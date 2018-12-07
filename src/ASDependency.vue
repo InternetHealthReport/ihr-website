@@ -208,8 +208,8 @@ export default {
         }
 
         // Sort the values based on the dates
-        yvalues= xvalues.filter(v => yvalues.includes(v));
-        xvalues.sort();
+        //yvalues= xvalues.filter(v => yvalues.includes(v));
+        //xvalues.sort();
         this.chart.layout.datarevision = new Date().getTime();
     },
     
