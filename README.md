@@ -3,6 +3,7 @@
 Internet Health Report charts (https://ihr.iijlab.net)
 
 ## Requirements
+- nodejs
 - npm
 
 ## Build Setup
