@@ -13,11 +13,12 @@
     "cors": "^2.8.4",
     "ify-loader": "^1.1.0",
     "jquery": "^3.3.1",
-    "plotly.js": "^1.40.1",
+    "plotly.js": "^1.42.5",
     "semantic-ui-css": "^2.3.3",
     "url-loader": "^1.1.1",
     "vue": "^2.5.11",
-    "vue-resource": "^1.0.3"
+    "vue-resource": "^1.0.3",
+    "vue-tables-2": "^1.4.70"
   },
   "browserslist": [
     "> 1%",

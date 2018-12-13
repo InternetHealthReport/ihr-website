@@ -7,36 +7,27 @@
                 <input v-model="endtime" placeholder="End time"> 
                 <button>Refresh</button>
             </form>
-
         </div>
         <reactive-chart :chart="chart" :clickFct="hegemonyPlotClick"></reactive-chart>
-        <div class="ui row">
-            <div v-html="detailTitle"></div>
-        </div>
         <div v-if="showDetail">
+            <div class="ui row">
+                <h3 class="vue-title">
+                <div v-html="tableTitle"></div>
+                </h3>
+            </div>
             <div class="row">
                 <div class="col-lg-1 col-m-0"></div>
                 <div class="col-lg-10 col-m-12"> 
-                    <table class="table"> 
-                        <thead> 
-                            <tr>
-                            <th v-for="key in detailColumns"> {{key}} </th> 
-                            </tr>
-                        </thead>'; 
-                        <tbody>
-                            <tr v-for="entry in detailTable">
-                                <td v-for="key in detailColumns" v-html="entry[key]"> </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                    <v-client-table :columns="tableColumns" :data="tableData" :options="tableOptions">
+                        <a slot="originasn" slot-scope="props" target="_parent" :href="props.row.originasn">{{props.row.originasn}}</a>
+                        <a slot="asn" slot-scope="props" target="_parent" :href="props.row.asn">{{props.row.asn}}</a>
+                    </v-client-table>
+
                 </div>
                 <div class="col-lg-1 col-m-0"></div>
             </div>
-            <div class="row">
-                <div class="col-lg-1 col-m-0"></div>
-                <div class="col-lg-10 col-m-12"> <div v-html="detailFooter"></div> </div>
-                <div class="col-lg-1 col-m-0"></div>
-            </div>
+            
             <div class="row">
                 <div class="col-lg-12 col-m-12"><div id="detailWidgetTitle"></div> </div>
             </div>
@@ -76,14 +67,25 @@ export default {
         apiPointHegemony: 'hegemony/',
         apiPointHegemonyCone: 'hegemony_cone/',
         showDetail: false,
-        detailTitle: "",
-        detailUrl: "",
-        detailBody: "",
-        detailFooter: "",
+        ripe_widgets: false,
+        tableTitle: "",
+        tableUrl: "",
         detailWidgetTitle: "",
         detailWidget: "",
-        detailColumns: ["ASN", "Name", "ASHegemony"],
-        detailTable: "",
+        tableColumns: [],
+        tableData: [],
+        tableOptions: {
+            headings: {
+                originasn: "ASN", 
+                asn: "ASN", 
+                originasn_name: "Name", 
+                asn_name: "Name", 
+                hege: "AS Hegemony"
+            },
+            sortable: ["hege", "originasn", "asn", "originasn_name", "asn_name"],
+            filterable: ["originasn", "asn", "originasn_name", "asn_name"],
+            orderBy: {column:"hege", ascending:false}
+        },
         originasn: this.asn,
         starttime: this.startdate,
         endtime: this.enddate,
@@ -155,9 +157,10 @@ export default {
                     b: 50,
                 },
             } 
-        },
-        this.traceIndexes = {},
+        }
+        this.traceIndexes = {}
         this.traceNextIndex = 1
+        this.showDetail = false
     
         this.fetchHegemony();
         this.fetchHegemonyCone();
@@ -188,6 +191,7 @@ export default {
             this.computeHegemonyConeTrace
         )
     },
+
     computeHegemonyTrace: function(data){
         for (var i=0; i< data.results.length; i++){
             var resp = data.results[i];
@@ -206,10 +210,6 @@ export default {
             this.chart.traces[traceIndex].y.push(resp.hege)
             this.chart.traces[traceIndex].x.push(resp.timebin)
         }
-
-        // Sort the values based on the dates
-        //yvalues= xvalues.filter(v => yvalues.includes(v));
-        //xvalues.sort();
         this.chart.layout.datarevision = new Date().getTime();
     },
     
@@ -219,159 +219,103 @@ export default {
             this.chart.traces[0].y.push(resp.conesize)
             this.chart.traces[0].x.push(resp.timebin)
         }
-
         this.chart.layout.datarevision = new Date().getTime();
     },
     
     hegemonyPlotClick: function(data){
         console.log("in the click fct!")
-        $("#cone_details_data").html('<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Loading...')
-        $("#cone_details_title").html("");
-        $("#cone_details_footer").html("");
         $("#cone_widget_title").html("");
         $("#cone_widget").html("");
 
         var pt = data.points[0];
-        var date = pt.x //JSON.stringify(pt.x).replace('"','').replace('"','');
-        //date = date.replace(" ", "+");
-        //date = date.replace(":", "%3A");
+        var date = pt.x 
         var title = "";
-        var montitle = "";
-        var body = "";
         var txt = "";
-        var footer = "";
         
-
         console.log("after init")
-        // Update query string
-        //$.QueryString.hegemonydate = pt.x;
-        //$.QueryString.hegemonyy = pt.yaxis._id;
-        //history.replaceState({}, '', "?" + $.param($.QueryString)); 
 
     if(data.points[0].yaxis._id == 'y'){
         console.log("first if")
-        title = "<h3>AS2500 dependencies ("+pt.x+")</h3><br>";
-        montitle = "";
-        body = "";
-        var url =  'https://ihr.iijlab.net/ihr/api/hegemony/'
+        this.showDetail = true;
+        this.tableTitle = "AS"+this.originasn+" dependencies ("+pt.x+")";
+        this.tableUrl =  'https://ihr.iijlab.net/ihr/api/hegemony/'
+        this.tableData = [];
+        this.tableColumns = ["asn", "asn_name", "hege"]
+
         var params = {
             originasn: this.originasn,
             timebin: date,
             af:this.af,
             format: 'json',
-            ordering: '-hege'
             };
-        this.$http.get( url, { params: params}).then(
+        this.$http.get( this.tableUrl, { params: params}).then(
             function(response){
-            body = '<table class="table"> <thead> <tr> <th> ASN </th> <th> Name </th> <th> AS Hegemony </th> </tr></thead>'; 
-            body += '<tbody>';
-        for( i=0; i<response.data.results.length; i++){
-            var alarm = response.data.results[i];
-            if (alarm.asn == 2500){
-                continue;
-            }
-            if(alarm.hege>=0.5){
-                body += '<tr class="danger">';
-            }
-            else if(alarm.hege >= 0.25){
-                body += '<tr class="warning">';
-            }
-            else{
-                body += '<tr>';
-            }
-            body += '<td><a href="https://ihr.iijlab.net/ihr/'+alarm.asn+'/asn/">'+alarm.asn+'</a></td>';
-            body += '<td><a href="https://ihr.iijlab.net/ihr/'+alarm.asn+'/asn/">'+alarm.asn_name+'</a></td>';
-            body += '<td>'+alarm.hege.toFixed(4)+'</td>';
-            body += '</tr>';
+                for( var i=0; i<response.data.results.length; i++){
+                    var alarm = response.data.results[i];
+                    if (alarm.asn == this.originasn){
+                        continue;
+                    }
+                    this.tableData.push(alarm)
+                }
 
-        }
-        body += '</tbody>';
-        body += '</table>';
-        if (response.data.count == 0){
-            txt = "No network found."
-            footer = "";
-        }
-        else{
-            txt = '';
-            var nbASN = response.data.count-1;
-            footer = "See the "+nbASN+" ASN here: <a href='"+url.replace("format=json", "format=api")+"'>ihr.iijlab.net/"+url.replace("format=json", "format=api")+"</a>";
-        }
+                if (response.data.count == 0){
+                    // TODO
+                    txt = "No network found."
+                }
 
-        console.log("before widget")
-        // Widget
-        var ts = new Date(pt.x+' GMT');
-        montitle = "<h3>BGPlay for AS2500</h3><br>";
-        ripestat.init(
-            "bgplay",
-            {
-                "unix_timestamps":"TRUE",
-                "ignoreReannouncements":"true",
-                "resource":"AS2500",
-                "starttime":(ts.getTime()/1000)-1800,
-                "endtime":(ts.getTime()/1000)+1800,
-                "rrcs":"0,13,16",
-                "type":"bgp"
-            },
-            "cone_widget",
-            {
-                "size": "fit", 
-                "show_controls":"yes",
-                "disable":["footer-buttons","logo"]
-            }
-        );
-        $("#cone_details_title").html(title);
-        $("#cone_details_data").html(txt+body);
-        $("#cone_details_footer").html(footer);
-        $("#cone_mon_title").html(montitle);
-        }); 
+                console.log("before widget")
+                // Widget
+                var ts = new Date(pt.x+' GMT');
+                //montitle = "<h3>BGPlay for AS2500</h3><br>";
+                if(this.ripe_widgets){
+                    ripestat.init(
+                        "bgplay",
+                        {
+                            "unix_timestamps":"TRUE",
+                            "ignoreReannouncements":"true",
+                            "resource":"AS2500",
+                            "starttime":(ts.getTime()/1000)-1800,
+                            "endtime":(ts.getTime()/1000)+1800,
+                            "rrcs":"0,13,16",
+                            "type":"bgp"
+                        },
+                        "cone_widget",
+                        {
+                            "size": "fit", 
+                            "show_controls":"yes",
+                            "disable":["footer-buttons","logo"]
+                        }
+                    );
+                }
+            }); 
     }else{
 
-        console.log("in else");
         this.showDetail = true;
-        // Update query string
-        //$.QueryString.conedate = pt.x;
-        //history.replaceState({}, '', "?" + $.param($.QueryString)); 
-        
-        this.detailTitle = "Networks dependent on AS"+this.originasn+" ("+pt.x+")";
-        this.detailUrl =  'https://ihr.iijlab.net/ihr/api/hegemony/'
-        this.detailTable = [];
-            console.log("before getjson")
+        this.tableTitle = "Networks dependent on AS"+this.originasn+" ("+pt.x+")";
+        this.tableUrl =  'https://ihr.iijlab.net/ihr/api/hegemony/'
+        this.tableData = [];
+        this.tableColumns = ["originasn", "originasn_name", "hege"]
+
         var params = {
             asn: this.originasn,
             timebin: date,
             af:this.af,
             format: 'json',
-            ordering: '-hege'
             };
-        this.$http.get( this.detailUrl, { params: params}).then(
+        this.$http.get( this.tableUrl, { params: params}).then(
             function(response){
-            console.log("in getjson")
-                console.log(response.data)
-                console.log(response)
-            for( var i=0; i<response.data.results.length; i++){
-                console.log(response.data.results[i])
-                var alarm = response.data.results[i];
-                if (alarm.originasn == 0 || alarm.originasn == this.originasn){
-                    continue;
+                for( var i=0; i<response.data.results.length; i++){
+                    var alarm = response.data.results[i];
+                    if (alarm.originasn == 0 || alarm.originasn == this.originasn){
+                        continue;
+                    }
+                    this.tableData.push(alarm)
                 }
-                this.detailTable.push(
-                    {ASN:'<a href="https://ihr.iijlab.net/ihr/'+alarm.originasn+'/asn/">'+alarm.originasn+'</a>',
-                    Name: '<a href="https://ihr.iijlab.net/ihr/'+alarm.originasn+'/asn/">'+alarm.originasn_name+'</a></td>',
-                    ASHegemony: alarm.hege.toFixed(3)}
-                )
 
-            }
-
-            if (response.data.count == 0){
-                // TODO
-                var txt = "No network found."
-                this.detailFooter = "";
-            }
-            else{
-                var txt = '';
-                var nbASN = response.data.count-2;
-                this.detailFooter = "See the "+nbASN+" ASN here: <a href='"+url.replace("format=json", "format=api")+"'>ihr.iijlab.net/"+url.replace("format=json", "format=api")+"</a>";
-            }
+                if (response.data.count == 0){
+                    // TODO
+                    var txt = "No network found."
+                }
 
             });
         }
