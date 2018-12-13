@@ -1,6 +1,10 @@
 # ihr-charts
 
-> Internet Health Report charts (https://ihr.iijlab.net)
+Internet Health Report charts (https://ihr.iijlab.net)
+
+## Requirements
+- nodejs
+- npm
 
 ## Build Setup
 
