@@ -1,16 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>ihr-charts</title>
-    <link rel="stylesheet" type="text/css" href="https://ihr.iijlab.net/static/ihr/css/main.css">
-    <link rel="stylesheet" href="https://ihr.iijlab.net/static/ihr/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://ihr.iijlab.net/static/ihr/css/bootstrap-theme.min.css">
-  </head>
-  <body>
-    <div id="ihr-chart">
-        <as-dependency asn=28761 startdate="2013-10-01T00:00" enddate="2013-10-30T00:00"></as-dependency>
-    </div>
-    <script src="/dist/build.js"></script>
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Internet Health Report</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+
+    </head>
+    <body>
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        <div class="ui fixed inverted menu">
+        <div class="ui container">
+                <a href="/" class="header item">
+                    <img class="logo" src="https://ihr.iijlab.net/static/ihr/logo_ihr_website.png">
+                    Internet Health Report</a>
+                        <!--<a class="item" href="{% url "ihr:index" %}">Home</a> - -->
+                        <a class="item" href="/ihr/about/">Documentation</a> - 
+                        <a class="item" href="{% url "ihr:asnList" %}">Networks</a> - 
+                        <a class="item" href="{% url "ihr:countryList" %}">Countries</a> - 
+                        <a class="item" href="/ihr/api/doc/">API</a> - 
+                        <a class="item" href="/ihr/contact/">Contact</a>
+                <div class="ui item right floated">
+                    <div class="ui category search">
+                    <div class="ui icon input">
+                        <input class="prompt" placeholder="Search networks..." type="text">
+                        <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                    </div>
+                </div>
+        </div>
+        </div>
+
+        <div class="ui main container">
+            <div id="ihr-chart">
+                <router-view></router-view>
+            </div>
+        </div>
+    
+        <!--<div class="ui inverted vertical footer segment" >-->
+            <!--<div class="ui center aligned container">-->
+                <!--<div class="ui stackable inverted divided grid">-->
+                    <!--<div class="three wide column right">-->
+                    <!--</div>-->
+                    <!--<div class="ten wide column">-->
+                        <!--<a href="{% url "ihr:index" %}">Home</a> - -->
+                        <!--<a href="/ihr/about/">Documentation</a> - -->
+                        <!--<a href="{% url "ihr:asnList" %}">Networks</a> - -->
+                        <!--<a href="{% url "ihr:countryList" %}">Countries</a> - -->
+                        <!--<a href="/ihr/api/doc/">API</a> - -->
+                        <!--<a href="/ihr/contact/">Contact</a>-->
+                    <!--</div>-->
+                    <!--<div class="three wide column right">-->
+                        <!--<div class="ui header">-->
+                        <!--<a href="https://twitter.com/ihr_alerts"><i class="twitter icon"></i></a>-->
+                        <!--<a href="https://github.com/InternetHealthReport"><i class="github icon"></i></a>-->
+                    <!--</div>-->
+
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+        <!-- Modal -->
+        <div class="ui basic modal">
+            <!-- Modal content-->
+            <div class="ui icon header">
+                <i class="linkify icon"></i>
+                Permanent link to this page
+            </div>
+            <div class="content">
+                <div class="ui form fluid">
+                <input id="permalink" value="" type="text" class="form control">
+                </div>
+            </div>
+        </div>
+
+        <script src="/dist/build.js"></script>
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-74681817-1','auto');ga('send','pageview');
+        </script>
+    </body>
 </html>

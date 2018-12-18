@@ -11,3 +11,82 @@
     text-align: center;
 }
 
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  background-color: #FAFAFA;
+}
+.ui.menu .item img.logo{
+    margin-right: 1.5em;
+}
+.main.container {
+    margin-top: 7em;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    background-color: #333333;
+    padding-top: 25px;
+    padding-bottom: 15px;
+    padding-left: 150px;
+    padding-right: 150px;
+    color: #ffffff;
+}
+
+.footer a {
+    color: #dddddd;
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+
+div.modal-body {
+    overflow-y: auto;
+    max-height: none;
+    padding: 15px;
+}
+
+a.help-btn{
+    font-size: 20px;
+    color: black;
+    float: right;
+}
+
+a.help-btn:hover{
+    text-decoration: none;
+}
+
+a.help-btn:visited {
+    text-decoration: none;
+}
+
+a.help-btn:link {
+    text-decoration: none;
+}
+
+a.help-btn:active {
+    text-decoration: none;
+}

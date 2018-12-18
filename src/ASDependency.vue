@@ -1,42 +1,69 @@
 <template>
     <div>
-        <div v-if="showInput">
-            <form v-on:submit.prevent="reset">
-                <input v-model="originasn" placeholder="Origin ASN"> 
-                <input v-model="starttime" placeholder="Start time"> 
-                <input v-model="endtime" placeholder="End time"> 
-                <button>Refresh</button>
-            </form>
-        </div>
-        <reactive-chart :chart="chart" :clickFct="hegemonyPlotClick"></reactive-chart>
-        <div v-if="showDetail">
-            <div class="ui row">
-                <h3 class="vue-title">
-                <div v-html="tableTitle"></div>
-                </h3>
-            </div>
-            <div class="row">
-                <div class="col-lg-1 col-m-0"></div>
-                <div class="col-lg-10 col-m-12"> 
-
-                    <v-client-table :columns="tableColumns" :data="tableData" :options="tableOptions">
-                        <a slot="originasn" slot-scope="props" target="_parent" :href="props.row.originasn">{{props.row.originasn}}</a>
-                        <a slot="asn" slot-scope="props" target="_parent" :href="props.row.asn">{{props.row.asn}}</a>
-                    </v-client-table>
-
+        <h2 class="ui dividing header">AS Interdependence</h2>
+        <div class="ui centered grid">
+            <div v-if="showInput">
+                <div class="row">
+                    <div class="column">
+                        <form v-on:submit.prevent="reset">
+                            <input v-model="originasn" placeholder="Origin ASN"> 
+                            <input v-model="starttime" placeholder="Start time"> 
+                            <input v-model="endtime" placeholder="End time"> 
+                            <button>Refresh</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="col-lg-1 col-m-0"></div>
-            </div>
-            
-            <div class="row">
-                <div class="col-lg-12 col-m-12"><div id="detailWidgetTitle"></div> </div>
             </div>
             <div class="row">
-                <div class="col-lg-12 col-m-12"><div id="detailWidget"></div> </div>
+                <div class="column">
+                    <reactive-chart :chart="chart" :clickFct="hegemonyPlotClick"></reactive-chart>
+                </div>
             </div>
-        </div>
-        <div v-else>
-            <i>Click on the graph for more details.</i>
+            <div v-if="showDetail">
+                <div class="row">
+                    <div class="column">
+                        <h3 class="vue-title">
+                        <div v-html="tableConf.title"></div>
+                        </h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <vuetable ref="vuetable"
+                            api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
+                            :per-page="10"
+                            :append-params="tableConf.queryparams" 
+                            :fields="tableConf.fields"
+                            :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
+                            pagination-path="pagination"
+                            @vuetable:pagination-data="onPaginationData"
+                            @vuetable:loaded="onLoaded"
+                            >
+                        </vuetable>
+                        <vuetable-pagination ref="pagination"
+                            @vuetable-pagination:change-page="onChangePage">
+						</vuetable-pagination>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="ui column">
+                        <div id="detailWidgetTitle"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="ui column">
+                        <div id="detailWidget"></div>
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                <div class="row">
+                    <div class="column">
+                        <i>Click on the graph for more details.</i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -44,8 +71,14 @@
 <script src="https://stat.ripe.net/widgets/widget_api.js"></script>
 <script>
 import { downloader } from './mixins/downloader'
+import Vuetable from 'vuetable-2/src/components/Vuetable'
+import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 
 export default {
+  components: {
+    Vuetable,
+    VuetablePagination
+  },
   mixins: [downloader],
   props: {
       asn:{
@@ -63,32 +96,52 @@ export default {
   },
   data () {
     return {
+        originasn: this.$route.params.asn, //this.asn,
+        starttime: '2018-10-01T00:00',//this.startdate,
+        endtime: '2018-10-03T00:00', //this.enddate,
         showInput: true,
         apiPointHegemony: 'hegemony/',
         apiPointHegemonyCone: 'hegemony_cone/',
         showDetail: false,
         ripe_widgets: false,
-        tableTitle: "",
-        tableUrl: "",
         detailWidgetTitle: "",
         detailWidget: "",
-        tableColumns: [],
-        tableData: [],
-        tableOptions: {
-            headings: {
-                originasn: "ASN", 
-                asn: "ASN", 
-                originasn_name: "Name", 
-                asn_name: "Name", 
-                hege: "AS Hegemony"
-            },
-            sortable: ["hege", "originasn", "asn", "originasn_name", "asn_name"],
-            filterable: ["originasn", "asn", "originasn_name", "asn_name"],
-            orderBy: {column:"hege", ascending:false}
+        tableConf: {
+            title: "",
+            fields:  [
+                {
+                    name: "originasn",
+                    sortField: "originasn",
+                    title: "ASN",
+                    visible: false
+                },
+                {
+                    name: "originasn_name",
+                    sortField: "originasn_name",
+                    title: "Name",
+                    visible: false
+                },
+                {
+                    name: "asn",
+                    sortField: "asn",
+                    title: "ASN",
+                    visible: false
+                },
+                {
+                    name: "asn_name",
+                    title: "Name",
+                    visible: false
+                },
+                {
+                    name: "hege",
+                    title: "AS Hegemony",
+                    callback: "hegeCallback",
+                    sortField: "hege"
+                },
+            ],
+            queryparams: { },
+            current_page: 1
         },
-        originasn: this.asn,
-        starttime: this.startdate,
-        endtime: this.enddate,
 
         chart: {
             uuid: this._uid,
@@ -235,91 +288,123 @@ export default {
         console.log("after init")
 
     if(data.points[0].yaxis._id == 'y'){
-        console.log("first if")
-        this.showDetail = true;
-        this.tableTitle = "AS"+this.originasn+" dependencies ("+pt.x+")";
-        this.tableUrl =  'https://ihr.iijlab.net/ihr/api/hegemony/'
-        this.tableData = [];
-        this.tableColumns = ["asn", "asn_name", "hege"]
+        this.tableConf.title = "AS"+this.originasn+" dependencies ("+pt.x+")";
+        this.tableConf.fields[0].visible = false
+        this.tableConf.fields[1].visible = false
+        this.tableConf.fields[2].visible = true
+        this.tableConf.fields[3].visible = true
 
-        var params = {
+        if(this.showDetail){
+            this.$refs.vuetable.normalizeFields()
+        }
+        else{
+            this.showDetail = true;
+        }
+
+        this.tableConf.queryparams = {
             originasn: this.originasn,
             timebin: date,
             af:this.af,
             format: 'json',
-            };
-        this.$http.get( this.tableUrl, { params: params}).then(
-            function(response){
-                for( var i=0; i<response.data.results.length; i++){
-                    var alarm = response.data.results[i];
-                    if (alarm.asn == this.originasn){
-                        continue;
-                    }
-                    this.tableData.push(alarm)
+        };
+
+
+        // Widget
+        var ts = new Date(pt.x+' GMT');
+        //montitle = "<h3>BGPlay for AS2500</h3><br>";
+        if(this.ripe_widgets){
+            ripestat.init(
+                "bgplay",
+                {
+                    "unix_timestamps":"TRUE",
+                    "ignoreReannouncements":"true",
+                    "resource":"AS2500",
+                    "starttime":(ts.getTime()/1000)-1800,
+                    "endtime":(ts.getTime()/1000)+1800,
+                    "rrcs":"0,13,16",
+                    "type":"bgp"
+                },
+                "cone_widget",
+                {
+                    "size": "fit", 
+                    "show_controls":"yes",
+                    "disable":["footer-buttons","logo"]
                 }
-
-                if (response.data.count == 0){
-                    // TODO
-                    txt = "No network found."
-                }
-
-                console.log("before widget")
-                // Widget
-                var ts = new Date(pt.x+' GMT');
-                //montitle = "<h3>BGPlay for AS2500</h3><br>";
-                if(this.ripe_widgets){
-                    ripestat.init(
-                        "bgplay",
-                        {
-                            "unix_timestamps":"TRUE",
-                            "ignoreReannouncements":"true",
-                            "resource":"AS2500",
-                            "starttime":(ts.getTime()/1000)-1800,
-                            "endtime":(ts.getTime()/1000)+1800,
-                            "rrcs":"0,13,16",
-                            "type":"bgp"
-                        },
-                        "cone_widget",
-                        {
-                            "size": "fit", 
-                            "show_controls":"yes",
-                            "disable":["footer-buttons","logo"]
-                        }
-                    );
-                }
-            }); 
-    }else{
-
-        this.showDetail = true;
-        this.tableTitle = "Networks dependent on AS"+this.originasn+" ("+pt.x+")";
-        this.tableUrl =  'https://ihr.iijlab.net/ihr/api/hegemony/'
-        this.tableData = [];
-        this.tableColumns = ["originasn", "originasn_name", "hege"]
-
-        var params = {
-            asn: this.originasn,
-            timebin: date,
-            af:this.af,
-            format: 'json',
-            };
-        this.$http.get( this.tableUrl, { params: params}).then(
-            function(response){
-                for( var i=0; i<response.data.results.length; i++){
-                    var alarm = response.data.results[i];
-                    if (alarm.originasn == 0 || alarm.originasn == this.originasn){
-                        continue;
-                    }
-                    this.tableData.push(alarm)
-                }
-
-                if (response.data.count == 0){
-                    // TODO
-                    var txt = "No network found."
-                }
-
-            });
+            );
         }
-      }
+        }else{
+
+            this.tableConf.title = "Networks dependent on AS"+this.originasn+" ("+pt.x+")";
+            this.tableConf.fields[0].visible = true
+            this.tableConf.fields[1].visible = true
+            this.tableConf.fields[2].visible = false
+            this.tableConf.fields[3].visible = false
+
+            if(this.showDetail){
+                this.$refs.vuetable.normalizeFields()
+            }
+            else{
+                this.showDetail = true;
+            }
+            this.tableConf.queryparams = {
+                asn: this.originasn,
+                timebin: date,
+                af:this.af,
+                format: 'json',
+            };
+
+        }
+    },
+    hegeCallback: function(value){
+        return Number(value).toFixed(3)
+    },
+    transform: function(data) {
+            var transformed = {}
+
+            var per_page = 1000;
+            var from = 1;
+            var to = data.count;
+            var curr_page = this.tableConf.current_page;
+            if(curr_page > 1){
+                from = (curr_page*per_page) + 1
+                to = (curr_page+1)*per_page
+            }
+                
+            transformed.pagination = {
+                total: data.count,
+                per_page: per_page,
+                current_page: this.tableConf.current_page,
+                last_page: Math.ceil(data.count/per_page),
+                next_page_url: data.next,
+                prev_page_url: data.previous,
+                from: from,
+                to: to, 
+            }
+
+            transformed.data = data.results 
+
+            return transformed
+    
+    },
+	onPaginationData: function(paginationData) {
+			this.$refs.pagination.setPaginationData(paginationData)
+			
+	},
+	onChangePage: function(page) {
+        this.tableConf.current_page = page
+        this.$refs.vuetable.changePage(page)
+			
+	},
+    getSortParam: function(sortOrder) {
+    return sortOrder.map(function(sort) {
+        return (sort.direction === 'desc' ? '' : '-') + sort.field
+        }).join(',')
+    },
+    onLoaded: function () {     
+        this.loading = false;
+        this.$refs.vuetable.refresh()
+
+    }
   },
 }
 </script>
