@@ -22,6 +22,7 @@
     "vue": "^2.5.11",
     "vue-resource": "^1.0.3",
     "vue-router": "^3.0.2",
+    "vue-simple-spinner": "^1.2.8",
     "vue-tables-2": "^1.4.70",
     "vuetable-2": "^1.7.5"
   },

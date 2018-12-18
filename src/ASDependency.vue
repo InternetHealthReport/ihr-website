@@ -29,20 +29,35 @@
                 </div>
                 <div class="row">
                     <div class="column">
-                        <vuetable ref="vuetable"
-                            api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
-                            :per-page="10"
-                            :append-params="tableConf.queryparams" 
-                            :fields="tableConf.fields"
-                            :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
-                            pagination-path="pagination"
-                            @vuetable:pagination-data="onPaginationData"
-                            @vuetable:loaded="onLoaded"
-                            >
-                        </vuetable>
-                        <vuetable-pagination ref="pagination"
-                            @vuetable-pagination:change-page="onChangePage">
-						</vuetable-pagination>
+                        <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
+
+                            <vuetable ref="vuetable"
+                                api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
+                                :per-page="10"
+                                :append-params="tableConf.queryparams" 
+                                :fields="tableConf.fields"
+                                :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
+                                :sort-order="[{ field: 'hege', direction: 'desc' }]"
+                                pagination-path="pagination"
+                                @vuetable:pagination-data="onPaginationData"
+                                @vuetable:loaded="onLoaded"
+                                @vuetable:loading="onLoading"
+                                >
+                                <template slot="originasn" scope="props">   
+                                    <router-link :to="{name: 'asn', params: { asn: props.rowData.originasn }}">
+                                        AS{{ props.rowData.originasn }} {{ props.rowData.originasn_name }}
+                                    </router-link>
+                                </template>
+                                <template slot="asn" scope="props">  
+                                    <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
+                                        AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
+                                    </router-link>
+                                </template>
+                            </vuetable>
+                            <vuetable-pagination ref="pagination"
+                                @vuetable-pagination:change-page="onChangePage">
+                            </vuetable-pagination>
+                        </div>
                     </div>
                 </div>
                 
@@ -60,7 +75,7 @@
             <div v-else>
                 <div class="row">
                     <div class="column">
-                        <i>Click on the graph for more details.</i>
+                        <i>Click on the graphs for more details.</i>
                     </div>
                 </div>
             </div>
@@ -77,7 +92,7 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 export default {
   components: {
     Vuetable,
-    VuetablePagination
+    VuetablePagination,
   },
   mixins: [downloader],
   props: {
@@ -100,6 +115,7 @@ export default {
         starttime: '2018-10-01T00:00',//this.startdate,
         endtime: '2018-10-03T00:00', //this.enddate,
         showInput: true,
+        loading: '',
         apiPointHegemony: 'hegemony/',
         apiPointHegemonyCone: 'hegemony_cone/',
         showDetail: false,
@@ -110,26 +126,13 @@ export default {
             title: "",
             fields:  [
                 {
-                    name: "originasn",
-                    sortField: "originasn",
-                    title: "ASN",
+                    name: "__slot:originasn",
+                    title: "Autonomous System",
                     visible: false
                 },
                 {
-                    name: "originasn_name",
-                    sortField: "originasn_name",
-                    title: "Name",
-                    visible: false
-                },
-                {
-                    name: "asn",
-                    sortField: "asn",
-                    title: "ASN",
-                    visible: false
-                },
-                {
-                    name: "asn_name",
-                    title: "Name",
+                    name: "__slot:asn",
+                    title: "Autonomous System",
                     visible: false
                 },
                 {
@@ -183,6 +186,7 @@ export default {
 
   methods: {
     reset: function(){
+        this.originasn = this.$route.params.asn
         this.chart = {
             uuid: this._uid,
             traces: [
@@ -289,10 +293,9 @@ export default {
 
     if(data.points[0].yaxis._id == 'y'){
         this.tableConf.title = "AS"+this.originasn+" dependencies ("+pt.x+")";
+        this.loading = 'loading';
         this.tableConf.fields[0].visible = false
-        this.tableConf.fields[1].visible = false
-        this.tableConf.fields[2].visible = true
-        this.tableConf.fields[3].visible = true
+        this.tableConf.fields[1].visible = true
 
         if(this.showDetail){
             this.$refs.vuetable.normalizeFields()
@@ -335,10 +338,9 @@ export default {
         }else{
 
             this.tableConf.title = "Networks dependent on AS"+this.originasn+" ("+pt.x+")";
+            this.loading = 'loading';
             this.tableConf.fields[0].visible = true
-            this.tableConf.fields[1].visible = true
-            this.tableConf.fields[2].visible = false
-            this.tableConf.fields[3].visible = false
+            this.tableConf.fields[1].visible = false
 
             if(this.showDetail){
                 this.$refs.vuetable.normalizeFields()
@@ -381,7 +383,14 @@ export default {
                 to: to, 
             }
 
-            transformed.data = data.results 
+            transformed.data = [] 
+            for (var i=0; i < data.results.length; i++) {
+                if(data.results[i].originasn != 0){
+                    if (data.results[i].originasn != data.results[i].asn){
+                        transformed.data.push(data.results[i])
+                    }
+                }
+            }
 
             return transformed
     
@@ -397,15 +406,23 @@ export default {
 	},
     getSortParam: function(sortOrder) {
     return sortOrder.map(function(sort) {
-        return (sort.direction === 'desc' ? '' : '-') + sort.field
+        return (sort.direction === 'desc' ? '-' : '') + sort.field
         }).join(',')
     },
+    onLoading: function () {     
+        this.loading = 'loading';
+    },
     onLoaded: function () {     
-        this.loading = false;
         this.$refs.vuetable.refresh()
+        this.loading = '';
 
     }
   },
+    watch: {
+        $route (to,from){
+            this.reset()
+        }
+    }
 }
 </script>
 
