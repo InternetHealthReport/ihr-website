@@ -43,12 +43,12 @@
                                 @vuetable:loaded="onLoaded"
                                 @vuetable:loading="onLoading"
                                 >
-                                <template slot="originasn" scope="props">   
+                                <template slot="originasn" slot-scope="props">   
                                     <router-link :to="{name: 'asn', params: { asn: props.rowData.originasn }}">
                                         AS{{ props.rowData.originasn }} {{ props.rowData.originasn_name }}
                                     </router-link>
                                 </template>
-                                <template slot="asn" scope="props">  
+                                <template slot="asn" slot-scope="props">  
                                     <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
                                         AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
                                     </router-link>
@@ -123,17 +123,18 @@ export default {
         detailWidgetTitle: "",
         detailWidget: "",
         tableConf: {
-            title: "",
+            title: 0,
+            type: "originasn",
             fields:  [
                 {
                     name: "__slot:originasn",
                     title: "Autonomous System",
-                    visible: false
+                    visible: true
                 },
                 {
                     name: "__slot:asn",
                     title: "Autonomous System",
-                    visible: false
+                    visible: true
                 },
                 {
                     name: "hege",
@@ -159,12 +160,12 @@ export default {
             ],
             layout: {
                 yaxis: {
-                    title: "AS"+this.originasn+" dependencies",
+                    title: "AS"+this.$route.params.asn+" dependencies",
                     domain: [0.55, 1],
                     autorange: true
                 },
                 yaxis2:{
-                    title: 'Number of ASes<br>dependent on AS'+this.originasn,
+                    title: 'Number of ASes<br>depmndent on AS'+this.$route.params.asn,
                     domain: [0, 0.45],
                     autorange: true,
                 },
@@ -294,16 +295,7 @@ export default {
     if(data.points[0].yaxis._id == 'y'){
         this.tableConf.title = "AS"+this.originasn+" dependencies ("+pt.x+")";
         this.loading = 'loading';
-        this.tableConf.fields[0].visible = false
-        this.tableConf.fields[1].visible = true
-
-        if(this.showDetail){
-            this.$refs.vuetable.normalizeFields()
-        }
-        else{
-            this.showDetail = true;
-        }
-
+        this.tableConf.type = 0
         this.tableConf.queryparams = {
             originasn: this.originasn,
             timebin: date,
@@ -311,6 +303,12 @@ export default {
             format: 'json',
         };
 
+        if (this.showDetail){
+            this.tableRefresh()
+        }
+        else{
+            this.showDetail = true;
+        }
 
         // Widget
         var ts = new Date(pt.x+' GMT');
@@ -339,21 +337,20 @@ export default {
 
             this.tableConf.title = "Networks dependent on AS"+this.originasn+" ("+pt.x+")";
             this.loading = 'loading';
-            this.tableConf.fields[0].visible = true
-            this.tableConf.fields[1].visible = false
-
-            if(this.showDetail){
-                this.$refs.vuetable.normalizeFields()
-            }
-            else{
-                this.showDetail = true;
-            }
+            this.tableConf.type = 1
             this.tableConf.queryparams = {
                 asn: this.originasn,
                 timebin: date,
                 af:this.af,
                 format: 'json',
             };
+
+            if (this.showDetail){
+                this.tableRefresh()
+            }
+            else{
+                this.showDetail = true;
+            }
 
         }
     },
@@ -413,9 +410,25 @@ export default {
         this.loading = 'loading';
     },
     onLoaded: function () {     
-        this.$refs.vuetable.refresh()
         this.loading = '';
+        this.tableHideColumns();
+    },
+    tableHideColumns: function() {
 
+        if(this.tableConf.type == 0){
+            this.tableConf.fields[0].visible = false
+            this.tableConf.fields[1].visible = true
+        }
+        else{
+            this.tableConf.fields[0].visible = true
+            this.tableConf.fields[1].visible = false
+        }
+        this.$refs.vuetable.normalizeFields()
+    },
+    tableRefresh: function(){
+        this.$nextTick(() => {
+          this.$refs.vuetable.refresh();
+      });
     }
   },
     watch: {
