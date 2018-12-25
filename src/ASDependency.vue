@@ -134,7 +134,7 @@ export default {
                 {
                     name: "__slot:asn",
                     title: "Autonomous System",
-                    visible: true
+                    visible: false
                 },
                 {
                     name: "hege",
@@ -294,7 +294,6 @@ export default {
 
     if(data.points[0].yaxis._id == 'y'){
         this.tableConf.title = "AS"+this.originasn+" dependencies ("+pt.x+")";
-        this.loading = 'loading';
         this.tableConf.type = 0
         this.tableConf.queryparams = {
             originasn: this.originasn,
@@ -336,7 +335,6 @@ export default {
         }else{
 
             this.tableConf.title = "Networks dependent on AS"+this.originasn+" ("+pt.x+")";
-            this.loading = 'loading';
             this.tableConf.type = 1
             this.tableConf.queryparams = {
                 asn: this.originasn,

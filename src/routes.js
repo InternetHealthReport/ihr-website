@@ -1,4 +1,5 @@
 import ASDependency from './ASDependency.vue'
+import GlobalReport from './GlobalReport.vue'
 
 export default [
     {
@@ -10,5 +11,10 @@ export default [
         name: 'country',
         path:'/:cc/country/',
         component: ASDependency,
+    },
+    {
+        name: 'index',
+        path:'/',
+        component: GlobalReport,
     }
 ]

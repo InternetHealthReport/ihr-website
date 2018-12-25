@@ -5,6 +5,7 @@ import Routes from './routes'
 import VueTables from 'vue-tables-2'
 import ReactiveChart from './ReactiveChart.vue'
 import ASDependency from './ASDependency.vue'
+import GlobalReport from './GlobalReport.vue'
 //import InternalDelayForwarding from './components/InternalDelayForwarding.vue'
 //import DelayExplorer from './DelayExplorer.vue'
 
