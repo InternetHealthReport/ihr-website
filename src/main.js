@@ -6,7 +6,7 @@ import VueTables from 'vue-tables-2'
 import ReactiveChart from './ReactiveChart.vue'
 import ASDependency from './ASDependency.vue'
 import GlobalReport from './GlobalReport.vue'
-//import InternalDelayForwarding from './components/InternalDelayForwarding.vue'
+import InternalDelayForwarding from './InternalDelayForwarding.vue'
 //import DelayExplorer from './DelayExplorer.vue'
 
 window.$ = window.jQuery = require('jquery')
@@ -21,7 +21,7 @@ Vue.use(VueRouter)
 Vue.use(VueTables.ClientTable);
 Vue.component("reactive-chart", ReactiveChart)
 Vue.component("as-dependency", ASDependency)
-//Vue.component("in-delay-forwarding", ASDependency)
+Vue.component("in-delay-forwarding", InternalDelayForwarding)
 //Vue.component("delay-explorer", DelayExplorer)
 
 const router = new VueRouter({

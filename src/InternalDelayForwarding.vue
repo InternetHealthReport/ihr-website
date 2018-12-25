@@ -6,13 +6,13 @@
                     <reactive-chart :chart="chart" :clickFct="plotClick"></reactive-chart>
                 </div>
             </div>
-            <div v-if="table.show">
+            <div v-if="showDetail">
                 <div class="row">
                     <div class="column">
-                        <div :class="[{'vuetable-wrapper ui basic segment': true}, table.loading]">
+                        <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
                             <div class="extra content">
                                  <h3 class="ui left floated header">
-                                    {{  table.title }} 
+                                    {{  tableConf.title }} 
                                 </h3>
                                 <div class="ui right floated header" >
                                     <button class="ui grey icon button basic small" v-on:click="closeDetail">
@@ -25,8 +25,8 @@
                                     <vuetable ref="vuetable"
                                         api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
                                         :per-page="10"
-                                        :append-params="table.queryparams" 
-                                        :fields="table.fields"
+                                        :append-params="tableConf.queryparams" 
+                                        :fields="tableConf.fields"
                                         :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
                                         :sort-order="[{ field: 'hege', direction: 'desc' }]"
                                         pagination-path="pagination"
@@ -100,13 +100,13 @@ export default {
   },
   data () {
     return {
+        loading: '',
+        showDetail: false,
         bgplay: {
             show: false
         },
-        table: {
+        tableConf: {
             title: 0,
-            show: false,
-            loading: '',
             type: "originasn",
             fields:  [
                 {
@@ -200,7 +200,7 @@ export default {
         }
         this.traceIndexes = {}
         this.traceNextIndex = 1
-        this.table.show = false
+        this.showDetail = false
         this.bgplay.show = false
     
         this.fetchHegemony();
@@ -268,9 +268,9 @@ export default {
         
         if(data.points[0].yaxis._id == 'y'){
             // Update the table
-            this.table.title = "AS"+this.asn+" dependencies ("+pt.x+")";
-            this.table.type = 0
-            this.table.queryparams = {
+            this.tableConf.title = "AS"+this.asn+" dependencies ("+pt.x+")";
+            this.tableConf.type = 0
+            this.tableConf.queryparams = {
                 originasn: this.asn,
                 timebin: pt.x,
                 af:this.af,
@@ -304,9 +304,9 @@ export default {
         }else{
             // Update the table
             this.bgplay.show = false;
-            this.table.title = "Networks dependent on AS"+this.asn+" ("+pt.x+")";
-            this.table.type = 1
-            this.table.queryparams = {
+            this.tableConf.title = "Networks dependent on AS"+this.asn+" ("+pt.x+")";
+            this.tableConf.type = 1
+            this.tableConf.queryparams = {
                 asn: this.asn,
                 timebin: pt.x,
                 af:this.af,
@@ -326,7 +326,7 @@ export default {
             var per_page = 1000;
             var from = 1;
             var to = data.count;
-            var curr_page = this.table.current_page;
+            var curr_page = this.tableConf.current_page;
             if(curr_page > 1){
                 from = (curr_page*per_page) + 1
                 to = (curr_page+1)*per_page
@@ -335,7 +335,7 @@ export default {
             transformed.pagination = {
                 total: data.count,
                 per_page: per_page,
-                current_page: this.table.current_page,
+                current_page: this.tableConf.current_page,
                 last_page: Math.ceil(data.count/per_page),
                 next_page_url: data.next,
                 prev_page_url: data.previous,
@@ -360,7 +360,7 @@ export default {
 			
 	},
 	onChangePage: function(page) {
-        this.table.current_page = page
+        this.tableConf.current_page = page
         this.$refs.vuetable.changePage(page)
 			
 	},
@@ -370,38 +370,38 @@ export default {
         }).join(',')
     },
     onLoading: function () {     
-        this.table.loading = 'loading';
+        this.loading = 'loading';
     },
     onLoaded: function () {     
-        this.table.loading = '';
+        this.loading = '';
         this.tableHideColumns();
     },
     tableHideColumns: function() {
 
-        if(this.table.type == 0){
-            this.table.fields[0].visible = false
-            this.table.fields[1].visible = true
+        if(this.tableConf.type == 0){
+            this.tableConf.fields[0].visible = false
+            this.tableConf.fields[1].visible = true
         }
         else{
-            this.table.fields[0].visible = true
-            this.table.fields[1].visible = false
+            this.tableConf.fields[0].visible = true
+            this.tableConf.fields[1].visible = false
         }
         this.$refs.vuetable.normalizeFields()
     },
     tableRefresh: function(){
-        if (this.table.show){
+        if (this.showDetail){
             this.$nextTick(() => {
             this.$refs.vuetable.refresh();
             });
         }
         else{
-            this.table.show = true;
+            this.showDetail = true;
         }
     },
 
     closeDetail: function(){
         console.log("clicked on the button")
-        this.table.show = false
+        this.showDetail = false
         this.bgplay.show = false
     }
         

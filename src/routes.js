@@ -1,16 +1,16 @@
-import ASDependency from './ASDependency.vue'
 import GlobalReport from './GlobalReport.vue'
+import NetworkReport from './NetworkReport.vue'
 
 export default [
     {
         name: 'asn',
         path:'/:asn/asn/',
-        component: ASDependency,
+        component: NetworkReport,
     },
     {
         name: 'country',
         path:'/:cc/country/',
-        component: ASDependency,
+        component: NetworkReport,
     },
     {
         name: 'index',
