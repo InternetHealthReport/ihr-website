@@ -6,13 +6,13 @@
                     <reactive-chart :chart="chart" :clickFct="plotClick"></reactive-chart>
                 </div>
             </div>
-            <div v-if="showDetail">
+            <div v-if="table.show">
                 <div class="row">
                     <div class="column">
-                        <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
+                        <div :class="[{'vuetable-wrapper ui basic segment': true}, table.loading]">
                             <div class="extra content">
                                  <h3 class="ui left floated header">
-                                    {{  tableConf.title }} 
+                                    {{  table.title }} 
                                 </h3>
                                 <div class="ui right floated header" >
                                     <button class="ui grey icon button basic small" v-on:click="closeDetail">
@@ -23,22 +23,17 @@
                             <div class="content">
 
                                     <vuetable ref="vuetable"
-                                        api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
+                                        :api-url="table.apiurl" 
                                         :per-page="10"
-                                        :append-params="tableConf.queryparams" 
-                                        :fields="tableConf.fields"
+                                        :append-params="table.queryparams" 
+                                        :fields="table.fields"
                                         :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
-                                        :sort-order="[{ field: 'hege', direction: 'desc' }]"
+                                        :sort-order="[{ field: 'deviation', direction: 'desc' }]"
                                         pagination-path="pagination"
                                         @vuetable:pagination-data="onPaginationData"
                                         @vuetable:loaded="onLoaded"
                                         @vuetable:loading="onLoading"
                                         >
-                                        <template slot="originasn" slot-scope="props">   
-                                            <router-link :to="{name: 'asn', params: { asn: props.rowData.originasn }}">
-                                                AS{{ props.rowData.originasn }} {{ props.rowData.originasn_name }}
-                                            </router-link>
-                                        </template>
                                         <template slot="asn" slot-scope="props">  
                                             <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
                                                 AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
@@ -60,10 +55,17 @@
                     </div>
                 </div>
             </div>
-            <div v-show="bgplay.show">    
+            <div v-show="latencymon.show">    
                 <div class="row">
                     <div class="column">
-                        <div id="hege_bgplay"></div>
+                        <div id="latencymon"></div>
+                    </div>
+                </div>
+            </div>
+            <div v-show="tracemon.show">    
+                <div class="row">
+                    <div class="column">
+                        <div id="tracemon"></div>
                     </div>
                 </div>
             </div>
@@ -100,95 +102,116 @@ export default {
   },
   data () {
     return {
-        loading: '',
-        showDetail: false,
-        bgplay: {
+        latencymon: {
             show: false
         },
-        tableConf: {
+        tracemon: {
+            show: false
+        },
+        table: {
             title: 0,
+            show: false,
+            loading: '',
+            apiurl: "",
             type: "originasn",
             fields:  [
                 {
-                    name: "__slot:originasn",
-                    title: "Autonomous System",
-                    visible: true
-                },
-                {
-                    name: "__slot:asn",
-                    title: "Autonomous System",
+                    name: "link",
+                    sortField: "link",
+                    type: 0,
                     visible: false
                 },
                 {
-                    name: "hege",
-                    title: "AS Hegemony",
-                    callback: "hegeCallback",
-                    sortField: "hege"
+                    name: "deviation",
+                    callback: "printFloat",
+                    sortField: "deviation",
+                    type: 0,
+                    visible: false
                 },
+                {
+                    name: "diffmedian",
+                    title: "Delay Change",
+                    callback: "printFloat",
+                    sortField: "diffmedian",
+                    type: 0,
+                    visible: false
+                },
+                {
+                    name: "nbprobes",
+                    title: "#Probes",
+                    sortField: "nbprobes",
+                    type: 0,
+                    visible: false
+                },
+                {
+                    name: "ip",
+                    title: "Reported IP",
+                    type: 1,
+                    visible: false
+                },
+                {   
+                    name: "previoushop",
+                    title: "Usual preceding IP",
+                    type: 1,
+                    visible: false
+                },
+                {
+                    name: "correlation",
+                    callback: "printFloat",
+                    type: 1,
+                    visible: false
+                },
+                {
+                    name: "responsibility",
+                    callback: "printFloat",
+                    type: 1,
+                    visible: false
+                },
+
             ],
             queryparams: { },
             current_page: 1
         },
 
-        chart: {
-            uuid: this._uid,
-            traces: [
-                { // First trace is used for the hegemony cone
-                    x: [],
-                    y: [],
-                    yaxis: 'y2',
-                    name: 'Number of dependents',
-                    showlegend: false
-                }
-            ],
-            layout: {
-                yaxis: {
-                    title: "AS"+this.asn+" dependencies",
-                    domain: [0.55, 1],
-                    autorange: true
-                },
-                yaxis2:{
-                    title: 'Number of ASes<br>dependent on AS'+this.asn,
-                    domain: [0, 0.45],
-                    autorange: true,
-                },
-                margin: {
-                    t: 50,
-                    b: 50,
-                },
-            } 
-        },
+        chart: this.initialChart(),
         traceIndexes:{},
         traceNextIndex: 1
     }
   },
 
   mounted() {
-    this.fetchHegemony();
-    this.fetchHegemonyCone();
+    this.fetchDelay();
+    this.fetchForwarding();
   },
 
   methods: {
-    reset: function(){
-        this.chart = {
+    initialChart: function(){
+        return {
             uuid: this._uid,
             traces: [
-                { // First trace is used for the hegemony cone
+                { 
+                    x: [],
+                    y: [],
+                    yaxis: 'y',
+                    name: 'Delay',
+                    showlegend: false
+                },
+                { 
                     x: [],
                     y: [],
                     yaxis: 'y2',
-                    name: 'Number of dependents',
+                    name: 'Forwarding',
                     showlegend: false
                 }
             ],
             layout: {
                 yaxis: {
-                    title: "AS"+this.asn+" dependencies",
+                    title: "Delay Change Level",
                     domain: [0.55, 1],
                     autorange: true
                 },
                 yaxis2:{
-                    title: 'Number of ASes<br>dependent on AS'+this.asn,
+                    title: "Forwarding Change Level",
                     domain: [0, 0.45],
                     autorange: true,
                 },
@@ -198,80 +221,73 @@ export default {
                 },
             } 
         }
+    },
+    reset: function(){
+        this.chart = this.initialChart() 
         this.traceIndexes = {}
         this.traceNextIndex = 1
-        this.showDetail = false
-        this.bgplay.show = false
+        this.table.show = false
+        this.tracemon.show = false
+        this.latencymon.show = false
     
-        this.fetchHegemony();
-        this.fetchHegemonyCone();
+        this.fetchDelay();
+        this.fetchForwarding();
     },
 
-    fetchHegemony: function(){
+    fetchDelay: function(){
         this.apiGetData(
-            "hegemony/",
-            {
-                originasn: this.asn, 
-                timebin__gte: this.starttime, 
-                timebin__lte: this.endtime, 
-                af:this.af
-            },
-            this.computeHegemonyTrace
-        )
-    },
-
-    fetchHegemonyCone: function(){
-        this.apiGetData(
-            "hegemony_cone/",
+            "delay/",
             {
                 asn: this.asn, 
                 timebin__gte: this.starttime, 
                 timebin__lte: this.endtime, 
                 af:this.af
             },
-            this.computeHegemonyConeTrace
+            this.computeTrace0
         )
     },
 
-    computeHegemonyTrace: function(data){
-        for (var i=0; i< data.results.length; i++){
-            var resp = data.results[i];
-            if(resp.asn == this.asn){
-                continue;
-            }
-            if(this.traceIndexes[resp.asn] === undefined){
-                this.traceIndexes[resp.asn] = this.traceNextIndex++
-                this.chart.traces.push({
-                    x: [],
-                    y: [],
-                    name: resp.asn_name.split(" ")[0]+" AS"+resp.asn,
-                })
-            }
-            var traceIndex = this.traceIndexes[resp.asn];
-            this.chart.traces[traceIndex].y.push(resp.hege)
-            this.chart.traces[traceIndex].x.push(resp.timebin)
-        }
-        this.chart.layout.datarevision = new Date().getTime();
+    fetchForwarding: function(){
+        this.apiGetData(
+            "forwarding/",
+            {
+                asn: this.asn, 
+                timebin__gte: this.starttime, 
+                timebin__lte: this.endtime, 
+                af:this.af
+            },
+            this.computeTrace1
+        )
     },
-    
-    computeHegemonyConeTrace: function(data){
+    computeTrace0: function(data){
         for (var i=0; i< data.results.length; i++){
             var resp = data.results[i];
-            this.chart.traces[0].y.push(resp.conesize)
+            this.chart.traces[0].y.push(resp.magnitude)
             this.chart.traces[0].x.push(resp.timebin)
         }
         this.chart.layout.datarevision = new Date().getTime();
     },
+    computeTrace1: function(data){
+        for (var i=0; i< data.results.length; i++){
+            var resp = data.results[i];
+            this.chart.traces[1].y.push(resp.magnitude)
+            this.chart.traces[1].x.push(resp.timebin)
+        }
+        this.chart.layout.datarevision = new Date().getTime();
+    },
+    
     
     plotClick: function(data){
         var pt = data.points[0];
         
         if(data.points[0].yaxis._id == 'y'){
             // Update the table
-            this.tableConf.title = "AS"+this.asn+" dependencies ("+pt.x+")";
-            this.tableConf.type = 0
-            this.tableConf.queryparams = {
-                originasn: this.asn,
+            this.tracemon.show = false
+            this.table.title = "Delay anomalies ("+pt.x+")";
+            this.table.type = 0
+            this.table.apiurl = "https://ihr.iijlab.net/ihr/api/delay_alarms/" 
+            this.table.queryparams = {
+                asn: this.asn,
                 timebin: pt.x,
                 af:this.af,
                 format: 'json',
@@ -280,33 +296,35 @@ export default {
             this.tableRefresh()
 
             // BGPlay Widget
-            var ts = new Date(pt.x+' GMT');
-            ripestat.init(
-                "bgplay",
-                {
-                    "unix_timestamps":"TRUE",
-                    "ignoreReannouncements":"true",
-                    "resource":"AS2500",
-                    "starttime":(ts.getTime()/1000)-1800,
-                    "endtime":(ts.getTime()/1000)+1800,
-                    "rrcs":"0,13,16",
-                    "type":"bgp"
-                },
-                "hege_bgplay",
-                {
-                    "size": "fit", 
-                    "show_controls":"yes",
-                    "disable":["footer-buttons","logo"]
-                }
-            );
-            this.bgplay.show = true;
+            // TODO Latencymon
+//            var ts = new Date(pt.x+' GMT');
+//            ripestat.init(
+//                "bgplay",
+ //               {
+  //                  "unix_timestamps":"TRUE",
+   //                 "ignoreReannouncements":"true",
+    //                "resource":"AS2500",
+     //               "starttime":(ts.getTime()/1000)-1800,
+      //              "endtime":(ts.getTime()/1000)+1800,
+       //             "rrcs":"0,13,16",
+        //            "type":"bgp"
+         //       },
+          //      "hege_bgplay",
+           //     {
+            //        "size": "fit", 
+             //       "show_controls":"yes",
+              //      "disable":["footer-buttons","logo"]
+               //// }
+            //);
+            this.latencymon.show = true;
 
         }else{
             // Update the table
-            this.bgplay.show = false;
-            this.tableConf.title = "Networks dependent on AS"+this.asn+" ("+pt.x+")";
-            this.tableConf.type = 1
-            this.tableConf.queryparams = {
+            this.latencymon.show = false;
+            this.table.title = "Forwarding anomalies ("+pt.x+")";
+            this.table.type = 1
+            this.table.apiurl = "https://ihr.iijlab.net/ihr/api/forwarding_alarms/" 
+            this.table.queryparams = {
                 asn: this.asn,
                 timebin: pt.x,
                 af:this.af,
@@ -317,7 +335,7 @@ export default {
         }
 
     },
-    hegeCallback: function(value){
+    printFloat: function(value){
         return Number(value).toFixed(3)
     },
     transform: function(data) {
@@ -326,7 +344,7 @@ export default {
             var per_page = 1000;
             var from = 1;
             var to = data.count;
-            var curr_page = this.tableConf.current_page;
+            var curr_page = this.table.current_page;
             if(curr_page > 1){
                 from = (curr_page*per_page) + 1
                 to = (curr_page+1)*per_page
@@ -335,7 +353,7 @@ export default {
             transformed.pagination = {
                 total: data.count,
                 per_page: per_page,
-                current_page: this.tableConf.current_page,
+                current_page: this.table.current_page,
                 last_page: Math.ceil(data.count/per_page),
                 next_page_url: data.next,
                 prev_page_url: data.previous,
@@ -360,7 +378,7 @@ export default {
 			
 	},
 	onChangePage: function(page) {
-        this.tableConf.current_page = page
+        this.table.current_page = page
         this.$refs.vuetable.changePage(page)
 			
 	},
@@ -370,39 +388,39 @@ export default {
         }).join(',')
     },
     onLoading: function () {     
-        this.loading = 'loading';
+        this.table.loading = 'loading';
     },
     onLoaded: function () {     
-        this.loading = '';
+        this.table.loading = '';
         this.tableHideColumns();
     },
     tableHideColumns: function() {
 
-        if(this.tableConf.type == 0){
-            this.tableConf.fields[0].visible = false
-            this.tableConf.fields[1].visible = true
-        }
-        else{
-            this.tableConf.fields[0].visible = true
-            this.tableConf.fields[1].visible = false
+        for(var i=0; i<this.table.fields.length; i++){
+            if(this.table.type == this.table.fields[i].type){
+                this.table.fields[i].visible = true
+            }
+            else{
+                this.table.fields[i].visible = false
+            }
         }
         this.$refs.vuetable.normalizeFields()
     },
     tableRefresh: function(){
-        if (this.showDetail){
+        if (this.table.show){
             this.$nextTick(() => {
             this.$refs.vuetable.refresh();
             });
         }
         else{
-            this.showDetail = true;
+            this.table.show = true;
         }
     },
 
     closeDetail: function(){
-        console.log("clicked on the button")
-        this.showDetail = false
-        this.bgplay.show = false
+        this.table.show = false
+        this.latencymon.show = false
+        this.tracemon.show = false
     }
         
   },

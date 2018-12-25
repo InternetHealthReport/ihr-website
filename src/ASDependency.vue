@@ -130,34 +130,7 @@ export default {
             current_page: 1
         },
 
-        chart: {
-            uuid: this._uid,
-            traces: [
-                { // First trace is used for the hegemony cone
-                    x: [],
-                    y: [],
-                    yaxis: 'y2',
-                    name: 'Number of dependents',
-                    showlegend: false
-                }
-            ],
-            layout: {
-                yaxis: {
-                    title: "AS"+this.asn+" dependencies",
-                    domain: [0.55, 1],
-                    autorange: true
-                },
-                yaxis2:{
-                    title: 'Number of ASes<br>dependent on AS'+this.asn,
-                    domain: [0, 0.45],
-                    autorange: true,
-                },
-                margin: {
-                    t: 50,
-                    b: 50,
-                },
-            } 
-        },
+        chart: this.initialChart(),
         traceIndexes:{},
         traceNextIndex: 1
     }
@@ -169,8 +142,8 @@ export default {
   },
 
   methods: {
-    reset: function(){
-        this.chart = {
+    initialChart: function(){
+        return {
             uuid: this._uid,
             traces: [
                 { // First trace is used for the hegemony cone
@@ -198,6 +171,9 @@ export default {
                 },
             } 
         }
+    },
+    reset: function(){
+        this.chart = this.initialChart()
         this.traceIndexes = {}
         this.traceNextIndex = 1
         this.table.show = false

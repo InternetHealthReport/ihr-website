@@ -20,6 +20,7 @@
         <h2 class="ui dividing header">External Delays</h2>
 
         <h2 class="ui dividing header">Internal Delays & Forwarding Anomalies</h2>
+        <in-delay-forwarding :asn="this.$route.params.asn" :starttime="starttime" :endtime="endtime"></in-delay-forwarding>
 
         <h2 class="ui dividing header">Network Disconnections</h2>
     </div>
