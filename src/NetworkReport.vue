@@ -15,12 +15,12 @@
         </div>
 
         <h2 class="ui dividing header">AS Interdependencies</h2>
-        <as-dependency :asn="this.$route.params.asn" :starttime="starttime" :endtime="endtime"></as-dependency>
+        <as-dependency :asn="Number(this.$route.params.asn)" :starttime="starttime" :endtime="endtime"></as-dependency>
 
         <h2 class="ui dividing header">External Delays</h2>
 
         <h2 class="ui dividing header">Internal Delays & Forwarding Anomalies</h2>
-        <in-delay-forwarding :asn="this.$route.params.asn" :starttime="starttime" :endtime="endtime"></in-delay-forwarding>
+        <in-delay-forwarding :asn="Number(this.$route.params.asn)" :starttime="starttime" :endtime="endtime"></in-delay-forwarding>
 
         <h2 class="ui dividing header">Network Disconnections</h2>
     </div>
@@ -28,23 +28,23 @@
 
 <script>
 import ASDependency from './ASDependency.vue'
+import InternalDelayForwarding from './InternalDelayForwarding.vue'
 
 export default {
+    components: {
+        "as-dependency": ASDependency,
+        "in-delay-forwarding": InternalDelayForwarding,
+    },
     props: {
     },
     data () {
         return {
             showInput: false,
-            asn: this.getASN(),
             starttime: '2018-10-01T00:00',//
             endtime: '2018-10-03T00:00', // 
         }
     },
-
     methods: {
-        getASN: function(){
-            return this.$route.params.asn;
-        }
     },
   }
 </script>

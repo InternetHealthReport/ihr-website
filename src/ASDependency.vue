@@ -63,7 +63,7 @@
             <div v-show="bgplay.show">    
                 <div class="row">
                     <div class="column">
-                        <div id="hege_bgplay"></div>
+                        <div id="ihr-asd-bgplay"></div>
                     </div>
                 </div>
             </div>
@@ -75,11 +75,13 @@
 import { downloader } from './mixins/downloader'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
+import ReactiveChart from './ReactiveChart.vue'
 
 export default {
   components: {
     Vuetable,
     VuetablePagination,
+    "reactive-chart": ReactiveChart,
   },
   mixins: [downloader],
   props: {
@@ -268,7 +270,7 @@ export default {
                     "rrcs":"0,13,16",
                     "type":"bgp"
                 },
-                "hege_bgplay",
+                "ihr-asd-bgplay",
                 {
                     "size": "fit", 
                     "show_controls":"yes",

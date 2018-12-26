@@ -2,12 +2,10 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 import Routes from './routes'
-import VueTables from 'vue-tables-2'
-import ReactiveChart from './ReactiveChart.vue'
-import ASDependency from './ASDependency.vue'
+import NetworkReport from './NetworkReport.vue'
 import GlobalReport from './GlobalReport.vue'
-import InternalDelayForwarding from './InternalDelayForwarding.vue'
-//import DelayExplorer from './DelayExplorer.vue'
+import DetailLink from './DetailLink.vue'
+import DetailForwarding from './DetailForwarding.vue'
 
 window.$ = window.jQuery = require('jquery')
 
@@ -18,11 +16,9 @@ require('semantic-ui-css/semantic.js')
 
 Vue.use(VueResource);
 Vue.use(VueRouter)
-Vue.use(VueTables.ClientTable);
-Vue.component("reactive-chart", ReactiveChart)
-Vue.component("as-dependency", ASDependency)
-Vue.component("in-delay-forwarding", InternalDelayForwarding)
-//Vue.component("delay-explorer", DelayExplorer)
+//Vuetable requires detail rows to be globally registered
+Vue.component("detail-link", DetailLink)
+Vue.component("detail-forwarding", DetailForwarding)
 
 const router = new VueRouter({
     routes: Routes,

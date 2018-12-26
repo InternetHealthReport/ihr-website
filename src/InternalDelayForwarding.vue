@@ -29,10 +29,13 @@
                                         :fields="table.fields"
                                         :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
                                         :sort-order="[{ field: 'deviation', direction: 'desc' }]"
+                                        :detail-row-component="table.detailrow"
+                                        :track-by="table.id"
                                         pagination-path="pagination"
                                         @vuetable:pagination-data="onPaginationData"
                                         @vuetable:loaded="onLoaded"
                                         @vuetable:loading="onLoading"
+                                        @vuetable:cell-clicked="onCellClicked"
                                         >
                                         <template slot="asn" slot-scope="props">  
                                             <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
@@ -55,20 +58,6 @@
                     </div>
                 </div>
             </div>
-            <div v-show="latencymon.show">    
-                <div class="row">
-                    <div class="column">
-                        <div id="latencymon"></div>
-                    </div>
-                </div>
-            </div>
-            <div v-show="tracemon.show">    
-                <div class="row">
-                    <div class="column">
-                        <div id="tracemon"></div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -77,11 +66,13 @@
 import { downloader } from './mixins/downloader'
 import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
+import ReactiveChart from './ReactiveChart.vue'
 
 export default {
   components: {
     Vuetable,
     VuetablePagination,
+    "reactive-chart": ReactiveChart,
   },
   mixins: [downloader],
   props: {
@@ -102,18 +93,13 @@ export default {
   },
   data () {
     return {
-        latencymon: {
-            show: false
-        },
-        tracemon: {
-            show: false
-        },
         table: {
             title: 0,
             show: false,
             loading: '',
             apiurl: "",
-            type: "originasn",
+            type: 0,
+            id: "",
             fields:  [
                 {
                     name: "link",
@@ -227,8 +213,6 @@ export default {
         this.traceIndexes = {}
         this.traceNextIndex = 1
         this.table.show = false
-        this.tracemon.show = false
-        this.latencymon.show = false
     
         this.fetchDelay();
         this.fetchForwarding();
@@ -259,6 +243,7 @@ export default {
             this.computeTrace1
         )
     },
+      //TODO clean this up
     computeTrace0: function(data){
         for (var i=0; i< data.results.length; i++){
             var resp = data.results[i];
@@ -282,10 +267,11 @@ export default {
         
         if(data.points[0].yaxis._id == 'y'){
             // Update the table
-            this.tracemon.show = false
             this.table.title = "Delay anomalies ("+pt.x+")";
             this.table.type = 0
+            this.table.id = "link"
             this.table.apiurl = "https://ihr.iijlab.net/ihr/api/delay_alarms/" 
+            this.table.detailrow = "detail-link"
             this.table.queryparams = {
                 asn: this.asn,
                 timebin: pt.x,
@@ -295,35 +281,13 @@ export default {
 
             this.tableRefresh()
 
-            // BGPlay Widget
-            // TODO Latencymon
-//            var ts = new Date(pt.x+' GMT');
-//            ripestat.init(
-//                "bgplay",
- //               {
-  //                  "unix_timestamps":"TRUE",
-   //                 "ignoreReannouncements":"true",
-    //                "resource":"AS2500",
-     //               "starttime":(ts.getTime()/1000)-1800,
-      //              "endtime":(ts.getTime()/1000)+1800,
-       //             "rrcs":"0,13,16",
-        //            "type":"bgp"
-         //       },
-          //      "hege_bgplay",
-           //     {
-            //        "size": "fit", 
-             //       "show_controls":"yes",
-              //      "disable":["footer-buttons","logo"]
-               //// }
-            //);
-            this.latencymon.show = true;
-
         }else{
             // Update the table
-            this.latencymon.show = false;
             this.table.title = "Forwarding anomalies ("+pt.x+")";
             this.table.type = 1
+            this.table.id = "ip"
             this.table.apiurl = "https://ihr.iijlab.net/ihr/api/forwarding_alarms/" 
+            this.table.detailrow = "detail-forwarding"
             this.table.queryparams = {
                 asn: this.asn,
                 timebin: pt.x,
@@ -394,6 +358,15 @@ export default {
         this.table.loading = '';
         this.tableHideColumns();
     },
+    onCellClicked (data, field, event) {
+        console.log('cellClicked: ', field.name, data.link)
+        if(this.table.type == 0){
+            this.$refs.vuetable.toggleDetailRow(data.link)
+        }   
+        else{
+            this.$refs.vuetable.toggleDetailRow(data.ip)
+        }
+    },
     tableHideColumns: function() {
 
         for(var i=0; i<this.table.fields.length; i++){
@@ -416,11 +389,8 @@ export default {
             this.table.show = true;
         }
     },
-
     closeDetail: function(){
         this.table.show = false
-        this.latencymon.show = false
-        this.tracemon.show = false
     }
         
   },
