@@ -1,24 +1,35 @@
 <template>
     <div>
-        <div id="ihr-dl-latencymon"> </div>
+        <div :id="divid"> </div>
     </div>
 </template>
 
 <script>
 export default {
     props: {
-    rowData: {
-        type: Object,
-        required: true
+        rowData: {
+            type: Object,
+            required: true
+        },
+        rowIndex: {
+            type: Number
+        }
     },
-    rowIndex: {
-        type: Number
-      }
-    },
-    mounted() {
+    data() {
+        return {
+            divid: "ihr-dl-latencymon-"+this.linkStr()
+        }
+    }, 
+    created() {
        this.loadLatencymon() 
     },
     methods: {
+        linkStr() {
+            var l = this.rowData.link.replace(/\./g,"-");
+            l = l.replace("(","").replace(")","")
+            l = l.replace(",","_")
+            return l
+        },
         loadLatencymon() {
             console.log("in detailForwarding click")
             var lm_grp = [];
@@ -51,8 +62,8 @@ export default {
                 });
             }
             try{
-                lm_widget = initLatencymon(
-                    '#ihr-dl-latencymon',
+                initLatencymon(
+                    '#'+this.divid,
                     {
                         dev: false,
                         autoStart: true

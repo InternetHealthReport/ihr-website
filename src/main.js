@@ -6,6 +6,7 @@ import NetworkReport from './NetworkReport.vue'
 import GlobalReport from './GlobalReport.vue'
 import DetailLink from './DetailLink.vue'
 import DetailForwarding from './DetailForwarding.vue'
+import DetailDependentNetwork from './DetailDependentNetwork.vue'
 
 window.$ = window.jQuery = require('jquery')
 
@@ -19,6 +20,7 @@ Vue.use(VueRouter)
 //Vuetable requires detail rows to be globally registered
 Vue.component("detail-link", DetailLink)
 Vue.component("detail-forwarding", DetailForwarding)
+Vue.component("detail-dependent-network", DetailDependentNetwork)
 
 const router = new VueRouter({
     routes: Routes,

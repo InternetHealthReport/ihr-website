@@ -100,6 +100,7 @@ export default {
             apiurl: "",
             type: 0,
             id: "",
+            detailRow: "",
             fields:  [
                 {
                     name: "link",
@@ -194,12 +195,14 @@ export default {
                 yaxis: {
                     title: "Delay Change Level",
                     domain: [0.55, 1],
-                    autorange: true
+                    autorange: true,
+                    automargin: true,
                 },
                 yaxis2:{
                     title: "Forwarding Change Level",
                     domain: [0, 0.45],
                     autorange: true,
+                    automargin: true,
                 },
                 margin: {
                     t: 50,
@@ -358,8 +361,7 @@ export default {
         this.table.loading = '';
         this.tableHideColumns();
     },
-    onCellClicked (data, field, event) {
-        console.log('cellClicked: ', field.name, data.link)
+    onCellClicked: function(data, field, event) {
         if(this.table.type == 0){
             this.$refs.vuetable.toggleDetailRow(data.link)
         }   

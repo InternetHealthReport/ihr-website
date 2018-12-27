@@ -1,74 +1,63 @@
 <template>
-    <div>
-        <div class="ui centered grid">
-            <div class="row">
+        <div class="ui centered equal width grid">
                 <div class="column">
                     <reactive-chart :chart="chart" :clickFct="plotClick"></reactive-chart>
                 </div>
-            </div>
+            <div class="equal width row">
             <div v-if="table.show">
-                <div class="row">
-                    <div class="column">
-                        <div :class="[{'vuetable-wrapper ui basic segment': true}, table.loading]">
-                            <div class="extra content">
-                                 <h3 class="ui left floated header">
-                                    {{  table.title }} 
-                                </h3>
-                                <div class="ui right floated header" >
-                                    <button class="ui grey icon button basic small" v-on:click="closeDetail">
-                                        <i class="close icon" ></i>
-                                    </button>
-                                </div>
+                <div class="column">
+                    <div :class="[{'vuetable-wrapper ui segment raised': true}, table.loading]">
+                            <div class="ui top attached label">
+                                {{  table.title }} 
                             </div>
-                            <div class="content">
-
-                                    <vuetable ref="vuetable"
-                                        api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
-                                        :per-page="10"
-                                        :append-params="table.queryparams" 
-                                        :fields="table.fields"
-                                        :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
-                                        :sort-order="[{ field: 'hege', direction: 'desc' }]"
-                                        pagination-path="pagination"
-                                        @vuetable:pagination-data="onPaginationData"
-                                        @vuetable:loaded="onLoaded"
-                                        @vuetable:loading="onLoading"
-                                        >
-                                        <template slot="originasn" slot-scope="props">   
-                                            <router-link :to="{name: 'asn', params: { asn: props.rowData.originasn }}">
-                                                AS{{ props.rowData.originasn }} {{ props.rowData.originasn_name }}
-                                            </router-link>
-                                        </template>
-                                        <template slot="asn" slot-scope="props">  
-                                            <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
-                                                AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
-                                            </router-link>
-                                        </template>
-                                    </vuetable>
-                                    <vuetable-pagination ref="pagination"
-                                        @vuetable-pagination:change-page="onChangePage">
-                                    </vuetable-pagination>
-                                </div>
-                        </div>
+                            <i class="ui top right attached label close icon link" v-on:click="closeDetail"></i>
+                            <div class="ui segment basic">
+                            <vuetable ref="vuetable"
+                                class="vuetable ui table very basic"
+                                api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
+                                :per-page="10"
+                                :append-params="table.queryparams" 
+                                :fields="table.fields"
+                                :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
+                                :sort-order="[{ field: 'hege', direction: 'desc' }]"
+                                :detail-row-component="table.detailrow"
+                                :track-by="table.id"
+                                pagination-path="pagination"
+                                @vuetable:pagination-data="onPaginationData"
+                                @vuetable:loaded="onLoaded"
+                                @vuetable:loading="onLoading"
+                                @vuetable:cell-clicked="onCellClicked"
+                                >
+                                <template slot="originasn" slot-scope="props">   
+                                    <router-link :to="{name: 'asn', params: { asn: props.rowData.originasn }}">
+                                        AS{{ props.rowData.originasn }} {{ props.rowData.originasn_name }}
+                                    </router-link>
+                                </template>
+                                <template slot="asn" slot-scope="props">  
+                                    <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
+                                        AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
+                                    </router-link>
+                                </template>
+                            </vuetable>
+                            <vuetable-pagination ref="pagination"
+                                @vuetable-pagination:change-page="onChangePage">
+                            </vuetable-pagination>
+                            </div>
                     </div>
                 </div>
             </div>
             <div v-else>
-                <div class="row">
                     <div class="column">
                         <i>Click on the graphs for more details.</i>
                     </div>
-                </div>
             </div>
             <div v-show="bgplay.show">    
-                <div class="row">
                     <div class="column">
                         <div id="ihr-asd-bgplay"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -109,7 +98,9 @@ export default {
             title: 0,
             show: false,
             loading: '',
-            type: "originasn",
+            type: 0,
+            id: "",
+            detailrow: "",
             fields:  [
                 {
                     name: "__slot:originasn",
@@ -160,16 +151,24 @@ export default {
                 yaxis: {
                     title: "AS"+this.asn+" dependencies",
                     domain: [0.55, 1],
-                    autorange: true
+                    range: [0, 1.1],
+                    automargin: true,
                 },
                 yaxis2:{
                     title: 'Number of ASes<br>dependent on AS'+this.asn,
                     domain: [0, 0.45],
                     autorange: true,
+                    automargin: true,
                 },
                 margin: {
                     t: 50,
                     b: 50,
+                },
+                showlegend: true,
+                legend: {
+                    x: 0,
+                    y: 1.2,
+                    "orientation": "h"
                 },
             } 
         }
@@ -248,6 +247,8 @@ export default {
             // Update the table
             this.table.title = "AS"+this.asn+" dependencies ("+pt.x+")";
             this.table.type = 0
+            this.table.id = "asn"
+            this.table.detailrow = "detail-dependent-network"
             this.table.queryparams = {
                 originasn: this.asn,
                 timebin: pt.x,
@@ -284,6 +285,8 @@ export default {
             this.bgplay.show = false;
             this.table.title = "Networks dependent on AS"+this.asn+" ("+pt.x+")";
             this.table.type = 1
+            this.table.id = "originasn"
+            this.table.detailrow = "detail-dependent-network"
             this.table.queryparams = {
                 asn: this.asn,
                 timebin: pt.x,
@@ -323,9 +326,14 @@ export default {
 
             transformed.data = [] 
             for (var i=0; i < data.results.length; i++) {
-                if(data.results[i].originasn != 0){
-                    if (data.results[i].originasn != data.results[i].asn){
-                        transformed.data.push(data.results[i])
+                var elem = data.results[i]
+                if(elem.originasn != 0){
+                    if (elem.originasn != elem.asn){
+                        // TODO add start/end times and af
+                        elem.starttime = this.starttime
+                        elem.endtime = this.endtime
+                        elem.af = this.af
+                        transformed.data.push(elem)
                     }
                 }
             }
@@ -353,6 +361,17 @@ export default {
     onLoaded: function () {     
         this.table.loading = '';
         this.tableHideColumns();
+    },
+    onCellClicked: function (data, field, event) {
+        console.log("in click")
+        if(this.table.type == 0){
+            
+            this.$refs.vuetable.toggleDetailRow(data.as)
+        }   
+        else{
+        console.log("in click, elses")
+            this.$refs.vuetable.toggleDetailRow(data.originasn)
+        }
     },
     tableHideColumns: function() {
 

@@ -15,10 +15,7 @@
         <meta name="theme-color" content="#ffffff">
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
-        <script src="/dist/build.js"></script>
-        <script src="https://stat.ripe.net/widgets/widget_api.js"></script>
         <script src="https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/latencymon-widget-main.js"></script>
-        <script src="https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js"></script>
 
     </head>
     <body>
@@ -48,10 +45,10 @@
         </div>
         </div>
 
-        <div class="ui main container">
-            <div id="ihr-chart">
-                <router-view></router-view>
-            </div>
+        <div class="main segment">
+        <div id="ihr-chart">
+            <router-view></router-view>
+        </div>
         </div>
     
         <div class="ui inverted vertical footer segment" >
@@ -78,6 +75,9 @@
             </div>
         </div>
 
+        <script src="/dist/build.js"></script>
+        <script src="https://stat.ripe.net/widgets/widget_api.js"></script>
+        <!--<script src="https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js"></script>-->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
