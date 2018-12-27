@@ -175,6 +175,7 @@ export default {
     initialChart: function(){
         return {
             uuid: this._uid,
+            loading: 0,
             traces: [
                 { 
                     x: [],
@@ -254,6 +255,7 @@ export default {
             this.chart.traces[0].x.push(resp.timebin)
         }
         this.chart.layout.datarevision = new Date().getTime();
+        this.chart.loading += 0.5
     },
     computeTrace1: function(data){
         for (var i=0; i< data.results.length; i++){
@@ -262,6 +264,7 @@ export default {
             this.chart.traces[1].x.push(resp.timebin)
         }
         this.chart.layout.datarevision = new Date().getTime();
+        this.chart.loading += 0.5
     },
     
     

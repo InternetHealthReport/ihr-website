@@ -1,59 +1,63 @@
 <template>
         <div class="ui centered equal width grid">
                 <div class="column">
-                    <reactive-chart :chart="chart" :clickFct="plotClick"></reactive-chart>
+                    <reactive-chart :chart="chart" :clickFct="plotClick" :loading="chart.loading"></reactive-chart>
                 </div>
             <div class="equal width row">
-            <div v-if="table.show">
-                <div class="column">
+                <div v-if="table.show">
                     <div :class="[{'vuetable-wrapper ui segment raised': true}, table.loading]">
-                            <div class="ui top attached label">
-                                {{  table.title }} 
+                        <div class="ui top attached label">
+                            {{  table.title }} 
+                        </div>
+                        <i class="ui top right attached label close icon link" @click="closeDetail"></i>
+                        <div class="ui placeholder segment basic">
+                            <div class="column">
+                                <vuetable ref="vuetable"
+                                    class="vuetable ui table very basic"
+                                    api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
+                                    :per-page="10"
+                                    :append-params="table.queryparams" 
+                                    :fields="table.fields"
+                                    :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
+                                    :sort-order="[{ field: 'hege', direction: 'desc' }]"
+                                    :detail-row-component="table.detailrow"
+                                    :track-by="table.id"
+                                    pagination-path="pagination"
+                                    @vuetable:pagination-data="onPaginationData"
+                                    @vuetable:loaded="onLoaded"
+                                    @vuetable:loading="onLoading"
+                                    @vuetable:cell-clicked="onCellClicked"
+                                    >
+                                    <template slot="originasn" slot-scope="props">   
+                                        <router-link :to="{name: 'asn', params: { asn: props.rowData.originasn }}">
+                                            AS{{ props.rowData.originasn }} {{ props.rowData.originasn_name }}
+                                        </router-link>
+                                    </template>
+                                    <template slot="asn" slot-scope="props">  
+                                        <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
+                                            AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
+                                        </router-link>
+                                    </template>
+                                </vuetable>
+                                <vuetable-pagination ref="pagination"
+                                    @vuetable-pagination:change-page="onChangePage">
+                                </vuetable-pagination>
                             </div>
-                            <i class="ui top right attached label close icon link" v-on:click="closeDetail"></i>
-                            <div class="ui segment basic">
-                            <vuetable ref="vuetable"
-                                class="vuetable ui table very basic"
-                                api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
-                                :per-page="10"
-                                :append-params="table.queryparams" 
-                                :fields="table.fields"
-                                :query-params="{sort: 'ordering', perPage: 'limit', page: 'page'}"
-                                :sort-order="[{ field: 'hege', direction: 'desc' }]"
-                                :detail-row-component="table.detailrow"
-                                :track-by="table.id"
-                                pagination-path="pagination"
-                                @vuetable:pagination-data="onPaginationData"
-                                @vuetable:loaded="onLoaded"
-                                @vuetable:loading="onLoading"
-                                @vuetable:cell-clicked="onCellClicked"
-                                >
-                                <template slot="originasn" slot-scope="props">   
-                                    <router-link :to="{name: 'asn', params: { asn: props.rowData.originasn }}">
-                                        AS{{ props.rowData.originasn }} {{ props.rowData.originasn_name }}
-                                    </router-link>
-                                </template>
-                                <template slot="asn" slot-scope="props">  
-                                    <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
-                                        AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
-                                    </router-link>
-                                </template>
-                            </vuetable>
-                            <vuetable-pagination ref="pagination"
-                                @vuetable-pagination:change-page="onChangePage">
-                            </vuetable-pagination>
+
+
+                            <div v-if="bgplay.show">
+                                <div class="ui divider"></div>
+                                <div class="column">
+                                    <div id="ihr-asd-bgplay"></div>
+                                </div>
                             </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div v-else>
+                <div v-else>
                     <div class="column">
-                        <i>Click on the graphs for more details.</i>
-                    </div>
-            </div>
-            <div v-show="bgplay.show">    
-                    <div class="column">
-                        <div id="ihr-asd-bgplay"></div>
+                    <i>Click on the graphs for more details.</i>
                     </div>
                 </div>
             </div>
@@ -138,6 +142,7 @@ export default {
     initialChart: function(){
         return {
             uuid: this._uid,
+            loading: 0,
             traces: [
                 { // First trace is used for the hegemony cone
                     x: [],
@@ -168,17 +173,22 @@ export default {
                 legend: {
                     x: 0,
                     y: 1.2,
-                    "orientation": "h"
+                    orientation: "h"
                 },
             } 
         }
     },
+    closeDetail: function(){
+        console.log("clicked on the button")
+        this.table.show = false
+        this.bgplay.show = false
+    },
     reset: function(){
+        console.log("dans reset")
         this.chart = this.initialChart()
         this.traceIndexes = {}
         this.traceNextIndex = 1
-        this.table.show = false
-        this.bgplay.show = false
+        this.closeDetail()
     
         this.fetchHegemony();
         this.fetchHegemonyCone();
@@ -229,6 +239,7 @@ export default {
             this.chart.traces[traceIndex].x.push(resp.timebin)
         }
         this.chart.layout.datarevision = new Date().getTime();
+        this.chart.loading += 0.5
     },
     
     computeHegemonyConeTrace: function(data){
@@ -238,6 +249,7 @@ export default {
             this.chart.traces[0].x.push(resp.timebin)
         }
         this.chart.layout.datarevision = new Date().getTime();
+        this.chart.loading += 0.5
     },
     
     plotClick: function(data){
@@ -258,27 +270,29 @@ export default {
 
             this.tableRefresh()
 
-            // BGPlay Widget
-            var ts = new Date(pt.x+' GMT');
-            ripestat.init(
-                "bgplay",
-                {
-                    "unix_timestamps":"TRUE",
-                    "ignoreReannouncements":"true",
-                    "resource":"AS2500",
-                    "starttime":(ts.getTime()/1000)-1800,
-                    "endtime":(ts.getTime()/1000)+1800,
-                    "rrcs":"0,13,16",
-                    "type":"bgp"
-                },
-                "ihr-asd-bgplay",
-                {
-                    "size": "fit", 
-                    "show_controls":"yes",
-                    "disable":["footer-buttons","logo"]
-                }
-            );
             this.bgplay.show = true;
+            this.$nextTick(() => {
+                // BGPlay Widget
+                var ts = new Date(pt.x+' GMT');
+                ripestat.init(
+                    "bgplay",
+                    {
+                        "unix_timestamps":"TRUE",
+                        "ignoreReannouncements":"true",
+                        "resource":"AS"+this.asn,
+                        "starttime":(ts.getTime()/1000)-1800,
+                        "endtime":(ts.getTime()/1000)+1800,
+                        "rrcs":"10",
+                        "type":"bgp"
+                    },
+                    "ihr-asd-bgplay",
+                    {
+                        "size": "fit", 
+                        "show_controls":"no",
+                        "disable":["footer-buttons","container"]
+                    }
+                );
+            })
 
         }else{
             // Update the table
@@ -395,16 +409,10 @@ export default {
             this.table.show = true;
         }
     },
-
-    closeDetail: function(){
-        console.log("clicked on the button")
-        this.table.show = false
-        this.bgplay.show = false
-    }
-        
   },
     watch: {
         $route (to,from){
+            console.log("in watch")
             this.reset()
         }
     }
@@ -412,4 +420,5 @@ export default {
 </script>
 
 <style>
+#ihr-asd-bgplay { min-width: 640px; }
 </style>
