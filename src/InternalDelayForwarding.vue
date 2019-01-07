@@ -1,28 +1,20 @@
-<template>
-    <div>
-        <div class="ui centered grid">
-            <div class="row">
+    <template>
+        <div>
+            <div class="ui centered equal width grid">
                 <div class="column">
                     <reactive-chart :chart="chart" :clickFct="plotClick"></reactive-chart>
                 </div>
-            </div>
-            <div v-if="table.show">
-                <div class="row">
-                    <div class="column">
-                        <div :class="[{'vuetable-wrapper ui basic segment': true}, table.loading]">
-                            <div class="extra content">
-                                 <h3 class="ui left floated header">
-                                    {{  table.title }} 
-                                </h3>
-                                <div class="ui right floated header" >
-                                    <button class="ui grey icon button basic small" v-on:click="closeDetail">
-                                        <i class="close icon" ></i>
-                                    </button>
-                                </div>
+                <div class="equal width row">
+                <div v-if="table.show">
+                    <div :class="[{'vuetable-wrapper ui segment raised': true}, table.loading]">
+                            <div class="ui top attached label">
+                                {{  table.title }} 
                             </div>
-                            <div class="content">
-
+                            <i class="ui top right attached label close icon link" @click="closeDetail"></i>
+                            <div class="ui placeholder segment basic padded">
+                                <div class="column">
                                     <vuetable ref="vuetable"
+                                    class="vuetable ui table very basic"
                                         :api-url="table.apiurl" 
                                         :per-page="10"
                                         :append-params="table.queryparams" 
@@ -47,14 +39,12 @@
                                         @vuetable-pagination:change-page="onChangePage">
                                     </vuetable-pagination>
                                 </div>
-                        </div>
+                            </div>
                     </div>
                 </div>
-            </div>
-            <div v-else>
-                <div class="row">
+                <div v-else>
                     <div class="column">
-                        <i>Click on the graphs for more details.</i>
+                        <i>Click on a graph for more details.</i>
                     </div>
                 </div>
             </div>

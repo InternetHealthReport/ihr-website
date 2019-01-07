@@ -3,7 +3,9 @@
         <div class="row">
         <div class="twelve wide column">
             <h1 class="ui centered header">
+                <div class="content">
                 {{ network.name }}
+                </div>
                 <div class="sub header">
                 AS {{ this.$route.params.asn }}
                 </div>

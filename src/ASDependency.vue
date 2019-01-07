@@ -1,8 +1,8 @@
 <template>
         <div class="ui centered equal width grid">
-                <div class="column">
-                    <reactive-chart :chart="chart" :clickFct="plotClick" :loading="chart.loading"></reactive-chart>
-                </div>
+            <div class="column">
+                <reactive-chart :chart="chart" :clickFct="plotClick" :loading="chart.loading"></reactive-chart>
+            </div>
             <div class="equal width row">
                 <div v-if="table.show">
                     <div :class="[{'vuetable-wrapper ui segment raised': true}, table.loading]">
@@ -10,7 +10,7 @@
                             {{  table.title }} 
                         </div>
                         <i class="ui top right attached label close icon link" @click="closeDetail"></i>
-                        <div class="ui placeholder segment basic">
+                        <div class="ui placeholder segment basic padded">
                             <div class="column">
                                 <vuetable ref="vuetable"
                                     class="vuetable ui table very basic"
@@ -57,7 +57,7 @@
                 </div>
                 <div v-else>
                     <div class="column">
-                    <i>Click on the graphs for more details.</i>
+                    <i>Click on a graph for more details.</i>
                     </div>
                 </div>
             </div>
