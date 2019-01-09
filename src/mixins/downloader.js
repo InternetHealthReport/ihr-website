@@ -22,7 +22,7 @@ export const downloader = {
                 }
             },
             function(err) {
-                console.log("error happened");
+                console.log("API request error!");
                 console.log(err)
             }
         )

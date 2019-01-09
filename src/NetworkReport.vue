@@ -4,10 +4,11 @@
         <div class="twelve wide column">
             <h1 class="ui centered header">
                 <div class="content">
-                {{ network.name }}
+                {{ network.shortName }}
                 </div>
                 <div class="sub header">
                 AS {{ this.$route.params.asn }}
+                <i :class="network.cc+' flag'"></i>
                 </div>
             </h1>
         </div>
@@ -102,6 +103,7 @@
 </template>
 
 <script>
+import { downloader } from './mixins/downloader'
 import ASDependency from './ASDependency.vue'
 import InternalDelayForwarding from './InternalDelayForwarding.vue'
 
@@ -110,12 +112,15 @@ export default {
         "as-dependency": ASDependency,
         "in-delay-forwarding": InternalDelayForwarding,
     },
+    mixins: [downloader],
     props: {
     },
     data () {
         return {
             network: {
-                name: ""
+                name: "",
+                shortName: "",
+                cc: "fr"
             },
             showInput: false,
             sections: {
@@ -140,6 +145,9 @@ export default {
             endtime: '2019-01-05T00:00', // 
         }
     },
+    created() {
+        this.updateNetName()
+    },
     methods: {
         switchSection: function(section){
             this.sections[section].show = !this.sections[section].show
@@ -150,13 +158,27 @@ export default {
                 this.sections[section].class =  "ui chevron down icon link"
             }
         },
-        getNetName(){
-            return "IIJ Internet Initiative Japan"
+        updateNetName(){
+            this.apiGetData(
+                "network/",
+                {
+                    number: this.$route.params.asn, 
+                },
+                this.updateNetNameCallback
+        )
         },
+        updateNetNameCallback(data){
+            this.$nextTick(() => {
+                this.network.name = data.results[0].name;
+                var tmp = this.network.name.split(",")
+                this.network.cc = tmp.pop().toLowerCase()
+                this.network.shortName = tmp.join(",")
+            })
+        }
     },
     watch: {
         $route (to,from){
-            this.network.name = this.getNetName()       
+            this.updateNetName()       
         }   
     }
   }
