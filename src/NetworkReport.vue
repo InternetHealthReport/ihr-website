@@ -136,8 +136,8 @@ export default {
                     show: true
                 },
             },
-            starttime: '2018-10-01T00:00',//
-            endtime: '2018-10-03T00:00', // 
+            starttime: '2018-12-30T00:00',//
+            endtime: '2019-01-05T00:00', // 
         }
     },
     methods: {
