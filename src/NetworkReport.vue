@@ -9,8 +9,6 @@
                 <div class="sub header">
                 AS {{ this.$route.params.asn }}
                 <i :class="network.cc+' flag'"></i>
-                {{ network.cc }}
-                <i class="ui jp flag"></i>
                 </div>
             </h1>
         </div>
@@ -173,7 +171,7 @@ export default {
             this.$nextTick(() => {
                 this.network.name = data.results[0].name;
                 var tmp = this.network.name.split(",")
-                this.network.cc = tmp.pop()
+                this.network.cc = tmp.pop().toLowerCase()
                 this.network.shortName = tmp.join(",")
             })
         }
