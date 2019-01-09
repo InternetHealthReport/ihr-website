@@ -11,9 +11,9 @@ import DetailDependentNetwork from './DetailDependentNetwork.vue'
 window.$ = window.jQuery = require('jquery')
 
 import './static/ihr/css/main.css'
-
-require('semantic-ui-css/semantic.css')
-require('semantic-ui-css/semantic.js')
+import 'semantic-ui-less/semantic.less'
+//require('semantic-ui-css/semantic.css')
+//require('semantic-ui-css/semantic.js')
 
 Vue.use(VueResource);
 Vue.use(VueRouter)
@@ -68,7 +68,7 @@ $('.ui.search')
           response.results[category].results.push({
             title       : item.name,
             description : category+asn,
-            url         : '/ihr/'+item.number+'/asn/'
+            url         : item.number+'/asn/'
           });
         });
         return response;

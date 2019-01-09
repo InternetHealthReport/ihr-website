@@ -17,11 +17,17 @@ module.exports = {
           'vue-style-loader',
           'css-loader'
         ],
-      },      {
+      },      
+      {
+        test: /\.less$/,
+        use: ['vue-style-loader', 'css-loader', 'less-loader']
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
           loaders: {
+            less: 'vue-style-loader!css-loader!less-loader'
           }
           // other vue-loader options go here
         }
@@ -50,7 +56,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      '../../theme.config$': path.join(__dirname, 'semantic-theme/theme.config')
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
