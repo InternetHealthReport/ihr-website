@@ -120,7 +120,7 @@ export default {
             network: {
                 name: "",
                 shortName: "",
-                cc: "fr"
+                cc: ""
             },
             showInput: false,
             sections: {
