@@ -42,7 +42,7 @@
                 </h4>
             </h2>
 
-            <div v-if="sections.ASDependency.show">
+            <div v-show="sections.ASDependency.show">
                 <as-dependency :asn="Number(this.$route.params.asn)" :starttime="starttime" :endtime="endtime"></as-dependency>
             </div>
         </div>
@@ -60,7 +60,7 @@
                 </h4>
             </h2>
 
-            <div v-if="sections.ExternalDelays.show">
+            <div v-show="sections.ExternalDelays.show">
             </div>
         </div>
 
@@ -77,7 +77,7 @@
                 </h4>
             </h2>
 
-            <div v-if="sections.InternalDelayForwarding.show">
+            <div v-show="sections.InternalDelayForwarding.show">
                 <in-delay-forwarding :asn="Number(this.$route.params.asn)" :starttime="starttime" :endtime="endtime"></in-delay-forwarding>
             </div>
         </div>
@@ -95,7 +95,7 @@
                 </h4>
             </h2>
 
-            <div v-if="sections.NetworkDisconnections.show">
+            <div v-show="sections.NetworkDisconnections.show">
             </div>
 
         </div>
