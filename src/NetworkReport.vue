@@ -35,7 +35,7 @@
                 </div>
                 <h4 class="ui top right floated header">
                     <div class="sub header">
-                        <i class="ui question icon link" @click="switchSection('ASDependency')"></i>
+                        <i class="ui question icon link" @click=""></i>
                         <i :class="sections.ASDependency.class" @click="switchSection('ASDependency')"></i>
 
                     </div>
@@ -54,7 +54,7 @@
                 </div>
                 <h4 class="ui top right floated header">
                     <div class="sub header">
-                        <i class="ui question icon link" @click="switchSection('')"></i>
+                        <i class="ui question icon link" @click=""></i>
                         <i :class="sections.ExternalDelays.class" @click="switchSection('ExternalDelays')"></i>
                     </div>
                 </h4>
@@ -71,7 +71,7 @@
                 </div>
                 <h4 class="ui top right floated header">
                     <div class="sub header">
-                        <i class="ui question icon link" @click="switchSection('')"></i>
+                        <i class="ui question icon link" @click=""></i>
                         <i :class="sections.InternalDelayForwarding.class" @click="switchSection('InternalDelayForwarding')"></i>
                     </div>
                 </h4>
@@ -89,7 +89,7 @@
                 </div>
                 <h4 class="ui top right floated header">
                     <div class="sub header">
-                        <i class="ui question icon link" @click="switchSection('')"></i>
+                        <i class="ui question icon link" @click=""></i>
                         <i :class="sections.NetworkDisconnections.class" @click="switchSection('NetworkDisconnections')"></i>
                     </div>
                 </h4>

@@ -88,21 +88,20 @@ export default {
             show: false,
             loading: '',
             apiurl: "",
-            type: 0,
             id: "",
             detailRow: "",
             fields:  [
                 {
                     name: "link",
                     sortField: "link",
-                    type: 0,
+                    type: "link",
                     visible: false
                 },
                 {
                     name: "deviation",
                     callback: "printFloat",
                     sortField: "deviation",
-                    type: 0,
+                    type: "link",
                     visible: false
                 },
                 {
@@ -110,38 +109,38 @@ export default {
                     title: "Delay Change",
                     callback: "printFloat",
                     sortField: "diffmedian",
-                    type: 0,
+                    type: "link",
                     visible: false
                 },
                 {
                     name: "nbprobes",
                     title: "#Probes",
                     sortField: "nbprobes",
-                    type: 0,
+                    type: "link",
                     visible: false
                 },
                 {
                     name: "ip",
                     title: "Reported IP",
-                    type: 1,
+                    type: "ip",
                     visible: false
                 },
                 {   
                     name: "previoushop",
                     title: "Usual preceding IP",
-                    type: 1,
+                    type: "ip",
                     visible: false
                 },
                 {
                     name: "correlation",
                     callback: "printFloat",
-                    type: 1,
+                    type: "ip",
                     visible: false
                 },
                 {
                     name: "responsibility",
                     callback: "printFloat",
-                    type: 1,
+                    type: "ip",
                     visible: false
                 },
 
@@ -264,7 +263,6 @@ export default {
         if(data.points[0].yaxis._id == 'y'){
             // Update the table
             this.table.title = "Delay anomalies ("+pt.x+")";
-            this.table.type = 0
             this.table.id = "link"
             this.table.apiurl = "https://ihr.iijlab.net/ihr/api/delay_alarms/" 
             this.table.detailrow = "detail-link"
@@ -280,7 +278,6 @@ export default {
         }else{
             // Update the table
             this.table.title = "Forwarding anomalies ("+pt.x+")";
-            this.table.type = 1
             this.table.id = "ip"
             this.table.apiurl = "https://ihr.iijlab.net/ihr/api/forwarding_alarms/" 
             this.table.detailrow = "detail-forwarding"
@@ -300,7 +297,6 @@ export default {
     },
     transform: function(data) {
             var transformed = {}
-
             var per_page = 1000;
             var from = 1;
             var to = data.count;
@@ -321,8 +317,11 @@ export default {
                 to: to, 
             }
 
+            var ids = new Set()
             transformed.data = [] 
             for (var i=0; i < data.results.length; i++) {
+                if(ids.has(data.results[i][this.table.id])){continue}
+                ids.add(data.results[i][this.table.id])
                 if(data.results[i].originasn != 0){
                     if (data.results[i].originasn != data.results[i].asn){
                         transformed.data.push(data.results[i])
@@ -355,7 +354,7 @@ export default {
         this.tableHideColumns();
     },
     onCellClicked: function(data, field, event) {
-        if(this.table.type == 0){
+        if(this.table.id === "link"){
             this.$refs.vuetable.toggleDetailRow(data.link)
         }   
         else{
@@ -365,7 +364,7 @@ export default {
     tableHideColumns: function() {
 
         for(var i=0; i<this.table.fields.length; i++){
-            if(this.table.type == this.table.fields[i].type){
+            if(this.table.id === this.table.fields[i].type){
                 this.table.fields[i].visible = true
             }
             else{
