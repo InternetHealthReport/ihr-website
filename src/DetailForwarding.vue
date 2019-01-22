@@ -33,8 +33,9 @@ export default {
             var timebin = new Date(this.rowData.timebin);
 
             // Get the most prominent msm 
-            for(var j=0; j<this.rowData.msmid.length; j++){
-                var ids = this.rowData.msmid[j].split(" ");
+            // TODO Make this work with the new msm_prb_ids field
+            for(var j=0; j<this.rowData.msm_prb_ids.length; j++){
+                var ids = this.rowData.msm_prb_ids[j].split(" ");
                 ids[0] = parseInt(ids[0]);
                 ids[1] = parseInt(ids[1]);
                 msmid.push(ids[0])

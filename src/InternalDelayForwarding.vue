@@ -1,10 +1,10 @@
     <template>
         <div>
-            <div class="ui centered equal width grid">
+            <div class="ui centered one column grid">
                 <div class="column">
                     <reactive-chart :chart="chart" :clickFct="plotClick"></reactive-chart>
                 </div>
-                <div class="equal width row">
+                <div class="twelve wide column">
                 <div v-if="table.show">
                     <div :class="[{'vuetable-wrapper ui segment raised': true}, table.loading]">
                             <div class="ui top attached label">
@@ -29,11 +29,6 @@
                                         @vuetable:loading="onLoading"
                                         @vuetable:cell-clicked="onCellClicked"
                                         >
-                                        <template slot="asn" slot-scope="props">  
-                                            <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
-                                                AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
-                                            </router-link>
-                                        </template>
                                     </vuetable>
                                     <vuetable-pagination ref="pagination"
                                         @vuetable-pagination:change-page="onChangePage">

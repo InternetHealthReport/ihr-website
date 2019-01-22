@@ -35,21 +35,7 @@ export default {
             var lm_grp = [];
             var lm_msmid = [];
             var timebin = new Date(this.rowData.timebin);
-            var msmdict = {};
-
-            // Put msm-probe pairs in a dict
-            for(var j=0; j<this.rowData.msmid.length; j++){
-                var ids = this.rowData.msmid[j].split(" ");
-                var mid = parseInt(ids[0]);
-                var pid = parseInt(ids[1]);
-                if(mid in msmdict){
-                    msmdict[mid].push(pid)
-                }
-                else{
-                    msmdict[mid] = []
-                    msmdict[mid].push(pid)
-                }
-            }
+            var msmdict = this.rowData.msm_prb_ids;
 
             // Make latencymon groups
             var msms = Object.entries(msmdict)

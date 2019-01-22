@@ -1,16 +1,16 @@
 <template>
-        <div class="ui centered equal width grid">
+        <div class="ui centered one column grid">
             <div class="column">
                 <reactive-chart :chart="chart" :clickFct="plotClick" :loading="chart.loading"></reactive-chart>
             </div>
-            <div class="equal width row">
+            <div class="ten wide column">
                 <div v-if="table.show">
                     <div :class="[{'vuetable-wrapper ui segment raised': true}, table.loading]">
                         <div class="ui top attached label">
                             {{  table.title }} 
                         </div>
                         <i class="ui top right attached label close icon link" @click="closeDetail"></i>
-                        <div class="ui placeholder segment basic padded">
+                        <div class="ui placeholder segment basic very padded">
                             <div class="column">
                                 <vuetable ref="vuetable"
                                     class="vuetable ui table very basic"

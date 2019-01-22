@@ -96,6 +96,7 @@
             </h2>
 
             <div v-show="sections.NetworkDisconnections.show">
+                <network-disconnection :streamname="Number(this.$route.params.asn)" :starttime="starttime" :endtime="endtime"></network-disconnection>
             </div>
 
         </div>
@@ -106,11 +107,13 @@
 import { downloader } from './mixins/downloader'
 import ASDependency from './ASDependency.vue'
 import InternalDelayForwarding from './InternalDelayForwarding.vue'
+import NetworkDisconnection from './NetworkDisconnection.vue'
 
 export default {
     components: {
         "as-dependency": ASDependency,
         "in-delay-forwarding": InternalDelayForwarding,
+        "network-disconnection": NetworkDisconnection,
     },
     mixins: [downloader],
     props: {
@@ -141,8 +144,8 @@ export default {
                     show: true
                 },
             },
-            starttime: '2018-12-30T00:00',//
-            endtime: '2019-01-05T00:00', // 
+            starttime: '2017-03-01T00:00',//
+            endtime: '2017-03-07T00:00', // 
         }
     },
     created() {
