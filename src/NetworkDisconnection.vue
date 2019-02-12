@@ -34,6 +34,10 @@
                                         @vuetable-pagination:change-page="onChangePage">
                                     </vuetable-pagination>
                                 </div>
+                                <div class="ui divider"></div>
+                                <div class="column">
+                                    <div id="ihr-nd-tracemon"></div>
+                                </div>
                             </div>
                     </div>
                 </div>
@@ -147,6 +151,7 @@ export default {
                     t: 50,
                     b: 50,
                 },
+				height: 250,
             } 
         }
     },
@@ -161,8 +166,8 @@ export default {
             "disco_events/",
             {
                 streamname: this.streamname, 
-                timebin__gte: this.starttime, 
-                timebin__lte: this.endtime, 
+                starttime__gte: this.starttime, 
+                endtime__lte: this.endtime, 
             },
             this.computeTrace
         )
@@ -205,7 +210,40 @@ export default {
         };
 
         this.tableRefresh()
-
+    },
+    tracemon: function(){
+        this.$nextTick(() => {
+            var pbids = [];
+            var startts = new Date()
+            var endts = new Date("1984-10-02")
+            for(var i=0; i<this.$refs.vuetable.tableData.length; i++){
+                pbids.push(this.$refs.vuetable.tableData[i].probe_id)
+                var sts = new Date(this.$refs.vuetable.tableData[i].starttime)
+                var ets = new Date(this.$refs.vuetable.tableData[i].endtime)
+                console.log(this.$refs.vuetable.tableData[i].endtime)
+                console.log(ets)
+                if(sts < startts){
+                    startts = sts
+                }
+                if(ets > endts){
+                    endts = ets
+                }
+            }
+            console.log(startts)
+            console.log(endts)
+            // Tracemon Widget
+            initTracemon(
+                '#ihr-nd-tracemon',
+                {},
+                { 
+                    measurements:[5030], //, 5027],
+                    sources: pbids,
+                    maximumTracerouteValiditySeconds:600,
+                    startTimestamp:  (startts.getTime()/1000)-1800,
+                    stopTimestamp: (endts.getTime()/1000)+1800,
+                }
+            );
+        })
     },
     printFloat: function(value){
         return Number(value).toFixed(3)
@@ -270,6 +308,7 @@ export default {
     },
     onLoaded: function () {     
         this.table.loading = '';
+        this.tracemon()
     },
     onCellClicked: function(data, field, event) {
         if(this.table.id === "link"){

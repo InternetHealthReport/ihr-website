@@ -144,11 +144,12 @@ export default {
                     show: true
                 },
             },
-            starttime: '2017-03-01T00:00',//
-            endtime: '2017-03-07T00:00', // 
+            starttime: '',//
+            endtime: '', // 
         }
     },
     created() {
+        this.updateDate()
         this.updateNetName()
     },
     methods: {
@@ -169,6 +170,31 @@ export default {
                 },
                 this.updateNetNameCallback
         )
+        },
+        updateDate(){
+            if(this.starttime == ''){
+                if (this.$route.query.date && this.$route.query.last){
+                    // get date from the url parameters
+                    var last = parseInt(this.$route.query.last)
+                    var endDate = new Date(this.$route.query.date)
+                    var startDate = new Date(this.$route.query.date)
+                    endDate.setDate(endDate.getDate() + 1)
+                    startDate.setDate(endDate.getDate() - last)
+
+                    this.starttime = startDate.toJSON().slice(0,16)
+                    this.endtime = endDate.toJSON().slice(0,16) 
+                }
+                else{
+                    // Display latest results
+                    var tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    var lastWeek = new Date();
+                    lastWeek.setDate(lastWeek.getDate() - 3);
+
+                    this.starttime = lastWeek.toJSON().slice(0,16)
+                    this.endtime = tomorrow.toJSON().slice(0,16) 
+                }
+            }
         },
         updateNetNameCallback(data){
             this.$nextTick(() => {

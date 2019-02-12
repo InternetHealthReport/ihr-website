@@ -14,7 +14,13 @@ export default {
     props: {
     },
     data () {
-        return { }
+        return {
+            delayParams: {
+                nbprobes: 10,
+                deviation: 100,
+                diffmedian: 100,
+            }
+        }
     },
 
     methods: { },

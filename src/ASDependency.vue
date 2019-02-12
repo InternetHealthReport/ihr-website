@@ -3,7 +3,7 @@
             <div class="column">
                 <reactive-chart :chart="chart" :clickFct="plotClick" :loading="chart.loading"></reactive-chart>
             </div>
-            <div class="ten wide column">
+            <div class="fourteen wide column">
                 <div v-if="table.show">
                     <div :class="[{'vuetable-wrapper ui segment raised': true}, table.loading]">
                         <div class="ui top attached label">
@@ -11,9 +11,9 @@
                         </div>
                         <i class="ui top right attached label close icon link" @click="closeDetail"></i>
                         <div class="ui placeholder segment basic very padded">
-                            <div class="column">
+                            <div class="column shrinked">
                                 <vuetable ref="vuetable"
-                                    class="vuetable ui table very basic"
+                                    class="vuetable ui table very basic testheight"
                                     api-url= "https://ihr.iijlab.net/ihr/api/hegemony/" 
                                     :per-page="10"
                                     :append-params="table.queryparams" 
@@ -29,14 +29,18 @@
                                     @vuetable:cell-clicked="onCellClicked"
                                     >
                                     <template slot="originasn" slot-scope="props">   
+                                       <div @click="onCellClicked(props.rowData, props.rowField, props.rowIndex)">  
                                         <router-link :to="{name: 'asn', params: { asn: props.rowData.originasn }}">
                                             AS{{ props.rowData.originasn }} {{ props.rowData.originasn_name }}
                                         </router-link>
+                                       </div>
                                     </template>
-                                    <template slot="asn" slot-scope="props">  
-                                        <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
-                                            AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
-                                        </router-link>
+                                    <template slot="asn" slot-scope="props">
+                                       <div @click="onCellClicked(props.rowData, props.rowField, props.rowIndex)">  
+                                            <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
+                                                AS{{ props.rowData.asn }} {{ props.rowData.asn_name }}
+                                            </router-link>
+                                       </div>
                                     </template>
                                 </vuetable>
                                 <vuetable-pagination ref="pagination"
@@ -377,13 +381,10 @@ export default {
         this.tableHideColumns();
     },
     onCellClicked: function (data, field, event) {
-        console.log("in click")
         if(this.table.type == 0){
-            
             this.$refs.vuetable.toggleDetailRow(data.as)
         }   
         else{
-        console.log("in click, elses")
             this.$refs.vuetable.toggleDetailRow(data.originasn)
         }
     },
@@ -421,4 +422,11 @@ export default {
 
 <style>
 #ihr-asd-bgplay { min-width: 640px; }
+div.shrinked{
+    max-height: 700px;
+    overflow: auto;
+}
+.ui.attached.table {
+    max-width: 100%;
+}
 </style>

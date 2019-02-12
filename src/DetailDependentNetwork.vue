@@ -1,5 +1,5 @@
 <template>
-    <div class="ui attached segment very padded">
+    <div class="ui attached segment padded">
         <div class="ui slider checkbox">
             <input type="checkbox" name="all-dependencies" v-model="allDependencies">
             <label>Show all dependencies of {{rowData.originasn_name}}</label>
@@ -42,18 +42,18 @@ export default {
             return {
                 uuid: this._uid,
                 traces: [],
+                loading: 0,
                 layout: {
                     yaxis: {
                         title: "AS"+this.rowData.originasn+" dependencies",
                         range: [0, 1.1],
                     },
-                    showlegend: true,
-                    legend: {
-                        x: 0,
-                        y: 1.2,
-                        "orientation": "h"
+                    showlegend: false,
+                    height: 250,
+                    margin: {
+                        t: 50,
+                        b: 50,
                     },
-                    height: 350,
                 } 
             }
         },
@@ -95,6 +95,7 @@ export default {
                 this.chart.traces[traceIndex].x.push(resp.timebin)
             }
             this.chart.layout.datarevision = new Date().getTime();
+            this.chart.loading = 1;
         },
         reset: function(){
             this.chart = this.initialChart() 
