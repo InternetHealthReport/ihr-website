@@ -177,6 +177,7 @@ export default {
                 }
             ],
             layout: {
+                hovermode:'closest',
                 yaxis: {
                     title: "Delay Change Level",
                     domain: [0.55, 1],

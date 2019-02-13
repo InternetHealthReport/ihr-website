@@ -157,6 +157,7 @@ export default {
                 }
             ],
             layout: {
+                hovermode:'closest',
                 yaxis: {
                     title: "AS"+this.asn+" dependencies",
                     domain: [0.55, 1],
@@ -235,7 +236,7 @@ export default {
                 this.chart.traces.push({
                     x: [],
                     y: [],
-                    name: resp.asn_name.split(" ")[0]+" AS"+resp.asn,
+                    name: this.printAsn(resp.asn)+" "+resp.asn_name.split(" ")[0],
                 })
             }
             var traceIndex = this.traceIndexes[resp.asn];
@@ -254,6 +255,18 @@ export default {
         }
         this.chart.layout.datarevision = new Date().getTime();
         this.chart.loading += 0.5
+    },
+
+    printAsn: function(value){
+        if(value == 0){
+            return "Unk."
+        }
+        else if(value > 0){
+            return "AS"+value
+        }
+        else{
+            return "IX"+(-value)
+        }
     },
     
     plotClick: function(data){
