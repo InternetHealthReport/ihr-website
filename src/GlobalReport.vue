@@ -273,7 +273,7 @@ export default {
         },
         printDate: function(value){
             var d = new Date(value);
-            var options = {year:'numeric', month:'numeric', day:'numeric', hour: '2-digit', minute:'2-digit', second: undefined}
+            var options = {year:'numeric', month:'numeric', day:'numeric', hour: '2-digit', minute:'2-digit', second: undefined, timeZone: "UTC"}
             return d.toLocaleString("ja", options)
         },
         printLink: function(value){
