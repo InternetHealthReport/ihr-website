@@ -90,7 +90,8 @@ export default {
                     name: "link",
                     sortField: "link",
                     type: "link",
-                    visible: false
+                    visible: false,
+                    callback: "printLink"
                 },
                 {
                     name: "deviation",
@@ -287,6 +288,10 @@ export default {
             this.tableRefresh()
         }
 
+    },
+    printLink: function(value){
+        var ips = value.split(",")
+        return ips[0].slice(1)+" - "+ips[1].slice(0,-1)
     },
     printFloat: function(value){
         return Number(value).toFixed(3)

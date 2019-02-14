@@ -123,10 +123,12 @@ export default {
                     },
                     {
                         name: "timebin",
-                        title: "Time",
+                        title: "Time (UTC)",
+                        callback: "printDate"
                     },
                     {
                         name: "link",
+                        callback: "printLink"
                     },
                     {
                         name: "deviation",
@@ -144,9 +146,9 @@ export default {
                 ],
                 queryparams: {
                     nbprobes__gte: 10,
-                    deviation__gte: 100,
-                    diffmedian__lte: 100,
-                    diffmedian__gte: 0,
+                    deviation__gte: 150,
+                    diffmedian__lte: 300,
+                    diffmedian__gte: 15,
                 },
                 current_page: 1
             },
@@ -221,13 +223,11 @@ export default {
         computeTraceDelay: function(data){
             var asn = data.results[0].asn
             var traceIndex = this.traceIndexes[asn];
-                    console.log(asn)
             if(traceIndex != undefined){
                 for (var i=0; i< data.results.length; i++){
                     var resp = data.results[i];
                     this.chartDelay.traces[traceIndex].y.push(resp.magnitude)
                     this.chartDelay.traces[traceIndex].x.push(resp.timebin)
-                    console.log(resp.timebin)
                 }
                 this.chartDelay.layout.datarevision = new Date().getTime();
                 this.chartDelay.loading += 0.5
@@ -270,6 +270,15 @@ export default {
                     this.endtime = today.toJSON().slice(0,10) 
                 }
             }
+        },
+        printDate: function(value){
+            var d = new Date(value);
+            var options = {year:'numeric', month:'numeric', day:'numeric', hour: '2-digit', minute:'2-digit', second: undefined}
+            return d.toLocaleString("ja", options)
+        },
+        printLink: function(value){
+            var ips = value.split(",")
+            return ips[0].slice(1)+" - "+ips[1].slice(0,-1)
         },
         printFloat: function(value){
             return Number(value).toFixed(3)
@@ -316,7 +325,6 @@ export default {
 
                     // Add corresponding graph
                     var resp = data.results[i]
-                    console.log(resp)
                     if(resp.asn != 0 & this.traceIndexes[resp.asn] === undefined){
                         this.traceIndexes[resp.asn] = this.traceNextIndex++
                         this.chartDelay.traces.push({
@@ -356,7 +364,6 @@ export default {
             this.tableDelay.loading = '';
         },
         onCellClickedDelay: function(data, field, event) {
-            console.log("clicked on the cell")
             this.$refs.vuetabledelay.toggleDetailRow(data.link)
         },
         plotClickDelay: function(data){
