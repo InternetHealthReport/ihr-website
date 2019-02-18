@@ -34,6 +34,10 @@
                                         @vuetable-pagination:change-page="onChangePage">
                                     </vuetable-pagination>
                                 </div>
+                                <div class="ui divider"></div>
+                                <div class="column">
+                                    <div id="ihr-nd-tracemon"></div>
+                                </div>
                             </div>
                     </div>
                 </div>
@@ -61,11 +65,8 @@ export default {
   },
   mixins: [downloader],
   props: {
-      asn:{
+      streamname:{
           type: Number,
-      },
-      af: {
-          default: '4'
       },
       starttime: {
           type: String,
@@ -87,73 +88,40 @@ export default {
             detailRow: "",
             fields:  [
                 {
-                    name: "link",
-                    sortField: "link",
-                    type: "link",
-                    visible: false,
-                    callback: "printLink"
+                    name: "starttime",
+                    title: "Disconnection Time",
+                    callback: "printDate",
+                    sortField: "starttime",
                 },
                 {
-                    name: "deviation",
-                    callback: "printFloat",
-                    sortField: "deviation",
-                    type: "link",
-                    visible: false
+                    name: "endtime",
+                    title: "Reconnection Time",
+                    callback: "printDate",
+                    sortField: "endtime",
                 },
                 {
-                    name: "diffmedian",
-                    title: "Delay Change",
-                    callback: "printFloat",
-                    sortField: "diffmedian",
-                    type: "link",
-                    visible: false
+                    name: "probe_id",
+                    title: "Atlas Probe ID",
                 },
                 {
-                    name: "nbprobes",
-                    title: "#Probes",
-                    sortField: "nbprobes",
-                    type: "link",
-                    visible: false
+                    name: "prefixv4",
+                    title: "IP Prefix",
                 },
                 {
-                    name: "ip",
-                    title: "Reported IP",
-                    type: "ip",
-                    visible: false
+                    name: "level",
+                    title: "Severity",
+					sortField: "level",
                 },
-                {   
-                    name: "previoushop",
-                    title: "Usual preceding IP",
-                    type: "ip",
-                    visible: false
-                },
-                {
-                    name: "correlation",
-                    callback: "printFloat",
-                    type: "ip",
-                    visible: false
-                },
-                {
-                    name: "responsibility",
-                    callback: "printFloat",
-                    type: "ip",
-                    visible: false
-                },
-
             ],
             queryparams: { },
-            current_page: 1
+            current_page: 1,
         },
-
-        chart: this.initialChart(),
-        traceIndexes:{},
-        traceNextIndex: 1
+        chart: this.initialChart()
     }
   },
 
   mounted() {
-    this.fetchDelay();
-    this.fetchForwarding();
+    this.fetchDisco();
   },
 
   methods: {
@@ -165,136 +133,124 @@ export default {
                 { 
                     x: [],
                     y: [],
+                    z: [],
                     yaxis: 'y',
-                    name: 'Delay',
-                    showlegend: false
+                    name: 'Disconnection Level',
+                    showlegend: false,
+                    line: {shape: 'hv'},
                 },
-                { 
-                    x: [],
-                    y: [],
-                    yaxis: 'y2',
-                    name: 'Forwarding',
-                    showlegend: false
-                }
             ],
             layout: {
-                hovermode:'closest',
                 yaxis: {
-                    title: "Delay Change Level",
-                    domain: [0.55, 1],
-                    autorange: true,
-                    automargin: true,
-                },
-                yaxis2:{
-                    title: "Forwarding Change Level",
-                    domain: [0, 0.45],
-                    autorange: true,
+                    title: "Disconnection Level",
+                    domain: [0, 10],
+                    autorange: "reversed",
                     automargin: true,
                 },
                 margin: {
                     t: 50,
                     b: 50,
                 },
+				height: 250,
             } 
         }
     },
     reset: function(){
         this.chart = this.initialChart() 
-        this.traceIndexes = {}
-        this.traceNextIndex = 1
         this.table.show = false
-    
-        this.fetchDelay();
-        this.fetchForwarding();
+        this.fetchDisco();
     },
 
-    fetchDelay: function(){
+    fetchDisco: function(){
         this.apiGetData(
-            "delay/",
+            "disco_events/",
             {
-                asn: this.asn, 
-                timebin__gte: this.starttime, 
-                timebin__lte: this.endtime, 
-                af:this.af
+                streamname: this.streamname, 
+                starttime__gte: this.starttime, 
+                endtime__lte: this.endtime, 
             },
-            this.computeTrace0
+            this.computeTrace
         )
     },
 
-    fetchForwarding: function(){
-        this.apiGetData(
-            "forwarding/",
-            {
-                asn: this.asn, 
-                timebin__gte: this.starttime, 
-                timebin__lte: this.endtime, 
-                af:this.af
-            },
-            this.computeTrace1
-        )
-    },
-      //TODO clean this up
-    computeTrace0: function(data){
+    computeTrace: function(data){
+        this.chart.traces[0].x.push(this.starttime)
+        this.chart.traces[0].y.push(0)
+        this.chart.traces[0].z.push(0)
+
         for (var i=0; i< data.results.length; i++){
-            var resp = data.results[i];
-            this.chart.traces[0].y.push(resp.magnitude)
-            this.chart.traces[0].x.push(resp.timebin)
+            var ev = data.results[i];
+            this.chart.traces[0].x.push(ev.starttime)
+            this.chart.traces[0].y.push(ev.avglevel)
+            this.chart.traces[0].z.push(ev.id)
+
+            this.chart.traces[0].x.push(ev.endtime)
+            this.chart.traces[0].y.push(0)
+            this.chart.traces[0].z.push(ev.id)
         }
+        this.chart.traces[0].x.push(this.endtime)
+        this.chart.traces[0].y.push(0)
+        this.chart.traces[0].z.push(0)
+
         this.chart.layout.datarevision = new Date().getTime();
-        this.chart.loading += 0.5
+        this.chart.loading = 1
     },
-    computeTrace1: function(data){
-        for (var i=0; i< data.results.length; i++){
-            var resp = data.results[i];
-            this.chart.traces[1].y.push(resp.magnitude)
-            this.chart.traces[1].x.push(resp.timebin)
-        }
-        this.chart.layout.datarevision = new Date().getTime();
-        this.chart.loading += 0.5
-    },
-    
     
     plotClick: function(data){
         var pt = data.points[0];
+        var eventid = pt.data.z[pt.pointNumber]
         
-        if(data.points[0].yaxis._id == 'y'){
-            // Update the table
-            this.table.title = "Delay anomalies ("+pt.x+")";
-            this.table.id = "link"
-            this.table.apiurl = "https://ihr.iijlab.net/ihr/api/delay_alarms/" 
-            this.table.detailrow = "detail-link"
-            this.table.queryparams = {
-                asn: this.asn,
-                timebin: pt.x,
-                af:this.af,
-                format: 'json',
-            };
+        // Update the table
+        this.table.title = "Disconnected probes on ("+pt.x+")"
+		this.table.apiurl = "https://ihr.iijlab.net/ihr/api/disco_probes/"
+        //this.table.detailrow = "detail-link"
+        this.table.queryparams = {
+            event: eventid,
+            format: 'json',
+        };
 
-            this.tableRefresh()
-
-        }else{
-            // Update the table
-            this.table.title = "Forwarding anomalies ("+pt.x+")";
-            this.table.id = "ip"
-            this.table.apiurl = "https://ihr.iijlab.net/ihr/api/forwarding_alarms/" 
-            this.table.detailrow = "detail-forwarding"
-            this.table.queryparams = {
-                asn: this.asn,
-                timebin: pt.x,
-                af:this.af,
-                format: 'json',
-            };
-
-            this.tableRefresh()
-        }
-
+        this.tableRefresh()
     },
-    printLink: function(value){
-        var ips = value.split(",")
-        return ips[0].slice(1)+" - "+ips[1].slice(0,-1)
+    tracemon: function(){
+        this.$nextTick(() => {
+            var pbids = [];
+            var startts = new Date()
+            var endts = new Date("1984-10-02")
+            for(var i=0; i<this.$refs.vuetable.tableData.length; i++){
+                pbids.push(this.$refs.vuetable.tableData[i].probe_id)
+                var sts = new Date(this.$refs.vuetable.tableData[i].starttime)
+                var ets = new Date(this.$refs.vuetable.tableData[i].endtime)
+                console.log(this.$refs.vuetable.tableData[i].endtime)
+                console.log(ets)
+                if(sts < startts){
+                    startts = sts
+                }
+                if(ets > endts){
+                    endts = ets
+                }
+            }
+            console.log(startts)
+            console.log(endts)
+            // Tracemon Widget
+            initTracemon(
+                '#ihr-nd-tracemon',
+                {},
+                { 
+                    measurements:[5030], //, 5027],
+                    sources: pbids,
+                    maximumTracerouteValiditySeconds:600,
+                    startTimestamp:  (startts.getTime()/1000)-1800,
+                    stopTimestamp: (endts.getTime()/1000)+1800,
+                }
+            );
+        })
     },
     printFloat: function(value){
         return Number(value).toFixed(3)
+    },
+    printDate: function(value){
+        var dt = value.split("T")
+        return dt[0]+" "+dt[1].slice(0,-1)
     },
     transform: function(data) {
             var transformed = {}
@@ -319,16 +275,16 @@ export default {
             }
 
             var ids = new Set()
-            transformed.data = [] 
-            for (var i=0; i < data.results.length; i++) {
-                if(ids.has(data.results[i][this.table.id])){continue}
-                ids.add(data.results[i][this.table.id])
-                if(data.results[i].originasn != 0){
-                    if (data.results[i].originasn != data.results[i].asn){
-                        transformed.data.push(data.results[i])
-                    }
-                }
-            }
+            transformed.data = data.results
+            //for (var i=0; i < data.results.length; i++) {
+                //if(ids.has(data.results[i][this.table.id])){continue}
+                //ids.add(data.results[i][this.table.id])
+                //if(data.results[i].originasn != 0){
+                    //if (data.results[i].originasn != data.results[i].asn){
+                        //transformed.data.push(data.results[i])
+                    //}
+                //}
+            //}
 
             return transformed
     
@@ -352,7 +308,7 @@ export default {
     },
     onLoaded: function () {     
         this.table.loading = '';
-        this.tableHideColumns();
+        this.tracemon()
     },
     onCellClicked: function(data, field, event) {
         if(this.table.id === "link"){
@@ -361,18 +317,6 @@ export default {
         else{
             this.$refs.vuetable.toggleDetailRow(data.ip)
         }
-    },
-    tableHideColumns: function() {
-
-        for(var i=0; i<this.table.fields.length; i++){
-            if(this.table.id === this.table.fields[i].type){
-                this.table.fields[i].visible = true
-            }
-            else{
-                this.table.fields[i].visible = false
-            }
-        }
-        this.$refs.vuetable.normalizeFields()
     },
     tableRefresh: function(){
         if (this.table.show){
