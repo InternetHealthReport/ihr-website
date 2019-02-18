@@ -13,7 +13,7 @@
         </div>
 
         <div class="row">
-            <div class="twelve wide column">
+            <div class="fourteen wide column">
                 <h2 class="ui dividing header">
                     <div class="content">
                         Delay Changes
@@ -50,7 +50,7 @@
                                         <template slot="asn" slot-scope="props">
                                             <div @click="onCellClickedDelay(props.rowData, props.rowField, props.rowIndex)">  
                                                     <router-link :to="{name: 'asn', params: { asn: props.rowData.asn }}">
-                                                        {{ printAsn(props.rowData.asn) }} {{ props.rowData.asn_name.split(" ")[0] }}
+                                                        {{ printAsn(props.rowData.asn) }} {{ trimString(props.rowData.asn_name) }}
                                                     </router-link>
                                             </div>
                                         </template>
@@ -67,7 +67,7 @@
         </div>
 
         <div class="row">
-            <div class="twelve wide column">
+            <div class="fourteen wide column">
                 <h2 class="ui dividing header">
                     <div class="content">
                         Network Disconnections
@@ -205,6 +205,13 @@ export default {
                         t: 50,
                         b: 50,
                     },
+                    height: 350,
+                    showlegend: true,
+                    legend: {
+                        x: 0,
+                        y: 1.2,
+                        orientation: "h"
+                    },
                 } 
             }
         },
@@ -283,6 +290,13 @@ export default {
         printFloat: function(value){
             return Number(value).toFixed(3)
         },
+        trimString: function(string){
+            var length = 30;
+            var trimmedString = string.length > length ? 
+							string.substring(0, length - 3) + "..." : 
+							string;
+			return trimmedString
+        },
         printAsn: function(value){
             if(value == 0){
                 return ""
@@ -320,8 +334,10 @@ export default {
                 transformed.data = [] 
                 var added = 0
                 for (var i=0; i < data.results.length & added <10 ; i++) {
-                    if(ids.has(data.results[i][this.tableDelay.id])){continue}
-                    ids.add(data.results[i][this.tableDelay.id])
+                    var rowID = data.results[i][this.tableDelay.id]
+                    rowID += data.results[i]["asn"]
+                    if(ids.has(rowID)){continue}
+                    ids.add(rowID)
 
                     // Add corresponding graph
                     var resp = data.results[i]

@@ -1,7 +1,7 @@
 <template>
     <div class="ui centered grid">
         <div class="row">
-        <div class="twelve wide column">
+        <div class="fourteen wide column">
             <h1 class="ui centered header">
                 <div class="content">
                 {{ network.shortName }}
@@ -16,7 +16,7 @@
         </div>
         </div>
         <div v-if="showInput">
-            <div class="ui twelve wide column">
+            <div class="ui fourteen wide column">
                 <div class="row">
                     <div class="column">
                         <form v-on:submit.prevent="reset">
@@ -30,7 +30,7 @@
             </div>
         </div>
 
-        <div class="twelve wide column">
+        <div class="fourteen wide column">
             <h2 class="ui dividing header">
                 <div class="content">
                     AS Interdependencies
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <div class="twelve wide column">
+        <div class="fourteen wide column">
             <h2 class="ui dividing header">
                 <div class="content">
                     External Delays
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="twelve wide column">
+        <div class="fourteen wide column">
             <h2 class="ui dividing header">
                 <div class="content">
                     Internal Delays & Forwarding Anomalies
@@ -83,7 +83,7 @@
             </div>
         </div>
 
-        <div class="twelve wide column">
+        <div class="fourteen wide column">
             <h2 class="ui dividing header">
                 <div class="content">
                     Network Disconnections
