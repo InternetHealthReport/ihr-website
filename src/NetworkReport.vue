@@ -8,7 +8,9 @@
                 </div>
                 <div class="sub header">
                 AS {{ this.$route.params.asn }}
+                <span>
                 <i :class="network.cc+' flag'"></i>
+                </span>
                 </div>
             </h1>
         </div>
@@ -37,7 +39,6 @@
                     <div class="sub header">
                         <i class="ui question icon link" @click=""></i>
                         <i :class="sections.ASDependency.class" @click="switchSection('ASDependency')"></i>
-
                     </div>
                 </h4>
             </h2>
@@ -171,7 +172,7 @@ export default {
             this.$nextTick(() => {
                 this.network.name = data.results[0].name;
                 var tmp = this.network.name.split(",")
-                this.network.cc = tmp.pop().toLowerCase()
+                this.network.cc = tmp.pop().toLowerCase().trim()
                 this.network.shortName = tmp.join(",")
             })
         }
