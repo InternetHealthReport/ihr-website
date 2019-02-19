@@ -81,6 +81,7 @@
                     </h4>
                 </h2>
                 <div v-show="sections.disco.show">
+                    <reactive-chart :chart="chartDisco" :clickFct="plotClickDisco"></reactive-chart>
                    
                 </div>
             </div>
@@ -169,13 +170,15 @@ export default {
 
             traceIndexes:{},
             traceNextIndex: 0,
-            chartDelay: this.initialDelayChart()
+            chartDelay: this.initialDelayChart(),
+            chartDisco: this.initialDiscoChart(),
         }
     },
 
     created() {
         this.updateDate()
         this.tableRefresh()
+        this.fetchDisco()
     },
 
     methods: { 
@@ -186,6 +189,34 @@ export default {
             }
             else{
                 this.sections[section].class =  "ui chevron down icon link"
+            }
+        },
+        initialDiscoChart (){
+            return {
+                uuid: this._uid,
+                loading: 0,
+                traces: [],
+                layout: {
+                    hovermode:'closest',
+                    yaxis: {
+                        title: "Disconnection Level",
+                        autorange: "reversed",
+                        automargin: true,
+                    },
+                    margin: {
+                        t: 50,
+                        b: 50,
+                    },
+                    height: 350,
+                    showlegend: true,
+                    legend: {
+                        x: 0,
+                        y: 1.2,
+                        orientation: "h"
+                    },
+                },
+                traceIndexes: {},
+                traceNextIndex: 0,
             }
         },
         initialDelayChart (){
@@ -215,6 +246,19 @@ export default {
                 } 
             }
         },
+        fetchDisco: function(){
+            console.log(this.starttime)
+            console.log(this.endtime)
+            this.apiGetData(
+                "disco_events/",
+                {
+                    starttime__gte: this.starttime+"T00:00", 
+                    endtime__lte: this.endtime+"T23:59", 
+                    avglevel__gte: 12,
+                },
+                this.computeTraceDisco
+            )
+        },
         fetchDelay: function(asn){
             this.apiGetData(
                 "delay/",
@@ -227,6 +271,64 @@ export default {
                 this.computeTraceDelay
             )
         },
+        computeTraceDisco: function(data){
+            console.log(data)
+            var prevStreamname = ""
+            var prevIndex = -1
+
+            for(var i = 0; i < data.results.length; i++){
+                var streamname = data.results[i].streamname
+                var traceIndex = this.chartDisco.traceIndexes[streamname];
+                
+                if(traceIndex == undefined){
+                    traceIndex = this.chartDisco.traceNextIndex
+                    this.chartDisco.traceIndexes[streamname] = this.chartDisco.traceNextIndex++
+                    this.chartDisco.traces.push({
+                        x: [],
+                        y: [],
+                        z: [],
+                        name: streamname,
+                        line: {shape: 'hv'},
+                    })
+                }
+
+                if(streamname != prevStreamname){
+                    // New stream
+                    if(prevIndex != -1){
+                        // Last point for previous stream
+                        this.chartDisco.traces[prevIndex].x.push(this.endtime+"T23:59")
+                        this.chartDisco.traces[prevIndex].y.push(0)
+                        this.chartDisco.traces[prevIndex].z.push(0)
+                    }
+
+                    // First point for the new stream
+                    this.chartDisco.traces[traceIndex].x.push(this.starttime)
+                    this.chartDisco.traces[traceIndex].y.push(0)
+                    this.chartDisco.traces[traceIndex].z.push(0)
+                }
+
+                var ev = data.results[i];
+                this.chartDisco.traces[traceIndex].x.push(ev.starttime)
+                this.chartDisco.traces[traceIndex].y.push(ev.avglevel)
+                this.chartDisco.traces[traceIndex].z.push(ev.id)
+
+                this.chartDisco.traces[traceIndex].x.push(ev.endtime)
+                this.chartDisco.traces[traceIndex].y.push(0)
+                this.chartDisco.traces[traceIndex].z.push(ev.id)
+
+                prevStreamname = streamname
+                prevIndex = traceIndex
+            }
+            // Last point for previous stream
+            this.chartDisco.traces[prevIndex].x.push(this.endtime+"T23:59")
+            this.chartDisco.traces[prevIndex].y.push(0)
+            this.chartDisco.traces[prevIndex].z.push(0)
+
+            this.chartDisco.layout.datarevision = new Date().getTime();
+            this.chartDisco.loading = 1
+
+        },
+
         computeTraceDelay: function(data){
             var asn = data.results[0].asn
             var traceIndex = this.traceIndexes[asn];
@@ -383,6 +485,16 @@ export default {
             this.$refs.vuetabledelay.toggleDetailRow(data.link)
         },
         plotClickDelay: function(data){
+            var label = data.points[0].data.name.split(" ")[0];
+            var asn = label.slice(2) 
+            if(label.startsWith("IX")){
+                asn = -asn
+            }
+           
+            this.$router.push({ name: 'asn', params: { asn: asn } })
+            
+        },
+        plotClickDisco: function(data){
             var label = data.points[0].data.name.split(" ")[0];
             var asn = label.slice(2) 
             if(label.startsWith("IX")){
