@@ -19,7 +19,13 @@ import {
   QList,
   QItem,
   QItemSection,
-  QItemLabel
+  QItemLabel,
+  QSelect,
+  QMenu,
+  QSeparator,
+  QAvatar,
+  QSpace,
+  QSpinner
 } from "quasar";
 
 Vue.use(Quasar, {
@@ -37,9 +43,16 @@ Vue.use(Quasar, {
     QList,
     QItem,
     QItemSection,
-    QItemLabel
+    QItemLabel,
+    QSelect,
+    QMenu,
+    QSeparator,
+    QAvatar,
+    QSpace,
+    QSpinner
   },
-  directives: {},
+  directives: ["ClosePopup"],
+  extras: ["material-icons", "fontawesome-v5"],
   plugins: {},
   iconSet: iconSet
 });

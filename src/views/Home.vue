@@ -1,13 +1,13 @@
 <template>
-  <q-page class="flex flex-center">
-    <img alt="Quasar logo" src="../assets/logo.png" />
-  </q-page>
+  <div id="home">
+      <h1>IHR</h1>
+  </div>
 </template>
-
-<style></style>
-
 <script>
 export default {
-  name: "PageHome"
-};
+  name: "Home",
+  data() {
+    return {}
+  }
+}
 </script>
