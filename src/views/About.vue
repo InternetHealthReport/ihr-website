@@ -1,5 +1,11 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <q-page padding>
+    <p>This is an about page</p>
+  </q-page>
 </template>
+
+<script>
+export default {
+  name: "PageAbout"
+};
+</script>
