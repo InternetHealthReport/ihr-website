@@ -4,7 +4,7 @@
       <q-toolbar class="q-py-sm q-px-md">
         <q-item>
         <q-btn round dense flat :ripple="false" no-caps size="22px" type="a" href="/">
-            <img src="./assets/imgs/logo_ihr.png" style="width: 80%;">
+            <img src="@/assets/imgs/logo_ihr.png" style="width: 80%;">
         </q-btn>
         </q-item>
 
@@ -47,7 +47,7 @@
               </q-item-section>
               <q-item-section side :class="{ 'default-type': !scope.opt.type }">
                 <q-btn outline dense no-caps text-color="blue-grey-5" size="12px" class="bg-grey-1 q-px-sm">
-                  {{ scope.opt.type || 'Jump to' }}
+                  {{ scope.opt.type || "Jump to" }}
                   <q-icon name="subdirectory_arrow_left" size="14px" />
                 </q-btn>
               </q-item-section>
@@ -56,8 +56,8 @@
         </q-select>
 
         <div v-if="$q.screen.gt.sm" class="GL__toolbar-link q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap">
-          <a v-bind:key="item.name" :href="item.path" class="text-white" v-for="item in menu">
-            {{item.name}}
+          <a v-bind:key="item.name" :href="item.path" class="text-white menu-entries" v-for="item in menu">
+            {{$t(item.name)}}
           </a>
         </div>
         <q-space />
@@ -97,7 +97,6 @@
               <img src="https://cdn.quasar.dev/img/avatar3.jpg">
             </q-avatar>
             <q-icon name="fas fa-sort-down" size="16px" />
-
             <q-menu auto-close>
               <q-list dense>
                 <q-item class="GL__menu-link-signed-in">
@@ -135,6 +134,7 @@
               </q-list>
             </q-menu>
           </q-btn>
+          <locale-selector/>
         </div>
       </q-toolbar>
     </q-header>
@@ -146,42 +146,45 @@
 </template>
 
 <script>
-const stringOptions = [
-  'quasarframework/quasar',
-  'quasarframework/quasar-awesome'
-]
+import LocaleSelector from "./locales/LocaleSelector"
 
-// subset of router, see router.js
-const menu = [
-  {
-    name: "documentation",
-    path: "/docs/"
-  },
-  {
-    name: "networks",
-    path: "/networks/"
-  },
-  {
-    name: "countries",
-    path: "/countries/"
-  },
-  {
-    name: "API",
-    path: "/api/"
-  },
-  {
-    name: "contacts",
-    path: "/contacts/"
-  }
+const stringOptions = [
+  "quasarframework/quasar",
+  "quasarframework/quasar-awesome"
 ]
 
 export default {
-  name: 'Default',
-
+  name: "Default",
+  components: {
+    LocaleSelector
+  },
   data () {
+    // subset of router, see router.js
+    const menu = [
+      {
+        name: "header.documentation",
+        path: "/docs/"
+      },
+      {
+        name: "header.networks",
+        path: "/networks/"
+      },
+      {
+        name: "header.countries",
+        path: "/countries/"
+      },
+      {
+        name: "header.API",
+        path: "/api/"
+      },
+      {
+        name: "header.contacts",
+        path: "/contacts/"
+      }
+    ]
 
     return {
-      text: '',
+      text: "",
       menu: menu,
       options: null,
       filteredOptions: []
@@ -194,13 +197,13 @@ export default {
         // load data
         setTimeout(() => {
           this.options = stringOptions
-          this.$refs.search.filter('')
+          this.$refs.search.filter("")
         }, 2000)
         update()
         return
       }
 
-      if (val === '') {
+      if (val === "") {
         update(() => {
           this.filteredOptions = this.options.map(op => ({ label: op }))
         })
@@ -211,11 +214,11 @@ export default {
         this.filteredOptions = [
           {
             label: val,
-            type: 'In this repository'
+            type: "In this repository"
           },
           {
             label: val,
-            type: 'All GitHub'
+            type: "All GitHub"
           },
           ...this.options
             .filter(op => op.toLowerCase().includes(val.toLowerCase()))
@@ -226,7 +229,6 @@ export default {
   }
 }
 </script>
-
 <style lang="stylus">
 .GL
   &__select-GL__menu-link
@@ -268,3 +270,21 @@ export default {
     .q-field__append
       display none
 </style>
+
+<style scoped>
+.menu-entries {
+  font-size: 12pt;
+}
+.menu-entries::first-letter {
+  text-transform: capitalize;
+}
+</style>
+<!--
+<div>Icons made by 
+<a href="https://www.freepik.com/?__hstc=57440181.bfe11e669d937a19a0cdcc809b9be889.1562286331749.1562286331749.1562286331749.1&__hssc=57440181.3.1562286331751&__hsfp=694215102" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/"             title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"             
+title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+
+
+alternative
+https://www.iconfinder.com/iconsets/142-mini-country-flags-16x16px
+-->

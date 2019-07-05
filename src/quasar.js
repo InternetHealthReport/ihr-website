@@ -25,7 +25,10 @@ import {
   QSeparator,
   QAvatar,
   QSpace,
-  QSpinner
+  QSpinner,
+
+  //non component
+  Cookies
 } from "quasar";
 
 Vue.use(Quasar, {
@@ -53,6 +56,6 @@ Vue.use(Quasar, {
   },
   directives: ["ClosePopup"],
   extras: ["material-icons", "fontawesome-v5"],
-  plugins: {},
+  plugins: { Cookies },
   iconSet: iconSet
 });

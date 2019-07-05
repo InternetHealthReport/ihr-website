@@ -22,3 +22,8 @@ To keep the number of different icons short there is a list of already used icon
 * **arrow down**: [*fas fa-sort-down*](https://fontawesome.com/icons/sort-down?style=solid)
 * **squared plus**: [*fas fa-plus-square*](https://fontawesome.com/icons/plus-square?style=solid)
 * **notification bell**: [*fas fa-bell*](https://fontawesome.com/icons/bell?style=solid)
+
+### Translations
+if a view or a component has a few of unique elements to translate you can do 
+it directly into is file
+You can use https://www.codeandweb.com/babeledit (one time payment)
