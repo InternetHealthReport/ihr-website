@@ -1,5 +1,12 @@
 const path = require("path");
 module.exports = {
+  chainWebpack: webpackConfig => {
+    webpackConfig.module
+      .rule("ify-loader")
+      .test(/node_module\/plotly.js\/*.js$/)
+      .use("ify-loader")
+      .loader("ify-loader");
+  },
   pluginOptions: {
     quasar: {
       rtlSupport: true,

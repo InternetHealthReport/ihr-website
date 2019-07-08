@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "axios": "^0.19.0",
     "core-js": "^2.6.5",
+    "ify-loader": "^1.1.0",
+    "plotly.js": "^1.48.3",
     "quasar": "^1.0.0",
     "vue": "^2.6.10",
     "vue-i18n": "^8.11.2",

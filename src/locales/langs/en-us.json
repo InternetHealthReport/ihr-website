@@ -1,9 +1,14 @@
 {
-  "header": {
-    "documentation": "documentation",
-    "networks": "networks",
-    "countries": "countries",
-    "contacts": "contacts",
-    "API": "API"
-  }
+	"header": {
+		"API": "API",
+		"contacts": "contacts",
+		"countries": "countries",
+		"documentation": "documentation",
+		"networks": "networks",
+		"participants": "participants"
+	},
+	"searchBar": {
+		"placeholder": " or name",
+		"resultsFound": "results found"
+	}
 }
