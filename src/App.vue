@@ -9,11 +9,11 @@
         </q-item>
         <search-bar></search-bar>
         <div class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap">
-          <router-link v-bind:key="item.name" :to="item.path" class="menu-entries" v-for="item in simple_menu">
+          <router-link v-bind:key="item.name" :to="item.path"  v-for="item in simple_menu">
             {{$t(item.name)}}
           </router-link>
 
-          <q-btn-dropdown color="primary" :label="$t(item.section)" v-bind:key="item.section" class="IHR_menu-entries" v-for="item in dropdown_menu">
+          <q-btn-dropdown color="primary" :label="$t(item.section)" v-bind:key="item.section" v-for="item in dropdown_menu">
             <q-list class="IHR_dropdown-menu">
               <q-item v-close-popup v-bind:key="subItem.name"  v-for="subItem in item.content">
                   <router-link :to="subItem.path">
@@ -165,7 +165,7 @@ menu-delinkify()
   font-size 12pt
   color: white
   text-decoration none
-  text-transform lowercase
+  text-transform capitalize
   font-weight 700
 
 .IHR_
@@ -175,8 +175,6 @@ menu-delinkify()
     a,
     button
       menu-delinkify 1
-      &::first-letter
-        text-transform capitalize
     button
       box-shadow none
 

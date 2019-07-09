@@ -43,7 +43,7 @@ class Query {
     return this.filterType + ": " + JSON.stringify(this.filter);
   }
 }
-
+const NO_FILTER = {};
 class NetworkQuery extends Query {
   constructor() {
     super(NetworkQuery.name, arguments);
@@ -159,4 +159,4 @@ const IhrApi = {
   }
 };
 
-export { NetworkQuery, IhrApi };
+export { NetworkQuery, IhrApi, NO_FILTER };

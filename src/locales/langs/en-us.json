@@ -7,6 +7,10 @@
 		"networks": "networks",
 		"participants": "participants"
 	},
+	"home": {
+		"monitoredCountries": "monitored countries",
+		"monitoredNetworks": "monitored Networks"
+	},
 	"searchBar": {
 		"placeholder": " or name",
 		"resultsFound": "results found"

@@ -7,6 +7,10 @@
 		"networks": "reti",
 		"participants": "partecipanti"
 	},
+	"home": {
+		"monitoredCountries": "paesi monitorati",
+		"monitoredNetworks": "Reti monitorate"
+	},
 	"searchBar": {
 		"placeholder": " o nome",
 		"resultsFound": "risultati trovati"

@@ -4,11 +4,15 @@ import router from "@/router";
 import "@/quasar";
 import i18n from "@/locales/i18n";
 import { IhrApi } from "@/plugins/IhrApi";
+import VueResizeText from "vue-resize-text";
 
 Vue.config.productionTip = false;
 
-//plugins
+// internal plugins
 Vue.use(IhrApi);
+
+//external plugin
+Vue.use(VueResizeText);
 
 new Vue({
   router,

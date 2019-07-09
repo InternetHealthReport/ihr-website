@@ -15,6 +15,14 @@ You can take a look here https://quasar.dev/introduction-to-quasar, but this gui
 *src/quasar.js* contains all loaded components. If some used components are missing you can probably see some weird locking stuff.
 check that the corresponding component is loaded and it's directive are loaded it's quasar page (e.g. https://quasar.dev/vue-components/ajax-bar, installation section)
 
+### Layout
+Whenever possible the Flex Grid layout it's utilized. Briefly it consists in
+rows and columns (cols) elements. The row (class="row") is divided in 12 cols and the default behavior
+it's to wrap (moving to below row) cols (class="col") that cannot fit in those 12.
+A col can span into multiple cols (col-\[n\]) and can be defined differently for different
+viewport (col-\[vp\]-\[n\]).
+The full reference is in the quasar website https://quasar.dev/layout/grid/introduction-to-flexbox.
+
 ### Icons
 In this project is used Font Awesome https://fontawesome.com/.
 To keep the number of different icons short there is a list of already used icons:
@@ -23,6 +31,8 @@ To keep the number of different icons short there is a list of already used icon
 * **squared plus**: [*fas fa-plus-square*](https://fontawesome.com/icons/plus-square?style=solid)
 * **notification bell**: [*fas fa-bell*](https://fontawesome.com/icons/bell?style=solid)
 * **magnifier** [*fas fa-search*](https://fontawesome.com/icons/search?style=solid)
+* **flag** [*fas fa-flag*](https://fontawesome.com/icons/flag?style=solid)
+* **network?** [*fas fa-network-wired*](https://fontawesome.com/icons/network-wired?style=solid)
 
 ### Translations
 if a view or a component has a few of unique elements to translate you can do 

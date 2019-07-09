@@ -18,6 +18,7 @@
     "quasar": "^1.0.0",
     "vue": "^2.6.10",
     "vue-i18n": "^8.11.2",
+    "vue-resize-text": "^0.1.0",
     "vue-router": "^3.0.3"
   },
   "devDependencies": {

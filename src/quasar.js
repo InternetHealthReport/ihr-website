@@ -27,6 +27,16 @@ import {
   QSpace,
   QSpinner,
   QBtnDropdown,
+  ClosePopup,
+  QCard,
+  QCardSection,
+  QCardActions,
+  QTabPanels,
+  QTabPanel,
+  QTabs,
+  QTab,
+  QRouteTab,
+  QImg,
 
   //non component
   Cookies
@@ -65,9 +75,18 @@ Vue.use(Quasar, {
     QAvatar,
     QSpace,
     QSpinner,
-    QBtnDropdown
+    QBtnDropdown,
+    QCard,
+    QCardSection,
+    QCardActions,
+    QTabPanels,
+    QTabPanel,
+    QTabs,
+    QTab,
+    QRouteTab,
+    QImg
   },
-  directives: ["ClosePopup"],
+  directives: { ClosePopup },
   extras: ["material-icons", "fontawesome-v5"],
   plugins: { Cookies },
   iconSet: iconSet

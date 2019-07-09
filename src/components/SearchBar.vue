@@ -3,7 +3,7 @@
     ref="search" dark dense standout use-input hide-selected
     class="GL__toolbar-select"
     color="black" :stack-label="false" :label="placeholder"
-    v-model="text" :options="retrievedValues" 
+    v-model="text" :options="retrievedValues"
     @filter="filter"
     style="width: 300px"
   >
@@ -82,7 +82,7 @@ export default {
   },
   computed: {
     placeholder() {
-      return "ASN, IXP " + this.$t("searchBar.placeholder") + "...";
+      return `ASN, IXP ${this.$t("searchBar.placeholder")}...`;
     }
   }
 }
