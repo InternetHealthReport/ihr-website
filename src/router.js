@@ -9,30 +9,42 @@ import Networks from "./views/Networks.vue";
 
 Vue.use(Router);
 
+const routerBase = "/:locale/";
+
 export default new Router({
   routes: [
     {
       path: "/",
+      redirect: "/en-us/"
+    },
+    {
+      name: "home",
+      path: routerBase,
       component: Home
     },
     {
-      path: "/api",
+      name: "api",
+      path: `${routerBase}api`,
       component: API
     },
     {
-      path: "/contacts",
+      name: "contacts",
+      path: `${routerBase}contacts`,
       component: Contacts
     },
     {
-      path: "/countries",
+      name: "countries",
+      path: `${routerBase}countries`,
       component: Countries
     },
     {
-      path: "/docs",
+      name: "docs",
+      path: `${routerBase}docs`,
       component: Documentation
     },
     {
-      path: "/networks",
+      name: "networks",
+      path: `${routerBase}networks`,
       component: Networks
     }
   ]

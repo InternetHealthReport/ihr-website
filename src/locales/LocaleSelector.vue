@@ -47,34 +47,25 @@ export default {
   },
   methods: {
     setLocale(localeIsoName) {
-      if(localeIsoName === undefined) {
-        localeIsoName = this.$q.cookies.get("locale");
-        if (
-          localeIsoName === undefined ||
-          this.langOptions.find(lang_opt => {
-            return lang_opt.value === localeIsoName;
-          }) === undefined
-        )
-          localeIsoName = "en-us";
-      }
       import(`quasar/lang/${localeIsoName}`).then(lang => {
         this.$q.lang.set(lang.default);
         //this.$i18n.locale = localeIsoName;
         this.$root.$i18n.locale = localeIsoName;
-        this.$q.cookies.set("locale", localeIsoName);
         this.lang = localeIsoName;
       });
     }
   },
   watch: {
     lang(localeIsoName) {
+      this.$router.push({params: {locale: localeIsoName}});
       this.setLocale(localeIsoName);
     }
   },
   created(){
-    this.setLocale();
-  },
+    this.setLocale(this.$route.params.locale);
+  }
 };
+
 </script>
 <style scoped>
 #lang-selector {

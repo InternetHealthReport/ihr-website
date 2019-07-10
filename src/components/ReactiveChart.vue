@@ -29,7 +29,7 @@ export default {
 
         // Plotly events
         if(this.clickFct != null){
-            this.$refs[this.chart.uuid].on('plotly_click', this.clickFct); 
+            this.$refs[this.chart.uuid].on('plotly_click', this.clickFct);
         }
     },
 
@@ -42,10 +42,10 @@ export default {
                 this.chart.layout
                 );
                 if(this.chart.loading < 1){
-                    this.loadingClass="ui active loader" 
+                    this.loadingClass="ui active loader"
                 }
                 else{
-                    this.loadingClass="ui disabled loader" 
+                    this.loadingClass="ui disabled loader"
                 }
             },
         deep: true

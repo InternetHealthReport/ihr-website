@@ -3,21 +3,22 @@
     <q-header elevated class="" primary>
       <q-toolbar class="q-py-sm q-px-md">
         <q-item>
-        <q-btn round dense flat :ripple="false" no-caps size="22px" type="a" href="/">
-            <img src="@/assets/imgs/logo_ihr.png" style="width: 80%;">
-        </q-btn>
+          <router-link :to="{name : 'home'}">
+            <q-btn round dense flat :ripple="false" no-caps size="22px">
+              <img src="@/assets/imgs/logo_ihr.png" style="width: 80%;">
+            </q-btn>
+          </router-link>
         </q-item>
         <search-bar></search-bar>
         <div class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap">
-          <router-link v-bind:key="item.name" :to="item.path"  v-for="item in simple_menu">
-            {{$t(item.name)}}
+          <router-link v-bind:key="item.entryName" :to="{name : item.routeName}"  v-for="item in simple_menu">
+            {{$t(item.entryName)}}
           </router-link>
-
           <q-btn-dropdown color="primary" :label="$t(item.section)" v-bind:key="item.section" v-for="item in dropdown_menu">
             <q-list class="IHR_dropdown-menu">
-              <q-item v-close-popup v-bind:key="subItem.name"  v-for="subItem in item.content">
-                  <router-link :to="subItem.path">
-                    {{$t(subItem.name)}}
+              <q-item v-close-popup v-bind:key="subItem.entryName"  v-for="subItem in item.content">
+                  <router-link :to="{name : item.routeName}">
+                    {{$t(subItem.entryName)}}
                   </router-link>
               </q-item>
             </q-list>
@@ -107,23 +108,25 @@
 </template>
 
 <script>
+import languages from "quasar/lang/index.json";
 import LocaleSelector from "@/locales/LocaleSelector";
 import SearchBar from "@/components/SearchBar";
+import routerBase from "@/router"
 
 // subset of router, see router.js
 
 const simple_menu = [
   {
-    name: "header.documentation",
-    path: "/docs/"
+    entryName: "header.documentation",
+    routeName: "docs"
   },
   {
-    name: "header.API",
-    path: "/api/"
+    entryName: "header.API",
+    routeName: "api"
   },
   {
-    name: "header.contacts",
-    path: "/contacts/"
+    entryName: "header.contacts",
+    routeName: "contacts"
   }
 ]
 
@@ -132,12 +135,12 @@ const dropdown_menu = [
     section : "header.participants",
     content: [
       {
-        name: "header.networks",
-        path: "/networks/"
+        entryName: "header.networks",
+        routeName: "networks"
       },
       {
-        name: "header.countries",
-        path: "/countries/"
+        entryName: "header.countries",
+        routeName: "countries"
       }
     ]
   }
