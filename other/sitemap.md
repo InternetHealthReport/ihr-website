@@ -4,25 +4,26 @@
     - Link to global report
     - Catchy summary of analyses
     - Latest tweets
-- About
-    - Brief explanations on analysis modules
+- Documentation
     - API endpoints
-    - Python library
+    - Python API wrapper
+    - Brief explanations on analysis modules
+- About
+    - Contacts
     - Acknowledgments (sponsor, contributors)
 - Global Report (derived specialized reports from this? CDN, SNS, DNS, Tier1,...)
 - Network Report
 - Country Report
+
 - Signup page
 - User preferences
-- Personal Report?
+- Personal Report? (personalize global report)
 
 # List of graphs
 
-- AS Hegemony (ASN):
+- AS Hegemony (**ASN**):
     - Line graph AS dependency
     - Line graph customer cone
-- AS Hegemony (country):
-    - Line graph Country AS dependency (weighted by population or not) 
 - In-network stats:
     - Line graph delays
     - Line graph forwarding anomalies
@@ -32,3 +33,5 @@
 - Out-delays:
     - Line graph delays
     - Treemap delays?
+ - AS Hegemony (**country**):
+    - Line graph Country AS dependency (weighted by population or not)
