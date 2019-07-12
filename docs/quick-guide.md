@@ -8,7 +8,8 @@ This guide cannot cover all missing knowledge so where a list to basic stuff:
 * **vuejs**: https://vuejs.org/v2/guide/
 
 ## Quasar UI
-You can take a look here https://quasar.dev/introduction-to-quasar, but this guide summarize some simple stuff for maintenance.
+You can take a look here https://quasar.dev/introduction-to-quasar, but this 
+guide summarize some simple stuff for maintenance.
 
 ### Component configuration
 
@@ -33,8 +34,17 @@ To keep the number of different icons short there is a list of already used icon
 * **magnifier** [*fas fa-search*](https://fontawesome.com/icons/search?style=solid)
 * **flag** [*fas fa-flag*](https://fontawesome.com/icons/flag?style=solid)
 * **network?** [*fas fa-network-wired*](https://fontawesome.com/icons/network-wired?style=solid)
+* **calendar** [*fas fa-calendar-day*](https://fontawesome.com/icons/calendar-day?style=solid)
+* **clock** [*fas fa-clock"*](https://fontawesome.com/icons/clock?style=solid)
 
 ### Translations
 if a view or a component has a few of unique elements to translate you can do 
 it directly into is file
 You can use https://www.codeandweb.com/babeledit (one time payment)
+
+### Routes
+The structure of the urls contain the locale in use (*/:locale/...*)".
+The simplest way to take this in account in routes is [named routes](https://router.vuejs.org/guide/essentials/named-routes.html).
+briefly:
+* name all routes in *router.js* file, and prepend routerBase to each route
+* when routing (using either \<router-link\> or router.update()) use the name. This will prevent te change of the parameters

@@ -1,56 +1,76 @@
 <template>
-    <div>
-        <q-spinner v-if="loading"
-        color="primary"
-        size="3em"
-        :thickness="2"/>
-        <div v-else :ref="chart.uuid" ></div>
-    </div>
+  <div>
+    <h1 v-if="chartTitle">{{chartTitle}}</h1>
+    <div ref="chart"></div>
+  </div>
 </template>
-
 <script>
+import Plotly from "plotly.js/dist/plotly.min";
+/*
+emitted events
+  plotly-click: propagation of plotly onclick
 
-import Plotly from 'plotly.js/dist/plotly.min'
+  loading: emited (with false) when the plot has been rendered (for 2 way binding)
+*/
 
 export default {
-    props: ["chart", "clickFct", "loading"],
-    data (){
-        return {
-            loadingClass: "ui active loader",
-        }
+  props: {
+    layout: {
+      type: Object,
+      require: true
     },
-    mounted() {
-        var graphDiv = this.$refs[this.chart.uuid];
-        Plotly.plot(graphDiv, this.chart.traces, this.chart.layout, {responsive: true, displayModeBar: false});
-
-        if(document.documentElement.clientWidth<576){
-            Plotly.relayout(graphDiv, {showlegend:false})
-        }
-
-        // Plotly events
-        if(this.clickFct != null){
-            this.$refs[this.chart.uuid].on('plotly_click', this.clickFct);
-        }
+    traces: {
+      type: Array,
+      require: true
     },
+    chartTitle: {
+      type: String,
+      require: false,
+      default: null
+    }
+  },
+  data() {
+    return {
+    };
+  },
+  mounted() {
+    var graphDiv = this.$refs["chart"];
+    Plotly.plot(graphDiv, this.traces, this.layout, {
+      responsive: true,
+      displayModeBar: false
+    });
 
-    watch: {
-        chart: {
-            handler: function() {
-                Plotly.react(
-                this.$refs[this.chart.uuid],
-                this.chart.traces,
-                this.chart.layout
-                );
-                if(this.chart.loading < 1){
-                    this.loadingClass="ui active loader"
-                }
-                else{
-                    this.loadingClass="ui disabled loader"
-                }
-            },
-        deep: true
-        }
+    if (document.documentElement.clientWidth < 576) {
+      Plotly.relayout(graphDiv, { showlegend: false });
+    }
+
+    graphDiv.on("plotly_click", eventData => {
+      this.$emit("plotly-click", eventData);
+    });
+  },
+  methods: {
+    react() {
+      Plotly.react(
+        this.$refs["chart"],
+        this.traces,
+        this.layout
+      );
+      this.$emit("loaded");
+    }
+  },
+  watch: {
+    traces: {
+      handler: function() { this.react() },
+      deep: true
     },
+    layout: {
+      handler: function() { this.react() },
+      deep: true
+    }
+  }
 }
-
 </script>
+<style lang="stylus" scoped>
+
+</style>
+

@@ -3,73 +3,11 @@
  */
 
 import axios from "axios";
+import { Query, NetworkQuery, DiscoEventQuery } from "./IhrQuery";
 
 const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/"; ///base api url
-
-/** @brief all allowed filters in ihr-api
- */
-class Query {
-  constructor(filterType = "Generic", dictionary = {}) {
-    this.filter = dictionary;
-    this.filterType = filterType;
-  }
-
-  _set(name, value) {
-    if (value === undefined) {
-      delete this.filter[name];
-      return this;
-    }
-
-    this.filter[name] = value;
-    return this;
-  }
-
-  //merged filter has the priority
-  merge(filter) {
-    this.filter = { ...this.filter, ...filter };
-    return this;
-  }
-
-  reset() {
-    this.filter = {};
-    return this;
-  }
-
-  get_filter() {
-    return this.filter;
-  }
-
-  toString() {
-    return this.filterType + ": " + JSON.stringify(this.filter);
-  }
-}
-const NO_FILTER = {};
-class NetworkQuery extends Query {
-  constructor() {
-    super(NetworkQuery.name, arguments);
-  }
-
-  containsName(name) {
-    return this._set("name", name);
-  }
-
-  exactAsn(asn) {
-    return this._set("number", asn);
-  }
-
-  /**
-   * @brief it match asn or name, but ignore the the AS and IX prefix (see API docs)
-   *
-   * @param {*} search the string to search
-   */
-  mixedContentSearch(search) {
-    return this._set("search", search);
-  }
-
-  orderedByNumber() {
-    return this._set("order", "number");
-  }
-}
+const DEFAULT_TIMEOUT = 2000;
+const PROJECT_START_DATE = new Date("2016-01-01T00:00:00");
 
 const IhrApi = {
   install(Vue /*, options*/) {
@@ -102,15 +40,14 @@ const IhrApi = {
           if (query instanceof Query) query = query.get_filter();
           console.log("call to: " + JSON.stringify(query));
           this.axios_base
-            .get(endpoint, { params: query })
+            .get(endpoint, { params: query, timeout: DEFAULT_TIMEOUT })
             .then(response => {
               if (success_callback instanceof Function)
                 success_callback(response.data);
             })
             .catch(result => {
-              console.log(result);
-              if (error_callback instanceof Function)
-                error_callback(result.response.data.error);
+              console.error(result);
+              if (error_callback instanceof Function) error_callback(result);
             });
         },
         /**
@@ -122,8 +59,13 @@ const IhrApi = {
         delay_alarms() {
           this._generic("delay_alarms/", arguments);
         },
-        disco_events() {
-          this._generic("disco_events/", arguments);
+        disco_events(discoEventQuery, success_callback, error_callback) {
+          this._generic(
+            "disco_events/",
+            discoEventQuery,
+            success_callback,
+            error_callback
+          );
         },
         disco_probes() {
           this._generic("disco_probes/", arguments);
@@ -159,4 +101,4 @@ const IhrApi = {
   }
 };
 
-export { NetworkQuery, IhrApi, NO_FILTER };
+export { PROJECT_START_DATE, IhrApi, Query, NetworkQuery, DiscoEventQuery };

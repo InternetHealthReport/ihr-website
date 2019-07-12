@@ -26,12 +26,14 @@
         v-on="scope.itemEvents"
         class="GL__select-GL__menu-link"
       >
-      <q-item-section side>
-        {{(scope.opt.number < 0)? "IXP" : "ASN" + scope.opt.number}}
-      </q-item-section>
-      <q-item-section>
-        {{scope.opt.name}}
-      </q-item-section>
+      <router-link :to="{name : 'as_and_ixp', params:{asn: scope.opt.number}}">
+        <q-item-section side>
+          {{(scope.opt.number < 0)? "IXP" : "ASN" + Math.abs(scope.opt.number)}}
+        </q-item-section>
+        <q-item-section>
+          {{scope.opt.name}}
+        </q-item-section>
+      </router-link>
       </q-item>
     </template>
   </q-select>

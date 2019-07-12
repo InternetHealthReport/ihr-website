@@ -1,11 +1,12 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Home from "./views/Home.vue";
-import API from "./views/Documentation.vue";
-import Contacts from "./views/Contacts.vue";
-import Countries from "./views/Countries.vue";
-import Documentation from "./views/Documentation.vue";
-import Networks from "./views/Networks.vue";
+import Home from "@/views/Home";
+import API from "@/views/Documentation";
+import Contacts from "@/views/Contacts";
+import Countries from "@/views/Countries";
+import Documentation from "@/views/Documentation";
+import Networks from "@/views/Networks";
+import AsAndIxp from "@/views/AsAndIxp";
 
 Vue.use(Router);
 
@@ -46,6 +47,11 @@ export default new Router({
       name: "networks",
       path: `${routerBase}networks`,
       component: Networks
+    },
+    {
+      name: "as_and_ixp",
+      path: `${routerBase}as_and_ixp/:asn`,
+      component: AsAndIxp
     }
   ]
 });

@@ -37,6 +37,12 @@ import {
   QTab,
   QRouteTab,
   QImg,
+  QLinearProgress,
+  QRange,
+  QTime,
+  QDate,
+  QInput,
+  QPopupProxy,
 
   //non component
   Cookies
@@ -84,7 +90,13 @@ Vue.use(Quasar, {
     QTabs,
     QTab,
     QRouteTab,
-    QImg
+    QImg,
+    QLinearProgress,
+    QRange,
+    QTime,
+    QDate,
+    QInput,
+    QPopupProxy
   },
   directives: { ClosePopup },
   extras: ["material-icons", "fontawesome-v5"],
