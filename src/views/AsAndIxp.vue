@@ -1,20 +1,39 @@
 <template>
-  <disco-chart :start-time="startTime" :end-time="endTime" :stream-name="Number(this.$route.params.asn)"/>
+  <div>
+    <interval-picker v-model="interval"/>
+    <disco-chart
+      :start-time="startTime"
+      :end-time="endTime"
+      :stream-name="Number(this.$route.params.asn)"
+    />
+  </div>
 </template>
 
 <script>
+import IntervalPicker, {ChartInterval} from "@/components/IntervalPicker";
 import DiscoChart from "@/views/charts/DiscoChart";
+import { DiscoEventQuery } from "@/plugins/IhrApi";
 
 export default {
   components: {
-    DiscoChart
+    DiscoChart,
+    IntervalPicker
   },
   data() {
     let today = new Date();
     return {
-      startTime: new Date(today.setHours(0, 0, 0, 0)),
-      endTime: new Date(today.setHours(23, 59, 59, 0))
+      interval: ChartInterval.today()
     };
+  },
+  methods: {
+  },
+  computed: {
+    startTime() {
+      return this.interval.begin;
+    },
+    endTime() {
+      return this.interval.end;
+    }
   }
 };
 </script>

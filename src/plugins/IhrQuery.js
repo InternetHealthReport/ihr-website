@@ -6,6 +6,13 @@ const _LTE = "__lte";
 const _GTE = "__gte";
 const _EXACT = "";
 
+// exceptions
+class MustBeImplemented extends SyntaxError {
+  constructor(functionName) {
+    super(`${functionName} MUST Be Implemented!`);
+  }
+}
+
 /** @brief all allowed filters in ihr-api
  */
 class Query {
@@ -69,6 +76,10 @@ class Query {
       : this._set("order", order + name);
   }
 
+  _clone() {
+    return Object.assign({}, this.filter);
+  }
+
   //public functions
 
   //merged filter has the priority
@@ -89,11 +100,15 @@ class Query {
   toString() {
     return this.filterType + ": " + JSON.stringify(this.filter);
   }
+
+  clone() {
+    throw new MustBeImplemented("clone");
+  }
 }
 
-class NetworkQuery extends Query {
+class NetworksQuery extends Query {
   constructor() {
-    super(NetworkQuery.name, arguments);
+    super(NetworksQuery.name, arguments);
   }
 
   containsName(name) {
@@ -116,9 +131,38 @@ class NetworkQuery extends Query {
   orderedByNumber(order = Query.ASC) {
     return this._setOrder("number", order);
   }
+
+  clone() {
+    return new NetworksQuery(this._clone());
+  }
 }
 
-class DiscoEventQuery extends Query {
+/** Placeholder class to remember to  implement common required feature
+ *
+ */
+class TimeQuery extends Query {
+  constructor() {
+    super(arguments);
+  }
+
+  startTime(time, comparator = Query.EXACT) {
+    throw new MustBeImplemented("startTime");
+  }
+
+  endTime(time, comparator = Query.EXACT) {
+    throw new MustBeImplemented("endTime");
+  }
+
+  timeInterval(lowerBound, upperBound) {
+    throw new MustBeImplemented("timeInterval");
+  }
+
+  orderedByTime() {
+    throw new MustBeImplemented("orderedByTime");
+  }
+}
+
+class DiscoEventQuery extends TimeQuery {
   constructor() {
     super(DiscoEventQuery.name, arguments);
   }
@@ -192,6 +236,14 @@ class DiscoEventQuery extends Query {
   orderedByNdDiscoProbes(order = Query.ASC) {
     return this._setOrder("nbdiscoprobes", order);
   }
+
+  orderedByTime() {
+    return this.orderedByStartTime();
+  }
+
+  clone() {
+    return new DiscoEventQuery(this._clone());
+  }
 }
 
-export { Query, NetworkQuery, DiscoEventQuery };
+export { Query, NetworksQuery, DiscoEventQuery };

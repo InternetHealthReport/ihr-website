@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { NetworkQuery } from "@/plugins/IhrApi";
+import { NetworksQuery } from "@/plugins/IhrApi";
 
 const minCharacters = 3;
 const maxResults = 8;
@@ -52,7 +52,7 @@ export default {
       minCharacters: minCharacters,
       maxResults: maxResults,
       retrievedValues: [],
-      networkQuery: (new NetworkQuery()).orderedByNumber()
+      networksQuery: (new NetworksQuery()).orderedByNumber()
       };
   },
   methods: {
@@ -62,13 +62,13 @@ export default {
       //TODO debounce filter!
       if(value.length > this.minCharacters) {
         update(() => {
-          this.networkQuery.mixedContentSearch(value);
+          this.networksQuery.mixedContentSearch(value);
           this.search();
         });
       }
     },
     search () {
-      this.$ihr_api.networks(this.networkQuery,
+      this.$ihr_api.networks(this.networksQuery,
       (result)=> {
         this.retrievedValues = []
         console.log(result)

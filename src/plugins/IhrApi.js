@@ -3,7 +3,7 @@
  */
 
 import axios from "axios";
-import { Query, NetworkQuery, DiscoEventQuery } from "./IhrQuery";
+import { Query, NetworksQuery, DiscoEventQuery } from "./IhrQuery";
 
 const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/"; ///base api url
 const DEFAULT_TIMEOUT = 2000;
@@ -101,4 +101,4 @@ const IhrApi = {
   }
 };
 
-export { PROJECT_START_DATE, IhrApi, Query, NetworkQuery, DiscoEventQuery };
+export { PROJECT_START_DATE, IhrApi, Query, NetworksQuery, DiscoEventQuery };
