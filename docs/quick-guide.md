@@ -36,6 +36,8 @@ To keep the number of different icons short there is a list of already used icon
 * **network?** [*fas fa-network-wired*](https://fontawesome.com/icons/network-wired?style=solid)
 * **calendar** [*fas fa-calendar-day*](https://fontawesome.com/icons/calendar-day?style=solid)
 * **clock** [*fas fa-clock"*](https://fontawesome.com/icons/clock?style=solid)
+* **twitter** [*fab fa-twitter-square*](https://fontawesome.com/icons/twitter-square?style=brands)
+* **github** [*fab fa-github-square*](https://fontawesome.com/icons/github-square?style=brands)
 
 ### Translations
 if a view or a component has a few of unique elements to translate you can do 

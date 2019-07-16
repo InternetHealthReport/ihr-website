@@ -1,9 +1,10 @@
 <template>
   <q-input filled
       :value="dateToString"
-      @input="validateAndPropagate($event)">
+      @input="validateAndPropagate($event)"
+      :dark="white" class="IHR_date-input">
     <template v-slot:prepend>
-      <q-icon name="fas fa-calendar-day" class="cursor-pointer">
+      <q-icon name="fas fa-calendar-day" class="cursor-pointer" :class="textColor">
         <q-popup-proxy transition-show="scale" transition-hide="scale">
           <q-date
             :value="dateToString"
@@ -15,13 +16,14 @@
       </q-icon>
     </template>
     <template v-slot:append>
-      <q-icon name="fas fa-clock" class="cursor-pointer">
+      <q-icon name="fas fa-clock" class="cursor-pointer" :class="textColor">
         <q-popup-proxy transition-show="scale" transition-hide="scale">
           <q-time
             :value="dateToString"
             @input="propagate($event)"
             :mask="TIME_FORMAT"
             format24h
+            color="white"
           />
         </q-popup-proxy>
       </q-icon>
@@ -50,6 +52,9 @@ export default {
       default: () => {
         return new Date();
       }
+    },
+    white: {
+      type: Boolean
     }
   },
   data() {
@@ -75,9 +80,21 @@ export default {
     dateToString() {
       return this.value.toUTCString();
     },
+    textColor() {
+      return this.white?"IHR_white-text":"IHR_black-text";
+    }
   }
 };
 </script>
 
-<style>
+<style lang="stylus" scoped>
+.IHR_
+    &white-text
+      color white
+
+    &black-text
+      color black
+    
+    &date-input
+      font-weight bolder
 </style>

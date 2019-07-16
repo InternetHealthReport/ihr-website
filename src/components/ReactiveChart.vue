@@ -50,6 +50,7 @@ export default {
   },
   methods: {
     react() {
+      console.log(this.traces);
       Plotly.react(
         this.$refs["chart"],
         this.traces,

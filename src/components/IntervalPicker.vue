@@ -7,6 +7,7 @@
         :max="maxTime"
         :value="localStartTime"
         @input="localStartTime = $event; timeRange.min = $event.getTime();"
+        :white="white"
       />
       <q-range
         class="col-7"
@@ -25,6 +26,7 @@
         :max="maxTime"
         :value="localEndtime"
         @input="localEndtime = $event; timeRange.max = $event.getTime();"
+        :white="white"
       />
     </div>
   </div>
@@ -71,6 +73,9 @@ export default {
     value: {
       type: ChartInterval,
       require: true
+    },
+    white: {
+      type: Boolean
     }
   },
   data() {
@@ -108,6 +113,9 @@ export default {
     rigthLabel() {
       this.debouncedEmit();
       return timestampToUTC(this.timeRange.max);
+    },
+    textColor() {
+      return this.white?"IHR_white-text":"IHR_black-text";
     }
   }
 };
@@ -115,4 +123,12 @@ export default {
 export { ChartInterval };
 </script>
 
-<style lang="stylus"></style>
+<style lang="stylus" scoped>
+.IHR_
+    &white-text
+      color white
+
+    &black-text
+      color black
+</style>
+

@@ -6,7 +6,7 @@ import axios from "axios";
 import { Query, NetworksQuery, DiscoEventQuery } from "./IhrQuery";
 
 const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/"; ///base api url
-const DEFAULT_TIMEOUT = 2000;
+const DEFAULT_TIMEOUT = 5000;
 const PROJECT_START_DATE = new Date("2016-01-01T00:00:00");
 
 const IhrApi = {

@@ -18,6 +18,8 @@ import ReactiveChart from "@/components/ReactiveChart";
 import DateTimePicker from "@/components/DateTimePicker";
 import { DiscoEventQuery, PROJECT_START_DATE } from "@/plugins/IhrApi";
 
+const DEFAULT_DEBOUNCE = 800;
+
 export default {
   components: {
     ReactiveChart,
@@ -46,9 +48,9 @@ export default {
     //prevent calls within 500ms and execute only the last one
     let debouncedApiCall = debounce(
       () => {
-        this.queryDiscoApi();
+        //FIXME this.queryDiscoApi();
       },
-      800,
+      DEFAULT_DEBOUNCE,
       false
     );
 
@@ -128,6 +130,7 @@ export default {
       trace.x.push(this.endTime.toUTCString());
       trace.y.push(0);
       trace.z.push(0);
+      this.layout.datarevision = new Date().getTime();
     }
   },
   watch: {

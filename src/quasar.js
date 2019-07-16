@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import "./styles/quasar.styl";
+import "@/styles/quasar.styl";
 import "quasar/dist/quasar.ie.polyfills";
 import iconSet from "quasar/icon-set/fontawesome-v5.js";
 import "@quasar/extras/roboto-font/roboto-font.css";
@@ -9,6 +9,7 @@ import {
   Quasar,
   QLayout,
   QHeader,
+  QFooter,
   QDrawer,
   QPageContainer,
   QPage,
@@ -42,6 +43,7 @@ import {
   QDate,
   QInput,
   QPopupProxy,
+  QPageSticky,
 
   //non component
   Cookies
@@ -63,6 +65,7 @@ Vue.use(Quasar, {
   components: {
     QLayout,
     QHeader,
+    QFooter,
     QDrawer,
     QPageContainer,
     QPage,
@@ -94,7 +97,8 @@ Vue.use(Quasar, {
     QTime,
     QDate,
     QInput,
-    QPopupProxy
+    QPopupProxy,
+    QPageSticky
   },
   directives: { ClosePopup },
   extras: ["material-icons", "fontawesome-v5"],

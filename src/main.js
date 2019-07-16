@@ -5,6 +5,7 @@ import "@/quasar";
 import i18n from "@/locales/i18n";
 import { IhrApi } from "@/plugins/IhrApi";
 import VueResizeText from "vue-resize-text";
+import "@/styles/main.styl";
 
 Vue.config.productionTip = false;
 

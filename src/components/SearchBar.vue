@@ -26,9 +26,9 @@
         v-on="scope.itemEvents"
         class="GL__select-GL__menu-link"
       >
-      <router-link :to="{name : 'as_and_ixp', params:{asn: scope.opt.number}}">
+      <router-link :to="{name : 'as_and_ixp', params:{asn: scope.opt.number}}" class="IHR_searchbar-routerlink">
         <q-item-section side>
-          {{(scope.opt.number < 0)? "IXP" : "ASN" + Math.abs(scope.opt.number)}}
+          {{asnOrIxp(scope.opt.number)}}
         </q-item-section>
         <q-item-section>
           {{scope.opt.name}}
@@ -41,19 +41,32 @@
 
 <script>
 import { NetworksQuery } from "@/plugins/IhrApi";
+import { debounce } from "quasar";
 
-const minCharacters = 3;
-const maxResults = 8;
+const MIN_CHARACTERS = 3;
+const MAX_RESULTS = 8;
+const DEFAULT_DEBOUNCE = 500;
 
 export default {
   data() {
     return {
       text: "",
-      minCharacters: minCharacters,
-      maxResults: maxResults,
+      debouncedSearch: null,
+      minCharacters: MIN_CHARACTERS,
+      maxResults: MAX_RESULTS,
+      value: null,
       retrievedValues: [],
       networksQuery: (new NetworksQuery()).orderedByNumber()
       };
+  },
+  mounted() {
+    this.debouncedSearch = debounce(
+      () => {
+        this.search();
+      },
+      DEFAULT_DEBOUNCE,
+      false
+    );
   },
   methods: {
     filter (value, update) {
@@ -62,12 +75,13 @@ export default {
       //TODO debounce filter!
       if(value.length > this.minCharacters) {
         update(() => {
-          this.networksQuery.mixedContentSearch(value);
-          this.search();
+          this.value = value;
+          this.debouncedSearch();
         });
       }
     },
     search () {
+      this.networksQuery.mixedContentSearch(this.value);
       this.$ihr_api.networks(this.networksQuery,
       (result)=> {
         this.retrievedValues = []
@@ -80,6 +94,9 @@ export default {
       (error) => {
         console.error(error);
       })
+    },
+    asnOrIxp(value) {
+      return (value < 0)? "IXP" : "ASN" + Math.abs(value);
     }
   },
   computed: {
@@ -89,7 +106,15 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+.IHR_
+  &searchbar-routerlink
+    text-decoration none
 
-<style>
-
+    &:first-child
+      margin-right 0px
+    
+    & > *
+      margin-right 0px
+      padding-right 0px 
 </style>

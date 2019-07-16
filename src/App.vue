@@ -1,6 +1,6 @@
 <template>
   <q-layout id="app">
-    <q-header elevated class="" primary>
+    <q-header elevated primary>
       <q-toolbar class="q-py-sm q-px-md">
         <q-item>
           <router-link :to="{name : 'home'}">
@@ -104,9 +104,24 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+    <q-footer elevated primary class="IHR_footer text-white text-center row items-end">
+      <span class="col-2 IHR_copyright">Internet Healt Report 2019 &#9400;</span>
+      <span class="IHR_sitemap col-8">
+        <router-link v-bind:key="item.entryName" :to="{name : item.routeName}"  v-for="item in [...simple_menu, ...dropdown_menu]">
+          {{$t(item.entryName)}}
+        </router-link>
+      </span>
+      <span class="IHR_external-links col-2">
+        <a href="https://twitter.com/ihr_alerts">
+          <q-icon name="fab fa-twitter-square" />
+        </a>
+        <a href="https://github.com/InternetHealthReport">
+          <q-icon name="fab fa-github-square"/>
+        </a>
+      </span>
+    </q-footer>
   </q-layout>
 </template>
-
 <script>
 import languages from "quasar/lang/index.json";
 import LocaleSelector from "@/locales/LocaleSelector";
@@ -186,56 +201,23 @@ menu-delinkify()
     a
       menu-delinkify 1
 
-  /*
-.GL
-  &__select-GL__menu-link
-    .default-type
-      visibility hidden
+  &footer
+    & > *
+      border-left solid gray 1px
+      &:first-child
+        border-left none
 
-    &:hover
-      background #0366d6
-      color white
-      .q-item__section--side
+    ~/copyright
+      vertical-align bottom
+
+    ~/external-links
+      font-size 18pt
+      & a
         color white
-      .default-type
-        visibility visible
 
-  &__toolbar-link
-    a
-      color white
-      text-decoration none
-      &:hover
-        opacity 0.7
+    ~/sitemap
+      font-size 18pt
+      a
+        menu-delinkify 1
 
-  &__menu-link:hover
-    background #0366d6
-    color white
-
-  &__menu-link-signed-in
-  &__menu-link-status
-    &:hover
-      & > div
-        background white !important
-
-  &__menu-link-status
-    color $blue-grey-6
-    &:hover
-      color $light-blue-9
-
-  &__toolbar-select.q-field--focused
-    width 450px !important
-    .q-field__append
-      display none
-*/
 </style>
-<!--
-//flags incons
-
-<div>Icons made by 
-<a href="https://www.freepik.com/?__hstc=57440181.bfe11e669d937a19a0cdcc809b9be889.1562286331749.1562286331749.1562286331749.1&__hssc=57440181.3.1562286331751&__hsfp=694215102" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/"             title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"             
-title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-
-
-alternative
-https://www.iconfinder.com/iconsets/142-mini-country-flags-16x16px
--->
