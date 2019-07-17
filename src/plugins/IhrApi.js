@@ -3,10 +3,19 @@
  */
 
 import axios from "axios";
-import { Query, NetworksQuery, DiscoEventQuery } from "./IhrQuery";
+import {
+  AS_FAMILY,
+  Query,
+  NetworksQuery,
+  DiscoEventQuery,
+  HegemonyQuery,
+  HegemonyConeQuery,
+  ForwardingQuery,
+  DelayQuery
+} from "./IhrQuery";
 
 const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/"; ///base api url
-const DEFAULT_TIMEOUT = 5000;
+const DEFAULT_TIMEOUT = 60000;
 const PROJECT_START_DATE = new Date("2016-01-01T00:00:00");
 
 const IhrApi = {
@@ -37,8 +46,12 @@ const IhrApi = {
          *      as parameter.
          */
         _generic: function(endpoint, query, success_callback, error_callback) {
-          if (query instanceof Query) query = query.get_filter();
-          console.log("call to: " + JSON.stringify(query));
+          if (Query.isPrototypeOf(query.constructor)) {
+            console.log("call to: " + query);
+            query = query.get_filter();
+          } else {
+            console.log("Non Query object: " + JSON.stringify(query));
+          }
           this.axios_base
             .get(endpoint, { params: query, timeout: DEFAULT_TIMEOUT })
             .then(response => {
@@ -54,10 +67,10 @@ const IhrApi = {
          * @brief delay endpoint wrapper see @ref _generic()
          */
         delay() {
-          this._generic("delay/", arguments);
+          this._generic("delay/", ...arguments);
         },
         delay_alarms() {
-          this._generic("delay_alarms/", arguments);
+          this._generic("delay_alarms/", ...arguments);
         },
         disco_events(discoEventQuery, success_callback, error_callback) {
           this._generic(
@@ -68,19 +81,29 @@ const IhrApi = {
           );
         },
         disco_probes() {
-          this._generic("disco_probes/", arguments);
+          this._generic("disco_probes/", ...arguments);
         },
         forwarding() {
-          this._generic("forwarding/", arguments);
+          this._generic("forwarding/", ...arguments);
         },
         forwarding_alarms() {
-          this._generic("forwarding_alarms/", arguments);
+          this._generic("forwarding_alarms/", ...arguments);
         },
-        hegemony() {
-          this._generic("hegemony/", arguments);
+        hegemony(hegemonyQuery, success_callback, error_callback) {
+          this._generic(
+            "hegemony/",
+            hegemonyQuery,
+            success_callback,
+            error_callback
+          );
         },
-        hegemony_cone() {
-          this._generic("hegemony_cone/", arguments);
+        hegemony_cone(hegemonyConeQuery, success_callback, error_callback) {
+          this._generic(
+            "hegemony_cone/",
+            hegemonyConeQuery,
+            success_callback,
+            error_callback
+          );
         },
         networks(networkQuery, success_callback, error_callback) {
           this._generic(
@@ -89,6 +112,11 @@ const IhrApi = {
             success_callback,
             error_callback
           );
+        },
+
+        // utilities
+        getAsOrIxp(asn) {
+          return asn < 0 ? "IXP" : "AS" + Math.abs(asn);
         }
       }
     });
@@ -101,4 +129,15 @@ const IhrApi = {
   }
 };
 
-export { PROJECT_START_DATE, IhrApi, Query, NetworksQuery, DiscoEventQuery };
+export {
+  AS_FAMILY,
+  PROJECT_START_DATE,
+  IhrApi,
+  Query,
+  NetworksQuery,
+  DiscoEventQuery,
+  HegemonyQuery,
+  HegemonyConeQuery,
+  ForwardingQuery,
+  DelayQuery
+};

@@ -1,4 +1,8 @@
 {
+	"generic_errors": {
+		"ups": "ups",
+		"bad_happened": "Something bad happened, please contact the administrator"
+	},
 	"header": {
 		"API": "API",
 		"contacts": "contacts",
@@ -14,5 +18,17 @@
 	"searchBar": {
 		"placeholder": " or name",
 		"resultsFound": "results found"
+	},
+	"AsAndIxp": {
+		"headerString": {
+			"loading": "loading in progress",
+			"not_found": "you are searching is not available",
+			"expired" : "Request expired"
+		},
+		"subHeader": {
+			"loading": "please wait",
+			"not_found": "the AS is not in our server",
+			"expired" : "the sever is under load, please try again later"
+		}
 	}
 }

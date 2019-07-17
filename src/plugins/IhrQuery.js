@@ -5,6 +5,10 @@ const _ORDER_DESC = "-";
 const _LTE = "__lte";
 const _GTE = "__gte";
 const _EXACT = "";
+const AS_FAMILY = {
+  v4: 4,
+  v6: 6
+};
 
 // exceptions
 class MustBeImplemented extends SyntaxError {
@@ -108,14 +112,14 @@ class Query {
 
 class NetworksQuery extends Query {
   constructor() {
-    super(NetworksQuery.name, arguments);
+    super(NetworksQuery.name, ...arguments);
   }
 
   containsName(name) {
     return this._set("name", name);
   }
 
-  exactAsn(asn) {
+  asNumber(asn) {
     return this._set("number", asn);
   }
 
@@ -142,45 +146,15 @@ class NetworksQuery extends Query {
  */
 class TimeQuery extends Query {
   constructor() {
-    super(arguments);
+    super(...arguments);
   }
 
-  startTime(time, comparator = Query.EXACT) {
+  startTime(/*time, comparator = Query.EXACT*/) {
     throw new MustBeImplemented("startTime");
   }
 
-  endTime(time, comparator = Query.EXACT) {
+  endTime(/*time, comparator = Query.EXACT*/) {
     throw new MustBeImplemented("endTime");
-  }
-
-  timeInterval(lowerBound, upperBound) {
-    throw new MustBeImplemented("timeInterval");
-  }
-
-  orderedByTime() {
-    throw new MustBeImplemented("orderedByTime");
-  }
-}
-
-class DiscoEventQuery extends TimeQuery {
-  constructor() {
-    super(DiscoEventQuery.name, arguments);
-  }
-
-  streamName(name) {
-    return this._set("streamname", name);
-  }
-
-  streamType(name) {
-    return this._set("streamtype", name);
-  }
-
-  startTime(time, comparator = Query.EXACT) {
-    return this._set("startime", Query.date_formatter(time), comparator);
-  }
-
-  endTime(time, comparator = Query.EXACT) {
-    return this._set("endtime", Query.date_formatter(time), comparator);
   }
 
   timeInterval(lowerBound, upperBound) {
@@ -191,6 +165,36 @@ class DiscoEventQuery extends TimeQuery {
     let todayEarly = new Date().setHours(0, 0, 0, 0);
     let todayLate = new Date().setHours(23, 59, 59, 0);
     return this.timeInterval(todayEarly, todayLate);
+  }
+
+  orderedByTime() {
+    throw new MustBeImplemented("orderedByTime");
+  }
+}
+
+class DiscoEventQuery extends TimeQuery {
+  constructor() {
+    super(DiscoEventQuery.name, ...arguments);
+  }
+
+  streamName(name) {
+    return this._set("streamname", name);
+  }
+
+  streamType(name) {
+    return this._set("streamtype", name);
+  }
+
+  startTime(time, comparator = Query.GTE) {
+    return this._set("timebin", Query.date_formatter(time), comparator);
+  }
+
+  endTime(time, comparator = Query.LTE) {
+    return this.startTime(time, comparator);
+  }
+
+  timeInterval(lowerBound, upperBound) {
+    return this.startTime(lowerBound, Query.GTE).endTime(upperBound, Query.LTE);
   }
 
   avgLevel(level, comparator = Query.EXACT) {
@@ -246,4 +250,125 @@ class DiscoEventQuery extends TimeQuery {
   }
 }
 
-export { Query, NetworksQuery, DiscoEventQuery };
+class DelayAndForwardingQuery extends TimeQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  asNumber(asn) {
+    return this._set("asn", asn);
+  }
+
+  magnitude(_magnitude) {
+    return this._set("magnitude", _magnitude);
+  }
+
+  startTime(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.date_formatter(time), comparator);
+  }
+
+  endTime(time, comparator = Query.EXACT) {
+    return this.startTime(time, comparator);
+  }
+
+  orderedByTime(order = Query.ASC) {
+    return this._setOrder("timebin", order);
+  }
+
+  orderedByMagnitude(order = Query.ASC) {
+    return this._setOrder("magnitude", order);
+  }
+}
+
+class DelayQuery extends DelayAndForwardingQuery {
+  constructor() {
+    super(DelayQuery.name, ...arguments);
+  }
+}
+
+class ForwardingQuery extends DelayAndForwardingQuery {
+  constructor() {
+    super(ForwardingQuery.name, ...arguments);
+  }
+}
+
+class CommonHegemonyQuery extends TimeQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  asNumber(asn) {
+    return this._set("asn", asn);
+  }
+
+  startTime(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.date_formatter(time), comparator);
+  }
+
+  endTime(time, comparator = Query.EXACT) {
+    return this.startTime(time, comparator);
+  }
+
+  asFamily(family) {
+    return this._set("af", family);
+  }
+
+  orderedByTime(order = Query.ASC) {
+    return this._setOrder("timebin", order);
+  }
+
+  orderedAsFamily(order = Query.ASC) {
+    return this._setOrder("af", order);
+  }
+}
+
+class HegemonyQuery extends CommonHegemonyQuery {
+  constructor() {
+    super(HegemonyQuery.name, ...arguments);
+  }
+
+  originAs(origin) {
+    return this._set("originasn", origin);
+  }
+
+  hegemony(hege, comparator = Query.EXACT) {
+    return this._set("hege", hege, comparator);
+  }
+
+  orderedByOriginAs(order = Query.ASC) {
+    return this._setOrder("originasn", order);
+  }
+
+  orderedByHegemony(order = Query.ASC) {
+    return this._setOrder("hege", order);
+  }
+
+  clone() {
+    return new HegemonyQuery(this._clone());
+  }
+}
+
+class HegemonyConeQuery extends CommonHegemonyQuery {
+  constructor() {
+    super(HegemonyConeQuery.name, ...arguments);
+  }
+
+  orderedByAs(order = Query.ASC) {
+    return this._setOrder("originasn", order);
+  }
+
+  clone() {
+    return new HegemonyConeQuery(this._clone());
+  }
+}
+
+export {
+  AS_FAMILY,
+  Query,
+  NetworksQuery,
+  DiscoEventQuery,
+  HegemonyQuery,
+  HegemonyConeQuery,
+  ForwardingQuery,
+  DelayQuery
+};

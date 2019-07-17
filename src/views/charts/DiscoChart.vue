@@ -16,7 +16,7 @@
 import { debounce } from "quasar";
 import ReactiveChart from "@/components/ReactiveChart";
 import DateTimePicker from "@/components/DateTimePicker";
-import { DiscoEventQuery, PROJECT_START_DATE } from "@/plugins/IhrApi";
+import { DiscoEventQuery } from "@/plugins/IhrApi";
 
 const DEFAULT_DEBOUNCE = 800;
 
@@ -37,18 +37,23 @@ export default {
     endTime: {
       type: Date,
       require: true
+    },
+    fetch: {
+      type: Boolean
     }
   },
   data() {
     let filter = new DiscoEventQuery()
       .streamName(this.streamName)
       .timeInterval(this.startTime, this.endTime)
-      .orderedByStartTime();
+      .orderedByTime();
 
     //prevent calls within 500ms and execute only the last one
     let debouncedApiCall = debounce(
       () => {
-        //FIXME this.queryDiscoApi();
+        if(!this.fetch)
+          return;
+        this.queryDiscoApi();
       },
       DEFAULT_DEBOUNCE,
       false
@@ -140,6 +145,9 @@ export default {
     },
     endTime() {
       this.filter.endTime(this.endTime, DiscoEventQuery.LTE);
+      this.debouncedApiCall();
+    },
+    fetch() {
       this.debouncedApiCall();
     }
   }
