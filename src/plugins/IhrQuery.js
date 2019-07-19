@@ -20,12 +20,18 @@ class MustBeImplemented extends SyntaxError {
 /** @brief all allowed filters in ihr-api
  */
 class Query {
-  constructor(filterType = "Generic", dictionary = {}) {
+  constructor(dictionary = {}) {
     this.filter = dictionary;
-    this.filterType = filterType;
   }
 
   // static members
+  static get FILTER_TYPE() {
+    return "Generic";
+  }
+
+  static get ENTRY_POINT() {
+    return "";
+  }
 
   static get NO_FILTER() {
     return _NO_FILTER;
@@ -51,8 +57,8 @@ class Query {
     return _EXACT;
   }
 
-  static date_formatter(date) {
-    return encodeURI(date.toISOString());
+  static dateFormatter(date) {
+    return date == undefined ? date : encodeURI(date.toISOString());
   }
 
   //private functions
@@ -75,7 +81,7 @@ class Query {
   }
 
   _setOrder(name, order = Query.ASC) {
-    return order === null
+    return order == null
       ? this._set("order")
       : this._set("order", order + name);
   }
@@ -102,7 +108,16 @@ class Query {
   }
 
   toString() {
-    return this.filterType + ": " + JSON.stringify(this.filter);
+    return this.constructor.FILTER_TYPE + ": " + JSON.stringify(this.filter);
+  }
+
+  toUrl() {
+    let str = [];
+    for (let param in this.filter)
+      str.push(
+        `${encodeURIComponent(param)}=${encodeURIComponent(this.filter[param])}`
+      );
+    return `${this.constructor.ENTRY_POINT}?${str.join("&")}`;
   }
 
   clone() {
@@ -110,10 +125,21 @@ class Query {
   }
 }
 
-class NetworksQuery extends Query {
+class NetworkQuery extends Query {
   constructor() {
-    super(NetworksQuery.name, ...arguments);
+    super(...arguments);
   }
+
+  //static members
+  static get FILTER_TYPE() {
+    return NetworkQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "network/";
+  }
+
+  //methods
 
   containsName(name) {
     return this._set("name", name);
@@ -137,7 +163,7 @@ class NetworksQuery extends Query {
   }
 
   clone() {
-    return new NetworksQuery(this._clone());
+    return new NetworkQuery(this._clone());
   }
 }
 
@@ -174,8 +200,19 @@ class TimeQuery extends Query {
 
 class DiscoEventQuery extends TimeQuery {
   constructor() {
-    super(DiscoEventQuery.name, ...arguments);
+    super(...arguments);
   }
+
+  //static members
+  static get FILTER_TYPE() {
+    return DiscoEventQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "disco_events/";
+  }
+
+  //methods
 
   streamName(name) {
     return this._set("streamname", name);
@@ -185,16 +222,16 @@ class DiscoEventQuery extends TimeQuery {
     return this._set("streamtype", name);
   }
 
+  timeBin(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.dateFormatter(time), comparator);
+  }
+
   startTime(time, comparator = Query.GTE) {
-    return this._set("timebin", Query.date_formatter(time), comparator);
+    return this.timeBin(time, comparator);
   }
 
   endTime(time, comparator = Query.LTE) {
-    return this.startTime(time, comparator);
-  }
-
-  timeInterval(lowerBound, upperBound) {
-    return this.startTime(lowerBound, Query.GTE).endTime(upperBound, Query.LTE);
+    return this.timeBin(time, comparator);
   }
 
   avgLevel(level, comparator = Query.EXACT) {
@@ -263,12 +300,16 @@ class DelayAndForwardingQuery extends TimeQuery {
     return this._set("magnitude", _magnitude);
   }
 
+  timeBin(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.dateFormatter(time), comparator);
+  }
+
   startTime(time, comparator = Query.EXACT) {
-    return this._set("timebin", Query.date_formatter(time), comparator);
+    return this.timeBin(time, comparator);
   }
 
   endTime(time, comparator = Query.EXACT) {
-    return this.startTime(time, comparator);
+    return this.timeBin(time, comparator);
   }
 
   orderedByTime(order = Query.ASC) {
@@ -282,13 +323,31 @@ class DelayAndForwardingQuery extends TimeQuery {
 
 class DelayQuery extends DelayAndForwardingQuery {
   constructor() {
-    super(DelayQuery.name, ...arguments);
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return DelayQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "delay/";
   }
 }
 
 class ForwardingQuery extends DelayAndForwardingQuery {
   constructor() {
-    super(ForwardingQuery.name, ...arguments);
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return ForwardingQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "forwarding/";
   }
 }
 
@@ -301,12 +360,16 @@ class CommonHegemonyQuery extends TimeQuery {
     return this._set("asn", asn);
   }
 
+  timeBin(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.dateFormatter(time), comparator);
+  }
+
   startTime(time, comparator = Query.EXACT) {
-    return this._set("timebin", Query.date_formatter(time), comparator);
+    return this.timeBin(time, comparator);
   }
 
   endTime(time, comparator = Query.EXACT) {
-    return this.startTime(time, comparator);
+    return this.timeBin(time, comparator);
   }
 
   asFamily(family) {
@@ -324,8 +387,19 @@ class CommonHegemonyQuery extends TimeQuery {
 
 class HegemonyQuery extends CommonHegemonyQuery {
   constructor() {
-    super(HegemonyQuery.name, ...arguments);
+    super(...arguments);
   }
+
+  //static members
+  static get FILTER_TYPE() {
+    return HegemonyQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "hegemony/";
+  }
+
+  //methods
 
   originAs(origin) {
     return this._set("originasn", origin);
@@ -350,8 +424,19 @@ class HegemonyQuery extends CommonHegemonyQuery {
 
 class HegemonyConeQuery extends CommonHegemonyQuery {
   constructor() {
-    super(HegemonyConeQuery.name, ...arguments);
+    super(...arguments);
   }
+
+  //static members
+  static get FILTER_TYPE() {
+    return HegemonyConeQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "hegemony_cone/";
+  }
+
+  //methods
 
   orderedByAs(order = Query.ASC) {
     return this._setOrder("originasn", order);
@@ -365,7 +450,7 @@ class HegemonyConeQuery extends CommonHegemonyQuery {
 export {
   AS_FAMILY,
   Query,
-  NetworksQuery,
+  NetworkQuery,
   DiscoEventQuery,
   HegemonyQuery,
   HegemonyConeQuery,

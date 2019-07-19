@@ -6,7 +6,7 @@ import axios from "axios";
 import {
   AS_FAMILY,
   Query,
-  NetworksQuery,
+  NetworkQuery,
   DiscoEventQuery,
   HegemonyQuery,
   HegemonyConeQuery,
@@ -50,7 +50,7 @@ const IhrApi = {
             console.log("call to: " + query);
             query = query.get_filter();
           } else {
-            console.log("Non Query object: " + JSON.stringify(query));
+            console.log("call with non Query object: " + JSON.stringify(query));
           }
           this.axios_base
             .get(endpoint, { params: query, timeout: DEFAULT_TIMEOUT })
@@ -63,6 +63,10 @@ const IhrApi = {
               if (error_callback instanceof Function) error_callback(result);
             });
         },
+
+        getUrl(queryFilter) {
+          return IHR_API_BASE + queryFilter.toUrl();
+        },
         /**
          * @brief delay endpoint wrapper see @ref _generic()
          */
@@ -74,7 +78,7 @@ const IhrApi = {
         },
         disco_events(discoEventQuery, success_callback, error_callback) {
           this._generic(
-            "disco_events/",
+            DiscoEventQuery.ENTRY_POINT,
             discoEventQuery,
             success_callback,
             error_callback
@@ -91,7 +95,7 @@ const IhrApi = {
         },
         hegemony(hegemonyQuery, success_callback, error_callback) {
           this._generic(
-            "hegemony/",
+            HegemonyQuery.ENTRY_POINT,
             hegemonyQuery,
             success_callback,
             error_callback
@@ -99,15 +103,15 @@ const IhrApi = {
         },
         hegemony_cone(hegemonyConeQuery, success_callback, error_callback) {
           this._generic(
-            "hegemony_cone/",
+            HegemonyConeQuery.ENTRY_POINT,
             hegemonyConeQuery,
             success_callback,
             error_callback
           );
         },
-        networks(networkQuery, success_callback, error_callback) {
+        network(networkQuery, success_callback, error_callback) {
           this._generic(
-            "network/",
+            NetworkQuery.ENTRY_POINT,
             networkQuery,
             success_callback,
             error_callback
@@ -134,7 +138,7 @@ export {
   PROJECT_START_DATE,
   IhrApi,
   Query,
-  NetworksQuery,
+  NetworkQuery,
   DiscoEventQuery,
   HegemonyQuery,
   HegemonyConeQuery,

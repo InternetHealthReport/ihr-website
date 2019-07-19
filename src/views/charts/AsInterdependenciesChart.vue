@@ -1,13 +1,51 @@
 <template>
-  <div class="IHR_interndependencies-chart">
+  <div class="IHR_interdependencies-chart">
     <reactive-chart
       :layout="layout"
       :traces="traces"
       @loaded="loading = false"
-      chart-title="AS interdependecies"
+      @plotly-click="showTable"
     />
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
+    </div>
+    <div v-if="details.tableData !== null">
+      <q-tabs
+        v-model="details.activeTab"
+        dense
+        class="text-grey"
+        active-color="primary"
+        indicator-color="primary"
+        align="justify"
+        narrow-indicator
+      >
+        <q-tab name="table" :label="$t('charts.hegemonyTable')" />
+        <q-tab name="bgpPlay" label="BGP play" />
+        <q-tab name="api" label="API" />
+      </q-tabs>
+      <q-tab-panels v-model="details.activeTab" animated>
+        <q-tab-panel name="table">
+          <as-interdependencies-table
+            :as-number="asNumber"
+            :date-time="details.tableData.dateTime"
+            :data="details.tableData.data"
+            :loading="details.tableData.loading"
+          />
+        </q-tab-panel>
+        <q-tab-panel name="bgpPlay">bgp Play</q-tab-panel>
+        <q-tab-panel name="api" class="IHR_api-table">
+          <table>
+            <tr>
+              <td><label name="hagemony">Hagemony</label></td>
+              <td><a :href="hegemonyUrl" target="_blank" id="hagemony">{{hegemonyUrl}}</a></td>
+            </tr>
+            <tr>
+              <td><label name="hagemonyCone">Hagemony cone</label></td>
+              <td><a :href="hegemonyConeUrl" target="_blank" id="hagemonyCone">{{hegemonyConeUrl}}</a></td>
+            </tr>
+          </table>
+        </q-tab-panel>
+      </q-tab-panels>
     </div>
   </div>
 </template>
@@ -16,26 +54,28 @@
 import { debounce } from "quasar";
 import ReactiveChart from "@/components/ReactiveChart";
 import DateTimePicker from "@/components/DateTimePicker";
-import {
-  HegemonyQuery,
-  HegemonyConeQuery,
-  AS_FAMILY
-  } from "@/plugins/IhrApi";
+import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
 
-const DEFAULT_TRACE = [{ // First trace is used for the hegemony cone
+import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
+
+const DEFAULT_TRACE = [
+  {
+    // First trace is used for the hegemony cone
     x: [],
     y: [],
-    yaxis: 'y2',
-    name: 'Number of dependents',
+    yaxis: "y2",
+    name: "Number of dependents",
     showlegend: false
-  }];
+  }
+];
 
 const DEFAULT_DEBOUNCE = 800;
 
 export default {
   components: {
     ReactiveChart,
-    DateTimePicker
+    DateTimePicker,
+    AsInterdependenciesTable
   },
   props: {
     asNumber: {
@@ -74,8 +114,7 @@ export default {
     //prevent calls within 500ms and execute only the last one
     let debouncedApiCall = debounce(
       () => {
-        if(!this.fetch)
-          return;
+        if (!this.fetch) return;
         this.traces = [...DEFAULT_TRACE];
         this.loading = true;
         this.loadingHegemony = true;
@@ -88,6 +127,11 @@ export default {
     );
 
     return {
+      details: {
+        activeTab: "table",
+        tableData: null,
+        enableBgpPlay: false
+      },
       debouncedApiCall: debouncedApiCall,
       loading: true,
       loadingHegemony: true,
@@ -96,29 +140,32 @@ export default {
       hegemonyConeFilter: hegemonyConeFilter,
       traces: [],
       layout: {
-          hovermode:'closest',
-          yaxis: {
-              title: "AS"+this.asNumber+" dependencies",
-              domain: [0.55, 1],
-              range: [0, 1.1],
-              automargin: true,
-          },
-          yaxis2:{
-              title: 'Number of ASes<br>dependent on AS'+this.asNumber,
-              domain: [0, 0.45],
-              autorange: true,
-              automargin: true,
-          },
-          margin: {
-              t: 50,
-              b: 50,
-          },
-          showlegend: true,
-          legend: {
-              x: 0,
-              y: 1.2,
-              orientation: "h"
-          },
+        hovermode: "closest",
+        yaxis: {
+          title: `AS${this.asNumber} ${this.$t(
+            "charts.tables.asInterdependencies.dependencies"
+          )}`,
+          domain: [0.55, 1],
+          range: [0, 1.1],
+          automargin: true
+        },
+        yaxis2: {
+          title:
+            this.$t("charts.tables.asInterdependencies.yaxis2") + this.asNumber,
+          domain: [0, 0.45],
+          autorange: true,
+          automargin: true
+        },
+        margin: {
+          t: 50,
+          b: 50
+        },
+        showlegend: true,
+        legend: {
+          x: 0,
+          y: 1.2,
+          orientation: "h"
+        }
       }
     };
   },
@@ -126,6 +173,56 @@ export default {
     this.debouncedApiCall();
   },
   methods: {
+    showTable(clickData) {
+      let plot = clickData.points[0];
+
+      this.enableBgpPlay = plot.yaxis._id == "y";
+      let intervalEnd = new Date(plot.x + "+00:00"); //adding timezone to string...
+      this.details.tableData = {
+        dateTime: intervalEnd,
+        data: [],
+        loading: true
+      };
+      //getting the previus point closest to x
+      let xIndex = plot.pointIndex - 1;
+      let endTime = intervalEnd.getTime();
+      while (xIndex >= 0 && Date.parse(plot.data.x[xIndex]) == endTime) {
+        xIndex--;
+      }
+      //if first point select the query must get an exact point
+      let intervalStart =
+        xIndex < 0 ? intervalEnd : new Date(plot.data.x[xIndex]);
+      let clickFilter = this.hegemonyFilter
+        .clone()
+        .timeInterval(intervalStart, intervalEnd);
+
+      this.$ihr_api.hegemony(
+        clickFilter,
+        results => {
+          console.log(results);
+          if (intervalStart != intervalEnd) {
+            let startString = intervalStart.toISOString().replace(".000", "");
+            let data = {};
+            let res = [];
+            results.results.forEach(elem => {
+              if (elem.timebin == startString) {
+                data[elem.originasn] = elem.hege;
+              } else if (data[elem.originasn] != undefined) {
+                elem.increment = elem.hege - data[elem.originasn];
+                res.push(elem);
+              }
+            });
+            results.results = res;
+          }
+          console.log(results.results);
+          this.details.tableData.data = results.results;
+          this.details.tableData.loading = false;
+        },
+        error => {
+          console.error(error); //TODO better error handling
+        }
+      );
+    },
     queryHegemonyAPI() {
       this.loadingHegemony = true;
       this.$ihr_api.hegemony(
@@ -155,35 +252,37 @@ export default {
       );
     },
     fetchHegemony(data) {
-      console.log("fetchHegemony")
-      let traces = {}
+      console.log("fetchHegemony");
+      let traces = {};
       data.forEach(resp => {
-        if(resp.asn == this.asNumber)
-          return;
+        if (resp.asn == this.asNumber) return;
 
         let trace;
-        if(!(resp.asn in traces)) {
+        if (!(resp.asn in traces)) {
           trace = {
-              x: [],
-              y: [],
-              name: this.$ihr_api.getAsOrIxp(resp.asn)+" "+resp.asn_name.split(" ")[0],
+            x: [],
+            y: [],
+            name:
+              this.$ihr_api.getAsOrIxp(resp.asn) +
+              " " +
+              resp.asn_name.split(" ")[0]
           };
           traces[resp.asn] = trace;
-          this.traces.push(trace)
+          this.traces.push(trace);
         } else {
           trace = traces[resp.asn];
         }
 
-        trace.y.push(resp.hege)
-        trace.x.push(resp.timebin)
+        trace.y.push(resp.hege);
+        trace.x.push(resp.timebin);
       });
     },
     fetchHegemonyCone(data) {
-      console.log("fetchHegemonyCone")
+      console.log("fetchHegemonyCone");
       let trace = this.traces[0];
       data.forEach(resp => {
-        trace.y.push(resp.conesize)
-        trace.x.push(resp.timebin)
+        trace.y.push(resp.conesize);
+        trace.x.push(resp.timebin);
       });
       this.layout.datarevision = new Date().getTime();
     }
@@ -202,17 +301,25 @@ export default {
     fetch() {
       this.debouncedApiCall();
     }
+  },
+  computed: {
+    hegemonyUrl() {
+      return this.$ihr_api.getUrl(this.hegemonyFilter);
+    },
+    hegemonyConeUrl() {
+      return this.$ihr_api.getUrl(this.hegemonyConeFilter);
+    },
   }
 };
 </script>
 
 <style lang="stylus">
 .IHR_
-  &interndependencies-chart
+  &interdependencies-chart
     text-align center
     position relative
 
-    & h1
+    &h1
       font-size 25pt
       margin-bottom 0px
       font-weight 400
@@ -222,4 +329,14 @@ export default {
     position absolute
     top 50%
     left 49%
+
+  &api-table
+    & table
+      display inline-block
+      margin 0 auto
+    & label
+      text-align right
+      display inline-block
+      font-weight 600
+      width 100%
 </style>

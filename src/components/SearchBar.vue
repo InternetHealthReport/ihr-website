@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { NetworksQuery } from "@/plugins/IhrApi";
+import { NetworkQuery } from "@/plugins/IhrApi";
 import { debounce } from "quasar";
 
 const MIN_CHARACTERS = 3;
@@ -56,7 +56,7 @@ export default {
       maxResults: MAX_RESULTS,
       value: null,
       retrievedValues: [],
-      networksQuery: (new NetworksQuery()).orderedByNumber()
+      networkQuery: (new NetworkQuery()).orderedByNumber()
       };
   },
   mounted() {
@@ -81,8 +81,8 @@ export default {
       }
     },
     search () {
-      this.networksQuery.mixedContentSearch(this.value);
-      this.$ihr_api.networks(this.networksQuery,
+      this.NetworkQuery.mixedContentSearch(this.value);
+      this.$ihr_api.network(this.networkQuery,
       (result)=> {
         this.retrievedValues = []
         result.results.some(element => {

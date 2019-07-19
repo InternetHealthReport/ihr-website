@@ -4,7 +4,6 @@
       :layout="layout"
       :traces="traces"
       @loaded="loading = false"
-      chart-title="AS interdependecies"
     />
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />

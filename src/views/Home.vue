@@ -58,7 +58,7 @@
 </template>
 <script>
 import DelayedCounter from "@/components/DelayedCounter"
-import NO_FILTER from "@/plugins/IhrApi"
+import { NetworkQuery } from "@/plugins/IhrApi"
 
 const features = [
   {
@@ -89,7 +89,7 @@ export default {
     };
   },
   mounted(){
-    this.$ihr_api.networks(NO_FILTER, (result)=>{
+    this.$ihr_api.network(NetworkQuery.NO_FILTER, (result)=>{
       this.networksNumber = result.count;
     });
     this.countriesNumber = 10;

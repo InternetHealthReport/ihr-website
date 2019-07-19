@@ -44,6 +44,11 @@ import {
   QInput,
   QPopupProxy,
   QPageSticky,
+  QTable,
+  QTh,
+  QTr,
+  QTd,
+  QExpansionItem,
 
   //non component
   Cookies
@@ -98,7 +103,12 @@ Vue.use(Quasar, {
     QDate,
     QInput,
     QPopupProxy,
-    QPageSticky
+    QPageSticky,
+    QTable,
+    QTh,
+    QTr,
+    QTd,
+    QExpansionItem
   },
   directives: { ClosePopup },
   extras: ["material-icons", "fontawesome-v5"],
