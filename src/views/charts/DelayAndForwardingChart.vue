@@ -1,0 +1,333 @@
+<template>
+  <div class="IHR_chart">
+    <reactive-chart
+      :layout="layout"
+      :traces="traces"
+      @loaded="loading = false"
+      @plotly-click="showTable"
+    />
+    <div v-if="loading" class="IHR_loading-spinner">
+      <q-spinner color="secondary" size="4em" />
+    </div>
+    <div v-if="details.tableVisible" class>
+      <span class="IHR_table-close-button" @click="details.tableVisible=false">x</span>
+      <q-tabs
+        v-model="details.activeTab"
+        dense
+        class="text-grey"
+        active-color="primary"
+        indicator-color="primary"
+        align="justify"
+        narrow-indicator
+      >
+        <q-tab name="delay" :label="$t('charts.delayAndForwarding.tables.delay.title')" />
+        <q-tab name="forwarding" :label="$t('charts.delayAndForwarding.tables.forwarding.title')" />
+        <q-tab name="api" label="API" />
+      </q-tabs>
+      <q-tab-panels v-model="details.activeTab" animated>
+        <q-tab-panel name="delay">
+          <delay-alarms-table
+            :date-time="details.delayData.dateTime"
+            :data="details.delayData.data"
+            :loading="details.delayData.loading"
+          />
+        </q-tab-panel>
+        <q-tab-panel name="forwarding">
+          <forwarding-alarms-table
+            :date-time="details.forwardingData.dateTime"
+            :data="details.forwardingData.data"
+            :loading="details.forwardingData.loading"
+          />
+        </q-tab-panel>
+        <q-tab-panel name="api" class="IHR_api-table">
+          <table>
+            <tr>
+              <td>
+                <label name="delay">{{$t('charts.delayAndForwarding.yaxis')}}</label>
+              </td>
+              <td>
+                <a :href="delayUrl" target="_blank" id="delay">{{delayUrl}}</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label name="forwarding">{{$t('charts.delayAndForwarding.yaxis2')}}</label>
+              </td>
+              <td>
+                <a :href="forwardingUrl" target="_blank" id="forwarding">{{forwardingUrl}}</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label name="delayAlarms">{{$t('charts.delayAndForwarding.tables.delay.title')}}</label>
+              </td>
+              <td>
+                <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{delayAlarmsUrl}}</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label
+                  name="forwardingAlarms"
+                >{{$t('charts.delayAndForwarding.tables.forwarding.title')}}</label>
+              </td>
+              <td>
+                <a
+                  :href="forwardingAlarmsUrl"
+                  target="_blank"
+                  id="forwardingAlarms"
+                >{{forwardingAlarmsUrl}}</a>
+              </td>
+            </tr>
+          </table>
+        </q-tab-panel>
+      </q-tab-panels>
+    </div>
+  </div>
+</template>
+
+<script>
+import { debounce } from "quasar";
+import ReactiveChart from "@/components/ReactiveChart";
+import DateTimePicker from "@/components/DateTimePicker";
+import DelayAlarmsTable from "./tables/DelayAlarmsTable";
+import ForwardingAlarmsTable from "./tables/ForwardingAlarmsTable";
+import {
+  ForwardingQuery,
+  DelayQuery,
+  DelayAlarmsQuery,
+  ForwardingAlarmsQuery
+} from "@/plugins/IhrApi";
+
+const DEFAULT_TRACES = [
+  {
+    x: [],
+    y: [],
+    yaxis: "y",
+    name: "Delay",
+    showlegend: false
+  },
+  {
+    x: [],
+    y: [],
+    yaxis: "y2",
+    name: "Forwarding",
+    showlegend: false
+  }
+];
+
+const DEFAULT_DEBOUNCE = 800;
+
+export default {
+  components: {
+    ReactiveChart,
+    DateTimePicker,
+    DelayAlarmsTable,
+    ForwardingAlarmsTable
+  },
+  props: {
+    asNumber: {
+      type: Number,
+      required: true
+    },
+    startTime: {
+      type: Date,
+      require: true
+    },
+    endTime: {
+      type: Date,
+      require: true
+    },
+    fetch: {
+      type: Boolean
+    }
+  },
+  data() {
+    let delayFilter = new DelayQuery()
+      .asNumber(this.asNumber)
+      .timeInterval(this.startTime, this.endTime)
+      .orderedByTime();
+
+    let forwardingFilter = new ForwardingQuery()
+      .asNumber(this.asNumber)
+      .timeInterval(this.startTime, this.endTime)
+      .orderedByTime();
+
+    //prevent calls within 500ms and execute only the last one
+    let debouncedApiCall = debounce(
+      () => {
+        if (!this.fetch) return;
+        this.traces = [...DEFAULT_TRACES];
+        this.loading = true;
+        this.loadingDelay = true;
+        this.loadingForwarding = true;
+        this.queryForwardingAPI();
+        this.queryDelayAPI();
+      },
+      DEFAULT_DEBOUNCE,
+      false
+    );
+
+    return {
+      details: {
+        activeTab: "delay",
+        delayData: null,
+        delayAlarmsFilter: new DelayAlarmsQuery().asNumber(this.asNumber),
+        forwardingData: null,
+        forwardingAlarmsFilter: new ForwardingAlarmsQuery().asNumber(
+          this.asNumber
+        ),
+        tableVisible: false
+      },
+      debouncedApiCall: debouncedApiCall,
+      loading: true,
+      loadingDelay: true,
+      loadingForwarding: true,
+      delayFilter: delayFilter,
+      forwardingFilter: forwardingFilter,
+      traces: [],
+      layout: {
+        hovermode: "closest",
+        yaxis: {
+          title: this.$t("charts.delayAndForwarding.yaxis"),
+          domain: [0.55, 1],
+          autorange: true,
+          automargin: true
+        },
+        yaxis2: {
+          title: this.$t("charts.delayAndForwarding.yaxis2"),
+          domain: [0, 0.45],
+          autorange: true,
+          automargin: true
+        },
+        margin: {
+          t: 50,
+          b: 50
+        }
+      }
+    };
+  },
+  mounted() {
+    this.debouncedApiCall();
+  },
+  methods: {
+    showTable(clickData) {
+      let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
+      this.details.delayData = {
+        dateTime: chosenTime,
+        data: [],
+        loading: true
+      };
+
+      this.details.forwardingData = {
+        dateTime: chosenTime,
+        data: [],
+        loading: true
+      };
+
+      this.$ihr_api.delay_alarms(
+        this.details.delayAlarmsFilter.timeBin(chosenTime),
+        results => {
+          this.details.delayData.data = results.results;
+          this.details.tableVisible = true;
+          this.details.delayData.loading = false;
+          this.details.delayAlarmsFilter = this.details.delayAlarmsFilter.clone();
+        },
+        error => {
+          console.error(error); //TODO better error handling
+        }
+      );
+
+      this.$ihr_api.forwarding_alarms(
+        this.details.forwardingAlarmsFilter.timeBin(chosenTime),
+        results => {
+          this.details.forwardingData.data = results.results;
+          this.details.tableVisible = true;
+          this.details.forwardingData.loading = false;
+          this.details.forwardingAlarmsFilter = this.details.forwardingAlarmsFilter.clone();
+        },
+        error => {
+          console.error(error); //TODO better error handling
+        }
+      );
+    },
+    queryForwardingAPI() {
+      this.loadingForwarding = true;
+      this.$ihr_api.forwarding(
+        this.forwardingFilter,
+        result => {
+          this.fetchForwarding(result.results);
+          this.loadingForwarding = false;
+          this.loading = this.loadingDelay || this.loadingForwarding;
+        },
+        error => {
+          console.error(error); //FIXME do a correct alert
+        }
+      );
+    },
+    queryDelayAPI() {
+      this.loadingDelay = true;
+      this.$ihr_api.delay(
+        this.delayFilter,
+        result => {
+          this.fetchDelay(result.results);
+          this.loadingDelay = false;
+          this.loading = this.loadingDelay || this.loadingForwarding;
+        },
+        error => {
+          console.error(error); //FIXME do a correct alert
+        }
+      );
+    },
+    fetchData(trace, data) {
+      data.forEach(resp => {
+        trace.y.push(resp.magnitude);
+        trace.x.push(resp.timebin);
+      });
+      this.layout.datarevision = new Date().getTime();
+    },
+    fetchDelay(data) {
+      console.log("fetchDelay");
+      this.fetchData(this.traces[0], data);
+    },
+    fetchForwarding(data) {
+      console.log("fetchForwarding");
+      this.fetchData(this.traces[1], data);
+    }
+  },
+  watch: {
+    startTime() {
+      this.delayFilter.startTime(this.startTime, DelayQuery.GTE);
+      this.forwardingFilter.startTime(this.startTime, ForwardingQuery.GTE);
+      this.debouncedApiCall();
+    },
+    endTime() {
+      this.delayFilter.endTime(this.endTime, DelayQuery.LTE);
+      this.forwardingFilter.endTime(this.endTime, ForwardingQuery.LTE);
+      this.debouncedApiCall();
+    },
+    fetch() {
+      this.debouncedApiCall();
+    }
+  },
+  computed: {
+    delayUrl() {
+      return this.$ihr_api.getUrl(this.delayFilter);
+    },
+    forwardingUrl() {
+      return this.$ihr_api.getUrl(this.forwardingFilter);
+    },
+    delayAlarmsUrl() {
+      console.log("trigger delayAlarmsUrl")
+      return this.$ihr_api.getUrl(this.details.delayAlarmsFilter);
+    },
+    forwardingAlarmsUrl() {
+      return this.$ihr_api.getUrl(this.details.forwardingAlarmsFilter);
+    }
+  }
+};
+</script>
+
+<style lang="stylus">
+@import '~@/styles/charts/common.styl';
+</style>

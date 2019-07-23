@@ -1,0 +1,73 @@
+{
+	"genericErrors": {
+		"ups": "ups",
+		"badHappened": "Something bad happened, please contact the administrator",
+		"cloudNotLoad": "Could not load "
+	},
+	"header": {
+		"API": "API",
+		"contacts": "contacts",
+		"countries": "countries",
+		"documentation": "documentation",
+		"networks": "networks",
+		"participants": "participants"
+	},
+	"home": {
+		"monitoredCountries": "monitored countries",
+		"monitoredNetworks": "monitored Networks"
+	},
+	"searchBar": {
+		"placeholder": " or name",
+		"resultsFound": "results found"
+	},
+	"AsAndIxp": {
+		"headerString": {
+			"loading": "loading in progress",
+			"notFound": "you are searching is not available",
+			"expired" : "Request expired"
+		},
+		"subHeader": {
+			"loading": "please wait",
+			"notFound": "the AS is not in our server",
+			"expired" : "the sever is under load, please try again later"
+		}
+	},
+	"charts":{
+		"asInterdependencies": {
+			"title": "AS interdependencies",
+			"yaxis": "dependencies",
+			"yaxis2": "Number of ASes<br> dependent on AS",
+			"table": {
+				"dependencyTitle": "networks dependency",
+				"dependentTitle": "dependent networks",
+				"increment": "increment",
+				"dependencies": "dependencies",
+				"dependent": "dependent"
+			}
+		},
+		"delayAndForwarding": {
+			"title": "delay and forwarding",
+			"yaxis": "Delay Change Level",
+			"yaxis2": "Forwarding Anomaly Level",
+			"tables": {
+				"delay": {
+					"title": "delay anomalies",
+					"deviation": "deviation",
+					"delayChange": "delay change",
+					"delayAnomalies": "delay anomalies on"
+				},
+				"forwarding": {
+					"title": "forwarding anomalies",
+					"reportedIp": "reported IP",
+					"usualPrecedingIP": "usual preceding IP",
+					"correlation": "correlation",
+					"responsibility": "responsibility"
+				}
+			}
+		},
+		"disconnections": {
+			"title": "disconnection events"
+		}
+	},
+	"asn": "AS number"
+}
