@@ -1,5 +1,5 @@
 <template>
-  <div class="IHR_interdependencies-chart">
+  <div class="IHR_chart">
     <reactive-chart
       :layout="layout"
       :traces="traces"
@@ -9,7 +9,8 @@
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
     </div>
-    <div v-if="details.tableData !== null">
+    <div v-if="details.tableVisible" class>
+      <span class="IHR_table-close-button" @click="details.tableVisible=false">x</span>
       <q-tabs
         v-model="details.activeTab"
         dense
@@ -19,20 +20,26 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="table" :label="$t('charts.hegemonyTable')" />
+        <q-tab name="dependency" :label="$t('charts.asInterdependencies.table.dependencyTitle')" />
+        <q-tab name="dependent" :label="$t('charts.asInterdependencies.table.dependentTitle')" />
         <q-tab name="bgpPlay" label="BGP play" />
         <q-tab name="api" label="API" />
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>
-        <q-tab-panel name="table">
+        <q-tab-panel name="dependency">
           <as-interdependencies-table
-            :as-number="asNumber"
-            :date-time="details.tableData.dateTime"
-            :data="details.tableData.data"
-            :loading="details.tableData.loading"
+            :data="networkDependencyData"
+            :loading="details.tablesData.dependency.loading"
           />
         </q-tab-panel>
-        <q-tab-panel name="bgpPlay">bgp Play</q-tab-panel>
+        <q-tab-panel name="dependent">
+          <as-interdependencies-table
+            :data="dependentNetworksData"
+            use-origin-asn
+            :loading="details.tablesData.dependent.loading"
+          />
+        </q-tab-panel>
+        <q-tab-panel name="bgpPlay" :disable="!details.enableBgpPlay">bgp Play</q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table">
           <table>
             <tr>
@@ -42,6 +49,14 @@
             <tr>
               <td><label name="hagemonyCone">Hagemony cone</label></td>
               <td><a :href="hegemonyConeUrl" target="_blank" id="hagemonyCone">{{hegemonyConeUrl}}</a></td>
+            </tr>
+            <tr>
+              <td><label name="tableUrl">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</label></td>
+              <td><a :href="dependencyUrl" target="_blank" id="tableUrl">{{dependencyUrl}}</a></td>
+            </tr>
+            <tr>
+              <td><label name="tableUrl">{{$t("charts.asInterdependencies.table.dependentTitle")}}</label></td>
+              <td><a :href="dependentUrl" target="_blank" id="tableUrl">{{dependentUrl}}</a></td>
             </tr>
           </table>
         </q-tab-panel>
@@ -128,9 +143,13 @@ export default {
 
     return {
       details: {
-        activeTab: "table",
-        tableData: null,
-        enableBgpPlay: false
+        activeTab: "dependency",
+        tablesData: {
+          dependency: null,
+          dependent: null
+        },
+        tableVisible: false,
+        enableBgpPlay: false,
       },
       debouncedApiCall: debouncedApiCall,
       loading: true,
@@ -142,16 +161,14 @@ export default {
       layout: {
         hovermode: "closest",
         yaxis: {
-          title: `AS${this.asNumber} ${this.$t(
-            "charts.tables.asInterdependencies.dependencies"
-          )}`,
+          title: `AS${this.asNumber} ${this.$t('charts.asInterdependencies.yaxis')}`,
           domain: [0.55, 1],
           range: [0, 1.1],
           automargin: true
         },
         yaxis2: {
           title:
-            this.$t("charts.tables.asInterdependencies.yaxis2") + this.asNumber,
+            this.$t('charts.asInterdependencies.yaxis2') + this.asNumber,
           domain: [0, 0.45],
           autorange: true,
           automargin: true
@@ -176,47 +193,50 @@ export default {
     showTable(clickData) {
       let plot = clickData.points[0];
 
-      this.enableBgpPlay = plot.yaxis._id == "y";
+      this.details.enableBgpPlay = (plot.yaxis._id == "y");
       let intervalEnd = new Date(plot.x + "+00:00"); //adding timezone to string...
-      this.details.tableData = {
-        dateTime: intervalEnd,
-        data: [],
-        loading: true
-      };
       //getting the previus point closest to x
       let xIndex = plot.pointIndex - 1;
       let endTime = intervalEnd.getTime();
       while (xIndex >= 0 && Date.parse(plot.data.x[xIndex]) == endTime) {
         xIndex--;
       }
-      //if first point select the query must get an exact point
-      let intervalStart =
-        xIndex < 0 ? intervalEnd : new Date(plot.data.x[xIndex]);
-      let clickFilter = this.hegemonyFilter
-        .clone()
-        .timeInterval(intervalStart, intervalEnd);
+      let intervalStart = xIndex < 0 ? intervalEnd : new Date(plot.data.x[xIndex]);
+
+      let dependencyFilter = this.hegemonyFilter.clone().timeInterval(intervalStart, intervalEnd);
+      let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber);
+      this.updateTable("dependency", "originasn", dependencyFilter, intervalStart, intervalEnd);
+      this.updateTable("dependent", "asn", dependentFilter, intervalStart, intervalEnd);
+    },
+    updateTable(tableType, haegemonyComparator, filter, intervalStart, intervalEnd) {
+      this.details.tablesData[tableType] = {
+        data: [],
+        loading: true,
+        filter: filter
+      };
 
       this.$ihr_api.hegemony(
-        clickFilter,
+        filter,
         results => {
-          console.log(results);
           if (intervalStart != intervalEnd) {
             let startString = intervalStart.toISOString().replace(".000", "");
             let data = {};
             let res = [];
             results.results.forEach(elem => {
+              let asn = elem[haegemonyComparator];
               if (elem.timebin == startString) {
-                data[elem.originasn] = elem.hege;
-              } else if (data[elem.originasn] != undefined) {
-                elem.increment = elem.hege - data[elem.originasn];
+                data[asn] = elem.hege;
+              } else if (data[asn] != undefined) {
+                elem.increment = elem.hege - data[asn];
                 res.push(elem);
               }
             });
             results.results = res;
           }
-          console.log(results.results);
-          this.details.tableData.data = results.results;
-          this.details.tableData.loading = false;
+
+          this.details.tablesData[tableType].data = results.results;
+          this.details.tableVisible = true;
+          this.details.tablesData[tableType].loading = false;
         },
         error => {
           console.error(error); //TODO better error handling
@@ -263,7 +283,7 @@ export default {
             x: [],
             y: [],
             name:
-              this.$ihr_api.getAsOrIxp(resp.asn) +
+              this.$options.filters.ihr_getAsOrIxp(resp.asn) +
               " " +
               resp.asn_name.split(" ")[0]
           };
@@ -303,40 +323,33 @@ export default {
     }
   },
   computed: {
+    networkDependencyData() {
+      return this.details.tablesData.dependency.data.filter((elem)=>{
+        return elem.asn != this.asNumber;
+      });
+    },
+    dependentNetworksData() {
+      return this.details.tablesData.dependent.data.filter((elem)=>{
+        return elem.originasn != this.asNumber;
+      });
+    },
     hegemonyUrl() {
       return this.$ihr_api.getUrl(this.hegemonyFilter);
     },
     hegemonyConeUrl() {
       return this.$ihr_api.getUrl(this.hegemonyConeFilter);
     },
+    dependencyUrl() {
+      return this.$ihr_api.getUrl(this.details.tablesData.dependency.filter);
+    },
+    dependentUrl() {
+      return this.$ihr_api.getUrl(this.details.tablesData.dependent.filter);
+    },
   }
 };
 </script>
 
 <style lang="stylus">
-.IHR_
-  &interdependencies-chart
-    text-align center
-    position relative
+@import "~@/styles/charts/common.styl";
 
-    &h1
-      font-size 25pt
-      margin-bottom 0px
-      font-weight 400
-      line-height 1
-
-  &loading-spinner
-    position absolute
-    top 50%
-    left 49%
-
-  &api-table
-    & table
-      display inline-block
-      margin 0 auto
-    & label
-      text-align right
-      display inline-block
-      font-weight 600
-      width 100%
 </style>

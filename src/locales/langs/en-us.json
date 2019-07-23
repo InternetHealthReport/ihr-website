@@ -1,7 +1,8 @@
 {
-	"generic_errors": {
+	"genericErrors": {
 		"ups": "ups",
-		"bad_happened": "Something bad happened, please contact the administrator"
+		"badHappened": "Something bad happened, please contact the administrator",
+		"cloudNotLoad": "Could not load "
 	},
 	"header": {
 		"API": "API",
@@ -22,33 +23,51 @@
 	"AsAndIxp": {
 		"headerString": {
 			"loading": "loading in progress",
-			"not_found": "you are searching is not available",
+			"notFound": "you are searching is not available",
 			"expired" : "Request expired"
 		},
 		"subHeader": {
 			"loading": "please wait",
-			"not_found": "the AS is not in our server",
+			"notFound": "the AS is not in our server",
 			"expired" : "the sever is under load, please try again later"
 		}
 	},
 	"charts":{
-		"hegemonyTable": "Hegemony table",
-		"titles": {
-			"asInterdependencies": "AS interdependencies",
-			"delayAndForwarding": "delay and forwarding",
-			"disconnections": "disconnection events"
-		},
-		"tables": {
-			"asInterdependencies": {
-				"title": "networks dependent on",
+		"asInterdependencies": {
+			"title": "AS interdependencies",
+			"yaxis": "dependencies",
+			"yaxis2": "Number of ASes<br> dependent on AS",
+			"table": {
+				"dependencyTitle": "networks dependency",
+				"dependentTitle": "dependent networks",
 				"increment": "increment",
 				"dependencies": "dependencies",
-				"yaxis2": "Number of ASes<br> dependent on AS"
-			},
-			"delayAndForwarding": {
-			},
-			"disconnections": {
+				"dependent": "dependent"
 			}
+		},
+		"delayAndForwarding": {
+			"title": "delay and forwarding",
+			"yaxis": "Delay Change Level",
+			"yaxis2": "Forwarding Anomaly Level",
+			"tables": {
+				"delay": {
+					"title": "delay anomalies",
+					"deviation": "deviation",
+					"delayChange": "delay change",
+					"delayAnomalies": "delay anomalies on"
+				},
+				"forwarding": {
+					"title": "forwarding anomalies",
+					"reportedIp": "reported IP",
+					"usualPrecedingIP": "usual preceding IP",
+					"correlation": "correlation",
+					"responsibility": "responsibility"
+				}
+			}
+		},
+		"disconnections": {
+			"title": "disconnection events"
 		}
-	}
+	},
+	"asn": "AS number"
 }

@@ -5,6 +5,7 @@ const _ORDER_DESC = "-";
 const _LTE = "__lte";
 const _GTE = "__gte";
 const _EXACT = "";
+const _CONTAINS = "__icontains";
 const AS_FAMILY = {
   v4: 4,
   v6: 6
@@ -55,6 +56,10 @@ class Query {
 
   static get EXACT() {
     return _EXACT;
+  }
+
+  static get CONTAINS() {
+    return _CONTAINS;
   }
 
   static dateFormatter(date) {
@@ -287,6 +292,155 @@ class DiscoEventQuery extends TimeQuery {
   }
 }
 
+class ForwardingAlarmsQuery extends TimeQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return ForwardingAlarmsQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "forwarding_alarms/";
+  }
+
+  //methods
+  asNumber(asn) {
+    return this._set("asn", asn);
+  }
+
+  timeBin(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.dateFormatter(time), comparator);
+  }
+
+  startTime(time, comparator = Query.EXACT) {
+    return this.timeBin(time, comparator);
+  }
+
+  endTime(time, comparator = Query.EXACT) {
+    return this.timeBin(time, comparator);
+  }
+
+  correlation(_correlation, comparator = Query.EXACT) {
+    return this._set("correlation", _correlation, comparator);
+  }
+
+  responsibility(_responsibility, comparator = Query.EXACT) {
+    return this._set("responsibility", _responsibility, comparator);
+  }
+
+  /**
+   * @param matchType accepted values Query.EXACT and Query.CONTAINS
+   */
+  ip(_ip, matchType = Query.EXACT) {
+    return this._set("ip", _ip, matchType);
+  }
+
+  /**
+   * @param matchType accepted values Query.EXACT and Query.CONTAINS
+   */
+  previousHop(_previousHop, matchType = Query.EXACT) {
+    return this._set("previoushop", _previousHop, matchType);
+  }
+
+  orderedByTime(order = Query.ASC) {
+    return this._setOrder("timebin", order);
+  }
+
+  orderedByMagnitude(order = Query.ASC) {
+    return this._setOrder("magnitude", order);
+  }
+
+  clone() {
+    return new ForwardingAlarmsQuery(this._clone());
+  }
+}
+
+class DelayAlarmsQuery extends TimeQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return DelayAlarmsQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "delay_alarms/";
+  }
+
+  //methods
+  asNumber(asn) {
+    return this._set("asn", asn);
+  }
+
+  timeBin(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.dateFormatter(time), comparator);
+  }
+
+  startTime(time, comparator = Query.EXACT) {
+    return this.timeBin(time, comparator);
+  }
+
+  endTime(time, comparator = Query.EXACT) {
+    return this.timeBin(time, comparator);
+  }
+
+  deviation(_deviation, comparator = Query.EXACT) {
+    return this._set("deviation", _deviation, comparator);
+  }
+
+  medianDifference(diffmedian, comparator = Query.EXACT) {
+    return this._set("diffmedian", diffmedian, comparator);
+  }
+
+  medianrtt(medianrtt, comparator = Query.EXACT) {
+    return this._set("medianrtt", medianrtt, comparator);
+  }
+
+  numberOfProbes(nbprobes, comparator = Query.EXACT) {
+    return this._set("nbprobes", nbprobes, comparator);
+  }
+
+  /**
+   * @param matchType accepted values Query.EXACT and Query.CONTAINS
+   */
+  links(links, matchType = Query.EXACT) {
+    return this._set("links", links, matchType);
+  }
+
+  orderedByTime(order = Query.ASC) {
+    return this._setOrder("timebin", order);
+  }
+
+  orderedByMagnitude(order = Query.ASC) {
+    return this._setOrder("magnitude", order);
+  }
+
+  orderedByDeviation(order = Query.ASC) {
+    return this._setOrder("deviation", order);
+  }
+
+  orderedByNumberOfProbes(order = Query.ASC) {
+    return this._setOrder("nbprobes", order);
+  }
+
+  orderedByMedianDifference(order = Query.ASC) {
+    return this._setOrder("magnitude", order);
+  }
+
+  orderByMedianrtt(order = Query.ASC) {
+    return this._setOrder("medianrtt", order);
+  }
+
+  clone() {
+    return new DelayAlarmsQuery(this._clone());
+  }
+}
+
 class DelayAndForwardingQuery extends TimeQuery {
   constructor() {
     super(...arguments);
@@ -455,5 +609,8 @@ export {
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,
-  DelayQuery
+  DelayQuery,
+  DelayAndForwardingQuery,
+  DelayAlarmsQuery,
+  ForwardingAlarmsQuery
 };

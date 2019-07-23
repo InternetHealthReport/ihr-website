@@ -26,9 +26,9 @@
         v-on="scope.itemEvents"
         class="GL__select-GL__menu-link"
       >
-      <router-link :to="{name : 'as_and_ixp', params:{asn: asnOrIxp(scope.opt.number)}}" class="IHR_searchbar-routerlink">
+      <router-link :to="{name : 'as_and_ixp', params:{asn: scope.opt.number | ihr_getAsOrIxp}}" class="IHR_searchbar-routerlink">
         <q-item-section side>
-          {{$ihr_api.getAsOrIxp(scope.opt.number)}}
+          {{scope.opt.number | ihr_getAsOrIxp}}
         </q-item-section>
         <q-item-section>
           {{scope.opt.name}}
@@ -81,7 +81,7 @@ export default {
       }
     },
     search () {
-      this.NetworkQuery.mixedContentSearch(this.value);
+      this.networkQuery.mixedContentSearch(this.value);
       this.$ihr_api.network(this.networkQuery,
       (result)=> {
         this.retrievedValues = []
@@ -93,9 +93,6 @@ export default {
       (error) => {
         console.error(error);
       })
-    },
-    asnOrIxp(value) {
-      return (value < 0)? "IXP" : "AS" + Math.abs(value);
     }
   },
   computed: {
@@ -112,8 +109,8 @@ export default {
 
     &:first-child
       margin-right 0px
-    
+
     & > *
       margin-right 0px
-      padding-right 0px 
+      padding-right 0px
 </style>

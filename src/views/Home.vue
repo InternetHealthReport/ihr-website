@@ -60,7 +60,7 @@
 import DelayedCounter from "@/components/DelayedCounter"
 import { NetworkQuery } from "@/plugins/IhrApi"
 
-const features = [
+const FEATURES = [
   {
     name: "AS interdependece",
     img: require("@/assets/imgs/AS-interdependece.png")
@@ -85,7 +85,7 @@ export default {
       tab: "",
       countriesNumber: null,
       networksNumber: null,
-      features: features
+      features: FEATURES
     };
   },
   mounted(){

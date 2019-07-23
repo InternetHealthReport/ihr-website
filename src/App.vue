@@ -11,12 +11,12 @@
         </q-item>
         <search-bar></search-bar>
         <div class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap">
-          <router-link v-bind:key="item.entryName" :to="{name : item.routeName}"  v-for="item in simple_menu">
+          <router-link :key="item.entryName" :to="{name : item.routeName}"  v-for="item in simple_menu">
             {{$t(item.entryName)}}
           </router-link>
-          <q-btn-dropdown color="primary" :label="$t(item.section)" v-bind:key="item.section" v-for="item in dropdown_menu">
+          <q-btn-dropdown color="primary" :label="$t(item.section)" :key="item.section" v-for="item in dropdown_menu">
             <q-list class="IHR_dropdown-menu">
-              <q-item v-close-popup v-bind:key="subItem.entryName"  v-for="subItem in item.content">
+              <q-item v-close-popup :key="subItem.entryName"  v-for="subItem in item.content">
                   <router-link :to="{name : item.routeName}">
                     {{$t(subItem.entryName)}}
                   </router-link>
@@ -107,7 +107,7 @@
     <q-footer elevated primary class="IHR_footer text-white text-center row items-end">
       <span class="col-2 IHR_copyright">Internet Healt Report 2019 &#9400;</span>
       <span class="IHR_sitemap col-8">
-        <router-link v-bind:key="item.entryName" :to="{name : item.routeName}"  v-for="item in [...simple_menu, ...dropdown_menu]">
+        <router-link :key="item.entryName" :to="{name : item.routeName}"  v-for="item in [...simple_menu, ...dropdown_menu]">
           {{$t(item.entryName)}}
         </router-link>
       </span>

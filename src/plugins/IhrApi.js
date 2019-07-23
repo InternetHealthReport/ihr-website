@@ -11,7 +11,9 @@ import {
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,
-  DelayQuery
+  DelayQuery,
+  DelayAlarmsQuery,
+  ForwardingAlarmsQuery
 } from "./IhrQuery";
 
 const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/"; ///base api url
@@ -21,9 +23,6 @@ const PROJECT_START_DATE = new Date("2016-01-01T00:00:00");
 const IhrApi = {
   install(Vue /*, options*/) {
     let ihr_api = new Vue({
-      component: {
-        axios
-      },
       data() {
         return {
           axios_base: axios.create({
@@ -70,11 +69,21 @@ const IhrApi = {
         /**
          * @brief delay endpoint wrapper see @ref _generic()
          */
-        delay() {
-          this._generic("delay/", ...arguments);
+        delay(delayQuery, success_callback, error_callback) {
+          this._generic(
+            DelayQuery.ENTRY_POINT,
+            delayQuery,
+            success_callback,
+            error_callback
+          );
         },
-        delay_alarms() {
-          this._generic("delay_alarms/", ...arguments);
+        delay_alarms(delayAlarmsQuery, success_callback, error_callback) {
+          this._generic(
+            DelayAlarmsQuery.ENTRY_POINT,
+            delayAlarmsQuery,
+            success_callback,
+            error_callback
+          );
         },
         disco_events(discoEventQuery, success_callback, error_callback) {
           this._generic(
@@ -87,8 +96,13 @@ const IhrApi = {
         disco_probes() {
           this._generic("disco_probes/", ...arguments);
         },
-        forwarding() {
-          this._generic("forwarding/", ...arguments);
+        forwarding(forwardingQuery, success_callback, error_callback) {
+          this._generic(
+            ForwardingQuery.ENTRY_POINT,
+            forwardingQuery,
+            success_callback,
+            error_callback
+          );
         },
         forwarding_alarms() {
           this._generic("forwarding_alarms/", ...arguments);
@@ -116,11 +130,6 @@ const IhrApi = {
             success_callback,
             error_callback
           );
-        },
-
-        // utilities
-        getAsOrIxp(asn) {
-          return asn < 0 ? "IXP" : "AS" + Math.abs(asn);
         }
       }
     });
@@ -128,6 +137,12 @@ const IhrApi = {
     Vue.mixin({
       beforeCreate() {
         this.$ihr_api = ihr_api;
+      },
+      filters: {
+        // utilities
+        ihr_getAsOrIxp(asn) {
+          return asn < 0 ? "IXP" : "AS" + Math.abs(asn);
+        }
       }
     });
   }
@@ -143,5 +158,7 @@ export {
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,
-  DelayQuery
+  DelayQuery,
+  DelayAlarmsQuery,
+  ForwardingAlarmsQuery
 };

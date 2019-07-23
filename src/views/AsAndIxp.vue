@@ -5,7 +5,7 @@
     <q-list v-if="showGraphs">
       <q-expansion-item
         expand-separator
-        :label="$t('charts.titles.asInterdependencies')"
+        :label="$t('charts.asInterdependencies.title')"
         header-class="IHR_charts-title"
         default-opened
       >
@@ -19,7 +19,7 @@
       </q-expansion-item>
       <q-expansion-item
         expand-separator
-        :label="$t('charts.titles.delayAndForwarding')"
+        :label="$t('charts.delayAndForwarding.title')"
         header-class="IHR_charts-title"
         default-opened
       >
@@ -32,7 +32,7 @@
       </q-expansion-item>
       <q-expansion-item
         expand-separator
-        :label="$t('charts.titles.disconnections')"
+        :label="$t('charts.disconnections.title')"
         header-class="IHR_charts-title"
         default-opened
       >
@@ -118,14 +118,14 @@ export default {
         case LOADING_STATUS.LOADING:
           return this.$t("AsAndIxp.headerString.loading");
         case LOADING_STATUS.NOT_FOUND:
-          return this.$t("AsAndIxp.headerString.not_found");
+          return this.$t("AsAndIxp.headerString.notFound");
         case LOADING_STATUS.EXPIRED:
           return this.$t("AsAndIxp.headerString.expired");
         case LOADING_STATUS.LOADED:
           return this.asName;
         default:
         case LOADING_STATUS.ERROR:
-          return this.$t("generic_errors.ups");
+          return this.$t("genericErrors.ups");
       }
     },
     subHeader() {
@@ -133,14 +133,14 @@ export default {
         case LOADING_STATUS.LOADING:
           return this.$t("AsAndIxp.subHeader.loading");
         case LOADING_STATUS.NOT_FOUND:
-          return this.$t("AsAndIxp.subHeader.not_found");
+          return this.$t("AsAndIxp.subHeader.notFound");
         case LOADING_STATUS.EXPIRED:
           return this.$t("AsAndIxp.subHeader.expired");
         case LOADING_STATUS.LOADED:
           return this.$route.params.asn;
         default:
         case LOADING_STATUS.ERROR:
-          return this.$t("generic_errors.bad_happened");
+          return this.$t("genericErrors.badHappened");
       }
     }
   }

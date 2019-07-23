@@ -7,8 +7,6 @@ import { IhrApi } from "@/plugins/IhrApi";
 import VueResizeText from "vue-resize-text";
 import "@/styles/main.styl";
 
-Vue.config.productionTip = false;
-
 // internal plugins
 Vue.use(IhrApi);
 

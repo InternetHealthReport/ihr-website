@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import Plotly from "plotly.js/dist/plotly.min";
+import Plotly from 'plotly.js-dist';
 /*
 emitted events
   plotly-click: propagation of plotly onclick
@@ -50,6 +50,8 @@ export default {
   },
   methods: {
     react() {
+      if(this.traces == undefined)
+        return;
       Plotly.react(
         this.$refs["chart"],
         this.traces,
