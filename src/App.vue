@@ -5,7 +5,7 @@
         <q-item>
           <router-link :to="{name : 'home'}">
             <q-btn round dense flat :ripple="false" no-caps size="22px">
-              <img src="@/assets/imgs/logo_ihr.png" style="width: 80%;">
+              <img src="@/assets/imgs/ihr_logo.svg" style="width: 80%;">
             </q-btn>
           </router-link>
         </q-item>
