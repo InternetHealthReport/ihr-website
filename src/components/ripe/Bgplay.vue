@@ -1,17 +1,20 @@
 <template>
-  <div id="bgplay-container">
-    <q-card v-if="bgplay === false" negative>
+  <div>
+    <q-card v-if="loaded === false" negative>
       <q-card-section>
         {{ $t('genericErrors.cloudNotLoad') }} BGPlay
       </q-card-section>
     </q-card>
-    <div v-if="bgplay === null" class="IHR_loading-spinner">
+    <div v-if="loaded === null" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
+    </div>
+    <div :id="myId">
     </div>
   </div>
 </template>
 
 <script>
+import { setTimeout } from 'timers';
 export default {
   props: {
     asNumber: {
@@ -29,8 +32,10 @@ export default {
   },
   data() {
     return {
+      myId: `bgplay-container-${this._uid}`,
       bgplay: null,
-      widgetPromise: null
+      loaded: null,
+      widgetPromise: null,
     };
   },
   beforeCreate() {
@@ -50,11 +55,18 @@ export default {
         rrcs: "10",
         type: "bgp"
       },
-      "bgplay-container",
+      this.myId,
       {
         size: "fit",
         show_controls: "no",
         disable: ["footer-buttons", "container"]
+      },
+      () => {
+        this.loaded = true;
+        setTimeout(()=>{
+          var elemt = document.getElementById(this.myId);
+          elemt.style.width = "100%";
+        }, 150);
       }
     );
     })
@@ -72,9 +84,7 @@ export default {
         endtime: this.endTime
       });
       this.bgplay.reload();
-    }
-    ,
-    intervalLength(oldValue, newValue) {
+    },intervalLength(oldValue, newValue) {
       if (oldValue == newValue) return;
       this.bgplay.update({
         starttime: this.startTime,
