@@ -1,6 +1,61 @@
 const SCRIPT_REGEXP = /src=('|")(.*(?=\1))/;
 const LINK_REGEXP = /href=('|")(.*(?=\1))/;
 
+function remove_style(all) {
+  //https://css-tricks.com/snippets/javascript/remove-inline-styles/
+  var i = all.length;
+  var j, is_hidden;
+
+  // Presentational attributes.
+  var attr = [
+    "align",
+    "background",
+    "bgcolor",
+    "border",
+    "cellpadding",
+    "cellspacing",
+    "color",
+    "face",
+    "height",
+    "hspace",
+    "marginheight",
+    "marginwidth",
+    "noshade",
+    "nowrap",
+    "valign",
+    "vspace",
+    "width",
+    "vlink",
+    "alink",
+    "text",
+    "link",
+    "frame",
+    "frameborder",
+    "clear",
+    "scrolling",
+    "style"
+  ];
+
+  var attr_len = attr.length;
+
+  while (i--) {
+    is_hidden = all[i].style.display === "none";
+
+    j = attr_len;
+
+    while (j--) {
+      all[i].removeAttribute(attr[j]);
+    }
+
+    // Re-hide display:none elements,
+    // so they can be toggled via JS.
+    if (is_hidden) {
+      all[i].style.display = "none";
+      is_hidden = false;
+    }
+  }
+}
+
 class LibraryDelayer {
   constructor() {
     if (LibraryDelayer.prototype.documentWriteBackup != undefined)
@@ -130,7 +185,25 @@ export default {
               .then(() => {
                 callback();
               });
+          } else {
+            callback();
           }
+        },
+        /**
+         * remove all inline style
+         * @param {String} id mandatory, the root from which the removal will begin
+         * @param {String} elements optional, if you want to get rid of all styles use *
+         */
+        getRidOfInlineStyle(id, elements) {
+          if (id == undefined) return;
+
+          var set = document.getElementById(id);
+          remove_style(set);
+
+          if (elements == undefined) return;
+
+          set = set.getElementsByTagName(elements);
+          remove_style(set);
         }
       }
     });

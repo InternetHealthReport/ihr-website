@@ -43,6 +43,9 @@
           :fetch="fetch"
         />
       </q-expansion-item>
+      <q-drawer v-model="right" side="right" bordered>
+        <prefix-overview ip="198.32.118.63 " class="IHR_prefix-overview-container"/>
+      </q-drawer>
       <div class="IHR_last-element">&nbsp;</div>
       <q-page-sticky position="bottom" class="IHR_time-filter" expand>
         <interval-picker v-model="interval" white />
@@ -58,6 +61,8 @@ import DiscoChart from "@/views/charts/DiscoChart";
 import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
 
+import PrefixOverview from "@/components/ripe/PrefixOverview";
+
 const LOADING_STATUS = {
   ERROR: -3,
   EXPIRED: -2,
@@ -71,7 +76,9 @@ export default {
     AsInterdependenciesChart,
     DiscoChart,
     DelayAndForwardingChart,
-    IntervalPicker
+    IntervalPicker,
+
+    PrefixOverview
   },
   data() {
     //correct

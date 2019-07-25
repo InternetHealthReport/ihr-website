@@ -49,24 +49,15 @@ import {
   QTr,
   QTd,
   QExpansionItem,
+  QResizeObserver,
+  QBanner,
+  QScrollArea,
 
   //non component
   Cookies
 } from "quasar";
 
 Vue.use(Quasar, {
-  config: {
-    brand: {
-      primary: "#263238",
-      secondary: "#1976d2",
-      accent: "#6eaaff",
-
-      positive: "#21BA45",
-      negative: "#d61e1e",
-      info: "#4f5b62",
-      warning: "#ffee58"
-    }
-  },
   components: {
     QLayout,
     QHeader,
@@ -108,7 +99,10 @@ Vue.use(Quasar, {
     QTh,
     QTr,
     QTd,
-    QExpansionItem
+    QExpansionItem,
+    QResizeObserver,
+    QBanner,
+    QScrollArea
   },
   directives: { ClosePopup },
   extras: ["material-icons", "fontawesome-v5"],

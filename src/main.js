@@ -7,6 +7,8 @@ import i18n from "@/locales/i18n";
 import { IhrApi } from "@/plugins/IhrApi";
 import LibraryDelayer from "@/plugins/LibraryDelayer";
 import "@/styles/main.styl";
+import "@/styles/ihr.style.styl";
+import IhrStyle from "./plugins/IhrStyle";
 
 //external plugin
 Vue.use(VueResizeText);
@@ -18,6 +20,7 @@ Vue.use(LibraryDelayer, {
     ripe_widget_api: "https://stat.ripe.net/widgets/widget_api.js"
   }
 });
+Vue.use(IhrStyle);
 
 new Vue({
   router,

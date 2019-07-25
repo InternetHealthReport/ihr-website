@@ -39,7 +39,9 @@
             :loading="details.tablesData.dependent.loading"
           />
         </q-tab-panel>
-        <q-tab-panel name="bgpPlay" :disable="!details.enableBgpPlay">bgp Play</q-tab-panel>
+        <q-tab-panel name="bgpPlay">
+          <bgplay :as-number="asNumber" :date-time="details.date" />
+        </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table">
           <table>
             <tr>
@@ -70,6 +72,7 @@ import { debounce } from "quasar";
 import ReactiveChart from "@/components/ReactiveChart";
 import DateTimePicker from "@/components/DateTimePicker";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
+import Bgplay from "@/components/ripe/Bgplay";
 
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
 
@@ -90,7 +93,8 @@ export default {
   components: {
     ReactiveChart,
     DateTimePicker,
-    AsInterdependenciesTable
+    AsInterdependenciesTable,
+    Bgplay
   },
   props: {
     asNumber: {
@@ -144,6 +148,7 @@ export default {
     return {
       details: {
         activeTab: "dependency",
+        date: null,
         tablesData: {
           dependency: null,
           dependent: null
@@ -192,9 +197,8 @@ export default {
   methods: {
     showTable(clickData) {
       let plot = clickData.points[0];
-
-      this.details.enableBgpPlay = (plot.yaxis._id == "y");
-      let intervalEnd = new Date(plot.x + "+00:00"); //adding timezone to string...
+      this.details.date = new Date(plot.x + "+00:00")//adding timezone to string...
+      let intervalEnd = this.details.date;
       //getting the previus point closest to x
       let xIndex = plot.pointIndex - 1;
       let endTime = intervalEnd.getTime();

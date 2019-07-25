@@ -1,11 +1,10 @@
 <template>
   <q-select
     ref="search" dark dense standout use-input hide-selected
-    class="GL__toolbar-select"
     color="black" :stack-label="false" :label="placeholder"
     v-model="text" :options="retrievedValues"
     @filter="filter"
-    style="width: 300px"
+    class="IHR_search-bar"
   >
     <template v-slot:prepend>
       <q-icon name="fas fa-search" style="font-size: 0.82em; margin-rigth: 4px;"/>
@@ -24,9 +23,8 @@
       <q-item
         v-bind="scope.itemProps"
         v-on="scope.itemEvents"
-        class="GL__select-GL__menu-link"
       >
-      <router-link :to="{name : 'as_and_ixp', params:{asn: scope.opt.number | ihr_getAsOrIxp}}" class="IHR_searchbar-routerlink">
+      <router-link :to="{name : 'as_and_ixp', params:{asn: $options.filters.ihr_getAsOrIxp(scope.opt.number) }}" class="IHR_searchbar-routerlink">
         <q-item-section side>
           {{scope.opt.number | ihr_getAsOrIxp}}
         </q-item-section>
@@ -86,7 +84,7 @@ export default {
       (result)=> {
         this.retrievedValues = []
         result.results.some(element => {
-          this.retrievedValues.push({label: element.number, number: element.number, name: element.name, url: `https://ihr.iijlab.net/ihr/${element.number}/asn/`});
+          this.retrievedValues.push({label: element.number, number: element.number, name: element.name});
           return this.retrievedValues.length > this.maxResults;
         });
       },
@@ -104,6 +102,9 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .IHR_
+  &search-bar
+    width 260px
+
   &searchbar-routerlink
     text-decoration none
 
