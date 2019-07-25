@@ -8,7 +8,7 @@
     binary-state-sort
   >
     <template v-slot:body="props">
-      <q-tr :props="props" @click="routeToIxp(props.row.key)">
+      <q-tr :props="props" @click.native="routeToIxp(props.colsMap.asNumber, props.row)" class="IHR_table-row">
         <q-td
           v-for="col in columns"
           :key="col.name"
@@ -21,18 +21,11 @@
 </template>
 
 <script>
-import { date } from "quasar";
+import CommonTableMixin from "./CommonTableMixin"
 
 export default {
+  mixins: [CommonTableMixin],
   props: {
-    data: {
-      type: Array,
-      required: true
-    },
-    loading: {
-      type: Boolean,
-      required: true
-    },
     useOriginAsn: {
       type: Boolean
     }
@@ -122,33 +115,18 @@ export default {
   methods: {
     hegClass(name, value) {
       if (name != "hegemonyIncrement") return "";
-      let colorClass;
-      if (value < 0) colorClass = "decrease";
-      else if (value > 0) colorClass = "increse";
-      else colorClass = "stable";
-      return `IHR_color-increment IHR_color-increment-${colorClass}`;
+      return this.getColorChangeClass(value);
     },
-    routeToIxp(asn) {
-      this.$router.push({
-        name: "as_and_ixp",
-        params: { asn: this.$options.filters.ihr_getAsOrIxp(props.row.key) },
-        target: "_blank"
-      });
+    routeToIxp(asn, row) {
+      asn = asn.format(asn.field(row));
+      let path = this.$route.path;
+      let link = "#";
+      link += path.substring(0, path.lastIndexOf("/") + 1);
+      link += this.$options.filters.ihr_getAsOrIxp(asn);
+      window.open(link);
     }
   }
 };
 </script>
 <style lang="stylus">
-.IHR_
-  &color-increment
-    font-weight 600
-
-    &-increse
-      color green
-
-    &-decrease
-      color red
-
-    &-stable
-      color black
 </style>

@@ -1,6 +1,5 @@
 <template>
   <q-table
-    :title="title"
     :data="data"
     :columns="columns"
     row-key="resposability"
@@ -11,23 +10,10 @@
 </template>
 
 <script>
-import { date } from "quasar";
+import CommonTableMixin from "./CommonTableMixin"
 
 export default {
-  props: {
-    dateTime: {
-      type: Date,
-      required: true
-    },
-    data: {
-      type: Array,
-      required: true
-    },
-    loading: {
-      type: Boolean,
-      required: true
-    }
-  },
+  mixins: [CommonTableMixin],
   data() {
     return {
       pagination: {
@@ -74,14 +60,6 @@ export default {
         }
       ]
     };
-  },
-  methods: {},
-  computed: {
-    title() {
-      return `${this.$t(
-        "charts.delayAndForwarding.tables.delay.delayAnomalies"
-      )}(${date.formatDate(this.dateTime, "YYYY-MM-DD HH:mm")})`;
-    }
   }
 };
 </script>
