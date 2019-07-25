@@ -4,6 +4,7 @@
       :layout="layout"
       :traces="traces"
       @loaded="loading = false"
+      ref="chart"
     />
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em"/>
@@ -13,32 +14,15 @@
 
 <script>
 import { debounce } from "quasar";
-import ReactiveChart from "@/components/ReactiveChart";
-import DateTimePicker from "@/components/DateTimePicker";
+import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
 import { DiscoEventQuery } from "@/plugins/IhrApi";
 
-const DEFAULT_DEBOUNCE = 800;
-
 export default {
-  components: {
-    ReactiveChart,
-    DateTimePicker
-  },
+  mixins: [CommonChartMixin],
   props: {
     streamName: {
       type: Number,
       required: true
-    },
-    startTime: {
-      type: Date,
-      require: true
-    },
-    endTime: {
-      type: Date,
-      require: true
-    },
-    fetch: {
-      type: Boolean
     }
   },
   data() {
@@ -61,7 +45,7 @@ export default {
     return {
       debouncedApiCall: debouncedApiCall,
       loading: true,
-      filter: filter,
+      filters: [filter],
       traces: [
         {
           x: [],
@@ -94,14 +78,11 @@ export default {
       }
     };
   },
-  mounted() {
-    this.debouncedApiCall();
-  },
   methods: {
     queryDiscoApi() {
       this.loading = true;
       this.$ihr_api.disco_events(
-        this.filter,
+        this.filters[0],
         result => {
           this.fetchDiscoData(result.results);
           this.loading = false;
@@ -135,19 +116,6 @@ export default {
       trace.y.push(0);
       trace.z.push(0);
       this.layout.datarevision = new Date().getTime();
-    }
-  },
-  watch: {
-    startTime() {
-      this.filter.startTime(this.startTime, DiscoEventQuery.GTE);
-      this.debouncedApiCall();
-    },
-    endTime() {
-      this.filter.endTime(this.endTime, DiscoEventQuery.LTE);
-      this.debouncedApiCall();
-    },
-    fetch() {
-      this.debouncedApiCall();
     }
   }
 };

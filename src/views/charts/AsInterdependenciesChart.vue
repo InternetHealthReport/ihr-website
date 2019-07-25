@@ -5,6 +5,7 @@
       :traces="traces"
       @loaded="loading = false"
       @plotly-click="showTable"
+      ref="chart"
     />
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
@@ -68,9 +69,8 @@
 </template>
 
 <script>
+import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
 import { debounce } from "quasar";
-import ReactiveChart from "@/components/ReactiveChart";
-import DateTimePicker from "@/components/DateTimePicker";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
 import Bgplay from "@/components/ripe/Bgplay";
 
@@ -87,12 +87,9 @@ const DEFAULT_TRACE = [
   }
 ];
 
-const DEFAULT_DEBOUNCE = 800;
-
 export default {
+  mixins: [CommonChartMixin],
   components: {
-    ReactiveChart,
-    DateTimePicker,
     AsInterdependenciesTable,
     Bgplay
   },
@@ -104,17 +101,6 @@ export default {
     asFamily: {
       type: Number,
       default: AS_FAMILY.v4
-    },
-    startTime: {
-      type: Date,
-      require: true
-    },
-    endTime: {
-      type: Date,
-      require: true
-    },
-    fetch: {
-      type: Boolean
     }
   },
   data() {
@@ -162,6 +148,7 @@ export default {
       loadingHegemonyCone: true,
       hegemonyFilter: hegemonyFilter,
       hegemonyConeFilter: hegemonyConeFilter,
+      filters: [hegemonyFilter, hegemonyConeFilter],
       traces: [],
       layout: {
         hovermode: "closest",
@@ -190,9 +177,6 @@ export default {
         }
       }
     };
-  },
-  mounted() {
-    this.debouncedApiCall();
   },
   methods: {
     showTable(clickData) {
@@ -309,21 +293,6 @@ export default {
         trace.x.push(resp.timebin);
       });
       this.layout.datarevision = new Date().getTime();
-    }
-  },
-  watch: {
-    startTime() {
-      this.hegemonyFilter.startTime(this.startTime, HegemonyQuery.GTE);
-      this.hegemonyConeFilter.startTime(this.startTime, HegemonyConeQuery.GTE);
-      this.debouncedApiCall();
-    },
-    endTime() {
-      this.hegemonyFilter.endTime(this.endTime, HegemonyQuery.LTE);
-      this.hegemonyConeFilter.endTime(this.endTime, HegemonyConeQuery.LTE);
-      this.debouncedApiCall();
-    },
-    fetch() {
-      this.debouncedApiCall();
     }
   },
   computed: {

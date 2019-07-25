@@ -5,6 +5,7 @@
       :traces="traces"
       @loaded="loading = false"
       @plotly-click="showTable"
+      ref="chart"
     />
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
@@ -88,8 +89,7 @@
 
 <script>
 import { debounce } from "quasar";
-import ReactiveChart from "@/components/ReactiveChart";
-import DateTimePicker from "@/components/DateTimePicker";
+import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
 import DelayAlarmsTable from "./tables/DelayAlarmsTable";
 import ForwardingAlarmsTable from "./tables/ForwardingAlarmsTable";
 import {
@@ -116,12 +116,9 @@ const DEFAULT_TRACES = [
   }
 ];
 
-const DEFAULT_DEBOUNCE = 800;
-
 export default {
+  mixins: [CommonChartMixin],
   components: {
-    ReactiveChart,
-    DateTimePicker,
     DelayAlarmsTable,
     ForwardingAlarmsTable
   },
@@ -129,17 +126,6 @@ export default {
     asNumber: {
       type: Number,
       required: true
-    },
-    startTime: {
-      type: Date,
-      require: true
-    },
-    endTime: {
-      type: Date,
-      require: true
-    },
-    fetch: {
-      type: Boolean
     }
   },
   data() {
@@ -185,6 +171,7 @@ export default {
       loadingForwarding: true,
       delayFilter: delayFilter,
       forwardingFilter: forwardingFilter,
+      filters: [delayFilter, forwardingFilter],
       traces: [],
       layout: {
         hovermode: "closest",
@@ -206,9 +193,6 @@ export default {
         }
       }
     };
-  },
-  mounted() {
-    this.debouncedApiCall();
   },
   methods: {
     showTable(clickData) {
@@ -295,21 +279,6 @@ export default {
       this.fetchData(this.traces[1], data);
     }
   },
-  watch: {
-    startTime() {
-      this.delayFilter.startTime(this.startTime, DelayQuery.GTE);
-      this.forwardingFilter.startTime(this.startTime, ForwardingQuery.GTE);
-      this.debouncedApiCall();
-    },
-    endTime() {
-      this.delayFilter.endTime(this.endTime, DelayQuery.LTE);
-      this.forwardingFilter.endTime(this.endTime, ForwardingQuery.LTE);
-      this.debouncedApiCall();
-    },
-    fetch() {
-      this.debouncedApiCall();
-    }
-  },
   computed: {
     delayUrl() {
       return this.$ihr_api.getUrl(this.delayFilter);
@@ -318,7 +287,6 @@ export default {
       return this.$ihr_api.getUrl(this.forwardingFilter);
     },
     delayAlarmsUrl() {
-      console.log("trigger delayAlarmsUrl")
       return this.$ihr_api.getUrl(this.details.delayAlarmsFilter);
     },
     forwardingAlarmsUrl() {

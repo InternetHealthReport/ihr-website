@@ -15,6 +15,7 @@
           :as-number="asNumber"
           :as-family="family"
           :fetch="fetch"
+          ref="asInterdependenciesChart"
         />
       </q-expansion-item>
       <q-expansion-item
@@ -28,6 +29,7 @@
           :end-time="endTime"
           :as-number="asNumber"
           :fetch="fetch"
+          ref="delayAndForwardingChart"
         />
       </q-expansion-item>
       <q-expansion-item
@@ -41,9 +43,10 @@
           :end-time="endTime"
           :stream-name="asNumber"
           :fetch="fetch"
+          ref="discoChart"
         />
       </q-expansion-item>
-      <q-drawer v-model="right" side="right" bordered>
+      <q-drawer :value="showSidebar" side="right" bordered @on-layout="resizeCharts">
         <prefix-overview ip="198.32.118.63 " class="IHR_prefix-overview-container"/>
       </q-drawer>
       <div class="IHR_last-element">&nbsp;</div>
@@ -62,6 +65,7 @@ import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
 
 import PrefixOverview from "@/components/ripe/PrefixOverview";
+import { setTimeout } from 'timers';
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -71,14 +75,24 @@ const LOADING_STATUS = {
   LOADED: 1
 };
 
+const CHART_REFS = [
+  'asInterdependenciesChart',
+  'delayAndForwardingChart',
+  'delayAndForwardingChart'];
+
 export default {
   components: {
     AsInterdependenciesChart,
     DiscoChart,
     DelayAndForwardingChart,
     IntervalPicker,
-
     PrefixOverview
+  },
+  props: {
+    showSidebar: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     //correct
@@ -96,7 +110,15 @@ export default {
       interval: new ChartInterval(lastWeek, new Date())
     };
   },
-  methods: {},
+  methods: {
+    resizeCharts() {
+      setTimeout(() => {
+        CHART_REFS.forEach((chart)=>{
+          this.$refs[chart].relayout();
+        });
+      },400);
+    }
+  },
   mounted() {
     let filter = new NetworkQuery().asNumber(this.asNumber);
     this.$ihr_api.network(filter, results => {
