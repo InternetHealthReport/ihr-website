@@ -104,9 +104,9 @@ class LibraryDelayer {
       if (script != null) {
         let scriptElem = document.createElement("script");
         scriptElem.src = script;
-        let promise = new Promise(resolve => {
+        let promise = new Promise(localResolve => {
           scriptElem.onload = () => {
-            resolve();
+            localResolve();
           };
           body.appendChild(scriptElem);
         });
@@ -135,9 +135,9 @@ class LibraryDelayer {
           linkElem.href = link;
           linkElem.rel = "stylesheet";
           this.promises.push(
-            new Promise(resolve => {
+            new Promise(localResolve => {
               linkElem.onload = () => {
-                resolve("link" + link);
+                localResolve("link" + link);
               };
               head.appendChild(linkElem);
             })
