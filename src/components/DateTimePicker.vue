@@ -15,7 +15,7 @@
         </q-popup-proxy>
       </q-icon>
     </template>
-    <template v-slot:append>
+    <template v-slot:append v-if="hideTime">
       <q-icon name="fas fa-clock" class="cursor-pointer" :class="textColor">
         <q-popup-proxy transition-show="scale" transition-hide="scale">
           <q-time
@@ -57,7 +57,8 @@ export default {
       type: Boolean
     },
     hideTime: {
-      type: Boolean
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -97,7 +98,7 @@ export default {
 
     &black-text
       color black
-    
+
     &date-input
       font-weight bolder
 </style>
