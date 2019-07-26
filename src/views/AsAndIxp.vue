@@ -30,6 +30,7 @@
           :as-number="asNumber"
           :fetch="fetch"
           ref="delayAndForwardingChart"
+          @prefix-details="showDetails($event)"
         />
       </q-expansion-item>
       <q-expansion-item
@@ -47,7 +48,21 @@
         />
       </q-expansion-item>
       <q-drawer :value="showSidebar" side="right" bordered @on-layout="resizeCharts">
-        <prefix-overview ip="198.32.118.63 " class="IHR_prefix-overview-container"/>
+        <q-scroll-area
+          class="fit"
+          :thumb-style="{left: '1px', width: '6pt'}"
+          :content-active-style="{'margin-left': '6.5pt !important', transition: '.4s'}"
+        >
+          <closable-container
+            @close-me="removePrefix(prefix)"
+            v-for="prefix in prefixesDetail"
+            :key="prefix"
+            class="IHR_prefix-sidebar shadow-2"
+          >
+            <reverse-dns-ip :ip="prefix" class="IHR_reverse-dns-ip-improved" />
+            <prefix-overview :ip="prefix" class="IHR_prefix-overview-improved" />
+          </closable-container>
+        </q-scroll-area>
       </q-drawer>
       <div class="IHR_last-element">&nbsp;</div>
       <q-page-sticky position="bottom" class="IHR_time-filter" expand>
@@ -59,13 +74,14 @@
 
 <script>
 import IntervalPicker, { ChartInterval } from "@/components/IntervalPicker";
+import ClosableContainer from "@/components/ClosableContainer";
 import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
 import DiscoChart from "@/views/charts/DiscoChart";
 import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
-
+import ReverseDnsIp from "@/components/ripe/ReverseDnsIp";
 import PrefixOverview from "@/components/ripe/PrefixOverview";
-import { setTimeout } from 'timers';
+import { setTimeout } from "timers";
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -76,9 +92,10 @@ const LOADING_STATUS = {
 };
 
 const CHART_REFS = [
-  'asInterdependenciesChart',
-  'delayAndForwardingChart',
-  'delayAndForwardingChart'];
+  "asInterdependenciesChart",
+  "delayAndForwardingChart",
+  "delayAndForwardingChart"
+];
 
 export default {
   components: {
@@ -86,7 +103,9 @@ export default {
     DiscoChart,
     DelayAndForwardingChart,
     IntervalPicker,
-    PrefixOverview
+    PrefixOverview,
+    ClosableContainer,
+    ReverseDnsIp
   },
   props: {
     showSidebar: {
@@ -107,16 +126,26 @@ export default {
       loadingStatus: LOADING_STATUS.LOADING,
       asNumber: asNumber,
       asName: null,
-      interval: new ChartInterval(lastWeek, new Date())
+      interval: new ChartInterval(lastWeek, new Date()),
+      prefixesDetail: []
     };
   },
   methods: {
     resizeCharts() {
       setTimeout(() => {
-        CHART_REFS.forEach((chart)=>{
+        CHART_REFS.forEach(chart => {
           this.$refs[chart].relayout();
         });
-      },400);
+      }, 400);
+    },
+    showDetails(address) {
+      this.$emit("sidebar-action", true);
+      this.prefixesDetail.push(address);
+      console.log(this.prefixesDetail);
+    },
+    removePrefix(address) {
+      this.prefixesDetail = this.prefixesDetail.filter(elem => address != elem);
+      console.log(this.prefixesDetail);
     }
   },
   mounted() {
@@ -190,6 +219,7 @@ export default {
 
     & > *:first-child
       width 100%
+      height 4.5vh
 
   &last-element
     margin-bottom 40px
@@ -198,4 +228,8 @@ export default {
     text-align center
     text-transform capitalize
     font-size 22pt
+
+  &prefix-sidebar
+    margin 4pt 6pt
+
 </style>

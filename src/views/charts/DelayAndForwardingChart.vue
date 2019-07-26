@@ -31,6 +31,7 @@
             :date-time="details.delayData.dateTime"
             :data="details.delayData.data"
             :loading="details.delayData.loading"
+            @prefix-details="$emit('prefix-details', $event)"
           />
         </q-tab-panel>
         <q-tab-panel name="forwarding">

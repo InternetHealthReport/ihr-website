@@ -55,6 +55,9 @@ export default {
     },
     white: {
       type: Boolean
+    },
+    hideTime: {
+      type: Boolean
     }
   },
   data() {

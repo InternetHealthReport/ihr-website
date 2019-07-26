@@ -30,15 +30,16 @@ To keep the number of different icons short there is a list of already used icon
 
 * **arrow down**: [*fas fa-sort-down*](https://fontawesome.com/icons/sort-down?style=solid)
 * **notification bell**: [*fas fa-bell*](https://fontawesome.com/icons/bell?style=solid)
-* **magnifier** [*fas fa-search*](https://fontawesome.com/icons/search?style=solid)
-* **flag** [*fas fa-flag*](https://fontawesome.com/icons/flag?style=solid)
-* **network?** [*fas fa-network-wired*](https://fontawesome.com/icons/network-wired?style=solid)
-* **calendar** [*fas fa-calendar-day*](https://fontawesome.com/icons/calendar-day?style=solid)
-* **clock** [*fas fa-clock"*](https://fontawesome.com/icons/clock?style=solid)
-* **twitter** [*fab fa-twitter-square*](https://fontawesome.com/icons/twitter-square?style=brands)
-* **github** [*fab fa-github-square*](https://fontawesome.com/icons/github-square?style=brands)
-* **double arrow** [*fas fa-angle-double-right*](https://fontawesome.com/icons/angle-double-right?style=solid)
-* **menu** [*fas fa-bars*](https://fontawesome.com/icons/bars?style=solid)
+* **magnifier**: [*fas fa-search*](https://fontawesome.com/icons/search?style=solid)
+* **flag**: [*fas fa-flag*](https://fontawesome.com/icons/flag?style=solid)
+* **network?**: [*fas fa-network-wired*](https://fontawesome.com/icons/network-wired?style=solid)
+* **calendar**: [*fas fa-calendar-day*](https://fontawesome.com/icons/calendar-day?style=solid)
+* **clock**: [*fas fa-clock"*](https://fontawesome.com/icons/clock?style=solid)
+* **twitter**: [*fab fa-twitter-square*](https://fontawesome.com/icons/twitter-square?style=brands)
+* **github**: [*fab fa-github-square*](https://fontawesome.com/icons/github-square?style=brands)
+* **double arrow**: [*fas fa-angle-double-right*](https://fontawesome.com/icons/angle-double-right?style=solid)
+* **menu**: [*fas fa-bars*](https://fontawesome.com/icons/bars?style=solid)
+* **close**: [*fas fa-times*](https://fontawesome.com/icons/times?style=solid)
 
 ### Translations
 if a view or a component has a few of unique elements to translate you can do 

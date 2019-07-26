@@ -11,14 +11,14 @@
       <q-tr :props="props">
         <q-td key="link" :props="props">
           (
-          <template v-for="(address, index) in getCellValue(props, 'link')">{{ index != 0?",": "" }}
-            <a
-              href="javascript:void(0)"
-              :key="address"
-            >{{address}}
+          <template v-for="(prefix, index) in getCellValue(props, 'link')">
+            {{ index != 0?",": "" }}
+            <a href="javascript:void(0)" :key="prefix" @click="$emit('prefix-details', prefix)">
+              {{prefix}}
               <q-popup-proxy transition-show="flip-up" transition-hide="flip-down">
                 <q-banner>
-                  <prefix-overview :ip="address"/>
+                  <reverse-dns-ip :ip="prefix" class="IHR_reverse-dns-ip-improved"/>
+                  <prefix-overview :ip="prefix" class="IHR_prefix-overview-improved IHR_prefix-overview-popup" />
                 </q-banner>
               </q-popup-proxy>
             </a>
@@ -54,11 +54,13 @@
 <script>
 import CommonTableMixin from "./CommonTableMixin";
 import PrefixOverview from "@/components/ripe/PrefixOverview";
+import ReverseDnsIp from "@/components/ripe/ReverseDnsIp";
 
 export default {
   mixins: [CommonTableMixin],
   components: {
-    PrefixOverview
+    PrefixOverview,
+    ReverseDnsIp
   },
   data() {
     return {
@@ -107,9 +109,7 @@ export default {
       ]
     };
   },
-  mounted() {
-   
-  },
+  mounted() {},
   methods: {
     getCellValue(props, columnName) {
       let col = props.colsMap[columnName];
@@ -122,19 +122,18 @@ export default {
 };
 </script>
 <style lang="stylus">
-.IHR_ {
-  &probe-cell {
-    cursor: pointer;
-  }
+.IHR_
+  &probe-cell
+    cursor pointer
 
-  &probe-popup {
-    padding: 10px;
-    max-width: 200px;
+  &probe-popup
+    padding 10px
+    max-width 200px
 
-    & > span:first-child {
-      font-weight: 500;
-      margin-right: 6pt;
-    }
-  }
-}
+    & > span:first-child
+      font-weight 500
+      margin-right 6pt
+
+  &prefix-overview-popup
+    max-width 400px
 </style>

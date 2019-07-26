@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     react() {
-      console.log("I'M REACTING BAKA")
       if(this.traces == undefined)
         return;
       Plotly.react(
@@ -61,7 +60,6 @@ export default {
       this.$emit("loaded");
     },
     relayout() {
-      console.log("reaLayout BAKA")
       Plotly.relayout(this.$refs["chart"], {});
     }
   },
