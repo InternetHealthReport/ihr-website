@@ -1,38 +1,12 @@
-<template>
-  <div>
-    <q-card v-if="loaded === false" negative>
-      <q-card-section>
-        {{ $t('genericErrors.cloudNotLoad') }} BGPlay
-      </q-card-section>
-    </q-card>
-    <div v-if="loaded === null" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="4em" />
-    </div>
-    <div :id="myId">
-    </div>
-  </div>
-</template>
-
 <script>
-
+import PrefixMixin from "./mixins/PrefixMixin"
 
 export default {
-  props: {
-    ip: {
-      type: String,
-      required: true
-    }
-  },
+  mixins: [PrefixMixin],
   data() {
     return {
-      myId: `prefix-overview-${this._uid}`,
-      prefixOverview: null,
-      loaded: null,
-      widgetPromise: null,
+      name: "reverse-dns-ip",
     };
-  },
-  beforeCreate() {
-    this.widgetPromise = null;
   },
   mounted() {
     this.$libraryDelayer.load("ripe_widget_api", ()=>{
@@ -44,21 +18,9 @@ export default {
         size: "small",
         disable: ["controls", "footer-buttons", "logo", "maximize"]
       },
-      () => {
-        this.$libraryDelayer.getRidOfInlineStyle(this.myId, "*");
-        var elemt = document.getElementById(this.myId);
-        elemt.style.width = "100%";
-        this.loaded = true;
-      }
+      this.navigateAndRemove
     );
     })
-  },
-  watch: {
-    ip(oldValue, newValue) {
-      if (oldValue == newValue) return;
-      this.prefixOverview.update({ resource: this.ip });
-      this.prefixOverview.reload();
-    }
   }
 };
 </script>
@@ -74,20 +36,20 @@ export default {
       display inline-block
       margin auto
 
-.IHR_prefix-overview-container
+.IHR_prefix-overview-improved
   & > div:first-child
     border none
+    margin-bottom 3pt
     & > .box-content
       border none
       padding-top 0px
       padding 0 10px
       & > .widget-drag-icon
-        margin 0 auto !important
-        width 96%
-
+        margin 0 !important
+        width 100%
         & .widget-title
           color black !important
-          font-size 13pt
+          font-size 12pt
 
       & > .controls-container
         display none
@@ -108,10 +70,17 @@ export default {
           border-width 2px 0px 2px 0px
           border-radius 0px
 
-          & > h6:first-child  //RIR information
-            margin 1px 0px 8px 0px
+          & > h6 //RIR information
+            margin 4px 0px 8px 0px
             font-size 15pt
             font-weight 500
+            & a
+              color $accent !important
+
+          & > .list-group
+            & > .list-group-item
+              & > a
+                color $accent !important
 
           & > div:first-of-type
             & > table
@@ -135,11 +104,11 @@ export default {
               padding 5px 8px
               font-weight 600
               text-transform uppercase
-              box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-              transition: all 0.3s cubic-bezier(.25,.8,.25,1);
-
+              box-shadow 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)
+              transition all 0.3s cubic-bezier(.25,.8,.25,1)
               &:hover
-                box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 6px 6px rgba(0,0,0,0.22);
+                box-shadow 0 14px 28px rgba(0,0,0,0.25), 0 6px 6px rgba(0,0,0,0.22)
+
             & > .panel
               & > .panel-body //Real body of IANA information
                 & > h5:first-child
