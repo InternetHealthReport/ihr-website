@@ -8,12 +8,15 @@
     binary-state-sort
   >
     <template v-slot:body="props">
-      <q-tr :props="props" @click.native="routeToIxp(props.colsMap.asNumber, props.row)" class="IHR_table-row">
+      <q-tr 
+        :props="props" 
+        @click.native="routeToIxp(props.colsMap.asNumber, props.row)" 
+        class="IHR_table-row">
         <q-td
           v-for="col in columns"
           :key="col.name"
-          :class="hegClass(col.name, col.field(props.row))"
           :props="props"
+          :class="col.name == 'hegemony'? ['IHR_important-cell', getCalssByHegemony(props)] : '' "
         >{{ col.format(col.field(props.row)) }}</q-td>
       </q-tr>
     </template>
@@ -113,10 +116,6 @@ export default {
     };
   },
   methods: {
-    hegClass(name, value) {
-      if (name != "hegemonyIncrement") return "";
-      return this.getColorChangeClass(value);
-    },
     routeToIxp(asn, row) {
       asn = asn.format(asn.field(row));
       let path = this.$route.path;
@@ -124,6 +123,12 @@ export default {
       link += path.substring(0, path.lastIndexOf("/") + 1);
       link += this.$options.filters.ihr_getAsOrIxp(asn);
       window.open(link);
+    },
+    getCalssByHegemony(props) {
+      let hegemony = this.getCellValue(props, 'hegemony');
+      if(hegemony >= 0.5 ) return "IHR_color-deviation-hight-threshold"
+      if(hegemony >= 0.25) return "IHR_color-deviation-mid-threshold"
+      return "";
     }
   }
 };

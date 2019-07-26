@@ -50,8 +50,7 @@
       <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
         <q-scroll-area
           class="fit"
-          :thumb-style="{left: '1px', width: '6pt'}"
-          :content-active-style="{'margin-left': '6.5pt !important', transition: '.4s'}"
+          :thumb-style="{right: '1px', width: '6pt'}"
         >
           <closable-container
             @close-me="removePrefix(prefix)"

@@ -15,12 +15,6 @@
             {{ index != 0?",": "" }}
             <a href="javascript:void(0)" :key="prefix" @click="$emit('prefix-details', prefix)">
               {{prefix}}
-              <q-popup-proxy transition-show="flip-up" transition-hide="flip-down">
-                <q-banner>
-                  <reverse-dns-ip :ip="prefix" class="IHR_reverse-dns-ip-improved"/>
-                  <prefix-overview :ip="prefix" class="IHR_prefix-overview-improved IHR_prefix-overview-popup" />
-                </q-banner>
-              </q-popup-proxy>
             </a>
           </template>
           )
@@ -28,9 +22,8 @@
         <q-td
           key="delayChange"
           :props="props"
-          :class="getdelayChangeCalss(getCellValue(props, 'delayChange'))"
         >{{ getCellValue(props, "delayChange") }}</q-td>
-        <q-td key="deviation" :props="props">{{ getCellValue(props, "deviation") }}</q-td>
+        <q-td key="deviation" :props="props" :class="['IHR_important-cell', getCalssByDeviation(getCellValue(props, 'deviation'))]">{{ getCellValue(props, "deviation") }}</q-td>
         <q-td key="probes" :props="props" class="IHR_probe-cell">
           {{ getCellValue(props, "probes") }}
           <q-popup-proxy transition-show="flip-up" transition-hide="flip-down">
@@ -111,12 +104,10 @@ export default {
   },
   mounted() {},
   methods: {
-    getCellValue(props, columnName) {
-      let col = props.colsMap[columnName];
-      return col.format(col.field(props.row));
-    },
-    getdelayChangeCalss(value) {
-      return this.getColorChangeClass(-value);
+    getCalssByDeviation(deviation) {
+      if(deviation > 100) return "IHR_color-deviation-hight-threshold";
+      if(deviation > 10) return "IHR_color-deviation-mid-threshold";
+      return "";
     }
   }
 };

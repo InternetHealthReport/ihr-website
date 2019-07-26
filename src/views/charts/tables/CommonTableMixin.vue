@@ -11,12 +11,9 @@ export default {
     }
   },
   methods: {
-    getColorChangeClass(value) {
-      let colorClass;
-      if (value < 0) colorClass = "decrease";
-      else if (value > 0) colorClass = "increse";
-      else colorClass = "stable";
-      return `IHR_color-increment IHR_color-increment-${colorClass}`;
+    getCellValue(props, columnName) {
+      let col = props.colsMap[columnName];
+      return col.format(col.field(props.row));
     }
   }
 }

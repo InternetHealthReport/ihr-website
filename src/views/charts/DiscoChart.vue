@@ -61,7 +61,7 @@ export default {
         hovermode: "closest",
         yaxis: {
           title: "Disconnection Level",
-          autorange: true,
+          autorange: "reversed",
           automargin: true
         },
         margin: {
