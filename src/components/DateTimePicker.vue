@@ -15,7 +15,7 @@
         </q-popup-proxy>
       </q-icon>
     </template>
-    <template v-slot:append v-if="hideTime">
+    <template v-slot:append v-if="!hideTime">
       <q-icon name="fas fa-clock" class="cursor-pointer" :class="textColor">
         <q-popup-proxy transition-show="scale" transition-hide="scale">
           <q-time
@@ -82,6 +82,11 @@ export default {
   },
   computed: {
     dateToString() {
+      if(this.hideTime) {
+        let str = this.value.getUTCDay();
+        str += "/" + this.value.getUTCMonth();
+        str += "/" + this.value.getUTCHours();
+      }
       return this.value.toUTCString();
     },
     textColor() {
