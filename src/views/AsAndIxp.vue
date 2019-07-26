@@ -47,7 +47,7 @@
           ref="discoChart"
         />
       </q-expansion-item>
-      <q-drawer :value="showSidebar" side="right" bordered @on-layout="resizeCharts">
+      <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
         <q-scroll-area
           class="fit"
           :thumb-style="{left: '1px', width: '6pt'}"
@@ -140,12 +140,11 @@ export default {
     },
     showDetails(address) {
       this.$emit("sidebar-action", true);
-      this.prefixesDetail.push(address);
-      console.log(this.prefixesDetail);
+      if(this.prefixesDetail.find((elem) => address == elem) == undefined)
+        this.prefixesDetail.push(address);
     },
     removePrefix(address) {
       this.prefixesDetail = this.prefixesDetail.filter(elem => address != elem);
-      console.log(this.prefixesDetail);
     }
   },
   mounted() {

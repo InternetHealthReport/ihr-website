@@ -1,7 +1,12 @@
 <template>
-  <q-layout view="hhh LpR fff" id="app">
+  <q-layout view="hHh LpR fff" id="app">
     <q-header elevated primary>
       <q-toolbar class="q-py-sm q-px-md row">
+        <div>
+          <q-btn flat @click="expandSidebar">
+            <q-icon name="fas fa-bars" class="text-white" />
+          </q-btn>
+        </div>
         <div class="col-8 row no-wrap">
           <q-item id="IHR_home-button">
             <router-link :to="{name : 'home'}">
@@ -83,11 +88,7 @@
             </q-btn>
             <locale-selector />
           </div>
-          <div>
-            <q-btn flat @click="expandSidebar">
-              <q-icon name="fas fa-bars" class="text-white" />
-            </q-btn>
-          </div>
+          
         </div>
       </q-toolbar>
     </q-header>
