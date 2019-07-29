@@ -26,7 +26,7 @@ The full reference is in the quasar website https://quasar.dev/layout/grid/intro
 
 ### Icons
 In this project is used Font Awesome https://fontawesome.com/.
-To keep the number of different icons short there is a list of already used icons:
+To keep the number of different icons short, here a list of already used icons:
 
 * **arrow down**: [*fas fa-sort-down*](https://fontawesome.com/icons/sort-down?style=solid)
 * **notification bell**: [*fas fa-bell*](https://fontawesome.com/icons/bell?style=solid)

@@ -31,6 +31,7 @@ export default {
   },
   data() {
     return {
+      created: false
     };
   },
   mounted() {
@@ -47,9 +48,14 @@ export default {
     graphDiv.on("plotly_click", eventData => {
       this.$emit("plotly-click", eventData);
     });
+
+    this.created = true;
   },
   methods: {
     react() {
+      if(!this.created)
+        console.error("SHOULD NEVER HAPPEN")
+        
       if(this.traces == undefined)
         return;
       Plotly.react(

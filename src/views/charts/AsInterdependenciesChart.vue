@@ -46,19 +46,19 @@
         <q-tab-panel name="api" class="IHR_api-table">
           <table>
             <tr>
-              <td><label name="hagemony">Hagemony</label></td>
+              <td><label for="hagemony">Hagemony</label></td>
               <td><a :href="hegemonyUrl" target="_blank" id="hagemony">{{hegemonyUrl}}</a></td>
             </tr>
             <tr>
-              <td><label name="hagemonyCone">Hagemony cone</label></td>
+              <td><label for="hagemonyCone">Hagemony cone</label></td>
               <td><a :href="hegemonyConeUrl" target="_blank" id="hagemonyCone">{{hegemonyConeUrl}}</a></td>
             </tr>
             <tr>
-              <td><label name="tableUrl">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</label></td>
+              <td><label for="tableUrl">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</label></td>
               <td><a :href="dependencyUrl" target="_blank" id="tableUrl">{{dependencyUrl}}</a></td>
             </tr>
             <tr>
-              <td><label name="tableUrl">{{$t("charts.asInterdependencies.table.dependentTitle")}}</label></td>
+              <td><label for="tableUrl">{{$t("charts.asInterdependencies.table.dependentTitle")}}</label></td>
               <td><a :href="dependentUrl" target="_blank" id="tableUrl">{{dependentUrl}}</a></td>
             </tr>
           </table>

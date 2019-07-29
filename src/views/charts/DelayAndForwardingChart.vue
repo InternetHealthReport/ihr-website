@@ -45,7 +45,7 @@
           <table>
             <tr>
               <td>
-                <label name="delay">{{$t('charts.delayAndForwarding.yaxis')}}</label>
+                <label for="delay">{{$t('charts.delayAndForwarding.yaxis')}}</label>
               </td>
               <td>
                 <a :href="delayUrl" target="_blank" id="delay">{{delayUrl}}</a>
@@ -53,7 +53,7 @@
             </tr>
             <tr>
               <td>
-                <label name="forwarding">{{$t('charts.delayAndForwarding.yaxis2')}}</label>
+                <label for="forwarding">{{$t('charts.delayAndForwarding.yaxis2')}}</label>
               </td>
               <td>
                 <a :href="forwardingUrl" target="_blank" id="forwarding">{{forwardingUrl}}</a>
@@ -61,7 +61,7 @@
             </tr>
             <tr>
               <td>
-                <label name="delayAlarms">{{$t('charts.delayAndForwarding.tables.delay.title')}}</label>
+                <label for="delayAlarms">{{$t('charts.delayAndForwarding.tables.delay.title')}}</label>
               </td>
               <td>
                 <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{delayAlarmsUrl}}</a>
