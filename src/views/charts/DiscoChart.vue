@@ -98,7 +98,7 @@ export default {
       trace.y = [];
       trace.z = [];
 
-      trace.x.push(this.startTime.toUTCString());
+      trace.x.push(this.$options.filters.ihrUtcString(this.startTime));
       trace.y.push(0);
       trace.z.push(0);
 
@@ -112,7 +112,7 @@ export default {
         trace.z.push(elem.id);
       });
 
-      trace.x.push(this.endTime.toUTCString());
+      trace.x.push(this.$options.filters.ihrUtcString(this.endTime));
       trace.y.push(0);
       trace.z.push(0);
       this.layout.datarevision = new Date().getTime();

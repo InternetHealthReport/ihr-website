@@ -14,9 +14,9 @@
         <q-icon name="fas fa-calendar-day" class="cursor-pointer" :class="textColor">
           <q-popup-proxy transition-show="scale" transition-hide="scale" :target="`#${myId}`">
             <q-date
-              :value="selectedDateTime"
+              :value="qTimeModel"
               @input="propagate($event)"
-              :mask="$ihrStyle.dateTimeFormat"
+              :mask="mask"
               :options="options"
             />
           </q-popup-proxy>
@@ -26,9 +26,9 @@
         <q-icon name="fas fa-clock" class="cursor-pointer" :class="textColor">
           <q-popup-proxy transition-show="scale" transition-hide="scale" target>
             <q-time
-              :value="selectedDateTime"
+              :value="qTimeModel"
               @input="propagate($event)"
-              :mask="$ihrStyle.dateTimeFormat"
+              :mask="mask"
               format24h
               color="white"
             />
@@ -39,7 +39,7 @@
   </div>
 </template>
 <script>
-import { date } from "quasar";
+const QTIME_MASK = "YYYY-MM-DDTHH:mm:ss.SSS";
 
 export default {
   props: {
@@ -70,9 +70,12 @@ export default {
     }
   },
   data() {
+    console.log(this.value.toISOString())
     return {
       myId: `date-time-picker-${this._uid}`,
-      selectedDateTime: date.formatDate(this.value, this.$ihrStyle.dateTimeFormat)
+      selectedDateTime: this.$options.filters.ihrUtcString(this.value),
+      mask: QTIME_MASK,
+      qTimeModel: this.value.toISOString()
     };
   },
   methods: {
@@ -81,8 +84,11 @@ export default {
       return selectDate >= this.min && selectDate <= this.max;
     },
     propagate(event) {
-      let selectedDate = new Date(event);
-      this.selectedDateTime = date.formatDate(selectedDate, this.$ihrStyle.dateTimeFormat);
+      let selectedDate = new Date(event+"Z");
+      let isoDate = selectedDate.toISOString();
+      isoDate = isoDate.substring(0, isoDate.length - 1);
+      this.qTimeModel = isoDate;
+      this.selectedDateTime = this.$options.filters.ihrUtcString(selectedDate),
       this.$emit("input", selectedDate);
     }
   },

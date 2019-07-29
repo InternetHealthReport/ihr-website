@@ -15,7 +15,7 @@
         :min="minTime"
         :max="maxTime"
         :value="localEndtime"
-        @input="localEndtime = $event;  debouncedEmit();"
+        @input="localEndtime = $event; debouncedEmit();"
         :white="white"
         hideTime
       />
@@ -37,16 +37,13 @@ class ChartInterval {
   }
 
   static today() {
-    let today = new Date();
-    return new ChartInterval(
-      new Date(today.setHours(0, 0, 0, 0)),
-      new Date(today.setHours(23, 59, 59, 0))
-    );
+    let today = new ChartInterval(new Date(), new Date());
+    return today.trim();
   }
 
   static lastWeek() {
     let result = ChartInterval.today();
-    result.begin.setDate(result.begin.getDate() - 7);
+    result.begin.setUTCDate(result.begin.getUTCDate() - 7);
     return result;
   }
 
@@ -56,8 +53,9 @@ class ChartInterval {
   }
 
   trim() {
-    this.begin.setHours(0, 0, 0, 0);
-    this.end.setHours(23, 59, 59, 0);
+    this.begin.setUTCHours(0, 0, 0, 0);
+    this.end.setUTCDate(this.end.getUTCDate() + 1);
+    this.end.setUTCHours(0, 0, 0, 0);
     return this;
   }
 };

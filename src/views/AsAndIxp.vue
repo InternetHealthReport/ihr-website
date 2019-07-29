@@ -48,7 +48,7 @@
         />
       </q-expansion-item>
       <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
-        <div class="row IHR_filter-section">
+        <div class="row IHR_sidebar-filter-section">
           <interval-picker v-model="interval" class="col-9"/>
           <div class="col-3 IHR_family-filter">
             <div>
@@ -59,20 +59,22 @@
             </div>
           </div>
         </div>
-        <q-scroll-area
-          class="fit"
-          :thumb-style="{right: '1px', width: '6pt'}"
-        >
-          <closable-container
-            @close-me="removePrefix(prefix)"
-            v-for="prefix in prefixesDetail"
-            :key="prefix"
-            class="IHR_prefix-sidebar shadow-2"
+        <div class="IHR_sidebar-content-section">
+          <q-scroll-area
+            class="fit"
+            :thumb-style="{right: '1px', width: '6pt'}"
           >
-            <reverse-dns-ip :ip="prefix" class="IHR_reverse-dns-ip-improved" />
-            <prefix-overview :ip="prefix" class="IHR_prefix-overview-improved" />
-          </closable-container>
-        </q-scroll-area>
+            <closable-container
+              @close-me="removePrefix(prefix)"
+              v-for="prefix in prefixesDetail"
+              :key="prefix"
+              class="IHR_prefix-sidebar shadow-2"
+            >
+              <reverse-dns-ip :ip="prefix" class="IHR_reverse-dns-ip-improved" />
+              <prefix-overview :ip="prefix" class="IHR_prefix-overview-improved" />
+            </closable-container>
+          </q-scroll-area>
+        </div>
       </q-drawer>
       <div class="IHR_last-element">&nbsp;</div>
     </q-list>
@@ -242,10 +244,14 @@ export default {
   &prefix-sidebar
     margin 4pt 6pt
 
-  &filter-section
+  &sidebar-filter-section
+    height 20%
     & > .IHR_family-filter
       padding 2pt
       & label
         font-weight bold
+
+  &sidebar-content-section
+    height 80%
 
 </style>

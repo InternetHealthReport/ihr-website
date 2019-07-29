@@ -227,16 +227,20 @@ class DiscoEventQuery extends TimeQuery {
     return this._set("streamtype", name);
   }
 
-  timeBin(time, comparator = Query.EXACT) {
-    return this._set("timebin", Query.dateFormatter(time), comparator);
+  starttime(time, comparator = Query.EXACT) {
+    return this._set("starttime", Query.dateFormatter(time), comparator);
+  }
+
+  endttime(time, comparator = Query.EXACT) {
+    return this._set("endttime", Query.dateFormatter(time), comparator);
   }
 
   startTime(time, comparator = Query.GTE) {
-    return this.timeBin(time, comparator);
+    return this.starttime(time, comparator);
   }
 
   endTime(time, comparator = Query.LTE) {
-    return this.timeBin(time, comparator);
+    return this.endttime(time, comparator);
   }
 
   avgLevel(level, comparator = Query.EXACT) {
