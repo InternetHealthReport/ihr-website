@@ -1,37 +1,45 @@
 <template>
-  <q-input filled
-      :value="dateToString"
-      @input="validateAndPropagate($event)"
-      :dark="white" class="IHR_date-input">
-    <template v-slot:prepend>
-      <q-icon name="fas fa-calendar-day" class="cursor-pointer" :class="textColor">
-        <q-popup-proxy transition-show="scale" transition-hide="scale">
-          <q-date
-            :value="dateToString"
-            @input="propagate($event)"
-            :mask="TIME_FORMAT"
-            :options="options"
-          />
-        </q-popup-proxy>
-      </q-icon>
-    </template>
-    <template v-slot:append v-if="!hideTime">
-      <q-icon name="fas fa-clock" class="cursor-pointer" :class="textColor">
-        <q-popup-proxy transition-show="scale" transition-hide="scale">
-          <q-time
-            :value="dateToString"
-            @input="propagate($event)"
-            :mask="TIME_FORMAT"
-            format24h
-            color="white"
-          />
-        </q-popup-proxy>
-      </q-icon>
-    </template>
-  </q-input>
+  <div :id="myId" class="IHR_date-time-picker">
+    <q-input
+      filled
+      v-model="selectedDateTime"
+      :dark="white"
+      class="IHR_date-input"
+      readonly
+      hide-bottom-space
+      square
+      dense
+    >
+      <template v-slot:prepend>
+        <q-icon name="fas fa-calendar-day" class="cursor-pointer" :class="textColor">
+          <q-popup-proxy transition-show="scale" transition-hide="scale" :target="`#${myId}`">
+            <q-date
+              :value="selectedDateTime"
+              @input="propagate($event)"
+              :mask="$ihrStyle.dateTimeFormat"
+              :options="options"
+            />
+          </q-popup-proxy>
+        </q-icon>
+      </template>
+      <template v-slot:append v-if="!hideTime">
+        <q-icon name="fas fa-clock" class="cursor-pointer" :class="textColor">
+          <q-popup-proxy transition-show="scale" transition-hide="scale" target>
+            <q-time
+              :value="selectedDateTime"
+              @input="propagate($event)"
+              :mask="$ihrStyle.dateTimeFormat"
+              format24h
+              color="white"
+            />
+          </q-popup-proxy>
+        </q-icon>
+      </template>
+    </q-input>
+  </div>
 </template>
 <script>
-const TIME_FORMAT = "YYYY-MM-DDTHH:MMZ";
+import { date } from "quasar";
 
 export default {
   props: {
@@ -63,34 +71,24 @@ export default {
   },
   data() {
     return {
-      TIME_FORMAT: TIME_FORMAT
+      myId: `date-time-picker-${this._uid}`,
+      selectedDateTime: date.formatDate(this.value, this.$ihrStyle.dateTimeFormat)
     };
   },
   methods: {
-    options(date) {
-      date = new Date(date);
-      return date >= this.min && date <= this.max;
+    options(selectDate) {
+      selectDate = new Date(selectDate);
+      return selectDate >= this.min && selectDate <= this.max;
     },
     propagate(event) {
-      this.$emit("input", new Date(event));
-    },
-    validateAndPropagate(event) {
-      let newDate = new Date(event);
-      if(!isNaN(newDate))
-        this.$emit("input", newDate);
+      let selectedDate = new Date(event);
+      this.selectedDateTime = date.formatDate(selectedDate, this.$ihrStyle.dateTimeFormat);
+      this.$emit("input", selectedDate);
     }
   },
   computed: {
-    dateToString() {
-      if(this.hideTime) {
-        let str = this.value.getUTCDay();
-        str += "/" + this.value.getUTCMonth();
-        str += "/" + this.value.getUTCHours();
-      }
-      return this.value.toUTCString();
-    },
     textColor() {
-      return this.white?"IHR_white-text":"IHR_black-text";
+      return this.white ? "IHR_white-text" : "IHR_black-text";
     }
   }
 };
@@ -98,12 +96,15 @@ export default {
 
 <style lang="stylus" scoped>
 .IHR_
-    &white-text
-      color white
+  &date-time-picker
+    cursor pointer
 
-    &black-text
-      color black
+  &white-text
+    color white
 
-    &date-input
-      font-weight bolder
+  &black-text
+    color black
+
+  &date-input
+    font-weight bolder
 </style>

@@ -1,32 +1,23 @@
 <template>
   <div>
-    <div class="row justify-around">
+    <div>
       <date-time-picker
-        class="col-2"
         :min="minTime"
-        :max="maxTime"
+        :max="localEndtime"
         :value="localStartTime"
-        @input="localStartTime = $event; timeRange.min = $event.getTime();"
+        @input="localStartTime = $event; debouncedEmit();"
         :white="white"
+        hideTime
       />
-      <q-range
-        class="col-7"
-        :min="minTime.getTime()"
-        :max="maxTime.getTime()"
-        v-model="timeRange"
-        label
-        drag-range
-        @change="updateRange"
-        :left-label-value="leftLabel"
-        :right-label-value="rigthLabel"
-      />
+    </div>
+    <div>
       <date-time-picker
-        class="col-2"
         :min="minTime"
         :max="maxTime"
         :value="localEndtime"
-        @input="localEndtime = $event; timeRange.max = $event.getTime();"
+        @input="localEndtime = $event;  debouncedEmit();"
         :white="white"
+        hideTime
       />
     </div>
   </div>
@@ -34,13 +25,8 @@
 
 <script>
 import { debounce } from "quasar";
-import ReactiveChart from "@/components/ReactiveChart";
 import DateTimePicker from "@/components/DateTimePicker";
 import { PROJECT_START_DATE, Query } from "@/plugins/IhrApi";
-
-function timestampToUTC(timestamp) {
-  return new Date(timestamp).toUTCString();
-}
 
 const DEBOUNCE_TIME = 800;
 
@@ -58,15 +44,26 @@ class ChartInterval {
     );
   }
 
+  static lastWeek() {
+    let result = ChartInterval.today();
+    result.begin.setDate(result.begin.getDate() - 7);
+    return result;
+  }
+
   setIntevalTime(beginTimestamp, endTimestamp) {
     this.begin.setTime(beginTimestamp);
     this.end.setTime(endTimestamp);
+  }
+
+  trim() {
+    this.begin.setHours(0, 0, 0, 0);
+    this.end.setHours(23, 59, 59, 0);
+    return this;
   }
 };
 
 export default {
   components: {
-    ReactiveChart,
     DateTimePicker
   },
   props: {
@@ -93,27 +90,9 @@ export default {
       maxTime: new Date(),
       localStartTime: new Date(this.value.begin),
       localEndtime: new Date(this.value.end),
-      timeRange: { min: this.value.begin.getTime(), max: this.value.end.getTime() }
     };
   },
-  mounted() {
-  },
-  methods: {
-    updateRange(range) {
-      //no reactivity using setTime, I'm sad to do a useless new....
-      this.localStartTime = new Date(this.timeRange.min);
-      this.localEndtime = new Date(this.timeRange.max);
-    }
-  },
   computed: {
-    leftLabel() {
-      this.debouncedEmit();
-      return timestampToUTC(this.timeRange.min);
-    },
-    rigthLabel() {
-      this.debouncedEmit();
-      return timestampToUTC(this.timeRange.max);
-    },
     textColor() {
       return this.white?"IHR_white-text":"IHR_black-text";
     }

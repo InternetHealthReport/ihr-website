@@ -48,6 +48,17 @@
         />
       </q-expansion-item>
       <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
+        <div class="row IHR_filter-section">
+          <interval-picker v-model="interval" class="col-9"/>
+          <div class="col-3 IHR_family-filter">
+            <div>
+              <q-toggle v-model="ipVersion" name="ipVersion"/>
+            </div>
+            <div class="text-center">
+              <label for="ipVersion">{{ipVersionText}}</label>
+            </div>
+          </div>
+        </div>
         <q-scroll-area
           class="fit"
           :thumb-style="{right: '1px', width: '6pt'}"
@@ -64,9 +75,6 @@
         </q-scroll-area>
       </q-drawer>
       <div class="IHR_last-element">&nbsp;</div>
-      <q-page-sticky position="bottom" class="IHR_time-filter" expand>
-        <interval-picker v-model="interval" white />
-      </q-page-sticky>
     </q-list>
   </div>
 </template>
@@ -109,7 +117,7 @@ export default {
   props: {
     showSidebar: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   data() {
@@ -117,15 +125,13 @@ export default {
     let routePieces = this.$route.params.asn.match(/[0-9]+$/);
     let asNumber = Number(routePieces[0]);
     if (this.$route.params.asn.startsWith("IXP")) asNumber = -asNumber;
-    let lastWeek = new Date();
-    lastWeek.setDate(lastWeek.getDate() - 7);
     return {
-      family: AS_FAMILY.v4,
+      ipVersion: true,
       fetch: false,
       loadingStatus: LOADING_STATUS.LOADING,
       asNumber: asNumber,
       asName: null,
-      interval: new ChartInterval(lastWeek, new Date()),
+      interval: ChartInterval.lastWeek(),
       prefixesDetail: []
     };
   },
@@ -160,6 +166,12 @@ export default {
     });
   },
   computed: {
+    family() {
+      return this.ipVersion? AS_FAMILY.v4 : AS_FAMILY.v6;
+    },
+    ipVersionText(){
+      return this.ipVersion? "IPv4" : "IPv6";
+    },
     startTime() {
       return this.interval.begin;
     },
@@ -229,5 +241,11 @@ export default {
 
   &prefix-sidebar
     margin 4pt 6pt
+
+  &filter-section
+    & > .IHR_family-filter
+      padding 2pt
+      & label
+        font-weight bold
 
 </style>
