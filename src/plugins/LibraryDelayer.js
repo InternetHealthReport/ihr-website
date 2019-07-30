@@ -69,7 +69,11 @@ class LibraryDelayer {
   }
 
   addScript(link) {
-    this.scripts.push(link);
+    if (link instanceof Array) {
+      this.scripts.push(...link);
+    } else {
+      this.scripts.push(link);
+    }
     return this;
   }
 
@@ -107,10 +111,13 @@ class LibraryDelayer {
         let promise = new Promise(localResolve => {
           scriptElem.onload = () => {
             localResolve();
+            console.log("loaded: " + script);
           };
           body.appendChild(scriptElem);
+          console.log("appended: " + script);
         });
         await promise;
+        console.log("promise concluded: " + script);
         await this.loadNext(body);
       }
       resolve();
@@ -177,12 +184,13 @@ export default {
       mounted() {},
       methods: {
         load(library, callback) {
-          let script = this.libraryList[library];
-          if (script !== undefined) {
+          let scripts = this.libraryList[library];
+          if (scripts !== undefined) {
             this.libraryDelayer
-              .addScript(script)
+              .addScript(scripts)
               .init()
               .then(() => {
+                delete this.libraryList[library];
                 callback();
               });
           } else {

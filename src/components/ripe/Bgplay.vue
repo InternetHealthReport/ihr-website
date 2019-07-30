@@ -35,11 +35,7 @@ export default {
       myId: `bgplay-container-${this._uid}`,
       bgplay: null,
       loaded: null,
-      widgetPromise: null,
     };
-  },
-  beforeCreate() {
-    this.widgetPromise = null;
   },
   mounted() {
     this.$libraryDelayer.load("ripe_widget_api", ()=>{

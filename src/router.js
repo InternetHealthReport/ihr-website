@@ -13,6 +13,7 @@ Vue.use(Router);
 const routerBase = "/:locale/";
 
 export default new Router({
+  mode: "history", //TODO https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
   routes: [
     {
       path: "/",

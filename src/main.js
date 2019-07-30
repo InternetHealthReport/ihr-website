@@ -17,7 +17,13 @@ Vue.use(VueResizeText);
 Vue.use(IhrApi);
 Vue.use(LibraryDelayer, {
   libraries: {
-    ripe_widget_api: "https://stat.ripe.net/widgets/widget_api.js"
+    ripe_widget_api: "https://stat.ripe.net/widgets/widget_api.js",
+    latencymon_widget: [
+      "https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/dev/libs/require.min.js",
+      "https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/latencymon-widget-main.js"
+    ],
+    tracemon_widget:
+      "https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js"
   }
 });
 Vue.use(IhrStyle);

@@ -8,7 +8,7 @@
     binary-state-sort
   >
     <template v-slot:body="props">
-      <q-tr :props="props">
+      <q-tr :props="props" @click.native="props.expand = !props.expand">
         <q-td key="link" :props="props">
           (
           <template v-for="(prefix, index) in getCellValue(props, 'link')">
@@ -40,23 +40,33 @@
           </q-popup-proxy>
         </q-td>
       </q-tr>
+      <q-tr v-if="props.expand" :props="props">
+        <q-td colspan="100%">
+          <latencymon :utc-time="dateTime" :propb-ids="props.row.msm_prb_ids" style="max-width: 93%; margin: 0 auto;"/>
+        </q-td>
+      </q-tr>
     </template>
   </q-table>
 </template>
 
 <script>
 import CommonTableMixin from "./CommonTableMixin";
-import PrefixOverview from "@/components/ripe/PrefixOverview";
-import ReverseDnsIp from "@/components/ripe/ReverseDnsIp";
+import Latencymon from "@/components/ripe/Latencymon";
 
 export default {
   mixins: [CommonTableMixin],
   components: {
-    PrefixOverview,
-    ReverseDnsIp
+    Latencymon
+  },
+  props: {
+    dateTime: {
+      type: Date,
+      required: true
+    }
   },
   data() {
     return {
+      showDetailRow: new Array(),
       pagination: {
         sortBy: "deviation",
         descending: true,
@@ -108,6 +118,14 @@ export default {
       if(deviation > 100) return "IHR_color-deviation-hight-threshold";
       if(deviation > 10) return "IHR_color-deviation-mid-threshold";
       return "";
+    },
+    expandRow(props) {
+      alert(props.expanded)
+      if(props.expanded == undefined || props.expanded == false) {
+        this.$set(props, "expanded", true);
+        return;
+      }
+      props.expanded = false;
     }
   }
 };
