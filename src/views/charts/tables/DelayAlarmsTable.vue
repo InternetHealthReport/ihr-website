@@ -127,6 +127,11 @@ export default {
       }
       props.expanded = false;
     }
+  },
+  watch: {
+    data() {
+      this.showDetailRow = new Array();
+    }
   }
 };
 </script>

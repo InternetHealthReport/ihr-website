@@ -20,9 +20,7 @@ export default {
   },
   mounted() {
     this.$libraryDelayer.load("latencymon_widget", () => {
-      var lm_grp = [];
-      var lm_msmid = [];
-      var timebin = this.utcTime;
+      let lm_grp = [];
 
       // Make latencymon groups
       for(let msms in this.propbIds) {
@@ -44,8 +42,8 @@ export default {
           },
           {
             measurements: Object.keys(this.propbIds),
-            startTimestamp: timebin.getTime() / 1000 - 5 * 3600,
-            stopTimestamp: timebin.getTime() / 1000 + 5 * 3600,
+            startTimestamp: this.utcTime.getTime() / 1000 - 5 * 3600,
+            stopTimestamp: this.utcTime.getTime() / 1000 + 5 * 3600,
             groups: lm_grp
           }
         );

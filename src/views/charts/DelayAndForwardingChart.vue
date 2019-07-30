@@ -39,7 +39,6 @@
         </q-tab-panel>
         <q-tab-panel name="forwarding">
           <forwarding-alarms-table
-            :date-time="details.forwardingData.dateTime"
             :data="details.forwardingData.data"
             :loading="details.forwardingData.loading"
           />
