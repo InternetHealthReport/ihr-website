@@ -87,8 +87,8 @@ class Query {
 
   _setOrder(name, order = Query.ASC) {
     return order == null
-      ? this._set("order")
-      : this._set("order", order + name);
+      ? this._set("ordering")
+      : this._set("ordering", order + name);
   }
 
   _clone() {

@@ -1,5 +1,5 @@
 const BASE_CLASS = "IHR_Style_"; //
-const DATETIME_FORMAT = "YYYY-MM-DDTHH:mmZ";
+const DATETIME_FORMAT = "YYYY-MM-DDTHH:mm.SSS";
 
 function padWith0(strNumber) {
   strNumber = `00${strNumber}`;

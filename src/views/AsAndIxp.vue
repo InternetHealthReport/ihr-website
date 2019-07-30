@@ -5,7 +5,7 @@
     <q-list v-if="showGraphs">
       <q-expansion-item
         expand-separator
-        :label="$t('charts.asInterdependencies.title')"
+        :label="$t('charts.asInterdependencies.title') + ' ' + asFamilyText"
         header-class="IHR_charts-title"
         default-opened
       >
@@ -52,10 +52,10 @@
           <interval-picker v-model="interval" class="col-9"/>
           <div class="col-3 IHR_family-filter">
             <div>
-              <q-toggle v-model="ipVersion" name="ipVersion"/>
+              <q-toggle v-model="asFamily" name="asFamily"/>
             </div>
             <div class="text-center">
-              <label for="ipVersion">{{ipVersionText}}</label>
+              <label for="asFamily">{{asFamilyText}}</label>
             </div>
           </div>
         </div>
@@ -128,7 +128,7 @@ export default {
     let asNumber = Number(routePieces[0]);
     if (this.$route.params.asn.startsWith("IXP")) asNumber = -asNumber;
     return {
-      ipVersion: true,
+      asFamily: true,
       fetch: false,
       loadingStatus: LOADING_STATUS.LOADING,
       asNumber: asNumber,
@@ -169,10 +169,10 @@ export default {
   },
   computed: {
     family() {
-      return this.ipVersion? AS_FAMILY.v4 : AS_FAMILY.v6;
+      return this.asFamily? AS_FAMILY.v4 : AS_FAMILY.v6;
     },
-    ipVersionText(){
-      return this.ipVersion? "IPv4" : "IPv6";
+    asFamilyText(){
+      return this.asFamily? "IPv4" : "IPv6";
     },
     startTime() {
       return this.interval.begin;
@@ -245,13 +245,13 @@ export default {
     margin 4pt 6pt
 
   &sidebar-filter-section
-    height 20%
+    height 16%
     & > .IHR_family-filter
       padding 2pt
       & label
         font-weight bold
 
   &sidebar-content-section
-    height 80%
+    height 84%
 
 </style>

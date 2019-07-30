@@ -7,6 +7,9 @@
       @plotly-click="showTable"
       ref="chart"
     />
+    <h2 v-if="details.tableVisible">
+      {{details.delayData.dateTime.toISOString()}}
+    </h2>
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
     </div>

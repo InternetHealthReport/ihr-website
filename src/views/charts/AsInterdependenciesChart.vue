@@ -7,6 +7,9 @@
       @plotly-click="showTable"
       ref="chart"
     />
+    <h2 v-if="details.tableVisible">
+      {{details.date.toISOString()}}
+    </h2>
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
     </div>
@@ -292,6 +295,7 @@ export default {
         trace.y.push(resp.conesize);
         trace.x.push(resp.timebin);
       });
+      console.log(trace)
       this.layout.datarevision = new Date().getTime();
     }
   },
@@ -318,6 +322,14 @@ export default {
     dependentUrl() {
       return this.$ihr_api.getUrl(this.details.tablesData.dependent.filter);
     },
+  },
+  watch: {
+    asFamily(oldValue, newValue) {
+      this.filters.forEach((filter) => {
+        filter.asFamily(newValue);
+      });
+      this.debouncedApiCall();
+    }
   }
 };
 </script>
