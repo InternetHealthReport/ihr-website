@@ -66,7 +66,6 @@ export default {
   },
   data() {
     return {
-      showDetailRow: new Array(),
       pagination: {
         sortBy: "deviation",
         descending: true,
@@ -126,11 +125,6 @@ export default {
         return;
       }
       props.expanded = false;
-    }
-  },
-  watch: {
-    data() {
-      this.showDetailRow = new Array();
     }
   }
 };

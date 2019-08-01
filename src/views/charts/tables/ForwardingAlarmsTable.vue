@@ -6,14 +6,37 @@
     :pagination.sync="pagination"
     :loading="loading"
     binary-state-sort
-  />
+  >
+    <template v-slot:body="props">
+      <q-tr
+        :props="props"
+        @click.native="props.expand = !props.expand">
+        <q-td
+          v-for="col in columns"
+          :key="col.name"
+          :props="props"
+        >{{ col.format(col.field(props.row)) }}</q-td>
+      </q-tr>
+      <!--
+      <q-tr v-if="props.expand" :props="props">
+        <q-td colspan="100%">
+          <tracemon :utc-time="dateTime" :propb-ids="props.row.msm_prb_ids" style="max-width: 93%; margin: 0 auto;"/>
+        </q-td>
+      </q-tr>
+      -->
+    </template>
+  </q-table>
 </template>
 
 <script>
 import CommonTableMixin from "./CommonTableMixin"
+import Tracemon from "@/components/ripe/Tracemon";
 
 export default {
   mixins: [CommonTableMixin],
+  components: {
+    Tracemon
+  },
   data() {
     return {
       pagination: {
