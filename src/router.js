@@ -7,6 +7,10 @@ import Countries from "@/views/Countries";
 import Documentation from "@/views/Documentation";
 import Networks from "@/views/Networks";
 import AsAndIxp from "@/views/AsAndIxp";
+import SignIn from "@/views/user/SignIn";
+import AccountActivation from "@/views/user/AccountActivation";
+import PersonalPage from "@/views/user/PersonalPage";
+import ResetPassword from "@/views/user/ResetPassword";
 
 Vue.use(Router);
 
@@ -53,6 +57,26 @@ export default new Router({
       name: "as_and_ixp",
       path: `${routerBase}as_and_ixp/:asn`,
       component: AsAndIxp
+    },
+    {
+      name: "sign_in",
+      path: `${routerBase}sign_in`,
+      component: SignIn
+    },
+    {
+      name: "account_activation",
+      path: `${routerBase}account_activation`,
+      component: AccountActivation
+    },
+    {
+      name: "reset_password",
+      path: `${routerBase}reset_password`,
+      component: ResetPassword
+    },
+    {
+      name: "personal_page",
+      path: `${routerBase}personal_page`,
+      component: PersonalPage
     }
   ]
 });

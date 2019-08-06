@@ -3,11 +3,11 @@ const LINK_REGEXP = /href=('|")(.*(?=\1))/;
 
 function remove_style(all) {
   //https://css-tricks.com/snippets/javascript/remove-inline-styles/
-  var i = all.length;
-  var j, is_hidden;
+  let i = all.length;
+  let j, is_hidden;
 
   // Presentational attributes.
-  var attr = [
+  let attr = [
     "align",
     "background",
     "bgcolor",
@@ -36,7 +36,7 @@ function remove_style(all) {
     "style"
   ];
 
-  var attr_len = attr.length;
+  let attr_len = attr.length;
 
   while (i--) {
     is_hidden = all[i].style.display === "none";
@@ -132,8 +132,8 @@ class LibraryDelayer {
     return new Promise(async (resolve, reject) => {
       try {
         this.start();
-        var body = document.getElementsByTagName("body")[0];
-        var head = document.getElementsByTagName("head")[0];
+        let body = document.getElementsByTagName("body")[0];
+        let head = document.getElementsByTagName("head")[0];
 
         await this.loadNext(body);
 
@@ -205,7 +205,7 @@ export default {
         getRidOfInlineStyle(id, elements) {
           if (id == undefined) return;
 
-          var set = document.getElementById(id);
+          let set = document.getElementById(id);
           remove_style(set);
 
           if (elements == undefined) return;

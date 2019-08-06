@@ -2,7 +2,8 @@
 	"genericErrors": {
 		"ups": "ups",
 		"badHappened": "Something bad happened, please contact the administrator",
-		"cloudNotLoad": "Could not load "
+		"cloudNotLoad": "Could not load ",
+		"invalid" : "invalid"
 	},
 	"header": {
 		"API": "API",
@@ -10,7 +11,12 @@
 		"countries": "countries",
 		"documentation": "documentation",
 		"networks": "networks",
-		"participants": "participants"
+		"participants": "participants",
+		"signUp": "sign up",
+		"signIn": "sign in",
+		"signInTitle": "fill and press",
+		"here": "here",
+		"ForgottenPassword": "do you forget your password? Please click"
 	},
 	"home": {
 		"monitoredCountries": "monitored countries",
@@ -69,5 +75,32 @@
 			"title": "disconnection events"
 		}
 	},
-	"asn": "AS number"
+	"sigIn": {
+		"title": "join to personalize your IHR",
+		"thankYou" : "thank you for your patience",
+		"mailWillBeSent": "an email will be sent to your address to confirm your account.",
+		"missingReCaptcha": "you need to click on \"i'm not a robot\" button.",
+		"passwordTooWeak": "the password of your choice is too weak. Use at least 8 characters.",
+		"strangeEmail": "your email it's a little bit strange. If you know what you're doing it submit again.",
+		"emailSentTo":"the email was sent the email to",
+		"pleaseFollowTheLink" : "please follow the link in it to activate you account"
+	},
+	"accountActivation": {
+		"title": "account validation page",
+		"signIntoValidate": "Please sign in here to validate",
+		"goAway": "This is the page for activate account. Please visit other pages or sign up.",
+		"tokenInvalid": "Your activation token seams to be invalid, please follow the link in your email. If you followed it, you should contact the administrator",
+		"validationInProgress": "Your account validation is in progress should take a few seconds",
+		"accountValidate": "Your account has been validated!"
+	},
+	"personalPage": {
+		"title": "personal page"
+	},
+	"forms" :{
+		"fancyEmail": "fancy email, are you sure?",
+		"weakPassword": "weak password",
+		"loginUnsuccessful": "login unsuccessful"
+	},
+	"asn": "AS number",
+	"close": "close"
 }

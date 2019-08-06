@@ -246,7 +246,7 @@ export default {
 
   &sidebar-filter-section
     height 16%
-    & > .IHR_family-filter
+    & > ~/family-filter
       padding 2pt
       & label
         font-weight bold

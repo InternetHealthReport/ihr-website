@@ -23,7 +23,9 @@ Vue.use(LibraryDelayer, {
       "https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/latencymon-widget-main.js"
     ],
     tracemon_widget:
-      "https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js"
+      "https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js",
+    google_recaptcha:
+      "https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit"
   }
 });
 Vue.use(IhrStyle);

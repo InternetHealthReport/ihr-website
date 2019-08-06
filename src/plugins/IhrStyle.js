@@ -1,5 +1,6 @@
 const BASE_CLASS = "IHR_Style_"; //
 const DATETIME_FORMAT = "YYYY-MM-DDTHH:mm.SSS";
+const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function padWith0(strNumber) {
   strNumber = `00${strNumber}`;
@@ -16,8 +17,16 @@ export default {
       },
       mounted() {},
       methods: {
+        //style
         rotateItem(val) {
           return `${BASE_CLASS}rotate-item-${val ? "on" : "off"}`;
+        },
+        //validation
+        validateEmail(email) {
+          return EMAIL_REGEXP.test(email);
+        },
+        validatePassword(password) {
+          return password.length >= 8; //the bare minimum...
         }
       }
     });
