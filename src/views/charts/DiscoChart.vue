@@ -13,7 +13,7 @@
     <h2 v-if="details.tableVisible">
       {{$t("charts.disconnections.table.event")}}
       <strong>{{details.eventid}}</strong>
-      [<span>{{details.startTime | ihrUtcString}}</span>, <span>{{details.startTime | ihrUtcString}}</span>]
+      [<span>{{details.startTime | ihrUtcString}}</span>, <span>{{details.endTime | ihrUtcString}}</span>]
     </h2>
     <div v-if="details.tableVisible" class>
       <span class="IHR_table-close-button" @click="details.tableVisible=false">x</span>
@@ -259,6 +259,10 @@ export default {
     & h2
       &:first-letter
         text-transform capitalize
+      & strong
+        font-size 20pt
+      & span
+        font-size 20pt
 
   &loading-spinner
     position absolute
