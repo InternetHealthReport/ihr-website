@@ -1,6 +1,7 @@
 const BASE_CLASS = "IHR_Style_"; //
 const DATETIME_FORMAT = "YYYY-MM-DDTHH:mm.SSS";
 const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const RECAPTCHA_KEY = "6LfXwLEUAAAAALwy5VlEX_56rbq6ensWnhT_rLhp"; //TODO change it in production
 
 function padWith0(strNumber) {
   strNumber = `00${strNumber}`;
@@ -28,6 +29,11 @@ export default {
         validatePassword(password) {
           return password.length >= 8; //the bare minimum...
         }
+      },
+      computed: {
+        recaptchaKey() {
+          return RECAPTCHA_KEY;
+        }
       }
     });
 
@@ -35,22 +41,32 @@ export default {
       beforeCreate() {
         this.$ihrStyle = ihrStyle;
       },
+      methods: {
+        logger(something) {
+          console.log(something);
+        }
+      },
       filters: {
         // utilities
         /**
          * Print the date into utc format YYYY-MM-DDTHH:MMZ
          * @param {Date|String|timestamp} date date to be converted
          */
-        ihrUtcString(date) {
+        ihrUtcString(date, short) {
           let actualDate = new Date(date);
           let result = actualDate.getUTCFullYear() + "-";
           result += padWith0(actualDate.getUTCMonth() + 1) + "-";
-          result += padWith0(actualDate.getUTCDate()) + "T";
-          result += padWith0(actualDate.getUTCHours()) + ":";
-          result += padWith0(actualDate.getUTCMinutes()) + "Z";
+          result += padWith0(actualDate.getUTCDate());
+          if (short == undefined || short == true) {
+            result += "T";
+            result += padWith0(actualDate.getUTCHours()) + ":";
+            result += padWith0(actualDate.getUTCMinutes()) + "Z";
+          }
           return result;
         }
       }
     });
   }
 };
+
+export { RECAPTCHA_KEY };
