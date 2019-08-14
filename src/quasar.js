@@ -55,6 +55,7 @@ import {
   QToggle,
   QInnerLoading,
   QSpinnerGears,
+  QBtnToggle,
 
   //non component
   Cookies
@@ -108,7 +109,8 @@ Vue.use(Quasar, {
     QScrollArea,
     QToggle,
     QInnerLoading,
-    QSpinnerGears
+    QSpinnerGears,
+    QBtnToggle
   },
   directives: { ClosePopup },
   extras: ["material-icons", "fontawesome-v5"],

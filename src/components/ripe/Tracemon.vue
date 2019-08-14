@@ -1,16 +1,22 @@
 <template>
   <div :id="myID"></div>
 </template>
-
 <script>
+const MESUREMENTS = [5030];
+const BOUNDARY_OFFSET = 1800; // half an hour
+
 export default {
   props: {
-    utcTime: {
+    startTime: {
       type: Date,
       required: true
     },
-    propbIds: {
-      type: Object,
+    endTime: {
+      type: Date,
+      required: true
+    },
+    probs: {
+      type: Array,
       required: true
     }
   },
@@ -21,15 +27,6 @@ export default {
   },
   mounted() {
     this.$libraryDelayer.load("tracemon_widget", () => {
-      var msmid = [];
-      var probeid = [];
-
-      // Get the most prominent msm
-      for(let msms in this.propbIds) {
-        msmid.push(msms);
-        probeid.push(...this.propbIds[msms]);
-      }
-
       initTracemon(
         `#${this.myID}`,
         {
@@ -38,11 +35,11 @@ export default {
         },
         {
           // mergedMeasurements: [lm_msmid],
-          measurements: msmid,
-          sources: probeid,
+          measurements: MESUREMENTS,
+          sources: this.probs,
           maximumTracerouteValiditySeconds: 600,
-          startTimestamp: this.utcTime.getTime() / 1000 - 2 * 3600,
-          stopTimestamp: this.utcTime.getTime() / 1000 + 2 * 3600
+          startTimestamp: this.startTime.getTime() / 1000 - BOUNDARY_OFFSET,
+          stopTimestamp: this.endTime.getTime() / 1000 + BOUNDARY_OFFSET
         } // Query options, see table below for more info
       );
     });

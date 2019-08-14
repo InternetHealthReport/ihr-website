@@ -18,10 +18,26 @@ class MustBeImplemented extends SyntaxError {
   }
 }
 
+class QueryBase {
+  // static members
+  static get FILTER_TYPE() {
+    throw MustBeImplemented("QueryBase.FILTER_TYPE");
+  }
+
+  static get ENTRY_POINT() {
+    throw MustBeImplemented("QueryBase.FILTER_TYPE");
+  }
+
+  get_filter() {
+    throw MustBeImplemented("QueryBase.get_filter");
+  }
+}
+
 /** @brief all allowed filters in ihr-api
  */
-class Query {
+class Query extends QueryBase {
   constructor(dictionary = {}) {
+    super();
     this.filter = dictionary;
   }
 
@@ -32,6 +48,10 @@ class Query {
 
   static get ENTRY_POINT() {
     return "";
+  }
+
+  static get HTTP_METHOD() {
+    return "get";
   }
 
   static get NO_FILTER() {
@@ -293,6 +313,47 @@ class DiscoEventQuery extends TimeQuery {
 
   clone() {
     return new DiscoEventQuery(this._clone());
+  }
+}
+
+class DiscoEventProbesQuery extends Query {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return DiscoEventProbesQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "disco_probes/";
+  }
+
+  //methods
+
+  probeId(probeId) {
+    return this._set("probe_id", probeId);
+  }
+
+  event(event) {
+    return this._set("event", event);
+  }
+
+  orderedByStartTime(order = Query.ASC) {
+    return this._setOrder("starttime", order);
+  }
+
+  orderedByEndTime(order = Query.ASC) {
+    return this._setOrder("endtime", order);
+  }
+
+  orderedByLevel(order = Query.ASC) {
+    return this._setOrder("level", order);
+  }
+
+  clone() {
+    return new DiscoEventProbesQuery(this._clone());
   }
 }
 
@@ -607,9 +668,11 @@ class HegemonyConeQuery extends CommonHegemonyQuery {
 
 export {
   AS_FAMILY,
+  QueryBase,
   Query,
   NetworkQuery,
   DiscoEventQuery,
+  DiscoEventProbesQuery,
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,

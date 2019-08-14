@@ -8,7 +8,7 @@
       ref="chart"
     />
     <h2 v-if="details.tableVisible">
-      {{details.date.toISOString()}}
+      {{details.date | ihrUtcString}}
     </h2>
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
@@ -295,7 +295,13 @@ export default {
         trace.y.push(resp.conesize);
         trace.x.push(resp.timebin);
       });
-      console.log(trace)
+      for(let i = 1; i < trace.length; i++) {
+        let a = new Date(trace[i-1].x);
+        let b = new Date(trace[i].x);
+        if(isNaN(a) || isNaN(b) || b-a < 0) {
+          console.log("error", a, b, b-a)
+        }
+      }
       this.layout.datarevision = new Date().getTime();
     }
   },

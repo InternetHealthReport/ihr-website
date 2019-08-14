@@ -1,6 +1,6 @@
 <template>
   <q-select
-    ref="search" dark dense standout use-input hide-selected
+    ref="search" :dark="dark" dense standout use-input hide-selected
     color="black" :stack-label="false" :label="placeholder"
     v-model="text" :options="retrievedValues"
     @filter="filter"
@@ -12,7 +12,10 @@
     <template v-slot:no-option>
       <q-item>
         <q-item-section>
-          <div class="text-center">
+          <div v-if="beforeQuery">
+            <q-spinner color="secondary" size="2em" />
+          </div>
+          <div class="text-center" v-else>
              0 {{$t("searchBar.resultsFound")}}...
           </div>
         </q-item-section>
@@ -24,14 +27,16 @@
         v-bind="scope.itemProps"
         v-on="scope.itemEvents"
       >
-      <router-link :to="{name : 'as_and_ixp', params:{asn: $options.filters.ihr_getAsOrIxp(scope.opt.number) }}" class="IHR_searchbar-routerlink">
-        <q-item-section side>
-          {{scope.opt.number | ihr_getAsOrIxp}}
-        </q-item-section>
-        <q-item-section>
-          {{scope.opt.name}}
-        </q-item-section>
-      </router-link>
+      <slot :asn="scope.opt">
+        <router-link :to="{name : 'as_and_ixp', params:{asn: $options.filters.ihr_getAsOrIxp(scope.opt.number) }}" class="IHR_searchbar-routerlink">
+          <q-item-section side>
+            {{scope.opt.number | ihr_getAsOrIxp}}
+          </q-item-section>
+          <q-item-section>
+            {{scope.opt.name}}
+          </q-item-section>
+        </router-link>
+      </slot>
       </q-item>
     </template>
   </q-select>
@@ -46,6 +51,11 @@ const MAX_RESULTS = 8;
 const DEFAULT_DEBOUNCE = 500;
 
 export default {
+  props: {
+    dark: {
+      type: Boolean
+    }
+  },
   data() {
     return {
       text: "",
@@ -54,7 +64,8 @@ export default {
       maxResults: MAX_RESULTS,
       value: null,
       retrievedValues: [],
-      networkQuery: (new NetworkQuery()).orderedByNumber()
+      networkQuery: (new NetworkQuery()).orderedByNumber(),
+      beforeQuery: true
       };
   },
   mounted() {
@@ -70,10 +81,10 @@ export default {
     filter (value, update) {
       if(value == null)
         return;
-      //TODO debounce filter!
       if(value.length > this.minCharacters) {
         update(() => {
           this.value = value;
+          this.beforeQuery = true;
           this.debouncedSearch();
         });
       }
@@ -87,6 +98,7 @@ export default {
           this.retrievedValues.push({label: element.number, number: element.number, name: element.name});
           return this.retrievedValues.length > this.maxResults;
         });
+        this.beforeQuery = false;
       },
       (error) => {
         console.error(error);

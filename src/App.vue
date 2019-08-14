@@ -15,7 +15,7 @@
               </q-btn>
             </router-link>
           </q-item>
-          <search-bar></search-bar>
+          <search-bar dark/>
           <div
             class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
           >
@@ -40,55 +40,58 @@
         </div>
         <div class="col-4 row no-wrap justify-end">
           <div v-if="$ihr_api.authenticated" class="q-pl-sm q-gutter-sm row items-center no-wrap">
-            <q-btn dense flat round size="sm" icon="fas fa-bell" />
+            <q-btn dense flat round size="13px" icon="fas fa-bell" />
             <q-btn dense flat no-wrap>
-              <q-avatar rounded size="20px">
-                <img src="https://cdn.quasar.dev/img/avatar3.jpg" />
+              <q-avatar rounded size="30px">
+                <q-icon name="fas fa-user-circle" color="accent"/>
               </q-avatar>
-              <q-icon name="fas fa-sort-down" size="16px" />
-              <q-menu auto-close>
+              <q-icon name="fas fa-sort-down" size="16px"/>
+              <q-menu auto-close id="IHR_user-menu">
                 <q-list dense>
                   <q-item>
                     <q-item-section>
                       <div>
-                        Signed in as
-                        <strong>{{$ihr_api.email}}</strong>
+                        {{$t('user.signedAs')}}
+                        <strong>{{$ihr_api.user}}</strong>
                       </div>
                     </q-item-section>
                   </q-item>
                   <q-separator />
                   <q-separator />
                   <q-item clickable>
-                    <q-item-section>Your profile</q-item-section>
+                    <q-item-section>
+                      <router-link :to="{name : 'personal_page', hash: '#profile'}" class="IHR_delikify">
+                        {{$t('user.profile')}}
+                      </router-link>
+                    </q-item-section>
                   </q-item>
                   <q-item clickable>
-                    <q-item-section>Your repositories</q-item-section>
+                    <q-item-section>
+                      <router-link :to="{name : 'personal_page', hash: '#settings'}" class="IHR_delikify">
+                        {{$t('user.settings')}}
+                      </router-link>
+                    </q-item-section>
                   </q-item>
-                  <q-item clickable>
-                    <q-item-section>Your projects</q-item-section>
-                  </q-item>
-                  <q-item clickable>
-                    <q-item-section>Your stars</q-item-section>
-                  </q-item>
-                  <q-item clickable>
-                    <q-item-section>Your gists</q-item-section>
+                  <q-item clickable @click="logout">
+                    <q-item-section>
+                      <router-link to="/" class="IHR_delikify">
+                        {{$t('user.logout')}}
+                      </router-link>
+                    </q-item-section>
                   </q-item>
                   <q-separator />
+                  <q-separator />
                   <q-item clickable>
-                    <q-item-section>Help</q-item-section>
-                  </q-item>
-                  <q-item clickable>
-                    <q-item-section>Settings</q-item-section>
-                  </q-item>
-                  <q-item clickable>
-                    <q-item-section>Sign out</q-item-section>
+                    <q-item-section>
+                      {{$t('user.signOut')}}
+                    </q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
             </q-btn>
           </div>
           <div v-else  class="IHR_menu-entries col-12 row items-center justify-end q-gutter-md">
-            <router-link :to="{name : 'sign_in'}" >
+            <router-link :to="{name : 'sign_up'}" >
               <span>{{$t('header.signUp')}}</span>
             </router-link>
             <q-btn dense flat no-wrap>
@@ -103,7 +106,7 @@
                   <q-separator />
                   <q-item>
                     <login-form v-model="loginError">
-                      <template v-slot:default="user">
+                      <template v-slot:default="user" @keydown.enter="login(user.email, user.password)">
                         <q-btn color="secondary" id="IHR_signin-button" @click="login(user.email, user.password)">
                           {{$t('header.signIn')}}
                         </q-btn>
@@ -198,7 +201,6 @@ export default {
   data() {
     return {
       text: "",
-      user: null,
       simple_menu: simple_menu,
       dropdown_menu: dropdown_menu,
       sidebarOpened: false,
@@ -215,6 +217,9 @@ export default {
           this.loginError = true
         })
       }
+    },
+    logout(){
+      this.$ihr_api.userLogout();
     }
   },
   computed: {
@@ -294,4 +299,10 @@ menu-delinkify()
 
   &forgotten-password
     white-space nowrap
+
+  &user-menu
+    padding 3pt
+    font-size 12pt
+    & *:first-letter
+      text-transform capitalize
 </style>

@@ -51,6 +51,9 @@ export default {
   },
   methods: {
     setLocale(localeIsoName) {
+      if(localeIsoName == "ihr" || localeIsoName == undefined) {  //backward compatibility
+        localeIsoName= "en-us";
+      }
       import(`quasar/lang/${localeIsoName}`).then(lang => {
         this.$q.lang.set(lang.default);
         //this.$i18n.locale = localeIsoName;

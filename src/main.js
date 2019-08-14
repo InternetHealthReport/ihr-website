@@ -22,8 +22,10 @@ Vue.use(LibraryDelayer, {
       "https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/dev/libs/require.min.js",
       "https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/latencymon-widget-main.js"
     ],
-    tracemon_widget:
-      "https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js",
+    tracemon_widget: [
+      "https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/tracemon/dev/libs/require.min.js", //preload require
+      "https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js"
+    ],
     google_recaptcha:
       "https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit"
   }

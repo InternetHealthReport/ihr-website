@@ -126,14 +126,27 @@ export default {
     //correct
     let routePieces = this.$route.params.asn.match(/[0-9]+$/);
     let asNumber = Number(routePieces[0]);
-    if (this.$route.params.asn.startsWith("IXP")) asNumber = -asNumber;
+    if (this.$route.params.asn.startsWith("IXP")) {
+      asNumber = -asNumber;
+    }
+
+    let asFamily = this.$route.query.af;
+    let interval;
+    try {
+      interval = ChartInterval.getFromDuration(this.$route.query.date + "T00:00+00:00", this.$route.query.last);
+    } catch(e) {
+      if(!(e instanceof RangeError)) {
+        throw e;
+      }
+      interval = ChartInterval.lastWeek(); //fallback to lastweek
+    }
     return {
-      asFamily: true,
+      asFamily: asFamily == 4 || asFamily == undefined,
       fetch: false,
       loadingStatus: LOADING_STATUS.LOADING,
       asNumber: asNumber,
       asName: null,
-      interval: ChartInterval.lastWeek(),
+      interval: interval,
       prefixesDetail: []
     };
   },
@@ -152,6 +165,15 @@ export default {
     },
     removePrefix(address) {
       this.prefixesDetail = this.prefixesDetail.filter(elem => address != elem);
+    },
+    pushRoute() {
+      this.$router.push({
+      query: {
+        af: this.family,
+        last: this.interval.dayDiff(),
+        date: this.$options.filters.ihrUtcString(this.interval.end, false)
+        }
+      });
     }
   },
   mounted() {
@@ -166,6 +188,7 @@ export default {
       this.loadingStatus = LOADING_STATUS.LOADED;
       this.fetch = true;
     });
+    this.pushRoute();
   },
   computed: {
     family() {
@@ -212,6 +235,14 @@ export default {
         case LOADING_STATUS.ERROR:
           return this.$t("genericErrors.badHappened");
       }
+    }
+  },
+  watch: {
+    asFamily() {
+      this.pushRoute();
+    },
+    interval() {
+      this.pushRoute();
     }
   }
 };

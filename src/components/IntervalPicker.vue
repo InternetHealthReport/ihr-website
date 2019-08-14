@@ -12,7 +12,7 @@
     </div>
     <div>
       <date-time-picker
-        :min="minTime"
+        :min="localStartTime"
         :max="maxTime"
         :value="localEndtime"
         @input="localEndtime = $event; debouncedEmit();"
@@ -43,13 +43,26 @@ class ChartInterval {
 
   static lastWeek() {
     let result = ChartInterval.today();
-    result.begin.setUTCDate(result.begin.getUTCDate() - 7);
+    result.begin.setUTCDate(result.begin.getUTCDate() - 6); //7 day starting from 0
     return result;
   }
 
   setIntevalTime(beginTimestamp, endTimestamp) {
     this.begin.setTime(beginTimestamp);
     this.end.setTime(endTimestamp);
+  }
+
+  static getFromDuration(endTimestamp, nDaysBefore) {
+    let end = new Date(endTimestamp);
+    let begin = new Date(end);
+    begin.setUTCDate(begin.getUTCDate() - nDaysBefore);
+    if(isNaN(begin.getTime()) || isNaN(end.getTime()))
+      throw RangeError("invalid start or end")
+    return new ChartInterval(begin, end);
+  }
+
+  dayDiff() {
+    return Math.round((this.end - this.begin) / 1000 / 60 / 60 / 24);
   }
 
   trim() {

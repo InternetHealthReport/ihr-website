@@ -55,7 +55,7 @@ export default {
     react() {
       if(!this.created)
         console.error("SHOULD NEVER HAPPEN")
-        
+
       if(this.traces == undefined)
         return;
       Plotly.react(

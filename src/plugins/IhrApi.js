@@ -5,36 +5,37 @@
 import axios from "axios";
 import {
   AS_FAMILY,
+  QueryBase,
   Query,
   NetworkQuery,
   DiscoEventQuery,
+  DiscoEventProbesQuery,
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,
   DelayQuery,
   DelayAlarmsQuery,
   ForwardingAlarmsQuery
-} from "./IhrQuery";
+} from "./query/IhrQuery";
+import { MonitoringUserQuery } from "./query/IhrUserQuery";
 
 const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/"; ///base api url
 const DEFAULT_TIMEOUT = 60000;
 const PROJECT_START_DATE = new Date("2016-01-01T00:00:00");
-const COOKIE_REGEX = /token=([^;]+);/;
-function get_token_from_cookie() {
-  let res = document.cookie.match(COOKIE_REGEX);
-  return res.length === 0 ? null : res[0];
+const COOKIE_DURATION = 1 * 24 * 60 * 60 * 1000; //TODO synch with server
+function createCookie(name, value) {
+  let date = new Date();
+  date.setTime(date.getTime() + (value != null ? COOKIE_DURATION : -100));
+  document.cookie = `${name}=${value}; expires=${date.toGMTString()}; path=/`;
 }
-
-function put_token_into_cookie(token) {
-  if (token === null) {
-    document.cookie = document.cookie.replace(COOKIE_REGEX, `test=${token};`);
-    return;
+// Read cookie
+function readCookie(name) {
+  let regexp = new RegExp(`(?:^${name}| ${name})=([^;]+)`);
+  let res = document.cookie.match(regexp);
+  if (res === null || res.length === 0) {
+    return null;
   }
-  let replacement = document.cookie.replace(COOKIE_REGEX, `test=${token};`);
-  if (replacement === document.cookie) {
-    if (document.cookie != "") document.cookie += ";";
-    document.cookie += `test=${token}`;
-  }
+  return res[1];
 }
 
 const IhrApi = {
@@ -42,7 +43,6 @@ const IhrApi = {
     let ihr_api = new Vue({
       data() {
         return {
-          authenticated: false,
           user: null,
           axios_base: null,
           local_base: null,
@@ -50,12 +50,38 @@ const IhrApi = {
         };
       },
       created() {
-        this._update_base();
+        !this._get_user() || this.userVerifyToken();
       },
-      mounted() {
-        this._setToken(get_token_from_cookie());
+      computed: {
+        authenticated() {
+          return this.user !== null;
+        }
       },
       methods: {
+        _save_user(email, token) {
+          if (email === null || token === null) {
+            this.user = null;
+            delete this.headers["Authorization"];
+            createCookie("user", null);
+            createCookie("token", null);
+          } else {
+            this.user = email.split("@")[0];
+            this.headers["Authorization"] = `Token ${token}`;
+            createCookie("user", this.user);
+            createCookie("token", token);
+          }
+          this._update_base();
+        },
+        _get_user() {
+          this.user = readCookie("user");
+          if (this.user == null) {
+            this._update_base();
+            return false;
+          }
+          this.headers["Authorization"] = `Token ${readCookie("token")}`;
+          this._update_base();
+          return true;
+        },
         _update_base() {
           this.axios_base = axios.create({
             baseURL: IHR_API_BASE,
@@ -69,23 +95,23 @@ const IhrApi = {
             headers: this.headers
           });
         },
-        _setToken(token) {
-          put_token_into_cookie(token);
-          if (token == null) {
-            delete this.headers["Authorization"];
-            this.authenticated = false;
-          } else {
-            this.headers["Authorization"] = "Token " + token;
-            this.authenticated = true;
-          }
-          this._update_base();
-        },
         _localWrapper() {
           //TODO kill me please :D
           let base = this.axios_base;
           this.axios_base = this.local_base;
           this._generic(...arguments);
           this.axios_base = base;
+        },
+        _check_authorization(error_callback) {
+          if (!this.authenticated) {
+            if (error_callback instanceof Function)
+              error_callback({
+                status: 401,
+                data: { datail: "need to login" }
+              });
+            return false;
+          }
+          return true;
         },
         /**
          * @brief generic API wrapper
@@ -105,13 +131,12 @@ const IhrApi = {
           success_callback,
           error_callback
         ) {
-          if (Query.isPrototypeOf(query.constructor)) {
+          if (QueryBase.isPrototypeOf(query.constructor)) {
             console.log("call to:", query);
             query = query.get_filter();
           } else {
             console.log("call with non Query object:", JSON.stringify(query));
           }
-
           let promise =
             method === "get"
               ? this.axios_base.get(endpoint, { params: query })
@@ -120,12 +145,11 @@ const IhrApi = {
           promise
             .then(response => {
               if (success_callback instanceof Function)
-                success_callback(response.data);
+                success_callback(response.data, response);
             })
-            .catch(response => {
-              console.error(response);
-              if (error_callback instanceof Function)
-                error_callback(response.data);
+            .catch(error => {
+              console.error(error);
+              if (error_callback instanceof Function) error_callback(error);
             });
         },
 
@@ -138,7 +162,7 @@ const IhrApi = {
         delay(delayQuery, success_callback, error_callback) {
           this._generic(
             DelayQuery.ENTRY_POINT,
-            "get",
+            DelayQuery.HTTP_METHOD,
             delayQuery,
             success_callback,
             error_callback
@@ -147,7 +171,7 @@ const IhrApi = {
         delay_alarms(delayAlarmsQuery, success_callback, error_callback) {
           this._generic(
             DelayAlarmsQuery.ENTRY_POINT,
-            "get",
+            DelayAlarmsQuery.HTTP_METHOD,
             delayAlarmsQuery,
             success_callback,
             error_callback
@@ -156,19 +180,25 @@ const IhrApi = {
         disco_events(discoEventQuery, success_callback, error_callback) {
           this._generic(
             DiscoEventQuery.ENTRY_POINT,
-            "get",
+            DiscoEventQuery.HTTP_METHOD,
             discoEventQuery,
             success_callback,
             error_callback
           );
         },
-        disco_probes() {
-          this._generic("disco_probes/", ...arguments);
+        disco_probes(discoEventProbesQuery, success_callback, error_callback) {
+          this._generic(
+            DiscoEventProbesQuery.ENTRY_POINT,
+            DiscoEventProbesQuery.HTTP_METHOD,
+            discoEventProbesQuery,
+            success_callback,
+            error_callback
+          );
         },
         forwarding(forwardingQuery, success_callback, error_callback) {
           this._generic(
             ForwardingQuery.ENTRY_POINT,
-            "get",
+            ForwardingQuery.HTTP_METHOD,
             forwardingQuery,
             success_callback,
             error_callback
@@ -180,7 +210,7 @@ const IhrApi = {
         hegemony(hegemonyQuery, success_callback, error_callback) {
           this._generic(
             HegemonyQuery.ENTRY_POINT,
-            "get",
+            HegemonyQuery.HTTP_METHOD,
             hegemonyQuery,
             success_callback,
             error_callback
@@ -189,7 +219,7 @@ const IhrApi = {
         hegemony_cone(hegemonyConeQuery, success_callback, error_callback) {
           this._generic(
             HegemonyConeQuery.ENTRY_POINT,
-            "get",
+            HegemonyConeQuery.HTTP_METHOD,
             hegemonyConeQuery,
             success_callback,
             error_callback
@@ -198,12 +228,13 @@ const IhrApi = {
         network(networkQuery, success_callback, error_callback) {
           this._generic(
             NetworkQuery.ENTRY_POINT,
-            "get",
+            NetworkQuery.HTTP_METHOD,
             networkQuery,
             success_callback,
             error_callback
           );
         },
+        // User management section
         userSignIn(
           email,
           password,
@@ -212,7 +243,7 @@ const IhrApi = {
           error_callback
         ) {
           this._localWrapper(
-            "user/sign_up/",
+            "user/sign_in/",
             "post",
             { email: email, password: password, recaptcha: recaptcha },
             success_callback,
@@ -225,29 +256,26 @@ const IhrApi = {
             "post",
             { email: email, password: password, token: token },
             result => {
-              this._setToken(result.token);
-              this.email = null;
-              success_callback(result);
+              this._save_user(email, result.token);
+              if (success_callback instanceof Function)
+                success_callback(result);
             },
             error_callback
           );
         },
         userSignOut(success_callback, error_callback) {
-          if (!this.authenticated) {
-            error_callback("not authorized");
-          }
-
-          this._localWrapper(
-            "user/sign_out/",
-            "post",
-            {},
-            result => {
-              this._setToken(null);
-              this.email = null;
-              success_callback(result);
-            },
-            error_callback
-          );
+          this._check_authorization(error_callback) &&
+            this._localWrapper(
+              "user/sign_out/",
+              "post",
+              {},
+              result => {
+                this._save_user(null);
+                if (success_callback instanceof Function)
+                  success_callback(result);
+              },
+              error_callback
+            );
         },
         userLogin(email, password, success_callback, error_callback) {
           this._localWrapper(
@@ -255,26 +283,26 @@ const IhrApi = {
             "post",
             { email: email, password: password },
             result => {
-              console.log(result);
-              this._setToken(result.token);
-              this.email = email;
-              success_callback(result);
+              this._save_user(email, result.token);
+              if (success_callback instanceof Function)
+                success_callback(result);
             },
             error_callback
           );
         },
         userLogout(success_callback, error_callback) {
-          this._localWrapper(
-            "user/logout/",
-            "post",
-            {},
-            result => {
-              this._setToken(null);
-              this.email = null;
-              success_callback(result);
-            },
-            error_callback
-          );
+          this._check_authorization(error_callback) &&
+            this._localWrapper(
+              "user/logout/",
+              "post",
+              {},
+              result => {
+                this._save_user(null);
+                if (success_callback instanceof Function)
+                  success_callback(result);
+              },
+              error_callback
+            );
         },
         userResetPasswordRequest(
           email,
@@ -304,12 +332,72 @@ const IhrApi = {
             "post",
             { email: email, password: password, token: token },
             result => {
-              this._setToken(result.token);
-              this.email = email;
-              success_callback(result);
+              this._save_user(email, result.token);
+              if (success_callback instanceof Function)
+                success_callback(result);
             },
             error_callback
           );
+        },
+        userVerifyToken: async function() {
+          try {
+            await this.local_base.get("user/verify_token/");
+            return true;
+          } catch (err) {
+            this._save_user(null);
+          }
+          return false;
+        },
+        /**
+         * Change user credential
+         * @param {Dict} userChange not null but you can specify email, password or both
+         */
+        userChangeCredentials(userChange, success_callback, error_callback) {
+          if (Object.keys(userChange).length > 0) {
+            throw Error("invalid number of parameters!");
+          }
+          this._check_authorization(error_callback) &&
+            this._localWrapper(
+              "user/change_credentials/",
+              "post",
+              { ...userChange },
+              success_callback,
+              error_callback
+            );
+        },
+        userChangeEmail(email, token, success_callback, error_callback) {
+          this._check_authorization(error_callback) &&
+            this._localWrapper(
+              "user/change_email/",
+              "post",
+              { email: email, token: token },
+              success_callback,
+              error_callback
+            );
+        },
+        userShow(success_callback, error_callback) {
+          this._check_authorization(error_callback) &&
+            this._localWrapper(
+              "user/show/",
+              "post",
+              {},
+              success_callback,
+              error_callback
+            );
+        },
+        userAddMonitoring(
+          monitoringUserQuery,
+          success_callback,
+          error_callback
+        ) {
+          this._check_authorization(error_callback) &&
+            this._localWrapper(
+              MonitoringUserQuery.ENTRY_POINT,
+              MonitoringUserQuery.HTTP_METHOD,
+              monitoringUserQuery,
+              success_callback,
+              error_callback
+            );
         }
       }
     });
@@ -335,10 +423,12 @@ export {
   Query,
   NetworkQuery,
   DiscoEventQuery,
+  DiscoEventProbesQuery,
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,
   DelayQuery,
   DelayAlarmsQuery,
-  ForwardingAlarmsQuery
+  ForwardingAlarmsQuery,
+  MonitoringUserQuery
 };

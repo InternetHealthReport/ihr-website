@@ -7,7 +7,7 @@ import Countries from "@/views/Countries";
 import Documentation from "@/views/Documentation";
 import Networks from "@/views/Networks";
 import AsAndIxp from "@/views/AsAndIxp";
-import SignIn from "@/views/user/SignIn";
+import SignUp from "@/views/user/SignUp";
 import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
 import ResetPassword from "@/views/user/ResetPassword";
@@ -15,9 +15,15 @@ import ResetPassword from "@/views/user/ResetPassword";
 Vue.use(Router);
 
 const routerBase = "/:locale/";
+const DEFAULT_LOCALE = "en-us";
 
 export default new Router({
   mode: "history", //TODO https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
+  scrollBehavior: function(to) {
+    return to.hash
+      ? { selector: to.hash, offset: { x: 0, y: 60 } }
+      : { x: 0, y: 0 };
+  },
   routes: [
     {
       path: "/",
@@ -54,14 +60,31 @@ export default new Router({
       component: Networks
     },
     {
+      name: "old_as_and_ixp",
+      path: "/ihr/:asn/asn/",
+      redirect: to => {
+        //ihr/:asn/asn/
+        const { hash, params, query } = to;
+        return {
+          name: "as_and_ixp",
+          query: query,
+          params: {
+            locale: "en-us",
+            asn: params.asn,
+            hash
+          }
+        };
+      }
+    },
+    {
       name: "as_and_ixp",
       path: `${routerBase}as_and_ixp/:asn`,
       component: AsAndIxp
     },
     {
-      name: "sign_in",
-      path: `${routerBase}sign_in`,
-      component: SignIn
+      name: "sign_up",
+      path: `${routerBase}sign_up`,
+      component: SignUp
     },
     {
       name: "account_activation",

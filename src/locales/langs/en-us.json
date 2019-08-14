@@ -3,7 +3,8 @@
 		"ups": "ups",
 		"badHappened": "Something bad happened, please contact the administrator",
 		"cloudNotLoad": "Could not load ",
-		"invalid" : "invalid"
+		"invalid" : "invalid",
+		"notMatchingPassword" : "passwords do not match"
 	},
 	"header": {
 		"API": "API",
@@ -72,7 +73,14 @@
 			}
 		},
 		"disconnections": {
-			"title": "disconnection events"
+			"title": "disconnection events",
+			"table": {
+				"event": "event",
+				"startTime": "event start",
+				"endTime": "event end",
+				"level": "level",
+				"disconnectionProbes": "disconnection events probes"
+			}
 		}
 	},
 	"sigIn": {
@@ -82,7 +90,7 @@
 		"missingReCaptcha": "you need to click on \"i'm not a robot\" button.",
 		"passwordTooWeak": "the password of your choice is too weak. Use at least 8 characters.",
 		"strangeEmail": "your email it's a little bit strange. If you know what you're doing it submit again.",
-		"emailSentTo":"the email was sent the email to",
+		"emailSentTo":"the email was sent to",
 		"pleaseFollowTheLink" : "please follow the link in it to activate you account"
 	},
 	"accountActivation": {
@@ -94,13 +102,41 @@
 		"accountValidate": "Your account has been validated!"
 	},
 	"personalPage": {
-		"title": "personal page"
+		"title": "personal page",
+		"goAway": "You must be logged in to access thi page. login or visit other pages, if you are new sign up!",
+		"personaInfo": "personal information",
+		"settings": "settings",
+		"change": "change",
+		"confirm": "confirm",
+		"removeSelected": "remove selected",
+		"reset": "reset",
+		"save": "save changes",
+		"settingInstruction": "here you can manage your setting for notification for AS events.",
+		"noAsnMonitored": "You don't have AS under monitoring",
+		"notificationLevel": "notification level",
+		"monitoredAs": "Monitored AS",
+		"notifyLevelExplanation": {
+			"low": "you will receive notification for all kind of events",
+			"moderate": "you will receive notification for events of medium entity and critical events",
+			"high": "you will receive only critical events notification"
+		},
+		"addAs": "add new AS"
 	},
 	"forms" :{
 		"fancyEmail": "fancy email, are you sure?",
 		"weakPassword": "weak password",
 		"loginUnsuccessful": "login unsuccessful"
 	},
+	"user": {
+		"signedAs": "signed as",
+		"profile": "profile",
+		"settings": "settings",
+		"signOut": "sign out",
+		"logout": "logout"
+	},
+	"passwordConfirm": "confirm password",
 	"asn": "AS number",
+	"prefix": "prefix",
+	"name": "name",
 	"close": "close"
 }
