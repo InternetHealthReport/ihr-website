@@ -3,57 +3,28 @@
     <h1>{{$t('accountActivation.title')}}</h1>
     <div class="shadow-2">
       {{bodyText}}
-      <div v-if="checkState('VALIDATION')" class="IHR_content">
+      <div v-if="actualState == state.VALIDATION" class="IHR_content">
         <q-spinner color="secondary" size="4em" />
       </div>
-      <div v-else-if="checkState('VALIDATE')" class="IHR_content IHR_content-confirm">
-        <q-input
-          v-model="email"
-          label="email"
-          type="email"
-          :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]"
-        >
-          <template v-slot:prepend>
-            <q-icon name="far fa-envelope" />
+      <div v-else-if="actualState == state.VALIDATE" class="IHR_content IHR_content-confirm">
+        <login-form v-model="loginError">
+          <template v-slot:default="user" @keydown.enter="login(user.email, user.password)">
+            <q-btn color="secondary" @click="validateAndSend(user.email, user.password)" id="IHR_validare-and-send">{{$t('header.signUp')}}</q-btn>
           </template>
-        </q-input>
-        <q-input
-          v-model="password"
-          label="password"
-          filled
-          :type="isPwd ? 'password' : 'text'"
-          :rules="[val => $ihrStyle.validatePassword(val) || $t('genericErrors.invalid')]"
-        >
-          <template v-slot:append>
-            <q-icon
-              :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'"
-              class="cursor-pointer"
-              @click="isPwd = !isPwd"
-            />
-          </template>
-        </q-input>
-        <q-btn color="secondary" @click="validateAndSend" id="IHR_validare-and-send">{{$t('header.signUp')}}</q-btn>
+        </login-form>
       </div>
-      <div v-else-if="checkState('INVALID')" class="row justify-around IHR_content">
+      <div v-else-if="actualState == state.VALID" class="row justify-around IHR_content">
         <q-btn
           color="secondary"
           class="col-3"
-          @click="$router.push({name : 'sign_in'})"
-        >{{$t('header.signUp')}}</q-btn>
-        <q-btn color="secondary" class="col-3" @click="$router.push({name : 'home'})">homepage</q-btn>
-      </div>
-      <div v-else-if="checkState('VALID')" class="row justify-around IHR_content">
-        <q-btn
-          color="secondary"
-          class="col-3"
-          @click="$router.push({name : 'sign_in'})"
+          @click="$router.push({name : 'personal_page'})"
         >{{$t('personalPage.title')}}</q-btn>
       </div>
       <div v-else class="row justify-around IHR_content">
         <q-btn
           color="secondary"
           class="col-3"
-          @click="$router.push({name : 'sign_in'})"
+          @click="$router.push({name : 'sign_up'})"
         >{{$t('header.signUp')}}</q-btn>
         <q-btn color="secondary" class="col-3" @click="$router.push({name : 'home'})">homepage</q-btn>
       </div>
@@ -62,57 +33,66 @@
 </template>
 
 <script>
+import LoginForm from "@/components/forms/LoginForm"
+
 const TOKEN_STATE = {
   NOPE: 0,
   VALIDATE: 1,
   VALIDATION: 2,
   INVALID: 3,
-  VALID: 4
+  VALID: 4,
+  ALREADY_VALIDATED: 5
 };
 
 export default {
   //console.log(this.$route.query.test) // outputs 'yay'
+  components: {
+    LoginForm
+  },
   data() {
     return {
-      state: TOKEN_STATE.NOPE,
-      email: "",
-      password: "",
+      state: TOKEN_STATE,
+      actualState: TOKEN_STATE.NOPE,
+      loginError: false,
       isPwd: true
     };
   },
   beforeMount() {
     if (this.$route.query.token !== undefined) {
-      this.state = TOKEN_STATE.VALIDATE;
+      this.actualState = TOKEN_STATE.VALIDATE;
     } else {
-      this.state = TOKEN_STATE.NOPE;
+      this.actualState = TOKEN_STATE.NOPE;
     }
   },
   mounted() {
-    console.log(this.token);
-    console.log(this.state);
   },
   methods: {
-    checkState(_state) {
-      return TOKEN_STATE[_state] === this.state;
-    },
-    validateAndSend() {
-      if(this.$ihrStyle.validatePassword(this.password) && this.$ihrStyle.validateEmail(this.email)) {
-        this.$ihr_api.userValidate(this.email, this.password, this.$route.query.token,
+    validateAndSend(email, password) {
+      if(this.$ihrStyle.validatePassword(password) && this.$ihrStyle.validateEmail(email)) {
+        let entrypoint = (this.$route.query.active)?this.$ihr_api.userChangeEmail:this.$ihr_api.userResetPassword;
+        entrypoint(email, password, this.$route.query.token,
         ()=>{
-          this.password = "";
-          this.sate = TOKEN_STATE.VALID;
-          console.log("OKOK")
+          this.actualState = TOKEN_STATE.VALID;
         },
         (error)=>{
-          this.sate = TOKEN_STATE.INVALID;
-          console.log(error.response.data.detail)
+          console.log(error.status)
+          switch(error.status) {
+            case 403:
+              this.$q.notify({ color: "negative", multiline: true, message: this.$t('accountActivation.wrongCredential')});
+            break;
+            case 409:
+              this.actualState = TOKEN_STATE.ALREADY_VALIDATED;
+            break;
+            default:
+              this.actualState = TOKEN_STATE.INVALID;
+          }
         });
       }
     }
   },
   computed: {
     bodyText() {
-      switch (this.state) {
+      switch (this.actualState) {
         default:
         case TOKEN_STATE.NOPE:
           return this.$t("accountActivation.goAway");
@@ -124,6 +104,8 @@ export default {
           return this.$t("accountActivation.tokenInvalid");
         case TOKEN_STATE.VALID:
           return this.$t("accountActivation.accountValidate");
+        case TOKEN_STATE.ALREADY_VALIDATED:
+          return this.$t("accountActivation.alreadyValidated");
       }
     }
   }
@@ -134,6 +116,7 @@ export default {
 #IHR_
   &account-activation
     width 80%
+    padding 0pt 16pt
     margin 0 auto
 
     & > h1

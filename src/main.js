@@ -9,8 +9,10 @@ import LibraryDelayer from "@/plugins/LibraryDelayer";
 import "@/styles/main.styl";
 import "@/styles/ihr.style.styl";
 import IhrStyle from "./plugins/IhrStyle";
+import Fragment from "vue-fragment";
 
 //external plugin
+Vue.use(Fragment.Plugin);
 Vue.use(VueResizeText);
 
 // internal plugins

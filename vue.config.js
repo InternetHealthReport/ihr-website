@@ -1,5 +1,6 @@
 const path = require("path");
 module.exports = {
+  runtimeCompiler: true,
   chainWebpack: webpackConfig => {
     webpackConfig.module
       .rule("ify-loader")

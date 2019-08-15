@@ -24,18 +24,6 @@
               :to="{name : item.routeName}"
               v-for="item in simple_menu"
             >{{$t(item.entryName)}}</router-link>
-            <q-btn-dropdown
-              color="primary"
-              :label="$t(item.section)"
-              :key="item.section"
-              v-for="item in dropdown_menu"
-            >
-              <q-list class="IHR_dropdown-menu">
-                <q-item v-close-popup :key="subItem.entryName" v-for="subItem in item.content">
-                  <router-link :to="{name : item.routeName}">{{$t(subItem.entryName)}}</router-link>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
           </div>
         </div>
         <div class="col-4 row no-wrap justify-end">
@@ -137,7 +125,7 @@
         <router-link
           :key="item.entryName"
           :to="{name : item.routeName}"
-          v-for="item in [...simple_menu, ...dropdown_menu]"
+          v-for="item in [...simple_menu]"
         >{{$t(item.entryName)}}</router-link>
       </span>
       <span class="IHR_external-links col-2">
@@ -175,22 +163,6 @@ const simple_menu = [
   }
 ];
 
-const dropdown_menu = [
-  {
-    section: "header.participants",
-    content: [
-      {
-        entryName: "header.networks",
-        routeName: "networks"
-      },
-      {
-        entryName: "header.countries",
-        routeName: "countries"
-      }
-    ]
-  }
-];
-
 export default {
   name: "Default",
   components: {
@@ -202,7 +174,6 @@ export default {
     return {
       text: "",
       simple_menu: simple_menu,
-      dropdown_menu: dropdown_menu,
       sidebarOpened: false,
       loginError: false
     };

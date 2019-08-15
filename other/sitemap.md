@@ -18,21 +18,21 @@
 - Signup page
 - User preferences
 
+# todo
 
 - Global Report (derived specialized reports from this? CDN, SNS, DNS, Tier1,...)
  - World map disconnections
+
+- Personal Report? (personalize global report)
+
+- Out-delays:
+    - Line graph delays
+    - Treemap delays?
 
 ## after backend it's ready
 - Country Report
 - AS Hegemony (**country**):
     - Line graph Country AS dependency (weighted by population or not)
-
-
-
-- Personal Report? (personalize global report)
-
-## Tracemon
-- Network Report
 
 # List of graphs
 
@@ -46,6 +46,3 @@
     - Line graph disconnections
 
 # for the end
-- Out-delays:
-    - Line graph delays
-    - Treemap delays?

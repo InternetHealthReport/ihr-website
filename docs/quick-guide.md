@@ -3,12 +3,17 @@ This guide purpose is to help maintainers to get used as quick as possible with 
 
 ## Prerequisites
 This guide cannot cover all missing knowledge so where a list to basic stuff:
-* HTML, CSS, Javascript
 * **es6 javascript**: https://github.com/lukehoban/es6features
 * **vuejs**: https://vuejs.org/v2/guide/
+* **CSS stylus**: http://stylus-lang.com/
+
+## Plugins
+### vue-fragment
+permit to have multiple elements as root of a template
+https://www.npmjs.com/package/vue-fragments
 
 ## Quasar UI
-You can take a look here https://quasar.dev/introduction-to-quasar, but this 
+You can take a look here https://quasar.dev/introduction-to-quasar, but this
 guide summarize some simple stuff for maintenance.
 
 ### Component configuration
@@ -43,13 +48,14 @@ To keep the number of different icons short, here a list of already used icons:
 * **email**: [*far fa-envelope*](https://fontawesome.com/icons/envelope?style=regular)
 * **visible**: [*far fa-eye*](https://fontawesome.com/icons/eye?style=regular)
 * **hidden**: [*far fa-eye-slash*](https://fontawesome.com/icons/eye-slash?style=regular)
+* **account**: [*fas fa-user-circle*](https://fontawesome.com/icons/user-circle?style=solid)
 
-### Translations
+## Translations
 if a view or a component has a few of unique elements to translate you can do
 it directly into is file
 You can use https://www.codeandweb.com/babeledit (one time payment)
 
-### Routes
+## Routes
 The structure of the urls contain the locale in use (*/:locale/...*)".
 The simplest way to take this in account in routes is [named routes](https://router.vuejs.org/guide/essentials/named-routes.html).
 briefly:

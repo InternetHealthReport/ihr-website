@@ -148,8 +148,20 @@ const IhrApi = {
                 success_callback(response.data, response);
             })
             .catch(error => {
-              console.error(error);
-              if (error_callback instanceof Function) error_callback(error);
+              console.error("error:", error);
+              if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                if (error_callback instanceof Function)
+                  error_callback(error.response);
+              } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.error(error.request);
+              }
+              // Something happened in setting up the request that triggered an Error
+              throw Error(error.message);
             });
         },
 
@@ -353,7 +365,7 @@ const IhrApi = {
          * @param {Dict} userChange not null but you can specify email, password or both
          */
         userChangeCredentials(userChange, success_callback, error_callback) {
-          if (Object.keys(userChange).length > 0) {
+          if (Object.keys(userChange).length == 0) {
             throw Error("invalid number of parameters!");
           }
           this._check_authorization(error_callback) &&
@@ -365,15 +377,24 @@ const IhrApi = {
               error_callback
             );
         },
-        userChangeEmail(email, token, success_callback, error_callback) {
-          this._check_authorization(error_callback) &&
-            this._localWrapper(
-              "user/change_email/",
-              "post",
-              { email: email, token: token },
-              success_callback,
-              error_callback
-            );
+        userChangeEmail(
+          email,
+          password,
+          token,
+          success_callback,
+          error_callback
+        ) {
+          this._localWrapper(
+            "user/change_email/",
+            "post",
+            { email: email, password: password, token: token },
+            result => {
+              this._save_user(email, result.token);
+              if (success_callback instanceof Function)
+                success_callback(result);
+            },
+            error_callback
+          );
         },
         userShow(success_callback, error_callback) {
           this._check_authorization(error_callback) &&

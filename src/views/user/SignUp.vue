@@ -37,7 +37,7 @@
       </q-input>
       <div :style="{height: (recaptcha_loaded)? 'auto' : '90px', position: 'relative'}">
         <vue-recaptcha
-          sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+          :sitekey="$ihrStyle.recaptchaKey"
           id="IHR_sig-in-captcha"
           @verify="verify"
           @expired="expired"
@@ -60,8 +60,6 @@
 
 <script>
 import VueRecaptcha from "vue-recaptcha";
-
-//This validation it's only to let user know they are missing something very strict
 
 export default {
   components: { VueRecaptcha },

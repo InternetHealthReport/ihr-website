@@ -28,7 +28,6 @@ import {
   QSpace,
   QSpinner,
   QBtnDropdown,
-  ClosePopup,
   QCard,
   QCardSection,
   QCardActions,
@@ -57,8 +56,10 @@ import {
   QSpinnerGears,
   QBtnToggle,
 
-  //non component
-  Cookies
+  //directives
+  ClosePopup,
+  //plugins
+  Notify
 } from "quasar";
 
 Vue.use(Quasar, {
@@ -113,7 +114,7 @@ Vue.use(Quasar, {
     QBtnToggle
   },
   directives: { ClosePopup },
+  plugins: { Notify },
   extras: ["material-icons", "fontawesome-v5"],
-  plugins: { Cookies },
   iconSet: iconSet
 });
