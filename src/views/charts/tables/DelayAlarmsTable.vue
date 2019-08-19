@@ -42,7 +42,7 @@
       </q-tr>
       <q-tr v-if="props.expand" :props="props">
         <q-td colspan="100%">
-          <latencymon :utc-time="dateTime" :propb-ids="props.row.msm_prb_ids" style="max-width: 93%; margin: 0 auto;"/>
+          <latencymon :start-time="startTime" :stop-time="stopTime" :propb-ids="props.row.msm_prb_ids" style="max-width: 93%; margin: 0 auto;"/>
         </q-td>
       </q-tr>
     </template>
@@ -59,7 +59,11 @@ export default {
     Latencymon
   },
   props: {
-    dateTime: {
+    startTime: {
+      type: Date,
+      required: true
+    },
+    stopTime: {
       type: Date,
       required: true
     }

@@ -54,5 +54,11 @@
     "vue-cli-plugin-i18n": "^0.6.0",
     "vue-cli-plugin-quasar": "^1.0.0",
     "vue-template-compiler": "^2.6.10"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^src(.*)$": "<rootDir>/src/$1",
+      "^@(.*)$": "<rootDir>/src/$1"
+    }
   }
 }

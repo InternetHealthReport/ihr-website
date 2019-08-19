@@ -4,7 +4,11 @@
 <script>
 export default {
   props: {
-    utcTime: {
+    startTime: {
+      type: Date,
+      required: true
+    },
+    stopTime: {
       type: Date,
       required: true
     },
@@ -42,8 +46,8 @@ export default {
           },
           {
             measurements: Object.keys(this.propbIds),
-            startTimestamp: this.utcTime.getTime() / 1000 - 5 * 3600,
-            stopTimestamp: this.utcTime.getTime() / 1000 + 5 * 3600,
+            startTimestamp: this.startTimestamp.getTime(),
+            stopTimestamp: this.stopTime.getTime(),
             groups: lm_grp
           }
         );

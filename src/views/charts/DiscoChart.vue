@@ -81,6 +81,12 @@ import { DiscoEventQuery, DiscoEventProbesQuery } from "@/plugins/IhrApi";
 import DisconnectionTable from "./tables/DisconnectionTable";
 import Tracemon from "@/components/ripe/Tracemon";
 
+function push0(trace, time) {
+  trace.x.push(time);
+  trace.y.push(0);
+  trace.z.push(0);
+}
+
 export default {
   mixins: [CommonChartMixin],
   components: {
@@ -130,7 +136,7 @@ export default {
           y: [],
           z: [],
           yaxis: "y",
-          name: "Disconnection Level",
+          name: "",
           showlegend: false,
           line: { shape: "hv" }
         }
@@ -138,7 +144,7 @@ export default {
       layout: {
         hovermode: "closest",
         yaxis: {
-          title: "Disconnection Level",
+          title: "",
           autorange: "reversed",
           automargin: true
         },
@@ -155,6 +161,10 @@ export default {
         }
       }
     };
+  },
+  created(){
+    this.traces[0].name =
+    this.layout.yaxis.title = this.$t('charts.disconnections.table.yaxis');
   },
   methods: {
     queryDiscoApi() {
@@ -176,23 +186,19 @@ export default {
       trace.y = [];
       trace.z = [];
 
-      trace.x.push(this.$options.filters.ihrUtcString(this.startTime));
-      trace.y.push(0);
-      trace.z.push(0);
+      push0(trace, this.$options.filters.ihrUtcString(this.startTime));
+      data.forEach(event => {
+        push0(trace, event.starttime);
+        trace.x.push(event.starttime);
+        trace.y.push(event.avglevel);
+        trace.z.push(event.id);
 
-      data.forEach(elem => {
-        trace.x.push(elem.starttime);
-        trace.y.push(elem.avglevel);
-        trace.z.push(elem.id);
-
-        trace.x.push(elem.endtime);
-        trace.y.push(0);
-        trace.z.push(elem.id);
+        trace.x.push(event.endtime);
+        trace.y.push(event.avglevel);
+        trace.z.push(event.id);
+        push0(trace, event.endtime);
       });
-
-      trace.x.push(this.$options.filters.ihrUtcString(this.endTime));
-      trace.y.push(0);
-      trace.z.push(0);
+      push0(trace, this.$options.filters.ihrUtcString(this.endTime));
       this.layout.datarevision = new Date().getTime();
     },
     showTable(clickData) {
@@ -243,6 +249,8 @@ export default {
     }
   }
 };
+
+export { push0 }
 </script>
 
 <style lang="stylus">

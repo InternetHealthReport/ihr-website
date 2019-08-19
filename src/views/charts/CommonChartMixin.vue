@@ -20,7 +20,8 @@ export default {
       require: true
     },
     fetch: {
-      type: Boolean
+      type: Boolean,
+      require: true
     }
   },
   data() {

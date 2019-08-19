@@ -132,7 +132,8 @@ const IhrApi = {
           error_callback
         ) {
           if (QueryBase.isPrototypeOf(query.constructor)) {
-            console.log("call to:", query);
+            console.log("call to:", query, query.toString());
+            console.log("query url:", this.getUrl(query));
             query = query.get_filter();
           } else {
             console.log("call with non Query object:", JSON.stringify(query));
@@ -166,6 +167,9 @@ const IhrApi = {
         },
 
         getUrl(queryFilter) {
+          if (queryFilter == null) {
+            return "";
+          }
           return IHR_API_BASE + queryFilter.toUrl();
         },
         /**

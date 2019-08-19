@@ -1,3 +1,7 @@
+/** \file IhrQuery.js
+ *   \brief Class helpers to query IHR api.
+ */
+
 // convenience constant for readability
 const _NO_FILTER = {};
 const _ORDER_ASC = "";
@@ -92,7 +96,11 @@ class Query extends QueryBase {
       delete this.filter[name + comparator];
       return this;
     }
-
+    //if it's an array is exact by default
+    if (value instanceof Array) {
+      this.filter[name] = value.join(",");
+      return this;
+    }
     this.filter[name + comparator] = value;
     return this;
   }
@@ -423,6 +431,9 @@ class ForwardingAlarmsQuery extends TimeQuery {
   }
 }
 
+/** \class DelayAlarmsQuery
+ *  \brief delay_alarms entry point helper
+ */
 class DelayAlarmsQuery extends TimeQuery {
   constructor() {
     super(...arguments);
@@ -466,6 +477,11 @@ class DelayAlarmsQuery extends TimeQuery {
     return this._set("medianrtt", medianrtt, comparator);
   }
 
+  /**
+   * filter based on number of probes
+   * @param {Integer} nbprobes the number of probes
+   * @param {*} comparator  see Query comparators for more details
+   */
   numberOfProbes(nbprobes, comparator = Query.EXACT) {
     return this._set("nbprobes", nbprobes, comparator);
   }

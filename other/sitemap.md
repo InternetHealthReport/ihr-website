@@ -14,9 +14,6 @@
     - Contacts
     - Acknowledgments (sponsor, contributors)
 
-## testing
-- Signup page
-- User preferences
 
 # todo
 
@@ -34,7 +31,9 @@
 - AS Hegemony (**country**):
     - Line graph Country AS dependency (weighted by population or not)
 
-# List of graphs
+# Done
+
+## List of graphs
 
 - AS Hegemony (**ASN**):
     - Line graph AS dependency
@@ -45,4 +44,5 @@
 - Network disconnections
     - Line graph disconnections
 
-# for the end
+- Signup page
+- User preferences

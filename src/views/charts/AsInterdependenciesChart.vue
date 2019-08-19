@@ -265,27 +265,27 @@ export default {
     fetchHegemony(data) {
       console.log("fetchHegemony");
       let traces = {};
-      data.forEach(resp => {
-        if (resp.asn == this.asNumber) return;
+      data.forEach(elem => {
+        if (elem.asn == this.asNumber) return;
 
         let trace;
-        if (!(resp.asn in traces)) {
+        if (!(elem.asn in traces)) {
           trace = {
             x: [],
             y: [],
             name:
-              this.$options.filters.ihr_getAsOrIxp(resp.asn) +
+              this.$options.filters.ihr_getAsOrIxp(elem.asn) +
               " " +
-              resp.asn_name.split(" ")[0]
+              elem.asn_name.split(" ")[0]
           };
-          traces[resp.asn] = trace;
+          traces[elem.asn] = trace;
           this.traces.push(trace);
         } else {
-          trace = traces[resp.asn];
+          trace = traces[elem.asn];
         }
 
-        trace.y.push(resp.hege);
-        trace.x.push(resp.timebin);
+        trace.y.push(elem.hege);
+        trace.x.push(elem.timebin);
       });
     },
     fetchHegemonyCone(data) {

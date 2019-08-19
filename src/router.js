@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/views/Home";
+import GlobalReport from "@/views/GlobalReport";
 import API from "@/views/Api";
 import Contacts from "@/views/Contacts";
 import Countries from "@/views/Countries";
@@ -33,6 +34,11 @@ export default new Router({
       name: "home",
       path: routerBase,
       component: Home
+    },
+    {
+      name: "global_report",
+      path: `${routerBase}global_report`,
+      component: GlobalReport
     },
     {
       name: "api",
@@ -69,7 +75,7 @@ export default new Router({
           name: "as_and_ixp",
           query: query,
           params: {
-            locale: "en-us",
+            locale: DEFAULT_LOCALE,
             asn: params.asn,
             hash
           }

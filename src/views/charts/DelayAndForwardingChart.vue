@@ -13,7 +13,7 @@
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />
     </div>
-    <div v-if="details.tableVisible" class>
+    <div v-if="details.tableVisible">
       <span class="IHR_table-close-button" @click="details.tableVisible=false">x</span>
       <q-tabs
         v-model="details.activeTab"
@@ -31,7 +31,8 @@
       <q-tab-panels v-model="details.activeTab" animated>
         <q-tab-panel name="delay">
           <delay-alarms-table
-            :date-time="details.delayData.dateTime"
+            :start-time="details.delayData.startTime"
+            :stop-time="details.delayData.stopTime"
             :data="details.delayData.data"
             :loading="details.delayData.loading"
             @prefix-details="$emit('prefix-details', $event)"
@@ -118,6 +119,7 @@ const DEFAULT_TRACES = [
     showlegend: false
   }
 ];
+const DELAY_ALARM_INTERVAL = 5 * 3600 * 1000; //5 minutes in milliseconds
 
 export default {
   mixins: [CommonChartMixin],
@@ -200,8 +202,11 @@ export default {
   methods: {
     showTable(clickData) {
       let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
+
       this.details.delayData = {
         dateTime: chosenTime,
+        startTime:  new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
+        stopTime: new Date(chosenTime.getTime() + DELAY_ALARM_INTERVAL),
         data: [],
         loading: true
       };

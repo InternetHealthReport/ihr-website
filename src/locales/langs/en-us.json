@@ -52,6 +52,13 @@
 				"dependent": "dependent"
 			}
 		},
+		"delays": {
+			"title": "delays",
+			"yaxis": "Delay Change Level",
+			"table": {
+				"title": "delay anomalies"
+			}
+		},
 		"delayAndForwarding": {
 			"title": "delay and forwarding",
 			"yaxis": "Delay Change Level",
@@ -79,7 +86,8 @@
 				"startTime": "event start",
 				"endTime": "event end",
 				"level": "level",
-				"disconnectionProbes": "disconnection events probes"
+				"disconnectionProbes": "disconnection events probes",
+				"yaxis": "Disconnection Level"
 			}
 		}
 	},
