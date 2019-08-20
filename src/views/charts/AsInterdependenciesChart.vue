@@ -76,6 +76,8 @@ import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
 import { debounce } from "quasar";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
 import Bgplay from "@/components/ripe/Bgplay";
+import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts"
+import i18n from "@/locales/i18n";
 
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
 
@@ -85,7 +87,7 @@ const DEFAULT_TRACE = [
     x: [],
     y: [],
     yaxis: "y2",
-    name: "Number of dependents",
+    name: i18n.t('charts.asInterdependencies.defaultTrace'),
     showlegend: false
   }
 ];
@@ -123,7 +125,7 @@ export default {
     let debouncedApiCall = debounce(
       () => {
         if (!this.fetch) return;
-        this.traces = [...DEFAULT_TRACE];
+        this.traces = DEFAULT_TRACE;
         this.loading = true;
         this.loadingHegemony = true;
         this.loadingHegemonyCone = true;
@@ -152,34 +154,13 @@ export default {
       hegemonyFilter: hegemonyFilter,
       hegemonyConeFilter: hegemonyConeFilter,
       filters: [hegemonyFilter, hegemonyConeFilter],
-      traces: [],
-      layout: {
-        hovermode: "closest",
-        yaxis: {
-          title: `AS${this.asNumber} ${this.$t('charts.asInterdependencies.yaxis')}`,
-          domain: [0.55, 1],
-          range: [0, 1.1],
-          automargin: true
-        },
-        yaxis2: {
-          title:
-            this.$t('charts.asInterdependencies.yaxis2') + this.asNumber,
-          domain: [0, 0.45],
-          autorange: true,
-          automargin: true
-        },
-        margin: {
-          t: 50,
-          b: 50
-        },
-        showlegend: true,
-        legend: {
-          x: 0,
-          y: 1.2,
-          orientation: "h"
-        }
-      }
+      traces: DEFAULT_TRACE,
+      layout: AS_INTERDEPENDENCIES_LAYOUT
     };
+  },
+  beforeMount() {
+    this.layout.yaxis.title = `AS${this.asNumber} ${this.$t("charts.asInterdependencies.yaxis")}`;
+    this.layout.yaxis2.title = this.$t("charts.asInterdependencies.yaxis2") + this.asNumber;
   },
   methods: {
     showTable(clickData) {

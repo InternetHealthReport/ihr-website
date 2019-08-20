@@ -96,6 +96,8 @@ import { debounce } from "quasar";
 import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
 import DelayAlarmsTable from "./tables/DelayAlarmsTable";
 import ForwardingAlarmsTable from "./tables/ForwardingAlarmsTable";
+import { DELAY_AND_FORWARDING_LAYOUT } from "./layouts"
+
 import {
   ForwardingQuery,
   DelayQuery,
@@ -178,25 +180,7 @@ export default {
       forwardingFilter: forwardingFilter,
       filters: [delayFilter, forwardingFilter],
       traces: [],
-      layout: {
-        hovermode: "closest",
-        yaxis: {
-          title: this.$t("charts.delayAndForwarding.yaxis"),
-          domain: [0.55, 1],
-          autorange: true,
-          automargin: true
-        },
-        yaxis2: {
-          title: this.$t("charts.delayAndForwarding.yaxis2"),
-          domain: [0, 0.45],
-          autorange: true,
-          automargin: true
-        },
-        margin: {
-          t: 50,
-          b: 50
-        }
-      }
+      layout: DELAY_AND_FORWARDING_LAYOUT
     };
   },
   methods: {

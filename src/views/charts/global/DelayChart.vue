@@ -16,7 +16,7 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="delay" :label="$t('charts.delays.tables.title')" />
+        <q-tab name="delay" :label="$t('charts.delays.table.title')" />
         <q-tab name="api" label="API" />
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>
@@ -59,6 +59,7 @@ import { debounce } from "quasar";
 import CommonChartMixin, { DEFAULT_DEBOUNCE } from "../CommonChartMixin";
 import DelayAlarmsTable from "../tables/DelayAlarmsTable";
 import { DelayQuery, DelayAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
+import { DELAY_CHART_LAYOUT } from "../layouts"
 
 const DEFAULT_MIN_NPROBES = 10;
 const DEFAULT_MIN_DEVIATION = 150;
@@ -128,25 +129,7 @@ export default {
       delayAlarmsFilter: delayAlarmsFilter,
       filters: [delayAlarmsFilter],
       traces: [],
-      layout: {
-        hovermode: "closest",
-        yaxis: {
-          title: this.$t("charts.delays.yaxis"),
-          autorange: true,
-          automargin: true
-        },
-        margin: {
-          t: 50,
-          b: 50
-        },
-        height: 350,
-        showlegend: true,
-        legend: {
-          x: 0,
-          y: 1.2,
-          orientation: "h"
-        }
-      }
+      layout: DELAY_CHART_LAYOUT
     };
   },
   methods: {
@@ -212,7 +195,6 @@ export default {
         trace.x.push(elem.timebin);
         trace.y.push(elem.magnitude);
       });
-      console.log(this.traces)
       this.layout.datarevision = new Date().getTime();
     }
   },

@@ -14,7 +14,6 @@
     - Contacts
     - Acknowledgments (sponsor, contributors)
 
-
 # todo
 
 - Global Report (derived specialized reports from this? CDN, SNS, DNS, Tier1,...)

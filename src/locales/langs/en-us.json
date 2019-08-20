@@ -42,6 +42,7 @@
 	"charts":{
 		"asInterdependencies": {
 			"title": "AS interdependencies",
+			"defaultTrace": "Number of dependents",
 			"yaxis": "dependencies",
 			"yaxis2": "Number of ASes<br> dependent on AS",
 			"table": {

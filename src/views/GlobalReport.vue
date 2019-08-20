@@ -24,11 +24,22 @@
       header-class="IHR_charts-title"
       default-opened
     >
+      <events-map
+        :geo-probes="geoProbes"
+      />
+    </q-expansion-item>
+    <q-expansion-item
+      expand-separator
+      :label="$t('charts.disconnections.title')"
+      header-class="IHR_charts-title"
+      default-opened
+    >
       <disco-chart
         :start-time="startTime"
         :end-time="endTime"
         :fetch="fetch"
         :min-avg-level="minAvgLevel"
+        :geoprobes.sync="geoProbes"
       />
     </q-expansion-item>
   </div>
@@ -45,22 +56,25 @@ import DelayChart, {
   DEFAULT_MAX_DIFFMEDIAN,
   DEFAULT_AS_FAMILY
 } from "./charts/global/DelayChart";
+import EventsMap from "./charts/global/EventsMap";
 
 export default {
   components: {
     DiscoChart,
-    DelayChart
+    DelayChart,
+    EventsMap
   },
   data() {
     return {
-      startTime: new Date("2019-08-01T00:00+00:00"),
-      endTime: new Date("2019-08-02T23:59+00:00"),
+      startTime: new Date("2019-08-13T00:00+00:00"),
+      endTime: new Date("2019-08-20T23:59+00:00"),
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
       minNprobes: DEFAULT_MIN_NPROBES,
       minDeviation: DEFAULT_MIN_DEVIATION,
       minDiffmedian: DEFAULT_MIN_DIFFMEDIAN,
       maxDiffmedian: DEFAULT_MAX_DIFFMEDIAN,
       asFamily: DEFAULT_AS_FAMILY,
+      geoProbes: [],
       fetch: false
     };
   },

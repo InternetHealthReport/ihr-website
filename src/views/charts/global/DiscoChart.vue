@@ -31,17 +31,23 @@ export default {
   beforeMount() {
     this.filters[0].streamName().avgLevel(this.minAvgLevel, DiscoEventQuery.GTE);
     this.traces = [];
+    /*
     this.layout.showlegend = false;
     delete this.layout.legend;
+    */
   },
   methods: {
     fetchDiscoData(data) {
       console.log("fetch data");
       this.traces = [];
       let streamTraces = {};
+      let geoProbes = [];
       data.forEach(event => {
-        //for (var i = 0; i < data.results.length; i++) {
         let streamname = event.streamname;
+        if(event.streamtype == "geo") {
+          geoProbes.push(event);
+          return;
+        }
         let trace = streamTraces[streamname];
 
         if (trace == undefined) {
@@ -70,6 +76,8 @@ export default {
         trace.z.push(event.id);
         push0(trace, event.endtime);
       });
+      this.$emit("update:geoprobes", geoProbes);
+      console.log("geoProbes")
       this.traces.forEach(trace => {
         push0(trace, this.$options.filters.ihrUtcString(this.endTime));
       });

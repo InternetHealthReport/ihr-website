@@ -9,7 +9,7 @@ import {
   Query,
   NetworkQuery,
   DiscoEventQuery,
-  DiscoEventProbesQuery,
+  DiscoProbesQuery,
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,
@@ -202,11 +202,11 @@ const IhrApi = {
             error_callback
           );
         },
-        disco_probes(discoEventProbesQuery, success_callback, error_callback) {
+        disco_probes(discoProbesQuery, success_callback, error_callback) {
           this._generic(
-            DiscoEventProbesQuery.ENTRY_POINT,
-            DiscoEventProbesQuery.HTTP_METHOD,
-            discoEventProbesQuery,
+            DiscoProbesQuery.ENTRY_POINT,
+            DiscoProbesQuery.HTTP_METHOD,
+            discoProbesQuery,
             success_callback,
             error_callback
           );
@@ -448,7 +448,7 @@ export {
   Query,
   NetworkQuery,
   DiscoEventQuery,
-  DiscoEventProbesQuery,
+  DiscoProbesQuery,
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,

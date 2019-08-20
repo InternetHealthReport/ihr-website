@@ -324,14 +324,14 @@ class DiscoEventQuery extends TimeQuery {
   }
 }
 
-class DiscoEventProbesQuery extends Query {
+class DiscoProbesQuery extends Query {
   constructor() {
     super(...arguments);
   }
 
   //static members
   static get FILTER_TYPE() {
-    return DiscoEventProbesQuery.name;
+    return DiscoProbesQuery.name;
   }
 
   static get ENTRY_POINT() {
@@ -361,7 +361,7 @@ class DiscoEventProbesQuery extends Query {
   }
 
   clone() {
-    return new DiscoEventProbesQuery(this._clone());
+    return new DiscoProbesQuery(this._clone());
   }
 }
 
@@ -688,7 +688,7 @@ export {
   Query,
   NetworkQuery,
   DiscoEventQuery,
-  DiscoEventProbesQuery,
+  DiscoProbesQuery,
   HegemonyQuery,
   HegemonyConeQuery,
   ForwardingQuery,

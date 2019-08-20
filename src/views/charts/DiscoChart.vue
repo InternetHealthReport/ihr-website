@@ -77,9 +77,10 @@
 <script>
 import { debounce } from "quasar";
 import CommonChartMixin, { DEFAULT_DEBOUNCE } from "./CommonChartMixin";
-import { DiscoEventQuery, DiscoEventProbesQuery } from "@/plugins/IhrApi";
+import { DiscoEventQuery, DiscoProbesQuery } from "@/plugins/IhrApi";
 import DisconnectionTable from "./tables/DisconnectionTable";
 import Tracemon from "@/components/ripe/Tracemon";
+import { DISCO_LAYOUT } from "./layouts"
 
 function push0(trace, time) {
   trace.x.push(time);
@@ -141,25 +142,7 @@ export default {
           line: { shape: "hv" }
         }
       ],
-      layout: {
-        hovermode: "closest",
-        yaxis: {
-          title: "",
-          autorange: "reversed",
-          automargin: true
-        },
-        margin: {
-          t: 50,
-          b: 50
-        },
-        height: 350,
-        showlegend: true,
-        legend: {
-          x: 0,
-          y: 1.2,
-          orientation: "h"
-        }
-      }
+      layout: DISCO_LAYOUT
     };
   },
   created(){
@@ -205,14 +188,13 @@ export default {
       let plot = clickData.points[0];
       this.details.eventid = plot.data.z[plot.pointNumber];
       this.details.selectedTime = plot.data.z[plot.pointNumber];
-      this.details.filter = new DiscoEventProbesQuery()
+      this.details.filter = new DiscoProbesQuery()
         .event(this.details.eventid)
         .orderedByStartTime();
       this.details.loading = true;
       this.$ihr_api.disco_probes(
         this.details.filter,
         result => {
-          console.log(result);
           if (result.results.length > 0) {
             let startTime = new Date(result.results[0].starttime);
             let endTime = new Date(result.results[0].endtime);
