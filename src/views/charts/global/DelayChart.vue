@@ -4,7 +4,7 @@
       :layout="layout"
       :traces="traces"
       @loaded="loading = false"
-      ref="chart"
+      :ref="myId"
     />
     <div>
       <q-tabs
@@ -117,6 +117,7 @@ export default {
     );
 
     return {
+      myId: `ihrDelayChart${this._uid}`,
       details: {
         activeTab: "delay",
         data: [],
@@ -187,7 +188,7 @@ export default {
           trace = {
             x: [],
             y: [],
-            name: this.$options.filters.ihr_getAsOrIxp(elem.asn),
+            name: this.$options.filters.ihr_NumberToAsOrIxp(elem.asn),
           };
           this.traces.push(trace);
           tracesMap[elem.asn] = trace;

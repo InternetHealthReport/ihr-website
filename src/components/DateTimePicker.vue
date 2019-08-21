@@ -72,7 +72,7 @@ export default {
   data() {
     console.log(this.value.toISOString())
     return {
-      myId: `date-time-picker-${this._uid}`,
+      myId: `dateTimePicker${this._uid}`,
       selectedDateTime: this.$options.filters.ihrUtcString(this.value),
       mask: QTIME_MASK,
       qTimeModel: this.value.toISOString()

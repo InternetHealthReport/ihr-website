@@ -2,10 +2,7 @@ import i18n from "@/locales/i18n";
 
 const COMMON_FEATURE = {
   hovermode: "closest",
-  margin: {
-    t: 50,
-    b: 50
-  },
+  margin: { t: 0, b: 40, l: 100, r: 0 },
   height: 350
 };
 

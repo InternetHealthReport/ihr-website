@@ -1,6 +1,6 @@
 <template>
   <div class="IHR_disco-chart">
-    <reactive-chart :layout="layout" :traces="traces" @loaded="loading = false" ref="chart" />
+    <reactive-chart :layout="layout" :traces="traces" @loaded="loading = false" :ref="myId" />
   </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
   },
   data() {
     return {
+      myId: `ihrMapchar${this._uid}`,
       layout: {
         ...COMMON_FEATURE,
         geo: {
@@ -42,6 +43,9 @@ export default {
     };
   },
   methods: {
+    relayout() {
+      this.$refs[this.myId].relayout();
+    },
     muliQueryProbesAPI() {
       if (this.events.length == 0) return false;
       let events = this.events;
@@ -101,7 +105,7 @@ export default {
     },
     pendingCalls(newValue, oldValue) {
       if (newValue === 0 && oldValue != 0) {
-          this.muliQueryProbesAPI()
+        this.muliQueryProbesAPI();
       }
     }
   },

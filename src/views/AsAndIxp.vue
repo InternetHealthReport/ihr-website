@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container">
+  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <h1 class="text-center">{{headerString}}</h1>
     <h2 class="text-center">{{subHeader}}</h2>
     <q-list v-if="showGraphs">
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import IntervalPicker, { ChartInterval } from "@/components/IntervalPicker";
+import reportMixin from "@/views/mixin/reportMixin";
 import ClosableContainer from "@/components/ClosableContainer";
 import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
 import DiscoChart from "@/views/charts/DiscoChart";
@@ -107,57 +107,28 @@ const CHART_REFS = [
 ];
 
 export default {
+  mixins: [reportMixin],
   components: {
     AsInterdependenciesChart,
     DiscoChart,
     DelayAndForwardingChart,
-    IntervalPicker,
     PrefixOverview,
     ClosableContainer,
     ReverseDnsIp
   },
-  props: {
-    showSidebar: {
-      type: Boolean,
-      default: true
-    }
-  },
   data() {
-    //correct
-    let routePieces = this.$route.params.asn.match(/[0-9]+$/);
-    let asNumber = Number(routePieces[0]);
-    if (this.$route.params.asn.startsWith("IXP")) {
-      asNumber = -asNumber;
-    }
-
+    let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn);
     let asFamily = this.$route.query.af;
-    let interval;
-    try {
-      interval = ChartInterval.getFromDuration(this.$route.query.date + "T00:00+00:00", this.$route.query.last);
-    } catch(e) {
-      if(!(e instanceof RangeError)) {
-        throw e;
-      }
-      interval = ChartInterval.lastWeek(); //fallback to lastweek
-    }
     return {
       asFamily: asFamily == 4 || asFamily == undefined,
-      fetch: false,
       loadingStatus: LOADING_STATUS.LOADING,
       asNumber: asNumber,
       asName: null,
-      interval: interval,
+      charRefs: CHART_REFS,
       prefixesDetail: []
     };
   },
   methods: {
-    resizeCharts() {
-      setTimeout(() => {
-        CHART_REFS.forEach(chart => {
-          this.$refs[chart].relayout();
-        });
-      }, 400);
-    },
     showDetails(address) {
       this.$emit("sidebar-action", true);
       if(this.prefixesDetail.find((elem) => address == elem) == undefined)
@@ -188,7 +159,6 @@ export default {
       this.loadingStatus = LOADING_STATUS.LOADED;
       this.fetch = true;
     });
-    this.pushRoute();
   },
   computed: {
     family() {
@@ -196,12 +166,6 @@ export default {
     },
     asFamilyText(){
       return this.asFamily? "IPv4" : "IPv6";
-    },
-    startTime() {
-      return this.interval.begin;
-    },
-    endTime() {
-      return this.interval.end;
     },
     showGraphs() {
       return this.loadingStatus == LOADING_STATUS.LOADED;
@@ -240,9 +204,6 @@ export default {
   watch: {
     asFamily() {
       this.pushRoute();
-    },
-    interval() {
-      this.pushRoute();
     }
   }
 };
@@ -251,27 +212,7 @@ export default {
 <style lang="stylus">
 @import '../styles/quasar.variables';
 
-#IHR_as-and-ixp-container
-  width 90%
-  margin 0 auto
-
 .IHR_
-  &time-filter
-    background-color $secondary
-    padding 8px 0px
-
-    & > *:first-child
-      width 100%
-      height 4.5vh
-
-  &last-element
-    margin-bottom 40px
-
-  &charts-title
-    text-align center
-    text-transform capitalize
-    font-size 22pt
-
   &prefix-sidebar
     margin 4pt 6pt
 

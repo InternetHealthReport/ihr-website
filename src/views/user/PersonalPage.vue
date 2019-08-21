@@ -94,7 +94,7 @@
                   <search-bar>
                     <template v-slot:default="elem">
                       <q-btn @click="addAsn(elem.asn)" flat class="IHR_asn-element">
-                        <q-item-section side>{{elem.asn.number | ihr_getAsOrIxp}}</q-item-section>
+                        <q-item-section side>{{elem.asn.number | ihr_NumberToAsOrIxp}}</q-item-section>
                         <q-item-section class="IHR_asn-name">{{elem.asn.name}}</q-item-section>
                       </q-btn>
                     </template>
@@ -240,7 +240,7 @@ export default {
             label: this.$t("asn"),
             align: "left",
             field: row => row.asnumber,
-            format: val => this.$options.filters.ihr_getAsOrIxp(val),
+            format: val => this.$options.filters.ihr_NumberToAsOrIxp(val),
             sortable: true
           },
           {

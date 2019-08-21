@@ -41,11 +41,6 @@ export default new Router({
       component: GlobalReport
     },
     {
-      name: "api",
-      path: `${routerBase}api`,
-      component: API
-    },
-    {
       name: "contacts",
       path: `${routerBase}contacts`,
       component: Contacts
@@ -54,11 +49,6 @@ export default new Router({
       name: "countries",
       path: `${routerBase}countries`,
       component: Countries
-    },
-    {
-      name: "docs",
-      path: `${routerBase}docs`,
-      component: Documentation
     },
     {
       name: "networks",

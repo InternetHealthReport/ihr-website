@@ -27,6 +27,7 @@ export default {
   data() {
     return {
       filters: [],
+      myId: `ihrChart${this._uid}`,
       debouncedApiCall: function(){}
     };
   },
@@ -35,7 +36,8 @@ export default {
   },
   methods: {
     relayout() {
-      this.$refs.chart.relayout();
+      console.log("COMMON CHART MIXIN", this.myId, this.$refs, this.$refs[this.myId])
+      this.$refs[this.myId].relayout();
     }
   },
   watch: {

@@ -121,7 +121,7 @@ export default {
       let path = this.$route.path;
       let link = "#";
       link += path.substring(0, path.lastIndexOf("/") + 1);
-      link += this.$options.filters.ihr_getAsOrIxp(asn);
+      link += this.$options.filters.ihr_NumberToAsOrIxp(asn);
       window.open(link);
     },
     getCalssByHegemony(props) {

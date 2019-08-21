@@ -26,14 +26,14 @@ export default {
   },
   data() {
     return {
-      myId: `prefix-mixin-${this._uid}`,
-      name: "prefix-mixin",
+      myId: `prefixMixin${this._uid}`,
+      name: "prefixMixin",
       prefixWidget: null,
       loaded: null,
     };
   },
   beforeMount() {
-    this.myId = `${name}-${this._uid}`;
+    this.myId = this.name + this._uid;
   },
   methods: {
     navigateAndRemove() {

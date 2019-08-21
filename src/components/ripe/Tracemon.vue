@@ -1,5 +1,5 @@
 <template>
-  <div :id="myID"></div>
+  <div :id="myId"></div>
 </template>
 <script>
 const MESUREMENTS = [5030];
@@ -22,13 +22,13 @@ export default {
   },
   data() {
     return {
-      myID: `tracemon-widget-${this._uid}`
+      myId: `tracemonWidget${this._uid}`
     };
   },
   mounted() {
     this.$libraryDelayer.load("tracemon_widget", () => {
       initTracemon(
-        `#${this.myID}`,
+        `#${this.myId}`,
         {
           dev: false,
           autoStart: true

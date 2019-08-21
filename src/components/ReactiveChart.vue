@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 v-if="chartTitle">{{chartTitle}}</h1>
-    <div ref="chart"></div>
+    <div :ref="myId"></div>
   </div>
 </template>
 <script>
@@ -31,11 +31,12 @@ export default {
   },
   data() {
     return {
-      created: false
+      created: false,
+      myId: `ihrReactiveChart${this._uid}`,
     };
   },
   mounted() {
-    var graphDiv = this.$refs["chart"];
+    var graphDiv = this.$refs[this.myId];
     Plotly.plot(graphDiv, this.traces, this.layout, {
       responsive: true,
       displayModeBar: false
@@ -59,14 +60,14 @@ export default {
       if(this.traces == undefined)
         return;
       Plotly.react(
-        this.$refs["chart"],
+        this.$refs[this.myId],
         this.traces,
         this.layout
       );
       this.$emit("loaded");
     },
     relayout() {
-      Plotly.relayout(this.$refs["chart"], {});
+      Plotly.relayout(this.$refs[this.myId], {});
     }
   },
   watch: {

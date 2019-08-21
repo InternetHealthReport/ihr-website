@@ -11,13 +11,30 @@
 		"contacts": "contacts",
 		"countries": "countries",
 		"documentation": "documentation",
-		"networks": "networks",
-		"participants": "participants",
 		"signUp": "sign up",
 		"signIn": "sign in",
 		"signInTitle": "fill and press",
 		"here": "here",
 		"ForgottenPassword": "do you forget your password? Please click"
+	},
+	"footer": {
+		"reportPages": { 
+			"title" :"report pages",
+			"network": "network report",
+			"global": "global report"
+		},
+		"documentation": {
+			"title": "documentation",
+			"apiEndpoints": "API endpoints",
+			"pythonWrapper": "pythonWrapper",
+			"modulesExplanation": "modules explanation"
+		},
+		"about": {
+			"title": "about IHR",
+			"policy": "policy",
+			"contacts": "contacts",
+			"acknowledgments": "acknowledgments"
+		}
 	},
 	"home": {
 		"monitoredCountries": "monitored countries",
@@ -26,6 +43,15 @@
 	"searchBar": {
 		"placeholder": " or name",
 		"resultsFound": "results found"
+	},
+	"globalReport": {
+		"filters": {
+			"minAvgLevel": "min event level",
+			"minNprobes": "min probe amount",
+			"minDiffmedian": "min median diff",
+			"maxDiffmedian": "max median diff",
+			"minDeviation": "min deviation"
+		}
 	},
 	"AsAndIxp": {
 		"headerString": {
@@ -44,7 +70,7 @@
 			"title": "AS interdependencies",
 			"defaultTrace": "Number of dependents",
 			"yaxis": "dependencies",
-			"yaxis2": "Number of ASes<br> dependent on AS",
+			"yaxis2": "Number of ASes<br> dependent",
 			"table": {
 				"dependencyTitle": "networks dependency",
 				"dependentTitle": "dependent networks",
@@ -62,8 +88,8 @@
 		},
 		"delayAndForwarding": {
 			"title": "delay and forwarding",
-			"yaxis": "Delay Change Level",
-			"yaxis2": "Forwarding Anomaly Level",
+			"yaxis": "Delay Change<br> Level",
+			"yaxis2": "Forwarding Anomaly<br> Level",
 			"tables": {
 				"delay": {
 					"title": "delay anomalies",

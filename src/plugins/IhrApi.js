@@ -433,8 +433,13 @@ const IhrApi = {
       },
       filters: {
         // utilities
-        ihr_getAsOrIxp(asn) {
+        ihr_NumberToAsOrIxp(asn) {
           return asn < 0 ? "IXP" : "AS" + Math.abs(asn);
+        },
+        ihr_AsOrIxpToNumber(asnString) {
+          let routePieces = asnString.match(/[0-9]+$/);
+          let asNumber = Number(routePieces[0]);
+          return asnString.startsWith("IXP") ? -asNumber : asNumber;
         }
       }
     });

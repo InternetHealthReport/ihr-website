@@ -32,7 +32,7 @@ export default {
   },
   data() {
     return {
-      myId: `bgplay-container-${this._uid}`,
+      myId: `bgplayContainer${this._uid}`,
       bgplay: null,
       loaded: null,
     };

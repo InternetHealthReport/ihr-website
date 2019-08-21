@@ -5,7 +5,7 @@
       :traces="traces"
       @loaded="loading = false"
       @plotly-click="showTable"
-      ref="chart"
+      :ref="myId"
     />
     <h2 v-if="details.tableVisible">
       {{details.delayData.dateTime | ihrUtcString}}

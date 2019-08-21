@@ -28,9 +28,9 @@
         v-on="scope.itemEvents"
       >
       <slot :asn="scope.opt">
-        <router-link :to="{name : 'as_and_ixp', params:{asn: $options.filters.ihr_getAsOrIxp(scope.opt.number) }}" class="IHR_searchbar-routerlink">
+        <router-link :to="{name : 'as_and_ixp', params:{asn: $options.filters.ihr_NumberToAsOrIxp(scope.opt.number) }}" class="IHR_searchbar-routerlink">
           <q-item-section side>
-            {{scope.opt.number | ihr_getAsOrIxp}}
+            {{scope.opt.number | ihr_NumberToAsOrIxp}}
           </q-item-section>
           <q-item-section>
             {{scope.opt.name}}

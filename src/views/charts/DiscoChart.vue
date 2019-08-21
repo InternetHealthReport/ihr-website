@@ -5,7 +5,7 @@
       :traces="traces"
       @loaded="loading = false"
       @plotly-click="showTable"
-      ref="chart"
+      :ref="myId"
     />
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />

@@ -1,5 +1,5 @@
 <template>
-  <div :id="myID"></div>
+  <div :id="myId"></div>
 </template>
 <script>
 export default {
@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return {
-      myID: `latencymon-widget-${this._uid}`
+      myId: `latencymonWidget${this._uid}`
     };
   },
   mounted() {
@@ -39,7 +39,7 @@ export default {
       try {
         //see https://atlas.ripe.net/docs/tools-latencymon/ for more options and details
         initLatencymon(
-          `#${this.myID}`,
+          `#${this.myId}`,
           {
             dev: false,
             autoStart: true

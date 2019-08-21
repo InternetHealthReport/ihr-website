@@ -2,8 +2,8 @@
   <q-layout view="hHh LpR fff" id="app">
     <q-header elevated primary>
       <q-toolbar class="q-py-sm q-px-md row">
-          <div class="col-8 row no-wrap items-center">
-            <div>
+        <div class="col-8 row no-wrap items-center">
+          <div>
             <q-btn flat @click="expandSidebar">
               <q-icon name="fas fa-bars" class="text-white" />
             </q-btn>
@@ -15,7 +15,7 @@
               </q-btn>
             </router-link>
           </q-item>
-          <search-bar dark/>
+          <search-bar dark />
           <div
             class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
           >
@@ -31,9 +31,9 @@
             <q-btn dense flat round size="13px" icon="fas fa-bell" />
             <q-btn dense flat no-wrap>
               <q-avatar rounded size="30px">
-                <q-icon name="fas fa-user-circle" color="accent"/>
+                <q-icon name="fas fa-user-circle" color="accent" />
               </q-avatar>
-              <q-icon name="fas fa-sort-down" size="16px"/>
+              <q-icon name="fas fa-sort-down" size="16px" />
               <q-menu auto-close id="IHR_user-menu">
                 <q-list dense>
                   <q-item>
@@ -48,38 +48,36 @@
                   <q-separator />
                   <q-item clickable>
                     <q-item-section>
-                      <router-link :to="{name : 'personal_page', hash: '#profile'}" class="IHR_delikify">
-                        {{$t('user.profile')}}
-                      </router-link>
+                      <router-link
+                        :to="{name : 'personal_page', hash: '#profile'}"
+                        class="IHR_delikify"
+                      >{{$t('user.profile')}}</router-link>
                     </q-item-section>
                   </q-item>
                   <q-item clickable>
                     <q-item-section>
-                      <router-link :to="{name : 'personal_page', hash: '#settings'}" class="IHR_delikify">
-                        {{$t('user.settings')}}
-                      </router-link>
+                      <router-link
+                        :to="{name : 'personal_page', hash: '#settings'}"
+                        class="IHR_delikify"
+                      >{{$t('user.settings')}}</router-link>
                     </q-item-section>
                   </q-item>
                   <q-item clickable @click="logout">
                     <q-item-section>
-                      <router-link to="/" class="IHR_delikify">
-                        {{$t('user.logout')}}
-                      </router-link>
+                      <router-link to="/" class="IHR_delikify">{{$t('user.logout')}}</router-link>
                     </q-item-section>
                   </q-item>
                   <q-separator />
                   <q-separator />
                   <q-item clickable>
-                    <q-item-section>
-                      {{$t('user.signOut')}}
-                    </q-item-section>
+                    <q-item-section>{{$t('user.signOut')}}</q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
             </q-btn>
           </div>
-          <div v-else  class="IHR_menu-entries col-12 row items-center justify-end q-gutter-md">
-            <router-link :to="{name : 'sign_up'}" >
+          <div v-else class="IHR_menu-entries col-12 row items-center justify-end q-gutter-md">
+            <router-link :to="{name : 'sign_up'}">
               <span>{{$t('header.signUp')}}</span>
             </router-link>
             <q-btn dense flat no-wrap>
@@ -87,54 +85,131 @@
               <q-menu>
                 <q-list dense>
                   <q-item>
-                    <q-item-section >
+                    <q-item-section>
                       <h4 id="IHR_sigin-title">{{$t('header.signInTitle')}}</h4>
-                      </q-item-section>
+                    </q-item-section>
                   </q-item>
                   <q-separator />
                   <q-item>
                     <login-form v-model="loginError">
-                      <template v-slot:default="user" @keydown.enter="login(user.email, user.password)">
-                        <q-btn color="secondary" id="IHR_signin-button" @click="login(user.email, user.password)">
-                          {{$t('header.signIn')}}
-                        </q-btn>
+                      <template
+                        v-slot:default="user"
+                        @keydown.enter="login(user.email, user.password)"
+                      >
+                        <q-btn
+                          color="secondary"
+                          id="IHR_signin-button"
+                          @click="login(user.email, user.password)"
+                        >{{$t('header.signIn')}}</q-btn>
                       </template>
                     </login-form>
                   </q-item>
                   <q-item>
                     <q-item-section class="row no-wrap" id="IHR_forgotten-password">
-                      {{$t('header.ForgottenPassword')}}<router-link :to="{name : 'reset_password'}" >
-                        {{$t('header.here')}}
-                      </router-link>
+                      {{$t('header.ForgottenPassword')}}
+                      <router-link :to="{name : 'reset_password'}">{{$t('header.here')}}</router-link>
                     </q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
             </q-btn>
           </div>
-          <locale-selector id="IHR_local-selector"/>
+          <locale-selector id="IHR_local-selector" />
         </div>
       </q-toolbar>
     </q-header>
     <q-page-container>
-      <router-view :show-sidebar="sidebarOpened" @sidebar-action="sidebarOpened = $event"/>
+      <router-view :show-sidebar="sidebarOpened" @sidebar-action="sidebarOpened = $event" />
     </q-page-container>
-    <q-footer elevated primary class="IHR_footer text-white text-center row items-end">
-      <span class="col-2 IHR_copyright">Internet Healt Report 2019 &#9400;</span>
-      <span class="IHR_sitemap col-8">
-        <router-link
-          :key="item.entryName"
-          :to="{name : item.routeName}"
-          v-for="item in [...simple_menu]"
-        >{{$t(item.entryName)}}</router-link>
+    <q-footer
+      elevated
+      primary
+      class="IHR_footer text-white text-center row items-streatch content-stretch no-wrap justiy-between"
+    >
+      <span class="col-2 IHR_copyright">
+        <div>
+          <strong>Internet Healt Report 2019 &#9400;</strong>
+        </div>
+        <div>
+          <router-link :to="{name : 'home'}">
+            <q-btn round dense flat :ripple="false" no-caps size="22px">
+              <img src="@/assets/imgs/ihr_logo.svg" style="width: 80%;" />
+            </q-btn>
+          </router-link>
+        </div>
       </span>
-      <span class="IHR_external-links col-2">
-        <a href="https://twitter.com/ihr_alerts">
-          <q-icon name="fab fa-twitter-square" />
-        </a>
-        <a href="https://github.com/InternetHealthReport">
-          <q-icon name="fab fa-github-square" />
-        </a>
+      <span class="IHR_sitemap col-8 row">
+        <span class="col-4">
+          <ul>
+            <li>
+              <strong>{{$t('footer.reportPages.title')}}</strong>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'global_report'}"
+              >{{$t('footer.reportPages.global')}}</router-link>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'as_and_ixp', params:{ asn: 2497 }}"
+              >{{$t('footer.reportPages.network')}}</router-link>
+            </li>
+          </ul>
+        </span>
+        <span class="col-4">
+          <ul>
+            <li>
+              <strong>{{$t('footer.documentation.title')}}</strong>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'docs'}"
+              >{{$t('footer.documentation.modulesExplanation')}}</router-link>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'api'}"
+              >{{$t('footer.documentation.apiEndpoints')}}</router-link>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'python_wrapper'}"
+              >{{$t('footer.documentation.pythonWrapper')}}</router-link>
+            </li>
+          </ul>
+        </span>
+        <span class="col-4">
+          <ul>
+            <li>
+              <strong>{{$t('footer.about.title')}}</strong>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'policy'}"
+              >{{$t('footer.about.policy')}}</router-link>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'contacts'}"
+              >{{$t('footer.about.contacts')}}</router-link>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'acknowledgments'}"
+              >{{$t('footer.about.acknowledgments')}}</router-link>
+            </li>
+          </ul>
+        </span>
+      </span>
+      <span class="IHR_external-links col-2 ">
+        <div class="row wrap justify-around">
+          <a href="https://twitter.com/ihr_alerts" class="col-6">
+            <q-icon name="fab fa-twitter-square" />
+          </a>
+          <a href="https://github.com/InternetHealthReport" class="col-6">
+            <q-icon name="fab fa-github-square" />
+          </a>
+        </div>
       </span>
     </q-footer>
   </q-layout>
@@ -144,7 +219,7 @@ import languages from "quasar/lang/index.json";
 import LocaleSelector from "@/locales/LocaleSelector";
 import SearchBar from "@/components/SearchBar";
 import routerBase from "@/router";
-import LoginForm from "@/components/forms/LoginForm"
+import LoginForm from "@/components/forms/LoginForm";
 
 // subset of router, see router.js
 
@@ -183,21 +258,22 @@ export default {
       this.sidebarOpened = !this.sidebarOpened;
     },
     login(email, password) {
-      if(this.$ihrStyle.validateEmail(email) && this.$ihrStyle.validatePassword(password)) {
-        this.$ihr_api.userLogin(email, password, ()=>{}, ()=>{
-          this.loginError = true
-        })
+      if (
+        this.$ihrStyle.validateEmail(email) &&
+        this.$ihrStyle.validatePassword(password)
+      ) {
+        this.$ihr_api.userLogin(
+          email,
+          password,
+          () => {},
+          () => {
+            this.loginError = true;
+          }
+        );
       }
     },
-    logout(){
+    logout() {
       this.$ihr_api.userLogout();
-    }
-  },
-  computed: {
-    atBottom() {
-      let element = this.$refs.scroll;
-      console.log(this.$refs);
-      console.log(element);
     }
   }
 };
@@ -208,12 +284,13 @@ export default {
 #app
   min-width 970px
 
-menu-delinkify()
+menu-delinkify(val)
   font-size 12pt
   color white
   text-decoration none
   text-transform capitalize
-  font-weight 700
+  if val
+    font-weight 700
 
 .IHR_
   &menu-entries
@@ -231,25 +308,39 @@ menu-delinkify()
 
   &footer
     & > *
+      padding-top 5pt
       border-left solid gray 1px
 
       &first-child
         border-left none
 
     ~/copyright
-      vertical-align bottom
+      & > div
+        margin 7pt 0pt
 
     ~/external-links
-      font-size 18pt
+      font-size 3.5em
 
       & a
         color white
 
     ~/sitemap
-      font-size 18pt
+      font-size 12pt
+      font-weight 300
+      text-align center
+      & a
+        menu-delinkify 0
 
-      a
-        menu-delinkify 1
+      & > span
+        padding-left 20pt
+        text-align left
+        & > ul
+          margin-top 2pt
+          & > li
+            list-style-type: none;
+            text-align left
+            & > strong
+                text-transform capitalize
 
 #IHR_
   &home-button

@@ -5,7 +5,7 @@
       :traces="traces"
       @loaded="loading = false"
       @plotly-click="showTable"
-      ref="chart"
+      :ref="myId"
     />
     <h2 v-if="details.tableVisible">
       {{details.date | ihrUtcString}}
@@ -159,8 +159,8 @@ export default {
     };
   },
   beforeMount() {
-    this.layout.yaxis.title = `AS${this.asNumber} ${this.$t("charts.asInterdependencies.yaxis")}`;
-    this.layout.yaxis2.title = this.$t("charts.asInterdependencies.yaxis2") + this.asNumber;
+    this.layout.yaxis.title = `${this.$t("charts.asInterdependencies.yaxis")}`;
+    this.layout.yaxis2.title = `${this.$t("charts.asInterdependencies.yaxis2")}`;
   },
   methods: {
     showTable(clickData) {
@@ -255,7 +255,7 @@ export default {
             x: [],
             y: [],
             name:
-              this.$options.filters.ihr_getAsOrIxp(elem.asn) +
+              this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) +
               " " +
               elem.asn_name.split(" ")[0]
           };
