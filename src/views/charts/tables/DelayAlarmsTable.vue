@@ -9,6 +9,9 @@
   >
     <template v-slot:body="props">
       <q-tr :props="props" @click.native="props.expand = !props.expand">
+        <q-td key="asNumber" :props="props" v-if="showAsn">
+          {{ getCellValue(props, "asNumber") }}
+        </q-td>
         <q-td key="link" :props="props">
           (
           <template v-for="(prefix, index) in getCellValue(props, 'link')">
@@ -66,6 +69,10 @@ export default {
     stopTime: {
       type: Date,
       required: true
+    },
+    showAsn: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -77,6 +84,15 @@ export default {
         rowsPerPage: 8
       },
       columns: [
+        {
+          name: "asNumber",
+          required: true,
+          label: "Autonomous System",
+          align: "center",
+          field: row => row.asn,
+          format: val => this.$options.filters.ihr_NumberToAsOrIxp(val),
+          sortable: false
+        },
         {
           name: "link",
           required: true,

@@ -36,18 +36,17 @@ export default {
   },
   methods: {
     relayout() {
-      console.log("COMMON CHART MIXIN", this.myId, this.$refs, this.$refs[this.myId])
       this.$refs[this.myId].relayout();
     }
   },
   watch: {
-    startTime(oldValue, newValue) {
+    startTime(newValue) {
       this.filters.forEach((filter) => {
         filter.startTime(newValue, Query.GTE);
       });
       this.debouncedApiCall();
     },
-    endTime(oldValue, newValue) {
+    endTime(newValue) {
       this.filters.forEach((filter) => {
         filter.endTime(newValue, Query.LTE);
       });

@@ -434,7 +434,7 @@ const IhrApi = {
       filters: {
         // utilities
         ihr_NumberToAsOrIxp(asn) {
-          return asn < 0 ? "IXP" : "AS" + Math.abs(asn);
+          return (asn < 0 ? "IXP" : "AS") + Math.abs(asn);
         },
         ihr_AsOrIxpToNumber(asnString) {
           let routePieces = asnString.match(/[0-9]+$/);

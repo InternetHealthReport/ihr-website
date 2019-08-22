@@ -35,6 +35,40 @@ class QueryBase {
   get_filter() {
     throw MustBeImplemented("QueryBase.get_filter");
   }
+
+  _clone() {
+    return Object.assign({}, this.filter);
+  }
+
+  //public functions
+
+  //merged filter has the priority
+  merge(filter) {
+    this.filter = { ...this.filter, ...filter };
+    return this;
+  }
+
+  reset() {
+    this.filter = {};
+    return this;
+  }
+
+  toString() {
+    return this.constructor.FILTER_TYPE + ": " + JSON.stringify(this.filter);
+  }
+
+  toUrl() {
+    let str = [];
+    for (let param in this.filter)
+      str.push(
+        `${encodeURIComponent(param)}=${encodeURIComponent(this.filter[param])}`
+      );
+    return `${this.constructor.ENTRY_POINT}?${str.join("&")}`;
+  }
+
+  clone() {
+    throw new MustBeImplemented("clone");
+  }
 }
 
 /** @brief all allowed filters in ihr-api
@@ -98,7 +132,9 @@ class Query extends QueryBase {
     }
     //if it's an array is exact by default
     if (value instanceof Array) {
-      this.filter[name] = value.join(",");
+      if (value.length > 0) {
+        this.filter[name] = value.join(",");
+      }
       return this;
     }
     this.filter[name + comparator] = value;
@@ -119,42 +155,8 @@ class Query extends QueryBase {
       : this._set("ordering", order + name);
   }
 
-  _clone() {
-    return Object.assign({}, this.filter);
-  }
-
-  //public functions
-
-  //merged filter has the priority
-  merge(filter) {
-    this.filter = { ...this.filter, ...filter };
-    return this;
-  }
-
-  reset() {
-    this.filter = {};
-    return this;
-  }
-
   get_filter() {
     return this.filter;
-  }
-
-  toString() {
-    return this.constructor.FILTER_TYPE + ": " + JSON.stringify(this.filter);
-  }
-
-  toUrl() {
-    let str = [];
-    for (let param in this.filter)
-      str.push(
-        `${encodeURIComponent(param)}=${encodeURIComponent(this.filter[param])}`
-      );
-    return `${this.constructor.ENTRY_POINT}?${str.join("&")}`;
-  }
-
-  clone() {
-    throw new MustBeImplemented("clone");
   }
 }
 

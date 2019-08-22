@@ -26,6 +26,7 @@
             :stop-time="endTime"
             :data="details.data"
             :loading="details.loading"
+            show-asn
             @prefix-details="$emit('prefix-details', $event)"
           />
         </q-tab-panel>
@@ -92,6 +93,11 @@ export default {
       type: Number,
       default: DEFAULT_MAX_DIFFMEDIAN,
       required: true
+    },
+    selectedAsn: {
+      type: Array,
+      default: [],
+      required: false
     }
   },
   data() {
@@ -100,6 +106,7 @@ export default {
       .deviation(this.minDeviation, DelayQuery.GTE)
       .medianDifference(this.minDiffmedian, DelayQuery.GTE)
       .medianDifference(this.maxDiffmedian, DelayQuery.LTE)
+      .asNumber(this.selectedAsn)
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 
@@ -159,7 +166,7 @@ export default {
     },
     queryDelayAPI(asn_list) {
       if(asn_list.length == 0) {
-        console.log("shure?")
+        console.log("shure?", asn_list)
         this.loading = false;
         return;
       }
@@ -205,6 +212,38 @@ export default {
     },
     delayAlarmsUrl() {
       return this.$ihr_api.getUrl(this.delayAlarmsFilter);
+    }
+  },
+  watch: {
+    minNprobes(newValue) {
+      this.filters.forEach((filter) => {
+        filter.numberOfProbes(newValue);
+      });
+      this.debouncedApiCall();
+    },
+    minDeviation(newValue) {
+      this.filters.forEach((filter) => {
+        filter.deviation(newValue);
+      });
+      this.debouncedApiCall();
+    },
+    minDiffmedian(newValue) {
+      this.filters.forEach((filter) => {
+        filter.medianDifference(newValue);
+      });
+      this.debouncedApiCall();
+    },
+    maxDiffmedian(newValue) {
+      this.filters.forEach((filter) => {
+        filter.medianDifference(newValue);
+      });
+      this.debouncedApiCall();
+    },
+    selectedAsn(newValue) {
+      this.filters.forEach((filter) => {
+        filter.asNumber(newValue);
+      });
+      this.debouncedApiCall();
     }
   }
 };

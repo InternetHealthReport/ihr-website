@@ -38,6 +38,10 @@ class MonitoringUserQuery extends QueryBase {
     this.set(monitoredAsn);
   }
 
+  static get FILTER_TYPE() {
+    return MonitoringUserQuery.name;
+  }
+
   static get ENTRY_POINT() {
     return "user/add_monitoring/";
   }

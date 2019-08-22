@@ -311,9 +311,15 @@ export default {
     },
   },
   watch: {
-    asFamily(oldValue, newValue) {
+    asFamily(newValue) {
       this.filters.forEach((filter) => {
         filter.asFamily(newValue);
+      });
+      this.debouncedApiCall();
+    },
+    asNumber(newValue) {
+      this.filters.forEach((filter) => {
+        filter.asNumber(newValue);
       });
       this.debouncedApiCall();
     }

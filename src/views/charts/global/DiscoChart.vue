@@ -82,6 +82,14 @@ export default {
         push0(trace, this.$options.filters.ihrUtcString(this.endTime));
       });
     }
+  },
+  watch: {
+    minAvgLevel(newValue) {
+      this.filters.forEach((filter) => {
+        filter.minAvgLevel(newValue);
+      });
+      this.debouncedApiCall();
+    },
   }
 };
 

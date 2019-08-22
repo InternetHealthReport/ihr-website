@@ -45,12 +45,12 @@
 		"resultsFound": "results found"
 	},
 	"globalReport": {
+		"title": {
+			"global": "global report",
+			"personal": "personalized report"
+		},
 		"filters": {
-			"minAvgLevel": "min event level",
-			"minNprobes": "min probe amount",
-			"minDiffmedian": "min median diff",
-			"maxDiffmedian": "max median diff",
-			"minDeviation": "min deviation"
+			"monitoredAsn": "Show only monitored Asn"
 		}
 	},
 	"AsAndIxp": {

@@ -120,6 +120,7 @@
     </q-header>
     <q-page-container>
       <router-view :show-sidebar="sidebarOpened" @sidebar-action="sidebarOpened = $event" />
+      <div id="IHR_last-element">&nbsp;</div>
     </q-page-container>
     <q-footer
       elevated
@@ -367,4 +368,7 @@ menu-delinkify(val)
     font-size 12pt
     & *:first-letter
       text-transform capitalize
+
+  &last-element
+    height 50px;
 </style>

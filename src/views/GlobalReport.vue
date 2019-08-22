@@ -1,5 +1,8 @@
 <template>
   <div class="IHR_char-container">
+    <h1 class="text-center">
+      {{title}}
+    </h1>
     <q-expansion-item
       expand-separator
       :label="$t('charts.delays.title')"
@@ -14,6 +17,7 @@
         :min-deviation="minDeviation"
         :min-diffmedian="minDiffmedian"
         :max-diffmedian="maxDiffmedian"
+        :selected-asn="asnList"
         ref="ihrChartDelay"
         @prefix-details="showDetails($event)"
       />
@@ -41,52 +45,52 @@
         ref="ihrChartDisco"
       />
     </q-expansion-item>
-    <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
-      <div class="IHR_sidebar-filter-section row justify-around">
-        <interval-picker v-model="interval" class="col-12" />
-        <q-input
-          v-model.number="minAvgLevel"
-          type="number"
-          filled
-          :hint="$t('globalReport.filters.minAvgLevel')"
-          class="col-5"
-        />
-        <q-input
-          v-model.number="minNprobes"
-          type="number"
-          filled
-          :hint="$t('globalReport.filters.minNprobes')"
-          class="col-5"
-        />
-        <q-input
-          v-model.number="minDiffmedian"
-          type="number"
-          filled
-          :hint="$t('globalReport.filters.minDiffmedian')"
-          class="col-5"
-        />
-        <q-input
-          v-model.number="maxDiffmedian"
-          type="number"
-          filled
-          :hint="$t('globalReport.filters.maxDiffmedian')"
-          class="col-5"
-        />
-        <q-input
-          v-model.number="minDeviation"
-          type="number"
-          filled
-          :hint="$t('globalReport.filters.minDeviation')"
-          class="col-5"
-        />
+    <q-drawer
+      :value="true"
+      side="left"
+      :mini="!showSidebar"
+      show-if-above
+      bordered
+      @on-layout="resizeCharts"
+    >
+      <div class="fit column">
+        <div class="IHR_sidebar-filter-section-global col-auto q-mini-drawer-hide q-gutter-y-md">
+          <div>
+            <interval-picker v-model="interval" class="col" />
+          </div>
+          <div>
+            <label>filter level</label>
+            <q-btn-toggle
+              class="col"
+              v-model="filterLevel"
+              :toggle-color="levelColors[filterLevel]"
+              :toggle-text-color="levelColors[filterLevel] == 'warning'?'black':'white'"
+              :options="levelOptions"
+            />
+          </div>
+        </div>
+        <q-scroll-area class="col mini-slot cursor-pointer">
+          <q-list padding>
+            <q-item clickable v-ripple @click="fetchList" v-if="$ihr_api.authenticated">
+              <q-item-section avatar class>
+                <q-icon name="fas fa-flag" color="blue" class="fas fa-user-circle"/>
+              </q-item-section>
+              <q-item-section class="q-mini-drawer-hide">{{$t('globalReport.filters.monitoredAsn')}}</q-item-section>
+            </q-item>
+            <q-item clickable v-ripple @click="asnList = presetAsnLists.TIER1">
+              <q-item-section avatar class>
+                <q-icon name="fas fa-flag" color="blue" class="mini-icon" />
+              </q-item-section>
+              <q-item-section class="q-mini-drawer-hide">Tier 1</q-item-section>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
       </div>
     </q-drawer>
   </div>
 </template>
 
 <script>
-const CHART_REFS = ["ihrChartDelay", "ihrChartMap", "ihrChartDisco"];
-
 import reportMixin from "@/views/mixin/reportMixin";
 import DiscoChart, {
   DEFAULT_DISCO_AVG_LEVEL
@@ -95,10 +99,43 @@ import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
   DEFAULT_MIN_DIFFMEDIAN,
-  DEFAULT_MAX_DIFFMEDIAN,
-  DEFAULT_AS_FAMILY
+  DEFAULT_MAX_DIFFMEDIAN
 } from "./charts/global/DelayChart";
 import EventsMap from "./charts/global/EventsMap";
+
+const CHART_REFS = ["ihrChartDelay", "ihrChartMap", "ihrChartDisco"];
+
+const REPORT_TYPE = {
+  GLOBAL: 0,
+  PERSONAL: 1,
+  TIER_1: 2
+}
+
+const PARAMETERS_LEVEL = {
+  LOW: 0,
+  MEDIUM: 1,
+  HIGH: 2
+};
+
+const LEVEL_OPTIONS = Object.keys(PARAMETERS_LEVEL).
+  map(key => {return {label: key, value: PARAMETERS_LEVEL[key]}});
+const LEVEL_COLOR = ["warning", "positive", "negative"];
+
+//TODO use presets with some sense
+const PRAMETERS_PRESETS = {
+  DISCO_AVG_LEVEL:    [10, DEFAULT_DISCO_AVG_LEVEL, 14],
+  MIN_NPROBES:    [5, DEFAULT_MIN_NPROBES, 12],
+  MIN_DEVIATION:  [100, DEFAULT_MIN_DEVIATION, 120],
+  MIN_DIFFMEDIAN: [10, DEFAULT_MIN_DIFFMEDIAN, 20],
+  MAX_DIFFMEDIAN: [150, DEFAULT_MAX_DIFFMEDIAN, 300]
+};
+
+const PRESETS_ASN_LISTS = {
+  CDN: [2121, 21231],
+  SNS: [2121, 21231],
+  DNS: [2121, 21231],
+  TIER1: [2121, 21231]
+};
 
 export default {
   mixins: [reportMixin],
@@ -108,18 +145,22 @@ export default {
     EventsMap
   },
   data() {
-    let checkAndSet = (par, _default) => {
-      let num = Number(this.$route.query[par]);
-      return num ? num : _default;
-    };
+    let filterLevel = Number(this.$route.query.filter_level);
+    filterLevel = filterLevel ? filterLevel : PARAMETERS_LEVEL.MEDIUM;
 
     return {
-      minAvgLevel: checkAndSet("min_avg_lvl", DEFAULT_DISCO_AVG_LEVEL),
-      minNprobes: checkAndSet("min_nprobes", DEFAULT_MIN_NPROBES),
-      minDeviation: checkAndSet("min_deviation", DEFAULT_MIN_DEVIATION),
-      minDiffmedian: checkAndSet("min_diffmedian", DEFAULT_MIN_DIFFMEDIAN),
-      maxDiffmedian: checkAndSet("max_diffmedian", DEFAULT_MAX_DIFFMEDIAN),
+      presetAsnLists: PRESETS_ASN_LISTS,
+      levelOptions: LEVEL_OPTIONS,
+      levelColors: LEVEL_COLOR,
+      filterLevel: filterLevel,
+      minAvgLevel:   PRAMETERS_PRESETS.DISCO_AVG_LEVEL[filterLevel],
+      minNprobes:    PRAMETERS_PRESETS.MIN_NPROBES[filterLevel],
+      minDeviation:  PRAMETERS_PRESETS.MIN_DEVIATION[filterLevel],
+      minDiffmedian: PRAMETERS_PRESETS.MIN_DIFFMEDIAN[filterLevel],
+      maxDiffmedian: PRAMETERS_PRESETS.MAX_DIFFMEDIAN[filterLevel],
       charRefs: CHART_REFS,
+      asnList: [],
+      asnListState: REPORT_TYPE.GLOBAL,
       geoProbes: []
     };
   },
@@ -130,36 +171,58 @@ export default {
     pushRoute() {
       this.$router.push({
         query: {
-          min_avg_lvl: this.minAvgLevel,
-          min_nprobes: this.minNprobes,
-          min_deviation: this.minDeviation,
-          min_diffmedian: this.minDiffmedian,
-          max_diffmedian: this.maxDiffmedian,
+          filter_level: this.filterLevel,
           last: this.interval.dayDiff(),
           date: this.$options.filters.ihrUtcString(this.interval.end, false)
         }
       });
+    },
+    fetchList() {
+      this.$ihr_api.userShow(
+        results => {
+          let asnList = [];
+          results.monitoredasn.forEach(monitored => {
+            asnList.push(monitored.asnumber);
+          });
+          this.asnList = asnList;
+          this.asnListState = REPORT_TYPE.PERSONAL;
+          console.log(asnList)
+        },
+        error => {
+          console.error(error); //FIXME correct error handling
+        }
+      );
+    }
+  },
+  computed: {
+    title() {
+      switch(this.asnListState) {
+        case REPORT_TYPE.GLOBAL:
+          return this.$t('globalReport.title.global');
+        case REPORT_TYPE.PERSONAL:
+          return this.$t('globalReport.title.personal');
+      }
     }
   },
   watch: {
-    minAvgLevel() {
-      this.pushRoute();
-    },
-    minNprobes() {
-      this.pushRoute();
-    },
-    minDeviation() {
-      this.pushRoute();
-    },
-    minDiffmedian() {
-      this.pushRoute();
-    },
-    maxDiffmedian() {
+    filterLevel() {
       this.pushRoute();
     }
   }
 };
 </script>
 
-<style>
+<style lang="stylus">
+@import '../styles/quasar.variables';
+.IHR_
+  &char-container
+    & > h1
+      margin-bottom 14pt
+      &:first-letter
+        text-transform capitalize
+
+  &sidebar-filter-section-global
+    & label
+      margin 0pt 4pt
+      font-weight 600
 </style>

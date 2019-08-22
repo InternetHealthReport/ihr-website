@@ -44,6 +44,10 @@ export default {
       methods: {
         logger(something) {
           console.log(something);
+        },
+        newWindow(route) {
+          let routeData = this.$router.resolve(route);
+          window.open(routeData.href, "_blank");
         }
       },
       filters: {

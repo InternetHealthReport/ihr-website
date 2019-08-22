@@ -48,20 +48,20 @@
         />
       </q-expansion-item>
       <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
-        <div class="row IHR_sidebar-filter-section">
-          <interval-picker v-model="interval" class="col-9"/>
-          <div class="col-3 IHR_family-filter">
-            <div>
-              <q-toggle v-model="asFamily" name="asFamily"/>
-            </div>
-            <div class="text-center">
-              <label for="asFamily">{{asFamilyText}}</label>
+        <div class="fit column">
+          <div class="row IHR_sidebar-filter-section col-auto">
+            <interval-picker v-model="interval" class="col-9"/>
+            <div class="col-3 IHR_family-filter">
+              <div>
+                <q-toggle v-model="asFamily" name="asFamily"/>
+              </div>
+              <div class="text-center">
+                <label for="asFamily">{{asFamilyText}}</label>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="IHR_sidebar-content-section">
           <q-scroll-area
-            class="fit"
+            class="col"
             :thumb-style="{right: '1px', width: '6pt'}"
           >
             <closable-container
@@ -217,13 +217,8 @@ export default {
     margin 4pt 6pt
 
   &sidebar-filter-section
-    height 16%
     & > ~/family-filter
       padding 2pt
       & label
         font-weight bold
-
-  &sidebar-content-section
-    height 84%
-
 </style>

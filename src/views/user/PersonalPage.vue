@@ -60,7 +60,8 @@
             v-model="password.content"
             :read-only="password.readonly"
             :borderlessy="password.readonly"
-            ref="password">
+            ref="password"
+          >
             <confirm-element
               v-model="password.readonly"
               :related-input="password.content"
@@ -87,9 +88,8 @@
                   <q-btn
                     color="negative"
                     v-show="monitoring.selected.length > 0"
-                    @click="removeMonitored">
-                    {{$t("personalPage.removeSelected")}}
-                  </q-btn>
+                    @click="removeMonitored"
+                  >{{$t("personalPage.removeSelected")}}</q-btn>
                   <span class="IHR_label">{{$t("personalPage.addAs")}}</span>
                   <search-bar>
                     <template v-slot:default="elem">
@@ -101,6 +101,19 @@
                   </search-bar>
                 </div>
               </template>
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td auto-width>
+                    <q-toggle dense v-model="props.selected" />
+                  </q-td>
+                  <q-td :props="props" key="asNumber">
+                    <a @click="newWindow({name : 'as_and_ixp', params:{asn: getCellValue(props, 'asNumber') }})" href="javascript:void(0)">
+                      {{ getCellValue(props, "asNumber") }}
+                    </a>
+                  </q-td>
+                  <q-td :props="props" key="name">{{ getCellValue(props, "name") }}</q-td>
+                </q-tr>
+              </template>
             </q-table>
             <div class="col-3" id="IHR_monitored-as-panel">
               <q-btn-toggle
@@ -110,13 +123,13 @@
                 :toggle-text-color="nofifyLevelColor == 'warning'?'black':'white'"
                 :options="monitoring.levelOption"
               />
-              <div class="IHR_info-level shadow-1">
-                {{explaination}}
-              </div>
-              <!-- v-show="monitoring.modified" -->
+              <div class="IHR_info-level shadow-1">{{explaination}}</div>
               <div class="q-gutter-sm" v-show="monitoring.query.modified">
                 <q-btn color="positive" @click="saveMonitoring">{{$t("personalPage.confirm")}}</q-btn>
-                <q-btn color="negative" @click="monitoring.query.restore()">{{$t("personalPage.reset")}}</q-btn>
+                <q-btn
+                  color="negative"
+                  @click="monitoring.query.restore()"
+                >{{$t("personalPage.reset")}}</q-btn>
               </div>
             </div>
           </div>
@@ -179,7 +192,7 @@ const ConfirmElement = {
     }
   },
   template: `
-  <span>
+  <span class="IHR_confirm-element">
     <q-btn :color="primaryColor" @click="primaryClick">
       {{primaryButton}}
     </q-btn>
@@ -262,8 +275,10 @@ export default {
         this.saved.email = user.email;
         this.email.content = user.email;
         this.monitoring.query.set(user.monitoredasn);
-        this.monitoring.globalLevel = user.monitoredasn.length == 0 ?
-          MonitoringUserQuery.NOTIFY_LEVEL.LOW : user.monitoredasn[0].notifylevel;
+        this.monitoring.globalLevel =
+          user.monitoredasn.length == 0
+            ? MonitoringUserQuery.NOTIFY_LEVEL.LOW
+            : user.monitoredasn[0].notifylevel;
       },
       error => {
         console.log(error);
@@ -284,37 +299,50 @@ export default {
   },
   methods: {
     activeSave(changedElement) {
-      if(this.toSave === false) {
+      if (this.toSave === false) {
         this.toSave = {};
       }
-      this.toSave = {...this.toSave, ...changedElement};
+      this.toSave = { ...this.toSave, ...changedElement };
     },
     submit() {
-      console.log(this.toSave)
-      this.$ihr_api.userChangeCredentials(this.toSave,
+      console.log(this.toSave);
+      this.$ihr_api.userChangeCredentials(
+        this.toSave,
         (_, response) => {
           let message = "";
           let data = JSON.parse(response.config.data);
-          console.log(data)
-          if(data.password != undefined) {
-            message += this.$t('personalPage.changesApplied');
+          console.log(data);
+          if (data.password != undefined) {
+            message += this.$t("personalPage.changesApplied");
           }
-          if(data.email != undefined) {
-            message += this.$t('personalPage.confirmYourEmail');
+          if (data.email != undefined) {
+            message += this.$t("personalPage.confirmYourEmail");
           }
 
-          this.$q.notify({ color: "positive", multiline: true, message: message});
+          this.$q.notify({
+            color: "positive",
+            multiline: true,
+            message: message
+          });
           this.toSave = false;
         },
-        (error) => {
+        error => {
           let message = "";
-          if(error.status == 409) {
-            message += response.config.data.email + " " + this.$t('personalPage.error409')
+          if (error.status == 409) {
+            message +=
+              response.config.data.email +
+              " " +
+              this.$t("personalPage.error409");
           }
 
-          this.$q.notify({ color: "negative", multilne: true, message: message + this.$t('personalPage.changesNotApplied')})
+          this.$q.notify({
+            color: "negative",
+            multilne: true,
+            message: message + this.$t("personalPage.changesNotApplied")
+          });
           this.reset();
-        });
+        }
+      );
     },
     reset() {
       this.email.content = this.saved.email;
@@ -330,22 +358,27 @@ export default {
     removeMonitored() {
       this.monitoring.selected.forEach(elem => {
         this.monitoring.query.remove(elem.asnumber);
-      })
-      this.monitoring.selected = []
+      });
+      this.monitoring.selected = [];
     },
     getCellValue(props, columnName) {
+      console.log("getCellValue", props, columnName)
       let col = props.colsMap[columnName];
       return col.format(col.field(props.row));
     },
     saveMonitoring() {
-      if(this.monitoring.query.verifyModified())
-        this.$ihr_api.userAddMonitoring(this.monitoring.query,
-        (_, response)=> {
-          this.monitoring.query.set(JSON.parse(response.config.data).monitoredasn);
-        },
-        err=> {
-          console.error(err)
-        })
+      if (this.monitoring.query.verifyModified())
+        this.$ihr_api.userAddMonitoring(
+          this.monitoring.query,
+          (_, response) => {
+            this.monitoring.query.set(
+              JSON.parse(response.config.data).monitoredasn
+            );
+          },
+          err => {
+            console.error(err);
+          }
+        );
     }
   },
   computed: {
@@ -353,10 +386,14 @@ export default {
       return this.email.editable ? "IHR_input-readonly" : "IHR_input-editable";
     },
     nofifyLevelColor() {
-      return MonitoringUserQuery.NOTIFY_LEVEL.toColor(this.monitoring.globalLevel);
+      return MonitoringUserQuery.NOTIFY_LEVEL.toColor(
+        this.monitoring.globalLevel
+      );
     },
     explaination() {
-      let str = MonitoringUserQuery.NOTIFY_LEVEL.toString(this.monitoring.globalLevel);
+      let str = MonitoringUserQuery.NOTIFY_LEVEL.toString(
+        this.monitoring.globalLevel
+      );
       return this.$t(`personalPage.notifyLevelExplanation.${str}`);
     }
   }
@@ -405,6 +442,8 @@ export default {
           text-transform capitalize
 
 .IHR_
+  &confirm-element
+    padding-left 8pt
   &not-access
     width 50%
     margin 40pt auto 0px auto

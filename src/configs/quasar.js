@@ -58,6 +58,7 @@ import {
 
   //directives
   ClosePopup,
+  Ripple,
   //plugins
   Notify
 } from "quasar";
@@ -113,7 +114,7 @@ Vue.use(Quasar, {
     QSpinnerGears,
     QBtnToggle
   },
-  directives: { ClosePopup },
+  directives: { ClosePopup, Ripple },
   plugins: { Notify },
   extras: ["material-icons", "fontawesome-v5"],
   iconSet: iconSet

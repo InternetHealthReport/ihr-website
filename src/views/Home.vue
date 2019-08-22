@@ -1,5 +1,6 @@
 <template>
   <div id="IHR_home">
+    <router-link :to="{name: 'global_report'}">
     <div id="IHR_global-report">
       <div>
         <img src="@/assets/imgs/global-banner.png">
@@ -11,6 +12,7 @@
         </div>
       </div>
     </div>
+    </router-link>
     <div class="IHR_description">
         A brief explanation of what the global report is used for
     </div>

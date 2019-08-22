@@ -229,6 +229,14 @@ export default {
     disconnetionEvenProbestUr() {
       return this.$ihr_api.getUrl(this.details.filter);
     }
+  },
+  watch: {
+    streamName(newValue) {
+      this.filters.forEach((filter) => {
+        filter.streamName(newValue);
+      });
+      this.debouncedApiCall();
+    }
   }
 };
 

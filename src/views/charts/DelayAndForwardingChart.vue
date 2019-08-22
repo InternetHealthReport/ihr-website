@@ -284,6 +284,14 @@ export default {
     forwardingAlarmsUrl() {
       return this.$ihr_api.getUrl(this.details.forwardingAlarmsFilter);
     }
+  },
+  watch: {
+    asNumber(newValue) {
+      this.filters.forEach((filter) => {
+        filter.asNumber(newValue);
+      });
+      this.debouncedApiCall();
+    }
   }
 };
 </script>
