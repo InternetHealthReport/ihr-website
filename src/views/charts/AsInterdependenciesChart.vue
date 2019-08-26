@@ -74,11 +74,12 @@
 
 <script>
 import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
-import { debounce } from "quasar";
+import { debounce, extend } from "quasar";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
 import Bgplay from "@/components/ripe/Bgplay";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts"
 import i18n from "@/locales/i18n";
+
 
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
 
@@ -126,7 +127,7 @@ export default {
     let debouncedApiCall = debounce(
       () => {
         if (!this.fetch) return;
-        this.traces = DEFAULT_TRACE;
+        this.traces = extend(true, [], DEFAULT_TRACE);
         this.loading = true;
         this.loadingHegemony = true;
         this.loadingHegemonyCone = true;

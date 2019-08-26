@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { debounce } from "quasar";
+import { debounce, extend } from "quasar";
 import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
 import DelayAlarmsTable from "./tables/DelayAlarmsTable";
 import ForwardingAlarmsTable from "./tables/ForwardingAlarmsTable";
@@ -151,7 +151,7 @@ export default {
     let debouncedApiCall = debounce(
       () => {
         if (!this.fetch) return;
-        this.traces = [...DEFAULT_TRACES];
+        this.traces = extend(true, [], DEFAULT_TRACES);
         this.loading = true;
         this.loadingDelay = true;
         this.loadingForwarding = true;
