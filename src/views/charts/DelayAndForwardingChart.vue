@@ -6,6 +6,7 @@
       @loaded="loading = false"
       @plotly-click="showTable"
       :ref="myId"
+      :no-data="noData"
     />
     <h2 v-if="details.tableVisible">
       {{details.delayData.dateTime | ihrUtcString}}
@@ -204,7 +205,15 @@ export default {
       this.$ihr_api.delay_alarms(
         this.details.delayAlarmsFilter.timeBin(chosenTime),
         results => {
-          this.details.delayData.data = results.results;
+          let data = [];
+          results.results.forEach(alarm => {
+            data.some(elem => {
+              return alarm.asn == elem.asn &&
+                     alarm.link == elem.link &&
+                     alarm.timebin == elem.timebin;
+            }) || data.push(alarm);
+          });
+          this.details.delayData.data = data;
           this.details.tableVisible = true;
           this.details.delayData.loading = false;
           this.details.delayAlarmsFilter = this.details.delayAlarmsFilter.clone();

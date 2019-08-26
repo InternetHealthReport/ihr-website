@@ -10,7 +10,9 @@
     <template v-slot:body="props">
       <q-tr :props="props" @click.native="props.expand = !props.expand">
         <q-td key="asNumber" :props="props" v-if="showAsn">
-          {{ getCellValue(props, "asNumber") }}
+          <a @click="newWindow({name : 'as_and_ixp', params:{asn: getCellValue(props, 'asNumber') }})" href="javascript:void(0)">
+            {{ getCellValue(props, "asNumber") }}
+          </a>
         </q-td>
         <q-td key="link" :props="props">
           (

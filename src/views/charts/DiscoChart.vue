@@ -6,6 +6,7 @@
       @loaded="loading = false"
       @plotly-click="showTable"
       :ref="myId"
+      :no-data="noData"
     />
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="4em" />

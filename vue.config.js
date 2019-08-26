@@ -7,6 +7,14 @@ module.exports = {
       .test(/node_module\/plotly.js\/*.js$/)
       .use("ify-loader")
       .loader("ify-loader");
+
+    webpackConfig.module
+      .rule("i18n")
+      .resourceQuery(/blockType=i18n/)
+      .type("javascript/auto")
+      .use("i18n")
+      .loader("@kazupon/vue-i18n-loader")
+      .end();
   },
   pluginOptions: {
     quasar: {
@@ -20,7 +28,7 @@ module.exports = {
       enableInSFC: true
     }
   },
-  transpileDependencies: [/[\\\/]node_modules[\\\/]quasar[\\\/]/],
+  transpileDependencies: [/[\\/]node_modules[\\/]quasar[\\/]/],
   configureWebpack: {
     resolve: {
       alias: {

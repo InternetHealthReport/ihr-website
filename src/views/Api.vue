@@ -1,24 +1,28 @@
 <template>
-  <div>
-    <tracemon :utc-time="new Date('2019-07-25T11:30:00.000Z')" :propb-ids="porbs"/>
-  </div>
+  <div></div>
 </template>
 <script>
-import Tracemon from "../components/ripe/Tracemon"
+import ReactiveChart from "@/components/ReactiveChart";
 
 export default {
   components: {
-    Tracemon
+    ReactiveChart
   },
   data() {
     return {
-      porbs:{
-        1004797: [3491],
-        9181034: [15701],
-        9181042: [14827],
-        9181792: [15701],
+      traces: [],
+      layout: {
+        hovermode: "closest",
+        margin: { t: 0, b: 40, l: 100, r: 0 },
+        height: 350,
+        showlegend: true,
+        legend: {
+          x: 0,
+          y: 1.2,
+          orientation: "h"
+        }
       }
-    }
+    };
   }
 };
 </script>

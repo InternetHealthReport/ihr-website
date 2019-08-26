@@ -6,6 +6,7 @@
       @loaded="loading = false"
       @plotly-click="showTable"
       :ref="myId"
+      :no-data="noData"
     />
     <h2 v-if="details.tableVisible">
       {{details.date | ihrUtcString}}

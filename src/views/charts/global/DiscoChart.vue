@@ -38,7 +38,6 @@ export default {
   },
   methods: {
     fetchDiscoData(data) {
-      console.log("fetch data");
       this.traces = [];
       let streamTraces = {};
       let geoProbes = [];
@@ -77,7 +76,6 @@ export default {
         push0(trace, event.endtime);
       });
       this.$emit("update:geoprobes", geoProbes);
-      console.log("geoProbes")
       this.traces.forEach(trace => {
         push0(trace, this.$options.filters.ihrUtcString(this.endTime));
       });
@@ -86,7 +84,7 @@ export default {
   watch: {
     minAvgLevel(newValue) {
       this.filters.forEach((filter) => {
-        filter.minAvgLevel(newValue);
+        filter.avgLevel(this.minAvgLevel, DiscoEventQuery.GTE);
       });
       this.debouncedApiCall();
     },

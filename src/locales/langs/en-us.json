@@ -8,8 +8,8 @@
 	},
 	"header": {
 		"API": "API",
+		"globalReport": "global report",
 		"contacts": "contacts",
-		"countries": "countries",
 		"documentation": "documentation",
 		"signUp": "sign up",
 		"signIn": "sign in",
@@ -18,7 +18,7 @@
 		"ForgottenPassword": "do you forget your password? Please click"
 	},
 	"footer": {
-		"reportPages": { 
+		"reportPages": {
 			"title" :"report pages",
 			"network": "network report",
 			"global": "global report"
@@ -35,10 +35,6 @@
 			"contacts": "contacts",
 			"acknowledgments": "acknowledgments"
 		}
-	},
-	"home": {
-		"monitoredCountries": "monitored countries",
-		"monitoredNetworks": "monitored Networks"
 	},
 	"searchBar": {
 		"placeholder": " or name",
@@ -195,5 +191,6 @@
 	"asn": "AS number",
 	"prefix": "prefix",
 	"name": "name",
-	"close": "close"
+	"close": "close",
+	"noDataAvailable": "sorry no data available"
 }

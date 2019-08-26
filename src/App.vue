@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="hHh LpR fff" id="app">
-    <q-header elevated primary>
+  <q-layout view="hHh LpR fff" id="app" class="IHR_minimum-width">
+    <q-header elevated primary  class="IHR_minimum-width">
       <q-toolbar class="q-py-sm q-px-md row">
         <div class="col-8 row no-wrap items-center">
           <div>
@@ -118,14 +118,14 @@
         </div>
       </q-toolbar>
     </q-header>
-    <q-page-container>
+    <q-page-container class="IHR_minimum-width">
       <router-view :show-sidebar="sidebarOpened" @sidebar-action="sidebarOpened = $event" />
       <div id="IHR_last-element">&nbsp;</div>
     </q-page-container>
     <q-footer
       elevated
       primary
-      class="IHR_footer text-white text-center row items-streatch content-stretch no-wrap justiy-between"
+      class="IHR_minimum-width IHR_footer text-white text-center row items-streatch content-stretch no-wrap justiy-between"
     >
       <span class="col-2 IHR_copyright">
         <div>
@@ -226,6 +226,10 @@ import LoginForm from "@/components/forms/LoginForm";
 
 const simple_menu = [
   {
+    entryName: "header.globalReport",
+    routeName: "global_report"
+  },
+  {
     entryName: "header.documentation",
     routeName: "docs"
   },
@@ -282,9 +286,6 @@ export default {
 <style lang="stylus">
 @import '~quasar-variables';
 
-#app
-  min-width 970px
-
 menu-delinkify(val)
   font-size 12pt
   color white
@@ -294,6 +295,9 @@ menu-delinkify(val)
     font-weight 700
 
 .IHR_
+  &minimum-width
+    min-width 945px !important
+
   &menu-entries
     a, button
       menu-delinkify 1

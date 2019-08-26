@@ -220,8 +220,18 @@ const IhrApi = {
             error_callback
           );
         },
-        forwarding_alarms() {
-          this._generic("forwarding_alarms/", ...arguments);
+        forwarding_alarms(
+          forwardingAlarmsQuery,
+          success_callback,
+          error_callback
+        ) {
+          this._generic(
+            ForwardingAlarmsQuery.ENTRY_POINT,
+            ForwardingAlarmsQuery.HTTP_METHOD,
+            forwardingAlarmsQuery,
+            success_callback,
+            error_callback
+          );
         },
         hegemony(hegemonyQuery, success_callback, error_callback) {
           this._generic(
@@ -434,9 +444,15 @@ const IhrApi = {
       filters: {
         // utilities
         ihr_NumberToAsOrIxp(asn) {
+          if (asn == 0) {
+            return "unknown";
+          }
           return (asn < 0 ? "IXP" : "AS") + Math.abs(asn);
         },
         ihr_AsOrIxpToNumber(asnString) {
+          if (asnString == 0) {
+            return 0;
+          }
           let routePieces = asnString.match(/[0-9]+$/);
           let asNumber = Number(routePieces[0]);
           return asnString.startsWith("IXP") ? -asNumber : asNumber;

@@ -32,7 +32,9 @@ The full reference is in the quasar website https://quasar.dev/layout/grid/intro
 ### Icons
 In this project is used Font Awesome https://fontawesome.com/.
 To keep the number of different icons short, here a list of already used icons:
-
+* **AS dependence** [*fas fa-project-diagram*](https://fontawesome.com/icons/project-diagram?style=solid)
+* **Delay** [*fas fa-shipping-fast*](https://fontawesome.com/icons/shipping-fast?style=solid)
+* **Disco** [*fas fa-plug*](https://fontawesome.com/icons/plug?style=solid)
 * **arrow down**: [*fas fa-sort-down*](https://fontawesome.com/icons/sort-down?style=solid)
 * **notification bell**: [*fas fa-bell*](https://fontawesome.com/icons/bell?style=solid)
 * **magnifier**: [*fas fa-search*](https://fontawesome.com/icons/search?style=solid)

@@ -1,6 +1,12 @@
 <template>
   <div class="IHR_disco-chart">
-    <reactive-chart :layout="layout" :traces="traces" @loaded="loading = false" :ref="myId" />
+    <reactive-chart
+      :layout="layout"
+      :traces="traces"
+      @loaded="loading = false"
+      :ref="myId"
+      :no-data="noData"
+    />
   </div>
 </template>
 
@@ -127,7 +133,7 @@ export default {
         text.push(probeText);
         sizes.push(size / prob.startTime.length);
       });
-
+      this.noData = (latitudes.length === 0) ? this.$t("noDataAvailable"): false;
       return [
         {
           type: "scattergeo",

@@ -2,6 +2,9 @@
   <div>
     <h1 v-if="chartTitle">{{chartTitle}}</h1>
     <div :ref="myId"></div>
+    <div v-show="noData" class="IHR_no-data">
+      <div>{{noData}}</div>
+    </div>
   </div>
 </template>
 <script>
@@ -27,6 +30,10 @@ export default {
       type: String,
       require: false,
       default: null
+    },
+    noData: {
+      require: false,
+      default: false
     }
   },
   data() {
@@ -83,6 +90,21 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+.IHR_
+  &no-data
+    position absolute
+    bottom 50%
+    left 50%
+    & > div:first-child
+      background-color #ffee58
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+      padding 16pt
+      position relative
+      font-weight: 500;
+      top 50%
+      left -50%
+      &:first-letter
+        text-transform uppercase
 
 </style>
 

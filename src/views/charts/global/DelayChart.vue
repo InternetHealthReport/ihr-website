@@ -5,7 +5,8 @@
       :traces="traces"
       @loaded="loading = false"
       :ref="myId"
-    />
+      :no-data="noData"
+      />
     <div>
       <q-tabs
         v-model="details.activeTab"
@@ -60,7 +61,7 @@ import { debounce } from "quasar";
 import CommonChartMixin, { DEFAULT_DEBOUNCE } from "../CommonChartMixin";
 import DelayAlarmsTable from "../tables/DelayAlarmsTable";
 import { DelayQuery, DelayAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
-import { DELAY_CHART_LAYOUT } from "../layouts"
+import { DELAY_CHART_LAYOUT } from "../layouts";
 
 const DEFAULT_MIN_NPROBES = 10;
 const DEFAULT_MIN_DEVIATION = 150;
@@ -148,14 +149,20 @@ export default {
       this.$ihr_api.delay_alarms(
         this.delayAlarmsFilter,
         result => {
-          console.log("queryDelayAlarmsAPI", result)
-          this.details.data = result.results;
+          console.log("queryDelayAlarmsAPI", result);
+          let data = [];
           let asn_list = [];
-          this.details.data.forEach(alarm => {
-            if(!asn_list.some(asn => { return alarm.asn == asn })) {
-              asn_list.push(alarm.asn);
-            }
-          })
+          result.results.forEach(alarm => {
+            data.some(elem => {
+              return (
+                alarm.asn == elem.asn &&
+                alarm.link == elem.link &&
+                alarm.timebin == elem.timebin
+              );
+            }) || data.push(alarm);
+            asn_list.some(asn => alarm.asn == asn) || asn_list.push(alarm.asn);
+          });
+          this.details.data = data;
           this.queryDelayAPI(asn_list);
           this.details.loading = false;
         },
@@ -165,8 +172,8 @@ export default {
       );
     },
     queryDelayAPI(asn_list) {
-      if(asn_list.length == 0) {
-        console.log("shure?", asn_list)
+      if (asn_list.length == 0) {
+        console.log("shure?", asn_list);
         this.loading = false;
         return;
       }
@@ -195,7 +202,7 @@ export default {
           trace = {
             x: [],
             y: [],
-            name: this.$options.filters.ihr_NumberToAsOrIxp(elem.asn),
+            name: this.$options.filters.ihr_NumberToAsOrIxp(elem.asn)
           };
           this.traces.push(trace);
           tracesMap[elem.asn] = trace;
@@ -216,31 +223,31 @@ export default {
   },
   watch: {
     minNprobes(newValue) {
-      this.filters.forEach((filter) => {
-        filter.numberOfProbes(newValue);
+      this.filters.forEach(filter => {
+        filter.numberOfProbes(newValue, DelayQuery.GTE);
       });
       this.debouncedApiCall();
     },
     minDeviation(newValue) {
-      this.filters.forEach((filter) => {
-        filter.deviation(newValue);
+      this.filters.forEach(filter => {
+        filter.deviation(newValue, DelayQuery.GTE);
       });
       this.debouncedApiCall();
     },
     minDiffmedian(newValue) {
-      this.filters.forEach((filter) => {
-        filter.medianDifference(newValue);
+      this.filters.forEach(filter => {
+        filter.medianDifference(newValue, DelayQuery.GTE);
       });
       this.debouncedApiCall();
     },
     maxDiffmedian(newValue) {
-      this.filters.forEach((filter) => {
-        filter.medianDifference(newValue);
+      this.filters.forEach(filter => {
+        filter.medianDifference(newValue, DelayQuery.LTE);
       });
       this.debouncedApiCall();
     },
     selectedAsn(newValue) {
-      this.filters.forEach((filter) => {
+      this.filters.forEach(filter => {
         filter.asNumber(newValue);
       });
       this.debouncedApiCall();
