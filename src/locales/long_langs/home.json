@@ -1,0 +1,32 @@
+{
+  "en-us": {
+    "globalReport": {
+      "name": "Global report",
+      "description": [
+        "the Internet Health Report helps to monitor network conditions.",
+        "the Global report helps to catch a glimpse of status of the whole network using charts."
+      ]
+    },
+    "asInterdependence": {
+      "title":  "AS interdependence",
+      "description": [
+        "Shows connectivity between networks (a.k.a AS) using {asPaper}AS hegemony{close} metric."
+      ]
+    },
+    "delayAndForwarding": {
+      "title": "delay and forwarding",
+      "description": [
+        "shows delay changes and forwarding anomalies to detect network malfunctions."
+      ]
+    },
+    "disco": {
+      "title": "network disconnection",
+      "description": [
+        "show the average of severity levels of network disconnection."
+      ]
+    },
+    "documentation": "documentation",
+    "explore": "Explore"
+  },
+  "ita": {}
+}
