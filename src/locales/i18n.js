@@ -44,8 +44,6 @@ Vue.mixin({
       return Object.keys(messageArray)
         .map(e => messageArray[Number(e)])
         .map(message => {
-          console.log("VueI18n message:", message);
-          console.log("value", values);
           let arr = message.split(INTERPOLATION_REGEXP);
           if (arr.length > 1) {
             if (values === undefined) {
