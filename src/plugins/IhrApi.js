@@ -15,7 +15,9 @@ import {
   ForwardingQuery,
   DelayQuery,
   DelayAlarmsQuery,
-  ForwardingAlarmsQuery
+  ForwardingAlarmsQuery,
+  NetworkDelayQuery,
+  NetworkDelayLocation
 } from "./query/IhrQuery";
 import { MonitoringUserQuery } from "./query/IhrUserQuery";
 
@@ -102,10 +104,10 @@ const IhrApi = {
           this._generic(...arguments);
           this.axios_base = base;
         },
-        _check_authorization(error_callback) {
+        _check_authorization(errorCallback) {
           if (!this.authenticated) {
-            if (error_callback instanceof Function)
-              error_callback({
+            if (errorCallback instanceof Function)
+              errorCallback({
                 status: 401,
                 data: { datail: "need to login" }
               });
@@ -113,31 +115,14 @@ const IhrApi = {
           }
           return true;
         },
-        /**
-         * @brief generic API wrapper
-         * @param endpoint and-point name. it will be added to @ref
-         *      ihr_api_base
-         * @param success_callback <optional>
-         *      If is a function will be called with the api result
-         *      as parameter.
-         * @param error_callback   <optional>
-         *      If is a function will be called with the api error
-         *      as parameter.
-         */
-        _generic: function(
+
+        _resolveAxiosPromise(
           endpoint,
           method,
           query,
-          success_callback,
-          error_callback
+          successCallback,
+          errorCallback
         ) {
-          if (QueryBase.isPrototypeOf(query.constructor)) {
-            console.log("call to:", query, query.toString());
-            console.log("query url:", this.getUrl(query));
-            query = query.get_filter();
-          } else {
-            console.log("call with non Query object:", JSON.stringify(query));
-          }
           let promise =
             method === "get"
               ? this.axios_base.get(endpoint, { params: query })
@@ -145,16 +130,18 @@ const IhrApi = {
 
           promise
             .then(response => {
-              if (success_callback instanceof Function)
-                success_callback(response.data, response);
+              if (successCallback instanceof Function) {
+                successCallback(response.data, response);
+              }
             })
             .catch(error => {
               console.error("error:", error);
               if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                if (error_callback instanceof Function)
-                  error_callback(error.response);
+                if (errorCallback instanceof Function) {
+                  errorCallback(error.response);
+                }
               } else if (error.request) {
                 // The request was made but no response was received
                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -164,6 +151,58 @@ const IhrApi = {
               // Something happened in setting up the request that triggered an Error
               throw Error(error.message);
             });
+        },
+        /**
+         * @brief generic API wrapper
+         * @param endpoint and-point name. it will be added to @ref
+         *      ihr_api_base
+         * @param successCallback <optional>
+         *      If is a function will be called with the api result
+         *      as parameter.
+         * @param errorCallback   <optional>
+         *      If is a function will be called with the api error
+         *      as parameter.
+         */
+        _generic: function(
+          endpoint,
+          method,
+          query,
+          successCallback,
+          errorCallback
+        ) {
+          if (QueryBase.isPrototypeOf(query.constructor)) {
+            console.log("call to:", query, query.toString());
+            console.log("query url:", this.getUrl(query));
+            let resolvePagination = query.resolvePagination;
+            query = query.get_filter();
+            if (resolvePagination && successCallback instanceof Function) {
+              let singleSuccess = successCallback;
+              let recursiveSuccess = (data, response) => {
+                singleSuccess(data, response);
+                if (data.next != null) {
+                  console.log(data.next);
+                  this._resolveAxiosPromise(
+                    data.next,
+                    method,
+                    query,
+                    recursiveSuccess,
+                    errorCallback
+                  );
+                }
+              };
+              successCallback = recursiveSuccess;
+            }
+          } else {
+            console.log("call with non Query object:", JSON.stringify(query));
+          }
+
+          this._resolveAxiosPromise(
+            endpoint,
+            method,
+            query,
+            successCallback,
+            errorCallback
+          );
         },
 
         getUrl(queryFilter) {
@@ -175,183 +214,197 @@ const IhrApi = {
         /**
          * @brief delay endpoint wrapper see @ref _generic()
          */
-        delay(delayQuery, success_callback, error_callback) {
+        delay(delayQuery, successCallback, errorCallback) {
           this._generic(
             DelayQuery.ENTRY_POINT,
             DelayQuery.HTTP_METHOD,
             delayQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
-        delay_alarms(delayAlarmsQuery, success_callback, error_callback) {
+        delay_alarms(delayAlarmsQuery, successCallback, errorCallback) {
           this._generic(
             DelayAlarmsQuery.ENTRY_POINT,
             DelayAlarmsQuery.HTTP_METHOD,
             delayAlarmsQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
-        disco_events(discoEventQuery, success_callback, error_callback) {
+        disco_events(discoEventQuery, successCallback, errorCallback) {
           this._generic(
             DiscoEventQuery.ENTRY_POINT,
             DiscoEventQuery.HTTP_METHOD,
             discoEventQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
-        disco_probes(discoProbesQuery, success_callback, error_callback) {
+        disco_probes(discoProbesQuery, successCallback, errorCallback) {
           this._generic(
             DiscoProbesQuery.ENTRY_POINT,
             DiscoProbesQuery.HTTP_METHOD,
             discoProbesQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
-        forwarding(forwardingQuery, success_callback, error_callback) {
+        forwarding(forwardingQuery, successCallback, errorCallback) {
           this._generic(
             ForwardingQuery.ENTRY_POINT,
             ForwardingQuery.HTTP_METHOD,
             forwardingQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
         forwarding_alarms(
           forwardingAlarmsQuery,
-          success_callback,
-          error_callback
+          successCallback,
+          errorCallback
         ) {
           this._generic(
             ForwardingAlarmsQuery.ENTRY_POINT,
             ForwardingAlarmsQuery.HTTP_METHOD,
             forwardingAlarmsQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
-        hegemony(hegemonyQuery, success_callback, error_callback) {
+        hegemony(hegemonyQuery, successCallback, errorCallback) {
           this._generic(
             HegemonyQuery.ENTRY_POINT,
             HegemonyQuery.HTTP_METHOD,
             hegemonyQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
-        hegemony_cone(hegemonyConeQuery, success_callback, error_callback) {
+        hegemony_cone(hegemonyConeQuery, successCallback, errorCallback) {
           this._generic(
             HegemonyConeQuery.ENTRY_POINT,
             HegemonyConeQuery.HTTP_METHOD,
             hegemonyConeQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
-        network(networkQuery, success_callback, error_callback) {
+        network(networkQuery, successCallback, errorCallback) {
           this._generic(
             NetworkQuery.ENTRY_POINT,
             NetworkQuery.HTTP_METHOD,
             networkQuery,
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
+          );
+        },
+        network_delay(networkDelayQuery, successCallback, errorCallback) {
+          this._generic(
+            NetworkDelayQuery.ENTRY_POINT,
+            NetworkDelayQuery.HTTP_METHOD,
+            networkDelayQuery,
+            successCallback,
+            errorCallback
+          );
+        },
+        network_delay_location(
+          networkDelayLocation,
+          successCallback,
+          errorCallback
+        ) {
+          this._generic(
+            NetworkDelayLocation.ENTRY_POINT,
+            NetworkDelayLocation.HTTP_METHOD,
+            networkDelayLocation,
+            successCallback,
+            errorCallback
           );
         },
         // User management section
-        userSignIn(
-          email,
-          password,
-          recaptcha,
-          success_callback,
-          error_callback
-        ) {
+        userSignIn(email, password, recaptcha, successCallback, errorCallback) {
           this._localWrapper(
             "user/sign_in/",
             "post",
             { email: email, password: password, recaptcha: recaptcha },
-            success_callback,
-            error_callback
+            successCallback,
+            errorCallback
           );
         },
-        userValidate(email, password, token, success_callback, error_callback) {
+        userValidate(email, password, token, successCallback, errorCallback) {
           this._localWrapper(
             "user/validate/",
             "post",
             { email: email, password: password, token: token },
             result => {
               this._save_user(email, result.token);
-              if (success_callback instanceof Function)
-                success_callback(result);
+              if (successCallback instanceof Function) successCallback(result);
             },
-            error_callback
+            errorCallback
           );
         },
-        userSignOut(success_callback, error_callback) {
-          this._check_authorization(error_callback) &&
+        userSignOut(successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
             this._localWrapper(
               "user/sign_out/",
               "post",
               {},
               result => {
                 this._save_user(null);
-                if (success_callback instanceof Function)
-                  success_callback(result);
+                if (successCallback instanceof Function)
+                  successCallback(result);
               },
-              error_callback
+              errorCallback
             );
         },
-        userLogin(email, password, success_callback, error_callback) {
+        userLogin(email, password, successCallback, errorCallback) {
           this._localWrapper(
             "user/login/",
             "post",
             { email: email, password: password },
             result => {
               this._save_user(email, result.token);
-              if (success_callback instanceof Function)
-                success_callback(result);
+              if (successCallback instanceof Function) successCallback(result);
             },
-            error_callback
+            errorCallback
           );
         },
-        userLogout(success_callback, error_callback) {
-          this._check_authorization(error_callback) &&
+        userLogout(successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
             this._localWrapper(
               "user/logout/",
               "post",
               {},
               result => {
                 this._save_user(null);
-                if (success_callback instanceof Function)
-                  success_callback(result);
+                if (successCallback instanceof Function)
+                  successCallback(result);
               },
-              error_callback
+              errorCallback
             );
         },
         userResetPasswordRequest(
           email,
           recaptcha,
-          success_callback,
-          error_callback
+          successCallback,
+          errorCallback
         ) {
           this._localWrapper(
             "user/request_reset_password/",
             "post",
             { email: email, recaptcha: recaptcha },
             result => {
-              success_callback(result);
+              successCallback(result);
             },
-            error_callback
+            errorCallback
           );
         },
         userResetPassword(
           email,
           password,
           token,
-          success_callback,
-          error_callback
+          successCallback,
+          errorCallback
         ) {
           this._localWrapper(
             "user/reset_password/",
@@ -359,10 +412,9 @@ const IhrApi = {
             { email: email, password: password, token: token },
             result => {
               this._save_user(email, result.token);
-              if (success_callback instanceof Function)
-                success_callback(result);
+              if (successCallback instanceof Function) successCallback(result);
             },
-            error_callback
+            errorCallback
           );
         },
         userVerifyToken: async function() {
@@ -378,25 +430,25 @@ const IhrApi = {
          * Change user credential
          * @param {Dict} userChange not null but you can specify email, password or both
          */
-        userChangeCredentials(userChange, success_callback, error_callback) {
+        userChangeCredentials(userChange, successCallback, errorCallback) {
           if (Object.keys(userChange).length == 0) {
             throw Error("invalid number of parameters!");
           }
-          this._check_authorization(error_callback) &&
+          this._check_authorization(errorCallback) &&
             this._localWrapper(
               "user/change_credentials/",
               "post",
               { ...userChange },
-              success_callback,
-              error_callback
+              successCallback,
+              errorCallback
             );
         },
         userChangeEmail(
           email,
           password,
           token,
-          success_callback,
-          error_callback
+          successCallback,
+          errorCallback
         ) {
           this._localWrapper(
             "user/change_email/",
@@ -404,34 +456,29 @@ const IhrApi = {
             { email: email, password: password, token: token },
             result => {
               this._save_user(email, result.token);
-              if (success_callback instanceof Function)
-                success_callback(result);
+              if (successCallback instanceof Function) successCallback(result);
             },
-            error_callback
+            errorCallback
           );
         },
-        userShow(success_callback, error_callback) {
-          this._check_authorization(error_callback) &&
+        userShow(successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
             this._localWrapper(
               "user/show/",
               "post",
               {},
-              success_callback,
-              error_callback
+              successCallback,
+              errorCallback
             );
         },
-        userAddMonitoring(
-          monitoringUserQuery,
-          success_callback,
-          error_callback
-        ) {
-          this._check_authorization(error_callback) &&
+        userAddMonitoring(monitoringUserQuery, successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
             this._localWrapper(
               MonitoringUserQuery.ENTRY_POINT,
               MonitoringUserQuery.HTTP_METHOD,
               monitoringUserQuery,
-              success_callback,
-              error_callback
+              successCallback,
+              errorCallback
             );
         }
       }
@@ -476,5 +523,7 @@ export {
   DelayQuery,
   DelayAlarmsQuery,
   ForwardingAlarmsQuery,
-  MonitoringUserQuery
+  MonitoringUserQuery,
+  NetworkDelayQuery,
+  NetworkDelayLocation
 };

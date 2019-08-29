@@ -10,9 +10,18 @@ const _LTE = "__lte";
 const _GTE = "__gte";
 const _EXACT = "";
 const _CONTAINS = "__icontains";
+const _STRING_SEPARATOR = "|";
+const _DEFAULT_SEPARATOR = ",";
 const AS_FAMILY = {
   v4: 4,
   v6: 6
+};
+const _NETWORK_DELAY_EDGE_TYPE = {
+  AS: "AS",
+  CITY: "CT",
+  IP: "IP",
+  IXP: "IX",
+  PB: "PB"
 };
 
 // exceptions
@@ -23,6 +32,29 @@ class MustBeImplemented extends SyntaxError {
 }
 
 class QueryBase {
+  /**
+   * Every query class must inherit this base class
+   * @param {Boolean} auto_resolve_pagination if this flag is set the callback
+   *  for this query will be called subsequently for each page
+   */
+  constructor() {
+    this._resolve_pagination = false;
+  }
+
+  get resolvePagination() {
+    return this._resolve_pagination;
+  }
+
+  setAutoResolvePagination() {
+    this._resolve_pagination = true;
+    return this;
+  }
+
+  unSetAutoResolvePagination() {
+    this._resolve_pagination = false;
+    return this;
+  }
+
   // static members
   static get FILTER_TYPE() {
     throw MustBeImplemented("QueryBase.FILTER_TYPE");
@@ -125,7 +157,7 @@ class Query extends QueryBase {
   }
 
   //private functions
-  _set(name, value, comparator = Query.EXACT) {
+  _set(name, value, comparator = Query.EXACT, separator = _DEFAULT_SEPARATOR) {
     if (value == undefined) {
       delete this.filter[name + comparator];
       return this;
@@ -133,7 +165,7 @@ class Query extends QueryBase {
     //if it's an array is exact by default
     if (value instanceof Array) {
       if (value.length > 0) {
-        this.filter[name] = value.join(",");
+        this.filter[name] = value.join(separator);
       }
       return this;
     }
@@ -684,6 +716,162 @@ class HegemonyConeQuery extends CommonHegemonyQuery {
   }
 }
 
+class NetworkDelayQuery extends TimeQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return NetworkDelayQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "network_delay/";
+  }
+
+  static get EDGE_TYPE() {
+    return _NETWORK_DELAY_EDGE_TYPE;
+  }
+
+  //methods
+
+  timeBin(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.dateFormatter(time), comparator);
+  }
+
+  startTime(time, comparator = Query.GTE) {
+    return this.timeBin(time, comparator);
+  }
+
+  endTime(time, comparator = Query.LTE) {
+    return this.timeBin(time, comparator);
+  }
+
+  startPointName(startpoint_name) {
+    return this._set(
+      "startpoint_name",
+      startpoint_name,
+      Query.EXACT,
+      _STRING_SEPARATOR
+    );
+  }
+
+  endPointName(endpoint_name) {
+    return this._set(
+      "endpoint_name",
+      endpoint_name,
+      Query.EXACT,
+      _STRING_SEPARATOR
+    );
+  }
+  /**
+   * Filter for the type of start point
+   * @param {String} startpoint_type you can use EDGE_TYPE of this class for this parameter
+   */
+  startPointType(startpoint_type) {
+    return this._set("startpoint_type", startpoint_type);
+  }
+
+  /**
+   * Filter for the type of end point
+   * @param {String} endpoint_type you can use EDGE_TYPE of this class for this parameter
+   */
+  endPointType(endpoint_type) {
+    return this._set("endpoint_type", endpoint_type);
+  }
+
+  /**
+   * Filter for the as family of start point
+   * @param {Number} startpoint_af you can use AS_FAMILY enum for this parameter
+   */
+  startpointAf(startpoint_af) {
+    return this._set("startpoint_af", startpoint_af);
+  }
+
+  /**
+   * Filter for the as family of end point
+   * @param {Number} endpoint_af you can use AS_FAMILY enum for this parameter
+   */
+  endpoint_af(endpoint_af) {
+    return this._set("endpoint_af", endpoint_af);
+  }
+
+  // ordering
+
+  orderedByTimebin(order = Query.ASC) {
+    return this._setOrder("timebin", order);
+  }
+
+  orderedByTime(order = Query.ASC) {
+    return this.orderedByTimebin(order);
+  }
+
+  orderByStartPointName(order = Query.ASC) {
+    return this._setOrder("startpoint_name", order);
+  }
+
+  orderByEndPointName(order = Query.ASC) {
+    return this._setOrder("endpoint_name", order);
+  }
+
+  clone() {
+    return new NetworkDelayQuery(this._clone());
+  }
+}
+
+class NetworkDelayLocation extends Query {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return NetworkDelayLocation.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "network_delay_location/";
+  }
+
+  static get EDGE_TYPE() {
+    return _NETWORK_DELAY_EDGE_TYPE;
+  }
+
+  //methods
+
+  name(name) {
+    return this._set("name", name);
+  }
+  /**
+   * filter by delay location type
+   * @param {String} type you can use EDGE_TYPE helper fot this parameter
+   */
+  type(type) {
+    return this._set("type", type);
+  }
+
+  asFamily(af) {
+    return this._set("af", af);
+  }
+
+  orderedByName(order = Query.ASC) {
+    return this._setOrder("name", order);
+  }
+
+  orderedByType(order = Query.ASC) {
+    return this._setOrder("type", order);
+  }
+
+  orderedByAsFamily(order = Query.ASC) {
+    return this._setOrder("af", order);
+  }
+
+  clone() {
+    return new DiscoProbesQuery(this._clone());
+  }
+}
+
 export {
   AS_FAMILY,
   QueryBase,
@@ -697,5 +885,7 @@ export {
   DelayQuery,
   DelayAndForwardingQuery,
   DelayAlarmsQuery,
-  ForwardingAlarmsQuery
+  ForwardingAlarmsQuery,
+  NetworkDelayQuery,
+  NetworkDelayLocation
 };
