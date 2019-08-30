@@ -91,14 +91,14 @@
                     @click="removeMonitored"
                   >{{$t("personalPage.removeSelected")}}</q-btn>
                   <span class="IHR_label">{{$t("personalPage.addAs")}}</span>
-                  <search-bar>
+                  <network-search-bar>
                     <template v-slot:default="elem">
                       <q-btn @click="addAsn(elem.asn)" flat class="IHR_asn-element">
                         <q-item-section side>{{elem.asn.number | ihr_NumberToAsOrIxp}}</q-item-section>
                         <q-item-section class="IHR_asn-name">{{elem.asn.name}}</q-item-section>
                       </q-btn>
                     </template>
-                  </search-bar>
+                  </network-search-bar>
                 </div>
               </template>
               <template v-slot:body="props">
@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import SearchBar from "@/components/SearchBar";
+import NetworkSearchBar from "@/components/search_bar/NetworkSearchBar";
 import PasswordConfirm from "@/components/forms/PasswordConfirm";
 import { MonitoringUserQuery } from "@/plugins/IhrApi";
 
@@ -204,7 +204,7 @@ const ConfirmElement = {
 export default {
   components: {
     ConfirmElement,
-    SearchBar,
+    NetworkSearchBar,
     PasswordConfirm
   },
   props: {
