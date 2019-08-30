@@ -2,7 +2,7 @@
   <q-select
     ref="search" :dark="dark" dense standout use-input hide-selected
     color="black" :stack-label="false" :label="placeholder"
-    v-model="text" :options="retrievedValues"
+    v-model="text" :options="options"
     @filter="filter"
     class="IHR_search-bar"
   >
@@ -12,7 +12,7 @@
     <template v-slot:no-option>
       <q-item>
         <q-item-section>
-          <div v-if="beforeQuery">
+          <div v-if="loading">
             <q-spinner color="secondary" size="2em" />
           </div>
           <div class="text-center" v-else>
@@ -27,15 +27,7 @@
         v-bind="scope.itemProps"
         v-on="scope.itemEvents"
       >
-      <slot :asn="scope.opt">
-        <router-link :to="{name : 'as_and_ixp', params:{asn: $options.filters.ihr_NumberToAsOrIxp(scope.opt.number) }}" class="IHR_searchbar-routerlink">
-          <q-item-section side>
-            {{scope.opt.number | ihr_NumberToAsOrIxp}}
-          </q-item-section>
-          <q-item-section>
-            {{scope.opt.name}}
-          </q-item-section>
-        </router-link>
+      <slot :elem="scope.opt">
       </slot>
       </q-item>
     </template>
@@ -43,7 +35,7 @@
 </template>
 
 <script>
-import { NetworkQuery } from "@/plugins/IhrApi";
+import { Query } from "@/plugins/IhrApi";
 import { debounce } from "quasar";
 
 const MIN_CHARACTERS = 3;
@@ -54,24 +46,26 @@ export default {
   props: {
     dark: {
       type: Boolean
+    },
+    value: {
+      type: Array,
+      required: true
+    },
+    placeholder: {
+      type: String,
+      required: true
     }
   },
   data() {
     return {
       text: "",
       debouncedSearch: null,
-      minCharacters: MIN_CHARACTERS,
-      maxResults: MAX_RESULTS,
-      value: null,
-      retrievedValues: [],
-      networkQuery: (new NetworkQuery()).orderedByNumber(),
-      beforeQuery: true
       };
   },
   mounted() {
     this.debouncedSearch = debounce(
-      () => {
-        this.search();
+      (value) => {
+        this.$emit("search", value);
       },
       DEFAULT_DEBOUNCE,
       false
@@ -81,36 +75,25 @@ export default {
     filter (value, update) {
       if(value == null)
         return;
-      if(value.length > this.minCharacters) {
+      if(value.length > MIN_CHARACTERS) {
         update(() => {
-          this.value = value;
-          this.beforeQuery = true;
-          this.debouncedSearch();
+          this.$emit("input", []);
+          this.debouncedSearch(value);
         });
       }
-    },
-    search () {
-      this.networkQuery.mixedContentSearch(this.value);
-      this.$ihr_api.network(this.networkQuery,
-      (result)=> {
-        this.retrievedValues = []
-        result.results.some(element => {
-          this.retrievedValues.push({label: element.number, number: element.number, name: element.name});
-          return this.retrievedValues.length > this.maxResults;
-        });
-        this.beforeQuery = false;
-      },
-      (error) => {
-        console.error(error);
-      })
     }
   },
   computed: {
-    placeholder() {
-      return `ASN, IXP ${this.$t("searchBar.placeholder")}...`;
+    loading() {
+      return this.value.length === 0;
+    },
+    options() {
+      return this.value === null ? []: this.value;
     }
   }
 }
+
+export { MAX_RESULTS };
 </script>
 <style lang="stylus" scoped>
 .IHR_

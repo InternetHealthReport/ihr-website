@@ -15,7 +15,7 @@
               </q-btn>
             </router-link>
           </q-item>
-          <search-bar dark />
+          <network-search-bar dark />
           <div
             class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
           >
@@ -204,12 +204,15 @@
       </span>
       <span class="IHR_external-links col-2 ">
         <div class="row wrap justify-around">
-          <a href="https://twitter.com/ihr_alerts" class="col-6">
+          <a href="https://twitter.com/ihr_alerts" class="col-4">
             <q-icon name="fab fa-twitter-square" />
           </a>
-          <a href="https://github.com/InternetHealthReport" class="col-6">
+          <a href="https://github.com/InternetHealthReport" class="col-4">
             <q-icon name="fab fa-github-square" />
           </a>
+          <router-link :to="{name : 'contacts'}" class="col-4">
+            <q-icon name="fas fa-envelope-square" />
+          </router-link>
         </div>
       </span>
     </q-footer>
@@ -218,7 +221,7 @@
 <script>
 import languages from "quasar/lang/index.json";
 import LocaleSelector from "@/locales/LocaleSelector";
-import SearchBar from "@/components/SearchBar";
+import NetworkSearchBar from "@/components/search_bar/NetworkSearchBar";
 import routerBase from "@/router";
 import LoginForm from "@/components/forms/LoginForm";
 
@@ -247,7 +250,7 @@ export default {
   name: "Default",
   components: {
     LocaleSelector,
-    SearchBar,
+    NetworkSearchBar,
     LoginForm
   },
   data() {
