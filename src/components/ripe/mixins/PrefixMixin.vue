@@ -6,7 +6,7 @@
       </q-card-section>
     </q-card>
     <div v-if="loaded === null" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="4em" />
+      <q-spinner color="secondary" size="15em" />
     </div>
     <div :id="myId">
     </div>

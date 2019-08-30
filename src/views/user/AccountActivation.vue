@@ -4,7 +4,7 @@
     <div class="shadow-2">
       {{bodyText}}
       <div v-if="actualState == state.VALIDATION" class="IHR_content">
-        <q-spinner color="secondary" size="4em" />
+        <q-spinner color="secondary" size="15em" />
       </div>
       <div v-else-if="actualState == state.VALIDATE" class="IHR_content IHR_content-confirm">
         <login-form v-model="loginError">
