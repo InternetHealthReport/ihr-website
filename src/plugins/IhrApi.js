@@ -47,7 +47,6 @@ const IhrApi = {
         return {
           user: null,
           axios_base: null,
-          local_base: null,
           headers: {}
         };
       },
@@ -96,13 +95,6 @@ const IhrApi = {
             timeout: DEFAULT_TIMEOUT,
             headers: this.headers
           });
-        },
-        _localWrapper() {
-          //TODO kill me please :D
-          let base = this.axios_base;
-          this.axios_base = this.local_base;
-          this._generic(...arguments);
-          this.axios_base = base;
         },
         _check_authorization(errorCallback) {
           if (!this.authenticated) {
@@ -323,7 +315,7 @@ const IhrApi = {
         },
         // User management section
         userSignIn(email, password, recaptcha, successCallback, errorCallback) {
-          this._localWrapper(
+          this._generic(
             "user/sign_in/",
             "post",
             { email: email, password: password, recaptcha: recaptcha },
@@ -332,7 +324,7 @@ const IhrApi = {
           );
         },
         userValidate(email, password, token, successCallback, errorCallback) {
-          this._localWrapper(
+          this._generic(
             "user/validate/",
             "post",
             { email: email, password: password, token: token },
@@ -345,7 +337,7 @@ const IhrApi = {
         },
         userSignOut(successCallback, errorCallback) {
           this._check_authorization(errorCallback) &&
-            this._localWrapper(
+            this._generic(
               "user/sign_out/",
               "post",
               {},
@@ -358,7 +350,7 @@ const IhrApi = {
             );
         },
         userLogin(email, password, successCallback, errorCallback) {
-          this._localWrapper(
+          this._generic(
             "user/login/",
             "post",
             { email: email, password: password },
@@ -371,7 +363,7 @@ const IhrApi = {
         },
         userLogout(successCallback, errorCallback) {
           this._check_authorization(errorCallback) &&
-            this._localWrapper(
+            this._generic(
               "user/logout/",
               "post",
               {},
@@ -389,7 +381,7 @@ const IhrApi = {
           successCallback,
           errorCallback
         ) {
-          this._localWrapper(
+          this._generic(
             "user/request_reset_password/",
             "post",
             { email: email, recaptcha: recaptcha },
@@ -406,7 +398,7 @@ const IhrApi = {
           successCallback,
           errorCallback
         ) {
-          this._localWrapper(
+          this._generic(
             "user/reset_password/",
             "post",
             { email: email, password: password, token: token },
@@ -435,7 +427,7 @@ const IhrApi = {
             throw Error("invalid number of parameters!");
           }
           this._check_authorization(errorCallback) &&
-            this._localWrapper(
+            this._generic(
               "user/change_credentials/",
               "post",
               { ...userChange },
@@ -450,7 +442,7 @@ const IhrApi = {
           successCallback,
           errorCallback
         ) {
-          this._localWrapper(
+          this._generic(
             "user/change_email/",
             "post",
             { email: email, password: password, token: token },
@@ -463,7 +455,7 @@ const IhrApi = {
         },
         userShow(successCallback, errorCallback) {
           this._check_authorization(errorCallback) &&
-            this._localWrapper(
+            this._generic(
               "user/show/",
               "post",
               {},
@@ -473,7 +465,7 @@ const IhrApi = {
         },
         userAddMonitoring(monitoringUserQuery, successCallback, errorCallback) {
           this._check_authorization(errorCallback) &&
-            this._localWrapper(
+            this._generic(
               MonitoringUserQuery.ENTRY_POINT,
               MonitoringUserQuery.HTTP_METHOD,
               monitoringUserQuery,

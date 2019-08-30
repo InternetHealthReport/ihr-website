@@ -716,6 +716,18 @@ class HegemonyConeQuery extends CommonHegemonyQuery {
   }
 }
 
+class Edge {
+  constructor(type, asFamily, name) {
+    this.type = type;
+    this.asFamily = asFamily;
+    this.name = name;
+  }
+
+  toString() {
+    return this.type + this.asFamily + this.name;
+  }
+}
+
 class NetworkDelayQuery extends TimeQuery {
   constructor() {
     super(...arguments);
@@ -733,6 +745,15 @@ class NetworkDelayQuery extends TimeQuery {
   static get EDGE_TYPE() {
     return _NETWORK_DELAY_EDGE_TYPE;
   }
+  /**
+   * Create an edge object to fetch the key entry point
+   * @param {String} type you can use EDGE_TYPE for this
+   * @param {Number} asFamily you can use AS_FAMILY for this
+   * @param {String} name
+   */
+  static edge(type, asFamily, name) {
+    return new Edge(type, asFamily, name);
+  }
 
   //methods
 
@@ -746,6 +767,37 @@ class NetworkDelayQuery extends TimeQuery {
 
   endTime(time, comparator = Query.LTE) {
     return this.timeBin(time, comparator);
+  }
+
+  /**
+   * @brief generic point filter in the standard compressed format
+   * @param {Edge} endpoint_key use the static method edge to create Edge objects
+   * @param {String} query_param the real query param to add to filter
+   */
+  _pointKey(endpoint_key, query_param) {
+    if (endpoint_key instanceof Array) {
+      endpoint_key = endpoint_key.map(elem => elem.toString());
+    } else {
+      endpoint_key = endpoint_key.toString();
+    }
+
+    return this._set(query_param, endpoint_key, Query.EXACT, _STRING_SEPARATOR);
+  }
+
+  /**
+   * @brief add start point filter in the standard compressed format
+   * @param {Edge} startpoint_key use the static method edge to create Edge objects
+   */
+  startPointKey(startpoint_key) {
+    this._pointKey(startpoint_key, "startpoint_key");
+  }
+
+  /**
+   * @brief add start point filter in the standard compressed format
+   * @param {Edge} endpoint_key use the static method edge to create Edge objects
+   */
+  endPointKey(endpoint_key) {
+    this._pointKey(endpoint_key, "endpoint_key");
   }
 
   startPointName(startpoint_name) {
@@ -793,7 +845,7 @@ class NetworkDelayQuery extends TimeQuery {
    * Filter for the as family of end point
    * @param {Number} endpoint_af you can use AS_FAMILY enum for this parameter
    */
-  endpoint_af(endpoint_af) {
+  endpointAf(endpoint_af) {
     return this._set("endpoint_af", endpoint_af);
   }
 
