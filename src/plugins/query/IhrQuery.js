@@ -153,7 +153,7 @@ class Query extends QueryBase {
   }
 
   static dateFormatter(date) {
-    return date == undefined ? date : encodeURI(date.toISOString());
+    return date == undefined ? date : date.toISOString();
   }
 
   //private functions

@@ -184,7 +184,7 @@ const IhrApi = {
                   this._resolveAxiosPromise(
                     data.next,
                     method,
-                    query,
+                    "",
                     recursiveSuccess,
                     errorCallback
                   );
