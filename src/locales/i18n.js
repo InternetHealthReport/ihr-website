@@ -23,7 +23,7 @@ let vueI18n = new VueI18n({
   messages: loadLocaleMessages()
 });
 
-const INTERPOLATION_REGEXP = /^{([^}]+)}|(?<=[^\\]){([^}]+)}/g;
+const INTERPOLATION_REGEXP = /^{([^}]+)}|{([^}]+)}/g;
 
 Vue.mixin({
   methods: {
