@@ -21,16 +21,41 @@ import {
 } from "./query/IhrQuery";
 import { MonitoringUserQuery } from "./query/IhrUserQuery";
 
-const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/"; ///base api url
+// Const section
+
+/// Base url for api
+const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/";
+/// Default timeout before api call are considered failed
 const DEFAULT_TIMEOUT = 60000;
+/// Data of the first available data
 const PROJECT_START_DATE = new Date("2016-01-01T00:00:00");
+/// Default expire date of cookies
 const COOKIE_DURATION = 1 * 24 * 60 * 60 * 1000; //TODO synch with server
+
+// Internal function section
+
+/**
+ * Function to create/destroy cookie to avoid other dipendecies.
+ *
+ * this function create a cookie *name* with value *value*, it automatically
+ * set its duration to *COOKIE_DURATION*. If *value* is null delete the cookie.
+ * It overwrite the prexisting cokkie without warning.
+ *
+ * @param {String} name name of the cookie.
+ * @param value if is null delete the cookie *name*, otherwise is the value of the coockie *name*.
+ */
 function createCookie(name, value) {
   let date = new Date();
   date.setTime(date.getTime() + (value != null ? COOKIE_DURATION : -100));
   document.cookie = `${name}=${value}; expires=${date.toGMTString()}; path=/`;
 }
-// Read cookie
+/**
+ * Function to obtain the value of the cookie as string.
+ *
+ * if the coockie is not present it return null.
+ *
+ * @param {String} name name of the coockie.
+ */
 function readCookie(name) {
   let regexp = new RegExp(`(?:^${name}| ${name})=([^;]+)`);
   let res = document.cookie.match(regexp);
@@ -40,9 +65,24 @@ function readCookie(name) {
   return res[1];
 }
 
+// Actual plugin.
+
+/**
+ * ihr_api plugin.
+ */
 const IhrApi = {
-  install(Vue /*, options*/) {
+  install(Vue) {
     let ihr_api = new Vue({
+/**
+ * Internal data of the plugin.
+ *
+ * **user** will contain the part of the email before the '@'.
+ *
+ * **axios_base** will contain the axios object to make the query call. It change
+ * when the user login.
+ *
+ * **headers** contain request headers to feede axios constructor.
+ */
       data() {
         return {
           user: null,
@@ -51,14 +91,35 @@ const IhrApi = {
         };
       },
       created() {
+	//if user is alread logged verify the token
         !this._get_user() || this.userVerifyToken();
       },
       computed: {
+/**
+ * Use this to check if the user is autheticated
+ *
+ * it can be used into templates.
+ *
+ * @return {Boolean}
+ */
         authenticated() {
           return this.user !== null;
         }
       },
       methods: {
+/**
+ * @internal
+ * @brief save/delete user.
+ *
+ * used for delete using with a parameter setted to null, or
+ * to safe a user specifing both parameters.
+ *
+ * @parameter {String} email email of the user it is not stored but used
+ * to calculate a user name.
+ *
+ * @parameter {String} json token returned by API.
+ * @endinternal
+ */
         _save_user(email, token) {
           if (email === null || token === null) {
             this.user = null;
@@ -73,6 +134,13 @@ const IhrApi = {
           }
           this._update_base();
         },
+/**
+ * @internal
+ * @brief get user from cookie, set it and return true if the coockie exists or false otherwise.
+ *
+ * @return {Boolean} if the user exists true otherwise false.
+ * @endinternal
+ */
         _get_user() {
           this.user = readCookie("user");
           if (this.user == null) {
