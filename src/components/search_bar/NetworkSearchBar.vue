@@ -7,7 +7,7 @@
   >
     <template v-slot:default="scope">
       <slot :asn="scope.elem">
-        <q-btn @click="gotoASN(number)" flat class="IHR_asn-element">
+        <q-btn @click="gotoASN(scope.elem.number)" flat class="IHR_asn-element">
           <q-item-section side>{{scope.elem.number | ihr_NumberToAsOrIxp}}</q-item-section>
           <q-item-section class="IHR_asn-element-name">{{scope.elem.name}}</q-item-section>
         </q-btn>
@@ -37,7 +37,6 @@ export default {
   methods: {
     search(value) {
       this.networkQuery.mixedContentSearch(value);
-      this.retrievedValues = [];
       this.$ihr_api.network(
         this.networkQuery,
         result => {
