@@ -12,7 +12,7 @@
       {{details.date | ihrUtcString}}
     </h2>
     <div v-if="loading" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="4em" />
+      <q-spinner color="secondary" size="15em" />
     </div>
     <div v-if="details.tableVisible" class>
       <span class="IHR_table-close-button" @click="details.tableVisible=false">x</span>
@@ -150,7 +150,6 @@ export default {
         enableBgpPlay: false,
       },
       debouncedApiCall: debouncedApiCall,
-      loading: true,
       loadingHegemony: true,
       loadingHegemonyCone: true,
       hegemonyFilter: hegemonyFilter,
@@ -208,9 +207,12 @@ export default {
             results.results = res;
           }
 
-          this.details.tablesData[tableType].data = results.results;
           this.details.tableVisible = true;
-          this.details.tablesData[tableType].loading = false;
+          this.details.tablesData[tableType] = {
+            data: results.results,
+            loading: false,
+            filter: filter
+          };
         },
         error => {
           console.error(error); //TODO better error handling
@@ -251,8 +253,8 @@ export default {
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return;
 
-        let trace;
-        if (!(elem.asn in traces)) {
+        let trace = traces[elem.asn];
+        if (trace === undefined) {
           trace = {
             x: [],
             y: [],
@@ -263,13 +265,13 @@ export default {
           };
           traces[elem.asn] = trace;
           this.traces.push(trace);
-        } else {
-          trace = traces[elem.asn];
         }
 
         trace.y.push(elem.hege);
         trace.x.push(elem.timebin);
       });
+      this.noData |= Object.keys(traces).length == 0;
+      this.layout.datarevision = new Date().getTime();
     },
     fetchHegemonyCone(data) {
       console.log("fetchHegemonyCone");
@@ -282,9 +284,10 @@ export default {
         let a = new Date(trace[i-1].x);
         let b = new Date(trace[i].x);
         if(isNaN(a) || isNaN(b) || b-a < 0) {
-          console.log("error", a, b, b-a)
+          console.error("error", a, b, b-a)
         }
       }
+      this.noData |= trace.length == 0;
       this.layout.datarevision = new Date().getTime();
     }
   },

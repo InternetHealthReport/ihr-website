@@ -3,7 +3,7 @@
     <h1 v-if="chartTitle">{{chartTitle}}</h1>
     <div :ref="myId"></div>
     <div v-show="noData" class="IHR_no-data">
-      <div>{{noData}}</div>
+      <div>{{$t("noDataAvailable")}}</div>
     </div>
   </div>
 </template>

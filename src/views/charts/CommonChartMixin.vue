@@ -25,6 +25,7 @@ export default {
   },
   data() {
     return {
+      loading: true,
       noData: false,
       traces: undefined,
       filters: [],
@@ -55,17 +56,6 @@ export default {
     },
     fetch() {
       this.debouncedApiCall();
-    },
-    traces: {
-      handler(newValue, oldValue) {
-        if (newValue == [] || oldValue == undefined) return;
-        if (newValue.every(trace => trace.x.length == 0)) {
-          this.noData = this.$t("noDataAvailable");
-          return;
-        }
-        this.noData = false;
-      },
-      deep: true
     }
   }
 };

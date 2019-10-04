@@ -12,7 +12,7 @@
       {{details.delayData.dateTime | ihrUtcString}}
     </h2>
     <div v-if="loading" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="4em" />
+      <q-spinner color="secondary" size="15em" />
     </div>
     <div v-if="details.tableVisible">
       <span class="IHR_table-close-button" @click="details.tableVisible=false">x</span>
@@ -174,7 +174,6 @@ export default {
         tableVisible: false
       },
       debouncedApiCall: debouncedApiCall,
-      loading: true,
       loadingDelay: true,
       loadingForwarding: true,
       delayFilter: delayFilter,
@@ -269,6 +268,7 @@ export default {
         trace.y.push(resp.magnitude);
         trace.x.push(resp.timebin);
       });
+      this.noData |= trace.x.length == 0;
       this.layout.datarevision = new Date().getTime();
     },
     fetchDelay(data) {

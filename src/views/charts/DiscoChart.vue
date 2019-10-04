@@ -1,5 +1,5 @@
 <template>
-  <div class="IHR_disco-chart">
+  <div class="IHR_disco-chart IHR_chart">
     <reactive-chart
       :layout="layout"
       :traces="traces"
@@ -9,7 +9,7 @@
       :no-data="noData"
     />
     <div v-if="loading" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="4em" />
+      <q-spinner color="secondary" size="15em" />
     </div>
     <h2 v-if="details.tableVisible">
       {{$t("charts.disconnections.table.event")}}
@@ -130,7 +130,6 @@ export default {
         filter: null,
         loading: true
       },
-      loading: true,
       filters: [filter],
       traces: [
         {
@@ -245,26 +244,4 @@ export { push0 }
 </script>
 
 <style lang="stylus">
-.IHR_
-  &disco-chart
-    text-align center
-    position relative
-
-    & h1
-      font-size 25pt
-      margin-bottom 0px
-      font-weight 400
-      line-height 1
-    & h2
-      &:first-letter
-        text-transform capitalize
-      & strong
-        font-size 20pt
-      & span
-        font-size 20pt
-
-  &loading-spinner
-    position absolute
-    top 50%
-    left 49%
 </style>

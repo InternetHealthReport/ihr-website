@@ -84,7 +84,7 @@
 		},
 		"delayAndForwarding": {
 			"title": "delay and forwarding",
-			"yaxis": "Delay Change<br> Level",
+			"yaxis": "Delay Change Level",
 			"yaxis2": "Forwarding Anomaly<br> Level",
 			"tables": {
 				"delay": {
@@ -112,6 +112,9 @@
 				"disconnectionProbes": "disconnection events probes",
 				"yaxis": "Disconnection Level"
 			}
+		},
+		"networkDelay": {
+			"title": "network delay"
 		}
 	},
 	"sigIn": {
