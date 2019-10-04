@@ -45,6 +45,7 @@ To keep the number of different icons short, here a list of already used icons:
 * **twitter**: [*fab fa-twitter-square*](https://fontawesome.com/icons/twitter-square?style=brands)
 * **github**: [*fab fa-github-square*](https://fontawesome.com/icons/github-square?style=brands)
 * **double arrow**: [*fas fa-angle-double-right*](https://fontawesome.com/icons/angle-double-right?style=solid)
+* **email**: [*fas fa-envelope-square*](https://fontawesome.com/icons/envelope-square?style=solid)
 * **menu**: [*fas fa-bars*](https://fontawesome.com/icons/bars?style=solid)
 * **close**: [*fas fa-times*](https://fontawesome.com/icons/times?style=solid)
 * **email**: [*far fa-envelope*](https://fontawesome.com/icons/envelope?style=regular)
