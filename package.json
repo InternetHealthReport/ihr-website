@@ -21,6 +21,7 @@
     "plotly.js-dist": "^1.48.3",
     "postcss-plugins": "^1.13.1",
     "quasar": "^1.0.0",
+    "timeline-vuejs": "^1.0.9",
     "vue": "^2.6.10",
     "vue-animejs": "^2.1.1",
     "vue-fragment": "^1.5.1",

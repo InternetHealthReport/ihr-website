@@ -119,7 +119,7 @@
       </q-toolbar>
     </q-header>
     <q-page-container class="IHR_minimum-width">
-      <router-view :show-sidebar="sidebarOpened" @sidebar-action="sidebarOpened = $event" />
+      <router-view :show-sidebar="sidebarOpened" @sidebar-action="sidebarOpened = $event === true" />
       <div id="IHR_last-element">&nbsp;</div>
     </q-page-container>
     <q-footer

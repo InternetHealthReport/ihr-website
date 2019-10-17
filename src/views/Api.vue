@@ -1,28 +1,24 @@
 <template>
-  <div></div>
+  <div>
+    <network-delay-chart :start-time="interval.begin" :end-time="interval.end" :fetch="fetch"/>
+    <q-btn @click="fetch=true">fetch</q-btn>
+  </div>
 </template>
 <script>
-import ReactiveChart from "@/components/ReactiveChart";
+import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
+import NetworkEdgeSearchBar from "@/components/search_bar/NetworkEdgeSearchBar";
+import { ChartInterval } from "@/components/IntervalPicker"
 
 export default {
   components: {
-    ReactiveChart
-  },
-  data() {
+    NetworkDelayChart,
+    NetworkEdgeSearchBar
+  }
+  ,data() {
     return {
-      traces: [],
-      layout: {
-        hovermode: "closest",
-        margin: { t: 0, b: 40, l: 100, r: 0 },
-        height: 350,
-        showlegend: true,
-        legend: {
-          x: 0,
-          y: 1.2,
-          orientation: "h"
-        }
-      }
-    };
+      interval: ChartInterval.today(),
+      fetch: false
+    }
   }
 };
 </script>

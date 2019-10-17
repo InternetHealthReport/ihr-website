@@ -5,7 +5,6 @@ import GlobalReport from "@/views/GlobalReport";
 import API from "@/views/Api";
 import Contacts from "@/views/Contacts";
 import Countries from "@/views/Countries";
-import Documentation from "@/views/Documentation";
 import Networks from "@/views/Networks";
 import AsAndIxp from "@/views/AsAndIxp";
 import SignUp from "@/views/user/SignUp";
@@ -76,6 +75,11 @@ export default new Router({
       name: "as_and_ixp",
       path: `${routerBase}as_and_ixp/:asn`,
       component: AsAndIxp
+    },
+    {
+      name: "api",
+      path: `${routerBase}api/`,
+      component: API
     },
     {
       name: "sign_up",

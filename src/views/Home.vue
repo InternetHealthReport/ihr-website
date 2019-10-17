@@ -41,10 +41,16 @@
         </div>
       </div>
     </div>
+    <q-drawer :value="showSidebar" side="left" show-if-above bordered>
+      <q-scroll-area class="fit">
+        <Timeline id="ihr_alerts" sourceType="profile" :options="{ tweetLimit: '5' }" />
+      </q-scroll-area>
+    </q-drawer>
   </div>
 </template>
 
 <script>
+import { Timeline } from "vue-tweet-embed";
 const GRAPHS_TYPES = [
   {
     name: "asInterdependence",
@@ -66,7 +72,7 @@ const GRAPHS_TYPES = [
 const PLACEHOLDER_VALUES = {
   asPaper:
     "<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
-  close: "</a>",
+  close: "</a>"
   /*
   ripe: "<a href='https://atlas.ripe.net/' target='_blank'>RIPE Atlas</a>",
   bgpstream:
@@ -79,6 +85,15 @@ const PLACEHOLDER_VALUES = {
 };
 
 export default {
+  components: {
+    Timeline
+  },
+  props: {
+    showSidebar: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       graphTypes: GRAPHS_TYPES,
@@ -119,7 +134,7 @@ export default {
 
           & > *
             margin-left auto
-            width 87%
+            width 88%
 
         &:last-child
           text-align right
