@@ -1,9 +1,4 @@
-const removeConsolePlugin = [];
-if (process.env.NODE_ENV === "production") {
-  removeConsolePlugin.push("transform-remove-console");
-}
-
-module.exports = {
+let config = {
   presets: ["@vue/app"],
   plugins: [
     [
@@ -14,7 +9,12 @@ module.exports = {
           preventFullImport: true
         }
       }
-    ],
-    removeConsolePlugin
+    ]
   ]
 };
+
+if (process.env.NODE_ENV === "production") {
+  config.plugins.push(["transform-remove-console"]);
+}
+
+module.exports = config;
