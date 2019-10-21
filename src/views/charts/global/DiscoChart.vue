@@ -4,7 +4,7 @@ import NetworkDisco, { push0 } from "../DiscoChart";
 import { DiscoEventQuery } from "@/plugins/query/IhrQuery";
 import DiscoChartVue from "../DiscoChart.vue";
 
-const DEFAULT_DISCO_AVG_LEVEL = 12;
+const DEFAULT_DISCO_AVG_LEVEL = 8;
 //under this gap 2 consecutive event are considered like 1 that change value
 
 //utility functions

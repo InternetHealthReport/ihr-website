@@ -28,7 +28,7 @@ var DISCO_LAYOUT = {
 var DELAY_CHART_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
-    title: i18n.t("charts.delays.yaxis"),
+    title: i18n.t("charts.linkDelays.yaxis"),
     autorange: true,
     automargin: true
   }

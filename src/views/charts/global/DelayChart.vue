@@ -17,7 +17,7 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="delay" :label="$t('charts.delays.table.title')" />
+        <q-tab name="delay" :label="$t('charts.linkDelays.table.title')" />
         <q-tab name="api" label="API" />
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>

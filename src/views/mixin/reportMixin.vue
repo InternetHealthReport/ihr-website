@@ -23,7 +23,7 @@ export default {
       if (!(e instanceof RangeError)) {
         throw e;
       }
-      interval = ChartInterval.lastWeek(); // fallback to lastweek
+      interval = ChartInterval.lastDays(3); // fallback to last few days
     }
     return {
       interval: interval,

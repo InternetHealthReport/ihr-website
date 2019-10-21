@@ -3,7 +3,7 @@
     <h1 class="text-center">{{title}}</h1>
     <q-expansion-item
       expand-separator
-      :label="$t('charts.delays.title')"
+      :label="$t('charts.linkDelays.title')"
       header-class="IHR_charts-title"
       default-opened
     >
@@ -149,7 +149,7 @@ const LEVEL_COLOR = ["warning", "positive", "negative"];
 
 //TODO use presets with some sense
 const PRAMETERS_PRESETS = {
-  DISCO_AVG_LEVEL: [10, DEFAULT_DISCO_AVG_LEVEL, 14],
+  DISCO_AVG_LEVEL: [7, DEFAULT_DISCO_AVG_LEVEL, 10],
   MIN_NPROBES: [5, DEFAULT_MIN_NPROBES, 12],
   MIN_DEVIATION: [100, DEFAULT_MIN_DEVIATION, 120],
   MIN_DIFFMEDIAN: [10, DEFAULT_MIN_DIFFMEDIAN, 20],

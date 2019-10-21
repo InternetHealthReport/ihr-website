@@ -75,8 +75,8 @@
 				"dependent": "dependent"
 			}
 		},
-		"delays": {
-			"title": "delays",
+		"linkDelays": {
+			"title": "link delays",
 			"yaxis": "Delay Change Level",
 			"table": {
 				"title": "delay anomalies"
@@ -103,7 +103,7 @@
 			}
 		},
 		"disconnections": {
-			"title": "disconnection events",
+			"title": "network disconnections",
 			"table": {
 				"event": "event",
 				"startTime": "event start",

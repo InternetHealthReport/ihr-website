@@ -3,13 +3,11 @@
   <div id="IHR_home">
     <router-link :to="{name: 'global_report'}" class="IHR_delikify">
       <div id="IHR_global-report" class="row">
-        <div class="col-4">
+        <div class="col-6">
           <div>Internet Health Report</div>
-          <div>{{ $t("globalReport.name") }}</div>
-          <div id="IHR_global-report-button">{{ $t("explore") }}</div>
+          <div id="IHR_global-report-button">{{ $t("globalReport.name") }}</div>
         </div>
-        <div class="col-8">
-          <img src="@/assets/imgs/global-banner.png" />
+        <div class="col-6">
         </div>
       </div>
     </router-link>
@@ -20,32 +18,45 @@
         'bgpstream': '<a href=\'https://bgpstream.caida.org/\' target=\'_blank\'>BGPstream</a>'
         })"
     ></div>
-    <div id="IHR_graphs-types" class="row wrap justify-around">
-      <div
-        class="col-xs-6 col-xl-4 text-center column"
-        v-for="graphT in graphTypes"
-        :key="graphT.name"
-      >
-        <h2 class="col-auto">{{$t(`${graphT.name}.title`)}}</h2>
-        <div class="col-auto">
-          <q-avatar color="primary" text-color="white" size="130px" :icon="graphT.icon"></q-avatar>
-        </div>
+
+
+    <div class="IHR_section">
+        <h2> Analysis modules </h2>
+        <div id="IHR_graphs-types" class="row wrap justify-around">
         <div
-          class="IHR_description col-auto"
-          v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues)"
-        ></div>
-        <div class="IHR_description IHR_description-link col-grow content-end">
-          <router-link
-            :to="{name :'documentation', query: graphT.docsQuery}"
-          >{{$t(`${graphT.name}.title`)}} {{$t("documentation")}}</router-link>
+            class="col-xs-6 col-xl-4 text-center column"
+            v-for="graphT in graphTypes"
+            :key="graphT.name"
+        >
+            <h2 class="col-auto">{{$t(`${graphT.name}.title`)}}</h2>
+            <div class="col-auto">
+            <q-avatar color="primary" text-color="white" size="100px" :icon="graphT.icon"></q-avatar>
+            </div>
+            <div
+            class="IHR_description col-auto"
+            v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues)"
+            ></div>
+            <div class="IHR_description IHR_description-link col-grow content-end">
+            <router-link
+                :to="{name :'documentation', query: graphT.docsQuery}"
+            >{{$t(`${graphT.name}.title`)}} {{$t("documentation")}}</router-link>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
-    <q-drawer :value="showSidebar" side="left" show-if-above bordered>
-      <q-scroll-area class="fit">
-        <Timeline id="ihr_alerts" sourceType="profile" :options="{ tweetLimit: '5' }" />
-      </q-scroll-area>
-    </q-drawer>
+
+    <div class="IHR_section">
+        <h2>IHR tweets</h2>
+        <div id="IHR_tweets-types">
+          <Timeline id="ihr_alerts" sourceType="profile" :options="{ chrome: 'noheader' , tweetLimit: '3' }">
+            <div class="spinner"></div>
+          </Timeline>
+        </div>
+    </div>
+    <!--<q-drawer :value="hideSidebar" side="left" show-if-above bordered>-->
+      <!--<q-scroll-area class="fit">-->
+      <!--</q-scroll-area>-->
+    <!--</q-drawer>-->
   </div>
 </template>
 
@@ -111,6 +122,10 @@ export default {
       width 100%
       height 450px
       background-color black
+      background-image url('~@/assets/imgs/global-banner.png')
+      background-repeat no-repeat
+      background-position right top
+      background-size contain
 
       &-button
         margin-top 40px
@@ -118,10 +133,12 @@ export default {
         text-align center
         font-weight 500
         transition all 0.6s
+        width 300pt
 
         &:hover
           background-color white
           color black
+          text-shadow 0 0 3px #FFFFFF
 
       & > div
         height 100%
@@ -130,22 +147,32 @@ export default {
           color white
           font-size 50px
           text-align left
+          padding-top 60pt
+          padding-left 60pt
           display inline-block
+          text-shadow 0 0 8px #000000;
 
-          & > *
-            margin-left auto
-            width 88%
-
-        &:last-child
-          text-align right
-          overflow hidden
-
-          & > img
-            height 100%
 
     ~/graphs-types
-      margin 60pt auto 40px auto
-      width 88%
+      width 100%
+
+      & > div
+        background-color white
+        padding 1.6em
+        border gray solid 1px
+
+        > h2
+          font-weight 400
+          margin-bottom 4pt
+          &:first-letter
+            text-transform uppercase
+
+
+    ~/tweets-types
+      margin-left auto
+      margin-right auto
+      width 70% 
+      text-align center
 
       & > div
         background-color white
@@ -177,4 +204,11 @@ export default {
         text-align center
         &:first-letter
           text-transform uppercase
+
+  &section
+    margin 60pt auto 40px auto
+    width 85%
+    font-size 18pt
+    text-align center
+
 </style>
