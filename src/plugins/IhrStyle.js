@@ -1,7 +1,7 @@
 const BASE_CLASS = "IHR_Style_"; //
 const DATETIME_FORMAT = "YYYY-MM-DDTHH:mm.SSS";
 const EMAIL_REGEXP = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const RECAPTCHA_KEY = "6LfXwLEUAAAAALwy5VlEX_56rbq6ensWnhT_rLhp"; //TODO change it in production
+const RECAPTCHA_KEY = "6Lf6v7EUAAAAAG6u4YYnHV8xkN0hLF41t2vqVDf5"; 
 
 function padWith0(strNumber) {
   strNumber = `00${strNumber}`;
