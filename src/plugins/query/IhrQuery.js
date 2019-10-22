@@ -641,7 +641,7 @@ class CommonHegemonyQuery extends TimeQuery {
     return this.timeBin(time, comparator);
   }
 
-  asFamily(family) {
+  addressFamily(family) {
     return this._set("af", family);
   }
 

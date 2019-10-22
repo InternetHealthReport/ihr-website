@@ -10,7 +10,7 @@
     <template v-slot:body="props">
       <q-tr 
         :props="props" 
-        @click.native="routeToIxp(props.colsMap.asNumber, props.row)" 
+        @click.native="routeToAsn(props.colsMap.asNumber, props.row)" 
         class="IHR_table-row">
         <q-td
           v-for="col in columns"
@@ -116,13 +116,17 @@ export default {
     };
   },
   methods: {
-    routeToIxp(asn, row) {
+    OLDrouteToAsn(asn, row) {
       asn = asn.format(asn.field(row));
       let path = this.$route.path;
       let link = "#";
       link += path.substring(0, path.lastIndexOf("/") + 1);
       link += this.$options.filters.ihr_NumberToAsOrIxp(asn);
       window.open(link);
+    },
+    routeToAsn(asn, row) {
+      asn = asn.format(asn.field(row));
+      this.$router.push({ name: 'as_and_ixp', params: {asn: this.$options.filters.ihr_NumberToAsOrIxp(asn)} })
     },
     getCalssByHegemony(props) {
       let hegemony = this.getCellValue(props, 'hegemony');

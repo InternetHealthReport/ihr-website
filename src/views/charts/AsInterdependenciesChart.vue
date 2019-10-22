@@ -27,7 +27,7 @@
       >
         <q-tab name="dependency" :label="$t('charts.asInterdependencies.table.dependencyTitle')" />
         <q-tab name="dependent" :label="$t('charts.asInterdependencies.table.dependentTitle')" />
-        <q-tab name="bgpPlay" label="BGP play" />
+        <q-tab name="bgpPlay" label="AS Graph" />
         <q-tab name="api" label="API" />
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>
@@ -49,14 +49,6 @@
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table">
           <table>
-            <tr>
-              <td><label for="hagemony">Hagemony</label></td>
-              <td><a :href="hegemonyUrl" target="_blank" id="hagemony">{{hegemonyUrl}}</a></td>
-            </tr>
-            <tr>
-              <td><label for="hagemonyCone">Hagemony cone</label></td>
-              <td><a :href="hegemonyConeUrl" target="_blank" id="hagemonyCone">{{hegemonyConeUrl}}</a></td>
-            </tr>
             <tr>
               <td><label for="tableUrl">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</label></td>
               <td><a :href="dependencyUrl" target="_blank" id="tableUrl">{{dependencyUrl}}</a></td>
@@ -105,7 +97,7 @@ export default {
       type: Number,
       required: true
     },
-    asFamily: {
+    addressFamily: {
       type: Number,
       default: AS_FAMILY.v4
     }
@@ -113,13 +105,13 @@ export default {
   data() {
     let hegemonyFilter = new HegemonyQuery()
       .originAs(this.asNumber)
-      .asFamily(this.asFamily)
+      .addressFamily(this.addressFamily)
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 
     let hegemonyConeFilter = new HegemonyConeQuery()
       .asNumber(this.asNumber)
-      .asFamily(this.asFamily)
+      .addressFamily(this.addressFamily)
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 
@@ -316,9 +308,9 @@ export default {
     },
   },
   watch: {
-    asFamily(newValue) {
+    addressFamily(newValue) {
       this.filters.forEach((filter) => {
-        filter.asFamily(newValue);
+        filter.addressFamily(newValue);
       });
       this.debouncedApiCall();
     },

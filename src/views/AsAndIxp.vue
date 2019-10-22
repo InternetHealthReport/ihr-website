@@ -1,11 +1,13 @@
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <h1 class="text-center">{{headerString}}</h1>
-    <h2 class="text-center">{{subHeader}}</h2>
+    <div>
+        <h1 class="text-center">{{headerString}}</h1>
+        <h2 class="text-center">{{subHeader}}</h2>
+    </div>
     <q-list v-if="showGraphs">
       <q-expansion-item
         expand-separator
-        :label="$t('charts.asInterdependencies.title') + ' ' + asFamilyText"
+        :label="$t('charts.asInterdependencies.title') + ' ' + addressFamilyText"
         header-class="IHR_charts-title"
         default-opened
       >
@@ -53,10 +55,10 @@
             <interval-picker v-model="interval" class="col-9"/>
             <div class="col-3 IHR_family-filter">
               <div>
-                <q-toggle v-model="asFamily" name="asFamily"/>
+                <q-toggle v-model="addressFamily" name="addressFamily"/>
               </div>
               <div class="text-center">
-                <label for="asFamily">{{asFamilyText}}</label>
+                <label for="addressFamily">{{addressFamilyText}}</label>
               </div>
             </div>
           </div>
@@ -118,9 +120,9 @@ export default {
   },
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn);
-    let asFamily = this.$route.query.af;
+    let addressFamily = this.$route.query.af;
     return {
-      asFamily: asFamily == 4 || asFamily == undefined,
+      addressFamily: addressFamily == 4 || addressFamily == undefined,
       loadingStatus: LOADING_STATUS.LOADING,
       asNumber: asNumber,
       asName: null,
@@ -145,27 +147,31 @@ export default {
         date: this.$options.filters.ihrUtcString(this.interval.end, false)
         }
       });
+    },
+    netName() {
+        let filter = new NetworkQuery().asNumber(this.asNumber);
+        this.$ihr_api.network(filter, results => {
+        if (results.count != 1) {
+            this.loadingStatus = LOADING_STATUS.ERROR;
+            return;
+        }
+
+        this.asName = results.results[0].name;
+        this.loadingStatus = LOADING_STATUS.LOADED;
+        this.fetch = true;
+    });
+
     }
   },
   mounted() {
-    let filter = new NetworkQuery().asNumber(this.asNumber);
-    this.$ihr_api.network(filter, results => {
-      if (results.count != 1) {
-        this.loadingStatus = LOADING_STATUS.ERROR;
-        return;
-      }
-
-      this.asName = results.results[0].name;
-      this.loadingStatus = LOADING_STATUS.LOADED;
-      this.fetch = true;
-    });
+    this.netName()
   },
   computed: {
     family() {
-      return this.asFamily? AS_FAMILY.v4 : AS_FAMILY.v6;
+      return this.addressFamily? AS_FAMILY.v4 : AS_FAMILY.v6;
     },
-    asFamilyText(){
-      return this.asFamily? "IPv4" : "IPv6";
+    addressFamilyText(){
+      return this.addressFamily? "IPv4" : "IPv6";
     },
     showGraphs() {
       return this.loadingStatus == LOADING_STATUS.LOADED;
@@ -202,8 +208,16 @@ export default {
     }
   },
   watch: {
-    asFamily() {
+    addressFamily() {
       this.pushRoute();
+    },
+    '$route.params.asn': {
+        handler: function(asn){
+            this.loadingStatus = LOADING_STATUS.LOADING,
+            this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn);
+            this.netName()
+        },
+        deep: true,
     }
   }
 };

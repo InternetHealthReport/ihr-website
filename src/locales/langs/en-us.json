@@ -68,7 +68,7 @@
 			"yaxis": "dependencies",
 			"yaxis2": "Number of ASes<br> dependent",
 			"table": {
-				"dependencyTitle": "networks dependency",
+				"dependencyTitle": "network dependency",
 				"dependentTitle": "dependent networks",
 				"increment": "increment",
 				"dependencies": "dependencies",
