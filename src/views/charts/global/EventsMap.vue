@@ -15,7 +15,7 @@ import ReactiveChart from "@/components/ReactiveChart";
 import { DiscoProbesQuery } from "@/plugins/query/IhrQuery";
 import { COMMON_FEATURE } from "../layouts";
 
-const MAX_ID_FOR_REQUEST = 10;
+const MAX_ID_FOR_REQUEST = 50;
 
 export default {
   components: { ReactiveChart },
@@ -52,7 +52,7 @@ export default {
     relayout() {
       this.$refs[this.myId].relayout();
     },
-    muliQueryProbesAPI() {
+    multiQueryProbesAPI() {
       if (this.events.length == 0) return false;
       let events = this.events;
       this.events = [];
@@ -106,12 +106,12 @@ export default {
         return event.id;
       });
       if (this.pendingCalls == 0) {
-        this.muliQueryProbesAPI();
+        this.multiQueryProbesAPI();
       }
     },
     pendingCalls(newValue, oldValue) {
       if (newValue === 0 && oldValue != 0) {
-        this.muliQueryProbesAPI();
+        this.multiQueryProbesAPI();
       }
     }
   },
@@ -125,7 +125,7 @@ export default {
         latitudes.push(prob.lat);
         longitudes.push(prob.lon);
         let size = 0;
-        let probeText = `probe id: ${prob.id}`;
+        let probeText = `probe #${prob.id}`;
         for (let i = 0; i < prob.startTime.length; ++i) {
           size += prob.level[i];
           probeText += ` [${prob.startTime[i]}, ${prob.endTime[i]}] level ${prob.level[i]}`;

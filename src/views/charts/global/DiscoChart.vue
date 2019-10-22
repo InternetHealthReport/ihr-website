@@ -43,9 +43,11 @@ export default {
       let geoProbes = [];
       data.forEach(event => {
         let streamname = event.streamname;
-        if(event.streamtype == "geo") {
+        if(event.streamtype == "admin1" ||
+            event.streamtype == "admin2" ||
+            event.streamtype == "country"
+        ) {
           geoProbes.push(event);
-          return;
         }
         let trace = streamTraces[streamname];
 
