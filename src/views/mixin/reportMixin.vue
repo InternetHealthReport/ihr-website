@@ -64,12 +64,13 @@ export default {
     margin-bottom 80px
 
   &charts-title
-    text-align left
     text-transform capitalize
-    font-size 22pt
-    margin 10pt
-    margin-top 15pt
+    font-size 18pt
     
+  &charts-body
+    margin-right 10pt
+    margin-left 5pt
+    margin-top 5pt
 
   &char-container
     width 90%

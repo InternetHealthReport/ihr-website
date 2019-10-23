@@ -6,48 +6,69 @@
     </div>
     <q-list v-if="showGraphs">
       <q-expansion-item
-        expand-separator
-        :label="$t('charts.asInterdependencies.title') + ' ' + addressFamilyText"
+        popup
+        :label="$t('charts.asInterdependencies.title')"
+        caption="BGP data"
         header-class="IHR_charts-title"
+        icon="fas fa-project-diagram"
         default-opened
       >
-        <as-interdependencies-chart
-          :start-time="startTime"
-          :end-time="endTime"
-          :as-number="asNumber"
-          :as-family="family"
-          :fetch="fetch"
-          ref="asInterdependenciesChart"
-        />
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+            <q-separator />
+            <as-interdependencies-chart
+            :start-time="startTime"
+            :end-time="endTime"
+            :as-number="asNumber"
+            :as-family="family"
+            :fetch="fetch"
+            ref="asInterdependenciesChart"
+            />
+          </q-card-section>
+       </q-card>
       </q-expansion-item>
       <q-expansion-item
-        expand-separator
+        popup
         :label="$t('charts.delayAndForwarding.title')"
+        caption="Traceroute data"
         header-class="IHR_charts-title"
+        icon="fas fa-shipping-fast"
         default-opened
       >
-        <delay-and-forwarding-chart
-          :start-time="startTime"
-          :end-time="endTime"
-          :as-number="asNumber"
-          :fetch="fetch"
-          ref="delayAndForwardingChart"
-          @prefix-details="showDetails($event)"
-        />
+        <q-separator />
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+            <delay-and-forwarding-chart
+            :start-time="startTime"
+            :end-time="endTime"
+            :as-number="asNumber"
+            :fetch="fetch"
+            ref="delayAndForwardingChart"
+            @prefix-details="showDetails($event)"
+            />
+          </q-card-section>
+        </q-card>
       </q-expansion-item>
       <q-expansion-item
-        expand-separator
+        popup
         :label="$t('charts.disconnections.title')"
+        caption="RIPE Atlas log"
         header-class="IHR_charts-title"
+        icon="fas fa-plug"
         default-opened
       >
-        <disco-chart
-          :start-time="startTime"
-          :end-time="endTime"
-          :stream-name="asNumber"
-          :fetch="fetch"
-          ref="discoChart"
-        />
+        <q-separator />
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+            <disco-chart
+            :start-time="startTime"
+            :end-time="endTime"
+            :stream-name="asNumber"
+            :fetch="fetch"
+            ref="discoChart"
+            />
+          </q-card-section>
+        </q-card>
       </q-expansion-item>
       <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
         <div class="fit column">

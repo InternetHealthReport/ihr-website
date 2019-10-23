@@ -63,10 +63,10 @@
 	},
 	"charts":{
 		"asInterdependencies": {
-			"title": "AS interdependencies",
+			"title": "AS dependency",
 			"defaultTrace": "Number of dependents",
 			"yaxis": "dependencies",
-			"yaxis2": "Number of ASes<br> dependent",
+			"yaxis2": "Number of ASes<br> dependent on",
 			"table": {
 				"dependencyTitle": "network dependency",
 				"dependentTitle": "dependent networks",
