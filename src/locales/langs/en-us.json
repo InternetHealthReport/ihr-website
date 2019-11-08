@@ -119,13 +119,13 @@
 	},
 	"sigIn": {
 		"title": "Join to personalize your IHR",
-		"thankYou" : "Thank you for your patience",
+		"thankYou" : "Thank you for signing up!",
 		"mailWillBeSent": "An email will be sent to your address to confirm your account.",
 		"missingReCaptcha": "You need to click on \"i'm not a robot\" button.",
 		"passwordTooWeak": "Your password is too weak. Use at least 8 characters.",
 		"strangeEmail": "Your email is usual. If you know what you're doing then submit again.",
-		"emailSentTo":"The email was sent to",
-		"pleaseFollowTheLink" : "please follow the link in it to activate you account"
+		"emailSentTo":"An email was sent to",
+		"pleaseFollowTheLink" : "please follow instructions in the email to activate you account"
 	},
 	"accountActivation": {
 		"title": "account validation page",
@@ -138,12 +138,12 @@
 		"wrongCredential": "wrong credential, try again"
 	},
 	"resetPassword": {
-		"title": "fill the form for recover your password",
+		"title": "Forgot your password?",
 		"fillToChange": "fill the form to change your password",
 		"recoverPassword": "recover password",
-		"emailSent": "an email was sent to you",
-		"instructionPart1": "follow the instruction in the email sen to",
-		"instructionPart2": "to reset your password",
+		"emailSent": "an email was sent to",
+		"instructionPart1": "",
+		"instructionPart2": " follow the instructions in the email to reset your password",
 		"resetPassword": "reset password",
 		"error403": "this user doesn't exist",
 		"errorInvalidEmail": "Invalid email, please check it!",
@@ -159,8 +159,8 @@
 		"confirmYourEmail": "you need to confirm your email (following the instruction we sent to your new email) before we apply that change",
 		"changesNotApplied": "Something went wrong, no changes has been made",
 		"goAway": "You must be logged in to access this page. login or visit other pages, if you are new sign up!",
-		"personaInfo": "personal information",
-		"settings": "settings",
+		"personaInfo": "Personal information",
+		"settings": "Settings",
 		"change": "change",
 		"confirm": "confirm",
 		"removeSelected": "remove selected",
