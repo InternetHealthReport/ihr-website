@@ -31,6 +31,7 @@
       </slot>
       </q-item>
     </template>
+    <span slot="loading"></span>
   </q-select>
 </template>
 
@@ -49,7 +50,7 @@ export default {
     },
     value: {
       type: Array,
-      required: true
+      required: true,
     },
     placeholder: {
       type: String,
@@ -65,6 +66,7 @@ export default {
   mounted() {
     this.debouncedSearch = debounce(
       (value) => {
+        this.$emit("input", []);
         this.$emit("search", value);
       },
       DEFAULT_DEBOUNCE,
@@ -75,9 +77,9 @@ export default {
     filter (value, update) {
       if(value == null)
         return;
-      if(value.length > MIN_CHARACTERS) {
+      if(value.length >= MIN_CHARACTERS) {
         update(() => {
-          this.$emit("input", []);
+          this.value = null;
           this.debouncedSearch(value);
         });
       }
@@ -85,7 +87,7 @@ export default {
   },
   computed: {
     loading() {
-      return this.value.length === 0;
+      return this.value === null;
     },
     options() {
       return this.value === null ? []: this.value;
