@@ -106,15 +106,14 @@
                   </q-item>
                   <q-item>
                     <q-item-section class="row no-wrap" id="IHR_forgotten-password">
-                      {{$t('header.ForgottenPassword')}}
-                      <router-link :to="{name : 'reset_password'}">{{$t('header.here')}}</router-link>
+                      <router-link :to="{name : 'reset_password'}">{{$t('header.ForgottenPassword')}}</router-link>
                     </q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
             </q-btn>
           </div>
-          <locale-selector id="IHR_local-selector" />
+          <!--<locale-selector id="IHR_local-selector" />-->
         </div>
       </q-toolbar>
     </q-header>

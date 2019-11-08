@@ -16,7 +16,7 @@
             <q-spinner color="secondary" size="2em" />
           </div>
           <div class="text-center" v-else>
-             0 {{$t("searchBar.resultsFound")}}...
+             {{$t("searchBar.noResultFound")}}
           </div>
         </q-item-section>
       </q-item>
@@ -111,4 +111,5 @@ export { MAX_RESULTS };
     & > *
       margin-right 0px
       padding-right 0px
+
 </style>

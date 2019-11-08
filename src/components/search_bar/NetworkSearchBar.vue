@@ -63,7 +63,7 @@ export default {
   },
   computed: {
     placeholder() {
-      return `ASN, IXP ${this.$t("searchBar.placeholder")}...`;
+      return `ASN or IXP ${this.$t("searchBar.placeholder")}...`;
     }
   }
 };
