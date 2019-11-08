@@ -70,7 +70,7 @@ export default {
   &charts-body
     margin-right 10pt
     margin-left 5pt
-    margin-top 5pt
+    margin-top 10pt
 
   &char-container
     width 90%
