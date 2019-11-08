@@ -129,7 +129,7 @@
     >
       <span class="col-2 IHR_copyright">
         <div>
-          <strong>Internet Healt Report 2019 &#9400;</strong>
+          <strong>Internet Health Report 2019 &#9400;</strong>
         </div>
         <div>
           <router-link :to="{name : 'home'}">
