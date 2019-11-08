@@ -12,10 +12,10 @@
 		"contacts": "contacts",
 		"documentation": "documentation",
 		"signUp": "sign up",
-		"signIn": "sign in",
-		"signInTitle": "fill and press",
+		"signIn": "log in",
+		"signInTitle": "log in",
 		"here": "here",
-		"ForgottenPassword": "do you forget your password? Please click"
+		"ForgottenPassword": "forgot your password?"
 	},
 	"footer": {
 		"reportPages": {
@@ -37,8 +37,8 @@
 		}
 	},
 	"searchBar": {
-		"placeholder": " or name",
-		"resultsFound": "results found"
+		"placeholder": "name",
+		"noResultFound": "no result found"
 	},
 	"globalReport": {
 		"title": {

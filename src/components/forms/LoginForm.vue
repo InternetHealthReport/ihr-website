@@ -10,9 +10,6 @@
           @input="$emit('input', false)"
           ref="email"
         >
-          <template v-slot:prepend>
-            <q-icon name="far fa-envelope" />
-          </template>
         </q-input>
       </q-item-section>
     </q-item>
@@ -21,7 +18,6 @@
         <q-input
           v-model="password"
           label="password"
-          filled
           :type="isPwd ? 'password' : 'text'"
           :rules="[val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword'), externalError]"
           ref="password"
