@@ -21,7 +21,7 @@
 
 
     <div class="IHR_section">
-        <h2> Analysis modules </h2>
+        <h2> {{$t("analysisModules.title")}}</h2>
         <div id="IHR_graphs-types" class="row wrap justify-around">
         <div
             class="col-xs-4 col-xl-4 text-center column"
@@ -46,11 +46,30 @@
     </div>
 
     <div class="IHR_section">
-        <h2>IHR tweets</h2>
+        <h2> {{$t("ihrTweets.title")}}</h2>
         <div id="IHR_tweets-types">
           <Timeline id="ihr_alerts" sourceType="profile" :options="{ chrome: 'noheader' , tweetLimit: '3' }">
             <div class="spinner"></div>
           </Timeline>
+        </div>
+    </div>
+
+    <div class="IHR_section">
+        <h2>
+            <q-icon name="fa fa-heart"></q-icon>
+            {{$t("ack.title")}}</h2>
+
+        <div class="row wrap justify-around">
+            <div
+                class="col-xs-3 col-xl-3 column"
+                v-for="org in $t('ack.organizations')"
+                :key="org.name"
+            >
+            <div class="IHR_ack-logo" >
+                <span></span>
+                <img :src="org.logo"  :alt="org.name" >
+            </div>
+            </div>
         </div>
     </div>
     <!--<q-drawer :value="hideSidebar" side="left" show-if-above bordered>-->
@@ -64,17 +83,17 @@
 import { Timeline } from "vue-tweet-embed";
 const GRAPHS_TYPES = [
   {
-    name: "asInterdependence",
+    name: "analysisModules.asInterdependence",
     icon: "fas fa-project-diagram",
     docsQuery: {}
   },
   {
-    name: "delayAndForwarding",
+    name: "analysisModules.delayAndForwarding",
     icon: "fas fa-shipping-fast",
     docsQuery: {}
   },
   {
-    name: "disco",
+    name: "analysisModules.disco",
     icon: "fas fa-plug",
     docsQuery: {}
   }
@@ -185,6 +204,7 @@ export default {
           &:first-letter
             text-transform uppercase
 
+
 .IHR_
   &description
     font-size 18pt
@@ -210,5 +230,26 @@ export default {
     width 85%
     font-size 18pt
     text-align center
+
+
+  ~/ack-logo
+      margin-left auto
+      margin-right auto
+      text-align center
+      height 250px
+      width 300px
+
+      & > span
+        display inline-block
+        vertical-align middle
+        height 100%
+
+      & > img
+        vertical-align middle
+        max-height 100px
+        max-width 300px
+        width auto
+        height auto
+
 
 </style>

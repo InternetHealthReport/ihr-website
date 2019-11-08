@@ -17,16 +17,18 @@
         :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]"
       >
         <template v-slot:prepend>
-          <q-icon name="far fa-envelope" />
+          <q-icon name="fa fa-envelope" />
         </template>
       </q-input>
       <q-input
         v-model="password"
         label="password"
-        filled
         :type="isPwd ? 'password' : 'text'"
         :rules="[val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')]"
       >
+        <template v-slot:prepend>
+          <q-icon name="fa fa-key" />
+        </template>
         <template v-slot:append>
           <q-icon
             :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'"

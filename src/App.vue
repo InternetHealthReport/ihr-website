@@ -128,7 +128,7 @@
     >
       <span class="col-2 IHR_copyright">
         <div>
-          <strong>Internet Health Report 2019 &#9400;</strong>
+          <strong>Internet Health Report</strong>
         </div>
         <div>
           <router-link :to="{name : 'home'}">

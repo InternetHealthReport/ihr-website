@@ -118,13 +118,13 @@
 		}
 	},
 	"sigIn": {
-		"title": "join to personalize your IHR",
-		"thankYou" : "thank you for your patience",
-		"mailWillBeSent": "an email will be sent to your address to confirm your account.",
-		"missingReCaptcha": "you need to click on \"i'm not a robot\" button.",
-		"passwordTooWeak": "the password of your choice is too weak. Use at least 8 characters.",
-		"strangeEmail": "your email it's a little bit strange. If you know what you're doing it submit again.",
-		"emailSentTo":"the email was sent to",
+		"title": "Join to personalize your IHR",
+		"thankYou" : "Thank you for your patience",
+		"mailWillBeSent": "An email will be sent to your address to confirm your account.",
+		"missingReCaptcha": "You need to click on \"i'm not a robot\" button.",
+		"passwordTooWeak": "Your password is too weak. Use at least 8 characters.",
+		"strangeEmail": "Your email is usual. If you know what you're doing then submit again.",
+		"emailSentTo":"The email was sent to",
 		"pleaseFollowTheLink" : "please follow the link in it to activate you account"
 	},
 	"accountActivation": {

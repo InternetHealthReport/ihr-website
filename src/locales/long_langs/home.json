@@ -7,26 +7,58 @@
         "the Global report helps to catch a glimpse of status of the whole network using charts."
       ]
     },
-    "asInterdependence": {
-      "title":  "AS interdependence",
-      "description": [
-        "Shows connectivity between networks (a.k.a AS) using {asPaper}AS hegemony{close} metric."
-      ]
+    "analysisModules": {
+        "title": "Analysis modules",
+        "asInterdependence": {
+        "title":  "AS interdependence",
+        "description": [
+            "Shows connectivity between networks (a.k.a AS) using {asPaper}AS hegemony{close} metric."
+        ]
+        },
+        "delayAndForwarding": {
+        "title": "delay and forwarding",
+        "description": [
+            "shows delay changes and forwarding anomalies to detect network malfunctions."
+        ]
+        },
+        "disco": {
+        "title": "network disconnection",
+        "description": [
+            "show the average of severity levels of network disconnection."
+        ]
+        }
     },
-    "delayAndForwarding": {
-      "title": "delay and forwarding",
-      "description": [
-        "shows delay changes and forwarding anomalies to detect network malfunctions."
-      ]
+    "ihrTweets": {
+        "title": "IHR Tweets"
     },
-    "disco": {
-      "title": "network disconnection",
-      "description": [
-        "show the average of severity levels of network disconnection."
-      ]
+    "ack": {
+        "title": "Special thanks to",
+        "organizations": [
+            { 
+                "name": "IIJ",
+                "logo": "https://logosrated.net/wp-content/uploads/parser/IIJ-Logo-1.jpg",
+                "description": "For financial support, rack space, etc..."
+            },
+            { 
+                "name": "RIPE NCC",
+                "logo": "https://labs.ripe.net/Members/miguel_bastos/RIPENCClogo2015.png/@@images/7232b09e-a8b5-42f6-9a25-9f45515ea0f8.png",
+                "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
+            },
+            { 
+                "name": "Route Views",
+                "logo": "http://www.routeviews.org/routeviews/wp-content/uploads/2018/03/RV-logo-new2-150px.png",
+                "description": "For BGP data"
+            },
+            { 
+                "name": "IIJ-II",
+                "logo": "https://www.iij-ii.co.jp/common/img/logo-footer.png",
+                "description": "For financial support"
+            }
+        ] 
     },
     "documentation": "documentation",
     "explore": "Explore"
+    
   },
   "ita": {}
 }
