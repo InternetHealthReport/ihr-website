@@ -24,7 +24,7 @@
         <h2> Analysis modules </h2>
         <div id="IHR_graphs-types" class="row wrap justify-around">
         <div
-            class="col-xs-6 col-xl-4 text-center column"
+            class="col-xs-4 col-xl-4 text-center column"
             v-for="graphT in graphTypes"
             :key="graphT.name"
         >
