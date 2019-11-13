@@ -163,7 +163,7 @@
             </li>
             <li>
               <router-link
-                :to="{name : 'docs'}"
+                :to="{name : 'documentation'}"
               >{{$t('footer.documentation.modulesExplanation')}}</router-link>
             </li>
             <li>
@@ -233,7 +233,7 @@ const simple_menu = [
   },
   {
     entryName: "header.documentation",
-    routeName: "docs"
+    routeName: "documentation"
   },
   {
     entryName: "header.API",

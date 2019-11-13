@@ -11,6 +11,7 @@ import SignUp from "@/views/user/SignUp";
 import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
 import ResetPassword from "@/views/user/ResetPassword";
+import Documentation from "@/views/Documentation";
 
 Vue.use(Router);
 
@@ -100,6 +101,11 @@ export default new Router({
       name: "personal_page",
       path: `${routerBase}personal_page`,
       component: PersonalPage
+    },
+    {
+      name: "documentation",
+      path: `${routerBase}documentation`,
+      component: Documentation
     }
   ]
 });

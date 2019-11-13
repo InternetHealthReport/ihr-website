@@ -1,0 +1,244 @@
+{
+  "en-us": {
+    "documentationPage":{
+    "title": "Documentation",
+    "sections": {
+        "about": {
+            "title":  "About Internet Health Report",
+            "summary": "The Internet Health Report helps network operators to monitor network conditions. Network performance data is collected with RIPE Atlas and BGPstream. and analyzed with a set of tools pinpointing delay changes, forwarding anomalies, network disconnections and routing changes.",
+            "description": [
+                { 
+                    "header":"Monitored networks",
+                    "body": "For <b>delay changes, forwarding anomalies, network disconnections</b>, the data we analyze is collected with RIPE Atlas. Networks observed in the builtin and anchoring measurements are likely to appear in the delay change and forwarding anomaly reports. And networks hosting more than 10 public probes appear in the network disconnection reports. The best way to ensure that your network is monitored is to host an anchor (delay changes, forwarding anomalies) and at least 10 probes (network disconnection). <br><br>For <b>routing changes</b>, we use BGP data to monitor Internet routing infrastructure. If your AS is publicly advertising IP space then it should be already monitored by our system."
+                },
+                { 
+                    "header":"What the graphs mean?",
+                    "body": "Each graph represents a different aspect of network conditions, we provide documentation for each of them:<ul> <li> AS interdependence </li> <li> Delay and Forwarding Anomalies </li> <li> Network Disconnections</li></ul>"
+                },
+                { 
+                    "header":"How it works?",
+                    "body": "We have several research papers describing our monitoring techniques: <ul> <li>Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush,<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'> Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements.</a> ACM IMC 2017, London, UK (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_imc2017.bib'>bibtex</a>).  </li><li>  Anant Shah, Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>Disco: Fast, Good, and Cheap Outage Detection</a>, TMA 2017  (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/anant_tma2017.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, Proceedings of PAM'18. Berlin, Germany. March 2018  (<a href='hhttps://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam18.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17  (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.bib'>bibtex</a>).  </li></ul>"
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        },
+        "faq": {
+            "title":  "FAQ",
+            "summary": "",
+            "description": [
+                { 
+                    "header":"How do I get my network monitored?",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        },
+        "ack": {
+            "title":  "Acknowledgements",
+            "summary": "The Internet Health Report helps network operators to monitor network conditions. Network performance data is collected with RIPE Atlas and BGPstream. and analyzed with a set of tools pinpointing delay changes, forwarding anomalies, network disconnections and routing changes.",
+            "description": [
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        },
+        "asdependency": {
+            "title":  "AS dependency",
+            "summary": " ",
+            "description": [
+                { 
+                    "header":"What is AS dependency?",
+                    "body": " Networks connected to the Internet rely on other networks (a.k.a ASes) to transmit data. Consequently, the connectivity of a network depend on the connectivity of other networks.  AS hegemony is a metric to evaluate these AS-interdependences based on BGP data.  See our research report for more details: <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'>https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf</a>"
+                },
+                { 
+                    "header":"What the graphs mean?",
+                    "body": " <p>Let's look at an example, AS2497 IIJ is one of the main ISP in Japan. For the <a href='/ihr/2497/asn/?date=2018-02-15&last=7'>second week of January 2018 we obtain the two following plots</a>:</p> <img src='/static/ihr/hegemony_AS2497.png' style='max-width:100%'> <p><b>The top plot</b> shows the AS dependencies of AS2497. That means the most common transit networks used to reach AS2497. The value (a.k.a AS hegemony) range between 0 and 1. The value represents the ratio of AS paths towards AS2497 that contain a certain AS transit.  Values close to 1 mean that the reachability of the monitored AS is strongly depending on a transit AS. The plot shows only three weak dependencies to Level(3) (AS3356), NTT America (AS2914), and GTT (AS3257). Around mid-February, 14% of the paths towards IIJ transit through Level(3), 12% through NTT, and 3% through GTT. Stub ASes usually have much higher values, for example the values goes up to 1 for  ASes with a single upstream provider (meaning that all the paths include the upstream provider). You can click on the graph to display dependencies details at particular timestamp and a graphical representation of BGP changes around that time (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated-in-ripestat' target='_blank'>using BGPlay</a>).</p> <p><b>The bottom plot</b> shows the number of networks that depend on AS2497. In this case there is about 400 networks that use IIJ for transit. This is somehow related to <a href='http://as-rank.caida.org/asns/2497' target='_blank'>IIJ's customer cone</a>. The main difference is that networks using IIJ as a backup transit are not counted here whereas they are counted in its customer cone. You can click on the graph to obtain an overview of dependent networks and a link to the complete list of networks. </p>"
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        },
+        "delayforward": {
+            "title":  "Delay and Forwarding anomalies",
+            "summary": "traceroute data",
+            "description": [
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        },
+        "disco": {
+            "title":  "Network disconnections",
+            "summary": "disco",
+            "description": [
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        },
+        "api": {
+            "title":  "API",
+            "summary": "",
+            "description": [
+                { 
+                    "header":"How do I get my network monitored?",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        },
+        "pythonlibrary": {
+            "title":  "Python Library",
+            "summary": "",
+            "description": [
+                { 
+                    "header":"How do I get my network monitored?",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        },
+        "datapolicy": {
+            "title":  "Data policy",
+            "summary": "",
+            "description": [
+                { 
+                    "header":"How do I get my network monitored?",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                },
+                { 
+                    "header":"",
+                    "body": ""
+                }
+            ]
+        }
+      }
+    }
+  },
+  "ita": {}
+}
