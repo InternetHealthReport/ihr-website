@@ -9,7 +9,7 @@
 	"header": {
 		"API": "API",
 		"globalReport": "global report",
-		"contacts": "contacts",
+		"contact": "contact",
 		"documentation": "documentation",
 		"signUp": "sign up",
 		"signIn": "log in",
@@ -32,7 +32,7 @@
 		"about": {
 			"title": "about IHR",
 			"policy": "policy",
-			"contacts": "contacts",
+			"contact": "contact",
 			"acknowledgments": "acknowledgments"
 		}
 	},

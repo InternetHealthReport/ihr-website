@@ -190,8 +190,8 @@
             </li>
             <li>
               <router-link
-                :to="{name : 'contacts'}"
-              >{{$t('footer.about.contacts')}}</router-link>
+                :to="{name : 'contact'}"
+              >{{$t('footer.about.contact')}}</router-link>
             </li>
             <li>
               <router-link
@@ -209,7 +209,7 @@
           <a href="https://github.com/InternetHealthReport" class="col-4">
             <q-icon name="fab fa-github-square" />
           </a>
-          <router-link :to="{name : 'contacts'}" class="col-4">
+          <router-link :to="{name : 'contact'}" class="col-4">
             <q-icon name="fas fa-envelope-square" />
           </router-link>
         </div>
@@ -240,8 +240,8 @@ const simple_menu = [
     routeName: "api"
   },
   {
-    entryName: "header.contacts",
-    routeName: "contacts"
+    entryName: "header.contact",
+    routeName: "contact"
   }
 ];
 

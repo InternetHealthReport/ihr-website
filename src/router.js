@@ -3,7 +3,7 @@ import Router from "vue-router";
 import Home from "@/views/Home";
 import GlobalReport from "@/views/GlobalReport";
 import API from "@/views/Api";
-import Contacts from "@/views/Contacts";
+import Contact from "@/views/Contact";
 import Countries from "@/views/Countries";
 import Networks from "@/views/Networks";
 import AsAndIxp from "@/views/AsAndIxp";
@@ -41,9 +41,9 @@ export default new Router({
       component: GlobalReport
     },
     {
-      name: "contacts",
-      path: `${routerBase}contacts`,
-      component: Contacts
+      name: "contact",
+      path: `${routerBase}contact`,
+      component: Contact
     },
     {
       name: "countries",
