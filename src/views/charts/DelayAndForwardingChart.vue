@@ -25,7 +25,7 @@
         class="text-grey inset-shadow"
         active-color="primary"
         active-bg-color="white"
-        indicator-color="primary"
+        indicator-color="secondary"
         align="justify"
         narrow-indicator
       >
