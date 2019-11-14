@@ -1,27 +1,43 @@
 <template>
-  <base-search-bar
-    :dark="dark"
-    :placeholder="placeholder"
-    v-model="retrievedValues"
-    @search="search"
+  <q-select
+    :dark="dark" dense standout use-input
+    :label="placeholder"
+    :options="options"
+    v-model = "model"
+    @filter="filter"
+    hide-dropdown-icon
+    input-debounce="1000"
+    class="IHR_search-bar"
   >
-    <template v-slot:default="scope">
-      <slot :asn="scope.elem">
-        <q-btn @click="gotoASN(scope.elem.number)" flat class="IHR_asn-element">
-          <q-item-section side>{{scope.elem.number | ihr_NumberToAsOrIxp}}</q-item-section>
-          <q-item-section class="IHR_asn-element-name">{{scope.elem.name}}</q-item-section>
-        </q-btn>
-      </slot>
+    <template v-slot:append>
+        <div v-if="!loading">
+            <q-icon name="fas fa-search" style="font-size: 0.82em; margin-rigth: 4px;"/>
+        </div>
+        <div v-else>
+              <q-spinner color="primary" size="0.82em" />
+        </div>
     </template>
-  </base-search-bar>
+    <template v-slot:loading> </template>
+    <template v-slot:option="scope">
+        <q-item
+            v-bind="scope.itemProps"
+            v-on="scope.itemEvents"
+            @click="gotoASN(scope.opt.value)" 
+          >
+          <q-item-section side color='accent'>{{scope.opt.value | ihr_NumberToAsOrIxp}}</q-item-section>
+          <q-item-section class="IHR_asn-element-name">{{scope.opt.name}}</q-item-section>
+      </q-item>
+    </template>
+  </q-select>
 </template>
 
 <script>
-import BaseSearchBar, { MAX_RESULTS } from "./BaseSearchBar";
 import { NetworkQuery } from "@/plugins/IhrApi";
 
+const MIN_CHARACTERS = 3;
+const MAX_RESULTS = 8;
+
 export default {
-  components: { BaseSearchBar },
   props: {
     dark: {
       type: Boolean,
@@ -30,24 +46,35 @@ export default {
   },
   data() {
     return {
-      retrievedValues: [],
+        options: [
+            {name: "Suggestions"},
+            {label: 2497,
+            value: 2497,
+            name: "IIJ"}],
+        model: null,
+        prevValue: "",
+        loading: false,
+        always: false,
       networkQuery: new NetworkQuery().orderedByNumber()
     };
   },
   methods: {
-    search(value) {
+    search(value, update) {
+      this.loading = true;
+      this.options=[];
       this.networkQuery.mixedContentSearch(value);
       this.$ihr_api.network(
         this.networkQuery,
         result => {
           result.results.some(element => {
-            this.retrievedValues.push({
-              label: element.number,
-              number: element.number,
+            this.options.push({
+              value: element.number,
               name: element.name
             });
-            return this.retrievedValues.length > MAX_RESULTS;
+            update();
+            return this.options.length > MAX_RESULTS;
           });
+          this.loading = false;
         },
         error => {
           console.error(error);
@@ -59,6 +86,18 @@ export default {
         name: "as_and_ixp",
         params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(number) }
       });
+    },
+    filter (value, update, abort) {
+        if(this.prevValue === value){
+            return;
+        }  
+        this.prevValue = value;
+      if(value.length < MIN_CHARACTERS) {
+        abort();
+      }
+      else{
+        this.search(value, update)
+      }
     }
   },
   computed: {
