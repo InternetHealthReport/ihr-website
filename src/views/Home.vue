@@ -67,7 +67,7 @@
             >
             <div class="IHR_ack-logo" >
                 <span></span>
-                <img :src="org.logo"  :alt="org.name" >
+                <img :src="require(`@/assets/imgs/${org.logo}`)"  :alt="org.name" >
             </div>
             </div>
         </div>

@@ -36,22 +36,22 @@
         "organizations": [
             { 
                 "name": "IIJ",
-                "logo": "https://logosrated.net/wp-content/uploads/parser/IIJ-Logo-1.jpg",
+                "logo": "iij-logo.jpg",
                 "description": "For financial support, rack space, etc..."
             },
             { 
                 "name": "RIPE NCC",
-                "logo": "https://labs.ripe.net/Members/miguel_bastos/RIPENCClogo2015.png/@@images/7232b09e-a8b5-42f6-9a25-9f45515ea0f8.png",
+                "logo": "ripe-logo.png",
                 "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
             },
             { 
                 "name": "Route Views",
-                "logo": "http://www.routeviews.org/routeviews/wp-content/uploads/2018/03/RV-logo-new2-150px.png",
+                "logo": "rv-logo.png",
                 "description": "For BGP data"
             },
             { 
                 "name": "IIJ-II",
-                "logo": "https://www.iij-ii.co.jp/common/img/logo-footer.png",
+                "logo": "iijii-logo.png",
                 "description": "For financial support"
             }
         ] 
