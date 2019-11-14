@@ -58,13 +58,15 @@ export default {
          */
         ihrUtcString(date, short) {
           let actualDate = new Date(date);
+          return actualDate.toUTCString();
+
           let result = actualDate.getUTCFullYear() + "-";
           result += padWith0(actualDate.getUTCMonth() + 1) + "-";
           result += padWith0(actualDate.getUTCDate());
           if (short == undefined || short == true) {
-            result += "T";
+            result += " ";
             result += padWith0(actualDate.getUTCHours()) + ":";
-            result += padWith0(actualDate.getUTCMinutes()) + "Z";
+            result += padWith0(actualDate.getUTCMinutes()) + " UTC";
           }
           return result;
         }

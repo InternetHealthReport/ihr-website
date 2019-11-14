@@ -6,6 +6,7 @@
     :pagination.sync="pagination"
     :loading="loading"
     binary-state-sort
+    flat
   >
     <template v-slot:body="props">
       <q-tr

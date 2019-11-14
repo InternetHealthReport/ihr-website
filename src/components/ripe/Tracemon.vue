@@ -15,7 +15,7 @@ export default {
       type: Date,
       required: true
     },
-    probs: {
+    probes: {
       type: Array,
       required: true
     }
@@ -36,7 +36,7 @@ export default {
         {
           // mergedMeasurements: [lm_msmid],
           measurements: MESUREMENTS,
-          sources: this.probs,
+          sources: this.probes,
           maximumTracerouteValiditySeconds: 600,
           startTimestamp: this.startTime.getTime() / 1000 - BOUNDARY_OFFSET,
           stopTimestamp: this.endTime.getTime() / 1000 + BOUNDARY_OFFSET

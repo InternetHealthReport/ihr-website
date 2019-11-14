@@ -11,19 +11,26 @@
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="15em" />
     </div>
-    <h2 v-if="details.tableVisible">
-      {{$t("charts.disconnections.table.event")}}
-      <strong>{{details.eventid}}</strong>
-      [<span>{{details.startTime | ihrUtcString}}</span>, <span>{{details.endTime | ihrUtcString}}</span>]
-    </h2>
-    <div v-if="details.tableVisible" class>
-      <span class="IHR_table-close-button" @click="details.tableVisible=false">x</span>
+    <q-card v-if="details.tableVisible" class="bg-accent" dark>
+        <q-card-section class="q-pa-xs">
+          <div class="row items-center">
+              <div class="col">
+                  <div class="text-h3"> 
+                    (<span>{{details.startTime | ihrUtcString}}</span>, <span>{{details.endTime | ihrUtcString}}</span>)
+                  </div>
+              </div>
+              <div class="col-auto">
+                <q-btn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible=false" icon="fa fa-times-circle"></q-btn>
+              </div>
+          </div>
+        </q-card-section>
       <q-tabs
         v-model="details.activeTab"
         dense
-        class="text-grey"
+        class="text-grey inset-shadow"
         active-color="primary"
-        indicator-color="primary"
+        active-bg-color="white"
+        indicator-color="secondary"
         align="justify"
         narrow-indicator
       >
@@ -39,7 +46,7 @@
           <tracemon
             :start-time="details.startTime"
             :end-time="details.endTime"
-            :probs="details.porbs"
+            :probes="details.probes"
           />
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table">
@@ -71,7 +78,7 @@
           </table>
         </q-tab-panel>
       </q-tab-panels>
-    </div>
+    </q-card>
   </div>
 </template>
 
@@ -126,7 +133,7 @@ export default {
         endTime: null,
         data: [],
         eventid: null,
-        porbs: [],
+        probes: [],
         filter: null,
         loading: true
       },
@@ -198,18 +205,18 @@ export default {
           if (result.results.length > 0) {
             let startTime = new Date(result.results[0].starttime);
             let endTime = new Date(result.results[0].endtime);
-            let probs = [];
+            let probes = [];
             result.results.forEach(elem => {
               let start = new Date(elem.starttime);
               let end = new Date(elem.endtime);
-              probs.push(elem.probe_id);
+              probes.push(elem.probe_id);
               if (start < startTime) startTime = start;
               if (end > endTime) endTime = end;
             });
             this.details.startTime = startTime;
             this.details.endTime = endTime;
             this.details.data = result.results;
-            this.details.porbs = probs;
+            this.details.probes = probes;
             this.details.tableVisible = true;
             this.details.loading = false;
           }

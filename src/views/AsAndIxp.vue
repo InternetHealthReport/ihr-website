@@ -6,16 +6,15 @@
     </div>
     <q-list v-if="showGraphs">
       <q-expansion-item
-        popup
         :label="$t('charts.asInterdependencies.title')"
         caption="BGP data"
         header-class="IHR_charts-title"
         icon="fas fa-project-diagram"
         default-opened
       >
+        <q-separator />
         <q-card class="IHR_charts-body">
           <q-card-section>
-            <q-separator />
             <as-interdependencies-chart
             :start-time="startTime"
             :end-time="endTime"
@@ -28,7 +27,6 @@
        </q-card>
       </q-expansion-item>
       <q-expansion-item
-        popup
         :label="$t('charts.delayAndForwarding.title')"
         caption="Traceroute data"
         header-class="IHR_charts-title"
@@ -50,7 +48,6 @@
         </q-card>
       </q-expansion-item>
       <q-expansion-item
-        popup
         :label="$t('charts.disconnections.title')"
         caption="RIPE Atlas log"
         header-class="IHR_charts-title"

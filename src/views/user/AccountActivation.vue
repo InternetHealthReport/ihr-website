@@ -9,7 +9,7 @@
       <div v-else-if="actualState == state.VALIDATE" class="IHR_content IHR_content-confirm">
         <login-form v-model="loginError">
           <template v-slot:default="user" @keydown.enter="login(user.email, user.password)">
-            <q-btn color="secondary" @click="validateAndSend(user.email, user.password)" id="IHR_validare-and-send">{{$t('header.signUp')}}</q-btn>
+            <q-btn color="positive" @click="validateAndSend(user.email, user.password)" id="IHR_validare-and-send">{{$t('header.signUp')}}</q-btn>
           </template>
         </login-form>
       </div>
@@ -22,7 +22,7 @@
       </div>
       <div v-else class="row justify-around IHR_content">
         <q-btn
-          color="secondary"
+          color="positive"
           class="col-3"
           @click="$router.push({name : 'sign_up'})"
         >{{$t('header.signUp')}}</q-btn>

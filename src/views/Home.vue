@@ -19,7 +19,6 @@
         })"
     ></div>
 
-
     <div class="IHR_section">
         <h2> {{$t("analysisModules.title")}}</h2>
         <div id="IHR_graphs-types" class="row wrap justify-around">
@@ -137,7 +136,7 @@ export default {
 #IHR_
   &home
     ~/global-report
-      margin-bottom 60pt
+      margin-bottom 50pt
       width 100%
       height 450px
       background-color black

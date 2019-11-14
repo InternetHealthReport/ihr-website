@@ -50,7 +50,7 @@
         </q-inner-loading>
       </div>
       <div>{{$t('sigIn.mailWillBeSent')}}</div>
-      <q-btn color="secondary" @click="validateAndSend">{{$t('header.signUp')}}</q-btn>
+      <q-btn color="positive" @click="validateAndSend">{{$t('header.signUp')}}</q-btn>
     </div>
     <div class="shadow-2" id="IHR_confirm-your-email" v-else>
       <div>{{$t("sigIn.emailSentTo")}}</div>

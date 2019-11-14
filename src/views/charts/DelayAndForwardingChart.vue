@@ -8,19 +8,23 @@
       :ref="myId"
       :no-data="noData"
     />
-    <h2 v-if="details.tableVisible">
-      {{details.delayData.dateTime | ihrUtcString}}
-    </h2>
-    <div v-if="loading" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
-    </div>
-    <div v-if="details.tableVisible">
-      <span class="IHR_table-close-button" @click="details.tableVisible=false">x</span>
+    <q-card v-if="details.tableVisible" class="bg-accent" dark>
+        <q-card-section class="q-pa-xs">
+          <div class="row items-center">
+              <div class="col">
+                  <div class="text-h3"> {{details.delayData.dateTime | ihrUtcString}} </div>
+              </div>
+              <div class="col-auto">
+                <q-btn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible=false" icon="fa fa-times-circle"></q-btn>
+              </div>
+          </div>
+        </q-card-section>
       <q-tabs
         v-model="details.activeTab"
         dense
-        class="text-grey"
+        class="text-grey inset-shadow"
         active-color="primary"
+        active-bg-color="white"
         indicator-color="primary"
         align="justify"
         narrow-indicator
@@ -29,6 +33,9 @@
         <q-tab name="forwarding" :label="$t('charts.delayAndForwarding.tables.forwarding.title')" />
         <q-tab name="api" label="API" />
       </q-tabs>
+    <div v-if="loading" class="IHR_loading-spinner">
+      <q-spinner color="secondary" size="15em" />
+    </div>
       <q-tab-panels v-model="details.activeTab" animated>
         <q-tab-panel name="delay">
           <delay-alarms-table
@@ -88,7 +95,7 @@
           </table>
         </q-tab-panel>
       </q-tab-panels>
-    </div>
+    </q-card>
   </div>
 </template>
 

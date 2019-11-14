@@ -97,7 +97,7 @@
                         @keydown.enter="login(user.email, user.password)"
                       >
                         <q-btn
-                          color="secondary"
+                          color="positive"
                           id="IHR_signin-button"
                           @click="login(user.email, user.password)"
                         >{{$t('header.signIn')}}</q-btn>
@@ -117,7 +117,7 @@
         </div>
       </q-toolbar>
     </q-header>
-    <q-page-container class="IHR_minimum-width">
+    <q-page-container class="IHR_minimum-width bg-white">
       <router-view :show-sidebar="sidebarOpened" @sidebar-action="sidebarOpened = $event === true" />
       <div id="IHR_last-element">&nbsp;</div>
     </q-page-container>

@@ -7,6 +7,7 @@
     :pagination.sync="pagination"
     :loading="loading"
     binary-state-sort
+    flat
   />
 </template>
 
