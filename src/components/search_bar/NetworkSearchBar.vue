@@ -102,7 +102,7 @@ export default {
   },
   computed: {
     placeholder() {
-      return `ASN or IXP ${this.$t("searchBar.placeholder")}...`;
+      return `${this.$t("searchBar.placeholder")}`;
     }
   }
 };

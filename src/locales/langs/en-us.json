@@ -37,7 +37,7 @@
 		}
 	},
 	"searchBar": {
-		"placeholder": "name",
+		"placeholder": "AS or IXP name",
 		"noResultFound": "no result found"
 	},
 	"globalReport": {
