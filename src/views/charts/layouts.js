@@ -2,8 +2,7 @@ import i18n from "@/locales/i18n";
 
 const COMMON_FEATURE = {
   hovermode: "closest",
-  margin: { t: 0, b: 50, l: 80, r: 0 },
-  height: 350
+  margin: { t: 10, b: 10, l: 80, r: 80 },
 };
 
 const COMMON_WITH_LEGEND = {
@@ -13,7 +12,7 @@ const COMMON_WITH_LEGEND = {
     x: 0,
     y: 1.2,
     orientation: "h"
-  }
+  },
 };
 
 var DISCO_LAYOUT = {
@@ -21,7 +20,6 @@ var DISCO_LAYOUT = {
   yaxis: {
     title: "",
     autorange: "reversed",
-    automargin: true
   }
 };
 
@@ -30,7 +28,6 @@ var DELAY_CHART_LAYOUT = {
   yaxis: {
     title: i18n.t("charts.linkDelays.yaxis"),
     autorange: true,
-    automargin: true
   }
 };
 
@@ -40,13 +37,11 @@ var DELAY_AND_FORWARDING_LAYOUT = {
     title: i18n.t("charts.delayAndForwarding.yaxis"),
     domain: [0.55, 1],
     autorange: true,
-    automargin: true
   },
   yaxis2: {
     title: i18n.t("charts.delayAndForwarding.yaxis2"),
     domain: [0, 0.45],
     autorange: true,
-    automargin: true
   }
 };
 
@@ -56,12 +51,10 @@ var AS_INTERDEPENDENCIES_LAYOUT = {
     title: "",
     domain: [0.55, 1],
     range: [0, 1.1],
-    automargin: true
   },
   yaxis2: {
     domain: [0, 0.45],
     autorange: true,
-    automargin: true
   }
 };
 

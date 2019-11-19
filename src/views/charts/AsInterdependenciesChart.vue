@@ -89,7 +89,11 @@ const DEFAULT_TRACE = [
     y: [],
     yaxis: "y2",
     name: i18n.t('charts.asInterdependencies.defaultTrace'),
-    showlegend: false
+    showlegend: false,
+    hovertemplate:
+        "%{x}<br>"+
+        "%{yaxis.title.text}: <b>%{y:.2f}</b>"+
+        "<extra></extra>"
   }
 ];
 
@@ -159,8 +163,8 @@ export default {
     };
   },
   beforeMount() {
-    this.layout.yaxis.title = `${this.$t("charts.asInterdependencies.yaxis")}`;
-    this.layout.yaxis2.title = `${this.$t("charts.asInterdependencies.yaxis2")}`;
+    this.layout.yaxis.title = `AS`+this.asNumber+` ${this.$t("charts.asInterdependencies.yaxis")}`;
+    this.layout.yaxis2.title = `${this.$t("charts.asInterdependencies.yaxis2")} AS`+this.asNumber;
   },
   methods: {
     showTable(clickData) {
@@ -260,7 +264,16 @@ export default {
             name:
               this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) +
               " " +
-              elem.asn_name.split(" ")[0]
+              elem.asn_name.split(" ")[0],
+            hovertemplate:
+              "<b>" +
+              this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) +
+              " " +
+              elem.asn_name.split(" ")[0]+
+              "</b><br><br>" +
+              "%{x}<br>"+
+              "%{yaxis.title.text}: <b>%{y:.2f}</b>"+
+              "<extra></extra>"
           };
           traces[elem.asn] = trace;
           this.traces.push(trace);

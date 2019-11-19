@@ -65,13 +65,13 @@
 		"asInterdependencies": {
 			"title": "AS dependency",
 			"defaultTrace": "Number of dependents",
-			"yaxis": "dependencies",
-			"yaxis2": "Number of ASes<br> dependent on",
+			"yaxis": "dependency",
+			"yaxis2": "Number of ASes<br> dependent on ",
 			"table": {
 				"dependencyTitle": "network dependency",
 				"dependentTitle": "dependent networks",
 				"increment": "increment",
-				"dependencies": "dependencies",
+				"dependencies": "Dependency",
 				"dependent": "dependent"
 			}
 		},
