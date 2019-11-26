@@ -19,15 +19,14 @@
 	},
 	"footer": {
 		"reportPages": {
-			"title" :"report pages",
-			"network": "network report",
+			"title" :"Reports",
+			"network": "network reports",
 			"global": "global report"
 		},
 		"documentation": {
 			"title": "documentation",
-			"apiEndpoints": "API endpoints",
-			"pythonWrapper": "pythonWrapper",
-			"modulesExplanation": "modules explanation"
+			"dataAccess": "Data access",
+			"analysisModules": "Analysis modules"
 		},
 		"about": {
 			"title": "about IHR",

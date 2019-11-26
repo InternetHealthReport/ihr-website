@@ -127,8 +127,8 @@
       class="IHR_minimum-width IHR_footer text-white text-center row items-streatch content-stretch no-wrap justiy-between"
     >
       <span class="col-2 IHR_copyright">
-        <div>
-          <strong>Internet Health Report</strong>
+        <div class="text-weight-bold">
+          Internet Health Report
         </div>
         <div>
           <router-link :to="{name : 'home'}">
@@ -141,8 +141,8 @@
       <span class="IHR_sitemap col-8 row">
         <span class="col-4">
           <ul>
-            <li>
-              <strong>{{$t('footer.reportPages.title')}}</strong>
+            <li class="text-weight-bold">
+                {{$t('footer.reportPages.title')}}
             </li>
             <li>
               <router-link
@@ -158,35 +158,31 @@
         </span>
         <span class="col-4">
           <ul>
-            <li>
-              <strong>{{$t('footer.documentation.title')}}</strong>
+            <li class="text-weight-bold">
+              <router-link
+                :to="{name : 'documentation'}" >
+                  {{$t('footer.documentation.title')}}
+              </router-link>
             </li>
             <li>
               <router-link
-                :to="{name : 'documentation'}"
-              >{{$t('footer.documentation.modulesExplanation')}}</router-link>
+                :to="{name : 'analysisModules'}"
+              >{{$t('footer.documentation.analysisModules')}}</router-link>
             </li>
             <li>
               <router-link
-                :to="{name : 'api'}"
-              >{{$t('footer.documentation.apiEndpoints')}}</router-link>
-            </li>
-            <li>
-              <router-link
-                :to="{name : 'python_wrapper'}"
-              >{{$t('footer.documentation.pythonWrapper')}}</router-link>
+                :to="{name : 'dataAcess'}"
+              >{{$t('footer.documentation.dataAccess')}}</router-link>
             </li>
           </ul>
         </span>
         <span class="col-4">
           <ul>
-            <li>
-              <strong>{{$t('footer.about.title')}}</strong>
-            </li>
-            <li>
+            <li class="text-weight-bold">
               <router-link
-                :to="{name : 'policy'}"
-              >{{$t('footer.about.policy')}}</router-link>
+                :to="{name : 'contact'}" >
+                  {{$t('footer.about.title')}}
+                </router-link>
             </li>
             <li>
               <router-link
@@ -201,7 +197,7 @@
           </ul>
         </span>
       </span>
-      <span class="IHR_external-links col-2 ">
+      <span class="IHR_external-links col-2">
         <div class="row wrap justify-around">
           <a href="https://twitter.com/ihr_alerts" class="col-4">
             <q-icon name="fab fa-twitter-square" />
@@ -326,7 +322,7 @@ menu-delinkify(val)
         margin 7pt 0pt
 
     ~/external-links
-      font-size 3.5em
+      font-size 3.0em
 
       & a
         color white
