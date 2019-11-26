@@ -53,10 +53,11 @@
           />
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table">
+          <h3>{{$t("charts.delayAndForwarding.apiTitle")}}</h3>
           <table>
             <tr>
               <td>
-                <label for="delay">{{$t('charts.delayAndForwarding.yaxis')}}</label>
+                <p class="text-subtitle1">{{$t('charts.delayAndForwarding.yaxis')}}</p>
               </td>
               <td>
                 <a :href="delayUrl" target="_blank" id="delay">{{delayUrl}}</a>
@@ -64,7 +65,7 @@
             </tr>
             <tr>
               <td>
-                <label for="forwarding">{{$t('charts.delayAndForwarding.yaxis2')}}</label>
+                <p class="text-subtitle1">{{$t('charts.delayAndForwarding.yaxis2')}}</p>
               </td>
               <td>
                 <a :href="forwardingUrl" target="_blank" id="forwarding">{{forwardingUrl}}</a>
@@ -72,7 +73,7 @@
             </tr>
             <tr>
               <td>
-                <label for="delayAlarms">{{$t('charts.delayAndForwarding.tables.delay.title')}}</label>
+                <p class="text-subtitle1">{{$t('charts.delayAndForwarding.tables.delay.title')}}</p>
               </td>
               <td>
                 <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{delayAlarmsUrl}}</a>
@@ -80,9 +81,7 @@
             </tr>
             <tr>
               <td>
-                <label
-                  name="forwardingAlarms"
-                >{{$t('charts.delayAndForwarding.tables.forwarding.title')}}</label>
+                <p class="text-subtitle1" name="forwardingAlarms" >{{$t('charts.delayAndForwarding.tables.forwarding.title')}}</p>
               </td>
               <td>
                 <a
@@ -193,6 +192,13 @@ export default {
   methods: {
     showTable(clickData) {
       let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
+      
+      if(clickData.points[0].data.yaxis == "y2"){
+        this.details.activeTab = "forwarding";
+      }
+      else{
+        this.details.activeTab = "delay"
+      }
 
       this.details.delayData = {
         dateTime: chosenTime,

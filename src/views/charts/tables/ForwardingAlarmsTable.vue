@@ -44,7 +44,7 @@ export default {
         sortBy: "responsibility",
         descending: true,
         page: 1,
-        rowsPerPage: 8
+        rowsPerPage: 10
       },
       columns: [
         {

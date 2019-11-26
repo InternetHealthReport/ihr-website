@@ -54,7 +54,8 @@
         <q-tab-panel name="bgpPlay">
           <bgplay :as-number="asNumber" :date-time="details.date" />
         </q-tab-panel>
-        <q-tab-panel name="api" class="IHR_api-table q-pa-lg">
+        <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
+          <h3>{{$t("charts.asInterdependencies.table.apiTitle")}}</h3>
           <table>
             <tr>
               <td><p class="text-subtitle1">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</p></td>

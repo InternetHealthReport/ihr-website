@@ -68,7 +68,7 @@ export default {
         sortBy: "deviation",
         descending: true,
         page: 1,
-        rowsPerPage: 8
+        rowsPerPage: 10
       },
       visibleColumns: ['asNumber', 'link', 'delayChange', 'deviation', 'nbprobes'],
       columns: [

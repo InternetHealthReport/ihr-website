@@ -11,13 +11,11 @@
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="15em" />
     </div>
-    <q-card v-if="details.tableVisible" class="bg-accent" dark>
+    <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
         <q-card-section class="q-pa-xs">
           <div class="row items-center">
               <div class="col">
-                  <div class="text-h3"> 
-                    (<span>{{details.startTime | ihrUtcString}}</span>, <span>{{details.endTime | ihrUtcString}}</span>)
-                  </div>
+                  <div class="text-h3"> {{details.startTime | ihrUtcString}} to {{details.endTime | ihrUtcString}}  </div>
               </div>
               <div class="col-auto">
                 <q-btn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible=false" icon="fa fa-times-circle"></q-btn>
@@ -50,10 +48,11 @@
           />
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table">
+          <h3>{{$t("charts.disconnections.table.apiTitle")}}</h3>
           <table>
             <tr>
               <td>
-                <label for="disconnection">{{$t('charts.disconnections.title')}}</label>
+                  <p class="text-subtitle1">{{$t('charts.disconnections.title')}}</p>
               </td>
               <td>
                 <a
@@ -65,7 +64,7 @@
             </tr>
             <tr>
               <td>
-                <label for="tableUrl">{{$t("charts.disconnections.table.disconnectionProbes")}}</label>
+                <p class="text-subtitle1">{{$t("charts.disconnections.table.disconnectionProbes")}}</p>
               </td>
               <td>
                 <a
