@@ -5,6 +5,7 @@
     row-key="link"
     :pagination.sync="pagination"
     :loading="loading"
+    :visible-columns="visibleColumns"
     binary-state-sort
     flat
   >
@@ -25,26 +26,9 @@
           </template>
           )
         </q-td>
-        <q-td
-          key="delayChange"
-          :props="props"
-        >{{ getCellValue(props, "delayChange") }}</q-td>
-        <q-td key="deviation" :props="props" :class="['IHR_important-cell', getCalssByDeviation(getCellValue(props, 'deviation'))]">{{ getCellValue(props, "deviation") }}</q-td>
-        <q-td key="probes" :props="props" class="IHR_probe-cell">
-          {{ getCellValue(props, "probes") }}
-          <q-popup-proxy transition-show="flip-up" transition-hide="flip-down">
-            <q-banner>
-              <div
-                v-for="(probeList, probeListName) in props.row.msm_prb_ids"
-                :key="probeListName"
-                class="IHR_probe-popup"
-              >
-                <span>{{ probeListName }}:</span>
-                <span>{{ probeList.join(", ") }}</span>
-              </div>
-            </q-banner>
-          </q-popup-proxy>
-        </q-td>
+        <q-td key="delayChange" :props="props" >{{ getCellValue(props, "delayChange") }}</q-td>
+        <q-td key="deviation" :props="props" :class="['IHR_important-cell', getClassByDeviation(getCellValue(props, 'deviation'))]">{{ getCellValue(props, "deviation") }}</q-td>
+        <q-td key="nbprobes" :props="props"> {{ getCellValue(props, "nbprobes") }} </q-td>
       </q-tr>
       <q-tr v-if="props.expand" :props="props">
         <q-td colspan="100%">
@@ -86,10 +70,11 @@ export default {
         page: 1,
         rowsPerPage: 8
       },
+      visibleColumns: ['asNumber', 'link', 'delayChange', 'deviation', 'nbprobes'],
       columns: [
         {
           name: "asNumber",
-          required: true,
+          required: false,
           label: "Autonomous System",
           align: "center",
           field: row => row.asn,
@@ -124,7 +109,7 @@ export default {
           sortable: true
         },
         {
-          name: "probes",
+          name: "nbprobes",
           label: "#Probes",
           align: "center",
           field: row => row.nbprobes,
@@ -134,9 +119,13 @@ export default {
       ]
     };
   },
-  mounted() {},
+  mounted() {
+      if(!this.showAsn){
+          this.visibleColumns = ['link', 'delayChange', 'deviation', 'nbprobes']
+      }
+  },
   methods: {
-    getCalssByDeviation(deviation) {
+    getClassByDeviation(deviation) {
       if(deviation > 100) return "IHR_color-deviation-hight-threshold";
       if(deviation > 10) return "IHR_color-deviation-mid-threshold";
       return "";
@@ -154,9 +143,6 @@ export default {
 </script>
 <style lang="stylus">
 .IHR_
-  &probe-cell
-    cursor pointer
-
   &probe-popup
     padding 10px
     max-width 200px

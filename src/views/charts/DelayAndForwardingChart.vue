@@ -8,7 +8,7 @@
       :ref="myId"
       :no-data="noData"
     />
-    <q-card v-if="details.tableVisible" class="bg-accent" dark>
+    <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
         <q-card-section class="q-pa-xs">
           <div class="row items-center">
               <div class="col">
