@@ -8,7 +8,7 @@
       :ref="myId"
       :no-data="noData"
     />
-    <q-card v-if="details.tableVisible" class="bg-accent" dark>
+    <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
         <q-card-section class="q-pa-xs">
           <div class="row items-center">
               <div class="col">
@@ -22,7 +22,7 @@
       <q-tabs
         dense
         v-model="details.activeTab"
-        class="text-grey inset-shadow"
+        class="table-card text-grey inset-shadow"
         indicator-color="secondary"
         active-color="primary"
         active-bg-color="white"
@@ -54,14 +54,14 @@
         <q-tab-panel name="bgpPlay">
           <bgplay :as-number="asNumber" :date-time="details.date" />
         </q-tab-panel>
-        <q-tab-panel name="api" class="IHR_api-table">
+        <q-tab-panel name="api" class="IHR_api-table q-pa-lg">
           <table>
             <tr>
-              <td><label for="tableUrl">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</label></td>
+              <td><p class="text-subtitle1">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</p></td>
               <td><a :href="dependencyUrl" target="_blank" id="tableUrl">{{dependencyUrl}}</a></td>
             </tr>
             <tr>
-              <td><label for="tableUrl">{{$t("charts.asInterdependencies.table.dependentTitle")}}</label></td>
+              <td><p class="text-subtitle1">{{$t("charts.asInterdependencies.table.dependentTitle")}}</p></td>
               <td><a :href="dependentUrl" target="_blank" id="tableUrl">{{dependentUrl}}</a></td>
             </tr>
           </table>
@@ -178,13 +178,21 @@ export default {
         xIndex--;
       }
       let intervalStart = xIndex < 0 ? intervalEnd : new Date(plot.data.x[xIndex]);
+        console.log(intervalStart)
+        console.log(intervalEnd)
 
       let dependencyFilter = this.hegemonyFilter.clone().timeInterval(intervalStart, intervalEnd);
       let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber);
-      this.updateTable("dependency", "originasn", dependencyFilter, intervalStart, intervalEnd);
-      this.updateTable("dependent", "asn", dependentFilter, intervalStart, intervalEnd);
+      this.updateTable("dependency", "asn", dependencyFilter, intervalStart, intervalEnd);
+      this.updateTable("dependent", "originasn", dependentFilter, intervalStart, intervalEnd);
+      if(plot.data.yaxis == "y2"){
+        this.details.activeTab = "dependent";
+      }
+      else{
+        this.details.activeTab = "dependency"
+      }
     },
-    updateTable(tableType, haegemonyComparator, filter, intervalStart, intervalEnd) {
+    updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
       this.details.tablesData[tableType] = {
         data: [],
         loading: true,
@@ -199,14 +207,29 @@ export default {
             let data = {};
             let res = [];
             results.results.forEach(elem => {
-              let asn = elem[haegemonyComparator];
-              if (elem.timebin == startString) {
-                data[asn] = elem.hege;
-              } else if (data[asn] != undefined) {
-                elem.increment = elem.hege - data[asn];
-                res.push(elem);
+              let asn = elem[hegemonyComparator];
+              if (asn != 0){
+                if (elem.timebin == startString) {
+                    data[asn] = elem;
+                } else {
+                    if (data[asn] != undefined) {
+                      elem.increment = elem.hege - data[asn].hege;
+                      res.push(elem);
+                      delete data[asn];
+                    } 
+                    else{
+                      elem.increment = elem.hege;
+                      res.push(elem);
+                    }
+                }
               }
             });
+
+            for(var unprocessed in data){
+                data[unprocessed].increment = -data[unprocessed].hege;
+                data[unprocessed].hege = 0;
+                res.push(data[unprocessed]);
+            }
             results.results = res;
           }
 
