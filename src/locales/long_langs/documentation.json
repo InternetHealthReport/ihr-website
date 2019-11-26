@@ -2,6 +2,11 @@
   "en-us": {
     "documentationPage":{
     "title": "Documentation",
+    "sectionsTitle": {
+        "general": "General",
+        "analysisModules": "Analysis Modules",
+        "dataAccess": "Data Access"
+    },
     "sections": {
         "about": {
             "title":  "About Internet Health Report",

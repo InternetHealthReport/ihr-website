@@ -4,23 +4,23 @@
       <q-drawer :value="showSidebar" side="left" bordered content-class="IHR_documentation-page-sidebar">
         <h3>{{$t('documentationPage.title')}}</h3>
         <div>
-          <div class="text-weight-light">General</div>
+            <div class="text-weight-light">{{$t('documentationPage.sectionsTitle.general')}}</div>
             <ul>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#about'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.about.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.about.title")}}</router-link>
                 </li>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#faq'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.faq.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.faq.title")}}</router-link>
                 </li>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#ack'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.ack.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.ack.title")}}</router-link>
                 </li>
@@ -29,48 +29,48 @@
         <div>
         </div>
         <div>
-            <div class="text-weight-light">Analysis modules</div>
+            <div class="text-weight-light">{{$t('documentationPage.sectionsTitle.analysisModules')}}</div>
             <ul>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#asdependency'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.asdependency.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.asdependency.title")}}</router-link>
                 </li>
                 </li>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#delayforward'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.delayforward.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.delayforward.title")}}</router-link>
                 </li>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#disco'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.disco.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.disco.title")}}</router-link>
                 </li>
             </ul>
         </div>
         <div>
-            <div class="text-weight-light">Data Access</div>
+            <div class="text-weight-light">{{$t('documentationPage.sectionsTitle.dataAccess')}}</div>
             <ul>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#api'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.api.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.api.title")}}</router-link>
                 </li>
                 </li>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#pythonlibrary'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.pythonlibrary.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.pythonlibrary.title")}}</router-link>
                 </li>
                 <li>
                 <router-link
-                    :to="{name : 'documentation', hash: '#disco'}"
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.datapolicy.title`))}"
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.datapolicy.title")}}</router-link>
                 </li>
@@ -78,11 +78,12 @@
         </div>
       </q-drawer>
 
-      <div id="IHR_documentation-page">
+      <div id="IHR_documentation-page" >
         <div v-for="sec in $t('documentationPage.sections')" 
             class="IHR_documentation-page">
-          <h1 v-html='sec.title'></h1>
-          <p v-html='sec.summary'></p>
+            <div :id="replaceSpaces(sec.title)"></div>
+            <h1 v-html='sec.title'></h1>
+          <p class="text-left text-body1" v-html='sec.summary'></p>
           <div 
             class="row"
             v-for="sub in sec.description"
@@ -107,6 +108,11 @@ export default {
   mounted() {
     this.$emit("sidebar-action", true);
   },
+  methods: {
+      replaceSpaces(text) {
+          return text.split(' ').join('_');
+      } 
+  }
 };
 </script>
 
