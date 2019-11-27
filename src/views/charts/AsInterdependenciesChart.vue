@@ -214,12 +214,12 @@ export default {
                     data[asn] = elem;
                 } else {
                     if (data[asn] != undefined) {
-                      elem.increment = elem.hege - data[asn].hege;
+                      elem.increment = 100*(elem.hege - data[asn].hege)/elem.hege;
                       res.push(elem);
                       delete data[asn];
                     } 
                     else{
-                      elem.increment = elem.hege;
+                      elem.increment = 100;
                       res.push(elem);
                     }
                 }
@@ -227,7 +227,7 @@ export default {
             });
 
             for(var unprocessed in data){
-                data[unprocessed].increment = -data[unprocessed].hege;
+                data[unprocessed].increment = -100;
                 data[unprocessed].hege = 0;
                 res.push(data[unprocessed]);
             }

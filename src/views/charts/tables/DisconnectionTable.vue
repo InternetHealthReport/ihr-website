@@ -32,7 +32,7 @@ export default {
         {
           name: "starttime",
           required: true,
-          label: this.$t('charts.disconnections.table.startTime'),
+          label: "Disconnection Time",
           align: "center",
           field: row => row.starttime,
           format: val => val,
@@ -41,25 +41,16 @@ export default {
         {
           name: "endtime",
           required: true,
-          label: this.$t('charts.disconnections.table.endTime'),
+          label: "Reconnection Time",
           align: "center",
           field: row => row.endtime,
           format: val => val,
           sortable: true
         },
         {
-          name: "ipv4",
-          required: true,
-          label: "ip v4",
-          align: "center",
-          field: row => row.ipv4,
-          format: val => val,
-          sortable: false
-        },
-        {
           name: "prefixv4",
           required: true,
-          label: this.$t('prefix') + " v4",
+          label: "IP Prefix",
           align: "center",
           field: row => row.prefixv4,
           format: val => val,
@@ -68,18 +59,9 @@ export default {
         {
           name: "probe_id",
           required: true,
-          label: "probe id",
+          label: "Probe ID",
           align: "center",
           field: row => row.probe_id,
-          format: val => val,
-          sortable: true
-        },
-        {
-          name: "level",
-          required: true,
-          label: this.$t('charts.disconnections.table.level'),
-          align: "center",
-          field: row => row.level,
           format: val => val,
           sortable: true
         },

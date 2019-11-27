@@ -50,7 +50,7 @@ export default {
         {
           name: "reportedIp",
           required: true,
-          label: this.$t('charts.delayAndForwarding.tables.forwarding.reportedIp'),
+          label: "Reported IP",
           align: "center",
           field: row => row.ip,
           format: val => val,
@@ -59,7 +59,7 @@ export default {
         {
           name: "usualPrecedingIp",
           required: true,
-          label: this.$t('charts.delayAndForwarding.tables.forwarding.usualPrecedingIP'),
+          label: "Usual Preceding IP",
           align: "center",
           field: row => row.previoushop,
           format: val => val,
@@ -68,7 +68,7 @@ export default {
         {
           name: "correlation",
           required: true,
-          label: this.$t('charts.delayAndForwarding.tables.forwarding.correlation'),
+          label: "Correlation",
           align: "center",
           field: row => row.correlation,
           format: val => `${val.toFixed(3)}`,
@@ -76,7 +76,7 @@ export default {
         },
         {
           name: "responsibility",
-          label: this.$t('charts.delayAndForwarding.tables.forwarding.responsibility'),
+          label: "Responsibility",
           align: "center",
           field: row => row.responsibility,
           format: val => `${val.toFixed(3)}`,
