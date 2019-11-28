@@ -85,7 +85,6 @@
             <h1 v-html='sec.title'></h1>
           <p class="text-left text-body1" v-html='sec.summary'></p>
           <div 
-            class="row"
             v-for="sub in sec.description"
               >
               <h2 v-html="sub.header"></h2>

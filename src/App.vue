@@ -126,7 +126,7 @@
       primary
       class="IHR_minimum-width IHR_footer text-white text-center row items-streatch content-stretch no-wrap justiy-between"
     >
-      <span class="col-2 IHR_copyright">
+      <div class="col-2 IHR_copyright IHR_fsection">
         <div class="text-weight-bold">
           Internet Health Report
         </div>
@@ -137,9 +137,10 @@
             </q-btn>
           </router-link>
         </div>
-      </span>
-      <span class="IHR_sitemap col-8 row">
-        <span class="col-4">
+      </div>
+      <div class="IHR_fsection col-8">
+        <div class="IHR_sitemap row justify-start">
+        <span class="col-3">
           <ul>
             <li class="text-weight-bold">
                 {{$t('footer.reportPages.title')}}
@@ -156,7 +157,7 @@
             </li>
           </ul>
         </span>
-        <span class="col-4">
+        <span class="col-3">
           <ul>
             <li class="text-weight-bold">
               <router-link
@@ -176,7 +177,7 @@
             </li>
           </ul>
         </span>
-        <span class="col-4">
+        <span class="col-3">
           <ul>
             <li class="text-weight-bold">
               <router-link
@@ -196,20 +197,29 @@
             </li>
           </ul>
         </span>
-      </span>
-      <span class="IHR_external-links col-2">
-        <div class="row wrap justify-around">
-          <a href="https://twitter.com/ihr_alerts" class="col-4">
+        </div>
+        <div class="row items-center q-pt-lg">
+            <div class="col-2 "><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
+            <div class="col-10 text-caption text-left">
+                </a><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" property="dct:title" rel="dct:type"> Internet Health Report</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="ihr-admin@iij-ii.co.jp" rel="cc:morePermissions">ihr-admin@iij-ii.co.jp</a>.
+            </div>
+        </div>
+      </div>
+      <div class="IHR_external-links col-2 IHR_fsection">
+        <div class="row wrap justify-center">
+          <a href="https://twitter.com/ihr_alerts" class="col-1">
             <q-icon name="fab fa-twitter-square" />
           </a>
-          <a href="https://github.com/InternetHealthReport" class="col-4">
+          <div class="col-1 q-pa-md"></div>
+          <a href="https://github.com/InternetHealthReport" class="col-1">
             <q-icon name="fab fa-github-square" />
           </a>
-          <router-link :to="{name : 'contact'}" class="col-4">
+          <div class="col-1 q-pa-md"></div>
+          <router-link :to="{name : 'contact'}" class="col-1">
             <q-icon name="fas fa-envelope-square" />
           </router-link>
         </div>
-      </span>
+      </div>
     </q-footer>
   </q-layout>
 </template>
@@ -310,7 +320,10 @@ menu-delinkify(val)
       menu-delinkify 1
 
   &footer
-    & > *
+    & a
+      color white
+
+    ~/fsection 
       padding-top 5pt
       border-left solid gray 1px
 
@@ -331,12 +344,12 @@ menu-delinkify(val)
       font-size 12pt
       font-weight 300
       text-align center
-      & a
-        menu-delinkify 0
 
       & > span
         padding-left 20pt
         text-align left
+        & a
+            menu-delinkify 0
         & > ul
           margin-top 2pt
           & > li

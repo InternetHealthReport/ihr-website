@@ -72,7 +72,7 @@ export default {
     let filter = new NetworkDelayQuery()
       .startPointName(DEFAULT_STARTPOINT.NAME)
       .startPointType(DEFAULT_STARTPOINT.TYPE)
-      .endPointName(["Tokyo, Tokyo, JP", "New York City, New York, US", "174"])
+      .endPointName(["Tokyo, Tokyo, JP", "Ashburn, Virginia, US", "London, England, GB"])
       .endpointAf(this.asFamily)
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();

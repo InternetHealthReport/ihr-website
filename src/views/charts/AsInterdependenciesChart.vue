@@ -214,7 +214,7 @@ export default {
                     data[asn] = elem;
                 } else {
                     if (data[asn] != undefined) {
-                      elem.increment = 100*(elem.hege - data[asn].hege)/elem.hege;
+                      elem.increment = 100*((elem.hege - data[asn].hege)/data[asn].hege);
                       res.push(elem);
                       delete data[asn];
                     } 
