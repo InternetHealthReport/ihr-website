@@ -43,7 +43,7 @@ class ChartInterval {
 
   static lastDays(nbDays) {
     let result = ChartInterval.today();
-    result.begin.setUTCDate(result.begin.getUTCDate() - nbDays); //7 day starting from 0
+    result.begin.setUTCDate(result.begin.getUTCDate() - nbDays); //a few days starting from 0
     return result;
   }
 
