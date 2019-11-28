@@ -25,12 +25,8 @@
                     "body": "We have several research papers describing our monitoring techniques: <ul> <li>Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush,<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'> Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements.</a> ACM IMC 2017, London, UK (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_imc2017.bib'>bibtex</a>).  </li><li>  Anant Shah, Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>Disco: Fast, Good, and Cheap Outage Detection</a>, TMA 2017  (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/anant_tma2017.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, Proceedings of PAM'18. Berlin, Germany. March 2018  (<a href='hhttps://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam18.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17  (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.bib'>bibtex</a>).  </li></ul>"
                 },
                 { 
-                    "header":"",
-                    "body": ""
-                },
-                { 
-                    "header":"",
-                    "body": ""
+                    "header":"Citation policy",
+                    "body": "If you publish material using data from the Internet Health Report, then, help others to obtain the same data sets and replicate your experiments by citing of the above papers. "
                 }
             ]
         },
@@ -43,12 +39,12 @@
                     "body": ""
                 },
                 { 
-                    "header":"",
+                    "header":"How can I report problems?",
                     "body": ""
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"How can I contribute?",
+                    "body": "interchip, github"
                 },
                 { 
                     "header":"",
@@ -65,24 +61,20 @@
             "summary": "The Internet Health Report helps network operators to monitor network conditions. Network performance data is collected with RIPE Atlas and BGPstream. and analyzed with a set of tools pinpointing delay changes, forwarding anomalies, network disconnections and routing changes.",
             "description": [
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"IIJ",
+                    "body": " main sponsor"
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"IIJ-II",
+                    "body": "main host"
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"RIPE NCC",
+                    "body": "data and ripe fund"
                 },
                 { 
-                    "header":"",
-                    "body": ""
-                },
-                { 
-                    "header":"",
-                    "body": ""
+                    "header":"Route-views",
+                    "body": "data"
                 }
             ]
         },
@@ -99,60 +91,48 @@
                     "body": " <p>Let's look at an example, AS2497 IIJ is one of the main ISP in Japan. For the <a href='/ihr/2497/asn/?date=2018-02-15&last=7'>second week of January 2018 we obtain the two following plots</a>:</p> <img src='/static/ihr/hegemony_AS2497.png' style='max-width:100%'> <p><b>The top plot</b> shows the AS dependencies of AS2497. That means the most common transit networks used to reach AS2497. The value (a.k.a AS hegemony) range between 0 and 1. The value represents the ratio of AS paths towards AS2497 that contain a certain AS transit.  Values close to 1 mean that the reachability of the monitored AS is strongly depending on a transit AS. The plot shows only three weak dependencies to Level(3) (AS3356), NTT America (AS2914), and GTT (AS3257). Around mid-February, 14% of the paths towards IIJ transit through Level(3), 12% through NTT, and 3% through GTT. Stub ASes usually have much higher values, for example the values goes up to 1 for  ASes with a single upstream provider (meaning that all the paths include the upstream provider). You can click on the graph to display dependencies details at particular timestamp and a graphical representation of BGP changes around that time (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated-in-ripestat' target='_blank'>using BGPlay</a>).</p> <p><b>The bottom plot</b> shows the number of networks that depend on AS2497. In this case there is about 400 networks that use IIJ for transit. This is somehow related to <a href='http://as-rank.caida.org/asns/2497' target='_blank'>IIJ's customer cone</a>. The main difference is that networks using IIJ as a backup transit are not counted here whereas they are counted in its customer cone. You can click on the graph to obtain an overview of dependent networks and a link to the complete list of networks. </p>"
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"Known issues",
+                    "body": "<p><b>Level shift for an entire day. </b> Sometimes we cannot get as much data as we'd like, if the amount of data is very low then graphs might show significant level shifts for the entire day. </p> <p><b>Update frequency.</b> For now AS interdependence results are daily updated. We are planning to make it near-real time in a near future. </p>"
                 },
                 { 
-                    "header":"",
-                    "body": ""
-                },
-                { 
-                    "header":"",
-                    "body": ""
+                    "header":"References",
+                    "body": "<ul> <li> Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17.  </li><li><a href='https://github.com/InternetHealthReport/ashash'> https://github.com/InternetHealthReport/ashash</a> </li></ul>"
                 }
             ]
         },
         "delayforward": {
             "title":  "Delay and Forwarding anomalies",
-            "summary": "traceroute data",
+            "summary": "<p>Using traceroute data collected with the RIPE Atlas measurement platform, we detect delay changes and significant routing changes. The techniques we used are detailed in the following research paper: <a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'>R. Fontugne, E. Aben, C. Pelsser, R. Bush, Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements. ACM IMC 2017, London, UK.</a>﷯ </p>",
             "description": [
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"What the graphs mean?",
+                    "body": "<p>Let's look at two examples. First, <a href='http://ihr.iijlab.net/ihr/7922/asn/?date=2017-11-10&amp;last=7'>AS7922 Comcast on November 2017</a>:</p> <img src='/static/ihr/tartiflette_AS7922.png' style='max-width:100%'> <p><b>The top plot</b> represents the overall delay changes we observe for AS7922. This value is normally close to 0, but features higher values when we observe significant delay changes for IP addresses in that AS.  In this example we see that AS7922 features increased delays daily. You can click on the graphs to obtain the list of IP addresses that are detected by our system and the end-to-end delays for traceroute monitoring reported IP addresses. </p> <p>For forwarding anomalies let's look at another example,<a href='http://ihr.iijlab.net/ihr/174/asn/?date=2017-11-02&amp;last=3'> AS174 Cogent on November 2017</a>:</p> <img src='/static/ihr/tartiflette_AS174.png' style='max-width:100%'> <p><b>The bottom plot</b> represents the forwarding anomalies observed for AS174. Intuitively, this graph represents the presence and absence of IP addresses for AS174 in the monitored traceroutes. If the number of observed IP addresses for AS174 is constant then the forwarding anomaly level is close to 0. If we observe more IP addresses than usual then the forwarding anomaly level takes higher positive values. On the other hand if we observe less IP addresses than usual, the forwarding anomaly level takes lower negative values. In this example, IP addresses from AS174 are appearing more than usual due to an internal routing anomaly. You can click on the graphs to obtain the list of reported IP addresses and a visualization of corresponding traceroutes.  </p>" 
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"Known issues",
+                    "body": "<p><b>Traceroute limitations.</b> Our analysis of delay and forwarding anomalies relies solely on traceroute results. That implies a few limitations, for example, unexpected results for MPLS tunnels that do not implement RFC4950. </p> "
                 },
                 { 
-                    "header":"",
-                    "body": ""
-                },
-                { 
-                    "header":"",
-                    "body": ""
-                },
-                { 
-                    "header":"",
-                    "body": ""
+                    "header":"References",
+                    "body": "<ul> <li> <a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'>R. Fontugne, E. Aben, C. Pelsser, R. Bush, Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements. ACM IMC 2017, London, UK.</a> </li><li><a href='https://github.com/InternetHealthReport/tartiflette'> https://github.com/InternetHealthReport/tartiflette</a> </li></ul>"
                 }
             ]
         },
         "disco": {
             "title":  "Network disconnections",
-            "summary": "disco",
+            "summary": "<p> To detect significant network disconnections we monitor the status of Atlas probes. We  essentially seek for synchronized disconnections of probes that are in the same geographical or topological area.  See our research report for more details: <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, Disco: Fast, Good, and Cheap Outage Detection. TMA 2017</a> </p>",
             "description": [
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"What the graph mean?",
+                    "body": "<p> Here is an example for <a href='http://ihr.iijlab.net/ihr/35540/asn/?date=2017-12-07&amp;last=30'>AS35540 with two disconnections late in 2017</a>.  <img src='/static/ihr/disco_AS35540.png' style='max-width:100%'> </p> <p>The graph shows the disconnection level, which is a metric taking into account the number of disconnected probes for this AS and the synchronization of their disconnection time. Larger values represent stronger evidences of the network disconnection. </p> <p>To avoid too many false positives, only values higher than 10 are reported. We also monitors only networks and countries that have at least 10 Atlas probes. If you click on the graph you will obtain the list of disconnected probes along with a visualization of traceroutes initiated by these probes (<a href='https://labs.ripe.net/Members/massimo_candela/tracemon-traceroute-visualisation-network-debugging-tool' target='_blank'>using Tracemon</a>). This visualization allows one to see the outage from the inside and identify where the disconnection happened.  </p>"
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"Known issues",
+                    "body": "<p><b>Atlas infrastructure.</b> Sudden Atlas controller reboots or outages near Atlas controllers may result in large-scale Atlas probes disconnection thus appear as a large outage for our detector. "
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"References",
+                    "body": "<ul> <li>  A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>Disco: Fast, Good, and Cheap Outage Detection</a>. TMA 2017.  </li><li><a href='https://github.com/InternetHealthReport/disco'> https://github.com/InternetHealthReport/disco</a> </li></ul>"
                 },
                 { 
                     "header":"",
@@ -165,28 +145,24 @@
             ]
         },
         "api": {
-            "title":  "API",
-            "summary": "",
+            "title":  "REST API",
+            "summary": "All results displayed on the Internet Health Report website are available via a REST API.",
             "description": [
                 { 
-                    "header":"How do I get my network monitored?",
-                    "body": ""
+                    "header":"Format",
+                    "body": "Two formats are available, HTML and JSON. The HTML format allows developpers to easily play with the API. The JSON format provides a programmatic access to our reports. The results are formatted in HTML if you access the API with your web browser, JSON is used otherwise. "
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"Endpoints",
+                    "body": "The API is accessible at <a href='http://ihr.iijlab.net/ihr/api/'> http://ihr.iijlab.net/ihr/api/ </a> and there is six endpoints available: <ul> <li> delay: Overall delay change observed for an ASN.  </li><li> delay_alarms: Details of links with reported delay change.  </li><li> forwarding: Overall forwarding anomaly score reported for an ASN.  </li><li> forwarding_alarms: Details of routers for identified forwarding anomalies.  </li><li> disco_events: Network disconnections observed for an ASN or country.  </li><li> disco_probes: Disconnected probes identified in a disco_event </li></ul>"
                 },
                 { 
-                    "header":"",
-                    "body": ""
+                    "header":"Filtering",
+                    "body": "<p>You can filter your search by adding parameters in the URL. For example: </p><ul> <li> <a href='http://ihr.iijlab.net/ihr/api/delay/?asn=174'> http://ihr.iijlab.net/ihr/api/delay/?asn=174 </a> returns delay changes only for AS174.  </li><li> <a href='http://ihr.iijlab.net/ihr/api/disco_events/?streamname=20712'> http://ihr.iijlab.net/ihr/api/disco_events/?streamname=20712 </a> returns network disconnections for AS20712.  </li><li> <a href='http://ihr.iijlab.net/ihr/api/disco_events/?streamname=IR'> http://ihr.iijlab.net/ihr/api/disco_events/?streamname=IR </a> returns network disconnections in Iran.  </li></ul> <p></p> <p>You can also filter results using inequalities. Add the suffix '_gte' and '_lte' for 'greater than or equal' and 'less than or equal'. For example, <a href='http://ihr.iijlab.net/ihr/api/delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00'> http://ihr.iijlab.net/ihr/api/delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00 </a> returns delay change results for AS174 on June 2017. </p> "
                 },
                 { 
-                    "header":"",
-                    "body": ""
-                },
-                { 
-                    "header":"",
-                    "body": ""
+                    "header":"Scripting",
+                    "body": "<p>This is a python example to fetch the latest delay change results for AS174 on June 2017: </p> <pre><code>import sys\nimport requests\nurl = 'https://ihr.iijlab.net/ihr/api/delay/'\nparams={\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin_lte': '2017-07-01T00:00'} \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
                 }
             ]
         },

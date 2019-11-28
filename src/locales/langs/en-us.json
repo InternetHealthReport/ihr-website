@@ -50,7 +50,7 @@
 	},
 	"AsAndIxp": {
 		"headerString": {
-			"loading": "loading in progress",
+			"loading": "Loading in progress...",
 			"notFound": "you are searching is not available",
 			"expired" : "Request expired"
 		},
@@ -71,20 +71,23 @@
 				"dependentTitle": "dependent networks",
 				"increment": "increment",
 				"dependencies": "Dependency",
-				"dependent": "dependent"
+				"dependent": "dependent",
+               "apiTitle": "Displayed data is available at the following links:"
 			}
 		},
 		"linkDelays": {
 			"title": "link delays",
 			"yaxis": "Delay Change Level",
 			"table": {
-				"title": "delay anomalies"
+				"title": "delay anomalies",
+               "apiTitle": "Displayed data is available at the following links:"
 			}
 		},
 		"delayAndForwarding": {
 			"title": "delay and forwarding",
 			"yaxis": "Delay Change Level",
-			"yaxis2": "Forwarding Anomaly<br> Level",
+			"yaxis2": "Forwarding Anomaly Level",
+            "apiTitle": "Displayed data is available at the following links:",
 			"tables": {
 				"delay": {
 					"title": "delay anomalies",
@@ -105,11 +108,12 @@
 			"title": "network disconnections",
 			"table": {
 				"event": "event",
-				"startTime": "event start",
-				"endTime": "event end",
+				"startTime": "Disconnection time",
+				"endTime": "Reconnection time",
 				"level": "level",
 				"disconnectionProbes": "disconnection events probes",
-				"yaxis": "Disconnection Level"
+				"yaxis": "Disconnection Level",
+                "apiTitle": "Displayed data is available at the following links:"
 			}
 		},
 		"networkDelay": {

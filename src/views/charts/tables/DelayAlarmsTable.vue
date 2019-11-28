@@ -68,7 +68,7 @@ export default {
         sortBy: "deviation",
         descending: true,
         page: 1,
-        rowsPerPage: 8
+        rowsPerPage: 10
       },
       visibleColumns: ['asNumber', 'link', 'delayChange', 'deviation', 'nbprobes'],
       columns: [
@@ -84,7 +84,7 @@ export default {
         {
           name: "link",
           required: true,
-          label: "Link",
+          label: "IP Link",
           align: "center",
           field: row => row.link,
           format: val => val.replace(/(\))|(^\()/g, "").split(","),
@@ -93,7 +93,7 @@ export default {
         {
           name: "delayChange",
           required: true,
-          label: this.$t("charts.delayAndForwarding.tables.delay.delayChange"),
+          label: "Delay Change (ms)",
           align: "center",
           field: row => row.diffmedian,
           format: val => val.toFixed(2),
@@ -102,7 +102,7 @@ export default {
         {
           name: "deviation",
           required: true,
-          label: this.$t("charts.delayAndForwarding.tables.delay.deviation"),
+          label: "Deviation",
           align: "center",
           field: row => row.deviation,
           format: val => val.toFixed(2),

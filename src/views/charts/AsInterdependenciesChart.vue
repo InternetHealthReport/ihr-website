@@ -54,7 +54,8 @@
         <q-tab-panel name="bgpPlay">
           <bgplay :as-number="asNumber" :date-time="details.date" />
         </q-tab-panel>
-        <q-tab-panel name="api" class="IHR_api-table q-pa-lg">
+        <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
+          <h3>{{$t("charts.asInterdependencies.table.apiTitle")}}</h3>
           <table>
             <tr>
               <td><p class="text-subtitle1">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</p></td>
@@ -213,12 +214,12 @@ export default {
                     data[asn] = elem;
                 } else {
                     if (data[asn] != undefined) {
-                      elem.increment = elem.hege - data[asn].hege;
+                      elem.increment = 100*((elem.hege - data[asn].hege)/data[asn].hege);
                       res.push(elem);
                       delete data[asn];
                     } 
                     else{
-                      elem.increment = elem.hege;
+                      elem.increment = 100;
                       res.push(elem);
                     }
                 }
@@ -226,7 +227,7 @@ export default {
             });
 
             for(var unprocessed in data){
-                data[unprocessed].increment = -data[unprocessed].hege;
+                data[unprocessed].increment = -100;
                 data[unprocessed].hege = 0;
                 res.push(data[unprocessed]);
             }

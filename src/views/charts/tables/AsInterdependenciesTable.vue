@@ -41,7 +41,7 @@ export default {
         {
           name: "asName",
           required: true,
-          label: "Origin Autonomous System",
+          label: "Autonomous System Name",
           align: "left",
           field: row => {
             return row.originasn_name == "" ? "--" : row.originasn_name;
@@ -52,7 +52,7 @@ export default {
         {
           name: "asNumber",
           required: true,
-          label: `origin ${this.$t("asn")}`,
+          label: `ASN`,
           align: "left",
           field: row => row.originasn,
           format: val => val,
@@ -64,7 +64,7 @@ export default {
         {
           name: "asName",
           required: true,
-          label: "Autonomous System",
+          label: "Autonomous System Name",
           align: "left",
           field: row => row.asn_name,
           format: val => `${val}`,
@@ -73,7 +73,7 @@ export default {
         {
           name: "asNumber",
           required: true,
-          label: this.$t("asn"),
+          label: "ASN",
           align: "left",
           field: row => row.asn,
           format: val => val,
@@ -87,13 +87,13 @@ export default {
         sortBy: "hegemony",
         descending: true,
         page: 1,
-        rowsPerPage: 8
+        rowsPerPage: 10
       },
       columns: [
         ...columns,
         {
           name: "hegemony",
-          label: "hegemony",
+          label: "AS Hegemony",
           align: "center",
           field: row => row.hege,
           format: val => `${val.toFixed(3)}`,
@@ -101,15 +101,13 @@ export default {
         },
         {
           name: "hegemonyIncrement",
-          label: `hegemony ${this.$t(
-            "charts.asInterdependencies.table.increment"
-          )}`,
+          label: `% Change`,
           align: "center",
           field: row => row.increment,
           format: val => {
-            if (val == undefined) return "--";
-            if (val > 0) return "+" + val.toFixed(3);
-            return val.toFixed(3);
+            if (val == undefined) return 0;
+            if (val > 0) return "+" + val.toFixed(1) + "%";
+            return val.toFixed(3) + "%";
           },
           sortable: true
         }
