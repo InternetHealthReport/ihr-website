@@ -105,7 +105,7 @@ export default {
           align: "center",
           field: row => row.increment,
           format: val => {
-            if (val == undefined) return "--";
+            if (val == undefined) return 0;
             if (val > 0) return "+" + val.toFixed(1) + "%";
             return val.toFixed(3) + "%";
           },
