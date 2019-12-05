@@ -170,7 +170,13 @@ export default {
   methods: {
     showTable(clickData) {
       let plot = clickData.points[0];
-      this.details.date = new Date(plot.x + "+00:00")//adding timezone to string...
+      if(plot.x.length < 14){
+        // at midnight no time is given
+        this.details.date = new Date(plot.x+" 00:00+00:00")//adding timezone to string...
+      }
+      else{
+        this.details.date = new Date(plot.x + "+00:00")//adding timezone to string...
+      }
       let intervalEnd = this.details.date;
       //getting the previus point closest to x
       let xIndex = plot.pointIndex - 1;
