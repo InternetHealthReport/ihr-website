@@ -89,28 +89,28 @@
         </q-scroll-area>
       </div>
       <!-- minified area -->
-      <template v-slot:mini>
-        <q-scroll-area class="fit cursor-pointer column">
-          <q-avatar
-            text-color="accent"
-            icon="fas fa-user-circle"
-            class="col-auto"
-            font-size="20pt"
-            style="width: 100%"
-            v-if="$ihr_api.authenticated"
-            @click="fetchList"
-          />
-          <div
-            clickable
-            @click="asnList = preset.asnList"
-            :key="preset.name"
-            v-for="preset in presetAsnLists"
-            class="IHR_presets-name-vertical col-auto"
-          >
-            <span>{{preset.name}}</span>
-          </div>
-        </q-scroll-area>
-      </template>
+      <!--<template v-slot:mini>-->
+        <!--<q-scroll-area class="fit cursor-pointer column">-->
+          <!--<q-avatar-->
+            <!--text-color="accent"-->
+            <!--icon="fas fa-user-circle"-->
+            <!--class="col-auto"-->
+            <!--font-size="20pt"-->
+            <!--style="width: 100%"-->
+            <!--v-if="$ihr_api.authenticated"-->
+            <!--@click="fetchList"-->
+          <!--/>-->
+          <!--<div-->
+            <!--clickable-->
+            <!--@click="asnList = preset.asnList"-->
+            <!--:key="preset.name"-->
+            <!--v-for="preset in presetAsnLists"-->
+            <!--class="IHR_presets-name-vertical col-auto"-->
+          <!-->-->
+            <!--<span>{{preset.name}}</span>-->
+          <!--</div>-->
+        <!--</q-scroll-area>-->
+      <!--</template>-->
     </q-drawer>
   </div>
 </template>
@@ -156,7 +156,8 @@ const PRAMETERS_PRESETS = {
   MAX_DIFFMEDIAN: [150, DEFAULT_MAX_DIFFMEDIAN, 300]
 };
 
-const PRESETS_ASN_LISTS = [
+const PRESETS_ASN_LISTS = [];
+const PRESETS_ASN_LISTS_SAVE = [
   {
     name: "Tier1",
     asnList: [2914, 4134, 7018, 3356, 1299, 3257, 6939, 174]

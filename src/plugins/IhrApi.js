@@ -157,12 +157,6 @@ const IhrApi = {
             timeout: DEFAULT_TIMEOUT,
             headers: this.headers
           });
-          this.local_base = axios.create({
-            //TODO remove me please
-            baseURL: "http://localhost:8000/",
-            timeout: DEFAULT_TIMEOUT,
-            headers: this.headers
-          });
         },
         _check_authorization(errorCallback) {
           if (!this.authenticated) {
@@ -214,7 +208,7 @@ const IhrApi = {
         },
         /**
          * @brief generic API wrapper
-         * @param endpoint and-point name. it will be added to @ref
+         * @param endpoint end-point name. it will be added to @ref
          *      ihr_api_base
          * @param successCallback <optional>
          *      If is a function will be called with the api result
@@ -253,7 +247,7 @@ const IhrApi = {
               successCallback = recursiveSuccess;
             }
           } else {
-            console.log("call with non Query object:", JSON.stringify(query));
+            console.log("call with non Query object:", JSON.stringify(query), endpoint, method);
           }
 
           this._resolveAxiosPromise(
@@ -479,7 +473,7 @@ const IhrApi = {
         },
         userVerifyToken: async function() {
           try {
-            await this.local_base.get("user/verify_token/");
+            await this.axios_base.get("user/verify_token/");
             return true;
           } catch (err) {
             this._save_user(null);
