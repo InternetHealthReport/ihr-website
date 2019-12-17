@@ -15,6 +15,14 @@ const COMMON_WITH_LEGEND = {
   },
 };
 
+var NET_DELAY_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  yaxis: {
+    title: "",
+    autorange: true,
+  }
+};
+
 var DISCO_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
@@ -62,5 +70,6 @@ export {
   DISCO_LAYOUT,
   DELAY_AND_FORWARDING_LAYOUT,
   AS_INTERDEPENDENCIES_LAYOUT,
-  DELAY_CHART_LAYOUT
+  DELAY_CHART_LAYOUT,
+  NET_DELAY_LAYOUT 
 };

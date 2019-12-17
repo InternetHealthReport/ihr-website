@@ -37,6 +37,9 @@
 	},
 	"searchBar": {
 		"placeholder": "AS or IXP name",
+		"locationHint": "ASN, city name, or Atlas probe ID",
+		"locationSource": "Source",
+		"locationDestination": "Destination",
 		"noResultFound": "no result found"
 	},
 	"globalReport": {

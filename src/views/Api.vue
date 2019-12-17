@@ -1,7 +1,7 @@
 <template>
   <div>
-    <network-delay-chart :start-time="interval.begin" :end-time="interval.end" :fetch="fetch"/>
-    <q-btn @click="fetch=true">fetch</q-btn>
+    <network-delay-chart :start-time="interval.begin" :end-time="interval.end" 
+        startPointName="2914"/>
   </div>
 </template>
 <script>
@@ -16,7 +16,7 @@ export default {
   }
   ,data() {
     return {
-      interval: ChartInterval.today(),
+      interval: ChartInterval.lastDays(3),
       fetch: false
     }
   }

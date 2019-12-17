@@ -1,13 +1,14 @@
 <template>
   <q-select
-    :dark="dark" dense standout use-input
-    :label="placeholder"
+    :dark="dark" use-input clearable dense outlined
+    :label="label"
     :options="options"
     v-model = "model"
     @filter="filter"
     hide-dropdown-icon
     input-debounce="1000"
     class="IHR_search-bar"
+    :hint="hint"
   >
     <template v-slot:append>
         <div v-if="!loading">
@@ -22,9 +23,9 @@
         <q-item
             v-bind="scope.itemProps"
             v-on="scope.itemEvents"
-            @click="gotoASN(scope.opt.value)" 
+            @click="selectLocation(scope.opt.value)" 
           >
-          <q-item-section side color='accent'>{{scope.opt.value | ihr_NumberToAsOrIxp}}</q-item-section>
+          <q-item-section side color='accent'>{{scope.opt.type | readableType}}</q-item-section>
           <q-item-section class="IHR_asn-element-name">{{scope.opt.name}}</q-item-section>
       </q-item>
     </template>
@@ -32,16 +33,28 @@
 </template>
 
 <script>
-import { NetworkQuery } from "@/plugins/IhrApi";
+import { NetworkDelayLocation, NetworkQuery } from "@/plugins/IhrApi";
 
 const MIN_CHARACTERS = 3;
-const MAX_RESULTS = 10;
+const MAX_RESULTS = 100;
 
 export default {
   props: {
     dark: {
       type: Boolean,
       default: false
+    },
+    label: {
+        type: String,
+        default: ''
+    },
+    hint: {
+        type: String,
+        default: ''
+    },
+    selected: {
+        type: String,
+        default: ''
     }
   },
   data() {
@@ -51,9 +64,10 @@ export default {
             {label: 2497,
             value: 2497,
             name: "IIJ"}],
-        model: null,
+        model: this.selected,
         loading: false,
         always: false,
+      networkDelayLocation: new NetworkDelayLocation().orderedByName(),
       networkQuery: new NetworkQuery().orderedByNumber()
     };
   },
@@ -66,11 +80,42 @@ export default {
         this.networkQuery,
         result => {
           result.results.some(element => {
+            let elem = {
+                value: elem,
+                type: (element.number < 0 ? "IX" : "AS"),
+                name: Math.abs(element.number),
+                af: 4, 
+            }
             this.options.push({
-              value: element.number,
-              name: element.name
+              value: elem,
+              type: elem.type,
+              name: element.name+' ('+elem.type+elem.name+')',
+              label: elem.type+elem.name,
+              asFamily: elem.af
             });
             update();
+            return this.options.length > MAX_RESULTS;
+          });
+        },
+        error => {
+          console.error(error);
+        }
+      );
+      this.networkDelayLocation.name(value);
+      this.$ihr_api.network_delay_location(
+        this.networkDelayLocation,
+        result => {
+          result.results.some(element => {
+            if(element.type != 'AS' && element.type != 'IX'){
+                this.options.push({
+                value: element,
+                type: element.type,
+                name: element.name,
+                label: element.name,
+                asFamily: element.af
+                });
+                update();
+            }
             return this.options.length > MAX_RESULTS;
           });
           this.loading = false;
@@ -79,12 +124,10 @@ export default {
           console.error(error);
         }
       );
+
     },
-    gotoASN(number) {
-      this.$router.push({
-        name: "as_and_ixp",
-        params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(number) }
-      });
+    selectLocation(loc) {
+      this.$emit("select", loc);
     },
     filter (value, update, abort) {
       if(value.length < MIN_CHARACTERS) {
@@ -93,11 +136,6 @@ export default {
       else{
         this.search(value, update)
       }
-    }
-  },
-  computed: {
-    placeholder() {
-      return `${this.$t("searchBar.placeholder")}`;
     }
   }
 };

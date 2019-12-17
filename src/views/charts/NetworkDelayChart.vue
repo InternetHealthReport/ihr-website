@@ -8,26 +8,41 @@
       default-opened
     >
       <template v-slot:header>
-        <q-item-section @click.stop v-if="startSearchBar">
-          <network-edge-search-bar
-            :class="['IHR_searchbar', openClose? 'IHR_showed-bar': 'IHR_hidden-bar']"
-          />
-        </q-item-section>
         <q-item-section>{{$t('charts.networkDelay.title')}}</q-item-section>
-        <q-item-section @click.stop v-if="endSearchBar">
-          <network-edge-search-bar
-            :class="['IHR_searchbar', 'IHR_last', openClose? 'IHR_showed-bar': 'IHR_hidden-bar']"
-          />
-        </q-item-section>
       </template>
 
-      <reactive-chart
-        :layout="layout"
-        :traces="traces"
-        @loaded="loading = false"
-        :ref="myId"
-        :no-data="noData"
-      />
+      <div class="row justify-center">
+          <div class="col-5 q-pa-sm">
+            <location-search-bar
+                @select="addStartLocation"
+                :hint="$t('searchBar.locationSource')"
+                :label="$t('searchBar.locationHint')"
+                :selected="startPointName"
+            />
+          </div>
+          <div class="col-5 q-pa-sm">
+            <location-search-bar
+                @select="addEndLocation"
+                :hint="$t('searchBar.locationDestination')"
+                :label="$t('searchBar.locationHint')"
+            />
+        </div>
+          <div class="col-2 q-pa-sm">
+            <q-btn @click='queryNetworkDelayApi' color='secondary' class="q-ml-sm">Add</q-btn>
+            <q-btn @click='clearGraph' class="q-ml-sm">Clear all</q-btn>
+        </div>
+      </div>
+      <div class="row">
+          <div class="col">
+            <reactive-chart
+                :layout="layout"
+                :traces="traces"
+                @loaded="loading = false"
+                :ref="myId"
+                :no-data="noData"
+            />
+        </div>
+      </div>
       <div v-if="loading" class="IHR_loading-spinner">
         <q-spinner color="secondary" size="15em" />
       </div>
@@ -36,24 +51,22 @@
 </template>
 
 <script>
-import { debounce } from "quasar";
-import NetworkEdgeSearchBar from "@/components/search_bar/NetworkEdgeSearchBar";
+import LocationSearchBar from "@/components/search_bar/LocationSearchBar";
 import CommonChartMixin, { DEFAULT_DEBOUNCE } from "./CommonChartMixin";
 import { NetworkDelayQuery, NetworkDelayLocation, AS_FAMILY } from "@/plugins/IhrApi";
-import { DISCO_LAYOUT } from "./layouts";
-
-const DEFAULT_STARTPOINT = {
-  NAME: "2914",
-  TYPE: NetworkDelayQuery.EDGE_TYPE.AS
-};
+import { NET_DELAY_LAYOUT } from "./layouts";
 
 export default {
   mixins: [CommonChartMixin],
-  components: { NetworkEdgeSearchBar },
+  components: { LocationSearchBar },
   props: {
-    startPoint: {
-      type: Boolean,
-      default: false
+    startPointName: {
+      type: String,
+        default: () => ["2497"]
+    },
+    endPointName: {
+        type: Array,
+        default: () => ["Tokyo, Tokyo, JP", "Singapore, Central Singapore, SG", "Ashburn, Virginia, US", "London, England, GB"]
     },
     asFamily: {
       type: Number,
@@ -65,53 +78,55 @@ export default {
     },
     endSearchBar: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   data() {
     let filter = new NetworkDelayQuery()
-      .startPointName(DEFAULT_STARTPOINT.NAME)
-      .startPointType(DEFAULT_STARTPOINT.TYPE)
-      .endPointName(["Tokyo, Tokyo, JP", "Ashburn, Virginia, US", "London, England, GB"])
+      .startPointName(this.startPointName)
+      .endPointName(this.endPointName)
       .endpointAf(this.asFamily)
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 
-    //prevent calls within 500ms and execute only the last one
-    let debouncedApiCall = debounce(
-      () => {
-        if (!this.fetch) return;
-        this.queryNetworkDelayApi();
-      },
-      DEFAULT_DEBOUNCE,
-      false
-    );
-
     return {
       openClose: true,
-      debouncedApiCall: debouncedApiCall,
-      filters: [filter],
+      filter: filter,
       traces: [],
-      layout: DISCO_LAYOUT
+      layout: NET_DELAY_LAYOUT,
+      selectedStart: '',
+      selectedEnd: ''
     };
   },
-  created() {},
+  mounted() {
+      if( this.startPointName != ""){
+        this.queryNetworkDelayApi();
+      }
+  },
   methods: {
     queryNetworkDelayApi() {
       this.loading = true;
       this.$ihr_api.network_delay(
-        this.filters[0],
+        this.filter,
         result => {
           this.fetchNewtworkDelay(result.results);
           this.loading = false;
         },
         error => {
           console.error(error); //FIXME do a correct alert
+          this.loading = false;
         }
       );
     },
-    stop(event) {
-      console.log("stop", event);
+    addStartLocation(loc) {
+        this.filter.startPointName(loc.name)
+    },
+    addEndLocation(loc) {
+        this.filter.endPointName(loc.name)
+    },
+    clearGraph(){
+        this.traces = []
+        this.layout.datarevision = new Date().getTime();
     },
     fetchNewtworkDelay(data) {
       console.log("fetchNewtworkDelay");
@@ -127,11 +142,21 @@ export default {
 
         let trace = traces[key];
         if (trace === undefined) {
+            let startname = elem.startpoint_type+elem.startpoint_name
+            if (elem.startpoint_type === 'CT'){
+                startname = elem.startpoint_name.split(',')[0]
+            }
+            let endname = elem.endpoint_type+elem.endpoint_name
+        
+            if (elem.endpoint_type === 'CT'){
+                endname = elem.endpoint_name.split(',')[0]
+            }
+          
           trace = {
             x: [],
             y: [],
             //name: `${elem.startpoint_type} ${elem.startpoint_name} ipv${elem.startpoint_af} => ${elem.endpoint_type} ${elem.endpoint_name} ipv${elem.endpoint_af}`
-            name: `${elem.startpoint_type} ${elem.startpoint_name} => ${elem.endpoint_type} ${elem.endpoint_name}`
+            name: `${startname} to ${endname}`
           };
           traces[key] = trace;
           this.traces.push(trace);

@@ -26,7 +26,7 @@ import { MonitoringUserQuery } from "./query/IhrUserQuery";
 /// Base url for api
 const IHR_API_BASE = "https://ihr.iijlab.net/ihr/api/";
 /// Default timeout before api call are considered failed
-const DEFAULT_TIMEOUT = 60000;
+const DEFAULT_TIMEOUT = 180000;
 /// Data of the first available data
 const PROJECT_START_DATE = new Date("2016-01-01T00:00:00");
 /// Default expire date of cookies
@@ -550,6 +550,17 @@ const IhrApi = {
       },
       filters: {
         // utilities
+        readableType(type){
+            if(type=='CT'){
+                return 'City';
+            }
+            else if(type == 'PB'){
+                return 'Probe';
+            }
+            else{
+                return type;
+            }
+        },
         ihr_NumberToAsOrIxp(asn) {
           if (asn == 0) {
             return "unknown";
