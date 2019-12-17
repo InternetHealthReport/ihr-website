@@ -87,7 +87,7 @@
 			}
 		},
 		"delayAndForwarding": {
-			"title": "delay and forwarding",
+			"title": "link delay and forwarding anomalies",
 			"yaxis": "Delay Change Level",
 			"yaxis2": "Forwarding Anomaly Level",
             "apiTitle": "Displayed data is available at the following links:",
@@ -120,7 +120,8 @@
 			}
 		},
 		"networkDelay": {
-			"title": "network delay"
+			"title": "network delay",
+			"yaxis": "Estimated RTT (ms)"
 		}
 	},
 	"sigIn": {

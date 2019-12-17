@@ -1,23 +1,12 @@
 <template>
-  <div class="IHR_network-chart">
-    <q-expansion-item
-      v-model="openClose"
-      expand-separator
-      header-class="IHR_charts-title"
-      header-style="overflow: hidden"
-      default-opened
-    >
-      <template v-slot:header>
-        <q-item-section>{{$t('charts.networkDelay.title')}}</q-item-section>
-      </template>
-
+  <div class="IHR_chart">
       <div class="row justify-center">
           <div class="col-5 q-pa-sm">
             <location-search-bar
                 @select="addStartLocation"
                 :hint="$t('searchBar.locationSource')"
                 :label="$t('searchBar.locationHint')"
-                :selected="startPointName"
+                :selected="startPointNameStr()"
             />
           </div>
           <div class="col-5 q-pa-sm">
@@ -46,7 +35,6 @@
       <div v-if="loading" class="IHR_loading-spinner">
         <q-spinner color="secondary" size="15em" />
       </div>
-    </q-expansion-item>
   </div>
 </template>
 
@@ -166,6 +154,14 @@ export default {
         trace.x.push(elem.timebin);
       });
       this.layout.datarevision = new Date().getTime();
+    },
+    startPointNameStr(){
+        if(isNaN(this.startPointName)){
+            return this.startPointName;
+        }
+        else{
+            return 'AS'+this.startPointName.toString()
+        }
     }
   }
 };

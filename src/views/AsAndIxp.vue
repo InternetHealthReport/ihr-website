@@ -26,11 +26,32 @@
           </q-card-section>
        </q-card>
       </q-expansion-item>
+
+      <q-expansion-item
+        :label="$t('charts.networkDelay.title')"
+        caption="Traceroute data"
+        header-class="IHR_charts-title"
+        icon="fas fa-shipping-fast"
+        default-opened
+      >
+        <q-separator />
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+            <network-delay-chart 
+                :start-time="startTime" 
+                :end-time="endTime" 
+                :startPointName="asNumber.toString()"
+                ref="networkDelayChart"
+            />
+          </q-card-section>
+       </q-card>
+      </q-expansion-item>
+
       <q-expansion-item
         :label="$t('charts.delayAndForwarding.title')"
         caption="Traceroute data"
         header-class="IHR_charts-title"
-        icon="fas fa-shipping-fast"
+        icon="fas fa-exchange-alt"
         default-opened
       >
         <q-separator />
@@ -107,6 +128,7 @@ import ClosableContainer from "@/components/ClosableContainer";
 import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
 import DiscoChart from "@/views/charts/DiscoChart";
 import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
+import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
 import ReverseDnsIp from "@/components/ripe/ReverseDnsIp";
 import PrefixOverview from "@/components/ripe/PrefixOverview";
@@ -122,8 +144,9 @@ const LOADING_STATUS = {
 
 const CHART_REFS = [
   "asInterdependenciesChart",
+  "networkDelayChart",
   "delayAndForwardingChart",
-  "delayAndForwardingChart"
+  "discoChart"
 ];
 
 export default {
@@ -132,6 +155,7 @@ export default {
     AsInterdependenciesChart,
     DiscoChart,
     DelayAndForwardingChart,
+    NetworkDelayChart,
     PrefixOverview,
     ClosableContainer,
     ReverseDnsIp

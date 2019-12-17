@@ -13,14 +13,20 @@ const COMMON_WITH_LEGEND = {
     y: 1.2,
     orientation: "h"
   },
+  yaxis: {
+    automargin: true
+  },
+  xaxis: {
+    automargin: true
+  },
 };
 
 var NET_DELAY_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
-    title: "",
+    title: i18n.t("charts.networkDelay.yaxis"),
     autorange: true,
-  }
+  },
 };
 
 var DISCO_LAYOUT = {
