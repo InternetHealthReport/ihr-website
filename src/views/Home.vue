@@ -12,7 +12,7 @@
       </div>
     </router-link>
     <div
-      class="IHR_description"
+      class="IHR_description-main"
       v-html="$interpolateArray($t('globalReport.description'), {
         'ripe': '<a href=\'https://atlas.ripe.net/\' target=\'_blank\'>RIPE Atlas</a>',
         'bgpstream': '<a href=\'https://bgpstream.caida.org/\' target=\'_blank\'>BGPstream</a>'
@@ -20,18 +20,19 @@
     ></div>
 
 
-    <div class="IHR_section">
-        <h2> {{$t("analysisModules.title")}}</h2>
-        <div id="IHR_graphs-types" class="row wrap justify-around">
-        <div
-            class="col-xs-4 col-xl-4 text-center column"
+        <div class="row wrap justify-center q-gutter-md">
+        <q-card
+            class="analysis-modules"
             v-for="graphT in graphTypes"
             :key="graphT.name"
         >
-            <h2 class="col-auto">{{$t(`${graphT.name}.title`)}}</h2>
-            <div class="col-auto">
-            <q-avatar color="primary" text-color="white" size="100px" :icon="graphT.icon"></q-avatar>
-            </div>
+        <q-card-section class="bg-primary text-white q-pa-sm">
+                  <div class='text-h2'>
+                      <q-avatar :icon="graphT.icon" ></q-avatar>
+                      {{$t(`${graphT.name}.title`)}}
+                  </div>
+          </q-card-section>
+        <q-card-section>
             <div
             class="IHR_description col-auto"
             v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues)"
@@ -41,9 +42,9 @@
                 :to="{name :'documentation', query: graphT.docsQuery}"
             >{{$t(`${graphT.name}.title`)}} {{$t("documentation")}}</router-link>
             </div>
+        </q-card-section>
+        </q-card>
         </div>
-        </div>
-    </div>
 
     <div class="IHR_section">
         <h2> {{$t("ihrTweets.title")}}</h2>
@@ -88,8 +89,13 @@ const GRAPHS_TYPES = [
     docsQuery: {}
   },
   {
-    name: "analysisModules.delayAndForwarding",
+    name: "analysisModules.networkDelay",
     icon: "fas fa-shipping-fast",
+    docsQuery: {}
+  },
+  {
+    name: "analysisModules.delayAndForwarding",
+    icon: "fas fa-exchange-alt",
     docsQuery: {}
   },
   {
@@ -210,9 +216,15 @@ export default {
     font-size 18pt
     width 90%
     margin 30pt auto
-    text-align center
+    text-align left
     #IHR_graphs-types &
       text-align justify
+
+    &-main
+      font-size 20pt
+      margin 30pt auto
+      text-align center
+      width 80%
 
     &-link
       position relative
@@ -250,6 +262,11 @@ export default {
         max-width 300px
         width auto
         height auto
+
+.analysis-modules
+    width 90%
+    max-width 750px
+    text-align left
 
 
 </style>

@@ -17,6 +17,7 @@ const COMMON_WITH_LEGEND = {
     automargin: true
   },
   xaxis: {
+    autorange: true,
     automargin: true
   },
 };

@@ -10,7 +10,7 @@
     "sections": {
         "about": {
             "title":  "About Internet Health Report",
-            "summary": "The Internet Health Report helps network operators to monitor network conditions. Network performance data is collected with RIPE Atlas and BGPstream. and analyzed with a set of tools pinpointing delay changes, forwarding anomalies, network disconnections and routing changes.",
+            "summary": "The Internet Health Report helps network operators to monitor network conditions. Network performance data is collected with RIPE Atlas and BGPstream. and analyzed with a set of tools pinpointing delay changes, forwarding anomalies, network disconnections and routing changes.  In a general effort towards transparency and reusability, the Internet Health Report data and analysis tools are made publicly available.",
             "description": [
                 { 
                     "header":"Monitored networks",

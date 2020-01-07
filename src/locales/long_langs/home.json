@@ -3,26 +3,32 @@
     "globalReport": {
       "name": "Global report",
       "description": [
-        "the Internet Health Report helps to monitor network conditions.",
-        "the Global report helps to catch a glimpse of status of the whole network using charts."
+        "The Internet Health Report monitors the conditions of networks that composed the Internet in order to provide to network operators, policymakers, and other stakeholders, a better understanding of the Internet's infrastructure and its evolution. "
       ]
     },
     "analysisModules": {
         "title": "Analysis modules",
         "asInterdependence": {
-        "title":  "AS interdependence",
+        "title":  "AS Dependency",
         "description": [
+            "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of networks connectivity and resiliency. ",
             "Shows connectivity between networks (a.k.a AS) using {asPaper}AS hegemony{close} metric."
         ]
         },
+        "networkDelay": {
+        "title": "Network Delay",
+        "description": [
+            "Monitor delays between numerous places on the Internet."
+        ]
+        },
         "delayAndForwarding": {
-        "title": "delay and forwarding",
+        "title": "Link Monitoring",
         "description": [
             "shows delay changes and forwarding anomalies to detect network malfunctions."
         ]
         },
         "disco": {
-        "title": "network disconnection",
+        "title": "Disconnection",
         "description": [
             "show the average of severity levels of network disconnection."
         ]
