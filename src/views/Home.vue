@@ -258,7 +258,7 @@ export default {
 
 .analysis-modules
     width 90%
-    max-width 750px
+    max-width 550px
     text-align left
 
 

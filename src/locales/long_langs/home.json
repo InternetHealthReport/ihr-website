@@ -3,7 +3,7 @@
     "globalReport": {
       "name": "Global report",
       "description": [
-        "The Internet Health Report monitors the conditions of networks that composed the Internet in order to provide to network operators, policymakers, and other stakeholders, a better understanding of the Internet's infrastructure and its evolution. "
+        "The Internet Health Report monitors the conditions of networks that composed the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. "
       ]
     },
     "analysisModules": {
@@ -17,19 +17,19 @@
         "networkDelay": {
         "title": "Network Delay",
         "description": [
-            "Monitor delays between numerous places on the Internet."
+            " Delay is a key metric when assessing the performance or conditions of a network. The Internet Health Report infers network delays between ASes, cities, and Internet landmarks from traceroute data."
         ]
         },
         "delayAndForwarding": {
         "title": "Link Monitoring",
         "description": [
-            "shows delay changes and forwarding anomalies to detect network malfunctions."
+                "Network congestion is another key indicator of network conditions. The Internet Health Report pinpoints link congestion and abnormal forwarding patterns using traceroute data."
         ]
         },
         "disco": {
         "title": "Disconnection",
         "description": [
-            "show the average of severity levels of network disconnection."
+            "The worst-case scenario is the complete disconnection of a network from the Internet. The Internet Health Report infers data plane disruptions by monitoring the connectivity of RIPE Atlas probes."
         ]
         }
     },
