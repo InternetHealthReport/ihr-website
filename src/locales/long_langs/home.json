@@ -11,8 +11,7 @@
         "asInterdependence": {
         "title":  "AS Dependency",
         "description": [
-            "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of networks connectivity and resiliency. ",
-            "Shows connectivity between networks (a.k.a AS) using {asPaper}AS hegemony{close} metric."
+            "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of networks connectivity and resiliency. "
         ]
         },
         "networkDelay": {
@@ -63,6 +62,7 @@
         ] 
     },
     "documentation": "documentation",
+    "learnmore": "Learn more on ",
     "explore": "Explore"
     
   },

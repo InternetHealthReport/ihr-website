@@ -32,15 +32,15 @@
                       {{$t(`${graphT.name}.title`)}}
                   </div>
           </q-card-section>
-        <q-card-section>
+        <q-card-section class="q-pa-xs">
             <div
-            class="IHR_description col-auto"
+            class="IHR_description"
             v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues)"
             ></div>
-            <div class="IHR_description IHR_description-link col-grow content-end">
+            <div class="IHR_description IHR_description-link">
             <router-link
                 :to="{name :'documentation', query: graphT.docsQuery}"
-            >{{$t(`${graphT.name}.title`)}} {{$t("documentation")}}</router-link>
+            >{{$t("learnmore")}} {{$t(`${graphT.name}.title`)}}</router-link>
             </div>
         </q-card-section>
         </q-card>
@@ -228,14 +228,7 @@ export default {
 
     &-link
       position relative
-      > a
-        position absolute
-        bottom 0px
-        left 0px
-        width 100%
-        text-align center
-        &:first-letter
-          text-transform uppercase
+      text-align right
 
   &section
     margin 60pt auto 40px auto
