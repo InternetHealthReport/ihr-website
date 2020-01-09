@@ -25,7 +25,7 @@ export default {
   }
 };
 </script>
-footer-buttons
+
 <style lang="stylus">
 @import '~quasar-variables'
 
