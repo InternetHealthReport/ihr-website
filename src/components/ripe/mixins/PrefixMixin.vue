@@ -1,15 +1,10 @@
 <template>
   <div>
-    <q-card v-if="loaded === false" negative>
-      <q-card-section>
-        {{ $t('genericErrors.cloudNotLoad') }} {{name}}
-      </q-card-section>
-    </q-card>
-    <div v-if="loaded === null" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
+    <div v-if="loaded === null" class="IHR_loading-spin">
+        <q-spinner color="secondary" size="2em" />
+        Loading RIPEstat widgets...
     </div>
-    <div :id="myId">
-    </div>
+    <div :id="myId"></div>
   </div>
 </template>
 <script>
@@ -59,10 +54,7 @@ export default {
 @import '~quasar-variables'
 
 .IHR_
-  &loading-spinner
-    & > *
-      width 25%
-      height 25%
-      display inline-block
-      margin auto
+  &loading-spin
+    padding 10px
+    align center
 </style>

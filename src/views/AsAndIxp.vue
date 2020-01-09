@@ -40,7 +40,8 @@
             <network-delay-chart 
                 :start-time="startTime" 
                 :end-time="endTime" 
-                :startPointName="asNumber.toString()"
+                :startPointName="Math.abs(asNumber).toString()"
+                :startPointType="this.$route.params.asn.substring(0,2)"
                 ref="networkDelayChart"
             />
           </q-card-section>
@@ -63,7 +64,6 @@
             :as-number="asNumber"
             :fetch="fetch"
             ref="delayAndForwardingChart"
-            @prefix-details="showDetails($event)"
             />
           </q-card-section>
         </q-card>
@@ -101,20 +101,6 @@
               </div>
             </div>
           </div>
-          <q-scroll-area
-            class="col"
-            :thumb-style="{right: '1px', width: '6pt'}"
-          >
-            <closable-container
-              @close-me="removePrefix(prefix)"
-              v-for="prefix in prefixesDetail"
-              :key="prefix"
-              class="IHR_prefix-sidebar shadow-2"
-            >
-              <reverse-dns-ip :ip="prefix" class="IHR_reverse-dns-ip-improved" />
-              <prefix-overview :ip="prefix" class="IHR_prefix-overview-improved" />
-            </closable-container>
-          </q-scroll-area>
         </div>
       </q-drawer>
       <div class="IHR_last-element">&nbsp;</div>

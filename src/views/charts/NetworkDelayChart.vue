@@ -48,6 +48,10 @@ export default {
   mixins: [CommonChartMixin],
   components: { LocationSearchBar },
   props: {
+    startPointType: {
+      type: String,
+        default: () => ["AS"]
+    },
     startPointName: {
       type: String,
         default: () => ["2497"]
@@ -72,6 +76,7 @@ export default {
   data() {
     let filter = new NetworkDelayQuery()
       .startPointName(this.startPointName)
+      .startPointType(this.startPointType)
       .endPointName(this.endPointName)
       .endpointAf(this.asFamily)
       .timeInterval(this.startTime, this.endTime)
@@ -108,9 +113,11 @@ export default {
     },
     addStartLocation(loc) {
         this.filter.startPointName(loc.name)
+        this.filter.startPointType(loc.type)
     },
     addEndLocation(loc) {
         this.filter.endPointName(loc.name)
+        this.filter.endPointType(loc.type)
     },
     clearGraph(){
         this.traces = []
@@ -160,7 +167,7 @@ export default {
             return this.startPointName;
         }
         else{
-            return 'AS'+this.startPointName.toString()
+            return this.startPointType.toString()+this.startPointName.toString()
         }
     }
   }
