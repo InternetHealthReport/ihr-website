@@ -159,14 +159,6 @@ export default {
     };
   },
   methods: {
-    showDetails(address) {
-      this.$emit("sidebar-action", true);
-      if(this.prefixesDetail.find((elem) => address == elem) == undefined)
-        this.prefixesDetail.push(address);
-    },
-    removePrefix(address) {
-      this.prefixesDetail = this.prefixesDetail.filter(elem => address != elem);
-    },
     pushRoute() {
       this.$router.push({
       query: {
