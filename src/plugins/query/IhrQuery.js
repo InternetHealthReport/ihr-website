@@ -883,7 +883,7 @@ class NetworkDelayLocation extends Query {
   }
 
   static get ENTRY_POINT() {
-    return "network_delay_location/";
+    return "network_delay_locations/";
   }
 
   static get EDGE_TYPE() {

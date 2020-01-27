@@ -2,7 +2,16 @@
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div>
         <h1 class="text-center">{{headerString}}</h1>
-        <h2 class="text-center">{{subHeader}}</h2>
+        <h2 class="text-center">{{subHeader}} - {{reportDateFmt}}
+            <date-time-picker
+                :min="minDate"
+                :max="maxDate"
+                :value="maxDate"
+                @input="setReportDate"
+                hideTime
+                class="IHR_subtitle_calendar"
+            />
+        </h2>
     </div>
     <q-list v-if="showGraphs">
       <q-expansion-item
@@ -91,7 +100,6 @@
       <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
         <div class="fit column">
           <div class="row IHR_sidebar-filter-section col-auto">
-            <interval-picker v-model="interval" class="col-9"/>
             <div class="col-3 IHR_family-filter">
               <div>
                 <q-toggle v-model="addressFamily" name="addressFamily"/>
@@ -119,6 +127,7 @@ import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
 import ReverseDnsIp from "@/components/ripe/ReverseDnsIp";
 import PrefixOverview from "@/components/ripe/PrefixOverview";
 import { setTimeout } from "timers";
+import DateTimePicker from "@/components/DateTimePicker";
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -144,7 +153,8 @@ export default {
     NetworkDelayChart,
     PrefixOverview,
     ClosableContainer,
-    ReverseDnsIp
+    ReverseDnsIp,
+    DateTimePicker
   },
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn);

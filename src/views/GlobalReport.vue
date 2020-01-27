@@ -1,6 +1,19 @@
 <template>
   <div class="IHR_char-container">
-    <h1 class="text-center">{{title}}</h1>
+    <div class="q-mb-xl">
+        <h1 class="text-center">{{title}}</h1>
+        <h2 class="text-center"> 
+            {{reportDateFmt}}
+            <date-time-picker
+                :min="minDate"
+                :max="maxDate"
+                :value="maxDate"
+                @input="setReportDate"
+                hideTime
+                class="IHR_subtitle_calendar"
+            />
+        </h2>
+    </div>
     <q-expansion-item
       expand-separator
       :label="$t('charts.linkDelays.title')"
@@ -55,9 +68,6 @@
       <div class="fit column">
         <div class="IHR_sidebar-filter-section-global col-auto q-mini-drawer-hide q-gutter-y-md">
           <div>
-            <interval-picker v-model="interval" class="col" />
-          </div>
-          <div>
             <label>filter level</label>
             <q-btn-toggle
               class="col"
@@ -88,29 +98,29 @@
           </q-list>
         </q-scroll-area>
       </div>
-      <!-- minified area -->
-      <!--<template v-slot:mini>-->
-        <!--<q-scroll-area class="fit cursor-pointer column">-->
-          <!--<q-avatar-->
-            <!--text-color="accent"-->
-            <!--icon="fas fa-user-circle"-->
-            <!--class="col-auto"-->
-            <!--font-size="20pt"-->
-            <!--style="width: 100%"-->
-            <!--v-if="$ihr_api.authenticated"-->
-            <!--@click="fetchList"-->
-          <!--/>-->
-          <!--<div-->
-            <!--clickable-->
-            <!--@click="asnList = preset.asnList"-->
-            <!--:key="preset.name"-->
-            <!--v-for="preset in presetAsnLists"-->
-            <!--class="IHR_presets-name-vertical col-auto"-->
-          <!-->-->
-            <!--<span>{{preset.name}}</span>-->
-          <!--</div>-->
-        <!--</q-scroll-area>-->
-      <!--</template>-->
+       <!--minified area -->
+      <template v-slot:mini>
+        <q-scroll-area class="fit cursor-pointer column">
+          <q-avatar
+            text-color="accent"
+            icon="fas fa-user-circle"
+            class="col-auto"
+            font-size="20pt"
+            style="width: 100%"
+            v-if="$ihr_api.authenticated"
+            @click="fetchList"
+          />
+          <div
+            clickable
+            @click="asnList = preset.asnList"
+            :key="preset.name"
+            v-for="preset in presetAsnLists"
+            class="IHR_presets-name-vertical col-auto"
+          >
+            <span>{{preset.name}}</span>
+          </div>
+        </q-scroll-area>
+      </template>
     </q-drawer>
   </div>
 </template>
@@ -127,6 +137,7 @@ import DelayChart, {
   DEFAULT_MAX_DIFFMEDIAN
 } from "./charts/global/DelayChart";
 import EventsMap from "./charts/global/EventsMap";
+import DateTimePicker from "@/components/DateTimePicker";
 
 const CHART_REFS = ["ihrChartDelay", "ihrChartMap", "ihrChartDisco"];
 
@@ -206,7 +217,8 @@ export default {
   components: {
     DiscoChart,
     DelayChart,
-    EventsMap
+    EventsMap,
+    DateTimePicker
   },
   data() {
     let filterLevel = Number(this.$route.query.filter_level);
@@ -225,7 +237,7 @@ export default {
       charRefs: CHART_REFS,
       asnList: [],
       asnListState: REPORT_TYPE.GLOBAL,
-      geoProbes: []
+      geoProbes: [],
     };
   },
   mounted() {
@@ -262,7 +274,7 @@ export default {
           console.error(error); //FIXME correct error handling
         }
       );
-    }
+    },
   },
   computed: {
     title() {
@@ -272,7 +284,7 @@ export default {
         case REPORT_TYPE.PERSONAL:
           return this.$t("globalReport.title.personal");
       }
-    }
+    },
   },
   watch: {
     filterLevel(newValue, oldValue) {
@@ -288,12 +300,10 @@ export default {
 @import '../styles/quasar.variables';
 
 .IHR_
-  &char-container
-    & > h1
-      margin-bottom 14pt
-
-      &:first-letter
-        text-transform capitalize
+  &subtitle_calendar
+      position relative
+      top -5px
+      left 5px
 
   &sidebar-filter-section-global
     & label

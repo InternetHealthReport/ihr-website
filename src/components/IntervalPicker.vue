@@ -47,11 +47,6 @@ class ChartInterval {
     return result;
   }
 
-  setIntevalTime(beginTimestamp, endTimestamp) {
-    this.begin.setTime(beginTimestamp);
-    this.end.setTime(endTimestamp);
-  }
-
   static getFromDuration(endTimestamp, nDaysBefore) {
     let end = new Date(endTimestamp);
     let begin = new Date(end);

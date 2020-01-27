@@ -44,7 +44,7 @@
 	},
 	"globalReport": {
 		"title": {
-			"global": "global report",
+			"global": "Global Report",
 			"personal": "personalized report"
 		},
 		"filters": {

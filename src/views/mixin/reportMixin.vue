@@ -1,11 +1,29 @@
 <script>
 
-import IntervalPicker, { ChartInterval } from "@/components/IntervalPicker";
+class DateInterval {
+  constructor(begin, end) {
+    this.begin = this.createDateAsUTC(begin);
+    this.end = this.createDateAsUTC(end);
+  }
+
+  dayDiff() {
+    return Math.round((this.end - this.begin) / 1000 / 60 / 60 / 24);
+  }
+
+  createDateAsUTC(date) {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
+  }
+
+  setHours() {
+    this.begin.setUTCHours(0, 0, 0, 0);
+    this.end.setUTCHours(23, 59, 59, 0);
+    return this;
+  }
+};
+
+import { PROJECT_START_DATE, Query } from "@/plugins/IhrApi";
 
 export default {
-  components: {
-    IntervalPicker
-  },
   props: {
     showSidebar: {
       type: Boolean,
@@ -15,7 +33,7 @@ export default {
   data() {
     let interval;
     try {
-      interval = ChartInterval.getFromDuration(
+      interval = this.getDateInterval(
         this.$route.query.date + "T00:00+00:00",
         this.$route.query.last
       );
@@ -23,7 +41,7 @@ export default {
       if (!(e instanceof RangeError)) {
         throw e;
       }
-      interval = ChartInterval.lastDays(3); // fallback to last few days
+      interval = this.getDateInterval(new Date(), 3); // fallback to last few days
     }
     return {
       interval: interval,
@@ -34,6 +52,9 @@ export default {
     this.pushRoute();
   },
   methods: {
+    setReportDate(event){
+        this.interval = this.getDateInterval(event, 3)
+    },
     resizeCharts() {
       setTimeout(() => {
         this.charRefs.forEach(chart => {
@@ -41,8 +62,29 @@ export default {
         });
       }, 400);
     },
+    getDateInterval(endTimestamp, nDaysBefore) {
+        let end = new Date(endTimestamp);
+        let begin = new Date(end);
+        begin.setUTCDate(begin.getUTCDate() - nDaysBefore);
+        if(isNaN(begin.getTime()) || isNaN(end.getTime()))
+            throw RangeError("invalid start or end")
+
+        let newInterval = new DateInterval(begin, end);
+        newInterval.setHours()
+        return newInterval
+    },
   },
   computed: {
+    minDate(){
+        return PROJECT_START_DATE;
+    },
+    maxDate(){ 
+        return new Date()
+    },
+    reportDateFmt() {
+        var options = { year: 'numeric', month: 'long', day: '2-digit', timeZone: 'UTC' };
+        return this.interval.end.toLocaleDateString(undefined, options)
+    },
     startTime() {
       return this.interval.begin;
     },

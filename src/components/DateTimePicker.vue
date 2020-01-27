@@ -1,45 +1,18 @@
 <template>
-  <div :id="myId" class="IHR_date-time-picker">
-    <q-input
-      filled
-      v-model="selectedDateTime"
-      :dark="white"
-      class="IHR_date-input"
-      readonly
-      hide-bottom-space
-      square
-      dense
-    >
-      <template v-slot:prepend>
         <q-icon name="fas fa-calendar-day" class="cursor-pointer" :class="textColor">
-          <q-popup-proxy transition-show="scale" transition-hide="scale" :target="`#${myId}`">
+          <q-popup-proxy id='popupid' v-model='show'>
             <q-date
               :value="qTimeModel"
               @input="propagate($event)"
               :mask="mask"
               :options="options"
+              color='accent'
             />
           </q-popup-proxy>
         </q-icon>
-      </template>
-      <template v-slot:append v-if="!hideTime">
-        <q-icon name="fas fa-clock" class="cursor-pointer" :class="textColor">
-          <q-popup-proxy transition-show="scale" transition-hide="scale" target>
-            <q-time
-              :value="qTimeModel"
-              @input="propagate($event)"
-              :mask="mask"
-              format24h
-              color="white"
-            />
-          </q-popup-proxy>
-        </q-icon>
-      </template>
-    </q-input>
-  </div>
 </template>
 <script>
-const QTIME_MASK = "YYYY-MM-DDTHH:mm:ss.SSS";
+const QTIME_MASK = "YYYY-MM-DDTHH:mm:ss.SSSZ";
 
 export default {
   props: {
@@ -75,7 +48,8 @@ export default {
       myId: `dateTimePicker${this._uid}`,
       selectedDateTime: this.$options.filters.ihrUtcString(this.value),
       mask: QTIME_MASK,
-      qTimeModel: this.value.toISOString()
+      qTimeModel: this.value.toISOString(),
+      show: false
     };
   },
   methods: {
@@ -84,11 +58,11 @@ export default {
       return selectDate >= this.min && selectDate <= this.max;
     },
     propagate(event) {
-      let selectedDate = new Date(event+"Z");
-      let isoDate = selectedDate.toISOString();
-      isoDate = isoDate.substring(0, isoDate.length - 1);
-      this.qTimeModel = isoDate;
+      let selectedDate = new Date(event);
+      this.qTimeModel = selectedDate.toISOString();
       this.selectedDateTime = this.$options.filters.ihrUtcString(selectedDate),
+      
+      this.show = false
       this.$emit("input", selectedDate);
     }
   },
