@@ -27,6 +27,7 @@
                 :layout="layout"
                 :traces="traces"
                 @loaded="loading = false"
+                @plotly-click="showTable"
                 :ref="myId"
                 :no-data="noData"
             />
@@ -35,18 +36,72 @@
       <div v-if="loading" class="IHR_loading-spinner">
         <q-spinner color="secondary" size="15em" />
       </div>
+    <div>
+    <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
+        <q-card-section class="q-pa-xs">
+          <div class="row items-center">
+              <div class="col">
+                  <div class="text-h3"> {{details.delayData.dateTime | ihrUtcString}} </div>
+              </div>
+              <div class="col-auto">
+                <q-btn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible=false" icon="fa fa-times-circle"></q-btn>
+              </div>
+          </div>
+        </q-card-section>
+      <q-tabs
+        v-model="details.activeTab"
+        dense
+        class="text-grey"
+        active-color="primary"
+        indicator-color="primary"
+        align="justify"
+        narrow-indicator
+      >
+        <q-tab name="delay" :label="$t('charts.networkDelay.table.title')" />
+        <q-tab name="api" label="API" />
+      </q-tabs>
+      <q-tab-panels v-model="details.activeTab" animated>
+        <q-tab-panel name="delay">
+          <network-delay-table
+            :start-time="startTime"
+            :stop-time="endTime"
+            :data="details.delayData.data"
+            :loading="details.delayData.loading"
+            show-start
+            @prefix-details="$emit('prefix-details', $event)"
+          />
+        </q-tab-panel>
+        <q-tab-panel name="api" class="IHR_api-table">
+          <table>
+            <tr>
+              <td>
+                <label for="delay">{{$t('charts.delayAndForwarding.yaxis')}}</label>
+              </td>
+              <td>
+                <a :href="delayUrl" target="_blank" id="delay">{{delayUrl}}</a>
+              </td>
+            </tr>
+          </table>
+        </q-tab-panel>
+      </q-tab-panels>
+    </q-card>
+    </div>
   </div>
 </template>
 
 <script>
+import { debounce } from "quasar";
 import LocationSearchBar from "@/components/search_bar/LocationSearchBar";
 import CommonChartMixin, { DEFAULT_DEBOUNCE } from "./CommonChartMixin";
+import NetworkDelayTable from "./tables/NetworkDelayTable";
 import { NetworkDelayQuery, NetworkDelayLocation, AS_FAMILY } from "@/plugins/IhrApi";
 import { NET_DELAY_LAYOUT } from "./layouts";
 
+const DELAY_ALARM_INTERVAL = 5 * 3600 * 1000; //5 minutes in milliseconds
+
 export default {
   mixins: [CommonChartMixin],
-  components: { LocationSearchBar },
+  components: { LocationSearchBar, NetworkDelayTable },
   props: {
     startPointType: {
       type: String,
@@ -58,7 +113,7 @@ export default {
     },
     endPointName: {
         type: Array,
-        default: () => ["Tokyo, Tokyo, JP", "Singapore, Central Singapore, SG", "Ashburn, Virginia, US", "London, England, GB"]
+        default: () => ["CT4Tokyo, Tokyo, JP", "CT4Singapore, Central Singapore, SG", "CT4Ashburn, Virginia, US", "CT4London, England, GB", "IP4", "AS415169", "AS425152"]
     },
     asFamily: {
       type: Number,
@@ -77,12 +132,33 @@ export default {
     let filter = new NetworkDelayQuery()
       .startPointName(this.startPointName)
       .startPointType(this.startPointType)
-      .endPointName(this.endPointName)
+      .endPointKey(this.endPointName)
       .endpointAf(this.asFamily)
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 
+    //prevent calls within 500ms and execute only the last one
+    let debouncedApiCall = debounce(
+      () => {
+        if (!this.fetch) return;
+        this.traces = [];
+        this.loading = true;
+        this.loadingDelay = true;
+        this.queryDelayAlarmsAPI();
+      },
+      DEFAULT_DEBOUNCE,
+      false
+    );
+
     return {
+      details: {
+        activeTab: "delay",
+        delayData: {},
+        tableVisible: false,
+        loading: true,
+        filter: ''
+      },
+      debouncedApiCall: debouncedApiCall,
       openClose: true,
       filter: filter,
       traces: [],
@@ -95,6 +171,11 @@ export default {
       if( this.startPointName != ""){
         this.queryNetworkDelayApi();
       }
+  },
+  computed:{
+    delayUrl() {
+      return this.$ihr_api.getUrl(this.filter);
+    },
   },
   methods: {
     queryNetworkDelayApi() {
@@ -116,15 +197,44 @@ export default {
         this.filter.startPointType(loc.type)
     },
     addEndLocation(loc) {
-        this.filter.endPointName(loc.name)
-        this.filter.endPointType(loc.type)
+        this.filter.endPointKey(loc.type+this.asFamily+loc.name)
     },
     clearGraph(){
         this.traces = []
         this.layout.datarevision = new Date().getTime();
     },
+    showTable(clickData) {
+      let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
+      this.details.activeTab = "delay"
+      this.details.filter = this.filter.clone()
+
+      this.details.delayData = {
+        dateTime: chosenTime,
+        startTime:  new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
+        stopTime: new Date(chosenTime.getTime() + DELAY_ALARM_INTERVAL),
+        data: [],
+        loading: true,
+      };
+
+      this.$ihr_api.network_delay(
+        this.details.filter.timeBin(chosenTime),
+        results => {
+          let data = [];
+          results.results.forEach(delay => {
+            data.push(delay);
+          });
+          this.details.delayData.data = data;
+          this.details.tableVisible = true;
+          this.details.delayData.loading = false;
+          this.details.filter = this.filter.clone();
+        },
+        error => {
+          console.error(error); //TODO better error handling
+        }
+      );
+
+    },
     fetchNewtworkDelay(data) {
-      console.log("fetchNewtworkDelay");
       let trace = [];
       let traces = {};
       data.forEach(elem => {
@@ -146,12 +256,20 @@ export default {
             if (elem.endpoint_type === 'CT'){
                 endname = elem.endpoint_name.split(',')[0]
             }
+            let nbtracks = elem.nbtracks;
           
           trace = {
             x: [],
             y: [],
             //name: `${elem.startpoint_type} ${elem.startpoint_name} ipv${elem.startpoint_af} => ${elem.endpoint_type} ${elem.endpoint_name} ipv${elem.endpoint_af}`
-            name: `${startname} to ${endname}`
+            name: `${startname} to ${endname}`,
+            hovertemplate:
+              "<b>" +
+              startname+" to "+endname +
+              "</b><br><br>" +
+              "%{x}<br>"+
+              "%{yaxis.title.text}: <b>%{y:.2f}</b>"+
+              "<extra></extra>"
           };
           traces[key] = trace;
           this.traces.push(trace);

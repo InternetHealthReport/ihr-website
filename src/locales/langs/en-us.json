@@ -121,7 +121,11 @@
 		},
 		"networkDelay": {
 			"title": "network delay",
-			"yaxis": "Estimated RTT (ms)"
+			"yaxis": "Estimated RTT (ms)",
+			"table": {
+				"title": "Estimated Delays",
+               "apiTitle": "Displayed data is available at the following links:"
+			}
 		}
 	},
 	"sigIn": {

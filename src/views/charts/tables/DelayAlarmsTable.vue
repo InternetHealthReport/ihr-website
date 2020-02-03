@@ -119,7 +119,7 @@ export default {
         },
         {
           name: "nbprobes",
-          label: "#Probes",
+          label: "Nb. Atlas Probes",
           align: "center",
           field: row => row.nbprobes,
           format: val => val,

@@ -797,7 +797,13 @@ class NetworkDelayQuery extends TimeQuery {
    * @param {Edge} endpoint_key use the static method edge to create Edge objects
    */
   endPointKey(endpoint_key) {
-    this._pointKey(endpoint_key, "endpoint_key");
+    //this._pointKey(endpoint_key, "endpoint_key");
+    return this._set(
+      "endpoint_key",
+      endpoint_key,
+      Query.EXACT,
+      _STRING_SEPARATOR
+    );
   }
 
   startPointName(startpoint_name) {
