@@ -51,7 +51,7 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
-      visibleColumns: ['startpoint', 'endpoint', 'median', 'nbtracks', 'nbprobes', 'realrtt'],
+      visibleColumns: ['startpoint', 'endpoint', 'median', 'nbtracks', 'realrtt', 'nbprobes'],
       columns: [
         {
           name: "startpoint",
@@ -90,27 +90,28 @@ export default {
           sortable: true
         },
         {
-          name: "nbprobes",
-          label: "Nb. Atlas Probes",
-          align: "center",
-          field: row => row.nbprobes,
-          format: val => val,
-          sortable: true
-        },
-        {
           name: "realrtt",
           label: "Nb. Real RTTs",
           align: "center",
           field: row => row.nbrealrtts,
           format: val => val,
           sortable: true
+        },
+        {
+          name: "nbprobes",
+          label: "Nb. Atlas Probes",
+          align: "center",
+          field: row => row.nbprobes,
+          format: val => val,
+          sortable: true
         }
+        
       ]
     };
   },
   mounted() {
       if(!this.showStart){
-          this.visibleColumns = ['endpoint', 'median', 'nbtracks', 'nbprobes', 'realrtt']
+          this.visibleColumns = ['endpoint', 'median', 'nbtracks', 'realrtt', 'nbprobes']
       }
   },
   methods: {
