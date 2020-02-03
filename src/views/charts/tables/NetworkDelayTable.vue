@@ -15,8 +15,8 @@
         <q-td key="endpoint" :props="props" > {{ getCellValue(props, "endpoint") }} </q-td>
         <q-td key="median" :props="props" >{{ getCellValue(props, "median") }}</q-td>
         <q-td key="nbtracks" :props="props" >{{ getCellValue(props, "nbtracks") }}</q-td>
-        <q-td key="nbprobes" :props="props"> {{ getCellValue(props, "nbprobes") }} </q-td>
         <q-td key="realrtt" :props="props"> {{ getCellValue(props, "realrtt") }} </q-td>
+        <q-td key="nbprobes" :props="props"> {{ getCellValue(props, "nbprobes") }} </q-td>
       </q-tr>
     </template>
   </q-table>

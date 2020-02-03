@@ -51,9 +51,10 @@
       <q-tabs
         v-model="details.activeTab"
         dense
-        class="text-grey"
+        class="text-grey inset-shadow"
         active-color="primary"
-        indicator-color="primary"
+        active-bg-color="white"
+        indicator-color="secondary"
         align="justify"
         narrow-indicator
       >
