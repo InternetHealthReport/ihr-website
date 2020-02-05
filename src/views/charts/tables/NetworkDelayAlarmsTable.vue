@@ -10,6 +10,7 @@
     row-key="asNumber"
     selection="single"
     :selected.sync="selectedRow"
+    loading-label="Fetching the latest network delay alarms..."
   >
     <template v-slot:top-right>
       <q-input debounce="300" v-model="filter" placeholder="Search">
@@ -64,6 +65,7 @@ export default {
     return {
       filter: '',
       selectedRow: [],
+      dataSummary: [],
       pagination: {
         sortBy: "nbalarms",
         descending: true,
@@ -110,8 +112,13 @@ export default {
       ],
     };
   },
-  computed: {
-    dataSummary(){
+  mounted(){
+      this.computeDataSummary()
+  },
+  methods: {
+      computeDataSummary(){
+        if(!this.data.length) return;
+
         var datasum = {};
         this.data.forEach( alarm => {
             var start = alarm.startpoint_type+alarm.startpoint_name
@@ -140,10 +147,15 @@ export default {
                 }
             }
         })        
-        return Object.values(datasum);
-    }
-  },
-  methods: {
+
+        // Select the AS with the largest number of alarms
+        const values = Object.values(datasum);
+        var first_row = values.reduce((prev, current) => (prev.nbalarms > current.nbalarms) ? prev : current);
+          console.log(first_row)
+        this.selectedRow = [first_row];
+        
+        this.dataSummary = values
+      },
       destinationsSubtitle(val){
           return String(val.length)+this.$t('charts.networkDelayAlarms.table.destinations');
       },
@@ -159,6 +171,9 @@ export default {
       }
   },
   watch: { 
+    data(){ 
+        this.computeDataSummary()
+    },
     selectedRow(newValue){
         this.$emit('selectedRow', newValue)
     }

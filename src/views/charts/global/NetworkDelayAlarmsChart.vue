@@ -7,7 +7,7 @@
         :startPointType="plot.startpoint_type"
         :endPointName="plot.endpoints"
         :clear="plot.clear"
-        ref="networkDelayChart"
+        noTable
     />
 
     <div>
@@ -114,7 +114,6 @@ export default {
         endpoints: [],
         clear: 1
       },
-      tableData: null,
       loading: true,
       delayFilter: null,
       debouncedApiCall: debouncedApiCall, 
@@ -137,7 +136,6 @@ export default {
             data.push(alarm);
           });
           this.table.data = data;
-          this.tableData = data;
           this.table.loading = false;
         },
         error => {
@@ -175,20 +173,6 @@ export default {
     }
   },
   watch: {
-    tableData(newValue){
-        if(this.table.selectedRow.length == 0){
-            var count = 0;
-            newValue.forEach( alarm => { 
-                if(alarm.startpoint_name != '0' && alarm.deviation>50 && count<MAX_NETDELAY_PLOTS){ 
-                    console.log(alarm)
-                    this.plot.endpoints = [alarm.endpoint_type+alarm.endpoint_af+alarm.endpoint_name];
-                    this.plot.startpoint_type = alarm.startpoint_type;
-                    this.plot.startpoint_name = alarm.startpoint_name;
-                    count += 1
-                }
-            })
-        }
-    },
     minDeviation(newValue) {
       this.filters.forEach(filter => {
         filter.deviation(newValue, DelayQuery.GTE);
