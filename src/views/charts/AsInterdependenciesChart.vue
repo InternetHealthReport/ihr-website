@@ -112,35 +112,26 @@ export default {
     addressFamily: {
       type: Number,
       default: AS_FAMILY.v4
+    },
+    clear: {
+      type: Number,
+      default: 1
+    },
+    noTable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
-    let hegemonyFilter = new HegemonyQuery()
-      .originAs(this.asNumber)
-      .addressFamily(this.addressFamily)
-      .timeInterval(this.startTime, this.endTime)
-      .orderedByTime();
-
-    let hegemonyConeFilter = new HegemonyConeQuery()
-      .asNumber(this.asNumber)
-      .addressFamily(this.addressFamily)
-      .timeInterval(this.startTime, this.endTime)
-      .orderedByTime();
-
     //prevent calls within 500ms and execute only the last one
-    let debouncedApiCall = debounce(
-      () => {
-        if (!this.fetch) return;
-        this.traces = extend(true, [], DEFAULT_TRACE);
-        this.loading = true;
-        this.loadingHegemony = true;
-        this.loadingHegemonyCone = true;
-        this.queryHegemonyAPI();
-        this.queryHegemonyConeAPI();
-      },
-      DEFAULT_DEBOUNCE,
-      false
-    );
+      let debouncedApiCall = debounce(
+        () => {
+            if(!this.fetch) return;
+            this.loadBothPlots()
+        },
+        DEFAULT_DEBOUNCE,
+        false
+        );
 
     return {
       details: {
@@ -156,18 +147,48 @@ export default {
       debouncedApiCall: debouncedApiCall,
       loadingHegemony: true,
       loadingHegemonyCone: true,
-      hegemonyFilter: hegemonyFilter,
-      hegemonyConeFilter: hegemonyConeFilter,
-      filters: [hegemonyFilter, hegemonyConeFilter],
+      hegemonyFilter: null,
+      hegemonyConeFilter: null,
       traces: DEFAULT_TRACE,
       layout: AS_INTERDEPENDENCIES_LAYOUT
     };
   },
   beforeMount() {
-    this.layout.yaxis.title = `AS`+this.asNumber+` ${this.$t("charts.asInterdependencies.yaxis")}`;
-    this.layout.yaxis2.title = `${this.$t("charts.asInterdependencies.yaxis2")} AS`+this.asNumber;
+      this.updateAxesLabel()
   },
   methods: {
+    updateAxesLabel(){
+        this.layout.yaxis.title = `AS`+this.asNumber+` ${this.$t("charts.asInterdependencies.yaxis")}`;
+        this.layout.yaxis2.title = `${this.$t("charts.asInterdependencies.yaxis2")} AS`+this.asNumber;
+    },
+    makeHegemonyFilter(){
+
+        return new HegemonyQuery()
+        .originAs(this.asNumber)
+        .addressFamily(this.addressFamily)
+        .timeInterval(this.startTime, this.endTime)
+        .orderedByTime();
+    },
+    makeHegemonyConeFilter(){
+        return new HegemonyConeQuery()
+        .asNumber(this.asNumber)
+        .addressFamily(this.addressFamily)
+        .timeInterval(this.startTime, this.endTime)
+        .orderedByTime();
+
+    },
+    loadBothPlots(){
+        if(this.asNumber==0) return;
+        this.updateAxesLabel()
+        this.hegemonyFilter= this.makeHegemonyFilter()
+        this.hegemonyConeFilter= this.makeHegemonyConeFilter()
+        this.traces = extend(true, [], DEFAULT_TRACE);
+        this.loading = true;
+        this.loadingHegemony = true;
+        this.loadingHegemonyCone = true;
+        this.queryHegemonyAPI();
+        this.queryHegemonyConeAPI();
+    },
     showTable(clickData) {
       let plot = clickData.points[0];
       if(plot.x.length < 14){
@@ -331,7 +352,11 @@ export default {
       }
       this.noData |= trace.length == 0;
       this.layout.datarevision = new Date().getTime();
-    }
+    },
+    clearGraph(){
+        this.traces = []
+        this.layout.datarevision = new Date().getTime();
+    },
   },
   computed: {
     networkDependencyData() {
@@ -359,16 +384,17 @@ export default {
   },
   watch: {
     addressFamily(newValue) {
-      this.filters.forEach((filter) => {
-        filter.addressFamily(newValue);
-      });
-      this.debouncedApiCall();
+      this.loadBothPlots();
     },
     asNumber(newValue) {
-      this.filters.forEach((filter) => {
-        filter.asNumber(newValue);
-      });
-      this.debouncedApiCall();
+        console.log("YEEEEEEEEEEEEEAAAAAAAAAAAAH")
+      this.loadBothPlots();
+    },
+    clear(newValue){
+        this.clearGraph();
+        this.$nextTick(function () {
+            this.loading = true;
+        })
     }
   }
 };

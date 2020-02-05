@@ -81,6 +81,19 @@ var AS_INTERDEPENDENCIES_LAYOUT = {
   }
 };
 
+var HEGEMONY_ALARMS_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  yaxis: {
+    title: "",
+    domain: [0.55, 1],
+    range: [0, 1.1],
+  },
+  yaxis2: {
+    domain: [0, 0.45],
+    autorange: true,
+  }
+};
+
 export {
   DISCO_LAYOUT,
   DELAY_AND_FORWARDING_LAYOUT,

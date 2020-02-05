@@ -16,6 +16,20 @@
     </div>
     <q-expansion-item
       expand-separator
+      :label="$t('charts.hegemonyAlarms.title')"
+      header-class="IHR_charts-title"
+      default-opened
+    >
+      <hegemony-alarms-chart
+        :start-time="startTime"
+        :end-time="endTime"
+        :fetch="fetch"
+        :min-deviation="minDeviationNetworkDelay"
+        ref="ihrChartHegemonyAlarms"
+      />
+    </q-expansion-item>
+    <q-expansion-item
+      expand-separator
       :label="$t('charts.networkDelayAlarms.title')"
       header-class="IHR_charts-title"
       default-opened
@@ -25,7 +39,6 @@
         :end-time="endTime"
         :fetch="fetch"
         :min-deviation="minDeviationNetworkDelay"
-        :selected-asn="asnList"
         ref="ihrChartNetworkDelay"
       />
     </q-expansion-item>
@@ -80,6 +93,7 @@ import DiscoChart, {
   DEFAULT_DISCO_AVG_LEVEL
 } from "./charts/global/DiscoChart";
 import NetworkDelayAlarmsChart from "./charts/global/NetworkDelayAlarmsChart";
+import HegemonyAlarmsChart from "./charts/global/HegemonyAlarmsChart";
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -166,6 +180,7 @@ export default {
   mixins: [reportMixin],
   components: {
     NetworkDelayAlarmsChart,
+    HegemonyAlarmsChart,
     DiscoChart,
     DelayChart,
     EventsMap,
