@@ -1,6 +1,6 @@
 <template>
   <div class="IHR_chart">
-      <div class="row justify-center">
+      <div class="row justify-center" v-if="searchBar">
           <div class="col-5 q-pa-sm">
             <location-search-bar
                 @select="addStartLocation"
@@ -17,7 +17,7 @@
             />
         </div>
           <div class="col-2 q-pa-sm">
-            <q-btn @click='queryNetworkDelayApi' color='secondary' class="q-ml-sm">Add</q-btn>
+            <q-btn @click='debouncedApiCall' color='secondary' class="q-ml-sm">Add</q-btn>
             <q-btn @click='clearGraph' class="q-ml-sm">Clear all</q-btn>
         </div>
       </div>
@@ -120,28 +120,22 @@ export default {
       type: Number,
       default: AS_FAMILY.v4
     },
-    startSearchBar: {
+    searchBar: {
       type: Boolean,
       default: false
     },
-    endSearchBar: {
-      type: Boolean,
-      default: true
+    clear: {
+      type: Number,
+      default: 1
     }
   },
   data() {
-    let filter = new NetworkDelayQuery()
-      .startPointName(this.startPointName)
-      .startPointType(this.startPointType)
-      .endPointKey(this.endPointName)
-      .endpointAf(this.asFamily)
-      .timeInterval(this.startTime, this.endTime)
-      .orderedByTime();
 
     //prevent calls within 500ms and execute only the last one
     let debouncedApiCall = debounce(
       () => {
         if (!this.fetch) return;
+        if( this.startPointName == "") return;
         this.traces = [];
         this.loading = true;
         this.loadingDelay = true;
@@ -161,17 +155,12 @@ export default {
       },
       debouncedApiCall: debouncedApiCall,
       openClose: true,
-      filter: filter,
+      filter: null,
       traces: [],
       layout: NET_DELAY_LAYOUT,
       selectedStart: '',
       selectedEnd: ''
     };
-  },
-  mounted() {
-      if( this.startPointName != ""){
-        this.queryNetworkDelayApi();
-      }
   },
   computed:{
     delayUrl() {
@@ -179,12 +168,22 @@ export default {
     },
   },
   methods: {
+    setFilter() { 
+        this.filter = new NetworkDelayQuery()
+        .startPointName(this.startPointName)
+        .startPointType(this.startPointType)
+        .endPointKey(this.endPointName)
+        .endpointAf(this.asFamily)
+        .timeInterval(this.startTime, this.endTime)
+        .orderedByTime();
+    },
     queryNetworkDelayApi() {
+      this.setFilter()
       this.loading = true;
       this.$ihr_api.network_delay(
         this.filter,
         result => {
-          this.fetchNewtworkDelay(result.results);
+          this.fetchNetworkDelay(result.results);
           this.loading = false;
         },
         error => {
@@ -235,7 +234,7 @@ export default {
       );
 
     },
-    fetchNewtworkDelay(data) {
+    fetchNetworkDelay(data) {
       let trace = [];
       let traces = {};
       data.forEach(elem => {
@@ -288,6 +287,17 @@ export default {
         else{
             return this.startPointType.toString()+this.startPointName.toString()
         }
+    }
+  },
+  watch: { 
+    startPointName(newValue){
+        this.queryNetworkDelayApi();
+    },
+    clear(newValue){
+        this.clearGraph();
+        this.$nextTick(function () {
+            this.loading = true;
+        })
     }
   }
 };

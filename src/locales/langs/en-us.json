@@ -79,7 +79,7 @@
 			}
 		},
 		"linkDelays": {
-			"title": "link delays",
+			"title": "link delay",
 			"yaxis": "Delay Change Level",
 			"table": {
 				"title": "delay anomalies",
@@ -124,6 +124,15 @@
 			"yaxis": "Estimated RTT (ms)",
 			"table": {
 				"title": "Estimated Delays",
+               "apiTitle": "Displayed data is available at the following links:"
+			}
+		},
+		"networkDelayAlarms": {
+			"title": "Network Delay",
+			"yaxis": "Number of alarms",
+			"table": {
+				"title": "Delay Alarms",
+				"destinations": " Destinations",
                "apiTitle": "Displayed data is available at the following links:"
 			}
 		}

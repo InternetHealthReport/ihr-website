@@ -728,6 +728,160 @@ class Edge {
   }
 }
 
+class NetworkDelayAlarmsQuery extends TimeQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return NetworkDelayAlarmsQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "network_delay_alarms/";
+  }
+
+  static get EDGE_TYPE() {
+    return _NETWORK_DELAY_EDGE_TYPE;
+  }
+  /**
+   * Create an edge object to fetch the key entry point
+   * @param {String} type you can use EDGE_TYPE for this
+   * @param {Number} asFamily you can use AS_FAMILY for this
+   * @param {String} name
+   */
+  static edge(type, asFamily, name) {
+    return new Edge(type, asFamily, name);
+  }
+
+  //methods
+
+  deviation(dev, comparator = Query.EXACT) {
+    return this._set("deviation", dev, comparator);
+  }
+
+  timeBin(time, comparator = Query.EXACT) {
+    return this._set("timebin", Query.dateFormatter(time), comparator);
+  }
+
+  startTime(time, comparator = Query.GTE) {
+    return this.timeBin(time, comparator);
+  }
+
+  endTime(time, comparator = Query.LTE) {
+    return this.timeBin(time, comparator);
+  }
+
+  /**
+   * @brief generic point filter in the standard compressed format
+   * @param {Edge} endpoint_key use the static method edge to create Edge objects
+   * @param {String} query_param the real query param to add to filter
+   */
+  _pointKey(endpoint_key, query_param) {
+    if (endpoint_key instanceof Array) {
+      endpoint_key = endpoint_key.map(elem => elem.toString());
+    } else {
+      endpoint_key = endpoint_key.toString();
+    }
+
+    return this._set(query_param, endpoint_key, Query.EXACT, _STRING_SEPARATOR);
+  }
+
+  /**
+   * @brief add start point filter in the standard compressed format
+   * @param {Edge} startpoint_key use the static method edge to create Edge objects
+   */
+  startPointKey(startpoint_key) {
+    this._pointKey(startpoint_key, "startpoint_key");
+  }
+
+  /**
+   * @brief add start point filter in the standard compressed format
+   * @param {Edge} endpoint_key use the static method edge to create Edge objects
+   */
+  endPointKey(endpoint_key) {
+    //this._pointKey(endpoint_key, "endpoint_key");
+    return this._set(
+      "endpoint_key",
+      endpoint_key,
+      Query.EXACT,
+      _STRING_SEPARATOR
+    );
+  }
+
+  startPointName(startpoint_name) {
+    return this._set(
+      "startpoint_name",
+      startpoint_name,
+      Query.EXACT,
+      _STRING_SEPARATOR
+    );
+  }
+
+  endPointName(endpoint_name) {
+    return this._set(
+      "endpoint_name",
+      endpoint_name,
+      Query.EXACT,
+      _STRING_SEPARATOR
+    );
+  }
+  /**
+   * Filter for the type of start point
+   * @param {String} startpoint_type you can use EDGE_TYPE of this class for this parameter
+   */
+  startPointType(startpoint_type) {
+    return this._set("startpoint_type", startpoint_type);
+  }
+
+  /**
+   * Filter for the type of end point
+   * @param {String} endpoint_type you can use EDGE_TYPE of this class for this parameter
+   */
+  endPointType(endpoint_type) {
+    return this._set("endpoint_type", endpoint_type);
+  }
+
+  /**
+   * Filter for the as family of start point
+   * @param {Number} startpoint_af you can use AS_FAMILY enum for this parameter
+   */
+  startpointAf(startpoint_af) {
+    return this._set("startpoint_af", startpoint_af);
+  }
+
+  /**
+   * Filter for the as family of end point
+   * @param {Number} endpoint_af you can use AS_FAMILY enum for this parameter
+   */
+  endpointAf(endpoint_af) {
+    return this._set("endpoint_af", endpoint_af);
+  }
+
+  // ordering
+
+  orderedByTimebin(order = Query.ASC) {
+    return this._setOrder("timebin", order);
+  }
+
+  orderedByTime(order = Query.ASC) {
+    return this.orderedByTimebin(order);
+  }
+
+  orderByStartPointName(order = Query.ASC) {
+    return this._setOrder("startpoint_name", order);
+  }
+
+  orderByEndPointName(order = Query.ASC) {
+    return this._setOrder("endpoint_name", order);
+  }
+
+  clone() {
+    return new NetworkDelayAlarmsQuery(this._clone());
+  }
+}
+
 class NetworkDelayQuery extends TimeQuery {
   constructor() {
     super(...arguments);
@@ -945,5 +1099,6 @@ export {
   DelayAlarmsQuery,
   ForwardingAlarmsQuery,
   NetworkDelayQuery,
+  NetworkDelayAlarmsQuery,
   NetworkDelayLocation
 };

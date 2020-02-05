@@ -17,6 +17,7 @@ import {
   DelayAlarmsQuery,
   ForwardingAlarmsQuery,
   NetworkDelayQuery,
+  NetworkDelayAlarmsQuery,
   NetworkDelayLocation
 } from "./query/IhrQuery";
 import { MonitoringUserQuery } from "./query/IhrUserQuery";
@@ -362,6 +363,15 @@ const IhrApi = {
             errorCallback
           );
         },
+        network_delay_alarms(networkDelayAlarmsQuery, successCallback, errorCallback) {
+          this._generic(
+            NetworkDelayAlarmsQuery.ENTRY_POINT,
+            NetworkDelayAlarmsQuery.HTTP_METHOD,
+            networkDelayAlarmsQuery,
+            successCallback,
+            errorCallback
+          );
+        },
         network_delay_location(
           networkDelayLocation,
           successCallback,
@@ -568,6 +578,9 @@ const IhrApi = {
           let routePieces = asnString.match(/[0-9]+$/);
           let asNumber = Number(routePieces[0]);
           return asnString.startsWith("IXP") ? -asNumber : asNumber;
+        },
+        sortedKeys(val){
+            return Object.keys(val).sort(function(a,b){return val[b]-val[a]})
         }
       }
     });
@@ -590,5 +603,6 @@ export {
   ForwardingAlarmsQuery,
   MonitoringUserQuery,
   NetworkDelayQuery,
+  NetworkDelayAlarmsQuery,
   NetworkDelayLocation
 };

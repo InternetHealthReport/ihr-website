@@ -16,6 +16,21 @@
     </div>
     <q-expansion-item
       expand-separator
+      :label="$t('charts.networkDelayAlarms.title')"
+      header-class="IHR_charts-title"
+      default-opened
+    >
+      <network-delay-alarms-chart
+        :start-time="startTime"
+        :end-time="endTime"
+        :fetch="fetch"
+        :min-deviation="minDeviationNetworkDelay"
+        :selected-asn="asnList"
+        ref="ihrChartNetworkDelay"
+      />
+    </q-expansion-item>
+    <q-expansion-item
+      expand-separator
       :label="$t('charts.linkDelays.title')"
       header-class="IHR_charts-title"
       default-opened
@@ -130,6 +145,7 @@ import reportMixin from "@/views/mixin/reportMixin";
 import DiscoChart, {
   DEFAULT_DISCO_AVG_LEVEL
 } from "./charts/global/DiscoChart";
+import NetworkDelayAlarmsChart from "./charts/global/NetworkDelayAlarmsChart";
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -139,7 +155,7 @@ import DelayChart, {
 import EventsMap from "./charts/global/EventsMap";
 import DateTimePicker from "@/components/DateTimePicker";
 
-const CHART_REFS = ["ihrChartDelay", "ihrChartMap", "ihrChartDisco"];
+const CHART_REFS = ["ihrChartNetworkDelay", "ihrChartDelay", "ihrChartMap", "ihrChartDisco"];
 
 const REPORT_TYPE = {
   GLOBAL: 0,
@@ -215,6 +231,7 @@ const PRESETS_ASN_LISTS_SAVE = [
 export default {
   mixins: [reportMixin],
   components: {
+    NetworkDelayAlarmsChart,
     DiscoChart,
     DelayChart,
     EventsMap,
@@ -232,6 +249,7 @@ export default {
       minAvgLevel: PRAMETERS_PRESETS.DISCO_AVG_LEVEL[filterLevel],
       minNprobes: PRAMETERS_PRESETS.MIN_NPROBES[filterLevel],
       minDeviation: PRAMETERS_PRESETS.MIN_DEVIATION[filterLevel],
+      minDeviationNetworkDelay: 20,
       minDiffmedian: PRAMETERS_PRESETS.MIN_DIFFMEDIAN[filterLevel],
       maxDiffmedian: PRAMETERS_PRESETS.MAX_DIFFMEDIAN[filterLevel],
       charRefs: CHART_REFS,
