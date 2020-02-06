@@ -127,6 +127,10 @@ export default {
     clear: {
       type: Number,
       default: 1
+    },
+    noTable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -204,6 +208,7 @@ export default {
         this.layout.datarevision = new Date().getTime();
     },
     showTable(clickData) {
+      if(this.noTable) return;
       let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
       this.details.activeTab = "delay"
       this.details.filter = this.filter.clone()

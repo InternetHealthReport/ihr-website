@@ -691,6 +691,48 @@ class HegemonyQuery extends CommonHegemonyQuery {
   }
 }
 
+
+class HegemonyAlarmsQuery extends CommonHegemonyQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return HegemonyAlarmsQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "hegemony_alarms/";
+  }
+
+  //methods
+
+  deviation(dev, comparator = Query.EXACT) {
+    return this._set("deviation", dev, comparator);
+  }
+
+  startTime(time, comparator = Query.GTE) {
+    return this.timeBin(time, comparator);
+  }
+
+  endTime(time, comparator = Query.LTE) {
+    return this.timeBin(time, comparator);
+  }
+
+  originAs(origin) {
+    return this._set("originasn", origin);
+  }
+
+  hegemony(hege, comparator = Query.EXACT) {
+    return this._set("hege", hege, comparator);
+  }
+
+  clone() {
+    return new HegemonyAlarmsQuery(this._clone());
+  }
+}
+
 class HegemonyConeQuery extends CommonHegemonyQuery {
   constructor() {
     super(...arguments);
@@ -1092,6 +1134,7 @@ export {
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,
+  HegemonyAlarmsQuery,
   HegemonyConeQuery,
   ForwardingQuery,
   DelayQuery,

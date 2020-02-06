@@ -16,6 +16,20 @@
     </div>
     <q-expansion-item
       expand-separator
+      :label="$t('charts.hegemonyAlarms.title')"
+      header-class="IHR_charts-title"
+      default-opened
+    >
+      <hegemony-alarms-chart
+        :start-time="startTime"
+        :end-time="endTime"
+        :fetch="fetch"
+        :min-deviation="minDeviationNetworkDelay"
+        ref="ihrChartHegemonyAlarms"
+      />
+    </q-expansion-item>
+    <q-expansion-item
+      expand-separator
       :label="$t('charts.networkDelayAlarms.title')"
       header-class="IHR_charts-title"
       default-opened
@@ -25,7 +39,6 @@
         :end-time="endTime"
         :fetch="fetch"
         :min-deviation="minDeviationNetworkDelay"
-        :selected-asn="asnList"
         ref="ihrChartNetworkDelay"
       />
     </q-expansion-item>
@@ -71,72 +84,6 @@
         ref="ihrChartDisco"
       />
     </q-expansion-item>
-    <q-drawer
-      :value="true"
-      side="left"
-      :mini="!showSidebar"
-      show-if-above
-      bordered
-      @on-layout="resizeCharts"
-    >
-      <!-- non minified area -->
-      <div class="fit column">
-        <div class="IHR_sidebar-filter-section-global col-auto q-mini-drawer-hide q-gutter-y-md">
-          <div>
-            <label>filter level</label>
-            <q-btn-toggle
-              class="col"
-              v-model="filterLevel"
-              :toggle-color="levelColors[filterLevel]"
-              :toggle-text-color="levelColors[filterLevel] == 'warning'?'black':'white'"
-              :options="levelOptions"
-            />
-          </div>
-        </div>
-        <q-scroll-area class="col">
-          <q-list padding>
-            <q-item clickable v-ripple @click="fetchList" v-if="$ihr_api.authenticated">
-              <q-item-section avatar>
-                <q-icon name="fas fa-user-circle" color="accent" />
-              </q-item-section>
-              <q-item-section class="IHR_presets-name">{{$t('globalReport.filters.monitoredAsn')}}</q-item-section>
-            </q-item>
-            <q-item
-              clickable
-              v-ripple
-              @click="asnList = preset.asnList"
-              :key="preset.name"
-              v-for="preset in presetAsnLists"
-            >
-              <q-item-section class="IHR_presets-name">{{preset.name}}</q-item-section>
-            </q-item>
-          </q-list>
-        </q-scroll-area>
-      </div>
-       <!--minified area -->
-      <template v-slot:mini>
-        <q-scroll-area class="fit cursor-pointer column">
-          <q-avatar
-            text-color="accent"
-            icon="fas fa-user-circle"
-            class="col-auto"
-            font-size="20pt"
-            style="width: 100%"
-            v-if="$ihr_api.authenticated"
-            @click="fetchList"
-          />
-          <div
-            clickable
-            @click="asnList = preset.asnList"
-            :key="preset.name"
-            v-for="preset in presetAsnLists"
-            class="IHR_presets-name-vertical col-auto"
-          >
-            <span>{{preset.name}}</span>
-          </div>
-        </q-scroll-area>
-      </template>
-    </q-drawer>
   </div>
 </template>
 
@@ -146,6 +93,7 @@ import DiscoChart, {
   DEFAULT_DISCO_AVG_LEVEL
 } from "./charts/global/DiscoChart";
 import NetworkDelayAlarmsChart from "./charts/global/NetworkDelayAlarmsChart";
+import HegemonyAlarmsChart from "./charts/global/HegemonyAlarmsChart";
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -232,6 +180,7 @@ export default {
   mixins: [reportMixin],
   components: {
     NetworkDelayAlarmsChart,
+    HegemonyAlarmsChart,
     DiscoChart,
     DelayChart,
     EventsMap,

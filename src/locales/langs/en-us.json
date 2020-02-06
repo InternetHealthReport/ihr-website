@@ -78,6 +78,13 @@
                "apiTitle": "Displayed data is available at the following links:"
 			}
 		},
+        "hegemonyAlarms":{
+            "title": "AS dependency",
+            "table": {
+                "title": "AS dependency alarms",
+                "dependencies": "Anomalous Dependencies"
+            }
+        },
 		"linkDelays": {
 			"title": "link delay",
 			"yaxis": "Delay Change Level",

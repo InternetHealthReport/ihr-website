@@ -1,13 +1,10 @@
 <template>
   <div class="IHR_chart">
-    <network-delay-chart 
-        :start-time="startTime" 
-        :end-time="endTime" 
-        :startPointName="plot.startpoint_name"
-        :startPointType="plot.startpoint_type"
-        :endPointName="plot.endpoints"
-        :clear="plot.clear"
-        noTable
+    <as-interdependencies-chart
+        :start-time="startTime"
+        :end-time="endTime"
+        :as-number="plot.originasn"
+        :fetch="fetch"
     />
 
     <div>
@@ -21,12 +18,12 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="alarms" :label="$t('charts.networkDelayAlarms.table.title')" />
+        <q-tab name="alarms" :label="$t('charts.hegemonyAlarms.table.title')" />
         <q-tab name="api" label="API" />
       </q-tabs>
       <q-tab-panels v-model="table.activeTab" animated>
         <q-tab-panel name="alarms">
-          <network-delay-alarms-table
+          <hegemony-alarms-table
             :start-time="startTime"
             :stop-time="endTime"
             :data="table.data"
@@ -38,10 +35,10 @@
           <table>
             <tr>
               <td>
-                <label>{{$t('charts.networkDelayAlarms.table.title')}}</label>
+                <label>{{$t('charts.hegemonyAlarms.table.title')}}</label>
               </td>
               <td>
-                <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{delayAlarmsUrl}}</a>
+                <a :href="hegemonyAlarmsUrl" target="_blank" id="hegemonyAlarms">{{hegemonyAlarmsUrl}}</a>
               </td>
             </tr>
           </table>
@@ -54,20 +51,18 @@
 <script>
 import { debounce } from "quasar";
 import CommonChartMixin, { DEFAULT_DEBOUNCE } from "../CommonChartMixin";
-import NetworkDelayAlarmsTable from "../tables/NetworkDelayAlarmsTable";
-import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
-import { Query, NetworkDelayAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
-import { NET_DELAY_ALARMS_LAYOUT } from "../layouts";
+import HegemonyAlarmsTable from "../tables/HegemonyAlarmsTable";
+import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
+import { Query, HegemonyAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
+import { HEGEMONY_ALARMS_LAYOUT } from "../layouts";
 
 const DEFAULT_MIN_DEVIATION = 10;
-const DEFAULT_MIN_DIFFMEDIAN = 15;
 const DEFAULT_AS_FAMILY = AS_FAMILY.v4;
-const MAX_NETDELAY_PLOTS = 5;
 
 export default {
   mixins: [CommonChartMixin],
   components: {
-    NetworkDelayAlarmsTable, NetworkDelayChart
+    HegemonyAlarmsTable, AsInterdependenciesChart
   },
   props: {
     minDeviation: {
@@ -75,32 +70,25 @@ export default {
       default: DEFAULT_MIN_DEVIATION,
       required: true
     },
-    selectedType: {
-      type: String,
-      default: "AS",
-      required: false
-    }
   },
   data() {
-    let networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery()
+    let hegemonyAlarmsFilter = new HegemonyAlarmsQuery()
       .deviation(this.minDeviation, Query.GTE)
-      .startPointType(this.selectedType)
       .timeInterval(this.startTime, this.endTime);
-      //TODO add IXPs
 
     //prevent calls within 500ms and execute only the last one
     let debouncedApiCall = debounce(
       () => {
         if (!this.fetch) return;
         this.loading = true;
-        this.queryNetworkDelayAlarmsAPI();
+        this.queryHegemonyAlarmsAPI();
       },
       DEFAULT_DEBOUNCE,
       false
     );
 
     return {
-      myId: `ihrNetworkDelayAlarmsChart${this._uid}`,
+      myId: `ihrHegemonyAlarmsChart${this._uid}`,
       table: {
         activeTab: "alarms",
         data: [],
@@ -109,29 +97,26 @@ export default {
         selectedRow: []
       },
       plot: {
-        startpoint_name: '',
-        startpoint_type: '',
-        endpoints: [],
+        originasn: 0,
         clear: 1
       },
       loading: true,
       delayFilter: null,
       debouncedApiCall: debouncedApiCall, 
-      networkDelayAlarmsFilter: networkDelayAlarmsFilter,
-      filters: [networkDelayAlarmsFilter],
-      layout: NET_DELAY_ALARMS_LAYOUT
+      hegemonyAlarmsFilter: hegemonyAlarmsFilter,
+      filters: [hegemonyAlarmsFilter],
+      layout: HEGEMONY_ALARMS_LAYOUT
     };
   },
   methods: {
-    queryNetworkDelayAlarmsAPI() {
+    queryHegemonyAlarmsAPI() {
       this.loading = true;
       this.table.tableVisible = true;
       this.table.loading = true;
-      this.$ihr_api.network_delay_alarms(
-        this.networkDelayAlarmsFilter,
+      this.$ihr_api.hegemony_alarms(
+        this.hegemonyAlarmsFilter,
         result => {
           let data = [];
-          let asn_list = [];
           result.results.forEach(alarm => {
             data.push(alarm);
           });
@@ -146,30 +131,12 @@ export default {
     selectRow(newSelection){ 
         this.table.selectedRow = newSelection;
         this.plot.clear += 1;
-        var val = newSelection[0];
-        this.plot.endpoints = [];
-
-        // Compute endpoints keys
-        for(const key of Object.keys(val.endpoints)){
-            var type = key.substring(0,2);
-            var name = key.substring(2);
-            var af = '4'; //TODO get this value from global settings
-            this.plot.endpoints.push(type+af+name);
-        }
-
-        // Limit the number of values to display
-        if(this.plot.endpoints.length>MAX_NETDELAY_PLOTS){ 
-            this.plot.endpoints = this.plot.endpoints.slice(0, MAX_NETDELAY_PLOTS);
-        }
-            
-        this.plot.startpoint_type = 'AS';
-        this.plot.startpoint_name = String(val.asNumber);
-
+        this.plot.originasn = newSelection[0].originasn;
     }
   },
   computed: {
-    delayAlarmsUrl() {
-      return this.$ihr_api.getUrl(this.delayAlarmsFilter);
+    hegemonyAlarmsUrl() {
+      return this.$ihr_api.getUrl(this.hegemonyAlarmsFilter);
     }
   },
   watch: {
@@ -181,7 +148,7 @@ export default {
     },
     selectedAsn(newValue) {
       this.filters.forEach(filter => {
-        filter.asNumber(newValue);
+        filter.originasn(newValue);
       });
       this.debouncedApiCall();
     }

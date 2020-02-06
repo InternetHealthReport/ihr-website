@@ -11,6 +11,7 @@ import {
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,
+  HegemonyAlarmsQuery,
   HegemonyConeQuery,
   ForwardingQuery,
   DelayQuery,
@@ -363,6 +364,15 @@ const IhrApi = {
             errorCallback
           );
         },
+        hegemony_alarms(hegemonyAlarmsQuery, successCallback, errorCallback) {
+          this._generic(
+            HegemonyAlarmsQuery.ENTRY_POINT,
+            HegemonyAlarmsQuery.HTTP_METHOD,
+            hegemonyAlarmsQuery,
+            successCallback,
+            errorCallback
+          );
+        },
         network_delay_alarms(networkDelayAlarmsQuery, successCallback, errorCallback) {
           this._generic(
             NetworkDelayAlarmsQuery.ENTRY_POINT,
@@ -604,5 +614,6 @@ export {
   MonitoringUserQuery,
   NetworkDelayQuery,
   NetworkDelayAlarmsQuery,
+  HegemonyAlarmsQuery,
   NetworkDelayLocation
 };

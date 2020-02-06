@@ -7,31 +7,31 @@
     :filter="filter"
     binary-state-sort
     flat
-    row-key="asNumber"
+    row-key="originasn"
     selection="single"
     :selected.sync="selectedRow"
-    loading-label="Fetching the latest network delay alarms..."
+    loading-label="Fetching the latest network dependency alarms..."
   >
     <template v-slot:top-right>
       <q-input debounce="300" v-model="filter" placeholder="Search">
         <template v-slot:append>
-          <q-icon name="fas fa-search" />
+          <q-icon name="fas fa-search"/>
         </template>
       </q-input>
     </template>
 
-    <template v-slot:body-cell-asNumber="props">
+    <template v-slot:body-cell-originasn="props">
         <q-td :props="props" auto-width>
           <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.value}})" href="javascript:void(0)">
             {{props.value}}
           </a>
         </q-td>
     </template>
-    <template v-slot:body-cell-destinations="props">
+    <template v-slot:body-cell-dependencies="props">
         <q-td :props="props" auto-width>
-            <div> {{destinationsSubtitle(props.value)}}</div>
+            <div> {{dependenciesSubtitle(props.value)}}</div>
             <div class='IHR_ndelay_table_cell'>
-            {{destinationsBody(props.value)}}
+            {{dependenciesBody(props.value)}}
             </div>
         </q-td>
     </template>
@@ -74,20 +74,20 @@ export default {
       },
       columns: [
         {
-          name: "asNumber",
+          name: "originasn",
           required: true,
-          label: "Source",
+          label: "Origin AS",
           align: "left",
-          field: row => row.asNumber,
+          field: row => row.originasn,
           format: val => this.$options.filters.ihr_NumberToAsOrIxp(val),
           sortable: true
         },
         {
-          name: "destinations",
+          name: "dependencies",
           required: false,
-          label: "Destinations",
+          label: "Anomalous Dependencies",
           align: "left",
-          field: row => row.endpoints,
+          field: row => row.dependencies,
           format: val => this.$options.filters.sortedKeys(val),
           sortable: false
         },
@@ -121,29 +121,27 @@ export default {
 
         var datasum = {};
         this.data.forEach( alarm => {
-            var start = alarm.startpoint_type+alarm.startpoint_name
-            var asNumber = alarm.type == 'IX' ? -parseInt(alarm.startpoint_name) : parseInt(alarm.startpoint_name)
-            if(asNumber!=0){
-                if(start in datasum){ 
-                    datasum[start].nbalarms += 1;
-                    datasum[start].cumdev += alarm.deviation;
+            var originasn = alarm.originasn
+            if(originasn!=0){
+                if(originasn in datasum){ 
+                    datasum[originasn].nbalarms += 1;
+                    datasum[originasn].cumdev += alarm.deviation;
                 }
                 else{
-                datasum[start] = {
-                    asNumber: asNumber, 
-                    nbalarms: 1,
-                    cumdev: alarm.deviation,
-                    endpoints: {}
-                  }
+                    datasum[originasn] = {
+                        originasn: originasn, 
+                        nbalarms: 1,
+                        cumdev: alarm.deviation,
+                        dependencies: {}
+                    }
                 }
 
                 // Add destination
-                var end = alarm.endpoint_type+alarm.endpoint_name
-                if(end in datasum[start].endpoints){
-                    datasum[start].endpoints[end] += alarm.deviation;
+                if(alarm.asn in datasum[originasn].dependencies){
+                    datasum[originasn].dependencies[alarm.asn] += alarm.deviation;
                 }
                 else{
-                    datasum[start].endpoints[end] = alarm.deviation;
+                    datasum[originasn].dependencies[alarm.asn] = alarm.deviation;
                 }
             }
         })        
@@ -151,21 +149,20 @@ export default {
         // Select the AS with the largest number of alarms
         const values = Object.values(datasum);
         var first_row = values.reduce((prev, current) => (prev.nbalarms > current.nbalarms) ? prev : current);
-          console.log(first_row)
         this.selectedRow = [first_row];
         
         this.dataSummary = values
       },
-      destinationsSubtitle(val){
-          return String(val.length)+this.$t('charts.networkDelayAlarms.table.destinations');
+      dependenciesSubtitle(val){
+          return String(val.length)+this.$t('charts.hegemonyAlarms.table.dependencies');
       },
-      destinationsBody(val){
+      dependenciesBody(val){
           var body = '';
           val.forEach( dest => {
-              var loc = dest.startsWith('CT') ? dest.substring(2) : dest;
-              body += loc+', '; 
+              body += dest+', '; 
           })
-          
+
+          //Remove the last comma 
           body = body.substring(0,body.length-1)
           return body
       }
