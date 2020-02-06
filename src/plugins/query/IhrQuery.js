@@ -847,7 +847,7 @@ class NetworkDelayAlarmsQuery extends TimeQuery {
    * Filter for the as family of start point
    * @param {Number} startpoint_af you can use AS_FAMILY enum for this parameter
    */
-  startpointAf(startpoint_af) {
+  startPointAf(startpoint_af) {
     return this._set("startpoint_af", startpoint_af);
   }
 
@@ -855,7 +855,7 @@ class NetworkDelayAlarmsQuery extends TimeQuery {
    * Filter for the as family of end point
    * @param {Number} endpoint_af you can use AS_FAMILY enum for this parameter
    */
-  endpointAf(endpoint_af) {
+  endPointAf(endpoint_af) {
     return this._set("endpoint_af", endpoint_af);
   }
 
