@@ -1,47 +1,64 @@
 <template>
   <q-table
+    table-class="myClass"
     :data="dataSummary"
     :columns="columns"
     :pagination.sync="pagination"
     :loading="loading"
-    :filter="filter"
+    :filter="filterTable"
     binary-state-sort
     flat
     row-key="originasn"
-    selection="single"
-    :selected.sync="selectedRow"
+    :expanded.sync="expandedRow"
     loading-label="Fetching the latest network dependency alarms..."
   >
     <template v-slot:top-right>
-      <q-input debounce="300" v-model="filter" placeholder="Search">
+      <q-input debounce="300" v-model="filterTable" placeholder="Search">
         <template v-slot:append>
           <q-icon name="fas fa-search"/>
         </template>
       </q-input>
     </template>
 
-    <template v-slot:body-cell-originasn="props">
-        <q-td :props="props" auto-width>
-          <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.value}})" href="javascript:void(0)">
-            {{props.value}}
+    <template v-slot:body="props">
+      <q-tr :props="props">
+        <q-td auto-width>
+          <q-toggle v-model="props.expand" />
+        </q-td>
+        <q-td key="originasn" align>
+          <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.row.originasn}})" href="javascript:void(0)">
+            {{$options.filters.ihr_NumberToAsOrIxp(props.row.originasn)}}
           </a>
         </q-td>
-    </template>
-    <template v-slot:body-cell-dependencies="props">
-        <q-td :props="props" auto-width>
-            <div> {{dependenciesSubtitle(props.value)}}</div>
-            <div class='IHR_ndelay_table_cell'>
-            {{dependenciesBody(props.value)}}
-            </div>
+        <q-td key="dependencies">
+            {{dependenciesBody(props.row.dependencies)}}
         </q-td>
+        <q-td key="nbalarms">{{props.row.nbalarms}}</q-td>
+        <q-td key="avgdev">{{(props.row.cumdev/props.row.nbalarms).toFixed(2)}}</q-td>
+      </q-tr>
+      <q-tr v-show="props.expand" :props="props">
+          <q-td colspan="100%" class="IHR_nohover" bordered>
+            <div v-if='props.expand' class="IHR_side_borders">
+                <as-interdependencies-chart
+                    :start-time="startTime"
+                    :end-time="stopTime"
+                    :as-number="props.row.originasn"
+                    :fetch="fetch"
+                />
+            </div>
+          </q-td>
+        </q-tr>
     </template>
+
   </q-table>
 </template>
 
 <script>
+import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
 
 export default {
   components: {
+    AsInterdependenciesChart
   },
   props: {
     data: {
@@ -60,19 +77,30 @@ export default {
       type: Date,
       required: true
     },
+    filter: { 
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
-      filter: '',
+      fetch: true,
+      filterTable: '',
       selectedRow: [],
+      expandedRow: [],
       dataSummary: [],
       pagination: {
         sortBy: "nbalarms",
         descending: true,
         page: 1,
-        rowsPerPage: 10
+        rowsPerPage: 5
       },
       columns: [
+        {
+          name: "overview",
+          label: "Overview",
+          align: "center",
+        },
         {
           name: "originasn",
           required: true,
@@ -80,7 +108,7 @@ export default {
           align: "left",
           field: row => row.originasn,
           format: val => this.$options.filters.ihr_NumberToAsOrIxp(val),
-          sortable: true
+          sortable: true,
         },
         {
           name: "dependencies",
@@ -95,7 +123,7 @@ export default {
           name: "nbalarms",
           required: true,
           label: "Nb. Alarms",
-          align: "center",
+          align: "left",
           field: row => row.nbalarms,
           format: val => val,
           sortable: true
@@ -104,7 +132,7 @@ export default {
           name: "avgdev",
           required: true,
           label: "Average Deviation",
-          align: "center",
+          align: "left",
           field: row => row.cumdev/row.nbalarms,
           format: val => val.toFixed(2),
           sortable: true
@@ -154,16 +182,17 @@ export default {
         this.dataSummary = values
       },
       dependenciesSubtitle(val){
-          return String(val.length)+this.$t('charts.hegemonyAlarms.table.dependencies');
+          return String(Object.keys(val).length)+" "+this.$t('charts.hegemonyAlarms.table.dependencies');
       },
       dependenciesBody(val){
           var body = '';
-          val.forEach( dest => {
-              body += dest+', '; 
+          var sortedVal = this.$options.filters.sortedKeys(val);
+          sortedVal.forEach( dest => {
+              body += this.$options.filters.ihr_NumberToAsOrIxp(dest)+', '; 
           })
 
           //Remove the last comma 
-          body = body.substring(0,body.length-1)
+          body = body.substring(0,body.length-2)
           return body
       }
   },
@@ -173,18 +202,39 @@ export default {
     },
     selectedRow(newValue){
         this.$emit('selectedRow', newValue)
+    },
+    filter(newValue){ 
+        this.filterTable = newValue
     }
   }
 };
 </script>
 <style lang="stylus">
-.IHR_ndelay_table_cell
-    text-overflow ellipsis
-    /* Required for text-overflow to do anything */
-    white-space nowrap
-    overflow hidden
-    font-style italic
-    max-width 700px 
-    color #555
+.IHR_nohover 
+    &:first-child
+      padding-top 0px
+      padding-bottom 20px
+      padding-right 20px
+      padding-left 20px
+      background #fafafa
+
+.IHR_side_borders
+    &:first-child
+        padding-top 20px
+        border-style solid
+        border-color #dddddd
+        border-top-width 0px
+        border-left-width 1px
+        border-right-width 1px
+        border-bottom-width 1px
+        border-radius 5px
+        background #ffffff
+
+
+.myClass 
+
+    tbody td
+        text-align left
+
 
 </style>

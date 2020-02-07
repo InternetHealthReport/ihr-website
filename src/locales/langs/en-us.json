@@ -81,7 +81,7 @@
         "hegemonyAlarms":{
             "title": "AS dependency",
             "table": {
-                "title": "AS dependency alarms",
+                "title": "Alarms",
                 "dependencies": "Anomalous Dependencies"
             }
         },

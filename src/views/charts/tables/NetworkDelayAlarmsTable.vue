@@ -1,47 +1,70 @@
 <template>
   <q-table
+    table-class="myClass"
     :data="dataSummary"
     :columns="columns"
     :pagination.sync="pagination"
     :loading="loading"
-    :filter="filter"
+    :filter="filterTable"
     binary-state-sort
     flat
     row-key="asNumber"
-    selection="single"
-    :selected.sync="selectedRow"
+    :expanded.sync="expandedRow"
     loading-label="Fetching the latest network delay alarms..."
   >
     <template v-slot:top-right>
-      <q-input debounce="300" v-model="filter" placeholder="Search">
+      <q-input debounce="300" v-model="filterTable" placeholder="Search">
         <template v-slot:append>
           <q-icon name="fas fa-search" />
         </template>
       </q-input>
     </template>
 
-    <template v-slot:body-cell-asNumber="props">
-        <q-td :props="props" auto-width>
-          <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.value}})" href="javascript:void(0)">
-            {{props.value}}
+    <template v-slot:body="props">
+      <q-tr :props="props">
+        <q-td auto-width>
+          <q-toggle v-model="props.expand" />
+        </q-td>
+        <q-td key="asNumber" align>
+          <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.row.asNumber}})" href="javascript:void(0)">
+            {{$options.filters.ihr_NumberToAsOrIxp(props.row.asNumber)}}
           </a>
         </q-td>
-    </template>
-    <template v-slot:body-cell-destinations="props">
-        <q-td :props="props" auto-width>
-            <div> {{destinationsSubtitle(props.value)}}</div>
-            <div class='IHR_ndelay_table_cell'>
-            {{destinationsBody(props.value)}}
+        <q-td key="destinations" class='IHR_ndelay_table_cell'>
+            <div> {{destinationsSubtitle(props.row.endpoints)}}</div>
+            <div class="IHR_ndelay_destinations">
+            {{destinationsBody(props.row.endpoints)}}
             </div>
         </q-td>
+        <q-td key="nbalarms">{{props.row.nbalarms}}</q-td>
+        <q-td key="avgdev">{{(props.row.cumdev/props.row.nbalarms).toFixed(2)}}</q-td>
+      </q-tr>
+      <q-tr v-show="props.expand" :props="props">
+          <q-td colspan="100%" class="IHR_nohover" bordered>
+            <div v-if='props.expand' class="IHR_side_borders">
+                <network-delay-chart 
+                    :start-time="startTime" 
+                    :end-time="stopTime" 
+                    :startPointName="String(props.row.asNumber)"
+                    :startPointType="props.row.asNumber>0? 'AS':'IX'"
+                    :endPointName="endpointKeys(props.row.endpoints)"
+                    :fetch="fetch"
+                />
+            </div>
+          </q-td>
+        </q-tr>
     </template>
   </q-table>
 </template>
 
 <script>
+import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
+
+const MAX_NETDELAY_PLOTS = 5;
 
 export default {
   components: {
+      NetworkDelayChart
   },
   props: {
     data: {
@@ -60,19 +83,29 @@ export default {
       type: Date,
       required: true
     },
+    filter: {
+        type: String,
+        default: ''
+    }
   },
   data() {
     return {
-      filter: '',
-      selectedRow: [],
+      filterTable: '',
+      fetch: true,
+      expandedRow: [],
       dataSummary: [],
       pagination: {
         sortBy: "nbalarms",
         descending: true,
         page: 1,
-        rowsPerPage: 10
+        rowsPerPage: 5
       },
       columns: [
+        {
+          name: "overview",
+          label: "Overview",
+          align: "center",
+        },
         {
           name: "asNumber",
           required: true,
@@ -95,7 +128,7 @@ export default {
           name: "nbalarms",
           required: true,
           label: "Nb. Alarms",
-          align: "center",
+          align: "left",
           field: row => row.nbalarms,
           format: val => val,
           sortable: true
@@ -104,7 +137,7 @@ export default {
           name: "avgdev",
           required: true,
           label: "Average Deviation",
-          align: "center",
+          align: "left",
           field: row => row.cumdev/row.nbalarms,
           format: val => val.toFixed(2),
           sortable: true
@@ -148,46 +181,88 @@ export default {
             }
         })        
 
-        // Select the AS with the largest number of alarms
         const values = Object.values(datasum);
-        var first_row = values.reduce((prev, current) => (prev.nbalarms > current.nbalarms) ? prev : current);
-          console.log(first_row)
-        this.selectedRow = [first_row];
-        
         this.dataSummary = values
       },
       destinationsSubtitle(val){
-          return String(val.length)+this.$t('charts.networkDelayAlarms.table.destinations');
+          return String(Object.keys(val).length)+" "+this.$t('charts.networkDelayAlarms.table.destinations');
       },
       destinationsBody(val){
           var body = '';
-          val.forEach( dest => {
+          Object.keys(val).forEach( dest => {
               var loc = dest.startsWith('CT') ? dest.substring(2) : dest;
               body += loc+', '; 
           })
           
-          body = body.substring(0,body.length-1)
+          // Remove the last comma
+          body = body.substring(0,body.length-2)
           return body
+      },
+      endpointKeys(endpoints){
+        var keys = []
+        // Compute endpoints keys
+        for(const key of Object.keys(endpoints)){
+            var type = key.substring(0,2);
+            var name = key.substring(2);
+            var af = '4'; //TODO get this value from global settings
+            keys.push(type+af+name);
+        }
+
+        // Limit the number of values to display
+        if(keys.length>MAX_NETDELAY_PLOTS){ 
+            keys = keys.slice(0, MAX_NETDELAY_PLOTS);
+        }
+
+        return keys
       }
   },
   watch: { 
     data(){ 
         this.computeDataSummary()
     },
-    selectedRow(newValue){
-        this.$emit('selectedRow', newValue)
+    filter(newValue){ 
+        this.filterTable = newValue
     }
   }
 };
 </script>
 <style lang="stylus">
 .IHR_ndelay_table_cell
+    max-width 700px 
+
+.IHR_ndelay_destinations
     text-overflow ellipsis
     /* Required for text-overflow to do anything */
     white-space nowrap
     overflow hidden
     font-style italic
-    max-width 700px 
     color #555
+
+.IHR_nohover 
+    &:first-child
+      padding-top 0px
+      padding-bottom 20px
+      padding-right 20px
+      padding-left 20px
+      background #fafafa
+
+.IHR_side_borders
+    &:first-child
+        padding-top 20px
+        border-style solid
+        border-color #dddddd
+        border-top-width 0px
+        border-left-width 1px
+        border-right-width 1px
+        border-bottom-width 1px
+        border-radius 5px
+        background #ffffff
+
+
+.myClass 
+
+    tbody td
+        text-align left
+
 
 </style>

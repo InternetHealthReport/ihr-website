@@ -143,7 +143,7 @@ export default {
         this.traces = [];
         this.loading = true;
         this.loadingDelay = true;
-        this.queryDelayAlarmsAPI();
+        this.queryNetworkDelayApi();
       },
       DEFAULT_DEBOUNCE,
       false
@@ -187,8 +187,10 @@ export default {
       this.$ihr_api.network_delay(
         this.filter,
         result => {
-          this.fetchNetworkDelay(result.results);
-          this.loading = false;
+            this.$nextTick(function () {
+                this.fetchNetworkDelay(result.results);
+                this.loading = false;
+            })
         },
         error => {
           console.error(error); //FIXME do a correct alert
@@ -283,7 +285,7 @@ export default {
         trace.y.push(elem.median);
         trace.x.push(elem.timebin);
       });
-      this.layout.datarevision = new Date().getTime();
+        this.layout.datarevision = new Date().getTime();
     },
     startPointNameStr(){
         if(isNaN(this.startPointName)){

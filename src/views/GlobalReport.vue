@@ -14,76 +14,107 @@
             />
         </h2>
     </div>
-    <q-expansion-item
-      expand-separator
-      :label="$t('charts.hegemonyAlarms.title')"
-      header-class="IHR_charts-title"
-      default-opened
-    >
-      <hegemony-alarms-chart
-        :start-time="startTime"
-        :end-time="endTime"
-        :fetch="fetch"
-        :min-deviation="minDeviationNetworkDelay"
-        ref="ihrChartHegemonyAlarms"
-      />
-    </q-expansion-item>
-    <q-expansion-item
-      expand-separator
-      :label="$t('charts.networkDelayAlarms.title')"
-      header-class="IHR_charts-title"
-      default-opened
-    >
-      <network-delay-alarms-chart
-        :start-time="startTime"
-        :end-time="endTime"
-        :fetch="fetch"
-        :min-deviation="minDeviationNetworkDelay"
-        ref="ihrChartNetworkDelay"
-      />
-    </q-expansion-item>
-    <q-expansion-item
-      expand-separator
-      :label="$t('charts.linkDelays.title')"
-      header-class="IHR_charts-title"
-      default-opened
-    >
-      <delay-chart
-        :start-time="startTime"
-        :end-time="endTime"
-        :fetch="fetch"
-        :min-nprobes="minNprobes"
-        :min-deviation="minDeviation"
-        :min-diffmedian="minDiffmedian"
-        :max-diffmedian="maxDiffmedian"
-        :selected-asn="asnList"
-        ref="ihrChartDelay"
-        @prefix-details="showDetails($event)"
-      />
-    </q-expansion-item>
-    <q-expansion-item
-      expand-separator
-      :label="$t('charts.disconnections.title')"
-      header-class="IHR_charts-title"
-      default-opened
-    >
-      <events-map :geo-probes="geoProbes" ref="ihrChartMap" />
-    </q-expansion-item>
-    <q-expansion-item
-      expand-separator
-      :label="$t('charts.disconnections.title')"
-      header-class="IHR_charts-title"
-      default-opened
-    >
-      <disco-chart
-        :start-time="startTime"
-        :end-time="endTime"
-        :fetch="fetch"
-        :min-avg-level="minAvgLevel"
-        :geoprobes.sync="geoProbes"
-        ref="ihrChartDisco"
-      />
-    </q-expansion-item>
+    <div>
+      <q-input debounce="300" v-model="globalFilter" placeholder="Search">
+        <template v-slot:append>
+          <q-icon name="fas fa-search" />
+        </template>
+      </q-input>
+    </div>
+      <q-expansion-item
+        :label="$t('charts.asInterdependencies.title')"
+        caption="BGP data"
+        header-class="IHR_charts-title"
+        icon="fas fa-project-diagram"
+        default-opened
+      >
+        <q-separator />
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+            <hegemony-alarms-chart
+                :start-time="startTime"
+                :end-time="endTime"
+                :fetch="fetch"
+                :min-deviation="minDeviationNetworkDelay"
+                :filter="hegemonyFilter"
+                ref="ihrChartHegemonyAlarms"
+            />
+          </q-card-section>
+        </q-card>
+        </q-expansion-item>
+      <q-expansion-item
+        :label="$t('charts.networkDelay.title')"
+        caption="Traceroute data"
+        header-class="IHR_charts-title"
+        icon="fas fa-shipping-fast"
+        default-opened
+      >
+        <q-separator />
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+        <network-delay-alarms-chart
+            :start-time="startTime"
+            :end-time="endTime"
+            :fetch="fetch"
+            :min-deviation="minDeviationNetworkDelay"
+            :filter="ndelayFilter"
+            ref="ihrChartNetworkDelay"
+        />
+          </q-card-section>
+       </q-card>
+        </q-expansion-item>
+      <q-expansion-item
+        :label="$t('charts.delayAndForwarding.title')"
+        caption="Traceroute data"
+        header-class="IHR_charts-title"
+        icon="fas fa-exchange-alt"
+        default-opened
+      >
+        <q-separator />
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+        <delay-chart
+            :start-time="startTime"
+            :end-time="endTime"
+            :fetch="fetch"
+            :min-nprobes="minNprobes"
+            :min-deviation="minDeviation"
+            :min-diffmedian="minDiffmedian"
+            :max-diffmedian="maxDiffmedian"
+            :filter="linkFilter"
+            :selected-asn="asnList"
+            ref="ihrChartDelay"
+            @prefix-details="showDetails($event)"
+        />
+          </q-card-section>
+       </q-card>
+        </q-expansion-item>
+      <q-expansion-item
+        :label="$t('charts.disconnections.title')"
+        caption="RIPE Atlas log"
+        header-class="IHR_charts-title"
+        icon="fas fa-plug"
+        default-opened
+      >
+        <q-separator />
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+        <events-map :geo-probes="geoProbes" ref="ihrChartMap" />
+          </q-card-section>
+          <q-card-section>
+        <disco-chart
+            :start-time="startTime"
+            :end-time="endTime"
+            :fetch="fetch"
+            :min-avg-level="minAvgLevel"
+            :geoprobes.sync="geoProbes"
+            :filter="discoFilter"
+            :selected-asn="asnList"
+            ref="ihrChartDisco"
+        />
+          </q-card-section>
+        </q-card>
+        </q-expansion-item>
   </div>
 </template>
 
@@ -191,6 +222,11 @@ export default {
     filterLevel = filterLevel ? filterLevel : PARAMETERS_LEVEL.MEDIUM;
 
     return {
+      globalFilter: '',
+      hegemonyFilter: '',
+      ndelayFilter: '',
+      linkFilter: '',
+      discoFilter: '',
       presetAsnLists: PRESETS_ASN_LISTS,
       levelOptions: LEVEL_OPTIONS,
       levelColors: LEVEL_COLOR,
@@ -258,6 +294,12 @@ export default {
       if (newValue != oldValue) {
         this.pushRoute();
       }
+    },
+    globalFilter(newValue){ 
+        this.hegemonyFilter = newValue
+        this.ndelayFilter = newValue
+        this.linkFilter = newValue
+        this.discoFilter = newValue
     }
   }
 };

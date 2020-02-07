@@ -51,6 +51,7 @@
                 :end-time="endTime" 
                 :startPointName="Math.abs(asNumber).toString()"
                 :startPointType="this.$route.params.asn.substring(0,2)"
+                :fetch="fetch"
                 ref="networkDelayChart"
             />
           </q-card-section>

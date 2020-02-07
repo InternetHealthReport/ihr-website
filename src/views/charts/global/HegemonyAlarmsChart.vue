@@ -1,50 +1,12 @@
 <template>
   <div class="IHR_chart">
-    <as-interdependencies-chart
-        :start-time="startTime"
-        :end-time="endTime"
-        :as-number="plot.originasn"
-        :fetch="fetch"
-    />
-
-    <div>
-      <q-tabs
-        v-model="table.activeTab"
-        dense
-        class="text-grey inset-shadow"
-        active-color="primary"
-        active-bg-color="white"
-        indicator-color="secondary"
-        align="justify"
-        narrow-indicator
-      >
-        <q-tab name="alarms" :label="$t('charts.hegemonyAlarms.table.title')" />
-        <q-tab name="api" label="API" />
-      </q-tabs>
-      <q-tab-panels v-model="table.activeTab" animated>
-        <q-tab-panel name="alarms">
           <hegemony-alarms-table
             :start-time="startTime"
             :stop-time="endTime"
             :data="table.data"
             :loading="table.loading"
-            @selectedRow='selectRow'
+            :filter="filterValue"
           />
-        </q-tab-panel>
-        <q-tab-panel name="api" class="IHR_api-table">
-          <table>
-            <tr>
-              <td>
-                <label>{{$t('charts.hegemonyAlarms.table.title')}}</label>
-              </td>
-              <td>
-                <a :href="hegemonyAlarmsUrl" target="_blank" id="hegemonyAlarms">{{hegemonyAlarmsUrl}}</a>
-              </td>
-            </tr>
-          </table>
-        </q-tab-panel>
-      </q-tab-panels>
-    </div>
   </div>
 </template>
 
@@ -52,7 +14,6 @@
 import { debounce } from "quasar";
 import CommonChartMixin, { DEFAULT_DEBOUNCE } from "../CommonChartMixin";
 import HegemonyAlarmsTable from "../tables/HegemonyAlarmsTable";
-import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
 import { Query, HegemonyAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
 import { HEGEMONY_ALARMS_LAYOUT } from "../layouts";
 
@@ -62,7 +23,7 @@ const DEFAULT_AS_FAMILY = AS_FAMILY.v4;
 export default {
   mixins: [CommonChartMixin],
   components: {
-    HegemonyAlarmsTable, AsInterdependenciesChart
+    HegemonyAlarmsTable
   },
   props: {
     minDeviation: {
@@ -70,6 +31,10 @@ export default {
       default: DEFAULT_MIN_DEVIATION,
       required: true
     },
+    filter:{ 
+      type: String,
+      default: ''
+    }
   },
   data() {
     let hegemonyAlarmsFilter = new HegemonyAlarmsQuery()
@@ -95,10 +60,6 @@ export default {
         tableVisible: true,
         loading: true,
         selectedRow: []
-      },
-      plot: {
-        originasn: 0,
-        clear: 1
       },
       loading: true,
       delayFilter: null,
@@ -128,15 +89,13 @@ export default {
         }
       );
     },
-    selectRow(newSelection){ 
-        this.table.selectedRow = newSelection;
-        this.plot.clear += 1;
-        this.plot.originasn = newSelection[0].originasn;
-    }
   },
   computed: {
     hegemonyAlarmsUrl() {
       return this.$ihr_api.getUrl(this.hegemonyAlarmsFilter);
+    },
+    filterValue(){
+        return this.filter
     }
   },
   watch: {

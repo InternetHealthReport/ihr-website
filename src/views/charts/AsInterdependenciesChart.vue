@@ -387,7 +387,6 @@ export default {
       this.loadBothPlots();
     },
     asNumber(newValue) {
-        console.log("YEEEEEEEEEEEEEAAAAAAAAAAAAH")
       this.loadBothPlots();
     },
     clear(newValue){
