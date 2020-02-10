@@ -113,6 +113,7 @@ export default {
       .orderedByTime();
 
     return {
+      dataEvents: [],
       details: {
         activeTab: "probes",
         tableVisible: false,
@@ -149,6 +150,7 @@ export default {
       this.$ihr_api.disco_events(
         this.filters[0],
         result => {
+          this.dataEvents = result.results;
           this.fetchDiscoData(result.results);
           this.loading = false;
         },

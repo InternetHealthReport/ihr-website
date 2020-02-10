@@ -199,7 +199,6 @@
        
         <q-card class="IHR_charts-body">
           <q-card-section>
-          <disco-map :geo-probes="geoProbes" ref="ihrChartMap" />
           </q-card-section>
           <q-card-section>
           <disco-chart
@@ -232,7 +231,6 @@ import DelayChart, {
   DEFAULT_MIN_DIFFMEDIAN,
   DEFAULT_MAX_DIFFMEDIAN
 } from "./charts/global/DelayChart";
-import DiscoMap from "./charts/global/DiscoMap";
 import DateTimePicker from "@/components/DateTimePicker";
 
 const CHART_REFS = ["ihrChartNetworkDelay", "ihrChartDelay", "ihrChartMap", "ihrChartDisco"];
@@ -315,7 +313,6 @@ export default {
     HegemonyAlarmsChart,
     DiscoChart,
     DelayChart,
-    DiscoMap,
     DateTimePicker
   },
   data() {

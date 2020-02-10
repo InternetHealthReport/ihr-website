@@ -7,9 +7,8 @@
     :loading="loading"
     :filter="filterTable"
     :filter-method="filterFct"
-    binary-state-sort
     flat
-    row-key="originasn"
+    row-key="id"
     :expanded.sync="expandedRow"
     loading-label="Fetching the latest network disconnections..."
   >
@@ -18,20 +17,24 @@
         <q-td auto-width>
           <q-toggle v-model="props.expand" />
         </q-td>
-        <q-td key="originasn" align>
-          <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.row.originasn}})" href="javascript:void(0)">
-            {{$options.filters.ihr_NumberToAsOrIxp(props.row.originasn)}}
-          </a>
+        <q-td key="location" align>
+          <div v-if="props.row.streamtype == 'asn'">
+            <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.row.streamname}})" href="javascript:void(0)">
+                AS{{props.row.streamname}}
+            </a>
+          </div>
+          <div v-else>
+              {{getCountryName(props.row.streamname)}}
+          </div>
         </q-td>
-        <q-td key="dependencies">
-            {{dependenciesBody(props.row.dependencies)}}
-        </q-td>
-        <q-td key="nbalarms">{{props.row.nbalarms}}</q-td>
-        <q-td key="avgdev">{{(props.row.cumdev/props.row.nbalarms).toFixed(2)}}</q-td>
+        <q-td key="starttime"> {{props.row.starttime}} </div> </q-td>
+        <q-td key="endtime"> {{props.row.endtime}} </div> </q-td>
+        <q-td key="deviation">{{props.row.avglevel}}</q-td>
       </q-tr>
       <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%" class="IHR_nohover" bordered>
             <div v-if='props.expand' class="IHR_side_borders">
+                Some very fancy view
             </div>
           </q-td>
         </q-tr>
@@ -42,6 +45,255 @@
 
 <script>
 import CommonTableMixin from './CommonTableMixin.vue';
+
+const isoCountries = {
+    'AF' : 'Afghanistan',
+    'AX' : 'Aland Islands',
+    'AL' : 'Albania',
+    'DZ' : 'Algeria',
+    'AS' : 'American Samoa',
+    'AD' : 'Andorra',
+    'AO' : 'Angola',
+    'AI' : 'Anguilla',
+    'AQ' : 'Antarctica',
+    'AG' : 'Antigua And Barbuda',
+    'AR' : 'Argentina',
+    'AM' : 'Armenia',
+    'AW' : 'Aruba',
+    'AU' : 'Australia',
+    'AT' : 'Austria',
+    'AZ' : 'Azerbaijan',
+    'BS' : 'Bahamas',
+    'BH' : 'Bahrain',
+    'BD' : 'Bangladesh',
+    'BB' : 'Barbados',
+    'BY' : 'Belarus',
+    'BE' : 'Belgium',
+    'BZ' : 'Belize',
+    'BJ' : 'Benin',
+    'BM' : 'Bermuda',
+    'BT' : 'Bhutan',
+    'BO' : 'Bolivia',
+    'BA' : 'Bosnia And Herzegovina',
+    'BW' : 'Botswana',
+    'BV' : 'Bouvet Island',
+    'BR' : 'Brazil',
+    'IO' : 'British Indian Ocean Territory',
+    'BN' : 'Brunei Darussalam',
+    'BG' : 'Bulgaria',
+    'BF' : 'Burkina Faso',
+    'BI' : 'Burundi',
+    'KH' : 'Cambodia',
+    'CM' : 'Cameroon',
+    'CA' : 'Canada',
+    'CV' : 'Cape Verde',
+    'KY' : 'Cayman Islands',
+    'CF' : 'Central African Republic',
+    'TD' : 'Chad',
+    'CL' : 'Chile',
+    'CN' : 'China',
+    'CX' : 'Christmas Island',
+    'CC' : 'Cocos (Keeling) Islands',
+    'CO' : 'Colombia',
+    'KM' : 'Comoros',
+    'CG' : 'Congo',
+    'CD' : 'Congo, Democratic Republic',
+    'CK' : 'Cook Islands',
+    'CR' : 'Costa Rica',
+    'CI' : 'Cote D\'Ivoire',
+    'HR' : 'Croatia',
+    'CU' : 'Cuba',
+    'CY' : 'Cyprus',
+    'CZ' : 'Czech Republic',
+    'DK' : 'Denmark',
+    'DJ' : 'Djibouti',
+    'DM' : 'Dominica',
+    'DO' : 'Dominican Republic',
+    'EC' : 'Ecuador',
+    'EG' : 'Egypt',
+    'SV' : 'El Salvador',
+    'GQ' : 'Equatorial Guinea',
+    'ER' : 'Eritrea',
+    'EE' : 'Estonia',
+    'ET' : 'Ethiopia',
+    'FK' : 'Falkland Islands (Malvinas)',
+    'FO' : 'Faroe Islands',
+    'FJ' : 'Fiji',
+    'FI' : 'Finland',
+    'FR' : 'France',
+    'GF' : 'French Guiana',
+    'PF' : 'French Polynesia',
+    'TF' : 'French Southern Territories',
+    'GA' : 'Gabon',
+    'GM' : 'Gambia',
+    'GE' : 'Georgia',
+    'DE' : 'Germany',
+    'GH' : 'Ghana',
+    'GI' : 'Gibraltar',
+    'GR' : 'Greece',
+    'GL' : 'Greenland',
+    'GD' : 'Grenada',
+    'GP' : 'Guadeloupe',
+    'GU' : 'Guam',
+    'GT' : 'Guatemala',
+    'GG' : 'Guernsey',
+    'GN' : 'Guinea',
+    'GW' : 'Guinea-Bissau',
+    'GY' : 'Guyana',
+    'HT' : 'Haiti',
+    'HM' : 'Heard Island & Mcdonald Islands',
+    'VA' : 'Holy See (Vatican City State)',
+    'HN' : 'Honduras',
+    'HK' : 'Hong Kong',
+    'HU' : 'Hungary',
+    'IS' : 'Iceland',
+    'IN' : 'India',
+    'ID' : 'Indonesia',
+    'IR' : 'Iran, Islamic Republic Of',
+    'IQ' : 'Iraq',
+    'IE' : 'Ireland',
+    'IM' : 'Isle Of Man',
+    'IL' : 'Israel',
+    'IT' : 'Italy',
+    'JM' : 'Jamaica',
+    'JP' : 'Japan',
+    'JE' : 'Jersey',
+    'JO' : 'Jordan',
+    'KZ' : 'Kazakhstan',
+    'KE' : 'Kenya',
+    'KI' : 'Kiribati',
+    'KR' : 'Korea',
+    'KW' : 'Kuwait',
+    'KG' : 'Kyrgyzstan',
+    'LA' : 'Lao People\'s Democratic Republic',
+    'LV' : 'Latvia',
+    'LB' : 'Lebanon',
+    'LS' : 'Lesotho',
+    'LR' : 'Liberia',
+    'LY' : 'Libyan Arab Jamahiriya',
+    'LI' : 'Liechtenstein',
+    'LT' : 'Lithuania',
+    'LU' : 'Luxembourg',
+    'MO' : 'Macao',
+    'MK' : 'Macedonia',
+    'MG' : 'Madagascar',
+    'MW' : 'Malawi',
+    'MY' : 'Malaysia',
+    'MV' : 'Maldives',
+    'ML' : 'Mali',
+    'MT' : 'Malta',
+    'MH' : 'Marshall Islands',
+    'MQ' : 'Martinique',
+    'MR' : 'Mauritania',
+    'MU' : 'Mauritius',
+    'YT' : 'Mayotte',
+    'MX' : 'Mexico',
+    'FM' : 'Micronesia, Federated States Of',
+    'MD' : 'Moldova',
+    'MC' : 'Monaco',
+    'MN' : 'Mongolia',
+    'ME' : 'Montenegro',
+    'MS' : 'Montserrat',
+    'MA' : 'Morocco',
+    'MZ' : 'Mozambique',
+    'MM' : 'Myanmar',
+    'NA' : 'Namibia',
+    'NR' : 'Nauru',
+    'NP' : 'Nepal',
+    'NL' : 'Netherlands',
+    'AN' : 'Netherlands Antilles',
+    'NC' : 'New Caledonia',
+    'NZ' : 'New Zealand',
+    'NI' : 'Nicaragua',
+    'NE' : 'Niger',
+    'NG' : 'Nigeria',
+    'NU' : 'Niue',
+    'NF' : 'Norfolk Island',
+    'MP' : 'Northern Mariana Islands',
+    'NO' : 'Norway',
+    'OM' : 'Oman',
+    'PK' : 'Pakistan',
+    'PW' : 'Palau',
+    'PS' : 'Palestinian Territory, Occupied',
+    'PA' : 'Panama',
+    'PG' : 'Papua New Guinea',
+    'PY' : 'Paraguay',
+    'PE' : 'Peru',
+    'PH' : 'Philippines',
+    'PN' : 'Pitcairn',
+    'PL' : 'Poland',
+    'PT' : 'Portugal',
+    'PR' : 'Puerto Rico',
+    'QA' : 'Qatar',
+    'RE' : 'Reunion',
+    'RO' : 'Romania',
+    'RU' : 'Russian Federation',
+    'RW' : 'Rwanda',
+    'BL' : 'Saint Barthelemy',
+    'SH' : 'Saint Helena',
+    'KN' : 'Saint Kitts And Nevis',
+    'LC' : 'Saint Lucia',
+    'MF' : 'Saint Martin',
+    'PM' : 'Saint Pierre And Miquelon',
+    'VC' : 'Saint Vincent And Grenadines',
+    'WS' : 'Samoa',
+    'SM' : 'San Marino',
+    'ST' : 'Sao Tome And Principe',
+    'SA' : 'Saudi Arabia',
+    'SN' : 'Senegal',
+    'RS' : 'Serbia',
+    'SC' : 'Seychelles',
+    'SL' : 'Sierra Leone',
+    'SG' : 'Singapore',
+    'SK' : 'Slovakia',
+    'SI' : 'Slovenia',
+    'SB' : 'Solomon Islands',
+    'SO' : 'Somalia',
+    'ZA' : 'South Africa',
+    'GS' : 'South Georgia And Sandwich Isl.',
+    'ES' : 'Spain',
+    'LK' : 'Sri Lanka',
+    'SD' : 'Sudan',
+    'SR' : 'Suriname',
+    'SJ' : 'Svalbard And Jan Mayen',
+    'SZ' : 'Swaziland',
+    'SE' : 'Sweden',
+    'CH' : 'Switzerland',
+    'SY' : 'Syrian Arab Republic',
+    'TW' : 'Taiwan',
+    'TJ' : 'Tajikistan',
+    'TZ' : 'Tanzania',
+    'TH' : 'Thailand',
+    'TL' : 'Timor-Leste',
+    'TG' : 'Togo',
+    'TK' : 'Tokelau',
+    'TO' : 'Tonga',
+    'TT' : 'Trinidad And Tobago',
+    'TN' : 'Tunisia',
+    'TR' : 'Turkey',
+    'TM' : 'Turkmenistan',
+    'TC' : 'Turks And Caicos Islands',
+    'TV' : 'Tuvalu',
+    'UG' : 'Uganda',
+    'UA' : 'Ukraine',
+    'AE' : 'United Arab Emirates',
+    'GB' : 'United Kingdom',
+    'US' : 'United States',
+    'UM' : 'United States Outlying Islands',
+    'UY' : 'Uruguay',
+    'UZ' : 'Uzbekistan',
+    'VU' : 'Vanuatu',
+    'VE' : 'Venezuela',
+    'VN' : 'Viet Nam',
+    'VG' : 'Virgin Islands, British',
+    'VI' : 'Virgin Islands, U.S.',
+    'WF' : 'Wallis And Futuna',
+    'EH' : 'Western Sahara',
+    'YE' : 'Yemen',
+    'ZM' : 'Zambia',
+    'ZW' : 'Zimbabwe'
+};
+
 
 export default {
   mixins: [CommonTableMixin],
@@ -64,10 +316,6 @@ export default {
       type: Date,
       required: true
     },
-    filter: { 
-      type: String,
-      default: ''
-    }
   },
   data() {
     return {
@@ -75,7 +323,7 @@ export default {
       expandedRow: [],
       rows: [],
       pagination: {
-        sortBy: "nbalarms",
+        sortBy: "deviation",
         descending: true,
         page: 1,
         rowsPerPage: 5
@@ -87,111 +335,53 @@ export default {
           align: "center",
         },
         {
-          name: "originasn",
+          name: "location",
           required: true,
-          label: "Origin AS",
+          label: "Location",
           align: "left",
-          field: row => row.originasn,
-          format: val => this.$options.filters.ihr_NumberToAsOrIxp(val),
+          field: row => [row.streamtype, row.streamname],
+          format: val => val,
           sortable: true,
         },
         {
-          name: "dependencies",
+          name: "starttime",
           required: false,
-          label: "Anomalous Dependencies",
+          label: "Disconnection Time",
           align: "left",
-          field: row => row.dependencies,
-          format: val => this.$options.filters.sortedKeys(val),
+          field: row => row.starttime,
+          format: val => val,
           sortable: false
         },
         {
-          name: "nbalarms",
+          name: "endtime",
           required: true,
-          label: "Nb. Alarms",
+          label: "Reconnection Time",
           align: "left",
-          field: row => row.nbalarms,
+          field: row => row.endtime,
           format: val => val,
           sortable: true
         },
         {
-          name: "avgdev",
+          name: "deviation",
           required: true,
-          label: "Average Deviation",
+          label: "Deviation",
           align: "left",
-          field: row => row.cumdev/row.nbalarms,
-          format: val => val.toFixed(2),
+          field: row => row.avglevel,
+          format: val => val,
           sortable: true
-        }
+        },
       ],
     };
   },
-  mounted(){
-      this.computeDataSummary()
-  },
   methods: {
-      computeDataSummary(){
-        if(!this.data.length) return;
-
-        var datasum = {};
-        this.data.forEach( alarm => {
-            var originasn = alarm.originasn
-            if(originasn!=0){
-                if(originasn in datasum){ 
-                    datasum[originasn].nbalarms += 1;
-                    datasum[originasn].cumdev += alarm.deviation;
-                }
-                else{
-                    datasum[originasn] = {
-                        originasn: originasn, 
-                        nbalarms: 1,
-                        cumdev: alarm.deviation,
-                        dependencies: {}
-                    }
-                }
-
-                // Add destination
-                if(alarm.asn in datasum[originasn].dependencies){
-                    datasum[originasn].dependencies[alarm.asn] += alarm.deviation;
-                }
-                else{
-                    datasum[originasn].dependencies[alarm.asn] = alarm.deviation;
-                }
-            }
-        })        
-
-        // Select the AS with the largest number of alarms
-        const values = Object.values(datasum);
-        var first_row = values.reduce((prev, current) => (prev.nbalarms > current.nbalarms) ? prev : current);
-        this.selectedRow = [first_row];
-        
-        this.rows = values
+      getCountryName (countryCode) {
+        if (isoCountries.hasOwnProperty(countryCode)) {
+            return isoCountries[countryCode];
+        } else {
+            return countryCode;
+        }
       },
-      dependenciesSubtitle(val){
-          return String(Object.keys(val).length)+" "+this.$t('charts.hegemonyAlarms.table.dependencies');
-      },
-      dependenciesBody(val){
-          var body = '';
-          var sortedVal = this.$options.filters.sortedKeys(val);
-          sortedVal.forEach( dest => {
-              body += this.$options.filters.ihr_NumberToAsOrIxp(dest)+', '; 
-          })
-
-          //Remove the last comma 
-          body = body.substring(0,body.length-2)
-          return body
-      },
-      nbAlarmsDisplayed(val) {
-          this.$emit('nbAlarmsDisplayed', val)
-      }
   },
-  watch: { 
-    data(){ 
-        this.computeDataSummary()
-    },
-    filter(newValue){ 
-        this.filterTable = newValue
-    },
-  }
 };
 </script>
 <style lang="stylus">

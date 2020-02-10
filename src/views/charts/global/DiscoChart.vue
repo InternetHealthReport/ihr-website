@@ -1,7 +1,16 @@
 <template>
   <div class="IHR_chart">
     <div>
-        <disconnection-alarms-table :data="details.data" :loading="details.loading" />
+        <disco-map :geo-probes="geoProbes" ref="ihrChartMap" />
+        <disco-alarms-table 
+        :start-time="startTime"
+        :stop-time="endTime"
+        :data="dataEvents"
+        :loading="loading"
+        :filter='filterValue'
+        @filteredRows="filteredRows"
+        @prefix-details="$emit('prefix-details', $event)"
+        />
     </div>
   </div>
 </template>
@@ -10,6 +19,7 @@
 <script>
 import Vue from "vue";
 import NetworkDisco, { push0 } from "../DiscoChart";
+import DiscoMap from "./DiscoMap.vue";
 import DiscoAlarmsTable from "../tables/DiscoAlarmsTable.vue";
 import { DiscoEventQuery } from "@/plugins/query/IhrQuery";
 import DiscoChartVue from "../DiscoChart.vue";
@@ -26,6 +36,10 @@ const DEFAULT_DISCO_AVG_LEVEL = 8;
 
 export default {
   extends: NetworkDisco,
+  components: {
+    DiscoAlarmsTable,
+    DiscoMap,
+  },
   props: {
     minAvgLevel: {
       required: true,
@@ -33,7 +47,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+        geoProbes: []
+    }
   },
   beforeCreate() {
     Vue.delete(this.$options.props, "streamName");
@@ -47,50 +63,29 @@ export default {
     */
   },
   methods: {
-    fetchDiscoData(data) {
-      this.traces = [];
-      let streamTraces = {};
-      let geoProbes = [];
+    apiCall() {
+      this.loading = true;
+      this.$ihr_api.disco_events(
+        this.filters[0],
+        result => {
+          this.dataEvents = result.results;
+          this.updateGeoProbes(this.dataEvents);
+          this.loading = false;
+        },
+        error => {
+          console.error(error); //FIXME do a correct alert
+        }
+      );
+    },
+    updateGeoProbes(data) { 
+      this.geoProbes = [];
       data.forEach(event => {
-        let streamname = event.streamname;
-        if(event.streamtype == "admin1" ||
-            event.streamtype == "admin2" ||
-            event.streamtype == "country"
-        ) {
-          geoProbes.push(event);
-        }
-        let trace = streamTraces[streamname];
-
-        if (trace == undefined) {
-          trace = {
-            x: [this.$options.filters.ihrUtcString(this.startTime)],
-            y: [0],
-            z: [0],
-            name: streamname,
-            line: { shape: "hv" }
-          };
-          streamTraces[streamname] = trace;
-          this.traces.push(trace);
-        } else {
-          //if it's not the first generate the gap with no events
-          push0(trace, trace.x[trace.x.length - 1], 0);
-        }
-
-        //generate square for the event
-        push0(trace, event.starttime);
-        trace.x.push(event.starttime);
-        trace.y.push(event.avglevel);
-        trace.z.push(event.id);
-
-        trace.x.push(event.endtime);
-        trace.y.push(event.avglevel);
-        trace.z.push(event.id);
-        push0(trace, event.endtime);
+          this.geoProbes.push(event);
       });
-      this.$emit("update:geoprobes", geoProbes);
-      this.traces.forEach(trace => {
-        push0(trace, this.$options.filters.ihrUtcString(this.endTime));
-      });
+    },
+    filteredRows(data){
+        this.updateGeoProbes(data);
+        this.$emit('filteredRows', data);
     }
   },
   watch: {
