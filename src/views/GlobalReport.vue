@@ -1,9 +1,8 @@
 <template>
   <div class="IHR_char-container">
-    <div class="q-mb-xl">
-        <h1 class="text-center">{{title}}</h1>
-        <h2 class="text-center"> 
-            {{reportDateFmt}}
+    <div class="q-mb-xs">
+        <div class="text-center">
+            <div class="text-h1">{{title}}</div><div class="text-h2">{{reportDateFmt}}
             <date-time-picker
                 :min="minDate"
                 :max="maxDate"
@@ -12,23 +11,65 @@
                 hideTime
                 class="IHR_subtitle_calendar"
             />
-        </h2>
+            </div>
+        </div>
     </div>
-    <div>
-      <q-input debounce="300" v-model="globalFilter" placeholder="Search">
-        <template v-slot:append>
-          <q-icon name="fas fa-search" />
-        </template>
-      </q-input>
-    </div>
+    <q-card class="q-mb-xl" flat>
+      <q-card-section>
+      <div class="row justify-center q-pa-md">
+        <div class="text">
+            <q-input outlined debounce="300" v-model="globalFilter" placeholder="Search">
+                <template v-slot:append>
+                <q-icon name="fas fa-search" />
+                </template>
+            </q-input>
+        </div>
+      </div>
+      </q-card-section>
+      <q-card-section>
+      <div class="row">
+        <div class="col text-center text-h3">
+            <b>{{nbAlarms.hegemony}}</b> AS dependency alarms
+        </div>
+        <div class="col text-center text-h3">
+            <b>{{nbAlarms.networkDelay}}</b> network delay alarms
+        </div>
+        <div class="col text-center text-h3">
+            <b>{{nbAlarms.linkDelay}}</b> link delay alarms 
+        </div>
+        <div class="col text-center text-h3">
+            <b>{{nbAlarms.disco}}</b> network disconnections
+        </div>
+      </div>
+      </q-card-section>
+      <q-separator/>
+    </q-card>
       <q-expansion-item
-        :label="$t('charts.asInterdependencies.title')"
-        caption="BGP data"
         header-class="IHR_charts-title"
-        icon="fas fa-project-diagram"
         default-opened
+        expand-icon-toggle
+        v-model="hegemonyExpanded"
       >
-        <q-separator />
+      <template v-slot:header>
+          <q-item-section avatar>
+            <q-icon name="fas fa-project-diagram" color="primary" text-color="white" />
+          </q-item-section>
+
+          <q-item-section>
+              <div class='text-primary'>{{$t('charts.asInterdependencies.title')}}</div>
+              <div class='text-caption text-grey'>BGP data</div>
+          </q-item-section>
+
+          <q-item-section side>
+            <div class="text" v-if='hegemonyExpanded'>
+                <q-input debounce="300" v-model="hegemonyFilter" placeholder="Search">
+                    <template v-slot:append>
+                    <q-icon name="fas fa-search" />
+                    </template>
+                </q-input>
+            </div>
+          </q-item-section>
+        </template> 
         <q-card class="IHR_charts-body">
           <q-card-section>
             <hegemony-alarms-chart
@@ -37,19 +78,38 @@
                 :fetch="fetch"
                 :min-deviation="minDeviationNetworkDelay"
                 :filter="hegemonyFilter"
+                @filteredRows="hegemonyFilteredRows"
                 ref="ihrChartHegemonyAlarms"
             />
           </q-card-section>
         </q-card>
         </q-expansion-item>
       <q-expansion-item
-        :label="$t('charts.networkDelay.title')"
-        caption="Traceroute data"
         header-class="IHR_charts-title"
-        icon="fas fa-shipping-fast"
         default-opened
+        expand-icon-toggle
+        v-model="ndelayExpanded"
       >
-        <q-separator />
+      <template v-slot:header>
+          <q-item-section avatar>
+            <q-icon name="fas fa-shipping-fast" color="primary" text-color="white" />
+          </q-item-section>
+
+          <q-item-section>
+              <div class='text-primary'>{{$t('charts.networkDelay.title')}}</div>
+              <div class='text-caption text-grey'>Traceroute data</div>
+          </q-item-section>
+
+          <q-item-section side>
+            <div class="text" v-if='ndelayExpanded'>
+                <q-input debounce="300" v-model="ndelayFilter" placeholder="Search">
+                    <template v-slot:append>
+                    <q-icon name="fas fa-search" />
+                    </template>
+                </q-input>
+            </div>
+          </q-item-section>
+        </template> 
         <q-card class="IHR_charts-body">
           <q-card-section>
         <network-delay-alarms-chart
@@ -58,19 +118,38 @@
             :fetch="fetch"
             :min-deviation="minDeviationNetworkDelay"
             :filter="ndelayFilter"
+            @filteredRows="networkDelayFilteredRows"
             ref="ihrChartNetworkDelay"
         />
           </q-card-section>
        </q-card>
         </q-expansion-item>
       <q-expansion-item
-        :label="$t('charts.delayAndForwarding.title')"
-        caption="Traceroute data"
         header-class="IHR_charts-title"
-        icon="fas fa-exchange-alt"
         default-opened
+        expand-icon-toggle
+        v-model="linkExpanded"
       >
-        <q-separator />
+      <template v-slot:header>
+          <q-item-section avatar>
+            <q-icon name="fas fa-exchange-alt" color="primary" text-color="white" />
+          </q-item-section>
+
+          <q-item-section>
+              <div class='text-primary'>{{$t('charts.delayAndForwarding.title')}}</div>
+              <div class='text-caption text-grey'>Traceroute data</div>
+          </q-item-section>
+
+          <q-item-section side>
+            <div class="text" v-if='linkExpanded'>
+                <q-input debounce="300" v-model="linkFilter" placeholder="Search">
+                    <template v-slot:append>
+                    <q-icon name="fas fa-search" />
+                    </template>
+                </q-input>
+            </div>
+          </q-item-section>
+        </template> 
         <q-card class="IHR_charts-body">
           <q-card-section>
         <delay-chart
@@ -82,6 +161,7 @@
             :min-diffmedian="minDiffmedian"
             :max-diffmedian="maxDiffmedian"
             :filter="linkFilter"
+            @filteredRows="linkDelayFilteredRows"
             :selected-asn="asnList"
             ref="ihrChartDelay"
             @prefix-details="showDetails($event)"
@@ -90,28 +170,49 @@
        </q-card>
         </q-expansion-item>
       <q-expansion-item
-        :label="$t('charts.disconnections.title')"
         caption="RIPE Atlas log"
         header-class="IHR_charts-title"
-        icon="fas fa-plug"
         default-opened
+        expand-icon-toggle
+        v-model="discoExpanded"
       >
-        <q-separator />
+      <template v-slot:header>
+          <q-item-section avatar>
+            <q-icon name="fas fa-plug" color="primary" text-color="white" />
+          </q-item-section>
+
+          <q-item-section>
+              <div class='text-primary'>{{$t('charts.disconnections.title')}}</div>
+              <div class='text-caption text-grey'>RIPE Atlas log</div>
+          </q-item-section>
+
+          <q-item-section side>
+            <div class="text" v-if='discoExpanded'>
+                <q-input debounce="300" v-model="discoFilter" placeholder="Search">
+                    <template v-slot:append>
+                    <q-icon name="fas fa-search" />
+                    </template>
+                </q-input>
+            </div>
+          </q-item-section>
+        </template> 
+       
         <q-card class="IHR_charts-body">
           <q-card-section>
-        <events-map :geo-probes="geoProbes" ref="ihrChartMap" />
+          <disco-map :geo-probes="geoProbes" ref="ihrChartMap" />
           </q-card-section>
           <q-card-section>
-        <disco-chart
+          <disco-chart
             :start-time="startTime"
             :end-time="endTime"
             :fetch="fetch"
             :min-avg-level="minAvgLevel"
             :geoprobes.sync="geoProbes"
             :filter="discoFilter"
+            @filteredRows="discoFilteredRows"
             :selected-asn="asnList"
             ref="ihrChartDisco"
-        />
+          />
           </q-card-section>
         </q-card>
         </q-expansion-item>
@@ -131,7 +232,7 @@ import DelayChart, {
   DEFAULT_MIN_DIFFMEDIAN,
   DEFAULT_MAX_DIFFMEDIAN
 } from "./charts/global/DelayChart";
-import EventsMap from "./charts/global/EventsMap";
+import DiscoMap from "./charts/global/DiscoMap";
 import DateTimePicker from "@/components/DateTimePicker";
 
 const CHART_REFS = ["ihrChartNetworkDelay", "ihrChartDelay", "ihrChartMap", "ihrChartDisco"];
@@ -214,7 +315,7 @@ export default {
     HegemonyAlarmsChart,
     DiscoChart,
     DelayChart,
-    EventsMap,
+    DiscoMap,
     DateTimePicker
   },
   data() {
@@ -227,6 +328,10 @@ export default {
       ndelayFilter: '',
       linkFilter: '',
       discoFilter: '',
+      hegemonyExpanded: true,
+      ndelayExpanded: true,
+      linkExpanded: true,
+      discoExpanded: true,
       presetAsnLists: PRESETS_ASN_LISTS,
       levelOptions: LEVEL_OPTIONS,
       levelColors: LEVEL_COLOR,
@@ -241,6 +346,12 @@ export default {
       asnList: [],
       asnListState: REPORT_TYPE.GLOBAL,
       geoProbes: [],
+      nbAlarms:{ 
+        hegemony: 0,
+        networkDelay: 0,
+        linkDelay: 0,
+        disco:0
+      }
     };
   },
   mounted() {
@@ -278,6 +389,18 @@ export default {
         }
       );
     },
+    hegemonyFilteredRows(val){ 
+        if(this.globalFilter != '' || this.nbAlarms.hegemony == 0) this.nbAlarms.hegemony = val.length;
+    },
+    networkDelayFilteredRows(val){ 
+        if(this.globalFilter != '' || this.nbAlarms.networkDelay == 0) this.nbAlarms.networkDelay = val.length;
+    },
+    linkDelayFilteredRows(val){ 
+        if(this.globalFilter != '' || this.nbAlarms.linkDelay == 0) this.nbAlarms.linkDelay = val.length;
+    },
+    discoFilteredRows(val){ 
+        if(this.globalFilter != '' || this.nbAlarms.disco == 0) this.nbAlarms.disco= val.length;
+    }
   },
   computed: {
     title() {

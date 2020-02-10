@@ -1,6 +1,16 @@
+<template>
+  <div class="IHR_chart">
+    <div>
+        <disconnection-alarms-table :data="details.data" :loading="details.loading" />
+    </div>
+  </div>
+</template>
+
+
 <script>
 import Vue from "vue";
 import NetworkDisco, { push0 } from "../DiscoChart";
+import DiscoAlarmsTable from "../tables/DiscoAlarmsTable.vue";
 import { DiscoEventQuery } from "@/plugins/query/IhrQuery";
 import DiscoChartVue from "../DiscoChart.vue";
 

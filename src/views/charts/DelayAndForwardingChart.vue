@@ -99,8 +99,8 @@
 </template>
 
 <script>
-import { debounce, extend } from "quasar";
-import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
+import { extend } from "quasar";
+import CommonChartMixin from "./CommonChartMixin"
 import DelayAlarmsTable from "./tables/DelayAlarmsTable";
 import ForwardingAlarmsTable from "./tables/ForwardingAlarmsTable";
 import { DELAY_AND_FORWARDING_LAYOUT } from "./layouts"
@@ -153,21 +153,6 @@ export default {
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 
-    //prevent calls within 500ms and execute only the last one
-    let debouncedApiCall = debounce(
-      () => {
-        if (!this.fetch) return;
-        this.traces = extend(true, [], DEFAULT_TRACES);
-        this.loading = true;
-        this.loadingDelay = true;
-        this.loadingForwarding = true;
-        this.queryForwardingAPI();
-        this.queryDelayAPI();
-      },
-      DEFAULT_DEBOUNCE,
-      false
-    );
-
     return {
       details: {
         activeTab: "delay",
@@ -179,7 +164,6 @@ export default {
         ),
         tableVisible: false
       },
-      debouncedApiCall: debouncedApiCall,
       loadingDelay: true,
       loadingForwarding: true,
       delayFilter: delayFilter,
@@ -190,6 +174,13 @@ export default {
     };
   },
   methods: {
+    apiCall(){
+        this.traces = extend(true, [], DEFAULT_TRACES);
+        this.loadingDelay = true;
+        this.loadingForwarding = true;
+        this.queryForwardingAPI();
+        this.queryDelayAPI();
+    },
     showTable(clickData) {
       let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
       

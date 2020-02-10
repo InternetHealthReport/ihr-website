@@ -6,7 +6,8 @@
     :pagination.sync="pagination"
     :loading="loading"
     :visible-columns="visibleColumns"
-    binary-state-sort
+    :filter="filterTable"
+    :filter-method="filterFct"
     flat
   >
     <template v-slot:body="props">

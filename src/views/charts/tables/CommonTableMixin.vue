@@ -8,12 +8,47 @@ export default {
     loading: {
       type: Boolean,
       required: true
+    },
+    filter: {
+        type: String,
+        default: ''
+    }
+  },
+  data() { 
+    return { 
+      filteredRows: [],
+      filterTable: '',
+      rows: this.data
     }
   },
   methods: {
     getCellValue(props, columnName) {
       let col = props.colsMap[columnName];
       return col.format(col.field(props.row));
+    },
+    filterFct(rows, terms, cols, cellValue) {
+      const lowerTerms = terms ? terms.toLowerCase() : ''
+      this.filteredRows = rows.filter(
+        row => cols.some(col => (cellValue(col, row) + '').toLowerCase().indexOf(lowerTerms) !== -1)
+      )
+      return this.filteredRows
+    },
+  },
+  watch: { 
+    filteredRows(newValue){
+        this.$emit('filteredRows', newValue)
+    },
+    filterTable(newValue){ 
+        if(newValue == '') this.filteredRows = this.rows;
+    },
+    data(newValue){ 
+        this.rows = newValue
+    },
+    rows(newValue){ 
+        this.filteredRows = newValue
+    },
+    filter(newValue){ 
+        this.filterTable = newValue
     }
   }
 }

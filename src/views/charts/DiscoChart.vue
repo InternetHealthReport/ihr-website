@@ -82,8 +82,7 @@
 </template>
 
 <script>
-import { debounce } from "quasar";
-import CommonChartMixin, { DEFAULT_DEBOUNCE } from "./CommonChartMixin";
+import CommonChartMixin from "./CommonChartMixin";
 import { DiscoEventQuery, DiscoProbesQuery } from "@/plugins/IhrApi";
 import DisconnectionTable from "./tables/DisconnectionTable";
 import Tracemon from "@/components/ripe/Tracemon";
@@ -113,18 +112,7 @@ export default {
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 
-    //prevent calls within 500ms and execute only the last one
-    let debouncedApiCall = debounce(
-      () => {
-        if (!this.fetch) return;
-        this.queryDiscoApi();
-      },
-      DEFAULT_DEBOUNCE,
-      false
-    );
-
     return {
-      debouncedApiCall: debouncedApiCall,
       details: {
         activeTab: "probes",
         tableVisible: false,
@@ -156,7 +144,7 @@ export default {
     this.layout.yaxis.title = this.$t('charts.disconnections.table.yaxis');
   },
   methods: {
-    queryDiscoApi() {
+    apiCall() {
       this.loading = true;
       this.$ihr_api.disco_events(
         this.filters[0],

@@ -1,4 +1,3 @@
-
 <template>
    <q-table
     :data="data"
@@ -6,8 +5,9 @@
     row-key="link"
     :pagination.sync="pagination"
     :loading="loading"
-    binary-state-sort
     flat
+    :filter="filterTable"
+    :filter-method="filterFct"
   />
 </template>
 

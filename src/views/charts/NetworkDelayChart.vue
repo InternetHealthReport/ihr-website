@@ -134,21 +134,6 @@ export default {
     }
   },
   data() {
-
-    //prevent calls within 500ms and execute only the last one
-    let debouncedApiCall = debounce(
-      () => {
-        if (!this.fetch) return;
-        if( this.startPointName == "") return;
-        this.traces = [];
-        this.loading = true;
-        this.loadingDelay = true;
-        this.queryNetworkDelayApi();
-      },
-      DEFAULT_DEBOUNCE,
-      false
-    );
-
     return {
       details: {
         activeTab: "delay",
@@ -157,9 +142,8 @@ export default {
         loading: true,
         filter: ''
       },
-      debouncedApiCall: debouncedApiCall,
+      apiFilter: null,
       openClose: true,
-      filter: null,
       traces: [],
       layout: NET_DELAY_LAYOUT,
       selectedStart: '',
@@ -168,12 +152,12 @@ export default {
   },
   computed:{
     delayUrl() {
-      return this.$ihr_api.getUrl(this.filter);
+      return this.$ihr_api.getUrl(this.apiFilter);
     },
   },
   methods: {
     setFilter() { 
-        this.filter = new NetworkDelayQuery()
+        this.apiFilter = new NetworkDelayQuery()
         .startPointName(this.startPointName)
         .startPointType(this.startPointType)
         .endPointKey(this.endPointName)
@@ -181,11 +165,13 @@ export default {
         .timeInterval(this.startTime, this.endTime)
         .orderedByTime();
     },
-    queryNetworkDelayApi() {
+    apiCall() {
+      this.traces = [];
+      this.loadingDelay = true;
       this.setFilter()
       this.loading = true;
       this.$ihr_api.network_delay(
-        this.filter,
+        this.apiFilter,
         result => {
             this.$nextTick(function () {
                 this.fetchNetworkDelay(result.results);
@@ -199,11 +185,11 @@ export default {
       );
     },
     addStartLocation(loc) {
-        this.filter.startPointName(loc.name)
-        this.filter.startPointType(loc.type)
+        this.apiFilter.startPointName(loc.name)
+        this.apiFilter.startPointType(loc.type)
     },
     addEndLocation(loc) {
-        this.filter.endPointKey(loc.type+this.asFamily+loc.name)
+        this.apiFilter.endPointKey(loc.type+this.asFamily+loc.name)
     },
     clearGraph(){
         this.traces = []
@@ -213,7 +199,7 @@ export default {
       if(this.noTable) return;
       let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
       this.details.activeTab = "delay"
-      this.details.filter = this.filter.clone()
+      this.details.filter = this.apiFilter.clone()
 
       this.details.delayData = {
         dateTime: chosenTime,
@@ -233,7 +219,7 @@ export default {
           this.details.delayData.data = data;
           this.details.tableVisible = true;
           this.details.delayData.loading = false;
-          this.details.filter = this.filter.clone();
+          this.details.filter = this.apiFilter.clone();
         },
         error => {
           console.error(error); //TODO better error handling

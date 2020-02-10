@@ -1,65 +1,23 @@
 <template>
   <div class="IHR_chart">
-    <reactive-chart
-      :layout="layout"
-      :traces="traces"
-      @loaded="loading = false"
-      :ref="myId"
-      :no-data="noData"
-      />
     <div>
-      <q-tabs
-        v-model="details.activeTab"
-        dense
-        class="text-grey inset-shadow"
-        active-color="primary"
-        active-bg-color="white"
-        indicator-color="secondary"
-        align="justify"
-        narrow-indicator
-      >
-        <q-tab name="delay" :label="$t('charts.linkDelays.table.title')" />
-        <q-tab name="api" label="API" />
-      </q-tabs>
-      <q-tab-panels v-model="details.activeTab" animated>
-        <q-tab-panel name="delay">
-          <delay-alarms-table
-            :start-time="startTime"
-            :stop-time="endTime"
-            :data="details.data"
-            :loading="details.loading"
-            show-asn
-            @prefix-details="$emit('prefix-details', $event)"
-          />
-        </q-tab-panel>
-        <q-tab-panel name="api" class="IHR_api-table">
-          <table>
-            <tr>
-              <td>
-                <label for="delay">{{$t('charts.delayAndForwarding.yaxis')}}</label>
-              </td>
-              <td>
-                <a :href="delayUrl" target="_blank" id="delay">{{delayUrl}}</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="delayAlarms">{{$t('charts.delayAndForwarding.tables.delay.title')}}</label>
-              </td>
-              <td>
-                <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{delayAlarmsUrl}}</a>
-              </td>
-            </tr>
-          </table>
-        </q-tab-panel>
-      </q-tab-panels>
+    <delay-alarms-table
+        :start-time="startTime"
+        :stop-time="endTime"
+        :data="details.data"
+        :loading="details.loading"
+        :filter='filterValue'
+        @filteredRows="filteredRows"
+        show-asn
+        @prefix-details="$emit('prefix-details', $event)"
+    />
     </div>
   </div>
 </template>
 
 <script>
 import { debounce } from "quasar";
-import CommonChartMixin, { DEFAULT_DEBOUNCE } from "../CommonChartMixin";
+import CommonChartMixin from "../CommonChartMixin";
 import DelayAlarmsTable from "../tables/DelayAlarmsTable";
 import { DelayQuery, DelayAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
 import { DELAY_CHART_LAYOUT } from "../layouts";
@@ -112,19 +70,6 @@ export default {
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 
-    //prevent calls within 500ms and execute only the last one
-    let debouncedApiCall = debounce(
-      () => {
-        if (!this.fetch) return;
-        this.traces = [];
-        this.loading = true;
-        this.loadingDelay = true;
-        this.queryDelayAlarmsAPI();
-      },
-      DEFAULT_DEBOUNCE,
-      false
-    );
-
     return {
       myId: `ihrDelayChart${this._uid}`,
       details: {
@@ -133,7 +78,6 @@ export default {
         tableVisible: false,
         loading: true
       },
-      debouncedApiCall: debouncedApiCall,
       loading: true,
       delayFilter: null,
       delayAlarmsFilter: delayAlarmsFilter,
@@ -143,8 +87,10 @@ export default {
     };
   },
   methods: {
-    queryDelayAlarmsAPI() {
+    apiCall(){ 
+      this.traces = [];
       this.loading = true;
+      this.loadingDelay = true;
       this.details.tableVisible = true;
       this.details.loading = true;
       this.$ihr_api.delay_alarms(

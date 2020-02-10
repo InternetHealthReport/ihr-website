@@ -73,8 +73,8 @@
 </template>
 
 <script>
-import CommonChartMixin, {DEFAULT_DEBOUNCE} from "./CommonChartMixin"
-import { debounce, extend } from "quasar";
+import CommonChartMixin from "./CommonChartMixin"
+import { extend } from "quasar";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
 import Bgplay from "@/components/ripe/Bgplay";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts"
@@ -124,15 +124,6 @@ export default {
   },
   data() {
     //prevent calls within 500ms and execute only the last one
-      let debouncedApiCall = debounce(
-        () => {
-            if(!this.fetch) return;
-            this.loadBothPlots()
-        },
-        DEFAULT_DEBOUNCE,
-        false
-        );
-
     return {
       details: {
         activeTab: "dependency",
@@ -144,7 +135,6 @@ export default {
         tableVisible: false,
         enableBgpPlay: false,
       },
-      debouncedApiCall: debouncedApiCall,
       loadingHegemony: true,
       loadingHegemonyCone: true,
       hegemonyFilter: null,
@@ -177,7 +167,7 @@ export default {
         .orderedByTime();
 
     },
-    loadBothPlots(){
+    apiCall(){
         if(this.asNumber==0) return;
         this.updateAxesLabel()
         this.hegemonyFilter= this.makeHegemonyFilter()
@@ -384,10 +374,10 @@ export default {
   },
   watch: {
     addressFamily(newValue) {
-      this.loadBothPlots();
+      this.debouncedApiCall();
     },
     asNumber(newValue) {
-      this.loadBothPlots();
+      this.debouncedApiCall();
     },
     clear(newValue){
         this.clearGraph();

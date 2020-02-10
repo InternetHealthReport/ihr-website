@@ -1,25 +1,17 @@
 <template>
   <q-table
     table-class="myClass"
-    :data="dataSummary"
+    :data="rows"
     :columns="columns"
     :pagination.sync="pagination"
     :loading="loading"
     :filter="filterTable"
-    binary-state-sort
+    :filter-method="filterFct"
     flat
     row-key="asNumber"
     :expanded.sync="expandedRow"
-    loading-label="Fetching the latest network delay alarms..."
+    loading-label="Fetching latest network delay alarms..."
   >
-    <template v-slot:top-right>
-      <q-input debounce="300" v-model="filterTable" placeholder="Search">
-        <template v-slot:append>
-          <q-icon name="fas fa-search" />
-        </template>
-      </q-input>
-    </template>
-
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td auto-width>
@@ -48,7 +40,7 @@
                     :startPointName="String(props.row.asNumber)"
                     :startPointType="props.row.asNumber>0? 'AS':'IX'"
                     :endPointName="endpointKeys(props.row.endpoints)"
-                    :fetch="fetch"
+                    fetch
                 />
             </div>
           </q-td>
@@ -58,11 +50,13 @@
 </template>
 
 <script>
+import CommonTableMixin from "./CommonTableMixin"
 import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
 
 const MAX_NETDELAY_PLOTS = 5;
 
 export default {
+  mixins: [CommonTableMixin],
   components: {
       NetworkDelayChart
   },
@@ -83,17 +77,11 @@ export default {
       type: Date,
       required: true
     },
-    filter: {
-        type: String,
-        default: ''
-    }
   },
   data() {
     return {
-      filterTable: '',
-      fetch: true,
       expandedRow: [],
-      dataSummary: [],
+      rows: [],
       pagination: {
         sortBy: "nbalarms",
         descending: true,
@@ -182,7 +170,7 @@ export default {
         })        
 
         const values = Object.values(datasum);
-        this.dataSummary = values
+        this.rows = values
       },
       destinationsSubtitle(val){
           return String(Object.keys(val).length)+" "+this.$t('charts.networkDelayAlarms.table.destinations');
@@ -220,9 +208,6 @@ export default {
     data(){ 
         this.computeDataSummary()
     },
-    filter(newValue){ 
-        this.filterTable = newValue
-    }
   }
 };
 </script>

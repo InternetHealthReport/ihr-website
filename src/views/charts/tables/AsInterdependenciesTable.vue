@@ -1,6 +1,6 @@
 <template>
   <q-table
-    :data="data"
+    :data="rows"
     :columns="columns"
     row-key="asNumber"
     :pagination.sync="pagination"

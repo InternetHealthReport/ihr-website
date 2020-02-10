@@ -7,14 +7,14 @@
         :data="table.data"
         :loading="table.loading"
         :filter="filterValue"
+        @filteredRows="filteredRows"
           />
     </div>
   </div>
 </template>
 
 <script>
-import { debounce } from "quasar";
-import CommonChartMixin, { DEFAULT_DEBOUNCE } from "../CommonChartMixin";
+import CommonChartMixin  from "../CommonChartMixin";
 import NetworkDelayAlarmsTable from "../tables/NetworkDelayAlarmsTable";
 import { Query, NetworkDelayAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
 
@@ -38,10 +38,6 @@ export default {
       default: "AS",
       required: false
     },
-    filter:{ 
-      type: String,
-      default: ''
-    }
   },
   data() {
     let networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery()
@@ -49,17 +45,6 @@ export default {
       .startPointType(this.selectedType)
       .timeInterval(this.startTime, this.endTime);
       //TODO add IXPs
-
-    //prevent calls within 500ms and execute only the last one
-    let debouncedApiCall = debounce(
-      () => {
-        if (!this.fetch) return;
-        this.loading = true;
-        this.queryNetworkDelayAlarmsAPI();
-      },
-      DEFAULT_DEBOUNCE,
-      false
-    );
 
     return {
       myId: `ihrNetworkDelayAlarmsChart${this._uid}`,
@@ -78,13 +63,12 @@ export default {
       },
       loading: true,
       delayFilter: null,
-      debouncedApiCall: debouncedApiCall, 
       networkDelayAlarmsFilter: networkDelayAlarmsFilter,
       filters: [networkDelayAlarmsFilter],
     };
   },
   methods: {
-    queryNetworkDelayAlarmsAPI() {
+    apiCall() {
       this.loading = true;
       this.table.tableVisible = true;
       this.table.loading = true;
@@ -109,9 +93,6 @@ export default {
     delayAlarmsUrl() {
       return this.$ihr_api.getUrl(this.delayAlarmsFilter);
     },
-    filterValue(){
-        return this.filter
-    }
   },
   watch: {
     minDeviation(newValue) {

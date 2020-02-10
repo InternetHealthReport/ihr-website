@@ -5,7 +5,8 @@
     row-key="resposability"
     :pagination.sync="pagination"
     :loading="loading"
-    binary-state-sort
+    :filter="filterTable"
+    :filter-method="filterFct"
     flat
   >
     <template v-slot:body="props">

@@ -1,4 +1,5 @@
 <script>
+import { debounce } from "quasar";
 import ReactiveChart from "@/components/ReactiveChart";
 import { Query } from "@/plugins/IhrApi";
 
@@ -21,16 +22,31 @@ export default {
     fetch: {
       type: Boolean,
       require: true
+    },
+    filter:{ 
+      type: String,
+      default: ''
     }
   },
   data() {
+    //prevent calls within 500ms and execute only the last one
+    let debouncedApiCall = debounce(
+      () => {
+        if (!this.fetch) return;
+        this.loading = true;
+        this.apiCall();
+      },
+      DEFAULT_DEBOUNCE,
+      false
+    );
+
     return {
       loading: true,
       noData: false,
       traces: undefined,
       filters: [],
       myId: `ihrChart${this._uid}`,
-      debouncedApiCall: function() {}
+      debouncedApiCall: debouncedApiCall
     };
   },
   mounted() {
@@ -39,6 +55,14 @@ export default {
   methods: {
     relayout() {
       this.$refs[this.myId].relayout();
+    },
+    filteredRows(val) {
+        this.$emit('filteredRows', val)
+    }
+  },
+  computed: { 
+    filterValue(){
+        return this.filter
     }
   },
   watch: {
@@ -56,9 +80,8 @@ export default {
     },
     fetch() {
       this.debouncedApiCall();
-    }
+    },
   }
 };
 
-export { DEFAULT_DEBOUNCE };
 </script>

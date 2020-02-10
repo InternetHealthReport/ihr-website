@@ -11,7 +11,7 @@
     flat
     row-key="originasn"
     :expanded.sync="expandedRow"
-    loading-label="Fetching the latest network dependency alarms..."
+    loading-label="Fetching the latest network disconnections..."
   >
     <template v-slot:body="props">
       <q-tr :props="props">
@@ -32,12 +32,6 @@
       <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%" class="IHR_nohover" bordered>
             <div v-if='props.expand' class="IHR_side_borders">
-                <as-interdependencies-chart
-                    :start-time="startTime"
-                    :end-time="stopTime"
-                    :as-number="props.row.originasn"
-                    :fetch="fetch"
-                />
             </div>
           </q-td>
         </q-tr>
@@ -48,12 +42,10 @@
 
 <script>
 import CommonTableMixin from './CommonTableMixin.vue';
-import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
 
 export default {
   mixins: [CommonTableMixin],
   components: {
-    AsInterdependenciesChart
   },
   props: {
     data: {
