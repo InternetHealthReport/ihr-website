@@ -12,50 +12,68 @@ export default {
       type: Date,
       required: true
     },
-    propbIds: {
+    msmPrbIds: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      myId: `latencymonWidget${this._uid}`
+      myId: `latencymonWidget${this._uid}`,
+      startTimestamp: this.getTimestamp(this.startTime),
+      stopTimestamp: this.getTimestamp(this.stopTime),
+      lm: null
     };
   },
-  mounted() {
-    this.$libraryDelayer.load("latencymon_widget", () => {
+  created() {
+  },
+  mounted(){
+      this.$libraryDelayer.load("latencymon_widget", () => {
       let lm_grp = [];
 
       // Make latencymon groups
-      for(let msms in this.propbIds) {
+      for(let msms in this.msmPrbIds) {
         lm_grp.push({
           id: msms.toString(),
-          measurementId: msms,
-          probes: this.propbIds[msms],
+          measurementId: Number(msms),
+          probes: this.msmPrbIds[msms],
           type: "multi-probes"
         });
       }
 
+      var lm = null;
       try {
+    console.log(this.startTime)
+    console.log(this.stopTime)
+          console.log(this.startTimestamp)
+          console.log(this.stopTimestamp)
+          console.log(lm_grp)
         //see https://atlas.ripe.net/docs/tools-latencymon/ for more options and details
-        initLatencymon(
+        this.lm = initLatencymon(
           `#${this.myId}`,
           {
-            dev: false,
-            autoStart: true
+            autoStartGrouping: false,
           },
           {
-            measurements: Object.keys(this.propbIds),
-            startTimestamp: this.startTimestamp.getTime(),
-            stopTimestamp: this.stopTime.getTime(),
-            groups: lm_grp
+            measurements: Object.keys(this.msmPrbIds), //measurements: [1030, 1031], 
+            startTimestamp: this.startTimestamp, //startTimestamp: 1580422400, 
+            stopTimestamp: this.stopTimestamp,// stopTimestamp:  1580508800,
+            syncWithRealTimeData: false ,
+            groups: lm_grp 
           }
         );
+
+
       } catch (err) {
         console.error(err); //TODO better error handling
       }
-    });
-  }
+    });  
+  },
+  methods: { 
+    getTimestamp(datetime){ 
+        return Math.ceil(datetime.getTime()/1000)
+    },
+  },
 };
 </script>
 

@@ -33,6 +33,11 @@ export default {
       )
       return this.filteredRows
     },
+    halfDayShift(datetime, sign){ 
+        var res = new Date();
+        res.setHours(datetime.getHours() + (sign*12))
+        return res
+    }
   },
   watch: { 
     filteredRows(newValue){

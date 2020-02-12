@@ -14,13 +14,14 @@
 import ReactiveChart from "@/components/ReactiveChart";
 import { DiscoProbesQuery } from "@/plugins/query/IhrQuery";
 import { COMMON_FEATURE } from "../layouts";
+import getCountryName from "@/plugins/countryName.js";
 
 const MAX_ID_FOR_REQUEST = 50;
 
 export default {
   components: { ReactiveChart },
   props: {
-    geoProbes: {
+    events: {
       type: Array,
       required: true
     }
@@ -43,8 +44,6 @@ export default {
           b: 10
         }
       },
-      pendingCalls: 0,
-      events: [],
       probes: []
     };
   },
@@ -52,86 +51,60 @@ export default {
     relayout() {
       this.$refs[this.myId].relayout();
     },
-    multiQueryProbesAPI() {
-      if (this.events.length == 0) return false;
-      let events = this.events;
-      this.events = [];
-      //if too many events do separate query
-      let filter = new DiscoProbesQuery();
-      let cap = events.length - MAX_ID_FOR_REQUEST;
-      this.probes = [];
-      for (var i = 0; i < cap; i += MAX_ID_FOR_REQUEST) {
-        filter.event(events.slice(i, i + MAX_ID_FOR_REQUEST));
-        this.singleQueryProbesAPI(filter);
-      }
-      filter.event(events.slice(i, events.length));
-      this.singleQueryProbesAPI(filter);
-      return true;
-    },
-    singleQueryProbesAPI(filter) {
-      this.pendingCalls++;
-      this.$ihr_api.disco_probes(
-        filter,
-        results => {
-          this.pendingCalls--;
-          results.results.forEach(newProbe => {
-            let probe = this.probes.find(p => {
-              return newProbe.probe_id === p.probe_id;
-            });
-            if (probe === undefined) {
-              this.probes.push({
-                level: [newProbe.level],
-                lon: newProbe.lon,
-                lat: newProbe.lat,
-                id: newProbe.probe_id,
-                startTime: [newProbe.starttime],
-                endTime: [newProbe.endtime]
-              });
-            } else {
-              probe.level.push(newProbe.level);
-              probe.startTime.push(newProbe.starttime);
-              probe.endTime.push(newProbe.endtime);
-            }
-          });
-        },
-        error => {
-          console.error(error);
+    updateProbes(){ 
+      this.probes = []
+      this.events.forEach( event => { 
+        var label = '';
+        if(event.streamtype == 'asn'){ 
+            label = "AS"+event.streamname
+
+        }else if(event.streamtype == 'country'){ 
+            label = getCountryName(event.streamname)
         }
-      );
+        else{ 
+            label = event.streamname
+        }
+        event.discoprobes.forEach( newProbe => { 
+            this.probes.push({
+            label: label,
+            level: newProbe.level,
+            lon: newProbe.lon,
+            lat: newProbe.lat,
+            id: newProbe.probe_id,
+            startTime: new Date(newProbe.starttime),
+            endTime: new Date(newProbe.endtime)
+            });
+        });
+      })
     }
   },
+  mounted() { 
+      this.updateProbes()
+  },
   watch: {
-    geoProbes(newValue) {
-      this.events = newValue.map(event => {
-        return event.id;
-      });
-      if (this.pendingCalls == 0) {
-        this.multiQueryProbesAPI();
-      }
+    events(newValue) {
+        this.updateProbes()
     },
-    pendingCalls(newValue, oldValue) {
-      if (newValue === 0 && oldValue != 0) {
-        this.multiQueryProbesAPI();
-      }
-    }
   },
   computed: {
     traces() {
       let latitudes = [];
       let longitudes = [];
       let sizes = [];
+      let colors = [];
       let text = [];
       this.probes.forEach(prob => {
         latitudes.push(prob.lat);
         longitudes.push(prob.lon);
-        let size = 0;
-        let probeText = `probe #${prob.id}`;
-        for (let i = 0; i < prob.startTime.length; ++i) {
-          size += prob.level[i];
-          probeText += ` [${prob.startTime[i]}, ${prob.endTime[i]}] level ${prob.level[i]}`;
-        }
+        let color = prob.level-6;
+        let durationHour = 1+Math.ceil(Math.abs(prob.endTime - prob.startTime) / (1000*60*60));
+          let probeText = `<b>${prob.label}</b><br>PB${prob.id}<br> Disconnection time: ${prob.startTime}<br> Duration: ${durationHour}H<br> Deviation: ${prob.level}`;
         text.push(probeText);
-        sizes.push(size / prob.startTime.length);
+        sizes.push(Math.log(durationHour)*10);
+        const red = Math.min(255, 255*(color/5));
+        const green = 255-Math.min(255, 255*(color/5));
+        const blue = 255-Math.min(255, 255*(color/5));
+        colors.push(`rgba(${red},${green},${blue},0.1)`);
       });
       this.noData = (latitudes.length === 0) ? this.$t("noDataAvailable"): false;
       return [
@@ -144,9 +117,10 @@ export default {
           text: text,
           marker: {
             size: sizes,
+            color: colors,
             line: {
               color: "black",
-              width: 2
+              width: 1
             }
           },
           name: "world events"

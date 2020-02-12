@@ -1,7 +1,7 @@
 <template>
   <div class="IHR_chart">
     <div>
-        <disco-map :geo-probes="geoProbes" ref="ihrChartMap" />
+        <disco-map :events="dataEvents" ref="ihrChartMap" />
         <disco-alarms-table 
         :start-time="startTime"
         :stop-time="endTime"
@@ -46,11 +46,6 @@ export default {
       default: DEFAULT_DISCO_AVG_LEVEL
     }
   },
-  data() {
-    return {
-        geoProbes: []
-    }
-  },
   beforeCreate() {
     Vue.delete(this.$options.props, "streamName");
   },
@@ -69,22 +64,14 @@ export default {
         this.filters[0],
         result => {
           this.dataEvents = result.results;
-          this.updateGeoProbes(this.dataEvents);
-          this.loading = false;
+	      this.loading = false;
         },
         error => {
           console.error(error); //FIXME do a correct alert
         }
       );
     },
-    updateGeoProbes(data) { 
-      this.geoProbes = [];
-      data.forEach(event => {
-          this.geoProbes.push(event);
-      });
-    },
     filteredRows(data){
-        this.updateGeoProbes(data);
         this.$emit('filteredRows', data);
     }
   },
