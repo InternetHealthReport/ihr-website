@@ -3,7 +3,6 @@
     <reactive-chart
       :layout="layout"
       :traces="traces"
-      @loaded="loading = false"
       @plotly-click="showTable"
       :ref="myId"
       :no-data="noData"
