@@ -34,8 +34,14 @@
       </q-tr>
       <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%" class="IHR_nohover" bordered>
+              <div class='text-h3 text-center'>Pings from disconnected probes</div>
             <div v-if='props.expand' class="IHR_side_borders">
-            <latencymon :start-time="halfDayShift(startTime, -1)" :stop-time="halfDayShift(stopTime, 1)" :msm-prb-ids="msmPrbIds(props.row.discoprobes)" style="max-width: 93%; margin: 0 auto;"/>
+
+            <latencymon 
+                :start-time="dateHourShift(props.row.starttime, -duration(props.row.starttime, props.row.endtime)/60)" 
+                :stop-time="dateHourShift(props.row.endtime, duration(props.row.starttime, props.row.endtime)/60)" 
+                :msm-prb-ids="msmPrbIds(props.row.discoprobes)" 
+                style="max-width: 93%; margin: 0 auto;"/>
             </div>
           </q-td>
         </q-tr>
@@ -152,7 +158,7 @@ export default {
       },
       msmPrbIds(probes){ 
         var probeIds = probes.map( probe => { return probe.probe_id });
-        return {1030:probeIds, 1031:probeIds}
+        return {1030:probeIds, 1001:probeIds, 1591146:probeIds}
       }
   },
 };

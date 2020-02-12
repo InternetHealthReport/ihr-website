@@ -34,7 +34,7 @@ export default {
       // Make latencymon groups
       for(let msms in this.msmPrbIds) {
         lm_grp.push({
-          id: msms.toString(),
+          id: this.targetName(msms),
           measurementId: Number(msms),
           probes: this.msmPrbIds[msms],
           type: "multi-probes"
@@ -43,11 +43,6 @@ export default {
 
       var lm = null;
       try {
-    console.log(this.startTime)
-    console.log(this.stopTime)
-          console.log(this.startTimestamp)
-          console.log(this.stopTimestamp)
-          console.log(lm_grp)
         //see https://atlas.ripe.net/docs/tools-latencymon/ for more options and details
         this.lm = initLatencymon(
           `#${this.myId}`,
@@ -73,15 +68,25 @@ export default {
     getTimestamp(datetime){ 
         return Math.ceil(datetime.getTime()/1000)
     },
+    targetName(msmid){ 
+        const names = { 
+            1001: "K-root servers",
+            1006: "M-root servers",
+            1010: "B-root servers",
+            1030: "Atlas Controller",
+            1591146: "Google DNS"
+        };
+
+        if(msmid in names){ 
+            return names[msmid];
+        }
+        else{ 
+            return msmid.toString();
+        }
+    }
   },
 };
 </script>
 
 <style lang="stylus">
-@import '~quasar-variables'
-  .probe-multi-info
-    & > .probe-info-line:nth-child(2)
-      & > .probe-listed
-        color $accent
-        white-space normal
 </style>

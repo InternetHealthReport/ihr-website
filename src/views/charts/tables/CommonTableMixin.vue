@@ -33,9 +33,10 @@ export default {
       )
       return this.filteredRows
     },
-    halfDayShift(datetime, sign){ 
-        var res = new Date();
-        res.setHours(datetime.getHours() + (sign*12))
+    dateHourShift(datetime, shift){ 
+        var res = new Date(datetime);
+        var sign =  shift < 0? -1 : 1;
+        res.setHours(res.getHours() +  sign*Math.max(1, Math.abs(shift)))
         return res
     }
   },
