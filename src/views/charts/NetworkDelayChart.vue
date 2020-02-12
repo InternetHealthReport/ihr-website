@@ -26,7 +26,6 @@
             <reactive-chart
                 :layout="layout"
                 :traces="traces"
-                @loaded="loading = false"
                 @plotly-click="showTable"
                 :ref="myId"
                 :no-data="noData"
@@ -175,7 +174,6 @@ export default {
         result => {
             this.$nextTick(function () {
                 this.fetchNetworkDelay(result.results);
-                this.loading = false;
             })
         },
         error => {
@@ -271,6 +269,7 @@ export default {
         trace.y.push(elem.median);
         trace.x.push(elem.timebin);
       });
+        this.loading = false;
         this.layout.datarevision = new Date().getTime();
     },
     startPointNameStr(){

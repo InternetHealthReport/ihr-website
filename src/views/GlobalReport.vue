@@ -387,16 +387,32 @@ export default {
       );
     },
     hegemonyFilteredRows(val){ 
-        if(this.globalFilter != '' || this.nbAlarms.hegemony == 0) this.nbAlarms.hegemony = val.length;
+        if(this.globalFilter != '' || this.nbAlarms.hegemony == 0){
+            this.$nextTick(function () {
+                this.nbAlarms.hegemony = val.length;
+            })
+        }
     },
     networkDelayFilteredRows(val){ 
-        if(this.globalFilter != '' || this.nbAlarms.networkDelay == 0) this.nbAlarms.networkDelay = val.length;
+        if(this.globalFilter != '' || this.nbAlarms.networkDelay == 0){
+            this.$nextTick(function () {
+                this.nbAlarms.networkDelay = val.length;
+            })
+        } 
     },
     linkDelayFilteredRows(val){ 
-        if(this.globalFilter != '' || this.nbAlarms.linkDelay == 0) this.nbAlarms.linkDelay = val.length;
+        if(this.globalFilter != '' || this.nbAlarms.linkDelay == 0){
+            this.$nextTick(function () {
+                this.nbAlarms.linkDelay = val.length;
+            })
+        }
     },
     discoFilteredRows(val){ 
-        if(this.globalFilter != '' || this.nbAlarms.disco == 0) this.nbAlarms.disco= val.length;
+        if(this.globalFilter != '' || this.nbAlarms.disco == 0){
+            this.$nextTick(function () {
+                this.nbAlarms.disco= val.length;
+            })
+        }
     }
   },
   computed: {
