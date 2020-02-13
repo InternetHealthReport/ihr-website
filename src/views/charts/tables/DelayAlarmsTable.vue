@@ -1,6 +1,6 @@
 <template>
   <q-table
-    :data="data"
+    :data="rows"
     :columns="columns"
     row-key="link"
     :pagination.sync="pagination"
@@ -9,36 +9,48 @@
     flat
     :filter="filterTable"
     :filter-method="filterFct"
+    :expanded.sync="expandedRow"
+    loading-label="Fetching latest link delay alarms..."
   >
     <template v-slot:body="props">
       <q-tr :props="props" >
-        <q-td key="asNumber" :props="props" v-if="showAsn">
-          <a @click="newWindow({name : 'as_and_ixp', params:{asn: getCellValue(props, 'asNumber') }})" href="javascript:void(0)">
-            {{ getCellValue(props, "asNumber") }}
+        <q-td auto-width>
+          <q-toggle v-model="props.expand" />
+        </q-td>
+        <q-td key="asn" :props="props" v-if="showAsn">
+          <a v-for="(asn, index) in props.row.asn" @click="newWindow({name : 'as_and_ixp', params:{asn: $options.filters.ihr_NumberToAsOrIxp(asn) }})" href="javascript:void(0)">
+            {{ index==1? '/'+$options.filters.ihr_NumberToAsOrIxp(asn): $options.filters.ihr_NumberToAsOrIxp(asn) }}
           </a>
         </q-td>
         <q-td key="link" :props="props">
             <a href="javascript:void(0)">
-              {{getCellValue(props, 'link')[0]}}
+              {{props.row.link[0]}}
               <q-popup-proxy>
                     <reverse-dns-ip :ip="getCellValue(props, 'link')[0]" class="IHR_reverse-dns-ip-improved" />
               </q-popup-proxy>
             </a>
             --
             <a href="javascript:void(0)">
-              {{getCellValue(props, 'link')[1]}}
+              {{props.row.link[1]}}
               <q-popup-proxy>
                 <reverse-dns-ip :ip="getCellValue(props, 'link')[1]" class="IHR_reverse-dns-ip-improved" />
               </q-popup-proxy>
             </a>
         </q-td>
-        <q-td key="delayChange" :props="props" >{{ getCellValue(props, "delayChange") }}</q-td>
-        <q-td key="deviation" :props="props" :class="['IHR_important-cell', getClassByDeviation(getCellValue(props, 'deviation'))]">{{ getCellValue(props, "deviation") }}</q-td>
-        <q-td key="nbprobes" :props="props"> {{ getCellValue(props, "nbprobes") }} </q-td>
+        <q-td key="delayChange" :props="props" >{{ (props.row.diffmedian/props.row.nbalarms).toFixed(2) }}</q-td>
+        <q-td key="deviation" :props="props" :class="['IHR_important-cell', getClassByDeviation(props.row.deviation/props.row.nbalarms)]">{{ (props.row.deviation/props.row.nbalarms).toFixed(2) }}</q-td>
+        <q-td key="nbprobes" :props="props"> {{ Math.floor(props.row.nbprobes/props.row.nbalarms) }} </q-td>
       </q-tr>
       <q-tr v-if="props.expand" :props="props">
-        <q-td colspan="100%">
-          <!--<latencymon :start-time="startTime" :stop-time="stopTime" :propb-ids="props.row.msm_prb_ids" style="max-width: 93%; margin: 0 auto;"/>-->
+        <q-td colspan="100%" class="IHR_nohover" bordered>
+              <div class='text-h3 text-center'>RTTs of traceroute crossing reported link</div>
+            <div v-if='props.expand' class="IHR_side_borders">
+                <latencymon 
+                    :start-time="dateHourShift(props.row.starttime, -6)" 
+                    :stop-time="dateHourShift(props.row.endtime, 6)" 
+                    :msm-prb-ids="props.row.msm_prb_ids" 
+                    style="max-width: 93%; margin: 0 auto;"/>
+            </div>
         </q-td>
       </q-tr>
     </template>
@@ -74,21 +86,27 @@ export default {
   },
   data() {
     return {
+      expandedRow: [],
       pagination: {
         sortBy: "deviation",
         descending: true,
         page: 1,
         rowsPerPage: 10
       },
-      visibleColumns: ['asNumber', 'link', 'delayChange', 'deviation', 'nbprobes'],
+      visibleColumns: ['overview', 'asn', 'link', 'delayChange', 'deviation', 'nbprobes'],
       columns: [
         {
-          name: "asNumber",
+          name: "overview",
+          label: "Overview",
+          align: "center",
+        },
+        {
+          name: "asn",
           required: false,
           label: "Autonomous System",
           align: "center",
           field: row => row.asn,
-          format: val => this.$options.filters.ihr_NumberToAsOrIxp(val),
+          format: val => val,
           sortable: false
         },
         {
@@ -97,7 +115,7 @@ export default {
           label: "IP Link",
           align: "center",
           field: row => row.link,
-          format: val => val.replace(/(\))|(^\()/g, "").split(","),
+          format: val => val,
           sortable: false
         },
         {
@@ -131,10 +149,66 @@ export default {
   },
   mounted() {
       if(!this.showAsn){
-          this.visibleColumns = ['link', 'delayChange', 'deviation', 'nbprobes']
+          this.visibleColumns = ['overview', 'link', 'delayChange', 'deviation', 'nbprobes']
       }
+      this.computeDataSummary()
   },
   methods: {
+      computeDataSummary(){
+        if(!this.data.length) return;
+
+        var datasum = {};
+        this.data.forEach( alarm => {
+            if(alarm.link in datasum){ 
+                // update stats
+                datasum[alarm.link].nbalarms += 1;
+                datasum[alarm.link].deviation += alarm.deviation;
+                datasum[alarm.link].diffmedian += alarm.diffmedian;
+                datasum[alarm.link].nbprobes += alarm.nbprobes;
+                if(!datasum[alarm.link].asn.includes(alarm.asn)) datasum[alarm.link].asn.push(alarm.asn)
+
+                // update datetimes
+                var timebin = new Date(alarm.timebin)
+                if(timebin<datasum[alarm.link].starttime) datasum[alarm.link].starttime = timebin;
+                if(timebin>datasum[alarm.link].endtime) datasum[alarm.link].endtime = timebin;
+
+                // update msm/probe ids
+                Object.keys(alarm.msm_prb_ids).forEach( msmid => { 
+                    if(msmid in datasum[alarm.link].msm_prb_ids){ 
+                        var union = [...new Set([...alarm.msm_prb_ids[msmid], ...datasum[alarm.link].msm_prb_ids[msmid]])]; 
+                        if(union.length>0){ 
+                            datasum[alarm.link].msm_prb_ids[msmid] = union
+                        }
+                        else{ 
+                            console.warn("Warning: ignoring msmid/probeid from this alarm")
+                            console.warn(alarm)
+                        }
+                    }
+
+                })
+            }
+            else{
+            datasum[alarm.link] = {
+                link: alarm.link.replace(/(\))|(^\()/g, "").split(","),
+                asn: [alarm.asn], 
+                starttime: new Date(alarm.timebin),
+                endtime: new Date(alarm.timebin),
+                nbalarms: 1,
+                nbprobes: alarm.nbprobes,
+                deviation: alarm.deviation,
+                diffmedian: alarm.diffmedian,
+                msm_prb_ids: alarm.msm_prb_ids
+                }
+            }
+        })        
+
+        const values = Object.values(datasum);
+        this.rows = values
+      },
+    duration(start, end){ 
+      let durationMin = Math.ceil(Math.abs(new Date(end) - new Date(start)) / (1000*60));
+      return durationMin
+    },
     getClassByDeviation(deviation) {
       if(deviation > 100) return "IHR_color-deviation-hight-threshold";
       if(deviation > 10) return "IHR_color-deviation-mid-threshold";
@@ -148,6 +222,11 @@ export default {
       }
       props.expanded = false;
     }
+  },
+  watch:{ 
+    data(){ 
+        this.computeDataSummary()
+    },
   }
 };
 </script>

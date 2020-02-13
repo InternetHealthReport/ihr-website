@@ -76,7 +76,12 @@ export default {
             });
         });
       })
-    }
+    },
+    dateFormatter(datetime){ 
+        var dt = new Date(datetime)
+        var options = { year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit',  timeZone: 'UTC' };
+        return dt.toLocaleDateString(undefined, options)
+    },
   },
   mounted() { 
       this.updateProbes()
@@ -98,7 +103,7 @@ export default {
         longitudes.push(prob.lon);
         let color = prob.level-6;
         let durationHour = 1+Math.ceil(Math.abs(prob.endTime - prob.startTime) / (1000*60*60));
-          let probeText = `<b>${prob.label}</b><br>PB${prob.id}<br> Disconnection time: ${prob.startTime}<br> Duration: ${durationHour}H<br> Deviation: ${prob.level}`;
+          let probeText = `<b>${prob.label}</b><br> PB${prob.id}<br> ${this.dateFormatter(prob.startTime)}<br> Duration: ${durationHour}H<br> Deviation: ${prob.level}`;
         text.push(probeText);
         sizes.push(Math.log(durationHour)*10);
         const red = Math.min(255, 255*(color/5));

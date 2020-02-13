@@ -19,7 +19,7 @@
         </q-td>
         <q-td key="location" align>
           <div v-if="props.row.streamtype == 'asn'">
-            <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.row.streamname}})" href="javascript:void(0)">
+            <a @click="newWindow({name : 'as_and_ixp', params:{asn: 'AS'+props.row.streamname}})" href="javascript:void(0)">
                 AS{{props.row.streamname}}
             </a>
           </div>
@@ -34,7 +34,7 @@
       </q-tr>
       <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%" class="IHR_nohover" bordered>
-              <div class='text-h3 text-center'>Pings from disconnected probes</div>
+              <div class='text-h3 text-center'>RTTs of traceroutes crossing reported link</div>
             <div v-if='props.expand' class="IHR_side_borders">
 
             <latencymon 

@@ -4,7 +4,7 @@
             :start-time="startTime"
             :stop-time="endTime"
             :data="table.data"
-            :loading="table.loading"
+            :loading="loading"
             :filter="filterValue"
             @filteredRows="filteredRows"
           />
@@ -43,7 +43,6 @@ export default {
         activeTab: "alarms",
         data: [],
         tableVisible: true,
-        loading: true,
         selectedRow: []
       },
       loading: true,
@@ -57,7 +56,6 @@ export default {
     apiCall() {
       this.loading = true;
       this.table.tableVisible = true;
-      this.table.loading = true;
       this.$ihr_api.hegemony_alarms(
         this.hegemonyAlarmsFilter,
         result => {
@@ -66,7 +64,7 @@ export default {
             data.push(alarm);
           });
           this.table.data = data;
-          this.table.loading = false;
+          this.loading = false;
         },
         error => {
           console.error(error); //FIXME do a correct alert

@@ -66,6 +66,9 @@ export default {
     }
   },
   watch: {
+    loading(newValue){
+      this.$emit('loading', newValue)
+    },
     startTime(newValue) {
       this.filters.forEach(filter => {
         filter.startTime(newValue, Query.GTE);

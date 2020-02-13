@@ -1,7 +1,7 @@
 <template>
   <div class="IHR_chart">
     <div>
-        <disco-map :events="dataEvents" ref="ihrChartMap" />
+        <disco-map :events="mapData" ref="ihrChartMap" />
         <disco-alarms-table 
         :start-time="startTime"
         :stop-time="endTime"
@@ -24,7 +24,7 @@ import DiscoAlarmsTable from "../tables/DiscoAlarmsTable.vue";
 import { DiscoEventQuery } from "@/plugins/query/IhrQuery";
 import DiscoChartVue from "../DiscoChart.vue";
 
-const DEFAULT_DISCO_AVG_LEVEL = 8;
+const DEFAULT_DISCO_AVG_LEVEL = 9;
 //under this gap 2 consecutive event are considered like 1 that change value
 
 //utility functions
@@ -46,16 +46,15 @@ export default {
       default: DEFAULT_DISCO_AVG_LEVEL
     }
   },
+    data(){ return { 
+    mapData: []
+    }
+  },
   beforeCreate() {
     Vue.delete(this.$options.props, "streamName");
   },
   beforeMount() {
     this.filters[0].streamName().avgLevel(this.minAvgLevel, DiscoEventQuery.GTE);
-    this.traces = [];
-    /*
-    this.layout.showlegend = false;
-    delete this.layout.legend;
-    */
   },
   methods: {
     apiCall() {
@@ -64,6 +63,7 @@ export default {
         this.filters[0],
         result => {
           this.dataEvents = result.results;
+          this.mapData = result.results
 	      this.loading = false;
         },
         error => {
@@ -72,6 +72,7 @@ export default {
       );
     },
     filteredRows(data){
+        this.mapData = data[1];
         this.$emit('filteredRows', data);
     }
   },

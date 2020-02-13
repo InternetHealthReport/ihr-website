@@ -29,16 +29,41 @@
       <q-card-section>
       <div class="row">
         <div class="col text-center text-h3">
-            <b>{{nbAlarms.hegemony}}</b> AS dependency alarms
+            <a href="#hegemony" class='IHR_global_stats'>
+                <q-spinner v-if='loading.hegemony'
+                    color="primary"
+                    size="1em"
+                />
+                <b v-else>{{nbAlarms.hegemony}}</b> 
+                AS dependency alarms
+            </a>
         </div>
         <div class="col text-center text-h3">
-            <b>{{nbAlarms.networkDelay}}</b> network delay alarms
+            <a href="#networkDelay" class='IHR_global_stats'>
+                <q-spinner v-if='loading.networkDelay'
+                    color="primary"
+                    size="1em"
+                />
+                <b v-else>{{nbAlarms.networkDelay}}</b> network delay alarms
+            </a>
         </div>
         <div class="col text-center text-h3">
-            <b>{{nbAlarms.linkDelay}}</b> link delay alarms 
+            <a href="#linkDelay" class='IHR_global_stats'>
+                <q-spinner v-if='loading.linkDelay'
+                    color="primary"
+                    size="1em"
+                />
+                <b v-else>{{nbAlarms.linkDelay}}</b> link delay alarms 
+            </a>
         </div>
         <div class="col text-center text-h3">
-            <b>{{nbAlarms.disco}}</b> network disconnections
+            <a href="#disco" class='IHR_global_stats'>
+                <q-spinner v-if='loading.disco'
+                    color="primary"
+                    size="1em"
+                />
+                <b v-else>{{nbAlarms.disco}}</b> network disconnections
+            </a>
         </div>
       </div>
       </q-card-section>
@@ -56,6 +81,7 @@
           </q-item-section>
 
           <q-item-section>
+              <a id="hegemony"></a>
               <div class='text-primary'>{{$t('charts.asInterdependencies.title')}}</div>
               <div class='text-caption text-grey'>BGP data</div>
           </q-item-section>
@@ -78,7 +104,8 @@
                 :fetch="fetch"
                 :min-deviation="minDeviationNetworkDelay"
                 :filter="hegemonyFilter"
-                @filteredRows="hegemonyFilteredRows"
+                @filteredRows="newFilteredRows('hegemony', $event)"
+                @loading="hegemonyLoading"
                 ref="ihrChartHegemonyAlarms"
             />
           </q-card-section>
@@ -96,6 +123,7 @@
           </q-item-section>
 
           <q-item-section>
+              <a id="networkDelay"></a>
               <div class='text-primary'>{{$t('charts.networkDelay.title')}}</div>
               <div class='text-caption text-grey'>Traceroute data</div>
           </q-item-section>
@@ -118,7 +146,8 @@
             :fetch="fetch"
             :min-deviation="minDeviationNetworkDelay"
             :filter="ndelayFilter"
-            @filteredRows="networkDelayFilteredRows"
+            @filteredRows="newFilteredRows('networkDelay', $event)"
+            @loading="networkDelayLoading"
             ref="ihrChartNetworkDelay"
         />
           </q-card-section>
@@ -136,6 +165,7 @@
           </q-item-section>
 
           <q-item-section>
+              <a id="linkDelay"></a>
               <div class='text-primary'>{{$t('charts.delayAndForwarding.title')}}</div>
               <div class='text-caption text-grey'>Traceroute data</div>
           </q-item-section>
@@ -161,7 +191,8 @@
             :min-diffmedian="minDiffmedian"
             :max-diffmedian="maxDiffmedian"
             :filter="linkFilter"
-            @filteredRows="linkDelayFilteredRows"
+            @filteredRows="newFilteredRows('linkDelay', $event)"
+            @loading="linkDelayLoading"
             :selected-asn="asnList"
             ref="ihrChartDelay"
             @prefix-details="showDetails($event)"
@@ -182,6 +213,7 @@
           </q-item-section>
 
           <q-item-section>
+              <a id="disco"></a>
               <div class='text-primary'>{{$t('charts.disconnections.title')}}</div>
               <div class='text-caption text-grey'>RIPE Atlas log</div>
           </q-item-section>
@@ -208,7 +240,8 @@
             :min-avg-level="minAvgLevel"
             :geoprobes.sync="geoProbes"
             :filter="discoFilter"
-            @filteredRows="discoFilteredRows"
+            @filteredRows="newFilteredRows('disco', $event)"
+            @loading="discoLoading"
             :selected-asn="asnList"
             ref="ihrChartDisco"
           />
@@ -348,6 +381,12 @@ export default {
         networkDelay: 0,
         linkDelay: 0,
         disco:0
+      },
+      loading: { 
+        hegemony: true,
+        networkDelay: true,
+        linkDelay: true,
+        disco: true
       }
     };
   },
@@ -355,6 +394,26 @@ export default {
     this.fetch = true;
   },
   methods: {
+    hegemonyLoading(val){ 
+        this.$nextTick( function(){ 
+            this.loading.hegemony = val;
+        })
+    },
+    networkDelayLoading(val){ 
+        this.$nextTick( function(){ 
+            this.loading.networkDelay = val;
+        })
+    },
+    linkDelayLoading(val){ 
+        this.$nextTick( function(){ 
+            this.loading.linkDelay = val;
+        })
+    },
+    discoLoading(val){ 
+        this.$nextTick( function(){ 
+            this.loading.disco = val;
+        })
+    },
     pushRoute() {
       this.$router.push({
         query: {
@@ -379,41 +438,21 @@ export default {
           });
           this.asnList = asnList;
           this.asnListState = REPORT_TYPE.PERSONAL;
-          console.log(asnList);
         },
         error => {
           console.error(error); //FIXME correct error handling
         }
       );
     },
-    hegemonyFilteredRows(val){ 
-        if(this.globalFilter != '' || this.nbAlarms.hegemony == 0){
+    newFilteredRows(graphType, val){ 
+        let search = val[0];
+        let rows = val[1]
+        if(this.globalFilter == search){
             this.$nextTick(function () {
-                this.nbAlarms.hegemony = val.length;
+                this.nbAlarms[graphType] = rows.length;
             })
         }
     },
-    networkDelayFilteredRows(val){ 
-        if(this.globalFilter != '' || this.nbAlarms.networkDelay == 0){
-            this.$nextTick(function () {
-                this.nbAlarms.networkDelay = val.length;
-            })
-        } 
-    },
-    linkDelayFilteredRows(val){ 
-        if(this.globalFilter != '' || this.nbAlarms.linkDelay == 0){
-            this.$nextTick(function () {
-                this.nbAlarms.linkDelay = val.length;
-            })
-        }
-    },
-    discoFilteredRows(val){ 
-        if(this.globalFilter != '' || this.nbAlarms.disco == 0){
-            this.$nextTick(function () {
-                this.nbAlarms.disco= val.length;
-            })
-        }
-    }
   },
   computed: {
     title() {
@@ -443,7 +482,8 @@ export default {
 
 <style lang="stylus">
 @import '../styles/quasar.variables';
-
+.IHR_global_stats
+  text-decoration none;
 .IHR_
   &subtitle_calendar
       position relative

@@ -42,7 +42,7 @@ export default {
   },
   watch: { 
     filteredRows(newValue){
-        this.$emit('filteredRows', newValue)
+        this.$emit('filteredRows', [this.filterTable, newValue]);
     },
     filterTable(newValue){ 
         if(newValue == '') this.filteredRows = this.rows;
@@ -59,3 +59,32 @@ export default {
   }
 }
 </script>
+<style lang="stylus">
+.IHR_nohover 
+    &:first-child
+      padding-top 0px
+      padding-bottom 20px
+      padding-right 20px
+      padding-left 20px
+      background #fafafa
+
+.IHR_side_borders
+    &:first-child
+        padding-top 20px
+        border-style solid
+        border-color #dddddd
+        border-top-width 0px
+        border-left-width 1px
+        border-right-width 1px
+        border-bottom-width 1px
+        border-radius 5px
+        background #ffffff
+
+
+.myClass 
+
+    tbody td
+        text-align left
+
+
+</style>

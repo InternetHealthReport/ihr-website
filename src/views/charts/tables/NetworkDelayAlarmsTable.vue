@@ -7,6 +7,7 @@
     :loading="loading"
     :filter="filterTable"
     :filter-method="filterFct"
+    binary-state-sort
     flat
     row-key="asNumber"
     :expanded.sync="expandedRow"
@@ -18,7 +19,7 @@
           <q-toggle v-model="props.expand" />
         </q-td>
         <q-td key="asNumber" align>
-          <a @click="newWindow({name : 'as_and_ixp', params:{asn: props.row.asNumber}})" href="javascript:void(0)">
+          <a @click="newWindow({name : 'as_and_ixp', params:{asn: $options.filters.ihr_NumberToAsOrIxp(props.row.asNumber)}})" href="javascript:void(0)">
             {{$options.filters.ihr_NumberToAsOrIxp(props.row.asNumber)}}
           </a>
         </q-td>
