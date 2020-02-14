@@ -105,11 +105,11 @@ export default {
   props: {
     startPointType: {
       type: String,
-        default: () => ["AS"]
+        default: () => "AS"
     },
     startPointName: {
       type: String,
-        default: () => ["2497"]
+        default: () => "2497"
     },
     endPointName: {
         type: Array,
@@ -146,7 +146,10 @@ export default {
       traces: [],
       layout: NET_DELAY_LAYOUT,
       selectedStart: '',
-      selectedEnd: ''
+      selectedEnd: '',
+      endPointKeysFilter: this.endPointName,
+      startPointNameFilter: this.startPointName,
+      startPointTypeFilter: this.startPointType,
     };
   },
   computed:{
@@ -157,15 +160,13 @@ export default {
   methods: {
     setFilter() { 
         this.apiFilter = new NetworkDelayQuery()
-        .startPointName(this.startPointName)
-        .startPointType(this.startPointType)
-        .endPointKey(this.endPointName)
-        .endpointAf(this.asFamily)
+        .startPointName(this.startPointNameFilter)
+        .startPointType(this.startPointTypeFilter)
+        .endPointKey(this.endPointKeysFilter)
         .timeInterval(this.startTime, this.endTime)
         .orderedByTime();
     },
     apiCall() {
-      this.traces = [];
       this.loadingDelay = true;
       this.setFilter()
       this.loading = true;
@@ -183,11 +184,11 @@ export default {
       );
     },
     addStartLocation(loc) {
-        this.apiFilter.startPointName(loc.name)
-        this.apiFilter.startPointType(loc.type)
+        this.startPointTypeFilter = loc.type
+        this.startPointNameFilter = loc.name
     },
     addEndLocation(loc) {
-        this.apiFilter.endPointKey(loc.type+this.asFamily+loc.name)
+        this.endPointKeysFilter = [loc.type+this.asFamily+loc.name]
     },
     clearGraph(){
         this.traces = []
