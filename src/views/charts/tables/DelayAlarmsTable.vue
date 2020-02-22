@@ -43,7 +43,7 @@
       </q-tr>
       <q-tr v-if="props.expand" :props="props">
         <q-td colspan="100%" class="IHR_nohover" bordered>
-              <div class='text-h3 text-center'>RTTs of traceroute crossing reported link</div>
+              <div class='text-h3 text-center'>RTTs of traceroutes crossing reported link</div>
             <div v-if='props.expand' class="IHR_side_borders">
                 <latencymon 
                     :start-time="dateHourShift(props.row.starttime, -6)" 

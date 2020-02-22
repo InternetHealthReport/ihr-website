@@ -34,7 +34,7 @@
       </q-tr>
       <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%" class="IHR_nohover" bordered>
-              <div class='text-h3 text-center'>RTTs of traceroutes crossing reported link</div>
+              <div class='text-h3 text-center'>Pings from disconnected probes</div>
             <div v-if='props.expand' class="IHR_side_borders">
 
             <latencymon 
