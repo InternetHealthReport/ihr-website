@@ -101,7 +101,7 @@ export default {
           label: "Location",
           align: "left",
           field: row => [row.streamtype, row.streamname],
-          format: val => val,
+          format: val => val[0] == 'country'? this.countryName(val[1]): val[1],
           sortable: true,
         },
         {

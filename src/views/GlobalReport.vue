@@ -2,7 +2,8 @@
   <div class="IHR_char-container">
     <div class="q-mb-xs">
         <div class="text-center">
-            <div class="text-h1">{{title}}</div><div class="text-h2">{{reportDateFmt}}
+            <div class="text-h1">{{title}}</div>
+            <div class="text-h3">3-day report ending on {{reportDateFmt}}
             <date-time-picker
                 :min="minDate"
                 :max="maxDate"

@@ -1,8 +1,8 @@
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div>
-        <h1 class="text-center">{{headerString}}</h1>
-        <h2 class="text-center">{{subHeader}} - {{reportDateFmt}}
+        <h1 class="text-center">{{subHeader}} - {{headerString}}</h1>
+        <h3 class="text-center">3-day report ending on {{reportDateFmt}}
             <date-time-picker
                 :min="minDate"
                 :max="maxDate"
@@ -11,7 +11,7 @@
                 hideTime
                 class="IHR_subtitle_calendar"
             />
-        </h2>
+        </h3>
     </div>
     <q-list v-if="showGraphs">
       <q-expansion-item
