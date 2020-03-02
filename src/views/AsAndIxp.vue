@@ -90,11 +90,11 @@
         <q-card class="IHR_charts-body">
           <q-card-section>
             <disco-chart
-            :start-time="startTime"
-            :end-time="endTime"
-            :stream-name="asNumber"
-            :fetch="fetch"
-            ref="discoChart"
+                :streamName="asNumber"
+                :start-time="startTime"
+                :end-time="endTime"
+                :fetch="fetch"
+                ref="ihrChartDisco"
             />
           </q-card-section>
         </q-card>
@@ -122,7 +122,9 @@
 import reportMixin from "@/views/mixin/reportMixin";
 import ClosableContainer from "@/components/ClosableContainer";
 import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
-import DiscoChart from "@/views/charts/DiscoChart";
+import DiscoChart, {
+  DEFAULT_DISCO_AVG_LEVEL
+} from "@/views/charts/global/DiscoChart";
 import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
 import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
@@ -143,7 +145,7 @@ const CHART_REFS = [
   "asInterdependenciesChart",
   "networkDelayChart",
   "delayAndForwardingChart",
-  "discoChart"
+  "ihrChartDisco"
 ];
 
 export default {
@@ -167,7 +169,8 @@ export default {
       asNumber: asNumber,
       asName: null,
       charRefs: CHART_REFS,
-      prefixesDetail: []
+      prefixesDetail: [],
+      minAvgLevel: DEFAULT_DISCO_AVG_LEVEL
     };
   },
   methods: {
@@ -187,6 +190,8 @@ export default {
             this.loadingStatus = LOADING_STATUS.ERROR;
             return;
         }
+
+        console.log(results.results[0])
 
         this.asName = results.results[0].name;
         this.loadingStatus = LOADING_STATUS.LOADED;

@@ -232,8 +232,6 @@
        
         <q-card class="IHR_charts-body">
           <q-card-section>
-          </q-card-section>
-          <q-card-section>
           <disco-chart
             :start-time="startTime"
             :end-time="endTime"

@@ -42,22 +42,21 @@ export default {
   },
   props: {
     minAvgLevel: {
-      required: true,
       default: DEFAULT_DISCO_AVG_LEVEL
+    },
+    streamName:{ 
+        default: ''
     }
   },
-    data(){ return { 
-    mapData: []
+    data(){ 
+
+    return { 
+        mapData: []
     }
-  },
-  beforeCreate() {
-    Vue.delete(this.$options.props, "streamName");
-  },
-  beforeMount() {
-    this.filters[0].streamName().avgLevel(this.minAvgLevel, DiscoEventQuery.GTE);
   },
   methods: {
     apiCall() {
+      this.filters[0].streamName(this.streamName).avgLevel(this.minAvgLevel, DiscoEventQuery.GTE);
       this.loading = true;
       this.$ihr_api.disco_events(
         this.filters[0],
