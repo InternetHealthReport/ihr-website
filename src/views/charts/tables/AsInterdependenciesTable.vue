@@ -125,7 +125,7 @@ export default {
     },
     routeToAsn(asn, row) {
       asn = asn.format(asn.field(row));
-      this.$router.push({ name: 'as_and_ixp', params: {asn: this.$options.filters.ihr_NumberToAsOrIxp(asn)} })
+      this.$router.push({ name: 'networks', params: {asn: this.$options.filters.ihr_NumberToAsOrIxp(asn)} })
     },
     getCalssByHegemony(props) {
       let hegemony = this.getCellValue(props, 'hegemony');

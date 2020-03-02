@@ -19,7 +19,7 @@
         </q-td>
         <q-td key="location" align>
           <div v-if="props.row.streamtype == 'asn'">
-            <a @click="newWindow({name : 'as_and_ixp', params:{asn: 'AS'+props.row.streamname}})" href="javascript:void(0)">
+            <a @click="newWindow({name : 'networks', params:{asn: 'AS'+props.row.streamname}})" href="javascript:void(0)">
                 AS{{props.row.streamname}}
             </a>
           </div>

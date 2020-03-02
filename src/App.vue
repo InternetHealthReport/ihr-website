@@ -63,7 +63,7 @@
             </li>
             <li>
               <router-link
-                :to="{name : 'as_and_ixp', params:{ asn: 2497 }}"
+                :to="{name : 'networks', params:{ asn: 2497 }}"
               >{{$t('footer.reportPages.network')}}</router-link>
             </li>
           </ul>

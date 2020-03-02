@@ -6,7 +6,6 @@ import API from "@/views/Api";
 import Contact from "@/views/Contact";
 import Countries from "@/views/Countries";
 import Networks from "@/views/Networks";
-import AsAndIxp from "@/views/AsAndIxp";
 import SignUp from "@/views/user/SignUp";
 import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
@@ -52,7 +51,7 @@ export default new Router({
     },
     {
       name: "networks",
-      path: `${routerBase}networks`,
+      path: `${routerBase}networks/:asn`,
       component: Networks
     },
     {
@@ -62,7 +61,7 @@ export default new Router({
         //ihr/:asn/asn/
         const { hash, params, query } = to;
         return {
-          name: "as_and_ixp",
+          name: "networks",
           query: query,
           params: {
             locale: DEFAULT_LOCALE,
@@ -71,11 +70,6 @@ export default new Router({
           }
         };
       }
-    },
-    {
-      name: "as_and_ixp",
-      path: `${routerBase}as_and_ixp/:asn`,
-      component: AsAndIxp
     },
     {
       name: "api",

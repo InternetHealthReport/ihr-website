@@ -18,7 +18,7 @@
           <q-toggle v-model="props.expand" />
         </q-td>
         <q-td key="asn" :props="props" v-if="showAsn">
-          <a v-for="(asn, index) in props.row.asn" @click="newWindow({name : 'as_and_ixp', params:{asn: $options.filters.ihr_NumberToAsOrIxp(asn) }})" href="javascript:void(0)">
+          <a v-for="(asn, index) in props.row.asn" @click="newWindow({name : 'networks', params:{asn: $options.filters.ihr_NumberToAsOrIxp(asn) }})" href="javascript:void(0)">
             {{ index==1? '/'+$options.filters.ihr_NumberToAsOrIxp(asn): $options.filters.ihr_NumberToAsOrIxp(asn) }}
           </a>
         </q-td>

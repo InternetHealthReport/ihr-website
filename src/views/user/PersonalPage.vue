@@ -107,7 +107,7 @@
                     <q-toggle dense v-model="props.selected" />
                   </q-td>
                   <q-td :props="props" key="asNumber">
-                    <a @click="newWindow({name : 'as_and_ixp', params:{asn: getCellValue(props, 'asNumber') }})" href="javascript:void(0)">
+                    <a @click="newWindow({name : 'networks', params:{asn: getCellValue(props, 'asNumber') }})" href="javascript:void(0)">
                       {{ getCellValue(props, "asNumber") }}
                     </a>
                   </q-td>

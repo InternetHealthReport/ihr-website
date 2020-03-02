@@ -82,7 +82,7 @@ export default {
     },
     gotoASN(number) {
       this.$router.push({
-        name: "as_and_ixp",
+        name: "networks",
         params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(number) }
       });
     },

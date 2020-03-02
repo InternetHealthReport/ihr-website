@@ -51,7 +51,7 @@
 			"monitoredAsn": "Show only monitored Asn"
 		}
 	},
-	"AsAndIxp": {
+	"Networks": {
 		"headerString": {
 			"loading": "Loading in progress...",
 			"notFound": "you are searching is not available",
