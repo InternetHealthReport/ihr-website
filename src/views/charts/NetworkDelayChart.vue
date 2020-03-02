@@ -271,6 +271,7 @@ export default {
         trace.x.push(elem.timebin);
       });
         this.loading = false;
+        this.notifyDisplay(this.traces.length > 0)
         this.layout.datarevision = new Date().getTime();
     },
     startPointNameStr(){
@@ -280,6 +281,9 @@ export default {
         else{
             return this.startPointType.toString()+this.startPointName.toString()
         }
+    },
+    notifyDisplay(displayed){ 
+        this.$emit('display', displayed);
     }
   },
   watch: { 
@@ -291,7 +295,7 @@ export default {
         this.$nextTick(function () {
             this.loading = true;
         })
-    }
+    },
   }
 };
 </script>

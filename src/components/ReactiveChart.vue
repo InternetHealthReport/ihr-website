@@ -2,8 +2,8 @@
   <div>
     <h1 v-if="chartTitle">{{chartTitle}}</h1>
     <div :ref="myId"></div>
-    <div v-show="noData" class="IHR_no-data">
-      <div>{{$t("noDataAvailable")}}</div>
+    <div v-show="noData" class="IHR_no-data" >
+      <div class="bg-white">{{noData}}</div>
     </div>
   </div>
 </template>
@@ -96,7 +96,6 @@ export default {
     bottom 50%
     left 50%
     & > div:first-child
-      background-color #ffee58
       box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
       padding 16pt
       position relative

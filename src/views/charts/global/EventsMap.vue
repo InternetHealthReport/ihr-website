@@ -133,7 +133,7 @@ export default {
         text.push(probeText);
         sizes.push(size / prob.startTime.length);
       });
-      this.noData = (latitudes.length === 0) ? this.$t("noDataAvailable"): false;
+      this.noData = (latitudes.length === 0) ? this.$t("noOutage"): false;
       return [
         {
           type: "scattergeo",

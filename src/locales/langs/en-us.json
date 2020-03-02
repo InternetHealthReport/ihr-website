@@ -128,7 +128,7 @@
 		},
 		"networkDelay": {
 			"title": "network delay",
-			"yaxis": "Estimated RTT (ms)",
+			"yaxis": "Median RTT (ms)",
 			"table": {
 				"title": "Estimated Delays",
                "apiTitle": "Displayed data is available at the following links:"
@@ -222,5 +222,6 @@
 	"prefix": "prefix",
 	"name": "name",
 	"close": "close",
-	"noDataAvailable": "sorry no data available"
+	"noDataAvailable": "no data available",
+	"noOutage": "No significant disconnection detected for this network"
 }

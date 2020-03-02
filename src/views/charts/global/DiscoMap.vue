@@ -44,7 +44,8 @@ export default {
           b: 10
         }
       },
-      probes: []
+      probes: [],
+      noData: this.$t("noOutage")
     };
   },
   methods: {
@@ -111,7 +112,7 @@ export default {
         const blue = 255-Math.min(255, 255*(color/5));
         colors.push(`rgba(${red},${green},${blue},0.1)`);
       });
-      this.noData = (latitudes.length === 0) ? this.$t("noDataAvailable"): false;
+      this.noData = (latitudes.length === 0) ? this.$t("noOutage"): false;
       return [
         {
           type: "scattergeo",

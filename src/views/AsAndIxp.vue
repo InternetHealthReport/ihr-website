@@ -19,7 +19,8 @@
         caption="BGP data"
         header-class="IHR_charts-title"
         icon="fas fa-project-diagram"
-        default-opened
+        :disable="!show.hegemony"
+        v-model="show.hegemony"
       >
         <q-separator />
         <q-card class="IHR_charts-body">
@@ -41,7 +42,8 @@
         caption="Traceroute data"
         header-class="IHR_charts-title"
         icon="fas fa-shipping-fast"
-        default-opened
+        v-model="show.net_delay"
+        :disable="show.net_delay_disable"
       >
         <q-separator />
         <q-card class="IHR_charts-body">
@@ -54,6 +56,7 @@
                 :fetch="fetch"
                 searchBar
                 ref="networkDelayChart"
+                @display="displayNetDelay"
             />
           </q-card-section>
        </q-card>
@@ -64,7 +67,8 @@
         caption="Traceroute data"
         header-class="IHR_charts-title"
         icon="fas fa-exchange-alt"
-        default-opened
+        :disable="!show.delayAndForwarding"
+        v-model="show.delayAndForwarding"
       >
         <q-separator />
         <q-card class="IHR_charts-body">
@@ -84,7 +88,8 @@
         caption="RIPE Atlas log"
         header-class="IHR_charts-title"
         icon="fas fa-plug"
-        default-opened
+        :disable="!show.disco"
+        v-model="show.disco"
       >
         <q-separator />
         <q-card class="IHR_charts-body">
@@ -170,7 +175,14 @@ export default {
       asName: null,
       charRefs: CHART_REFS,
       prefixesDetail: [],
-      minAvgLevel: DEFAULT_DISCO_AVG_LEVEL
+      minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
+      show: { 
+        delayAndForwarding: false,
+        disco: false,
+        hegemony: false,
+        net_delay: true,
+        net_delay_disable: false,
+      }
     };
   },
   methods: {
@@ -191,13 +203,23 @@ export default {
             return;
         }
 
-        console.log(results.results[0])
+        this.$nextTick(function () {
+            this.show.delayAndForwarding = results.results[0].delay_forwarding;
+            this.show.disco = results.results[0].disco;
+            this.show.hegemony = results.results[0].hegemony;
+        })
 
         this.asName = results.results[0].name;
         this.loadingStatus = LOADING_STATUS.LOADED;
         this.fetch = true;
     });
 
+    },
+    displayNetDelay(displayValue){ 
+        this.show.net_delay = displayValue;
+        this.$nextTick(function () {
+            this.show.net_delay_disable = !displayValue;
+        })
     }
   },
   mounted() {
