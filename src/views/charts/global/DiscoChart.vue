@@ -24,7 +24,7 @@ import DiscoAlarmsTable from "../tables/DiscoAlarmsTable.vue";
 import { DiscoEventQuery } from "@/plugins/query/IhrQuery";
 import DiscoChartVue from "../DiscoChart.vue";
 
-const DEFAULT_DISCO_AVG_LEVEL = 9;
+const DEFAULT_DISCO_AVG_LEVEL = 10;
 //under this gap 2 consecutive event are considered like 1 that change value
 
 //utility functions

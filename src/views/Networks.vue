@@ -99,6 +99,7 @@
                 :start-time="startTime"
                 :end-time="endTime"
                 :fetch="fetch"
+                :minAvgLevel=9
                 ref="ihrChartDisco"
             />
           </q-card-section>

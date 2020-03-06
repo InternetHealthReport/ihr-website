@@ -103,10 +103,15 @@ export default {
         latitudes.push(prob.lat);
         longitudes.push(prob.lon);
         let color = prob.level-6;
-        let durationHour = 1+Math.ceil(Math.abs(prob.endTime - prob.startTime) / (1000*60*60));
-          let probeText = `<b>${prob.label}</b><br> PB${prob.id}<br> ${this.dateFormatter(prob.startTime)}<br> Duration: ${durationHour}H<br> Deviation: ${prob.level}`;
+        let durationHour = Math.ceil(Math.abs(prob.endTime - prob.startTime) / (1000*60*60));
+        let durationMin = Math.ceil(Math.abs(prob.endTime - prob.startTime) / (1000*60));
+        var durationLabel = `${durationHour} hours`;
+        if(durationHour <= 1){
+            durationLabel = `${durationMin} min.`;
+        } 
+        let probeText = `<b>${prob.label}</b><br> PB${prob.id}<br> ${this.dateFormatter(prob.startTime)}<br> Duration: ${durationLabel}<br> Deviation: ${prob.level}`;
         text.push(probeText);
-        sizes.push(Math.log(durationHour)*10);
+        sizes.push(Math.min(durationMin/2, 60));
         const red = Math.min(255, 255*(color/5));
         const green = 255-Math.min(255, 255*(color/5));
         const blue = 255-Math.min(255, 255*(color/5));
