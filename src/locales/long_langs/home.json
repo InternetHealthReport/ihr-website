@@ -3,7 +3,7 @@
     "globalReport": {
       "name": "Global report",
       "description": [
-        "The Internet Health Report monitors the conditions of networks that composed the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. "
+        "The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. "
       ]
     },
     "analysisModules": {

@@ -10,13 +10,13 @@ import "@/styles/main.styl";
 import "@/styles/ihr.style.styl";
 import IhrStyle from "./plugins/IhrStyle";
 import Fragment from "vue-fragment";
-import LoadScript from 'vue-plugin-load-script';
+//import LoadScript from 'vue-plugin-load-script';
  
 
 //external plugin
 Vue.use(Fragment.Plugin);
 Vue.use(VueResizeText);
-Vue.use(LoadScript);
+//Vue.use(LoadScript);
 
 
 // internal plugins

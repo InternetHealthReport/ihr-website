@@ -37,6 +37,13 @@
                     class="IHR_delikify"
                 >{{$t("documentationPage.sections.asdependency.title")}}</router-link>
                 </li>
+                 <li>
+                <router-link
+                    :to="{name : 'documentation', hash: '#'+replaceSpaces($t(`documentationPage.sections.netdelay.title`))}"
+                    class="IHR_delikify"
+                >{{$t("documentationPage.sections.netdelay.title")}}</router-link>
+                </li>
+                </li>
                 </li>
                 <li>
                 <router-link
@@ -81,13 +88,14 @@
       <div id="IHR_documentation-page" >
         <div v-for="sec in $t('documentationPage.sections')" 
             class="IHR_documentation-page">
-            <div :id="replaceSpaces(sec.title)"></div>
+            <div class='IHR_anchor' :id="replaceSpaces(sec.title)"></div>
             <h1 v-html='sec.title'></h1>
           <p class="text-left text-body1" v-html='sec.summary'></p>
           <div 
             v-for="sub in sec.description"
               >
               <h2 v-html="sub.header"></h2>
+              <img v-if='sub.img' :src="require(`@/${sub.img[0]}`)" :style='sub.img[1]'>
               <p class="text-left text-body1" v-html="sub.body"></p>
           </div>
         </div>
@@ -109,7 +117,7 @@ export default {
   },
   methods: {
       replaceSpaces(text) {
-          return text.split(' ').join('_');
+          return text.split(' ').join('_').split('(').join('_').split(')').join('_');
       } 
   }
 };
@@ -153,11 +161,10 @@ export default {
       margin 4pt auto 2pt auto
 
       & a:hover
-        padding-bottom 2pt
-        border-bottom 2px solid $secondary
+        border-bottom 1px solid $primary
 
       & a:active
-        border-bottom 2px solid $accent
+        border-bottom 1px solid $accent
 
       & ul
         margin 5px 
@@ -168,6 +175,12 @@ export default {
         margin 0px
         padding 0px
         padding-left 15px
+
+.IHR_anchor
+    display block
+    position relative
+    top -100px
+    visibility hidden
 
 </style>
 

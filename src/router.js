@@ -19,10 +19,15 @@ const DEFAULT_LOCALE = "en-us";
 
 export default new Router({
   mode: "history", //TODO https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
-  scrollBehavior: function(to) {
-    return to.hash
-      ? { selector: to.hash, offset: { x: 0, y: 60 } }
-      : { x: 0, y: 0 };
+  scrollBehavior: (to) => {
+    if (to.hash) {
+      VueScrollTo.scrollTo(to.hash, 700);
+      return {
+        selector: to.hash,
+        offset: { x: 0, y: 50 },
+      };
+    }
+    return { x: 0, y: 0 };
   },
   routes: [
     {
@@ -100,6 +105,6 @@ export default new Router({
       name: "documentation",
       path: `${routerBase}documentation`,
       component: Documentation
-    }
+    },
   ]
 });
