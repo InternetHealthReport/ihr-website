@@ -11,7 +11,7 @@
           <q-item id="IHR_home-button">
             <router-link :to="{name : 'home'}">
               <q-btn round dense flat :ripple="false" no-caps size="22px">
-                <img src="@/assets/imgs/ihr_logo.svg" style="width: 80%;" />
+                <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px;" />
               </q-btn>
             </router-link>
           </q-item>
