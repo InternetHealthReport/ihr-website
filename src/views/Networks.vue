@@ -105,20 +105,6 @@
           </q-card-section>
         </q-card>
       </q-expansion-item>
-      <q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">
-        <div class="fit column">
-          <div class="row IHR_sidebar-filter-section col-auto">
-            <div class="col-3 IHR_family-filter">
-              <div>
-                <q-toggle v-model="addressFamily" name="addressFamily"/>
-              </div>
-              <div class="text-center">
-                <label for="addressFamily">{{addressFamilyText}}</label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </q-drawer>
       <div class="IHR_last-element">&nbsp;</div>
     </q-list>
   </div>
@@ -296,3 +282,19 @@ export default {
       & label
         font-weight bold
 </style>
+
+
+      <!--<q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">-->
+        <!--<div class="fit column">-->
+          <!--<div class="row IHR_sidebar-filter-section col-auto">-->
+            <!--<div class="col-3 IHR_family-filter">-->
+              <!--<div>-->
+                <!--<q-toggle v-model="addressFamily" name="addressFamily"/>-->
+              <!--</div>-->
+              <!--<div class="text-center">-->
+                <!--<label for="addressFamily">{{addressFamilyText}}</label>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</q-drawer>-->

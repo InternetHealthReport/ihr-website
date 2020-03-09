@@ -118,7 +118,7 @@ export default {
           required: true,
           label: "Duration (minutes)",
           align: "left",
-          field: row => this.duration(row.starttime, row.endtime),
+          field: row => this.duration(row.starttime, row.endtime, 'Unk.'),
           format: val => val,
           sortable: true
         },

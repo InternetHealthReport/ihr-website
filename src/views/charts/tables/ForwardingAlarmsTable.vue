@@ -32,12 +32,12 @@
 
 <script>
 import CommonTableMixin from "./CommonTableMixin"
-import Tracemon from "@/components/ripe/Tracemon";
+//import Tracemon from "@/components/ripe/Tracemon";
 
 export default {
   mixins: [CommonTableMixin],
   components: {
-    Tracemon
+    //Tracemon
   },
   data() {
     return {

@@ -11,6 +11,7 @@ import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
 import ResetPassword from "@/views/user/ResetPassword";
 import Documentation from "@/views/Documentation";
+import VueScrollTo from 'vue-scrollto';
 
 Vue.use(Router);
 
@@ -32,32 +33,38 @@ export default new Router({
   routes: [
     {
       path: "/",
-      redirect: "/en-us/"
+      redirect: "/en-us/",
+      meta:{ title: "IHR"}
     },
     {
       name: "home",
       path: routerBase,
-      component: Home
+      component: Home,
+      meta:{ title: "IHR"}
     },
     {
       name: "global_report",
       path: `${routerBase}global_report`,
-      component: GlobalReport
+      component: GlobalReport,
+      meta:{ title: "Global Report - IHR"}
     },
     {
       name: "contact",
       path: `${routerBase}contact`,
-      component: Contact
+      component: Contact,
+      meta:{ title: 'Contact - IHR'}
     },
     {
       name: "countries",
       path: `${routerBase}countries`,
-      component: Countries
+      component: Countries,
+      meta:{ title: 'Country Report - IHR'}
     },
     {
       name: "networks",
       path: `${routerBase}networks/:asn`,
-      component: Networks
+      component: Networks,
+      meta:{ title: 'Network Report - IHR'}
     },
     {
       name: "old_as_and_ixp",
@@ -79,32 +86,38 @@ export default new Router({
     {
       name: "api",
       path: `${routerBase}api/`,
-      component: API
+      component: API,
+      meta:{ title: 'API - IHR'}
     },
     {
       name: "sign_up",
       path: `${routerBase}sign_up`,
-      component: SignUp
+      component: SignUp,
+      meta:{ title: 'Sign Up - IHR'}
     },
     {
       name: "account_activation",
       path: `${routerBase}account_activation`,
-      component: AccountActivation
+      component: AccountActivation,
+      meta:{ title: 'Account Activation - IHR'}
     },
     {
       name: "reset_password",
       path: `${routerBase}reset_password`,
-      component: ResetPassword
+      component: ResetPassword,
+      meta:{ title: 'Reset Password - IHR'}
     },
     {
       name: "personal_page",
       path: `${routerBase}personal_page`,
-      component: PersonalPage
+      component: PersonalPage,
+      meta:{ title: 'Personnal Page - IHR'}
     },
     {
       name: "documentation",
       path: `${routerBase}documentation`,
-      component: Documentation
+      component: Documentation,
+      meta:{ title: 'Documentation - IHR'}
     },
   ]
 });

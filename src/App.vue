@@ -15,7 +15,7 @@
               </q-btn>
             </router-link>
           </q-item>
-          <network-search-bar dark />
+          <network-search-bar/>
           <div
             class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
           >
@@ -44,7 +44,7 @@
         <div>
           <router-link :to="{name : 'home'}">
             <q-btn round dense flat :ripple="false" no-caps size="22px">
-              <img src="@/assets/imgs/ihr_logo.svg" style="width: 80%;" />
+              <img src="@/assets/imgs/ihr_logo.svg" style="width: 50px;" />
             </q-btn>
           </router-link>
         </div>
@@ -103,7 +103,7 @@
             </li>
             <li>
               <router-link
-                :to="{name : 'acknowledgments'}"
+                :to="{name : 'documentation', hash:'#Acknowledgements'}"
               >{{$t('footer.about.acknowledgments')}}</router-link>
             </li>
           </ul>

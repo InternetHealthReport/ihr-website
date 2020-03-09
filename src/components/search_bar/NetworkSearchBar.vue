@@ -1,17 +1,20 @@
 <template>
   <q-select
-    :dark="dark" dense standout use-input
+    outlined
+    dense 
+    use-input
     :label="placeholder"
     :options="options"
-    v-model = "model"
     @filter="filter"
     hide-dropdown-icon
     input-debounce="1000"
-    class="IHR_search-bar"
+    bg-color='accent'
+    label-color='grey-5'
+    input-class='text-white text-weight-bold'
   >
     <template v-slot:append>
         <div v-if="!loading">
-            <q-icon name="fas fa-search" style="font-size: 0.82em; margin-rigth: 4px;"/>
+            <q-icon color='grey-5' name="fas fa-search" style="font-size: 0.80em; margin: 2px;"/>
         </div>
         <div v-else>
               <q-spinner color="primary" size="0.82em" />
@@ -111,4 +114,8 @@ export default {
     &-name
       text-align left
 
+.IHR_search-bar
+  text-color 'white'
+  color 'white'
+  input white
 </style>

@@ -7,6 +7,9 @@
       :ref="myId"
       :no-data="noData"
     />
+      <div v-if="loading" class="IHR_loading-spinner">
+        <q-spinner color="secondary" size="15em" />
+      </div>
     <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
         <q-card-section class="q-pa-xs">
           <div class="row items-center">
@@ -34,9 +37,6 @@
         <q-tab name="api" label="API" />
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>
-      <div v-if="loading" class="IHR_loading-spinner">
-        <q-spinner color="secondary" size="15em" />
-      </div>
         <q-tab-panel name="dependency">
           <as-interdependencies-table
             :data="networkDependencyData"
@@ -292,6 +292,7 @@ export default {
     },
     fetchHegemony(data) {
       console.log("fetchHegemony");
+        console.log(data)
       let traces = {};
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return;
