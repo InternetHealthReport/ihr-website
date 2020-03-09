@@ -28,7 +28,7 @@
           </div>
         </q-td>
         <q-td key="starttime"> {{dateFormatter(props.row.starttime)}} </q-td>
-        <q-td key="duration"> {{duration(props.row.starttime, props.row.endtime)}} </q-td>
+        <q-td key="duration"> {{duration(props.row.starttime, props.row.endtime, 'Unk')}} </q-td>
         <q-td key="deviation">{{props.row.avglevel}}</q-td>
         <q-td key="nbdiscoprobes"> {{props.row.nbdiscoprobes}} </q-td>
       </q-tr>
@@ -38,8 +38,8 @@
             <div v-if='props.expand' class="IHR_side_borders">
 
             <latencymon 
-                :start-time="dateHourShift(props.row.starttime, -duration(props.row.starttime, props.row.endtime)/60)" 
-                :stop-time="dateHourShift(props.row.endtime, duration(props.row.starttime, props.row.endtime)/60)" 
+                :start-time="dateHourShift(props.row.starttime, -duration(props.row.starttime, props.row.endtime, 120)/60)" 
+                :stop-time="dateHourShift(props.row.endtime, duration(props.row.starttime, props.row.endtime, 120)/60)" 
                 :msm-prb-ids="msmPrbIds(props.row.discoprobes)" 
                 style="max-width: 93%; margin: 0 auto;"/>
             </div>
@@ -144,8 +144,13 @@ export default {
     };
   },
   methods: {
-      duration(start, end){ 
+      duration(start, end, nonzero){ 
         let durationMin = Math.ceil(Math.abs(new Date(end) - new Date(start)) / (1000*60));
+
+        if(durationMin == 0){ 
+            return nonzero
+        }
+
         return durationMin
       },
       dateFormatter(datetime){ 

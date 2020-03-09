@@ -117,8 +117,6 @@ export default {
       details: {
         activeTab: "probes",
         tableVisible: false,
-        startTime: null,
-        endTime: null,
         data: [],
         eventid: null,
         probes: [],
@@ -199,8 +197,6 @@ export default {
               let start = new Date(elem.starttime);
               let end = new Date(elem.endtime);
               probes.push(elem.probe_id);
-              if (start < startTime) startTime = start;
-              if (end > endTime) endTime = end;
             });
             this.details.startTime = startTime;
             this.details.endTime = endTime;
