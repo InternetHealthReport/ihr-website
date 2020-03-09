@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LpR fff" id="app" class="IHR_minimum-width">
+  <q-layout view="hHh LpR fff" id="app" class="IHR_minimum-width bg-white">
     <q-header elevated primary  class="IHR_minimum-width">
       <q-toolbar class="q-py-sm q-px-lg row">
         <div class="col-8 row no-wrap items-center">
@@ -37,7 +37,7 @@
       primary
       class="IHR_minimum-width IHR_footer text-white text-center row items-streatch content-stretch no-wrap justiy-between"
     >
-      <div class="col-2 IHR_copyright IHR_fsection">
+      <div class="col-2 IHR_copyright IHR_fsection q-pt-md">
         <div class="text-weight-bold">
           Internet Health Report
         </div>
@@ -49,7 +49,7 @@
           </router-link>
         </div>
       </div>
-      <div class="IHR_fsection col-8">
+      <div class="IHR_fsection col-8 q-pt-md">
         <div class="IHR_sitemap row justify-start">
         <span class="col-3">
           <ul>
@@ -111,13 +111,13 @@
         </div>
         <div class="row items-center q-pt-lg">
             <div class="col-2 "><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
-            <div class="col-10 text-caption text-left">
+            <div class="col-10 text-caption text-left q-pa-md">
                 <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" property="dct:title" rel="dct:type"> Internet Health Report</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:ihr-admin@iij-ii.co.jp" rel="cc:morePermissions">ihr-admin@iij-ii.co.jp</a>.
             </div>
         </div>
       </div>
       <div class="IHR_external-links col-2 IHR_fsection">
-        <div class="row wrap justify-center">
+        <div class="row wrap justify-center q-pt-lg">
           <a href="https://twitter.com/ihr_alerts" class="col-1">
             <q-icon name="fab fa-twitter-square" />
           </a>
@@ -177,6 +177,9 @@ export default {
       loginError: false
     };
   },
+  mounted(){ 
+    document.title = 'Internet Health Report';
+  },
   methods: {
     expandSidebar() {
       this.sidebarOpened = !this.sidebarOpened;
@@ -198,6 +201,11 @@ export default {
     },
     logout() {
       this.$ihr_api.userLogout();
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      document.title = to.meta.title || 'IHR'
     }
   }
 };

@@ -34,7 +34,7 @@ export default new Router({
     {
       path: "/",
       redirect: "/en-us/",
-      meta:{ title: "IHR"}
+      meta:{ title: "Internet Health Report"}
     },
     {
       name: "home",

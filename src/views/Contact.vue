@@ -1,12 +1,11 @@
 <template>
     <div>
     <div id="IHR_contact-page" >
-        <h1 class="text-center">Contact</h1>
         <div class="IHR_contact-page" >
-            <h2 >Feedback </h2>
+            <h1 >Feedback </h1>
             <p class="IHR_description" >Please submit bug reports and feature requests on Github:
             <a href="https://github.com/InternetHealthReport/ihr-website/issues" target="_blank">https://github.com/InternetHealthReport/ihr-website/issues</a></p>
-            <h2>Others </h2>
+            <h1>Others </h1>
             <p>For questions and inquiries, please contact us at: <a href="mailto:ihr-admin@iij-ii.co.jp">ihr-admin@iij-ii.co.jp</a></p>
         </div>
     </div>
@@ -32,18 +31,17 @@ export default {
     margin 0pt auto
 
 .IHR_background
-    width 1600px
-    height 1600px
+    width 1000px
+    height 1000px
     background-repeat no-repeat
     background-position left top
-    background-size 1600px 1600px
+    background-size 1000px 1000px
     opacity 0.1
     position absolute
-    left 660px
+    left 60% 
     top 450px
     overflow-x hidden
     position fixed
-    z-index -1
 
 
 .IHR_
