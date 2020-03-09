@@ -26,23 +26,24 @@
             v-for="graphT in graphTypes"
             :key="graphT.name"
         >
-        <q-card-section class="bg-primary text-white q-pa-sm">
-                  <div class='text-h2'>
-                      <q-avatar :icon="graphT.icon" ></q-avatar>
-                      {{$t(`${graphT.name}.title`)}}
-                  </div>
-          </q-card-section>
-        <q-card-section class="q-pa-xs">
-            <div
-            class="IHR_description"
-            v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues)"
-            ></div>
-            <div class="IHR_description IHR_description-link">
-            <router-link
-                :to="{name :'documentation', query: graphT.docsQuery}"
-            >{{$t("learnmore")}} {{$t(`${graphT.name}.title`)}}</router-link>
-            </div>
-        </q-card-section>
+            <q-card-section class="bg-primary text-white q-pa-sm">
+                    <div class='text-h2'>
+                        <q-avatar :icon="graphT.icon" ></q-avatar>
+                        {{$t(`${graphT.name}.title`)}}
+                    </div>
+            </q-card-section>
+            <q-card-section class="q-pa-xs">
+                <div
+                class="IHR_description"
+                v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues)"
+                ></div>
+                <div class="IHR_description IHR_description-link">
+                <router-link
+                    :to="{name :'documentation', hash:$t(`${graphT.name}.docHash`)}"
+                >{{$t("learnmore")}} {{$t(`${graphT.name}.title`)}}</router-link>
+
+                </div>
+            </q-card-section>
         </q-card>
         </div>
 
