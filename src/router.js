@@ -20,6 +20,7 @@ const DEFAULT_LOCALE = "en-us";
 
 export default new Router({
   mode: "history", //TODO https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
+  base: "/ihr/",
   scrollBehavior: (to) => {
     if (to.hash) {
       VueScrollTo.scrollTo(to.hash, 700);
