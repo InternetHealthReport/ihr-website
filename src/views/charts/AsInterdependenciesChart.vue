@@ -125,7 +125,7 @@ export default {
     //prevent calls within 500ms and execute only the last one
     return {
       details: {
-        activeTab: "dependency",
+        activeTab: null,
         date: null,
         tablesData: {
           dependency: null,
@@ -144,21 +144,11 @@ export default {
   },
   beforeMount() {
       this.updateAxesLabel()
-      console.log('hege')
-      console.log(this.addressFamily)
   },
   mounted(){ 
     this.tableFromQuery()
   },
   methods: {
-    tableFromQuery(){ 
-        // if query parameter have click information then show corresponding tables
-        let selectedDate = this.$route.query.hege_dt;
-        let table = this.$route.query.hege_tb;
-        if(selectedDate != undefined && table != undefined){
-            this.showTable(table, selectedDate); 
-        }
-    },
     updateAxesLabel(){
         this.layout.yaxis.title = `AS`+this.asNumber+` ${this.$t("charts.asInterdependencies.yaxis")}`;
         this.layout.yaxis2.title = `${this.$t("charts.asInterdependencies.yaxis2")} AS`+this.asNumber;
@@ -193,12 +183,18 @@ export default {
     },
     plotClick(clickData){ 
         var table = 'dependency';
-        if(plot.data.yaxis == "y2"){
+        if(clickData.points[0].data.yaxis == "y2"){
           table = 'dependent';
         }
-        // update query parameters
-        this.$router.push({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
         this.showTable(table, clickData.points[0].x)
+    },
+    tableFromQuery(){ 
+        // if query parameter have click information then show corresponding tables
+        let selectedDate = this.$route.query.hege_dt;
+        let table = this.$route.query.hege_tb;
+        if(selectedDate != undefined && table != undefined){
+            this.showTable(table, selectedDate); 
+        }
     },
     showTable(table, selectedDate) {
       
@@ -211,13 +207,13 @@ export default {
       }
 
       let intervalEnd = this.details.date;
-      let intervalStart = new Date(intervalEnd.getTime() + 15*60000);
+      let intervalStart = new Date(intervalEnd.getTime() - 15*60000);
 
-      let dependencyFilter = this.hegemonyFilter.clone().timeInterval(intervalStart, intervalEnd);
+      this.details.activeTab = table;
+      let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd);
       let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber);
       this.updateTable("dependency", "asn", dependencyFilter, intervalStart, intervalEnd);
       this.updateTable("dependent", "originasn", dependentFilter, intervalStart, intervalEnd);
-      this.details.activeTab = table;
     },
     updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
       this.details.tablesData[tableType] = {
@@ -302,7 +298,6 @@ export default {
     },
     fetchHegemony(data) {
       console.log("fetchHegemony");
-        console.log(data)
       let traces = {};
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return;
@@ -388,6 +383,13 @@ export default {
     },
     asNumber(newValue) {
       this.debouncedApiCall();
+    },
+    'details.activeTab'(newValue){ 
+        this.updateQuery('hege_tb', newValue)
+    },
+    'details.date'(newValue){ 
+        const str = newValue.toISOString().slice(0, 16).replace("T", " ");
+        this.updateQuery('hege_dt', str)
     },
     clear(newValue){
         this.clearGraph();

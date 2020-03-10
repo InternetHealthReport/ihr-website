@@ -176,11 +176,12 @@ export default {
   methods: {
     pushRoute() {
       this.$router.push({
-      query: {
-        af: this.family,
-        last: this.interval.dayDiff(),
-        date: this.$options.filters.ihrUtcString(this.interval.end, false)
-        }
+        //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
+        query: Object.assign({}, this.$route.query, { 
+            af: this.family,
+            last: this.interval.dayDiff(),
+            date: this.$options.filters.ihrUtcString(this.interval.end, false)
+        }) 
       });
     },
     netName() {
@@ -191,6 +192,7 @@ export default {
             return;
         }
 
+        // Hide tabs if not necessary
         this.$nextTick(function () {
             this.show.delayAndForwarding = results.results[0].delay_forwarding;
             this.show.disco = results.results[0].disco;
@@ -262,6 +264,7 @@ export default {
         handler: function(asn){
             this.loadingStatus = LOADING_STATUS.LOADING,
             this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn);
+            this.pushRoute()
             this.netName()
         },
         deep: true,
