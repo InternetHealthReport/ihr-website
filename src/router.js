@@ -19,7 +19,10 @@ const routerBase = "/:locale/";
 const DEFAULT_LOCALE = "en-us";
 
 export default new Router({
-  mode: "history", //TODO https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
+//The serving HTTP server should handle this properly 
+//see https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
+//for apache use FallBackRessource
+  mode: "history", 
   base: "/ihr/",
   scrollBehavior: (to) => {
     if (to.hash) {
@@ -41,7 +44,7 @@ export default new Router({
       name: "home",
       path: routerBase,
       component: Home,
-      meta:{ title: "IHR"}
+      meta:{ title: "Internet Health Report"}
     },
     {
       name: "global_report",

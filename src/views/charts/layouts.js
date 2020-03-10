@@ -65,6 +65,7 @@ var DELAY_AND_FORWARDING_LAYOUT = {
     title: i18n.t("charts.delayAndForwarding.yaxis2"),
     domain: [0, 0.45],
     autorange: true,
+    rangemode: "tozero"
   }
 };
 

@@ -145,6 +145,10 @@ import LoginForm from "@/components/forms/LoginForm";
 
 const simple_menu = [
   {
+    entryName: "header.home",
+    routeName: "home"
+  },
+  {
     entryName: "header.globalReport",
     routeName: "global_report"
   },

@@ -14,10 +14,10 @@
   >
     <template v-slot:append>
         <div v-if="!loading">
-            <q-icon color='grey-5' name="fas fa-search" style="font-size: 0.80em; margin: 2px;"/>
+            <q-icon color='grey-5' name="fas fa-search q-mb-sm" style="font-size: 0.80em;"/>
         </div>
         <div v-else>
-              <q-spinner color="primary" size="0.82em" />
+              <q-spinner color="grey-5" size="0.82em" />
         </div>
     </template>
     <template v-slot:loading> </template>

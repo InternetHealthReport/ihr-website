@@ -3,7 +3,7 @@
     <reactive-chart
       :layout="layout"
       :traces="traces"
-      @plotly-click="showTable"
+      @plotly-click="plotClick"
       :ref="myId"
       :no-data="noData"
     />
@@ -144,8 +144,21 @@ export default {
   },
   beforeMount() {
       this.updateAxesLabel()
+      console.log('hege')
+      console.log(this.addressFamily)
+  },
+  mounted(){ 
+    this.tableFromQuery()
   },
   methods: {
+    tableFromQuery(){ 
+        // if query parameter have click information then show corresponding tables
+        let selectedDate = this.$route.query.hege_dt;
+        let table = this.$route.query.hege_tb;
+        if(selectedDate != undefined && table != undefined){
+            this.showTable(table, selectedDate); 
+        }
+    },
     updateAxesLabel(){
         this.layout.yaxis.title = `AS`+this.asNumber+` ${this.$t("charts.asInterdependencies.yaxis")}`;
         this.layout.yaxis2.title = `${this.$t("charts.asInterdependencies.yaxis2")} AS`+this.asNumber;
@@ -178,36 +191,33 @@ export default {
         this.queryHegemonyAPI();
         this.queryHegemonyConeAPI();
     },
-    showTable(clickData) {
-      let plot = clickData.points[0];
-      if(plot.x.length < 14){
+    plotClick(clickData){ 
+        var table = 'dependency';
+        if(plot.data.yaxis == "y2"){
+          table = 'dependent';
+        }
+        // update query parameters
+        this.$router.push({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
+        this.showTable(table, clickData.points[0].x)
+    },
+    showTable(table, selectedDate) {
+      
+      if(selectedDate.length < 14){
         // at midnight no time is given
-        this.details.date = new Date(plot.x+" 00:00+00:00")//adding timezone to string...
+        this.details.date = new Date(selectedDate+" 00:00+00:00")//adding timezone to string...
       }
       else{
-        this.details.date = new Date(plot.x + "+00:00")//adding timezone to string...
+        this.details.date = new Date(selectedDate+ "+00:00")//adding timezone to string...
       }
+
       let intervalEnd = this.details.date;
-      //getting the previus point closest to x
-      let xIndex = plot.pointIndex - 1;
-      let endTime = intervalEnd.getTime();
-      while (xIndex >= 0 && Date.parse(plot.data.x[xIndex]) == endTime) {
-        xIndex--;
-      }
-      let intervalStart = xIndex < 0 ? intervalEnd : new Date(plot.data.x[xIndex]);
-        console.log(intervalStart)
-        console.log(intervalEnd)
+      let intervalStart = new Date(intervalEnd.getTime() + 15*60000);
 
       let dependencyFilter = this.hegemonyFilter.clone().timeInterval(intervalStart, intervalEnd);
       let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber);
       this.updateTable("dependency", "asn", dependencyFilter, intervalStart, intervalEnd);
       this.updateTable("dependent", "originasn", dependentFilter, intervalStart, intervalEnd);
-      if(plot.data.yaxis == "y2"){
-        this.details.activeTab = "dependent";
-      }
-      else{
-        this.details.activeTab = "dependency"
-      }
+      this.details.activeTab = table;
     },
     updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
       this.details.tablesData[tableType] = {

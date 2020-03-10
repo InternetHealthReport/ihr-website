@@ -58,7 +58,6 @@ export default {
          */
         ihrUtcString(date, short) {
           let actualDate = new Date(date);
-          return actualDate.toUTCString();
 
           let result = actualDate.getUTCFullYear() + "-";
           result += padWith0(actualDate.getUTCMonth() + 1) + "-";

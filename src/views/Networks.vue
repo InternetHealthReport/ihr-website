@@ -29,7 +29,7 @@
             :start-time="startTime"
             :end-time="endTime"
             :as-number="asNumber"
-            :as-family="family"
+            :address-family="family"
             :fetch="fetch"
             ref="asInterdependenciesChart"
             />
@@ -155,8 +155,9 @@ export default {
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn);
     let addressFamily = this.$route.query.af;
+    let date = this.$route.query.date;
     return {
-      addressFamily: addressFamily == 4 || addressFamily == undefined,
+      addressFamily: addressFamily == undefined ? 4 : addressFamily,
       loadingStatus: LOADING_STATUS.LOADING,
       asNumber: asNumber,
       asName: null,
@@ -207,14 +208,14 @@ export default {
         this.$nextTick(function () {
             this.show.net_delay_disable = !displayValue;
         })
-    }
+    },
   },
   mounted() {
     this.netName()
   },
   computed: {
     family() {
-      return this.addressFamily? AS_FAMILY.v4 : AS_FAMILY.v6;
+      return this.addressFamily==6? AS_FAMILY.v6 : AS_FAMILY.v4;
     },
     addressFamilyText(){
       return this.addressFamily? "IPv4" : "IPv6";
