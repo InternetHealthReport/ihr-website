@@ -3,7 +3,7 @@ import { debounce } from "quasar";
 import ReactiveChart from "@/components/ReactiveChart";
 import { Query } from "@/plugins/IhrApi";
 
-const DEFAULT_DEBOUNCE = 800;
+const DEFAULT_DEBOUNCE = 50;
 
 //remember to put ref="chart" into the charts!
 export default {

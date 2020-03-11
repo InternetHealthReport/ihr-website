@@ -112,7 +112,6 @@
 
 <script>
 import reportMixin from "@/views/mixin/reportMixin";
-import ClosableContainer from "@/components/ClosableContainer";
 import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
 import DiscoChart, {
   DEFAULT_DISCO_AVG_LEVEL
@@ -120,9 +119,6 @@ import DiscoChart, {
 import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
 import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
-import ReverseDnsIp from "@/components/ripe/ReverseDnsIp";
-import PrefixOverview from "@/components/ripe/PrefixOverview";
-import { setTimeout } from "timers";
 import DateTimePicker from "@/components/DateTimePicker";
 
 const LOADING_STATUS = {
@@ -147,22 +143,17 @@ export default {
     DiscoChart,
     DelayAndForwardingChart,
     NetworkDelayChart,
-    PrefixOverview,
-    ClosableContainer,
-    ReverseDnsIp,
     DateTimePicker
   },
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn);
     let addressFamily = this.$route.query.af;
-    let date = this.$route.query.date;
     return {
       addressFamily: addressFamily == undefined ? 4 : addressFamily,
       loadingStatus: LOADING_STATUS.LOADING,
       asNumber: asNumber,
       asName: null,
       charRefs: CHART_REFS,
-      prefixesDetail: [],
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
       show: { 
         delayAndForwarding: false,

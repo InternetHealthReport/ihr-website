@@ -1,5 +1,6 @@
 <template>
   <q-select
+    :value = 'model'
     outlined
     dense 
     use-input
@@ -54,7 +55,7 @@ export default {
             {label: 2497,
             value: 2497,
             name: "IIJ"}],
-        model: null,
+        model: [],
         loading: false,
         always: false,
       networkQuery: new NetworkQuery().orderedByNumber()

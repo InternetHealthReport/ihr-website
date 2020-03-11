@@ -2,7 +2,7 @@ import i18n from "@/locales/i18n";
 
 const COMMON_FEATURE = {
   hovermode: "closest",
-  margin: { t: 10, b: 10, l: 80, r: 80 },
+  margin: { t: 10, b: 10, l: 80, r: 80 }
 };
 
 const COMMON_WITH_LEGEND = {
@@ -19,30 +19,30 @@ const COMMON_WITH_LEGEND = {
   xaxis: {
     autorange: true,
     automargin: true
-  },
+  }
 };
 
 var NET_DELAY_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
     title: i18n.t("charts.networkDelay.yaxis"),
-    autorange: true,
-  },
+    autorange: true
+  }
 };
 
 var NET_DELAY_ALARMS_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
     title: i18n.t("charts.networkDelayAlarms.yaxis"),
-    autorange: true,
-  },
+    autorange: true
+  }
 };
 
 var DISCO_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
     title: "",
-    autorange: "reversed",
+    autorange: "reversed"
   }
 };
 
@@ -50,7 +50,7 @@ var DELAY_CHART_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
     title: i18n.t("charts.linkDelays.yaxis"),
-    autorange: true,
+    autorange: true
   }
 };
 
@@ -59,13 +59,12 @@ var DELAY_AND_FORWARDING_LAYOUT = {
   yaxis: {
     title: i18n.t("charts.delayAndForwarding.yaxis"),
     domain: [0.55, 1],
-    autorange: true,
+    autorange: true
   },
   yaxis2: {
     title: i18n.t("charts.delayAndForwarding.yaxis2"),
     domain: [0, 0.45],
-    autorange: true,
-    rangemode: "tozero"
+    autorange: true
   }
 };
 
@@ -74,11 +73,12 @@ var AS_INTERDEPENDENCIES_LAYOUT = {
   yaxis: {
     title: "",
     domain: [0.55, 1],
-    range: [0, 1.1],
+    range: [0, 1.1]
   },
   yaxis2: {
     domain: [0, 0.45],
     autorange: true,
+    rangemode: "tozero"
   }
 };
 
@@ -87,18 +87,21 @@ var HEGEMONY_ALARMS_LAYOUT = {
   yaxis: {
     title: "",
     domain: [0.55, 1],
-    range: [0, 1.1],
+    range: [0, 1.1]
   },
   yaxis2: {
     domain: [0, 0.45],
-    autorange: true,
+    autorange: true
   }
 };
 
 export {
+  COMMON_FEATURE,
+  HEGEMONY_ALARMS_LAYOUT,
+  NET_DELAY_ALARMS_LAYOUT,
   DISCO_LAYOUT,
   DELAY_AND_FORWARDING_LAYOUT,
   AS_INTERDEPENDENCIES_LAYOUT,
   DELAY_CHART_LAYOUT,
-  NET_DELAY_LAYOUT 
+  NET_DELAY_LAYOUT
 };

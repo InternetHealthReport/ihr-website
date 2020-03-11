@@ -224,5 +224,6 @@
 	"name": "name",
 	"close": "close",
 	"noDataAvailable": "no data available",
-	"noOutage": "No significant disconnection detected for this network"
+	"noOutage": "No significant disconnection detected",
+	"loading": "Loading..."
 }

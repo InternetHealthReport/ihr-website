@@ -5,7 +5,6 @@
     row-key="link"
     :pagination.sync="pagination"
     :loading="loading"
-    :visible-columns="visibleColumns"
     flat
     :filter="filterTable"
     :filter-method="filterFct"
@@ -17,8 +16,8 @@
         <q-td auto-width>
           <q-toggle v-model="props.expand" />
         </q-td>
-        <q-td key="asn" :props="props" v-if="showAsn">
-          <a v-for="(asn, index) in props.row.asn" @click="newWindow({name : 'networks', params:{asn: $options.filters.ihr_NumberToAsOrIxp(asn) }})" href="javascript:void(0)">
+        <q-td key="asn" :props="props">
+          <a v-bind:key='asn' v-for="(asn, index) in props.row.asn" @click="newWindow({name : 'networks', params:{asn: $options.filters.ihr_NumberToAsOrIxp(asn) }})" href="javascript:void(0)">
             {{ index==1? '/'+$options.filters.ihr_NumberToAsOrIxp(asn): $options.filters.ihr_NumberToAsOrIxp(asn) }}
           </a>
         </q-td>
@@ -61,13 +60,11 @@
 import CommonTableMixin from "./CommonTableMixin";
 import Latencymon from "@/components/ripe/Latencymon";
 import ReverseDnsIp from "@/components/ripe/ReverseDnsIp";
-import PrefixOverview from "@/components/ripe/PrefixOverview";
 
 export default {
   mixins: [CommonTableMixin],
   components: {
     Latencymon,
-    PrefixOverview,
     ReverseDnsIp
   },
   props: {
@@ -79,10 +76,6 @@ export default {
       type: Date,
       required: true
     },
-    showAsn: {
-      type: Boolean,
-      default: false
-    }
   },
   data() {
     return {
@@ -93,7 +86,6 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
-      visibleColumns: ['overview', 'asn', 'link', 'delayChange', 'deviation', 'nbprobes'],
       columns: [
         {
           name: "overview",
@@ -148,9 +140,6 @@ export default {
     };
   },
   mounted() {
-      if(!this.showAsn){
-          this.visibleColumns = ['overview', 'link', 'delayChange', 'deviation', 'nbprobes']
-      }
       this.computeDataSummary()
   },
   methods: {

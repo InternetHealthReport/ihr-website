@@ -20,7 +20,7 @@
     ></div>
 
 
-        <div class="row wrap justify-center q-gutter-md">
+        <div class="row wrap justify-center q-gutter-lg IHR_description-main">
         <q-card
             class="analysis-modules"
             v-for="graphT in graphTypes"
@@ -258,7 +258,7 @@ export default {
         height auto
 
 .analysis-modules
-    width 90%
+    width 100%
     max-width 550px
     text-align left
 

@@ -110,29 +110,7 @@ export default {
             asn_list.some(asn => alarm.asn == asn) || asn_list.push(alarm.asn);
           });
           this.details.data = data;
-          this.queryDelayAPI(asn_list);
           this.details.loading = false;
-        },
-        error => {
-          console.error(error); //FIXME do a correct alert
-        }
-      );
-    },
-    queryDelayAPI(asn_list) {
-      if (asn_list.length == 0) {
-        console.log("shure?", asn_list);
-        this.loading = false;
-        return;
-      }
-      this.delayFilter = new DelayQuery()
-        .asNumber(asn_list)
-        .timeInterval(this.startTime, this.endTime)
-        .orderedByTime();
-
-      this.$ihr_api.delay(
-        this.delayFilter,
-        result => {
-          this.fetchDelay(result.results);
           this.loading = false;
         },
         error => {
@@ -140,30 +118,8 @@ export default {
         }
       );
     },
-    fetchDelay(data) {
-      let tracesMap = {};
-      this.traces = [];
-      data.forEach(elem => {
-        let trace = tracesMap[elem.asn];
-        if (trace === undefined) {
-          trace = {
-            x: [],
-            y: [],
-            name: this.$options.filters.ihr_NumberToAsOrIxp(elem.asn)
-          };
-          this.traces.push(trace);
-          tracesMap[elem.asn] = trace;
-        }
-        trace.x.push(elem.timebin);
-        trace.y.push(elem.magnitude);
-      });
-      this.layout.datarevision = new Date().getTime();
-    }
   },
   computed: {
-    delayUrl() {
-      return this.$ihr_api.getUrl(this.delayFilter);
-    },
     delayAlarmsUrl() {
       return this.$ihr_api.getUrl(this.delayAlarmsFilter);
     }

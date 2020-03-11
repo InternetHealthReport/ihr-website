@@ -3,7 +3,6 @@
     <reactive-chart
       :layout="layout"
       :traces="traces"
-      @loaded="loading = false"
       :ref="myId"
       :no-data="noData"
     />
@@ -13,7 +12,7 @@
 <script>
 import ReactiveChart from "@/components/ReactiveChart";
 import { DiscoProbesQuery } from "@/plugins/query/IhrQuery";
-import { COMMON_FEATURE } from "../layouts";
+import { COMMON_FEATURE } from "../layouts.js";
 import getCountryName from "@/plugins/countryName.js";
 
 const MAX_ID_FOR_REQUEST = 50;
@@ -24,6 +23,10 @@ export default {
     events: {
       type: Array,
       required: true
+    },
+    loading: { 
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -45,7 +48,7 @@ export default {
         }
       },
       probes: [],
-      noData: this.$t("noOutage")
+      noData: this.$t("loading")
     };
   },
   methods: {
@@ -77,6 +80,7 @@ export default {
             });
         });
       })
+      this.noData = (this.probes.length === 0 && !this.loading) ? this.$t("noOutage"): false;
     },
     dateFormatter(datetime){ 
         var dt = new Date(datetime)
@@ -85,7 +89,6 @@ export default {
     },
   },
   mounted() { 
-      this.updateProbes()
   },
   watch: {
     events(newValue) {
@@ -123,7 +126,6 @@ export default {
         const blue = 255-Math.min(255, 255*(color/5));
         colors.push(`rgba(${red},${green},${blue},0.1)`);
       });
-      this.noData = (latitudes.length === 0) ? this.$t("noOutage"): false;
       return [
         {
           type: "scattergeo",
