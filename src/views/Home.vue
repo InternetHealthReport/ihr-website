@@ -48,12 +48,19 @@
         </div>
 
     <div class="IHR_section">
-        <h2> {{$t("ihrTweets.title")}}</h2>
-        <div id="IHR_tweets-types">
+        <q-card class="IHR_tweets-types">
+            <q-card-section class="bg-white text-primary q-pa-sm">
+            <div class='text-h2'>
+                <q-avatar icon="fab fa-twitter" ></q-avatar>
+                {{$t("ihrTweets.title")}}
+            </div>
+            </q-card-section>
+            <q-card-section class="q-pa-xs">
           <Timeline id="ihr_alerts" sourceType="profile" :options="{ chrome: 'noheader' , tweetLimit: '3' }">
             <div class="spinner"></div>
           </Timeline>
-        </div>
+            </q-card-section>
+        </q-card>
     </div>
 
     <div class="IHR_section">
@@ -194,23 +201,6 @@ export default {
             text-transform uppercase
 
 
-    ~/tweets-types
-      margin-left auto
-      margin-right auto
-      width 70% 
-      text-align center
-
-      & > div
-        background-color white
-        padding 1.6em
-        border gray solid 1px
-
-        > h2
-          font-weight 400
-          margin-bottom 4pt
-          &:first-letter
-            text-transform uppercase
-
 
 .IHR_
   &description
@@ -261,6 +251,21 @@ export default {
     width 100%
     max-width 550px
     text-align left
+
+.IHR_tweets-types
+      margin-left auto
+      margin-right auto
+      width 70% 
+      text-align center
+
+      & > div
+        background-color white
+
+        > h2
+          font-weight 400
+          margin-bottom 4pt
+          &:first-letter
+            text-transform uppercase
 
 
 </style>

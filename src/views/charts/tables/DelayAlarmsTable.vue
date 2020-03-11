@@ -115,8 +115,8 @@ export default {
           required: true,
           label: "Delay Change (ms)",
           align: "center",
-          field: row => row.diffmedian,
-          format: val => val.toFixed(2),
+          field: row => row.diffmedian/row.nbalarms,
+          format: val => val,
           sortable: true
         },
         {
@@ -124,8 +124,8 @@ export default {
           required: true,
           label: "Deviation",
           align: "center",
-          field: row => row.deviation,
-          format: val => val.toFixed(2),
+          field: row => row.deviation/row.nbalarms,
+          format: val => val,
           sortable: true
         },
         {
