@@ -118,15 +118,15 @@
       </div>
       <div class="IHR_external-links col-2 IHR_fsection">
         <div class="row wrap justify-center q-pt-lg">
-          <a href="https://twitter.com/ihr_alerts" class="col-1">
+          <a href="https://twitter.com/ihr_alerts" class="col-1" target="_blank">
             <q-icon name="fab fa-twitter-square" />
           </a>
           <div class="col-1 q-pa-md"></div>
-          <a href="https://github.com/InternetHealthReport" class="col-1">
+          <a href="https://github.com/InternetHealthReport" class="col-1" target="_blank">
             <q-icon name="fab fa-github-square" />
           </a>
           <div class="col-1 q-pa-md"></div>
-          <router-link :to="{name : 'contact'}" class="col-1">
+          <router-link :to="{name : 'contact'}" class="col-1" target="_blank">
             <q-icon name="fas fa-envelope-square" />
           </router-link>
         </div>

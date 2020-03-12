@@ -69,14 +69,19 @@ export default {
             label = event.streamname
         }
         event.discoprobes.forEach( newProbe => { 
+            var start = new Date(newProbe.starttime);
+            var end = new Date(newProbe.endtime);
+            if(start.getTime() == end.getTime()){ 
+                end = new Date(event.endtime);
+            }
             this.probes.push({
             label: label,
             level: newProbe.level,
             lon: newProbe.lon,
             lat: newProbe.lat,
             id: newProbe.probe_id,
-            startTime: new Date(newProbe.starttime),
-            endTime: new Date(newProbe.endtime)
+            startTime: start,
+            endTime: end
             });
         });
       })

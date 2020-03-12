@@ -27,6 +27,7 @@ import DiscoAlarmsTable from "../tables/DiscoAlarmsTable.vue";
 import { DiscoEventQuery } from "@/plugins/query/IhrQuery";
 
 const DEFAULT_DISCO_AVG_LEVEL = 10;
+const DEFAULT_MIN_DISCO_DURATION = 15;
 //under this gap 2 consecutive event are considered like 1 that change value
 
 //utility functions
@@ -63,8 +64,15 @@ export default {
       this.$ihr_api.disco_events(
         this.filters[0],
         result => {
-          this.dataEvents = result.results;
-          this.mapData = result.results
+          var events = [];
+          result.results.forEach( event => { 
+            event.duration = this.duration(event.starttime, event.endtime, 0);
+            if(event.duration>DEFAULT_MIN_DISCO_DURATION){
+              events.push(event);
+            }
+          })
+          this.dataEvents = events;
+          this.mapData = events;
 	      this.loading = false;
         },
         error => {

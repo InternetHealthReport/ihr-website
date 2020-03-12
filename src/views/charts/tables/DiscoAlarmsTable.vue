@@ -28,7 +28,7 @@
           </div>
         </q-td>
         <q-td key="starttime"> {{dateFormatter(props.row.starttime)}} </q-td>
-        <q-td key="duration"> {{duration(props.row.starttime, props.row.endtime, 'Unk')}} </q-td>
+        <q-td key="duration"> {{props.row.duration}} </q-td>
         <q-td key="deviation">{{props.row.avglevel}}</q-td>
         <q-td key="nbdiscoprobes"> {{props.row.nbdiscoprobes}} </q-td>
       </q-tr>
@@ -38,8 +38,8 @@
             <div v-if='props.expand' class="IHR_side_borders">
 
             <latencymon 
-                :start-time="dateHourShift(props.row.starttime, -duration(props.row.starttime, props.row.endtime, 120)/60)" 
-                :stop-time="dateHourShift(props.row.endtime, duration(props.row.starttime, props.row.endtime, 120)/60)" 
+                :start-time="dateHourShift(props.row.starttime, -Math.max(props.row.duration, 120)/60)" 
+                :stop-time="dateHourShift(props.row.endtime, Math.max(props.row.duration, 120)/60)" 
                 :msm-prb-ids="msmPrbIds(props.row.discoprobes)" 
                 style="max-width: 93%; margin: 0 auto;"/>
             </div>
@@ -118,7 +118,7 @@ export default {
           required: true,
           label: "Duration (minutes)",
           align: "left",
-          field: row => this.duration(row.starttime, row.endtime, 'Unk.'),
+          field: row => row.duration,
           format: val => val,
           sortable: true
         },
@@ -144,15 +144,6 @@ export default {
     };
   },
   methods: {
-      duration(start, end, nonzero){ 
-        let durationMin = Math.ceil(Math.abs(new Date(end) - new Date(start)) / (1000*60));
-
-        if(durationMin == 0){ 
-            return nonzero
-        }
-
-        return durationMin
-      },
       dateFormatter(datetime){ 
         var dt = new Date(datetime)
         var options = { year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit',  timeZone: 'UTC' };

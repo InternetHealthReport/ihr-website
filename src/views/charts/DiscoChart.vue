@@ -94,6 +94,7 @@ function push0(trace, time) {
   trace.z.push(0);
 }
 
+
 export default {
   mixins: [CommonChartMixin],
   components: {
@@ -143,13 +144,31 @@ export default {
     this.layout.yaxis.title = this.$t('charts.disconnections.table.yaxis');
   },
   methods: {
+    duration(start, end, nonzero){ 
+      let durationMin = Math.ceil(Math.abs(new Date(end) - new Date(start)) / (1000*60));
+
+      if(durationMin == 0){ 
+          return nonzero
+      }
+
+      return durationMin
+    },
     apiCall() {
       this.loading = true;
       this.$ihr_api.disco_events(
         this.filters[0],
         result => {
-          this.dataEvents = result.results;
-          this.fetchDiscoData(result.results);
+          var events = [];
+            console.log('getting disco data')
+          result.results.forEach( event => { 
+            event.duration = this.duration(event.starttime, event.endtime, 0);
+            if(event.duration>DEFAULT_MIN_DISCO_DURATION){
+              events.push(event);
+            }
+          })
+            console.log(events)
+          this.dataEvents = events;
+          this.fetchDiscoData(events);
           this.loading = false;
         },
         error => {
