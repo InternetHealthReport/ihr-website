@@ -69,7 +69,7 @@ export default {
   methods: {
     validateAndSend(email, password) {
       if(this.$ihrStyle.validatePassword(password) && this.$ihrStyle.validateEmail(email)) {
-        let entrypoint = (this.$route.query.active)?this.$ihr_api.userChangeEmail:this.$ihr_api.userResetPassword;
+        let entrypoint = (this.$route.query.active)?this.$ihr_api.userChangeEmail:this.$ihr_api.userValidate;
         entrypoint(email, password, this.$route.query.token,
         ()=>{
           this.actualState = TOKEN_STATE.VALID;
