@@ -56,7 +56,7 @@
             </div>
             </q-card-section>
             <q-card-section class="q-pa-xs">
-          <Timeline id="ihr_alerts" sourceType="profile" :options="{ chrome: 'noheader' , tweetLimit: '3' }">
+          <Timeline id="ihr_alerts" sourceType="profile" :options="{ chrome: 'noheader' , tweetLimit: '3', showReplies: true }">
             <div class="spinner"></div>
           </Timeline>
             </q-card-section>
