@@ -203,7 +203,7 @@ class NetworkQuery extends Query {
   }
 
   static get ENTRY_POINT() {
-    return "network/";
+    return "networks/";
   }
 
   //methods
@@ -276,7 +276,7 @@ class DiscoEventQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return "disco_events/";
+    return "disco/events/";
   }
 
   //methods
@@ -410,7 +410,7 @@ class ForwardingAlarmsQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return "forwarding_alarms/";
+    return "link/forwarding/alarms/";
   }
 
   //methods
@@ -479,7 +479,7 @@ class DelayAlarmsQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return "delay_alarms/";
+    return "link/delay/alarms/";
   }
 
   //methods
@@ -601,7 +601,7 @@ class DelayQuery extends DelayAndForwardingQuery {
   }
 
   static get ENTRY_POINT() {
-    return "delay/";
+    return "link/delay/";
   }
 }
 
@@ -616,7 +616,7 @@ class ForwardingQuery extends DelayAndForwardingQuery {
   }
 
   static get ENTRY_POINT() {
-    return "forwarding/";
+    return "link/forwarding/";
   }
 }
 
@@ -703,7 +703,7 @@ class HegemonyAlarmsQuery extends CommonHegemonyQuery {
   }
 
   static get ENTRY_POINT() {
-    return "hegemony_alarms/";
+    return "hegemony/alarms/";
   }
 
   //methods
@@ -744,7 +744,7 @@ class HegemonyConeQuery extends CommonHegemonyQuery {
   }
 
   static get ENTRY_POINT() {
-    return "hegemony_cone/";
+    return "hegemony/cones/";
   }
 
   //methods
@@ -781,7 +781,7 @@ class NetworkDelayAlarmsQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return "network_delay_alarms/";
+    return "network_delay/alarms/";
   }
 
   static get EDGE_TYPE() {
@@ -1085,7 +1085,7 @@ class NetworkDelayLocation extends Query {
   }
 
   static get ENTRY_POINT() {
-    return "network_delay_locations/";
+    return "nrtwork_delay/locations/";
   }
 
   static get EDGE_TYPE() {

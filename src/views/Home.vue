@@ -20,7 +20,7 @@
     ></div>
 
 
-        <div class="row wrap justify-center q-gutter-lg IHR_description-main">
+        <div class="row wrap justify-center q-gutter-md IHR_description-main">
         <q-card
             class="analysis-modules"
             v-for="graphT in graphTypes"
@@ -215,14 +215,14 @@ export default {
       font-size 20pt
       margin 30pt auto
       text-align center
-      width 80%
+      width 85%
 
     &-link
       position relative
       text-align right
 
   &section
-    margin 60pt auto 40px auto
+    margin 40pt auto 40px auto
     width 85%
     font-size 18pt
     text-align center
@@ -248,8 +248,7 @@ export default {
         height auto
 
 .analysis-modules
-    width 100%
-    max-width 550px
+    max-width 500px
     text-align left
 
 .IHR_tweets-types

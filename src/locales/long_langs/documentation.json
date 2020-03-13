@@ -121,7 +121,7 @@
         },
         "delayforward": {
             "title":  "Delay and forwarding anomalies",
-            "summary": "<p>Using traceroute data collected with the RIPE Atlas measurement platform, we detect, per link, delay changes and routing changes. The techniques we used are detailed in the following research paper: <a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'>R. Fontugne, E. Aben, C. Pelsser, R. Bush, Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements. ACM IMC 2017, London, UK.</a>﷯ </p>",
+            "summary": "<p>Using traceroute data collected with the RIPE Atlas measurement platform, we detect, per link, delay changes and routing changes. The techniques we used are detailed in the following research paper: <a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'>R. Fontugne, E. Aben, C. Pelsser, R. Bush, Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements. ACM IMC 2017, London, UK.</a></p>",
             "description": [
                 { 
                     "header":"What the link delay graph means?",
@@ -171,7 +171,7 @@
                 },
                 { 
                     "header":"Endpoints",
-                    "body": "The API is accessible at <a href='http://ihr.iijlab.net/ihr/api/'> http://ihr.iijlab.net/ihr/api/ </a>, there is multiple endpoints available, all are documented in the API documentation. TODO add link here "
+                    "body": "The API is accessible at <a href='/ihr/api/'> http://ihr.iijlab.net/ihr/api/ </a>, there is multiple endpoints available, all are documented in the API documentation. TODO add link here "
                 },
                 { 
                     "header":"Filtering",
