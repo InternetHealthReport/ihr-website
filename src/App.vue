@@ -16,6 +16,7 @@
             </router-link>
           </q-item>
           <network-search-bar/>
+
           <div
             class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
           >
@@ -26,6 +27,98 @@
             >{{$t(item.entryName)}}</router-link>
           </div>
         </div>
+
+
+        <div class="col-4 row no-wrap justify-end">
+          <div v-if="$ihr_api.authenticated" class="q-pl-sm q-gutter-sm row items-center no-wrap">
+            <q-btn dense flat round size="13px" icon="fas fa-bell" />
+            <q-btn dense flat no-wrap>
+              <q-avatar rounded size="30px">
+                <q-icon name="fas fa-user-circle" color="accent" />
+              </q-avatar>
+              <q-icon name="fas fa-sort-down" size="16px" />
+              <q-menu auto-close id="IHR_user-menu">
+                <q-list dense>
+                  <q-item>
+                    <q-item-section>
+                      <div>
+                        {{$t('user.signedAs')}}
+                        <strong>{{$ihr_api.user}}</strong>
+                      </div>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator />
+                  <q-separator />
+                  <q-item clickable>
+                    <q-item-section>
+                      <router-link
+                        :to="{name : 'personal_page', hash: '#profile'}"
+                        class="IHR_delikify"
+                      >{{$t('user.profile')}}</router-link>
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable>
+                    <q-item-section>
+                      <router-link
+                        :to="{name : 'personal_page', hash: '#settings'}"
+                        class="IHR_delikify"
+                      >{{$t('user.settings')}}</router-link>
+                    </q-item-section>
+                  </q-item>
+                  <q-item clickable @click="logout">
+                    <q-item-section>
+                      <router-link to="/" class="IHR_delikify">{{$t('user.logout')}}</router-link>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator />
+                  <q-separator />
+                  <q-item clickable>
+                    <q-item-section>{{$t('user.signOut')}}</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
+          </div>
+          <div v-else class="IHR_menu-entries col-12 row items-center justify-end q-gutter-md">
+            <router-link :to="{name : 'sign_up'}">
+              <span>{{$t('header.signUp')}}</span>
+            </router-link>
+            <q-btn dense flat no-wrap>
+              <span>{{$t('header.signIn')}}</span>
+              <q-menu>
+                <q-list dense>
+                  <q-item>
+                    <q-item-section>
+                      <h4 id="IHR_sigin-title">{{$t('header.signInTitle')}}</h4>
+                    </q-item-section>
+                  </q-item>
+                  <q-separator />
+                  <q-item>
+                    <login-form v-model="loginError">
+                      <template
+                        v-slot:default="user"
+                        @keydown.enter="login(user.email, user.password)"
+                      >
+                        <q-btn
+                          color="positive"
+                          id="IHR_signin-button"
+                          @click="login(user.email, user.password)"
+                        >{{$t('header.signIn')}}</q-btn>
+                      </template>
+                    </login-form>
+                  </q-item>
+                  <q-item>
+                    <q-item-section class="row no-wrap" id="IHR_forgotten-password">
+                      <router-link :to="{name : 'reset_password'}">{{$t('header.ForgottenPassword')}}</router-link>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-btn>
+          </div>
+        </div>
+
+
       </q-toolbar>
     </q-header>
     <q-page-container class="IHR_minimum-width">
@@ -110,7 +203,7 @@
         </span>
         </div>
         <div class="row items-center q-pt-lg">
-            <div class="col-2 "><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
+            <div class="col-2"><a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a></div>
             <div class="col-10 text-caption text-left q-pa-md">
                 <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" property="dct:title" rel="dct:type"> Internet Health Report</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Permissions beyond the scope of this license may be available at <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:ihr-admin@iij-ii.co.jp" rel="cc:morePermissions">ihr-admin@iij-ii.co.jp</a>.
             </div>
@@ -227,7 +320,7 @@ menu-delinkify(val)
 
 .IHR_
   &minimum-width
-    min-width 945px !important
+    min-width 800px !important
 
   &menu-entries
     a, button
@@ -259,6 +352,7 @@ menu-delinkify(val)
 
     ~/external-links
       font-size 3.0em
+      text-decoration none
 
       & a
         color white
@@ -312,93 +406,3 @@ menu-delinkify(val)
 </style>
 
 
-
-        <!--<div class="col-4 row no-wrap justify-end">-->
-          <!--<div v-if="$ihr_api.authenticated" class="q-pl-sm q-gutter-sm row items-center no-wrap">-->
-            <!--<q-btn dense flat round size="13px" icon="fas fa-bell" />-->
-            <!--<q-btn dense flat no-wrap>-->
-              <!--<q-avatar rounded size="30px">-->
-                <!--<q-icon name="fas fa-user-circle" color="accent" />-->
-              <!--</q-avatar>-->
-              <!--<q-icon name="fas fa-sort-down" size="16px" />-->
-              <!--<q-menu auto-close id="IHR_user-menu">-->
-                <!--<q-list dense>-->
-                  <!--<q-item>-->
-                    <!--<q-item-section>-->
-                      <!--<div>-->
-                        <!--{{$t('user.signedAs')}}-->
-                        <!--<strong>{{$ihr_api.user}}</strong>-->
-                      <!--</div>-->
-                    <!--</q-item-section>-->
-                  <!--</q-item>-->
-                  <!--<q-separator />-->
-                  <!--<q-separator />-->
-                  <!--<q-item clickable>-->
-                    <!--<q-item-section>-->
-                      <!--<router-link-->
-                        <!--:to="{name : 'personal_page', hash: '#profile'}"-->
-                        <!--class="IHR_delikify"-->
-                      <!-->{{$t('user.profile')}}</router-link>-->
-                    <!--</q-item-section>-->
-                  <!--</q-item>-->
-                  <!--<q-item clickable>-->
-                    <!--<q-item-section>-->
-                      <!--<router-link-->
-                        <!--:to="{name : 'personal_page', hash: '#settings'}"-->
-                        <!--class="IHR_delikify"-->
-                      <!-->{{$t('user.settings')}}</router-link>-->
-                    <!--</q-item-section>-->
-                  <!--</q-item>-->
-                  <!--<q-item clickable @click="logout">-->
-                    <!--<q-item-section>-->
-                      <!--<router-link to="/" class="IHR_delikify">{{$t('user.logout')}}</router-link>-->
-                    <!--</q-item-section>-->
-                  <!--</q-item>-->
-                  <!--<q-separator />-->
-                  <!--<q-separator />-->
-                  <!--<q-item clickable>-->
-                    <!--<q-item-section>{{$t('user.signOut')}}</q-item-section>-->
-                  <!--</q-item>-->
-                <!--</q-list>-->
-              <!--</q-menu>-->
-            <!--</q-btn>-->
-          <!--</div>-->
-          <!--<div v-else class="IHR_menu-entries col-12 row items-center justify-end q-gutter-md">-->
-            <!--<router-link :to="{name : 'sign_up'}">-->
-              <!--<span>{{$t('header.signUp')}}</span>-->
-            <!--</router-link>-->
-            <!--<q-btn dense flat no-wrap>-->
-              <!--<span>{{$t('header.signIn')}}</span>-->
-              <!--<q-menu>-->
-                <!--<q-list dense>-->
-                  <!--<q-item>-->
-                    <!--<q-item-section>-->
-                      <!--<h4 id="IHR_sigin-title">{{$t('header.signInTitle')}}</h4>-->
-                    <!--</q-item-section>-->
-                  <!--</q-item>-->
-                  <!--<q-separator />-->
-                  <!--<q-item>-->
-                    <!--<login-form v-model="loginError">-->
-                      <!--<template-->
-                        <!--v-slot:default="user"-->
-                        <!--@keydown.enter="login(user.email, user.password)"-->
-                      <!-->-->
-                        <!--<q-btn-->
-                          <!--color="positive"-->
-                          <!--id="IHR_signin-button"-->
-                          <!--@click="login(user.email, user.password)"-->
-                        <!-->{{$t('header.signIn')}}</q-btn>-->
-                      <!--</template>-->
-                    <!--</login-form>-->
-                  <!--</q-item>-->
-                  <!--<q-item>-->
-                    <!--<q-item-section class="row no-wrap" id="IHR_forgotten-password">-->
-                      <!--<router-link :to="{name : 'reset_password'}">{{$t('header.ForgottenPassword')}}</router-link>-->
-                    <!--</q-item-section>-->
-                  <!--</q-item>-->
-                <!--</q-list>-->
-              <!--</q-menu>-->
-            <!--</q-btn>-->
-          <!--</div>-->
-          <!--[><locale-selector id="IHR_local-selector" /><]-->
-        <!--</div>-->

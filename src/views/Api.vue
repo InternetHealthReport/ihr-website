@@ -1,6 +1,8 @@
 <template>
-  <div>
+  <div class="row justify-center">
+    <div class="col-10 ">
       <div id="swagger-ui"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -18,6 +20,7 @@ export default {
         url: "https://ihr.iijlab.net/ihr/swagger.yaml",
         dom_id: "#swagger-ui",
         layout: "BaseLayout",
+        defaultModelsExpandDepth: -1,
         presets: [presets.apis],
         deepLinking: false
     });
@@ -26,6 +29,13 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.version
-    color red
+@import '~quasar-variables'
+
+.IHR_section_api
+  width 85%
+
+.opblock.opblock-get
+        background red
+        padding-top 100px
+        color $primary
 </style>
