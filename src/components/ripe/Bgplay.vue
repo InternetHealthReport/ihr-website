@@ -113,5 +113,3 @@ export default {
       margin auto
 </style>
 
-<style ty>
-</style>

@@ -98,15 +98,15 @@
       </q-drawer>
 
       <div id="IHR_documentation-page" >
-        <div v-for="sec in $t('documentationPage.sections')" 
-             v-bind:key="sec"
+        <div v-for="(sec, idx) in $t('documentationPage.sections')" 
+             v-bind:key="idx"
             class="IHR_documentation-page">
             <div class='IHR_anchor' :id="replaceSpaces(sec.title)"></div>
             <h1 v-html='sec.title'></h1>
           <p class="text-left text-body1" v-html='sec.summary'></p>
           <div 
-            v-for="sub in sec.description"
-            v-bind:key='sub' 
+            v-for="(sub, idx) in sec.description"
+            v-bind:key='idx' 
               >
               <h2 v-html="sub.header"></h2>
               <img v-if='sub.img' :src="require(`@/${sub.img[0]}`)" :style='sub.img[1]'>

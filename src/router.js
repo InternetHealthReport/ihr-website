@@ -1,5 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
+import Header from "@/views/Header";
+import Footer from "@/views/Footer";
 import Home from "@/views/Home";
 import GlobalReport from "@/views/GlobalReport";
 import API from "@/views/Api";
@@ -11,6 +13,7 @@ import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
 import ResetPassword from "@/views/user/ResetPassword";
 import Documentation from "@/views/Documentation";
+import Bgplay from "@/components/ripe/Bgplay";
 import VueScrollTo from 'vue-scrollto';
 
 Vue.use(Router);
@@ -43,31 +46,51 @@ export default new Router({
     {
       name: "home",
       path: routerBase,
-      component: Home,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: Home,
+      },
       meta:{ title: "Internet Health Report"}
     },
     {
       name: "global_report",
       path: `${routerBase}global_report`,
-      component: GlobalReport,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: GlobalReport,
+      },
       meta:{ title: "Global Report - IHR"}
     },
     {
       name: "contact",
       path: `${routerBase}contact`,
-      component: Contact,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: Contact,
+      },
       meta:{ title: 'Contact - IHR'}
     },
     {
       name: "countries",
       path: `${routerBase}countries`,
-      component: Countries,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: Countries,
+      },
       meta:{ title: 'Country Report - IHR'}
     },
     {
       name: "networks",
       path: `${routerBase}networks/:asn`,
-      component: Networks,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: Networks,
+      },
       meta:{ title: 'Network Report - IHR'}
     },
     {
@@ -90,38 +113,71 @@ export default new Router({
     {
       name: "api",
       path: `${routerBase}api/`,
-      component: API,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: API,
+      },
       meta:{ title: 'API - IHR'}
     },
     {
       name: "sign_up",
       path: `${routerBase}sign_up`,
-      component: SignUp,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: SignUp,
+      },
       meta:{ title: 'Sign Up - IHR'}
     },
     {
       name: "account_activation",
       path: `${routerBase}account_activation`,
-      component: AccountActivation,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: AccountActivation,
+      },
       meta:{ title: 'Account Activation - IHR'}
     },
     {
       name: "reset_password",
       path: `${routerBase}reset_password`,
-      component: ResetPassword,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: ResetPassword,
+      },
       meta:{ title: 'Reset Password - IHR'}
     },
     {
       name: "personal_page",
       path: `${routerBase}personal_page`,
-      component: PersonalPage,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: PersonalPage,
+      },
       meta:{ title: 'Personnal Page - IHR'}
     },
     {
       name: "documentation",
       path: `${routerBase}documentation`,
-      component: Documentation,
+      components: {
+          header: Header,
+          footer: Footer,
+          default: Documentation,
+      },
       meta:{ title: 'Documentation - IHR'}
+    },
+
+      // Widgets
+    {
+      name: "bgplay",
+      path: "/widget/bgplay",
+      component: Bgplay,
+      props: route => ({ asNumber: parseInt(route.query.asn), dateTime: new Date(route.query.date)}),
+      meta:{ title: 'BGPlay - IHR'}
     },
   ]
 });

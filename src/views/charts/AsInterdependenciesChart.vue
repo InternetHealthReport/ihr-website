@@ -51,7 +51,9 @@
           />
         </q-tab-panel>
         <q-tab-panel name="bgpPlay">
-          <bgplay :as-number="asNumber" :date-time="details.date" />
+            <div class="bgplay-container">
+                <iframe frameborder=0 :src='bgplay'></iframe>
+            </div>
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
           <h3>{{$t("charts.asInterdependencies.table.apiTitle")}}</h3>
@@ -354,6 +356,25 @@ export default {
     },
   },
   computed: {
+    bgplay() { 
+        return `/ihr/widget/bgplay?asn=${this.asNumber}&date=${this.dateStr}`
+    },
+    dateStr(){ 
+        let year = this.details.date.getUTCFullYear();
+        var day = this.details.date.getUTCDate();
+        var month = (this.details.date.getUTCMonth() + 1);
+        var hours = this.details.date.getUTCHours()
+        var minutes = this.details.date.getUTCMinutes()
+        var seconds = this.details.date.getUTCSeconds();
+
+        if (day < 10) day = "0" + day;
+        if (month < 10) month = "0" + month;
+        if (hours < 10) hours = "0" + hours;
+        if (minutes < 10) minutes = "0" + minutes;
+        if (seconds < 10) seconds = "0" + seconds;
+
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`
+    },
     networkDependencyData() {
       return this.details.tablesData.dependency.data.filter((elem)=>{
         return elem.asn != this.asNumber;
@@ -403,5 +424,18 @@ export default {
 
 <style lang="stylus">
 @import "~@/styles/charts/common.styl";
+.bgplay-container {
+  overflow: hidden;
+  padding-top: 1100px;
+  position: relative;
+}
 
+.bgplay-container iframe {
+   border: 0;
+   height: 100%;
+   left: 0;
+   position: absolute;
+   top: 0;
+   width: 100%;
+}
 </style>
