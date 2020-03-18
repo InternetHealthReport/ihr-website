@@ -31,7 +31,7 @@
 		},
 		"about": {
 			"title": "about IHR",
-			"policy": "policy",
+			"datapolicy": "data policy",
 			"contact": "contact",
 			"acknowledgments": "acknowledgments"
 		}

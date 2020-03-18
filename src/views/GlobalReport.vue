@@ -19,9 +19,9 @@
       <q-card-section>
       <div class="row justify-center q-pa-md">
         <div class="text">
-            <q-input outlined debounce="300" v-model="globalFilter" placeholder="Search">
+            <q-input outlined debounce="300" v-model="globalFilter" placeholder="Filter">
                 <template v-slot:append>
-                <q-icon name="fas fa-search" />
+                <q-icon name="fas fa-filter" />
                 </template>
             </q-input>
         </div>
@@ -89,9 +89,9 @@
 
           <q-item-section side>
             <div class="text" v-if='hegemonyExpanded'>
-                <q-input debounce="300" v-model="hegemonyFilter" placeholder="Search">
+                <q-input debounce="300" v-model="hegemonyFilter" placeholder="Filter">
                     <template v-slot:append>
-                    <q-icon name="fas fa-search" />
+                    <q-icon name="fas fa-filter" />
                     </template>
                 </q-input>
             </div>
@@ -131,9 +131,9 @@
 
           <q-item-section side>
             <div class="text" v-if='ndelayExpanded'>
-                <q-input debounce="300" v-model="ndelayFilter" placeholder="Search">
+                <q-input debounce="300" v-model="ndelayFilter" placeholder="Filter">
                     <template v-slot:append>
-                    <q-icon name="fas fa-search" />
+                    <q-icon name="fas fa-filter" />
                     </template>
                 </q-input>
             </div>
@@ -173,9 +173,9 @@
 
           <q-item-section side>
             <div class="text" v-if='linkExpanded'>
-                <q-input debounce="300" v-model="linkFilter" placeholder="Search">
+                <q-input debounce="300" v-model="linkFilter" placeholder="Filter">
                     <template v-slot:append>
-                    <q-icon name="fas fa-search" />
+                    <q-icon name="fas fa-filter" />
                     </template>
                 </q-input>
             </div>
@@ -221,9 +221,9 @@
 
           <q-item-section side>
             <div class="text" v-if='discoExpanded'>
-                <q-input debounce="300" v-model="discoFilter" placeholder="Search">
+                <q-input debounce="300" v-model="discoFilter" placeholder="Filter">
                     <template v-slot:append>
-                    <q-icon name="fas fa-search" />
+                    <q-icon name="fas fa-filter" />
                     </template>
                 </q-input>
             </div>

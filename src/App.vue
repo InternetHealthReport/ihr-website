@@ -28,97 +28,7 @@
           </div>
         </div>
 
-
-        <div class="col-4 row no-wrap justify-end">
-          <div v-if="$ihr_api.authenticated" class="q-pl-sm q-gutter-sm row items-center no-wrap">
-            <q-btn dense flat round size="13px" icon="fas fa-bell" />
-            <q-btn dense flat no-wrap>
-              <q-avatar rounded size="30px">
-                <q-icon name="fas fa-user-circle" color="accent" />
-              </q-avatar>
-              <q-icon name="fas fa-sort-down" size="16px" />
-              <q-menu auto-close id="IHR_user-menu">
-                <q-list dense>
-                  <q-item>
-                    <q-item-section>
-                      <div>
-                        {{$t('user.signedAs')}}
-                        <strong>{{$ihr_api.user}}</strong>
-                      </div>
-                    </q-item-section>
-                  </q-item>
-                  <q-separator />
-                  <q-separator />
-                  <q-item clickable>
-                    <q-item-section>
-                      <router-link
-                        :to="{name : 'personal_page', hash: '#profile'}"
-                        class="IHR_delikify"
-                      >{{$t('user.profile')}}</router-link>
-                    </q-item-section>
-                  </q-item>
-                  <q-item clickable>
-                    <q-item-section>
-                      <router-link
-                        :to="{name : 'personal_page', hash: '#settings'}"
-                        class="IHR_delikify"
-                      >{{$t('user.settings')}}</router-link>
-                    </q-item-section>
-                  </q-item>
-                  <q-item clickable @click="logout">
-                    <q-item-section>
-                      <router-link to="/" class="IHR_delikify">{{$t('user.logout')}}</router-link>
-                    </q-item-section>
-                  </q-item>
-                  <q-separator />
-                  <q-separator />
-                  <q-item clickable>
-                    <q-item-section>{{$t('user.signOut')}}</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn>
-          </div>
-          <div v-else class="IHR_menu-entries col-12 row items-center justify-end q-gutter-md">
-            <router-link :to="{name : 'sign_up'}">
-              <span>{{$t('header.signUp')}}</span>
-            </router-link>
-            <q-btn dense flat no-wrap>
-              <span>{{$t('header.signIn')}}</span>
-              <q-menu>
-                <q-list dense>
-                  <q-item>
-                    <q-item-section>
-                      <h4 id="IHR_sigin-title">{{$t('header.signInTitle')}}</h4>
-                    </q-item-section>
-                  </q-item>
-                  <q-separator />
-                  <q-item>
-                    <login-form v-model="loginError">
-                      <template
-                        v-slot:default="user"
-                        @keydown.enter="login(user.email, user.password)"
-                      >
-                        <q-btn
-                          color="positive"
-                          id="IHR_signin-button"
-                          @click="login(user.email, user.password)"
-                        >{{$t('header.signIn')}}</q-btn>
-                      </template>
-                    </login-form>
-                  </q-item>
-                  <q-item>
-                    <q-item-section class="row no-wrap" id="IHR_forgotten-password">
-                      <router-link :to="{name : 'reset_password'}">{{$t('header.ForgottenPassword')}}</router-link>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn>
-          </div>
-        </div>
-
-
+        <!--Log in /Log out stuff here-->
       </q-toolbar>
     </q-header>
     <q-page-container class="IHR_minimum-width">
@@ -198,6 +108,11 @@
               <router-link
                 :to="{name : 'documentation', hash:'#Acknowledgements'}"
               >{{$t('footer.about.acknowledgments')}}</router-link>
+            </li>
+            <li>
+              <router-link
+                :to="{name : 'documentation', hash:'#Data_policy'}"
+              >{{$t('footer.about.datapolicy')}}</router-link>
             </li>
           </ul>
         </span>

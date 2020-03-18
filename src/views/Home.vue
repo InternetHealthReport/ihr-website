@@ -248,7 +248,7 @@ export default {
         height auto
 
 .analysis-modules
-    max-width 500px
+    max-width 600px
     text-align left
 
 .IHR_tweets-types

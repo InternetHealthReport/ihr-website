@@ -10,7 +10,7 @@
         "title": "Analysis modules",
         "asInterdependence": {
         "title":  "AS Dependency",
-        "docHash": "#AS_Dependency",
+        "docHash": "#AS_dependency",
         "description": [
             "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of networks connectivity and resiliency. "
         ]

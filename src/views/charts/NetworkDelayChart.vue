@@ -113,7 +113,7 @@ export default {
     },
     endPointName: {
         type: Array,
-        default: () => ["CT4Tokyo, Tokyo, JP", "CT4Singapore, Central Singapore, SG", "CT4Ashburn, Virginia, US", "CT4London, England, GB", "IP4", "AS415169", "AS425152"]
+        default: () => ["CT4Tokyo, Tokyo, JP", "CT4Singapore, Central Singapore, SG", "CT4Ashburn, Virginia, US", "CT4London, England, GB", "AS415169", "AS425152"]
     },
     asFamily: {
       type: Number,
