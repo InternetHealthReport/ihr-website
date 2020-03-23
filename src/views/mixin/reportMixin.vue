@@ -7,7 +7,7 @@ class DateInterval {
   }
 
   dayDiff() {
-    return Math.floor((this.end - this.begin) / 1000 / 60 / 60 / 24);
+    return Math.ceil((this.end - this.begin) / 1000 / 60 / 60 / 24);
   }
 
   createDateAsUTC(date) {
@@ -63,10 +63,10 @@ export default {
         });
       }, 400);
     },
-    getDateInterval(endTimestamp, nDaysBefore) {
+    getDateInterval(endTimestamp, nDays) {
         let end = new Date(endTimestamp);
         let begin = new Date(end);
-        begin.setUTCDate(begin.getUTCDate() - nDaysBefore);
+        begin.setUTCDate(begin.getUTCDate() - (nDays-1));
         if(isNaN(begin.getTime()) || isNaN(end.getTime()))
             throw RangeError("invalid start or end")
 

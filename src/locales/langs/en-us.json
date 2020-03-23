@@ -9,6 +9,7 @@
 	"header": {
 		"API": "API",
 		"globalReport": "global report",
+		"networkReport": "network report",
 		"contact": "contact",
 		"documentation": "documentation",
 		"signUp": "sign up",
@@ -21,7 +22,7 @@
 	"footer": {
 		"reportPages": {
 			"title" :"Reports",
-			"network": "network reports",
+			"network": "network report",
 			"global": "global report"
 		},
 		"documentation": {

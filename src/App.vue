@@ -22,9 +22,6 @@ export default {
       text: "",
     };
   },
-  mounted(){ 
-    document.title = 'Internet Health Report';
-  },
 };
 </script>
 <style lang="stylus">

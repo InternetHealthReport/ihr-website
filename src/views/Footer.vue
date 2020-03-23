@@ -30,7 +30,7 @@
             </li>
             <li>
               <router-link
-                :to="{name : 'networks', params:{ asn: 2497 }}"
+                  :to="{name : 'networks', params:{asn:null}}"
               >{{$t('footer.reportPages.network')}}</router-link>
             </li>
           </ul>

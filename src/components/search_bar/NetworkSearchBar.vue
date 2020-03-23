@@ -9,16 +9,16 @@
     @filter="filter"
     hide-dropdown-icon
     input-debounce="1000"
-    bg-color='accent'
-    label-color='grey-5'
-    input-class='text-white text-weight-bold'
+    :bg-color='bg'
+    :label-color='label'
+    :input-class='input'
   >
     <template v-slot:append>
         <div v-if="!loading">
-            <q-icon color='grey-5' name="fas fa-search q-mb-sm" style="font-size: 0.80em;"/>
+            <q-icon :color='label' name="fas fa-search q-mb-sm" style="font-size: 0.80em;"/>
         </div>
         <div v-else>
-              <q-spinner color="grey-5" size="0.82em" />
+              <q-spinner :color="label" size="0.82em" />
         </div>
     </template>
     <template v-slot:loading> </template>
@@ -43,9 +43,20 @@ const MAX_RESULTS = 10;
 
 export default {
   props: {
-    dark: {
-      type: Boolean,
-      default: false
+    bg: {
+      type: String,
+      default: "accent"
+    },
+    labelTxt: {
+      type: String,
+    },
+    label: {
+      type: String,
+      default: "grey-5"
+    },
+    input: {
+      type: String,
+      default: "text-white text-weight-bold"
     }
   },
   data() {
@@ -101,7 +112,9 @@ export default {
   },
   computed: {
     placeholder() {
-      return `${this.$t("searchBar.placeholder")}`;
+        if(this.labelTxt == null) return `${this.$t("searchBar.placeholder")}`;
+
+        return this.labelTxt;
     }
   }
 };

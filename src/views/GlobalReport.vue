@@ -3,7 +3,7 @@
     <div class="q-mb-xs">
         <div class="text-center">
             <div class="text-h1">{{title}}</div>
-            <div class="text-h3">3-day report ending on {{reportDateFmt}}
+            <div class="text-h3">{{interval.dayDiff()}}-day report ending on {{reportDateFmt}}
             <date-time-picker
                 :min="minDate"
                 :max="maxDate"

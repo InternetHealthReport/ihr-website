@@ -582,6 +582,9 @@ const IhrApi = {
           return (asn < 0 ? "IXP" : "AS") + Math.abs(asn);
         },
         ihr_AsOrIxpToNumber(asnString) {
+          if (asnString == null) {
+            return null;
+          }
           if (asnString == 0) {
             return 0;
           }

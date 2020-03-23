@@ -85,7 +85,7 @@ export default new Router({
     },
     {
       name: "networks",
-      path: `${routerBase}networks/:asn`,
+      path: `${routerBase}networks/:asn?`,
       components: {
           header: Header,
           footer: Footer,

@@ -1,8 +1,9 @@
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+    <div v-if="asNumber">
     <div>
         <h1 class="text-center">{{subHeader}} - {{headerString}}</h1>
-        <h3 class="text-center">3-day report ending on {{reportDateFmt}}
+        <h3 class="text-center">{{interval.dayDiff()}}-day report ending on {{reportDateFmt}}
             <date-time-picker
                 :min="minDate"
                 :max="maxDate"
@@ -108,6 +109,71 @@
       <div class="IHR_last-element">&nbsp;</div>
     </q-list>
   </div>
+  <div v-else>
+    <div> 
+        <h1 class="text-center q-pa-xl">Network Report</h1>
+        <div class="row justify-center">
+            <div class="col-8">
+            <network-search-bar bg="white" label="grey-8" input="black"
+                labelTxt="Enter an ASN, IXP ID, or network name (at least 3 characters)"/>
+            </div>
+        </div>
+    </div>
+    <div class="q-pa-xl"> 
+        <div class="row justify-center">
+            <div class="col-6">
+                <h3>Examples:</h3>
+            </div>
+        </div>
+        <div class="row justify-center">
+            <div class="col-3">
+                <ul> 
+                    <li>
+                        <router-link
+                            :to="{name : 'networks', params:{asn: 'AS2497'}}"
+                            class="IHR_delikify"
+                        >IIJ (AS2497)</router-link>
+                    </li>
+                    <li>
+                        <router-link
+                            :to="{name : 'networks', params:{asn: 'AS15169'}}"
+                            class="IHR_delikify"
+                        >Google (AS15169)</router-link>
+                    </li>
+                    <li>
+                        <router-link
+                            :to="{name : 'networks', params:{asn: 'AS2501'}}"
+                            class="IHR_delikify"
+                        >University of Tokyo (AS2501)</router-link>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-3">
+                <ul> 
+                    <li>
+                        <router-link
+                            :to="{name : 'networks', params:{asn: 'AS7922'}}"
+                            class="IHR_delikify"
+                        >Comcast (AS7922)</router-link>
+                    </li>
+                    <li>
+                        <router-link
+                            :to="{name : 'networks', params:{asn: 'AS25152'}}"
+                            class="IHR_delikify"
+                        >K-Root server (AS25152)</router-link>
+                    </li>
+                    <li>
+                        <router-link
+                            :to="{name : 'networks', params:{asn: 'IXP208'}}"
+                            class="IHR_delikify"
+                        >DE-CIX (IXP208)</router-link>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+  </div>
+  </div>
 </template>
 
 <script>
@@ -120,6 +186,7 @@ import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
 import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
 import DateTimePicker from "@/components/DateTimePicker";
+import NetworkSearchBar from "@/components/search_bar/NetworkSearchBar";
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -143,7 +210,8 @@ export default {
     DiscoChart,
     DelayAndForwardingChart,
     NetworkDelayChart,
-    DateTimePicker
+    DateTimePicker,
+    NetworkSearchBar
   },
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn);
@@ -267,29 +335,6 @@ export default {
 <style lang="stylus">
 @import '../styles/quasar.variables';
 
-.IHR_
-  &prefix-sidebar
-    margin 4pt 6pt
-
-  &sidebar-filter-section
-    & > ~/family-filter
-      padding 2pt
-      & label
-        font-weight bold
 </style>
 
 
-      <!--<q-drawer :value="showSidebar" side="left" bordered @on-layout="resizeCharts">-->
-        <!--<div class="fit column">-->
-          <!--<div class="row IHR_sidebar-filter-section col-auto">-->
-            <!--<div class="col-3 IHR_family-filter">-->
-              <!--<div>-->
-                <!--<q-toggle v-model="addressFamily" name="addressFamily"/>-->
-              <!--</div>-->
-              <!--<div class="text-center">-->
-                <!--<label for="addressFamily">{{addressFamilyText}}</label>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</q-drawer>-->
