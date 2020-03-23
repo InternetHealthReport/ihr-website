@@ -1,6 +1,6 @@
-# ihr-charts
+# ihr-website
 
-Internet Health Report charts (https://ihr.iijlab.net)
+Internet Health Report website (https://ihr.iijlab.net)
 
 ## Requirements
 - nodejs
