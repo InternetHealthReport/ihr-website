@@ -19,7 +19,6 @@ import NetworkDelayAlarmsTable from "../tables/NetworkDelayAlarmsTable";
 import { Query, NetworkDelayAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
 
 const DEFAULT_MIN_DEVIATION = 10;
-const DEFAULT_MIN_DIFFMEDIAN = 15;
 const DEFAULT_AS_FAMILY = AS_FAMILY.v4;
 
 export default {
@@ -74,7 +73,6 @@ export default {
         this.networkDelayAlarmsFilter,
         result => {
           let data = [];
-          let asn_list = [];
           result.results.forEach(alarm => {
             data.push(alarm);
           });
@@ -95,7 +93,7 @@ export default {
   watch: {
     minDeviation(newValue) {
       this.filters.forEach(filter => {
-        filter.deviation(newValue, DelayQuery.GTE);
+        filter.deviation(newValue, NetworkDelayAlarmsQuery.GTE);
       });
       this.debouncedApiCall();
     }

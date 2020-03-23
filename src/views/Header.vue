@@ -35,8 +35,6 @@
 
 <script>
 import NetworkSearchBar from "@/components/search_bar/NetworkSearchBar";
-import LoginForm from "@/components/forms/LoginForm";
-import LocaleSelector from "@/locales/LocaleSelector";
 
 const simple_menu = [
   {
@@ -65,9 +63,7 @@ const simple_menu = [
 export default {
   name: "Default",
   components: {
-    NetworkSearchBar,
-    LoginForm,
-    LocaleSelector
+    NetworkSearchBar
   },
   data() {
     return {

@@ -179,17 +179,8 @@ export default {
       this.$ihr_api.disco_events(
         this.filters[0],
         result => {
-          var events = [];
-          console.log("getting disco data");
-          result.results.forEach(event => {
-            event.duration = this.duration(event.starttime, event.endtime, 0);
-            if (event.duration > DEFAULT_MIN_DISCO_DURATION) {
-              events.push(event);
-            }
-          });
-          console.log(events);
-          this.dataEvents = events;
-          this.fetchDiscoData(events);
+          this.dataEvents = result.results;
+          this.fetchDiscoData(result.results);
           this.loading = false;
         },
         error => {
@@ -234,8 +225,6 @@ export default {
             let endTime = new Date(result.results[0].endtime);
             let probes = [];
             result.results.forEach(elem => {
-              let start = new Date(elem.starttime);
-              let end = new Date(elem.endtime);
               probes.push(elem.probe_id);
             });
             this.details.startTime = startTime;

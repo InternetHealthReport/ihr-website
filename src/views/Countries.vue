@@ -1,8 +1,10 @@
-<template> </template>
+<template>
+  <div>
+    <h1>Country Report</h1>
+  </div>
+</template>
 
 <script>
-import ReactiveChart from "@/components/ReactiveChart";
-
 export default {
   components: {},
   data: function() {

@@ -105,15 +105,10 @@
 </template>
 
 <script>
-import { debounce } from "quasar";
 import LocationSearchBar from "@/components/search_bar/LocationSearchBar";
-import CommonChartMixin, { DEFAULT_DEBOUNCE } from "./CommonChartMixin";
+import CommonChartMixin from "./CommonChartMixin";
 import NetworkDelayTable from "./tables/NetworkDelayTable";
-import {
-  NetworkDelayQuery,
-  NetworkDelayLocation,
-  AS_FAMILY
-} from "@/plugins/IhrApi";
+import { NetworkDelayQuery, AS_FAMILY } from "@/plugins/IhrApi";
 import { NET_DELAY_LAYOUT } from "./layouts";
 
 const DELAY_ALARM_INTERVAL = 5 * 3600 * 1000; //5 minutes in milliseconds
@@ -252,7 +247,6 @@ export default {
       );
     },
     fetchNetworkDelay(data) {
-      let trace = [];
       let traces = {};
       data.forEach(elem => {
         let key = elem.startpoint_type;
@@ -273,7 +267,6 @@ export default {
           if (elem.endpoint_type === "CT") {
             endname = elem.endpoint_name.split(",")[0];
           }
-          let nbtracks = elem.nbtracks;
 
           trace = {
             x: [],
@@ -313,10 +306,10 @@ export default {
     }
   },
   watch: {
-    startPointName(newValue) {
+    startPointName() {
       this.queryNetworkDelayApi();
     },
-    clear(newValue) {
+    clear() {
       this.clearGraph();
       this.$nextTick(function() {
         this.loading = true;

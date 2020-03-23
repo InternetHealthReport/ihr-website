@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { debounce } from "quasar";
 import CommonChartMixin from "../CommonChartMixin";
 import DelayAlarmsTable from "../tables/DelayAlarmsTable";
 import { DelayQuery, DelayAlarmsQuery, AS_FAMILY } from "@/plugins/IhrApi";
@@ -53,11 +52,6 @@ export default {
       type: Number,
       default: DEFAULT_MAX_DIFFMEDIAN,
       required: true
-    },
-    selectedAsn: {
-      type: Array,
-      default: [],
-      required: false
     }
   },
   data() {
@@ -66,7 +60,6 @@ export default {
       .deviation(this.minDeviation, DelayQuery.GTE)
       .medianDifference(this.minDiffmedian, DelayQuery.GTE)
       .medianDifference(this.maxDiffmedian, DelayQuery.LTE)
-      .asNumber(this.selectedAsn)
       .timeInterval(this.startTime, this.endTime)
       .orderedByTime();
 

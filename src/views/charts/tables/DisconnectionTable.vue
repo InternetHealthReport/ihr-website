@@ -13,13 +13,10 @@
 
 <script>
 import CommonTableMixin from "./CommonTableMixin";
-import Tracemon from "@/components/ripe/Tracemon";
 
 export default {
   mixins: [CommonTableMixin],
-  components: {
-    Tracemon
-  },
+  components: {},
   data() {
     return {
       pagination: {

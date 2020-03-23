@@ -45,7 +45,6 @@
 
 <script>
 import languages from "quasar/lang/index.json";
-import i18n from "./i18n";
 
 export default {
   data() {

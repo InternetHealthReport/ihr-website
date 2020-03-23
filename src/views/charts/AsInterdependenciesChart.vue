@@ -106,7 +106,6 @@
 import CommonChartMixin from "./CommonChartMixin";
 import { extend } from "quasar";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
-import Bgplay from "@/components/ripe/Bgplay";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
 
@@ -128,8 +127,7 @@ const DEFAULT_TRACE = [
 export default {
   mixins: [CommonChartMixin],
   components: {
-    AsInterdependenciesTable,
-    Bgplay
+    AsInterdependenciesTable
   },
   props: {
     asNumber: {
@@ -449,10 +447,10 @@ export default {
     }
   },
   watch: {
-    addressFamily(newValue) {
+    addressFamily() {
       this.debouncedApiCall();
     },
-    asNumber(newValue) {
+    asNumber() {
       this.debouncedApiCall();
     },
     "details.activeTab"(newValue) {
@@ -465,7 +463,7 @@ export default {
         .replace("T", " ");
       this.updateQuery("hege_dt", str);
     },
-    clear(newValue) {
+    clear() {
       this.clearGraph();
       this.$nextTick(function() {
         this.loading = true;

@@ -371,10 +371,7 @@ export default {
         error => {
           let message = "";
           if (error.status == 409) {
-            message +=
-              response.config.data.email +
-              " " +
-              this.$t("personalPage.error409");
+            message += this.$t("personalPage.error409");
           }
 
           this.$q.notify({

@@ -80,7 +80,7 @@ export default {
   watch: {
     minDeviation(newValue) {
       this.filters.forEach(filter => {
-        filter.deviation(newValue, DelayQuery.GTE);
+        filter.deviation(newValue, HegemonyAlarmsQuery.GTE);
       });
       this.debouncedApiCall();
     },

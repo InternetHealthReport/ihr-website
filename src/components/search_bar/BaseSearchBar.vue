@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import { Query } from "@/plugins/IhrApi";
 import { debounce } from "quasar";
 
 const MIN_CHARACTERS = 3;

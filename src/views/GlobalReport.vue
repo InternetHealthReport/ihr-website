@@ -319,49 +319,6 @@ const PRAMETERS_PRESETS = {
 };
 
 const PRESETS_ASN_LISTS = [];
-const PRESETS_ASN_LISTS_SAVE = [
-  {
-    name: "Tier1",
-    asnList: [2914, 4134, 7018, 3356, 1299, 3257, 6939, 174]
-  },
-  {
-    name: "SNS",
-    asnList: [32934, 14618, 54113, 13414, 14413, 37936, 47541]
-  },
-  {
-    name: "CDN",
-    asnList: [
-      20940,
-      14618,
-      54113,
-      16509,
-      15169,
-      8075,
-      12200,
-      45102,
-      22822,
-      15133
-    ]
-  },
-  {
-    name: "DNS",
-    asnList: [
-      26415,
-      394353,
-      2149,
-      10886,
-      21556,
-      3557,
-      5927,
-      1508,
-      29216,
-      26415,
-      25152,
-      20144,
-      7500
-    ]
-  }
-];
 
 export default {
   mixins: [reportMixin],
@@ -486,6 +443,7 @@ export default {
         case REPORT_TYPE.PERSONAL:
           return this.$t("globalReport.title.personal");
       }
+      return this.$t("globalReport.title.global");
     }
   },
   watch: {

@@ -29,7 +29,7 @@ class DateInterval {
   }
 }
 
-import { PROJECT_START_DATE, Query } from "@/plugins/IhrApi";
+import { PROJECT_START_DATE } from "@/plugins/IhrApi";
 
 export default {
   props: {

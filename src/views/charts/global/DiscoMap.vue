@@ -11,11 +11,8 @@
 
 <script>
 import ReactiveChart from "@/components/ReactiveChart";
-import { DiscoProbesQuery } from "@/plugins/query/IhrQuery";
 import { COMMON_FEATURE } from "../layouts.js";
 import getCountryName from "@/plugins/countryName.js";
-
-const MAX_ID_FOR_REQUEST = 50;
 
 export default {
   components: { ReactiveChart },
@@ -101,7 +98,7 @@ export default {
   },
   mounted() {},
   watch: {
-    events(newValue) {
+    events() {
       this.updateProbes();
     }
   },
