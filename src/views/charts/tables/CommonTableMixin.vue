@@ -10,16 +10,16 @@ export default {
       required: true
     },
     filter: {
-        type: String,
-        default: ''
+      type: String,
+      default: ""
     }
   },
-  data() { 
-    return { 
+  data() {
+    return {
       filteredRows: [],
-      filterTable: '',
+      filterTable: "",
       rows: this.data
-    }
+    };
   },
   methods: {
     getCellValue(props, columnName) {
@@ -27,40 +27,43 @@ export default {
       return col.format(col.field(props.row));
     },
     filterFct(rows, terms, cols, cellValue) {
-      const lowerTerms = terms ? terms.toLowerCase() : ''
-      this.filteredRows = rows.filter(
-        row => cols.some(col => (cellValue(col, row) + '').toLowerCase().indexOf(lowerTerms) !== -1)
-      )
-      return this.filteredRows
+      const lowerTerms = terms ? terms.toLowerCase() : "";
+      this.filteredRows = rows.filter(row =>
+        cols.some(
+          col =>
+            (cellValue(col, row) + "").toLowerCase().indexOf(lowerTerms) !== -1
+        )
+      );
+      return this.filteredRows;
     },
-    dateHourShift(datetime, shift){ 
-        var res = new Date(datetime);
-        var sign =  shift < 0? -1 : 1;
-        res.setHours(res.getHours() +  sign*Math.max(1, Math.abs(shift)))
-        return res
+    dateHourShift(datetime, shift) {
+      var res = new Date(datetime);
+      var sign = shift < 0 ? -1 : 1;
+      res.setHours(res.getHours() + sign * Math.max(1, Math.abs(shift)));
+      return res;
     }
   },
-  watch: { 
-    filteredRows(newValue){
-        this.$emit('filteredRows', [this.filterTable, newValue]);
+  watch: {
+    filteredRows(newValue) {
+      this.$emit("filteredRows", [this.filterTable, newValue]);
     },
-    filterTable(newValue){ 
-        if(newValue == '') this.filteredRows = this.rows;
+    filterTable(newValue) {
+      if (newValue == "") this.filteredRows = this.rows;
     },
-    data(newValue){ 
-        this.rows = newValue
+    data(newValue) {
+      this.rows = newValue;
     },
-    rows(newValue){ 
-        this.filteredRows = newValue
+    rows(newValue) {
+      this.filteredRows = newValue;
     },
-    filter(newValue){ 
-        this.filterTable = newValue
+    filter(newValue) {
+      this.filterTable = newValue;
     }
   }
-}
+};
 </script>
 <style lang="stylus">
-.IHR_nohover 
+.IHR_nohover
     &:first-child
       padding-top 0px
       padding-bottom 20px
@@ -81,10 +84,8 @@ export default {
         background #ffffff
 
 
-.myClass 
+.myClass
 
     tbody td
         text-align left
-
-
 </style>

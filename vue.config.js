@@ -38,5 +38,5 @@ module.exports = {
       extensions: [".js", ".vue", ".json", ".styl"]
     }
   },
-  publicPath: '/ihr/'
+  publicPath: "/ihr/"
 };

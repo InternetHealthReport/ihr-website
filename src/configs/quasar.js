@@ -1,6 +1,6 @@
 import Vue from "vue";
 
-import "swagger-ui/dist/swagger-ui.css"
+import "swagger-ui/dist/swagger-ui.css";
 import "@/styles/quasar.styl";
 import "quasar/dist/quasar.ie.polyfills";
 import iconSet from "quasar/icon-set/fontawesome-v5.js";

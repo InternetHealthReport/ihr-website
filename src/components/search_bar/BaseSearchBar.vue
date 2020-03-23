@@ -1,13 +1,24 @@
 <template>
   <q-select
-    ref="search" :dark="dark" dense standout use-input hide-selected
-    color="black" :stack-label="false" :label="placeholder"
-    v-model="text" :options="options"
+    ref="search"
+    :dark="dark"
+    dense
+    standout
+    use-input
+    hide-selected
+    color="black"
+    :stack-label="false"
+    :label="placeholder"
+    v-model="text"
+    :options="options"
     @filter="filter"
     class="IHR_search-bar"
   >
     <template v-slot:prepend>
-      <q-icon name="fas fa-search" style="font-size: 0.82em; margin-rigth: 4px;"/>
+      <q-icon
+        name="fas fa-search"
+        style="font-size: 0.82em; margin-rigth: 4px;"
+      />
     </template>
     <template v-slot:no-option>
       <q-item>
@@ -16,19 +27,15 @@
             <q-spinner color="secondary" size="2em" />
           </div>
           <div class="text-center" v-else>
-             {{$t("searchBar.noResultFound")}}
+            {{ $t("searchBar.noResultFound") }}
           </div>
         </q-item-section>
       </q-item>
     </template>
 
     <template v-slot:option="scope">
-      <q-item
-        v-bind="scope.itemProps"
-        v-on="scope.itemEvents"
-      >
-      <slot :elem="scope.opt">
-      </slot>
+      <q-item v-bind="scope.itemProps" v-on="scope.itemEvents">
+        <slot :elem="scope.opt"> </slot>
       </q-item>
     </template>
     <span slot="loading"></span>
@@ -50,7 +57,7 @@ export default {
     },
     value: {
       type: Array,
-      required: true,
+      required: true
     },
     placeholder: {
       type: String,
@@ -60,12 +67,12 @@ export default {
   data() {
     return {
       text: "",
-      debouncedSearch: null,
-      };
+      debouncedSearch: null
+    };
   },
   mounted() {
     this.debouncedSearch = debounce(
-      (value) => {
+      value => {
         this.$emit("input", []);
         this.$emit("search", value);
       },
@@ -74,10 +81,9 @@ export default {
     );
   },
   methods: {
-    filter (value, update) {
-      if(value == null)
-        return;
-      if(value.length >= MIN_CHARACTERS) {
+    filter(value, update) {
+      if (value == null) return;
+      if (value.length >= MIN_CHARACTERS) {
         update(() => {
           this.value = null;
           this.debouncedSearch(value);
@@ -90,10 +96,10 @@ export default {
       return this.value === null;
     },
     options() {
-      return this.value === null ? []: this.value;
+      return this.value === null ? [] : this.value;
     }
   }
-}
+};
 
 export { MAX_RESULTS };
 </script>
@@ -111,5 +117,4 @@ export { MAX_RESULTS };
     & > *
       margin-right 0px
       padding-right 0px
-
 </style>

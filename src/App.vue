@@ -1,11 +1,11 @@
 <template>
   <q-layout view="hHh LpR fff" id="app" class="IHR_minimum-width bg-white">
-    <router-view name="header"/>
+    <router-view name="header" />
     <q-page-container class="IHR_minimum-width">
-      <router-view/>
+      <router-view />
       <div id="IHR_last-element">&nbsp;</div>
     </q-page-container>
-    <router-view name="footer"/>
+    <router-view name="footer" />
   </q-layout>
 </template>
 <script>
@@ -15,13 +15,12 @@ import routerBase from "@/router";
 // subset of router, see router.js
 export default {
   name: "Default",
-  components: {
-  },
+  components: {},
   data() {
     return {
-      text: "",
+      text: ""
     };
-  },
+  }
 };
 </script>
 <style lang="stylus">
@@ -56,7 +55,7 @@ menu-delinkify(val)
     & a
       color white
 
-    ~/fsection 
+    ~/fsection
       padding-top 5pt
       border-left solid gray 1px
 
@@ -121,5 +120,3 @@ menu-delinkify(val)
   &last-element
     height 50px;
 </style>
-
-

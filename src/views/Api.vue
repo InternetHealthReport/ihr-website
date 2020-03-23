@@ -6,23 +6,21 @@
   </div>
 </template>
 <script>
-import SwaggerUI, { presets } from 'swagger-ui'
+import SwaggerUI, { presets } from "swagger-ui";
 
 export default {
-  components: {
-  },
+  components: {},
   data() {
-    return {
-    }
+    return {};
   },
   mounted: function() {
     const ui = SwaggerUI({
-        url: "https://ihr.iijlab.net/ihr/swagger.yaml?1234",
-        dom_id: "#swagger-ui",
-        layout: "BaseLayout",
-        defaultModelsExpandDepth: -1,
-        presets: [presets.apis],
-        deepLinking: false
+      url: "https://ihr.iijlab.net/ihr/swagger.yaml?1234",
+      dom_id: "#swagger-ui",
+      layout: "BaseLayout",
+      defaultModelsExpandDepth: -1,
+      presets: [presets.apis],
+      deepLinking: false
     });
   }
 };

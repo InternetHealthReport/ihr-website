@@ -691,7 +691,6 @@ class HegemonyQuery extends CommonHegemonyQuery {
   }
 }
 
-
 class HegemonyAlarmsQuery extends CommonHegemonyQuery {
   constructor() {
     super(...arguments);

@@ -7,20 +7,27 @@
       :ref="myId"
       :no-data="noData"
     />
-      <div v-if="loading" class="IHR_loading-spinner">
-        <q-spinner color="secondary" size="15em" />
-      </div>
+    <div v-if="loading" class="IHR_loading-spinner">
+      <q-spinner color="secondary" size="15em" />
+    </div>
     <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
-        <q-card-section class="q-pa-xs">
-          <div class="row items-center">
-              <div class="col">
-                  <div class="text-h3"> {{details.date | ihrUtcString}} </div>
-              </div>
-              <div class="col-auto">
-                <q-btn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible=false" icon="fa fa-times-circle"></q-btn>
-              </div>
+      <q-card-section class="q-pa-xs">
+        <div class="row items-center">
+          <div class="col">
+            <div class="text-h3">{{ details.date | ihrUtcString }}</div>
           </div>
-        </q-card-section>
+          <div class="col-auto">
+            <q-btn
+              class="IHR_table-close-button"
+              size="sm"
+              round
+              flat
+              @click="details.tableVisible = false"
+              icon="fa fa-times-circle"
+            ></q-btn>
+          </div>
+        </div>
+      </q-card-section>
       <q-tabs
         dense
         v-model="details.activeTab"
@@ -31,8 +38,14 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="dependency" :label="$t('charts.asInterdependencies.table.dependencyTitle')" />
-        <q-tab name="dependent" :label="$t('charts.asInterdependencies.table.dependentTitle')" />
+        <q-tab
+          name="dependency"
+          :label="$t('charts.asInterdependencies.table.dependencyTitle')"
+        />
+        <q-tab
+          name="dependent"
+          :label="$t('charts.asInterdependencies.table.dependentTitle')"
+        />
         <q-tab name="bgpPlay" label="AS Graph" />
         <q-tab name="api" label="API" />
       </q-tabs>
@@ -51,20 +64,36 @@
           />
         </q-tab-panel>
         <q-tab-panel name="bgpPlay">
-            <div class="bgplay-container">
-                <iframe frameborder=0 :src='bgplay'></iframe>
-            </div>
+          <div class="bgplay-container">
+            <iframe frameborder="0" :src="bgplay"></iframe>
+          </div>
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
-          <h3>{{$t("charts.asInterdependencies.table.apiTitle")}}</h3>
+          <h3>{{ $t("charts.asInterdependencies.table.apiTitle") }}</h3>
           <table>
             <tr>
-              <td><p class="text-subtitle1">{{$t("charts.asInterdependencies.table.dependencyTitle")}}</p></td>
-              <td><a :href="dependencyUrl" target="_blank" id="tableUrl">{{dependencyUrl}}</a></td>
+              <td>
+                <p class="text-subtitle1">
+                  {{ $t("charts.asInterdependencies.table.dependencyTitle") }}
+                </p>
+              </td>
+              <td>
+                <a :href="dependencyUrl" target="_blank" id="tableUrl">{{
+                  dependencyUrl
+                }}</a>
+              </td>
             </tr>
             <tr>
-              <td><p class="text-subtitle1">{{$t("charts.asInterdependencies.table.dependentTitle")}}</p></td>
-              <td><a :href="dependentUrl" target="_blank" id="tableUrl">{{dependentUrl}}</a></td>
+              <td>
+                <p class="text-subtitle1">
+                  {{ $t("charts.asInterdependencies.table.dependentTitle") }}
+                </p>
+              </td>
+              <td>
+                <a :href="dependentUrl" target="_blank" id="tableUrl">{{
+                  dependentUrl
+                }}</a>
+              </td>
             </tr>
           </table>
         </q-tab-panel>
@@ -74,13 +103,12 @@
 </template>
 
 <script>
-import CommonChartMixin from "./CommonChartMixin"
+import CommonChartMixin from "./CommonChartMixin";
 import { extend } from "quasar";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
 import Bgplay from "@/components/ripe/Bgplay";
-import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts"
+import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
-
 
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
 
@@ -90,12 +118,10 @@ const DEFAULT_TRACE = [
     x: [],
     y: [],
     yaxis: "y2",
-    name: i18n.t('charts.asInterdependencies.defaultTrace'),
+    name: i18n.t("charts.asInterdependencies.defaultTrace"),
     showlegend: false,
     hovertemplate:
-        "%{x}<br>"+
-        "%{yaxis.title.text}: <b>%{y:.2f}</b>"+
-        "<extra></extra>"
+      "%{x}<br>" + "%{yaxis.title.text}: <b>%{y:.2f}</b>" + "<extra></extra>"
   }
 ];
 
@@ -134,7 +160,7 @@ export default {
           dependent: null
         },
         tableVisible: false,
-        enableBgpPlay: false,
+        enableBgpPlay: false
       },
       loadingHegemony: true,
       loadingHegemonyCone: true,
@@ -145,79 +171,103 @@ export default {
     };
   },
   beforeMount() {
-      this.updateAxesLabel()
+    this.updateAxesLabel();
   },
-  mounted(){ 
-    this.tableFromQuery()
+  mounted() {
+    this.tableFromQuery();
   },
   methods: {
-    updateAxesLabel(){
-        this.layout.yaxis.title = `AS`+this.asNumber+` ${this.$t("charts.asInterdependencies.yaxis")}`;
-        this.layout.yaxis2.title = `${this.$t("charts.asInterdependencies.yaxis2")} AS`+this.asNumber;
+    updateAxesLabel() {
+      this.layout.yaxis.title =
+        `AS` +
+        this.asNumber +
+        ` ${this.$t("charts.asInterdependencies.yaxis")}`;
+      this.layout.yaxis2.title =
+        `${this.$t("charts.asInterdependencies.yaxis2")} AS` + this.asNumber;
     },
-    makeHegemonyFilter(){
-
-        return new HegemonyQuery()
+    makeHegemonyFilter() {
+      return new HegemonyQuery()
         .originAs(this.asNumber)
         .addressFamily(this.addressFamily)
         .timeInterval(this.startTime, this.endTime)
         .orderedByTime();
     },
-    makeHegemonyConeFilter(){
-        return new HegemonyConeQuery()
+    makeHegemonyConeFilter() {
+      return new HegemonyConeQuery()
         .asNumber(this.asNumber)
         .addressFamily(this.addressFamily)
         .timeInterval(this.startTime, this.endTime)
         .orderedByTime();
-
     },
-    apiCall(){
-        if(this.asNumber==0) return;
-        this.updateAxesLabel()
-        this.hegemonyFilter= this.makeHegemonyFilter()
-        this.hegemonyConeFilter= this.makeHegemonyConeFilter()
-        this.traces = extend(true, [], DEFAULT_TRACE);
-        this.loading = true;
-        this.loadingHegemony = true;
-        this.loadingHegemonyCone = true;
-        this.queryHegemonyAPI();
-        this.queryHegemonyConeAPI();
+    apiCall() {
+      if (this.asNumber == 0) return;
+      this.updateAxesLabel();
+      this.hegemonyFilter = this.makeHegemonyFilter();
+      this.hegemonyConeFilter = this.makeHegemonyConeFilter();
+      this.traces = extend(true, [], DEFAULT_TRACE);
+      this.loading = true;
+      this.loadingHegemony = true;
+      this.loadingHegemonyCone = true;
+      this.queryHegemonyAPI();
+      this.queryHegemonyConeAPI();
     },
-    plotClick(clickData){ 
-        var table = 'dependency';
-        if(clickData.points[0].data.yaxis == "y2"){
-          table = 'dependent';
-        }
-        this.showTable(table, clickData.points[0].x)
+    plotClick(clickData) {
+      var table = "dependency";
+      if (clickData.points[0].data.yaxis == "y2") {
+        table = "dependent";
+      }
+      this.showTable(table, clickData.points[0].x);
     },
-    tableFromQuery(){ 
-        // if query parameter have click information then show corresponding tables
-        let selectedDate = this.$route.query.hege_dt;
-        let table = this.$route.query.hege_tb;
-        if(selectedDate != undefined && table != undefined){
-            this.showTable(table, selectedDate); 
-        }
+    tableFromQuery() {
+      // if query parameter have click information then show corresponding tables
+      let selectedDate = this.$route.query.hege_dt;
+      let table = this.$route.query.hege_tb;
+      if (selectedDate != undefined && table != undefined) {
+        this.showTable(table, selectedDate);
+      }
     },
     showTable(table, selectedDate) {
-      
-      if(selectedDate.length < 14){
+      if (selectedDate.length < 14) {
         // at midnight no time is given
-        this.details.date = new Date(selectedDate+" 00:00+00:00")//adding timezone to string...
-      }
-      else{
-        this.details.date = new Date(selectedDate+ "+00:00")//adding timezone to string...
+        this.details.date = new Date(selectedDate + " 00:00+00:00"); //adding timezone to string...
+      } else {
+        this.details.date = new Date(selectedDate + "+00:00"); //adding timezone to string...
       }
 
       let intervalEnd = this.details.date;
-      let intervalStart = new Date(intervalEnd.getTime() - 15*60000);
+      let intervalStart = new Date(intervalEnd.getTime() - 15 * 60000);
 
       this.details.activeTab = table;
-      let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd);
-      let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber);
-      this.updateTable("dependency", "asn", dependencyFilter, intervalStart, intervalEnd);
-      this.updateTable("dependent", "originasn", dependentFilter, intervalStart, intervalEnd);
+      let dependencyFilter = this.makeHegemonyFilter().timeInterval(
+        intervalStart,
+        intervalEnd
+      );
+      let dependentFilter = dependencyFilter
+        .clone()
+        .originAs()
+        .asNumber(this.asNumber);
+      this.updateTable(
+        "dependency",
+        "asn",
+        dependencyFilter,
+        intervalStart,
+        intervalEnd
+      );
+      this.updateTable(
+        "dependent",
+        "originasn",
+        dependentFilter,
+        intervalStart,
+        intervalEnd
+      );
     },
-    updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
+    updateTable(
+      tableType,
+      hegemonyComparator,
+      filter,
+      intervalStart,
+      intervalEnd
+    ) {
       this.details.tablesData[tableType] = {
         data: [],
         loading: true,
@@ -233,27 +283,27 @@ export default {
             let res = [];
             results.results.forEach(elem => {
               let asn = elem[hegemonyComparator];
-              if (asn != 0){
+              if (asn != 0) {
                 if (elem.timebin == startString) {
-                    data[asn] = elem;
+                  data[asn] = elem;
                 } else {
-                    if (data[asn] != undefined) {
-                      elem.increment = 100*((elem.hege - data[asn].hege)/data[asn].hege);
-                      res.push(elem);
-                      delete data[asn];
-                    } 
-                    else{
-                      elem.increment = 100;
-                      res.push(elem);
-                    }
+                  if (data[asn] != undefined) {
+                    elem.increment =
+                      100 * ((elem.hege - data[asn].hege) / data[asn].hege);
+                    res.push(elem);
+                    delete data[asn];
+                  } else {
+                    elem.increment = 100;
+                    res.push(elem);
+                  }
                 }
               }
             });
 
-            for(var unprocessed in data){
-                data[unprocessed].increment = -100;
-                data[unprocessed].hege = 0;
-                res.push(data[unprocessed]);
+            for (var unprocessed in data) {
+              data[unprocessed].increment = -100;
+              data[unprocessed].hege = 0;
+              res.push(data[unprocessed]);
             }
             results.results = res;
           }
@@ -317,10 +367,10 @@ export default {
               "<b>" +
               this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) +
               " " +
-              elem.asn_name.split(" ")[0]+
+              elem.asn_name.split(" ")[0] +
               "</b><br><br>" +
-              "%{x}<br>"+
-              "%{yaxis.title.text}: <b>%{y:.2f}</b>"+
+              "%{x}<br>" +
+              "%{yaxis.title.text}: <b>%{y:.2f}</b>" +
               "<extra></extra>"
           };
           traces[elem.asn] = trace;
@@ -340,48 +390,48 @@ export default {
         trace.y.push(resp.conesize);
         trace.x.push(resp.timebin);
       });
-      for(let i = 1; i < trace.length; i++) {
-        let a = new Date(trace[i-1].x);
+      for (let i = 1; i < trace.length; i++) {
+        let a = new Date(trace[i - 1].x);
         let b = new Date(trace[i].x);
-        if(isNaN(a) || isNaN(b) || b-a < 0) {
-          console.error("error", a, b, b-a)
+        if (isNaN(a) || isNaN(b) || b - a < 0) {
+          console.error("error", a, b, b - a);
         }
       }
       this.noData |= trace.length == 0;
       this.layout.datarevision = new Date().getTime();
     },
-    clearGraph(){
-        this.traces = []
-        this.layout.datarevision = new Date().getTime();
-    },
+    clearGraph() {
+      this.traces = [];
+      this.layout.datarevision = new Date().getTime();
+    }
   },
   computed: {
-    bgplay() { 
-        return `/ihr/widget/bgplay?asn=${this.asNumber}&date=${this.dateStr}`
+    bgplay() {
+      return `/ihr/widget/bgplay?asn=${this.asNumber}&date=${this.dateStr}`;
     },
-    dateStr(){ 
-        let year = this.details.date.getUTCFullYear();
-        var day = this.details.date.getUTCDate();
-        var month = (this.details.date.getUTCMonth() + 1);
-        var hours = this.details.date.getUTCHours()
-        var minutes = this.details.date.getUTCMinutes()
-        var seconds = this.details.date.getUTCSeconds();
+    dateStr() {
+      let year = this.details.date.getUTCFullYear();
+      var day = this.details.date.getUTCDate();
+      var month = this.details.date.getUTCMonth() + 1;
+      var hours = this.details.date.getUTCHours();
+      var minutes = this.details.date.getUTCMinutes();
+      var seconds = this.details.date.getUTCSeconds();
 
-        if (day < 10) day = "0" + day;
-        if (month < 10) month = "0" + month;
-        if (hours < 10) hours = "0" + hours;
-        if (minutes < 10) minutes = "0" + minutes;
-        if (seconds < 10) seconds = "0" + seconds;
+      if (day < 10) day = "0" + day;
+      if (month < 10) month = "0" + month;
+      if (hours < 10) hours = "0" + hours;
+      if (minutes < 10) minutes = "0" + minutes;
+      if (seconds < 10) seconds = "0" + seconds;
 
-        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
     },
     networkDependencyData() {
-      return this.details.tablesData.dependency.data.filter((elem)=>{
+      return this.details.tablesData.dependency.data.filter(elem => {
         return elem.asn != this.asNumber;
       });
     },
     dependentNetworksData() {
-      return this.details.tablesData.dependent.data.filter((elem)=>{
+      return this.details.tablesData.dependent.data.filter(elem => {
         return elem.originasn != this.asNumber;
       });
     },
@@ -396,7 +446,7 @@ export default {
     },
     dependentUrl() {
       return this.$ihr_api.getUrl(this.details.tablesData.dependent.filter);
-    },
+    }
   },
   watch: {
     addressFamily(newValue) {
@@ -405,18 +455,21 @@ export default {
     asNumber(newValue) {
       this.debouncedApiCall();
     },
-    'details.activeTab'(newValue){ 
-        this.updateQuery('hege_tb', newValue)
+    "details.activeTab"(newValue) {
+      this.updateQuery("hege_tb", newValue);
     },
-    'details.date'(newValue){ 
-        const str = newValue.toISOString().slice(0, 16).replace("T", " ");
-        this.updateQuery('hege_dt', str)
+    "details.date"(newValue) {
+      const str = newValue
+        .toISOString()
+        .slice(0, 16)
+        .replace("T", " ");
+      this.updateQuery("hege_dt", str);
     },
-    clear(newValue){
-        this.clearGraph();
-        this.$nextTick(function () {
-            this.loading = true;
-        })
+    clear(newValue) {
+      this.clearGraph();
+      this.$nextTick(function() {
+        this.loading = true;
+      });
     }
   }
 };

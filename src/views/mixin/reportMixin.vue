@@ -1,5 +1,4 @@
 <script>
-
 class DateInterval {
   constructor(begin, end) {
     this.begin = this.createDateAsUTC(begin);
@@ -11,7 +10,16 @@ class DateInterval {
   }
 
   createDateAsUTC(date) {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
+    return new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds()
+      )
+    );
   }
 
   setHours() {
@@ -19,7 +27,7 @@ class DateInterval {
     this.end.setUTCHours(23, 59, 59, 0);
     return this;
   }
-};
+}
 
 import { PROJECT_START_DATE, Query } from "@/plugins/IhrApi";
 
@@ -39,22 +47,22 @@ export default {
       );
     } catch (e) {
       if (!(e instanceof RangeError)) {
-        console.log('Range Error');
+        console.log("Range Error");
         throw e;
       }
       interval = this.getDateInterval(new Date(), 3); // fallback to last few days
     }
     return {
       interval: interval,
-      fetch: false,
-    }
+      fetch: false
+    };
   },
   mounted() {
     this.pushRoute();
   },
   methods: {
-    setReportDate(event){
-        this.interval = this.getDateInterval(event, 3)
+    setReportDate(event) {
+      this.interval = this.getDateInterval(event, 3);
     },
     resizeCharts() {
       setTimeout(() => {
@@ -64,34 +72,39 @@ export default {
       }, 400);
     },
     getDateInterval(endTimestamp, nDays) {
-        let end = new Date(endTimestamp);
-        let begin = new Date(end);
-        begin.setUTCDate(begin.getUTCDate() - (nDays-1));
-        if(isNaN(begin.getTime()) || isNaN(end.getTime()))
-            throw RangeError("invalid start or end")
+      let end = new Date(endTimestamp);
+      let begin = new Date(end);
+      begin.setUTCDate(begin.getUTCDate() - (nDays - 1));
+      if (isNaN(begin.getTime()) || isNaN(end.getTime()))
+        throw RangeError("invalid start or end");
 
-        let newInterval = new DateInterval(begin, end);
-        newInterval.setHours()
-        return newInterval
-    },
+      let newInterval = new DateInterval(begin, end);
+      newInterval.setHours();
+      return newInterval;
+    }
   },
   computed: {
-    minDate(){
-        return PROJECT_START_DATE;
+    minDate() {
+      return PROJECT_START_DATE;
     },
-    maxDate(){ 
-        return new Date()
+    maxDate() {
+      return new Date();
     },
     reportDateFmt() {
-        var options = { year: 'numeric', month: 'long', day: '2-digit', timeZone: 'UTC' };
-        return this.interval.end.toLocaleDateString(undefined, options)
+      var options = {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        timeZone: "UTC"
+      };
+      return this.interval.end.toLocaleDateString(undefined, options);
     },
     startTime() {
       return this.interval.begin;
     },
     endTime() {
       return this.interval.end;
-    },
+    }
   },
   watch: {
     interval() {
@@ -109,7 +122,7 @@ export default {
   &charts-title
     text-transform capitalize
     font-size 18pt
-    
+
   &charts-body
     margin-right 10pt
     margin-left 5pt

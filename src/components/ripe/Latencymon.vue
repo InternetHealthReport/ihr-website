@@ -25,14 +25,13 @@ export default {
       lm: null
     };
   },
-  created() {
-  },
-  mounted(){
-      this.$libraryDelayer.load("latencymon_widget", () => {
+  created() {},
+  mounted() {
+    this.$libraryDelayer.load("latencymon_widget", () => {
       let lm_grp = [];
 
       // Make latencymon groups
-      for(let msms in this.msmPrbIds) {
+      for (let msms in this.msmPrbIds) {
         lm_grp.push({
           id: this.targetName(msms),
           measurementId: Number(msms),
@@ -47,46 +46,42 @@ export default {
         this.lm = initLatencymon(
           `#${this.myId}`,
           {
-            autoStartGrouping: false,
+            autoStartGrouping: false
           },
           {
-            measurements: Object.keys(this.msmPrbIds), //measurements: [1030, 1031], 
-            startTimestamp: this.startTimestamp, //startTimestamp: 1580422400, 
-            stopTimestamp: this.stopTimestamp,// stopTimestamp:  1580508800,
-            syncWithRealTimeData: false ,
-            groups: lm_grp 
+            measurements: Object.keys(this.msmPrbIds), //measurements: [1030, 1031],
+            startTimestamp: this.startTimestamp, //startTimestamp: 1580422400,
+            stopTimestamp: this.stopTimestamp, // stopTimestamp:  1580508800,
+            syncWithRealTimeData: false,
+            groups: lm_grp
           }
         );
-
-
       } catch (err) {
         console.error(err); //TODO better error handling
       }
-    });  
+    });
   },
-  methods: { 
-    getTimestamp(datetime){ 
-        return Math.ceil(datetime.getTime()/1000)
+  methods: {
+    getTimestamp(datetime) {
+      return Math.ceil(datetime.getTime() / 1000);
     },
-    targetName(msmid){ 
-        const names = { 
-            1001: "K-root servers",
-            1006: "M-root servers",
-            1010: "B-root servers",
-            1030: "Atlas Controller",
-            1591146: "Google DNS"
-        };
+    targetName(msmid) {
+      const names = {
+        1001: "K-root servers",
+        1006: "M-root servers",
+        1010: "B-root servers",
+        1030: "Atlas Controller",
+        1591146: "Google DNS"
+      };
 
-        if(msmid in names){ 
-            return names[msmid];
-        }
-        else{ 
-            return msmid.toString();
-        }
+      if (msmid in names) {
+        return names[msmid];
+      } else {
+        return msmid.toString();
+      }
     }
-  },
+  }
 };
 </script>
 
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>

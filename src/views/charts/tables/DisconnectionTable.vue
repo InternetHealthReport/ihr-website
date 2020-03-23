@@ -1,5 +1,5 @@
 <template>
-   <q-table
+  <q-table
     :data="data"
     :columns="columns"
     row-key="link"
@@ -16,7 +16,7 @@ import CommonTableMixin from "./CommonTableMixin";
 import Tracemon from "@/components/ripe/Tracemon";
 
 export default {
-   mixins: [CommonTableMixin],
+  mixins: [CommonTableMixin],
   components: {
     Tracemon
   },
@@ -64,13 +64,11 @@ export default {
           field: row => row.probe_id,
           format: val => val,
           sortable: true
-        },
+        }
       ]
     };
-  },
-}
+  }
+};
 </script>
 
-<style lang="stylus" scoped>
-
-</style>
+<style lang="stylus" scoped></style>

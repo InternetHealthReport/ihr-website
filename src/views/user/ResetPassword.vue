@@ -2,19 +2,25 @@
   <div id="IHR_reset-password">
     <transition name="IHR_errors-banner-animation">
       <q-banner class="IHR_errors-banner" v-if="error != null">
-        <p>{{$t(`resetPassword.error${error}`)}}</p>
+        <p>{{ $t(`resetPassword.error${error}`) }}</p>
         <template v-slot:action>
-          <q-btn flat color="white" :label="$t('close')" @click="error = null" />
+          <q-btn
+            flat
+            color="white"
+            :label="$t('close')"
+            @click="error = null"
+          />
         </template>
       </q-banner>
     </transition>
-    <h1>{{title}}</h1>
-    <div class="row justify-around IHR_content"  v-if="$ihr_api.authenticated">
+    <h1>{{ title }}</h1>
+    <div class="row justify-around IHR_content" v-if="$ihr_api.authenticated">
       <q-btn
         color="secondary"
         class="col-3"
-        @click="$router.push({name : 'personal_page'})"
-      >{{$t('personalPage.title')}}</q-btn>
+        @click="$router.push({ name: 'personal_page' })"
+        >{{ $t("personalPage.title") }}</q-btn
+      >
     </div>
     <div class="shadow-2" id="IHR_reset-password-form" v-else-if="!emailSent">
       <q-input
@@ -28,9 +34,18 @@
         </template>
       </q-input>
       <div>
-        <password-confirm v-model="password"  v-if="token != undefined" ref="password"/>
+        <password-confirm
+          v-model="password"
+          v-if="token != undefined"
+          ref="password"
+        />
       </div>
-      <div :style="{height: (recaptcha_loaded)? 'auto' : '90px', position: 'relative'}">
+      <div
+        :style="{
+          height: recaptcha_loaded ? 'auto' : '90px',
+          position: 'relative'
+        }"
+      >
         <vue-recaptcha
           :sitekey="$ihrStyle.recaptchaKey"
           id="IHR_sig-in-captcha"
@@ -44,14 +59,21 @@
       </div>
       <q-btn
         color="secondary"
-        @click="(token != undefined)?validateAndChange():validateAndSend()">
-          {{$t(`resetPassword.${(token != undefined)?"resetPassword":"recoverPassword"}`)}}
+        @click="token != undefined ? validateAndChange() : validateAndSend()"
+      >
+        {{
+          $t(
+            `resetPassword.${
+              token != undefined ? "resetPassword" : "recoverPassword"
+            }`
+          )
+        }}
       </q-btn>
     </div>
     <div class="shadow-2" id="IHR_confirm-your-email" v-else>
-      <div>{{$t("resetPassword.instructionPart1")}}</div>
-      <div id="IHR_email-confirmation">{{email}}</div>
-      <div>{{$t("resetPassword.instructionPart2")}}</div>
+      <div>{{ $t("resetPassword.instructionPart1") }}</div>
+      <div id="IHR_email-confirmation">{{ email }}</div>
+      <div>{{ $t("resetPassword.instructionPart2") }}</div>
     </div>
   </div>
 </template>
@@ -73,7 +95,7 @@ export default {
       token: this.$route.query.token,
       error: null,
       emailSent: false,
-      recaptcha_loaded: false,
+      recaptcha_loaded: false
     };
   },
   mounted() {
@@ -97,7 +119,7 @@ export default {
         this.error = "InvalidEmail";
         return;
       }
-      if(this.recaptcha == "") {
+      if (this.recaptcha == "") {
         this.error = "AreYouRobot";
         return;
       }
@@ -110,7 +132,7 @@ export default {
         },
         error => {
           this.error = error.status;
-          console.log(error.detail)
+          console.log(error.detail);
         }
       );
     },
@@ -119,11 +141,11 @@ export default {
         this.error = "InvalidEmail";
         return;
       }
-      if(!this.$refs["password"].isValid()) {
+      if (!this.$refs["password"].isValid()) {
         this.error = this.password.toString();
         return;
       }
-      if(this.recaptcha == "") {
+      if (this.recaptcha == "") {
         this.error = "AreYouRobot";
         return;
       }
@@ -136,20 +158,22 @@ export default {
         },
         error => {
           this.error = error.status;
-          console.log(error.detail)
+          console.log(error.detail);
         }
       );
-    },
+    }
   },
   computed: {
     title() {
-      if(this.$ihr_api.authenticated) {
-        return this.$t('resetPassword.youAreLoggedIn');
+      if (this.$ihr_api.authenticated) {
+        return this.$t("resetPassword.youAreLoggedIn");
       }
-      if(this.token != undefined) {
-        return this.$t('resetPassword.fillToChange');
+      if (this.token != undefined) {
+        return this.$t("resetPassword.fillToChange");
       }
-      return (this.emailSent)? this.$t('resetPassword.emailSent'):this.$t('resetPassword.title');
+      return this.emailSent
+        ? this.$t("resetPassword.emailSent")
+        : this.$t("resetPassword.title");
     }
   }
 };

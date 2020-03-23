@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="loaded === null" class="IHR_loading-spin">
-        <q-spinner color="secondary" size="2em" />
-        Loading RIPEstat widgets...
+      <q-spinner color="secondary" size="2em" />
+      Loading RIPEstat widgets...
     </div>
     <div :id="myId"></div>
   </div>
@@ -24,7 +24,7 @@ export default {
       myId: `prefixMixin${this._uid}`,
       name: "prefixMixin",
       prefixWidget: null,
-      loaded: null,
+      loaded: null
     };
   },
   beforeMount() {
@@ -32,12 +32,11 @@ export default {
   },
   methods: {
     navigateAndRemove() {
-       if(!this.removeStyle)
-          return;
-        this.$libraryDelayer.getRidOfInlineStyle(this.myId, "*");
-        var elemt = document.getElementById(this.myId);
-        elemt.style.width = "100%";
-        this.loaded = true;
+      if (!this.removeStyle) return;
+      this.$libraryDelayer.getRidOfInlineStyle(this.myId, "*");
+      var elemt = document.getElementById(this.myId);
+      elemt.style.width = "100%";
+      this.loaded = true;
     }
   },
   watch: {

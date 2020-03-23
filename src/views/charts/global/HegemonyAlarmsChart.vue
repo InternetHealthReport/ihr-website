@@ -1,13 +1,13 @@
 <template>
   <div class="IHR_chart">
-          <hegemony-alarms-table
-            :start-time="startTime"
-            :stop-time="endTime"
-            :data="table.data"
-            :loading="loading"
-            :filter="filterValue"
-            @filteredRows="filteredRows"
-          />
+    <hegemony-alarms-table
+      :start-time="startTime"
+      :stop-time="endTime"
+      :data="table.data"
+      :loading="loading"
+      :filter="filterValue"
+      @filteredRows="filteredRows"
+    />
   </div>
 </template>
 
@@ -30,7 +30,7 @@ export default {
       type: Number,
       default: DEFAULT_MIN_DEVIATION,
       required: true
-    },
+    }
   },
   data() {
     let hegemonyAlarmsFilter = new HegemonyAlarmsQuery()
@@ -70,12 +70,12 @@ export default {
           console.error(error); //FIXME do a correct alert
         }
       );
-    },
+    }
   },
   computed: {
     hegemonyAlarmsUrl() {
       return this.$ihr_api.getUrl(this.hegemonyAlarmsFilter);
-    },
+    }
   },
   watch: {
     minDeviation(newValue) {
@@ -93,10 +93,7 @@ export default {
   }
 };
 
-export {
-  DEFAULT_MIN_DEVIATION,
-  DEFAULT_AS_FAMILY
-};
+export { DEFAULT_MIN_DEVIATION, DEFAULT_AS_FAMILY };
 </script>
 
 <style lang="stylus">

@@ -11,9 +11,9 @@
         :filled="filled"
         :borderlessy="borderlessy"
         :rules="[
-                  val => $ihrStyle.validatePassword(val) || $t('genericErrors.invalid'),
-                  val => val == password2 || $t('genericErrors.notMatchingPassword')
-                ]"
+          val => $ihrStyle.validatePassword(val) || $t('genericErrors.invalid'),
+          val => val == password2 || $t('genericErrors.notMatchingPassword')
+        ]"
         @input="$refs['passwordConfirm'].validate()"
         ref="password"
       >
@@ -28,7 +28,9 @@
       <slot></slot>
     </div>
     <div v-show="!readOnly">
-      <label for="passwordConfrim" class="IHR_label">{{$t('passwordConfirm')}}</label>
+      <label for="passwordConfrim" class="IHR_label">{{
+        $t("passwordConfirm")
+      }}</label>
       <q-input
         v-model="password2"
         name="passwordConfrim"
@@ -36,9 +38,9 @@
         :input-class="passwordClass"
         :filled="filled"
         :rules="[
-                val => val == password || $t('genericErrors.notMatchingPassword'),
-                val => $ihrStyle.validatePassword(val) || $t('genericErrors.invalid')
-              ]"
+          val => val == password || $t('genericErrors.notMatchingPassword'),
+          val => $ihrStyle.validatePassword(val) || $t('genericErrors.invalid')
+        ]"
         @input="$refs['password'].validate()"
         ref="passwordConfirm"
       />
@@ -107,7 +109,7 @@ export default {
       this.$emit("input", this.password);
     },
     isValid() {
-      return typeof this.value === 'string' || this.value instanceof String
+      return typeof this.value === "string" || this.value instanceof String;
     }
   },
   mounted() {
@@ -119,8 +121,12 @@ export default {
     }
   },
   watch: {
-    password(){this.checkPasswords()},
-    password2(){this.checkPasswords()}
+    password() {
+      this.checkPasswords();
+    },
+    password2() {
+      this.checkPasswords();
+    }
   }
 };
 </script>

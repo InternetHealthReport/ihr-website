@@ -128,12 +128,14 @@ export default {
         let probeText = `probe #${prob.id}`;
         for (let i = 0; i < prob.startTime.length; ++i) {
           size += prob.level[i];
-          probeText += ` [${prob.startTime[i]}, ${prob.endTime[i]}] level ${prob.level[i]}`;
+          probeText += ` [${prob.startTime[i]}, ${prob.endTime[i]}] level ${
+            prob.level[i]
+          }`;
         }
         text.push(probeText);
         sizes.push(size / prob.startTime.length);
       });
-      this.noData = (latitudes.length === 0) ? this.$t("noOutage"): false;
+      this.noData = latitudes.length === 0 ? this.$t("noOutage") : false;
       return [
         {
           type: "scattergeo",
@@ -157,5 +159,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

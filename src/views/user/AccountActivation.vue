@@ -1,39 +1,60 @@
 <template>
   <div id="IHR_account-activation">
-    <h1>{{$t('accountActivation.title')}}</h1>
+    <h1>{{ $t("accountActivation.title") }}</h1>
     <div class="shadow-2">
-      {{bodyText}}
+      {{ bodyText }}
       <div v-if="actualState == state.VALIDATION" class="IHR_content">
         <q-spinner color="secondary" size="15em" />
       </div>
-      <div v-else-if="actualState == state.VALIDATE" class="IHR_content IHR_content-confirm">
+      <div
+        v-else-if="actualState == state.VALIDATE"
+        class="IHR_content IHR_content-confirm"
+      >
         <login-form v-model="loginError">
-          <template v-slot:default="user" @keydown.enter="login(user.email, user.password)">
-            <q-btn color="positive" @click="validateAndSend(user.email, user.password)" id="IHR_validare-and-send">{{$t('header.signUp')}}</q-btn>
+          <template
+            v-slot:default="user"
+            @keydown.enter="login(user.email, user.password)"
+          >
+            <q-btn
+              color="positive"
+              @click="validateAndSend(user.email, user.password)"
+              id="IHR_validare-and-send"
+              >{{ $t("header.signUp") }}</q-btn
+            >
           </template>
         </login-form>
       </div>
-      <div v-else-if="actualState == state.VALID" class="row justify-around IHR_content">
+      <div
+        v-else-if="actualState == state.VALID"
+        class="row justify-around IHR_content"
+      >
         <q-btn
           color="secondary"
           class="col-3"
-          @click="$router.push({name : 'personal_page'})"
-        >{{$t('personalPage.title')}}</q-btn>
+          @click="$router.push({ name: 'personal_page' })"
+          >{{ $t("personalPage.title") }}</q-btn
+        >
       </div>
       <div v-else class="row justify-around IHR_content">
         <q-btn
           color="positive"
           class="col-3"
-          @click="$router.push({name : 'sign_up'})"
-        >{{$t('header.signUp')}}</q-btn>
-        <q-btn color="secondary" class="col-3" @click="$router.push({name : 'home'})">homepage</q-btn>
+          @click="$router.push({ name: 'sign_up' })"
+          >{{ $t("header.signUp") }}</q-btn
+        >
+        <q-btn
+          color="secondary"
+          class="col-3"
+          @click="$router.push({ name: 'home' })"
+          >homepage</q-btn
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import LoginForm from "@/components/forms/LoginForm"
+import LoginForm from "@/components/forms/LoginForm";
 
 const TOKEN_STATE = {
   NOPE: 0,
@@ -64,29 +85,41 @@ export default {
       this.actualState = TOKEN_STATE.NOPE;
     }
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     validateAndSend(email, password) {
-      if(this.$ihrStyle.validatePassword(password) && this.$ihrStyle.validateEmail(email)) {
-        let entrypoint = (this.$route.query.active)?this.$ihr_api.userChangeEmail:this.$ihr_api.userValidate;
-        entrypoint(email, password, this.$route.query.token,
-        ()=>{
-          this.actualState = TOKEN_STATE.VALID;
-        },
-        (error)=>{
-          console.log(error.status)
-          switch(error.status) {
-            case 403:
-              this.$q.notify({ color: "negative", multiline: true, message: this.$t('accountActivation.wrongCredential')});
-            break;
-            case 409:
-              this.actualState = TOKEN_STATE.ALREADY_VALIDATED;
-            break;
-            default:
-              this.actualState = TOKEN_STATE.INVALID;
+      if (
+        this.$ihrStyle.validatePassword(password) &&
+        this.$ihrStyle.validateEmail(email)
+      ) {
+        let entrypoint = this.$route.query.active
+          ? this.$ihr_api.userChangeEmail
+          : this.$ihr_api.userValidate;
+        entrypoint(
+          email,
+          password,
+          this.$route.query.token,
+          () => {
+            this.actualState = TOKEN_STATE.VALID;
+          },
+          error => {
+            console.log(error.status);
+            switch (error.status) {
+              case 403:
+                this.$q.notify({
+                  color: "negative",
+                  multiline: true,
+                  message: this.$t("accountActivation.wrongCredential")
+                });
+                break;
+              case 409:
+                this.actualState = TOKEN_STATE.ALREADY_VALIDATED;
+                break;
+              default:
+                this.actualState = TOKEN_STATE.INVALID;
+            }
           }
-        });
+        );
       }
     }
   },

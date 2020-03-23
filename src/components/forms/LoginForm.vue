@@ -6,7 +6,10 @@
           v-model="email"
           label="email"
           type="email"
-          :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail'), externalError]"
+          :rules="[
+            val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail'),
+            externalError
+          ]"
           @input="$emit('input', false)"
           ref="email"
         >
@@ -19,7 +22,10 @@
           v-model="password"
           label="password"
           :type="isPwd ? 'password' : 'text'"
-          :rules="[val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword'), externalError]"
+          :rules="[
+            val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword'),
+            externalError
+          ]"
           ref="password"
           @input="$emit('input', false)"
         >
@@ -43,13 +49,13 @@
 
 <script>
 class MalformedInput extends Error {
-   constructor(message) {
+  constructor(message) {
     super(message);
   }
 }
 
 export default {
-  props:{
+  props: {
     value: {
       type: Boolean,
       default: false
@@ -60,22 +66,24 @@ export default {
       email: "",
       password: "",
       isPwd: true
-      }
+    };
   },
   methods: {
     externalError(val) {
-      return !this.value || this.$t('forms.loginUnsuccessful');
+      return !this.value || this.$t("forms.loginUnsuccessful");
     }
   },
   computed: {
-    hasDefaultSlot () {
+    hasDefaultSlot() {
       return !!this.$slots.default || !!this.$scopedSlots;
     },
     validEmailOrNull() {
-      return this.$ihrStyle.validateEmail(this.email)? this.email: null;
+      return this.$ihrStyle.validateEmail(this.email) ? this.email : null;
     },
     validPasswordOrNull() {
-      return this.$ihrStyle.validatePassword(this.password)? this.password: null;
+      return this.$ihrStyle.validatePassword(this.password)
+        ? this.password
+        : null;
     }
   },
   watch: {
@@ -86,7 +94,7 @@ export default {
   }
 };
 
-export { MalformedInput }
+export { MalformedInput };
 </script>
 
 <style lang="stylus">

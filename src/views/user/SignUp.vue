@@ -2,13 +2,13 @@
   <div id="IHR_sig-in-form">
     <transition name="IHR_errors-banner-animation">
       <q-banner class="IHR_errors-banner" v-if="errors.length != 0">
-        <p v-for="error in errors" :key="error">{{$t(`sigIn.${error}`)}}</p>
+        <p v-for="error in errors" :key="error">{{ $t(`sigIn.${error}`) }}</p>
         <template v-slot:action>
           <q-btn flat color="white" :label="$t('close')" @click="errors = []" />
         </template>
       </q-banner>
     </transition>
-    <h1>{{title}}</h1>
+    <h1>{{ title }}</h1>
     <div class="shadow-2" id="IHR_sig-in-form-container" v-if="!emailSent">
       <q-input
         v-model="email"
@@ -24,7 +24,9 @@
         v-model="password"
         label="password"
         :type="isPwd ? 'password' : 'text'"
-        :rules="[val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')]"
+        :rules="[
+          val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')
+        ]"
       >
         <template v-slot:prepend>
           <q-icon name="fa fa-key" />
@@ -37,7 +39,12 @@
           />
         </template>
       </q-input>
-      <div :style="{height: (recaptcha_loaded)? 'auto' : '90px', position: 'relative'}">
+      <div
+        :style="{
+          height: recaptcha_loaded ? 'auto' : '90px',
+          position: 'relative'
+        }"
+      >
         <vue-recaptcha
           :sitekey="$ihrStyle.recaptchaKey"
           id="IHR_sig-in-captcha"
@@ -49,13 +56,15 @@
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
       </div>
-      <div>{{$t('sigIn.mailWillBeSent')}}</div>
-      <q-btn color="positive" @click="validateAndSend">{{$t('header.signUp')}}</q-btn>
+      <div>{{ $t("sigIn.mailWillBeSent") }}</div>
+      <q-btn color="positive" @click="validateAndSend">{{
+        $t("header.signUp")
+      }}</q-btn>
     </div>
     <div class="shadow-2" id="IHR_confirm-your-email" v-else>
-      <div>{{$t("sigIn.emailSentTo")}}</div>
-      <div id="IHR_email-confirmation">{{email}}</div>
-      <div>{{$t("sigIn.pleaseFollowTheLink")}}</div>
+      <div>{{ $t("sigIn.emailSentTo") }}</div>
+      <div id="IHR_email-confirmation">{{ email }}</div>
+      <div>{{ $t("sigIn.pleaseFollowTheLink") }}</div>
     </div>
   </div>
 </template>
@@ -106,19 +115,21 @@ export default {
           this.password,
           this.recaptcha,
           () => {
-            this.emailSent = true
-            this.password = ""
+            this.emailSent = true;
+            this.password = "";
           },
           error => {
             console.error(error); //TODO bettere error handling
-            console.log(error.detail)
+            console.log(error.detail);
           }
         );
     }
   },
   computed: {
     title() {
-      return (this.emailSent)? this.$t('sigIn.thankYou'):this.$t('sigIn.title');
+      return this.emailSent
+        ? this.$t("sigIn.thankYou")
+        : this.$t("sigIn.title");
     }
   }
 };

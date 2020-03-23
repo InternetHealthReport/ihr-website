@@ -8,9 +8,9 @@
     <template v-slot:default="scope">
       <slot :asn="scope.elem">
         <q-btn @click="gotoASN(scope.elem.number)" flat>
-          <q-item-section side>{{scope.elem.type }}</q-item-section>
-          <q-item-section>{{scope.elem.name}}</q-item-section>
-          <q-item-section side>IPv{{scope.elem.asFamily}}</q-item-section>
+          <q-item-section side>{{ scope.elem.type }}</q-item-section>
+          <q-item-section>{{ scope.elem.name }}</q-item-section>
+          <q-item-section side>IPv{{ scope.elem.asFamily }}</q-item-section>
         </q-btn>
       </slot>
     </template>
@@ -44,7 +44,7 @@ export default {
             });
             return this.retrievedValues.length > MAX_RESULTS;
           });
-          console.log(result)
+          console.log(result);
         },
         error => {
           console.error(error);
@@ -55,7 +55,9 @@ export default {
   computed: {
     placeholder() {
       const filter_type = NetworkDelayLocation.EDGE_TYPE;
-      return Object.keys(filter_type).map(key => filter_type[key]).join(", ");
+      return Object.keys(filter_type)
+        .map(key => filter_type[key])
+        .join(", ");
     }
   }
 };
@@ -68,5 +70,4 @@ export default {
     padding 0px
     &-name
       text-align left
-
 </style>

@@ -2,19 +2,18 @@
   <div>
     <q-card v-if="loaded === false" negative>
       <q-card-section>
-        {{ $t('genericErrors.cloudNotLoad') }} BGPlay
+        {{ $t("genericErrors.cloudNotLoad") }} BGPlay
       </q-card-section>
     </q-card>
     <div v-if="loaded === null" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="15em" />
     </div>
-    <div :id="myId">
-    </div>
+    <div :id="myId"></div>
   </div>
 </template>
 
 <script>
-import { setTimeout } from 'timers';
+import { setTimeout } from "timers";
 export default {
   props: {
     asNumber: {
@@ -34,38 +33,38 @@ export default {
     return {
       myId: `bgplayContainer${this._uid}`,
       bgplay: null,
-      loaded: null,
+      loaded: null
     };
   },
   mounted() {
-    this.$libraryDelayer.load("ripe_widget_api", ()=>{
+    this.$libraryDelayer.load("ripe_widget_api", () => {
       console.log("resolved");
       this.bgplay = ripestat.init(
-      "bgplay",
-      {
-        unix_timestamps: "TRUE",
-        ignoreReannouncements: "true",
-        resource: this.asName,
-        starttime: this.startTime,
-        endtime: this.endTime,
-        rrcs: "10",
-        type: "bgp"
-      },
-      this.myId,
-      {
-        size: "fit",
-        show_controls: "no",
-        disable: ["footer-buttons", "container"]
-      },
-      () => {
-        this.loaded = true;
-        setTimeout(()=>{
-          var elemt = document.getElementById(this.myId);
-          elemt.style.width = "100%";
-        }, 150);
-      }
-    );
-    })
+        "bgplay",
+        {
+          unix_timestamps: "TRUE",
+          ignoreReannouncements: "true",
+          resource: this.asName,
+          starttime: this.startTime,
+          endtime: this.endTime,
+          rrcs: "10",
+          type: "bgp"
+        },
+        this.myId,
+        {
+          size: "fit",
+          show_controls: "no",
+          disable: ["footer-buttons", "container"]
+        },
+        () => {
+          this.loaded = true;
+          setTimeout(() => {
+            var elemt = document.getElementById(this.myId);
+            elemt.style.width = "100%";
+          }, 150);
+        }
+      );
+    });
   },
   watch: {
     asNumber(oldValue, newValue) {
@@ -80,7 +79,8 @@ export default {
         endtime: this.endTime
       });
       this.bgplay.reload();
-    },intervalLength(oldValue, newValue) {
+    },
+    intervalLength(oldValue, newValue) {
       if (oldValue == newValue) return;
       this.bgplay.update({
         starttime: this.startTime,
@@ -112,4 +112,3 @@ export default {
       display inline-block
       margin auto
 </style>
-

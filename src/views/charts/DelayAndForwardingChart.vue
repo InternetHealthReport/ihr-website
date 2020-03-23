@@ -9,16 +9,25 @@
       :no-data="noData"
     />
     <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
-        <q-card-section class="q-pa-xs">
-          <div class="row items-center">
-              <div class="col">
-                  <div class="text-h3"> {{details.delayData.dateTime | ihrUtcString}} </div>
-              </div>
-              <div class="col-auto">
-                <q-btn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible=false" icon="fa fa-times-circle"></q-btn>
-              </div>
+      <q-card-section class="q-pa-xs">
+        <div class="row items-center">
+          <div class="col">
+            <div class="text-h3">
+              {{ details.delayData.dateTime | ihrUtcString }}
+            </div>
           </div>
-        </q-card-section>
+          <div class="col-auto">
+            <q-btn
+              class="IHR_table-close-button"
+              size="sm"
+              round
+              flat
+              @click="details.tableVisible = false"
+              icon="fa fa-times-circle"
+            ></q-btn>
+          </div>
+        </div>
+      </q-card-section>
       <q-tabs
         v-model="details.activeTab"
         dense
@@ -29,13 +38,19 @@
         align="justify"
         narrow-indicator
       >
-        <q-tab name="delay" :label="$t('charts.delayAndForwarding.tables.delay.title')" />
-        <q-tab name="forwarding" :label="$t('charts.delayAndForwarding.tables.forwarding.title')" />
+        <q-tab
+          name="delay"
+          :label="$t('charts.delayAndForwarding.tables.delay.title')"
+        />
+        <q-tab
+          name="forwarding"
+          :label="$t('charts.delayAndForwarding.tables.forwarding.title')"
+        />
         <q-tab name="api" label="API" />
       </q-tabs>
-    <div v-if="loading" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
-    </div>
+      <div v-if="loading" class="IHR_loading-spinner">
+        <q-spinner color="secondary" size="15em" />
+      </div>
       <q-tab-panels v-model="details.activeTab" animated>
         <q-tab-panel name="delay">
           <delay-alarms-table
@@ -53,42 +68,57 @@
           />
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table">
-          <h3>{{$t("charts.delayAndForwarding.apiTitle")}}</h3>
+          <h3>{{ $t("charts.delayAndForwarding.apiTitle") }}</h3>
           <table>
             <tr>
               <td>
-                <p class="text-subtitle1">{{$t('charts.delayAndForwarding.yaxis')}}</p>
+                <p class="text-subtitle1">
+                  {{ $t("charts.delayAndForwarding.yaxis") }}
+                </p>
               </td>
               <td>
-                <a :href="delayUrl" target="_blank" id="delay">{{delayUrl}}</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p class="text-subtitle1">{{$t('charts.delayAndForwarding.yaxis2')}}</p>
-              </td>
-              <td>
-                <a :href="forwardingUrl" target="_blank" id="forwarding">{{forwardingUrl}}</a>
+                <a :href="delayUrl" target="_blank" id="delay">{{
+                  delayUrl
+                }}</a>
               </td>
             </tr>
             <tr>
               <td>
-                <p class="text-subtitle1">{{$t('charts.delayAndForwarding.tables.delay.title')}}</p>
+                <p class="text-subtitle1">
+                  {{ $t("charts.delayAndForwarding.yaxis2") }}
+                </p>
               </td>
               <td>
-                <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{delayAlarmsUrl}}</a>
+                <a :href="forwardingUrl" target="_blank" id="forwarding">{{
+                  forwardingUrl
+                }}</a>
               </td>
             </tr>
             <tr>
               <td>
-                <p class="text-subtitle1" name="forwardingAlarms" >{{$t('charts.delayAndForwarding.tables.forwarding.title')}}</p>
+                <p class="text-subtitle1">
+                  {{ $t("charts.delayAndForwarding.tables.delay.title") }}
+                </p>
+              </td>
+              <td>
+                <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{
+                  delayAlarmsUrl
+                }}</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <p class="text-subtitle1" name="forwardingAlarms">
+                  {{ $t("charts.delayAndForwarding.tables.forwarding.title") }}
+                </p>
               </td>
               <td>
                 <a
                   :href="forwardingAlarmsUrl"
                   target="_blank"
                   id="forwardingAlarms"
-                >{{forwardingAlarmsUrl}}</a>
+                  >{{ forwardingAlarmsUrl }}</a
+                >
               </td>
             </tr>
           </table>
@@ -100,10 +130,10 @@
 
 <script>
 import { extend } from "quasar";
-import CommonChartMixin from "./CommonChartMixin"
+import CommonChartMixin from "./CommonChartMixin";
 import DelayAlarmsTable from "./tables/DelayAlarmsTable";
 import ForwardingAlarmsTable from "./tables/ForwardingAlarmsTable";
-import { DELAY_AND_FORWARDING_LAYOUT } from "./layouts"
+import { DELAY_AND_FORWARDING_LAYOUT } from "./layouts";
 
 import {
   ForwardingQuery,
@@ -174,26 +204,25 @@ export default {
     };
   },
   methods: {
-    apiCall(){
-        this.traces = extend(true, [], DEFAULT_TRACES);
-        this.loadingDelay = true;
-        this.loadingForwarding = true;
-        this.queryForwardingAPI();
-        this.queryDelayAPI();
+    apiCall() {
+      this.traces = extend(true, [], DEFAULT_TRACES);
+      this.loadingDelay = true;
+      this.loadingForwarding = true;
+      this.queryForwardingAPI();
+      this.queryDelayAPI();
     },
     showTable(clickData) {
       let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
-      
-      if(clickData.points[0].data.yaxis == "y2"){
+
+      if (clickData.points[0].data.yaxis == "y2") {
         this.details.activeTab = "forwarding";
-      }
-      else{
-        this.details.activeTab = "delay"
+      } else {
+        this.details.activeTab = "delay";
       }
 
       this.details.delayData = {
         dateTime: chosenTime,
-        startTime:  new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
+        startTime: new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
         stopTime: new Date(chosenTime.getTime() + DELAY_ALARM_INTERVAL),
         data: [],
         loading: true
@@ -211,9 +240,11 @@ export default {
           let data = [];
           results.results.forEach(alarm => {
             data.some(elem => {
-              return alarm.asn == elem.asn &&
-                     alarm.link == elem.link &&
-                     alarm.timebin == elem.timebin;
+              return (
+                alarm.asn == elem.asn &&
+                alarm.link == elem.link &&
+                alarm.timebin == elem.timebin
+              );
             }) || data.push(alarm);
           });
           this.details.delayData.data = data;
@@ -300,7 +331,7 @@ export default {
   },
   watch: {
     asNumber(newValue) {
-      this.filters.forEach((filter) => {
+      this.filters.forEach(filter => {
         filter.asNumber(newValue);
       });
       this.debouncedApiCall();

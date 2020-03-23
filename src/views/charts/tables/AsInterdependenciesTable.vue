@@ -9,23 +9,29 @@
     flat
   >
     <template v-slot:body="props">
-      <q-tr 
-        :props="props" 
-        @click.native="routeToAsn(props.colsMap.asNumber, props.row)" 
-        class="IHR_table-row">
+      <q-tr
+        :props="props"
+        @click.native="routeToAsn(props.colsMap.asNumber, props.row)"
+        class="IHR_table-row"
+      >
         <q-td
           v-for="col in columns"
           :key="col.name"
           :props="props"
-          :class="col.name == 'hegemony'? ['IHR_important-cell', getCalssByHegemony(props)] : '' "
-        >{{ col.format(col.field(props.row)) }}</q-td>
+          :class="
+            col.name == 'hegemony'
+              ? ['IHR_important-cell', getCalssByHegemony(props)]
+              : ''
+          "
+          >{{ col.format(col.field(props.row)) }}</q-td
+        >
       </q-tr>
     </template>
   </q-table>
 </template>
 
 <script>
-import CommonTableMixin from "./CommonTableMixin"
+import CommonTableMixin from "./CommonTableMixin";
 
 export default {
   mixins: [CommonTableMixin],
@@ -125,16 +131,18 @@ export default {
     },
     routeToAsn(asn, row) {
       asn = asn.format(asn.field(row));
-      this.$router.push({ name: 'networks', params: {asn: this.$options.filters.ihr_NumberToAsOrIxp(asn)} })
+      this.$router.push({
+        name: "networks",
+        params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(asn) }
+      });
     },
     getCalssByHegemony(props) {
-      let hegemony = this.getCellValue(props, 'hegemony');
-      if(hegemony >= 0.5 ) return "IHR_color-deviation-hight-threshold"
-      if(hegemony >= 0.25) return "IHR_color-deviation-mid-threshold"
+      let hegemony = this.getCellValue(props, "hegemony");
+      if (hegemony >= 0.5) return "IHR_color-deviation-hight-threshold";
+      if (hegemony >= 0.25) return "IHR_color-deviation-mid-threshold";
       return "";
     }
   }
 };
 </script>
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>

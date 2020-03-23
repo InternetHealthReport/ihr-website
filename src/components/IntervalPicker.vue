@@ -5,7 +5,10 @@
         :min="minTime"
         :max="localEndtime"
         :value="localStartTime"
-        @input="localStartTime = $event; debouncedEmit();"
+        @input="
+          localStartTime = $event;
+          debouncedEmit();
+        "
         :white="white"
         hideTime
       />
@@ -15,7 +18,10 @@
         :min="localStartTime"
         :max="maxTime"
         :value="localEndtime"
-        @input="localEndtime = $event; debouncedEmit();"
+        @input="
+          localEndtime = $event;
+          debouncedEmit();
+        "
         :white="white"
         hideTime
       />
@@ -51,8 +57,8 @@ class ChartInterval {
     let end = new Date(endTimestamp);
     let begin = new Date(end);
     begin.setUTCDate(begin.getUTCDate() - nDaysBefore);
-    if(isNaN(begin.getTime()) || isNaN(end.getTime()))
-      throw RangeError("invalid start or end")
+    if (isNaN(begin.getTime()) || isNaN(end.getTime()))
+      throw RangeError("invalid start or end");
     return new ChartInterval(begin, end);
   }
 
@@ -66,7 +72,7 @@ class ChartInterval {
     this.end.setUTCHours(0, 0, 0, 0);
     return this;
   }
-};
+}
 
 export default {
   components: {
@@ -84,7 +90,10 @@ export default {
   data() {
     let debouncedEmit = debounce(
       () => {
-        this.$emit("input", new ChartInterval(this.localStartTime, this.localEndtime));
+        this.$emit(
+          "input",
+          new ChartInterval(this.localStartTime, this.localEndtime)
+        );
       },
       DEBOUNCE_TIME,
       false
@@ -95,12 +104,12 @@ export default {
       minTime: PROJECT_START_DATE,
       maxTime: new Date(),
       localStartTime: new Date(this.value.begin),
-      localEndtime: new Date(this.value.end),
+      localEndtime: new Date(this.value.end)
     };
   },
   computed: {
     textColor() {
-      return this.white?"IHR_white-text":"IHR_black-text";
+      return this.white ? "IHR_white-text" : "IHR_black-text";
     }
   }
 };
@@ -116,4 +125,3 @@ export { ChartInterval };
     &black-text
       color black
 </style>
-

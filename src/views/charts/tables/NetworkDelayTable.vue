@@ -11,13 +11,25 @@
     flat
   >
     <template v-slot:body="props">
-      <q-tr :props="props" >
-        <q-td key="startpoint" :props="props" v-if="showStart"> {{ getCellValue(props, "startpoint") }} </q-td>
-        <q-td key="endpoint" :props="props" > {{ getCellValue(props, "endpoint") }} </q-td>
-        <q-td key="median" :props="props" >{{ getCellValue(props, "median") }}</q-td>
-        <q-td key="nbtracks" :props="props" >{{ getCellValue(props, "nbtracks") }}</q-td>
-        <q-td key="realrtt" :props="props"> {{ getCellValue(props, "realrtt") }} </q-td>
-        <q-td key="nbprobes" :props="props"> {{ getCellValue(props, "nbprobes") }} </q-td>
+      <q-tr :props="props">
+        <q-td key="startpoint" :props="props" v-if="showStart">
+          {{ getCellValue(props, "startpoint") }}
+        </q-td>
+        <q-td key="endpoint" :props="props">
+          {{ getCellValue(props, "endpoint") }}
+        </q-td>
+        <q-td key="median" :props="props">{{
+          getCellValue(props, "median")
+        }}</q-td>
+        <q-td key="nbtracks" :props="props">{{
+          getCellValue(props, "nbtracks")
+        }}</q-td>
+        <q-td key="realrtt" :props="props">
+          {{ getCellValue(props, "realrtt") }}
+        </q-td>
+        <q-td key="nbprobes" :props="props">
+          {{ getCellValue(props, "nbprobes") }}
+        </q-td>
       </q-tr>
     </template>
   </q-table>
@@ -28,8 +40,7 @@ import CommonTableMixin from "./CommonTableMixin";
 
 export default {
   mixins: [CommonTableMixin],
-  components: {
-  },
+  components: {},
   props: {
     startTime: {
       type: Date,
@@ -52,14 +63,21 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
-      visibleColumns: ['startpoint', 'endpoint', 'median', 'nbtracks', 'realrtt', 'nbprobes'],
+      visibleColumns: [
+        "startpoint",
+        "endpoint",
+        "median",
+        "nbtracks",
+        "realrtt",
+        "nbprobes"
+      ],
       columns: [
         {
           name: "startpoint",
           required: false,
           label: "Startpoint",
           align: "left",
-          field: row => row.startpoint_type+row.startpoint_name,
+          field: row => row.startpoint_type + row.startpoint_name,
           format: val => this.locationNameStr(val),
           sortable: true
         },
@@ -68,7 +86,7 @@ export default {
           required: true,
           label: "Endpoint",
           align: "left",
-          field: row => row.endpoint_type+row.endpoint_name,
+          field: row => row.endpoint_type + row.endpoint_name,
           format: val => this.locationNameStr(val),
           sortable: true
         },
@@ -106,26 +124,29 @@ export default {
           format: val => val,
           sortable: true
         }
-        
       ]
     };
   },
   mounted() {
-      if(!this.showStart){
-          this.visibleColumns = ['endpoint', 'median', 'nbtracks', 'realrtt', 'nbprobes']
-      }
+    if (!this.showStart) {
+      this.visibleColumns = [
+        "endpoint",
+        "median",
+        "nbtracks",
+        "realrtt",
+        "nbprobes"
+      ];
+    }
   },
   methods: {
-    locationNameStr(loc){
-        if(loc.substring(0,2) == 'CT'){
-            return loc.substring(2)
-        }
-        else{
-            return loc
-        }
+    locationNameStr(loc) {
+      if (loc.substring(0, 2) == "CT") {
+        return loc.substring(2);
+      } else {
+        return loc;
+      }
     }
   }
 };
 </script>
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>

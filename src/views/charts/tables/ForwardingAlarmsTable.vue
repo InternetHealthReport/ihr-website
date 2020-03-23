@@ -10,14 +10,10 @@
     flat
   >
     <template v-slot:body="props">
-      <q-tr
-        :props="props"
-        @click.native="props.expand = !props.expand">
-        <q-td
-          v-for="col in columns"
-          :key="col.name"
-          :props="props"
-        >{{ col.format(col.field(props.row)) }}</q-td>
+      <q-tr :props="props" @click.native="props.expand = !props.expand">
+        <q-td v-for="col in columns" :key="col.name" :props="props">{{
+          col.format(col.field(props.row))
+        }}</q-td>
       </q-tr>
       <!--
       <q-tr v-if="props.expand" :props="props">
@@ -31,7 +27,7 @@
 </template>
 
 <script>
-import CommonTableMixin from "./CommonTableMixin"
+import CommonTableMixin from "./CommonTableMixin";
 //import Tracemon from "@/components/ripe/Tracemon";
 
 export default {

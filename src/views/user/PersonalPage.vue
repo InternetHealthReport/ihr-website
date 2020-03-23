@@ -1,37 +1,50 @@
 <template>
   <div>
     <div v-if="!$ihr_api.authenticated" class="shadow-2 IHR_not-access">
-      <h2>{{$t('personalPage.goAway')}}</h2>
+      <h2>{{ $t("personalPage.goAway") }}</h2>
       <div class="row justify-around">
         <q-btn
           color="secondary"
           class="col-3"
-          @click="$router.push({name : 'sign_up'})"
-        >{{$t('header.signUp')}}</q-btn>
-        <q-btn color="secondary" class="col-3" @click="$router.push({name : 'home'})">homepage</q-btn>
+          @click="$router.push({ name: 'sign_up' })"
+          >{{ $t("header.signUp") }}</q-btn
+        >
+        <q-btn
+          color="secondary"
+          class="col-3"
+          @click="$router.push({ name: 'home' })"
+          >homepage</q-btn
+        >
       </div>
     </div>
     <div v-else>
-      <q-drawer :value="showSidebar" side="left" bordered content-class="IHR_personal-page-sidebar">
-        <h3>{{$t('personalPage.title')}}</h3>
+      <q-drawer
+        :value="showSidebar"
+        side="left"
+        bordered
+        content-class="IHR_personal-page-sidebar"
+      >
+        <h3>{{ $t("personalPage.title") }}</h3>
         <div>
           <router-link
-            :to="{name : 'personal_page', hash: '#profile'}"
+            :to="{ name: 'personal_page', hash: '#profile' }"
             class="IHR_delikify"
-          >{{$t("personalPage.personaInfo")}}</router-link>
+            >{{ $t("personalPage.personaInfo") }}</router-link
+          >
         </div>
         <div>
           <router-link
-            :to="{name : 'personal_page', hash: '#settings'}"
+            :to="{ name: 'personal_page', hash: '#settings' }"
             class="IHR_delikify"
-          >{{$t("personalPage.settings")}}</router-link>
+            >{{ $t("personalPage.settings") }}</router-link
+          >
         </div>
       </q-drawer>
       <div id="IHR_personal-page">
         <div id="profile">
-          <h2>{{$t("personalPage.personaInfo")}}</h2>
+          <h2>{{ $t("personalPage.personaInfo") }}</h2>
           <div v-show="toSave !== false">
-            <label>{{$t("personalPage.definitiveConfirm")}}</label>
+            <label>{{ $t("personalPage.definitiveConfirm") }}</label>
             <confirm-element
               :value="false"
               :related-input="toSave"
@@ -52,7 +65,7 @@
             <confirm-element
               v-model="email.readonly"
               :related-input="email.content"
-              @save="activeSave({email: email.content})"
+              @save="activeSave({ email: email.content })"
               :restore.sync="email.content"
             />
           </div>
@@ -65,14 +78,18 @@
             <confirm-element
               v-model="password.readonly"
               :related-input="password.content"
-              @save="$refs['password'].isValid()?activeSave({password: password.content}): (password.readonly = false);"
-              @restore="$refs['password'].resetValidation(password.content);"
+              @save="
+                $refs['password'].isValid()
+                  ? activeSave({ password: password.content })
+                  : (password.readonly = false)
+              "
+              @restore="$refs['password'].resetValidation(password.content)"
             />
           </password-confirm>
         </div>
         <div id="settings">
-          <h2>{{$t("personalPage.settings")}}</h2>
-          <p>{{$t('personalPage.settingInstruction')}}</p>
+          <h2>{{ $t("personalPage.settings") }}</h2>
+          <p>{{ $t("personalPage.settingInstruction") }}</p>
           <div class="row">
             <q-table
               :title="$t('personalPage.monitoredAs')"
@@ -89,13 +106,22 @@
                     color="negative"
                     v-show="monitoring.selected.length > 0"
                     @click="removeMonitored"
-                  >{{$t("personalPage.removeSelected")}}</q-btn>
-                  <span class="IHR_label">{{$t("personalPage.addAs")}}</span>
+                    >{{ $t("personalPage.removeSelected") }}</q-btn
+                  >
+                  <span class="IHR_label">{{ $t("personalPage.addAs") }}</span>
                   <network-search-bar>
                     <template v-slot:default="elem">
-                      <q-btn @click="addAsn(elem.asn)" flat class="IHR_asn-element">
-                        <q-item-section side>{{elem.asn.number | ihr_NumberToAsOrIxp}}</q-item-section>
-                        <q-item-section class="IHR_asn-name">{{elem.asn.name}}</q-item-section>
+                      <q-btn
+                        @click="addAsn(elem.asn)"
+                        flat
+                        class="IHR_asn-element"
+                      >
+                        <q-item-section side>{{
+                          elem.asn.number | ihr_NumberToAsOrIxp
+                        }}</q-item-section>
+                        <q-item-section class="IHR_asn-name">{{
+                          elem.asn.name
+                        }}</q-item-section>
                       </q-btn>
                     </template>
                   </network-search-bar>
@@ -107,29 +133,45 @@
                     <q-toggle dense v-model="props.selected" />
                   </q-td>
                   <q-td :props="props" key="asNumber">
-                    <a @click="newWindow({name : 'networks', params:{asn: getCellValue(props, 'asNumber') }})" href="javascript:void(0)">
+                    <a
+                      @click="
+                        newWindow({
+                          name: 'networks',
+                          params: { asn: getCellValue(props, 'asNumber') }
+                        })
+                      "
+                      href="javascript:void(0)"
+                    >
                       {{ getCellValue(props, "asNumber") }}
                     </a>
                   </q-td>
-                  <q-td :props="props" key="name">{{ getCellValue(props, "name") }}</q-td>
+                  <q-td :props="props" key="name">{{
+                    getCellValue(props, "name")
+                  }}</q-td>
                 </q-tr>
               </template>
             </q-table>
             <div class="col-3" id="IHR_monitored-as-panel">
               <q-btn-toggle
                 :value="monitoring.globalLevel"
-                @input="monitoring.globalLevel = $event; monitoring.query.setGlobalLevel($event)"
+                @input="
+                  monitoring.globalLevel = $event;
+                  monitoring.query.setGlobalLevel($event);
+                "
                 :toggle-color="nofifyLevelColor"
-                :toggle-text-color="nofifyLevelColor == 'warning'?'black':'white'"
+                :toggle-text-color="
+                  nofifyLevelColor == 'warning' ? 'black' : 'white'
+                "
                 :options="monitoring.levelOption"
               />
-              <div class="IHR_info-level shadow-1">{{explaination}}</div>
+              <div class="IHR_info-level shadow-1">{{ explaination }}</div>
               <div class="q-gutter-sm" v-show="monitoring.query.modified">
-                <q-btn color="positive" @click="saveMonitoring">{{$t("personalPage.confirm")}}</q-btn>
-                <q-btn
-                  color="negative"
-                  @click="monitoring.query.restore()"
-                >{{$t("personalPage.reset")}}</q-btn>
+                <q-btn color="positive" @click="saveMonitoring">{{
+                  $t("personalPage.confirm")
+                }}</q-btn>
+                <q-btn color="negative" @click="monitoring.query.restore()">{{
+                  $t("personalPage.reset")
+                }}</q-btn>
               </div>
             </div>
           </div>
@@ -362,7 +404,7 @@ export default {
       this.monitoring.selected = [];
     },
     getCellValue(props, columnName) {
-      console.log("getCellValue", props, columnName)
+      console.log("getCellValue", props, columnName);
       let col = props.colsMap[columnName];
       return col.format(col.field(props.row));
     },
@@ -491,4 +533,3 @@ export default {
   &settings-table
     max-width 90%
 </style>
-

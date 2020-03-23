@@ -1,178 +1,189 @@
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div v-if="asNumber">
-    <div>
-        <h1 class="text-center">{{subHeader}} - {{headerString}}</h1>
-        <h3 class="text-center">{{interval.dayDiff()}}-day report ending on {{reportDateFmt}}
-            <date-time-picker
-                :min="minDate"
-                :max="maxDate"
-                :value="maxDate"
-                @input="setReportDate"
-                hideTime
-                class="IHR_subtitle_calendar"
-            />
+      <div>
+        <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
+        <h3 class="text-center">
+          {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
+          <date-time-picker
+            :min="minDate"
+            :max="maxDate"
+            :value="maxDate"
+            @input="setReportDate"
+            hideTime
+            class="IHR_subtitle_calendar"
+          />
         </h3>
-    </div>
-    <q-list v-if="showGraphs">
-      <q-expansion-item
-        :label="$t('charts.asInterdependencies.title')"
-        caption="BGP data"
-        header-class="IHR_charts-title"
-        icon="fas fa-project-diagram"
-        :disable="!show.hegemony"
-        v-model="show.hegemony"
-      >
-        <q-separator />
-        <q-card class="IHR_charts-body">
-          <q-card-section>
-            <as-interdependencies-chart
-            :start-time="startTime"
-            :end-time="endTime"
-            :as-number="asNumber"
-            :address-family="family"
-            :fetch="fetch"
-            ref="asInterdependenciesChart"
-            />
-          </q-card-section>
-       </q-card>
-      </q-expansion-item>
+      </div>
+      <q-list v-if="showGraphs">
+        <q-expansion-item
+          :label="$t('charts.asInterdependencies.title')"
+          caption="BGP data"
+          header-class="IHR_charts-title"
+          icon="fas fa-project-diagram"
+          :disable="!show.hegemony"
+          v-model="show.hegemony"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <as-interdependencies-chart
+                :start-time="startTime"
+                :end-time="endTime"
+                :as-number="asNumber"
+                :address-family="family"
+                :fetch="fetch"
+                ref="asInterdependenciesChart"
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
 
-      <q-expansion-item
-        :label="$t('charts.networkDelay.title')"
-        caption="Traceroute data"
-        header-class="IHR_charts-title"
-        icon="fas fa-shipping-fast"
-        v-model="show.net_delay"
-        :disable="show.net_delay_disable"
-      >
-        <q-separator />
-        <q-card class="IHR_charts-body">
-          <q-card-section>
-            <network-delay-chart 
-                :start-time="startTime" 
-                :end-time="endTime" 
+        <q-expansion-item
+          :label="$t('charts.networkDelay.title')"
+          caption="Traceroute data"
+          header-class="IHR_charts-title"
+          icon="fas fa-shipping-fast"
+          v-model="show.net_delay"
+          :disable="show.net_delay_disable"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <network-delay-chart
+                :start-time="startTime"
+                :end-time="endTime"
                 :startPointName="Math.abs(asNumber).toString()"
-                :startPointType="this.$route.params.asn.substring(0,2)"
+                :startPointType="this.$route.params.asn.substring(0, 2)"
                 :fetch="fetch"
                 searchBar
                 ref="networkDelayChart"
                 @display="displayNetDelay"
-            />
-          </q-card-section>
-       </q-card>
-      </q-expansion-item>
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
 
-      <q-expansion-item
-        :label="$t('charts.delayAndForwarding.title')"
-        caption="Traceroute data"
-        header-class="IHR_charts-title"
-        icon="fas fa-exchange-alt"
-        :disable="!show.delayAndForwarding"
-        v-model="show.delayAndForwarding"
-      >
-        <q-separator />
-        <q-card class="IHR_charts-body">
-          <q-card-section>
-            <delay-and-forwarding-chart
-            :start-time="startTime"
-            :end-time="endTime"
-            :as-number="asNumber"
-            :fetch="fetch"
-            ref="delayAndForwardingChart"
-            />
-          </q-card-section>
-        </q-card>
-      </q-expansion-item>
-      <q-expansion-item
-        :label="$t('charts.disconnections.title')"
-        caption="RIPE Atlas log"
-        header-class="IHR_charts-title"
-        icon="fas fa-plug"
-        :disable="!show.disco"
-        v-model="show.disco"
-      >
-        <q-separator />
-        <q-card class="IHR_charts-body">
-          <q-card-section>
-            <disco-chart
+        <q-expansion-item
+          :label="$t('charts.delayAndForwarding.title')"
+          caption="Traceroute data"
+          header-class="IHR_charts-title"
+          icon="fas fa-exchange-alt"
+          :disable="!show.delayAndForwarding"
+          v-model="show.delayAndForwarding"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <delay-and-forwarding-chart
+                :start-time="startTime"
+                :end-time="endTime"
+                :as-number="asNumber"
+                :fetch="fetch"
+                ref="delayAndForwardingChart"
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+        <q-expansion-item
+          :label="$t('charts.disconnections.title')"
+          caption="RIPE Atlas log"
+          header-class="IHR_charts-title"
+          icon="fas fa-plug"
+          :disable="!show.disco"
+          v-model="show.disco"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <disco-chart
                 :streamName="asNumber"
                 :start-time="startTime"
                 :end-time="endTime"
                 :fetch="fetch"
-                :minAvgLevel=9
+                :minAvgLevel="9"
                 ref="ihrChartDisco"
-            />
-          </q-card-section>
-        </q-card>
-      </q-expansion-item>
-      <div class="IHR_last-element">&nbsp;</div>
-    </q-list>
-  </div>
-  <div v-else>
-    <div> 
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+        <div class="IHR_last-element">&nbsp;</div>
+      </q-list>
+    </div>
+    <div v-else>
+      <div>
         <h1 class="text-center q-pa-xl">Network Report</h1>
         <div class="row justify-center">
-            <div class="col-8">
-            <network-search-bar bg="white" label="grey-8" input="black"
-                labelTxt="Enter an ASN, IXP ID, or network name (at least 3 characters)"/>
-            </div>
+          <div class="col-8">
+            <network-search-bar
+              bg="white"
+              label="grey-8"
+              input="black"
+              labelTxt="Enter an ASN, IXP ID, or network name (at least 3 characters)"
+            />
+          </div>
         </div>
-    </div>
-    <div class="q-pa-xl"> 
+      </div>
+      <div class="q-pa-xl">
         <div class="row justify-center">
-            <div class="col-6">
-                <h3>Examples:</h3>
-            </div>
+          <div class="col-6">
+            <h3>Examples:</h3>
+          </div>
         </div>
         <div class="row justify-center">
-            <div class="col-3">
-                <ul> 
-                    <li>
-                        <router-link
-                            :to="{name : 'networks', params:{asn: 'AS2497'}}"
-                            class="IHR_delikify"
-                        >IIJ (AS2497)</router-link>
-                    </li>
-                    <li>
-                        <router-link
-                            :to="{name : 'networks', params:{asn: 'AS15169'}}"
-                            class="IHR_delikify"
-                        >Google (AS15169)</router-link>
-                    </li>
-                    <li>
-                        <router-link
-                            :to="{name : 'networks', params:{asn: 'AS2501'}}"
-                            class="IHR_delikify"
-                        >University of Tokyo (AS2501)</router-link>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-3">
-                <ul> 
-                    <li>
-                        <router-link
-                            :to="{name : 'networks', params:{asn: 'AS7922'}}"
-                            class="IHR_delikify"
-                        >Comcast (AS7922)</router-link>
-                    </li>
-                    <li>
-                        <router-link
-                            :to="{name : 'networks', params:{asn: 'AS25152'}}"
-                            class="IHR_delikify"
-                        >K-Root server (AS25152)</router-link>
-                    </li>
-                    <li>
-                        <router-link
-                            :to="{name : 'networks', params:{asn: 'IXP208'}}"
-                            class="IHR_delikify"
-                        >DE-CIX (IXP208)</router-link>
-                    </li>
-                </ul>
-            </div>
+          <div class="col-3">
+            <ul>
+              <li>
+                <router-link
+                  :to="{ name: 'networks', params: { asn: 'AS2497' } }"
+                  class="IHR_delikify"
+                  >IIJ (AS2497)</router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{ name: 'networks', params: { asn: 'AS15169' } }"
+                  class="IHR_delikify"
+                  >Google (AS15169)</router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{ name: 'networks', params: { asn: 'AS2501' } }"
+                  class="IHR_delikify"
+                  >University of Tokyo (AS2501)</router-link
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-3">
+            <ul>
+              <li>
+                <router-link
+                  :to="{ name: 'networks', params: { asn: 'AS7922' } }"
+                  class="IHR_delikify"
+                  >Comcast (AS7922)</router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{ name: 'networks', params: { asn: 'AS25152' } }"
+                  class="IHR_delikify"
+                  >K-Root server (AS25152)</router-link
+                >
+              </li>
+              <li>
+                <router-link
+                  :to="{ name: 'networks', params: { asn: 'IXP208' } }"
+                  class="IHR_delikify"
+                  >DE-CIX (IXP208)</router-link
+                >
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -214,7 +225,9 @@ export default {
     NetworkSearchBar
   },
   data() {
-    let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn);
+    let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(
+      this.$route.params.asn
+    );
     let addressFamily = this.$route.query.af;
     return {
       addressFamily: addressFamily == undefined ? 4 : addressFamily,
@@ -223,12 +236,12 @@ export default {
       asName: null,
       charRefs: CHART_REFS,
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
-      show: { 
+      show: {
         delayAndForwarding: false,
         disco: false,
         hegemony: false,
         net_delay: true,
-        net_delay_disable: false,
+        net_delay_disable: false
       }
     };
   },
@@ -236,50 +249,49 @@ export default {
     pushRoute() {
       this.$router.push({
         //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
-        query: Object.assign({}, this.$route.query, { 
-            af: this.family,
-            last: this.interval.dayDiff(),
-            date: this.$options.filters.ihrUtcString(this.interval.end, false)
-        }) 
+        query: Object.assign({}, this.$route.query, {
+          af: this.family,
+          last: this.interval.dayDiff(),
+          date: this.$options.filters.ihrUtcString(this.interval.end, false)
+        })
       });
     },
     netName() {
-        let filter = new NetworkQuery().asNumber(this.asNumber);
-        this.$ihr_api.network(filter, results => {
+      let filter = new NetworkQuery().asNumber(this.asNumber);
+      this.$ihr_api.network(filter, results => {
         if (results.count != 1) {
-            this.loadingStatus = LOADING_STATUS.ERROR;
-            return;
+          this.loadingStatus = LOADING_STATUS.ERROR;
+          return;
         }
 
         // Hide tabs if not necessary
-        this.$nextTick(function () {
-            this.show.delayAndForwarding = results.results[0].delay_forwarding;
-            this.show.disco = results.results[0].disco;
-            this.show.hegemony = results.results[0].hegemony;
-        })
+        this.$nextTick(function() {
+          this.show.delayAndForwarding = results.results[0].delay_forwarding;
+          this.show.disco = results.results[0].disco;
+          this.show.hegemony = results.results[0].hegemony;
+        });
 
         this.asName = results.results[0].name;
         this.loadingStatus = LOADING_STATUS.LOADED;
         this.fetch = true;
-    });
-
+      });
     },
-    displayNetDelay(displayValue){ 
-        this.show.net_delay = displayValue;
-        this.$nextTick(function () {
-            this.show.net_delay_disable = !displayValue;
-        })
-    },
+    displayNetDelay(displayValue) {
+      this.show.net_delay = displayValue;
+      this.$nextTick(function() {
+        this.show.net_delay_disable = !displayValue;
+      });
+    }
   },
   mounted() {
-    this.netName()
+    this.netName();
   },
   computed: {
     family() {
-      return this.addressFamily==6? AS_FAMILY.v6 : AS_FAMILY.v4;
+      return this.addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4;
     },
-    addressFamilyText(){
-      return this.addressFamily? "IPv4" : "IPv6";
+    addressFamilyText() {
+      return this.addressFamily ? "IPv4" : "IPv6";
     },
     showGraphs() {
       return this.loadingStatus == LOADING_STATUS.LOADED;
@@ -319,14 +331,14 @@ export default {
     addressFamily() {
       this.pushRoute();
     },
-    '$route.params.asn': {
-        handler: function(asn){
-            this.loadingStatus = LOADING_STATUS.LOADING,
-            this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn);
-            this.pushRoute()
-            this.netName()
-        },
-        deep: true,
+    "$route.params.asn": {
+      handler: function(asn) {
+        (this.loadingStatus = LOADING_STATUS.LOADING),
+          (this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn));
+        this.pushRoute();
+        this.netName();
+      },
+      deep: true
     }
   }
 };
@@ -334,7 +346,4 @@ export default {
 
 <style lang="stylus">
 @import '../styles/quasar.variables';
-
 </style>
-
-

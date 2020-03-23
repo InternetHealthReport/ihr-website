@@ -75,16 +75,16 @@ function readCookie(name) {
 const IhrApi = {
   install(Vue) {
     let ihr_api = new Vue({
-/**
- * Internal data of the plugin.
- *
- * **user** will contain the part of the email before the '@'.
- *
- * **axios_base** will contain the axios object to make the query call. It change
- * when the user login.
- *
- * **headers** contain request headers to feede axios constructor.
- */
+      /**
+       * Internal data of the plugin.
+       *
+       * **user** will contain the part of the email before the '@'.
+       *
+       * **axios_base** will contain the axios object to make the query call. It change
+       * when the user login.
+       *
+       * **headers** contain request headers to feede axios constructor.
+       */
       data() {
         return {
           user: null,
@@ -93,35 +93,35 @@ const IhrApi = {
         };
       },
       created() {
-	//if user is alread logged verify the token
+        //if user is alread logged verify the token
         !this._get_user() || this.userVerifyToken();
       },
       computed: {
-/**
- * Use this to check if the user is autheticated
- *
- * it can be used into templates.
- *
- * @return {Boolean}
- */
+        /**
+         * Use this to check if the user is autheticated
+         *
+         * it can be used into templates.
+         *
+         * @return {Boolean}
+         */
         authenticated() {
           return this.user !== null;
         }
       },
       methods: {
-/**
- * @internal
- * @brief save/delete user.
- *
- * used for delete using with a parameter setted to null, or
- * to safe a user specifing both parameters.
- *
- * @parameter {String} email email of the user it is not stored but used
- * to calculate a user name.
- *
- * @parameter {String} json token returned by API.
- * @endinternal
- */
+        /**
+         * @internal
+         * @brief save/delete user.
+         *
+         * used for delete using with a parameter setted to null, or
+         * to safe a user specifing both parameters.
+         *
+         * @parameter {String} email email of the user it is not stored but used
+         * to calculate a user name.
+         *
+         * @parameter {String} json token returned by API.
+         * @endinternal
+         */
         _save_user(email, token) {
           if (email === null || token === null) {
             this.user = null;
@@ -136,13 +136,13 @@ const IhrApi = {
           }
           this._update_base();
         },
-/**
- * @internal
- * @brief get user from cookie, set it and return true if the coockie exists or false otherwise.
- *
- * @return {Boolean} if the user exists true otherwise false.
- * @endinternal
- */
+        /**
+         * @internal
+         * @brief get user from cookie, set it and return true if the coockie exists or false otherwise.
+         *
+         * @return {Boolean} if the user exists true otherwise false.
+         * @endinternal
+         */
         _get_user() {
           this.user = readCookie("user");
           if (this.user == null) {
@@ -249,7 +249,12 @@ const IhrApi = {
               successCallback = recursiveSuccess;
             }
           } else {
-            console.log("call with non Query object:", JSON.stringify(query), endpoint, method);
+            console.log(
+              "call with non Query object:",
+              JSON.stringify(query),
+              endpoint,
+              method
+            );
           }
 
           this._resolveAxiosPromise(
@@ -373,7 +378,11 @@ const IhrApi = {
             errorCallback
           );
         },
-        network_delay_alarms(networkDelayAlarmsQuery, successCallback, errorCallback) {
+        network_delay_alarms(
+          networkDelayAlarmsQuery,
+          successCallback,
+          errorCallback
+        ) {
           this._generic(
             NetworkDelayAlarmsQuery.ENTRY_POINT,
             NetworkDelayAlarmsQuery.HTTP_METHOD,
@@ -564,16 +573,14 @@ const IhrApi = {
       },
       filters: {
         // utilities
-        readableType(type){
-            if(type=='CT'){
-                return 'City';
-            }
-            else if(type == 'PB'){
-                return 'Probe';
-            }
-            else{
-                return type;
-            }
+        readableType(type) {
+          if (type == "CT") {
+            return "City";
+          } else if (type == "PB") {
+            return "Probe";
+          } else {
+            return type;
+          }
         },
         ihr_NumberToAsOrIxp(asn) {
           if (asn == 0) {
@@ -592,8 +599,10 @@ const IhrApi = {
           let asNumber = Number(routePieces[0]);
           return asnString.startsWith("IXP") ? -asNumber : asNumber;
         },
-        sortedKeys(val){
-            return Object.keys(val).sort(function(a,b){return val[b]-val[a]})
+        sortedKeys(val) {
+          return Object.keys(val).sort(function(a, b) {
+            return val[b] - val[a];
+          });
         }
       }
     });

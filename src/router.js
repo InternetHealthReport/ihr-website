@@ -14,7 +14,7 @@ import PersonalPage from "@/views/user/PersonalPage";
 import ResetPassword from "@/views/user/ResetPassword";
 import Documentation from "@/views/Documentation";
 import Bgplay from "@/components/ripe/Bgplay";
-import VueScrollTo from 'vue-scrollto';
+import VueScrollTo from "vue-scrollto";
 
 Vue.use(Router);
 
@@ -22,17 +22,17 @@ const routerBase = "/:locale/";
 const DEFAULT_LOCALE = "en-us";
 
 export default new Router({
-//The serving HTTP server should handle this properly 
-//see https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
-//for apache use FallBackRessource
-  mode: "history", 
+  //The serving HTTP server should handle this properly
+  //see https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
+  //for apache use FallBackRessource
+  mode: "history",
   base: "/ihr/",
-  scrollBehavior: (to) => {
+  scrollBehavior: to => {
     if (to.hash) {
       VueScrollTo.scrollTo(to.hash, 700);
       return {
         selector: to.hash,
-        offset: { x: 0, y: 50 },
+        offset: { x: 0, y: 50 }
       };
     }
     return { x: 0, y: 0 };
@@ -41,57 +41,57 @@ export default new Router({
     {
       path: "/",
       redirect: "/en-us/",
-      meta:{ title: "Internet Health Report"}
+      meta: { title: "Internet Health Report" }
     },
     {
       name: "home",
       path: routerBase,
       components: {
-          header: Header,
-          footer: Footer,
-          default: Home,
+        header: Header,
+        footer: Footer,
+        default: Home
       },
-      meta:{ title: "Internet Health Report"}
+      meta: { title: "Internet Health Report" }
     },
     {
       name: "global_report",
       path: `${routerBase}global_report`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: GlobalReport,
+        header: Header,
+        footer: Footer,
+        default: GlobalReport
       },
-      meta:{ title: "Global Report - IHR"}
+      meta: { title: "Global Report - IHR" }
     },
     {
       name: "contact",
       path: `${routerBase}contact`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: Contact,
+        header: Header,
+        footer: Footer,
+        default: Contact
       },
-      meta:{ title: 'Contact - IHR'}
+      meta: { title: "Contact - IHR" }
     },
     {
       name: "countries",
       path: `${routerBase}countries`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: Countries,
+        header: Header,
+        footer: Footer,
+        default: Countries
       },
-      meta:{ title: 'Country Report - IHR'}
+      meta: { title: "Country Report - IHR" }
     },
     {
       name: "networks",
       path: `${routerBase}networks/:asn?`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: Networks,
+        header: Header,
+        footer: Footer,
+        default: Networks
       },
-      meta:{ title: 'Network Report - IHR'}
+      meta: { title: "Network Report - IHR" }
     },
     {
       name: "old_as_and_ixp",
@@ -114,70 +114,73 @@ export default new Router({
       name: "api",
       path: `${routerBase}api/`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: API,
+        header: Header,
+        footer: Footer,
+        default: API
       },
-      meta:{ title: 'API - IHR'}
+      meta: { title: "API - IHR" }
     },
     {
       name: "sign_up",
       path: `${routerBase}sign_up`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: SignUp,
+        header: Header,
+        footer: Footer,
+        default: SignUp
       },
-      meta:{ title: 'Sign Up - IHR'}
+      meta: { title: "Sign Up - IHR" }
     },
     {
       name: "account_activation",
       path: `${routerBase}account_activation`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: AccountActivation,
+        header: Header,
+        footer: Footer,
+        default: AccountActivation
       },
-      meta:{ title: 'Account Activation - IHR'}
+      meta: { title: "Account Activation - IHR" }
     },
     {
       name: "reset_password",
       path: `${routerBase}reset_password`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: ResetPassword,
+        header: Header,
+        footer: Footer,
+        default: ResetPassword
       },
-      meta:{ title: 'Reset Password - IHR'}
+      meta: { title: "Reset Password - IHR" }
     },
     {
       name: "personal_page",
       path: `${routerBase}personal_page`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: PersonalPage,
+        header: Header,
+        footer: Footer,
+        default: PersonalPage
       },
-      meta:{ title: 'Personnal Page - IHR'}
+      meta: { title: "Personnal Page - IHR" }
     },
     {
       name: "documentation",
       path: `${routerBase}documentation`,
       components: {
-          header: Header,
-          footer: Footer,
-          default: Documentation,
+        header: Header,
+        footer: Footer,
+        default: Documentation
       },
-      meta:{ title: 'Documentation - IHR'}
+      meta: { title: "Documentation - IHR" }
     },
 
-      // Widgets
+    // Widgets
     {
       name: "bgplay",
       path: "/widget/bgplay",
       component: Bgplay,
-      props: route => ({ asNumber: parseInt(route.query.asn), dateTime: new Date(route.query.date)}),
-      meta:{ title: 'BGPlay - IHR'}
-    },
+      props: route => ({
+        asNumber: parseInt(route.query.asn),
+        dateTime: new Date(route.query.date)
+      }),
+      meta: { title: "BGPlay - IHR" }
+    }
   ]
 });

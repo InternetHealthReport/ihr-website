@@ -1,16 +1,16 @@
 <template>
   <div class="IHR_chart">
     <div>
-    <delay-alarms-table
+      <delay-alarms-table
         :start-time="startTime"
         :stop-time="endTime"
         :data="details.data"
         :loading="details.loading"
-        :filter='filterValue'
+        :filter="filterValue"
         @filteredRows="filteredRows"
         show-asn
         @prefix-details="$emit('prefix-details', $event)"
-    />
+      />
     </div>
   </div>
 </template>
@@ -87,7 +87,7 @@ export default {
     };
   },
   methods: {
-    apiCall(){ 
+    apiCall() {
       this.traces = [];
       this.loading = true;
       this.loadingDelay = true;
@@ -117,7 +117,7 @@ export default {
           console.error(error); //FIXME do a correct alert
         }
       );
-    },
+    }
   },
   computed: {
     delayAlarmsUrl() {

@@ -19,39 +19,56 @@
         </q-td>
         <q-td key="location" align>
           <div v-if="props.row.streamtype == 'asn'">
-            <a @click="newWindow({name : 'networks', params:{asn: 'AS'+props.row.streamname}})" href="javascript:void(0)">
-                AS{{props.row.streamname}}
+            <a
+              @click="
+                newWindow({
+                  name: 'networks',
+                  params: { asn: 'AS' + props.row.streamname }
+                })
+              "
+              href="javascript:void(0)"
+            >
+              AS{{ props.row.streamname }}
             </a>
           </div>
           <div v-else>
-              {{countryName(props.row.streamname)}}
+            {{ countryName(props.row.streamname) }}
           </div>
         </q-td>
-        <q-td key="starttime"> {{dateFormatter(props.row.starttime)}} </q-td>
-        <q-td key="duration"> {{props.row.duration}} </q-td>
-        <q-td key="deviation">{{props.row.avglevel}}</q-td>
-        <q-td key="nbdiscoprobes"> {{props.row.nbdiscoprobes}} </q-td>
+        <q-td key="starttime"> {{ dateFormatter(props.row.starttime) }} </q-td>
+        <q-td key="duration"> {{ props.row.duration }} </q-td>
+        <q-td key="deviation">{{ props.row.avglevel }}</q-td>
+        <q-td key="nbdiscoprobes"> {{ props.row.nbdiscoprobes }} </q-td>
       </q-tr>
       <q-tr v-show="props.expand" :props="props">
-          <q-td colspan="100%" class="IHR_nohover" bordered>
-              <div class='text-h3 text-center'>Pings from disconnected probes</div>
-            <div v-if='props.expand' class="IHR_side_borders">
-
-            <latencymon 
-                :start-time="dateHourShift(props.row.starttime, -Math.max(props.row.duration, 120)/60)" 
-                :stop-time="dateHourShift(props.row.endtime, Math.max(props.row.duration, 120)/60)" 
-                :msm-prb-ids="msmPrbIds(props.row.discoprobes)" 
-                style="max-width: 93%; margin: 0 auto;"/>
-            </div>
-          </q-td>
-        </q-tr>
+        <q-td colspan="100%" class="IHR_nohover" bordered>
+          <div class="text-h3 text-center">Pings from disconnected probes</div>
+          <div v-if="props.expand" class="IHR_side_borders">
+            <latencymon
+              :start-time="
+                dateHourShift(
+                  props.row.starttime,
+                  -Math.max(props.row.duration, 120) / 60
+                )
+              "
+              :stop-time="
+                dateHourShift(
+                  props.row.endtime,
+                  Math.max(props.row.duration, 120) / 60
+                )
+              "
+              :msm-prb-ids="msmPrbIds(props.row.discoprobes)"
+              style="max-width: 93%; margin: 0 auto;"
+            />
+          </div>
+        </q-td>
+      </q-tr>
     </template>
-
   </q-table>
 </template>
 
 <script>
-import CommonTableMixin from './CommonTableMixin.vue';
+import CommonTableMixin from "./CommonTableMixin.vue";
 import Latencymon from "@/components/ripe/Latencymon";
 import getCountryName from "@/plugins/countryName.js";
 
@@ -76,7 +93,7 @@ export default {
     stopTime: {
       type: Date,
       required: true
-    },
+    }
   },
   data() {
     return {
@@ -93,7 +110,7 @@ export default {
         {
           name: "overview",
           label: "Overview",
-          align: "center",
+          align: "center"
         },
         {
           name: "location",
@@ -101,8 +118,9 @@ export default {
           label: "Location",
           align: "left",
           field: row => [row.streamtype, row.streamname],
-          format: val => val[0] == 'country'? this.countryName(val[1]): val[1],
-          sortable: true,
+          format: val =>
+            val[0] == "country" ? this.countryName(val[1]) : val[1],
+          sortable: true
         },
         {
           name: "starttime",
@@ -138,29 +156,38 @@ export default {
           align: "left",
           field: row => row.nbdiscoprobes,
           format: val => val,
-          sortable: true,
-        },
-      ],
+          sortable: true
+        }
+      ]
     };
   },
   methods: {
-      dateFormatter(datetime){ 
-        var dt = new Date(datetime)
-        var options = { year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit',  timeZone: 'UTC' };
-        return dt.toLocaleDateString(undefined, options)
-      },
-      countryName(code){
-        return getCountryName(code)
-      },
-      msmPrbIds(probes){ 
-        var probeIds = probes.map( probe => { return probe.probe_id });
-        return {1030:probeIds, 1001:probeIds, 1591146:probeIds}
-      }
-  },
+    dateFormatter(datetime) {
+      var dt = new Date(datetime);
+      var options = {
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC"
+      };
+      return dt.toLocaleDateString(undefined, options);
+    },
+    countryName(code) {
+      return getCountryName(code);
+    },
+    msmPrbIds(probes) {
+      var probeIds = probes.map(probe => {
+        return probe.probe_id;
+      });
+      return { 1030: probeIds, 1001: probeIds, 1591146: probeIds };
+    }
+  }
 };
 </script>
 <style lang="stylus">
-.IHR_nohover 
+.IHR_nohover
     &:first-child
       padding-top 0px
       padding-bottom 20px
@@ -181,10 +208,8 @@ export default {
         background #ffffff
 
 
-.myClass 
+.myClass
 
     tbody td
         text-align left
-
-
 </style>

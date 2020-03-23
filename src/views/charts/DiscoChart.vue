@@ -12,16 +12,26 @@
       <q-spinner color="secondary" size="15em" />
     </div>
     <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
-        <q-card-section class="q-pa-xs">
-          <div class="row items-center">
-              <div class="col">
-                  <div class="text-h3"> {{details.startTime | ihrUtcString}} to {{details.endTime | ihrUtcString}}  </div>
-              </div>
-              <div class="col-auto">
-                <q-btn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible=false" icon="fa fa-times-circle"></q-btn>
-              </div>
+      <q-card-section class="q-pa-xs">
+        <div class="row items-center">
+          <div class="col">
+            <div class="text-h3">
+              {{ details.startTime | ihrUtcString }} to
+              {{ details.endTime | ihrUtcString }}
+            </div>
           </div>
-        </q-card-section>
+          <div class="col-auto">
+            <q-btn
+              class="IHR_table-close-button"
+              size="sm"
+              round
+              flat
+              @click="details.tableVisible = false"
+              icon="fa fa-times-circle"
+            ></q-btn>
+          </div>
+        </div>
+      </q-card-section>
       <q-tabs
         v-model="details.activeTab"
         dense
@@ -38,7 +48,10 @@
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>
         <q-tab-panel name="probes">
-          <disconnection-table :data="details.data" :loading="details.loading" />
+          <disconnection-table
+            :data="details.data"
+            :loading="details.loading"
+          />
         </q-tab-panel>
         <q-tab-panel name="tracemon">
           <tracemon
@@ -48,30 +61,36 @@
           />
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table">
-          <h3>{{$t("charts.disconnections.table.apiTitle")}}</h3>
+          <h3>{{ $t("charts.disconnections.table.apiTitle") }}</h3>
           <table>
             <tr>
               <td>
-                  <p class="text-subtitle1">{{$t('charts.disconnections.title')}}</p>
+                <p class="text-subtitle1">
+                  {{ $t("charts.disconnections.title") }}
+                </p>
               </td>
               <td>
                 <a
                   :href="disconnetionEventUrl"
                   target="_blank"
                   id="disconnection"
-                >{{disconnetionEventUrl}}</a>
+                  >{{ disconnetionEventUrl }}</a
+                >
               </td>
             </tr>
             <tr>
               <td>
-                <p class="text-subtitle1">{{$t("charts.disconnections.table.disconnectionProbes")}}</p>
+                <p class="text-subtitle1">
+                  {{ $t("charts.disconnections.table.disconnectionProbes") }}
+                </p>
               </td>
               <td>
                 <a
                   :href="disconnetionEvenProbestUr"
                   target="_blank"
                   id="tableUrl"
-                >{{disconnetionEvenProbestUr}}</a>
+                  >{{ disconnetionEvenProbestUr }}</a
+                >
               </td>
             </tr>
           </table>
@@ -86,14 +105,13 @@ import CommonChartMixin from "./CommonChartMixin";
 import { DiscoEventQuery, DiscoProbesQuery } from "@/plugins/IhrApi";
 import DisconnectionTable from "./tables/DisconnectionTable";
 import Tracemon from "@/components/ripe/Tracemon";
-import { DISCO_LAYOUT } from "./layouts"
+import { DISCO_LAYOUT } from "./layouts";
 
 function push0(trace, time) {
   trace.x.push(time);
   trace.y.push(0);
   trace.z.push(0);
 }
-
 
 export default {
   mixins: [CommonChartMixin],
@@ -139,19 +157,22 @@ export default {
       layout: DISCO_LAYOUT
     };
   },
-  created(){
-    this.traces[0].name =
-    this.layout.yaxis.title = this.$t('charts.disconnections.table.yaxis');
+  created() {
+    this.traces[0].name = this.layout.yaxis.title = this.$t(
+      "charts.disconnections.table.yaxis"
+    );
   },
   methods: {
-    duration(start, end, nonzero){ 
-      let durationMin = Math.ceil(Math.abs(new Date(end) - new Date(start)) / (1000*60));
+    duration(start, end, nonzero) {
+      let durationMin = Math.ceil(
+        Math.abs(new Date(end) - new Date(start)) / (1000 * 60)
+      );
 
-      if(durationMin == 0){ 
-          return nonzero
+      if (durationMin == 0) {
+        return nonzero;
       }
 
-      return durationMin
+      return durationMin;
     },
     apiCall() {
       this.loading = true;
@@ -159,14 +180,14 @@ export default {
         this.filters[0],
         result => {
           var events = [];
-            console.log('getting disco data')
-          result.results.forEach( event => { 
+          console.log("getting disco data");
+          result.results.forEach(event => {
             event.duration = this.duration(event.starttime, event.endtime, 0);
-            if(event.duration>DEFAULT_MIN_DISCO_DURATION){
+            if (event.duration > DEFAULT_MIN_DISCO_DURATION) {
               events.push(event);
             }
-          })
-            console.log(events)
+          });
+          console.log(events);
           this.dataEvents = events;
           this.fetchDiscoData(events);
           this.loading = false;
@@ -243,7 +264,7 @@ export default {
   },
   watch: {
     streamName(newValue) {
-      this.filters.forEach((filter) => {
+      this.filters.forEach(filter => {
         filter.streamName(newValue);
       });
       this.debouncedApiCall();
@@ -251,8 +272,7 @@ export default {
   }
 };
 
-export { push0 }
+export { push0 };
 </script>
 
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>

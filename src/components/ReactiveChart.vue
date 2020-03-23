@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h1 v-if="chartTitle">{{chartTitle}}</h1>
+    <h1 v-if="chartTitle">{{ chartTitle }}</h1>
     <div :ref="myId"></div>
-    <div v-show="noData" class="IHR_no-data" >
-      <div class="bg-white">{{noData}}</div>
+    <div v-show="noData" class="IHR_no-data">
+      <div class="bg-white">{{ noData }}</div>
     </div>
   </div>
 </template>
 <script>
-import Plotly from 'plotly.js-dist';
+import Plotly from "plotly.js-dist";
 /*
 emitted events
   plotly-click: propagation of plotly onclick
@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       created: false,
-      myId: `ihrReactiveChart${this._uid}`,
+      myId: `ihrReactiveChart${this._uid}`
     };
   },
   mounted() {
@@ -61,16 +61,10 @@ export default {
   },
   methods: {
     react() {
-      if(!this.created)
-        console.error("SHOULD NEVER HAPPEN")
+      if (!this.created) console.error("SHOULD NEVER HAPPEN");
 
-      if(this.traces == undefined)
-        return;
-      Plotly.react(
-        this.$refs[this.myId],
-        this.traces,
-        this.layout
-      );
+      if (this.traces == undefined) return;
+      Plotly.react(this.$refs[this.myId], this.traces, this.layout);
       this.$emit("loaded");
     },
     relayout() {
@@ -79,15 +73,19 @@ export default {
   },
   watch: {
     traces: {
-      handler: function() { this.react() },
+      handler: function() {
+        this.react();
+      },
       deep: true
     },
     layout: {
-      handler: function() { this.react() },
+      handler: function() {
+        this.react();
+      },
       deep: true
     }
   }
-}
+};
 </script>
 <style lang="stylus" scoped>
 .IHR_
@@ -104,6 +102,4 @@ export default {
       left -50%
       &:first-letter
         text-transform uppercase
-
 </style>
-

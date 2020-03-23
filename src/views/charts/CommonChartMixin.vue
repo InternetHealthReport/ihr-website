@@ -23,9 +23,9 @@ export default {
       type: Boolean,
       require: true
     },
-    filter:{ 
+    filter: {
       type: String,
-      default: ''
+      default: ""
     }
   },
   data() {
@@ -57,25 +57,26 @@ export default {
       this.$refs[this.myId].relayout();
     },
     filteredRows(val) {
-        this.$emit('filteredRows', val)
+      this.$emit("filteredRows", val);
     },
-    updateQuery(field, value){
-        if ('URLSearchParams' in window) {
-            var searchParams = new URLSearchParams(window.location.search)
-            searchParams.set(field, value);
-            var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
-            history.pushState(null, '', newRelativePathQuery);
-        }
+    updateQuery(field, value) {
+      if ("URLSearchParams" in window) {
+        var searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(field, value);
+        var newRelativePathQuery =
+          window.location.pathname + "?" + searchParams.toString();
+        history.pushState(null, "", newRelativePathQuery);
+      }
     }
   },
-  computed: { 
-    filterValue(){
-        return this.filter
+  computed: {
+    filterValue() {
+      return this.filter;
     }
   },
   watch: {
-    loading(newValue){
-      this.$emit('loading', newValue)
+    loading(newValue) {
+      this.$emit("loading", newValue);
     },
     startTime(newValue) {
       this.filters.forEach(filter => {
@@ -91,8 +92,7 @@ export default {
     },
     fetch() {
       this.debouncedApiCall();
-    },
+    }
   }
 };
-
 </script>

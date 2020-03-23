@@ -1,9 +1,13 @@
 <template>
   <q-select
-    :dark="dark" use-input clearable dense outlined
+    :dark="dark"
+    use-input
+    clearable
+    dense
+    outlined
     :label="label"
     :options="options"
-    v-model = "model"
+    v-model="model"
     @filter="filter"
     hide-dropdown-icon
     input-debounce="1000"
@@ -11,22 +15,29 @@
     :hint="hint"
   >
     <template v-slot:append>
-        <div v-if="!loading">
-            <q-icon name="fas fa-search" style="font-size: 0.82em; margin-rigth: 4px;"/>
-        </div>
-        <div v-else>
-              <q-spinner color="primary" size="0.82em" />
-        </div>
+      <div v-if="!loading">
+        <q-icon
+          name="fas fa-search"
+          style="font-size: 0.82em; margin-rigth: 4px;"
+        />
+      </div>
+      <div v-else>
+        <q-spinner color="primary" size="0.82em" />
+      </div>
     </template>
     <template v-slot:loading> </template>
     <template v-slot:option="scope">
-        <q-item
-            v-bind="scope.itemProps"
-            v-on="scope.itemEvents"
-            @click="selectLocation(scope.opt.value)" 
-          >
-          <q-item-section side color='accent'>{{scope.opt.type | readableType}}</q-item-section>
-          <q-item-section class="IHR_asn-element-name">{{scope.opt.name}}</q-item-section>
+      <q-item
+        v-bind="scope.itemProps"
+        v-on="scope.itemEvents"
+        @click="selectLocation(scope.opt.value)"
+      >
+        <q-item-section side color="accent">{{
+          scope.opt.type | readableType
+        }}</q-item-section>
+        <q-item-section class="IHR_asn-element-name">{{
+          scope.opt.name
+        }}</q-item-section>
       </q-item>
     </template>
   </q-select>
@@ -45,28 +56,27 @@ export default {
       default: false
     },
     label: {
-        type: String,
-        default: ''
+      type: String,
+      default: ""
     },
     hint: {
-        type: String,
-        default: ''
+      type: String,
+      default: ""
     },
     selected: {
-        type: String,
-        default: ''
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
-        options: [
-            {name: "Suggestions"},
-            {label: 2497,
-            value: 2497,
-            name: "IIJ"}],
-        model: this.selected,
-        loading: false,
-        always: false,
+      options: [
+        { name: "Suggestions" },
+        { label: 2497, value: 2497, name: "IIJ" }
+      ],
+      model: this.selected,
+      loading: false,
+      always: false,
       networkDelayLocation: new NetworkDelayLocation().orderedByName(),
       networkQuery: new NetworkQuery().orderedByNumber()
     };
@@ -74,23 +84,23 @@ export default {
   methods: {
     search(value, update) {
       this.loading = true;
-      this.options=[];
+      this.options = [];
       this.networkQuery.mixedContentSearch(value);
       this.$ihr_api.network(
         this.networkQuery,
         result => {
           result.results.some(element => {
             let elem = {
-                value: elem,
-                type: (element.number < 0 ? "IX" : "AS"),
-                name: Math.abs(element.number),
-                af: 4, 
-            }
+              value: elem,
+              type: element.number < 0 ? "IX" : "AS",
+              name: Math.abs(element.number),
+              af: 4
+            };
             this.options.push({
               value: elem,
               type: elem.type,
-              name: element.name+' ('+elem.type+elem.name+')',
-              label: elem.type+elem.name,
+              name: element.name + " (" + elem.type + elem.name + ")",
+              label: elem.type + elem.name,
               asFamily: elem.af
             });
             update();
@@ -106,15 +116,15 @@ export default {
         this.networkDelayLocation,
         result => {
           result.results.some(element => {
-            if(element.type != 'AS' && element.type != 'IX'){
-                this.options.push({
+            if (element.type != "AS" && element.type != "IX") {
+              this.options.push({
                 value: element,
                 type: element.type,
                 name: element.name,
                 label: element.name,
                 asFamily: element.af
-                });
-                update();
+              });
+              update();
             }
             return this.options.length > MAX_RESULTS;
           });
@@ -124,17 +134,15 @@ export default {
           console.error(error);
         }
       );
-
     },
     selectLocation(loc) {
       this.$emit("select", loc);
     },
-    filter (value, update, abort) {
-      if(value.length < MIN_CHARACTERS) {
+    filter(value, update, abort) {
+      if (value.length < MIN_CHARACTERS) {
         abort();
-      }
-      else{
-        this.search(value, update)
+      } else {
+        this.search(value, update);
       }
     }
   }
@@ -148,5 +156,4 @@ export default {
     padding 0px
     &-name
       text-align left
-
 </style>

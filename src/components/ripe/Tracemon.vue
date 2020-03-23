@@ -26,8 +26,8 @@ export default {
     };
   },
   mounted() {
-      console.log("tracemon mounted")
-      console.log(this.probes);
+    console.log("tracemon mounted");
+    console.log(this.probes);
     this.$libraryDelayer.load("tracemon_widget", () => {
       initTracemon(
         `#${this.myId}`,
@@ -37,15 +37,15 @@ export default {
           view: "host",
           aggregateIPv4: false,
           onlyCore: false,
-          realTimeUpdate:false,
+          realTimeUpdate: false
         },
         {
           // mergedMeasurements: [lm_msmid],
           measurements: MESUREMENTS,
           sources: this.probes,
           maximumTracerouteValiditySeconds: 600,
-          startTimestamp: (this.startTime.getTime() / 1000) - BOUNDARY_OFFSET,
-          stopTimestamp: (this.endTime.getTime() / 1000) + BOUNDARY_OFFSET
+          startTimestamp: this.startTime.getTime() / 1000 - BOUNDARY_OFFSET,
+          stopTimestamp: this.endTime.getTime() / 1000 + BOUNDARY_OFFSET
         } // Query options, see table below for more info
       );
     });
