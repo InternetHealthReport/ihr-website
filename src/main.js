@@ -1,34 +1,45 @@
-import Vue from 'vue'
-import VueResource from 'vue-resource'
-import VueRouter from 'vue-router'
-import Routes from './routes'
-import NetworkReport from './NetworkReport.vue'
-import GlobalReport from './GlobalReport.vue'
-import DetailLink from './DetailLink.vue'
-import DetailForwarding from './DetailForwarding.vue'
-import DetailDependentNetwork from './DetailDependentNetwork.vue'
+import Vue from "vue";
+import App from "@/App.vue";
+import router from "@/router";
+import "@/configs/quasar";
+import VueResizeText from "vue-resize-text";
+import i18n from "@/locales/i18n";
+import { IhrApi } from "@/plugins/IhrApi";
+import LibraryDelayer from "@/plugins/LibraryDelayer";
+import "@/styles/main.styl";
+import "@/styles/ihr.style.styl";
+import IhrStyle from "./plugins/IhrStyle";
+import Fragment from "vue-fragment";
+//import LoadScript from 'vue-plugin-load-script';
+ 
 
-window.$ = window.jQuery = require('jquery')
+//external plugin
+Vue.use(Fragment.Plugin);
+Vue.use(VueResizeText);
+//Vue.use(LoadScript);
 
-import './static/ihr/css/main.css'
-import 'semantic-ui-less/semantic.less'
-//require('semantic-ui-css/semantic.css')
-//require('semantic-ui-css/semantic.js')
 
-Vue.use(VueResource);
-Vue.use(VueRouter)
-//Vuetable requires detail rows to be globally registered
-Vue.component("detail-link", DetailLink)
-Vue.component("detail-forwarding", DetailForwarding)
-Vue.component("detail-dependent-network", DetailDependentNetwork)
-
-const router = new VueRouter({
-    routes: Routes,
-    mode: 'history'
+// internal plugins
+Vue.use(IhrApi);
+Vue.use(LibraryDelayer, {
+  libraries: {
+    ripe_widget_api: "https://stat.ripe.net/widgets/widget_api.js",
+    latencymon_widget: [
+      "https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/dev/libs/require.min.js", //preload require
+      "https://atlas.ripe.net/resource/latencymon/latencymon-widget-main.js"
+    ],
+    tracemon_widget: [
+      "https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/tracemon/dev/libs/require.min.js", //preload require
+      "https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js"
+    ],
+    google_recaptcha:
+      "https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit"
+  }
 });
+Vue.use(IhrStyle);
+
 new Vue({
-    el: '#ihr-chart',
-    router: router,
-})
-
-
+  router,
+  i18n,
+  render: h => h(App)
+}).$mount("#app");

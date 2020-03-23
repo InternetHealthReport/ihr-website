@@ -1,0 +1,49 @@
+@import './quasar.variables'
+
+a
+  color $accent
+
+p
+  &:first-letter
+    text-transform uppercase
+
+.IHR_
+  &label
+    text-align right
+    font-weight 500
+
+  &errors-banner
+    background-color $negative
+    width 100%
+    margin-top -1em
+    & p
+      font-size 14pt
+      font-weight 500
+      color white
+      &:first-letter
+        text-transform capitalize
+      &:first-child
+        margin-top 5pt
+
+    & .q-btn__content > div
+      font-weight 600
+
+    &-animation-enter-active, &-animation-leave-active
+      transition all .5s
+
+    &-animation-enter, &-animation-leave-to
+      height 0em
+
+  &delikify
+    color black
+    text-decoration none
+    font-weight 400
+    /*
+    &-animation-enter-active, &-animation-leave-active
+      transition all .3s ease
+    &-animation-enter, &-animation-leave-to
+      height 0%
+    &-animation-enter-to, &-animation-leave
+      height auto
+
+    */
