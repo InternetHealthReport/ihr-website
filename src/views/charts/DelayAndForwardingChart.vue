@@ -303,7 +303,9 @@ export default {
         trace.y.push(resp.magnitude);
         trace.x.push(resp.timebin);
       });
-      this.noData |= trace.x.length == 0;
+      if(trace.x.length ==0) this.noData = 'No data available for this network';
+      else this.noData = null;
+        
       this.layout.datarevision = new Date().getTime();
     },
     fetchDelay(data) {
