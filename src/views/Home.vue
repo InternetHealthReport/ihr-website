@@ -21,6 +21,12 @@
         })
       "
     ></div>
+    <div class="IHR_description-main"> 
+    See latest alarms in the 
+    <router-link :to="{ name: 'global_report' }">global report</router-link>
+    and network metrics in 
+    <router-link :to="{ name: 'networks' }">network reports</router-link>.
+    </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_description-main">
       <q-card
