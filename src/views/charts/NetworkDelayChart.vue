@@ -128,7 +128,6 @@ export default {
     endPointName: {
       type: Array,
       default: () => [
-        "CT4Tokyo, Tokyo, JP",
         "CT4Singapore, Central Singapore, SG",
         "CT4Ashburn, Virginia, US",
         "CT4London, England, GB",

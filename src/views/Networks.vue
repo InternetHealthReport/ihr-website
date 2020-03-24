@@ -21,7 +21,7 @@
           caption="BGP data"
           header-class="IHR_charts-title"
           icon="fas fa-project-diagram"
-          :disable="!show.hegemony"
+          :disable="show.hegemony_disable"
           v-model="show.hegemony"
         >
           <q-separator />
@@ -69,7 +69,7 @@
           caption="Traceroute data"
           header-class="IHR_charts-title"
           icon="fas fa-exchange-alt"
-          :disable="!show.delayAndForwarding"
+          :disable="show.delayAndForwarding_disable"
           v-model="show.delayAndForwarding"
         >
           <q-separator />
@@ -90,7 +90,7 @@
           caption="RIPE Atlas log"
           header-class="IHR_charts-title"
           icon="fas fa-plug"
-          :disable="!show.disco"
+          :disable="show.disco_disable"
           v-model="show.disco"
         >
           <q-separator />
@@ -237,9 +237,12 @@ export default {
       charRefs: CHART_REFS,
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
       show: {
-        delayAndForwarding: false,
-        disco: false,
-        hegemony: false,
+        delayAndForwarding: true,
+        delayAndForwarding_disable: false,
+        disco: true,
+        disco_disable: false,
+        hegemony: true,
+        hegemony_disable: false,
         net_delay: true,
         net_delay_disable: false
       }
@@ -266,8 +269,11 @@ export default {
 
         // Hide tabs if not necessary
         this.$nextTick(function() {
+          this.show.delayAndForwarding_disable = !results.results[0].delay_forwarding;
           this.show.delayAndForwarding = results.results[0].delay_forwarding;
+          this.show.disco_disable = !results.results[0].disco;
           this.show.disco = results.results[0].disco;
+          this.show.hegemony_disable = !results.results[0].hegemony;
           this.show.hegemony = results.results[0].hegemony;
         });
 
