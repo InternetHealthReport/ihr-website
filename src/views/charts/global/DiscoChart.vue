@@ -54,6 +54,7 @@ export default {
     apiCall() {
       this.filters[0]
         .streamName(this.streamName)
+        .timeInterval(this.startTime, this.endTime)
         .avgLevel(this.minAvgLevel, DiscoEventQuery.GTE);
       this.loading = true;
       this.$ihr_api.disco_events(

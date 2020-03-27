@@ -293,8 +293,8 @@ class DiscoEventQuery extends TimeQuery {
     return this._set("starttime", Query.dateFormatter(time), comparator);
   }
 
-  endttime(time, comparator = Query.EXACT) {
-    return this._set("endttime", Query.dateFormatter(time), comparator);
+  endtime(time, comparator = Query.EXACT) {
+    return this._set("endtime", Query.dateFormatter(time), comparator);
   }
 
   startTime(time, comparator = Query.GTE) {
@@ -302,7 +302,7 @@ class DiscoEventQuery extends TimeQuery {
   }
 
   endTime(time, comparator = Query.LTE) {
-    return this.endttime(time, comparator);
+    return this.endtime(time, comparator);
   }
 
   avgLevel(level, comparator = Query.EXACT) {

@@ -119,7 +119,7 @@ export default {
         sortBy: "deviation",
         descending: true,
         page: 1,
-        rowsPerPage: 10
+        rowsPerPage: 5
       },
       columns: [
         {

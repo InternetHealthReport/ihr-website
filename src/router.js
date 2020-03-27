@@ -13,6 +13,7 @@ import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
 import ResetPassword from "@/views/user/ResetPassword";
 import Documentation from "@/views/Documentation";
+import Corona from "@/views/Corona";
 import Bgplay from "@/components/ripe/Bgplay";
 import VueScrollTo from "vue-scrollto";
 
@@ -90,6 +91,16 @@ export default new Router({
         header: Header,
         footer: Footer,
         default: Networks
+      },
+      meta: { title: "Network Report - IHR" }
+    },
+    {
+      name: "corona",
+      path: `${routerBase}corona`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Corona
       },
       meta: { title: "Network Report - IHR" }
     },
