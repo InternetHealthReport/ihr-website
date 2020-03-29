@@ -13,10 +13,10 @@
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td key="startpoint" :props="props" v-if="showStart">
-          {{ getCellValue(props, "startpoint") }}
+          {{ prettyName(getCellValue(props, "startpoint")) }}
         </q-td>
         <q-td key="endpoint" :props="props">
-          {{ getCellValue(props, "endpoint") }}
+          {{ prettyName(getCellValue(props, "endpoint")) }}
         </q-td>
         <q-td key="median" :props="props">{{
           getCellValue(props, "median")

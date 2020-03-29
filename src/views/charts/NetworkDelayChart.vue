@@ -184,6 +184,7 @@ export default {
         .startPointType(this.startPointTypeFilter)
         .endPointKey(this.endPointKeysFilter)
         .timeInterval(this.startTime, this.endTime)
+        .orderByEndPointName()
         .orderedByTime();
     },
     apiCall() {
@@ -267,6 +268,9 @@ export default {
             endname = elem.endpoint_name.split(",")[0];
           }
 
+          startname = this.prettyName(startname)
+          endname = this.prettyName(endname)
+
           trace = {
             x: [],
             y: [],
@@ -306,13 +310,18 @@ export default {
   },
   watch: {
     startPointName() {
-      this.queryNetworkDelayApi();
+      //reset filter
+      this.startPointNameFilter = this.startPointName;
+      this.startPointTypeFilter = this.startPointType;
+      this.endPointKeysFilter = this.endPointName;
+
+      // get updated data
+      this.debouncedApiCall(); 
+      
     },
     clear() {
       this.clearGraph();
-      this.$nextTick(function() {
-        this.loading = true;
-      });
+      this.loading = true;
     }
   }
 };

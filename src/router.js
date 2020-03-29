@@ -8,6 +8,7 @@ import API from "@/views/Api";
 import Contact from "@/views/Contact";
 import Countries from "@/views/Countries";
 import Networks from "@/views/Networks";
+import Corona from "@/views/Corona";
 import SignUp from "@/views/user/SignUp";
 import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
@@ -92,6 +93,16 @@ export default new Router({
         default: Networks
       },
       meta: { title: "Network Report - IHR" }
+    },
+    {
+      name: "corona",
+      path: `${routerBase}corona`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Corona
+      },
+      meta: { title: "COVID19 Report - IHR" }
     },
     {
       name: "old_as_and_ixp",
