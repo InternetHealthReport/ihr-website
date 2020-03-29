@@ -7,10 +7,19 @@
                 <q-select v-model="selected" :options="selection" label="Select a country" />
             </div>
         </div>
-        <div class="row justify-center q-pa-xl">
-            <div class="col-8">
-                <h2 class="text-center" v-if="selected">
-                    National lockdown on {{countriesInfo[selected].start}}
+        <div class="row justify-center q-pa-xl" v-if="selected">
+            <div class="col-5">
+                <h2 class="text-center">
+                    One month before lockdown
+                    <q-icon name="fas fa-level-down-alt"></q-icon>
+                </h2>
+            </div>
+            <div class="col-2">
+            </div>
+            <div class="col-5">
+                <h2 class="text-center">
+                    Week of the lockdown (lockdown on {{countriesInfo[selected].start}})
+                    <q-icon name="fas fa-level-down-alt"></q-icon>
                 </h2>
             </div>
         </div>
@@ -18,7 +27,7 @@
       <div v-for="asn in asns">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h3>{{asn.name}} (AS{{asn.as}})</h3>
+                    <h2>{{asn.name}} (AS{{asn.as}})</h2>
                 </div>
                 <div class="col-6">
                     <network-delay-chart
