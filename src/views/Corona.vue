@@ -127,7 +127,7 @@ export default {
   data() {
       var select = [];
       Object.keys(lockdowns).forEach( name => select.push({
-          label: `<span style="display:inline-block; width:220px;">${name}</span>(${lockdowns[name].start})`,
+          label: `<span style="display:inline-block; width:70%;">${name}</span>(${lockdowns[name].start})`,
           value: name
         })
       );
