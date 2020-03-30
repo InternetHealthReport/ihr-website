@@ -1,37 +1,56 @@
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" >
       <div>
         <h1 class="text-center">Network Delays During National Lockdowns</h1>
+        
+        <div class="row justify-center">
+            <div class="col-6 IHR_description q-pa-lg">
+                <p>
+                As part of the <a href="https://labs.ripe.net/Members/becha/hackathons-in-the-time-of-corona" targeet="_blank">RIPE Hackathon on the health of the Internet 
+                    during the COVID-19 crisis</a>, we hacked this experimental interface to look at network delays during national lockdowns.
+                This is an attempt to monitor and study congestion that could occur at large eyeball networks during mass quarantines.
+                </p>
+                <p>Select a country below to display estimated delays from major eyeball ASes.
+                As a reference we display a week of data taken one month before the lockdown (left plots), then show the week during the official lockdown (center plots), and the latest 7 days of data (right plots). </p> 
+                <p>
+                Displayed delays are computed  from <a href="https://atlas.ripe.net/" target="_blank">RIPE Atlas</a> traceroutes towards Google DNS, the networks' main upstream providers, and, for European countries, two large IXPs (AMS-IX and DE-CIX). See also our <router-link :to='{ name:"documentation", hash:"#Network_delay"}'>documentation on network delays.</router-link>
+                </p>
+                <p>
+                Be patient. Loading all graphs may take some time for certain countries.
+                </p>
+            </div>
+        </div>
         <div class="row justify-center">
             <div class="col-3">
                 <q-select v-model="selected" :options="selection" label="Select a country" />
             </div>
         </div>
-        <div class="row justify-center q-pa-xl" v-if="selected">
+        <div  v-if="selected">
+        <div class="row justify-center q-pa-xl">
 
             <div class="col-4">
-                <h2 class="text-center">
+                <h3 class="text-center">
                     One month before lockdown
                     <q-icon name="fas fa-level-down-alt"></q-icon>
-                </h2>
+                </h3>
             </div>
             <div class="col-4">
-                <h2 class="text-center">
-                    Lockdown on {{countriesInfo[selected].start}}
+                <h3 class="text-center">
+                    Lockdown ({{countriesInfo[selected['value']].start}})
                     <q-icon name="fas fa-level-down-alt"></q-icon>
-                </h2>
+                </h3>
             </div>
             <div class="col-4">
-                <h2 class="text-center">
-                    Now 
+                <h3 class="text-center">
+                    Latest 
                     <q-icon name="fas fa-level-down-alt"></q-icon>
-                </h2>
+                </h3>
             </div>
         </div>
-      </div>
       <div v-for="asn in asns">
             <div class="row">
                 <div class="col-12 text-center q-pa-md">
+                    <div class="IHR_anchor" :id="asn.as"></div>
                     <h2>{{asn.name}} (AS{{asn.as}})</h2>
                 </div>
                 <div class="col-4 q-pa-xs">
@@ -90,29 +109,34 @@
             />
         </div>
       </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import reportMixin from "@/views/mixin/reportMixin";
-import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
 import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
-import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
 import lockdowns from "@/plugins/covid19/lockdowns";
 //const TIMELINE_URL = "/covid-19/lockdowns.json"
 
 export default {
   mixins: [reportMixin],
   components: {
-    DelayAndForwardingChart,
     NetworkDelayChart,
   },
   data() {
+      var select = [];
+      Object.keys(lockdowns).forEach( name => select.push({
+          label: `<span style="display:inline-block; width:220px;">${name}</span>(${lockdowns[name].start})`,
+          value: name
+        })
+      );
     return {
       addressFamily: 4,
       countriesInfo: lockdowns,
-      selection: Object.keys(lockdowns),
-      selected: null,
+      selection: select,
+      selected: null, 
       asns: [],
       fetch: false,
       clear: 1,
@@ -123,6 +147,8 @@ export default {
     };
   },
   created(){ 
+      let selectedCountry = this.$route.query.country;
+      this.selected = selectedCountry == undefined ? null : {value: selectedCountry, label: `<span style="display:inline-block; width:220px;">${selectedCountry}</span>(${lockdowns[selectedCountry].start})`};
   },
   methods: {
       pushRoute(){}, //required for mixin
@@ -133,16 +159,17 @@ export default {
   mounted() {
   },
   watch: {
-    selected() {
+    selected(newValue) {
+      this.$route.query.country = newValue;
       this.fetch = false;
       this.clear += 1;
       this.yMax = 0;
-      this.asns = this.countriesInfo[this.selected].eyeball;
+      this.asns = this.countriesInfo[this.selected['value']].eyeball;
       this.endpoints = {}
-        this.countriesInfo[this.selected].eyeball.forEach( eyeball => {
+        this.countriesInfo[this.selected['value']].eyeball.forEach( eyeball => {
             let dests = ["AS415169"]
             eyeball.dependency.forEach( dep => { if(dep.hege>0.1)dests.push("AS4"+dep.asn);})
-            if(this.countriesInfo[this.selected].continent=='Europe'){ 
+            if(this.countriesInfo[this.selected['value']].continent=='Europe'){ 
                 dests = dests.concat(["IX423", "IX4208"])
 
             }
@@ -152,10 +179,10 @@ export default {
         //"AS43557",
         //"AS425152",
         //"AS420144",
-      this.before_start = new Date(this.countriesInfo[this.selected].monitoring_dates.before.monday+' 00:00Z');
-      this.before_end = new Date(this.countriesInfo[this.selected].monitoring_dates.before.sunday+' 23:59');
-      this.during_start = new Date(this.countriesInfo[this.selected].monitoring_dates.lockdown.monday+' 00:00Z');
-      this.during_end = new Date(this.countriesInfo[this.selected].monitoring_dates.lockdown.sunday+' 23:59');
+      this.before_start = new Date(this.countriesInfo[this.selected['value']].monitoring_dates.before.monday+' 00:00Z');
+      this.before_end = new Date(this.countriesInfo[this.selected['value']].monitoring_dates.before.sunday+' 23:59');
+      this.during_start = new Date(this.countriesInfo[this.selected['value']].monitoring_dates.lockdown.monday+' 00:00Z');
+      this.during_end = new Date(this.countriesInfo[this.selected['value']].monitoring_dates.lockdown.sunday+' 23:59');
       this.after_start = null;
       this.after_end = null;
       this.$nextTick(function() {
@@ -168,4 +195,14 @@ export default {
 
 <style lang="stylus">
 @import '../styles/quasar.variables';
+
+.IHR_description
+    font-weight 400
+
+.IHR_anchor
+    display block
+    position relative
+    top -250px
+    visibility hidden
+
 </style>

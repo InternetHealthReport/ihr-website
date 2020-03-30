@@ -95,8 +95,8 @@ export default new Router({
       meta: { title: "Network Report - IHR" }
     },
     {
-      name: "corona",
-      path: `${routerBase}corona`,
+      name: "covid19",
+      path: `${routerBase}covid19`,
       components: {
         header: Header,
         footer: Footer,
