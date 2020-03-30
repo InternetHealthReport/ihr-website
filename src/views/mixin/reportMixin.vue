@@ -48,7 +48,6 @@ export default {
     } catch (e) {
       if (!(e instanceof RangeError)) {
         console.log("Range Error");
-        throw e;
       }
       interval = this.getDateInterval(new Date(), 3); // fallback to last few days
     }
@@ -81,6 +80,15 @@ export default {
       let newInterval = new DateInterval(begin, end);
       newInterval.setHours();
       return newInterval;
+    },
+    updateQuery(field, value) {
+      if ("URLSearchParams" in window) {
+        var searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(field, value);
+        var newRelativePathQuery =
+          window.location.pathname + "?" + searchParams.toString();
+        history.pushState(null, "", newRelativePathQuery);
+      }
     }
   },
   computed: {

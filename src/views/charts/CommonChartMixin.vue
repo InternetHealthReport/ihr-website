@@ -2,6 +2,7 @@
 import { debounce } from "quasar";
 import ReactiveChart from "@/components/ReactiveChart";
 import { Query } from "@/plugins/IhrApi";
+import networkName from "@/plugins/networkName"; 
 
 const DEFAULT_DEBOUNCE = 50;
 
@@ -53,6 +54,9 @@ export default {
     this.debouncedApiCall();
   },
   methods: {
+    prettyName(shortname){ 
+        return networkName(shortname);
+    },
     relayout() {
       this.$refs[this.myId].relayout();
     },

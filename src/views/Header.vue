@@ -27,7 +27,13 @@
           >
         </div>
       </div>
-
+    <div class="col-4 row no-wrap justify-end">
+        <div
+          class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
+        >
+        <router-link :to="{ name:'covid19' }">RTT/COVID-19</router-link>
+        </div>
+    </div>
       <!--Log in /Log out stuff here-->
     </q-toolbar>
   </q-header>

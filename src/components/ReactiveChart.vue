@@ -34,6 +34,11 @@ export default {
     noData: {
       require: false,
       default: false
+    },
+    yMax: {
+      type: Number,
+      require: false,
+      default: 0
     }
   },
   data() {
@@ -83,6 +88,10 @@ export default {
         this.react();
       },
       deep: true
+    },
+    yMax(newValue){ 
+        var graphDiv = this.$refs[this.myId];
+        Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
     }
   }
 };

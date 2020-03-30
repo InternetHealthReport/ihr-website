@@ -281,6 +281,8 @@ export default {
       margin-left auto
       margin-right auto
       width 70%
+      max-width 800px
+      min-width 600px
       text-align center
 
       & > div

@@ -1,4 +1,6 @@
 <script>
+import networkName from "@/plugins/networkName"; 
+
 export default {
   props: {
     data: {
@@ -22,6 +24,9 @@ export default {
     };
   },
   methods: {
+    prettyName(shortname){ 
+        return networkName(shortname);
+    },
     getCellValue(props, columnName) {
       let col = props.colsMap[columnName];
       return col.format(col.field(props.row));
