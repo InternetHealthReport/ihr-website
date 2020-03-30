@@ -80,6 +80,15 @@ export default {
       let newInterval = new DateInterval(begin, end);
       newInterval.setHours();
       return newInterval;
+    },
+    updateQuery(field, value) {
+      if ("URLSearchParams" in window) {
+        var searchParams = new URLSearchParams(window.location.search);
+        searchParams.set(field, value);
+        var newRelativePathQuery =
+          window.location.pathname + "?" + searchParams.toString();
+        history.pushState(null, "", newRelativePathQuery);
+      }
     }
   },
   computed: {

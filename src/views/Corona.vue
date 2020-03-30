@@ -118,7 +118,6 @@
 import reportMixin from "@/views/mixin/reportMixin";
 import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
 import lockdowns from "@/plugins/covid19/lockdowns";
-//const TIMELINE_URL = "/covid-19/lockdowns.json"
 
 export default {
   mixins: [reportMixin],
@@ -160,7 +159,8 @@ export default {
   },
   watch: {
     selected(newValue) {
-      this.$route.query.country = newValue;
+        console.log(newValue)
+      this.updateQuery("country", newValue.value);
       this.fetch = false;
       this.clear += 1;
       this.yMax = 0;
