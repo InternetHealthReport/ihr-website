@@ -1,22 +1,22 @@
 <template>
   <div class="IHR_chart">
     <div class="row justify-center" v-if="searchBar">
-      <div class="col-5 q-pa-sm">
+      <div class="col-4 q-pa-sm">
         <location-search-bar
           @select="addStartLocation"
           :hint="$t('searchBar.locationSource')"
           :label="$t('searchBar.locationHint')"
-          :selected="startPointNameStr()"
+          :selected="startPointNameStr"
         />
       </div>
-      <div class="col-5 q-pa-sm">
+      <div class="col-4 q-pa-sm">
         <location-search-bar
           @select="addEndLocation"
           :hint="$t('searchBar.locationDestination')"
           :label="$t('searchBar.locationHint')"
         />
       </div>
-      <div class="col-2 q-pa-sm">
+      <div class="col-3 q-pa-sm">
         <q-btn @click="debouncedApiCall" color="secondary" class="q-ml-sm"
           >Add</q-btn
         >
@@ -31,6 +31,7 @@
           @plotly-click="showTable"
           :ref="myId"
           :no-data="noData"
+          :yMax="yMax"
         />
       </div>
     </div>
@@ -150,9 +151,18 @@ export default {
     noTable: {
       type: Boolean,
       default: false
+    },
+    yMax: {
+      type: Number,
+      default: 1
+    },
+    noYLabel: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
+    var layout = NET_DELAY_LAYOUT;
     return {
       details: {
         activeTab: "delay",
@@ -164,18 +174,13 @@ export default {
       apiFilter: null,
       openClose: true,
       traces: [],
-      layout: NET_DELAY_LAYOUT,
+      layout: layout,
       selectedStart: "",
       selectedEnd: "",
       endPointKeysFilter: this.endPointName,
       startPointNameFilter: this.startPointName,
-      startPointTypeFilter: this.startPointType
+      startPointTypeFilter: this.startPointType,
     };
-  },
-  computed: {
-    delayUrl() {
-      return this.$ihr_api.getUrl(this.apiFilter);
-    }
   },
   methods: {
     setFilter() {
@@ -248,6 +253,7 @@ export default {
     },
     fetchNetworkDelay(data) {
       let traces = {};
+      let maxValue = 0;
       data.forEach(elem => {
         let key = elem.startpoint_type;
         key += elem.startpoint_af;
@@ -287,15 +293,30 @@ export default {
               "<extra></extra>"
           };
           traces[key] = trace;
-          this.traces.push(trace);
         }
 
+        maxValue = maxValue>elem.median? maxValue : elem.median;
         trace.y.push(elem.median);
         trace.x.push(elem.timebin);
       });
+      // Sort traces by alphabetical order
+      let keys = Object.keys(traces).sort();
+      keys.forEach( key => this.traces.push(traces[key]))
+
+       // emit max value
+        this.$emit('max-value', maxValue)
+
       this.loading = false;
       this.notifyDisplay(this.traces.length > 0);
       this.layout.datarevision = new Date().getTime();
+    },
+    notifyDisplay(displayed) {
+      this.$emit("display", displayed);
+    }
+  },
+  computed: {
+    delayUrl() {
+      return this.$ihr_api.getUrl(this.apiFilter);
     },
     startPointNameStr() {
       if (isNaN(this.startPointName)) {
@@ -303,9 +324,6 @@ export default {
       } else {
         return this.startPointType.toString() + this.startPointName.toString();
       }
-    },
-    notifyDisplay(displayed) {
-      this.$emit("display", displayed);
     }
   },
   watch: {
@@ -322,7 +340,7 @@ export default {
     clear() {
       this.clearGraph();
       this.loading = true;
-    }
+    },
   }
 };
 </script>

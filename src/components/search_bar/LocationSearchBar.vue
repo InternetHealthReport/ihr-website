@@ -71,8 +71,6 @@ export default {
   data() {
     return {
       options: [
-        { name: "Suggestions" },
-        { label: 2497, value: 2497, name: "IIJ" }
       ],
       model: this.selected,
       loading: false,
@@ -144,6 +142,11 @@ export default {
       } else {
         this.search(value, update);
       }
+    }
+  },
+  watch:{ 
+    selected(newValue){ 
+        this.model = newValue
     }
   }
 };

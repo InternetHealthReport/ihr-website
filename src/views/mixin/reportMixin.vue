@@ -48,7 +48,6 @@ export default {
     } catch (e) {
       if (!(e instanceof RangeError)) {
         console.log("Range Error");
-        throw e;
       }
       interval = this.getDateInterval(new Date(), 3); // fallback to last few days
     }

@@ -8,17 +8,22 @@
             </div>
         </div>
         <div class="row justify-center q-pa-xl" v-if="selected">
-            <div class="col-5">
+
+            <div class="col-4">
                 <h2 class="text-center">
                     One month before lockdown
                     <q-icon name="fas fa-level-down-alt"></q-icon>
                 </h2>
             </div>
-            <div class="col-2">
-            </div>
-            <div class="col-5">
+            <div class="col-4">
                 <h2 class="text-center">
-                    Week of the lockdown (lockdown on {{countriesInfo[selected].start}})
+                    Lockdown on {{countriesInfo[selected].start}}
+                    <q-icon name="fas fa-level-down-alt"></q-icon>
+                </h2>
+            </div>
+            <div class="col-4">
+                <h2 class="text-center">
+                    Now 
                     <q-icon name="fas fa-level-down-alt"></q-icon>
                 </h2>
             </div>
@@ -26,36 +31,64 @@
       </div>
       <div v-for="asn in asns">
             <div class="row">
-                <div class="col-12 text-center">
+                <div class="col-12 text-center q-pa-md">
                     <h2>{{asn.name}} (AS{{asn.as}})</h2>
                 </div>
-                <div class="col-6">
+                <div class="col-4 q-pa-xs">
                     <network-delay-chart
                         :start-time="before_start"
                         :end-time="before_end"
                         :startPointName="asn.as.toString()"
                         startPointType="AS"
                         :endPointName="endpoints[asn.as]"
-                        searchBar
                         ref="networkDelayChart_before"
                         :fetch="fetch"
                         :clear="clear"
+                        @max-value='updateYaxis'
+                        :yMax='yMax'
+                        :searchBar='searchBar'
                     />
                 </div>
-                <div class="col-6">
+                <div class="col-4 q-pa-xs">
                     <network-delay-chart
                         :start-time="during_start"
                         :end-time="during_end"
                         :startPointName="asn.as.toString()"
                         startPointType="AS"
                         :endPointName="endpoints[asn.as]"
-                        searchBar
                         ref="networkDelayChart"
                         :fetch="fetch"
                         :clear="clear"
+                        @max-value='updateYaxis'
+                        :yMax='yMax'
+                        :searchBar='searchBar'
+                    />
+                </div>
+                <div class="col-4 q-pa-xs">
+                    <network-delay-chart
+                        :start-time="startTime"
+                        :end-time="endTime"
+                        :startPointName="asn.as.toString()"
+                        startPointType="AS"
+                        :endPointName="endpoints[asn.as]"
+                        ref="networkDelayChart"
+                        :fetch="fetch"
+                        :clear="clear"
+                        @max-value='updateYaxis'
+                        :yMax='yMax'
+                        :searchBar='searchBar'
                     />
                 </div>
             </div>
+     </div>
+      <div class='row self-end'>
+        <div class="col-2 offset-10">
+            <h3>Toolbox</h3>
+            <q-toggle
+            v-model="searchBar"
+            label="Add more destination networks"
+            />
+        </div>
       </div>
   </div>
 </template>
@@ -69,12 +102,12 @@ import lockdowns from "@/plugins/covid19/lockdowns";
 //const TIMELINE_URL = "/covid-19/lockdowns.json"
 
 export default {
+  mixins: [reportMixin],
   components: {
     DelayAndForwardingChart,
     NetworkDelayChart,
   },
   data() {
-      console.log(lockdowns)
     return {
       addressFamily: 4,
       countriesInfo: lockdowns,
@@ -82,13 +115,20 @@ export default {
       selected: null,
       asns: [],
       fetch: false,
-      clear: 1
+      clear: 1,
+      yMax: 0,
+      interval: this.getDateInterval(new Date(), 7), // current week
+      searchBar: false
 
     };
   },
   created(){ 
   },
   methods: {
+      pushRoute(){}, //required for mixin
+      updateYaxis(newMaxY){ 
+        this.yMax = this.yMax>newMaxY? this.yMax : newMaxY
+      }
   },
   mounted() {
   },
@@ -96,6 +136,7 @@ export default {
     selected() {
       this.fetch = false;
       this.clear += 1;
+      this.yMax = 0;
       this.asns = this.countriesInfo[this.selected].eyeball;
       this.endpoints = {}
         this.countriesInfo[this.selected].eyeball.forEach( eyeball => {
