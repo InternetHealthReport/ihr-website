@@ -11,7 +11,7 @@
                 This is an attempt to monitor and study congestion that could occur at large eyeball networks during mass quarantines.
                 </p>
                 <p>Select a country below to display estimated delays from major eyeball ASes.
-                As a reference we display a week of data taken one month before the lockdown (left plots), then show the week during the official lockdown (center plots), and the latest 7 days of data (right plots). </p> 
+                As a reference we display a week of data taken one month before the lockdown (left plots), then show the week during the official lockdown (center plots), and the latest 7 days of data (right plots). All dates and times are UTC. </p> 
                 <p>
                 Displayed delays are computed  from <a href="https://atlas.ripe.net/" target="_blank">RIPE Atlas</a> traceroutes towards Google DNS, the networks' main upstream providers, and, for European countries, two large IXPs (AMS-IX and DE-CIX). See also our <router-link :to='{ name:"documentation", hash:"#Network_delay"}'>documentation on network delays.</router-link>
                 </p>
