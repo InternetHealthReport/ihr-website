@@ -13,7 +13,7 @@
                 <p>Select a country below to display estimated delays from major eyeball ASes.
                 As a reference we display a week of data taken one month before the lockdown (left plots), then show the week during the official lockdown (center plots), and the latest 7 days of data (right plots). All dates and times are UTC. </p> 
                 <p>
-                Displayed delays are computed  from <a href="https://atlas.ripe.net/" target="_blank">RIPE Atlas</a> traceroutes towards Google DNS, the networks' main upstream providers, and, for European countries, two large IXPs (AMS-IX and DE-CIX). See also our <router-link :to='{ name:"documentation", hash:"#Network_delay"}'>documentation on network delays.</router-link>
+                Displayed delays are computed  from <a href="https://atlas.ripe.net/" target="_blank">RIPE Atlas</a> traceroutes towards Google DNS, the networks' main upstream providers, and, for European countries, two large IXPs (AMS-IX and DE-CIX), and the E-root DNS server for other countries. See also our <router-link :to='{ name:"documentation", hash:"#Network_delay"}'>documentation on network delays.</router-link>
                 </p>
                 <p>
                 Be patient. Loading all graphs may take some time for certain countries.
@@ -126,8 +126,9 @@ export default {
   },
   data() {
       var select = [];
-      Object.keys(lockdowns).forEach( name => select.push({
-          label: `<span style="display:inline-block; width:70%;">${name}</span>(${lockdowns[name].start})`,
+      var countries = Object.keys(lockdowns).sort();
+      countries.forEach( name => select.push({
+          label: `${name} (${lockdowns[name].start})`,
           value: name
         })
       );
@@ -147,7 +148,7 @@ export default {
   },
   created(){ 
       let selectedCountry = this.$route.query.country;
-      this.selected = selectedCountry == undefined ? null : {value: selectedCountry, label: `<span style="display:inline-block; width:220px;">${selectedCountry}</span>(${lockdowns[selectedCountry].start})`};
+      this.selected = selectedCountry == undefined ? null : {value: selectedCountry, label: `${selectedCountry} (${lockdowns[selectedCountry].start})`};
   },
   methods: {
       pushRoute(){}, //required for mixin
@@ -159,7 +160,6 @@ export default {
   },
   watch: {
     selected(newValue) {
-        console.log(newValue)
       this.updateQuery("country", newValue.value);
       this.fetch = false;
       this.clear += 1;
@@ -170,8 +170,12 @@ export default {
             let dests = ["AS415169"]
             eyeball.dependency.forEach( dep => { if(dep.hege>0.1)dests.push("AS4"+dep.asn);})
             if(this.countriesInfo[this.selected['value']].continent=='Europe'){ 
+                // Display delay to AMSIX and DECIX for european countries
                 dests = dests.concat(["IX423", "IX4208"])
 
+            }else{ 
+                // Add E and K root servers to other countries
+                dests.push("AS421556")
             }
             this.endpoints[eyeball.as] = dests
 
