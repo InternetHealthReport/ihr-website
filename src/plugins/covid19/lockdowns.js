@@ -1,2461 +1,4 @@
 const lockdowns = {
-    " Australia": {
-        "cc": "AU",
-        "continent": "Oceania",
-        "end": "2020-03-23",
-        "eyeball": [
-            {
-                "as": 1221,
-                "as-descr": "Telstra Corporation Ltd",
-                "autnum": "ASN-TELSTRA",
-                "cc": "AU",
-                "cumulative": 40.490623585076804,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0323356666980282,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0338977845232574,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 4637,
-                        "hege": 1.0,
-                        "name": "ASN-TELSTRA-GLOBAL Telstra Global, HK"
-                    },
-                    {
-                        "asn": 209,
-                        "hege": 0.013094459323401,
-                        "name": "CENTURYLINK-US-LEGACY-QWEST - Qwest Communications Company, LLC, US"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0631177037906988,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "ASN-TELSTRA Telstra Pty Ltd, AU",
-                "percent": 40.490623585076804,
-                "samples": 796800,
-                "v6capable": 57.39620983935743,
-                "v6preferred": 56.32944277108434
-            },
-            {
-                "as": 4804,
-                "as-descr": "Microplex PTY LTD",
-                "autnum": "MPX-AS",
-                "cc": "AU",
-                "cumulative": 59.261493305174184,
-                "dependency": [
-                    {
-                        "asn": 6939,
-                        "hege": 0.0450665072079964,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 15412,
-                        "hege": 0.0360550759956166,
-                        "name": "FLAG-AS Reliance Globalcom Limited, GB"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.385127912663367,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 7473,
-                        "hege": 0.949164707984999,
-                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
-                    },
-                    {
-                        "asn": 6461,
-                        "hege": 0.395690659014733,
-                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
-                    }
-                ],
-                "name": "MPX-AS Microplex PTY LTD, AU",
-                "percent": 18.770869720097384,
-                "samples": 369385,
-                "v6capable": 0.07309446783166615,
-                "v6preferred": 0.06416069954112917
-            },
-            {
-                "as": 7545,
-                "as-descr": "TPG Telecom Limited",
-                "autnum": "TPG-INTERNET-AP",
-                "cc": "AU",
-                "cumulative": 73.44337486908387,
-                "dependency": [
-                    {
-                        "asn": 6453,
-                        "hege": 0.0196214382416033,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 4817,
-                        "hege": 0.0465547123293768,
-                        "name": "TPG-INTERNET-SG-AP TPG Telecom Limited, AU"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.669785599133976,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.172903751047972,
-                        "name": "TELIANET Telia Company AB, EU"
-                    }
-                ],
-                "name": "TPG-INTERNET-AP TPG Telecom Limited, AU",
-                "percent": 14.181881563909682,
-                "samples": 279080,
-                "v6capable": 3.5502364913286515,
-                "v6preferred": 3.3517271033395444
-            },
-            {
-                "as": 133612,
-                "as-descr": "Vodafone Australia Pty Ltd",
-                "autnum": "VODAFONE-AS-AP",
-                "cc": "AU",
-                "cumulative": 78.80457125318175,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0710225903539856,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.409593627827262,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0242164479639465,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.108121333785758,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.161178129535716,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 7473,
-                        "hege": 0.415812053084309,
-                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
-                    },
-                    {
-                        "asn": 7474,
-                        "hege": 0.421612265554328,
-                        "name": "OPTUSCOM-AS01-AU SingTel Optus Pty Ltd, AU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0305387319701666,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "VODAFONE-AS-AP Vodafone Australia Pty Ltd, AU",
-                "percent": 5.361196384097877,
-                "samples": 105501,
-                "v6capable": 15.472839120008341,
-                "v6preferred": 14.907915564781376
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-24",
-                "sunday": "2020-03-01"
-            },
-            "lockdown": {
-                "monday": "2020-03-23",
-                "sunday": "2020-03-29"
-            }
-        },
-        "name": " Australia",
-        "scope": "National",
-        "start": "\t2020-03-23"
-    },
-    " Bolivia": {
-        "cc": "BO",
-        "continent": "America",
-        "end": "2020-03-22",
-        "eyeball": [
-            {
-                "as": 27882,
-                "as-descr": "Celular de Bolivia S.A.",
-                "autnum": "Telefonica",
-                "cc": "BO",
-                "cumulative": 42.099363939565144,
-                "dependency": [
-                    {
-                        "asn": 3491,
-                        "hege": 0.0219107777339124,
-                        "name": "BTN-ASN - PCCW Global, Inc., US"
-                    },
-                    {
-                        "asn": 7303,
-                        "hege": 0.0271076857938974,
-                        "name": "Telecom Argentina S.A., AR"
-                    },
-                    {
-                        "asn": 10481,
-                        "hege": 0.0271076857938974,
-                        "name": "Prima S.A., AR"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.0325305961310699,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 262589,
-                        "hege": 0.230556652191078,
-                        "name": "INTERNEXA Brasil Operadora de Telecomunicaes S.A, BR"
-                    },
-                    {
-                        "asn": 701,
-                        "hege": 0.318622266291425,
-                        "name": "UUNET - MCI Communications Services, Inc. d/b/a Verizon Business, US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.010181224277888,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0942218342617999,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.0106261121314589,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0812463882547475,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.376875652347912,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 262206,
-                        "hege": 0.365342693832713,
-                        "name": "COMCEL GUATEMALA S.A., GT"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0953538196985561,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Telefnica Celular de Bolivia S.A., BO",
-                "percent": 42.099363939565144,
-                "samples": 508189,
-                "v6capable": 0.010232413531186231,
-                "v6preferred": 0.007477532965097631
-            },
-            {
-                "as": 6568,
-                "as-descr": "S.A. - EntelNet",
-                "autnum": "Entel",
-                "cc": "BO",
-                "cumulative": 76.49484143223778,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.264540514738286,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0198943878177576,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.527427733003899,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0199680707356011,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.224800756310376,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0748495640427361,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Entel S.A. - EntelNet, BO",
-                "percent": 34.39547749267263,
-                "samples": 415194,
-                "v6capable": 24.445680814269956,
-                "v6preferred": 24.32501433065025
-            },
-            {
-                "as": 27839,
-                "as-descr": "Ltda",
-                "autnum": "Comteco",
-                "cc": "BO",
-                "cumulative": 82.65124039240571,
-                "dependency": [
-                    {
-                        "asn": 27882,
-                        "hege": 0.10299667036626,
-                        "name": "Telefnica Celular de Bolivia S.A., BO"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.0380688124306326,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 28024,
-                        "hege": 0.354568997410285,
-                        "name": "Nuevatel PCS de Bolivia S.A., BO"
-                    },
-                    {
-                        "asn": 701,
-                        "hege": 0.0307806141324454,
-                        "name": "UUNET - MCI Communications Services, Inc. d/b/a Verizon Business, US"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.356270810210877,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 12252,
-                        "hege": 0.354568997410285,
-                        "name": "America Movil Peru S.A.C., PE"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0164261931187569,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0312985571587125,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0934170548326298,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.544210136884943,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 262206,
-                        "hege": 0.10299667036626,
-                        "name": "COMCEL GUATEMALA S.A., GT"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0666666666666667,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Comteco Ltda, BO",
-                "percent": 6.156398960167937,
-                "samples": 74315,
-                "v6capable": 48.21772185965148,
-                "v6preferred": 45.73908363049183
-            },
-            {
-                "as": 25620,
-                "as-descr": "LTDA.",
-                "autnum": "COTAS",
-                "cc": "BO",
-                "cumulative": 87.88958494529946,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0304595588235294,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0234926470588235,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0836121323529412,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.990625,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0465073529411765,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "COTAS LTDA., BO",
-                "percent": 5.238344552893752,
-                "samples": 63233,
-                "v6capable": 0.06167665617636361,
-                "v6preferred": 0.06167665617636361
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-17",
-                "sunday": "2020-02-23"
-            },
-            "lockdown": {
-                "monday": "2020-03-16",
-                "sunday": "2020-03-22"
-            }
-        },
-        "name": " Bolivia",
-        "scope": "National",
-        "start": "\t2020-03-22"
-    },
-    " Chile": {
-        "cc": "CL",
-        "continent": "America",
-        "end": "2020-03-19",
-        "eyeball": [
-            {
-                "as": 7418,
-                "as-descr": "CHILE S.A.",
-                "autnum": "TELEFONICA",
-                "cc": "CL",
-                "cumulative": 24.120330989638273,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0362326868486163,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.0396455829500526,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0238652567176874,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 7004,
-                        "hege": 1.0,
-                        "name": "CTC Transmisiones Regionales S.A., CL"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0451681610744011,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 1.0,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0308899856217606,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "TELEFNICA CHILE S.A., CL",
-                "percent": 24.120330989638273,
-                "samples": 892932,
-                "v6capable": 0.004255643206873536,
-                "v6preferred": 0.003919671374751941
-            },
-            {
-                "as": 22047,
-                "as-descr": "BANDA ANCHA S.A.",
-                "autnum": "VTR",
-                "cc": "CL",
-                "cumulative": 47.58693232205714,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0291571948473303,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0472918601052306,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.469256875740403,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.550213983073459,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "VTR BANDA ANCHA S.A., CL",
-                "percent": 23.46660133241887,
-                "samples": 868731,
-                "v6capable": 0.002302208623843284,
-                "v6preferred": 0.00218709819265112
-            },
-            {
-                "as": 27651,
-                "as-descr": "CHILE S.A.",
-                "autnum": "ENTEL",
-                "cc": "CL",
-                "cumulative": 61.188863608184676,
-                "dependency": [
-                    {
-                        "asn": 6471,
-                        "hege": 0.520833333333333,
-                        "name": "ENTEL CHILE S.A., CL"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.0193965517241379,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 27986,
-                        "hege": 1.0,
-                        "name": "ENTEL CHILE S.A., CL"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0225095785440613,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0128711685823755,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.489918524579329,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0387033045977011,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.278588530751889,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.148144309439575,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 3549,
-                        "hege": 0.0980902777777778,
-                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "ENTEL CHILE S.A., CL",
-                "percent": 13.601931286127538,
-                "samples": 503542,
-                "v6capable": 0.6329164200801523,
-                "v6preferred": 0.6190148984593142
-            },
-            {
-                "as": 52341,
-                "as-descr": "Cayman Corp Chile S.A",
-                "autnum": "Centennial",
-                "cc": "CL",
-                "cumulative": 71.68843559502743,
-                "dependency": [
-                    {
-                        "asn": 3356,
-                        "hege": 1.0,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 3549,
-                        "hege": 1.0,
-                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Centennial Cayman Corp Chile S.A, CL",
-                "percent": 10.49957198684275,
-                "samples": 388693,
-                "v6capable": 0.0038590867342607146,
-                "v6preferred": 0.003087269387408572
-            },
-            {
-                "as": 6535,
-                "as-descr": "Servicios Empresariales S.A.",
-                "autnum": "Telmex",
-                "cc": "CL",
-                "cumulative": 78.69404798339487,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0232638129666574,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.382695676784347,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.32731456570643,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0905439808188895,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 27978,
-                        "hege": 1.0,
-                        "name": "Telmex Servicios Empresariales S.A., CL"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.120072333261591,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0244981190793999,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Telmex Servicios Empresariales S.A., CL",
-                "percent": 7.005612388367442,
-                "samples": 259347,
-                "v6capable": 0.0019279189657100332,
-                "v6preferred": 0.0019279189657100332
-            },
-            {
-                "as": 27995,
-                "as-descr": "CHILE S.A.",
-                "autnum": "CLARO",
-                "cc": "CL",
-                "cumulative": 84.68979783570398,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0303321697500218,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.621467540151125,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.186547439225978,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0282813940121872,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 27978,
-                        "hege": 1.0,
-                        "name": "Telmex Servicios Empresariales S.A., CL"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.071062892568725,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0382460552087934,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "CLARO CHILE S.A., CL",
-                "percent": 5.995749852309124,
-                "samples": 221962,
-                "v6capable": 0.0013515827033456177,
-                "v6preferred": 0.0013515827033456177
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-17",
-                "sunday": "2020-02-23"
-            },
-            "lockdown": {
-                "monday": "2020-03-16",
-                "sunday": "2020-03-22"
-            }
-        },
-        "name": " Chile",
-        "scope": "National",
-        "start": "\t2020-03-19"
-    },
-    " Jordan": {
-        "cc": "JO",
-        "continent": "Asia",
-        "end": "2020-03-21",
-        "eyeball": [
-            {
-                "as": 48832,
-                "as-descr": "",
-                "autnum": "ZAIN-",
-                "cc": "JO",
-                "cumulative": 33.44215464979517,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.114675287711707,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 5511,
-                        "hege": 0.036024572180781,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0140851250548486,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 59605,
-                        "hege": 0.899670908293111,
-                        "name": "ZAINGP-AS MENA LEVANT W.L.L, BH"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.037670482492773,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0750119862230437,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0797279508556384,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Zain-Jo Linkdotnet-Jordan, JO",
-                "percent": 33.44215464979517,
-                "samples": 545070,
-                "v6capable": 0.005687342910084943,
-                "v6preferred": 0.005320417561047205
-            },
-            {
-                "as": 9038,
-                "as-descr": "",
-                "autnum": "BAT-AS9038",
-                "cc": "JO",
-                "cumulative": 57.74074185419989,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.40894610956676,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.0702053916472603,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 8697,
-                        "hege": 0.186699627172112,
-                        "name": "JTC-AS8697 Jordan Telecommunications Company, JO"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.386867421389191,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 5511,
-                        "hege": 0.13141257479693,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0462490767233899,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0425405076407862,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "BAT-AS9038 Batelco Jordan, JO",
-                "percent": 24.29858720440472,
-                "samples": 396040,
-                "v6capable": 0.005302494697505302,
-                "v6preferred": 0.00504999495000505
-            },
-            {
-                "as": 8376,
-                "as-descr": "Data Communications",
-                "autnum": "Jordan",
-                "cc": "JO",
-                "cumulative": 80.82617896065315,
-                "dependency": [
-                    {
-                        "asn": 174,
-                        "hege": 0.0550494769694749,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 8697,
-                        "hege": 1.0,
-                        "name": "JTC-AS8697 Jordan Telecommunications Company, JO"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.017380050380454,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 5511,
-                        "hege": 0.634227015989713,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.156502435505146,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.158871260066938,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.204286008310716,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    }
-                ],
-                "name": "Jordan Data Communications Company LLC, JO",
-                "percent": 23.085437106453263,
-                "samples": 376267,
-                "v6capable": 4.871274919139866,
-                "v6preferred": 4.851873802379693
-            },
-            {
-                "as": 8697,
-                "as-descr": "Jordan Telecom Group ( JTG )",
-                "autnum": "JTC-AS8697",
-                "cc": "JO",
-                "cumulative": 95.9829779819362,
-                "dependency": [
-                    {
-                        "asn": 6453,
-                        "hege": 0.216004036808549,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0362621475873271,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 5511,
-                        "hege": 0.348366692503183,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0990902065082286,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.402843600198422,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "JTC-AS8697 Jordan Telecommunications Company, JO",
-                "percent": 15.156799021283044,
-                "samples": 247039,
-                "v6capable": 0.012143831540768866,
-                "v6preferred": 0.010524654001999685
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-17",
-                "sunday": "2020-02-23"
-            },
-            "lockdown": {
-                "monday": "2020-03-16",
-                "sunday": "2020-03-22"
-            }
-        },
-        "name": " Jordan",
-        "scope": "National",
-        "start": "\t2020-03-21"
-    },
-    " Panama": {
-        "cc": "PA",
-        "continent": "America",
-        "end": "2020-03-25",
-        "eyeball": [
-            {
-                "as": 18809,
-                "as-descr": "Onda",
-                "autnum": "Cable",
-                "cc": "PA",
-                "cumulative": 44.21944864412777,
-                "dependency": [
-                    {
-                        "asn": 23520,
-                        "hege": 0.0731425156639361,
-                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.190092353501895,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.771055256978673,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 3549,
-                        "hege": 0.323450874088737,
-                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Cable Onda, PA",
-                "percent": 44.21944864412777,
-                "samples": 164958,
-                "v6capable": 0.0024248596612471054,
-                "v6preferred": 0.001818644745935329
-            },
-            {
-                "as": 11556,
-                "as-descr": "& Wireless Panama",
-                "autnum": "Cable",
-                "cc": "PA",
-                "cumulative": 72.41799894918563,
-                "dependency": [
-                    {
-                        "asn": 3491,
-                        "hege": 0.118892566751134,
-                        "name": "BTN-ASN - PCCW Global, Inc., US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0111358406007752,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6830,
-                        "hege": 0.158117644392576,
-                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
-                    },
-                    {
-                        "asn": 23520,
-                        "hege": 1.0,
-                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.436336684230646,
-                        "name": "TELIANET Telia Company AB, EU"
-                    }
-                ],
-                "name": "Cable & Wireless Panama, PA",
-                "percent": 28.19855030505785,
-                "samples": 105193,
-                "v6capable": 0.0028519007918777865,
-                "v6preferred": 0.0028519007918777865
-            },
-            {
-                "as": 262227,
-                "as-descr": "Panama S.A.",
-                "autnum": "Claro",
-                "cc": "PA",
-                "cumulative": 82.26160989052231,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.340696168213038,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.335492227979274,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0334302325581395,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.402586154958429,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0271870104831907,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Claro Panam S.A., PA",
-                "percent": 9.843610941336678,
-                "samples": 36721,
-                "v6capable": 2.4481904087579314,
-                "v6preferred": 2.385555948912067
-            },
-            {
-                "as": 14709,
-                "as-descr": "Moviles Panama S.A.",
-                "autnum": "Telefonica",
-                "cc": "PA",
-                "cumulative": 91.00347412101523,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.045805941053666,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 18809,
-                        "hege": 0.0437196215760422,
-                        "name": "Cable Onda, PA"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0178196424404716,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0959773009823566,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.956280378423958,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0825073982303507,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 3549,
-                        "hege": 0.0437308562687733,
-                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Telefonica Moviles Panama S.A., PA",
-                "percent": 8.741864230492919,
-                "samples": 32611,
-                "v6capable": 0.0030664499708687254,
-                "v6preferred": 0.0030664499708687254
-            },
-            {
-                "as": 28005,
-                "as-descr": "(Panama), S.A",
-                "autnum": "Digicel",
-                "cc": "PA",
-                "cumulative": 96.84031910444882,
-                "dependency": [
-                    {
-                        "asn": 3491,
-                        "hege": 0.0296486459277157,
-                        "name": "BTN-ASN - PCCW Global, Inc., US"
-                    },
-                    {
-                        "asn": 3257,
-                        "hege": 0.37330866807611,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 52468,
-                        "hege": 0.0766888150609081,
-                        "name": "UFINET PANAMA S.A., PA"
-                    },
-                    {
-                        "asn": 6830,
-                        "hege": 0.0169133192389006,
-                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0126849894291755,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.0108350951374207,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 33576,
-                        "hege": 0.847679452330615,
-                        "name": "DIG001 - Digicel Jamaica, JM"
-                    },
-                    {
-                        "asn": 23520,
-                        "hege": 0.078274438739555,
-                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0317628108325783,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 6461,
-                        "hege": 0.386210107721736,
-                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
-                    }
-                ],
-                "name": "Digicel (Panama), S.A, PA",
-                "percent": 5.83684498343359,
-                "samples": 21774,
-                "v6capable": 0.0,
-                "v6preferred": 0.0
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-24",
-                "sunday": "2020-03-01"
-            },
-            "lockdown": {
-                "monday": "2020-03-23",
-                "sunday": "2020-03-29"
-            }
-        },
-        "name": " Panama",
-        "scope": "National",
-        "start": "\t2020-03-25"
-    },
-    " Peru": {
-        "cc": "PE",
-        "continent": "America",
-        "end": "2020-03-16",
-        "eyeball": [
-            {
-                "as": 6147,
-                "as-descr": "del Peru S.A.A.",
-                "autnum": "Telefonica",
-                "cc": "PE",
-                "cumulative": 52.32690568209851,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0116958806945693,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.0172068946715323,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0284607140887134,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 2,
-                        "hege": 0.0210152858216578,
-                        "name": "UDEL-DCN - University of Delaware, US"
-                    },
-                    {
-                        "asn": 4,
-                        "hege": 0.0115831827734075,
-                        "name": "ISI-AS - University of Southern California, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0227741009421987,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 1.0,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.119208825332874,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Telefonica del Peru S.A.A., PE",
-                "percent": 52.32690568209851,
-                "samples": 2036312,
-                "v6capable": 6.608761329305136,
-                "v6preferred": 6.54948750486173
-            },
-            {
-                "as": 12252,
-                "as-descr": "Movil Peru S.A.C.",
-                "autnum": "America",
-                "cc": "PE",
-                "cumulative": 77.7561466984623,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.512394737335659,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.080023414933694,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.38074598298212,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0972767001731328,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "America Movil Peru S.A.C., PE",
-                "percent": 25.429241016363786,
-                "samples": 989584,
-                "v6capable": 65.89920613106113,
-                "v6preferred": 65.40010751992756
-            },
-            {
-                "as": 21575,
-                "as-descr": "PERU S.A.",
-                "autnum": "ENTEL",
-                "cc": "PE",
-                "cumulative": 87.61985034125483,
-                "dependency": [
-                    {
-                        "asn": 6939,
-                        "hege": 0.0297619047619048,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0130910546949704,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.640756478294129,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.0411190331770919,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.163307993880283,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 3549,
-                        "hege": 0.173942794989482,
-                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "ENTEL PERU S.A., PE",
-                "percent": 9.863703642792533,
-                "samples": 383848,
-                "v6capable": 0.04012004751880953,
-                "v6preferred": 0.024749379962901982
-            },
-            {
-                "as": 262210,
-                "as-descr": "PERU S.A.C.",
-                "autnum": "VIETTEL",
-                "cc": "PE",
-                "cumulative": 96.29206582517885,
-                "dependency": [
-                    {
-                        "asn": 3491,
-                        "hege": 0.0207264957264957,
-                        "name": "BTN-ASN - PCCW Global, Inc., US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0152014652014652,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6830,
-                        "hege": 0.0160485347985348,
-                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.436510378510378,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 23520,
-                        "hege": 0.1115,
-                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.171036935286935,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.254754578754579,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0776098901098901,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "VIETTEL PER S.A.C., PE",
-                "percent": 8.672215483924019,
-                "samples": 337481,
-                "v6capable": 0.019556656522885733,
-                "v6preferred": 0.016593526746690925
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-17",
-                "sunday": "2020-02-23"
-            },
-            "lockdown": {
-                "monday": "2020-03-16",
-                "sunday": "2020-03-22"
-            }
-        },
-        "name": " Peru",
-        "scope": "National",
-        "start": "\t2020-03-16"
-    },
-    " Poland": {
-        "cc": "PL",
-        "continent": "Europe",
-        "end": "2020-03-13",
-        "eyeball": [
-            {
-                "as": 5617,
-                "as-descr": "",
-                "autnum": "TPNET",
-                "cc": "PL",
-                "cumulative": 25.447479609645047,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0129902088179072,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0399081456006742,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0142838619379014,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 5511,
-                        "hege": 0.958941477729787,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.105931482768031,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0270504254529919,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "TPNET Orange Polska Spolka Akcyjna, PL",
-                "percent": 25.447479609645047,
-                "samples": 2234291,
-                "v6capable": 36.33286801047849,
-                "v6preferred": 36.15052828839216
-            },
-            {
-                "as": 8374,
-                "as-descr": "Plus network operator in Poland",
-                "autnum": "PLUSNET",
-                "cc": "PL",
-                "cumulative": 37.633594680825496,
-                "dependency": [
-                    {
-                        "asn": 174,
-                        "hege": 0.483553085536666,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0117647058823529,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    }
-                ],
-                "name": "PLUSNET Polkomtel Sp. z o.o., PL",
-                "percent": 12.186115071180451,
-                "samples": 1069942,
-                "v6capable": 0.021122640292651377,
-                "v6preferred": 0.012524043359359666
-            },
-            {
-                "as": 39603,
-                "as-descr": "P4 UMTS operator in Poland",
-                "autnum": "P4NET",
-                "cc": "PL",
-                "cumulative": 47.07918864320071,
-                "dependency": [
-                    {
-                        "asn": 6939,
-                        "hege": 0.0122762148337596,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.435327548575611,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 24724,
-                        "hege": 0.335132809480654,
-                        "name": "ATMAN-Foreign-AS ATM S.A., PL"
-                    }
-                ],
-                "name": "P4NET P4 Sp. z o.o., PL",
-                "percent": 9.44559396237521,
-                "samples": 829324,
-                "v6capable": 0.023513126353512017,
-                "v6preferred": 0.018207600407078535
-            },
-            {
-                "as": 12912,
-                "as-descr": "",
-                "autnum": "TM",
-                "cc": "PL",
-                "cumulative": 55.0051714069997,
-                "dependency": [
-                    {
-                        "asn": 3320,
-                        "hege": 0.811445615982242,
-                        "name": "DTAG Deutsche Telekom AG, DE"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.117605438401776,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0307342010560657,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0636353126156123,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "TMPL T-MOBILE POLSKA SPOLKA AKCYJNA, PL",
-                "percent": 7.92598276379899,
-                "samples": 695902,
-                "v6capable": 0.028883377257142528,
-                "v6preferred": 0.018105997683581884
-            },
-            {
-                "as": 6830,
-                "as-descr": "formerly known as UPC Broadband Holding B.V.",
-                "autnum": "LGI-UPC",
-                "cc": "PL",
-                "cumulative": 62.2225216397842,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0175939065170926,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.045045046064168,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0342602885116221,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 7.2173502327845,
-                "samples": 633684,
-                "v6capable": 49.33405293490131,
-                "v6preferred": 48.98735016191035
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-10",
-                "sunday": "2020-02-16"
-            },
-            "lockdown": {
-                "monday": "2020-03-09",
-                "sunday": "2020-03-15"
-            }
-        },
-        "name": " Poland",
-        "scope": "National",
-        "start": "\t2020-03-13"
-    },
-    " Romania": {
-        "cc": "RO",
-        "continent": "Europe",
-        "end": "2020-03-25",
-        "eyeball": [
-            {
-                "as": 8708,
-                "as-descr": "73-75 Dr. Staicovici",
-                "autnum": "RCS-RDS",
-                "cc": "RO",
-                "cumulative": 38.21386534066179,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.141641835371186,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0924231282800965,
-                        "name": "TELIANET Telia Company AB, EU"
-                    }
-                ],
-                "name": "RCS-RDS RCS & RDS SA, RO",
-                "percent": 38.21386534066179,
-                "samples": 1656735,
-                "v6capable": 37.98108931120547,
-                "v6preferred": 37.804175079297536
-            },
-            {
-                "as": 8953,
-                "as-descr": "",
-                "autnum": "ASN-ORANGE-ROMANIA",
-                "cc": "RO",
-                "cumulative": 51.034418969841276,
-                "dependency": [
-                    {
-                        "asn": 6939,
-                        "hege": 0.0218920470858455,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.0888631687242799,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.481180711844628,
-                        "name": "TELIANET Telia Company AB, EU"
-                    }
-                ],
-                "name": "ASN-ORANGE-ROMANIA Orange Romania S.A., RO",
-                "percent": 12.820553629179487,
-                "samples": 555826,
-                "v6capable": 7.736593826125442,
-                "v6preferred": 7.692335371141328
-            },
-            {
-                "as": 12302,
-                "as-descr": "Charles de Gaulle nr.15",
-                "autnum": "VODAFONE_RO",
-                "cc": "RO",
-                "cumulative": 61.40714102341429,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0114728682170543,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.105256906305148,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0368106312292359,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 1273,
-                        "hege": 0.882728326695117,
-                        "name": "CW Vodafone Group PLC, GB"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.024142507652986,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Vodafone_Ro Vodafone Romania S.A., RO",
-                "percent": 10.372722053573014,
-                "samples": 449702,
-                "v6capable": 0.04514100448741611,
-                "v6preferred": 0.03024224931176646
-            },
-            {
-                "as": 9050,
-                "as-descr": "Bucharest, Romania",
-                "autnum": "RTD",
-                "cc": "RO",
-                "cumulative": 71.60666222419972,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0952809583690002,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    }
-                ],
-                "name": "RTD TELEKOM ROMANIA COMMUNICATION S.A, RO",
-                "percent": 10.199521200785435,
-                "samples": 442193,
-                "v6capable": 0.01741321097348895,
-                "v6preferred": 0.011985716644089798
-            },
-            {
-                "as": 6830,
-                "as-descr": "formerly known as UPC Broadband Holding B.V.",
-                "autnum": "LGI-UPC",
-                "cc": "RO",
-                "cumulative": 80.09816329595064,
-                "dependency": [
-                    {
-                        "asn": 1299,
-                        "hege": 0.0442439571306918,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0447742381153677,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 8.491501071750916,
-                "samples": 368143,
-                "v6capable": 20.90247539678875,
-                "v6preferred": 20.821256957214995
-            },
-            {
-                "as": 12632,
-                "as-descr": "RCS & RDS Mobile",
-                "autnum": "DIGINETMOBIL",
-                "cc": "RO",
-                "cumulative": 86.5626446656144,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0529715762273902,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 8708,
-                        "hege": 1.0,
-                        "name": "RCS-RDS RCS & RDS SA, RO"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.185400516795866,
-                        "name": "TELIANET Telia Company AB, EU"
-                    }
-                ],
-                "name": "DigiNetMobil RCS & RDS SA, RO",
-                "percent": 6.464481369663764,
-                "samples": 280263,
-                "v6capable": 0.04638500265821746,
-                "v6preferred": 0.03532396356279637
-            },
-            {
-                "as": 35725,
-                "as-descr": "",
-                "autnum": "COSMOROM",
-                "cc": "RO",
-                "cumulative": 92.24611912684995,
-                "dependency": [
-                    {
-                        "asn": 9050,
-                        "hege": 1.0,
-                        "name": "RTD TELEKOM ROMANIA COMMUNICATION S.A, RO"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0365812255983704,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0126464097776269,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "COSMOROM TELEKOM ROMANIA MOBILE COMMUNICATIONS S.A., RO",
-                "percent": 5.683474461235555,
-                "samples": 246403,
-                "v6capable": 0.0320612979549762,
-                "v6preferred": 0.024350352877197112
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-24",
-                "sunday": "2020-03-01"
-            },
-            "lockdown": {
-                "monday": "2020-03-23",
-                "sunday": "2020-03-29"
-            }
-        },
-        "name": " Romania",
-        "scope": "National",
-        "start": "\t2020-03-25"
-    },
-    " Rwanda": {
-        "cc": "RW",
-        "continent": "Africa",
-        "end": "2020-03-21",
-        "eyeball": [
-            {
-                "as": 36890,
-                "as-descr": "",
-                "autnum": "MTNRW-ASN",
-                "cc": "RW",
-                "cumulative": 34.1116096214156,
-                "dependency": [
-                    {
-                        "asn": 174,
-                        "hege": 0.0527103283173735,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 16637,
-                        "hege": 1.0,
-                        "name": "MTNNS-AS, ZA"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.236576607387141,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "MTNRW-ASN, RW",
-                "percent": 34.1116096214156,
-                "samples": 45466,
-                "v6capable": 0.0021994457396736023,
-                "v6preferred": 0.0021994457396736023
-            },
-            {
-                "as": 37228,
-                "as-descr": "",
-                "autnum": "Olleh-Rwanda-Networks",
-                "cc": "RW",
-                "cumulative": 67.4159326560929,
-                "dependency": [
-                    {
-                        "asn": 37619,
-                        "hege": 0.466666666666667,
-                        "name": "BSC-AS, RW"
-                    },
-                    {
-                        "asn": 36866,
-                        "hege": 0.282151162790698,
-                        "name": "JTL, KE"
-                    },
-                    {
-                        "asn": 37100,
-                        "hege": 0.064437984496124,
-                        "name": "SEACOM-AS, MU"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.0292248062015504,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 30844,
-                        "hege": 0.268397932816537,
-                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
-                    },
-                    {
-                        "asn": 8966,
-                        "hege": 0.0448255813953488,
-                        "name": "Etisalat-AS Emirates Telecommunications Corporation, AE"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.479547803617571,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 37662,
-                        "hege": 0.443346253229974,
-                        "name": "WIOCC-AS, MU"
-                    },
-                    {
-                        "asn": 37273,
-                        "hege": 0.103333333333333,
-                        "name": "BCS, UG"
-                    }
-                ],
-                "name": "Olleh-Rwanda-Networks, RW",
-                "percent": 33.30432303467731,
-                "samples": 44390,
-                "v6capable": 0.009011038522189683,
-                "v6preferred": 0.009011038522189683
-            },
-            {
-                "as": 37124,
-                "as-descr": "",
-                "autnum": "tigo-rw-as",
-                "cc": "RW",
-                "cumulative": 81.64548414687214,
-                "dependency": [
-                    {
-                        "asn": 30844,
-                        "hege": 0.146802325581395,
-                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
-                    },
-                    {
-                        "asn": 327707,
-                        "hege": 0.776162790697674,
-                        "name": "AIRTEL-, RW"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.669089147286822,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 37662,
-                        "hege": 0.497093023255814,
-                        "name": "WIOCC-AS, MU"
-                    },
-                    {
-                        "asn": 37273,
-                        "hege": 0.356104651162791,
-                        "name": "BCS, UG"
-                    },
-                    {
-                        "asn": 37075,
-                        "hege": 0.5,
-                        "name": "ZAINUGAS, UG"
-                    }
-                ],
-                "name": "tigo-rw-as, RW",
-                "percent": 14.229551490779226,
-                "samples": 18966,
-                "v6capable": 0.005272593061267532,
-                "v6preferred": 0.005272593061267532
-            },
-            {
-                "as": 327707,
-                "as-descr": "",
-                "autnum": "AIRTEL-",
-                "cc": "RW",
-                "cumulative": 92.24074546463994,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.125690987527655,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 30844,
-                        "hege": 0.8829907555184,
-                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.119189477039739,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.0159262267568526,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 37273,
-                        "hege": 0.1170092444816,
-                        "name": "BCS, UG"
-                    },
-                    {
-                        "asn": 37075,
-                        "hege": 1.0,
-                        "name": "ZAINUGAS, UG"
-                    }
-                ],
-                "name": "AIRTEL-, RW",
-                "percent": 10.595261317767807,
-                "samples": 14122,
-                "v6capable": 0.0,
-                "v6preferred": 0.0
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-17",
-                "sunday": "2020-02-23"
-            },
-            "lockdown": {
-                "monday": "2020-03-16",
-                "sunday": "2020-03-22"
-            }
-        },
-        "name": " Rwanda",
-        "scope": "National",
-        "start": "\t2020-03-21"
-    },
-    " Tunisia": {
-        "cc": "TN",
-        "continent": "Africa",
-        "end": "2020-03-22",
-        "eyeball": [
-            {
-                "as": 37693,
-                "as-descr": "",
-                "autnum": "TUNISIANA",
-                "cc": "TN",
-                "cumulative": 25.732418157039653,
-                "dependency": [
-                    {
-                        "asn": 174,
-                        "hege": 0.0142357227048973,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.025419885842112,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.71361922713464,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.343133871440757,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "TUNISIANA, TN",
-                "percent": 25.732418157039653,
-                "samples": 496779,
-                "v6capable": 0.0032207480589960527,
-                "v6preferred": 0.0032207480589960527
-            },
-            {
-                "as": 37705,
-                "as-descr": "",
-                "autnum": "TOPNET",
-                "cc": "TN",
-                "cumulative": 49.77361455787113,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0804893244536198,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.0138148788927336,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 2609,
-                        "hege": 1.0,
-                        "name": "TN-BB-AS Tunisia BackBone AS, TN"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0266089965397924,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 5438,
-                        "hege": 1.0,
-                        "name": "ATI-TN Agence Tunisienne d'Internet, TN"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.694893283116313,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0172361591695502,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.280685731530413,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "TOPNET, TN",
-                "percent": 24.04119640083147,
-                "samples": 464129,
-                "v6capable": 0.004524604151001123,
-                "v6preferred": 0.004524604151001123
-            },
-            {
-                "as": 37492,
-                "as-descr": "",
-                "autnum": "ORANGE-",
-                "cc": "TN",
-                "cumulative": 68.18519214920876,
-                "dependency": [
-                    {
-                        "asn": 2609,
-                        "hege": 0.023088841762593,
-                        "name": "TN-BB-AS Tunisia BackBone AS, TN"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0131114455128242,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.0191565784222429,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 5511,
-                        "hege": 0.0873584245892914,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0190548482263732,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.868970043149166,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "ORANGE-, TN",
-                "percent": 18.41157759133763,
-                "samples": 355446,
-                "v6capable": 0.0028133668686664078,
-                "v6preferred": 0.0028133668686664078
-            },
-            {
-                "as": 2609,
-                "as-descr": "Tunisia BackBone AS",
-                "autnum": "TN-BB-AS",
-                "cc": "TN",
-                "cumulative": 81.01433938495471,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.113960300253425,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.357746228024551,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.499085465461314,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "TN-BB-AS Tunisia BackBone AS, TN",
-                "percent": 12.829147235745953,
-                "samples": 247674,
-                "v6capable": 0.010497670324701018,
-                "v6preferred": 0.01009391377375098
-            },
-            {
-                "as": 5438,
-                "as-descr": "",
-                "autnum": "ATI-",
-                "cc": "TN",
-                "cumulative": 90.5925595566461,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.178174129534604,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2609,
-                        "hege": 1.0,
-                        "name": "TN-BB-AS Tunisia BackBone AS, TN"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0279185760154618,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.104043430311684,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0448994897101433,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.731525423330867,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "ATI-TN Agence Tunisienne d'Internet, TN",
-                "percent": 9.578220171691383,
-                "samples": 184913,
-                "v6capable": 0.00757112804399907,
-                "v6preferred": 0.00757112804399907
-            },
-            {
-                "as": 37671,
-                "as-descr": "",
-                "autnum": "GLOBALNET-AS",
-                "cc": "TN",
-                "cumulative": 99.22265957441299,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.595011169024572,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2609,
-                        "hege": 1.0,
-                        "name": "TN-BB-AS Tunisia BackBone AS, TN"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0126358897989576,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 5438,
-                        "hege": 1.0,
-                        "name": "ATI-TN Agence Tunisienne d'Internet, TN"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.324050632911393,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0570588235294118,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.10547965452715,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "GLOBALNET-AS, TN",
-                "percent": 8.630100017766893,
-                "samples": 166609,
-                "v6capable": 0.00360124603112677,
-                "v6preferred": 0.00360124603112677
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-17",
-                "sunday": "2020-02-23"
-            },
-            "lockdown": {
-                "monday": "2020-03-16",
-                "sunday": "2020-03-22"
-            }
-        },
-        "name": " Tunisia",
-        "scope": "National",
-        "start": "\t2020-03-22"
-    },
-    " Venezuela": {
-        "cc": "VE",
-        "continent": "America",
-        "end": "2020-03-17",
-        "eyeball": [
-            {
-                "as": 8048,
-                "as-descr": "Servicios, Venezuela",
-                "autnum": "CANTV",
-                "cc": "VE",
-                "cumulative": 51.680354006574206,
-                "dependency": [
-                    {
-                        "asn": 3491,
-                        "hege": 0.0857043253534999,
-                        "name": "BTN-ASN - PCCW Global, Inc., US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.199121614414884,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6830,
-                        "hege": 0.0749450192545252,
-                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0248790531281112,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.277359982609774,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 52320,
-                        "hege": 0.276869701342353,
-                        "name": "GlobeNet Cabos Submarinos Colombia, S.A.S., CO"
-                    },
-                    {
-                        "asn": 23520,
-                        "hege": 0.437876043019608,
-                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.166131030868716,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0117429980828923,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "CANTV Servicios, Venezuela, VE",
-                "percent": 51.680354006574206,
-                "samples": 1303839,
-                "v6capable": 0.003681436128233624,
-                "v6preferred": 0.0029911668541898195
-            },
-            {
-                "as": 6306,
-                "as-descr": "VENEZOLANA, C.A.",
-                "autnum": "TELEFONICA",
-                "cc": "VE",
-                "cumulative": 72.584229758638,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0116704603430007,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 8048,
-                        "hege": 0.414475491542718,
-                        "name": "CANTV Servicios, Venezuela, VE"
-                    },
-                    {
-                        "asn": 28007,
-                        "hege": 0.0307189670735057,
-                        "name": "Gold Data C.A., VE"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0456017813899234,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.414485302774617,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0501770927357639,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.549948981594129,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 3549,
-                        "hege": 0.554767120929452,
-                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "TELEFONICA VENEZOLANA, C.A., VE",
-                "percent": 20.903875752063804,
-                "samples": 527382,
-                "v6capable": 0.0015169270092646318,
-                "v6preferred": 0.0013273111331065528
-            },
-            {
-                "as": 264731,
-                "as-descr": "Digitel C.A.",
-                "autnum": "Corporacion",
-                "cc": "VE",
-                "cumulative": 84.91924542122509,
-                "dependency": [
-                    {
-                        "asn": 27717,
-                        "hege": 1.0,
-                        "name": "Corporacion Digitel C.A., VE"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.592734574662286,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 52320,
-                        "hege": 1.0,
-                        "name": "GlobeNet Cabos Submarinos Colombia, S.A.S., CO"
-                    },
-                    {
-                        "asn": 6461,
-                        "hege": 0.0261044176706827,
-                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
-                    }
-                ],
-                "name": "Corporacion Digitel C.A., VE",
-                "percent": 12.335015662587088,
-                "samples": 311199,
-                "v6capable": 0.01895892981661252,
-                "v6preferred": 0.01895892981661252
-            },
-            {
-                "as": 21826,
-                "as-descr": "Telemic C.A.",
-                "autnum": "Corporacion",
-                "cc": "VE",
-                "cumulative": 90.0967184075729,
-                "dependency": [
-                    {
-                        "asn": 6939,
-                        "hege": 0.109966019113978,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 52320,
-                        "hege": 0.25377473270441,
-                        "name": "GlobeNet Cabos Submarinos Colombia, S.A.S., CO"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0188731122452508,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.741885746250009,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 3549,
-                        "hege": 0.536193763360462,
-                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Corporacin Telemic C.A., VE",
-                "percent": 5.177472986347805,
-                "samples": 130622,
-                "v6capable": 0.005358974751573242,
-                "v6preferred": 0.005358974751573242
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-02-17",
-                "sunday": "2020-02-23"
-            },
-            "lockdown": {
-                "monday": "2020-03-16",
-                "sunday": "2020-03-22"
-            }
-        },
-        "name": " Venezuela",
-        "scope": "National",
-        "start": "\t2020-03-17"
-    },
     "Argentina": {
         "cc": "AR",
         "continent": "America",
@@ -2739,6 +282,192 @@ const lockdowns = {
         "name": "Argentina",
         "scope": "National",
         "start": "\t2020-03-19"
+    },
+    "Australia": {
+        "cc": "AU",
+        "continent": "Oceania",
+        "end": "2020-03-23",
+        "eyeball": [
+            {
+                "as": 1221,
+                "as-descr": "Telstra Corporation Ltd",
+                "autnum": "ASN-TELSTRA",
+                "cc": "AU",
+                "cumulative": 40.490623585076804,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0323356666980282,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0338977845232574,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 4637,
+                        "hege": 1.0,
+                        "name": "ASN-TELSTRA-GLOBAL Telstra Global, HK"
+                    },
+                    {
+                        "asn": 209,
+                        "hege": 0.013094459323401,
+                        "name": "CENTURYLINK-US-LEGACY-QWEST - Qwest Communications Company, LLC, US"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0631177037906988,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ASN-TELSTRA Telstra Pty Ltd, AU",
+                "percent": 40.490623585076804,
+                "samples": 796800,
+                "v6capable": 57.39620983935743,
+                "v6preferred": 56.32944277108434
+            },
+            {
+                "as": 4804,
+                "as-descr": "Microplex PTY LTD",
+                "autnum": "MPX-AS",
+                "cc": "AU",
+                "cumulative": 59.261493305174184,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.0450665072079964,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 15412,
+                        "hege": 0.0360550759956166,
+                        "name": "FLAG-AS Reliance Globalcom Limited, GB"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.385127912663367,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 7473,
+                        "hege": 0.949164707984999,
+                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
+                    },
+                    {
+                        "asn": 6461,
+                        "hege": 0.395690659014733,
+                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
+                    }
+                ],
+                "name": "MPX-AS Microplex PTY LTD, AU",
+                "percent": 18.770869720097384,
+                "samples": 369385,
+                "v6capable": 0.07309446783166615,
+                "v6preferred": 0.06416069954112917
+            },
+            {
+                "as": 7545,
+                "as-descr": "TPG Telecom Limited",
+                "autnum": "TPG-INTERNET-AP",
+                "cc": "AU",
+                "cumulative": 73.44337486908387,
+                "dependency": [
+                    {
+                        "asn": 6453,
+                        "hege": 0.0196214382416033,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 4817,
+                        "hege": 0.0465547123293768,
+                        "name": "TPG-INTERNET-SG-AP TPG Telecom Limited, AU"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.669785599133976,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.172903751047972,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "TPG-INTERNET-AP TPG Telecom Limited, AU",
+                "percent": 14.181881563909682,
+                "samples": 279080,
+                "v6capable": 3.5502364913286515,
+                "v6preferred": 3.3517271033395444
+            },
+            {
+                "as": 133612,
+                "as-descr": "Vodafone Australia Pty Ltd",
+                "autnum": "VODAFONE-AS-AP",
+                "cc": "AU",
+                "cumulative": 78.80457125318175,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0710225903539856,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.409593627827262,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0242164479639465,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.108121333785758,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.161178129535716,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 7473,
+                        "hege": 0.415812053084309,
+                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
+                    },
+                    {
+                        "asn": 7474,
+                        "hege": 0.421612265554328,
+                        "name": "OPTUSCOM-AS01-AU SingTel Optus Pty Ltd, AU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0305387319701666,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VODAFONE-AS-AP Vodafone Australia Pty Ltd, AU",
+                "percent": 5.361196384097877,
+                "samples": 105501,
+                "v6capable": 15.472839120008341,
+                "v6preferred": 14.907915564781376
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-24",
+                "sunday": "2020-03-01"
+            },
+            "lockdown": {
+                "monday": "2020-03-23",
+                "sunday": "2020-03-29"
+            }
+        },
+        "name": "Australia",
+        "scope": "National",
+        "start": "\t2020-03-23"
     },
     "Austria": {
         "cc": "AT",
@@ -3064,6 +793,551 @@ const lockdowns = {
         "name": "Belgium",
         "scope": "National",
         "start": "\t2020-03-18"
+    },
+    "Bolivia": {
+        "cc": "BO",
+        "continent": "America",
+        "end": "2020-03-22",
+        "eyeball": [
+            {
+                "as": 27882,
+                "as-descr": "Celular de Bolivia S.A.",
+                "autnum": "Telefonica",
+                "cc": "BO",
+                "cumulative": 42.099363939565144,
+                "dependency": [
+                    {
+                        "asn": 3491,
+                        "hege": 0.0219107777339124,
+                        "name": "BTN-ASN - PCCW Global, Inc., US"
+                    },
+                    {
+                        "asn": 7303,
+                        "hege": 0.0271076857938974,
+                        "name": "Telecom Argentina S.A., AR"
+                    },
+                    {
+                        "asn": 10481,
+                        "hege": 0.0271076857938974,
+                        "name": "Prima S.A., AR"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0325305961310699,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 262589,
+                        "hege": 0.230556652191078,
+                        "name": "INTERNEXA Brasil Operadora de Telecomunicaes S.A, BR"
+                    },
+                    {
+                        "asn": 701,
+                        "hege": 0.318622266291425,
+                        "name": "UUNET - MCI Communications Services, Inc. d/b/a Verizon Business, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.010181224277888,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0942218342617999,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0106261121314589,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0812463882547475,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.376875652347912,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 262206,
+                        "hege": 0.365342693832713,
+                        "name": "COMCEL GUATEMALA S.A., GT"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0953538196985561,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Telefnica Celular de Bolivia S.A., BO",
+                "percent": 42.099363939565144,
+                "samples": 508189,
+                "v6capable": 0.010232413531186231,
+                "v6preferred": 0.007477532965097631
+            },
+            {
+                "as": 6568,
+                "as-descr": "S.A. - EntelNet",
+                "autnum": "Entel",
+                "cc": "BO",
+                "cumulative": 76.49484143223778,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.264540514738286,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0198943878177576,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.527427733003899,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0199680707356011,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.224800756310376,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0748495640427361,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Entel S.A. - EntelNet, BO",
+                "percent": 34.39547749267263,
+                "samples": 415194,
+                "v6capable": 24.445680814269956,
+                "v6preferred": 24.32501433065025
+            },
+            {
+                "as": 27839,
+                "as-descr": "Ltda",
+                "autnum": "Comteco",
+                "cc": "BO",
+                "cumulative": 82.65124039240571,
+                "dependency": [
+                    {
+                        "asn": 27882,
+                        "hege": 0.10299667036626,
+                        "name": "Telefnica Celular de Bolivia S.A., BO"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0380688124306326,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 28024,
+                        "hege": 0.354568997410285,
+                        "name": "Nuevatel PCS de Bolivia S.A., BO"
+                    },
+                    {
+                        "asn": 701,
+                        "hege": 0.0307806141324454,
+                        "name": "UUNET - MCI Communications Services, Inc. d/b/a Verizon Business, US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.356270810210877,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 12252,
+                        "hege": 0.354568997410285,
+                        "name": "America Movil Peru S.A.C., PE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0164261931187569,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0312985571587125,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0934170548326298,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.544210136884943,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 262206,
+                        "hege": 0.10299667036626,
+                        "name": "COMCEL GUATEMALA S.A., GT"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0666666666666667,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Comteco Ltda, BO",
+                "percent": 6.156398960167937,
+                "samples": 74315,
+                "v6capable": 48.21772185965148,
+                "v6preferred": 45.73908363049183
+            },
+            {
+                "as": 25620,
+                "as-descr": "LTDA.",
+                "autnum": "COTAS",
+                "cc": "BO",
+                "cumulative": 87.88958494529946,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0304595588235294,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0234926470588235,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0836121323529412,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.990625,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0465073529411765,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "COTAS LTDA., BO",
+                "percent": 5.238344552893752,
+                "samples": 63233,
+                "v6capable": 0.06167665617636361,
+                "v6preferred": 0.06167665617636361
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Bolivia",
+        "scope": "National",
+        "start": "\t2020-03-22"
+    },
+    "Chile": {
+        "cc": "CL",
+        "continent": "America",
+        "end": "2020-03-19",
+        "eyeball": [
+            {
+                "as": 7418,
+                "as-descr": "CHILE S.A.",
+                "autnum": "TELEFONICA",
+                "cc": "CL",
+                "cumulative": 24.120330989638273,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0362326868486163,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0396455829500526,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0238652567176874,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 7004,
+                        "hege": 1.0,
+                        "name": "CTC Transmisiones Regionales S.A., CL"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0451681610744011,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 1.0,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0308899856217606,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TELEFNICA CHILE S.A., CL",
+                "percent": 24.120330989638273,
+                "samples": 892932,
+                "v6capable": 0.004255643206873536,
+                "v6preferred": 0.003919671374751941
+            },
+            {
+                "as": 22047,
+                "as-descr": "BANDA ANCHA S.A.",
+                "autnum": "VTR",
+                "cc": "CL",
+                "cumulative": 47.58693232205714,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0291571948473303,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0472918601052306,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.469256875740403,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.550213983073459,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VTR BANDA ANCHA S.A., CL",
+                "percent": 23.46660133241887,
+                "samples": 868731,
+                "v6capable": 0.002302208623843284,
+                "v6preferred": 0.00218709819265112
+            },
+            {
+                "as": 27651,
+                "as-descr": "CHILE S.A.",
+                "autnum": "ENTEL",
+                "cc": "CL",
+                "cumulative": 61.188863608184676,
+                "dependency": [
+                    {
+                        "asn": 6471,
+                        "hege": 0.520833333333333,
+                        "name": "ENTEL CHILE S.A., CL"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0193965517241379,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 27986,
+                        "hege": 1.0,
+                        "name": "ENTEL CHILE S.A., CL"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0225095785440613,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0128711685823755,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.489918524579329,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0387033045977011,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.278588530751889,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.148144309439575,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 3549,
+                        "hege": 0.0980902777777778,
+                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ENTEL CHILE S.A., CL",
+                "percent": 13.601931286127538,
+                "samples": 503542,
+                "v6capable": 0.6329164200801523,
+                "v6preferred": 0.6190148984593142
+            },
+            {
+                "as": 52341,
+                "as-descr": "Cayman Corp Chile S.A",
+                "autnum": "Centennial",
+                "cc": "CL",
+                "cumulative": 71.68843559502743,
+                "dependency": [
+                    {
+                        "asn": 3356,
+                        "hege": 1.0,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 3549,
+                        "hege": 1.0,
+                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Centennial Cayman Corp Chile S.A, CL",
+                "percent": 10.49957198684275,
+                "samples": 388693,
+                "v6capable": 0.0038590867342607146,
+                "v6preferred": 0.003087269387408572
+            },
+            {
+                "as": 6535,
+                "as-descr": "Servicios Empresariales S.A.",
+                "autnum": "Telmex",
+                "cc": "CL",
+                "cumulative": 78.69404798339487,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0232638129666574,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.382695676784347,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.32731456570643,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0905439808188895,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 27978,
+                        "hege": 1.0,
+                        "name": "Telmex Servicios Empresariales S.A., CL"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.120072333261591,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0244981190793999,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Telmex Servicios Empresariales S.A., CL",
+                "percent": 7.005612388367442,
+                "samples": 259347,
+                "v6capable": 0.0019279189657100332,
+                "v6preferred": 0.0019279189657100332
+            },
+            {
+                "as": 27995,
+                "as-descr": "CHILE S.A.",
+                "autnum": "CLARO",
+                "cc": "CL",
+                "cumulative": 84.68979783570398,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0303321697500218,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.621467540151125,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.186547439225978,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0282813940121872,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 27978,
+                        "hege": 1.0,
+                        "name": "Telmex Servicios Empresariales S.A., CL"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.071062892568725,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0382460552087934,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "CLARO CHILE S.A., CL",
+                "percent": 5.995749852309124,
+                "samples": 221962,
+                "v6capable": 0.0013515827033456177,
+                "v6preferred": 0.0013515827033456177
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Chile",
+        "scope": "National",
+        "start": "\t2020-03-19"
     },
     "Colombia": {
         "cc": "CO",
@@ -6159,6 +4433,212 @@ const lockdowns = {
         "scope": "National",
         "start": "\t2020-03-09"
     },
+    "Jordan": {
+        "cc": "JO",
+        "continent": "Asia",
+        "end": "2020-03-21",
+        "eyeball": [
+            {
+                "as": 48832,
+                "as-descr": "",
+                "autnum": "ZAIN-",
+                "cc": "JO",
+                "cumulative": 33.44215464979517,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.114675287711707,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.036024572180781,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0140851250548486,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 59605,
+                        "hege": 0.899670908293111,
+                        "name": "ZAINGP-AS MENA LEVANT W.L.L, BH"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.037670482492773,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0750119862230437,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0797279508556384,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Zain-Jo Linkdotnet-Jordan, JO",
+                "percent": 33.44215464979517,
+                "samples": 545070,
+                "v6capable": 0.005687342910084943,
+                "v6preferred": 0.005320417561047205
+            },
+            {
+                "as": 9038,
+                "as-descr": "",
+                "autnum": "BAT-AS9038",
+                "cc": "JO",
+                "cumulative": 57.74074185419989,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.40894610956676,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.0702053916472603,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 8697,
+                        "hege": 0.186699627172112,
+                        "name": "JTC-AS8697 Jordan Telecommunications Company, JO"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.386867421389191,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.13141257479693,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0462490767233899,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0425405076407862,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "BAT-AS9038 Batelco Jordan, JO",
+                "percent": 24.29858720440472,
+                "samples": 396040,
+                "v6capable": 0.005302494697505302,
+                "v6preferred": 0.00504999495000505
+            },
+            {
+                "as": 8376,
+                "as-descr": "Data Communications",
+                "autnum": "Jordan",
+                "cc": "JO",
+                "cumulative": 80.82617896065315,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0550494769694749,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 8697,
+                        "hege": 1.0,
+                        "name": "JTC-AS8697 Jordan Telecommunications Company, JO"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.017380050380454,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.634227015989713,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.156502435505146,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.158871260066938,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.204286008310716,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    }
+                ],
+                "name": "Jordan Data Communications Company LLC, JO",
+                "percent": 23.085437106453263,
+                "samples": 376267,
+                "v6capable": 4.871274919139866,
+                "v6preferred": 4.851873802379693
+            },
+            {
+                "as": 8697,
+                "as-descr": "Jordan Telecom Group ( JTG )",
+                "autnum": "JTC-AS8697",
+                "cc": "JO",
+                "cumulative": 95.9829779819362,
+                "dependency": [
+                    {
+                        "asn": 6453,
+                        "hege": 0.216004036808549,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0362621475873271,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.348366692503183,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0990902065082286,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.402843600198422,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "JTC-AS8697 Jordan Telecommunications Company, JO",
+                "percent": 15.156799021283044,
+                "samples": 247039,
+                "v6capable": 0.012143831540768866,
+                "v6preferred": 0.010524654001999685
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Jordan",
+        "scope": "National",
+        "start": "\t2020-03-21"
+    },
     "Kuwait": {
         "cc": "KW",
         "continent": "Asia",
@@ -7691,6 +6171,251 @@ const lockdowns = {
         "scope": "National",
         "start": "\t2020-03-12"
     },
+    "Panama": {
+        "cc": "PA",
+        "continent": "America",
+        "end": "2020-03-25",
+        "eyeball": [
+            {
+                "as": 18809,
+                "as-descr": "Onda",
+                "autnum": "Cable",
+                "cc": "PA",
+                "cumulative": 44.21944864412777,
+                "dependency": [
+                    {
+                        "asn": 23520,
+                        "hege": 0.0731425156639361,
+                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.190092353501895,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.771055256978673,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 3549,
+                        "hege": 0.323450874088737,
+                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Cable Onda, PA",
+                "percent": 44.21944864412777,
+                "samples": 164958,
+                "v6capable": 0.0024248596612471054,
+                "v6preferred": 0.001818644745935329
+            },
+            {
+                "as": 11556,
+                "as-descr": "& Wireless Panama",
+                "autnum": "Cable",
+                "cc": "PA",
+                "cumulative": 72.41799894918563,
+                "dependency": [
+                    {
+                        "asn": 3491,
+                        "hege": 0.118892566751134,
+                        "name": "BTN-ASN - PCCW Global, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0111358406007752,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6830,
+                        "hege": 0.158117644392576,
+                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
+                    },
+                    {
+                        "asn": 23520,
+                        "hege": 1.0,
+                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.436336684230646,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "Cable & Wireless Panama, PA",
+                "percent": 28.19855030505785,
+                "samples": 105193,
+                "v6capable": 0.0028519007918777865,
+                "v6preferred": 0.0028519007918777865
+            },
+            {
+                "as": 262227,
+                "as-descr": "Panama S.A.",
+                "autnum": "Claro",
+                "cc": "PA",
+                "cumulative": 82.26160989052231,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.340696168213038,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.335492227979274,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0334302325581395,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.402586154958429,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0271870104831907,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Claro Panam S.A., PA",
+                "percent": 9.843610941336678,
+                "samples": 36721,
+                "v6capable": 2.4481904087579314,
+                "v6preferred": 2.385555948912067
+            },
+            {
+                "as": 14709,
+                "as-descr": "Moviles Panama S.A.",
+                "autnum": "Telefonica",
+                "cc": "PA",
+                "cumulative": 91.00347412101523,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.045805941053666,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 18809,
+                        "hege": 0.0437196215760422,
+                        "name": "Cable Onda, PA"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0178196424404716,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0959773009823566,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.956280378423958,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0825073982303507,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 3549,
+                        "hege": 0.0437308562687733,
+                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Telefonica Moviles Panama S.A., PA",
+                "percent": 8.741864230492919,
+                "samples": 32611,
+                "v6capable": 0.0030664499708687254,
+                "v6preferred": 0.0030664499708687254
+            },
+            {
+                "as": 28005,
+                "as-descr": "(Panama), S.A",
+                "autnum": "Digicel",
+                "cc": "PA",
+                "cumulative": 96.84031910444882,
+                "dependency": [
+                    {
+                        "asn": 3491,
+                        "hege": 0.0296486459277157,
+                        "name": "BTN-ASN - PCCW Global, Inc., US"
+                    },
+                    {
+                        "asn": 3257,
+                        "hege": 0.37330866807611,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 52468,
+                        "hege": 0.0766888150609081,
+                        "name": "UFINET PANAMA S.A., PA"
+                    },
+                    {
+                        "asn": 6830,
+                        "hege": 0.0169133192389006,
+                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0126849894291755,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0108350951374207,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 33576,
+                        "hege": 0.847679452330615,
+                        "name": "DIG001 - Digicel Jamaica, JM"
+                    },
+                    {
+                        "asn": 23520,
+                        "hege": 0.078274438739555,
+                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0317628108325783,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 6461,
+                        "hege": 0.386210107721736,
+                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
+                    }
+                ],
+                "name": "Digicel (Panama), S.A, PA",
+                "percent": 5.83684498343359,
+                "samples": 21774,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-24",
+                "sunday": "2020-03-01"
+            },
+            "lockdown": {
+                "monday": "2020-03-23",
+                "sunday": "2020-03-29"
+            }
+        },
+        "name": "Panama",
+        "scope": "National",
+        "start": "\t2020-03-25"
+    },
     "Papua New": {
         "cc": "PG",
         "continent": "Oceania",
@@ -8020,6 +6745,392 @@ const lockdowns = {
         "scope": "National",
         "start": "\t2020-03-20"
     },
+    "Peru": {
+        "cc": "PE",
+        "continent": "America",
+        "end": "2020-03-16",
+        "eyeball": [
+            {
+                "as": 6147,
+                "as-descr": "del Peru S.A.A.",
+                "autnum": "Telefonica",
+                "cc": "PE",
+                "cumulative": 52.32690568209851,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0116958806945693,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0172068946715323,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0284607140887134,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 2,
+                        "hege": 0.0210152858216578,
+                        "name": "UDEL-DCN - University of Delaware, US"
+                    },
+                    {
+                        "asn": 4,
+                        "hege": 0.0115831827734075,
+                        "name": "ISI-AS - University of Southern California, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0227741009421987,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 1.0,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.119208825332874,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Telefonica del Peru S.A.A., PE",
+                "percent": 52.32690568209851,
+                "samples": 2036312,
+                "v6capable": 6.608761329305136,
+                "v6preferred": 6.54948750486173
+            },
+            {
+                "as": 12252,
+                "as-descr": "Movil Peru S.A.C.",
+                "autnum": "America",
+                "cc": "PE",
+                "cumulative": 77.7561466984623,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.512394737335659,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.080023414933694,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.38074598298212,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0972767001731328,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "America Movil Peru S.A.C., PE",
+                "percent": 25.429241016363786,
+                "samples": 989584,
+                "v6capable": 65.89920613106113,
+                "v6preferred": 65.40010751992756
+            },
+            {
+                "as": 21575,
+                "as-descr": "PERU S.A.",
+                "autnum": "ENTEL",
+                "cc": "PE",
+                "cumulative": 87.61985034125483,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.0297619047619048,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0130910546949704,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.640756478294129,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.0411190331770919,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.163307993880283,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 3549,
+                        "hege": 0.173942794989482,
+                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ENTEL PERU S.A., PE",
+                "percent": 9.863703642792533,
+                "samples": 383848,
+                "v6capable": 0.04012004751880953,
+                "v6preferred": 0.024749379962901982
+            },
+            {
+                "as": 262210,
+                "as-descr": "PERU S.A.C.",
+                "autnum": "VIETTEL",
+                "cc": "PE",
+                "cumulative": 96.29206582517885,
+                "dependency": [
+                    {
+                        "asn": 3491,
+                        "hege": 0.0207264957264957,
+                        "name": "BTN-ASN - PCCW Global, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0152014652014652,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6830,
+                        "hege": 0.0160485347985348,
+                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.436510378510378,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 23520,
+                        "hege": 0.1115,
+                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.171036935286935,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.254754578754579,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0776098901098901,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VIETTEL PER S.A.C., PE",
+                "percent": 8.672215483924019,
+                "samples": 337481,
+                "v6capable": 0.019556656522885733,
+                "v6preferred": 0.016593526746690925
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Peru",
+        "scope": "National",
+        "start": "\t2020-03-16"
+    },
+    "Poland": {
+        "cc": "PL",
+        "continent": "Europe",
+        "end": "2020-03-13",
+        "eyeball": [
+            {
+                "as": 5617,
+                "as-descr": "",
+                "autnum": "TPNET",
+                "cc": "PL",
+                "cumulative": 25.447479609645047,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0129902088179072,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0399081456006742,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0142838619379014,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.958941477729787,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.105931482768031,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0270504254529919,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TPNET Orange Polska Spolka Akcyjna, PL",
+                "percent": 25.447479609645047,
+                "samples": 2234291,
+                "v6capable": 36.33286801047849,
+                "v6preferred": 36.15052828839216
+            },
+            {
+                "as": 8374,
+                "as-descr": "Plus network operator in Poland",
+                "autnum": "PLUSNET",
+                "cc": "PL",
+                "cumulative": 37.633594680825496,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.483553085536666,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0117647058823529,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    }
+                ],
+                "name": "PLUSNET Polkomtel Sp. z o.o., PL",
+                "percent": 12.186115071180451,
+                "samples": 1069942,
+                "v6capable": 0.021122640292651377,
+                "v6preferred": 0.012524043359359666
+            },
+            {
+                "as": 39603,
+                "as-descr": "P4 UMTS operator in Poland",
+                "autnum": "P4NET",
+                "cc": "PL",
+                "cumulative": 47.07918864320071,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.0122762148337596,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.435327548575611,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 24724,
+                        "hege": 0.335132809480654,
+                        "name": "ATMAN-Foreign-AS ATM S.A., PL"
+                    }
+                ],
+                "name": "P4NET P4 Sp. z o.o., PL",
+                "percent": 9.44559396237521,
+                "samples": 829324,
+                "v6capable": 0.023513126353512017,
+                "v6preferred": 0.018207600407078535
+            },
+            {
+                "as": 12912,
+                "as-descr": "",
+                "autnum": "TM",
+                "cc": "PL",
+                "cumulative": 55.0051714069997,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.811445615982242,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.117605438401776,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0307342010560657,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0636353126156123,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TMPL T-MOBILE POLSKA SPOLKA AKCYJNA, PL",
+                "percent": 7.92598276379899,
+                "samples": 695902,
+                "v6capable": 0.028883377257142528,
+                "v6preferred": 0.018105997683581884
+            },
+            {
+                "as": 6830,
+                "as-descr": "formerly known as UPC Broadband Holding B.V.",
+                "autnum": "LGI-UPC",
+                "cc": "PL",
+                "cumulative": 62.2225216397842,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0175939065170926,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.045045046064168,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0342602885116221,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "LGI-UPC Liberty Global Operations B.V., AT",
+                "percent": 7.2173502327845,
+                "samples": 633684,
+                "v6capable": 49.33405293490131,
+                "v6preferred": 48.98735016191035
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-10",
+                "sunday": "2020-02-16"
+            },
+            "lockdown": {
+                "monday": "2020-03-09",
+                "sunday": "2020-03-15"
+            }
+        },
+        "name": "Poland",
+        "scope": "National",
+        "start": "\t2020-03-13"
+    },
     "Portugal": {
         "cc": "PT",
         "continent": "Europe",
@@ -8170,6 +7281,415 @@ const lockdowns = {
         "name": "Portugal",
         "scope": "National",
         "start": "\t2020-03-19"
+    },
+    "Romania": {
+        "cc": "RO",
+        "continent": "Europe",
+        "end": "2020-03-25",
+        "eyeball": [
+            {
+                "as": 8708,
+                "as-descr": "73-75 Dr. Staicovici",
+                "autnum": "RCS-RDS",
+                "cc": "RO",
+                "cumulative": 38.21386534066179,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.141641835371186,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0924231282800965,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "RCS-RDS RCS & RDS SA, RO",
+                "percent": 38.21386534066179,
+                "samples": 1656735,
+                "v6capable": 37.98108931120547,
+                "v6preferred": 37.804175079297536
+            },
+            {
+                "as": 8953,
+                "as-descr": "",
+                "autnum": "ASN-ORANGE-ROMANIA",
+                "cc": "RO",
+                "cumulative": 51.034418969841276,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.0218920470858455,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0888631687242799,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.481180711844628,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "ASN-ORANGE-ROMANIA Orange Romania S.A., RO",
+                "percent": 12.820553629179487,
+                "samples": 555826,
+                "v6capable": 7.736593826125442,
+                "v6preferred": 7.692335371141328
+            },
+            {
+                "as": 12302,
+                "as-descr": "Charles de Gaulle nr.15",
+                "autnum": "VODAFONE_RO",
+                "cc": "RO",
+                "cumulative": 61.40714102341429,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0114728682170543,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.105256906305148,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0368106312292359,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 1273,
+                        "hege": 0.882728326695117,
+                        "name": "CW Vodafone Group PLC, GB"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.024142507652986,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Vodafone_Ro Vodafone Romania S.A., RO",
+                "percent": 10.372722053573014,
+                "samples": 449702,
+                "v6capable": 0.04514100448741611,
+                "v6preferred": 0.03024224931176646
+            },
+            {
+                "as": 9050,
+                "as-descr": "Bucharest, Romania",
+                "autnum": "RTD",
+                "cc": "RO",
+                "cumulative": 71.60666222419972,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0952809583690002,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    }
+                ],
+                "name": "RTD TELEKOM ROMANIA COMMUNICATION S.A, RO",
+                "percent": 10.199521200785435,
+                "samples": 442193,
+                "v6capable": 0.01741321097348895,
+                "v6preferred": 0.011985716644089798
+            },
+            {
+                "as": 6830,
+                "as-descr": "formerly known as UPC Broadband Holding B.V.",
+                "autnum": "LGI-UPC",
+                "cc": "RO",
+                "cumulative": 80.09816329595064,
+                "dependency": [
+                    {
+                        "asn": 1299,
+                        "hege": 0.0442439571306918,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0447742381153677,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "LGI-UPC Liberty Global Operations B.V., AT",
+                "percent": 8.491501071750916,
+                "samples": 368143,
+                "v6capable": 20.90247539678875,
+                "v6preferred": 20.821256957214995
+            },
+            {
+                "as": 12632,
+                "as-descr": "RCS & RDS Mobile",
+                "autnum": "DIGINETMOBIL",
+                "cc": "RO",
+                "cumulative": 86.5626446656144,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0529715762273902,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 8708,
+                        "hege": 1.0,
+                        "name": "RCS-RDS RCS & RDS SA, RO"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.185400516795866,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "DigiNetMobil RCS & RDS SA, RO",
+                "percent": 6.464481369663764,
+                "samples": 280263,
+                "v6capable": 0.04638500265821746,
+                "v6preferred": 0.03532396356279637
+            },
+            {
+                "as": 35725,
+                "as-descr": "",
+                "autnum": "COSMOROM",
+                "cc": "RO",
+                "cumulative": 92.24611912684995,
+                "dependency": [
+                    {
+                        "asn": 9050,
+                        "hege": 1.0,
+                        "name": "RTD TELEKOM ROMANIA COMMUNICATION S.A, RO"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0365812255983704,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0126464097776269,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "COSMOROM TELEKOM ROMANIA MOBILE COMMUNICATIONS S.A., RO",
+                "percent": 5.683474461235555,
+                "samples": 246403,
+                "v6capable": 0.0320612979549762,
+                "v6preferred": 0.024350352877197112
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-24",
+                "sunday": "2020-03-01"
+            },
+            "lockdown": {
+                "monday": "2020-03-23",
+                "sunday": "2020-03-29"
+            }
+        },
+        "name": "Romania",
+        "scope": "National",
+        "start": "\t2020-03-25"
+    },
+    "Rwanda": {
+        "cc": "RW",
+        "continent": "Africa",
+        "end": "2020-03-21",
+        "eyeball": [
+            {
+                "as": 36890,
+                "as-descr": "",
+                "autnum": "MTNRW-ASN",
+                "cc": "RW",
+                "cumulative": 34.1116096214156,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0527103283173735,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 16637,
+                        "hege": 1.0,
+                        "name": "MTNNS-AS, ZA"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.236576607387141,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "MTNRW-ASN, RW",
+                "percent": 34.1116096214156,
+                "samples": 45466,
+                "v6capable": 0.0021994457396736023,
+                "v6preferred": 0.0021994457396736023
+            },
+            {
+                "as": 37228,
+                "as-descr": "",
+                "autnum": "Olleh-Rwanda-Networks",
+                "cc": "RW",
+                "cumulative": 67.4159326560929,
+                "dependency": [
+                    {
+                        "asn": 37619,
+                        "hege": 0.466666666666667,
+                        "name": "BSC-AS, RW"
+                    },
+                    {
+                        "asn": 36866,
+                        "hege": 0.282151162790698,
+                        "name": "JTL, KE"
+                    },
+                    {
+                        "asn": 37100,
+                        "hege": 0.064437984496124,
+                        "name": "SEACOM-AS, MU"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.0292248062015504,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 30844,
+                        "hege": 0.268397932816537,
+                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
+                    },
+                    {
+                        "asn": 8966,
+                        "hege": 0.0448255813953488,
+                        "name": "Etisalat-AS Emirates Telecommunications Corporation, AE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.479547803617571,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 37662,
+                        "hege": 0.443346253229974,
+                        "name": "WIOCC-AS, MU"
+                    },
+                    {
+                        "asn": 37273,
+                        "hege": 0.103333333333333,
+                        "name": "BCS, UG"
+                    }
+                ],
+                "name": "Olleh-Rwanda-Networks, RW",
+                "percent": 33.30432303467731,
+                "samples": 44390,
+                "v6capable": 0.009011038522189683,
+                "v6preferred": 0.009011038522189683
+            },
+            {
+                "as": 37124,
+                "as-descr": "",
+                "autnum": "tigo-rw-as",
+                "cc": "RW",
+                "cumulative": 81.64548414687214,
+                "dependency": [
+                    {
+                        "asn": 30844,
+                        "hege": 0.146802325581395,
+                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
+                    },
+                    {
+                        "asn": 327707,
+                        "hege": 0.776162790697674,
+                        "name": "AIRTEL-, RW"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.669089147286822,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 37662,
+                        "hege": 0.497093023255814,
+                        "name": "WIOCC-AS, MU"
+                    },
+                    {
+                        "asn": 37273,
+                        "hege": 0.356104651162791,
+                        "name": "BCS, UG"
+                    },
+                    {
+                        "asn": 37075,
+                        "hege": 0.5,
+                        "name": "ZAINUGAS, UG"
+                    }
+                ],
+                "name": "tigo-rw-as, RW",
+                "percent": 14.229551490779226,
+                "samples": 18966,
+                "v6capable": 0.005272593061267532,
+                "v6preferred": 0.005272593061267532
+            },
+            {
+                "as": 327707,
+                "as-descr": "",
+                "autnum": "AIRTEL-",
+                "cc": "RW",
+                "cumulative": 92.24074546463994,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.125690987527655,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 30844,
+                        "hege": 0.8829907555184,
+                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.119189477039739,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0159262267568526,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 37273,
+                        "hege": 0.1170092444816,
+                        "name": "BCS, UG"
+                    },
+                    {
+                        "asn": 37075,
+                        "hege": 1.0,
+                        "name": "ZAINUGAS, UG"
+                    }
+                ],
+                "name": "AIRTEL-, RW",
+                "percent": 10.595261317767807,
+                "samples": 14122,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Rwanda",
+        "scope": "National",
+        "start": "\t2020-03-21"
     },
     "Samoa": {
         "cc": "WS",
@@ -8599,6 +8119,280 @@ const lockdowns = {
         "name": "Spain",
         "scope": "National",
         "start": "\t2020-03-14"
+    },
+    "Tunisia": {
+        "cc": "TN",
+        "continent": "Africa",
+        "end": "2020-03-22",
+        "eyeball": [
+            {
+                "as": 37693,
+                "as-descr": "",
+                "autnum": "TUNISIANA",
+                "cc": "TN",
+                "cumulative": 25.732418157039653,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0142357227048973,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.025419885842112,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.71361922713464,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.343133871440757,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TUNISIANA, TN",
+                "percent": 25.732418157039653,
+                "samples": 496779,
+                "v6capable": 0.0032207480589960527,
+                "v6preferred": 0.0032207480589960527
+            },
+            {
+                "as": 37705,
+                "as-descr": "",
+                "autnum": "TOPNET",
+                "cc": "TN",
+                "cumulative": 49.77361455787113,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0804893244536198,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0138148788927336,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 2609,
+                        "hege": 1.0,
+                        "name": "TN-BB-AS Tunisia BackBone AS, TN"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0266089965397924,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 5438,
+                        "hege": 1.0,
+                        "name": "ATI-TN Agence Tunisienne d'Internet, TN"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.694893283116313,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0172361591695502,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.280685731530413,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TOPNET, TN",
+                "percent": 24.04119640083147,
+                "samples": 464129,
+                "v6capable": 0.004524604151001123,
+                "v6preferred": 0.004524604151001123
+            },
+            {
+                "as": 37492,
+                "as-descr": "",
+                "autnum": "ORANGE-",
+                "cc": "TN",
+                "cumulative": 68.18519214920876,
+                "dependency": [
+                    {
+                        "asn": 2609,
+                        "hege": 0.023088841762593,
+                        "name": "TN-BB-AS Tunisia BackBone AS, TN"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0131114455128242,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0191565784222429,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.0873584245892914,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0190548482263732,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.868970043149166,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ORANGE-, TN",
+                "percent": 18.41157759133763,
+                "samples": 355446,
+                "v6capable": 0.0028133668686664078,
+                "v6preferred": 0.0028133668686664078
+            },
+            {
+                "as": 2609,
+                "as-descr": "Tunisia BackBone AS",
+                "autnum": "TN-BB-AS",
+                "cc": "TN",
+                "cumulative": 81.01433938495471,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.113960300253425,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.357746228024551,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.499085465461314,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TN-BB-AS Tunisia BackBone AS, TN",
+                "percent": 12.829147235745953,
+                "samples": 247674,
+                "v6capable": 0.010497670324701018,
+                "v6preferred": 0.01009391377375098
+            },
+            {
+                "as": 5438,
+                "as-descr": "",
+                "autnum": "ATI-",
+                "cc": "TN",
+                "cumulative": 90.5925595566461,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.178174129534604,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2609,
+                        "hege": 1.0,
+                        "name": "TN-BB-AS Tunisia BackBone AS, TN"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0279185760154618,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.104043430311684,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0448994897101433,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.731525423330867,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ATI-TN Agence Tunisienne d'Internet, TN",
+                "percent": 9.578220171691383,
+                "samples": 184913,
+                "v6capable": 0.00757112804399907,
+                "v6preferred": 0.00757112804399907
+            },
+            {
+                "as": 37671,
+                "as-descr": "",
+                "autnum": "GLOBALNET-AS",
+                "cc": "TN",
+                "cumulative": 99.22265957441299,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.595011169024572,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2609,
+                        "hege": 1.0,
+                        "name": "TN-BB-AS Tunisia BackBone AS, TN"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0126358897989576,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 5438,
+                        "hege": 1.0,
+                        "name": "ATI-TN Agence Tunisienne d'Internet, TN"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.324050632911393,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0570588235294118,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.10547965452715,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "GLOBALNET-AS, TN",
+                "percent": 8.630100017766893,
+                "samples": 166609,
+                "v6capable": 0.00360124603112677,
+                "v6preferred": 0.00360124603112677
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Tunisia",
+        "scope": "National",
+        "start": "\t2020-03-22"
     },
     "United Arab Emirates": {
         "cc": "AE",
@@ -9052,6 +8846,212 @@ const lockdowns = {
         "name": "United States",
         "scope": "National",
         "start": "2020-03-19"
+    },
+    "Venezuela": {
+        "cc": "VE",
+        "continent": "America",
+        "end": "2020-03-17",
+        "eyeball": [
+            {
+                "as": 8048,
+                "as-descr": "Servicios, Venezuela",
+                "autnum": "CANTV",
+                "cc": "VE",
+                "cumulative": 51.680354006574206,
+                "dependency": [
+                    {
+                        "asn": 3491,
+                        "hege": 0.0857043253534999,
+                        "name": "BTN-ASN - PCCW Global, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.199121614414884,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6830,
+                        "hege": 0.0749450192545252,
+                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0248790531281112,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.277359982609774,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 52320,
+                        "hege": 0.276869701342353,
+                        "name": "GlobeNet Cabos Submarinos Colombia, S.A.S., CO"
+                    },
+                    {
+                        "asn": 23520,
+                        "hege": 0.437876043019608,
+                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.166131030868716,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0117429980828923,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "CANTV Servicios, Venezuela, VE",
+                "percent": 51.680354006574206,
+                "samples": 1303839,
+                "v6capable": 0.003681436128233624,
+                "v6preferred": 0.0029911668541898195
+            },
+            {
+                "as": 6306,
+                "as-descr": "VENEZOLANA, C.A.",
+                "autnum": "TELEFONICA",
+                "cc": "VE",
+                "cumulative": 72.584229758638,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0116704603430007,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 8048,
+                        "hege": 0.414475491542718,
+                        "name": "CANTV Servicios, Venezuela, VE"
+                    },
+                    {
+                        "asn": 28007,
+                        "hege": 0.0307189670735057,
+                        "name": "Gold Data C.A., VE"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0456017813899234,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.414485302774617,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0501770927357639,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.549948981594129,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 3549,
+                        "hege": 0.554767120929452,
+                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TELEFONICA VENEZOLANA, C.A., VE",
+                "percent": 20.903875752063804,
+                "samples": 527382,
+                "v6capable": 0.0015169270092646318,
+                "v6preferred": 0.0013273111331065528
+            },
+            {
+                "as": 264731,
+                "as-descr": "Digitel C.A.",
+                "autnum": "Corporacion",
+                "cc": "VE",
+                "cumulative": 84.91924542122509,
+                "dependency": [
+                    {
+                        "asn": 27717,
+                        "hege": 1.0,
+                        "name": "Corporacion Digitel C.A., VE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.592734574662286,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 52320,
+                        "hege": 1.0,
+                        "name": "GlobeNet Cabos Submarinos Colombia, S.A.S., CO"
+                    },
+                    {
+                        "asn": 6461,
+                        "hege": 0.0261044176706827,
+                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
+                    }
+                ],
+                "name": "Corporacion Digitel C.A., VE",
+                "percent": 12.335015662587088,
+                "samples": 311199,
+                "v6capable": 0.01895892981661252,
+                "v6preferred": 0.01895892981661252
+            },
+            {
+                "as": 21826,
+                "as-descr": "Telemic C.A.",
+                "autnum": "Corporacion",
+                "cc": "VE",
+                "cumulative": 90.0967184075729,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.109966019113978,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 52320,
+                        "hege": 0.25377473270441,
+                        "name": "GlobeNet Cabos Submarinos Colombia, S.A.S., CO"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0188731122452508,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.741885746250009,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 3549,
+                        "hege": 0.536193763360462,
+                        "name": "LVLT-3549 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Corporacin Telemic C.A., VE",
+                "percent": 5.177472986347805,
+                "samples": 130622,
+                "v6capable": 0.005358974751573242,
+                "v6preferred": 0.005358974751573242
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Venezuela",
+        "scope": "National",
+        "start": "\t2020-03-17"
     }
 }
     ;
