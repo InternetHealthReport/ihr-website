@@ -1,4 +1,4 @@
-const lockdowns = {
+const lockdowns ={
     "Argentina": {
         "cc": "AR",
         "continent": "America",
@@ -9,7 +9,7 @@ const lockdowns = {
                 "as-descr": "Argentina S.A.",
                 "autnum": "Telecom",
                 "cc": "AR",
-                "cumulative": 19.49194256228697,
+                "cumulative": 19.450211691458012,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -33,17 +33,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telecom Argentina S.A., AR",
-                "percent": 19.49194256228697,
-                "samples": 2166108,
-                "v6capable": 0.010156464959272575,
-                "v6preferred": 0.008125171967418061
+                "percent": 19.450211691458012,
+                "samples": 2205166,
+                "v6capable": 0.010339357671939437,
+                "v6preferred": 0.008207998853601043
             },
             {
                 "as": 27747,
                 "as-descr": "S.A.",
                 "autnum": "Telecentro",
                 "cc": "AR",
-                "cumulative": 29.775157345045432,
+                "cumulative": 29.768517567070173,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -82,17 +82,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telecentro S.A., AR",
-                "percent": 10.283214782758463,
-                "samples": 1142757,
-                "v6capable": 74.54778224941961,
-                "v6preferred": 74.27327069534468
+                "percent": 10.318305875612161,
+                "samples": 1169837,
+                "v6capable": 74.64766458916927,
+                "v6preferred": 74.36574497130796
             },
             {
                 "as": 22927,
                 "as-descr": "de Argentina",
                 "autnum": "Telefonica",
                 "cc": "AR",
-                "cumulative": 39.8919339956184,
+                "cumulative": 39.89208017893906,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -131,17 +131,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telefonica de Argentina, AR",
-                "percent": 10.116776650572968,
-                "samples": 1124261,
-                "v6capable": 2.705688447789259,
-                "v6preferred": 1.4474396959424902
+                "percent": 10.123562611868888,
+                "samples": 1147758,
+                "v6capable": 2.7053612346853604,
+                "v6preferred": 1.4467335448761847
             },
             {
                 "as": 10481,
                 "as-descr": "Argentina S.A.",
                 "autnum": "Telecom",
                 "cc": "AR",
-                "cumulative": 49.94639533123762,
+                "cumulative": 50.01049173930987,
                 "dependency": [
                     {
                         "asn": 262589,
@@ -180,17 +180,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Prima S.A., AR",
-                "percent": 10.054461335619218,
-                "samples": 1117336,
-                "v6capable": 1.9504428390385704,
-                "v6preferred": 1.9409559881718659
+                "percent": 10.11841156037081,
+                "samples": 1147174,
+                "v6capable": 1.9552395713291968,
+                "v6preferred": 1.945302107614015
             },
             {
                 "as": 11664,
                 "as-descr": "LMDS Comunicaciones Interactivas S.A.",
                 "autnum": "Techtel",
                 "cc": "AR",
-                "cumulative": 59.073676769156535,
+                "cumulative": 59.10784846488522,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -219,17 +219,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Techtel LMDS Comunicaciones Interactivas S.A., AR",
-                "percent": 9.127281437918919,
-                "samples": 1014300,
-                "v6capable": 0.37681159420289856,
-                "v6preferred": 0.37158631568569456
+                "percent": 9.09735672557535,
+                "samples": 1031412,
+                "v6capable": 0.4147712068504148,
+                "v6preferred": 0.4096326201362792
             },
             {
                 "as": 10318,
                 "as-descr": "Argentina S.A.",
                 "autnum": "Telecom",
                 "cc": "AR",
-                "cumulative": 68.05636867917988,
+                "cumulative": 68.09138812105783,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -263,10 +263,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "CABLEVISION S.A., AR",
-                "percent": 8.982691910023345,
-                "samples": 998232,
-                "v6capable": 1.992222248936119,
-                "v6preferred": 1.984007725658965
+                "percent": 8.983539656172605,
+                "samples": 1018508,
+                "v6capable": 1.9840786719397394,
+                "v6preferred": 1.9758313140397523
             }
         ],
         "monitoring_dates": {
@@ -293,7 +293,7 @@ const lockdowns = {
                 "as-descr": "Telstra Corporation Ltd",
                 "autnum": "ASN-TELSTRA",
                 "cc": "AU",
-                "cumulative": 40.42824221627968,
+                "cumulative": 40.39200562600667,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -322,17 +322,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASN-TELSTRA Telstra Pty Ltd, AU",
-                "percent": 40.42824221627968,
-                "samples": 789623,
-                "v6capable": 57.442475713093465,
-                "v6preferred": 56.387668545622404
+                "percent": 40.39200562600667,
+                "samples": 801234,
+                "v6capable": 57.44950913216364,
+                "v6preferred": 56.39263935379677
             },
             {
                 "as": 4804,
                 "as-descr": "Microplex PTY LTD",
                 "autnum": "MPX-AS",
                 "cc": "AU",
-                "cumulative": 59.178034218622564,
+                "cumulative": 59.138807599141984,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -361,17 +361,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MPX-AS Microplex PTY LTD, AU",
-                "percent": 18.749792002342886,
-                "samples": 366211,
-                "v6capable": 0.07345492079702685,
-                "v6preferred": 0.06471678895500135
+                "percent": 18.746801973135312,
+                "samples": 371870,
+                "v6capable": 0.07260601823217791,
+                "v6preferred": 0.06400086051577164
             },
             {
                 "as": 7545,
                 "as-descr": "TPG Telecom Limited",
                 "autnum": "TPG-INTERNET-AP",
                 "cc": "AU",
-                "cumulative": 73.39908363272197,
+                "cumulative": 73.39236607356659,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -395,17 +395,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TPG-INTERNET-AP TPG Telecom Limited, AU",
-                "percent": 14.221049414099399,
-                "samples": 277758,
-                "v6capable": 3.572894390080574,
-                "v6preferred": 3.360839291757573
+                "percent": 14.253558474424608,
+                "samples": 282740,
+                "v6capable": 3.5700643700926644,
+                "v6preferred": 3.36139209167433
             },
             {
                 "as": 133612,
                 "as-descr": "Vodafone Australia Pty Ltd",
                 "autnum": "VODAFONE-AS-AP",
                 "cc": "AU",
-                "cumulative": 78.76242802001079,
+                "cumulative": 78.74569290372017,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -449,10 +449,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "VODAFONE-AS-AP Vodafone Australia Pty Ltd, AU",
-                "percent": 5.363344387288822,
-                "samples": 104754,
-                "v6capable": 15.536399564694428,
-                "v6preferred": 14.987494510949462
+                "percent": 5.353326830153581,
+                "samples": 106191,
+                "v6capable": 15.600192106675706,
+                "v6preferred": 15.05212306127638
             }
         ],
         "monitoring_dates": {
@@ -479,7 +479,7 @@ const lockdowns = {
                 "as-descr": "==) TELE2 AUSTRIA (==",
                 "autnum": "H3G-AUSTRIA-AS",
                 "cc": "AT",
-                "cumulative": 19.07899369297778,
+                "cumulative": 19.060836857295808,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -503,17 +503,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "H3G-Austria-AS Hutchison Drei Austria GmbH, AT",
-                "percent": 19.07899369297778,
-                "samples": 132769,
-                "v6capable": 0.03539982977954191,
-                "v6preferred": 0.02410201176479449
+                "percent": 19.060836857295808,
+                "samples": 134592,
+                "v6capable": 0.03640632429862102,
+                "v6preferred": 0.02451854493580599
             },
             {
                 "as": 8447,
                 "as-descr": "A1 Telekom Austria AG",
                 "autnum": "TELEKOM-AT",
                 "cc": "AT",
-                "cumulative": 36.985821055308946,
+                "cumulative": 36.96209415423485,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -527,17 +527,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELEKOM-AT A1 Telekom Austria AG, AT",
-                "percent": 17.90682736233117,
-                "samples": 124612,
-                "v6capable": 13.871055757069945,
-                "v6preferred": 12.598305139151927
+                "percent": 17.90125729693904,
+                "samples": 126404,
+                "v6capable": 14.009841460713268,
+                "v6preferred": 12.741685389702857
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "AT",
-                "cumulative": 52.00239692710496,
+                "cumulative": 52.0027814048077,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -551,17 +551,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 15.016575871796014,
-                "samples": 104499,
-                "v6capable": 48.62343180317515,
-                "v6preferred": 48.12486243887501
+                "percent": 15.04068725057285,
+                "samples": 106205,
+                "v6capable": 48.59281578080128,
+                "v6preferred": 48.091897744927266
             },
             {
                 "as": 8412,
                 "as-descr": "Rennweg 97-99",
                 "autnum": "TMA",
                 "cc": "AT",
-                "cumulative": 65.03461030534955,
+                "cumulative": 65.02340968506681,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -580,17 +580,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TMA T-Mobile Austria GmbH, AT",
-                "percent": 13.032213378244581,
-                "samples": 90690,
-                "v6capable": 1.4907928106737236,
-                "v6preferred": 1.4786635792259346
+                "percent": 13.020628280259107,
+                "samples": 91941,
+                "v6capable": 1.497699611707508,
+                "v6preferred": 1.485735417278472
             },
             {
                 "as": 12793,
                 "as-descr": "A1 Telekom Austria AG",
                 "autnum": "A1-TELEKOM-AT",
                 "cc": "AT",
-                "cumulative": 74.25056510286812,
+                "cumulative": 74.24212383765887,
                 "dependency": [
                     {
                         "asn": 8447,
@@ -604,17 +604,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "A1-TELEKOM-AT A1 Telekom Austria AG, AT",
-                "percent": 9.215954797518577,
-                "samples": 64133,
-                "v6capable": 21.24335365568428,
-                "v6preferred": 19.09313457970156
+                "percent": 9.21871415259206,
+                "samples": 65095,
+                "v6capable": 21.296566556571165,
+                "v6preferred": 19.148936170212767
             },
             {
                 "as": 1901,
                 "as-descr": "A1 Telekom Austria AG",
                 "autnum": "EUNETAT-AS",
                 "cc": "AT",
-                "cumulative": 82.58678442457224,
+                "cumulative": 82.61154651205607,
                 "dependency": [
                     {
                         "asn": 8447,
@@ -628,10 +628,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "EUNETAT-AS A1 Telekom Austria AG, AT",
-                "percent": 8.336219321704117,
-                "samples": 58011,
-                "v6capable": 4.595680129630587,
-                "v6preferred": 4.554308665597904
+                "percent": 8.369422674397198,
+                "samples": 59098,
+                "v6capable": 4.705743003147314,
+                "v6preferred": 4.665132491793292
             }
         ],
         "monitoring_dates": {
@@ -658,7 +658,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "BELGACOM-SKYNET-AS",
                 "cc": "BE",
-                "cumulative": 43.09313496243395,
+                "cumulative": 43.116620436069994,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -687,17 +687,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "BELGACOM-SKYNET-AS Proximus NV, BE",
-                "percent": 43.09313496243395,
-                "samples": 492979,
-                "v6capable": 56.5484533823956,
-                "v6preferred": 56.00664531349206
+                "percent": 43.116620436069994,
+                "samples": 502228,
+                "v6capable": 56.57012352955231,
+                "v6preferred": 56.02813861433452
             },
             {
                 "as": 6848,
                 "as-descr": "",
                 "autnum": "TELENET-AS",
                 "cc": "BE",
-                "cumulative": 75.06881646175431,
+                "cumulative": 75.07617102487696,
                 "dependency": [
                     {
                         "asn": 6830,
@@ -716,17 +716,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELENET-AS Telenet BVBA, BE",
-                "percent": 31.97568149932036,
-                "samples": 365797,
-                "v6capable": 80.33335429213471,
-                "v6preferred": 79.85275986407761
+                "percent": 31.95955058880696,
+                "samples": 372269,
+                "v6capable": 80.3993886141473,
+                "v6preferred": 79.9126438140162
             },
             {
                 "as": 12392,
                 "as-descr": "VOO",
                 "autnum": "ASBRUTELE",
                 "cc": "BE",
-                "cumulative": 85.19394922136217,
+                "cumulative": 85.2031184404707,
                 "dependency": [
                     {
                         "asn": 174,
@@ -740,17 +740,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASBRUTELE Brutele SC, BE",
-                "percent": 10.125132759607862,
-                "samples": 115830,
-                "v6capable": 87.12078045411378,
-                "v6preferred": 86.66580333247
+                "percent": 10.126947415593747,
+                "samples": 117960,
+                "v6capable": 87.11258053577484,
+                "v6preferred": 86.6547982366904
             },
             {
                 "as": 47377,
                 "as-descr": "KPN Belgium Business NV has been acquired by Mobistar",
                 "autnum": "ORANGE_BELGIUM_SA",
                 "cc": "BE",
-                "cumulative": 94.63078624282662,
+                "cumulative": 94.6525322090327,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -774,10 +774,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "MES Orange Belgium SA, BE",
-                "percent": 9.436837021464441,
-                "samples": 107956,
-                "v6capable": 0.2102708510874801,
-                "v6preferred": 0.1630293823409537
+                "percent": 9.449413768561993,
+                "samples": 110068,
+                "v6capable": 0.20805320347421594,
+                "v6preferred": 0.16171821056074426
             }
         ],
         "monitoring_dates": {
@@ -804,7 +804,7 @@ const lockdowns = {
                 "as-descr": "Celular de Bolivia S.A.",
                 "autnum": "Telefonica",
                 "cc": "BO",
-                "cumulative": 42.13933381924565,
+                "cumulative": 42.223383551673344,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -873,17 +873,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telefnica Celular de Bolivia S.A., BO",
-                "percent": 42.13933381924565,
-                "samples": 502410,
-                "v6capable": 0.010151071833761271,
-                "v6preferred": 0.007364503095081706
+                "percent": 42.223383551673344,
+                "samples": 512241,
+                "v6capable": 0.010151471670561317,
+                "v6preferred": 0.007223162534822476
             },
             {
                 "as": 6568,
                 "as-descr": "S.A. - EntelNet",
                 "autnum": "Entel",
                 "cc": "BO",
-                "cumulative": 76.43641188701449,
+                "cumulative": 76.47714374501821,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -917,17 +917,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Entel S.A. - EntelNet, BO",
-                "percent": 34.29707806776883,
-                "samples": 408910,
-                "v6capable": 24.645276466704164,
-                "v6preferred": 24.524467486733023
+                "percent": 34.25376019334487,
+                "samples": 415556,
+                "v6capable": 24.74058851273956,
+                "v6preferred": 24.61786137127126
             },
             {
                 "as": 27839,
                 "as-descr": "Ltda",
                 "autnum": "Comteco",
                 "cc": "BO",
-                "cumulative": 82.61954826929384,
+                "cumulative": 82.65806330362877,
                 "dependency": [
                     {
                         "asn": 27882,
@@ -991,17 +991,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Comteco Ltda, BO",
-                "percent": 6.183136382279354,
-                "samples": 73719,
-                "v6capable": 48.22230361236588,
-                "v6preferred": 45.63409704418128
+                "percent": 6.180919558610548,
+                "samples": 74985,
+                "v6capable": 48.29499233179969,
+                "v6preferred": 45.617123424684934
             },
             {
                 "as": 25620,
                 "as-descr": "LTDA.",
                 "autnum": "COTAS",
                 "cc": "BO",
-                "cumulative": 87.88576978659839,
+                "cumulative": 87.9246832057199,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1030,10 +1030,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "COTAS LTDA., BO",
-                "percent": 5.266221517304546,
-                "samples": 62787,
-                "v6capable": 0.06052208259671588,
-                "v6preferred": 0.06052208259671588
+                "percent": 5.266619902091135,
+                "samples": 63893,
+                "v6capable": 0.05947443381904121,
+                "v6preferred": 0.05947443381904121
             }
         ],
         "monitoring_dates": {
@@ -1060,7 +1060,7 @@ const lockdowns = {
                 "as-descr": "CHILE S.A.",
                 "autnum": "TELEFONICA",
                 "cc": "CL",
-                "cumulative": 24.114948439473093,
+                "cumulative": 24.09978915376173,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -1099,17 +1099,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELEFNICA CHILE S.A., CL",
-                "percent": 24.114948439473093,
-                "samples": 888189,
-                "v6capable": 0.00427836868053984,
-                "v6preferred": 0.003940602732076168
+                "percent": 24.09978915376173,
+                "samples": 902058,
+                "v6capable": 0.004434304667770808,
+                "v6preferred": 0.004101731817687998
             },
             {
                 "as": 22047,
                 "as-descr": "BANDA ANCHA S.A.",
                 "autnum": "VTR",
                 "cc": "CL",
-                "cumulative": 47.63176707310352,
+                "cumulative": 47.67283674217448,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1133,17 +1133,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "VTR BANDA ANCHA S.A., CL",
-                "percent": 23.516818633630425,
-                "samples": 866159,
-                "v6capable": 0.0023090448751326258,
-                "v6preferred": 0.0021935926313759943
+                "percent": 23.573047588412756,
+                "samples": 882342,
+                "v6capable": 0.0022666947736818604,
+                "v6preferred": 0.0021533600349977673
             },
             {
                 "as": 27651,
                 "as-descr": "CHILE S.A.",
                 "autnum": "ENTEL",
                 "cc": "CL",
-                "cumulative": 61.19191007038275,
+                "cumulative": 61.18863631748977,
                 "dependency": [
                     {
                         "asn": 6471,
@@ -1197,17 +1197,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ENTEL CHILE S.A., CL",
-                "percent": 13.560142997279229,
-                "samples": 499440,
-                "v6capable": 0.6449223129905494,
-                "v6preferred": 0.6307063911580971
+                "percent": 13.515799575315281,
+                "samples": 505898,
+                "v6capable": 0.6515147322187477,
+                "v6preferred": 0.6364919410632183
             },
             {
                 "as": 52341,
                 "as-descr": "Cayman Corp Chile S.A",
                 "autnum": "Centennial",
                 "cc": "CL",
-                "cumulative": 71.6628741671185,
+                "cumulative": 71.64425334463262,
                 "dependency": [
                     {
                         "asn": 3356,
@@ -1221,17 +1221,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Centennial Cayman Corp Chile S.A, CL",
-                "percent": 10.470964096735754,
-                "samples": 385661,
-                "v6capable": 0.003889426205916595,
-                "v6preferred": 0.0031115409647332762
+                "percent": 10.455617027142846,
+                "samples": 391355,
+                "v6capable": 0.003832837193852129,
+                "v6preferred": 0.0030662697550817033
             },
             {
                 "as": 6535,
                 "as-descr": "Servicios Empresariales S.A.",
                 "autnum": "Telmex",
                 "cc": "CL",
-                "cumulative": 78.68021558737678,
+                "cumulative": 78.67818751315785,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -1270,17 +1270,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telmex Servicios Empresariales S.A., CL",
-                "percent": 7.017341420258274,
-                "samples": 258459,
-                "v6capable": 0.0019345428094978314,
-                "v6preferred": 0.0019345428094978314
+                "percent": 7.033934168525241,
+                "samples": 263281,
+                "v6capable": 0.0018991115955955804,
+                "v6preferred": 0.0018991115955955804
             },
             {
                 "as": 27995,
                 "as-descr": "CHILE S.A.",
                 "autnum": "CLARO",
                 "cc": "CL",
-                "cumulative": 84.64834555883868,
+                "cumulative": 84.62444149257335,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -1319,10 +1319,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "CLARO CHILE S.A., CL",
-                "percent": 5.968129971461905,
-                "samples": 219815,
-                "v6capable": 0.0013647840229283716,
-                "v6preferred": 0.0013647840229283716
+                "percent": 5.946253979415508,
+                "samples": 222569,
+                "v6capable": 0.0013478966073442393,
+                "v6preferred": 0.0013478966073442393
             }
         ],
         "monitoring_dates": {
@@ -1349,7 +1349,7 @@ const lockdowns = {
                 "as-descr": "Colombia S.A.",
                 "autnum": "Telmex",
                 "cc": "CO",
-                "cumulative": 25.284978132241193,
+                "cumulative": 25.365552480571328,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -1408,17 +1408,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telmex Colombia S.A., CO",
-                "percent": 25.284978132241193,
-                "samples": 1998088,
-                "v6capable": 10.06842541469645,
-                "v6preferred": 9.975786852230733
+                "percent": 25.365552480571328,
+                "samples": 2039795,
+                "v6capable": 10.151020077998034,
+                "v6preferred": 10.056059555004301
             },
             {
                 "as": 3816,
                 "as-descr": "TELECOMUNICACIONES S.A. ESP",
                 "autnum": "COLOMBIA",
                 "cc": "CO",
-                "cumulative": 40.31531180965274,
+                "cumulative": 40.38769671936973,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1447,17 +1447,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "COLOMBIA TELECOMUNICACIONES S.A. ESP, CO",
-                "percent": 15.03033367741155,
-                "samples": 1187738,
-                "v6capable": 0.019027765382601213,
-                "v6preferred": 0.007998396952863342
+                "percent": 15.022144238798397,
+                "samples": 1208020,
+                "v6capable": 0.01903941987715435,
+                "v6preferred": 0.008112448469396202
             },
             {
                 "as": 13489,
                 "as-descr": "Telecomunicaciones S.A. E.S.P.",
                 "autnum": "EPM",
                 "cc": "CO",
-                "cumulative": 54.697464893961524,
+                "cumulative": 54.760056929004755,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1471,17 +1471,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "EPM Telecomunicaciones S.A. E.S.P., CO",
-                "percent": 14.382153084308781,
-                "samples": 1136517,
-                "v6capable": 0.3944507649247658,
-                "v6preferred": 0.3803726649051444
+                "percent": 14.372360209635028,
+                "samples": 1155767,
+                "v6capable": 0.3973984375743554,
+                "v6preferred": 0.38346829421501044
             },
             {
                 "as": 26611,
                 "as-descr": "S.A.",
                 "autnum": "COMCEL",
                 "cc": "CO",
-                "cumulative": 64.57659713857014,
+                "cumulative": 64.57774856853646,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -1530,17 +1530,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "COMCEL S.A., CO",
-                "percent": 9.879132244608607,
-                "samples": 780676,
-                "v6capable": 0.018317458202890827,
-                "v6preferred": 0.014346540690376034
+                "percent": 9.81769163953171,
+                "samples": 789499,
+                "v6capable": 0.01861940293781246,
+                "v6preferred": 0.014566199577200225
             },
             {
                 "as": 27831,
                 "as-descr": "Movil",
                 "autnum": "Colombia",
                 "cc": "CO",
-                "cumulative": 74.1142073932399,
+                "cumulative": 74.11814447258286,
                 "dependency": [
                     {
                         "asn": 13489,
@@ -1559,17 +1559,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Colombia Mvil, CO",
-                "percent": 9.537610254669763,
-                "samples": 753688,
-                "v6capable": 3.128482873549798,
-                "v6preferred": 3.040913481440596
+                "percent": 9.540395904046399,
+                "samples": 767200,
+                "v6capable": 3.095672575599583,
+                "v6preferred": 3.008863399374348
             },
             {
                 "as": 19429,
                 "as-descr": "- Colombia",
                 "autnum": "ETB",
                 "cc": "CO",
-                "cumulative": 80.73348010123163,
+                "cumulative": 80.74526260026772,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1623,10 +1623,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "ETB - Colombia, CO",
-                "percent": 6.619272707991739,
-                "samples": 523073,
-                "v6capable": 0.03288259956067317,
-                "v6preferred": 0.02963257518549036
+                "percent": 6.627118127684868,
+                "samples": 532926,
+                "v6capable": 0.03227464976375707,
+                "v6preferred": 0.02908471344989736
             }
         ],
         "monitoring_dates": {
@@ -1653,7 +1653,7 @@ const lockdowns = {
                 "as-descr": "Costarricense de Electricidad y Telecom.",
                 "autnum": "Instituto",
                 "cc": "CR",
-                "cumulative": 33.351092101568454,
+                "cumulative": 33.300221875418245,
                 "dependency": [
                     {
                         "asn": 1239,
@@ -1677,17 +1677,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Instituto Costarricense de Electricidad y Telecom., CR",
-                "percent": 33.351092101568454,
-                "samples": 266051,
-                "v6capable": 0.22664827420306632,
-                "v6preferred": 0.22176199300134186
+                "percent": 33.300221875418245,
+                "samples": 271204,
+                "v6capable": 0.22861019748971254,
+                "v6preferred": 0.22381675786492825
             },
             {
                 "as": 52228,
                 "as-descr": "Tica",
                 "autnum": "Cable",
                 "cc": "CR",
-                "cumulative": 48.81588711941915,
+                "cumulative": 48.77219521598781,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -1716,17 +1716,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Cable Tica, CR",
-                "percent": 15.464795017850696,
-                "samples": 123367,
-                "v6capable": 0.0024317686253211962,
-                "v6preferred": 0.0024317686253211962
+                "percent": 15.471973340569559,
+                "samples": 126007,
+                "v6capable": 0.002380820113168316,
+                "v6preferred": 0.002380820113168316
             },
             {
                 "as": 262197,
                 "as-descr": "CABLE COSTA RICA S.A.",
                 "autnum": "MILLICOM",
                 "cc": "CR",
-                "cumulative": 62.744318865578244,
+                "cumulative": 62.70061798504705,
                 "dependency": [
                     {
                         "asn": 13489,
@@ -1770,17 +1770,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MILLICOM CABLE COSTA RICA S.A., CR",
-                "percent": 13.928431746159092,
-                "samples": 111111,
-                "v6capable": 0.0045000045000045,
-                "v6preferred": 0.0045000045000045
+                "percent": 13.928422769059246,
+                "samples": 113436,
+                "v6capable": 0.005289326139849783,
+                "v6preferred": 0.005289326139849783
             },
             {
                 "as": 52263,
                 "as-descr": "Economico S.A.",
                 "autnum": "Telecable",
                 "cc": "CR",
-                "cumulative": 76.62160535922018,
+                "cumulative": 76.60288720452937,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -1839,17 +1839,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telecable Economico S.A., CR",
-                "percent": 13.877286493641943,
-                "samples": 110703,
-                "v6capable": 0.00361327154638989,
-                "v6preferred": 0.00361327154638989
+                "percent": 13.902269219482307,
+                "samples": 113223,
+                "v6capable": 0.0035328510991582984,
+                "v6preferred": 0.0035328510991582984
             },
             {
                 "as": 14754,
                 "as-descr": "",
                 "autnum": "Telgua",
                 "cc": "CR",
-                "cumulative": 85.08551787075294,
+                "cumulative": 85.09137166158536,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1878,17 +1878,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telgua, GT",
-                "percent": 8.463912511532753,
-                "samples": 67519,
-                "v6capable": 0.005924258356906945,
-                "v6preferred": 0.004443193767680208
+                "percent": 8.488484457055995,
+                "samples": 69132,
+                "v6capable": 0.005786032517502748,
+                "v6preferred": 0.004339524388127061
             },
             {
                 "as": 262202,
                 "as-descr": "de Costa Rica TC, SA",
                 "autnum": "Telefonica",
                 "cc": "CR",
-                "cumulative": 91.3124523647158,
+                "cumulative": 91.31137335604068,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1917,10 +1917,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telefonica de Costa Rica TC, SA, CR",
-                "percent": 6.226934493962855,
-                "samples": 49674,
-                "v6capable": 0.004026251157547208,
-                "v6preferred": 0.004026251157547208
+                "percent": 6.220001694455325,
+                "samples": 50657,
+                "v6capable": 0.003948121681110212,
+                "v6preferred": 0.003948121681110212
             }
         ],
         "monitoring_dates": {
@@ -1947,7 +1947,7 @@ const lockdowns = {
                 "as-descr": "de Telecomunicaciones de Cuba, S.A.",
                 "autnum": "Empresa",
                 "cc": "CU",
-                "cumulative": 99.71953396981729,
+                "cumulative": 99.72165121617623,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -2006,10 +2006,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "Empresa de Telecomunicaciones de Cuba, S.A., CU",
-                "percent": 99.71953396981729,
-                "samples": 122309,
-                "v6capable": 0.0032704052849749404,
-                "v6preferred": 0.0032704052849749404
+                "percent": 99.72165121617623,
+                "samples": 124675,
+                "v6capable": 0.0032083416883898134,
+                "v6preferred": 0.0032083416883898134
             }
         ],
         "monitoring_dates": {
@@ -2029,14 +2029,14 @@ const lockdowns = {
     "Czech": {
         "cc": "CZ",
         "continent": "Europe",
-        "end": "2020-04-01",
+        "end": "2020-04-12",
         "eyeball": [
             {
                 "as": 5610,
                 "as-descr": "",
                 "autnum": "O2-CZECH-REPUBLIC",
                 "cc": "CZ",
-                "cumulative": 19.989135939137707,
+                "cumulative": 19.963209866708187,
                 "dependency": [
                     {
                         "asn": 174,
@@ -2060,17 +2060,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "O2-CZECH-REPUBLIC O2 Czech Republic, a.s., CZ",
-                "percent": 19.989135939137707,
-                "samples": 271574,
-                "v6capable": 43.92062568581676,
-                "v6preferred": 43.518893561239295
+                "percent": 19.963209866708187,
+                "samples": 275653,
+                "v6capable": 44.01620878423235,
+                "v6preferred": 43.6142541528661
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "CZ",
-                "cumulative": 34.5388073675409,
+                "cumulative": 34.53014726916545,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -2084,17 +2084,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 14.549671428403189,
-                "samples": 197673,
-                "v6capable": 11.43454088317575,
-                "v6preferred": 11.358657985663191
+                "percent": 14.566937402457262,
+                "samples": 201141,
+                "v6capable": 11.439239140702293,
+                "v6preferred": 11.361681606435287
             },
             {
                 "as": 13036,
                 "as-descr": "",
                 "autnum": "TMOBILE-",
                 "cc": "CZ",
-                "cumulative": 45.48493752428957,
+                "cumulative": 45.47810878436854,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -2118,17 +2118,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TMOBILE-CZ T-Mobile Czech Republic a.s., CZ",
-                "percent": 10.946130156748673,
-                "samples": 148715,
-                "v6capable": 11.286689305046565,
-                "v6preferred": 11.200618632955653
+                "percent": 10.947961515203088,
+                "samples": 151170,
+                "v6capable": 11.303830125024806,
+                "v6preferred": 11.21915724019316
             },
             {
                 "as": 16019,
                 "as-descr": "",
                 "autnum": "VODAFONE-CZ-AS",
                 "cc": "CZ",
-                "cumulative": 52.04348862953847,
+                "cumulative": 52.01407874392112,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -2147,10 +2147,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "VODAFONE-CZ-AS Vodafone Czech Republic a.s., CZ",
-                "percent": 6.558551105248902,
-                "samples": 89105,
-                "v6capable": 0.12457213399921441,
-                "v6preferred": 0.10886033331462881
+                "percent": 6.53596995955258,
+                "samples": 90249,
+                "v6capable": 0.12299305255459894,
+                "v6preferred": 0.10748041529546033
             }
         ],
         "monitoring_dates": {
@@ -2177,7 +2177,7 @@ const lockdowns = {
                 "as-descr": "TDC A/S",
                 "autnum": "TDC",
                 "cc": "DK",
-                "cumulative": 40.71257026827859,
+                "cumulative": 40.69653994912715,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -2191,17 +2191,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TDC TDC A/S, DK",
-                "percent": 40.71257026827859,
-                "samples": 230379,
-                "v6capable": 0.4627157857269977,
-                "v6preferred": 0.33423185272963246
+                "percent": 40.69653994912715,
+                "samples": 233590,
+                "v6capable": 0.4717667708377927,
+                "v6preferred": 0.3441928164733079
             },
             {
                 "as": 9158,
                 "as-descr": "",
                 "autnum": "TELENOR_DANMARK_AS",
                 "cc": "DK",
-                "cumulative": 49.45755804809257,
+                "cumulative": 49.43255862573609,
                 "dependency": [
                     {
                         "asn": 174,
@@ -2215,17 +2215,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELENOR_DANMARK_AS Telenor A/S, DK",
-                "percent": 8.744987779813984,
-                "samples": 49485,
-                "v6capable": 0.07679094675154087,
-                "v6preferred": 0.022228958270182883
+                "percent": 8.736018676608941,
+                "samples": 50143,
+                "v6capable": 0.0777775561892986,
+                "v6preferred": 0.023931555750553418
             },
             {
                 "as": 3308,
                 "as-descr": "",
                 "autnum": "TELIANET-DENMARK",
                 "cc": "DK",
-                "cumulative": 55.77123246275185,
+                "cumulative": 55.743231471479845,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -2239,17 +2239,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELIANET-DENMARK Telia Company AB, DK",
-                "percent": 6.313674414659275,
-                "samples": 35727,
-                "v6capable": 16.8276093710639,
-                "v6preferred": 16.53651300137151
+                "percent": 6.310672845743754,
+                "samples": 36222,
+                "v6capable": 16.782618298271768,
+                "v6preferred": 16.48997846612556
             },
             {
                 "as": 44034,
                 "as-descr": "",
                 "autnum": "HI3G",
                 "cc": "DK",
-                "cumulative": 61.26033149132216,
+                "cumulative": 61.22844001533155,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -2268,17 +2268,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "hi3g Hi3G Access AB, SE",
-                "percent": 5.489099028570318,
-                "samples": 31061,
-                "v6capable": 53.63961237564792,
-                "v6preferred": 52.63835678181643
+                "percent": 5.485208543851702,
+                "samples": 31484,
+                "v6capable": 53.61135815017152,
+                "v6preferred": 52.61084995553297
             },
             {
                 "as": 44869,
                 "as-descr": "",
                 "autnum": "FIBIA-P-S",
                 "cc": "DK",
-                "cumulative": 66.54266815347069,
+                "cumulative": 66.51886825324925,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2297,17 +2297,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "FIBIA-P-S FIBIA P/S, DK",
-                "percent": 5.282336662148526,
-                "samples": 29891,
-                "v6capable": 0.18065638486500954,
-                "v6preferred": 0.053527817737780606
+                "percent": 5.2904282379176975,
+                "samples": 30366,
+                "v6capable": 0.17783046828689983,
+                "v6preferred": 0.05269050912204439
             },
             {
                 "as": 43557,
                 "as-descr": "",
                 "autnum": "ASEMNET",
                 "cc": "DK",
-                "cumulative": 71.77198882422901,
+                "cumulative": 71.7521516429144,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2341,17 +2341,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASEMNET EnergiMidt Fiberbredband A/S, DK",
-                "percent": 5.229320670758323,
-                "samples": 29591,
-                "v6capable": 0.1351762360177081,
-                "v6preferred": 0.037173464904869724
+                "percent": 5.233283389665145,
+                "samples": 30038,
+                "v6capable": 0.13649377455223383,
+                "v6preferred": 0.039949397429922096
             },
             {
                 "as": 197288,
                 "as-descr": "",
                 "autnum": "STOFANET",
                 "cc": "DK",
-                "cumulative": 76.87460127556476,
+                "cumulative": 76.85476845883133,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -2370,10 +2370,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "STOFANET Stofa A/S, DK",
-                "percent": 5.102612451335738,
-                "samples": 28874,
-                "v6capable": 0.1350696128004433,
-                "v6preferred": 0.041559880861674864
+                "percent": 5.102616815916931,
+                "samples": 29288,
+                "v6capable": 0.13316033870527177,
+                "v6preferred": 0.040972411909314395
             }
         ],
         "monitoring_dates": {
@@ -2400,7 +2400,7 @@ const lockdowns = {
                 "as-descr": "Dominicana de Telefonos S. A.",
                 "autnum": "Compania",
                 "cc": "DO",
-                "cumulative": 63.74601033097857,
+                "cumulative": 63.71374507744009,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2429,17 +2429,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Compaa Dominicana de Telfonos, C. por A. - CODETEL, DO",
-                "percent": 63.74601033097857,
-                "samples": 1020580,
-                "v6capable": 0.00617296047345627,
-                "v6preferred": 0.0047032079797762055
+                "percent": 63.71374507744009,
+                "samples": 1037075,
+                "v6capable": 0.0060747776197478485,
+                "v6preferred": 0.004628401995998361
             },
             {
                 "as": 28118,
                 "as-descr": "DOMINICANA S.A.",
                 "autnum": "ALTICE",
                 "cc": "DO",
-                "cumulative": 90.16676972661008,
+                "cumulative": 90.16335833778744,
                 "dependency": [
                     {
                         "asn": 701,
@@ -2478,10 +2478,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "ALTICE DOMINICANA S.A., DO",
-                "percent": 26.420759395631507,
-                "samples": 422999,
-                "v6capable": 0.005437365100153901,
-                "v6preferred": 0.004491736387083657
+                "percent": 26.44961326034736,
+                "samples": 430523,
+                "v6capable": 0.005574615061216242,
+                "v6preferred": 0.004645512551013534
             }
         ],
         "monitoring_dates": {
@@ -2508,7 +2508,7 @@ const lockdowns = {
                 "as-descr": "S.A",
                 "autnum": "Telconet",
                 "cc": "EC",
-                "cumulative": 22.50073921837354,
+                "cumulative": 22.522223315167114,
                 "dependency": [
                     {
                         "asn": 1239,
@@ -2542,17 +2542,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telconet S.A, EC",
-                "percent": 22.50073921837354,
-                "samples": 400267,
-                "v6capable": 15.587845113386814,
-                "v6preferred": 15.288544896281731
+                "percent": 22.522223315167114,
+                "samples": 407559,
+                "v6capable": 15.680429091248138,
+                "v6preferred": 15.382803471399233
             },
             {
                 "as": 23487,
                 "as-descr": "",
                 "autnum": "CONECEL",
                 "cc": "EC",
-                "cumulative": 34.10343210939757,
+                "cumulative": 34.060387293005135,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2586,17 +2586,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "CONECEL, EC",
-                "percent": 11.602692891024034,
-                "samples": 206401,
-                "v6capable": 0.030038614154001192,
-                "v6preferred": 0.019379751067097543
+                "percent": 11.538163977838025,
+                "samples": 208793,
+                "v6capable": 0.02969448209470624,
+                "v6preferred": 0.019157730383681446
             },
             {
                 "as": 28006,
                 "as-descr": "NACIONAL DE TELECOMUNICACIONES - CNT EP",
                 "autnum": "CORPORACION",
                 "cc": "EC",
-                "cumulative": 44.73350474954832,
+                "cumulative": 44.662978161855804,
                 "dependency": [
                     {
                         "asn": 26613,
@@ -2625,17 +2625,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "CORPORACION NACIONAL DE TELECOMUNICACIONES - CNT EP, EC",
-                "percent": 10.630072640150745,
-                "samples": 189099,
-                "v6capable": 34.129741563942694,
-                "v6preferred": 33.522123332222804
+                "percent": 10.602590868850665,
+                "samples": 191863,
+                "v6capable": 34.22911139719487,
+                "v6preferred": 33.62086488796694
             },
             {
                 "as": 264668,
                 "as-descr": "S.A.",
                 "autnum": "NEDETEL",
                 "cc": "EC",
-                "cumulative": 55.23540872873552,
+                "cumulative": 55.18571651195356,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2699,17 +2699,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "NEDETEL S.A., EC",
-                "percent": 10.501903979187208,
-                "samples": 186819,
-                "v6capable": 0.0037469422275036267,
-                "v6preferred": 0.0037469422275036267
+                "percent": 10.522738350097757,
+                "samples": 190418,
+                "v6capable": 0.0036761230555934837,
+                "v6preferred": 0.0036761230555934837
             },
             {
                 "as": 14522,
                 "as-descr": "",
                 "autnum": "Satnet",
                 "cc": "EC",
-                "cumulative": 64.72624185876037,
+                "cumulative": 64.67727977559508,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -2783,17 +2783,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Satnet, EC",
-                "percent": 9.490833130024859,
-                "samples": 168833,
-                "v6capable": 0.007107615217404181,
-                "v6preferred": 0.007107615217404181
+                "percent": 9.491563263641519,
+                "samples": 171758,
+                "v6capable": 0.0069865741333737,
+                "v6preferred": 0.0069865741333737
             },
             {
                 "as": 27738,
                 "as-descr": "S.A.",
                 "autnum": "Ecuadortelecom",
                 "cc": "EC",
-                "cumulative": 73.86455495681052,
+                "cumulative": 73.83683339725219,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -2857,17 +2857,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Ecuadortelecom S.A., EC",
-                "percent": 9.13831309805015,
-                "samples": 162562,
-                "v6capable": 4.391555222007603,
-                "v6preferred": 4.3675643754382945
+                "percent": 9.159553621657109,
+                "samples": 165750,
+                "v6capable": 4.4180995475113125,
+                "v6preferred": 4.394570135746607
             },
             {
                 "as": 19114,
                 "as-descr": "S.A.",
                 "autnum": "Otecel",
                 "cc": "EC",
-                "cumulative": 80.31520496305032,
+                "cumulative": 80.26255729210992,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -2886,17 +2886,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Otecel S.A., EC",
-                "percent": 6.4506500062397905,
-                "samples": 114751,
-                "v6capable": 0.06274455124574078,
-                "v6preferred": 0.034858084025411545
+                "percent": 6.425723894857719,
+                "samples": 116279,
+                "v6capable": 0.06450003870002322,
+                "v6preferred": 0.036120021672013
             },
             {
                 "as": 22724,
                 "as-descr": "S.A.",
                 "autnum": "PUNTONET",
                 "cc": "EC",
-                "cumulative": 85.50097644282496,
+                "cumulative": 85.45435254251527,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -2960,10 +2960,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "PUNTONET S.A., EC",
-                "percent": 5.185771479774648,
-                "samples": 92250,
-                "v6capable": 0.016260162601626018,
-                "v6preferred": 0.0065040650406504065
+                "percent": 5.191795250405342,
+                "samples": 93950,
+                "v6capable": 0.018094731240021287,
+                "v6preferred": 0.006386375731772219
             }
         ],
         "monitoring_dates": {
@@ -2990,7 +2990,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "Telgua",
                 "cc": "SV",
-                "cumulative": 51.26471612678509,
+                "cumulative": 51.30177363351732,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3019,17 +3019,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telgua, GT",
-                "percent": 51.26471612678509,
-                "samples": 294362,
-                "v6capable": 0.003736895387312221,
-                "v6preferred": 0.003736895387312221
+                "percent": 51.30177363351732,
+                "samples": 300672,
+                "v6capable": 0.0036584716900808856,
+                "v6preferred": 0.0036584716900808856
             },
             {
                 "as": 27773,
                 "as-descr": "CABLE EL SALVADOR S.A. DE C.V.",
                 "autnum": "MILLICOM",
                 "cc": "SV",
-                "cumulative": 74.59491466388017,
+                "cumulative": 74.6770519634524,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3063,17 +3063,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MILLICOM CABLE EL SALVADOR S.A. DE C.V., SV",
-                "percent": 23.33019853709509,
-                "samples": 133962,
-                "v6capable": 0.003732401725862558,
-                "v6preferred": 0.003732401725862558
+                "percent": 23.375278329935078,
+                "samples": 136999,
+                "v6capable": 0.004379594011635121,
+                "v6preferred": 0.004379594011635121
             },
             {
                 "as": 17079,
                 "as-descr": "El Salvador S.A.",
                 "autnum": "Telemovil",
                 "cc": "SV",
-                "cumulative": 84.75235109717867,
+                "cumulative": 84.80425194297756,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3107,17 +3107,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telemovil El Salvador S.A., SV",
-                "percent": 10.157436433298502,
-                "samples": 58324,
-                "v6capable": 0.001714560043892737,
-                "v6preferred": 0.001714560043892737
+                "percent": 10.127199979525153,
+                "samples": 59354,
+                "v6capable": 0.001684806415742831,
+                "v6preferred": 0.001684806415742831
             },
             {
                 "as": 263783,
                 "as-descr": "Moviles El Salvador S.A. de C.V.",
                 "autnum": "Telefonica",
                 "cc": "SV",
-                "cumulative": 90.82514803204458,
+                "cumulative": 90.84723205678358,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -3156,10 +3156,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telefonica Moviles El Salvador S.A. de C.V., SV",
-                "percent": 6.0727969348659006,
-                "samples": 34870,
-                "v6capable": 0.0028677946659019216,
-                "v6preferred": 0.0028677946659019216
+                "percent": 6.042980113806018,
+                "samples": 35417,
+                "v6capable": 0.002823502837620352,
+                "v6preferred": 0.002823502837620352
             }
         ],
         "monitoring_dates": {
@@ -3186,7 +3186,7 @@ const lockdowns = {
                 "as-descr": "Telecom - Orange",
                 "autnum": "France",
                 "cc": "FR",
-                "cumulative": 29.702609765452706,
+                "cumulative": 29.70845512439488,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -3220,17 +3220,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "AS3215 Orange S.A., FR",
-                "percent": 29.702609765452706,
-                "samples": 2354923,
-                "v6capable": 59.9129143500658,
-                "v6preferred": 59.56768013221664
+                "percent": 29.70845512439488,
+                "samples": 2400573,
+                "v6capable": 60.04108185837298,
+                "v6preferred": 59.693123266820045
             },
             {
                 "as": 12322,
                 "as-descr": "",
                 "autnum": "PROXAD",
                 "cc": "FR",
-                "cumulative": 45.738923559884,
+                "cumulative": 45.764158547365696,
                 "dependency": [
                     {
                         "asn": 174,
@@ -3244,17 +3244,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "PROXAD Free SAS, FR",
-                "percent": 16.03631379443129,
-                "samples": 1271413,
-                "v6capable": 92.26577044595265,
-                "v6preferred": 91.62199851661104
+                "percent": 16.05570342297081,
+                "samples": 1297371,
+                "v6capable": 92.24084706687601,
+                "v6preferred": 91.58791124512572
             },
             {
                 "as": 15557,
                 "as-descr": "",
                 "autnum": "LDCOMNET",
                 "cc": "FR",
-                "cumulative": 60.06461380236486,
+                "cumulative": 60.11322159927737,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -3268,17 +3268,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "LDCOMNET SFR SA, FR",
-                "percent": 14.325690242480864,
-                "samples": 1135789,
-                "v6capable": 0.51453218863715,
-                "v6preferred": 0.44999555375162115
+                "percent": 14.349063051911672,
+                "samples": 1159467,
+                "v6capable": 0.5161854541785148,
+                "v6preferred": 0.45201803932324075
             },
             {
                 "as": 5410,
                 "as-descr": "",
                 "autnum": "BOUYGTEL-ISP",
                 "cc": "FR",
-                "cumulative": 73.50701666692524,
+                "cumulative": 73.58334703927522,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3302,17 +3302,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASN-BOUYGTEL-ISP Bouygues Telecom SA, FR",
-                "percent": 13.442402864560373,
-                "samples": 1065759,
-                "v6capable": 38.14286344286091,
-                "v6preferred": 37.816710907437795
+                "percent": 13.470125439997862,
+                "samples": 1088445,
+                "v6capable": 38.09875556413048,
+                "v6preferred": 37.770764714799554
             },
             {
                 "as": 12876,
                 "as-descr": "SAS",
                 "autnum": "Online",
                 "cc": "FR",
-                "cumulative": 82.08368287069534,
+                "cumulative": 82.03863231654427,
                 "dependency": [
                     {
                         "asn": 174,
@@ -3326,17 +3326,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "AS12876 ONLINE S.A.S., FR",
-                "percent": 8.576666203770097,
-                "samples": 679987,
-                "v6capable": 14.401304730825736,
-                "v6preferred": 0.7697205975996599
+                "percent": 8.45528527726904,
+                "samples": 683224,
+                "v6capable": 14.47182768755196,
+                "v6preferred": 0.7820275634345397
             },
             {
                 "as": 51207,
                 "as-descr": "",
                 "autnum": "FREEM",
                 "cc": "FR",
-                "cumulative": 88.22483201710524,
+                "cumulative": 88.20175195970218,
                 "dependency": [
                     {
                         "asn": 12322,
@@ -3350,10 +3350,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "FREEM Free Mobile SAS, FR",
-                "percent": 6.141149146409896,
-                "samples": 486891,
-                "v6capable": 0.19942861954729088,
-                "v6preferred": 0.15362781402819112
+                "percent": 6.163119643157914,
+                "samples": 498007,
+                "v6capable": 0.19939478762346713,
+                "v6preferred": 0.1538130990126645
             }
         ],
         "monitoring_dates": {
@@ -3380,7 +3380,7 @@ const lockdowns = {
                 "as-descr": "Internet service provider operations",
                 "autnum": "DTAG",
                 "cc": "DE",
-                "cumulative": 32.868569843741135,
+                "cumulative": 32.86458129140199,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -3394,17 +3394,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "DTAG Deutsche Telekom AG, DE",
-                "percent": 32.868569843741135,
-                "samples": 1929365,
-                "v6capable": 73.71186893096952,
-                "v6preferred": 72.53008114068618
+                "percent": 32.86458129140199,
+                "samples": 1961560,
+                "v6capable": 73.73004139562389,
+                "v6preferred": 72.5408858255674
             },
             {
                 "as": 3209,
                 "as-descr": "International IP-Backbone of Vodafone",
                 "autnum": "VODANET",
                 "cc": "DE",
-                "cumulative": 45.11333081996252,
+                "cumulative": 45.105999483297126,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3418,17 +3418,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "VODANET Vodafone GmbH, DE",
-                "percent": 12.244760976221388,
-                "samples": 718760,
-                "v6capable": 7.756970337803995,
-                "v6preferred": 7.673075852857699
+                "percent": 12.241418191895137,
+                "samples": 730643,
+                "v6capable": 7.765078157184836,
+                "v6preferred": 7.681863782996621
             },
             {
                 "as": 6805,
                 "as-descr": "",
                 "autnum": "TDDE-ASN1",
                 "cc": "DE",
-                "cumulative": 55.28042114236621,
+                "cumulative": 55.27036930181781,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3442,17 +3442,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TDDE-ASN1 Telefonica Germany GmbH & Co.OHG, DE",
-                "percent": 10.167090322403691,
-                "samples": 596802,
-                "v6capable": 14.366238719039146,
-                "v6preferred": 14.235374546331949
+                "percent": 10.164369818520681,
+                "samples": 606672,
+                "v6capable": 14.39295039164491,
+                "v6preferred": 14.261413086478361
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "DE",
-                "cumulative": 64.59077343052456,
+                "cumulative": 64.59007065962048,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -3466,17 +3466,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 9.310352288158361,
-                "samples": 546512,
-                "v6capable": 71.23173873583745,
-                "v6preferred": 70.84711772111135
+                "percent": 9.319701357802666,
+                "samples": 556257,
+                "v6capable": 71.26076615665062,
+                "v6preferred": 70.87263620952186
             },
             {
                 "as": 31334,
                 "as-descr": "",
                 "autnum": "KABELDEUTSCHLAND-AS",
                 "cc": "DE",
-                "cumulative": 73.1019180948899,
+                "cumulative": 73.11675708966939,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3500,10 +3500,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "KABELDEUTSCHLAND-AS Vodafone Kabel Deutschland GmbH, DE",
-                "percent": 8.511144664365336,
-                "samples": 499599,
-                "v6capable": 72.53076967728119,
-                "v6preferred": 72.00514812879929
+                "percent": 8.526686430048919,
+                "samples": 508925,
+                "v6capable": 72.58947782089699,
+                "v6preferred": 72.06720047158225
             }
         ],
         "monitoring_dates": {
@@ -3530,7 +3530,7 @@ const lockdowns = {
                 "as-descr": "Athens - Greece",
                 "autnum": "OTENET-GR",
                 "cc": "GR",
-                "cumulative": 41.98063613131628,
+                "cumulative": 41.98886512410277,
                 "dependency": [
                     {
                         "asn": 12713,
@@ -3549,17 +3549,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "OTENET-GR Ote SA (Hellenic Telecommunications Organisation), GR",
-                "percent": 41.98063613131628,
-                "samples": 2266328,
-                "v6capable": 80.87236269419078,
-                "v6preferred": 80.5290319847789
+                "percent": 41.98886512410277,
+                "samples": 2307509,
+                "v6capable": 80.90733340585021,
+                "v6preferred": 80.56293604922017
             },
             {
                 "as": 3329,
                 "as-descr": "Athens, Greece",
                 "autnum": "HOL-GR",
                 "cc": "GR",
-                "cumulative": 58.1794451355819,
+                "cumulative": 58.19908776703086,
                 "dependency": [
                     {
                         "asn": 174,
@@ -3578,17 +3578,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "HOL-GR VODAFONE-PANAFON HELLENIC TELECOMMUNICATIONS COMPANY SA, GR",
-                "percent": 16.198809004265623,
-                "samples": 874494,
-                "v6capable": 7.575352146498433,
-                "v6preferred": 7.506397985577945
+                "percent": 16.210222642928084,
+                "samples": 890837,
+                "v6capable": 7.5700717415194925,
+                "v6preferred": 7.500811035015384
             },
             {
                 "as": 25472,
                 "as-descr": "",
                 "autnum": "WIND-AS",
                 "cc": "GR",
-                "cumulative": 70.46821084640422,
+                "cumulative": 70.49865654352287,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -3612,17 +3612,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "WIND-AS WIND HELLAS TELECOMMUNICATIONS SA, GR",
-                "percent": 12.288765710822323,
-                "samples": 663410,
-                "v6capable": 0.06888651060430201,
-                "v6preferred": 0.05260698512232254
+                "percent": 12.299568776492004,
+                "samples": 675926,
+                "v6capable": 0.06879451300882049,
+                "v6preferred": 0.0519287614324645
             },
             {
                 "as": 1241,
                 "as-descr": "Forthnet",
                 "autnum": "FORTHNET-GR",
                 "cc": "GR",
-                "cumulative": 82.54704818442428,
+                "cumulative": 82.58612551373609,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3641,17 +3641,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "FORTHNET-GR Forthnet, GR",
-                "percent": 12.07883733802006,
-                "samples": 652077,
-                "v6capable": 61.39704360067906,
-                "v6preferred": 61.133577782991885
+                "percent": 12.087468970213225,
+                "samples": 664270,
+                "v6capable": 61.350203983320036,
+                "v6preferred": 61.087961220588014
             },
             {
                 "as": 29247,
                 "as-descr": "Cosmote Mobile Telecommunications S.A.",
                 "autnum": "COSMOTE-GR",
                 "cc": "GR",
-                "cumulative": 89.04173153026724,
+                "cumulative": 89.08375649573854,
                 "dependency": [
                     {
                         "asn": 6799,
@@ -3675,10 +3675,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "COSMOTE-GR Cosmote Mobile Telecommunications S.A., GR",
-                "percent": 6.4946833458429625,
-                "samples": 350616,
-                "v6capable": 81.02853263969699,
-                "v6preferred": 80.69369338535606
+                "percent": 6.497630982002451,
+                "samples": 357079,
+                "v6capable": 81.03864971056825,
+                "v6preferred": 80.70426992346232
             }
         ],
         "monitoring_dates": {
@@ -3705,7 +3705,7 @@ const lockdowns = {
                 "as-descr": "Celular S.A",
                 "autnum": "Telefonica",
                 "cc": "HN",
-                "cumulative": 23.046872436356,
+                "cumulative": 23.039568258504254,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3744,17 +3744,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telefnica Celular S.A, HN",
-                "percent": 23.046872436356,
-                "samples": 140467,
-                "v6capable": 0.0035595549132536467,
-                "v6preferred": 0.0035595549132536467
+                "percent": 23.039568258504254,
+                "samples": 143187,
+                "v6capable": 0.0034919371171963937,
+                "v6preferred": 0.0034919371171963937
             },
             {
                 "as": 14754,
                 "as-descr": "",
                 "autnum": "Telgua",
                 "cc": "HN",
-                "cumulative": 45.04662960799627,
+                "cumulative": 45.02343587837479,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3783,17 +3783,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telgua, GT",
-                "percent": 21.999757171640272,
-                "samples": 134085,
-                "v6capable": 0.003728977887161129,
-                "v6preferred": 0.003728977887161129
+                "percent": 21.983867619870537,
+                "samples": 136626,
+                "v6capable": 0.003659625547114019,
+                "v6preferred": 0.003659625547114019
             },
             {
                 "as": 27884,
                 "as-descr": "S.A.",
                 "autnum": "CABLECOLOR",
                 "cc": "HN",
-                "cumulative": 58.02383655682512,
+                "cumulative": 57.98469145575985,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3842,8 +3842,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "CABLECOLOR S.A., HN",
-                "percent": 12.977206948828846,
-                "samples": 79094,
+                "percent": 12.961255577385062,
+                "samples": 80552,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
@@ -3852,7 +3852,7 @@ const lockdowns = {
                 "as-descr": "Limited",
                 "autnum": "Newcom",
                 "cc": "HN",
-                "cumulative": 65.5946669641861,
+                "cumulative": 65.56977423356713,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3901,17 +3901,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Newcom Limited, GT",
-                "percent": 7.5708304073609805,
-                "samples": 46143,
-                "v6capable": 0.0021671759530156255,
-                "v6preferred": 0.0021671759530156255
+                "percent": 7.585082777807277,
+                "samples": 47140,
+                "v6capable": 0.0021213406873143827,
+                "v6preferred": 0.0021213406873143827
             },
             {
                 "as": 27932,
                 "as-descr": "y Telecomunicaciones",
                 "autnum": "Redes",
                 "cc": "HN",
-                "cumulative": 70.88307486332701,
+                "cumulative": 70.83926672169633,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -3940,8 +3940,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "Redes y Telecomunicaciones, HN",
-                "percent": 5.288407899140912,
-                "samples": 32232,
+                "percent": 5.269492488129201,
+                "samples": 32749,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
@@ -3950,7 +3950,7 @@ const lockdowns = {
                 "as-descr": "Networks de Honduras S. de R.L.",
                 "autnum": "Columbus",
                 "cc": "HN",
-                "cumulative": 75.9960884945298,
+                "cumulative": 75.94849738448195,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -3979,8 +3979,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "Columbus Networks de Honduras S. de R.L., HN",
-                "percent": 5.113013631202788,
-                "samples": 31163,
+                "percent": 5.109230662785627,
+                "samples": 31753,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
@@ -4009,7 +4009,7 @@ const lockdowns = {
                 "as-descr": "Magyar Telekom Nyrt.",
                 "autnum": "MAGYAR-TELEKOM-MAIN-AS",
                 "cc": "HU",
-                "cumulative": 35.72959062164345,
+                "cumulative": 35.73768639042179,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -4028,17 +4028,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "HTC-AS Magyar Telekom plc., HU",
-                "percent": 35.72959062164345,
-                "samples": 973661,
-                "v6capable": 47.86203822480309,
-                "v6preferred": 47.270764670660526
+                "percent": 35.73768639042179,
+                "samples": 992903,
+                "v6capable": 47.883932267301034,
+                "v6preferred": 47.29052082630428
             },
             {
                 "as": 20845,
                 "as-descr": "",
                 "autnum": "DIGICABLE",
                 "cc": "HU",
-                "cumulative": 54.279264154523005,
+                "cumulative": 54.29754368486143,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -4062,17 +4062,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "DIGICABLE DIGI Tavkozlesi es Szolgaltato Kft., HU",
-                "percent": 18.54967353287955,
-                "samples": 505494,
-                "v6capable": 14.123214123214122,
-                "v6preferred": 14.033005337353163
+                "percent": 18.559857294439638,
+                "samples": 515650,
+                "v6capable": 14.130902744109376,
+                "v6preferred": 14.039561718219723
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "HU",
-                "cumulative": 71.34615716291944,
+                "cumulative": 71.38333834837606,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -4086,17 +4086,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 17.06689300839644,
-                "samples": 465087,
-                "v6capable": 35.35360050915205,
-                "v6preferred": 35.14826258312961
+                "percent": 17.08579466351463,
+                "samples": 474696,
+                "v6capable": 35.390439354871326,
+                "v6preferred": 35.18673003353725
             },
             {
                 "as": 8448,
                 "as-descr": "Torokbalint, Hungary",
                 "autnum": "PGSM-HU",
                 "cc": "HU",
-                "cumulative": 77.70100947383987,
+                "cumulative": 77.73033083445031,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4120,17 +4120,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "PGSM-HU Telenor Hungary plc, HU",
-                "percent": 6.354852310920438,
-                "samples": 173175,
-                "v6capable": 0.06294211058178144,
-                "v6preferred": 0.04446369279630431
+                "percent": 6.346992486074258,
+                "samples": 176339,
+                "v6capable": 0.06294693743301255,
+                "v6preferred": 0.04480007258745938
             },
             {
                 "as": 21334,
                 "as-descr": "",
                 "autnum": "ASN-VODAFONE-",
                 "cc": "HU",
-                "cumulative": 83.09845975333594,
+                "cumulative": 83.10720049756901,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4149,10 +4149,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASN-VODAFONE-HU Vodafone Hungary Ltd., HU",
-                "percent": 5.397450279496074,
-                "samples": 147085,
-                "v6capable": 0.08838426760036713,
-                "v6preferred": 0.06730801917258727
+                "percent": 5.376869663118704,
+                "samples": 149386,
+                "v6capable": 0.08970050741033296,
+                "v6preferred": 0.06894889748704698
             }
         ],
         "monitoring_dates": {
@@ -4179,7 +4179,7 @@ const lockdowns = {
                 "as-descr": "Reliance Jio Infocomm Limited",
                 "autnum": "RELIANCEJIO-IN",
                 "cc": "IN",
-                "cumulative": 45.955407241062275,
+                "cumulative": 45.9362445109966,
                 "dependency": [
                     {
                         "asn": 64049,
@@ -4198,17 +4198,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "RELIANCEJIO-IN Reliance Jio Infocomm Limited, IN",
-                "percent": 45.955407241062275,
-                "samples": 34437814,
-                "v6capable": 92.38126728949753,
-                "v6preferred": 90.05879989943612
+                "percent": 45.9362445109966,
+                "samples": 35028980,
+                "v6capable": 92.39441171281608,
+                "v6preferred": 90.0825116803287
             },
             {
                 "as": 45609,
                 "as-descr": "Bharti Airtel Ltd. AS for GPRS Service",
                 "autnum": "BHARTI-MOBILITY-AS-AP",
                 "cc": "IN",
-                "cumulative": 67.28296147969151,
+                "cumulative": 67.2821904885574,
                 "dependency": [
                     {
                         "asn": 9498,
@@ -4227,17 +4227,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "BHARTI-MOBILITY-AS-AP Bharti Airtel Ltd. AS for GPRS Service, IN",
-                "percent": 21.327554238629233,
-                "samples": 15982327,
-                "v6capable": 55.7697386619608,
-                "v6preferred": 54.17872503797476
+                "percent": 21.345945977560795,
+                "samples": 16277489,
+                "v6capable": 55.81381133171093,
+                "v6preferred": 54.22945762703326
             },
             {
                 "as": 38266,
                 "as-descr": "Vodafone India Ltd.",
                 "autnum": "VODAFONE-IN",
                 "cc": "IN",
-                "cumulative": 74.72228908538638,
+                "cumulative": 74.72783589034182,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -4286,17 +4286,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "HUTCHVAS-AS Vodafone Essar Ltd., Telecommunication - Value Added Services, IN",
-                "percent": 7.439327605694872,
-                "samples": 5574843,
-                "v6capable": 55.621978950797356,
-                "v6preferred": 53.781801568223536
+                "percent": 7.445645401784414,
+                "samples": 5677725,
+                "v6capable": 55.651568189723875,
+                "v6preferred": 53.82050028840777
             },
             {
                 "as": 45271,
                 "as-descr": "Idea Cellular Limited",
                 "autnum": "ICLNET-AS-AP",
                 "cc": "IN",
-                "cumulative": 80.3854889233099,
+                "cumulative": 80.38609232947815,
                 "dependency": [
                     {
                         "asn": 9498,
@@ -4355,10 +4355,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "ICLNET-AS-AP Idea Cellular Limited, IN",
-                "percent": 5.6631998379235124,
-                "samples": 4243858,
-                "v6capable": 59.24274563380773,
-                "v6preferred": 57.09967204369232
+                "percent": 5.6582564391363235,
+                "samples": 4314740,
+                "v6capable": 59.29122032845548,
+                "v6preferred": 57.15111455151411
             }
         ],
         "monitoring_dates": {
@@ -4385,7 +4385,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "EARTHLINK-AS",
                 "cc": "IQ",
-                "cumulative": 49.255003297426846,
+                "cumulative": 49.26555283741238,
                 "dependency": [
                     {
                         "asn": 60051,
@@ -4454,17 +4454,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "EarthLink-AS EarthLink Ltd. Communications&Internet Services, IQ",
-                "percent": 49.255003297426846,
-                "samples": 1865682,
-                "v6capable": 0.00439517559798508,
-                "v6preferred": 0.004127177085912819
+                "percent": 49.26555283741238,
+                "samples": 1886178,
+                "v6capable": 0.004347415779422727,
+                "v6preferred": 0.004082329451409146
             },
             {
                 "as": 21277,
                 "as-descr": "",
                 "autnum": "NEWROZ-TELECOM-ASN",
                 "cc": "IQ",
-                "cumulative": 56.91271613458148,
+                "cumulative": 56.913895806136665,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -4488,17 +4488,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "NWRZ Newroz Telecom Ltd., IQ",
-                "percent": 7.657712837154635,
-                "samples": 290059,
-                "v6capable": 0.005516119134383005,
-                "v6preferred": 0.005516119134383005
+                "percent": 7.648342968724289,
+                "samples": 292824,
+                "v6capable": 0.005464033002759336,
+                "v6preferred": 0.005464033002759336
             },
             {
                 "as": 206206,
                 "as-descr": "",
                 "autnum": "KNET",
                 "cc": "IQ",
-                "cumulative": 63.61420158709457,
+                "cumulative": 63.6149458521849,
                 "dependency": [
                     {
                         "asn": 21277,
@@ -4557,10 +4557,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "KNET Kurdistan Net Company for Computer and Internet Ltd., IQ",
-                "percent": 6.701485452513094,
-                "samples": 253839,
-                "v6capable": 0.0023637029770838995,
-                "v6preferred": 0.00196975248090325
+                "percent": 6.701050046048236,
+                "samples": 256556,
+                "v6capable": 0.002338670699574362,
+                "v6preferred": 0.0019488922496453016
             }
         ],
         "monitoring_dates": {
@@ -4587,7 +4587,7 @@ const lockdowns = {
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "IE",
-                "cumulative": 20.029354003939616,
+                "cumulative": 20.074177977518907,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4606,17 +4606,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 20.029354003939616,
-                "samples": 134830,
-                "v6capable": 49.68404657717125,
-                "v6preferred": 49.072906623155085
+                "percent": 20.074177977518907,
+                "samples": 137530,
+                "v6capable": 49.720061077583075,
+                "v6preferred": 49.10492256235003
             },
             {
                 "as": 15502,
                 "as-descr": "",
                 "autnum": "VODAFONE-IRELAND-ASN",
                 "cc": "IE",
-                "cumulative": 39.77705218060437,
+                "cumulative": 39.82534166096198,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -4640,17 +4640,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Vodafone-Ireland-ASN Vodafone Ireland Limited, IE",
-                "percent": 19.747698176664755,
-                "samples": 132934,
-                "v6capable": 0.06619826380008124,
-                "v6preferred": 0.05265770984097372
+                "percent": 19.75116368344307,
+                "samples": 135317,
+                "v6capable": 0.0657714847358425,
+                "v6preferred": 0.05246938669937998
             },
             {
                 "as": 5466,
                 "as-descr": "Internet House",
                 "autnum": "EIRCOM",
                 "cc": "IE",
-                "cumulative": 59.344704543631394,
+                "cumulative": 59.40208054484761,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -4664,17 +4664,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "EIRCOM Eircom Limited, IE",
-                "percent": 19.567652363027026,
-                "samples": 131722,
-                "v6capable": 59.4555199587009,
-                "v6preferred": 59.02810464463036
+                "percent": 19.57673888388563,
+                "samples": 134122,
+                "v6capable": 59.52640133609699,
+                "v6preferred": 59.100669539672836
             },
             {
                 "as": 2110,
                 "as-descr": "BT Ireland was previously known as Esat Net, EUnet Ireland & IEUnet.",
                 "autnum": "AS-BTIRE",
                 "cc": "IE",
-                "cumulative": 69.23801402931241,
+                "cumulative": 69.29992161831183,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4693,17 +4693,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "AS-BTIRE BT Communications Ireland Limited, EU",
-                "percent": 9.89330948568101,
-                "samples": 66598,
-                "v6capable": 0.015015465929907806,
-                "v6preferred": 0.015015465929907806
+                "percent": 9.897841073464223,
+                "samples": 67811,
+                "v6capable": 0.014746869976847415,
+                "v6preferred": 0.014746869976847415
             },
             {
                 "as": 13280,
                 "as-descr": "",
                 "autnum": "H3G",
                 "cc": "IE",
-                "cumulative": 75.33818011117681,
+                "cumulative": 75.4408422601367,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -4737,17 +4737,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Three Ireland (Hutchison) limited, IE",
-                "percent": 6.100166081864395,
-                "samples": 41064,
-                "v6capable": 0.12663159945451002,
-                "v6preferred": 0.0974089226573154
+                "percent": 6.140920641824877,
+                "samples": 42072,
+                "v6capable": 0.12597451987069785,
+                "v6preferred": 0.09507510933637574
             },
             {
                 "as": 15751,
                 "as-descr": "",
                 "autnum": "METEORMOBILECOMMS-AS",
                 "cc": "IE",
-                "cumulative": 80.73361241424799,
+                "cumulative": 80.81998630874794,
                 "dependency": [
                     {
                         "asn": 5466,
@@ -4766,10 +4766,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "METEORMOBILECOMMS-AS Meteor, IE",
-                "percent": 5.3954323030711775,
-                "samples": 36320,
-                "v6capable": 0.21751101321585903,
-                "v6preferred": 0.17345814977973567
+                "percent": 5.379144048611243,
+                "samples": 36853,
+                "v6capable": 0.21979214717933412,
+                "v6preferred": 0.17366293110465905
             }
         ],
         "monitoring_dates": {
@@ -4789,14 +4789,14 @@ const lockdowns = {
     "Italy": {
         "cc": "IT",
         "continent": "Europe",
-        "end": "2020-04-12",
+        "end": "2020-04-13",
         "eyeball": [
             {
                 "as": 3269,
                 "as-descr": "",
                 "autnum": "ASN-IBSNAZ",
                 "cc": "IT",
-                "cumulative": 22.800730436310513,
+                "cumulative": 22.83471185716051,
                 "dependency": [
                     {
                         "asn": 174,
@@ -4815,17 +4815,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASN-IBSNAZ Telecom Italia S.p.a., IT",
-                "percent": 22.800730436310513,
-                "samples": 2418805,
-                "v6capable": 0.007234977602576479,
-                "v6preferred": 0.006656179394370361
+                "percent": 22.83471185716051,
+                "samples": 2461170,
+                "v6capable": 0.007232332589784533,
+                "v6preferred": 0.006663497442273391
             },
             {
                 "as": 30722,
                 "as-descr": "",
                 "autnum": "VODAFONE-IT-ASN",
                 "cc": "IT",
-                "cumulative": 43.82068301375488,
+                "cumulative": 43.84095446028259,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4849,17 +4849,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "VODAFONE-IT-ASN Vodafone Italia S.p.A., IT",
-                "percent": 21.019952577444368,
-                "samples": 2229892,
-                "v6capable": 0.013722637688282661,
-                "v6preferred": 0.01112161485847745
+                "percent": 21.006242603122082,
+                "samples": 2264094,
+                "v6capable": 0.01386868213068892,
+                "v6preferred": 0.011218615481512694
             },
             {
                 "as": 1267,
                 "as-descr": "IUNET",
                 "autnum": "ASN-WINDTRE",
                 "cc": "IT",
-                "cumulative": 60.309136467952825,
+                "cumulative": 60.33239699853296,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -4873,17 +4873,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASN-WINDTRE Wind Telecomunicazioni SpA, EU",
-                "percent": 16.488453454197945,
-                "samples": 1749170,
-                "v6capable": 0.011662674296952268,
-                "v6preferred": 0.009433045387240806
+                "percent": 16.49144253825037,
+                "samples": 1777480,
+                "v6capable": 0.011589441231406261,
+                "v6preferred": 0.009339064293269122
             },
             {
                 "as": 12874,
                 "as-descr": "",
                 "autnum": "FASTWEB",
                 "cc": "IT",
-                "cumulative": 71.34170539835493,
+                "cumulative": 71.37057073372947,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -4912,17 +4912,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "FASTWEB Fastweb SpA, IT",
-                "percent": 11.032568930402112,
-                "samples": 1170385,
-                "v6capable": 37.959902083502435,
-                "v6preferred": 37.72143354537182
+                "percent": 11.038173735196501,
+                "samples": 1189716,
+                "v6capable": 38.02041831832135,
+                "v6preferred": 37.77893211489128
             },
             {
                 "as": 16232,
                 "as-descr": "Service Provider",
                 "autnum": "ASN-TIM",
                 "cc": "IT",
-                "cumulative": 80.55385827190277,
+                "cumulative": 80.55069698120168,
                 "dependency": [
                     {
                         "asn": 3269,
@@ -4946,10 +4946,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASN-TIM TELECOM ITALIA SPA, IT",
-                "percent": 9.212152873547833,
-                "samples": 977267,
-                "v6capable": 0.024046652552475425,
-                "v6preferred": 0.019134995860905977
+                "percent": 9.180126247472211,
+                "samples": 989452,
+                "v6capable": 0.02385158653476874,
+                "v6preferred": 0.018899350347465062
             }
         ],
         "monitoring_dates": {
@@ -4976,7 +4976,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "ZAIN-",
                 "cc": "JO",
-                "cumulative": 33.37466459435175,
+                "cumulative": 33.32699147484564,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -5015,17 +5015,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Zain-Jo Linkdotnet-Jordan, JO",
-                "percent": 33.37466459435175,
-                "samples": 541558,
-                "v6capable": 0.006093530148202039,
-                "v6preferred": 0.005724225290735249
+                "percent": 33.32699147484564,
+                "samples": 550032,
+                "v6capable": 0.005999650929400471,
+                "v6preferred": 0.005636035721558018
             },
             {
                 "as": 9038,
                 "as-descr": "",
                 "autnum": "BAT-AS9038",
                 "cc": "JO",
-                "cumulative": 57.76655890136085,
+                "cumulative": 57.76291951696851,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -5064,17 +5064,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "BAT-AS9038 Batelco Jordan, JO",
-                "percent": 24.3918943070091,
-                "samples": 395798,
-                "v6capable": 0.005053082633060298,
-                "v6preferred": 0.0048004285014072836
+                "percent": 24.435928042122868,
+                "samples": 403293,
+                "v6capable": 0.005703049643807356,
+                "v6preferred": 0.005455090963641818
             },
             {
                 "as": 8376,
                 "as-descr": "Data Communications",
                 "autnum": "Jordan",
                 "cc": "JO",
-                "cumulative": 80.77997759237599,
+                "cumulative": 80.74745063347895,
                 "dependency": [
                     {
                         "asn": 174,
@@ -5113,17 +5113,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Jordan Data Communications Company LLC, JO",
-                "percent": 23.013418691015133,
-                "samples": 373430,
-                "v6capable": 4.915512947540369,
-                "v6preferred": 4.8954288621696165
+                "percent": 22.984531116510443,
+                "samples": 379339,
+                "v6capable": 4.934372685118061,
+                "v6preferred": 4.914601451472166
             },
             {
                 "as": 8697,
                 "as-descr": "Jordan Telecom Group ( JTG )",
                 "autnum": "JTC-AS8697",
                 "cc": "JO",
-                "cumulative": 95.99965981824927,
+                "cumulative": 96.01274834738034,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -5152,10 +5152,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "JTC-AS8697 Jordan Telecommunications Company, JO",
-                "percent": 15.219682225873287,
-                "samples": 246964,
-                "v6capable": 0.012147519476522895,
-                "v6preferred": 0.010527850212986509
+                "percent": 15.265297713901393,
+                "samples": 251940,
+                "v6capable": 0.011907597046915932,
+                "v6preferred": 0.010319917440660475
             }
         ],
         "monitoring_dates": {
@@ -5182,7 +5182,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "KTC3G",
                 "cc": "KW",
-                "cumulative": 32.925510438561076,
+                "cumulative": 32.9413028026774,
                 "dependency": [
                     {
                         "asn": 174,
@@ -5216,17 +5216,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "KTC3G Kuwait Telecommunication Company (Under Association), KW",
-                "percent": 32.925510438561076,
-                "samples": 253615,
-                "v6capable": 0.003154387555941092,
-                "v6preferred": 0.0027600891114484554
+                "percent": 32.9413028026774,
+                "samples": 257684,
+                "v6capable": 0.0031045776998183824,
+                "v6preferred": 0.0027165054873410843
             },
             {
                 "as": 42961,
                 "as-descr": "ZAIN",
                 "autnum": "GPRS-AS",
                 "cc": "KW",
-                "cumulative": 63.37513258355198,
+                "cumulative": 63.371777892546135,
                 "dependency": [
                     {
                         "asn": 59605,
@@ -5245,17 +5245,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "GPRS-AS Mobile Telecommunications Company, KW",
-                "percent": 30.449622144990904,
-                "samples": 234544,
-                "v6capable": 0.0025581553994133296,
-                "v6preferred": 0.0021317961661777747
+                "percent": 30.43047508986874,
+                "samples": 238043,
+                "v6capable": 0.002520553009330247,
+                "v6preferred": 0.0021004608411085393
             },
             {
                 "as": 29357,
                 "as-descr": "",
                 "autnum": "WATANIYATELECOM-AS",
                 "cc": "KW",
-                "cumulative": 91.49491930741078,
+                "cumulative": 91.47844939993762,
                 "dependency": [
                     {
                         "asn": 8781,
@@ -5309,10 +5309,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "WATANIYATELECOM-AS National Mobile Telecommunications Company, KW",
-                "percent": 28.11978672385881,
-                "samples": 216598,
-                "v6capable": 0.6440502682388572,
-                "v6preferred": 0.6408184747781605
+                "percent": 28.10667150739148,
+                "samples": 219865,
+                "v6capable": 0.6531280558524549,
+                "v6preferred": 0.6494894594410207
             }
         ],
         "monitoring_dates": {
@@ -5339,7 +5339,7 @@ const lockdowns = {
                 "as-descr": "OGERO Telecom",
                 "autnum": "OGERONET",
                 "cc": "LB",
-                "cumulative": 17.639651614257232,
+                "cumulative": 17.66423883858201,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -5363,17 +5363,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "OGERONET LIBANTELECOM, LB",
-                "percent": 17.639651614257232,
-                "samples": 342924,
-                "v6capable": 7.240379792607108,
-                "v6preferred": 7.13015128716567
+                "percent": 17.66423883858201,
+                "samples": 347950,
+                "v6capable": 7.277769794510705,
+                "v6preferred": 7.166834315275183
             },
             {
                 "as": 59989,
                 "as-descr": "",
                 "autnum": "THGLOBALVISION16",
                 "cc": "LB",
-                "cumulative": 29.294329575546335,
+                "cumulative": 29.321215007216473,
                 "dependency": [
                     {
                         "asn": 9002,
@@ -5407,17 +5407,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "thglobalvision16 T.H. Global Vision SARL, LB",
-                "percent": 11.654677961289101,
-                "samples": 226573,
-                "v6capable": 0.007061741690316145,
-                "v6preferred": 0.005737665123381868
+                "percent": 11.656976168634465,
+                "samples": 229619,
+                "v6capable": 0.00696806448943685,
+                "v6preferred": 0.00566155239766744
             },
             {
                 "as": 9051,
                 "as-descr": "",
                 "autnum": "Beirut-Lebanon",
                 "cc": "LB",
-                "cumulative": 40.17155919697622,
+                "cumulative": 40.18719676474605,
                 "dependency": [
                     {
                         "asn": 24634,
@@ -5441,17 +5441,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "IncoNet Data Management sal, LB",
-                "percent": 10.87722962142988,
-                "samples": 211459,
-                "v6capable": 0.023172340737447922,
-                "v6preferred": 0.022226530911429638
+                "percent": 10.865981757529575,
+                "samples": 214038,
+                "v6capable": 0.02289313112624861,
+                "v6preferred": 0.021958717610891524
             },
             {
                 "as": 39010,
                 "as-descr": "",
                 "autnum": "TERRANET-AS",
                 "cc": "LB",
-                "cumulative": 47.473935882373524,
+                "cumulative": 47.48514950002513,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5495,17 +5495,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TERRANET-AS TerraNet sal, LB",
-                "percent": 7.302376685397304,
-                "samples": 141962,
-                "v6capable": 0.009157380143982192,
-                "v6preferred": 0.007748552429523394
+                "percent": 7.297952735279082,
+                "samples": 143755,
+                "v6capable": 0.00973879169420194,
+                "v6preferred": 0.008347535737887378
             },
             {
                 "as": 38999,
                 "as-descr": "",
                 "autnum": "MTCTOUCH",
                 "cc": "LB",
-                "cumulative": 52.88238174699031,
+                "cumulative": 52.88438058908549,
                 "dependency": [
                     {
                         "asn": 42020,
@@ -5524,17 +5524,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MTCTOUCH Mobile Interim Company no.2 sal, LB",
-                "percent": 5.40844586461679,
-                "samples": 105143,
-                "v6capable": 0.03423908391428816,
-                "v6preferred": 0.02567931293571612
+                "percent": 5.399231089060356,
+                "samples": 106354,
+                "v6capable": 0.03572973277920906,
+                "v6preferred": 0.026327171521522464
             },
             {
                 "as": 57513,
                 "as-descr": "",
                 "autnum": "MIC1-ALFA-AS",
                 "cc": "LB",
-                "cumulative": 58.13836255408806,
+                "cumulative": 58.13623623527071,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -5568,10 +5568,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "MIC1-ALFA-AS Mobile interim company 1 S.A.L., LB",
-                "percent": 5.255980807097752,
-                "samples": 102179,
-                "v6capable": 0.019573493575000735,
-                "v6preferred": 0.01761614421750066
+                "percent": 5.25185564618522,
+                "samples": 103451,
+                "v6capable": 0.019332824235628463,
+                "v6preferred": 0.017399541812065617
             }
         ],
         "monitoring_dates": {
@@ -5598,7 +5598,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "GPTC-AS",
                 "cc": "LY",
-                "cumulative": 50.34834898120648,
+                "cumulative": 50.3505719951728,
                 "dependency": [
                     {
                         "asn": 37558,
@@ -5627,17 +5627,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "GPTC-AS, LY",
-                "percent": 50.34834898120648,
-                "samples": 281914,
-                "v6capable": 0.004611335371780046,
-                "v6preferred": 0.004256617266258505
+                "percent": 50.3505719951728,
+                "samples": 285381,
+                "v6capable": 0.004555313773516807,
+                "v6preferred": 0.004204905021707822
             },
             {
                 "as": 37284,
                 "as-descr": "",
                 "autnum": "Aljeel-net",
                 "cc": "LY",
-                "cumulative": 70.57116374098766,
+                "cumulative": 70.57771159587006,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5671,17 +5671,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Aljeel-net, LY",
-                "percent": 20.222814759781187,
-                "samples": 113233,
-                "v6capable": 0.001766269550396086,
-                "v6preferred": 0.001766269550396086
+                "percent": 20.227139600697264,
+                "samples": 114645,
+                "v6capable": 0.0026167735182519953,
+                "v6preferred": 0.0026167735182519953
             },
             {
                 "as": 328200,
                 "as-descr": "",
                 "autnum": "Al-Madar-Al-Jadeed",
                 "cc": "LY",
-                "cumulative": 89.57239068664308,
+                "cumulative": 89.58323041419366,
                 "dependency": [
                     {
                         "asn": 21003,
@@ -5710,17 +5710,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Al-Madar-Al-Jadeed, LY",
-                "percent": 19.001226945655414,
-                "samples": 106393,
-                "v6capable": 0.0028197343810213078,
-                "v6preferred": 0.0028197343810213078
+                "percent": 19.005518818323605,
+                "samples": 107721,
+                "v6capable": 0.002784972289525719,
+                "v6preferred": 0.002784972289525719
             },
             {
                 "as": 328286,
                 "as-descr": "",
                 "autnum": "Libyana-Mobile-AS",
                 "cc": "LY",
-                "cumulative": 96.39435140652263,
+                "cumulative": 96.39441907732697,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -5744,10 +5744,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "Libyana-Mobile-AS, LY",
-                "percent": 6.821960719879556,
-                "samples": 38198,
-                "v6capable": 0.005235876223886067,
-                "v6preferred": 0.005235876223886067
+                "percent": 6.811188663133305,
+                "samples": 38605,
+                "v6capable": 0.005180676078228209,
+                "v6preferred": 0.005180676078228209
             }
         ],
         "monitoring_dates": {
@@ -5774,7 +5774,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "TELIA-LIETUVA",
                 "cc": "LT",
-                "cumulative": 41.23053586354209,
+                "cumulative": 41.27585356221555,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5793,17 +5793,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telia-Lietuva Telia Lietuva, AB, LT",
-                "percent": 41.23053586354209,
-                "samples": 399561,
-                "v6capable": 0.011012085764126128,
-                "v6preferred": 0.010511536411211305
+                "percent": 41.27585356221555,
+                "samples": 406575,
+                "v6capable": 0.011314025702514911,
+                "v6preferred": 0.010822111541536002
             },
             {
                 "as": 1257,
                 "as-descr": "",
                 "autnum": "TELE2",
                 "cc": "LT",
-                "cumulative": 55.737547596198496,
+                "cumulative": 55.72836666094766,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5822,17 +5822,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELE2, SE",
-                "percent": 14.507011732656409,
-                "samples": 140586,
-                "v6capable": 0.0014226167612706813,
-                "v6preferred": 0.0014226167612706813
+                "percent": 14.452513098732105,
+                "samples": 142360,
+                "v6capable": 0.0014048890137679123,
+                "v6preferred": 0.0014048890137679123
             },
             {
                 "as": 13194,
                 "as-descr": "Bite IP Network",
                 "autnum": "BITE",
                 "cc": "LT",
-                "cumulative": 66.28785768091714,
+                "cumulative": 66.24542267712603,
                 "dependency": [
                     {
                         "asn": 9002,
@@ -5846,17 +5846,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "BITE UAB \"Bite Lietuva\", LT",
-                "percent": 10.550310084718653,
-                "samples": 102242,
-                "v6capable": 0.002934214901899415,
-                "v6preferred": 0.002934214901899415
+                "percent": 10.517056016178367,
+                "samples": 103595,
+                "v6capable": 0.0028958926589121095,
+                "v6preferred": 0.0028958926589121095
             },
             {
                 "as": 21412,
                 "as-descr": "",
                 "autnum": "CGATES-AS",
                 "cc": "LT",
-                "cumulative": 73.83638258572475,
+                "cumulative": 73.81400764858343,
                 "dependency": [
                     {
                         "asn": 9002,
@@ -5875,17 +5875,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "CGATES-AS UAB \"Cgates\", LT",
-                "percent": 7.548524904807603,
-                "samples": 73152,
-                "v6capable": 0.015037182852143482,
-                "v6preferred": 0.015037182852143482
+                "percent": 7.568584971457403,
+                "samples": 74552,
+                "v6capable": 0.01475480201738384,
+                "v6preferred": 0.01475480201738384
             },
             {
                 "as": 15419,
                 "as-descr": "",
                 "autnum": "LRTC-AS",
                 "cc": "LT",
-                "cumulative": 80.02280489944174,
+                "cumulative": 80.02028387269687,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -5919,10 +5919,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "LRTC-AS SC \"Lithuanian Radio and TV Center\", LT",
-                "percent": 6.186422313716992,
-                "samples": 59952,
-                "v6capable": 0.0016680010675206832,
-                "v6preferred": 0.0016680010675206832
+                "percent": 6.206276224113443,
+                "samples": 61133,
+                "v6capable": 0.0016357777305219766,
+                "v6preferred": 0.0016357777305219766
             }
         ],
         "monitoring_dates": {
@@ -5949,7 +5949,7 @@ const lockdowns = {
                 "as-descr": "TM Net, Internet Service Provider",
                 "autnum": "TMNET-AS-AP",
                 "cc": "MY",
-                "cumulative": 33.99622584380725,
+                "cumulative": 34.037651461464954,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5958,17 +5958,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TMNET-AS-AP TM Net, Internet Service Provider, MY",
-                "percent": 33.99622584380725,
-                "samples": 1888541,
-                "v6capable": 42.632857851643145,
-                "v6preferred": 41.913996042447586
+                "percent": 34.037651461464954,
+                "samples": 1935162,
+                "v6capable": 42.68531523459018,
+                "v6preferred": 41.96454870444955
             },
             {
                 "as": 9534,
                 "as-descr": "Binariang Berhad",
                 "autnum": "MAXIS-AS1-AP",
                 "cc": "MY",
-                "cumulative": 53.4202232919405,
+                "cumulative": 53.47178725979741,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -5997,17 +5997,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MAXIS-AS1-AP Binariang Berhad, MY",
-                "percent": 19.423997448133253,
-                "samples": 1079032,
-                "v6capable": 56.11955901215163,
-                "v6preferred": 54.51135832857598
+                "percent": 19.434135798332452,
+                "samples": 1104900,
+                "v6capable": 56.13358674993212,
+                "v6preferred": 54.53878179020726
             },
             {
                 "as": 4818,
                 "as-descr": "DiGi Telecommunications Sdn. Bhd.",
                 "autnum": "DIGIIX-AP",
                 "cc": "MY",
-                "cumulative": 67.57219293307884,
+                "cumulative": 67.60449695595193,
                 "dependency": [
                     {
                         "asn": 4788,
@@ -6031,17 +6031,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "DIGIIX-AP DiGi Telecommunications Sdn. Bhd., MY",
-                "percent": 14.151969641138338,
-                "samples": 786163,
-                "v6capable": 62.663340808458294,
-                "v6preferred": 61.59664090016956
+                "percent": 14.132709696154524,
+                "samples": 803495,
+                "v6capable": 62.72297898555685,
+                "v6preferred": 61.667838629985255
             },
             {
                 "as": 38466,
                 "as-descr": "U Mobile Sdn Bhd",
                 "autnum": "UMOBILE-AS-AP",
                 "cc": "MY",
-                "cumulative": 80.0571505822796,
+                "cumulative": 80.04156994890559,
                 "dependency": [
                     {
                         "asn": 4788,
@@ -6065,17 +6065,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "UMOBILE-AS-AP U Mobile Sdn Bhd, MY",
-                "percent": 12.48495764920077,
-                "samples": 693558,
-                "v6capable": 44.34423653104715,
-                "v6preferred": 43.58900048734208
+                "percent": 12.437072992953652,
+                "samples": 707092,
+                "v6capable": 44.430003450753226,
+                "v6preferred": 43.67394907593354
             },
             {
                 "as": 10030,
                 "as-descr": "Celcom Axiata Berhad",
                 "autnum": "CELCOMNET-AP",
                 "cc": "MY",
-                "cumulative": 91.86102839005758,
+                "cumulative": 91.87187365718636,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6099,10 +6099,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "CELCOMNET-AP Celcom Internet Service Provider, MY",
-                "percent": 11.803877807777972,
-                "samples": 655723,
-                "v6capable": 51.751273022297525,
-                "v6preferred": 50.22806886444428
+                "percent": 11.830303708280764,
+                "samples": 672595,
+                "v6capable": 51.86360291111293,
+                "v6preferred": 50.335491640586085
             }
         ],
         "monitoring_dates": {
@@ -6129,7 +6129,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "MT-MPLS",
                 "cc": "MA",
-                "cumulative": 62.37684966227329,
+                "cumulative": 62.45177846232936,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6168,17 +6168,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MT-MPLS, MA",
-                "percent": 62.37684966227329,
-                "samples": 2607449,
-                "v6capable": 0.006251320735324066,
-                "v6preferred": 0.006174617413418249
+                "percent": 62.45177846232936,
+                "samples": 2653177,
+                "v6capable": 0.00625665004634067,
+                "v6preferred": 0.006181268720481144
             },
             {
                 "as": 6713,
                 "as-descr": "",
                 "autnum": "IAM-AS",
                 "cc": "MA",
-                "cumulative": 83.1773223720173,
+                "cumulative": 83.17508799275768,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6202,17 +6202,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "IAM-AS, MA",
-                "percent": 20.800472709744017,
-                "samples": 869492,
-                "v6capable": 0.003105261463015186,
-                "v6preferred": 0.0028752420953844313
+                "percent": 20.723309530428324,
+                "samples": 880401,
+                "v6capable": 0.003180368945514601,
+                "v6preferred": 0.0029531997351207005
             },
             {
                 "as": 36925,
                 "as-descr": "",
                 "autnum": "ASMedi",
                 "cc": "MA",
-                "cumulative": 99.65951023347219,
+                "cumulative": 99.6624816017283,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6246,10 +6246,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASMedi, MA",
-                "percent": 16.482187861454896,
-                "samples": 688981,
-                "v6capable": 0.004354256503444943,
-                "v6preferred": 0.004354256503444943
+                "percent": 16.487393608970613,
+                "samples": 700444,
+                "v6capable": 0.004282997641495965,
+                "v6preferred": 0.004282997641495965
             }
         ],
         "monitoring_dates": {
@@ -6276,7 +6276,7 @@ const lockdowns = {
                 "as-descr": "WorldLink Communications Pvt Ltd",
                 "autnum": "WLINK-NEPAL-AS-AP",
                 "cc": "NP",
-                "cumulative": 37.671656981845345,
+                "cumulative": 37.6438126191034,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6305,17 +6305,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "WLINK-NEPAL-AS-AP WorldLink Communications Pvt Ltd, NP",
-                "percent": 37.671656981845345,
-                "samples": 601098,
-                "v6capable": 15.997724164778456,
-                "v6preferred": 15.059108498115116
+                "percent": 37.6438126191034,
+                "samples": 609008,
+                "v6capable": 16.07778551349079,
+                "v6preferred": 15.139045792501905
             },
             {
                 "as": 23752,
                 "as-descr": "Nepal Telecommunications Corporation, Internet Services",
                 "autnum": "NPTELECOM-NP-AS",
                 "cc": "NP",
-                "cumulative": 51.20429374338816,
+                "cumulative": 51.19163663133717,
                 "dependency": [
                     {
                         "asn": 9498,
@@ -6349,17 +6349,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "NPTELECOM-NP-AS Nepal Telecommunications Corporation, Internet Services, NP",
-                "percent": 13.53263676154282,
-                "samples": 215930,
-                "v6capable": 0.01898763488167462,
-                "v6preferred": 0.0162089566063076
+                "percent": 13.54782401223377,
+                "samples": 219179,
+                "v6capable": 0.019162419757367266,
+                "v6preferred": 0.016424931220600514
             },
             {
                 "as": 4007,
                 "as-descr": "Subisu Cablenet (Pvt) Ltd, Baluwatar, Kathmandu, Nepal",
                 "autnum": "SUBISU-CABLENET-AS-AP",
                 "cc": "NP",
-                "cumulative": 62.10084581329937,
+                "cumulative": 62.09478575141688,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6398,17 +6398,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "SUBISU-CABLENET-AS-AP Subisu Cablenet (Pvt) Ltd, Baluwatar, Kathmandu, Nepal, NP",
-                "percent": 10.896552069911207,
-                "samples": 173868,
-                "v6capable": 0.011502979271631353,
-                "v6preferred": 0.010352681344468217
+                "percent": 10.903149120079712,
+                "samples": 176393,
+                "v6capable": 0.01133831841399602,
+                "v6preferred": 0.010204486572596419
             },
             {
                 "as": 45650,
                 "as-descr": "Vianet Communications Pvt. Ltd.",
                 "autnum": "VIANET-NP",
                 "cc": "NP",
-                "cumulative": 70.70845011105374,
+                "cumulative": 70.7092334917979,
                 "dependency": [
                     {
                         "asn": 9498,
@@ -6422,17 +6422,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "VIANET-NP Vianet Communications Pvt. Ltd., NP",
-                "percent": 8.607604297754358,
-                "samples": 137345,
-                "v6capable": 0.012377589282463868,
-                "v6preferred": 0.012377589282463868
+                "percent": 8.614447740381019,
+                "samples": 139366,
+                "v6capable": 0.012198097096852892,
+                "v6preferred": 0.012198097096852892
             },
             {
                 "as": 38565,
                 "as-descr": "Ncell Pvt. Ltd.",
                 "autnum": "NCELL-AS-NP",
                 "cc": "NP",
-                "cumulative": 76.88434117310845,
+                "cumulative": 76.87958526829672,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6466,17 +6466,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "NCELL-AS-NP Ncell Pvt. Ltd., NP",
-                "percent": 6.17589106205472,
-                "samples": 98544,
-                "v6capable": 0.020295502516642312,
-                "v6preferred": 0.019280727390810198
+                "percent": 6.170351776498825,
+                "samples": 99825,
+                "v6capable": 0.020035061357375407,
+                "v6preferred": 0.019033308289506636
             },
             {
                 "as": 55915,
                 "as-descr": "Classic Tech Pvt. Ltd.",
                 "autnum": "CLASSIC-NP",
                 "cc": "NP",
-                "cumulative": 81.90049786165162,
+                "cumulative": 81.88997890367081,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6515,10 +6515,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "CLASSIC-NP Classic Tech Pvt. Ltd., NP",
-                "percent": 5.016156688543165,
-                "samples": 80039,
-                "v6capable": 19.065705468584067,
-                "v6preferred": 18.677144891865215
+                "percent": 5.010393635374087,
+                "samples": 81059,
+                "v6capable": 19.116939513194094,
+                "v6preferred": 18.72710001357036
             }
         ],
         "monitoring_dates": {
@@ -6535,6 +6535,108 @@ const lockdowns = {
         "scope": "National",
         "start": "\t2020-03-24"
     },
+    "Netherlands": {
+        "cc": "NL",
+        "continent": "Europe",
+        "end": "2020-04-15",
+        "eyeball": [
+            {
+                "as": 1136,
+                "as-descr": "KPN National",
+                "autnum": "KPN",
+                "cc": "NL",
+                "cumulative": 30.666906321264477,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.108955231819076,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 286,
+                        "hege": 0.510204967898196,
+                        "name": "KPN KPN B.V., NL"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0356110127136599,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0177425674465773,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "KPN KPN B.V., EU",
+                "percent": 30.666906321264477,
+                "samples": 682469,
+                "v6capable": 29.95300885461464,
+                "v6preferred": 29.805016784645165
+            },
+            {
+                "as": 33915,
+                "as-descr": "",
+                "autnum": "TNF-AS",
+                "cc": "NL",
+                "cumulative": 51.10147499915746,
+                "dependency": [
+                    {
+                        "asn": 6830,
+                        "hege": 0.971654634093157,
+                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.113360672238349,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TNF-AS Vodafone Libertel B.V., NL",
+                "percent": 20.434568677892987,
+                "samples": 454756,
+                "v6capable": 47.44654276139292,
+                "v6preferred": 47.009165354607745
+            },
+            {
+                "as": 6830,
+                "as-descr": "formerly known as UPC Broadband Holding B.V.",
+                "autnum": "LGI-UPC",
+                "cc": "NL",
+                "cumulative": 65.8463439567723,
+                "dependency": [
+                    {
+                        "asn": 1299,
+                        "hege": 0.0453505930488709,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0272203885638953,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "LGI-UPC Liberty Global Operations B.V., AT",
+                "percent": 14.744868957614838,
+                "samples": 328136,
+                "v6capable": 33.95177609283955,
+                "v6preferred": 33.61472072555282
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Netherlands",
+        "scope": "National",
+        "start": "\t2020-03-16"
+    },
     "New Zealand": {
         "cc": "NZ",
         "continent": "Oceania",
@@ -6545,7 +6647,7 @@ const lockdowns = {
                 "as-descr": "Spark New Zealand Trading Ltd.",
                 "autnum": "SPARKNZ",
                 "cc": "NZ",
-                "cumulative": 37.15767455353281,
+                "cumulative": 37.199365826419914,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6569,17 +6671,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "SPARKNZ Spark New Zealand Trading Ltd., NZ",
-                "percent": 37.15767455353281,
-                "samples": 146020,
-                "v6capable": 0.05204766470346528,
-                "v6preferred": 0.03766607314066566
+                "percent": 37.199365826419914,
+                "samples": 149226,
+                "v6capable": 0.05159958720330237,
+                "v6preferred": 0.03685684800235884
             },
             {
                 "as": 9500,
                 "as-descr": "Vodafone NZ Ltd.",
                 "autnum": "VODAFONE-TRANSIT-AS",
                 "cc": "NZ",
-                "cumulative": 59.90676227943834,
+                "cumulative": 59.946354499042755,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -6588,17 +6690,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "VODAFONE-TRANSIT-AS Vodafone NZ Ltd., NZ",
-                "percent": 22.749087725905532,
-                "samples": 89398,
-                "v6capable": 59.01362446587172,
-                "v6preferred": 49.80536477326115
+                "percent": 22.746988672622845,
+                "samples": 91250,
+                "v6capable": 59.21205479452055,
+                "v6preferred": 50.124931506849315
             },
             {
                 "as": 9790,
                 "as-descr": "VocusGroup",
                 "autnum": "VOCUSGROUPNZ",
                 "cc": "NZ",
-                "cumulative": 70.66599825942684,
+                "cumulative": 70.69838864071474,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -6612,17 +6714,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "CALLPLUS-NZ-AP CallPlus Services Limited, NZ",
-                "percent": 10.759235979988498,
-                "samples": 42281,
-                "v6capable": 18.502400605472907,
-                "v6preferred": 18.010453868167733
+                "percent": 10.752034141671984,
+                "samples": 43132,
+                "v6capable": 18.43874617453399,
+                "v6preferred": 17.949550217935638
             },
             {
                 "as": 23655,
                 "as-descr": "Snap Internet Limited",
                 "autnum": "SNAP-NZ-AS",
                 "cc": "NZ",
-                "cumulative": 78.75635538228994,
+                "cumulative": 78.80878071155072,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6641,10 +6743,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "SNAP-NZ-AS Snap Internet Limited, NZ",
-                "percent": 8.09035712286309,
-                "samples": 31793,
-                "v6capable": 57.792595854433365,
-                "v6preferred": 56.7231780580631
+                "percent": 8.110392070835992,
+                "samples": 32535,
+                "v6capable": 57.9560473336407,
+                "v6preferred": 56.89257722452743
             }
         ],
         "monitoring_dates": {
@@ -6671,7 +6773,7 @@ const lockdowns = {
                 "as-descr": "Internet Services",
                 "autnum": "CYTA-NETWORK",
                 "cc": "CY",
-                "cumulative": 49.51086291933314,
+                "cumulative": 49.43835949657284,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -6715,17 +6817,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "CYTA-NETWORK Cyprus Telecommunications Authority, CY",
-                "percent": 49.51086291933314,
-                "samples": 145758,
-                "v6capable": 0.24149617859740116,
-                "v6preferred": 0.2373797664622182
+                "percent": 49.43835949657284,
+                "samples": 148366,
+                "v6capable": 0.24668724640416267,
+                "v6preferred": 0.24264319318442232
             },
             {
                 "as": 35432,
                 "as-descr": "",
                 "autnum": "CABLENET-AS",
                 "cc": "CY",
-                "cumulative": 69.6096414353456,
+                "cumulative": 69.61010053215062,
                 "dependency": [
                     {
                         "asn": 41095,
@@ -6749,17 +6851,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "CABLENET-AS Cablenet Communication Systems Ltd, CY",
-                "percent": 20.098778516012445,
-                "samples": 59170,
-                "v6capable": 0.0033800912624640865,
-                "v6preferred": 0.0033800912624640865
+                "percent": 20.171741035577785,
+                "samples": 60536,
+                "v6capable": 0.0033038192150125546,
+                "v6preferred": 0.0033038192150125546
             },
             {
                 "as": 15805,
                 "as-descr": "",
                 "autnum": "SKYNET-CY-AS",
                 "cc": "CY",
-                "cumulative": 80.16651041454368,
+                "cumulative": 80.17847205792677,
                 "dependency": [
                     {
                         "asn": 16637,
@@ -6793,8 +6895,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "SKYNET-CY-AS MTN Cyprus Limited, CY",
-                "percent": 10.556868979198088,
-                "samples": 31079,
+                "percent": 10.56837152577615,
+                "samples": 31716,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
@@ -6803,7 +6905,7 @@ const lockdowns = {
                 "as-descr": "Transit AS for PrimeTel (AS16229), SpiderNet (AS5425) and NetWay (AS30916) traffic",
                 "autnum": "NSP-INTL",
                 "cc": "CY",
-                "cumulative": 87.3687142488349,
+                "cumulative": 87.40832314238777,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -6812,10 +6914,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "NSP-INTL Primetel PLC, CY",
-                "percent": 7.202203834291227,
-                "samples": 21203,
-                "v6capable": 0.004716313729189266,
-                "v6preferred": 0.004716313729189266
+                "percent": 7.229851084461002,
+                "samples": 21697,
+                "v6capable": 0.009217864220860027,
+                "v6preferred": 0.009217864220860027
             }
         ],
         "monitoring_dates": {
@@ -6842,7 +6944,7 @@ const lockdowns = {
                 "as-descr": "Telenor Norge AS",
                 "autnum": "TELENOR-NEXTEL",
                 "cc": "NO",
-                "cumulative": 30.155122529368704,
+                "cumulative": 30.119741305356595,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -6861,17 +6963,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELENOR-NEXTEL Telenor Norge AS, NO",
-                "percent": 30.155122529368704,
-                "samples": 173012,
-                "v6capable": 37.82165398931866,
-                "v6preferred": 37.54652856449264
+                "percent": 30.119741305356595,
+                "samples": 175902,
+                "v6capable": 37.73237370808746,
+                "v6preferred": 37.4589259928824
             },
             {
                 "as": 29695,
                 "as-descr": "Norway",
                 "autnum": "ALTIBOX_AS",
                 "cc": "NO",
-                "cumulative": 45.258130860668594,
+                "cumulative": 45.245535599622606,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -6885,17 +6987,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Altibox_AS Altibox AS, NO",
-                "percent": 15.103008331299892,
-                "samples": 86652,
-                "v6capable": 2.2480727507732077,
-                "v6preferred": 2.0253427503115913
+                "percent": 15.125794294266013,
+                "samples": 88336,
+                "v6capable": 2.2550262633580873,
+                "v6preferred": 2.0354102517659842
             },
             {
                 "as": 41164,
                 "as-descr": "GET Norway",
                 "autnum": "GET-NO",
                 "cc": "NO",
-                "cumulative": 55.66441245163314,
+                "cumulative": 55.67242970570659,
                 "dependency": [
                     {
                         "asn": 25400,
@@ -6914,17 +7016,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "GET-NO Get AS, NO",
-                "percent": 10.406281590964548,
-                "samples": 59705,
-                "v6capable": 1.5911565195544761,
-                "v6preferred": 1.4755883091868354
+                "percent": 10.426894106083981,
+                "samples": 60894,
+                "v6capable": 1.5765100009853188,
+                "v6preferred": 1.461556146746806
             },
             {
                 "as": 205016,
                 "as-descr": "",
                 "autnum": "HERNLABS",
                 "cc": "NO",
-                "cumulative": 64.78561717851291,
+                "cumulative": 64.78650157788664,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6968,17 +7070,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "HERNLABS HERN Labs AB, NL",
-                "percent": 9.121204726879771,
-                "samples": 52332,
-                "v6capable": 99.69999235649315,
-                "v6preferred": 98.19231063211802
+                "percent": 9.114071872180052,
+                "samples": 53227,
+                "v6capable": 99.69752193435663,
+                "v6preferred": 98.19640408063577
             },
             {
                 "as": 2116,
                 "as-descr": "",
                 "autnum": "ASN-CATCHCOM",
                 "cc": "NO",
-                "cumulative": 71.26172133719105,
+                "cumulative": 71.25061428847843,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -6997,17 +7099,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASN-CATCHCOM Broadnet AS, NO",
-                "percent": 6.4761041586781465,
-                "samples": 37156,
-                "v6capable": 6.042092797933039,
-                "v6preferred": 5.926364517170847
+                "percent": 6.464112710591789,
+                "samples": 37751,
+                "v6capable": 6.066064475113242,
+                "v6preferred": 5.946862334772589
             },
             {
                 "as": 50608,
                 "as-descr": "",
                 "autnum": "VENTELOHOSTING",
                 "cc": "NO",
-                "cumulative": 77.29459336981907,
+                "cumulative": 77.30171966527914,
                 "dependency": [
                     {
                         "asn": 16150,
@@ -7031,10 +7133,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "VENTELOHOSTING Ventelo Hosting AS, NO",
-                "percent": 6.03287203262802,
-                "samples": 34613,
-                "v6capable": 0.0028890879149452518,
-                "v6preferred": 0.0028890879149452518
+                "percent": 6.0511053768007,
+                "samples": 35339,
+                "v6capable": 0.002829734853844195,
+                "v6preferred": 0.002829734853844195
             }
         ],
         "monitoring_dates": {
@@ -7061,7 +7163,7 @@ const lockdowns = {
                 "as-descr": "Onda",
                 "autnum": "Cable",
                 "cc": "PA",
-                "cumulative": 44.365081510719406,
+                "cumulative": 44.506277480531864,
                 "dependency": [
                     {
                         "asn": 23520,
@@ -7085,17 +7187,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Cable Onda, PA",
-                "percent": 44.365081510719406,
-                "samples": 164102,
-                "v6capable": 0.0018281312842012894,
-                "v6preferred": 0.0018281312842012894
+                "percent": 44.506277480531864,
+                "samples": 168029,
+                "v6capable": 0.0017854060906153104,
+                "v6preferred": 0.0017854060906153104
             },
             {
                 "as": 11556,
                 "as-descr": "& Wireless Panama",
                 "autnum": "Cable",
                 "cc": "PA",
-                "cumulative": 72.53210413906837,
+                "cumulative": 72.63892567674948,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -7124,17 +7226,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Cable & Wireless Panama, PA",
-                "percent": 28.167022628348967,
-                "samples": 104187,
-                "v6capable": 0.002879437933715339,
-                "v6preferred": 0.002879437933715339
+                "percent": 28.13264819621762,
+                "samples": 106212,
+                "v6capable": 0.003766052800060257,
+                "v6preferred": 0.003766052800060257
             },
             {
                 "as": 262227,
                 "as-descr": "Panama S.A.",
                 "autnum": "Claro",
                 "cc": "PA",
-                "cumulative": 82.3360999215983,
+                "cumulative": 82.41272447952534,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -7163,17 +7265,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Claro Panam S.A., PA",
-                "percent": 9.803995782529942,
-                "samples": 36264,
-                "v6capable": 2.481800132362674,
-                "v6preferred": 2.4211339069049194
+                "percent": 9.773798802775865,
+                "samples": 36900,
+                "v6capable": 2.4769647696476964,
+                "v6preferred": 2.4173441734417342
             },
             {
                 "as": 14709,
                 "as-descr": "Moviles Panama S.A.",
                 "autnum": "Telefonica",
                 "cc": "PA",
-                "cumulative": 91.03003595663574,
+                "cumulative": 91.05763627695077,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -7212,17 +7314,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telefonica Moviles Panama S.A., PA",
-                "percent": 8.693936035037444,
-                "samples": 32158,
-                "v6capable": 0.0031096461222712857,
-                "v6preferred": 0.0031096461222712857
+                "percent": 8.644911797425438,
+                "samples": 32638,
+                "v6capable": 0.0030639132299773273,
+                "v6preferred": 0.0030639132299773273
             },
             {
                 "as": 28005,
                 "as-descr": "(Panama), S.A",
                 "autnum": "Digicel",
                 "cc": "PA",
-                "cumulative": 96.84014166373785,
+                "cumulative": 96.85596228214227,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -7276,8 +7378,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "Digicel (Panama), S.A, PA",
-                "percent": 5.810105707102111,
-                "samples": 21491,
+                "percent": 5.798326005191503,
+                "samples": 21891,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
@@ -7306,7 +7408,7 @@ const lockdowns = {
                 "as-descr": "PNG DATACO LTD",
                 "autnum": "PNGDATACOLIMITED-AS-PG",
                 "cc": "PG",
-                "cumulative": 42.1124753343565,
+                "cumulative": 42.14059395306374,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -7350,17 +7452,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TIARE-AS-PG Tiare, a business unit of Telikom PNG, PG",
-                "percent": 42.1124753343565,
-                "samples": 7683,
-                "v6capable": 0.013015749056358194,
-                "v6preferred": 0.013015749056358194
+                "percent": 42.14059395306374,
+                "samples": 7847,
+                "v6capable": 0.012743723716069836,
+                "v6preferred": 0.012743723716069836
             },
             {
                 "as": 58460,
                 "as-descr": "Digicel (PNG) Ltd",
                 "autnum": "DIGICELPNG-AS-AP",
                 "cc": "PG",
-                "cumulative": 83.59460644595484,
+                "cumulative": 83.69045701090167,
                 "dependency": [
                     {
                         "asn": 136587,
@@ -7414,8 +7516,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "DIGICELPNG-AS-AP Digicel (PNG) Ltd, PG",
-                "percent": 41.482131111598335,
-                "samples": 7568,
+                "percent": 41.549863057837925,
+                "samples": 7737,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
@@ -7424,7 +7526,7 @@ const lockdowns = {
                 "as-descr": "Bemobile LTD",
                 "autnum": "BEMOBILEPNG-AS-AP",
                 "cc": "PG",
-                "cumulative": 91.29028721771542,
+                "cumulative": 91.3377369636432,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -7448,8 +7550,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "BEMOBILEPNG-AS-AP Bemobile LTD, PG",
-                "percent": 7.695680771760578,
-                "samples": 1404,
+                "percent": 7.6472799527415285,
+                "samples": 1424,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
@@ -7478,7 +7580,7 @@ const lockdowns = {
                 "as-descr": "S.A.",
                 "autnum": "Telecel",
                 "cc": "PY",
-                "cumulative": 66.45610345165632,
+                "cumulative": 66.43986175034685,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -7502,17 +7604,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telecel S.A., PY",
-                "percent": 66.45610345165632,
-                "samples": 372842,
-                "v6capable": 4.346881520858702,
-                "v6preferred": 4.269100584161656
+                "percent": 66.43986175034685,
+                "samples": 380234,
+                "v6capable": 4.324179321154868,
+                "v6preferred": 4.2468585134417225
             },
             {
                 "as": 27895,
                 "as-descr": "S.A.",
                 "autnum": "Nucleo",
                 "cc": "PY",
-                "cumulative": 86.37928115001739,
+                "cumulative": 86.31324939105151,
                 "dependency": [
                     {
                         "asn": 7303,
@@ -7541,17 +7643,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Ncleo S.A., PY",
-                "percent": 19.923177698361066,
-                "samples": 111776,
-                "v6capable": 0.013419696535929001,
-                "v6preferred": 0.008051817921557401
+                "percent": 19.873387640704667,
+                "samples": 113735,
+                "v6capable": 0.013188552336571856,
+                "v6preferred": 0.007913131401943113
             },
             {
                 "as": 27866,
                 "as-descr": "",
                 "autnum": "CO.PA.CO.",
                 "cc": "PY",
-                "cumulative": 92.2676838343419,
+                "cumulative": 92.20441098868072,
                 "dependency": [
                     {
                         "asn": 27768,
@@ -7605,10 +7707,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "CO.PA.CO., PY",
-                "percent": 5.888402684324507,
-                "samples": 33036,
-                "v6capable": 0.030270008475602374,
-                "v6preferred": 0.018162005085361425
+                "percent": 5.891161597629207,
+                "samples": 33715,
+                "v6capable": 0.02966038855109002,
+                "v6preferred": 0.01779623313065401
             }
         ],
         "monitoring_dates": {
@@ -7635,7 +7737,7 @@ const lockdowns = {
                 "as-descr": "del Peru S.A.A.",
                 "autnum": "Telefonica",
                 "cc": "PE",
-                "cumulative": 52.41180319511858,
+                "cumulative": 52.467971483540445,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -7679,17 +7781,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telefonica del Peru S.A.A., PE",
-                "percent": 52.41180319511858,
-                "samples": 2023365,
-                "v6capable": 6.593817724434296,
-                "v6preferred": 6.534955383729579
+                "percent": 52.467971483540445,
+                "samples": 2058722,
+                "v6capable": 6.583113212954444,
+                "v6preferred": 6.523221688018101
             },
             {
                 "as": 12252,
                 "as-descr": "Movil Peru S.A.C.",
                 "autnum": "America",
                 "cc": "PE",
-                "cumulative": 77.80432864639269,
+                "cumulative": 77.84938409982851,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -7713,17 +7815,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "America Movil Peru S.A.C., PE",
-                "percent": 25.392525451274103,
-                "samples": 980282,
-                "v6capable": 65.94306536282417,
-                "v6preferred": 65.43627241956906
+                "percent": 25.381412616288063,
+                "samples": 995908,
+                "v6capable": 65.95046932045932,
+                "v6preferred": 65.43998039979597
             },
             {
                 "as": 21575,
                 "as-descr": "PERU S.A.",
                 "autnum": "ENTEL",
                 "cc": "PE",
-                "cumulative": 87.64786243489857,
+                "cumulative": 87.6709357762906,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -7757,17 +7859,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ENTEL PERU S.A., PE",
-                "percent": 9.843533788505884,
-                "samples": 380011,
-                "v6capable": 0.04052514269323783,
-                "v6preferred": 0.024736126059508805
+                "percent": 9.821551676462095,
+                "samples": 385375,
+                "v6capable": 0.041258514433992866,
+                "v6preferred": 0.025429776192020758
             },
             {
                 "as": 262210,
                 "as-descr": "PERU S.A.C.",
                 "autnum": "VIETTEL",
                 "cc": "PE",
-                "cumulative": 96.28583136856906,
+                "cumulative": 96.29539863330385,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -7811,10 +7913,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "VIETTEL PER S.A.C., PE",
-                "percent": 8.637968933670491,
-                "samples": 333470,
-                "v6capable": 0.019791885327015923,
-                "v6preferred": 0.016793114822922603
+                "percent": 8.624462857013244,
+                "samples": 338404,
+                "v6capable": 0.01979882034491318,
+                "v6preferred": 0.01654826775097221
             }
         ],
         "monitoring_dates": {
@@ -7841,7 +7943,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "TPNET",
                 "cc": "PL",
-                "cumulative": 25.413042760130814,
+                "cumulative": 25.40912085235252,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -7875,17 +7977,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TPNET Orange Polska Spolka Akcyjna, PL",
-                "percent": 25.413042760130814,
-                "samples": 2207891,
-                "v6capable": 36.39196862526275,
-                "v6preferred": 36.21098142978978
+                "percent": 25.40912085235252,
+                "samples": 2243711,
+                "v6capable": 36.361634809474126,
+                "v6preferred": 36.1810411412165
             },
             {
                 "as": 8374,
                 "as-descr": "Plus network operator in Poland",
                 "autnum": "PLUSNET",
                 "cc": "PL",
-                "cumulative": 37.610201998774635,
+                "cumulative": 37.59702489270794,
                 "dependency": [
                     {
                         "asn": 174,
@@ -7899,17 +8001,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "PLUSNET Polkomtel Sp. z o.o., PL",
-                "percent": 12.19715923864382,
-                "samples": 1059692,
-                "v6capable": 0.020666382307311937,
-                "v6preferred": 0.012173348482389223
+                "percent": 12.187904040355425,
+                "samples": 1076233,
+                "v6capable": 0.02044167015878532,
+                "v6preferred": 0.012079168730191325
             },
             {
                 "as": 39603,
                 "as-descr": "P4 UMTS operator in Poland",
                 "autnum": "P4NET",
                 "cc": "PL",
-                "cumulative": 47.058047613363826,
+                "cumulative": 47.02471717670571,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -7928,17 +8030,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "P4NET P4 Sp. z o.o., PL",
-                "percent": 9.447845614589188,
-                "samples": 820831,
-                "v6capable": 0.023025446163704832,
-                "v6preferred": 0.017786852592068282
+                "percent": 9.427692283997768,
+                "samples": 832497,
+                "v6capable": 0.02330338727947368,
+                "v6preferred": 0.018138203501033637
             },
             {
                 "as": 12912,
                 "as-descr": "",
                 "autnum": "TM",
                 "cc": "PL",
-                "cumulative": 54.98578905695807,
+                "cumulative": 54.94011157218574,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -7962,17 +8064,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TMPL T-MOBILE POLSKA SPOLKA AKCYJNA, PL",
-                "percent": 7.927741443594245,
-                "samples": 688764,
-                "v6capable": 0.029182709897729846,
-                "v6preferred": 0.018438826651799457
+                "percent": 7.915394395480036,
+                "samples": 698956,
+                "v6capable": 0.02875717498669444,
+                "v6preferred": 0.018169956334876586
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "PL",
-                "cumulative": 62.214591282734865,
+                "cumulative": 62.18373092669056,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -7991,10 +8093,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 7.228802225776796,
-                "samples": 628040,
-                "v6capable": 49.31835551875677,
-                "v6preferred": 48.970129291127954
+                "percent": 7.243619354504816,
+                "samples": 639636,
+                "v6capable": 49.30382279921705,
+                "v6preferred": 48.948933455903045
             }
         ],
         "monitoring_dates": {
@@ -8021,7 +8123,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "NOS_COMUNICACOES",
                 "cc": "PT",
-                "cumulative": 34.310323383272774,
+                "cumulative": 34.30420992944831,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -8050,17 +8152,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "NOS_COMUNICACOES NOS COMUNICACOES, S.A., PT",
-                "percent": 34.310323383272774,
-                "samples": 1133774,
-                "v6capable": 0.034133786804072065,
-                "v6preferred": 0.020462631882544494
+                "percent": 34.30420992944831,
+                "samples": 1145845,
+                "v6capable": 0.03473419179731988,
+                "v6preferred": 0.020508882091382342
             },
             {
                 "as": 3243,
                 "as-descr": "",
                 "autnum": "MEO-RESIDENCIAL",
                 "cc": "PT",
-                "cumulative": 62.955379517859,
+                "cumulative": 63.001347804922155,
                 "dependency": [
                     {
                         "asn": 8657,
@@ -8079,17 +8181,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MEO-RESIDENCIAL MEO - SERVICOS DE COMUNICACOES E MULTIMEDIA S.A., PT",
-                "percent": 28.645056134586223,
-                "samples": 946567,
-                "v6capable": 77.53259938282234,
-                "v6preferred": 76.43843489156076
+                "percent": 28.697137875473842,
+                "samples": 958555,
+                "v6capable": 77.56487629817799,
+                "v6preferred": 76.45497650108757
             },
             {
                 "as": 12353,
                 "as-descr": "Vodafone Portugal",
                 "autnum": "VODAFONE-PT",
                 "cc": "PT",
-                "cumulative": 86.36089489718319,
+                "cumulative": 86.40330682231189,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8113,17 +8215,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "VODAFONE-PT Vodafone Portugal - Communicacoes Pessoais S.A., PT",
-                "percent": 23.405515379324182,
-                "samples": 773428,
-                "v6capable": 47.61774851699189,
-                "v6preferred": 47.39044875541097
+                "percent": 23.401959017389736,
+                "samples": 781683,
+                "v6capable": 47.74800014839775,
+                "v6preferred": 47.513761972564325
             },
             {
                 "as": 42863,
                 "as-descr": "",
                 "autnum": "MEO-MOVEL",
                 "cc": "PT",
-                "cumulative": 92.06172005245018,
+                "cumulative": 92.07447595177122,
                 "dependency": [
                     {
                         "asn": 8657,
@@ -8142,10 +8244,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "MEO-MOVEL MEO - SERVICOS DE COMUNICACOES E MULTIMEDIA S.A., PT",
-                "percent": 5.700825155267004,
-                "samples": 188382,
-                "v6capable": 0.2670106485757663,
-                "v6preferred": 0.17942266246244334
+                "percent": 5.671169129459328,
+                "samples": 189431,
+                "v6capable": 0.26658783409262476,
+                "v6preferred": 0.17842908499664786
             }
         ],
         "monitoring_dates": {
@@ -8172,7 +8274,7 @@ const lockdowns = {
                 "as-descr": "73-75 Dr. Staicovici",
                 "autnum": "RCS-RDS",
                 "cc": "RO",
-                "cumulative": 38.27162839374116,
+                "cumulative": 38.34989947711952,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8186,17 +8288,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "RCS-RDS RCS & RDS SA, RO",
-                "percent": 38.27162839374116,
-                "samples": 1671960,
-                "v6capable": 37.968013588841835,
-                "v6preferred": 37.790497380320105
+                "percent": 38.34989947711952,
+                "samples": 1709711,
+                "v6capable": 37.98677086361379,
+                "v6preferred": 37.81042527070365
             },
             {
                 "as": 8953,
                 "as-descr": "",
                 "autnum": "ASN-ORANGE-ROMANIA",
                 "cc": "RO",
-                "cumulative": 51.067751330096804,
+                "cumulative": 51.116428666438324,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -8215,17 +8317,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASN-ORANGE-ROMANIA Orange Romania S.A., RO",
-                "percent": 12.796122936355644,
-                "samples": 559020,
-                "v6capable": 7.77020500160996,
-                "v6preferred": 7.7260205359378915
+                "percent": 12.766529189318803,
+                "samples": 569156,
+                "v6capable": 7.814202081678837,
+                "v6preferred": 7.770453091946672
             },
             {
                 "as": 12302,
                 "as-descr": "Charles de Gaulle nr.15",
                 "autnum": "VODAFONE_RO",
                 "cc": "RO",
-                "cumulative": 61.40806795299345,
+                "cumulative": 61.41720326347762,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8254,17 +8356,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Vodafone_Ro Vodafone Romania S.A., RO",
-                "percent": 10.34031662289664,
-                "samples": 451734,
-                "v6capable": 0.045823427061058054,
-                "v6preferred": 0.030106212948328
+                "percent": 10.300774597039291,
+                "samples": 459228,
+                "v6capable": 0.04529340545437125,
+                "v6preferred": 0.029832675707927216
             },
             {
                 "as": 9050,
                 "as-descr": "Bucharest, Romania",
                 "autnum": "RTD",
                 "cc": "RO",
-                "cumulative": 71.62104596207493,
+                "cumulative": 71.63532097898945,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -8273,17 +8375,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "RTD TELEKOM ROMANIA COMMUNICATION S.A, RO",
-                "percent": 10.212978009081489,
-                "samples": 446171,
-                "v6capable": 0.017706215778255423,
-                "v6preferred": 0.012327112250684155
+                "percent": 10.218117715511836,
+                "samples": 455543,
+                "v6capable": 0.018000496111234287,
+                "v6preferred": 0.012732058225019372
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "RO",
-                "cumulative": 80.14188309614809,
+                "cumulative": 80.18009106388267,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -8297,17 +8399,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 8.520837134073162,
-                "samples": 372247,
-                "v6capable": 20.910309552528293,
-                "v6preferred": 20.829717902360528
+                "percent": 8.544770084893216,
+                "samples": 380942,
+                "v6capable": 20.934682970110934,
+                "v6preferred": 20.85435578119504
             },
             {
                 "as": 12632,
                 "as-descr": "RCS & RDS Mobile",
                 "autnum": "DIGINETMOBIL",
                 "cc": "RO",
-                "cumulative": 86.58146752773787,
+                "cumulative": 86.60368593615031,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8326,17 +8428,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "DigiNetMobil RCS & RDS SA, RO",
-                "percent": 6.439584431589774,
-                "samples": 281324,
-                "v6capable": 0.0462100638409805,
-                "v6preferred": 0.03483527889550838
+                "percent": 6.423594872267641,
+                "samples": 286376,
+                "v6capable": 0.045394865491521635,
+                "v6preferred": 0.03422074475514708
             },
             {
                 "as": 35725,
                 "as-descr": "",
                 "autnum": "COSMOROM",
                 "cc": "RO",
-                "cumulative": 92.23889117664497,
+                "cumulative": 92.23888893001173,
                 "dependency": [
                     {
                         "asn": 9050,
@@ -8355,10 +8457,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "COSMOROM TELEKOM ROMANIA MOBILE COMMUNICATIONS S.A., RO",
-                "percent": 5.657423648907092,
-                "samples": 247154,
-                "v6capable": 0.03196387677318595,
-                "v6preferred": 0.023871756071113557
+                "percent": 5.635202993861409,
+                "samples": 251228,
+                "v6capable": 0.031843584313850364,
+                "v6preferred": 0.023484643431464645
             }
         ],
         "monitoring_dates": {
@@ -8385,7 +8487,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "MTNRW-ASN",
                 "cc": "RW",
-                "cumulative": 33.753672590894254,
+                "cumulative": 33.76993507076389,
                 "dependency": [
                     {
                         "asn": 174,
@@ -8404,17 +8506,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MTNRW-ASN, RW",
-                "percent": 33.753672590894254,
-                "samples": 44460,
-                "v6capable": 0.002249212775528565,
-                "v6preferred": 0.002249212775528565
+                "percent": 33.76993507076389,
+                "samples": 45145,
+                "v6capable": 0.0022150847269908074,
+                "v6preferred": 0.0022150847269908074
             },
             {
                 "as": 37228,
                 "as-descr": "",
                 "autnum": "Olleh-Rwanda-Networks",
                 "cc": "RW",
-                "cumulative": 67.19911326384197,
+                "cumulative": 67.16360970647199,
                 "dependency": [
                     {
                         "asn": 37619,
@@ -8463,17 +8565,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Olleh-Rwanda-Networks, RW",
-                "percent": 33.44544067294771,
-                "samples": 44054,
-                "v6capable": 0.009079765742043855,
-                "v6preferred": 0.009079765742043855
+                "percent": 33.39367463570809,
+                "samples": 44642,
+                "v6capable": 0.008960172035303077,
+                "v6preferred": 0.008960172035303077
             },
             {
                 "as": 37124,
                 "as-descr": "",
                 "autnum": "tigo-rw-as",
                 "cc": "RW",
-                "cumulative": 81.54176694326559,
+                "cumulative": 81.5370575386733,
                 "dependency": [
                     {
                         "asn": 30844,
@@ -8507,17 +8609,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "tigo-rw-as, RW",
-                "percent": 14.342653679423622,
-                "samples": 18892,
-                "v6capable": 0.005293245818335804,
-                "v6preferred": 0.005293245818335804
+                "percent": 14.373447832201311,
+                "samples": 19215,
+                "v6capable": 0.0052042674993494666,
+                "v6preferred": 0.0052042674993494666
             },
             {
                 "as": 327707,
                 "as-descr": "",
                 "autnum": "AIRTEL-",
                 "cc": "RW",
-                "cumulative": 92.19702548607262,
+                "cumulative": 92.23916100655278,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -8551,8 +8653,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "AIRTEL-, RW",
-                "percent": 10.655258542807037,
-                "samples": 14035,
+                "percent": 10.702103467879477,
+                "samples": 14307,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
@@ -8581,7 +8683,7 @@ const lockdowns = {
                 "as-descr": "Digicel Samoa Ltd",
                 "autnum": "DIGICELSAMOA-WS-AS-AP",
                 "cc": "WS",
-                "cumulative": 48.83606557377049,
+                "cumulative": 48.85718917166478,
                 "dependency": [
                     {
                         "asn": 132528,
@@ -8610,8 +8712,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "DIGICELSAMOA-WS-AS-AP Digicel Samoa Ltd, WS",
-                "percent": 48.83606557377049,
-                "samples": 2979,
+                "percent": 48.85718917166478,
+                "samples": 3014,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
@@ -8620,7 +8722,7 @@ const lockdowns = {
                 "as-descr": "Blue Sky Communications",
                 "autnum": "BLUESKY-AS-AP",
                 "cc": "WS",
-                "cumulative": 95.327868852459,
+                "cumulative": 95.31528610795915,
                 "dependency": [
                     {
                         "asn": 17993,
@@ -8644,8 +8746,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "BLUESKY-AS-AP Blue Sky Communications, AS",
-                "percent": 46.49180327868852,
-                "samples": 2836,
+                "percent": 46.458096936294375,
+                "samples": 2866,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
@@ -8674,7 +8776,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "Telkom-Internet",
                 "cc": "ZA",
-                "cumulative": 22.246035415054255,
+                "cumulative": 22.000789963623287,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -8703,17 +8805,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telkom-Internet, ZA",
-                "percent": 22.246035415054255,
-                "samples": 214137,
-                "v6capable": 0.003268935307770259,
-                "v6preferred": 0.003268935307770259
+                "percent": 22.000789963623287,
+                "samples": 217790,
+                "v6capable": 0.00321410533082327,
+                "v6preferred": 0.00321410533082327
             },
             {
                 "as": 29975,
                 "as-descr": "",
                 "autnum": "VODACOM-",
                 "cc": "ZA",
-                "cumulative": 34.40049450178426,
+                "cumulative": 34.11804400157993,
                 "dependency": [
                     {
                         "asn": 36994,
@@ -8732,17 +8834,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "VODACOM-, ZA",
-                "percent": 12.154459086730004,
-                "samples": 116997,
-                "v6capable": 0.004273613853346667,
-                "v6preferred": 0.004273613853346667
+                "percent": 12.117254037956641,
+                "samples": 119951,
+                "v6capable": 0.004168368750573151,
+                "v6preferred": 0.004168368750573151
             },
             {
                 "as": 16637,
                 "as-descr": "",
                 "autnum": "MTNNS-AS",
                 "cc": "ZA",
-                "cumulative": 43.29529340266055,
+                "cumulative": 43.05877551597656,
                 "dependency": [
                     {
                         "asn": 174,
@@ -8756,17 +8858,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "MTNNS-AS, ZA",
-                "percent": 8.894798900876287,
-                "samples": 85620,
-                "v6capable": 0.00233590282644242,
-                "v6preferred": 0.00116795141322121
+                "percent": 8.940731514396633,
+                "samples": 88506,
+                "v6capable": 0.0022597338033579642,
+                "v6preferred": 0.0011298669016789821
             },
             {
                 "as": 5713,
                 "as-descr": "",
                 "autnum": "SAIX-NET",
                 "cc": "ZA",
-                "cumulative": 51.43763927341482,
+                "cumulative": 51.54078262968991,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -8790,17 +8892,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "SAIX-NET, ZA",
-                "percent": 8.142345870754271,
-                "samples": 78377,
-                "v6capable": 0.006379422534672162,
-                "v6preferred": 0.006379422534672162
+                "percent": 8.482007113713344,
+                "samples": 83965,
+                "v6capable": 0.0059548621449413445,
+                "v6preferred": 0.0059548621449413445
             },
             {
                 "as": 37168,
                 "as-descr": "",
                 "autnum": "CELL-C",
                 "cc": "ZA",
-                "cumulative": 57.03236597287513,
+                "cumulative": 57.180739030163075,
                 "dependency": [
                     {
                         "asn": 37100,
@@ -8819,10 +8921,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "CELL-C, ZA",
-                "percent": 5.594726699460307,
-                "samples": 53854,
-                "v6capable": 0.0018568722843242842,
-                "v6preferred": 0.0018568722843242842
+                "percent": 5.63995640047317,
+                "samples": 55831,
+                "v6capable": 0.0017911196288800128,
+                "v6preferred": 0.0017911196288800128
             }
         ],
         "monitoring_dates": {
@@ -8849,7 +8951,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "TELEFONICA_DE_ESPANA",
                 "cc": "ES",
-                "cumulative": 29.68100913603442,
+                "cumulative": 29.6866476633173,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8878,17 +8980,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Telefonica_de_Espana TELEFONICA DE ESPANA, ES",
-                "percent": 29.68100913603442,
-                "samples": 2296371,
-                "v6capable": 0.0060965758581692595,
-                "v6preferred": 0.005356277361105849
+                "percent": 29.6866476633173,
+                "samples": 2340666,
+                "v6capable": 0.006280263822347998,
+                "v6preferred": 0.005425806159443509
             },
             {
                 "as": 12479,
                 "as-descr": "",
                 "autnum": "UNI2-AS",
                 "cc": "ES",
-                "cumulative": 53.34413189060748,
+                "cumulative": 53.344929815494176,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -8917,17 +9019,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "UNI2-AS Orange Espagne SA, ES",
-                "percent": 23.66312275457306,
-                "samples": 1830777,
-                "v6capable": 13.20510362540058,
-                "v6preferred": 13.084553716809857
+                "percent": 23.658282152176877,
+                "samples": 1865355,
+                "v6capable": 13.243109220496903,
+                "v6preferred": 13.121899048706547
             },
             {
                 "as": 12430,
                 "as-descr": "",
                 "autnum": "VODAFONE_ES",
                 "cc": "ES",
-                "cumulative": 66.39988232915884,
+                "cumulative": 66.38110487882986,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -8946,17 +9048,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "VODAFONE_ES VODAFONE ESPANA S.A.U., ES",
-                "percent": 13.055750438551366,
-                "samples": 1010102,
-                "v6capable": 0.008414991753308081,
-                "v6preferred": 0.007226992917546941
+                "percent": 13.03617506333569,
+                "samples": 1027847,
+                "v6capable": 0.008269713293904638,
+                "v6preferred": 0.007102224358294571
             },
             {
                 "as": 15704,
                 "as-descr": "",
                 "autnum": "AS15704",
                 "cc": "ES",
-                "cumulative": 73.6673622137008,
+                "cumulative": 73.67627297603231,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8980,10 +9082,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "AS15704 XTRA TELECOM S.A., ES",
-                "percent": 7.26747988454195,
-                "samples": 562273,
-                "v6capable": 0.0033791414490825632,
-                "v6preferred": 0.0028455927992274217
+                "percent": 7.295168097202449,
+                "samples": 575193,
+                "v6capable": 0.003477093775480578,
+                "v6preferred": 0.002955529709158491
             }
         ],
         "monitoring_dates": {
@@ -9010,7 +9112,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "TUNISIANA",
                 "cc": "TN",
-                "cumulative": 25.695781120077747,
+                "cumulative": 25.668775017158687,
                 "dependency": [
                     {
                         "asn": 174,
@@ -9034,17 +9136,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TUNISIANA, TN",
-                "percent": 25.695781120077747,
-                "samples": 490737,
-                "v6capable": 0.0032604022113678,
-                "v6preferred": 0.0032604022113678
+                "percent": 25.668775017158687,
+                "samples": 496286,
+                "v6capable": 0.00322394748189552,
+                "v6preferred": 0.00322394748189552
             },
             {
                 "as": 37705,
                 "as-descr": "",
                 "autnum": "TOPNET",
                 "cc": "TN",
-                "cumulative": 49.8232795544655,
+                "cumulative": 49.875324747869456,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9088,17 +9190,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TOPNET, TN",
-                "percent": 24.127498434387757,
-                "samples": 460786,
-                "v6capable": 0.004774450612648822,
-                "v6preferred": 0.004774450612648822
+                "percent": 24.206549730710766,
+                "samples": 468015,
+                "v6capable": 0.004914372402593934,
+                "v6preferred": 0.004700704037263763
             },
             {
                 "as": 37492,
                 "as-descr": "",
                 "autnum": "ORANGE-",
                 "cc": "TN",
-                "cumulative": 68.2367645549577,
+                "cumulative": 68.26390293277778,
                 "dependency": [
                     {
                         "asn": 2609,
@@ -9132,17 +9234,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ORANGE-, TN",
-                "percent": 18.413485000492198,
-                "samples": 351660,
-                "v6capable": 0.0028436558039014958,
-                "v6preferred": 0.0028436558039014958
+                "percent": 18.388578184908322,
+                "samples": 355529,
+                "v6capable": 0.0030939810817120403,
+                "v6preferred": 0.0030939810817120403
             },
             {
                 "as": 2609,
                 "as-descr": "Tunisia BackBone AS",
                 "autnum": "TN-BB-AS",
                 "cc": "TN",
-                "cumulative": 80.9970803164317,
+                "cumulative": 80.99841576313099,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9161,17 +9263,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TN-BB-AS Tunisia BackBone AS, TN",
-                "percent": 12.760315761474,
-                "samples": 243696,
-                "v6capable": 0.011079377585188102,
-                "v6preferred": 0.010669030267218174
+                "percent": 12.734512830353212,
+                "samples": 246212,
+                "v6capable": 0.010966159244878397,
+                "v6preferred": 0.01056000519877179
             },
             {
                 "as": 5438,
                 "as-descr": "",
                 "autnum": "ATI-",
                 "cc": "TN",
-                "cumulative": 90.57386233922367,
+                "cumulative": 90.57779906414686,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9205,17 +9307,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ATI-TN Agence Tunisienne d'Internet, TN",
-                "percent": 9.576782022791964,
-                "samples": 182897,
-                "v6capable": 0.007654581540429859,
-                "v6preferred": 0.007654581540429859
+                "percent": 9.579383301015866,
+                "samples": 185210,
+                "v6capable": 0.0075589870957291725,
+                "v6preferred": 0.0075589870957291725
             },
             {
                 "as": 37671,
                 "as-descr": "",
                 "autnum": "GLOBALNET-AS",
                 "cc": "TN",
-                "cumulative": 99.22347727191804,
+                "cumulative": 99.23094946113707,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9254,10 +9356,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "GLOBALNET-AS, TN",
-                "percent": 8.649614932694382,
-                "samples": 165190,
-                "v6capable": 0.0036321811247654215,
-                "v6preferred": 0.0036321811247654215
+                "percent": 8.653150396990208,
+                "samples": 167302,
+                "v6capable": 0.0035863289141791492,
+                "v6preferred": 0.0035863289141791492
             }
         ],
         "monitoring_dates": {
@@ -9284,7 +9386,7 @@ const lockdowns = {
                 "as-descr": "Emirates Internet",
                 "autnum": "EMIRATES-INTERNET",
                 "cc": "AE",
-                "cumulative": 91.63322774344141,
+                "cumulative": 91.68140962690315,
                 "dependency": [
                     {
                         "asn": 8966,
@@ -9308,17 +9410,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "EMIRATES-INTERNET Emirates Telecommunications Corporation, AE",
-                "percent": 91.63322774344141,
-                "samples": 479327,
-                "v6capable": 33.76400661761178,
-                "v6preferred": 33.454823116578034
+                "percent": 91.68140962690315,
+                "samples": 489201,
+                "v6capable": 33.87912126099497,
+                "v6preferred": 33.56493547641971
             },
             {
                 "as": 15802,
                 "as-descr": "",
                 "autnum": "DU-AS1",
                 "cc": "AE",
-                "cumulative": 98.96347303443173,
+                "cumulative": 98.9746770916887,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -9337,10 +9439,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "DU-AS1 Emirates Integrated Telecommunications Company PJSC (EITC-DU), AE",
-                "percent": 7.330245290990321,
-                "samples": 38344,
-                "v6capable": 0.29470060504902984,
-                "v6preferred": 0.15126225745879407
+                "percent": 7.293267464785565,
+                "samples": 38916,
+                "v6capable": 0.30064754856614245,
+                "v6preferred": 0.1567478672011512
             }
         ],
         "monitoring_dates": {
@@ -9367,7 +9469,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "BSKYB-BROADBAND-AS",
                 "cc": "GB",
-                "cumulative": 19.897628022178754,
+                "cumulative": 19.89357547809019,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -9386,17 +9488,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "BSKYB-BROADBAND-AS Sky UK Limited, GB",
-                "percent": 19.897628022178754,
-                "samples": 1260852,
-                "v6capable": 93.71583659303391,
-                "v6preferred": 93.06278611605485
+                "percent": 19.89357547809019,
+                "samples": 1280709,
+                "v6capable": 93.70465890377908,
+                "v6preferred": 93.05056808377235
             },
             {
                 "as": 5089,
                 "as-descr": "",
                 "autnum": "NTL",
                 "cc": "GB",
-                "cumulative": 39.31786207163198,
+                "cumulative": 39.33392173291443,
                 "dependency": [
                     {
                         "asn": 33891,
@@ -9420,17 +9522,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "NTL Virgin Media Limited, GB",
-                "percent": 19.420234049453224,
-                "samples": 1230601,
-                "v6capable": 0.1261984997574356,
-                "v6preferred": 0.05517629190940036
+                "percent": 19.440346254824238,
+                "samples": 1251531,
+                "v6capable": 0.1273640045672061,
+                "v6preferred": 0.05561188656133967
             },
             {
                 "as": 2856,
                 "as-descr": "BTnet UK Regional network",
                 "autnum": "BT-UK-AS",
                 "cc": "GB",
-                "cumulative": 56.12810779120662,
+                "cumulative": 56.15710144549335,
                 "dependency": [
                     {
                         "asn": 5400,
@@ -9444,17 +9546,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "BT-UK-AS British Telecommunications PLC, GB",
-                "percent": 16.810245719574635,
-                "samples": 1065214,
-                "v6capable": 67.44635350267646,
-                "v6preferred": 66.82009436601471
+                "percent": 16.82317971257892,
+                "samples": 1083043,
+                "v6capable": 67.46768133859875,
+                "v6preferred": 66.84277540226935
             },
             {
                 "as": 12576,
                 "as-descr": "Ltd",
                 "autnum": "EE",
                 "cc": "GB",
-                "cumulative": 63.23427275575044,
+                "cumulative": 63.248263926103974,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -9468,17 +9570,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ORANGE-PCS EE Limited, GB",
-                "percent": 7.10616496454382,
-                "samples": 450296,
-                "v6capable": 37.85376729973173,
-                "v6preferred": 37.68143621084798
+                "percent": 7.091162480610619,
+                "samples": 456515,
+                "v6capable": 37.71924252215152,
+                "v6preferred": 37.54619234855372
             },
             {
                 "as": 13285,
                 "as-descr": "TalkTalk Communications Limited",
                 "autnum": "OPALTELECOM-AS",
                 "cc": "GB",
-                "cumulative": 69.06049604722968,
+                "cumulative": 69.08485225236812,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9502,10 +9604,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "OPALTELECOM-AS TalkTalk Communications Limited, GB",
-                "percent": 5.826223291479233,
-                "samples": 369190,
-                "v6capable": 0.09290609171429345,
-                "v6preferred": 0.037379127278637014
+                "percent": 5.836588326264151,
+                "samples": 375748,
+                "v6capable": 0.09314753505008676,
+                "v6preferred": 0.036992878205605886
             }
         ],
         "monitoring_dates": {
@@ -9532,7 +9634,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "COMCAST-7922",
                 "cc": "US",
-                "cumulative": 16.417932294602696,
+                "cumulative": 16.466521802541454,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9561,17 +9663,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "COMCAST-7922 - Comcast Cable Communications, LLC, US",
-                "percent": 16.417932294602696,
-                "samples": 9657354,
-                "v6capable": 79.05485291312714,
-                "v6preferred": 77.93426646677754
+                "percent": 16.466521802541454,
+                "samples": 9845228,
+                "v6capable": 79.07178990674467,
+                "v6preferred": 77.95785938121494
             },
             {
                 "as": 21928,
                 "as-descr": "",
                 "autnum": "T-MOBILE-AS21928",
                 "cc": "US",
-                "cumulative": 25.573853872022376,
+                "cumulative": 25.591289152451203,
                 "dependency": [
                     {
                         "asn": 6461,
@@ -9580,17 +9682,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "T-MOBILE-AS21928 - T-Mobile USA, Inc., US",
-                "percent": 9.155921577419681,
-                "samples": 5385695,
-                "v6capable": 97.0492573381894,
-                "v6preferred": 96.74134907379641
+                "percent": 9.12476734990975,
+                "samples": 5455640,
+                "v6capable": 97.04784406595743,
+                "v6preferred": 96.74195878027143
             },
             {
                 "as": 22394,
                 "as-descr": "",
                 "autnum": "CELLCO",
                 "cc": "US",
-                "cumulative": 34.21352291278429,
+                "cumulative": 34.204087483124084,
                 "dependency": [
                     {
                         "asn": 701,
@@ -9619,17 +9721,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "CELLCO - Cellco Partnership DBA Verizon Wireless, US",
-                "percent": 8.639669040761918,
-                "samples": 5082025,
-                "v6capable": 86.21399934081394,
-                "v6preferred": 85.67364387227532
+                "percent": 8.612798330672883,
+                "samples": 5149537,
+                "v6capable": 86.20287610323025,
+                "v6preferred": 85.66535205009693
             },
             {
                 "as": 20057,
                 "as-descr": "",
                 "autnum": "ATT-MOBILITY-LLC-AS20057",
                 "cc": "US",
-                "cumulative": 42.187678903128514,
+                "cumulative": 42.15070875486876,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -9663,17 +9765,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ATT-MOBILITY-LLC-AS20057 - AT&T Mobility LLC, US",
-                "percent": 7.974155990344223,
-                "samples": 4690557,
-                "v6capable": 81.73402433868728,
-                "v6preferred": 80.7280883698887
+                "percent": 7.946621271744672,
+                "samples": 4751234,
+                "v6capable": 81.71624466401781,
+                "v6preferred": 80.70886426557816
             },
             {
                 "as": 7018,
                 "as-descr": "",
                 "autnum": "ATT-INTERNET4",
                 "cc": "US",
-                "cumulative": 49.78654325295063,
+                "cumulative": 49.761139774702386,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9707,10 +9809,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "ATT-INTERNET4 - AT&T Services, Inc., US",
-                "percent": 7.598864349822117,
-                "samples": 4469803,
-                "v6capable": 68.56812257721425,
-                "v6preferred": 67.33686025983695
+                "percent": 7.610431019833629,
+                "samples": 4550228,
+                "v6capable": 68.53935670915831,
+                "v6preferred": 67.3079019337053
             }
         ],
         "monitoring_dates": {
@@ -9737,7 +9839,7 @@ const lockdowns = {
                 "as-descr": "Servicios, Venezuela",
                 "autnum": "CANTV",
                 "cc": "VE",
-                "cumulative": 51.796584854677654,
+                "cumulative": 51.87558469006523,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -9786,17 +9888,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "CANTV Servicios, Venezuela, VE",
-                "percent": 51.796584854677654,
-                "samples": 1290082,
-                "v6capable": 0.0037206937233447176,
-                "v6preferred": 0.003023063650217583
+                "percent": 51.87558469006523,
+                "samples": 1309222,
+                "v6capable": 0.0036662995275056486,
+                "v6preferred": 0.002978868366098339
             },
             {
                 "as": 6306,
                 "as-descr": "VENEZOLANA, C.A.",
                 "autnum": "TELEFONICA",
                 "cc": "VE",
-                "cumulative": 72.6157218740339,
+                "cumulative": 72.63894177487437,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -9840,17 +9942,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELEFONICA VENEZOLANA, C.A., VE",
-                "percent": 20.819137019356237,
-                "samples": 518536,
-                "v6capable": 0.0017356557693197772,
-                "v6preferred": 0.0015428051282842465
+                "percent": 20.763357084809133,
+                "samples": 524020,
+                "v6capable": 0.0019083241097668027,
+                "v6preferred": 0.0017174916987901226
             },
             {
                 "as": 264731,
                 "as-descr": "Digitel C.A.",
                 "autnum": "Corporacion",
                 "cc": "VE",
-                "cumulative": 84.94116041065256,
+                "cumulative": 84.94250473398361,
                 "dependency": [
                     {
                         "asn": 27717,
@@ -9874,17 +9976,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "Corporacion Digitel C.A., VE",
-                "percent": 12.32543853661866,
-                "samples": 306986,
-                "v6capable": 0.019219117484184946,
-                "v6preferred": 0.019219117484184946
+                "percent": 12.303562959109238,
+                "samples": 310514,
+                "v6capable": 0.019000753589210148,
+                "v6preferred": 0.019000753589210148
             },
             {
                 "as": 21826,
                 "as-descr": "Telemic C.A.",
                 "autnum": "Corporacion",
                 "cc": "VE",
-                "cumulative": 90.07941638193739,
+                "cumulative": 90.09047168663744,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -9913,10 +10015,10 @@ const lockdowns = {
                     }
                 ],
                 "name": "Corporacin Telemic C.A., VE",
-                "percent": 5.138255971284835,
-                "samples": 127977,
-                "v6capable": 0.005469732842620158,
-                "v6preferred": 0.005469732842620158
+                "percent": 5.1479669526538245,
+                "samples": 129923,
+                "v6capable": 0.005387806623923401,
+                "v6preferred": 0.005387806623923401
             }
         ],
         "monitoring_dates": {
@@ -9943,7 +10045,7 @@ const lockdowns = {
                 "as-descr": "",
                 "autnum": "ZOL-AS",
                 "cc": "ZW",
-                "cumulative": 32.710371640798094,
+                "cumulative": 32.70238245607704,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -9962,17 +10064,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ZOL-AS Zimbabwe Online (Private) Ltd., GB",
-                "percent": 32.710371640798094,
-                "samples": 53593,
-                "v6capable": 31.927677122012202,
-                "v6preferred": 27.84692030675648
+                "percent": 32.70238245607704,
+                "samples": 54370,
+                "v6capable": 32.196064005885596,
+                "v6preferred": 28.07798418245356
             },
             {
                 "as": 37204,
                 "as-descr": "",
                 "autnum": "TELONE",
                 "cc": "ZW",
-                "cumulative": 64.17319230229307,
+                "cumulative": 64.30586381325298,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -10001,17 +10103,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "TELONE, ZW",
-                "percent": 31.462820661494987,
-                "samples": 51549,
-                "v6capable": 0.005819705522900541,
-                "v6preferred": 0.0038798036819336942
+                "percent": 31.603481357175937,
+                "samples": 52543,
+                "v6capable": 0.0057096092724054585,
+                "v6preferred": 0.003806406181603639
             },
             {
                 "as": 56696,
                 "as-descr": "",
                 "autnum": "ASLIQUID-MPLS",
                 "cc": "ZW",
-                "cumulative": 77.89930481381339,
+                "cumulative": 77.96784496291886,
                 "dependency": [
                     {
                         "asn": 30844,
@@ -10025,17 +10127,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "ASLIQUID-MPLS Liquid Telecommunications Ltd, GB",
-                "percent": 13.726112511520315,
-                "samples": 22489,
-                "v6capable": 0.013339855040241896,
-                "v6preferred": 0.013339855040241896
+                "percent": 13.661981149665879,
+                "samples": 22714,
+                "v6capable": 0.013207713304569869,
+                "v6preferred": 0.013207713304569869
             },
             {
                 "as": 328088,
                 "as-descr": "",
                 "autnum": "NetOne-Cellular-AS",
                 "cc": "ZW",
-                "cumulative": 85.41268669014471,
+                "cumulative": 85.52903035661657,
                 "dependency": [
                     {
                         "asn": 37204,
@@ -10069,17 +10171,17 @@ const lockdowns = {
                     }
                 ],
                 "name": "NetOne-Cellular-AS, ZW",
-                "percent": 7.513381876331321,
-                "samples": 12310,
-                "v6capable": 0.016246953696181964,
-                "v6preferred": 0.008123476848090982
+                "percent": 7.561185393697709,
+                "samples": 12571,
+                "v6capable": 0.015909633282952827,
+                "v6preferred": 0.007954816641476414
             },
             {
                 "as": 30844,
                 "as-descr": "",
                 "autnum": "LIQUID-AS",
                 "cc": "ZW",
-                "cumulative": 91.88603585183196,
+                "cumulative": 91.94199341982595,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -10098,8 +10200,8 @@ const lockdowns = {
                     }
                 ],
                 "name": "LIQUID-AS Liquid Telecommunications Ltd, GB",
-                "percent": 6.473349161687246,
-                "samples": 10606,
+                "percent": 6.412963063209369,
+                "samples": 10662,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
