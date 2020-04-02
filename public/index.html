@@ -6,15 +6,76 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>favicon-16x16.png">
-  <title>web-charts</title>
+  <title>Internet Health Report</title>
 </head>
 
-<body>
+<body bgcolor="#FFFFFF">
   <noscript>
     <strong>We're sorry but Internet Health Report doesn't work properly without JavaScript enabled. Please enable it to
       continue.</strong>
   </noscript>
-  <div id="app"></div>
+  <div id="app">
+      <div id="loading-wrapper">
+        <div id="loading-content">
+            <img class="blink-image" src="https://avatars1.githubusercontent.com/u/40665700?s=200&v=4">
+        </div>
+        <div id="loading-text">Loading...</div>
+      </div>
+  </div>
   <!-- built files will be auto injected -->
+  <style>
+  #loading-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    text-align: center;
+  }
+
+  #loading-text {
+    width: 150px;
+    height: 30px;
+    text-align: center;
+    font-size: 20px;
+    margin: 20px 0 0 -75px;
+  }
+
+  #loading-content {
+    text-align: center;
+    margin: -50px 0 0 -75px;
+  }
+
+/* Firefox old*/
+@-moz-keyframes blink {
+    0% { opacity:1; }
+    50% { opacity:0.1; }
+    100% { opacity:1; }
+} 
+
+@-webkit-keyframes blink {
+    0% { opacity:1; }
+    50% { opacity:0.1; }
+    100% { opacity:1; }
+}
+/* IE */
+@-ms-keyframes blink {
+    0% { opacity:1; }
+    50% { opacity:0.1; }
+    100% { opacity:1; }
+} 
+/* Opera and prob css3 final iteration */
+@keyframes blink {
+    0% { opacity:1; }
+    50% { opacity:0.1; }
+    100% { opacity:1; }
+} 
+.blink-image {
+    -moz-animation: blink normal 2s infinite ease-in-out; /* Firefox */
+    -webkit-animation: blink normal 2s infinite ease-in-out; /* Webkit */
+    -ms-animation: blink normal 2s infinite ease-in-out; /* IE */
+    animation: blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
+    width: 100px;
+    height: 100px;
+}
+    </style>
 </body>
 </html>
