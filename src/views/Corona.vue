@@ -169,7 +169,11 @@ export default {
         this.countriesInfo[this.selected['value']].eyeball.forEach( eyeball => {
             let dests = ["AS415169"]
             eyeball.dependency.forEach( dep => { if(dep.hege>0.1)dests.push("AS4"+dep.asn);})
-            if(this.countriesInfo[this.selected['value']].continent=='Europe'){ 
+            if(this.selected['value'] == 'Ireland'){ 
+
+                dests.push("IX4382")
+            }
+            else if(this.countriesInfo[this.selected['value']].continent=='Europe'){ 
                 // Display delay to AMSIX and DECIX for european countries
                 dests = dests.concat(["IX423", "IX4208"])
 

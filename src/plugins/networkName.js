@@ -6,6 +6,8 @@ export default function networkName(shortname) {
             return "DE-CIX (Frankfurt)"
         case "IX438":
             return "LINX (London)"
+        case "IX382":
+            return "INEX (Dublin)"
         case "AS15169":
             return `Google (${shortname})`
         case "AS21556":
