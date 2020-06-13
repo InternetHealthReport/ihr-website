@@ -349,6 +349,7 @@ export default {
     fetchHegemony(data) {
       console.log("fetchHegemony");
       let traces = {};
+      let timeResolution = 900*1000;
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return;
 
@@ -375,6 +376,13 @@ export default {
           this.traces.push(trace);
         }
 
+        // Add null if there is missing data
+        let prevDate = Date.parse(trace.x.slice(-1)[0]);
+        let currDate = Date.parse(elem.timebin);
+        if( currDate > prevDate + timeResolution + 1){ 
+            trace.y.push(null);
+            trace.x.push(elem.timbin)
+        } 
         trace.y.push(elem.hege);
         trace.x.push(elem.timebin);
       });

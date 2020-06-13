@@ -254,6 +254,7 @@ export default {
     fetchNetworkDelay(data) {
       let traces = {};
       let maxValue = 0;
+      let timeResolution = 1800*1000;
       data.forEach(elem => {
         let key = elem.startpoint_type;
         key += elem.startpoint_af;
@@ -296,6 +297,15 @@ export default {
         }
 
         maxValue = maxValue>elem.median? maxValue : elem.median;
+
+        // Add null if there is missing data
+        let prevDate = Date.parse(trace.x.slice(-1)[0]);
+        let currDate = Date.parse(elem.timebin);
+        if( currDate > prevDate + timeResolution + 1){ 
+            trace.y.push(null);
+            trace.x.push(elem.timbin)
+        } 
+
         trace.y.push(elem.median);
         trace.x.push(elem.timebin);
       });
