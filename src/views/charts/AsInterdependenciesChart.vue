@@ -108,6 +108,7 @@ import { extend } from "quasar";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
+import "datejs";
 
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
 
@@ -227,9 +228,9 @@ export default {
     showTable(table, selectedDate) {
       if (selectedDate.length < 14) {
         // at midnight no time is given
-        this.details.date = new Date(selectedDate + " 00:00+00:00"); //adding timezone to string...
+        this.details.date = Date.parse(selectedDate + " 00:00 GMT"); //adding timezone to string...
       } else {
-        this.details.date = new Date(selectedDate + "+00:00"); //adding timezone to string...
+        this.details.date = Date.parse(selectedDate + " GMT"); //adding timezone to string...
       }
 
       let intervalEnd = this.details.date;

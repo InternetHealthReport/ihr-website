@@ -134,6 +134,7 @@ import CommonChartMixin from "./CommonChartMixin";
 import DelayAlarmsTable from "./tables/DelayAlarmsTable";
 import ForwardingAlarmsTable from "./tables/ForwardingAlarmsTable";
 import { DELAY_AND_FORWARDING_LAYOUT } from "./layouts";
+import "datejs";
 
 import {
   ForwardingQuery,
@@ -212,7 +213,7 @@ export default {
       this.queryDelayAPI();
     },
     showTable(clickData) {
-      let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
+      let chosenTime = Date.parse(clickData.points[0].x + " GMT"); //adding timezone to string...
 
       if (clickData.points[0].data.yaxis == "y2") {
         this.details.activeTab = "forwarding";

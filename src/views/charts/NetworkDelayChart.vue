@@ -222,7 +222,7 @@ export default {
     },
     showTable(clickData) {
       if (this.noTable) return;
-      let chosenTime = new Date(clickData.points[0].x + "+00:00"); //adding timezone to string...
+      let chosenTime = Date.parse(clickData.points[0].x + " GMT"); //adding timezone to string...
       this.details.activeTab = "delay";
       this.details.filter = this.apiFilter.clone();
 

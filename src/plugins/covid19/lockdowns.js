@@ -1,15 +1,309 @@
-const lockdowns ={
+const lockdowns = {
+    "Albania": {
+        "cc": "AL",
+        "continent": "Europe",
+        "end": "2020-03-13",
+        "eyeball": [
+            {
+                "as": 42313,
+                "as-descr": "",
+                "autnum": "ALBTELECOM-AS",
+                "cc": "AL",
+                "cumulative": 20.5871094505584,
+                "dependency": [
+                    {
+                        "asn": 12713,
+                        "hege": 0.255510724145254,
+                        "name": "OTEGlobe OTEGlobe - OTE Global Solutions SA, GR"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.161339987258441,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6663,
+                        "hege": 0.233552771289021,
+                        "name": "TTI-NET Euroweb Romania S.A., RO"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.27951794436186,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    }
+                ],
+                "name": "ALBTELECOM-AS Albtelecom Sh.a., AL",
+                "percent": 20.5871094505584,
+                "samples": 202221,
+                "v6capable": 0.003461559383051216,
+                "v6preferred": 0.003461559383051216
+            },
+            {
+                "as": 21246,
+                "as-descr": "",
+                "autnum": "IPKO-AS",
+                "cc": "AL",
+                "cumulative": 33.47307766703656,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.0530185758513932,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 5603,
+                        "hege": 1.0,
+                        "name": "SIOL-NET Telekom Slovenije d.d., SI"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0667763157894737,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.750793343653251,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "IPKO-AS IPKO Telecommunications LLC, AL",
+                "percent": 12.885968216478158,
+                "samples": 126575,
+                "v6capable": 0.005530317993284614,
+                "v6preferred": 0.005530317993284614
+            },
+            {
+                "as": 29170,
+                "as-descr": "",
+                "autnum": "KUJTESA-AS",
+                "cc": "AL",
+                "cumulative": 45.1292414509249,
+                "dependency": [
+                    {
+                        "asn": 5603,
+                        "hege": 0.0743034055727554,
+                        "name": "SIOL-NET Telekom Slovenije d.d., SI"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.913828689370485,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0113519091847265,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0550051599587203,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 34772,
+                        "hege": 0.087719298245614,
+                        "name": "NEOTEL-AS-MK NEOTEL DOO export-import Skopje, MK"
+                    }
+                ],
+                "name": "KUJTESA-AS Kujtesa Net Sh.p.k., RS",
+                "percent": 11.65616378388834,
+                "samples": 114495,
+                "v6capable": 0.005240403511070352,
+                "v6preferred": 0.005240403511070352
+            },
+            {
+                "as": 21183,
+                "as-descr": "Tirana, Albania",
+                "autnum": "ABCOM-AS",
+                "cc": "AL",
+                "cumulative": 56.467773626396,
+                "dependency": [
+                    {
+                        "asn": 12713,
+                        "hege": 0.333652081522264,
+                        "name": "OTEGlobe OTEGlobe - OTE Global Solutions SA, GR"
+                    },
+                    {
+                        "asn": 50973,
+                        "hege": 0.297855694001739,
+                        "name": "VODAFONE-AL-ASN Vodafone Albania Sh.A., AL"
+                    },
+                    {
+                        "asn": 5391,
+                        "hege": 0.0355645706558485,
+                        "name": "T-HT Hrvatski Telekom d.d., HR"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0121027721433401,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0935574229691877,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 8585,
+                        "hege": 0.0355645706558485,
+                        "name": "INTERNET-CG Crnogorski Telekom a.d.Podgorica, ME"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0112431179368299,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 42313,
+                        "hege": 0.421414082874529,
+                        "name": "ALBTELECOM-AS Albtelecom Sh.a., AL"
+                    },
+                    {
+                        "asn": 1273,
+                        "hege": 0.298396600019318,
+                        "name": "CW Vodafone Group PLC, GB"
+                    }
+                ],
+                "name": "ABCOM-AS ABCOM Shpk, AL",
+                "percent": 11.338532175471103,
+                "samples": 111375,
+                "v6capable": 0.0017957351290684624,
+                "v6preferred": 0.0017957351290684624
+            },
+            {
+                "as": 206262,
+                "as-descr": "",
+                "autnum": "TELKOS",
+                "cc": "AL",
+                "cumulative": 63.004265629613045,
+                "dependency": [
+                    {
+                        "asn": 202441,
+                        "hege": 0.183933873241079,
+                        "name": "MTSDOO-AS mts D.O.O, RS"
+                    },
+                    {
+                        "asn": 3257,
+                        "hege": 0.0126750700280112,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0132586367880486,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 42313,
+                        "hege": 0.180826533511955,
+                        "name": "ALBTELECOM-AS Albtelecom Sh.a., AL"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.371754436576913,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.195867410509354,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 34772,
+                        "hege": 0.281927952340357,
+                        "name": "NEOTEL-AS-MK NEOTEL DOO export-import Skopje, MK"
+                    },
+                    {
+                        "asn": 8400,
+                        "hege": 0.183933873241079,
+                        "name": "TELEKOM-AS TELEKOM SRBIJA a.d., RS"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.132752512769814,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0239262371615313,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Telkos TelKos L.L.C, AL",
+                "percent": 6.536492003217038,
+                "samples": 64206,
+                "v6capable": 0.0062299473569448335,
+                "v6preferred": 0.0062299473569448335
+            },
+            {
+                "as": 50973,
+                "as-descr": "",
+                "autnum": "VODAFONE-AL-ASN",
+                "cc": "AL",
+                "cumulative": 68.9807283129893,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0196078431372549,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0182072829131653,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0274509803921569,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0661064425770308,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 1273,
+                        "hege": 1.0,
+                        "name": "CW Vodafone Group PLC, GB"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0235294117647059,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VODAFONE-AL-ASN Vodafone Albania Sh.A., AL",
+                "percent": 5.976462683376261,
+                "samples": 58705,
+                "v6capable": 0.003406864832637765,
+                "v6preferred": 0.003406864832637765
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-10",
+                "sunday": "2020-02-16"
+            },
+            "lockdown": {
+                "monday": "2020-03-09",
+                "sunday": "2020-03-15"
+            }
+        },
+        "name": "Albania",
+        "scope": "National",
+        "start": "\t2020-03-13"
+    },
     "Argentina": {
         "cc": "AR",
         "continent": "America",
-        "end": "2020-04-12",
+        "end": "2020-04-26",
         "eyeball": [
             {
                 "as": 7303,
                 "as-descr": "Argentina S.A.",
                 "autnum": "Telecom",
                 "cc": "AR",
-                "cumulative": 19.450211691458012,
+                "cumulative": 18.82607119834568,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -33,17 +327,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telecom Argentina S.A., AR",
-                "percent": 19.450211691458012,
-                "samples": 2205166,
-                "v6capable": 0.010339357671939437,
-                "v6preferred": 0.008207998853601043
+                "percent": 18.82607119834568,
+                "samples": 2388333,
+                "v6capable": 0.013230985796369266,
+                "v6preferred": 0.01042568184587325
             },
             {
                 "as": 27747,
                 "as-descr": "S.A.",
                 "autnum": "Telecentro",
                 "cc": "AR",
-                "cumulative": 29.768517567070173,
+                "cumulative": 29.64822857023944,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -82,66 +376,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telecentro S.A., AR",
-                "percent": 10.318305875612161,
-                "samples": 1169837,
-                "v6capable": 74.64766458916927,
-                "v6preferred": 74.36574497130796
-            },
-            {
-                "as": 22927,
-                "as-descr": "de Argentina",
-                "autnum": "Telefonica",
-                "cc": "AR",
-                "cumulative": 39.89208017893906,
-                "dependency": [
-                    {
-                        "asn": 3257,
-                        "hege": 0.0176338297891765,
-                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.023073747191665,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0109005276816032,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.014929483088468,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.054920321486255,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 1.0,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0512671696653124,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Telefonica de Argentina, AR",
-                "percent": 10.123562611868888,
-                "samples": 1147758,
-                "v6capable": 2.7053612346853604,
-                "v6preferred": 1.4467335448761847
+                "percent": 10.822157371893757,
+                "samples": 1372932,
+                "v6capable": 76.53270518860366,
+                "v6preferred": 76.17689732630603
             },
             {
                 "as": 10481,
                 "as-descr": "Argentina S.A.",
                 "autnum": "Telecom",
                 "cc": "AR",
-                "cumulative": 50.01049173930987,
+                "cumulative": 40.065673963721196,
                 "dependency": [
                     {
                         "asn": 262589,
@@ -180,56 +425,66 @@ const lockdowns ={
                     }
                 ],
                 "name": "Prima S.A., AR",
-                "percent": 10.11841156037081,
-                "samples": 1147174,
-                "v6capable": 1.9552395713291968,
-                "v6preferred": 1.945302107614015
+                "percent": 10.417445393481758,
+                "samples": 1321589,
+                "v6capable": 1.8937808955734348,
+                "v6preferred": 1.8814472578085926
             },
             {
-                "as": 11664,
-                "as-descr": "LMDS Comunicaciones Interactivas S.A.",
-                "autnum": "Techtel",
+                "as": 22927,
+                "as-descr": "de Argentina",
+                "autnum": "Telefonica",
                 "cc": "AR",
-                "cumulative": 59.10784846488522,
+                "cumulative": 50.288050753308326,
                 "dependency": [
                     {
                         "asn": 3257,
-                        "hege": 0.0434852464764007,
+                        "hege": 0.0176338297891765,
                         "name": "GTT-BACKBONE GTT Communications Inc., DE"
                     },
                     {
                         "asn": 2914,
-                        "hege": 0.364733337243286,
+                        "hege": 0.023073747191665,
                         "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
                     },
                     {
-                        "asn": 6762,
-                        "hege": 0.13024680134774,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                        "asn": 6939,
+                        "hege": 0.0109005276816032,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
                     },
                     {
-                        "asn": 19037,
-                        "hege": 1.0,
-                        "name": "AMX Argentina S.A., AR"
+                        "asn": 174,
+                        "hege": 0.014929483088468,
+                        "name": "COGENT-174 - Cogent Communications, US"
                     },
                     {
                         "asn": 1299,
-                        "hege": 0.285568627489718,
+                        "hege": 0.054920321486255,
                         "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 1.0,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0512671696653124,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
                     }
                 ],
-                "name": "Techtel LMDS Comunicaciones Interactivas S.A., AR",
-                "percent": 9.09735672557535,
-                "samples": 1031412,
-                "v6capable": 0.4147712068504148,
-                "v6preferred": 0.4096326201362792
+                "name": "Telefonica de Argentina, AR",
+                "percent": 10.222376789587134,
+                "samples": 1296842,
+                "v6capable": 2.5480359211068118,
+                "v6preferred": 1.2900569228942307
             },
             {
                 "as": 10318,
                 "as-descr": "Argentina S.A.",
                 "autnum": "Telecom",
                 "cc": "AR",
-                "cumulative": 68.09138812105783,
+                "cumulative": 59.90125888497408,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -263,10 +518,49 @@ const lockdowns ={
                     }
                 ],
                 "name": "CABLEVISION S.A., AR",
-                "percent": 8.983539656172605,
-                "samples": 1018508,
-                "v6capable": 1.9840786719397394,
-                "v6preferred": 1.9758313140397523
+                "percent": 9.61320813166575,
+                "samples": 1219561,
+                "v6capable": 2.04499815917367,
+                "v6preferred": 2.03327262842941
+            },
+            {
+                "as": 11664,
+                "as-descr": "LMDS Comunicaciones Interactivas S.A.",
+                "autnum": "Techtel",
+                "cc": "AR",
+                "cumulative": 68.58052296704808,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0434852464764007,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.364733337243286,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.13024680134774,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 19037,
+                        "hege": 1.0,
+                        "name": "AMX Argentina S.A., AR"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.285568627489718,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "Techtel LMDS Comunicaciones Interactivas S.A., AR",
+                "percent": 8.67926408207401,
+                "samples": 1101078,
+                "v6capable": 1.03398669304082,
+                "v6preferred": 1.0233607428356575
             }
         ],
         "monitoring_dates": {
@@ -283,17 +577,173 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-19"
     },
+    "Armenia": {
+        "cc": "AM",
+        "continent": "Asia",
+        "end": "2020-04-14",
+        "eyeball": [
+            {
+                "as": 44395,
+                "as-descr": "",
+                "autnum": "ORG-UL31-RIPE",
+                "cc": "AM",
+                "cumulative": 34.49993589717079,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.0114942528735632,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.374462928280269,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 8932,
+                        "hege": 1.0,
+                        "name": "UCOMINT Ucom LLC, AM"
+                    }
+                ],
+                "name": "ORG-UL31-RIPE Ucom LLC, AM",
+                "percent": 34.49993589717079,
+                "samples": 166841,
+                "v6capable": 8.847945049478247,
+                "v6preferred": 8.791004609178799
+            },
+            {
+                "as": 12297,
+                "as-descr": "Republic of Armenia",
+                "autnum": "ARMENTEL",
+                "cc": "AM",
+                "cumulative": 53.9733414943817,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.28385889292196,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 3216,
+                        "hege": 0.71614110707804,
+                        "name": "SOVAM-AS PJSC \"Vimpelcom\", RU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0301156987295826,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ARMENTEL VEON Armenia CJSC, AM",
+                "percent": 19.473405597210906,
+                "samples": 94173,
+                "v6capable": 0.011680630329287588,
+                "v6preferred": 0.011680630329287588
+            },
+            {
+                "as": 49800,
+                "as-descr": "GNC Alfa CJSC (Rostelecom Armenia)",
+                "autnum": "GNC-ALFA",
+                "cc": "AM",
+                "cumulative": 68.08733700304799,
+                "dependency": [
+                    {
+                        "asn": 196709,
+                        "hege": 0.0226024488337524,
+                        "name": "GNC-ALFA GNC-Alfa CJSC, AM"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.0131529630503283,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 12389,
+                        "hege": 0.0200837958795278,
+                        "name": "ROSTELECOM-AS PJSC Rostelecom, RU"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0406916717080056,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6682,
+                        "hege": 0.976951896800448,
+                        "name": "GNC-ALFA GNC-Alfa CJSC, AM"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.404729364341981,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "GNC-ALFA GNC-Alfa CJSC, AM",
+                "percent": 14.113995508666289,
+                "samples": 68255,
+                "v6capable": 29.719434473664933,
+                "v6preferred": 29.443996776792908
+            },
+            {
+                "as": 43733,
+                "as-descr": "Karabakh Telecom 47975",
+                "autnum": "K-TELECOM",
+                "cc": "AM",
+                "cumulative": 76.77575176075997,
+                "dependency": [
+                    {
+                        "asn": 8359,
+                        "hege": 0.0144927536231884,
+                        "name": "MTS MTS PJSC, RU"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.31723721472597,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 3216,
+                        "hege": 0.666770781276029,
+                        "name": "SOVAM-AS PJSC \"Vimpelcom\", RU"
+                    },
+                    {
+                        "asn": 12297,
+                        "hege": 0.984091287689489,
+                        "name": "ARMENTEL VEON Armenia CJSC, AM"
+                    }
+                ],
+                "name": "K-Telecom MTS Armenia CJSC, AM",
+                "percent": 8.688414757711984,
+                "samples": 42017,
+                "v6capable": 0.03331984672870505,
+                "v6preferred": 0.014279934312302163
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-24",
+                "sunday": "2020-03-01"
+            },
+            "lockdown": {
+                "monday": "2020-03-23",
+                "sunday": "2020-03-29"
+            }
+        },
+        "name": "Armenia",
+        "scope": "National",
+        "start": "\t2020-03-24"
+    },
     "Australia": {
         "cc": "AU",
         "continent": "Oceania",
-        "end": "2020-04-24",
+        "end": "2020-03-23",
         "eyeball": [
             {
                 "as": 1221,
                 "as-descr": "Telstra Corporation Ltd",
                 "autnum": "ASN-TELSTRA",
                 "cc": "AU",
-                "cumulative": 40.39200562600667,
+                "cumulative": 39.72268489042213,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -322,17 +772,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASN-TELSTRA Telstra Pty Ltd, AU",
-                "percent": 40.39200562600667,
-                "samples": 801234,
-                "v6capable": 57.44950913216364,
-                "v6preferred": 56.39263935379677
+                "percent": 39.72268489042213,
+                "samples": 870958,
+                "v6capable": 58.16124313686768,
+                "v6preferred": 57.0607308274337
             },
             {
                 "as": 4804,
                 "as-descr": "Microplex PTY LTD",
                 "autnum": "MPX-AS",
                 "cc": "AU",
-                "cumulative": 59.138807599141984,
+                "cumulative": 58.359360319913016,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -361,17 +811,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "MPX-AS Microplex PTY LTD, AU",
-                "percent": 18.746801973135312,
-                "samples": 371870,
-                "v6capable": 0.07260601823217791,
-                "v6preferred": 0.06400086051577164
+                "percent": 18.636675429490886,
+                "samples": 408627,
+                "v6capable": 0.08247130023224114,
+                "v6preferred": 0.07366130970298096
             },
             {
                 "as": 7545,
                 "as-descr": "TPG Telecom Limited",
                 "autnum": "TPG-INTERNET-AP",
                 "cc": "AU",
-                "cumulative": 73.39236607356659,
+                "cumulative": 73.31400768769075,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -395,17 +845,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TPG-INTERNET-AP TPG Telecom Limited, AU",
-                "percent": 14.253558474424608,
-                "samples": 282740,
-                "v6capable": 3.5700643700926644,
-                "v6preferred": 3.36139209167433
+                "percent": 14.954647367777739,
+                "samples": 327895,
+                "v6capable": 3.461168971774501,
+                "v6preferred": 3.2733039540096676
             },
             {
                 "as": 133612,
                 "as-descr": "Vodafone Australia Pty Ltd",
                 "autnum": "VODAFONE-AS-AP",
                 "cc": "AU",
-                "cumulative": 78.74569290372017,
+                "cumulative": 78.54392692497842,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -449,10 +899,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "VODAFONE-AS-AP Vodafone Australia Pty Ltd, AU",
-                "percent": 5.353326830153581,
-                "samples": 106191,
-                "v6capable": 15.600192106675706,
-                "v6preferred": 15.05212306127638
+                "percent": 5.229919237287672,
+                "samples": 114671,
+                "v6capable": 17.891184344777667,
+                "v6preferred": 17.348762982794256
             }
         ],
         "monitoring_dates": {
@@ -479,7 +929,7 @@ const lockdowns ={
                 "as-descr": "==) TELE2 AUSTRIA (==",
                 "autnum": "H3G-AUSTRIA-AS",
                 "cc": "AT",
-                "cumulative": 19.060836857295808,
+                "cumulative": 18.738618704574947,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -503,17 +953,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "H3G-Austria-AS Hutchison Drei Austria GmbH, AT",
-                "percent": 19.060836857295808,
-                "samples": 134592,
-                "v6capable": 0.03640632429862102,
-                "v6preferred": 0.02451854493580599
+                "percent": 18.738618704574947,
+                "samples": 140359,
+                "v6capable": 0.04274752598693351,
+                "v6preferred": 0.029923268190853454
             },
             {
                 "as": 8447,
                 "as-descr": "A1 Telekom Austria AG",
                 "autnum": "TELEKOM-AT",
                 "cc": "AT",
-                "cumulative": 36.96209415423485,
+                "cumulative": 36.67273669089336,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -527,17 +977,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TELEKOM-AT A1 Telekom Austria AG, AT",
-                "percent": 17.90125729693904,
-                "samples": 126404,
-                "v6capable": 14.009841460713268,
-                "v6preferred": 12.741685389702857
+                "percent": 17.934117986318416,
+                "samples": 134333,
+                "v6capable": 16.520140248486967,
+                "v6preferred": 15.31418192104695
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "AT",
-                "cumulative": 52.0027814048077,
+                "cumulative": 52.13434334264308,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -551,17 +1001,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 15.04068725057285,
-                "samples": 106205,
-                "v6capable": 48.59281578080128,
-                "v6preferred": 48.091897744927266
+                "percent": 15.461606651749715,
+                "samples": 115813,
+                "v6capable": 49.17582654796957,
+                "v6preferred": 48.68624420401855
             },
             {
                 "as": 8412,
                 "as-descr": "Rennweg 97-99",
                 "autnum": "TMA",
                 "cc": "AT",
-                "cumulative": 65.02340968506681,
+                "cumulative": 65.13545410367459,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -580,17 +1030,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TMA T-Mobile Austria GmbH, AT",
-                "percent": 13.020628280259107,
-                "samples": 91941,
-                "v6capable": 1.497699611707508,
-                "v6preferred": 1.485735417278472
+                "percent": 13.001110761031512,
+                "samples": 97383,
+                "v6capable": 1.5259336845239928,
+                "v6preferred": 1.5053962190526067
             },
             {
                 "as": 12793,
                 "as-descr": "A1 Telekom Austria AG",
                 "autnum": "A1-TELEKOM-AT",
                 "cc": "AT",
-                "cumulative": 74.24212383765887,
+                "cumulative": 74.28815170432395,
                 "dependency": [
                     {
                         "asn": 8447,
@@ -604,17 +1054,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "A1-TELEKOM-AT A1 Telekom Austria AG, AT",
-                "percent": 9.21871415259206,
-                "samples": 65095,
-                "v6capable": 21.296566556571165,
-                "v6preferred": 19.148936170212767
+                "percent": 9.152697600649368,
+                "samples": 68557,
+                "v6capable": 23.949414355937396,
+                "v6preferred": 21.953994486339834
             },
             {
                 "as": 1901,
                 "as-descr": "A1 Telekom Austria AG",
                 "autnum": "EUNETAT-AS",
                 "cc": "AT",
-                "cumulative": 82.61154651205607,
+                "cumulative": 82.86744562344133,
                 "dependency": [
                     {
                         "asn": 8447,
@@ -628,10 +1078,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "EUNETAT-AS A1 Telekom Austria AG, AT",
-                "percent": 8.369422674397198,
-                "samples": 59098,
-                "v6capable": 4.705743003147314,
-                "v6preferred": 4.665132491793292
+                "percent": 8.579293919117372,
+                "samples": 64262,
+                "v6capable": 6.789393420684075,
+                "v6preferred": 6.728704366499642
             }
         ],
         "monitoring_dates": {
@@ -648,17 +1098,538 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-16"
     },
+    "Azerbaijan": {
+        "cc": "AZ",
+        "continent": "Asia",
+        "end": "2020-04-20",
+        "eyeball": [
+            {
+                "as": 34170,
+                "as-descr": "Azerbaijan Telecomunication ISP",
+                "autnum": "AS-AZTELEKOM",
+                "cc": "AZ",
+                "cumulative": 22.306249796756045,
+                "dependency": [
+                    {
+                        "asn": 29049,
+                        "hege": 1.0,
+                        "name": "Delta-Telecom-AS Delta Telecom Ltd, AZ"
+                    },
+                    {
+                        "asn": 57463,
+                        "hege": 0.0525949146638802,
+                        "name": "NetIX NetIX Communications Ltd., BG"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0474573319400906,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "AS-AZTELEKOM Aztelekom, AZ",
+                "percent": 22.306249796756045,
+                "samples": 493880,
+                "v6capable": 0.006479306714181583,
+                "v6preferred": 0.006276828379363408
+            },
+            {
+                "as": 28787,
+                "as-descr": "Bakinternet ISP, Azerbaijan",
+                "autnum": "BAKINTER-AS",
+                "cc": "AZ",
+                "cumulative": 44.27764388768649,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0164845560758715,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 20764,
+                        "hege": 0.0454093940683979,
+                        "name": "RASCOM-AS CJSC RASCOM, RU"
+                    },
+                    {
+                        "asn": 12389,
+                        "hege": 0.0120618702994182,
+                        "name": "ROSTELECOM-AS PJSC Rostelecom, RU"
+                    },
+                    {
+                        "asn": 29049,
+                        "hege": 1.0,
+                        "name": "Delta-Telecom-AS Delta Telecom Ltd, AZ"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0423821011305047,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.15668606026205,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "BAKINTER-AS Baktelekom, AZ",
+                "percent": 21.971394090930442,
+                "samples": 486466,
+                "v6capable": 0.0037001558176727664,
+                "v6preferred": 0.003494591605579835
+            },
+            {
+                "as": 57293,
+                "as-descr": "",
+                "autnum": "AG-TELECOM-KATV1",
+                "cc": "AZ",
+                "cumulative": 52.37542500569083,
+                "dependency": [
+                    {
+                        "asn": 20764,
+                        "hege": 0.0180792486639563,
+                        "name": "RASCOM-AS CJSC RASCOM, RU"
+                    },
+                    {
+                        "asn": 29049,
+                        "hege": 1.0,
+                        "name": "Delta-Telecom-AS Delta Telecom Ltd, AZ"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0110161135648392,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0333391862627245,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.060936198567383,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ag-telecom-katv1 AG Telecom LTD., AZ",
+                "percent": 8.097781118004344,
+                "samples": 179292,
+                "v6capable": 0.002788746848716061,
+                "v6preferred": 0.002788746848716061
+            },
+            {
+                "as": 31721,
+                "as-descr": "",
+                "autnum": "AZERCELL-AS",
+                "cc": "AZ",
+                "cumulative": 59.855389668342,
+                "dependency": [
+                    {
+                        "asn": 12389,
+                        "hege": 0.110811781609195,
+                        "name": "ROSTELECOM-AS PJSC Rostelecom, RU"
+                    },
+                    {
+                        "asn": 29049,
+                        "hege": 1.0,
+                        "name": "Delta-Telecom-AS Delta Telecom Ltd, AZ"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0835551893171061,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0475933908045977,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.125496534820825,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.13110632183908,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "AZERCELL-AS \"Azercell Telecom Ltd\" Azerbaijan-Turkey Joint Venture, AZ",
+                "percent": 7.479964662651168,
+                "samples": 165613,
+                "v6capable": 0.0024152693327214652,
+                "v6preferred": 0.0024152693327214652
+            },
+            {
+                "as": 197830,
+                "as-descr": "",
+                "autnum": "BAKCELL-AS",
+                "cc": "AZ",
+                "cumulative": 66.78185329580396,
+                "dependency": [
+                    {
+                        "asn": 20771,
+                        "hege": 0.0203065134099617,
+                        "name": "CAUCASUS-CABLE-SYSTEM Caucasus Online Ltd., GE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0162835249042146,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 3216,
+                        "hege": 0.766091954022989,
+                        "name": "SOVAM-AS PJSC \"Vimpelcom\", RU"
+                    },
+                    {
+                        "asn": 196925,
+                        "hege": 1.0,
+                        "name": "AZRT-AS AZERTELECOM, AZ"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.133333333333333,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "BAKCELL-AS BAKCELL LLC, AZ",
+                "percent": 6.9264636274619615,
+                "samples": 153358,
+                "v6capable": 0.00326034507492273,
+                "v6preferred": 0.00326034507492273
+            },
+            {
+                "as": 42779,
+                "as-descr": "",
+                "autnum": "AZERFON",
+                "cc": "AZ",
+                "cumulative": 73.45661057735735,
+                "dependency": [
+                    {
+                        "asn": 20771,
+                        "hege": 0.813218390804598,
+                        "name": "CAUCASUS-CABLE-SYSTEM Caucasus Online Ltd., GE"
+                    },
+                    {
+                        "asn": 41313,
+                        "hege": 0.123563218390805,
+                        "name": "NOVATEL-AS \"NOVATEL\" EOOD, BG"
+                    },
+                    {
+                        "asn": 9002,
+                        "hege": 0.0114942528735632,
+                        "name": "RETN-AS RETN Limited, UA"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0977011494252874,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 196925,
+                        "hege": 1.0,
+                        "name": "AZRT-AS AZERTELECOM, AZ"
+                    },
+                    {
+                        "asn": 47872,
+                        "hege": 0.0431034482758621,
+                        "name": "SOFIA-CONNECT-AS Sofia Connect EAD, BG"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.431034482758621,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "AZERFON Azerfon LLC, AZ",
+                "percent": 6.674757281553398,
+                "samples": 147785,
+                "v6capable": 0.003383293297695977,
+                "v6preferred": 0.003383293297695977
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-03-02",
+                "sunday": "2020-03-08"
+            },
+            "lockdown": {
+                "monday": "2020-03-30",
+                "sunday": "2020-04-05"
+            }
+        },
+        "name": "Azerbaijan",
+        "scope": "National",
+        "start": "\t2020-03-31"
+    },
+    "Bangladesh": {
+        "cc": "BD",
+        "continent": "Asia",
+        "end": "2020-04-25",
+        "eyeball": [
+            {
+                "as": 24389,
+                "as-descr": "GrameenPhone Ltd.",
+                "autnum": "GRAMEENPHONE-AS-AP",
+                "cc": "BD",
+                "cumulative": 22.884531933605626,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0385082080172035,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 9498,
+                        "hege": 0.444833454484879,
+                        "name": "BBIL-AP BHARTI Airtel Ltd., IN"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.0775376200788495,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 58717,
+                        "hege": 0.108695652173913,
+                        "name": "SUMMITCOMMUNICATIONS-BD Summit Communications Ltd, BD"
+                    },
+                    {
+                        "asn": 17494,
+                        "hege": 0.0498015512445797,
+                        "name": "BTTB-AS-AP Telecom Operator & Internet Service Provider as well, BD"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0352530805304418,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.146898268037698,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 17806,
+                        "hege": 0.0217391304347826,
+                        "name": "MANGOTELESERVICE-AS-BD Tire-1 IP Transit Provider of Bangladesh, BD"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0138878792926769,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 10075,
+                        "hege": 0.0108695652173913,
+                        "name": "MERIT-AS-8 - Merit Network Inc., US"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0170198991413384,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 58601,
+                        "hege": 0.655297351324338,
+                        "name": "AAMRA-ATL-BD Aamra technologies limited, BD"
+                    },
+                    {
+                        "asn": 58682,
+                        "hege": 0.184782608695652,
+                        "name": "LEVEL3-BD Level3 Carrier Ltd., BD"
+                    }
+                ],
+                "name": "GRAMEENPHONE-AS-AP GrameenPhone Ltd., BD",
+                "percent": 22.884531933605626,
+                "samples": 1522488,
+                "v6capable": 0.014187303939341395,
+                "v6preferred": 0.013727530200566442
+            },
+            {
+                "as": 24432,
+                "as-descr": "TM International Bangladesh Ltd.Internet service Provider,Gulshan-1,Dhaka-1212",
+                "autnum": "AXIATA-ROBI-AS-AP",
+                "cc": "BD",
+                "cumulative": 41.90876988771686,
+                "dependency": [
+                    {
+                        "asn": 45588,
+                        "hege": 0.0714285714285714,
+                        "name": "BTCL-ISP-AS Bangladesh Telecommunications Company Limited (BTCL), Nationwide, BD"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0721443307650204,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 9498,
+                        "hege": 0.170692812934192,
+                        "name": "BBIL-AP BHARTI Airtel Ltd., IN"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.069357013222712,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 17494,
+                        "hege": 0.54987684729064,
+                        "name": "BTTB-AS-AP Telecom Operator & Internet Service Provider as well, BD"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0167516492380376,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0833779851928672,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 17806,
+                        "hege": 0.154009304871374,
+                        "name": "MANGOTELESERVICE-AS-BD Tire-1 IP Transit Provider of Bangladesh, BD"
+                    },
+                    {
+                        "asn": 132602,
+                        "hege": 0.0397825354721907,
+                        "name": "BANGLADESH-AS-AP Bangladesh Submarine Cable Company Limited (BSCCL), BD"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0577449370552819,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 58717,
+                        "hege": 0.175437034230138,
+                        "name": "SUMMITCOMMUNICATIONS-BD Summit Communications Ltd, BD"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.14824302134647,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 7473,
+                        "hege": 0.0345774914740432,
+                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
+                    },
+                    {
+                        "asn": 10075,
+                        "hege": 0.107142857142857,
+                        "name": "MERIT-AS-8 - Merit Network Inc., US"
+                    },
+                    {
+                        "asn": 58601,
+                        "hege": 0.25,
+                        "name": "AAMRA-ATL-BD Aamra technologies limited, BD"
+                    },
+                    {
+                        "asn": 58682,
+                        "hege": 0.0989326765188834,
+                        "name": "LEVEL3-BD Level3 Carrier Ltd., BD"
+                    },
+                    {
+                        "asn": 6461,
+                        "hege": 0.0145730706075534,
+                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
+                    }
+                ],
+                "name": "AXIATA-ROBI-AS-AP TM International Bangladesh Ltd.Internet service Provider,Gulshan-1,Dhaka-1212, BD",
+                "percent": 19.02423795411123,
+                "samples": 1265666,
+                "v6capable": 0.013194634287402838,
+                "v6preferred": 0.012720575570490162
+            },
+            {
+                "as": 45245,
+                "as-descr": "banglalink an Orascom Telecom Company, providing GSM Telecom service in Bangladesh",
+                "autnum": "BANGLALINK-AS",
+                "cc": "BD",
+                "cumulative": 50.62627453568084,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0105363984674329,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 9498,
+                        "hege": 0.689258587080729,
+                        "name": "BBIL-AP BHARTI Airtel Ltd., IN"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0165053438193184,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0351364522417154,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 132884,
+                        "hege": 0.170175438596491,
+                        "name": "SUMMIT-BD Summit Communications Limited, BD"
+                    },
+                    {
+                        "asn": 58717,
+                        "hege": 0.35,
+                        "name": "SUMMITCOMMUNICATIONS-BD Summit Communications Ltd, BD"
+                    },
+                    {
+                        "asn": 10075,
+                        "hege": 0.25,
+                        "name": "MERIT-AS-8 - Merit Network Inc., US"
+                    },
+                    {
+                        "asn": 58601,
+                        "hege": 0.3,
+                        "name": "AAMRA-ATL-BD Aamra technologies limited, BD"
+                    },
+                    {
+                        "asn": 58682,
+                        "hege": 0.1,
+                        "name": "LEVEL3-BD Level3 Carrier Ltd., BD"
+                    }
+                ],
+                "name": "BANGLALINK-AS banglalink an Orascom Telecom Company, providing GSM Telecom service in Bangladesh, BD",
+                "percent": 8.717504647963983,
+                "samples": 579968,
+                "v6capable": 0.015862944162436547,
+                "v6preferred": 0.01413871110130214
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-24",
+                "sunday": "2020-03-01"
+            },
+            "lockdown": {
+                "monday": "2020-03-23",
+                "sunday": "2020-03-29"
+            }
+        },
+        "name": "Bangladesh",
+        "scope": "National",
+        "start": "\t2020-03-26"
+    },
     "Belgium": {
         "cc": "BE",
         "continent": "Europe",
-        "end": "2020-04-18",
+        "end": "2020-04-19",
         "eyeball": [
             {
                 "as": 5432,
                 "as-descr": "",
                 "autnum": "BELGACOM-SKYNET-AS",
                 "cc": "BE",
-                "cumulative": 43.116620436069994,
+                "cumulative": 44.11502530657467,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -687,17 +1658,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "BELGACOM-SKYNET-AS Proximus NV, BE",
-                "percent": 43.116620436069994,
-                "samples": 502228,
-                "v6capable": 56.57012352955231,
-                "v6preferred": 56.02813861433452
+                "percent": 44.11502530657467,
+                "samples": 613179,
+                "v6capable": 56.95987631670361,
+                "v6preferred": 56.34977714500986
             },
             {
                 "as": 6848,
                 "as-descr": "",
                 "autnum": "TELENET-AS",
                 "cc": "BE",
-                "cumulative": 75.07617102487696,
+                "cumulative": 74.67673413887499,
                 "dependency": [
                     {
                         "asn": 6830,
@@ -716,17 +1687,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TELENET-AS Telenet BVBA, BE",
-                "percent": 31.95955058880696,
-                "samples": 372269,
-                "v6capable": 80.3993886141473,
-                "v6preferred": 79.9126438140162
+                "percent": 30.561708832300326,
+                "samples": 424794,
+                "v6capable": 81.28222150030368,
+                "v6preferred": 80.72453942381483
             },
             {
                 "as": 12392,
                 "as-descr": "VOO",
                 "autnum": "ASBRUTELE",
                 "cc": "BE",
-                "cumulative": 85.2031184404707,
+                "cumulative": 85.38938310952511,
                 "dependency": [
                     {
                         "asn": 174,
@@ -740,17 +1711,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASBRUTELE Brutele SC, BE",
-                "percent": 10.126947415593747,
-                "samples": 117960,
-                "v6capable": 87.11258053577484,
-                "v6preferred": 86.6547982366904
+                "percent": 10.712648970650129,
+                "samples": 148901,
+                "v6capable": 87.15388076641527,
+                "v6preferred": 86.66227896387532
             },
             {
                 "as": 47377,
                 "as-descr": "KPN Belgium Business NV has been acquired by Mobistar",
                 "autnum": "ORANGE_BELGIUM_SA",
                 "cc": "BE",
-                "cumulative": 94.6525322090327,
+                "cumulative": 95.18790176660394,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -774,10 +1745,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "MES Orange Belgium SA, BE",
-                "percent": 9.449413768561993,
-                "samples": 110068,
-                "v6capable": 0.20805320347421594,
-                "v6preferred": 0.16171821056074426
+                "percent": 9.798518657078827,
+                "samples": 136195,
+                "v6capable": 0.229083299680605,
+                "v6preferred": 0.18209185359227578
             }
         ],
         "monitoring_dates": {
@@ -797,14 +1768,14 @@ const lockdowns ={
     "Bolivia": {
         "cc": "BO",
         "continent": "America",
-        "end": "2020-04-14",
+        "end": "2020-04-15",
         "eyeball": [
             {
                 "as": 27882,
                 "as-descr": "Celular de Bolivia S.A.",
                 "autnum": "Telefonica",
                 "cc": "BO",
-                "cumulative": 42.223383551673344,
+                "cumulative": 43.80236056302995,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -873,17 +1844,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telefnica Celular de Bolivia S.A., BO",
-                "percent": 42.223383551673344,
-                "samples": 512241,
-                "v6capable": 0.010151471670561317,
-                "v6preferred": 0.007223162534822476
+                "percent": 43.80236056302995,
+                "samples": 612827,
+                "v6capable": 0.011259295037588097,
+                "v6preferred": 0.008322087636478157
             },
             {
                 "as": 6568,
                 "as-descr": "S.A. - EntelNet",
                 "autnum": "Entel",
                 "cc": "BO",
-                "cumulative": 76.47714374501821,
+                "cumulative": 77.46865245773452,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -917,17 +1888,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Entel S.A. - EntelNet, BO",
-                "percent": 34.25376019334487,
-                "samples": 415556,
-                "v6capable": 24.74058851273956,
-                "v6preferred": 24.61786137127126
+                "percent": 33.666291894704564,
+                "samples": 471016,
+                "v6capable": 26.76320974234421,
+                "v6preferred": 26.62499787692987
             },
             {
                 "as": 27839,
                 "as-descr": "Ltda",
                 "autnum": "Comteco",
                 "cc": "BO",
-                "cumulative": 82.65806330362877,
+                "cumulative": 83.57662537980507,
                 "dependency": [
                     {
                         "asn": 27882,
@@ -991,17 +1962,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Comteco Ltda, BO",
-                "percent": 6.180919558610548,
-                "samples": 74985,
-                "v6capable": 48.29499233179969,
-                "v6preferred": 45.617123424684934
+                "percent": 6.107972922070543,
+                "samples": 85455,
+                "v6capable": 50.17026505178164,
+                "v6preferred": 46.031244514656834
             },
             {
                 "as": 25620,
                 "as-descr": "LTDA.",
                 "autnum": "COTAS",
                 "cc": "BO",
-                "cumulative": 87.9246832057199,
+                "cumulative": 88.74297481260807,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1030,10 +2001,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "COTAS LTDA., BO",
-                "percent": 5.266619902091135,
-                "samples": 63893,
-                "v6capable": 0.05947443381904121,
-                "v6preferred": 0.05947443381904121
+                "percent": 5.166349432803006,
+                "samples": 72281,
+                "v6capable": 0.05118910917115148,
+                "v6preferred": 0.05118910917115148
             }
         ],
         "monitoring_dates": {
@@ -1050,17 +2021,301 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-22"
     },
+    "Botswana": {
+        "cc": "BW",
+        "continent": "Africa",
+        "end": "2020-04-30",
+        "eyeball": [
+            {
+                "as": 14988,
+                "as-descr": "",
+                "autnum": "BTC-GATE1",
+                "cc": "BW",
+                "cumulative": 48.429926781478805,
+                "dependency": [
+                    {
+                        "asn": 6453,
+                        "hege": 0.0479596282311937,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.381711430769779,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0114725530060993,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 37662,
+                        "hege": 0.864765404313721,
+                        "name": "WIOCC-AS, MU"
+                    },
+                    {
+                        "asn": 37678,
+                        "hege": 1.0,
+                        "name": "BOFINET, BW"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0283183270403718,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "BTC-GATE1, BW",
+                "percent": 48.429926781478805,
+                "samples": 18785,
+                "v6capable": 0.005323396326856534,
+                "v6preferred": 0.005323396326856534
+            },
+            {
+                "as": 37014,
+                "as-descr": "",
+                "autnum": "Mascom-Wireless-Botswana",
+                "cc": "BW",
+                "cumulative": 62.22543054552954,
+                "dependency": [
+                    {
+                        "asn": 3491,
+                        "hege": 0.0660511363636364,
+                        "name": "BTN-ASN - PCCW Global, Inc., US"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0170454545454545,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 5713,
+                        "hege": 0.485179924242424,
+                        "name": "SAIX-NET, ZA"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.136363636363636,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.207386363636364,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 37662,
+                        "hege": 0.466524621212121,
+                        "name": "WIOCC-AS, MU"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.0299715909090909,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 37678,
+                        "hege": 0.410085227272727,
+                        "name": "BOFINET, BW"
+                    }
+                ],
+                "name": "Mascom-Wireless-Botswana, BW",
+                "percent": 13.795503764050737,
+                "samples": 5351,
+                "v6capable": 0.018688095683049896,
+                "v6preferred": 0.0
+            },
+            {
+                "as": 36963,
+                "as-descr": "",
+                "autnum": "OBO",
+                "cc": "BW",
+                "cumulative": 75.03609363720739,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0233828671328671,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.230769230769231,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.0182473776223776,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0228146853146853,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.407342657342657,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 5713,
+                        "hege": 0.11604020979021,
+                        "name": "SAIX-NET, ZA"
+                    },
+                    {
+                        "asn": 37662,
+                        "hege": 0.628933566433567,
+                        "name": "WIOCC-AS, MU"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0221809440559441,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 37678,
+                        "hege": 0.153846153846154,
+                        "name": "BOFINET, BW"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0241258741258741,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "OBO, BW",
+                "percent": 12.810663091677839,
+                "samples": 4969,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
+            },
+            {
+                "as": 37678,
+                "as-descr": "",
+                "autnum": "BOFINET",
+                "cc": "BW",
+                "cumulative": 81.50201093121584,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.427325581395349,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0845665961945032,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 5713,
+                        "hege": 0.116411205073996,
+                        "name": "SAIX-NET, ZA"
+                    },
+                    {
+                        "asn": 37662,
+                        "hege": 0.51757399577167,
+                        "name": "WIOCC-AS, MU"
+                    }
+                ],
+                "name": "BOFINET, BW",
+                "percent": 6.465917294008456,
+                "samples": 2508,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
+            },
+            {
+                "as": 327776,
+                "as-descr": "",
+                "autnum": "Stature-PTY-LTD",
+                "cc": "BW",
+                "cumulative": 87.83902237805506,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.554545454545455,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 5713,
+                        "hege": 0.0818181818181818,
+                        "name": "SAIX-NET, ZA"
+                    },
+                    {
+                        "asn": 37662,
+                        "hege": 0.775,
+                        "name": "WIOCC-AS, MU"
+                    },
+                    {
+                        "asn": 37678,
+                        "hege": 1.0,
+                        "name": "BOFINET, BW"
+                    }
+                ],
+                "name": "Stature-PTY-LTD, BW",
+                "percent": 6.337011446839228,
+                "samples": 2458,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-03-02",
+                "sunday": "2020-03-08"
+            },
+            "lockdown": {
+                "monday": "2020-03-30",
+                "sunday": "2020-04-05"
+            }
+        },
+        "name": "Botswana",
+        "scope": "National",
+        "start": "\t2020-04-02"
+    },
     "Chile": {
         "cc": "CL",
         "continent": "America",
-        "end": "2020-04-14",
+        "end": "2020-03-19",
         "eyeball": [
+            {
+                "as": 22047,
+                "as-descr": "BANDA ANCHA S.A.",
+                "autnum": "VTR",
+                "cc": "CL",
+                "cumulative": 24.53133718818229,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0291571948473303,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0472918601052306,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 12956,
+                        "hege": 0.469256875740403,
+                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.550213983073459,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VTR BANDA ANCHA S.A., CL",
+                "percent": 24.53133718818229,
+                "samples": 1048069,
+                "v6capable": 0.003625715482473005,
+                "v6preferred": 0.0034348883518165313
+            },
             {
                 "as": 7418,
                 "as-descr": "CHILE S.A.",
                 "autnum": "TELEFONICA",
                 "cc": "CL",
-                "cumulative": 24.09978915376173,
+                "cumulative": 48.3323533927789,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -1099,51 +2354,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TELEFNICA CHILE S.A., CL",
-                "percent": 24.09978915376173,
-                "samples": 902058,
-                "v6capable": 0.004434304667770808,
-                "v6preferred": 0.004101731817687998
-            },
-            {
-                "as": 22047,
-                "as-descr": "BANDA ANCHA S.A.",
-                "autnum": "VTR",
-                "cc": "CL",
-                "cumulative": 47.67283674217448,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0291571948473303,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0472918601052306,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.469256875740403,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.550213983073459,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "VTR BANDA ANCHA S.A., CL",
-                "percent": 23.573047588412756,
-                "samples": 882342,
-                "v6capable": 0.0022666947736818604,
-                "v6preferred": 0.0021533600349977673
+                "percent": 23.801016204596607,
+                "samples": 1016867,
+                "v6capable": 0.004228674939790553,
+                "v6preferred": 0.0040319923844514575
             },
             {
                 "as": 27651,
                 "as-descr": "CHILE S.A.",
                 "autnum": "ENTEL",
                 "cc": "CL",
-                "cumulative": 61.18863631748977,
+                "cumulative": 61.21546645794557,
                 "dependency": [
                     {
                         "asn": 6471,
@@ -1197,17 +2418,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ENTEL CHILE S.A., CL",
-                "percent": 13.515799575315281,
-                "samples": 505898,
-                "v6capable": 0.6515147322187477,
-                "v6preferred": 0.6364919410632183
+                "percent": 12.883113065166672,
+                "samples": 550414,
+                "v6capable": 0.7123728684226782,
+                "v6preferred": 0.6972933101265593
             },
             {
                 "as": 52341,
                 "as-descr": "Cayman Corp Chile S.A",
                 "autnum": "Centennial",
                 "cc": "CL",
-                "cumulative": 71.64425334463262,
+                "cumulative": 71.3413732150414,
                 "dependency": [
                     {
                         "asn": 3356,
@@ -1221,17 +2442,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Centennial Cayman Corp Chile S.A, CL",
-                "percent": 10.455617027142846,
-                "samples": 391355,
-                "v6capable": 0.003832837193852129,
-                "v6preferred": 0.0030662697550817033
+                "percent": 10.12590675709583,
+                "samples": 432616,
+                "v6capable": 0.004854189396601143,
+                "v6preferred": 0.004160733768515265
             },
             {
                 "as": 6535,
                 "as-descr": "Servicios Empresariales S.A.",
                 "autnum": "Telmex",
                 "cc": "CL",
-                "cumulative": 78.67818751315785,
+                "cumulative": 78.67601760897001,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -1270,17 +2491,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telmex Servicios Empresariales S.A., CL",
-                "percent": 7.033934168525241,
-                "samples": 263281,
-                "v6capable": 0.0018991115955955804,
-                "v6preferred": 0.0018991115955955804
+                "percent": 7.334644393928613,
+                "samples": 313363,
+                "v6capable": 0.0025529497739043856,
+                "v6preferred": 0.0025529497739043856
             },
             {
                 "as": 27995,
                 "as-descr": "CHILE S.A.",
                 "autnum": "CLARO",
                 "cc": "CL",
-                "cumulative": 84.62444149257335,
+                "cumulative": 84.21575575886722,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -1319,10 +2540,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "CLARO CHILE S.A., CL",
-                "percent": 5.946253979415508,
-                "samples": 222569,
-                "v6capable": 0.0013478966073442393,
-                "v6preferred": 0.0013478966073442393
+                "percent": 5.5397381498972,
+                "samples": 236678,
+                "v6capable": 0.003380119825247805,
+                "v6preferred": 0.003380119825247805
             }
         ],
         "monitoring_dates": {
@@ -1342,14 +2563,14 @@ const lockdowns ={
     "Colombia": {
         "cc": "CO",
         "continent": "America",
-        "end": "2020-04-13",
+        "end": "2020-04-27",
         "eyeball": [
             {
                 "as": 10620,
                 "as-descr": "Colombia S.A.",
                 "autnum": "Telmex",
                 "cc": "CO",
-                "cumulative": 25.365552480571328,
+                "cumulative": 26.597508501684636,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -1408,17 +2629,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telmex Colombia S.A., CO",
-                "percent": 25.365552480571328,
-                "samples": 2039795,
-                "v6capable": 10.151020077998034,
-                "v6preferred": 10.056059555004301
+                "percent": 26.597508501684636,
+                "samples": 2405659,
+                "v6capable": 12.00157628325544,
+                "v6preferred": 11.872755033028373
             },
             {
                 "as": 3816,
                 "as-descr": "TELECOMUNICACIONES S.A. ESP",
                 "autnum": "COLOMBIA",
                 "cc": "CO",
-                "cumulative": 40.38769671936973,
+                "cumulative": 41.34399256667844,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1447,17 +2668,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "COLOMBIA TELECOMUNICACIONES S.A. ESP, CO",
-                "percent": 15.022144238798397,
-                "samples": 1208020,
-                "v6capable": 0.01903941987715435,
-                "v6preferred": 0.008112448469396202
+                "percent": 14.746484064993801,
+                "samples": 1333772,
+                "v6capable": 0.01904373461131288,
+                "v6preferred": 0.008697138641386984
             },
             {
                 "as": 13489,
                 "as-descr": "Telecomunicaciones S.A. E.S.P.",
                 "autnum": "EPM",
                 "cc": "CO",
-                "cumulative": 54.760056929004755,
+                "cumulative": 55.547527507336355,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1471,17 +2692,46 @@ const lockdowns ={
                     }
                 ],
                 "name": "EPM Telecomunicaciones S.A. E.S.P., CO",
-                "percent": 14.372360209635028,
-                "samples": 1155767,
-                "v6capable": 0.3973984375743554,
-                "v6preferred": 0.38346829421501044
+                "percent": 14.20353494065792,
+                "samples": 1284664,
+                "v6capable": 0.5051126208876406,
+                "v6preferred": 0.4896221891482909
+            },
+            {
+                "as": 27831,
+                "as-descr": "Movil",
+                "autnum": "Colombia",
+                "cc": "CO",
+                "cumulative": 65.22121627768286,
+                "dependency": [
+                    {
+                        "asn": 13489,
+                        "hege": 1.0,
+                        "name": "EPM Telecomunicaciones S.A. E.S.P., CO"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.25,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.343023255813953,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "Colombia Mvil, CO",
+                "percent": 9.673688770346496,
+                "samples": 874954,
+                "v6capable": 2.4562434139394758,
+                "v6preferred": 2.3836681699837934
             },
             {
                 "as": 26611,
                 "as-descr": "S.A.",
                 "autnum": "COMCEL",
                 "cc": "CO",
-                "cumulative": 64.57774856853646,
+                "cumulative": 74.14408782711779,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -1530,46 +2780,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "COMCEL S.A., CO",
-                "percent": 9.81769163953171,
-                "samples": 789499,
-                "v6capable": 0.01861940293781246,
-                "v6preferred": 0.014566199577200225
-            },
-            {
-                "as": 27831,
-                "as-descr": "Movil",
-                "autnum": "Colombia",
-                "cc": "CO",
-                "cumulative": 74.11814447258286,
-                "dependency": [
-                    {
-                        "asn": 13489,
-                        "hege": 1.0,
-                        "name": "EPM Telecomunicaciones S.A. E.S.P., CO"
-                    },
-                    {
-                        "asn": 2914,
-                        "hege": 0.25,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.343023255813953,
-                        "name": "TELIANET Telia Company AB, EU"
-                    }
-                ],
-                "name": "Colombia Mvil, CO",
-                "percent": 9.540395904046399,
-                "samples": 767200,
-                "v6capable": 3.095672575599583,
-                "v6preferred": 3.008863399374348
+                "percent": 8.922871549434927,
+                "samples": 807045,
+                "v6capable": 0.021807953707661903,
+                "v6preferred": 0.017595053559590852
             },
             {
                 "as": 19429,
                 "as-descr": "- Colombia",
                 "autnum": "ETB",
                 "cc": "CO",
-                "cumulative": 80.74526260026772,
+                "cumulative": 80.93583873300963,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1623,10 +2844,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "ETB - Colombia, CO",
-                "percent": 6.627118127684868,
-                "samples": 532926,
-                "v6capable": 0.03227464976375707,
-                "v6preferred": 0.02908471344989736
+                "percent": 6.79175090589184,
+                "samples": 614292,
+                "v6capable": 0.032069439289458435,
+                "v6preferred": 0.026860190267820515
             }
         ],
         "monitoring_dates": {
@@ -1646,14 +2867,14 @@ const lockdowns ={
     "Costa Rica": {
         "cc": "CR",
         "continent": "America",
-        "end": "2020-04-13",
+        "end": "2020-03-23",
         "eyeball": [
             {
                 "as": 11830,
                 "as-descr": "Costarricense de Electricidad y Telecom.",
                 "autnum": "Instituto",
                 "cc": "CR",
-                "cumulative": 33.300221875418245,
+                "cumulative": 32.650101302675004,
                 "dependency": [
                     {
                         "asn": 1239,
@@ -1677,17 +2898,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Instituto Costarricense de Electricidad y Telecom., CR",
-                "percent": 33.300221875418245,
-                "samples": 271204,
-                "v6capable": 0.22861019748971254,
-                "v6preferred": 0.22381675786492825
+                "percent": 32.650101302675004,
+                "samples": 307960,
+                "v6capable": 0.26789193401740485,
+                "v6preferred": 0.26172230159761006
             },
             {
                 "as": 52228,
                 "as-descr": "Tica",
                 "autnum": "Cable",
                 "cc": "CR",
-                "cumulative": 48.77219521598781,
+                "cumulative": 48.390236351704225,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -1716,17 +2937,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Cable Tica, CR",
-                "percent": 15.471973340569559,
-                "samples": 126007,
-                "v6capable": 0.002380820113168316,
-                "v6preferred": 0.002380820113168316
+                "percent": 15.740135049029222,
+                "samples": 148463,
+                "v6capable": 0.004714979489839219,
+                "v6preferred": 0.004714979489839219
             },
             {
                 "as": 262197,
                 "as-descr": "CABLE COSTA RICA S.A.",
                 "autnum": "MILLICOM",
                 "cc": "CR",
-                "cumulative": 62.70061798504705,
+                "cumulative": 62.44241756633973,
                 "dependency": [
                     {
                         "asn": 13489,
@@ -1770,17 +2991,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "MILLICOM CABLE COSTA RICA S.A., CR",
-                "percent": 13.928422769059246,
-                "samples": 113436,
-                "v6capable": 0.005289326139849783,
-                "v6preferred": 0.005289326139849783
+                "percent": 14.052181214635507,
+                "samples": 132542,
+                "v6capable": 0.006790300433070272,
+                "v6preferred": 0.006790300433070272
             },
             {
                 "as": 52263,
                 "as-descr": "Economico S.A.",
                 "autnum": "Telecable",
                 "cc": "CR",
-                "cumulative": 76.60288720452937,
+                "cumulative": 76.16657107143348,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -1839,17 +3060,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telecable Economico S.A., CR",
-                "percent": 13.902269219482307,
-                "samples": 113223,
-                "v6capable": 0.0035328510991582984,
-                "v6preferred": 0.0035328510991582984
+                "percent": 13.72415350509376,
+                "samples": 129448,
+                "v6capable": 0.0023175329089673074,
+                "v6preferred": 0.0023175329089673074
             },
             {
                 "as": 14754,
                 "as-descr": "",
                 "autnum": "Telgua",
                 "cc": "CR",
-                "cumulative": 85.09137166158536,
+                "cumulative": 84.75657142130143,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1878,17 +3099,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telgua, GT",
-                "percent": 8.488484457055995,
-                "samples": 69132,
-                "v6capable": 0.005786032517502748,
-                "v6preferred": 0.004339524388127061
+                "percent": 8.590000349867951,
+                "samples": 81022,
+                "v6capable": 0.0024684653550887414,
+                "v6preferred": 0.0012342326775443707
             },
             {
                 "as": 262202,
                 "as-descr": "de Costa Rica TC, SA",
                 "autnum": "Telefonica",
                 "cc": "CR",
-                "cumulative": 91.31137335604068,
+                "cumulative": 90.62597737732621,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -1917,10 +3138,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telefonica de Costa Rica TC, SA, CR",
-                "percent": 6.220001694455325,
-                "samples": 50657,
-                "v6capable": 0.003948121681110212,
-                "v6preferred": 0.003948121681110212
+                "percent": 5.869405956024779,
+                "samples": 55361,
+                "v6capable": 0.003612651505572515,
+                "v6preferred": 0.003612651505572515
             }
         ],
         "monitoring_dates": {
@@ -1937,17 +3158,226 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-23"
     },
+    "Croatia": {
+        "cc": "HR",
+        "continent": "Europe",
+        "end": "2020-04-19",
+        "eyeball": [
+            {
+                "as": 5391,
+                "as-descr": "Croatian Telecom Inc.",
+                "autnum": "T-HT",
+                "cc": "HR",
+                "cumulative": 41.37799908031342,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.306168666152356,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0482488753411805,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.139526160493138,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.488815623662272,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0100079364011784,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "T-HT Hrvatski Telekom d.d., HR",
+                "percent": 41.37799908031342,
+                "samples": 681170,
+                "v6capable": 0.004110574452779776,
+                "v6preferred": 0.004110574452779776
+            },
+            {
+                "as": 12810,
+                "as-descr": "3G/GSM and Internet Service Provider",
+                "autnum": "VIPNET-AS",
+                "cc": "HR",
+                "cumulative": 55.97598852639361,
+                "dependency": [
+                    {
+                        "asn": 15994,
+                        "hege": 1.0,
+                        "name": "Vipnet VIPnet d.o.o., HR"
+                    },
+                    {
+                        "asn": 8447,
+                        "hege": 0.487791601558811,
+                        "name": "TELEKOM-AT A1 Telekom Austria AG, AT"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.382057160780565,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VIPNET-AS VIPnet d.o.o., HR",
+                "percent": 14.597989446080184,
+                "samples": 240314,
+                "v6capable": 0.004161222400692427,
+                "v6preferred": 0.004161222400692427
+            },
+            {
+                "as": 1257,
+                "as-descr": "",
+                "autnum": "TELE2",
+                "cc": "HR",
+                "cumulative": 66.8989371363244,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.0238882415732234,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.227665848248745,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0388937791834853,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TELE2, SE",
+                "percent": 10.922948609930792,
+                "samples": 179815,
+                "v6capable": 0.007229652698606902,
+                "v6preferred": 0.007229652698606902
+            },
+            {
+                "as": 15994,
+                "as-descr": "A1 Hrvatska d.o.o. Zagreb, Croatia",
+                "autnum": "A1HR",
+                "cc": "HR",
+                "cumulative": 76.33319625103192,
+                "dependency": [
+                    {
+                        "asn": 8447,
+                        "hege": 0.541339869281046,
+                        "name": "TELEKOM-AT A1 Telekom Austria AG, AT"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0235294117647059,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.02,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.353954248366013,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Vipnet VIPnet d.o.o., HR",
+                "percent": 9.434259114707514,
+                "samples": 155308,
+                "v6capable": 0.14938058567491694,
+                "v6preferred": 0.14809282200530557
+            },
+            {
+                "as": 34594,
+                "as-descr": "",
+                "autnum": "OT-AS",
+                "cc": "HR",
+                "cumulative": 84.08893624336584,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.15722358634924,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.753260588935397,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    }
+                ],
+                "name": "OT-AS OT - OPTIMA TELEKOM d.d., HR",
+                "percent": 7.75573999233392,
+                "samples": 127676,
+                "v6capable": 0.0023496976722328393,
+                "v6preferred": 0.0023496976722328393
+            },
+            {
+                "as": 13046,
+                "as-descr": "HEP",
+                "autnum": "ASN-ISKON",
+                "cc": "HR",
+                "cumulative": 90.88368273121401,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.144128621366543,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 5391,
+                        "hege": 0.551109149100541,
+                        "name": "T-HT Hrvatski Telekom d.d., HR"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.354861494316301,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.207841401206223,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "ASN-ISKON ISKON INTERNET d.d. za informatiku i telekomunikacije, HR",
+                "percent": 6.794746487848171,
+                "samples": 111856,
+                "v6capable": 0.05274638821341725,
+                "v6preferred": 0.016092118437991704
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Croatia",
+        "scope": "National",
+        "start": "\t2020-03-18"
+    },
     "Cuba": {
         "cc": "CU",
         "continent": "America",
-        "end": "2020-04-19",
+        "end": "2020-04-20",
         "eyeball": [
             {
                 "as": 27725,
                 "as-descr": "de Telecomunicaciones de Cuba, S.A.",
                 "autnum": "Empresa",
                 "cc": "CU",
-                "cumulative": 99.72165121617623,
+                "cumulative": 99.77089720696742,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -2006,10 +3436,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "Empresa de Telecomunicaciones de Cuba, S.A., CU",
-                "percent": 99.72165121617623,
-                "samples": 124675,
-                "v6capable": 0.0032083416883898134,
-                "v6preferred": 0.0032083416883898134
+                "percent": 99.77089720696742,
+                "samples": 148065,
+                "v6capable": 0.0033768952824772902,
+                "v6preferred": 0.0033768952824772902
             }
         ],
         "monitoring_dates": {
@@ -2036,7 +3466,7 @@ const lockdowns ={
                 "as-descr": "",
                 "autnum": "O2-CZECH-REPUBLIC",
                 "cc": "CZ",
-                "cumulative": 19.963209866708187,
+                "cumulative": 19.61899690484907,
                 "dependency": [
                     {
                         "asn": 174,
@@ -2060,17 +3490,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "O2-CZECH-REPUBLIC O2 Czech Republic, a.s., CZ",
-                "percent": 19.963209866708187,
-                "samples": 275653,
-                "v6capable": 44.01620878423235,
-                "v6preferred": 43.6142541528661
+                "percent": 19.61899690484907,
+                "samples": 294746,
+                "v6capable": 44.98890570185855,
+                "v6preferred": 44.565490286551814
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "CZ",
-                "cumulative": 34.53014726916545,
+                "cumulative": 34.33094818118281,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -2084,17 +3514,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 14.566937402457262,
-                "samples": 201141,
-                "v6capable": 11.439239140702293,
-                "v6preferred": 11.361681606435287
+                "percent": 14.711951276333744,
+                "samples": 221025,
+                "v6capable": 11.70093880782717,
+                "v6preferred": 11.621309806582966
             },
             {
                 "as": 13036,
                 "as-descr": "",
                 "autnum": "TMOBILE-",
                 "cc": "CZ",
-                "cumulative": 45.47810878436854,
+                "cumulative": 45.33158052384597,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -2118,17 +3548,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TMOBILE-CZ T-Mobile Czech Republic a.s., CZ",
-                "percent": 10.947961515203088,
-                "samples": 151170,
-                "v6capable": 11.303830125024806,
-                "v6preferred": 11.21915724019316
+                "percent": 11.000632342663161,
+                "samples": 165268,
+                "v6capable": 11.373042573274923,
+                "v6preferred": 11.281675823510904
             },
             {
                 "as": 16019,
                 "as-descr": "",
                 "autnum": "VODAFONE-CZ-AS",
                 "cc": "CZ",
-                "cumulative": 52.01407874392112,
+                "cumulative": 51.58165540652977,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -2147,10 +3577,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "VODAFONE-CZ-AS Vodafone Czech Republic a.s., CZ",
-                "percent": 6.53596995955258,
-                "samples": 90249,
-                "v6capable": 0.12299305255459894,
-                "v6preferred": 0.10748041529546033
+                "percent": 6.250074882683795,
+                "samples": 93898,
+                "v6capable": 0.1586828260452832,
+                "v6preferred": 0.14270804489978486
             }
         ],
         "monitoring_dates": {
@@ -2177,7 +3607,7 @@ const lockdowns ={
                 "as-descr": "TDC A/S",
                 "autnum": "TDC",
                 "cc": "DK",
-                "cumulative": 40.69653994912715,
+                "cumulative": 40.563248895295644,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -2191,17 +3621,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TDC TDC A/S, DK",
-                "percent": 40.69653994912715,
-                "samples": 233590,
-                "v6capable": 0.4717667708377927,
-                "v6preferred": 0.3441928164733079
+                "percent": 40.563248895295644,
+                "samples": 249595,
+                "v6capable": 0.4795769146016547,
+                "v6preferred": 0.35337246339069295
             },
             {
                 "as": 9158,
                 "as-descr": "",
                 "autnum": "TELENOR_DANMARK_AS",
                 "cc": "DK",
-                "cumulative": 49.43255862573609,
+                "cumulative": 49.23966762172063,
                 "dependency": [
                     {
                         "asn": 174,
@@ -2215,17 +3645,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TELENOR_DANMARK_AS Telenor A/S, DK",
-                "percent": 8.736018676608941,
-                "samples": 50143,
-                "v6capable": 0.0777775561892986,
-                "v6preferred": 0.023931555750553418
+                "percent": 8.676418726424984,
+                "samples": 53388,
+                "v6capable": 0.07305012362328613,
+                "v6preferred": 0.026223121300666816
             },
             {
                 "as": 3308,
                 "as-descr": "",
                 "autnum": "TELIANET-DENMARK",
                 "cc": "DK",
-                "cumulative": 55.743231471479845,
+                "cumulative": 55.495894026389394,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -2239,17 +3669,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TELIANET-DENMARK Telia Company AB, DK",
-                "percent": 6.310672845743754,
-                "samples": 36222,
-                "v6capable": 16.782618298271768,
-                "v6preferred": 16.48997846612556
+                "percent": 6.256226404668768,
+                "samples": 38496,
+                "v6capable": 16.944617622610142,
+                "v6preferred": 16.684850374064837
             },
             {
                 "as": 44034,
                 "as-descr": "",
                 "autnum": "HI3G",
                 "cc": "DK",
-                "cumulative": 61.22844001533155,
+                "cumulative": 60.8868837992404,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -2268,17 +3698,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "hi3g Hi3G Access AB, SE",
-                "percent": 5.485208543851702,
-                "samples": 31484,
-                "v6capable": 53.61135815017152,
-                "v6preferred": 52.61084995553297
+                "percent": 5.390989772851007,
+                "samples": 33172,
+                "v6capable": 53.41854576148559,
+                "v6preferred": 52.34836609188472
             },
             {
                 "as": 44869,
                 "as-descr": "",
                 "autnum": "FIBIA-P-S",
                 "cc": "DK",
-                "cumulative": 66.51886825324925,
+                "cumulative": 66.25024580586131,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2297,17 +3727,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "FIBIA-P-S FIBIA P/S, DK",
-                "percent": 5.2904282379176975,
-                "samples": 30366,
-                "v6capable": 0.17783046828689983,
-                "v6preferred": 0.05269050912204439
+                "percent": 5.363362006620913,
+                "samples": 33002,
+                "v6capable": 0.18786740197563784,
+                "v6preferred": 0.05454214896066905
             },
             {
                 "as": 43557,
                 "as-descr": "",
                 "autnum": "ASEMNET",
                 "cc": "DK",
-                "cumulative": 71.7521516429144,
+                "cumulative": 71.42557648584564,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2341,17 +3771,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASEMNET EnergiMidt Fiberbredband A/S, DK",
-                "percent": 5.233283389665145,
-                "samples": 30038,
-                "v6capable": 0.13649377455223383,
-                "v6preferred": 0.039949397429922096
+                "percent": 5.1753306799843335,
+                "samples": 31845,
+                "v6capable": 0.1381692573402418,
+                "v6preferred": 0.04396294551734966
             },
             {
                 "as": 197288,
                 "as-descr": "",
                 "autnum": "STOFANET",
                 "cc": "DK",
-                "cumulative": 76.85476845883133,
+                "cumulative": 76.52728729464037,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -2370,10 +3800,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "STOFANET Stofa A/S, DK",
-                "percent": 5.102616815916931,
-                "samples": 29288,
-                "v6capable": 0.13316033870527177,
-                "v6preferred": 0.040972411909314395
+                "percent": 5.1017108087947305,
+                "samples": 31392,
+                "v6capable": 0.1560907237512742,
+                "v6preferred": 0.0445973496432212
             }
         ],
         "monitoring_dates": {
@@ -2393,14 +3823,14 @@ const lockdowns ={
     "Dominican": {
         "cc": "DO",
         "continent": "America",
-        "end": "2020-04-03",
+        "end": "2020-03-19",
         "eyeball": [
             {
                 "as": 6400,
                 "as-descr": "Dominicana de Telefonos S. A.",
                 "autnum": "Compania",
                 "cc": "DO",
-                "cumulative": 63.71374507744009,
+                "cumulative": 63.558892034173425,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2429,17 +3859,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Compaa Dominicana de Telfonos, C. por A. - CODETEL, DO",
-                "percent": 63.71374507744009,
-                "samples": 1037075,
-                "v6capable": 0.0060747776197478485,
-                "v6preferred": 0.004628401995998361
+                "percent": 63.558892034173425,
+                "samples": 1094807,
+                "v6capable": 0.00602845981072463,
+                "v6preferred": 0.004475674707962225
             },
             {
                 "as": 28118,
                 "as-descr": "DOMINICANA S.A.",
                 "autnum": "ALTICE",
                 "cc": "DO",
-                "cumulative": 90.16335833778744,
+                "cumulative": 90.2693049901655,
                 "dependency": [
                     {
                         "asn": 701,
@@ -2478,10 +3908,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "ALTICE DOMINICANA S.A., DO",
-                "percent": 26.44961326034736,
-                "samples": 430523,
-                "v6capable": 0.005574615061216242,
-                "v6preferred": 0.004645512551013534
+                "percent": 26.710412955992076,
+                "samples": 460089,
+                "v6capable": 0.006303128307783928,
+                "v6preferred": 0.005433731299813732
             }
         ],
         "monitoring_dates": {
@@ -2508,7 +3938,7 @@ const lockdowns ={
                 "as-descr": "S.A",
                 "autnum": "Telconet",
                 "cc": "EC",
-                "cumulative": 22.522223315167114,
+                "cumulative": 23.032189907782726,
                 "dependency": [
                     {
                         "asn": 1239,
@@ -2542,100 +3972,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telconet S.A, EC",
-                "percent": 22.522223315167114,
-                "samples": 407559,
-                "v6capable": 15.680429091248138,
-                "v6preferred": 15.382803471399233
-            },
-            {
-                "as": 23487,
-                "as-descr": "",
-                "autnum": "CONECEL",
-                "cc": "EC",
-                "cumulative": 34.060387293005135,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0139600877902966,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0290238807381147,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1239,
-                        "hege": 0.179096739960987,
-                        "name": "SPRINTLINK - Sprint, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.234877291128674,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.376742037019091,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.194954253143233,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "CONECEL, EC",
-                "percent": 11.538163977838025,
-                "samples": 208793,
-                "v6capable": 0.02969448209470624,
-                "v6preferred": 0.019157730383681446
-            },
-            {
-                "as": 28006,
-                "as-descr": "NACIONAL DE TELECOMUNICACIONES - CNT EP",
-                "autnum": "CORPORACION",
-                "cc": "EC",
-                "cumulative": 44.662978161855804,
-                "dependency": [
-                    {
-                        "asn": 26613,
-                        "hege": 1.0,
-                        "name": "CORPORACION NACIONAL DE TELECOMUNICACIONES - CNT EP, EC"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0402574109113844,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.359282159648374,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.640728476821192,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0356847209082308,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "CORPORACION NACIONAL DE TELECOMUNICACIONES - CNT EP, EC",
-                "percent": 10.602590868850665,
-                "samples": 191863,
-                "v6capable": 34.22911139719487,
-                "v6preferred": 33.62086488796694
+                "percent": 23.032189907782726,
+                "samples": 465253,
+                "v6capable": 16.96302871770843,
+                "v6preferred": 16.735840499685118
             },
             {
                 "as": 264668,
                 "as-descr": "S.A.",
                 "autnum": "NEDETEL",
                 "cc": "EC",
-                "cumulative": 55.18571651195356,
+                "cumulative": 33.790640847678134,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -2699,17 +4046,100 @@ const lockdowns ={
                     }
                 ],
                 "name": "NEDETEL S.A., EC",
-                "percent": 10.522738350097757,
-                "samples": 190418,
-                "v6capable": 0.0036761230555934837,
-                "v6preferred": 0.0036761230555934837
+                "percent": 10.758450939895406,
+                "samples": 217322,
+                "v6capable": 0.005521760337195498,
+                "v6preferred": 0.005521760337195498
+            },
+            {
+                "as": 23487,
+                "as-descr": "",
+                "autnum": "CONECEL",
+                "cc": "EC",
+                "cumulative": 44.17364847337541,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0139600877902966,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0290238807381147,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1239,
+                        "hege": 0.179096739960987,
+                        "name": "SPRINTLINK - Sprint, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.234877291128674,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.376742037019091,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.194954253143233,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "CONECEL, EC",
+                "percent": 10.383007625697273,
+                "samples": 209738,
+                "v6capable": 0.03289818726220332,
+                "v6preferred": 0.020978554196187625
+            },
+            {
+                "as": 28006,
+                "as-descr": "NACIONAL DE TELECOMUNICACIONES - CNT EP",
+                "autnum": "CORPORACION",
+                "cc": "EC",
+                "cumulative": 54.421706405704526,
+                "dependency": [
+                    {
+                        "asn": 26613,
+                        "hege": 1.0,
+                        "name": "CORPORACION NACIONAL DE TELECOMUNICACIONES - CNT EP, EC"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0402574109113844,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.359282159648374,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.640728476821192,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0356847209082308,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "CORPORACION NACIONAL DE TELECOMUNICACIONES - CNT EP, EC",
+                "percent": 10.248057932329115,
+                "samples": 207012,
+                "v6capable": 36.200799953625875,
+                "v6preferred": 35.50663729638862
             },
             {
                 "as": 14522,
                 "as-descr": "",
                 "autnum": "Satnet",
                 "cc": "EC",
-                "cumulative": 64.67727977559508,
+                "cumulative": 64.14486646613982,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -2783,17 +4213,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Satnet, EC",
-                "percent": 9.491563263641519,
-                "samples": 171758,
-                "v6capable": 0.0069865741333737,
-                "v6preferred": 0.0069865741333737
+                "percent": 9.723160060435285,
+                "samples": 196409,
+                "v6capable": 0.013746824229032275,
+                "v6preferred": 0.003563991466786145
             },
             {
                 "as": 27738,
                 "as-descr": "S.A.",
                 "autnum": "Ecuadortelecom",
                 "cc": "EC",
-                "cumulative": 73.83683339725219,
+                "cumulative": 73.74634408112428,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -2857,17 +4287,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Ecuadortelecom S.A., EC",
-                "percent": 9.159553621657109,
-                "samples": 165750,
-                "v6capable": 4.4180995475113125,
-                "v6preferred": 4.394570135746607
+                "percent": 9.601477614984466,
+                "samples": 193951,
+                "v6capable": 4.7584183634010655,
+                "v6preferred": 4.7321230620105075
             },
             {
                 "as": 19114,
                 "as-descr": "S.A.",
                 "autnum": "Otecel",
                 "cc": "EC",
-                "cumulative": 80.26255729210992,
+                "cumulative": 79.65635847707836,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -2886,17 +4316,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Otecel S.A., EC",
-                "percent": 6.425723894857719,
-                "samples": 116279,
-                "v6capable": 0.06450003870002322,
-                "v6preferred": 0.036120021672013
+                "percent": 5.910014395954083,
+                "samples": 119383,
+                "v6capable": 0.07203705720244925,
+                "v6preferred": 0.04104436980139551
             },
             {
                 "as": 22724,
                 "as-descr": "S.A.",
                 "autnum": "PUNTONET",
                 "cc": "EC",
-                "cumulative": 85.45435254251527,
+                "cumulative": 85.04706902731272,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -2960,10 +4390,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "PUNTONET S.A., EC",
-                "percent": 5.191795250405342,
-                "samples": 93950,
-                "v6capable": 0.018094731240021287,
-                "v6preferred": 0.006386375731772219
+                "percent": 5.390710550234355,
+                "samples": 108893,
+                "v6capable": 0.033978308982211894,
+                "v6preferred": 0.007346661401559329
             }
         ],
         "monitoring_dates": {
@@ -2983,14 +4413,14 @@ const lockdowns ={
     "El Salvador": {
         "cc": "SV",
         "continent": "America",
-        "end": "2020-04-01",
+        "end": "2020-04-02",
         "eyeball": [
             {
                 "as": 14754,
                 "as-descr": "",
                 "autnum": "Telgua",
                 "cc": "SV",
-                "cumulative": 51.30177363351732,
+                "cumulative": 51.56337695870903,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3019,17 +4449,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telgua, GT",
-                "percent": 51.30177363351732,
-                "samples": 300672,
-                "v6capable": 0.0036584716900808856,
-                "v6preferred": 0.0036584716900808856
+                "percent": 51.56337695870903,
+                "samples": 351869,
+                "v6capable": 0.0034103601056074844,
+                "v6preferred": 0.0034103601056074844
             },
             {
                 "as": 27773,
                 "as-descr": "CABLE EL SALVADOR S.A. DE C.V.",
                 "autnum": "MILLICOM",
                 "cc": "SV",
-                "cumulative": 74.6770519634524,
+                "cumulative": 76.01937863514269,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3063,17 +4493,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "MILLICOM CABLE EL SALVADOR S.A. DE C.V., SV",
-                "percent": 23.375278329935078,
-                "samples": 136999,
-                "v6capable": 0.004379594011635121,
-                "v6preferred": 0.004379594011635121
+                "percent": 24.45600167643365,
+                "samples": 166888,
+                "v6capable": 0.00479363405397632,
+                "v6preferred": 0.00479363405397632
             },
             {
                 "as": 17079,
                 "as-descr": "El Salvador S.A.",
                 "autnum": "Telemovil",
                 "cc": "SV",
-                "cumulative": 84.80425194297756,
+                "cumulative": 85.6302965558374,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -3107,17 +4537,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telemovil El Salvador S.A., SV",
-                "percent": 10.127199979525153,
-                "samples": 59354,
-                "v6capable": 0.001684806415742831,
-                "v6preferred": 0.001684806415742831
+                "percent": 9.610917920694723,
+                "samples": 65585,
+                "v6capable": 0.004574216665396051,
+                "v6preferred": 0.004574216665396051
             },
             {
                 "as": 263783,
                 "as-descr": "Moviles El Salvador S.A. de C.V.",
                 "autnum": "Telefonica",
                 "cc": "SV",
-                "cumulative": 90.84723205678358,
+                "cumulative": 91.2420995866067,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -3156,10 +4586,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telefonica Moviles El Salvador S.A. de C.V., SV",
-                "percent": 6.042980113806018,
-                "samples": 35417,
-                "v6capable": 0.002823502837620352,
-                "v6preferred": 0.002823502837620352
+                "percent": 5.611803030769298,
+                "samples": 38295,
+                "v6capable": 0.007833920877399139,
+                "v6preferred": 0.007833920877399139
             }
         ],
         "monitoring_dates": {
@@ -3176,17 +4606,81 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-12"
     },
+    "Eritrea": {
+        "cc": "ER",
+        "continent": "Africa",
+        "end": "2020-04-23",
+        "eyeball": [
+            {
+                "as": 30987,
+                "as-descr": "",
+                "autnum": "ERITEL-AS",
+                "cc": "ER",
+                "cumulative": 99.11504424778761,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0340909090909091,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 38176,
+                        "hege": 0.5,
+                        "name": "ABS-PEERING-AS-AP Asia Broadcast Satellite Ltd, HK"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.485795454545455,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 58453,
+                        "hege": 0.5,
+                        "name": "CMI-INT-HK Level 30, Tower 1, HK"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0814393939393939,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0340909090909091,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ERITEL-AS, ER",
+                "percent": 99.11504424778761,
+                "samples": 224,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-03-02",
+                "sunday": "2020-03-08"
+            },
+            "lockdown": {
+                "monday": "2020-03-30",
+                "sunday": "2020-04-05"
+            }
+        },
+        "name": "Eritrea",
+        "scope": "National",
+        "start": "\t2020-04-02"
+    },
     "France": {
         "cc": "FR",
         "continent": "Europe",
-        "end": "2020-04-15",
+        "end": "2020-05-11",
         "eyeball": [
             {
                 "as": 3215,
                 "as-descr": "Telecom - Orange",
                 "autnum": "France",
                 "cc": "FR",
-                "cumulative": 29.70845512439488,
+                "cumulative": 29.529850950957293,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -3220,17 +4714,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "AS3215 Orange S.A., FR",
-                "percent": 29.70845512439488,
-                "samples": 2400573,
-                "v6capable": 60.04108185837298,
-                "v6preferred": 59.693123266820045
+                "percent": 29.529850950957293,
+                "samples": 3122200,
+                "v6capable": 63.714207930305555,
+                "v6preferred": 63.30936519121133
             },
             {
                 "as": 12322,
                 "as-descr": "",
                 "autnum": "PROXAD",
                 "cc": "FR",
-                "cumulative": 45.764158547365696,
+                "cumulative": 46.34678044042247,
                 "dependency": [
                     {
                         "asn": 174,
@@ -3244,17 +4738,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "PROXAD Free SAS, FR",
-                "percent": 16.05570342297081,
-                "samples": 1297371,
-                "v6capable": 92.24084706687601,
-                "v6preferred": 91.58791124512572
+                "percent": 16.816929489465178,
+                "samples": 1778059,
+                "v6capable": 92.4229735908651,
+                "v6preferred": 91.55089904215777
             },
             {
                 "as": 15557,
                 "as-descr": "",
                 "autnum": "LDCOMNET",
                 "cc": "FR",
-                "cumulative": 60.11322159927737,
+                "cumulative": 61.479452909903785,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -3268,17 +4762,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "LDCOMNET SFR SA, FR",
-                "percent": 14.349063051911672,
-                "samples": 1159467,
-                "v6capable": 0.5161854541785148,
-                "v6preferred": 0.45201803932324075
+                "percent": 15.132672469481312,
+                "samples": 1599982,
+                "v6capable": 0.5625688288993251,
+                "v6preferred": 0.4787553859980925
             },
             {
                 "as": 5410,
                 "as-descr": "",
                 "autnum": "BOUYGTEL-ISP",
                 "cc": "FR",
-                "cumulative": 73.58334703927522,
+                "cumulative": 75.66636999989596,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3302,41 +4796,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASN-BOUYGTEL-ISP Bouygues Telecom SA, FR",
-                "percent": 13.470125439997862,
-                "samples": 1088445,
-                "v6capable": 38.09875556413048,
-                "v6preferred": 37.770764714799554
-            },
-            {
-                "as": 12876,
-                "as-descr": "SAS",
-                "autnum": "Online",
-                "cc": "FR",
-                "cumulative": 82.03863231654427,
-                "dependency": [
-                    {
-                        "asn": 174,
-                        "hege": 0.0218373493975904,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.207723752151463,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "AS12876 ONLINE S.A.S., FR",
-                "percent": 8.45528527726904,
-                "samples": 683224,
-                "v6capable": 14.47182768755196,
-                "v6preferred": 0.7820275634345397
+                "percent": 14.186917089992178,
+                "samples": 1499987,
+                "v6capable": 36.95058690508651,
+                "v6preferred": 36.59471715421534
             },
             {
                 "as": 51207,
                 "as-descr": "",
                 "autnum": "FREEM",
                 "cc": "FR",
-                "cumulative": 88.20175195970218,
+                "cumulative": 82.59589729717972,
                 "dependency": [
                     {
                         "asn": 12322,
@@ -3350,10 +4820,34 @@ const lockdowns ={
                     }
                 ],
                 "name": "FREEM Free Mobile SAS, FR",
-                "percent": 6.163119643157914,
-                "samples": 498007,
-                "v6capable": 0.19939478762346713,
-                "v6preferred": 0.1538130990126645
+                "percent": 6.929527297283749,
+                "samples": 732661,
+                "v6capable": 0.1886274825601472,
+                "v6preferred": 0.14686191840428248
+            },
+            {
+                "as": 12876,
+                "as-descr": "SAS",
+                "autnum": "Online",
+                "cc": "FR",
+                "cumulative": 88.14449594865427,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0218373493975904,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.207723752151463,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "AS12876 ONLINE S.A.S., FR",
+                "percent": 5.5485986514745536,
+                "samples": 586655,
+                "v6capable": 16.68987735551559,
+                "v6preferred": 1.3633225660737571
             }
         ],
         "monitoring_dates": {
@@ -3370,6 +4864,104 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-17"
     },
+    "Georgia": {
+        "cc": "GE",
+        "continent": "Asia",
+        "end": "2020-04-21",
+        "eyeball": [
+            {
+                "as": 16010,
+                "as-descr": "Caucasus-Online",
+                "autnum": "MAGTICOMAS",
+                "cc": "GE",
+                "cumulative": 45.83359497645212,
+                "dependency": [
+                    {
+                        "asn": 20771,
+                        "hege": 1.0,
+                        "name": "CAUCASUS-CABLE-SYSTEM Caucasus Online Ltd., GE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0866040932556101,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 29049,
+                        "hege": 0.072974452472774,
+                        "name": "Delta-Telecom-AS Delta Telecom Ltd, AZ"
+                    },
+                    {
+                        "asn": 41313,
+                        "hege": 0.201517828098011,
+                        "name": "NOVATEL-AS \"NOVATEL\" EOOD, BG"
+                    },
+                    {
+                        "asn": 47872,
+                        "hege": 0.0355629651959405,
+                        "name": "SOFIA-CONNECT-AS Sofia Connect EAD, BG"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.396871426282894,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "MagticomAS Magticom Ltd., GE",
+                "percent": 45.83359497645212,
+                "samples": 255465,
+                "v6capable": 0.018006380521793593,
+                "v6preferred": 0.018006380521793593
+            },
+            {
+                "as": 35805,
+                "as-descr": "",
+                "autnum": "SILKNET-AS",
+                "cc": "GE",
+                "cumulative": 72.80448531060776,
+                "dependency": [
+                    {
+                        "asn": 57463,
+                        "hege": 0.16378604343195,
+                        "name": "NetIX NetIX Communications Ltd., BG"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.203462259954788,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0449097382336099,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0384410935960293,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "SILKNET-AS JSC \"Silknet\", GE",
+                "percent": 26.97089033415564,
+                "samples": 150329,
+                "v6capable": 0.003991245867397508,
+                "v6preferred": 0.003991245867397508
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-03-02",
+                "sunday": "2020-03-08"
+            },
+            "lockdown": {
+                "monday": "2020-03-30",
+                "sunday": "2020-04-05"
+            }
+        },
+        "name": "Georgia",
+        "scope": "National",
+        "start": "\t2020-03-31"
+    },
     "Germany": {
         "cc": "DE",
         "continent": "Europe",
@@ -3380,7 +4972,7 @@ const lockdowns ={
                 "as-descr": "Internet service provider operations",
                 "autnum": "DTAG",
                 "cc": "DE",
-                "cumulative": 32.86458129140199,
+                "cumulative": 32.89561794880979,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -3394,17 +4986,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "DTAG Deutsche Telekom AG, DE",
-                "percent": 32.86458129140199,
-                "samples": 1961560,
-                "v6capable": 73.73004139562389,
-                "v6preferred": 72.5408858255674
+                "percent": 32.89561794880979,
+                "samples": 2167362,
+                "v6capable": 73.81217350862477,
+                "v6preferred": 72.7012838649012
             },
             {
                 "as": 3209,
                 "as-descr": "International IP-Backbone of Vodafone",
                 "autnum": "VODANET",
                 "cc": "DE",
-                "cumulative": 45.105999483297126,
+                "cumulative": 45.07792546038584,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3418,17 +5010,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "VODANET Vodafone GmbH, DE",
-                "percent": 12.241418191895137,
-                "samples": 730643,
-                "v6capable": 7.765078157184836,
-                "v6preferred": 7.681863782996621
+                "percent": 12.182307511576049,
+                "samples": 802644,
+                "v6capable": 7.796108860216983,
+                "v6preferred": 7.703041448014313
             },
             {
                 "as": 6805,
                 "as-descr": "",
                 "autnum": "TDDE-ASN1",
                 "cc": "DE",
-                "cumulative": 55.27036930181781,
+                "cumulative": 55.13479031369923,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3442,17 +5034,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TDDE-ASN1 Telefonica Germany GmbH & Co.OHG, DE",
-                "percent": 10.164369818520681,
-                "samples": 606672,
-                "v6capable": 14.39295039164491,
-                "v6preferred": 14.261413086478361
+                "percent": 10.056864853313387,
+                "samples": 662607,
+                "v6capable": 15.247197811070514,
+                "v6preferred": 15.102013712502282
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "DE",
-                "cumulative": 64.59007065962048,
+                "cumulative": 64.69765067076425,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -3466,17 +5058,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 9.319701357802666,
-                "samples": 556257,
-                "v6capable": 71.26076615665062,
-                "v6preferred": 70.87263620952186
+                "percent": 9.562860357065016,
+                "samples": 630059,
+                "v6capable": 71.49520917882293,
+                "v6preferred": 71.0911200379647
             },
             {
                 "as": 31334,
                 "as-descr": "",
                 "autnum": "KABELDEUTSCHLAND-AS",
                 "cc": "DE",
-                "cumulative": 73.11675708966939,
+                "cumulative": 73.45062778093812,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3500,10 +5092,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "KABELDEUTSCHLAND-AS Vodafone Kabel Deutschland GmbH, DE",
-                "percent": 8.526686430048919,
-                "samples": 508925,
-                "v6capable": 72.58947782089699,
-                "v6preferred": 72.06720047158225
+                "percent": 8.75297711017387,
+                "samples": 576699,
+                "v6capable": 72.63823935883364,
+                "v6preferred": 72.12358613418785
             }
         ],
         "monitoring_dates": {
@@ -3523,14 +5115,14 @@ const lockdowns ={
     "Greece": {
         "cc": "GR",
         "continent": "Europe",
-        "end": "2020-04-06",
+        "end": "2020-04-27",
         "eyeball": [
             {
                 "as": 6799,
                 "as-descr": "Athens - Greece",
                 "autnum": "OTENET-GR",
                 "cc": "GR",
-                "cumulative": 41.98886512410277,
+                "cumulative": 42.001778070475034,
                 "dependency": [
                     {
                         "asn": 12713,
@@ -3549,17 +5141,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "OTENET-GR Ote SA (Hellenic Telecommunications Organisation), GR",
-                "percent": 41.98886512410277,
-                "samples": 2307509,
-                "v6capable": 80.90733340585021,
-                "v6preferred": 80.56293604922017
+                "percent": 42.001778070475034,
+                "samples": 2571503,
+                "v6capable": 81.86099724557972,
+                "v6preferred": 81.50949075307321
             },
             {
                 "as": 3329,
                 "as-descr": "Athens, Greece",
                 "autnum": "HOL-GR",
                 "cc": "GR",
-                "cumulative": 58.19908776703086,
+                "cumulative": 58.569471578557774,
                 "dependency": [
                     {
                         "asn": 174,
@@ -3578,17 +5170,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "HOL-GR VODAFONE-PANAFON HELLENIC TELECOMMUNICATIONS COMPANY SA, GR",
-                "percent": 16.210222642928084,
-                "samples": 890837,
-                "v6capable": 7.5700717415194925,
-                "v6preferred": 7.500811035015384
+                "percent": 16.56769350808274,
+                "samples": 1014335,
+                "v6capable": 7.277773122291945,
+                "v6preferred": 7.214381836375557
             },
             {
                 "as": 25472,
                 "as-descr": "",
                 "autnum": "WIND-AS",
                 "cc": "GR",
-                "cumulative": 70.49865654352287,
+                "cumulative": 71.02875407501708,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -3612,17 +5204,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "WIND-AS WIND HELLAS TELECOMMUNICATIONS SA, GR",
-                "percent": 12.299568776492004,
-                "samples": 675926,
-                "v6capable": 0.06879451300882049,
-                "v6preferred": 0.0519287614324645
+                "percent": 12.459282496459295,
+                "samples": 762803,
+                "v6capable": 0.06476115065095445,
+                "v6preferred": 0.047063265351604544
             },
             {
                 "as": 1241,
                 "as-descr": "Forthnet",
                 "autnum": "FORTHNET-GR",
                 "cc": "GR",
-                "cumulative": 82.58612551373609,
+                "cumulative": 83.23078312685274,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -3641,17 +5233,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "FORTHNET-GR Forthnet, GR",
-                "percent": 12.087468970213225,
-                "samples": 664270,
-                "v6capable": 61.350203983320036,
-                "v6preferred": 61.087961220588014
+                "percent": 12.202029051835671,
+                "samples": 747053,
+                "v6capable": 61.52615677870245,
+                "v6preferred": 61.241036445874656
             },
             {
                 "as": 29247,
                 "as-descr": "Cosmote Mobile Telecommunications S.A.",
                 "autnum": "COSMOTE-GR",
                 "cc": "GR",
-                "cumulative": 89.08375649573854,
+                "cumulative": 89.71902533774929,
                 "dependency": [
                     {
                         "asn": 6799,
@@ -3675,10 +5267,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "COSMOTE-GR Cosmote Mobile Telecommunications S.A., GR",
-                "percent": 6.497630982002451,
-                "samples": 357079,
-                "v6capable": 81.03864971056825,
-                "v6preferred": 80.70426992346232
+                "percent": 6.488242210896537,
+                "samples": 397234,
+                "v6capable": 81.19043183614696,
+                "v6preferred": 80.86039966367431
             }
         ],
         "monitoring_dates": {
@@ -3695,321 +5287,90 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-23"
     },
-    "Honduras": {
-        "cc": "HN",
-        "continent": "America",
-        "end": "2020-04-12",
+    "Guernsey": {
+        "cc": "GG",
+        "continent": "Europe",
+        "end": "2020-03-25",
         "eyeball": [
             {
-                "as": 52262,
-                "as-descr": "Celular S.A",
-                "autnum": "Telefonica",
-                "cc": "HN",
-                "cumulative": 23.039568258504254,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.044720989220038,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 701,
-                        "hege": 0.567214471922779,
-                        "name": "UUNET - MCI Communications Services, Inc. d/b/a Verizon Business, US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0643627140139505,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.054850982878884,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0763228352004509,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 262206,
-                        "hege": 1.0,
-                        "name": "COMCEL GUATEMALA S.A., GT"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.252651457962174,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "Telefnica Celular S.A, HN",
-                "percent": 23.039568258504254,
-                "samples": 143187,
-                "v6capable": 0.0034919371171963937,
-                "v6preferred": 0.0034919371171963937
-            },
-            {
-                "as": 14754,
+                "as": 8680,
                 "as-descr": "",
-                "autnum": "Telgua",
-                "cc": "HN",
-                "cumulative": 45.02343587837479,
+                "autnum": "SURE-INTERNATIONAL-LIMITED",
+                "cc": "GG",
+                "cumulative": 89.31190681622088,
                 "dependency": [
                     {
                         "asn": 2914,
-                        "hege": 0.0654963677661482,
+                        "hege": 0.249973692518152,
                         "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
                     },
                     {
-                        "asn": 174,
-                        "hege": 0.255985989324507,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.42183293453971,
-                        "name": "TELIANET Telia Company AB, EU"
+                        "asn": 6939,
+                        "hege": 0.0188887719667473,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
                     },
                     {
                         "asn": 3356,
-                        "hege": 0.146761493308461,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.174394808469163,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    }
-                ],
-                "name": "Telgua, GT",
-                "percent": 21.983867619870537,
-                "samples": 136626,
-                "v6capable": 0.003659625547114019,
-                "v6preferred": 0.003659625547114019
-            },
-            {
-                "as": 27884,
-                "as-descr": "S.A.",
-                "autnum": "CABLECOLOR",
-                "cc": "HN",
-                "cumulative": 57.98469145575985,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0410095667221732,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 52468,
-                        "hege": 0.0828423356946782,
-                        "name": "UFINET PANAMA S.A., PA"
-                    },
-                    {
-                        "asn": 22869,
-                        "hege": 0.822652302443685,
-                        "name": "CABLECOLOR S.A., HN"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0232148104613576,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.0532883130202418,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    },
-                    {
-                        "asn": 23520,
-                        "hege": 0.0178655117084513,
-                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.175827329972018,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 12956,
-                        "hege": 0.822652302443685,
-                        "name": "Telefonica Telefonica International Wholesale Services, SL, ES"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0344548927416985,
+                        "hege": 0.37993265284647,
                         "name": "LEVEL3 - Level 3 Parent, LLC, US"
                     }
                 ],
-                "name": "CABLECOLOR S.A., HN",
-                "percent": 12.961255577385062,
-                "samples": 80552,
+                "name": "Sure Guernsey Limited, GB",
+                "percent": 89.31190681622088,
+                "samples": 8281,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
             {
-                "as": 20299,
-                "as-descr": "Limited",
-                "autnum": "Newcom",
-                "cc": "HN",
-                "cumulative": 65.56977423356713,
+                "as": 8681,
+                "as-descr": "",
+                "autnum": "JT",
+                "cc": "GG",
+                "cumulative": 99.84900776531492,
                 "dependency": [
                     {
-                        "asn": 2914,
-                        "hege": 0.0327927834054853,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 52262,
-                        "hege": 0.704989154013015,
-                        "name": "Telefnica Celular S.A, HN"
-                    },
-                    {
-                        "asn": 701,
-                        "hege": 0.48886328141357,
-                        "name": "UUNET - MCI Communications Services, Inc. d/b/a Verizon Business, US"
-                    },
-                    {
                         "asn": 174,
-                        "hege": 0.122129008198312,
+                        "hege": 0.127774339022018,
                         "name": "COGENT-174 - Cogent Communications, US"
                     },
                     {
-                        "asn": 6939,
-                        "hege": 0.0583493649062798,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0963282431259262,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 262206,
-                        "hege": 1.0,
-                        "name": "COMCEL GUATEMALA S.A., GT"
-                    },
-                    {
                         "asn": 3356,
-                        "hege": 0.256361318679794,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 23243,
-                        "hege": 0.0498915401301518,
-                        "name": "COMCEL GUATEMALA S.A., GT"
-                    }
-                ],
-                "name": "Newcom Limited, GT",
-                "percent": 7.585082777807277,
-                "samples": 47140,
-                "v6capable": 0.0021213406873143827,
-                "v6preferred": 0.0021213406873143827
-            },
-            {
-                "as": 27932,
-                "as-descr": "y Telecomunicaciones",
-                "autnum": "Redes",
-                "cc": "HN",
-                "cumulative": 70.83926672169633,
-                "dependency": [
-                    {
-                        "asn": 3491,
-                        "hege": 0.118883698057536,
-                        "name": "BTN-ASN - PCCW Global, Inc., US"
-                    },
-                    {
-                        "asn": 6830,
-                        "hege": 0.0695844602901401,
-                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
-                    },
-                    {
-                        "asn": 23520,
-                        "hege": 0.284612736660929,
-                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.71538726333907,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0322104745512663,
+                        "hege": 0.377597488725794,
                         "name": "LEVEL3 - Level 3 Parent, LLC, US"
                     }
                 ],
-                "name": "Redes y Telecomunicaciones, HN",
-                "percent": 5.269492488129201,
-                "samples": 32749,
-                "v6capable": 0.0,
-                "v6preferred": 0.0
-            },
-            {
-                "as": 27696,
-                "as-descr": "Networks de Honduras S. de R.L.",
-                "autnum": "Columbus",
-                "cc": "HN",
-                "cumulative": 75.94849738448195,
-                "dependency": [
-                    {
-                        "asn": 3491,
-                        "hege": 0.148473296550212,
-                        "name": "BTN-ASN - PCCW Global, Inc., US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.013563269824683,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 6830,
-                        "hege": 0.132167514870654,
-                        "name": "LGI-UPC Liberty Global Operations B.V., AT"
-                    },
-                    {
-                        "asn": 23520,
-                        "hege": 1.0,
-                        "name": "COLUMBUS-NETWORKS - Columbus Networks USA, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.44205482298451,
-                        "name": "TELIANET Telia Company AB, EU"
-                    }
-                ],
-                "name": "Columbus Networks de Honduras S. de R.L., HN",
-                "percent": 5.109230662785627,
-                "samples": 31753,
+                "name": "JT JT (Jersey) Limited, JE",
+                "percent": 10.537100949094047,
+                "samples": 977,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
         ],
         "monitoring_dates": {
             "before": {
-                "monday": "2020-02-17",
-                "sunday": "2020-02-23"
+                "monday": "2020-02-24",
+                "sunday": "2020-03-01"
             },
             "lockdown": {
-                "monday": "2020-03-16",
-                "sunday": "2020-03-22"
+                "monday": "2020-03-23",
+                "sunday": "2020-03-29"
             }
         },
-        "name": "Honduras",
+        "name": "Guernsey",
         "scope": "National",
-        "start": "\t2020-03-17"
+        "start": "\t2020-03-25"
     },
     "Hungary": {
         "cc": "HU",
         "continent": "Europe",
-        "end": "2020-04-11",
+        "end": "2020-04-10",
         "eyeball": [
             {
                 "as": 5483,
                 "as-descr": "Magyar Telekom Nyrt.",
                 "autnum": "MAGYAR-TELEKOM-MAIN-AS",
                 "cc": "HU",
-                "cumulative": 35.73768639042179,
+                "cumulative": 35.888972827598884,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -4028,17 +5389,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "HTC-AS Magyar Telekom plc., HU",
-                "percent": 35.73768639042179,
-                "samples": 992903,
-                "v6capable": 47.883932267301034,
-                "v6preferred": 47.29052082630428
+                "percent": 35.888972827598884,
+                "samples": 1179120,
+                "v6capable": 48.12402469638374,
+                "v6preferred": 47.55733089083384
             },
             {
                 "as": 20845,
                 "as-descr": "",
                 "autnum": "DIGICABLE",
                 "cc": "HU",
-                "cumulative": 54.29754368486143,
+                "cumulative": 54.779048086329304,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -4062,17 +5423,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "DIGICABLE DIGI Tavkozlesi es Szolgaltato Kft., HU",
-                "percent": 18.559857294439638,
-                "samples": 515650,
-                "v6capable": 14.130902744109376,
-                "v6preferred": 14.039561718219723
+                "percent": 18.89007525873042,
+                "samples": 620627,
+                "v6capable": 14.233186761130277,
+                "v6preferred": 14.149239398221477
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "HU",
-                "cumulative": 71.38333834837606,
+                "cumulative": 72.04871394194917,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -4086,17 +5447,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 17.08579466351463,
-                "samples": 474696,
-                "v6capable": 35.390439354871326,
-                "v6preferred": 35.18673003353725
+                "percent": 17.269665855619873,
+                "samples": 567389,
+                "v6capable": 36.139755969890146,
+                "v6preferred": 35.92596966102621
             },
             {
                 "as": 8448,
                 "as-descr": "Torokbalint, Hungary",
                 "autnum": "PGSM-HU",
                 "cc": "HU",
-                "cumulative": 77.73033083445031,
+                "cumulative": 78.43118753930187,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4120,17 +5481,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "PGSM-HU Telenor Hungary plc, HU",
-                "percent": 6.346992486074258,
-                "samples": 176339,
-                "v6capable": 0.06294693743301255,
-                "v6preferred": 0.04480007258745938
+                "percent": 6.382473597352704,
+                "samples": 209694,
+                "v6capable": 0.07010214884546052,
+                "v6preferred": 0.04864230736215629
             },
             {
                 "as": 21334,
                 "as-descr": "",
                 "autnum": "ASN-VODAFONE-",
                 "cc": "HU",
-                "cumulative": 83.10720049756901,
+                "cumulative": 83.48222139568632,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4149,10 +5510,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASN-VODAFONE-HU Vodafone Hungary Ltd., HU",
-                "percent": 5.376869663118704,
-                "samples": 149386,
-                "v6capable": 0.08970050741033296,
-                "v6preferred": 0.06894889748704698
+                "percent": 5.051033856384452,
+                "samples": 165950,
+                "v6capable": 0.0909912624284423,
+                "v6preferred": 0.06869539017776438
             }
         ],
         "monitoring_dates": {
@@ -4172,14 +5533,14 @@ const lockdowns ={
     "India": {
         "cc": "IN",
         "continent": "Asia",
-        "end": "2020-04-15",
+        "end": "2020-05-03",
         "eyeball": [
             {
                 "as": 55836,
                 "as-descr": "Reliance Jio Infocomm Limited",
                 "autnum": "RELIANCEJIO-IN",
                 "cc": "IN",
-                "cumulative": 45.9362445109966,
+                "cumulative": 45.40959686928967,
                 "dependency": [
                     {
                         "asn": 64049,
@@ -4198,17 +5559,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "RELIANCEJIO-IN Reliance Jio Infocomm Limited, IN",
-                "percent": 45.9362445109966,
-                "samples": 35028980,
-                "v6capable": 92.39441171281608,
-                "v6preferred": 90.0825116803287
+                "percent": 45.40959686928967,
+                "samples": 38815613,
+                "v6capable": 92.49832019914254,
+                "v6preferred": 90.20478177170614
             },
             {
                 "as": 45609,
                 "as-descr": "Bharti Airtel Ltd. AS for GPRS Service",
                 "autnum": "BHARTI-MOBILITY-AS-AP",
                 "cc": "IN",
-                "cumulative": 67.2821904885574,
+                "cumulative": 67.22574475593245,
                 "dependency": [
                     {
                         "asn": 9498,
@@ -4227,17 +5588,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "BHARTI-MOBILITY-AS-AP Bharti Airtel Ltd. AS for GPRS Service, IN",
-                "percent": 21.345945977560795,
-                "samples": 16277489,
-                "v6capable": 55.81381133171093,
-                "v6preferred": 54.22945762703326
+                "percent": 21.816147886642778,
+                "samples": 18648198,
+                "v6capable": 56.736500760019815,
+                "v6preferred": 55.16662789616455
             },
             {
                 "as": 38266,
                 "as-descr": "Vodafone India Ltd.",
                 "autnum": "VODAFONE-IN",
                 "cc": "IN",
-                "cumulative": 74.72783589034182,
+                "cumulative": 74.77682673319195,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -4286,17 +5647,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "HUTCHVAS-AS Vodafone Essar Ltd., Telecommunication - Value Added Services, IN",
-                "percent": 7.445645401784414,
-                "samples": 5677725,
-                "v6capable": 55.651568189723875,
-                "v6preferred": 53.82050028840777
+                "percent": 7.551081977259504,
+                "samples": 6454580,
+                "v6capable": 56.000948163939405,
+                "v6preferred": 54.2235435923019
             },
             {
                 "as": 45271,
                 "as-descr": "Idea Cellular Limited",
                 "autnum": "ICLNET-AS-AP",
                 "cc": "IN",
-                "cumulative": 80.38609232947815,
+                "cumulative": 80.28420963326658,
                 "dependency": [
                     {
                         "asn": 9498,
@@ -4355,10 +5716,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "ICLNET-AS-AP Idea Cellular Limited, IN",
-                "percent": 5.6582564391363235,
-                "samples": 4314740,
-                "v6capable": 59.29122032845548,
-                "v6preferred": 57.15111455151411
+                "percent": 5.507382900074633,
+                "samples": 4707649,
+                "v6capable": 60.06433359836301,
+                "v6preferred": 57.80562654522459
             }
         ],
         "monitoring_dates": {
@@ -4385,7 +5746,7 @@ const lockdowns ={
                 "as-descr": "",
                 "autnum": "EARTHLINK-AS",
                 "cc": "IQ",
-                "cumulative": 49.26555283741238,
+                "cumulative": 49.74174493779047,
                 "dependency": [
                     {
                         "asn": 60051,
@@ -4454,17 +5815,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "EarthLink-AS EarthLink Ltd. Communications&Internet Services, IQ",
-                "percent": 49.26555283741238,
-                "samples": 1886178,
-                "v6capable": 0.004347415779422727,
-                "v6preferred": 0.004082329451409146
+                "percent": 49.74174493779047,
+                "samples": 1976052,
+                "v6capable": 0.004655747925661875,
+                "v6preferred": 0.004402718147093295
             },
             {
                 "as": 21277,
                 "as-descr": "",
                 "autnum": "NEWROZ-TELECOM-ASN",
                 "cc": "IQ",
-                "cumulative": 56.913895806136665,
+                "cumulative": 57.16082296256151,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -4488,17 +5849,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "NWRZ Newroz Telecom Ltd., IQ",
-                "percent": 7.648342968724289,
-                "samples": 292824,
-                "v6capable": 0.005464033002759336,
-                "v6preferred": 0.005464033002759336
+                "percent": 7.419078024771039,
+                "samples": 294732,
+                "v6capable": 0.006785825767137603,
+                "v6preferred": 0.006785825767137603
             },
             {
                 "as": 206206,
                 "as-descr": "",
                 "autnum": "KNET",
                 "cc": "IQ",
-                "cumulative": 63.6149458521849,
+                "cumulative": 63.92086538289689,
                 "dependency": [
                     {
                         "asn": 21277,
@@ -4557,10 +5918,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "KNET Kurdistan Net Company for Computer and Internet Ltd., IQ",
-                "percent": 6.701050046048236,
-                "samples": 256556,
-                "v6capable": 0.002338670699574362,
-                "v6preferred": 0.0019488922496453016
+                "percent": 6.76004242033538,
+                "samples": 268551,
+                "v6capable": 0.0033513187439257346,
+                "v6preferred": 0.002978949994600653
             }
         ],
         "monitoring_dates": {
@@ -4580,14 +5941,14 @@ const lockdowns ={
     "Ireland": {
         "cc": "IE",
         "continent": "Europe",
-        "end": "2020-04-12",
+        "end": "2020-05-05",
         "eyeball": [
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "IE",
-                "cumulative": 20.074177977518907,
+                "cumulative": 20.76127099291026,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4606,17 +5967,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 20.074177977518907,
-                "samples": 137530,
-                "v6capable": 49.720061077583075,
-                "v6preferred": 49.10492256235003
+                "percent": 20.76127099291026,
+                "samples": 161733,
+                "v6capable": 50.407770832174016,
+                "v6preferred": 49.82965752196522
             },
             {
                 "as": 15502,
                 "as-descr": "",
                 "autnum": "VODAFONE-IRELAND-ASN",
                 "cc": "IE",
-                "cumulative": 39.82534166096198,
+                "cumulative": 40.761964177748,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -4640,17 +6001,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Vodafone-Ireland-ASN Vodafone Ireland Limited, IE",
-                "percent": 19.75116368344307,
-                "samples": 135317,
-                "v6capable": 0.0657714847358425,
-                "v6preferred": 0.05246938669937998
+                "percent": 20.000693184837736,
+                "samples": 155808,
+                "v6capable": 0.05455432326966523,
+                "v6preferred": 0.039792565208461694
             },
             {
                 "as": 5466,
                 "as-descr": "Internet House",
                 "autnum": "EIRCOM",
                 "cc": "IE",
-                "cumulative": 59.40208054484761,
+                "cumulative": 60.55919477595368,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -4664,17 +6025,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "EIRCOM Eircom Limited, IE",
-                "percent": 19.57673888388563,
-                "samples": 134122,
-                "v6capable": 59.52640133609699,
-                "v6preferred": 59.100669539672836
+                "percent": 19.79723059820568,
+                "samples": 154223,
+                "v6capable": 60.23939360536366,
+                "v6preferred": 59.83478469488987
             },
             {
                 "as": 2110,
                 "as-descr": "BT Ireland was previously known as Esat Net, EUnet Ireland & IEUnet.",
                 "autnum": "AS-BTIRE",
                 "cc": "IE",
-                "cumulative": 69.29992161831183,
+                "cumulative": 70.61717840395475,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4693,17 +6054,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "AS-BTIRE BT Communications Ireland Limited, EU",
-                "percent": 9.897841073464223,
-                "samples": 67811,
-                "v6capable": 0.014746869976847415,
-                "v6preferred": 0.014746869976847415
+                "percent": 10.057983628001073,
+                "samples": 78353,
+                "v6capable": 0.014039028499227854,
+                "v6preferred": 0.01276275318111623
             },
             {
                 "as": 13280,
                 "as-descr": "",
                 "autnum": "H3G",
                 "cc": "IE",
-                "cumulative": 75.4408422601367,
+                "cumulative": 77.93823723095764,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -4737,17 +6098,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Three Ireland (Hutchison) limited, IE",
-                "percent": 6.140920641824877,
-                "samples": 42072,
-                "v6capable": 0.12597451987069785,
-                "v6preferred": 0.09507510933637574
+                "percent": 7.321058827002887,
+                "samples": 57032,
+                "v6capable": 0.12799831673446485,
+                "v6preferred": 0.08942348155421517
             },
             {
                 "as": 15751,
                 "as-descr": "",
                 "autnum": "METEORMOBILECOMMS-AS",
                 "cc": "IE",
-                "cumulative": 80.81998630874794,
+                "cumulative": 83.02608557238455,
                 "dependency": [
                     {
                         "asn": 5466,
@@ -4766,10 +6127,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "METEORMOBILECOMMS-AS Meteor, IE",
-                "percent": 5.379144048611243,
-                "samples": 36853,
-                "v6capable": 0.21979214717933412,
-                "v6preferred": 0.17366293110465905
+                "percent": 5.087848341426908,
+                "samples": 39635,
+                "v6capable": 0.23464110003784533,
+                "v6preferred": 0.17661158067364702
             }
         ],
         "monitoring_dates": {
@@ -4789,14 +6150,14 @@ const lockdowns ={
     "Italy": {
         "cc": "IT",
         "continent": "Europe",
-        "end": "2020-04-13",
+        "end": "2020-05-03",
         "eyeball": [
             {
                 "as": 3269,
                 "as-descr": "",
                 "autnum": "ASN-IBSNAZ",
                 "cc": "IT",
-                "cumulative": 22.83471185716051,
+                "cumulative": 23.37318337086375,
                 "dependency": [
                     {
                         "asn": 174,
@@ -4815,17 +6176,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASN-IBSNAZ Telecom Italia S.p.a., IT",
-                "percent": 22.83471185716051,
-                "samples": 2461170,
-                "v6capable": 0.007232332589784533,
-                "v6preferred": 0.006663497442273391
+                "percent": 23.37318337086375,
+                "samples": 2740750,
+                "v6capable": 0.0076256499133448875,
+                "v6preferred": 0.00689592264890997
             },
             {
                 "as": 30722,
                 "as-descr": "",
                 "autnum": "VODAFONE-IT-ASN",
                 "cc": "IT",
-                "cumulative": 43.84095446028259,
+                "cumulative": 44.17774279392583,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -4849,17 +6210,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "VODAFONE-IT-ASN Vodafone Italia S.p.A., IT",
-                "percent": 21.006242603122082,
-                "samples": 2264094,
-                "v6capable": 0.01386868213068892,
-                "v6preferred": 0.011218615481512694
+                "percent": 20.80455942306208,
+                "samples": 2439552,
+                "v6capable": 0.01569960386169264,
+                "v6preferred": 0.01254328663623485
             },
             {
                 "as": 1267,
                 "as-descr": "IUNET",
                 "autnum": "ASN-WINDTRE",
                 "cc": "IT",
-                "cumulative": 60.33239699853296,
+                "cumulative": 60.779299414252634,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -4873,17 +6234,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASN-WINDTRE Wind Telecomunicazioni SpA, EU",
-                "percent": 16.49144253825037,
-                "samples": 1777480,
-                "v6capable": 0.011589441231406261,
-                "v6preferred": 0.009339064293269122
+                "percent": 16.601556620326804,
+                "samples": 1946706,
+                "v6capable": 0.012688099795243863,
+                "v6preferred": 0.010479240316719629
             },
             {
                 "as": 12874,
                 "as-descr": "",
                 "autnum": "FASTWEB",
                 "cc": "IT",
-                "cumulative": 71.37057073372947,
+                "cumulative": 71.93259108250054,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -4912,17 +6273,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "FASTWEB Fastweb SpA, IT",
-                "percent": 11.038173735196501,
-                "samples": 1189716,
-                "v6capable": 38.02041831832135,
-                "v6preferred": 37.77893211489128
+                "percent": 11.153291668247904,
+                "samples": 1307840,
+                "v6capable": 38.96363469537558,
+                "v6preferred": 38.68462503058478
             },
             {
                 "as": 16232,
                 "as-descr": "Service Provider",
                 "autnum": "ASN-TIM",
                 "cc": "IT",
-                "cumulative": 80.55069698120168,
+                "cumulative": 80.62385058218692,
                 "dependency": [
                     {
                         "asn": 3269,
@@ -4946,10 +6307,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASN-TIM TELECOM ITALIA SPA, IT",
-                "percent": 9.180126247472211,
-                "samples": 989452,
-                "v6capable": 0.02385158653476874,
-                "v6preferred": 0.018899350347465062
+                "percent": 8.691259499686382,
+                "samples": 1019141,
+                "v6capable": 0.023745487621438053,
+                "v6preferred": 0.019231882536371318
             }
         ],
         "monitoring_dates": {
@@ -4966,120 +6327,256 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-09"
     },
+    "Japan": {
+        "cc": "JP",
+        "continent": "Asia",
+        "end": "2020-05-06",
+        "eyeball": [
+            {
+                "as": 2516,
+                "as-descr": "KDDI CORPORATION",
+                "autnum": "KDDI",
+                "cc": "JP",
+                "cumulative": 20.147131744010775,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0583260703541382,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0518201001932168,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.171720599372472,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0435368738382624,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "KDDI KDDI CORPORATION, JP",
+                "percent": 20.147131744010775,
+                "samples": 2202999,
+                "v6capable": 59.53007695418836,
+                "v6preferred": 58.633934922349034
+            },
+            {
+                "as": 17676,
+                "as-descr": "Softbank BB Corp.",
+                "autnum": "GIGAINFRA",
+                "cc": "JP",
+                "cumulative": 39.201406842931135,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0136494593601511,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.334829884906725,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "GIGAINFRA Softbank BB Corp., JP",
+                "percent": 19.054275098920357,
+                "samples": 2083500,
+                "v6capable": 50.5746100311975,
+                "v6preferred": 48.96227501799856
+            },
+            {
+                "as": 4713,
+                "as-descr": "NTT Communications Corporation",
+                "autnum": "OCN",
+                "cc": "JP",
+                "cumulative": 53.699519888968496,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 1.0,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0114951946637614,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0632950582785146,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0155521083203292,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "OCN NTT Communications Corporation, JP",
+                "percent": 14.49811304603736,
+                "samples": 1585304,
+                "v6capable": 47.411474392293215,
+                "v6preferred": 42.35509403874588
+            },
+            {
+                "as": 9605,
+                "as-descr": "NTT DOCOMO, INC.",
+                "autnum": "DOCOMO",
+                "cc": "JP",
+                "cumulative": 62.25258936029764,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.299911274475137,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 2497,
+                        "hege": 0.157861546323324,
+                        "name": "IIJ Internet Initiative Japan Inc., JP"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0381444990359438,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    }
+                ],
+                "name": "DOCOMO NTT DOCOMO, INC., JP",
+                "percent": 8.553069471329145,
+                "samples": 935240,
+                "v6capable": 11.31367349557333,
+                "v6preferred": 10.823852700910995
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-03-09",
+                "sunday": "2020-03-15"
+            },
+            "lockdown": {
+                "monday": "2020-04-06",
+                "sunday": "2020-04-12"
+            }
+        },
+        "name": "Japan",
+        "scope": "National",
+        "start": "2020-04-07"
+    },
     "Jordan": {
         "cc": "JO",
         "continent": "Asia",
-        "end": "2020-04-12",
+        "end": "2020-03-18",
         "eyeball": [
             {
                 "as": 48832,
                 "as-descr": "",
                 "autnum": "ZAIN-",
                 "cc": "JO",
-                "cumulative": 33.32699147484564,
+                "cumulative": 32.393769968489664,
                 "dependency": [
                     {
                         "asn": 3257,
-                        "hege": 0.114675287711707,
+                        "hege": 0.126124297755818,
                         "name": "GTT-BACKBONE GTT Communications Inc., DE"
                     },
                     {
-                        "asn": 5511,
-                        "hege": 0.036024572180781,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0140851250548486,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 59605,
-                        "hege": 0.899670908293111,
-                        "name": "ZAINGP-AS MENA LEVANT W.L.L, BH"
-                    },
-                    {
                         "asn": 174,
-                        "hege": 0.037670482492773,
+                        "hege": 0.0367300168410046,
                         "name": "COGENT-174 - Cogent Communications, US"
                     },
                     {
+                        "asn": 59605,
+                        "hege": 0.897380688124306,
+                        "name": "ZAINGP-AS MENA LEVANT W.L.L, BH"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.0364483906770255,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
                         "asn": 1299,
-                        "hege": 0.0750119862230437,
+                        "hege": 0.0847291083695079,
                         "name": "TELIANET Telia Company AB, EU"
                     },
                     {
                         "asn": 3356,
-                        "hege": 0.0797279508556384,
+                        "hege": 0.0751165371809101,
                         "name": "LEVEL3 - Level 3 Parent, LLC, US"
                     }
                 ],
                 "name": "Zain-Jo Linkdotnet-Jordan, JO",
-                "percent": 33.32699147484564,
-                "samples": 550032,
-                "v6capable": 0.005999650929400471,
-                "v6preferred": 0.005636035721558018
+                "percent": 32.393769968489664,
+                "samples": 589990,
+                "v6capable": 0.006440787131985288,
+                "v6preferred": 0.005762809539144731
             },
             {
                 "as": 9038,
                 "as-descr": "",
                 "autnum": "BAT-AS9038",
                 "cc": "JO",
-                "cumulative": 57.76291951696851,
+                "cumulative": 57.62998769564933,
                 "dependency": [
                     {
                         "asn": 3257,
-                        "hege": 0.40894610956676,
+                        "hege": 0.417074859446812,
                         "name": "GTT-BACKBONE GTT Communications Inc., DE"
                     },
                     {
                         "asn": 6453,
-                        "hege": 0.0702053916472603,
+                        "hege": 0.0537357859324758,
                         "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
                     },
                     {
                         "asn": 8697,
-                        "hege": 0.186699627172112,
+                        "hege": 0.194522722934379,
                         "name": "JTC-AS8697 Jordan Telecommunications Company, JO"
                     },
                     {
                         "asn": 174,
-                        "hege": 0.386867421389191,
+                        "hege": 0.391504085940313,
                         "name": "COGENT-174 - Cogent Communications, US"
                     },
                     {
                         "asn": 5511,
-                        "hege": 0.13141257479693,
+                        "hege": 0.139983359116079,
                         "name": "Opentransit Orange S.A., FR"
                     },
                     {
                         "asn": 1299,
-                        "hege": 0.0462490767233899,
+                        "hege": 0.0474218981456289,
                         "name": "TELIANET Telia Company AB, EU"
                     },
                     {
                         "asn": 3356,
-                        "hege": 0.0425405076407862,
+                        "hege": 0.0387915601023018,
                         "name": "LEVEL3 - Level 3 Parent, LLC, US"
                     }
                 ],
                 "name": "BAT-AS9038 Batelco Jordan, JO",
-                "percent": 24.435928042122868,
-                "samples": 403293,
-                "v6capable": 0.005703049643807356,
-                "v6preferred": 0.005455090963641818
+                "percent": 25.236217727159673,
+                "samples": 459629,
+                "v6capable": 0.007179703630536802,
+                "v6preferred": 0.006309436523805069
             },
             {
                 "as": 8376,
                 "as-descr": "Data Communications",
                 "autnum": "Jordan",
                 "cc": "JO",
-                "cumulative": 80.74745063347895,
+                "cumulative": 80.49362353518654,
                 "dependency": [
                     {
-                        "asn": 174,
-                        "hege": 0.0550494769694749,
-                        "name": "COGENT-174 - Cogent Communications, US"
+                        "asn": 6453,
+                        "hege": 0.205293356605303,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
                     },
                     {
                         "asn": 8697,
@@ -5088,74 +6585,74 @@ const lockdowns ={
                     },
                     {
                         "asn": 6939,
-                        "hege": 0.017380050380454,
+                        "hege": 0.0192104142587749,
                         "name": "HURRICANE - Hurricane Electric LLC, US"
                     },
                     {
+                        "asn": 174,
+                        "hege": 0.061973450284251,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
                         "asn": 5511,
-                        "hege": 0.634227015989713,
+                        "hege": 0.632438621992991,
                         "name": "Opentransit Orange S.A., FR"
                     },
                     {
                         "asn": 1299,
-                        "hege": 0.156502435505146,
+                        "hege": 0.143854907641586,
                         "name": "TELIANET Telia Company AB, EU"
                     },
                     {
                         "asn": 3356,
-                        "hege": 0.158871260066938,
+                        "hege": 0.155033134584254,
                         "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.204286008310716,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
                     }
                 ],
                 "name": "Jordan Data Communications Company LLC, JO",
-                "percent": 22.984531116510443,
-                "samples": 379339,
-                "v6capable": 4.934372685118061,
-                "v6preferred": 4.914601451472166
+                "percent": 22.86363583953721,
+                "samples": 416417,
+                "v6capable": 5.3448826536860885,
+                "v6preferred": 5.3232697032061616
             },
             {
                 "as": 8697,
                 "as-descr": "Jordan Telecom Group ( JTG )",
                 "autnum": "JTC-AS8697",
                 "cc": "JO",
-                "cumulative": 96.01274834738034,
+                "cumulative": 96.2855246259966,
                 "dependency": [
                     {
                         "asn": 6453,
-                        "hege": 0.216004036808549,
+                        "hege": 0.266652805675757,
                         "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
                     },
                     {
                         "asn": 174,
-                        "hege": 0.0362621475873271,
+                        "hege": 0.0396741061697832,
                         "name": "COGENT-174 - Cogent Communications, US"
                     },
                     {
                         "asn": 5511,
-                        "hege": 0.348366692503183,
+                        "hege": 0.347581661360601,
                         "name": "Opentransit Orange S.A., FR"
                     },
                     {
                         "asn": 1299,
-                        "hege": 0.0990902065082286,
+                        "hege": 0.0953725108245296,
                         "name": "TELIANET Telia Company AB, EU"
                     },
                     {
                         "asn": 3356,
-                        "hege": 0.402843600198422,
+                        "hege": 0.346301820451272,
                         "name": "LEVEL3 - Level 3 Parent, LLC, US"
                     }
                 ],
                 "name": "JTC-AS8697 Jordan Telecommunications Company, JO",
-                "percent": 15.265297713901393,
-                "samples": 251940,
-                "v6capable": 0.011907597046915932,
-                "v6preferred": 0.010319917440660475
+                "percent": 15.791901090810061,
+                "samples": 287619,
+                "v6capable": 0.010082783126288597,
+                "v6preferred": 0.008344372242445736
             }
         ],
         "monitoring_dates": {
@@ -5170,7 +6667,7 @@ const lockdowns ={
         },
         "name": "Jordan",
         "scope": "National",
-        "start": "\t2020-03-21"
+        "start": "\t2020-03-18"
     },
     "Kuwait": {
         "cc": "KW",
@@ -5182,7 +6679,7 @@ const lockdowns ={
                 "as-descr": "",
                 "autnum": "KTC3G",
                 "cc": "KW",
-                "cumulative": 32.9413028026774,
+                "cumulative": 33.46731004693931,
                 "dependency": [
                     {
                         "asn": 174,
@@ -5216,17 +6713,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "KTC3G Kuwait Telecommunication Company (Under Association), KW",
-                "percent": 32.9413028026774,
-                "samples": 257684,
-                "v6capable": 0.0031045776998183824,
-                "v6preferred": 0.0027165054873410843
+                "percent": 33.46731004693931,
+                "samples": 305588,
+                "v6capable": 0.003926855766587693,
+                "v6preferred": 0.0035996177860387188
             },
             {
                 "as": 42961,
                 "as-descr": "ZAIN",
                 "autnum": "GPRS-AS",
                 "cc": "KW",
-                "cumulative": 63.371777892546135,
+                "cumulative": 63.49444854527574,
                 "dependency": [
                     {
                         "asn": 59605,
@@ -5245,17 +6742,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "GPRS-AS Mobile Telecommunications Company, KW",
-                "percent": 30.43047508986874,
-                "samples": 238043,
-                "v6capable": 0.002520553009330247,
-                "v6preferred": 0.0021004608411085393
+                "percent": 30.027138498336427,
+                "samples": 274176,
+                "v6capable": 0.005835667600373483,
+                "v6preferred": 0.004741479925303454
             },
             {
                 "as": 29357,
                 "as-descr": "",
                 "autnum": "WATANIYATELECOM-AS",
                 "cc": "KW",
-                "cumulative": 91.47844939993762,
+                "cumulative": 91.76207487947572,
                 "dependency": [
                     {
                         "asn": 8781,
@@ -5309,10 +6806,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "WATANIYATELECOM-AS National Mobile Telecommunications Company, KW",
-                "percent": 28.10667150739148,
-                "samples": 219865,
-                "v6capable": 0.6531280558524549,
-                "v6preferred": 0.6494894594410207
+                "percent": 28.267626334199985,
+                "samples": 258110,
+                "v6capable": 1.2947967920653984,
+                "v6preferred": 1.280461818604471
             }
         ],
         "monitoring_dates": {
@@ -5332,14 +6829,14 @@ const lockdowns ={
     "Lebanon": {
         "cc": "LB",
         "continent": "Asia",
-        "end": "2020-03-29",
+        "end": "2020-03-28",
         "eyeball": [
             {
                 "as": 42003,
                 "as-descr": "OGERO Telecom",
                 "autnum": "OGERONET",
                 "cc": "LB",
-                "cumulative": 17.66423883858201,
+                "cumulative": 17.635703712912637,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -5363,17 +6860,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "OGERONET LIBANTELECOM, LB",
-                "percent": 17.66423883858201,
-                "samples": 347950,
-                "v6capable": 7.277769794510705,
-                "v6preferred": 7.166834315275183
+                "percent": 17.635703712912637,
+                "samples": 363153,
+                "v6capable": 8.246937241328036,
+                "v6preferred": 8.121370331513164
             },
             {
                 "as": 59989,
                 "as-descr": "",
                 "autnum": "THGLOBALVISION16",
                 "cc": "LB",
-                "cumulative": 29.321215007216473,
+                "cumulative": 29.4076511563759,
                 "dependency": [
                     {
                         "asn": 9002,
@@ -5407,17 +6904,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "thglobalvision16 T.H. Global Vision SARL, LB",
-                "percent": 11.656976168634465,
-                "samples": 229619,
-                "v6capable": 0.00696806448943685,
-                "v6preferred": 0.00566155239766744
+                "percent": 11.771947443463262,
+                "samples": 242407,
+                "v6capable": 0.00577541077609145,
+                "v6preferred": 0.004537822752643281
             },
             {
                 "as": 9051,
                 "as-descr": "",
                 "autnum": "Beirut-Lebanon",
                 "cc": "LB",
-                "cumulative": 40.18719676474605,
+                "cumulative": 40.23272234934868,
                 "dependency": [
                     {
                         "asn": 24634,
@@ -5441,17 +6938,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "IncoNet Data Management sal, LB",
-                "percent": 10.865981757529575,
-                "samples": 214038,
-                "v6capable": 0.02289313112624861,
-                "v6preferred": 0.021958717610891524
+                "percent": 10.825071192972779,
+                "samples": 222909,
+                "v6capable": 0.022430677989672916,
+                "v6preferred": 0.021982064429879457
             },
             {
                 "as": 39010,
                 "as-descr": "",
                 "autnum": "TERRANET-AS",
                 "cc": "LB",
-                "cumulative": 47.48514950002513,
+                "cumulative": 47.68030373078373,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5495,17 +6992,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TERRANET-AS TerraNet sal, LB",
-                "percent": 7.297952735279082,
-                "samples": 143755,
-                "v6capable": 0.00973879169420194,
-                "v6preferred": 0.008347535737887378
+                "percent": 7.447581381435048,
+                "samples": 153360,
+                "v6capable": 0.010432968179447054,
+                "v6preferred": 0.009128847157016172
             },
             {
                 "as": 38999,
                 "as-descr": "",
                 "autnum": "MTCTOUCH",
                 "cc": "LB",
-                "cumulative": 52.88438058908549,
+                "cumulative": 52.80396388486358,
                 "dependency": [
                     {
                         "asn": 42020,
@@ -5524,17 +7021,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "MTCTOUCH Mobile Interim Company no.2 sal, LB",
-                "percent": 5.399231089060356,
-                "samples": 106354,
-                "v6capable": 0.03572973277920906,
-                "v6preferred": 0.026327171521522464
+                "percent": 5.123660154079853,
+                "samples": 105506,
+                "v6capable": 0.04075597596345232,
+                "v6preferred": 0.028434401834966733
             },
             {
                 "as": 57513,
                 "as-descr": "",
                 "autnum": "MIC1-ALFA-AS",
                 "cc": "LB",
-                "cumulative": 58.13623623527071,
+                "cumulative": 57.87575903558289,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -5568,10 +7065,69 @@ const lockdowns ={
                     }
                 ],
                 "name": "MIC1-ALFA-AS Mobile interim company 1 S.A.L., LB",
-                "percent": 5.25185564618522,
-                "samples": 103451,
-                "v6capable": 0.019332824235628463,
-                "v6preferred": 0.017399541812065617
+                "percent": 5.0717951507193115,
+                "samples": 104438,
+                "v6capable": 0.026810164882514028,
+                "v6preferred": 0.022980141327869165
+            },
+            {
+                "as": 35197,
+                "as-descr": "",
+                "autnum": "VISP-LB-AS",
+                "cc": "LB",
+                "cumulative": 62.886365137393696,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0687979539641944,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.690098648154914,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 29686,
+                        "hege": 0.173913043478261,
+                        "name": "PROBENETWORKS-AS Probe Networks, DE"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.0286445012787724,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0445012787723785,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 42020,
+                        "hege": 0.826086956521739,
+                        "name": "LibanTelecom LIBANTELECOM, LB"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.070076726342711,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.205789351313648,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0757033248081841,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VISP-LB-AS Virtual ISP s.a.l., LB",
+                "percent": 5.010606101810807,
+                "samples": 103178,
+                "v6capable": 0.0029075965806664213,
+                "v6preferred": 0.0029075965806664213
             }
         ],
         "monitoring_dates": {
@@ -5591,14 +7147,14 @@ const lockdowns ={
     "Libya": {
         "cc": "LY",
         "continent": "Africa",
-        "end": "2020-04-20",
+        "end": "2020-03-22",
         "eyeball": [
             {
                 "as": 21003,
                 "as-descr": "",
                 "autnum": "GPTC-AS",
                 "cc": "LY",
-                "cumulative": 50.3505719951728,
+                "cumulative": 50.49169119425012,
                 "dependency": [
                     {
                         "asn": 37558,
@@ -5627,17 +7183,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "GPTC-AS, LY",
-                "percent": 50.3505719951728,
-                "samples": 285381,
-                "v6capable": 0.004555313773516807,
-                "v6preferred": 0.004204905021707822
+                "percent": 50.49169119425012,
+                "samples": 302781,
+                "v6capable": 0.004623804003553724,
+                "v6preferred": 0.004293532289014172
             },
             {
                 "as": 37284,
                 "as-descr": "",
                 "autnum": "Aljeel-net",
                 "cc": "LY",
-                "cumulative": 70.57771159587006,
+                "cumulative": 70.96295431615985,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5671,17 +7227,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Aljeel-net, LY",
-                "percent": 20.227139600697264,
-                "samples": 114645,
-                "v6capable": 0.0026167735182519953,
-                "v6preferred": 0.0026167735182519953
+                "percent": 20.471263121909733,
+                "samples": 122759,
+                "v6capable": 0.004073021122687542,
+                "v6preferred": 0.004073021122687542
             },
             {
                 "as": 328200,
                 "as-descr": "",
                 "autnum": "Al-Madar-Al-Jadeed",
                 "cc": "LY",
-                "cumulative": 89.58323041419366,
+                "cumulative": 89.95322388333486,
                 "dependency": [
                     {
                         "asn": 21003,
@@ -5710,17 +7266,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Al-Madar-Al-Jadeed, LY",
-                "percent": 19.005518818323605,
-                "samples": 107721,
-                "v6capable": 0.002784972289525719,
-                "v6preferred": 0.002784972289525719
+                "percent": 18.990269567175005,
+                "samples": 113878,
+                "v6capable": 0.0035125309541790338,
+                "v6preferred": 0.0035125309541790338
             },
             {
                 "as": 328286,
                 "as-descr": "",
                 "autnum": "Libyana-Mobile-AS",
                 "cc": "LY",
-                "cumulative": 96.39441907732697,
+                "cumulative": 96.43267491015817,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -5744,10 +7300,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "Libyana-Mobile-AS, LY",
-                "percent": 6.811188663133305,
-                "samples": 38605,
-                "v6capable": 0.005180676078228209,
-                "v6preferred": 0.005180676078228209
+                "percent": 6.47945102682331,
+                "samples": 38855,
+                "v6capable": 0.0051473426843392095,
+                "v6preferred": 0.0051473426843392095
             }
         ],
         "monitoring_dates": {
@@ -5767,14 +7323,14 @@ const lockdowns ={
     "Lithuania": {
         "cc": "LT",
         "continent": "Europe",
-        "end": "2020-04-13",
+        "end": "2020-04-27",
         "eyeball": [
             {
                 "as": 8764,
                 "as-descr": "",
                 "autnum": "TELIA-LIETUVA",
                 "cc": "LT",
-                "cumulative": 41.27585356221555,
+                "cumulative": 41.430089920865576,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5793,17 +7349,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telia-Lietuva Telia Lietuva, AB, LT",
-                "percent": 41.27585356221555,
-                "samples": 406575,
-                "v6capable": 0.011314025702514911,
-                "v6preferred": 0.010822111541536002
+                "percent": 41.430089920865576,
+                "samples": 448622,
+                "v6capable": 0.01092233550739821,
+                "v6preferred": 0.010253621088577912
             },
             {
                 "as": 1257,
                 "as-descr": "",
                 "autnum": "TELE2",
                 "cc": "LT",
-                "cumulative": 55.72836666094766,
+                "cumulative": 55.54859854770922,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5822,17 +7378,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TELE2, SE",
-                "percent": 14.452513098732105,
-                "samples": 142360,
-                "v6capable": 0.0014048890137679123,
-                "v6preferred": 0.0014048890137679123
+                "percent": 14.118508626843646,
+                "samples": 152881,
+                "v6capable": 0.0013082070368456511,
+                "v6preferred": 0.0013082070368456511
             },
             {
                 "as": 13194,
                 "as-descr": "Bite IP Network",
                 "autnum": "BITE",
                 "cc": "LT",
-                "cumulative": 66.24542267712603,
+                "cumulative": 65.9087529932834,
                 "dependency": [
                     {
                         "asn": 9002,
@@ -5846,17 +7402,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "BITE UAB \"Bite Lietuva\", LT",
-                "percent": 10.517056016178367,
-                "samples": 103595,
-                "v6capable": 0.0028958926589121095,
-                "v6preferred": 0.0028958926589121095
+                "percent": 10.360154445574189,
+                "samples": 112184,
+                "v6capable": 0.005348356271839122,
+                "v6preferred": 0.005348356271839122
             },
             {
                 "as": 21412,
                 "as-descr": "",
                 "autnum": "CGATES-AS",
                 "cc": "LT",
-                "cumulative": 73.81400764858343,
+                "cumulative": 73.81074414433881,
                 "dependency": [
                     {
                         "asn": 9002,
@@ -5875,17 +7431,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "CGATES-AS UAB \"Cgates\", LT",
-                "percent": 7.568584971457403,
-                "samples": 74552,
-                "v6capable": 0.01475480201738384,
-                "v6preferred": 0.01475480201738384
+                "percent": 7.901991151055418,
+                "samples": 85566,
+                "v6capable": 0.012855573475445855,
+                "v6preferred": 0.012855573475445855
             },
             {
                 "as": 15419,
                 "as-descr": "",
                 "autnum": "LRTC-AS",
                 "cc": "LT",
-                "cumulative": 80.02028387269687,
+                "cumulative": 80.13955880872629,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -5919,10 +7475,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "LRTC-AS SC \"Lithuanian Radio and TV Center\", LT",
-                "percent": 6.206276224113443,
-                "samples": 61133,
-                "v6capable": 0.0016357777305219766,
-                "v6preferred": 0.0016357777305219766
+                "percent": 6.328814664387477,
+                "samples": 68531,
+                "v6capable": 0.004377580948767711,
+                "v6preferred": 0.004377580948767711
             }
         ],
         "monitoring_dates": {
@@ -5939,17 +7495,104 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-16"
     },
+    "Luxembourg": {
+        "cc": "LU",
+        "continent": "Europe",
+        "end": "2020-03-18",
+        "eyeball": [
+            {
+                "as": 6661,
+                "as-descr": "Entreprise des P. et T. Luxembourg",
+                "autnum": "EPT-LU",
+                "cc": "LU",
+                "cumulative": 45.3316911577338,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.375679108599962,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0813572711693373,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    }
+                ],
+                "name": "EPT-LU POST Luxembourg, LU",
+                "percent": 45.3316911577338,
+                "samples": 53369,
+                "v6capable": 59.931795611684684,
+                "v6preferred": 59.58889992317638
+            },
+            {
+                "as": 56665,
+                "as-descr": "",
+                "autnum": "TANGO-TELINDUS",
+                "cc": "LU",
+                "cumulative": 66.18788753928482,
+                "dependency": [
+                    {
+                        "asn": 1299,
+                        "hege": 0.0113613445378151,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0116302521008403,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ASN-Telindus-Telecom Tango S.A., LU",
+                "percent": 20.85619638155101,
+                "samples": 24554,
+                "v6capable": 0.21992343406369635,
+                "v6preferred": 0.16290624745458987
+            },
+            {
+                "as": 8632,
+                "as-descr": "lu",
+                "autnum": "LOL-AS",
+                "cc": "LU",
+                "cumulative": 77.02794529856452,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.135294117647059,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    }
+                ],
+                "name": "LOL-AS Luxembourg Online S.A., LU",
+                "percent": 10.840057759279707,
+                "samples": 12762,
+                "v6capable": 70.16141670584548,
+                "v6preferred": 69.83231468421877
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Luxembourg",
+        "scope": "National",
+        "start": "\t2020-03-18"
+    },
     "Malaysia": {
         "cc": "MY",
         "continent": "Asia",
-        "end": "2020-04-14",
+        "end": "2020-04-28",
         "eyeball": [
             {
                 "as": 4788,
                 "as-descr": "TM Net, Internet Service Provider",
                 "autnum": "TMNET-AS-AP",
                 "cc": "MY",
-                "cumulative": 34.037651461464954,
+                "cumulative": 34.530482929602215,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -5958,17 +7601,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TMNET-AS-AP TM Net, Internet Service Provider, MY",
-                "percent": 34.037651461464954,
-                "samples": 1935162,
-                "v6capable": 42.68531523459018,
-                "v6preferred": 41.96454870444955
+                "percent": 34.530482929602215,
+                "samples": 2420668,
+                "v6capable": 43.57173309185729,
+                "v6preferred": 42.809959895367726
             },
             {
                 "as": 9534,
                 "as-descr": "Binariang Berhad",
                 "autnum": "MAXIS-AS1-AP",
                 "cc": "MY",
-                "cumulative": 53.47178725979741,
+                "cumulative": 54.00226953875298,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -5997,17 +7640,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "MAXIS-AS1-AP Binariang Berhad, MY",
-                "percent": 19.434135798332452,
-                "samples": 1104900,
-                "v6capable": 56.13358674993212,
-                "v6preferred": 54.53878179020726
+                "percent": 19.47178660915076,
+                "samples": 1365018,
+                "v6capable": 56.724160414001865,
+                "v6preferred": 55.17729436534903
             },
             {
                 "as": 4818,
                 "as-descr": "DiGi Telecommunications Sdn. Bhd.",
                 "autnum": "DIGIIX-AP",
                 "cc": "MY",
-                "cumulative": 67.60449695595193,
+                "cumulative": 67.7823496644549,
                 "dependency": [
                     {
                         "asn": 4788,
@@ -6031,17 +7674,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "DIGIIX-AP DiGi Telecommunications Sdn. Bhd., MY",
-                "percent": 14.132709696154524,
-                "samples": 803495,
-                "v6capable": 62.72297898555685,
-                "v6preferred": 61.667838629985255
+                "percent": 13.78008012570192,
+                "samples": 966016,
+                "v6capable": 63.6255507155161,
+                "v6preferred": 62.58840433284749
             },
             {
                 "as": 38466,
                 "as-descr": "U Mobile Sdn Bhd",
                 "autnum": "UMOBILE-AS-AP",
                 "cc": "MY",
-                "cumulative": 80.04156994890559,
+                "cumulative": 80.17153490574852,
                 "dependency": [
                     {
                         "asn": 4788,
@@ -6065,17 +7708,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "UMOBILE-AS-AP U Mobile Sdn Bhd, MY",
-                "percent": 12.437072992953652,
-                "samples": 707092,
-                "v6capable": 44.430003450753226,
-                "v6preferred": 43.67394907593354
+                "percent": 12.389185241293623,
+                "samples": 868511,
+                "v6capable": 46.80389770538312,
+                "v6preferred": 45.99389069338212
             },
             {
                 "as": 10030,
                 "as-descr": "Celcom Axiata Berhad",
                 "autnum": "CELCOMNET-AP",
                 "cc": "MY",
-                "cumulative": 91.87187365718636,
+                "cumulative": 92.10126336706259,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6099,10 +7742,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "CELCOMNET-AP Celcom Internet Service Provider, MY",
-                "percent": 11.830303708280764,
-                "samples": 672595,
-                "v6capable": 51.86360291111293,
-                "v6preferred": 50.335491640586085
+                "percent": 11.929728461314065,
+                "samples": 836302,
+                "v6capable": 53.413958115608956,
+                "v6preferred": 51.703810346023324
             }
         ],
         "monitoring_dates": {
@@ -6129,7 +7772,7 @@ const lockdowns ={
                 "as-descr": "",
                 "autnum": "MT-MPLS",
                 "cc": "MA",
-                "cumulative": 62.45177846232936,
+                "cumulative": 63.972414154845616,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6168,17 +7811,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "MT-MPLS, MA",
-                "percent": 62.45177846232936,
-                "samples": 2653177,
-                "v6capable": 0.00625665004634067,
-                "v6preferred": 0.006181268720481144
+                "percent": 63.972414154845616,
+                "samples": 3024665,
+                "v6capable": 0.0072074097462032985,
+                "v6preferred": 0.007042102183216985
             },
             {
                 "as": 6713,
                 "as-descr": "",
                 "autnum": "IAM-AS",
                 "cc": "MA",
-                "cumulative": 83.17508799275768,
+                "cumulative": 83.10681065473341,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6202,17 +7845,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "IAM-AS, MA",
-                "percent": 20.723309530428324,
-                "samples": 880401,
-                "v6capable": 0.003180368945514601,
-                "v6preferred": 0.0029531997351207005
+                "percent": 19.1343964998878,
+                "samples": 904689,
+                "v6capable": 0.003316056678040741,
+                "v6preferred": 0.003094986232838025
             },
             {
                 "as": 36925,
                 "as-descr": "",
                 "autnum": "ASMedi",
                 "cc": "MA",
-                "cumulative": 99.6624816017283,
+                "cumulative": 99.7025852159345,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6246,10 +7889,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASMedi, MA",
-                "percent": 16.487393608970613,
-                "samples": 700444,
-                "v6capable": 0.004282997641495965,
-                "v6preferred": 0.004282997641495965
+                "percent": 16.595774561201097,
+                "samples": 784661,
+                "v6capable": 0.004587968562219863,
+                "v6preferred": 0.004587968562219863
             }
         ],
         "monitoring_dates": {
@@ -6269,14 +7912,14 @@ const lockdowns ={
     "Nepal": {
         "cc": "NP",
         "continent": "Asia",
-        "end": "2020-04-07",
+        "end": "2020-04-15",
         "eyeball": [
             {
                 "as": 17501,
                 "as-descr": "WorldLink Communications Pvt Ltd",
                 "autnum": "WLINK-NEPAL-AS-AP",
                 "cc": "NP",
-                "cumulative": 37.6438126191034,
+                "cumulative": 37.26558158625027,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6305,17 +7948,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "WLINK-NEPAL-AS-AP WorldLink Communications Pvt Ltd, NP",
-                "percent": 37.6438126191034,
-                "samples": 609008,
-                "v6capable": 16.07778551349079,
-                "v6preferred": 15.139045792501905
+                "percent": 37.26558158625027,
+                "samples": 661893,
+                "v6capable": 17.881893296952832,
+                "v6preferred": 16.867076702729896
             },
             {
                 "as": 23752,
                 "as-descr": "Nepal Telecommunications Corporation, Internet Services",
                 "autnum": "NPTELECOM-NP-AS",
                 "cc": "NP",
-                "cumulative": 51.19163663133717,
+                "cumulative": 50.9443172342892,
                 "dependency": [
                     {
                         "asn": 9498,
@@ -6349,17 +7992,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "NPTELECOM-NP-AS Nepal Telecommunications Corporation, Internet Services, NP",
-                "percent": 13.54782401223377,
-                "samples": 219179,
-                "v6capable": 0.019162419757367266,
-                "v6preferred": 0.016424931220600514
+                "percent": 13.678735648038934,
+                "samples": 242955,
+                "v6capable": 0.018933547364738325,
+                "v6preferred": 0.01605235537445206
             },
             {
                 "as": 4007,
                 "as-descr": "Subisu Cablenet (Pvt) Ltd, Baluwatar, Kathmandu, Nepal",
                 "autnum": "SUBISU-CABLENET-AS-AP",
                 "cc": "NP",
-                "cumulative": 62.09478575141688,
+                "cumulative": 61.97395379109096,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6398,17 +8041,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "SUBISU-CABLENET-AS-AP Subisu Cablenet (Pvt) Ltd, Baluwatar, Kathmandu, Nepal, NP",
-                "percent": 10.903149120079712,
-                "samples": 176393,
-                "v6capable": 0.01133831841399602,
-                "v6preferred": 0.010204486572596419
+                "percent": 11.029636556801758,
+                "samples": 195903,
+                "v6capable": 0.015313701168435398,
+                "v6preferred": 0.014803244462820886
             },
             {
                 "as": 45650,
                 "as-descr": "Vianet Communications Pvt. Ltd.",
                 "autnum": "VIANET-NP",
                 "cc": "NP",
-                "cumulative": 70.7092334917979,
+                "cumulative": 70.7988791493516,
                 "dependency": [
                     {
                         "asn": 9498,
@@ -6422,17 +8065,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "VIANET-NP Vianet Communications Pvt. Ltd., NP",
-                "percent": 8.614447740381019,
-                "samples": 139366,
-                "v6capable": 0.012198097096852892,
-                "v6preferred": 0.012198097096852892
+                "percent": 8.824925358260643,
+                "samples": 156744,
+                "v6capable": 0.01786352268667381,
+                "v6preferred": 0.01786352268667381
             },
             {
                 "as": 38565,
                 "as-descr": "Ncell Pvt. Ltd.",
                 "autnum": "NCELL-AS-NP",
                 "cc": "NP",
-                "cumulative": 76.87958526829672,
+                "cumulative": 76.74009698499734,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6466,59 +8109,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "NCELL-AS-NP Ncell Pvt. Ltd., NP",
-                "percent": 6.170351776498825,
-                "samples": 99825,
-                "v6capable": 0.020035061357375407,
-                "v6preferred": 0.019033308289506636
-            },
-            {
-                "as": 55915,
-                "as-descr": "Classic Tech Pvt. Ltd.",
-                "autnum": "CLASSIC-NP",
-                "cc": "NP",
-                "cumulative": 81.88997890367081,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0261593341260404,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 9498,
-                        "hege": 0.655568767340468,
-                        "name": "BBIL-AP BHARTI Airtel Ltd., IN"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.345620293301625,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0180340864050733,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 136776,
-                        "hege": 1.0,
-                        "name": "CLASSIC-AS-AP Classic Tech Transit, NP"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0412207689258819,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0241775663892192,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "CLASSIC-NP Classic Tech Pvt. Ltd., NP",
-                "percent": 5.010393635374087,
-                "samples": 81059,
-                "v6capable": 19.116939513194094,
-                "v6preferred": 18.72710001357036
+                "percent": 5.94121783564573,
+                "samples": 105525,
+                "v6capable": 0.022743425728500355,
+                "v6preferred": 0.02179578298981284
             }
         ],
         "monitoring_dates": {
@@ -6538,14 +8132,14 @@ const lockdowns ={
     "Netherlands": {
         "cc": "NL",
         "continent": "Europe",
-        "end": "2020-04-15",
+        "end": "2020-04-28",
         "eyeball": [
             {
                 "as": 1136,
                 "as-descr": "KPN National",
                 "autnum": "KPN",
                 "cc": "NL",
-                "cumulative": 30.666906321264477,
+                "cumulative": 30.424664474257725,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -6569,17 +8163,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "KPN KPN B.V., EU",
-                "percent": 30.666906321264477,
-                "samples": 682469,
-                "v6capable": 29.95300885461464,
-                "v6preferred": 29.805016784645165
+                "percent": 30.424664474257725,
+                "samples": 722451,
+                "v6capable": 30.06017017071054,
+                "v6preferred": 29.886455967255912
             },
             {
                 "as": 33915,
                 "as-descr": "",
                 "autnum": "TNF-AS",
                 "cc": "NL",
-                "cumulative": 51.10147499915746,
+                "cumulative": 50.442166686249266,
                 "dependency": [
                     {
                         "asn": 6830,
@@ -6593,17 +8187,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TNF-AS Vodafone Libertel B.V., NL",
-                "percent": 20.434568677892987,
-                "samples": 454756,
-                "v6capable": 47.44654276139292,
-                "v6preferred": 47.009165354607745
+                "percent": 20.01750221199154,
+                "samples": 475327,
+                "v6capable": 48.10498877614779,
+                "v6preferred": 47.642359891190694
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "NL",
-                "cumulative": 65.8463439567723,
+                "cumulative": 65.25292928323051,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -6617,10 +8211,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 14.744868957614838,
-                "samples": 328136,
-                "v6capable": 33.95177609283955,
-                "v6preferred": 33.61472072555282
+                "percent": 14.810762596981247,
+                "samples": 351690,
+                "v6capable": 34.60547641388723,
+                "v6preferred": 34.24805937046831
             }
         ],
         "monitoring_dates": {
@@ -6640,14 +8234,14 @@ const lockdowns ={
     "New Zealand": {
         "cc": "NZ",
         "continent": "Oceania",
-        "end": "2020-04-19",
+        "end": "2020-05-10",
         "eyeball": [
             {
                 "as": 4771,
                 "as-descr": "Spark New Zealand Trading Ltd.",
                 "autnum": "SPARKNZ",
                 "cc": "NZ",
-                "cumulative": 37.199365826419914,
+                "cumulative": 37.73401985067657,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -6671,17 +8265,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "SPARKNZ Spark New Zealand Trading Ltd., NZ",
-                "percent": 37.199365826419914,
-                "samples": 149226,
-                "v6capable": 0.05159958720330237,
-                "v6preferred": 0.03685684800235884
+                "percent": 37.73401985067657,
+                "samples": 191496,
+                "v6capable": 0.061620086059238834,
+                "v6preferred": 0.03446547186364206
             },
             {
                 "as": 9500,
                 "as-descr": "Vodafone NZ Ltd.",
                 "autnum": "VODAFONE-TRANSIT-AS",
                 "cc": "NZ",
-                "cumulative": 59.946354499042755,
+                "cumulative": 60.181008849452894,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -6690,17 +8284,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "VODAFONE-TRANSIT-AS Vodafone NZ Ltd., NZ",
-                "percent": 22.746988672622845,
-                "samples": 91250,
-                "v6capable": 59.21205479452055,
-                "v6preferred": 50.124931506849315
+                "percent": 22.446988998776327,
+                "samples": 113916,
+                "v6capable": 61.649812142280275,
+                "v6preferred": 55.58920608167421
             },
             {
                 "as": 9790,
                 "as-descr": "VocusGroup",
                 "autnum": "VOCUSGROUPNZ",
                 "cc": "NZ",
-                "cumulative": 70.69838864071474,
+                "cumulative": 71.1873557850515,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -6714,17 +8308,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "CALLPLUS-NZ-AP CallPlus Services Limited, NZ",
-                "percent": 10.752034141671984,
-                "samples": 43132,
-                "v6capable": 18.43874617453399,
-                "v6preferred": 17.949550217935638
+                "percent": 11.006346935598604,
+                "samples": 55856,
+                "v6capable": 17.11902033801203,
+                "v6preferred": 16.701876253222572
             },
             {
                 "as": 23655,
                 "as-descr": "Snap Internet Limited",
                 "autnum": "SNAP-NZ-AS",
                 "cc": "NZ",
-                "cumulative": 78.80878071155072,
+                "cumulative": 79.79975920660348,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -6743,10 +8337,44 @@ const lockdowns ={
                     }
                 ],
                 "name": "SNAP-NZ-AS Snap Internet Limited, NZ",
-                "percent": 8.110392070835992,
-                "samples": 32535,
-                "v6capable": 57.9560473336407,
-                "v6preferred": 56.89257722452743
+                "percent": 8.612403421551994,
+                "samples": 43707,
+                "v6capable": 58.11883679959732,
+                "v6preferred": 56.94968769304688
+            },
+            {
+                "as": 55850,
+                "as-descr": "TrustPower Ltd",
+                "autnum": "TRUSTPOWERLTD-AS-AP",
+                "cc": "NZ",
+                "cumulative": 84.98312278689784,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0373101230735115,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.032967439110027,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.359019846989688,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 6461,
+                        "hege": 0.275030491185275,
+                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
+                    }
+                ],
+                "name": "TRUSTPOWERLTD-AS-AP TrustPower Ltd, NZ",
+                "percent": 5.183363580294351,
+                "samples": 26305,
+                "v6capable": 55.32028131533929,
+                "v6preferred": 53.23322562250523
             }
         ],
         "monitoring_dates": {
@@ -6766,14 +8394,14 @@ const lockdowns ={
     "Northern Cyprus": {
         "cc": "CY",
         "continent": "Asia",
-        "end": "2020-04-03",
+        "end": "2020-03-30",
         "eyeball": [
             {
                 "as": 6866,
                 "as-descr": "Internet Services",
                 "autnum": "CYTA-NETWORK",
                 "cc": "CY",
-                "cumulative": 49.43835949657284,
+                "cumulative": 48.55044013132813,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -6817,17 +8445,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "CYTA-NETWORK Cyprus Telecommunications Authority, CY",
-                "percent": 49.43835949657284,
-                "samples": 148366,
-                "v6capable": 0.24668724640416267,
-                "v6preferred": 0.24264319318442232
+                "percent": 48.55044013132813,
+                "samples": 170648,
+                "v6capable": 0.2578407013267076,
+                "v6preferred": 0.25198068538746426
             },
             {
                 "as": 35432,
                 "as-descr": "",
                 "autnum": "CABLENET-AS",
                 "cc": "CY",
-                "cumulative": 69.61010053215062,
+                "cumulative": 69.44231064679674,
                 "dependency": [
                     {
                         "asn": 41095,
@@ -6851,17 +8479,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "CABLENET-AS Cablenet Communication Systems Ltd, CY",
-                "percent": 20.171741035577785,
-                "samples": 60536,
-                "v6capable": 0.0033038192150125546,
-                "v6preferred": 0.0033038192150125546
+                "percent": 20.89187051546861,
+                "samples": 73432,
+                "v6capable": 0.0027236082361913063,
+                "v6preferred": 0.0027236082361913063
             },
             {
                 "as": 15805,
                 "as-descr": "",
                 "autnum": "SKYNET-CY-AS",
                 "cc": "CY",
-                "cumulative": 80.17847205792677,
+                "cumulative": 80.31557444677739,
                 "dependency": [
                     {
                         "asn": 16637,
@@ -6895,8 +8523,8 @@ const lockdowns ={
                     }
                 ],
                 "name": "SKYNET-CY-AS MTN Cyprus Limited, CY",
-                "percent": 10.56837152577615,
-                "samples": 31716,
+                "percent": 10.873263799980654,
+                "samples": 38218,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
@@ -6905,7 +8533,7 @@ const lockdowns ={
                 "as-descr": "Transit AS for PrimeTel (AS16229), SpiderNet (AS5425) and NetWay (AS30916) traffic",
                 "autnum": "NSP-INTL",
                 "cc": "CY",
-                "cumulative": 87.40832314238777,
+                "cumulative": 87.72781846218625,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -6914,10 +8542,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "NSP-INTL Primetel PLC, CY",
-                "percent": 7.229851084461002,
-                "samples": 21697,
-                "v6capable": 0.009217864220860027,
-                "v6preferred": 0.009217864220860027
+                "percent": 7.412244015408864,
+                "samples": 26053,
+                "v6capable": 0.0115149886769278,
+                "v6preferred": 0.0115149886769278
             }
         ],
         "monitoring_dates": {
@@ -6944,7 +8572,7 @@ const lockdowns ={
                 "as-descr": "Telenor Norge AS",
                 "autnum": "TELENOR-NEXTEL",
                 "cc": "NO",
-                "cumulative": 30.119741305356595,
+                "cumulative": 30.137206324673652,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -6963,17 +8591,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TELENOR-NEXTEL Telenor Norge AS, NO",
-                "percent": 30.119741305356595,
-                "samples": 175902,
-                "v6capable": 37.73237370808746,
-                "v6preferred": 37.4589259928824
+                "percent": 30.137206324673652,
+                "samples": 198892,
+                "v6capable": 37.05025843171168,
+                "v6preferred": 36.780262655109304
             },
             {
                 "as": 29695,
                 "as-descr": "Norway",
                 "autnum": "ALTIBOX_AS",
                 "cc": "NO",
-                "cumulative": 45.245535599622606,
+                "cumulative": 45.71645036403997,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -6987,17 +8615,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Altibox_AS Altibox AS, NO",
-                "percent": 15.125794294266013,
-                "samples": 88336,
-                "v6capable": 2.2550262633580873,
-                "v6preferred": 2.0354102517659842
+                "percent": 15.579244039366321,
+                "samples": 102816,
+                "v6capable": 2.3770619358854654,
+                "v6preferred": 2.177676626206038
             },
             {
                 "as": 41164,
                 "as-descr": "GET Norway",
                 "autnum": "GET-NO",
                 "cc": "NO",
-                "cumulative": 55.67242970570659,
+                "cumulative": 56.688713624413786,
                 "dependency": [
                     {
                         "asn": 25400,
@@ -7016,17 +8644,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "GET-NO Get AS, NO",
-                "percent": 10.426894106083981,
-                "samples": 60894,
-                "v6capable": 1.5765100009853188,
-                "v6preferred": 1.461556146746806
+                "percent": 10.972263260373813,
+                "samples": 72412,
+                "v6capable": 1.4362260398828923,
+                "v6preferred": 1.3436999392365907
             },
             {
                 "as": 205016,
                 "as-descr": "",
                 "autnum": "HERNLABS",
                 "cc": "NO",
-                "cumulative": 64.78650157788664,
+                "cumulative": 65.3764271806411,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -7070,17 +8698,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "HERNLABS HERN Labs AB, NL",
-                "percent": 9.114071872180052,
-                "samples": 53227,
-                "v6capable": 99.69752193435663,
-                "v6preferred": 98.19640408063577
+                "percent": 8.687713556227319,
+                "samples": 57335,
+                "v6capable": 99.69128804395221,
+                "v6preferred": 98.547135257696
             },
             {
                 "as": 2116,
                 "as-descr": "",
                 "autnum": "ASN-CATCHCOM",
                 "cc": "NO",
-                "cumulative": 71.25061428847843,
+                "cumulative": 71.72095067087908,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -7099,17 +8727,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASN-CATCHCOM Broadnet AS, NO",
-                "percent": 6.464112710591789,
-                "samples": 37751,
-                "v6capable": 6.066064475113242,
-                "v6preferred": 5.946862334772589
+                "percent": 6.344523490237971,
+                "samples": 41871,
+                "v6capable": 6.81378519739199,
+                "v6preferred": 6.644216761004036
             },
             {
                 "as": 50608,
                 "as-descr": "",
                 "autnum": "VENTELOHOSTING",
                 "cc": "NO",
-                "cumulative": 77.30171966527914,
+                "cumulative": 77.7166624997159,
                 "dependency": [
                     {
                         "asn": 16150,
@@ -7133,10 +8761,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "VENTELOHOSTING Ventelo Hosting AS, NO",
-                "percent": 6.0511053768007,
-                "samples": 35339,
-                "v6capable": 0.002829734853844195,
-                "v6preferred": 0.002829734853844195
+                "percent": 5.995711828836814,
+                "samples": 39569,
+                "v6capable": 0.002527230913088529,
+                "v6preferred": 0.002527230913088529
             }
         ],
         "monitoring_dates": {
@@ -7153,17 +8781,391 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-12"
     },
+    "Pakistan": {
+        "cc": "PK",
+        "continent": "Asia",
+        "end": "2020-04-30",
+        "eyeball": [
+            {
+                "as": 45595,
+                "as-descr": "Pakistan Telecom Company Limited",
+                "autnum": "PKTELECOM-AS-PK",
+                "cc": "PK",
+                "cumulative": 25.542190771325785,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0211051858983336,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 17557,
+                        "hege": 1.0,
+                        "name": "PKTELECOM-AS-PK Pakistan Telecommunication Company Limited, PK"
+                    },
+                    {
+                        "asn": 8529,
+                        "hege": 0.0294451973001267,
+                        "name": "OMANTEL-AS Oman Telecommunications Company (S.A.O.G), OM"
+                    },
+                    {
+                        "asn": 8966,
+                        "hege": 0.0977044360442513,
+                        "name": "Etisalat-AS Emirates Telecommunications Corporation, AE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.114772717025747,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.725957645091032,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0184869160813112,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0494572101719986,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "PKTELECOM-AS-PK Pakistan Telecom Company Limited, PK",
+                "percent": 25.542190771325785,
+                "samples": 2228302,
+                "v6capable": 0.015303132160721482,
+                "v6preferred": 0.014540219413706042
+            },
+            {
+                "as": 59257,
+                "as-descr": "CMPak Limited",
+                "autnum": "CMPAKLIMITED-AS-AP",
+                "cc": "PK",
+                "cumulative": 42.95310468070571,
+                "dependency": [
+                    {
+                        "asn": 38193,
+                        "hege": 0.554081933392278,
+                        "name": "TWA-AS-AP Transworld Associates (Pvt.) Ltd., PK"
+                    },
+                    {
+                        "asn": 17557,
+                        "hege": 0.391600353669319,
+                        "name": "PKTELECOM-AS-PK Pakistan Telecommunication Company Limited, PK"
+                    },
+                    {
+                        "asn": 8966,
+                        "hege": 0.060860595343354,
+                        "name": "Etisalat-AS Emirates Telecommunications Corporation, AE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.019149720011789,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.120001964829551,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.16965811965812,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 8529,
+                        "hege": 0.0184129089301503,
+                        "name": "OMANTEL-AS Oman Telecommunications Company (S.A.O.G), OM"
+                    },
+                    {
+                        "asn": 58453,
+                        "hege": 0.0512820512820513,
+                        "name": "CMI-INT-HK Level 30, Tower 1, HK"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0163080852736025,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "CMPAKLIMITED-AS-AP CMPak Limited, PK",
+                "percent": 17.410913909379925,
+                "samples": 1518929,
+                "v6capable": 0.01231130619008525,
+                "v6preferred": 0.011916291018210857
+            },
+            {
+                "as": 45669,
+                "as-descr": "PMCL /LDI IP TRANSIT",
+                "autnum": "MOBILINK-AS-PK",
+                "cc": "PK",
+                "cumulative": 57.84266515207178,
+                "dependency": [
+                    {
+                        "asn": 38193,
+                        "hege": 0.322654526505637,
+                        "name": "TWA-AS-AP Transworld Associates (Pvt.) Ltd., PK"
+                    },
+                    {
+                        "asn": 17557,
+                        "hege": 0.330538211725435,
+                        "name": "PKTELECOM-AS-PK Pakistan Telecommunication Company Limited, PK"
+                    },
+                    {
+                        "asn": 8966,
+                        "hege": 0.0576605643427494,
+                        "name": "Etisalat-AS Emirates Telecommunications Corporation, AE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0310077519379845,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0778879254005549,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 58470,
+                        "hege": 1.0,
+                        "name": "MOBILINK-PEERING-AS-PK IX Peering for Mobilink and Link Direct International., PK"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0154147732335383,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.346361748091659,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.195135510699089,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "MOBILINK-AS-PK PMCL /LDI IP TRANSIT, PK",
+                "percent": 14.889560471366076,
+                "samples": 1298966,
+                "v6capable": 0.013934159939521127,
+                "v6preferred": 0.013549238394230488
+            },
+            {
+                "as": 24499,
+                "as-descr": "Telenor Pakistan",
+                "autnum": "TPP-AS-PK",
+                "cc": "PK",
+                "cumulative": 65.94498742263444,
+                "dependency": [
+                    {
+                        "asn": 45595,
+                        "hege": 0.0344827586206896,
+                        "name": "PKTELECOM-AS-PK Pakistan Telecom Company Limited, PK"
+                    },
+                    {
+                        "asn": 17557,
+                        "hege": 1.0,
+                        "name": "PKTELECOM-AS-PK Pakistan Telecommunication Company Limited, PK"
+                    },
+                    {
+                        "asn": 8529,
+                        "hege": 0.0210254339323507,
+                        "name": "OMANTEL-AS Oman Telecommunications Company (S.A.O.G), OM"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0180340864050733,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 8966,
+                        "hege": 0.0172974670764813,
+                        "name": "Etisalat-AS Emirates Telecommunications Corporation, AE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0163149244655986,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 7473,
+                        "hege": 0.0487362419585963,
+                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.283428356555586,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TPP-AS-PK Telenor Pakistan, PK",
+                "percent": 8.10232227056266,
+                "samples": 706847,
+                "v6capable": 0.01556206647265957,
+                "v6preferred": 0.015279119809520306
+            },
+            {
+                "as": 9541,
+                "as-descr": "Cyber Internet Services (Pvt) Ltd.",
+                "autnum": "CYBERNET-AP",
+                "cc": "PK",
+                "cumulative": 72.4825925707287,
+                "dependency": [
+                    {
+                        "asn": 38193,
+                        "hege": 0.0621401479779705,
+                        "name": "TWA-AS-AP Transworld Associates (Pvt.) Ltd., PK"
+                    },
+                    {
+                        "asn": 45595,
+                        "hege": 0.0810313075506446,
+                        "name": "PKTELECOM-AS-PK Pakistan Telecom Company Limited, PK"
+                    },
+                    {
+                        "asn": 17557,
+                        "hege": 0.935033877867831,
+                        "name": "PKTELECOM-AS-PK Pakistan Telecommunication Company Limited, PK"
+                    },
+                    {
+                        "asn": 8529,
+                        "hege": 0.0123781148424929,
+                        "name": "OMANTEL-AS Oman Telecommunications Company (S.A.O.G), OM"
+                    },
+                    {
+                        "asn": 8966,
+                        "hege": 0.0371199006675731,
+                        "name": "Etisalat-AS Emirates Telecommunications Corporation, AE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0101872213389684,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0500446852563367,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 58470,
+                        "hege": 0.0461738114770714,
+                        "name": "MOBILINK-PEERING-AS-PK IX Peering for Mobilink and Link Direct International., PK"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0259620003363877,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 12713,
+                        "hege": 0.0196718844771456,
+                        "name": "OTEGlobe OTEGlobe - OTE Global Solutions SA, GR"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0972088778232787,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "CYBERNET-AP Cyber Internet Services (Pvt) Ltd., PK",
+                "percent": 6.5376051480942525,
+                "samples": 570341,
+                "v6capable": 0.01595536705234237,
+                "v6preferred": 0.01595536705234237
+            },
+            {
+                "as": 132165,
+                "as-descr": "Connect Communications",
+                "autnum": "CONNECT-AS-AP",
+                "cc": "PK",
+                "cumulative": 78.16688550728708,
+                "dependency": [
+                    {
+                        "asn": 38193,
+                        "hege": 0.0300919441546542,
+                        "name": "TWA-AS-AP Transworld Associates (Pvt.) Ltd., PK"
+                    },
+                    {
+                        "asn": 17557,
+                        "hege": 0.969908055845346,
+                        "name": "PKTELECOM-AS-PK Pakistan Telecommunication Company Limited, PK"
+                    },
+                    {
+                        "asn": 8529,
+                        "hege": 0.0496558992577163,
+                        "name": "OMANTEL-AS Oman Telecommunications Company (S.A.O.G), OM"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.207271076522577,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 8966,
+                        "hege": 0.04394331788676,
+                        "name": "Etisalat-AS Emirates Telecommunications Corporation, AE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0197382841736327,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0959111474966815,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0123506596455467,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0430362097276485,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "CONNECT-AS-AP Connect Communications, PK",
+                "percent": 5.684292936558381,
+                "samples": 495898,
+                "v6capable": 0.011494299230890223,
+                "v6preferred": 0.011090990485946707
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-24",
+                "sunday": "2020-03-01"
+            },
+            "lockdown": {
+                "monday": "2020-03-23",
+                "sunday": "2020-03-29"
+            }
+        },
+        "name": "Pakistan",
+        "scope": "National",
+        "start": "\t2020-03-24"
+    },
     "Panama": {
         "cc": "PA",
         "continent": "America",
-        "end": "2020-04-13",
+        "end": "2020-04-07",
         "eyeball": [
             {
                 "as": 18809,
                 "as-descr": "Onda",
                 "autnum": "Cable",
                 "cc": "PA",
-                "cumulative": 44.506277480531864,
+                "cumulative": 46.68754109102583,
                 "dependency": [
                     {
                         "asn": 23520,
@@ -7187,17 +9189,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Cable Onda, PA",
-                "percent": 44.506277480531864,
-                "samples": 168029,
-                "v6capable": 0.0017854060906153104,
-                "v6preferred": 0.0017854060906153104
+                "percent": 46.68754109102583,
+                "samples": 212327,
+                "v6capable": 0.0042387449547160744,
+                "v6preferred": 0.0042387449547160744
             },
             {
                 "as": 11556,
                 "as-descr": "& Wireless Panama",
                 "autnum": "Cable",
                 "cc": "PA",
-                "cumulative": 72.63892567674948,
+                "cumulative": 74.44737380245084,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -7226,17 +9228,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Cable & Wireless Panama, PA",
-                "percent": 28.13264819621762,
-                "samples": 106212,
-                "v6capable": 0.003766052800060257,
-                "v6preferred": 0.003766052800060257
+                "percent": 27.75983271142501,
+                "samples": 126247,
+                "v6capable": 0.0063367842404175945,
+                "v6preferred": 0.0055446862103653944
             },
             {
                 "as": 262227,
                 "as-descr": "Panama S.A.",
                 "autnum": "Claro",
                 "cc": "PA",
-                "cumulative": 82.41272447952534,
+                "cumulative": 83.4802532196674,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -7265,17 +9267,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Claro Panam S.A., PA",
-                "percent": 9.773798802775865,
-                "samples": 36900,
-                "v6capable": 2.4769647696476964,
-                "v6preferred": 2.4173441734417342
+                "percent": 9.032879417216563,
+                "samples": 41080,
+                "v6capable": 2.5340798442064263,
+                "v6preferred": 2.4732229795520935
             },
             {
                 "as": 14709,
                 "as-descr": "Moviles Panama S.A.",
                 "autnum": "Telefonica",
                 "cc": "PA",
-                "cumulative": 91.05763627695077,
+                "cumulative": 91.36401316671908,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -7314,17 +9316,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telefonica Moviles Panama S.A., PA",
-                "percent": 8.644911797425438,
-                "samples": 32638,
-                "v6capable": 0.0030639132299773273,
-                "v6preferred": 0.0030639132299773273
+                "percent": 7.88375994705167,
+                "samples": 35854,
+                "v6capable": 0.005578178167010654,
+                "v6preferred": 0.005578178167010654
             },
             {
                 "as": 28005,
                 "as-descr": "(Panama), S.A",
                 "autnum": "Digicel",
                 "cc": "PA",
-                "cumulative": 96.85596228214227,
+                "cumulative": 96.90885543215116,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -7378,10 +9380,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "Digicel (Panama), S.A, PA",
-                "percent": 5.798326005191503,
-                "samples": 21891,
-                "v6capable": 0.0,
-                "v6preferred": 0.0
+                "percent": 5.544842265432085,
+                "samples": 25217,
+                "v6capable": 0.003965578776222389,
+                "v6preferred": 0.003965578776222389
             }
         ],
         "monitoring_dates": {
@@ -7401,14 +9403,14 @@ const lockdowns ={
     "Papua": {
         "cc": "PG",
         "continent": "Oceania",
-        "end": "2020-04-13",
+        "end": "2020-04-07",
         "eyeball": [
             {
                 "as": 17828,
                 "as-descr": "PNG DATACO LTD",
                 "autnum": "PNGDATACOLIMITED-AS-PG",
                 "cc": "PG",
-                "cumulative": 42.14059395306374,
+                "cumulative": 42.95384896857705,
                 "dependency": [
                     {
                         "asn": 6453,
@@ -7452,17 +9454,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TIARE-AS-PG Tiare, a business unit of Telikom PNG, PG",
-                "percent": 42.14059395306374,
-                "samples": 7847,
-                "v6capable": 0.012743723716069836,
-                "v6preferred": 0.012743723716069836
+                "percent": 42.95384896857705,
+                "samples": 9391,
+                "v6capable": 0.010648493238206793,
+                "v6preferred": 0.010648493238206793
             },
             {
                 "as": 58460,
                 "as-descr": "Digicel (PNG) Ltd",
                 "autnum": "DIGICELPNG-AS-AP",
                 "cc": "PG",
-                "cumulative": 83.69045701090167,
+                "cumulative": 83.75794721675891,
                 "dependency": [
                     {
                         "asn": 136587,
@@ -7516,8 +9518,8 @@ const lockdowns ={
                     }
                 ],
                 "name": "DIGICELPNG-AS-AP Digicel (PNG) Ltd, PG",
-                "percent": 41.549863057837925,
-                "samples": 7737,
+                "percent": 40.80409824818186,
+                "samples": 8921,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
@@ -7526,7 +9528,7 @@ const lockdowns ={
                 "as-descr": "Bemobile LTD",
                 "autnum": "BEMOBILEPNG-AS-AP",
                 "cc": "PG",
-                "cumulative": 91.3377369636432,
+                "cumulative": 91.99103508210219,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -7550,8 +9552,8 @@ const lockdowns ={
                     }
                 ],
                 "name": "BEMOBILEPNG-AS-AP Bemobile LTD, PG",
-                "percent": 7.6472799527415285,
-                "samples": 1424,
+                "percent": 8.233087865343274,
+                "samples": 1800,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
@@ -7580,7 +9582,7 @@ const lockdowns ={
                 "as-descr": "S.A.",
                 "autnum": "Telecel",
                 "cc": "PY",
-                "cumulative": 66.43986175034685,
+                "cumulative": 65.6423184416387,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -7604,17 +9606,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telecel S.A., PY",
-                "percent": 66.43986175034685,
-                "samples": 380234,
-                "v6capable": 4.324179321154868,
-                "v6preferred": 4.2468585134417225
+                "percent": 65.6423184416387,
+                "samples": 467393,
+                "v6capable": 4.560829965361056,
+                "v6preferred": 4.456634994533508
             },
             {
                 "as": 27895,
                 "as-descr": "S.A.",
                 "autnum": "Nucleo",
                 "cc": "PY",
-                "cumulative": 86.31324939105151,
+                "cumulative": 85.13587910621743,
                 "dependency": [
                     {
                         "asn": 7303,
@@ -7643,17 +9645,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Ncleo S.A., PY",
-                "percent": 19.873387640704667,
-                "samples": 113735,
-                "v6capable": 0.013188552336571856,
-                "v6preferred": 0.007913131401943113
+                "percent": 19.49356066457874,
+                "samples": 138800,
+                "v6capable": 0.020172910662824207,
+                "v6preferred": 0.011527377521613832
             },
             {
                 "as": 27866,
                 "as-descr": "",
                 "autnum": "CO.PA.CO.",
                 "cc": "PY",
-                "cumulative": 92.20441098868072,
+                "cumulative": 90.9281912278977,
                 "dependency": [
                     {
                         "asn": 27768,
@@ -7707,10 +9709,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "CO.PA.CO., PY",
-                "percent": 5.891161597629207,
-                "samples": 33715,
-                "v6capable": 0.02966038855109002,
-                "v6preferred": 0.01779623313065401
+                "percent": 5.792312121680267,
+                "samples": 41243,
+                "v6capable": 0.031520500448560966,
+                "v6preferred": 0.016972577164609752
             }
         ],
         "monitoring_dates": {
@@ -7730,14 +9732,14 @@ const lockdowns ={
     "Peru": {
         "cc": "PE",
         "continent": "America",
-        "end": "2020-04-11",
+        "end": "2020-04-26",
         "eyeball": [
             {
                 "as": 6147,
                 "as-descr": "del Peru S.A.A.",
                 "autnum": "Telefonica",
                 "cc": "PE",
-                "cumulative": 52.467971483540445,
+                "cumulative": 53.61602319673946,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -7781,17 +9783,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telefonica del Peru S.A.A., PE",
-                "percent": 52.467971483540445,
-                "samples": 2058722,
-                "v6capable": 6.583113212954444,
-                "v6preferred": 6.523221688018101
+                "percent": 53.61602319673946,
+                "samples": 2409362,
+                "v6capable": 6.381108359806455,
+                "v6preferred": 6.319017233607902
             },
             {
                 "as": 12252,
                 "as-descr": "Movil Peru S.A.C.",
                 "autnum": "America",
                 "cc": "PE",
-                "cumulative": 77.84938409982851,
+                "cumulative": 78.51232883113936,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -7815,17 +9817,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "America Movil Peru S.A.C., PE",
-                "percent": 25.381412616288063,
-                "samples": 995908,
-                "v6capable": 65.95046932045932,
-                "v6preferred": 65.43998039979597
+                "percent": 24.89630563439989,
+                "samples": 1118774,
+                "v6capable": 66.46436188184566,
+                "v6preferred": 65.85708999315322
             },
             {
                 "as": 21575,
                 "as-descr": "PERU S.A.",
                 "autnum": "ENTEL",
                 "cc": "PE",
-                "cumulative": 87.6709357762906,
+                "cumulative": 87.97966502252581,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -7859,17 +9861,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ENTEL PERU S.A., PE",
-                "percent": 9.821551676462095,
-                "samples": 385375,
-                "v6capable": 0.041258514433992866,
-                "v6preferred": 0.025429776192020758
+                "percent": 9.467336191386453,
+                "samples": 425437,
+                "v6capable": 0.04607027597505624,
+                "v6preferred": 0.026090819557302258
             },
             {
                 "as": 262210,
                 "as-descr": "PERU S.A.C.",
                 "autnum": "VIETTEL",
                 "cc": "PE",
-                "cumulative": 96.29539863330385,
+                "cumulative": 96.41002417810574,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -7913,10 +9915,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "VIETTEL PER S.A.C., PE",
-                "percent": 8.624462857013244,
-                "samples": 338404,
-                "v6capable": 0.01979882034491318,
-                "v6preferred": 0.01654826775097221
+                "percent": 8.430359155579936,
+                "samples": 378838,
+                "v6capable": 0.01926945026634076,
+                "v6preferred": 0.014782044039932636
             }
         ],
         "monitoring_dates": {
@@ -7936,14 +9938,14 @@ const lockdowns ={
     "Poland": {
         "cc": "PL",
         "continent": "Europe",
-        "end": "2020-04-12",
+        "end": "2020-04-11",
         "eyeball": [
             {
                 "as": 5617,
                 "as-descr": "",
                 "autnum": "TPNET",
                 "cc": "PL",
-                "cumulative": 25.40912085235252,
+                "cumulative": 25.04460825353263,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -7977,17 +9979,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TPNET Orange Polska Spolka Akcyjna, PL",
-                "percent": 25.40912085235252,
-                "samples": 2243711,
-                "v6capable": 36.361634809474126,
-                "v6preferred": 36.1810411412165
+                "percent": 25.04460825353263,
+                "samples": 2371920,
+                "v6capable": 36.21614556983372,
+                "v6preferred": 36.032033120847245
             },
             {
                 "as": 8374,
                 "as-descr": "Plus network operator in Poland",
                 "autnum": "PLUSNET",
                 "cc": "PL",
-                "cumulative": 37.59702489270794,
+                "cumulative": 37.18523319248962,
                 "dependency": [
                     {
                         "asn": 174,
@@ -8001,17 +10003,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "PLUSNET Polkomtel Sp. z o.o., PL",
-                "percent": 12.187904040355425,
-                "samples": 1076233,
-                "v6capable": 0.02044167015878532,
-                "v6preferred": 0.012079168730191325
+                "percent": 12.140624938956988,
+                "samples": 1149812,
+                "v6capable": 0.022264509328481525,
+                "v6preferred": 0.01356743537204343
             },
             {
                 "as": 39603,
                 "as-descr": "P4 UMTS operator in Poland",
                 "autnum": "P4NET",
                 "cc": "PL",
-                "cumulative": 47.02471717670571,
+                "cumulative": 46.40627842624595,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -8030,17 +10032,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "P4NET P4 Sp. z o.o., PL",
-                "percent": 9.427692283997768,
-                "samples": 832497,
-                "v6capable": 0.02330338727947368,
-                "v6preferred": 0.018138203501033637
+                "percent": 9.221045233756328,
+                "samples": 873305,
+                "v6capable": 0.025306164512970842,
+                "v6preferred": 0.019580787926325855
             },
             {
                 "as": 12912,
                 "as-descr": "",
                 "autnum": "TM",
                 "cc": "PL",
-                "cumulative": 54.94011157218574,
+                "cumulative": 54.246972873726044,
                 "dependency": [
                     {
                         "asn": 3320,
@@ -8064,17 +10066,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TMPL T-MOBILE POLSKA SPOLKA AKCYJNA, PL",
-                "percent": 7.915394395480036,
-                "samples": 698956,
-                "v6capable": 0.02875717498669444,
-                "v6preferred": 0.018169956334876586
+                "percent": 7.840694447480097,
+                "samples": 742575,
+                "v6capable": 0.03056930276403057,
+                "v6preferred": 0.01952664714001953
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "PL",
-                "cumulative": 62.18373092669056,
+                "cumulative": 61.87812810791423,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8093,10 +10095,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 7.243619354504816,
-                "samples": 639636,
-                "v6capable": 49.30382279921705,
-                "v6preferred": 48.948933455903045
+                "percent": 7.631155234188183,
+                "samples": 722730,
+                "v6capable": 49.35259363801143,
+                "v6preferred": 48.98454471240989
             }
         ],
         "monitoring_dates": {
@@ -8123,7 +10125,7 @@ const lockdowns ={
                 "as-descr": "",
                 "autnum": "NOS_COMUNICACOES",
                 "cc": "PT",
-                "cumulative": 34.30420992944831,
+                "cumulative": 34.43764136383853,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -8152,17 +10154,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "NOS_COMUNICACOES NOS COMUNICACOES, S.A., PT",
-                "percent": 34.30420992944831,
-                "samples": 1145845,
-                "v6capable": 0.03473419179731988,
-                "v6preferred": 0.020508882091382342
+                "percent": 34.43764136383853,
+                "samples": 1159888,
+                "v6capable": 0.040866014649690315,
+                "v6preferred": 0.020777868207964907
             },
             {
                 "as": 3243,
                 "as-descr": "",
                 "autnum": "MEO-RESIDENCIAL",
                 "cc": "PT",
-                "cumulative": 63.001347804922155,
+                "cumulative": 64.11960872686592,
                 "dependency": [
                     {
                         "asn": 8657,
@@ -8181,17 +10183,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "MEO-RESIDENCIAL MEO - SERVICOS DE COMUNICACOES E MULTIMEDIA S.A., PT",
-                "percent": 28.697137875473842,
-                "samples": 958555,
-                "v6capable": 77.56487629817799,
-                "v6preferred": 76.45497650108757
+                "percent": 29.681967363027386,
+                "samples": 999713,
+                "v6capable": 78.66897799668504,
+                "v6preferred": 77.3902109905543
             },
             {
                 "as": 12353,
                 "as-descr": "Vodafone Portugal",
                 "autnum": "VODAFONE-PT",
                 "cc": "PT",
-                "cumulative": 86.40330682231189,
+                "cumulative": 87.18365526730051,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8215,17 +10217,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "VODAFONE-PT Vodafone Portugal - Communicacoes Pessoais S.A., PT",
-                "percent": 23.401959017389736,
-                "samples": 781683,
-                "v6capable": 47.74800014839775,
-                "v6preferred": 47.513761972564325
+                "percent": 23.064046540434585,
+                "samples": 776816,
+                "v6capable": 50.481967415707196,
+                "v6preferred": 50.1836985849931
             },
             {
                 "as": 42863,
                 "as-descr": "",
                 "autnum": "MEO-MOVEL",
                 "cc": "PT",
-                "cumulative": 92.07447595177122,
+                "cumulative": 92.27530683635376,
                 "dependency": [
                     {
                         "asn": 8657,
@@ -8244,10 +10246,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "MEO-MOVEL MEO - SERVICOS DE COMUNICACOES E MULTIMEDIA S.A., PT",
-                "percent": 5.671169129459328,
-                "samples": 189431,
-                "v6capable": 0.26658783409262476,
-                "v6preferred": 0.17842908499664786
+                "percent": 5.091651569053248,
+                "samples": 171491,
+                "v6capable": 0.30613851455761526,
+                "v6preferred": 0.19826113323731276
             }
         ],
         "monitoring_dates": {
@@ -8264,17 +10266,208 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-19"
     },
+    "Republic of the Congo": {
+        "cc": "CG",
+        "continent": "Africa",
+        "end": "2020-04-20",
+        "eyeball": [
+            {
+                "as": 37550,
+                "as-descr": "",
+                "autnum": "airtelcg",
+                "cc": "CG",
+                "cumulative": 49.77235169134262,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0368474616858237,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 37468,
+                        "hege": 0.993265086206897,
+                        "name": "ANGOLA-CABLES, AO"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0387482040229885,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 37451,
+                        "hege": 0.993265086206897,
+                        "name": "CongoTelecom, CG"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0310704022988506,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "airtelcg, CG",
+                "percent": 49.77235169134262,
+                "samples": 14758,
+                "v6capable": 0.0067759859059493156,
+                "v6preferred": 0.0
+            },
+            {
+                "as": 37451,
+                "as-descr": "",
+                "autnum": "CongoTelecom",
+                "cc": "CG",
+                "cumulative": 69.75481434015717,
+                "dependency": [
+                    {
+                        "asn": 6774,
+                        "hege": 0.0183203852619145,
+                        "name": "ASN-BICS Belgacom International Carrier Services SA, BE"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.066127650460484,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 37468,
+                        "hege": 0.86025169233565,
+                        "name": "ANGOLA-CABLES, AO"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0213529598836945,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0520875925673527,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 6461,
+                        "hege": 0.0838671573304257,
+                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
+                    }
+                ],
+                "name": "CongoTelecom, CG",
+                "percent": 19.982462648814543,
+                "samples": 5925,
+                "v6capable": 0.11814345991561181,
+                "v6preferred": 0.10126582278481013
+            },
+            {
+                "as": 37463,
+                "as-descr": "",
+                "autnum": "MTN-CONGO",
+                "cc": "CG",
+                "cumulative": 86.11176688813194,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0678335074886799,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 37468,
+                        "hege": 0.973180076628353,
+                        "name": "ANGOLA-CABLES, AO"
+                    },
+                    {
+                        "asn": 16637,
+                        "hege": 0.0268199233716475,
+                        "name": "MTNNS-AS, ZA"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0167189132706374,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 37451,
+                        "hege": 0.973180076628353,
+                        "name": "CongoTelecom, CG"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0337861372344131,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "MTN-CONGO, CG",
+                "percent": 16.356952547974775,
+                "samples": 4850,
+                "v6capable": 0.020618556701030927,
+                "v6preferred": 0.020618556701030927
+            },
+            {
+                "as": 36924,
+                "as-descr": "",
+                "autnum": "GVA-Canalbox",
+                "cc": "CG",
+                "cumulative": 94.74553977943408,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.558369481079028,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.225079963195023,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.10246973082709,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0177598621273861,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0124508901838788,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.032525668550731,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "GVA-Canalbox, BJ",
+                "percent": 8.633772891302149,
+                "samples": 2560,
+                "v6capable": 59.8046875,
+                "v6preferred": 59.140625
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-03-02",
+                "sunday": "2020-03-08"
+            },
+            "lockdown": {
+                "monday": "2020-03-30",
+                "sunday": "2020-04-05"
+            }
+        },
+        "name": "Republic of the Congo",
+        "scope": "National",
+        "start": "\t2020-03-31"
+    },
     "Romania": {
         "cc": "RO",
         "continent": "Europe",
-        "end": "2020-04-14",
+        "end": "2020-05-12",
         "eyeball": [
             {
                 "as": 8708,
                 "as-descr": "73-75 Dr. Staicovici",
                 "autnum": "RCS-RDS",
                 "cc": "RO",
-                "cumulative": 38.34989947711952,
+                "cumulative": 39.40617801533218,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8288,17 +10481,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "RCS-RDS RCS & RDS SA, RO",
-                "percent": 38.34989947711952,
-                "samples": 1709711,
-                "v6capable": 37.98677086361379,
-                "v6preferred": 37.81042527070365
+                "percent": 39.40617801533218,
+                "samples": 1969360,
+                "v6capable": 38.18829467441199,
+                "v6preferred": 38.054291749603934
             },
             {
                 "as": 8953,
                 "as-descr": "",
                 "autnum": "ASN-ORANGE-ROMANIA",
                 "cc": "RO",
-                "cumulative": 51.116428666438324,
+                "cumulative": 51.77357415331223,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -8317,17 +10510,36 @@ const lockdowns ={
                     }
                 ],
                 "name": "ASN-ORANGE-ROMANIA Orange Romania S.A., RO",
-                "percent": 12.766529189318803,
-                "samples": 569156,
-                "v6capable": 7.814202081678837,
-                "v6preferred": 7.770453091946672
+                "percent": 12.367396137980052,
+                "samples": 618072,
+                "v6capable": 8.360838219495463,
+                "v6preferred": 8.314241706467856
+            },
+            {
+                "as": 9050,
+                "as-descr": "Bucharest, Romania",
+                "autnum": "RTD",
+                "cc": "RO",
+                "cumulative": 62.052084283791075,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0952809583690002,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    }
+                ],
+                "name": "RTD TELEKOM ROMANIA COMMUNICATION S.A, RO",
+                "percent": 10.278510130478839,
+                "samples": 513678,
+                "v6capable": 0.02044082090336748,
+                "v6preferred": 0.014405911874754224
             },
             {
                 "as": 12302,
                 "as-descr": "Charles de Gaulle nr.15",
                 "autnum": "VODAFONE_RO",
                 "cc": "RO",
-                "cumulative": 61.41720326347762,
+                "cumulative": 71.79073441769556,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8356,36 +10568,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Vodafone_Ro Vodafone Romania S.A., RO",
-                "percent": 10.300774597039291,
-                "samples": 459228,
-                "v6capable": 0.04529340545437125,
-                "v6preferred": 0.029832675707927216
-            },
-            {
-                "as": 9050,
-                "as-descr": "Bucharest, Romania",
-                "autnum": "RTD",
-                "cc": "RO",
-                "cumulative": 71.63532097898945,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0952809583690002,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    }
-                ],
-                "name": "RTD TELEKOM ROMANIA COMMUNICATION S.A, RO",
-                "percent": 10.218117715511836,
-                "samples": 455543,
-                "v6capable": 0.018000496111234287,
-                "v6preferred": 0.012732058225019372
+                "percent": 9.738650133904489,
+                "samples": 486698,
+                "v6capable": 0.05218842074551364,
+                "v6preferred": 0.03349099441542805
             },
             {
                 "as": 6830,
                 "as-descr": "formerly known as UPC Broadband Holding B.V.",
                 "autnum": "LGI-UPC",
                 "cc": "RO",
-                "cumulative": 80.18009106388267,
+                "cumulative": 80.67427272974665,
                 "dependency": [
                     {
                         "asn": 1299,
@@ -8399,17 +10592,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "LGI-UPC Liberty Global Operations B.V., AT",
-                "percent": 8.544770084893216,
-                "samples": 380942,
-                "v6capable": 20.934682970110934,
-                "v6preferred": 20.85435578119504
+                "percent": 8.883538312051083,
+                "samples": 443963,
+                "v6capable": 21.15942094273622,
+                "v6preferred": 21.074954444401897
             },
             {
                 "as": 12632,
                 "as-descr": "RCS & RDS Mobile",
                 "autnum": "DIGINETMOBIL",
                 "cc": "RO",
-                "cumulative": 86.60368593615031,
+                "cumulative": 86.88484374074554,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8428,17 +10621,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "DigiNetMobil RCS & RDS SA, RO",
-                "percent": 6.423594872267641,
-                "samples": 286376,
-                "v6capable": 0.045394865491521635,
-                "v6preferred": 0.03422074475514708
+                "percent": 6.210571010998897,
+                "samples": 310379,
+                "v6capable": 0.046717078152838945,
+                "v6preferred": 0.03544054204698127
             },
             {
                 "as": 35725,
                 "as-descr": "",
                 "autnum": "COSMOROM",
                 "cc": "RO",
-                "cumulative": 92.23888893001173,
+                "cumulative": 92.2403829684376,
                 "dependency": [
                     {
                         "asn": 9050,
@@ -8457,10 +10650,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "COSMOROM TELEKOM ROMANIA MOBILE COMMUNICATIONS S.A., RO",
-                "percent": 5.635202993861409,
-                "samples": 251228,
-                "v6capable": 0.031843584313850364,
-                "v6preferred": 0.023484643431464645
+                "percent": 5.355539227692057,
+                "samples": 267648,
+                "v6capable": 0.036988880918220945,
+                "v6preferred": 0.02578012912482066
             }
         ],
         "monitoring_dates": {
@@ -8480,43 +10673,14 @@ const lockdowns ={
     "Rwanda": {
         "cc": "RW",
         "continent": "Africa",
-        "end": "2020-04-12",
+        "end": "2020-04-19",
         "eyeball": [
-            {
-                "as": 36890,
-                "as-descr": "",
-                "autnum": "MTNRW-ASN",
-                "cc": "RW",
-                "cumulative": 33.76993507076389,
-                "dependency": [
-                    {
-                        "asn": 174,
-                        "hege": 0.0527103283173735,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 16637,
-                        "hege": 1.0,
-                        "name": "MTNNS-AS, ZA"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.236576607387141,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "MTNRW-ASN, RW",
-                "percent": 33.76993507076389,
-                "samples": 45145,
-                "v6capable": 0.0022150847269908074,
-                "v6preferred": 0.0022150847269908074
-            },
             {
                 "as": 37228,
                 "as-descr": "",
                 "autnum": "Olleh-Rwanda-Networks",
                 "cc": "RW",
-                "cumulative": 67.16360970647199,
+                "cumulative": 33.88051926688508,
                 "dependency": [
                     {
                         "asn": 37619,
@@ -8565,17 +10729,46 @@ const lockdowns ={
                     }
                 ],
                 "name": "Olleh-Rwanda-Networks, RW",
-                "percent": 33.39367463570809,
-                "samples": 44642,
-                "v6capable": 0.008960172035303077,
-                "v6preferred": 0.008960172035303077
+                "percent": 33.88051926688508,
+                "samples": 49431,
+                "v6capable": 0.006069065970747102,
+                "v6preferred": 0.006069065970747102
+            },
+            {
+                "as": 36890,
+                "as-descr": "",
+                "autnum": "MTNRW-ASN",
+                "cc": "RW",
+                "cumulative": 65.16401869799449,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0527103283173735,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 16637,
+                        "hege": 1.0,
+                        "name": "MTNNS-AS, ZA"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.236576607387141,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "MTNRW-ASN, RW",
+                "percent": 31.283499431109405,
+                "samples": 45642,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
             },
             {
                 "as": 37124,
                 "as-descr": "",
                 "autnum": "tigo-rw-as",
                 "cc": "RW",
-                "cumulative": 81.5370575386733,
+                "cumulative": 81.04634744821725,
                 "dependency": [
                     {
                         "asn": 30844,
@@ -8609,17 +10802,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "tigo-rw-as, RW",
-                "percent": 14.373447832201311,
-                "samples": 19215,
-                "v6capable": 0.0052042674993494666,
-                "v6preferred": 0.0052042674993494666
+                "percent": 15.882328750222758,
+                "samples": 23172,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
             },
             {
                 "as": 327707,
                 "as-descr": "",
                 "autnum": "AIRTEL-",
                 "cc": "RW",
-                "cumulative": 92.23916100655278,
+                "cumulative": 92.70175053804712,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -8653,8 +10846,8 @@ const lockdowns ={
                     }
                 ],
                 "name": "AIRTEL-, RW",
-                "percent": 10.702103467879477,
-                "samples": 14307,
+                "percent": 11.655403089829882,
+                "samples": 17005,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
@@ -8676,14 +10869,14 @@ const lockdowns ={
     "Samoa": {
         "cc": "WS",
         "continent": "Oceania",
-        "end": "2020-04-09",
+        "end": "2020-04-08",
         "eyeball": [
             {
                 "as": 38800,
                 "as-descr": "Digicel Samoa Ltd",
                 "autnum": "DIGICELSAMOA-WS-AS-AP",
                 "cc": "WS",
-                "cumulative": 48.85718917166478,
+                "cumulative": 48.54433538512727,
                 "dependency": [
                     {
                         "asn": 132528,
@@ -8712,8 +10905,8 @@ const lockdowns ={
                     }
                 ],
                 "name": "DIGICELSAMOA-WS-AS-AP Digicel Samoa Ltd, WS",
-                "percent": 48.85718917166478,
-                "samples": 3014,
+                "percent": 48.54433538512727,
+                "samples": 2918,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             },
@@ -8722,7 +10915,7 @@ const lockdowns ={
                 "as-descr": "Blue Sky Communications",
                 "autnum": "BLUESKY-AS-AP",
                 "cc": "WS",
-                "cumulative": 95.31528610795915,
+                "cumulative": 95.15887539510896,
                 "dependency": [
                     {
                         "asn": 17993,
@@ -8746,8 +10939,8 @@ const lockdowns ={
                     }
                 ],
                 "name": "BLUESKY-AS-AP Blue Sky Communications, AS",
-                "percent": 46.458096936294375,
-                "samples": 2866,
+                "percent": 46.6145400099817,
+                "samples": 2802,
                 "v6capable": 0.0,
                 "v6preferred": 0.0
             }
@@ -8766,17 +10959,666 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-26"
     },
+    "San Marino": {
+        "cc": "SM",
+        "continent": "Europe",
+        "end": "2020-03-14",
+        "eyeball": [
+            {
+                "as": 15433,
+                "as-descr": "Telecom Italia San Marino.",
+                "autnum": "TISM",
+                "cc": "SM",
+                "cumulative": 89.85730274202574,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.230654515327258,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0493786246893124,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.330571665285833,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0252692626346313,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "Tism Telecom Italia San Marino S.p.A, SM",
+                "percent": 89.85730274202574,
+                "samples": 6423,
+                "v6capable": 0.015569048731122529,
+                "v6preferred": 0.0
+            },
+            {
+                "as": 196874,
+                "as-descr": "",
+                "autnum": "TELENETSRLAS",
+                "cc": "SM",
+                "cumulative": 99.51035254616676,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0181372549019608,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 15433,
+                        "hege": 0.5,
+                        "name": "Tism Telecom Italia San Marino S.p.A, SM"
+                    },
+                    {
+                        "asn": 3303,
+                        "hege": 0.0205882352941176,
+                        "name": "SWISSCOM Swisscom (Switzerland) Ltd, CH"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0176470588235294,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 12874,
+                        "hege": 0.5,
+                        "name": "FASTWEB Fastweb SpA, IT"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0137254901960784,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.502941176470588,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0205882352941176,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.155882352941176,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TelenetsrlAS Telenet srl, SM",
+                "percent": 9.653049804141018,
+                "samples": 690,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-10",
+                "sunday": "2020-02-16"
+            },
+            "lockdown": {
+                "monday": "2020-03-09",
+                "sunday": "2020-03-15"
+            }
+        },
+        "name": "San Marino",
+        "scope": "National",
+        "start": "\t2020-03-14"
+    },
+    "Serbia": {
+        "cc": "RS",
+        "continent": "Europe",
+        "end": "2020-03-15",
+        "eyeball": [
+            {
+                "as": 8400,
+                "as-descr": "",
+                "autnum": "TELEKOM-AS",
+                "cc": "RS",
+                "cumulative": 38.60470487878797,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0230906184462556,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0438205071096744,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.11249394190245,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TELEKOM-AS TELEKOM SRBIJA a.d., RS",
+                "percent": 38.60470487878797,
+                "samples": 1601156,
+                "v6capable": 0.004559205973684013,
+                "v6preferred": 0.004122021839221163
+            },
+            {
+                "as": 31042,
+                "as-descr": "Serbia BroadBand-Srpske Kablovske mreze d.o.o.",
+                "autnum": "SERBIA-BROADBAND-AS",
+                "cc": "RS",
+                "cumulative": 63.68499894034261,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.0346950141252057,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.107111499206315,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0533351154921888,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "SERBIA-BROADBAND-AS Serbia BroadBand-Srpske Kablovske mreze d.o.o., RS",
+                "percent": 25.080294061554643,
+                "samples": 1040222,
+                "v6capable": 0.004614399618542965,
+                "v6preferred": 0.004325999642384029
+            },
+            {
+                "as": 15958,
+                "as-descr": "Telenordoo-NET",
+                "autnum": "TELENOR_DOO_AS",
+                "cc": "RS",
+                "cumulative": 72.8889491116117,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0647719762062128,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.333906146728354,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "Telenor_doo_AS Telenor d.o.o. Beograd, RS",
+                "percent": 9.203950171269083,
+                "samples": 381740,
+                "v6capable": 0.005763084822130246,
+                "v6preferred": 0.005501126421124326
+            },
+            {
+                "as": 44143,
+                "as-descr": "",
+                "autnum": "VIPMOBILE-AS",
+                "cc": "RS",
+                "cumulative": 81.04505605334404,
+                "dependency": [
+                    {
+                        "asn": 8447,
+                        "hege": 1.0,
+                        "name": "TELEKOM-AT A1 Telekom Austria AG, AT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0810661764705882,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.203860294117647,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VIPMOBILE-AS Vip mobile d.o.o., RS",
+                "percent": 8.156106941732345,
+                "samples": 338280,
+                "v6capable": 0.002956131015726617,
+                "v6preferred": 0.002956131015726617
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-10",
+                "sunday": "2020-02-16"
+            },
+            "lockdown": {
+                "monday": "2020-03-09",
+                "sunday": "2020-03-15"
+            }
+        },
+        "name": "Serbia",
+        "scope": "National",
+        "start": "\t2020-03-15"
+    },
+    "Singapore": {
+        "cc": "SG",
+        "continent": "Asia",
+        "end": "2020-06-01",
+        "eyeball": [
+            {
+                "as": 9506,
+                "as-descr": "Singtel Fibre Broadband",
+                "autnum": "SINGTEL-FIBRE",
+                "cc": "SG",
+                "cumulative": 26.291287962757703,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.0238549398273062,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.348037166734221,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 7473,
+                        "hege": 1.0,
+                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
+                    },
+                    {
+                        "asn": 6461,
+                        "hege": 0.351148055596293,
+                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
+                    }
+                ],
+                "name": "SINGTEL-FIBRE Singtel Fibre Broadband, SG",
+                "percent": 26.291287962757703,
+                "samples": 417472,
+                "v6capable": 0.06563314425877664,
+                "v6preferred": 0.051260922888241606
+            },
+            {
+                "as": 55430,
+                "as-descr": "Starhub Ltd",
+                "autnum": "STARHUB-NGNBN",
+                "cc": "SG",
+                "cumulative": 45.15149835755023,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.120496295161727,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 4657,
+                        "hege": 1.0,
+                        "name": "STARHUBINTERNET-AS StarHub Internet Exchange, SG"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0102205180730275,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 4637,
+                        "hege": 0.0244439189797665,
+                        "name": "ASN-TELSTRA-GLOBAL Telstra Global, HK"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0823981721369824,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.336565980314716,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "STARHUBINTERNET-AS-NGNBN Starhub Internet Pte Ltd, SG",
+                "percent": 18.860210394792528,
+                "samples": 299476,
+                "v6capable": 46.448463315925146,
+                "v6preferred": 43.69866032670398
+            },
+            {
+                "as": 4773,
+                "as-descr": "MobileOne Ltd. Mobile/Internet Service Provider Singapore",
+                "autnum": "MOBILEONELTD-AS-AP",
+                "cc": "SG",
+                "cumulative": 59.099914854597856,
+                "dependency": [
+                    {
+                        "asn": 3491,
+                        "hege": 0.0247937883389911,
+                        "name": "BTN-ASN - PCCW Global, Inc., US"
+                    },
+                    {
+                        "asn": 4657,
+                        "hege": 0.16279786194953,
+                        "name": "STARHUBINTERNET-AS StarHub Internet Exchange, SG"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.156738933429495,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 4637,
+                        "hege": 0.0285015901993695,
+                        "name": "ASN-TELSTRA-GLOBAL Telstra Global, HK"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.174315026354238,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 1273,
+                        "hege": 0.0415381642216768,
+                        "name": "CW Vodafone Group PLC, GB"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0270543406642084,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.113103802573268,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    }
+                ],
+                "name": "MOBILEONELTD-AS-AP MobileOne Ltd. Mobile/Internet Service Provider Singapore, SG",
+                "percent": 13.94841649704762,
+                "samples": 221483,
+                "v6capable": 21.756974575926822,
+                "v6preferred": 21.322178225868353
+            },
+            {
+                "as": 45143,
+                "as-descr": "SINGTEL MOBILE INTERNET SERVICE PROVIDER Singapore",
+                "autnum": "SINGTELMOBILE-AS-AP",
+                "cc": "SG",
+                "cumulative": 67.00174825174825,
+                "dependency": [
+                    {
+                        "asn": 6939,
+                        "hege": 0.0248247827305859,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 9506,
+                        "hege": 1.0,
+                        "name": "SINGTEL-FIBRE Singtel Fibre Broadband, SG"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.385015419119708,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 7473,
+                        "hege": 1.0,
+                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
+                    },
+                    {
+                        "asn": 6461,
+                        "hege": 0.325791982057752,
+                        "name": "ZAYO-6461 - Zayo Bandwidth, US"
+                    }
+                ],
+                "name": "SINGTELMOBILE-AS-AP SINGTEL MOBILE INTERNET SERVICE PROVIDER Singapore, SG",
+                "percent": 7.9018333971504005,
+                "samples": 125471,
+                "v6capable": 0.07093272549035236,
+                "v6preferred": 0.062962756334133
+            },
+            {
+                "as": 14061,
+                "as-descr": "",
+                "autnum": "DIGITALOCEAN-ASN",
+                "cc": "SG",
+                "cumulative": 73.85689778521191,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.11742190834651,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 9498,
+                        "hege": 0.0196636110783225,
+                        "name": "BBIL-AP BHARTI Airtel Ltd., IN"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.075256684106003,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0144616810041933,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.184081791990846,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0194151678550426,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "DIGITALOCEAN-ASN - DigitalOcean, LLC, US",
+                "percent": 6.8551495334636545,
+                "samples": 108851,
+                "v6capable": 3.937492535668023,
+                "v6preferred": 3.4193530606057823
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-03-09",
+                "sunday": "2020-03-15"
+            },
+            "lockdown": {
+                "monday": "2020-04-06",
+                "sunday": "2020-04-12"
+            }
+        },
+        "name": "Singapore",
+        "scope": "National",
+        "start": "\t2020-04-07"
+    },
+    "Slovakia": {
+        "cc": "SK",
+        "continent": "Europe",
+        "end": "2020-04-22",
+        "eyeball": [
+            {
+                "as": 6855,
+                "as-descr": "",
+                "autnum": "SK-TELEKOM",
+                "cc": "SK",
+                "cumulative": 36.60195032218409,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.132528452204153,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0104737951673959,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.718592164799467,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "Slovak Telecom, a. s., SK",
+                "percent": 36.60195032218409,
+                "samples": 410287,
+                "v6capable": 0.009505541243081063,
+                "v6preferred": 0.006824491148878712
+            },
+            {
+                "as": 15962,
+                "as-descr": "Slovakia",
+                "autnum": "OSK-DNI",
+                "cc": "SK",
+                "cumulative": 52.48072381914156,
+                "dependency": [
+                    {
+                        "asn": 5588,
+                        "hege": 0.234546057737121,
+                        "name": "GTSCE T-Mobile Czech Republic a.s., CZ"
+                    },
+                    {
+                        "asn": 5511,
+                        "hege": 0.232192619749303,
+                        "name": "Opentransit Orange S.A., FR"
+                    },
+                    {
+                        "asn": 5578,
+                        "hege": 0.575106524076564,
+                        "name": "AS-BENESTRA BENESTRA, s.r.o., CZ"
+                    }
+                ],
+                "name": "OSK-DNI Orange Slovensko a.s., SK",
+                "percent": 15.878773496957473,
+                "samples": 177992,
+                "v6capable": 5.221582992494045,
+                "v6preferred": 5.185626320284058
+            },
+            {
+                "as": 6830,
+                "as-descr": "formerly known as UPC Broadband Holding B.V.",
+                "autnum": "LGI-UPC",
+                "cc": "SK",
+                "cumulative": 59.29980382588588,
+                "dependency": [
+                    {
+                        "asn": 1299,
+                        "hege": 0.0453505930488709,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0272203885638953,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "LGI-UPC Liberty Global Operations B.V., AT",
+                "percent": 6.819080006744321,
+                "samples": 76438,
+                "v6capable": 58.78097281456867,
+                "v6preferred": 57.939768178131295
+            },
+            {
+                "as": 28952,
+                "as-descr": "",
+                "autnum": "O2BS",
+                "cc": "SK",
+                "cumulative": 65.02016605661483,
+                "dependency": [
+                    {
+                        "asn": 5610,
+                        "hege": 0.105858170606372,
+                        "name": "O2-CZECH-REPUBLIC O2 Czech Republic, a.s., CZ"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.623800959232614,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.105601233299075,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0734840698869476,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "O2BSSK O2 Business Services, a.s, SK",
+                "percent": 5.720362230728949,
+                "samples": 64122,
+                "v6capable": 0.02651196157325099,
+                "v6preferred": 0.015595271513677053
+            },
+            {
+                "as": 16160,
+                "as-descr": "Bratislava, Slovakia",
+                "autnum": "SWAN",
+                "cc": "SK",
+                "cumulative": 70.41348221988093,
+                "dependency": [
+                    {
+                        "asn": 5588,
+                        "hege": 0.53030303030303,
+                        "name": "GTSCE T-Mobile Czech Republic a.s., CZ"
+                    },
+                    {
+                        "asn": 5578,
+                        "hege": 1.0,
+                        "name": "AS-BENESTRA BENESTRA, s.r.o., CZ"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.108170995670996,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0469426406926407,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "SWAN SWAN, a.s., SK",
+                "percent": 5.393316163266107,
+                "samples": 60456,
+                "v6capable": 0.014886859865025803,
+                "v6preferred": 0.014886859865025803
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Slovakia",
+        "scope": "National",
+        "start": "\t2020-03-16"
+    },
     "South Africa": {
         "cc": "ZA",
         "continent": "Africa",
-        "end": "2020-04-16",
+        "end": "2020-04-30",
         "eyeball": [
             {
                 "as": 37457,
                 "as-descr": "",
                 "autnum": "Telkom-Internet",
                 "cc": "ZA",
-                "cumulative": 22.000789963623287,
+                "cumulative": 18.69579663555437,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -8805,70 +11647,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telkom-Internet, ZA",
-                "percent": 22.000789963623287,
-                "samples": 217790,
-                "v6capable": 0.00321410533082327,
-                "v6preferred": 0.00321410533082327
-            },
-            {
-                "as": 29975,
-                "as-descr": "",
-                "autnum": "VODACOM-",
-                "cc": "ZA",
-                "cumulative": 34.11804400157993,
-                "dependency": [
-                    {
-                        "asn": 36994,
-                        "hege": 1.0,
-                        "name": "Vodacom-VB, ZA"
-                    },
-                    {
-                        "asn": 1273,
-                        "hege": 0.0589169881300243,
-                        "name": "CW Vodafone Group PLC, GB"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.359742986588646,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "VODACOM-, ZA",
-                "percent": 12.117254037956641,
-                "samples": 119951,
-                "v6capable": 0.004168368750573151,
-                "v6preferred": 0.004168368750573151
-            },
-            {
-                "as": 16637,
-                "as-descr": "",
-                "autnum": "MTNNS-AS",
-                "cc": "ZA",
-                "cumulative": 43.05877551597656,
-                "dependency": [
-                    {
-                        "asn": 174,
-                        "hege": 0.0325721130634041,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.275949271971322,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "MTNNS-AS, ZA",
-                "percent": 8.940731514396633,
-                "samples": 88506,
-                "v6capable": 0.0022597338033579642,
-                "v6preferred": 0.0011298669016789821
+                "percent": 18.69579663555437,
+                "samples": 221697,
+                "v6capable": 0.005412793136578302,
+                "v6preferred": 0.005412793136578302
             },
             {
                 "as": 5713,
                 "as-descr": "",
                 "autnum": "SAIX-NET",
                 "cc": "ZA",
-                "cumulative": 51.54078262968991,
+                "cumulative": 31.583589978849936,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -8892,17 +11681,70 @@ const lockdowns ={
                     }
                 ],
                 "name": "SAIX-NET, ZA",
-                "percent": 8.482007113713344,
-                "samples": 83965,
-                "v6capable": 0.0059548621449413445,
-                "v6preferred": 0.0059548621449413445
+                "percent": 12.887793343295565,
+                "samples": 152825,
+                "v6capable": 0.005889088827089809,
+                "v6preferred": 0.005889088827089809
+            },
+            {
+                "as": 29975,
+                "as-descr": "",
+                "autnum": "VODACOM-",
+                "cc": "ZA",
+                "cumulative": 43.11442285961012,
+                "dependency": [
+                    {
+                        "asn": 36994,
+                        "hege": 1.0,
+                        "name": "Vodacom-VB, ZA"
+                    },
+                    {
+                        "asn": 1273,
+                        "hege": 0.0589169881300243,
+                        "name": "CW Vodafone Group PLC, GB"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.359742986588646,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VODACOM-, ZA",
+                "percent": 11.530832880760189,
+                "samples": 136734,
+                "v6capable": 0.005119428964266386,
+                "v6preferred": 0.005119428964266386
+            },
+            {
+                "as": 16637,
+                "as-descr": "",
+                "autnum": "MTNNS-AS",
+                "cc": "ZA",
+                "cumulative": 52.04956603576284,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0325721130634041,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.275949271971322,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "MTNNS-AS, ZA",
+                "percent": 8.935143176152712,
+                "samples": 105954,
+                "v6capable": 0.005662834815108444,
+                "v6preferred": 0.004719029012590369
             },
             {
                 "as": 37168,
                 "as-descr": "",
                 "autnum": "CELL-C",
                 "cc": "ZA",
-                "cumulative": 57.180739030163075,
+                "cumulative": 57.83092092169754,
                 "dependency": [
                     {
                         "asn": 37100,
@@ -8921,10 +11763,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "CELL-C, ZA",
-                "percent": 5.63995640047317,
-                "samples": 55831,
-                "v6capable": 0.0017911196288800128,
-                "v6preferred": 0.0017911196288800128
+                "percent": 5.781354885934701,
+                "samples": 68556,
+                "v6capable": 0.0,
+                "v6preferred": 0.0
             }
         ],
         "monitoring_dates": {
@@ -8944,14 +11786,14 @@ const lockdowns ={
     "Spain": {
         "cc": "ES",
         "continent": "Europe",
-        "end": "2020-04-14",
+        "end": "2020-04-25",
         "eyeball": [
             {
                 "as": 3352,
                 "as-descr": "",
                 "autnum": "TELEFONICA_DE_ESPANA",
                 "cc": "ES",
-                "cumulative": 29.6866476633173,
+                "cumulative": 29.753862448431104,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -8980,17 +11822,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Telefonica_de_Espana TELEFONICA DE ESPANA, ES",
-                "percent": 29.6866476633173,
-                "samples": 2340666,
-                "v6capable": 0.006280263822347998,
-                "v6preferred": 0.005425806159443509
+                "percent": 29.753862448431104,
+                "samples": 2718769,
+                "v6capable": 0.007466614486188418,
+                "v6preferred": 0.006105704456686096
             },
             {
                 "as": 12479,
                 "as-descr": "",
                 "autnum": "UNI2-AS",
                 "cc": "ES",
-                "cumulative": 53.344929815494176,
+                "cumulative": 53.17700083819123,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -9019,17 +11861,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "UNI2-AS Orange Espagne SA, ES",
-                "percent": 23.658282152176877,
-                "samples": 1865355,
-                "v6capable": 13.243109220496903,
-                "v6preferred": 13.121899048706547
+                "percent": 23.423138389760126,
+                "samples": 2140297,
+                "v6capable": 13.935308978146491,
+                "v6preferred": 13.810279601382424
             },
             {
                 "as": 12430,
                 "as-descr": "",
                 "autnum": "VODAFONE_ES",
                 "cc": "ES",
-                "cumulative": 66.38110487882986,
+                "cumulative": 65.9974853168793,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -9048,17 +11890,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "VODAFONE_ES VODAFONE ESPANA S.A.U., ES",
-                "percent": 13.03617506333569,
-                "samples": 1027847,
-                "v6capable": 0.008269713293904638,
-                "v6preferred": 0.007102224358294571
+                "percent": 12.820484478688066,
+                "samples": 1171476,
+                "v6capable": 0.00862160214976662,
+                "v6preferred": 0.00768261577701976
             },
             {
                 "as": 15704,
                 "as-descr": "",
                 "autnum": "AS15704",
                 "cc": "ES",
-                "cumulative": 73.67627297603231,
+                "cumulative": 73.7638375697248,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9082,10 +11924,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "AS15704 XTRA TELECOM S.A., ES",
-                "percent": 7.295168097202449,
-                "samples": 575193,
-                "v6capable": 0.003477093775480578,
-                "v6preferred": 0.002955529709158491
+                "percent": 7.766352252845489,
+                "samples": 709653,
+                "v6capable": 0.0045092460681488,
+                "v6preferred": 0.0039455903096302
             }
         ],
         "monitoring_dates": {
@@ -9102,51 +11944,454 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-14"
     },
-    "Tunisia": {
-        "cc": "TN",
-        "continent": "Africa",
-        "end": "2020-04-11",
+    "Switzerland": {
+        "cc": "CH",
+        "continent": "Europe",
+        "end": "2020-03-17",
         "eyeball": [
             {
-                "as": 37693,
+                "as": 3303,
+                "as-descr": "Swisscom (Switzerland) Ltd",
+                "autnum": "SWISSCOM",
+                "cc": "CH",
+                "cumulative": 44.92536970830775,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.0452063608019711,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 3257,
+                        "hege": 0.0312288736249308,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 33891,
+                        "hege": 0.030145321745332,
+                        "name": "CORE-BACKBONE Core-Backbone GmbH, DE"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.025549329566824,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "SWISSCOM Swisscom (Switzerland) Ltd, CH",
+                "percent": 44.92536970830775,
+                "samples": 313146,
+                "v6capable": 63.58471767162921,
+                "v6preferred": 63.125506952028765
+            },
+            {
+                "as": 6730,
                 "as-descr": "",
-                "autnum": "TUNISIANA",
-                "cc": "TN",
-                "cumulative": 25.668775017158687,
+                "autnum": "SUNRISE",
+                "cc": "CH",
+                "cumulative": 62.35488554393173,
                 "dependency": [
                     {
                         "asn": 174,
-                        "hege": 0.0142357227048973,
+                        "hege": 0.044529758798274,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0758031686104399,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0342366605796717,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "SUNRISE Sunrise Communications AG, CH",
+                "percent": 17.429515835623985,
+                "samples": 121490,
+                "v6capable": 29.861717013745988,
+                "v6preferred": 29.60079018849288
+            },
+            {
+                "as": 6830,
+                "as-descr": "formerly known as UPC Broadband Holding B.V.",
+                "autnum": "LGI-UPC",
+                "cc": "CH",
+                "cumulative": 74.36689066274911,
+                "dependency": [
+                    {
+                        "asn": 1299,
+                        "hege": 0.045898986449838,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0275460148262984,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "LGI-UPC Liberty Global Operations B.V., AT",
+                "percent": 12.012005118817392,
+                "samples": 83728,
+                "v6capable": 32.85280909612077,
+                "v6preferred": 32.084846168545766
+            },
+            {
+                "as": 15796,
+                "as-descr": "",
+                "autnum": "SALT-",
+                "cc": "CH",
+                "cumulative": 82.16132308804708,
+                "dependency": [
+                    {
+                        "asn": 3303,
+                        "hege": 0.0963855421686747,
+                        "name": "SWISSCOM Swisscom (Switzerland) Ltd, CH"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.5,
                         "name": "COGENT-174 - Cogent Communications, US"
                     },
                     {
                         "asn": 6939,
-                        "hege": 0.025419885842112,
+                        "hege": 0.0240963855421687,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    }
+                ],
+                "name": "SALT-CH Salt Mobile SA, CH",
+                "percent": 7.794432425297976,
+                "samples": 54330,
+                "v6capable": 6.666666666666667,
+                "v6preferred": 6.523099576661145
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Switzerland",
+        "scope": "National",
+        "start": "\t2020-03-17"
+    },
+    "Thailand": {
+        "cc": "TH",
+        "continent": "Asia",
+        "end": "2020-04-30",
+        "eyeball": [
+            {
+                "as": 17552,
+                "as-descr": "True Internet Co.,Ltd.",
+                "autnum": "TRUE-AS-AP",
+                "cc": "TH",
+                "cumulative": 18.838944173466256,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.0151242183056704,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 7470,
+                        "hege": 1.0,
+                        "name": "TRUEINTERNET-AS-AP TRUE INTERNET Co.,Ltd., TH"
+                    },
+                    {
+                        "asn": 4651,
+                        "hege": 0.783095362330825,
+                        "name": "THAI-GATEWAY The Communications Authority of Thailand(CAT), TH"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.383182672291465,
                         "name": "HURRICANE - Hurricane Electric LLC, US"
                     },
                     {
-                        "asn": 6762,
-                        "hege": 0.71361922713464,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                        "asn": 38082,
+                        "hege": 0.216904637669176,
+                        "name": "IIT-TIG-AS-AP True International Gateway Co., Ltd., TH"
+                    },
+                    {
+                        "asn": 7473,
+                        "hege": 0.014998116052132,
+                        "name": "SINGTEL-AS-AP Singapore Telecommunications Ltd, SG"
+                    }
+                ],
+                "name": "TRUE-AS-AP True Internet Co.,Ltd., TH",
+                "percent": 18.838944173466256,
+                "samples": 1315781,
+                "v6capable": 3.864700888673723,
+                "v6preferred": 3.7554881853439137
+            },
+            {
+                "as": 131445,
+                "as-descr": "Advance Wireless Network",
+                "autnum": "AIS3G-2100-AS-AP",
+                "cc": "TH",
+                "cumulative": 37.40519362742536,
+                "dependency": [
+                    {
+                        "asn": 4788,
+                        "hege": 0.0459599682566844,
+                        "name": "TMNET-AS-AP TM Net, Internet Service Provider, MY"
+                    },
+                    {
+                        "asn": 45430,
+                        "hege": 1.0,
+                        "name": "SBN-AWN-IIG-AS-AP SBN-IIG/AWN-IIG transit provider, TH"
+                    },
+                    {
+                        "asn": 9930,
+                        "hege": 0.0222665422505561,
+                        "name": "TTNET-MY TIME dotCom Berhad, MY"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.171847612009614,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.0547849424101096,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.156883140601857,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.100800128718672,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 4637,
+                        "hege": 0.018649842877639,
+                        "name": "ASN-TELSTRA-GLOBAL Telstra Global, HK"
+                    }
+                ],
+                "name": "AIS3G-2100-AS-AP Advance Wireless Network, TH",
+                "percent": 18.566249453959106,
+                "samples": 1296735,
+                "v6capable": 87.7471495718092,
+                "v6preferred": 86.67877399777133
+            },
+            {
+                "as": 45758,
+                "as-descr": "Triple T Internet/Triple T Broadband",
+                "autnum": "TRIPLETNET-AS-AP",
+                "cc": "TH",
+                "cumulative": 53.61634060753107,
+                "dependency": [],
+                "percent": 16.211146980105713,
+                "samples": 1132246,
+                "v6capable": 57.55215739335798,
+                "v6preferred": 55.920179890235865
+            },
+            {
+                "as": 132061,
+                "as-descr": "Realmove Company Limited",
+                "autnum": "REALMOVE-AS-AP",
+                "cc": "TH",
+                "cumulative": 66.49769406447284,
+                "dependency": [
+                    {
+                        "asn": 7470,
+                        "hege": 1.0,
+                        "name": "TRUEINTERNET-AS-AP TRUE INTERNET Co.,Ltd., TH"
+                    },
+                    {
+                        "asn": 4651,
+                        "hege": 0.576954134366925,
+                        "name": "THAI-GATEWAY The Communications Authority of Thailand(CAT), TH"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.282138242894057,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 38082,
+                        "hege": 0.423045865633075,
+                        "name": "IIT-TIG-AS-AP True International Gateway Co., Ltd., TH"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0161397771317829,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "REALMOVE-AS-AP Realmove Company Limited, TH",
+                "percent": 12.881353456941767,
+                "samples": 899681,
+                "v6capable": 0.0560198559267118,
+                "v6preferred": 0.042792945499571515
+            },
+            {
+                "as": 24378,
+                "as-descr": "Total Access Communication PLC.",
+                "autnum": "ENGTAC-AS-TH-AP",
+                "cc": "TH",
+                "cumulative": 77.15921858058145,
+                "dependency": [
+                    {
+                        "asn": 4788,
+                        "hege": 0.202716969227277,
+                        "name": "TMNET-AS-AP TM Net, Internet Service Provider, MY"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.014264472035355,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.786044602771412,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 9587,
+                        "hege": 1.0,
+                        "name": "DTACNETWORK-TH-AP 26th Floor 333/3 Moo 14 Chai Building, TH"
+                    },
+                    {
+                        "asn": 15932,
+                        "hege": 0.281279430178457,
+                        "name": "TGS-INT-NETWORK Telenor Global Services AS, NO"
+                    },
+                    {
+                        "asn": 10089,
+                        "hege": 0.711008641839548,
+                        "name": "DTNCORP-TH-AP Total Access Communication PLC., TH"
+                    }
+                ],
+                "name": "ENGTAC-AS-TH-AP Total Access Communication PLC., TH",
+                "percent": 10.661524516108617,
+                "samples": 744640,
+                "v6capable": 0.05398581865062312,
+                "v6preferred": 0.04471959604641169
+            },
+            {
+                "as": 23969,
+                "as-descr": "TOT Public Company Limited",
+                "autnum": "TOT-NET",
+                "cc": "TH",
+                "cumulative": 87.17455712164036,
+                "dependency": [
+                    {
+                        "asn": 38040,
+                        "hege": 0.796039832555763,
+                        "name": "GLOBAL-TRANSIT-TOT-IIG-TH TOT Public Company Limited, TH"
+                    },
+                    {
+                        "asn": 4651,
+                        "hege": 0.20395765466045,
+                        "name": "THAI-GATEWAY The Communications Authority of Thailand(CAT), TH"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.256132681027292,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0214290609628092,
+                        "name": "TELIANET Telia Company AB, EU"
                     },
                     {
                         "asn": 3356,
-                        "hege": 0.343133871440757,
+                        "hege": 0.0387261767627659,
                         "name": "LEVEL3 - Level 3 Parent, LLC, US"
                     }
                 ],
-                "name": "TUNISIANA, TN",
-                "percent": 25.668775017158687,
-                "samples": 496286,
-                "v6capable": 0.00322394748189552,
-                "v6preferred": 0.00322394748189552
+                "name": "TOT-NET TOT Public Company Limited, TH",
+                "percent": 10.015338541058911,
+                "samples": 699508,
+                "v6capable": 0.12723228326194982,
+                "v6preferred": 0.0820576748228755
             },
+            {
+                "as": 133481,
+                "as-descr": "AIS Fibre",
+                "autnum": "AIS-FIBRE-AS-AP",
+                "cc": "TH",
+                "cumulative": 94.55914902524451,
+                "dependency": [
+                    {
+                        "asn": 4788,
+                        "hege": 0.0233817934440273,
+                        "name": "TMNET-AS-AP TM Net, Internet Service Provider, MY"
+                    },
+                    {
+                        "asn": 45430,
+                        "hege": 1.0,
+                        "name": "SBN-AWN-IIG-AS-AP SBN-IIG/AWN-IIG transit provider, TH"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.196065552907354,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.070695010044284,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.17400428374986,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0834438484402704,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 4637,
+                        "hege": 0.0219500902024451,
+                        "name": "ASN-TELSTRA-GLOBAL Telstra Global, HK"
+                    }
+                ],
+                "name": "AIS-FIBRE-AS-AP AIS Fibre, TH",
+                "percent": 7.384591903604149,
+                "samples": 515767,
+                "v6capable": 57.79877347717089,
+                "v6preferred": 57.065108857294085
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-24",
+                "sunday": "2020-03-01"
+            },
+            "lockdown": {
+                "monday": "2020-03-23",
+                "sunday": "2020-03-29"
+            }
+        },
+        "name": "Thailand",
+        "scope": "National",
+        "start": "\t2020-03-25"
+    },
+    "Tunisia": {
+        "cc": "TN",
+        "continent": "Africa",
+        "end": "2020-04-19",
+        "eyeball": [
             {
                 "as": 37705,
                 "as-descr": "",
                 "autnum": "TOPNET",
                 "cc": "TN",
-                "cumulative": 49.875324747869456,
+                "cumulative": 26.50042673089064,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9190,17 +12435,51 @@ const lockdowns ={
                     }
                 ],
                 "name": "TOPNET, TN",
-                "percent": 24.206549730710766,
-                "samples": 468015,
-                "v6capable": 0.004914372402593934,
-                "v6preferred": 0.004700704037263763
+                "percent": 26.50042673089064,
+                "samples": 544005,
+                "v6capable": 0.0047793678366926775,
+                "v6preferred": 0.004595545996819882
+            },
+            {
+                "as": 37693,
+                "as-descr": "",
+                "autnum": "TUNISIANA",
+                "cc": "TN",
+                "cumulative": 51.43388399155112,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.0142357227048973,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.025419885842112,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.71361922713464,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.343133871440757,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TUNISIANA, TN",
+                "percent": 24.93345726066048,
+                "samples": 511838,
+                "v6capable": 0.0035167377177935206,
+                "v6preferred": 0.0035167377177935206
             },
             {
                 "as": 37492,
                 "as-descr": "",
                 "autnum": "ORANGE-",
                 "cc": "TN",
-                "cumulative": 68.26390293277778,
+                "cumulative": 69.33685240177395,
                 "dependency": [
                     {
                         "asn": 2609,
@@ -9234,17 +12513,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ORANGE-, TN",
-                "percent": 18.388578184908322,
-                "samples": 355529,
-                "v6capable": 0.0030939810817120403,
-                "v6preferred": 0.0030939810817120403
+                "percent": 17.902968410222837,
+                "samples": 367515,
+                "v6capable": 0.003809368325102377,
+                "v6preferred": 0.003809368325102377
             },
             {
                 "as": 2609,
                 "as-descr": "Tunisia BackBone AS",
                 "autnum": "TN-BB-AS",
                 "cc": "TN",
-                "cumulative": 80.99841576313099,
+                "cumulative": 80.50059040849253,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9263,17 +12542,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TN-BB-AS Tunisia BackBone AS, TN",
-                "percent": 12.734512830353212,
-                "samples": 246212,
-                "v6capable": 0.010966159244878397,
-                "v6preferred": 0.01056000519877179
+                "percent": 11.163738006718576,
+                "samples": 229171,
+                "v6capable": 0.010472529246719698,
+                "v6preferred": 0.01003617386143971
             },
             {
                 "as": 5438,
                 "as-descr": "",
                 "autnum": "ATI-",
                 "cc": "TN",
-                "cumulative": 90.57779906414686,
+                "cumulative": 90.01478944045643,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9307,17 +12586,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ATI-TN Agence Tunisienne d'Internet, TN",
-                "percent": 9.579383301015866,
-                "samples": 185210,
-                "v6capable": 0.0075589870957291725,
-                "v6preferred": 0.0075589870957291725
+                "percent": 9.514199031963898,
+                "samples": 195309,
+                "v6capable": 0.007680137628066295,
+                "v6preferred": 0.007680137628066295
             },
             {
                 "as": 37671,
                 "as-descr": "",
                 "autnum": "GLOBALNET-AS",
                 "cc": "TN",
-                "cumulative": 99.23094946113707,
+                "cumulative": 98.87086811482374,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9356,10 +12635,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "GLOBALNET-AS, TN",
-                "percent": 8.653150396990208,
-                "samples": 167302,
-                "v6capable": 0.0035863289141791492,
-                "v6preferred": 0.0035863289141791492
+                "percent": 8.856078674367309,
+                "samples": 181799,
+                "v6capable": 0.003850406217855984,
+                "v6preferred": 0.003850406217855984
             }
         ],
         "monitoring_dates": {
@@ -9376,17 +12655,448 @@ const lockdowns ={
         "scope": "National",
         "start": "\t2020-03-22"
     },
+    "Turkey": {
+        "cc": "TR",
+        "continent": "Asia",
+        "end": "2020-04-13",
+        "eyeball": [
+            {
+                "as": 47331,
+                "as-descr": "",
+                "autnum": "TTNET",
+                "cc": "TR",
+                "cumulative": 26.79476682544091,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.464578974983223,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 9121,
+                        "hege": 1.0,
+                        "name": "TTNet Turk Telekomunikasyon Anonim Sirketi, TR"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0422160739248044,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.0674173152572168,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TTNET TTNet A.S., TR",
+                "percent": 26.79476682544091,
+                "samples": 12272239,
+                "v6capable": 0.003968306027938341,
+                "v6preferred": 0.003927563666255196
+            },
+            {
+                "as": 16135,
+                "as-descr": "Turkcell A.S.",
+                "autnum": "TURKCELL-AS",
+                "cc": "TR",
+                "cumulative": 41.96390113028396,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.0809460167060091,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 3257,
+                        "hege": 0.207567245058154,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 286,
+                        "hege": 0.0939397850579497,
+                        "name": "KPN KPN B.V., NL"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0186709796231719,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.341830744642155,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0354636213596769,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 34984,
+                        "hege": 1.0,
+                        "name": "TELLCOM-AS TELLCOM ILETISIM HIZMETLERI A.S., TR"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0126008595750189,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.185440916755519,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0307318008536138,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.130926441952548,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TURKCELL-AS TURKCELL ILETISIM HIZMETLERI A.S., TR",
+                "percent": 15.169134304843052,
+                "samples": 6947597,
+                "v6capable": 0.004058957363243723,
+                "v6preferred": 0.004001383499935301
+            },
+            {
+                "as": 15897,
+                "as-descr": "",
+                "autnum": "VODAFONETURKEY",
+                "cc": "TR",
+                "cumulative": 54.39209464970978,
+                "dependency": [
+                    {
+                        "asn": 15924,
+                        "hege": 1.0,
+                        "name": "BORUSANTELEKOM-AS VODAFONE NET ILETISIM HIZMETLERI ANONIM SIRKETI, TR"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0329314339655024,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0429795796584755,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0606639205926943,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 1273,
+                        "hege": 0.955719557195572,
+                        "name": "CW Vodafone Group PLC, GB"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.055522183128808,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "VodafoneTurkey Vodafone Telekomunikasyon A.S., TR",
+                "percent": 12.428193519425827,
+                "samples": 5692222,
+                "v6capable": 0.003478430742862805,
+                "v6preferred": 0.003373023750654841
+            },
+            {
+                "as": 20978,
+                "as-descr": "Istanbul",
+                "autnum": "TT_MOBIL",
+                "cc": "TR",
+                "cumulative": 66.68604402360828,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.16503045124274,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0674551853332393,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 9121,
+                        "hege": 1.0,
+                        "name": "TTNet Turk Telekomunikasyon Anonim Sirketi, TR"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.373801741638645,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "AVEA-Telekomunikasyon AVEA Iletisim Hizmetleri A.S., TR",
+                "percent": 12.293949373898492,
+                "samples": 5630737,
+                "v6capable": 0.003676250551215587,
+                "v6preferred": 0.003587452228722457
+            },
+            {
+                "as": 9121,
+                "as-descr": "",
+                "autnum": "TTNET",
+                "cc": "TR",
+                "cumulative": 76.45230833992709,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.0733249765319821,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.459819123910526,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 4134,
+                        "hege": 0.0171164043373745,
+                        "name": "CHINANET-BACKBONE No.31,Jin-rong Street, CN"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0447997003814194,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 39533,
+                        "hege": 0.0170374453621112,
+                        "name": "asympto Asympto Networks Kft., CH"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0239638786658318,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.202127841279259,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "TTNet Turk Telekomunikasyon Anonim Sirketi, TR",
+                "percent": 9.766264316318813,
+                "samples": 4473035,
+                "v6capable": 0.004650086574328169,
+                "v6preferred": 0.004538305647060665
+            },
+            {
+                "as": 34984,
+                "as-descr": "",
+                "autnum": "TELLCOM-AS",
+                "cc": "TR",
+                "cumulative": 85.9518528901628,
+                "dependency": [
+                    {
+                        "asn": 3320,
+                        "hege": 0.0689801513450853,
+                        "name": "DTAG Deutsche Telekom AG, DE"
+                    },
+                    {
+                        "asn": 3257,
+                        "hege": 0.188841325283297,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 286,
+                        "hege": 0.165891794382901,
+                        "name": "KPN KPN B.V., NL"
+                    },
+                    {
+                        "asn": 2914,
+                        "hege": 0.0190640777067239,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0397538950439916,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0128769284049444,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 6762,
+                        "hege": 0.0683170782734177,
+                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0285507312238241,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.117901417287731,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    },
+                    {
+                        "asn": 6453,
+                        "hege": 0.428399659919136,
+                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
+                    }
+                ],
+                "name": "TELLCOM-AS TELLCOM ILETISIM HIZMETLERI A.S., TR",
+                "percent": 9.499544550235717,
+                "samples": 4350875,
+                "v6capable": 0.0038842761513488665,
+                "v6preferred": 0.0037463728560347058
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-03-09",
+                "sunday": "2020-03-15"
+            },
+            "lockdown": {
+                "monday": "2020-04-06",
+                "sunday": "2020-04-12"
+            }
+        },
+        "name": "Turkey",
+        "scope": "National",
+        "start": "\t2020-04-11"
+    },
+    "Ukraine": {
+        "cc": "UA",
+        "continent": "Europe",
+        "end": "2020-04-24",
+        "eyeball": [
+            {
+                "as": 15895,
+                "as-descr": "",
+                "autnum": "KSNET-AS",
+                "cc": "UA",
+                "cumulative": 19.071567397874265,
+                "dependency": [
+                    {
+                        "asn": 174,
+                        "hege": 0.179176595697471,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.242622429801903,
+                        "name": "TELIANET Telia Company AB, EU"
+                    }
+                ],
+                "name": "KSNET-AS \"Kyivstar\" PJSC, UA",
+                "percent": 19.071567397874265,
+                "samples": 2246311,
+                "v6capable": 0.005653714022679852,
+                "v6preferred": 0.005342091989933718
+            },
+            {
+                "as": 21497,
+                "as-descr": "",
+                "autnum": "UMC-AS",
+                "cc": "UA",
+                "cumulative": 26.579647494838824,
+                "dependency": [
+                    {
+                        "asn": 3257,
+                        "hege": 0.101727878929252,
+                        "name": "GTT-BACKBONE GTT Communications Inc., DE"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.126837785926314,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.177818604641817,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 1273,
+                        "hege": 0.0998420968561851,
+                        "name": "CW Vodafone Group PLC, GB"
+                    }
+                ],
+                "name": "UMC-AS PrJSC \"VF UKRAINE\", UA",
+                "percent": 7.50808009696456,
+                "samples": 884326,
+                "v6capable": 0.005088621164593148,
+                "v6preferred": 0.004749379753620271
+            },
+            {
+                "as": 6849,
+                "as-descr": "",
+                "autnum": "UKRTELNET",
+                "cc": "UA",
+                "cumulative": 33.66787159191749,
+                "dependency": [
+                    {
+                        "asn": 9002,
+                        "hege": 0.0470517966337401,
+                        "name": "RETN-AS RETN Limited, UA"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0300345302759029,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.174990452466625,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.327624336404626,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.290206222228704,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "UKRTELNET PJSC \"Ukrtelecom\", UA",
+                "percent": 7.088224097078667,
+                "samples": 834874,
+                "v6capable": 0.008025163078500468,
+                "v6preferred": 0.007426270311448195
+            }
+        ],
+        "monitoring_dates": {
+            "before": {
+                "monday": "2020-02-17",
+                "sunday": "2020-02-23"
+            },
+            "lockdown": {
+                "monday": "2020-03-16",
+                "sunday": "2020-03-22"
+            }
+        },
+        "name": "Ukraine",
+        "scope": "National",
+        "start": "\t2020-03-17"
+    },
     "United Arab Emirates": {
         "cc": "AE",
         "continent": "Asia",
-        "end": "2020-03-30",
+        "end": "2020-04-17",
         "eyeball": [
             {
                 "as": 5384,
                 "as-descr": "Emirates Internet",
                 "autnum": "EMIRATES-INTERNET",
                 "cc": "AE",
-                "cumulative": 91.68140962690315,
+                "cumulative": 93.41446811024626,
                 "dependency": [
                     {
                         "asn": 8966,
@@ -9410,17 +13120,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "EMIRATES-INTERNET Emirates Telecommunications Corporation, AE",
-                "percent": 91.68140962690315,
-                "samples": 489201,
-                "v6capable": 33.87912126099497,
-                "v6preferred": 33.56493547641971
+                "percent": 93.41446811024626,
+                "samples": 695722,
+                "v6capable": 37.497161222442294,
+                "v6preferred": 37.14256556498142
             },
             {
                 "as": 15802,
                 "as-descr": "",
                 "autnum": "DU-AS1",
                 "cc": "AE",
-                "cumulative": 98.9746770916887,
+                "cumulative": 99.21962380281671,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -9439,10 +13149,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "DU-AS1 Emirates Integrated Telecommunications Company PJSC (EITC-DU), AE",
-                "percent": 7.293267464785565,
-                "samples": 38916,
-                "v6capable": 0.30064754856614245,
-                "v6preferred": 0.1567478672011512
+                "percent": 5.805155692570448,
+                "samples": 43235,
+                "v6capable": 0.40476465826298136,
+                "v6preferred": 0.19659997687059097
             }
         ],
         "monitoring_dates": {
@@ -9462,14 +13172,14 @@ const lockdowns ={
     "United Kingdom": {
         "cc": "GB",
         "continent": "Europe",
-        "end": "2020-04-13",
+        "end": "2020-03-23",
         "eyeball": [
             {
                 "as": 5607,
                 "as-descr": "",
                 "autnum": "BSKYB-BROADBAND-AS",
                 "cc": "GB",
-                "cumulative": 19.89357547809019,
+                "cumulative": 19.824749832661645,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -9488,17 +13198,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "BSKYB-BROADBAND-AS Sky UK Limited, GB",
-                "percent": 19.89357547809019,
-                "samples": 1280709,
-                "v6capable": 93.70465890377908,
-                "v6preferred": 93.05056808377235
+                "percent": 19.824749832661645,
+                "samples": 1415729,
+                "v6capable": 93.51973435593959,
+                "v6preferred": 92.85746071458591
             },
             {
                 "as": 5089,
                 "as-descr": "",
                 "autnum": "NTL",
                 "cc": "GB",
-                "cumulative": 39.33392173291443,
+                "cumulative": 39.53821615914367,
                 "dependency": [
                     {
                         "asn": 33891,
@@ -9522,17 +13232,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "NTL Virgin Media Limited, GB",
-                "percent": 19.440346254824238,
-                "samples": 1251531,
-                "v6capable": 0.1273640045672061,
-                "v6preferred": 0.05561188656133967
+                "percent": 19.71346632648203,
+                "samples": 1407782,
+                "v6capable": 0.1250903904155615,
+                "v6preferred": 0.054767002277341235
             },
             {
                 "as": 2856,
                 "as-descr": "BTnet UK Regional network",
                 "autnum": "BT-UK-AS",
                 "cc": "GB",
-                "cumulative": 56.15710144549335,
+                "cumulative": 56.57761558949311,
                 "dependency": [
                     {
                         "asn": 5400,
@@ -9546,17 +13256,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "BT-UK-AS British Telecommunications PLC, GB",
-                "percent": 16.82317971257892,
-                "samples": 1083043,
-                "v6capable": 67.46768133859875,
-                "v6preferred": 66.84277540226935
+                "percent": 17.039399430349437,
+                "samples": 1216821,
+                "v6capable": 68.21447032883226,
+                "v6preferred": 67.56079982183083
             },
             {
                 "as": 12576,
                 "as-descr": "Ltd",
                 "autnum": "EE",
                 "cc": "GB",
-                "cumulative": 63.248263926103974,
+                "cumulative": 63.37303710010334,
                 "dependency": [
                     {
                         "asn": 5511,
@@ -9570,17 +13280,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "ORANGE-PCS EE Limited, GB",
-                "percent": 7.091162480610619,
-                "samples": 456515,
-                "v6capable": 37.71924252215152,
-                "v6preferred": 37.54619234855372
+                "percent": 6.795421510610232,
+                "samples": 485276,
+                "v6capable": 35.184719623472006,
+                "v6preferred": 35.00956156908646
             },
             {
                 "as": 13285,
                 "as-descr": "TalkTalk Communications Limited",
                 "autnum": "OPALTELECOM-AS",
                 "cc": "GB",
-                "cumulative": 69.08485225236812,
+                "cumulative": 69.36593467222687,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9604,10 +13314,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "OPALTELECOM-AS TalkTalk Communications Limited, GB",
-                "percent": 5.836588326264151,
-                "samples": 375748,
-                "v6capable": 0.09314753505008676,
-                "v6preferred": 0.036992878205605886
+                "percent": 5.992897572123531,
+                "samples": 427966,
+                "v6capable": 0.09743764691587649,
+                "v6preferred": 0.03458218643537103
             }
         ],
         "monitoring_dates": {
@@ -9634,7 +13344,7 @@ const lockdowns ={
                 "as-descr": "",
                 "autnum": "COMCAST-7922",
                 "cc": "US",
-                "cumulative": 16.466521802541454,
+                "cumulative": 17.38553687891796,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9663,17 +13373,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "COMCAST-7922 - Comcast Cable Communications, LLC, US",
-                "percent": 16.466521802541454,
-                "samples": 9845228,
-                "v6capable": 79.07178990674467,
-                "v6preferred": 77.95785938121494
+                "percent": 17.38553687891796,
+                "samples": 11672727,
+                "v6capable": 79.4842970284493,
+                "v6preferred": 78.33308360591317
             },
             {
                 "as": 21928,
                 "as-descr": "",
                 "autnum": "T-MOBILE-AS21928",
                 "cc": "US",
-                "cumulative": 25.591289152451203,
+                "cumulative": 25.970292184237202,
                 "dependency": [
                     {
                         "asn": 6461,
@@ -9682,17 +13392,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "T-MOBILE-AS21928 - T-Mobile USA, Inc., US",
-                "percent": 9.12476734990975,
-                "samples": 5455640,
-                "v6capable": 97.04784406595743,
-                "v6preferred": 96.74195878027143
+                "percent": 8.584755305319241,
+                "samples": 5763843,
+                "v6capable": 97.00899209086715,
+                "v6preferred": 96.69404596898285
             },
             {
                 "as": 22394,
                 "as-descr": "",
                 "autnum": "CELLCO",
                 "cc": "US",
-                "cumulative": 34.204087483124084,
+                "cumulative": 34.07089967796758,
                 "dependency": [
                     {
                         "asn": 701,
@@ -9721,61 +13431,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "CELLCO - Cellco Partnership DBA Verizon Wireless, US",
-                "percent": 8.612798330672883,
-                "samples": 5149537,
-                "v6capable": 86.20287610323025,
-                "v6preferred": 85.66535205009693
-            },
-            {
-                "as": 20057,
-                "as-descr": "",
-                "autnum": "ATT-MOBILITY-LLC-AS20057",
-                "cc": "US",
-                "cumulative": 42.15070875486876,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.024789527895999,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0273690850555542,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0197156198027757,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 7018,
-                        "hege": 0.999839983501143,
-                        "name": "ATT-INTERNET4 - AT&T Services, Inc., US"
-                    },
-                    {
-                        "asn": 1299,
-                        "hege": 0.0791734128166486,
-                        "name": "TELIANET Telia Company AB, EU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.101614720890171,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "ATT-MOBILITY-LLC-AS20057 - AT&T Mobility LLC, US",
-                "percent": 7.946621271744672,
-                "samples": 4751234,
-                "v6capable": 81.71624466401781,
-                "v6preferred": 80.70886426557816
+                "percent": 8.100607493730381,
+                "samples": 5438784,
+                "v6capable": 86.08920670502819,
+                "v6preferred": 85.54375389793013
             },
             {
                 "as": 7018,
                 "as-descr": "",
                 "autnum": "ATT-INTERNET4",
                 "cc": "US",
-                "cumulative": 49.761139774702386,
+                "cumulative": 41.904122888906635,
                 "dependency": [
                     {
                         "asn": 3257,
@@ -9809,10 +13475,54 @@ const lockdowns ={
                     }
                 ],
                 "name": "ATT-INTERNET4 - AT&T Services, Inc., US",
-                "percent": 7.610431019833629,
-                "samples": 4550228,
-                "v6capable": 68.53935670915831,
-                "v6preferred": 67.3079019337053
+                "percent": 7.833223210939051,
+                "samples": 5259261,
+                "v6capable": 68.68117022524648,
+                "v6preferred": 67.37045375766671
+            },
+            {
+                "as": 20057,
+                "as-descr": "",
+                "autnum": "ATT-MOBILITY-LLC-AS20057",
+                "cc": "US",
+                "cumulative": 49.311444848013075,
+                "dependency": [
+                    {
+                        "asn": 2914,
+                        "hege": 0.024789527895999,
+                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
+                    },
+                    {
+                        "asn": 174,
+                        "hege": 0.0273690850555542,
+                        "name": "COGENT-174 - Cogent Communications, US"
+                    },
+                    {
+                        "asn": 6939,
+                        "hege": 0.0197156198027757,
+                        "name": "HURRICANE - Hurricane Electric LLC, US"
+                    },
+                    {
+                        "asn": 7018,
+                        "hege": 0.999839983501143,
+                        "name": "ATT-INTERNET4 - AT&T Services, Inc., US"
+                    },
+                    {
+                        "asn": 1299,
+                        "hege": 0.0791734128166486,
+                        "name": "TELIANET Telia Company AB, EU"
+                    },
+                    {
+                        "asn": 3356,
+                        "hege": 0.101614720890171,
+                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
+                    }
+                ],
+                "name": "ATT-MOBILITY-LLC-AS20057 - AT&T Mobility LLC, US",
+                "percent": 7.407321959106437,
+                "samples": 4973309,
+                "v6capable": 81.66524541306401,
+                "v6preferred": 80.60985150932709
             }
         ],
         "monitoring_dates": {
@@ -9832,14 +13542,14 @@ const lockdowns ={
     "Venezuela": {
         "cc": "VE",
         "continent": "America",
-        "end": "2020-04-19",
+        "end": "2020-03-17",
         "eyeball": [
             {
                 "as": 8048,
                 "as-descr": "Servicios, Venezuela",
                 "autnum": "CANTV",
                 "cc": "VE",
-                "cumulative": 51.87558469006523,
+                "cumulative": 53.02774126330344,
                 "dependency": [
                     {
                         "asn": 3491,
@@ -9888,17 +13598,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "CANTV Servicios, Venezuela, VE",
-                "percent": 51.87558469006523,
-                "samples": 1309222,
-                "v6capable": 0.0036662995275056486,
-                "v6preferred": 0.002978868366098339
+                "percent": 53.02774126330344,
+                "samples": 1361474,
+                "v6capable": 0.003966289477434016,
+                "v6preferred": 0.003231791426057347
             },
             {
                 "as": 6306,
                 "as-descr": "VENEZOLANA, C.A.",
                 "autnum": "TELEFONICA",
                 "cc": "VE",
-                "cumulative": 72.63894177487437,
+                "cumulative": 72.8384891771098,
                 "dependency": [
                     {
                         "asn": 2914,
@@ -9942,17 +13652,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "TELEFONICA VENEZOLANA, C.A., VE",
-                "percent": 20.763357084809133,
-                "samples": 524020,
-                "v6capable": 0.0019083241097668027,
-                "v6preferred": 0.0017174916987901226
+                "percent": 19.810747913806367,
+                "samples": 508636,
+                "v6capable": 0.002162646765073648,
+                "v6preferred": 0.0019660425137033163
             },
             {
                 "as": 264731,
                 "as-descr": "Digitel C.A.",
                 "autnum": "Corporacion",
                 "cc": "VE",
-                "cumulative": 84.94250473398361,
+                "cumulative": 85.02357374463237,
                 "dependency": [
                     {
                         "asn": 27717,
@@ -9976,17 +13686,17 @@ const lockdowns ={
                     }
                 ],
                 "name": "Corporacion Digitel C.A., VE",
-                "percent": 12.303562959109238,
-                "samples": 310514,
-                "v6capable": 0.019000753589210148,
-                "v6preferred": 0.019000753589210148
+                "percent": 12.185084567522566,
+                "samples": 312849,
+                "v6capable": 0.0172607232243031,
+                "v6preferred": 0.01694108020163082
             },
             {
                 "as": 21826,
                 "as-descr": "Telemic C.A.",
                 "autnum": "Corporacion",
                 "cc": "VE",
-                "cumulative": 90.09047168663744,
+                "cumulative": 90.23269944205883,
                 "dependency": [
                     {
                         "asn": 6939,
@@ -10015,10 +13725,10 @@ const lockdowns ={
                     }
                 ],
                 "name": "Corporacin Telemic C.A., VE",
-                "percent": 5.1479669526538245,
-                "samples": 129923,
-                "v6capable": 0.005387806623923401,
-                "v6preferred": 0.005387806623923401
+                "percent": 5.20912569742646,
+                "samples": 133743,
+                "v6capable": 0.005233918784534518,
+                "v6preferred": 0.005233918784534518
             }
         ],
         "monitoring_dates": {
@@ -10034,191 +13744,6 @@ const lockdowns ={
         "name": "Venezuela",
         "scope": "National",
         "start": "\t2020-03-17"
-    },
-    "Zimbabwe": {
-        "cc": "ZW",
-        "continent": "Africa",
-        "end": "2020-04-12",
-        "eyeball": [
-            {
-                "as": 30969,
-                "as-descr": "",
-                "autnum": "ZOL-AS",
-                "cc": "ZW",
-                "cumulative": 32.70238245607704,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.040431488801054,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0422595520421607,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 30844,
-                        "hege": 1.0,
-                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
-                    }
-                ],
-                "name": "ZOL-AS Zimbabwe Online (Private) Ltd., GB",
-                "percent": 32.70238245607704,
-                "samples": 54370,
-                "v6capable": 32.196064005885596,
-                "v6preferred": 28.07798418245356
-            },
-            {
-                "as": 37204,
-                "as-descr": "",
-                "autnum": "TELONE",
-                "cc": "ZW",
-                "cumulative": 64.30586381325298,
-                "dependency": [
-                    {
-                        "asn": 5511,
-                        "hege": 0.134124912073622,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 6453,
-                        "hege": 0.0339267798525272,
-                        "name": "AS6453 - TATA COMMUNICATIONS (AMERICA) INC, US"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.469634060837039,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 37662,
-                        "hege": 0.842222006659826,
-                        "name": "WIOCC-AS, MU"
-                    },
-                    {
-                        "asn": 3356,
-                        "hege": 0.0405005528664521,
-                        "name": "LEVEL3 - Level 3 Parent, LLC, US"
-                    }
-                ],
-                "name": "TELONE, ZW",
-                "percent": 31.603481357175937,
-                "samples": 52543,
-                "v6capable": 0.0057096092724054585,
-                "v6preferred": 0.003806406181603639
-            },
-            {
-                "as": 56696,
-                "as-descr": "",
-                "autnum": "ASLIQUID-MPLS",
-                "cc": "ZW",
-                "cumulative": 77.96784496291886,
-                "dependency": [
-                    {
-                        "asn": 30844,
-                        "hege": 1.0,
-                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0284090909090909,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    }
-                ],
-                "name": "ASLIQUID-MPLS Liquid Telecommunications Ltd, GB",
-                "percent": 13.661981149665879,
-                "samples": 22714,
-                "v6capable": 0.013207713304569869,
-                "v6preferred": 0.013207713304569869
-            },
-            {
-                "as": 328088,
-                "as-descr": "",
-                "autnum": "NetOne-Cellular-AS",
-                "cc": "ZW",
-                "cumulative": 85.52903035661657,
-                "dependency": [
-                    {
-                        "asn": 37204,
-                        "hege": 0.256818181818182,
-                        "name": "TELONE, ZW"
-                    },
-                    {
-                        "asn": 5511,
-                        "hege": 0.153409090909091,
-                        "name": "Opentransit Orange S.A., FR"
-                    },
-                    {
-                        "asn": 30844,
-                        "hege": 0.743181818181818,
-                        "name": "LIQUID-AS Liquid Telecommunications Ltd, GB"
-                    },
-                    {
-                        "asn": 6939,
-                        "hege": 0.0159090909090909,
-                        "name": "HURRICANE - Hurricane Electric LLC, US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0318181818181818,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 37662,
-                        "hege": 0.103409090909091,
-                        "name": "WIOCC-AS, MU"
-                    }
-                ],
-                "name": "NetOne-Cellular-AS, ZW",
-                "percent": 7.561185393697709,
-                "samples": 12571,
-                "v6capable": 0.015909633282952827,
-                "v6preferred": 0.007954816641476414
-            },
-            {
-                "as": 30844,
-                "as-descr": "",
-                "autnum": "LIQUID-AS",
-                "cc": "ZW",
-                "cumulative": 91.94199341982595,
-                "dependency": [
-                    {
-                        "asn": 2914,
-                        "hege": 0.0965844451339332,
-                        "name": "NTT-COMMUNICATIONS-2914 - NTT America, Inc., US"
-                    },
-                    {
-                        "asn": 174,
-                        "hege": 0.0126289559416693,
-                        "name": "COGENT-174 - Cogent Communications, US"
-                    },
-                    {
-                        "asn": 6762,
-                        "hege": 0.0155134967421657,
-                        "name": "SEABONE-NET TELECOM ITALIA SPARKLE S.p.A., IT"
-                    }
-                ],
-                "name": "LIQUID-AS Liquid Telecommunications Ltd, GB",
-                "percent": 6.412963063209369,
-                "samples": 10662,
-                "v6capable": 0.0,
-                "v6preferred": 0.0
-            }
-        ],
-        "monitoring_dates": {
-            "before": {
-                "monday": "2020-03-02",
-                "sunday": "2020-03-08"
-            },
-            "lockdown": {
-                "monday": "2020-03-30",
-                "sunday": "2020-04-05"
-            }
-        },
-        "name": "Zimbabwe",
-        "scope": "National",
-        "start": "\t2020-03-30"
     }
 }
     ;

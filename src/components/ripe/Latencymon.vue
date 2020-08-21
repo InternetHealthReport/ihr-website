@@ -1,5 +1,5 @@
 <template>
-  <div :id="myId"></div>
+  <div class='IHR_nowrap' :id="myId"></div>
 </template>
 <script>
 export default {
@@ -84,4 +84,13 @@ export default {
 };
 </script>
 
-<style lang="stylus"></style>
+<style lang="stylus">
+
+.latencymon-container .probe-multi-info .probe-info-line 
+    white-space normal!important;
+    margin-top 10px!important;
+
+.IHR_nowrap
+    white-space normal !important;
+
+</style>
