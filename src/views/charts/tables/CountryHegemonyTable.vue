@@ -36,8 +36,15 @@ import CommonTableMixin from "./CommonTableMixin";
 export default {
   mixins: [CommonTableMixin],
   data() {
-    let columns;
-      columns = [
+
+    return {
+      pagination: {
+        sortBy: "allEyeball",
+        descending: true,
+        page: 1,
+        rowsPerPage: 10
+      },
+      columns: [
         {
           name: "asName",
           required: true,
@@ -57,38 +64,40 @@ export default {
           field: row => row.asn,
           format: val => val,
           sortable: true
-        }
-      ];
-
-    return {
-      pagination: {
-        sortBy: "hegemony",
-        descending: true,
-        page: 1,
-        rowsPerPage: 10
-      },
-      columns: [
-        ...columns,
+        },
         {
-          name: "hegemony",
-          label: "AS Hegemony",
+          name: "transitingAs",
+          label: "AS coverage",
           align: "center",
-          field: row => row.hege,
-          format: val => `${val.toFixed(3)}`,
+          field: row => row.hege_as,
+          format: val => `${val.toFixed(1)}%`,
           sortable: true
         },
         {
-          name: "hegemonyIncrement",
-          label: `% Change`,
+          name: "allEyeball",
+            label: "Population coverage",
           align: "center",
-          field: row => row.increment,
-          format: val => {
-            if (val == undefined) return 0;
-            if (val > 0) return "+" + val.toFixed(1) + "%";
-            return val.toFixed(3) + "%";
-          },
+          field: row => row.hege_eye_all,
+          format: val => `${val.toFixed(1)}%`,
           sortable: true
-        }
+        },
+        {
+          name: "transitingEyeball",
+          label: "Population (transit)",
+          align: "center",
+          field: row => row.hege_eye_transit,
+          format: val => `${val.toFixed(1)}%`,
+          sortable: true
+        },
+        {
+          name: "eyeball",
+          label: "Population (hosted) ",
+          align: "center",
+          field: row => row.eyeball,
+          format: val => `${val.toFixed(1)}%`,
+          sortable: true
+        },
+        
       ]
     };
   },

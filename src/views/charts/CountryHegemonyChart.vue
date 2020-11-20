@@ -1,12 +1,5 @@
 <template>
   <div class="IHR_chart">
-    <reactive-chart
-      :layout="layout"
-      :traces="traces"
-      @plotly-click="plotClick"
-      :ref="myId"
-      :no-data="noData"
-    />
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="15em" />
     </div>
@@ -104,10 +97,6 @@ export default {
       type: Number,
       default: AS_FAMILY.v4
     },
-    clear: {
-      type: Number,
-      default: 1
-    },
   },
   data() {
     //prevent calls within 500ms and execute only the last one
@@ -130,7 +119,6 @@ export default {
     this.updateAxesLabel();
   },
   mounted() {
-    this.tableFromQuery();
   },
   methods: {
     updateAxesLabel() {
@@ -152,99 +140,8 @@ export default {
       if (this.asNumber == 0) return;
       this.updateAxesLabel();
       this.hegemonyFilter = this.makeHegemonyFilter();
-      this.traces = extend(true, [], DEFAULT_TRACE);
       this.loading = true;
       this.queryCountryHegemonyAPI();
-    },
-    tableFromQuery() {
-      // if query parameter have click information then show corresponding tables
-      let selectedDate = this.$route.query.hege_dt;
-      let table = this.$route.query.hege_tb;
-      if (selectedDate != undefined && table != undefined) {
-        this.showTable(table, selectedDate);
-      }
-    },
-    showTable(table, selectedDate) {
-      if (selectedDate.length < 14) {
-        // at midnight no time is given
-        this.details.date = new Date(selectedDate + " 00:00+00:00"); //adding timezone to string...
-      } else {
-        this.details.date = new Date(selectedDate + "+00:00"); //adding timezone to string...
-      }
-
-      let intervalEnd = this.details.date;
-      let intervalStart = new Date(intervalEnd.getTime() - 15 * 60000);
-
-      this.details.activeTab = table;
-      let dependencyFilter = this.makeHegemonyFilter().timeInterval(
-        intervalStart,
-        intervalEnd
-      );
-      this.updateTable(
-        "dependency",
-        "asn",
-        dependencyFilter,
-        intervalStart,
-        intervalEnd
-      );
-    },
-    updateTable(
-      tableType,
-      hegemonyComparator,
-      filter,
-      intervalStart,
-      intervalEnd
-    ) {
-      this.details.tablesData[tableType] = {
-        data: [],
-        loading: true,
-        filter: filter
-      };
-
-      this.$ihr_api.hegemony_country(
-        filter,
-        results => {
-          if (intervalStart != intervalEnd) {
-            let startString = intervalStart.toISOString().replace(".000", "");
-            let data = {};
-            let res = [];
-            results.results.forEach(elem => {
-              let asn = elem[hegemonyComparator];
-              if (asn != 0) {
-                if (elem.timebin == startString) {
-                  data[asn] = elem;
-                } else {
-                  if (data[asn] != undefined) {
-                    elem.increment =
-                      100 * ((elem.hege - data[asn].hege) / data[asn].hege);
-                    res.push(elem);
-                    delete data[asn];
-                  } else {
-                    elem.increment = 100;
-                    res.push(elem);
-                  }
-                }
-              }
-            });
-
-            for (var unprocessed in data) {
-              data[unprocessed].increment = -100;
-              data[unprocessed].hege = 0;
-              res.push(data[unprocessed]);
-            }
-            results.results = res;
-          }
-
-          this.details.tableVisible = true;
-          this.details.tablesData[tableType] = {
-            data: results.results,
-            filter: filter
-          };
-        },
-        error => {
-          console.error(error); //TODO better error handling
-        }
-      );
     },
     queryCountryHegemonyAPI() {
         console.log('in queryCountryHegemonyAPI')
@@ -260,15 +157,35 @@ export default {
         }
       );
     },
+    median(values){
+        if(values == undefined) return 0;
+        if(values.length ===0) return 0;
+
+        values.sort(function(a,b){
+            return a-b;
+        });
+
+        var half = Math.floor(values.length / 2);
+
+        if (values.length % 2)
+            return values[half];
+
+        return (values[half - 1] + values[half]) / 2.0;
+    },
     fetchCountryHegemony(data) {
+      this.traces = [];
       let traces = {};
       data.forEach(elem => {
 
         let trace = traces[elem.asn];
         if (trace === undefined) {
           trace = {
-            x: [],
-            y: [],
+            hege_as: [],
+            hege_eye_all: [],
+            hege_eye_transit: [],
+            asn: elem.asn,
+            asn_name: elem.asn_name,
+            eyeball: 0,
             name:
               this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) +
               " " +
@@ -286,24 +203,37 @@ export default {
           traces[elem.asn] = trace;
           this.traces.push(trace);
         }
-
-        trace.y.push(elem.hege);
-        trace.x.push(elem.timebin);
+        if (elem.weightscheme == 'as'){ 
+            if (!elem.transitonly){ 
+                trace.hege_as.push(elem.hege);
+            }
+        }
+        else if (elem.weightscheme == 'eyeball'){ 
+            if (elem.transitonly){ 
+                trace.hege_eye_transit.push(elem.hege);
+            }
+            else{ 
+                trace.hege_eye_all.push(elem.hege);
+                trace.eyeball = elem.weight;
+            }
+        }
       });
+
+      // Compute median value from each array of hegemony scores
+      this.traces.forEach(elem => { 
+        elem.hege_as = this.median(elem.hege_as)*100;
+        elem.hege_eye_all = this.median(elem.hege_eye_all)*100;
+        elem.hege_eye_transit = this.median(elem.hege_eye_transit)*100;
+      });
+        // TODO remove the 2 fl
       this.noData |= Object.keys(traces).length == 0;
       this.layout.datarevision = new Date().getTime();
+
+      this.details.tableVisible = true;
+      this.details.tablesData['dependency'] = {
+          data: this.traces,
+      };
     },
-    plotClick(clickData) {
-      var table = "dependency";
-      if (clickData.points[0].data.yaxis == "y2") {
-        table = "dependent";
-      }
-      this.showTable(table, clickData.points[0].x);
-    },
-    clearGraph() {
-      this.traces = [];
-      this.layout.datarevision = new Date().getTime();
-    }
   },
   computed: {
     dateStr() {
@@ -349,12 +279,6 @@ export default {
         .replace("T", " ");
       this.updateQuery("hege_dt", str);
     },
-    clear() {
-      this.clearGraph();
-      this.$nextTick(function() {
-        this.loading = true;
-      });
-    }
   }
 };
 </script>
