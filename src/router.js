@@ -76,7 +76,7 @@ export default new Router({
     },
     {
       name: "countries",
-      path: `${routerBase}countries`,
+      path: `${routerBase}countries/:cc?`,
       components: {
         header: Header,
         footer: Footer,

@@ -1,0 +1,378 @@
+<template>
+  <div class="IHR_chart">
+    <reactive-chart
+      :layout="layout"
+      :traces="traces"
+      @plotly-click="plotClick"
+      :ref="myId"
+      :no-data="noData"
+    />
+    <div v-if="loading" class="IHR_loading-spinner">
+      <q-spinner color="secondary" size="15em" />
+    </div>
+    <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
+      <q-card-section class="q-pa-xs">
+        <div class="row items-center">
+          <div class="col">
+            <div class="text-h3">{{ details.date | ihrUtcString }}</div>
+          </div>
+          <div class="col-auto">
+            <q-btn
+              class="IHR_table-close-button"
+              size="sm"
+              round
+              flat
+              @click="details.tableVisible = false"
+              icon="fa fa-times-circle"
+            ></q-btn>
+          </div>
+        </div>
+      </q-card-section>
+      <q-tabs
+        dense
+        v-model="details.activeTab"
+        class="table-card text-grey inset-shadow"
+        indicator-color="secondary"
+        active-color="primary"
+        active-bg-color="white"
+        align="justify"
+        narrow-indicator
+      >
+        <q-tab
+          name="dependency"
+          :label="$t('charts.asInterdependencies.table.dependencyTitle')"
+        />
+        <q-tab name="api" label="API" />
+      </q-tabs>
+      <q-tab-panels v-model="details.activeTab" animated>
+        <q-tab-panel name="dependency">
+          <as-interdependencies-table
+            :data="countryHegemonyData"
+            :loading="loading"
+          />
+        </q-tab-panel>
+        <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
+          <h3>{{ $t("charts.countryHegemony.table.apiTitle") }}</h3>
+          <table>
+            <tr>
+              <td>
+                <p class="text-subtitle1">
+                  {{ $t("charts.countryHegemony.table.dependencyTitle") }}
+                </p>
+              </td>
+            </tr>
+          </table>
+        </q-tab-panel>
+      </q-tab-panels>
+    </q-card>
+  </div>
+</template>
+
+<script>
+import CommonChartMixin from "./CommonChartMixin";
+import { extend } from "quasar";
+import AsInterdependenciesTable from "./tables/CountryHegemonyTable";
+import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
+import i18n from "@/locales/i18n";
+
+import { HegemonyCountryQuery, AS_FAMILY } from "@/plugins/IhrApi";
+
+const DEFAULT_TRACE = [
+  {
+    // First trace is used for the hegemony cone
+    x: [],
+    y: [],
+    yaxis: "y2",
+    name: i18n.t("charts.countryHegemony.defaultTrace"),
+    showlegend: false,
+    hovertemplate:
+      "%{x}<br>" + "%{yaxis.title.text}: <b>%{y:.2f}</b>" + "<extra></extra>"
+  }
+];
+
+export default {
+  mixins: [ CommonChartMixin ],
+  components: {
+    AsInterdependenciesTable
+  },
+  props: {
+    countryCode: {
+      type: String,
+      required: true
+    },
+    addressFamily: {
+      type: Number,
+      default: AS_FAMILY.v4
+    },
+    clear: {
+      type: Number,
+      default: 1
+    },
+  },
+  data() {
+    //prevent calls within 500ms and execute only the last one
+    return {
+      details: {
+        activeTab: null,
+        date: null,
+        tablesData: {
+            dependency: {data:[]},
+        },
+        tableVisible: true,
+      },
+      loading: true,
+      hegemonyFilter: null,
+      traces: DEFAULT_TRACE,
+      layout: AS_INTERDEPENDENCIES_LAYOUT
+    };
+  },
+  beforeMount() {
+    this.updateAxesLabel();
+  },
+  mounted() {
+    this.tableFromQuery();
+  },
+  methods: {
+    updateAxesLabel() {
+      this.layout.yaxis.title =
+        this.countryCode +
+        ` ${this.$t("charts.countryHegemony.yaxis")}`;
+      this.layout.yaxis2.title =
+        `${this.$t("charts.countryHegemony.yaxis2")} ` + this.countryCode;
+    },
+    makeHegemonyFilter() {
+        console.log('going to query country hegemony')
+      return new HegemonyCountryQuery()
+        .country(this.countryCode)
+        .addressFamily(this.addressFamily)
+        .timeInterval(this.startTime, this.endTime)
+        .orderedByTime();
+    },
+    apiCall() {
+      if (this.asNumber == 0) return;
+      this.updateAxesLabel();
+      this.hegemonyFilter = this.makeHegemonyFilter();
+      this.traces = extend(true, [], DEFAULT_TRACE);
+      this.loading = true;
+      this.queryCountryHegemonyAPI();
+    },
+    tableFromQuery() {
+      // if query parameter have click information then show corresponding tables
+      let selectedDate = this.$route.query.hege_dt;
+      let table = this.$route.query.hege_tb;
+      if (selectedDate != undefined && table != undefined) {
+        this.showTable(table, selectedDate);
+      }
+    },
+    showTable(table, selectedDate) {
+      if (selectedDate.length < 14) {
+        // at midnight no time is given
+        this.details.date = new Date(selectedDate + " 00:00+00:00"); //adding timezone to string...
+      } else {
+        this.details.date = new Date(selectedDate + "+00:00"); //adding timezone to string...
+      }
+
+      let intervalEnd = this.details.date;
+      let intervalStart = new Date(intervalEnd.getTime() - 15 * 60000);
+
+      this.details.activeTab = table;
+      let dependencyFilter = this.makeHegemonyFilter().timeInterval(
+        intervalStart,
+        intervalEnd
+      );
+      this.updateTable(
+        "dependency",
+        "asn",
+        dependencyFilter,
+        intervalStart,
+        intervalEnd
+      );
+    },
+    updateTable(
+      tableType,
+      hegemonyComparator,
+      filter,
+      intervalStart,
+      intervalEnd
+    ) {
+      this.details.tablesData[tableType] = {
+        data: [],
+        loading: true,
+        filter: filter
+      };
+
+      this.$ihr_api.hegemony_country(
+        filter,
+        results => {
+          if (intervalStart != intervalEnd) {
+            let startString = intervalStart.toISOString().replace(".000", "");
+            let data = {};
+            let res = [];
+            results.results.forEach(elem => {
+              let asn = elem[hegemonyComparator];
+              if (asn != 0) {
+                if (elem.timebin == startString) {
+                  data[asn] = elem;
+                } else {
+                  if (data[asn] != undefined) {
+                    elem.increment =
+                      100 * ((elem.hege - data[asn].hege) / data[asn].hege);
+                    res.push(elem);
+                    delete data[asn];
+                  } else {
+                    elem.increment = 100;
+                    res.push(elem);
+                  }
+                }
+              }
+            });
+
+            for (var unprocessed in data) {
+              data[unprocessed].increment = -100;
+              data[unprocessed].hege = 0;
+              res.push(data[unprocessed]);
+            }
+            results.results = res;
+          }
+
+          this.details.tableVisible = true;
+          this.details.tablesData[tableType] = {
+            data: results.results,
+            filter: filter
+          };
+        },
+        error => {
+          console.error(error); //TODO better error handling
+        }
+      );
+    },
+    queryCountryHegemonyAPI() {
+        console.log('in queryCountryHegemonyAPI')
+      this.loading = true;
+      this.$ihr_api.hegemony_country(
+        this.hegemonyFilter,
+        result => {
+          this.fetchCountryHegemony(result.results);
+          this.loading = false;
+        },
+        error => {
+          console.error(error); //FIXME do a correct alert
+        }
+      );
+    },
+    fetchCountryHegemony(data) {
+      let traces = {};
+      data.forEach(elem => {
+
+        let trace = traces[elem.asn];
+        if (trace === undefined) {
+          trace = {
+            x: [],
+            y: [],
+            name:
+              this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) +
+              " " +
+              elem.asn_name.split(" ")[0],
+            hovertemplate:
+              "<b>" +
+              this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) +
+              " " +
+              elem.asn_name.split(" ")[0] +
+              "</b><br><br>" +
+              "%{x}<br>" +
+              "%{yaxis.title.text}: <b>%{y:.2f}</b>" +
+              "<extra></extra>"
+          };
+          traces[elem.asn] = trace;
+          this.traces.push(trace);
+        }
+
+        trace.y.push(elem.hege);
+        trace.x.push(elem.timebin);
+      });
+      this.noData |= Object.keys(traces).length == 0;
+      this.layout.datarevision = new Date().getTime();
+    },
+    plotClick(clickData) {
+      var table = "dependency";
+      if (clickData.points[0].data.yaxis == "y2") {
+        table = "dependent";
+      }
+      this.showTable(table, clickData.points[0].x);
+    },
+    clearGraph() {
+      this.traces = [];
+      this.layout.datarevision = new Date().getTime();
+    }
+  },
+  computed: {
+    dateStr() {
+      let year = this.details.date.getUTCFullYear();
+      var day = this.details.date.getUTCDate();
+      var month = this.details.date.getUTCMonth() + 1;
+      var hours = this.details.date.getUTCHours();
+      var minutes = this.details.date.getUTCMinutes();
+      var seconds = this.details.date.getUTCSeconds();
+
+      if (day < 10) day = "0" + day;
+      if (month < 10) month = "0" + month;
+      if (hours < 10) hours = "0" + hours;
+      if (minutes < 10) minutes = "0" + minutes;
+      if (seconds < 10) seconds = "0" + seconds;
+
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+    },
+    countryHegemonyData() {
+      return this.details.tablesData.dependency.data
+    },
+    hegemonyUrl() {
+      return this.$ihr_api.getUrl(this.hegemonyFilter);
+    },
+    dependencyUrl() {
+      return this.$ihr_api.getUrl(this.details.tablesData.dependency.filter);
+    },
+  },
+  watch: {
+    addressFamily() {
+      this.debouncedApiCall();
+    },
+    countryCode() {
+      this.debouncedApiCall();
+    },
+    "details.activeTab"(newValue) {
+      this.updateQuery("hege_tb", newValue);
+    },
+    "details.date"(newValue) {
+      const str = newValue
+        .toISOString()
+        .slice(0, 16)
+        .replace("T", " ");
+      this.updateQuery("hege_dt", str);
+    },
+    clear() {
+      this.clearGraph();
+      this.$nextTick(function() {
+        this.loading = true;
+      });
+    }
+  }
+};
+</script>
+
+<style lang="stylus">
+@import "~@/styles/charts/common.styl";
+.bgplay-container {
+  overflow: hidden;
+  padding-top: 1100px;
+  position: relative;
+}
+
+.bgplay-container iframe {
+   border: 0;
+   height: 100%;
+   left: 0;
+   position: absolute;
+   top: 0;
+   width: 100%;
+}
+</style>

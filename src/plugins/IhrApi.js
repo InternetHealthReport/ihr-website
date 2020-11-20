@@ -11,6 +11,7 @@ import {
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,
+  HegemonyCountryQuery,
   HegemonyAlarmsQuery,
   HegemonyConeQuery,
   ForwardingQuery,
@@ -342,6 +343,15 @@ const IhrApi = {
             errorCallback
           );
         },
+        hegemony_country(hegemonyCountryQuery, successCallback, errorCallback) {
+          this._generic(
+            HegemonyCountryQuery.ENTRY_POINT,
+            HegemonyCountryQuery.HTTP_METHOD,
+            hegemonyCountryQuery,
+            successCallback,
+            errorCallback
+          );
+        },
         hegemony_cone(hegemonyConeQuery, successCallback, errorCallback) {
           this._generic(
             HegemonyConeQuery.ENTRY_POINT,
@@ -618,6 +628,7 @@ export {
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,
+  HegemonyCountryQuery,
   HegemonyConeQuery,
   ForwardingQuery,
   DelayQuery,
