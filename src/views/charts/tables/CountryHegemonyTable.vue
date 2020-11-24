@@ -5,9 +5,25 @@
     row-key="asNumber"
     :pagination.sync="pagination"
     :loading="loading"
+    separator="vertical"
     binary-state-sort
     flat
   >
+        <div slot="header" slot-scope="props" style="display: contents">
+        <q-tr>
+            <q-th colspan="2" ><h3>Autonomous System</h3></q-th>
+            <q-th colspan="3" ><h3>Population coverage</h3></q-th>
+            <q-th colspan="1" ><h3>AS coverage</h3></q-th>
+        </q-tr>
+        <q-tr>
+          <q-th key="asNumber" :props="props" >ASN</q-th>
+          <q-th key="asName" :props="props" >Name</q-th>
+          <q-th key="allEyeball" :props="props" >Total</q-th>
+          <q-th key="transitingEyeball" :props="props" >Transit</q-th>
+          <q-th key="eyeball" :props="props" >Hosted</q-th>
+          <q-th key="transitingAs" :props="props" >Total</q-th>
+        </q-tr>
+        </div>
     <template v-slot:body="props">
       <q-tr
         :props="props"
@@ -46,6 +62,15 @@ export default {
       },
       columns: [
         {
+          name: "asNumber",
+          required: true,
+          label: `ASN`,
+          align: "center",
+          field: row => row.asn,
+          format: val => val,
+          sortable: true
+        },
+        {
           name: "asName",
           required: true,
           label: "Autonomous System Name",
@@ -54,23 +79,6 @@ export default {
             return row.asn_name == "" ? "--" : row.asn_name;
           },
           format: val => `${val}`,
-          sortable: true
-        },
-        {
-          name: "asNumber",
-          required: true,
-          label: `ASN`,
-          align: "left",
-          field: row => row.asn,
-          format: val => val,
-          sortable: true
-        },
-        {
-          name: "transitingAs",
-          label: "AS coverage",
-          align: "center",
-          field: row => row.hege_as,
-          format: val => `${val.toFixed(1)}%`,
           sortable: true
         },
         {
@@ -94,6 +102,14 @@ export default {
           label: "Population (hosted) ",
           align: "center",
           field: row => row.eyeball,
+          format: val => `${val.toFixed(1)}%`,
+          sortable: true
+        },
+        {
+          name: "transitingAs",
+          label: "AS coverage",
+          align: "center",
+          field: row => row.hege_as,
           format: val => `${val.toFixed(1)}%`,
           sortable: true
         },
