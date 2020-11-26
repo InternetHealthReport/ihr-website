@@ -68,7 +68,7 @@ import AsInterdependenciesTable from "./tables/CountryHegemonyTable";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
 
-import { HegemonyCountryQuery, AS_FAMILY } from "@/plugins/IhrApi";
+import { HegemonyCountryQuery, AS_FAMILY, Query } from "@/plugins/IhrApi";
 
 const DEFAULT_TRACE = [
   {
@@ -134,6 +134,7 @@ export default {
         .country(this.countryCode)
         .addressFamily(this.addressFamily)
         .timeInterval(this.startTime, this.endTime)
+        .hegemony(0.0001, Query.GTE)
         .orderedByTime();
     },
     apiCall() {
