@@ -127,7 +127,7 @@ export default {
   },
   methods: {
     routeToAsn(asn, row) {
-      asn = asn.format(asn.field(row));
+      asn = asn.field(row);
       this.$router.push({
         name: "networks",
         params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(asn) }
