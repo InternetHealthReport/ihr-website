@@ -3,27 +3,18 @@
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="15em" />
     </div>
-    <q-card v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
-      <q-card-section class="q-pa-xs">
-        <div class="row items-center">
-          <div class="col">
-            <div class="text-h3">{{ details.date }}</div>
-          </div>
-        </div>
-      </q-card-section>
+    <q-card v-if="details.tableVisible" class="q-ma-xl">
       <q-tabs
-        dense
         v-model="details.activeTab"
-        class="table-card text-grey inset-shadow"
+        class="table-card text-grey bg-grey-2"
         indicator-color="secondary"
         active-color="primary"
-        active-bg-color="white"
         align="justify"
         narrow-indicator
       >
         <q-tab
           name="dependency"
-          :label="$t('charts.asInterdependencies.table.dependencyTitle')"
+          :label="$t('charts.countryHegemony.table.dependencyTitle')"
         />
         <q-tab name="api" label="API" />
       </q-tabs>
@@ -58,7 +49,7 @@ import AsInterdependenciesTable from "./tables/CountryHegemonyTable";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
 
-import { HegemonyCountryQuery, AS_FAMILY } from "@/plugins/IhrApi";
+import { HegemonyCountryQuery, AS_FAMILY, Query } from "@/plugins/IhrApi";
 
 const DEFAULT_TRACE = [
   {
@@ -92,7 +83,7 @@ export default {
     //prevent calls within 500ms and execute only the last one
     return {
       details: {
-        activeTab: null,
+        activeTab: "dependency",
         date: null,
         tablesData: {
             dependency: {data:[]},
@@ -125,6 +116,7 @@ export default {
         .country(this.countryCode)
         .addressFamily(this.addressFamily)
         .timeInterval(this.startTime, this.endTime)
+        .hegemony(0.0001, Query.GTE)
         .orderedByTime();
     },
     apiCall() {

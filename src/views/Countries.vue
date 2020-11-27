@@ -2,7 +2,7 @@
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div v-if="countryCode">
       <div>
-        <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
+        <h1 class="text-center">{{ headerString }} ({{ subHeader }})</h1>
         <h3 class="text-center">
           {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
           <date-time-picker
@@ -17,8 +17,8 @@
       </div>
       <q-list v-if="showGraphs">
         <q-expansion-item
-          :label="$t('charts.countryHegemonyChart.title')"
-          caption="BGP data"
+          :label="$t('charts.countryHegemony.title')"
+          caption="BGP data / APNIC population estimates"
           header-class="IHR_charts-title"
           icon="fas fa-project-diagram"
           :disable="show.hegemony_disable"
@@ -177,6 +177,7 @@ import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
 import DateTimePicker from "@/components/DateTimePicker";
 import NetworkSearchBar from "@/components/search_bar/NetworkSearchBar";
+import { isoCountries } from "@/plugins/countryName";
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -289,7 +290,7 @@ export default {
         case LOADING_STATUS.EXPIRED:
           return this.$t("Networks.headerString.expired");
         case LOADING_STATUS.LOADED:
-          return this.countryCode;
+          return isoCountries[this.countryCode];
         default:
         case LOADING_STATUS.ERROR:
           return this.$t("genericErrors.ups");
