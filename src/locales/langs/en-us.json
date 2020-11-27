@@ -84,7 +84,7 @@
             "title": "Network Dependency",
 			"table": {
 				"dependencyTitle": "Summary",
-               "apiTitle": "Displayed data is available at the following links:"
+               "apiTitle": "The network dependency data is available at the following link:"
 			}
         },
         "hegemonyAlarms":{

@@ -30,9 +30,7 @@
           <table>
             <tr>
               <td>
-                <p class="text-subtitle1">
-                  {{ $t("charts.countryHegemony.table.dependencyTitle") }}
-                </p>
+                <a :href="hegemonyUrl" target="_blank" id="tableUrl">{{ hegemonyUrl }}</a>
               </td>
             </tr>
           </table>
@@ -240,9 +238,6 @@ export default {
     },
     hegemonyUrl() {
       return this.$ihr_api.getUrl(this.hegemonyFilter);
-    },
-    dependencyUrl() {
-      return this.$ihr_api.getUrl(this.details.tablesData.dependency.filter);
     },
   },
   watch: {
