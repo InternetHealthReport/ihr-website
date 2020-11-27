@@ -5,6 +5,7 @@
     row-key="asNumber"
     :pagination.sync="pagination"
     :loading="loading"
+    :filter="tabFilter"
     separator="vertical"
     binary-state-sort
     flat
@@ -16,8 +17,14 @@
             <q-th colspan="1" ><h3>AS coverage</h3></q-th>
         </q-tr>
         <q-tr>
-          <q-th key="asNumber" :props="props" >ASN</q-th>
-          <q-th key="asName" :props="props" >Name</q-th>
+            <q-th ></q-th>
+            <q-th>
+            <q-input dense debounce="300" borderless  v-model="tabFilter" placeholder="Search">
+              <template v-slot:prepend>
+                <q-icon name="fas fa-search" />
+              </template>
+            </q-input>
+          </q-th>
           <q-th key="allEyeball" :props="props" >Total</q-th>
           <q-th key="transitingEyeball" :props="props" >Transit</q-th>
           <q-th key="eyeball" :props="props" >Hosted</q-th>
@@ -35,8 +42,8 @@
           :key="col.name"
           :props="props"
           :class="
-            col.name == 'hegemony'
-              ? ['IHR_important-cell', getCalssByHegemony(props)]
+            col.name == 'allEyeball'  || col.name == 'transitingAs'
+              ? ['IHR_important-cell', getClassByHegemony(col.field(props.row))]
               : ''
           "
           >{{ col.format(col.field(props.row)) }}</q-td
@@ -60,6 +67,7 @@ export default {
         page: 1,
         rowsPerPage: 10
       },
+      tabFilter: "",
       columns: [
         {
           name: "asNumber",
@@ -67,7 +75,7 @@ export default {
           label: `ASN`,
           align: "center",
           field: row => row.asn,
-          format: val => val,
+          format: val => `AS${val}`,
           sortable: true
         },
         {
@@ -125,10 +133,9 @@ export default {
         params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(asn) }
       });
     },
-    getCalssByHegemony(props) {
-      let hegemony = this.getCellValue(props, "hegemony");
-      if (hegemony >= 0.5) return "IHR_color-deviation-hight-threshold";
-      if (hegemony >= 0.25) return "IHR_color-deviation-mid-threshold";
+    getClassByHegemony(hegemony) {
+      if (hegemony >= 25) return "IHR_color-deviation-high-threshold";
+      if (hegemony >= 10) return "IHR_color-deviation-mid-threshold";
       return "";
     }
   }

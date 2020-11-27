@@ -138,7 +138,7 @@ export default {
     },
     getCalssByHegemony(props) {
       let hegemony = this.getCellValue(props, "hegemony");
-      if (hegemony >= 0.5) return "IHR_color-deviation-hight-threshold";
+      if (hegemony >= 0.5) return "IHR_color-deviation-high-threshold";
       if (hegemony >= 0.25) return "IHR_color-deviation-mid-threshold";
       return "";
     }
