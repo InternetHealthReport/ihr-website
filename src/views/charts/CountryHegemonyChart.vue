@@ -115,7 +115,6 @@ export default {
         .addressFamily(this.addressFamily)
         .timeInterval(this.startTime, this.endTime)
         .hegemony(0.0001, Query.GTE)
-        .orderedByTime();
     },
     apiCall() {
       if (this.asNumber == 0) return;
