@@ -7,17 +7,7 @@
       <q-card-section class="q-pa-xs">
         <div class="row items-center">
           <div class="col">
-            <div class="text-h3">{{ details.date | ihrUtcString }}</div>
-          </div>
-          <div class="col-auto">
-            <q-btn
-              class="IHR_table-close-button"
-              size="sm"
-              round
-              flat
-              @click="details.tableVisible = false"
-              icon="fa fa-times-circle"
-            ></q-btn>
+            <div class="text-h3">{{ details.date }}</div>
           </div>
         </div>
       </q-card-section>
@@ -119,6 +109,7 @@ export default {
     this.updateAxesLabel();
   },
   mounted() {
+      this.details.date=`${this.startTime} - ${this.endTime}`
   },
   methods: {
     updateAxesLabel() {
