@@ -76,6 +76,10 @@ export default {
       type: Number,
       default: AS_FAMILY.v4
     },
+    eyeballThreshold: {
+      type: Number,
+      default: 10
+    },
   },
   data() {
     //prevent calls within 500ms and execute only the last one
@@ -91,7 +95,8 @@ export default {
       loading: true,
       hegemonyFilter: null,
       traces: DEFAULT_TRACE,
-      layout: AS_INTERDEPENDENCIES_LAYOUT
+      layout: AS_INTERDEPENDENCIES_LAYOUT,
+      major_eyeball: []
     };
   },
   beforeMount() {
@@ -114,7 +119,6 @@ export default {
         .country(this.countryCode)
         .addressFamily(this.addressFamily)
         .timeInterval(this.startTime, this.endTime)
-        .hegemony(0.0001, Query.GTE)
     },
     apiCall() {
       if (this.asNumber == 0) return;
@@ -200,11 +204,18 @@ export default {
       });
 
       // Compute median value from each array of hegemony scores
+      this.major_eyeball = []
       this.traces.forEach(elem => { 
         elem.hege_as = this.median(elem.hege_as)*100;
         elem.hege_eye_all = this.median(elem.hege_eye_all)*100;
         elem.hege_eye_transit = this.median(elem.hege_eye_transit)*100;
+
+        if(elem.eyeball > this.eyeballThreshold){ 
+            this.major_eyeball.push(elem.asn)
+        }
       });
+      this.$emit('eyeballs', this.major_eyeball)
+
         // TODO remove the 2 fl
       this.noData |= Object.keys(traces).length == 0;
       this.layout.datarevision = new Date().getTime();
@@ -250,11 +261,6 @@ export default {
       this.updateQuery("hege_tb", newValue);
     },
     "details.date"(newValue) {
-      const str = newValue
-        .toISOString()
-        .slice(0, 16)
-        .replace("T", " ");
-      this.updateQuery("hege_dt", str);
     },
   }
 };

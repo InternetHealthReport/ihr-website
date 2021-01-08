@@ -1,3 +1,4 @@
+<i18n src="@/locales/long_langs/documentation.json"></i18n>
 <template>
   <q-table
     :data="rows"
@@ -13,8 +14,14 @@
         <div slot="header" slot-scope="props" style="display: contents">
         <q-tr>
             <q-th colspan="2" ><h3>Autonomous System</h3></q-th>
-            <q-th colspan="3" ><h3>Population coverage</h3></q-th>
-            <q-th colspan="1" ><h3>AS coverage</h3></q-th>
+            <q-th colspan="3" ><h3>Population coverage 
+                    <q-icon name="far fa-question-circle" color="grey" style="font-size: 0.9em;" right />
+                        <q-tooltip max-width="360px"><div v-html="$t(`documentationPage.sections.countryasdependency.description[0].body`)"></div></q-tooltip>
+                </h3></q-th>
+            <q-th colspan="1" ><h3>AS coverage
+                    <q-icon name="far fa-question-circle" color="grey" style="font-size: 0.9em;" right />
+                        <q-tooltip max-width="360px"><div v-html="$t(`documentationPage.sections.countryasdependency.description[1].body`)"></div></q-tooltip>
+                </h3></q-th>
         </q-tr>
         <q-tr>
             <q-th ></q-th>
@@ -26,8 +33,8 @@
             </q-input>
           </q-th>
           <q-th key="allEyeball" :props="props" >Total</q-th>
-          <q-th key="transitingEyeball" :props="props" >Transit</q-th>
-          <q-th key="eyeball" :props="props" >Hosted</q-th>
+          <q-th key="eyeball" :props="props" >Direct</q-th>
+          <q-th key="transitingEyeball" :props="props" >Indirect</q-th>
           <q-th key="transitingAs" :props="props" >Total</q-th>
         </q-tr>
         </div>
@@ -98,18 +105,18 @@ export default {
           sortable: true
         },
         {
-          name: "transitingEyeball",
-          label: "Population (transit)",
+          name: "eyeball",
+          label: "Direct",
           align: "center",
-          field: row => row.hege_eye_transit,
+          field: row => row.eyeball,
           format: val => `${val.toFixed(1)}%`,
           sortable: true
         },
         {
-          name: "eyeball",
-          label: "Population (hosted) ",
+          name: "transitingEyeball",
+          label: "Indirect",
           align: "center",
-          field: row => row.eyeball,
+          field: row => row.hege_eye_transit,
           format: val => `${val.toFixed(1)}%`,
           sortable: true
         },

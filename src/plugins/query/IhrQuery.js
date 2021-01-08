@@ -1023,8 +1023,15 @@ class NetworkDelayQuery extends TimeQuery {
    * @param {Edge} startpoint_key use the static method edge to create Edge objects
    */
   startPointKey(startpoint_key) {
-    this._pointKey(startpoint_key, "startpoint_key");
+    //this._pointKey(startpoint_key, "startpoint_key");
+    return this._set(
+      "startpoint_key",
+      startpoint_key,
+      Query.EXACT,
+      _STRING_SEPARATOR
+    );
   }
+
 
   /**
    * @brief add start point filter in the standard compressed format

@@ -34,6 +34,7 @@
                 :address-family="family"
                 :fetch="fetch"
                 ref="asInterdependenciesChart"
+                @eyeballs="setMajorEyeballs($event)"
               />
             </q-card-section>
           </q-card>
@@ -50,16 +51,18 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card-section>
-              <!--<network-delay-chart-->
-                <!--:start-time="startTime"-->
-                <!--:end-time="endTime"-->
-                <!--:startPointName="Math.abs(asNumber).toString()"-->
-                <!--:startPointType="this.$route.params.asn.substring(0, 2)"-->
-                <!--:fetch="fetch"-->
-                <!--searchBar-->
-                <!--ref="networkDelayChart"-->
-                <!--@display="displayNetDelay"-->
-              <!--/>-->
+              <network-delay-chart
+                group="start"
+                :start-time="startTime"
+                :end-time="endTime"
+                :startPointNames="majorEyeballs"
+                :endPointNames="['AS415169', 'CT4Amsterdam, North Holland, NL', 'CT4Singapore, Central Singapore, SG', 'CT4New York City, New York, US']"
+                :eyeballThreshold="majorEyeballsThreshold"
+                :fetch="majorEyeballs.length!=0"
+                searchBar
+                ref="networkDelayChart"
+                @display="displayNetDelay"
+              />
             </q-card-section>
           </q-card>
         </q-expansion-item>
@@ -172,7 +175,6 @@ import CountryHegemonyChart from "@/views/charts/CountryHegemonyChart";
 import DiscoChart, {
   DEFAULT_DISCO_AVG_LEVEL
 } from "@/views/charts/global/DiscoChart";
-import DelayAndForwardingChart from "@/views/charts/DelayAndForwardingChart";
 import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
 import { AS_FAMILY, NetworkQuery } from "@/plugins/IhrApi";
 import DateTimePicker from "@/components/DateTimePicker";
@@ -199,7 +201,6 @@ export default {
   components: {
     CountryHegemonyChart,
     DiscoChart,
-    DelayAndForwardingChart,
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar
@@ -221,7 +222,9 @@ export default {
         hegemony_disable: false,
         net_delay: true,
         net_delay_disable: false
-      }
+      },
+      majorEyeballs: [],
+      majorEyeballsThreshold: 10,
     };
   },
   methods: {
@@ -231,45 +234,27 @@ export default {
         query: Object.assign({}, this.$route.query, {
           af: this.family,
           last: this.interval.dayDiff(),
-          date: this.$options.filters.ihrUtcString(this.interval.end, false)
+          date: this.$options.filters.ihrUtcString(this.interval.end, false),
         })
       });
-    },
-    netName() {
-        this.loadingStatus = LOADING_STATUS.LOADED;
-        this.fetch = true;
-        return this.countryCode;
-      let filter = new NetworkQuery().asNumber(this.asNumber);
-      this.$ihr_api.network(filter, results => {
-        if (results.count != 1) {
-          this.loadingStatus = LOADING_STATUS.ERROR;
-          return;
-        }
-
-        // Hide tabs if not necessary
-        this.$nextTick(function() {
-          this.show.delayAndForwarding_disable = !results.results[0].delay_forwarding;
-          this.show.delayAndForwarding = results.results[0].delay_forwarding;
-          this.show.disco_disable = !results.results[0].disco;
-          this.show.disco = results.results[0].disco;
-          this.show.hegemony_disable = !results.results[0].hegemony;
-          this.show.hegemony = results.results[0].hegemony;
-        });
-
-        this.asName = results.results[0].name;
-        this.loadingStatus = LOADING_STATUS.LOADED;
-        this.fetch = true;
-      });
+      this.loadingStatus = LOADING_STATUS.LOADED;
+      this.fetch = true;
     },
     displayNetDelay(displayValue) {
       this.show.net_delay = displayValue;
       this.$nextTick(function() {
         this.show.net_delay_disable = !displayValue;
       });
+    },
+    setMajorEyeballs(asns){ 
+        var tmp=[]
+        asns.forEach(elem => { 
+            tmp.push('AS4'+elem)
+        })
+        this.majorEyeballs = tmp
     }
   },
   mounted() {
-    this.netName();
   },
   computed: {
     family() {
@@ -316,15 +301,6 @@ export default {
     addressFamily() {
       this.pushRoute();
     },
-    "$route.params.cc": {
-      handler: function(cc) {
-        (this.loadingStatus = LOADING_STATUS.LOADING),
-          (this.countryCode = cc);
-        this.pushRoute();
-        // this.netName();
-      },
-      deep: true
-    }
   }
 };
 </script>

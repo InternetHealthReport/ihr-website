@@ -93,6 +93,11 @@
             "summary": " Network reports provide all information collected by IHR about a selected network (AS or IXP). Network reports are available through the search bar at the top of the IHR webpages or by following links from the global report. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/AS2497' target='_blank'>Internet Initiative Japan (AS2497)</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/AS15169' target='_blank'>Google (AS15169)</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/IX208' target='_blank'>DECIX (IX208)</a></li></ul>",
             "description": []
         },
+        "countryreport": {
+            "title":  "Country Report",
+            "summary": " A country report provide information collected by IHR about a certain country. Country reports are available through the search bar at the top of the IHR webpages. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/US' target='_blank'>United States</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/JP' target='_blank'>Japan</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/NL' target='_blank'>Netherlands</a></li></ul>",
+            "description": []
+        },
         "asdependency": {
             "title":  "AS dependency",
             "summary": " ",
@@ -113,6 +118,24 @@
                 { 
                     "header":"References",
                     "body": "<ul> <li>Research report: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17.  </li><li> Source code: <a href='https://github.com/InternetHealthReport/ashash'> https://github.com/InternetHealthReport/ashash</a> </li></ul>"
+                }
+            ]
+        },
+        "countryasdependency": {
+            "title":  "Country's network dependency",
+            "summary": "A Country network dependency is computed in two different ways, emphasizing either the distribution of the country's population or the of the country ASes.",
+            "description": [
+                { 
+                    "header":"Population coverage",
+                    "body": "<p>The population coverage combines two data sources, the estimated population for each AS and the paths from the Internet to these ASes. The <b>total</b> value represents the percentage of the population that is reached through the corresponding AS. This value is also dissected into two parts: <ul><li> <b>Direct</b> is the percentage of population directly connected to this AS</li> <li><b>Indirect</b> is the percentage of population that is reached via this AS but that is not directly connected to it.</li></ul></p>"
+                },
+                { 
+                    "header":"AS coverage",
+                    "body": " <p>The AS coverage is the percentage of the country's ASes that are reached via this AS. Large values represent significant transit networks for the monitored country.</p>"
+                },
+                { 
+                    "header":"References",
+                    "body": "<ul> <li>Research report: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> R. Fontugne, K. Ermoshina, E. Aben. <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.pdf'>The Internet in Crimea: a Case Study on Routing Interregnum</a>, Global Internet Symposium 2020. Paris, France. June 2020. </li><li> Source code: <a href='https://github.com/InternetHealthReport/country-as-hegemony'> https://github.com/InternetHealthReport/country-as-hegemony</a> </li></ul>"
                 }
             ]
         },
