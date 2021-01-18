@@ -110,6 +110,7 @@ import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
 
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
+import ripeApi from "@/plugins/RipeApi";
 
 const DEFAULT_TRACE = [
   {
@@ -165,7 +166,8 @@ export default {
       hegemonyFilter: null,
       hegemonyConeFilter: null,
       traces: DEFAULT_TRACE,
-      layout: AS_INTERDEPENDENCIES_LAYOUT
+      layout: AS_INTERDEPENDENCIES_LAYOUT,
+      neighbours: []
     };
   },
   beforeMount() {
@@ -208,6 +210,14 @@ export default {
       this.loadingHegemonyCone = true;
       this.queryHegemonyAPI();
       this.queryHegemonyConeAPI();
+
+      this.neighbours = []
+      ripeApi.asnNeighbours(this.asNumber).then(res => {
+          res.data.neighbours.forEach( neighbour => {
+            this.neighbours.push(neighbour.asn)
+          })
+        })
+
     },
     plotClick(clickData) {
       var table = "dependency";
@@ -295,6 +305,7 @@ export default {
                     res.push(elem);
                   }
                 }
+                elem.direct = this.neighbours.includes(asn);
               }
             });
 
