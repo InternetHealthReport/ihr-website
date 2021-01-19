@@ -88,6 +88,22 @@
               }}</router-link
             >
           </li>
+          <li>
+            <router-link
+              :to="{
+                name: 'documentation',
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.countryreport.title`)
+                  )
+              }"
+              class="IHR_delikify"
+              >{{
+                $t("documentationPage.sections.countryreport.title")
+              }}</router-link
+            >
+          </li>
         </ul>
       </div>
       <div>

@@ -241,7 +241,7 @@ export default {
       return durationMin;
     },
     getClassByDeviation(deviation) {
-      if (deviation > 100) return "IHR_color-deviation-hight-threshold";
+      if (deviation > 100) return "IHR_color-deviation-high-threshold";
       if (deviation > 10) return "IHR_color-deviation-mid-threshold";
       return "";
     },

@@ -50,7 +50,7 @@
     "babel-plugin-transform-imports": "1.5.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint-plugin-vue": "^5.2.3",
     "jsdom": "15.1.1",
     "jsdom-global": "3.0.2",
     "postcss-rtl": "^1.7.2",

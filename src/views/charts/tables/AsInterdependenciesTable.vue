@@ -23,7 +23,12 @@
               ? ['IHR_important-cell', getCalssByHegemony(props)]
               : ''
           "
-          >{{ col.format(col.field(props.row)) }}</q-td
+          >
+          <div v-if="col.name == 'direct'">
+            <q-icon name="fas fa-check" v-if="props.row.direct" />
+            <q-icon name="fas fa-times" v-if="!props.row.direct" />
+          </div>
+          {{ col.format(col.field(props.row)) }}</q-td
         >
       </q-tr>
     </template>
@@ -99,10 +104,10 @@ export default {
         ...columns,
         {
           name: "hegemony",
-          label: "AS Hegemony",
+          label: "Dependency",
           align: "center",
           field: row => row.hege,
-          format: val => `${val.toFixed(3)}`,
+          format: val => `${(val*100).toFixed(1)}%`,
           sortable: true
         },
         {
@@ -113,8 +118,16 @@ export default {
           format: val => {
             if (val == undefined) return 0;
             if (val > 0) return "+" + val.toFixed(1) + "%";
-            return val.toFixed(3) + "%";
+            return val.toFixed(1) + "%";
           },
+          sortable: true
+        },
+        {
+          name: "direct",
+          label: `Direct Neighbour`,
+          align: "center",
+          field: row => row.direct,
+          format: val => '',
           sortable: true
         }
       ]
@@ -138,7 +151,7 @@ export default {
     },
     getCalssByHegemony(props) {
       let hegemony = this.getCellValue(props, "hegemony");
-      if (hegemony >= 0.5) return "IHR_color-deviation-hight-threshold";
+      if (hegemony >= 0.5) return "IHR_color-deviation-high-threshold";
       if (hegemony >= 0.25) return "IHR_color-deviation-mid-threshold";
       return "";
     }

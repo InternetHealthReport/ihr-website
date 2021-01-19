@@ -111,6 +111,7 @@ import i18n from "@/locales/i18n";
 import "datejs";
 
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
+import ripeApi from "@/plugins/RipeApi";
 
 const DEFAULT_TRACE = [
   {
@@ -166,7 +167,8 @@ export default {
       hegemonyFilter: null,
       hegemonyConeFilter: null,
       traces: DEFAULT_TRACE,
-      layout: AS_INTERDEPENDENCIES_LAYOUT
+      layout: AS_INTERDEPENDENCIES_LAYOUT,
+      neighbours: []
     };
   },
   beforeMount() {
@@ -209,6 +211,14 @@ export default {
       this.loadingHegemonyCone = true;
       this.queryHegemonyAPI();
       this.queryHegemonyConeAPI();
+
+      this.neighbours = []
+      ripeApi.asnNeighbours(this.asNumber).then(res => {
+          res.data.neighbours.forEach( neighbour => {
+            this.neighbours.push(neighbour.asn)
+          })
+        })
+
     },
     plotClick(clickData) {
       var table = "dependency";
@@ -296,6 +306,7 @@ export default {
                     res.push(elem);
                   }
                 }
+                elem.direct = this.neighbours.includes(asn);
               }
             });
 
@@ -370,7 +381,7 @@ export default {
               elem.asn_name.split(" ")[0] +
               "</b><br><br>" +
               "%{x}<br>" +
-              "%{yaxis.title.text}: <b>%{y:.2f}</b>" +
+              "%{yaxis.title.text}: <b>%{y:.2f}%</b>" +
               "<extra></extra>"
           };
           traces[elem.asn] = trace;
@@ -384,7 +395,7 @@ export default {
             trace.y.push(null);
             trace.x.push(elem.timbin)
         } 
-        trace.y.push(elem.hege);
+        trace.y.push(elem.hege*100);
         trace.x.push(elem.timebin);
       });
       this.noData |= Object.keys(traces).length == 0;

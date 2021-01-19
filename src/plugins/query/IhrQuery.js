@@ -21,7 +21,8 @@ const _NETWORK_DELAY_EDGE_TYPE = {
   CITY: "CT",
   IP: "IP",
   IXP: "IX",
-  PB: "PB"
+  PB: "PB",
+  LM: "LM"
 };
 
 // exceptions
@@ -691,6 +692,44 @@ class HegemonyQuery extends CommonHegemonyQuery {
   }
 }
 
+class HegemonyCountryQuery extends CommonHegemonyQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return HegemonyCountryQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "hegemony/countries/";
+  }
+
+  //methods
+
+  country(cc) {
+    return this._set("country", cc);
+  }
+
+  hegemony(hege, comparator = Query.EXACT) {
+    return this._set("hege", hege, comparator);
+  }
+
+  orderedByCountry(order = Query.ASC) {
+    return this._setOrder("country", order);
+  }
+
+  orderedByHegemony(order = Query.ASC) {
+    return this._setOrder("hege", order);
+  }
+
+  clone() {
+    return new HegemonyCountryQuery(this._clone());
+  }
+}
+
+
 class HegemonyAlarmsQuery extends CommonHegemonyQuery {
   constructor() {
     super(...arguments);
@@ -984,8 +1023,15 @@ class NetworkDelayQuery extends TimeQuery {
    * @param {Edge} startpoint_key use the static method edge to create Edge objects
    */
   startPointKey(startpoint_key) {
-    this._pointKey(startpoint_key, "startpoint_key");
+    //this._pointKey(startpoint_key, "startpoint_key");
+    return this._set(
+      "startpoint_key",
+      startpoint_key,
+      Query.EXACT,
+      _STRING_SEPARATOR
+    );
   }
+
 
   /**
    * @brief add start point filter in the standard compressed format
@@ -1133,6 +1179,7 @@ export {
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,
+  HegemonyCountryQuery,
   HegemonyAlarmsQuery,
   HegemonyConeQuery,
   ForwardingQuery,

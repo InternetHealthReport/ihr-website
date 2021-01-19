@@ -114,19 +114,36 @@ import { NET_DELAY_LAYOUT } from "./layouts";
 
 const DELAY_ALARM_INTERVAL = 5 * 3600 * 1000; //5 minutes in milliseconds
 
+const LINE_COLORS = [ 
+   '#1f77b4',  // muted blue
+    '#ff7f0e',  // safety orange
+    '#2ca02c',  // cooked asparagus green
+    '#d62728',  // brick red
+    '#9467bd',  // muted purple
+    '#8c564b',  // chestnut brown
+    '#e377c2',  // raspberry yogurt pink
+    '#7f7f7f',  // middle gray
+    '#bcbd22',  // curry yellow-green
+    '#17becf'   // blue-teal
+]
+
 export default {
   mixins: [CommonChartMixin],
   components: { LocationSearchBar, NetworkDelayTable },
   props: {
     startPointType: {
       type: String,
-      default: () => "AS"
+      default: () => ""
     },
     startPointName: {
       type: String,
-      default: () => "2497"
+      default: () => ""
     },
-    endPointName: {
+    startPointNames: {
+      type: Array,
+      default: () => []
+    },
+    endPointNames: {
       type: Array,
       default: () => [
         "CT4Singapore, Central Singapore, SG",
@@ -159,7 +176,12 @@ export default {
     noYLabel: {
       type: Boolean,
       default: false
+    },
+    group: { 
+      type: String,
+      default: ""
     }
+
   },
   data() {
     var layout = NET_DELAY_LAYOUT;
@@ -177,20 +199,32 @@ export default {
       layout: layout,
       selectedStart: "",
       selectedEnd: "",
-      endPointKeysFilter: this.endPointName,
+      endPointKeysFilter: this.endPointNames,
       startPointNameFilter: this.startPointName,
       startPointTypeFilter: this.startPointType,
+      startPointKeysFilter: this.startPointNames,
     };
   },
   methods: {
     setFilter() {
-      this.apiFilter = new NetworkDelayQuery()
-        .startPointName(this.startPointNameFilter)
-        .startPointType(this.startPointTypeFilter)
-        .endPointKey(this.endPointKeysFilter)
-        .timeInterval(this.startTime, this.endTime)
-        .orderByEndPointName()
-        .orderedByTime();
+      if(this.startPointName == ""){
+        this.apiFilter = new NetworkDelayQuery()
+            .startPointKey(this.startPointKeysFilter)
+            .endPointKey(this.endPointKeysFilter)
+            .timeInterval(this.startTime, this.endTime)
+            .orderByEndPointName()
+            .orderedByTime();
+        
+      }
+      else{
+        this.apiFilter = new NetworkDelayQuery()
+            .startPointName(this.startPointNameFilter)
+            .startPointType(this.startPointTypeFilter)
+            .endPointKey(this.endPointKeysFilter)
+            .timeInterval(this.startTime, this.endTime)
+            .orderByEndPointName()
+            .orderedByTime();
+      }
     },
     apiCall() {
       this.loadingDelay = true;
@@ -255,6 +289,7 @@ export default {
       let traces = {};
       let maxValue = 0;
       let timeResolution = 1800*1000;
+      let groups = [];
       data.forEach(elem => {
         let key = elem.startpoint_type;
         key += elem.startpoint_af;
@@ -293,6 +328,22 @@ export default {
               "%{yaxis.title.text}: <b>%{y:.2f}</b>" +
               "<extra></extra>"
           };
+
+          // Group traces if needed
+          if(this.group=="start"){ 
+              let idx= groups.indexOf(startname);
+              if( idx == -1){ 
+                groups.push(startname)
+                idx = groups.length-1;
+              }
+              else{
+                  trace.showlegend = false;
+              }
+              trace.name = startname;
+              trace.legendgroup = startname;
+              trace.line = {color: LINE_COLORS[idx]};
+          }
+
           traces[key] = trace;
         }
 
@@ -337,11 +388,21 @@ export default {
     }
   },
   watch: {
+    startPointNames() {
+      //reset filter
+      this.endPointKeysFilter = this.endPointNames;
+      this.startPointKeysFilter = this.startPointNames;
+
+      // get updated data
+      this.debouncedApiCall(); 
+      
+    },
     startPointName() {
       //reset filter
       this.startPointNameFilter = this.startPointName;
       this.startPointTypeFilter = this.startPointType;
-      this.endPointKeysFilter = this.endPointName;
+      this.endPointKeysFilter = this.endPointNames;
+      this.startPointKeysFilter = this.startPointNames;
 
       // get updated data
       this.debouncedApiCall(); 

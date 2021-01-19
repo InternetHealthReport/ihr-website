@@ -80,6 +80,13 @@
                "apiTitle": "Displayed data is available at the following links:"
 			}
 		},
+        "countryHegemony": {
+            "title": "Network Dependency",
+			"table": {
+				"dependencyTitle": "Summary",
+               "apiTitle": "The network dependency data is available at the following link:"
+			}
+        },
         "hegemonyAlarms":{
             "title": "AS dependency",
             "table": {
