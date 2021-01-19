@@ -73,7 +73,7 @@ var AS_INTERDEPENDENCIES_LAYOUT = {
   yaxis: {
     title: "",
     domain: [0.55, 1],
-    range: [0, 1.1]
+    range: [0, 101]
   },
   yaxis2: {
     domain: [0, 0.45],

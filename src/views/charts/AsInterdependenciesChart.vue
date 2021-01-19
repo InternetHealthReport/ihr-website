@@ -379,14 +379,14 @@ export default {
               elem.asn_name.split(" ")[0] +
               "</b><br><br>" +
               "%{x}<br>" +
-              "%{yaxis.title.text}: <b>%{y:.2f}</b>" +
+              "%{yaxis.title.text}: <b>%{y:.2f}%</b>" +
               "<extra></extra>"
           };
           traces[elem.asn] = trace;
           this.traces.push(trace);
         }
 
-        trace.y.push(elem.hege);
+        trace.y.push(elem.hege*100);
         trace.x.push(elem.timebin);
       });
       this.noData |= Object.keys(traces).length == 0;
