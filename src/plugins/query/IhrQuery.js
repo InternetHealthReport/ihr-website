@@ -692,6 +692,68 @@ class HegemonyQuery extends CommonHegemonyQuery {
   }
 }
 
+class HegemonyPrefixQuery extends CommonHegemonyQuery {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return HegemonyPrefixQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "hegemony/prefixes/";
+  }
+
+  //methods
+
+  asn(asn_value) {
+    return this._set("asn", asn_value);
+  }
+
+  country(cc) {
+    return this._set("country", cc);
+  }
+
+  prefix(p0) {
+    return this._set("prefix", p0);
+  }
+
+  rpkiStatus(status) {
+    return this._set("rpki_status", status);
+  }
+
+  irrStatus(status) {
+    return this._set("irr_status", status);
+  }
+
+  delegatedPrefixStatus(status) {
+    return this._set("delegated_prefix_status", status);
+  }
+
+  delegatedAsnStatus(status) {
+    return this._set("delegated_asn_status", status);
+  }
+
+  hegemony(hege, comparator = Query.EXACT) {
+    return this._set("hege", hege, comparator);
+  }
+
+  orderedByPrefix(order = Query.ASC) {
+    return this._setOrder("prefix", order);
+  }
+
+  orderedByHegemony(order = Query.ASC) {
+    return this._setOrder("hege", order);
+  }
+
+  clone() {
+    return new HegemonyPrefixQuery(this._clone());
+  }
+}
+
+
 class HegemonyCountryQuery extends CommonHegemonyQuery {
   constructor() {
     super(...arguments);
@@ -1180,6 +1242,7 @@ export {
   DiscoProbesQuery,
   HegemonyQuery,
   HegemonyCountryQuery,
+  HegemonyPrefixQuery,
   HegemonyAlarmsQuery,
   HegemonyConeQuery,
   ForwardingQuery,

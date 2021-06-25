@@ -66,6 +66,13 @@
 		}
 	},
 	"charts":{
+        "prefixHegemony": {
+            "title": "Route Origin Validation",
+			"table": {
+				"dependencyTitle": "Summary",
+               "apiTitle": "The displayed prefix data is available at the following link:"
+			}
+        },
 		"asInterdependencies": {
 			"title": "AS dependency",
 			"defaultTrace": "Number of dependents",

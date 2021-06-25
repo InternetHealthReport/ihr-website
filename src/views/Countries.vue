@@ -41,6 +41,29 @@
         </q-expansion-item>
 
         <q-expansion-item
+          :label="$t('charts.prefixHegemony.title')"
+          caption="BGP / IRR / RPKI / delegated"
+          header-class="IHR_charts-title"
+          icon="fas fa-project-diagram"
+          :disable="show.hegemony_disable"
+          v-model="show.hegemony"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <prefix-hegemony-chart
+                :start-time="startTime"
+                :end-time="endTime"
+                :country-code="countryCode"
+                :address-family="family"
+                :fetch="fetch"
+                ref="asInterdependenciesChart"
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
           :label="$t('charts.networkDelay.title')"
           caption="Traceroute data"
           header-class="IHR_charts-title"
@@ -172,6 +195,7 @@
 <script>
 import reportMixin from "@/views/mixin/reportMixin";
 import CountryHegemonyChart from "@/views/charts/CountryHegemonyChart";
+import PrefixHegemonyChart from "@/views/charts/PrefixHegemonyChart";
 import DiscoChart, {
   DEFAULT_DISCO_AVG_LEVEL
 } from "@/views/charts/global/DiscoChart";
@@ -191,6 +215,7 @@ const LOADING_STATUS = {
 
 const CHART_REFS = [
   "countryHegemonyChart",
+  "prefixHegemonyChart",
   "networkDelayChart",
   "delayAndForwardingChart",
   "ihrChartDisco"
@@ -200,6 +225,7 @@ export default {
   mixins: [reportMixin],
   components: {
     CountryHegemonyChart,
+    PrefixHegemonyChart,
     DiscoChart,
     NetworkDelayChart,
     DateTimePicker,
