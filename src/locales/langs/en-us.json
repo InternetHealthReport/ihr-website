@@ -69,7 +69,9 @@
         "prefixHegemony": {
             "title": "Route Origin Validation",
 			"table": {
-				"dependencyTitle": "Summary",
+				"routesTitle": "Routes",
+				"originsTitle": "Origin ASes",
+				"transitsTitle": "Main Transits",
                "apiTitle": "The displayed prefix data is available at the following link:"
 			}
         },

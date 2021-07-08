@@ -707,6 +707,10 @@ class HegemonyPrefixQuery extends CommonHegemonyQuery {
   }
 
   //methods
+  originAs(asn_value) {
+    return this._set("originasn", asn_value);
+  }
+
 
   asn(asn_value) {
     return this._set("asn", asn_value);

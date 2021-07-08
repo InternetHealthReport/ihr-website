@@ -1,5 +1,14 @@
 <template>
   <div class="IHR_chart">
+    <div class="row justify-center">
+      <div class="col-2">
+        <q-select v-model="selection" :options="selectionOptions">
+            <template v-slot:prepend>
+            <q-icon name="fas fa-exclamation-triangle" />
+            </template>
+        </q-select>
+      </div>
+    </div>
     <div v-if="loading" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="15em" />
     </div>
@@ -13,17 +22,33 @@
         narrow-indicator
       >
         <q-tab
-          name="dependency"
-          :label="$t('charts.prefixHegemony.table.dependencyTitle')"
+          name="routes"
+          :label="$t('charts.prefixHegemony.table.routesTitle')"
         />
+        <q-tab name="origins" :label="$t('charts.prefixHegemony.table.originsTitle')" />
+        <q-tab name="transits" :label="$t('charts.prefixHegemony.table.transitsTitle')" />
         <q-tab name="api" label="API" />
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>
-        <q-tab-panel name="dependency">
-          <q-select filled v-model="selection" :options="selectionOptions" label="Type of Error" />
+        <q-tab-panel name="routes">
           <as-interdependencies-table
             :data="prefixHegemonyData"
             :loading="loading"
+            :showCountry="countryCode == null"
+          />
+        </q-tab-panel>
+        <q-tab-panel name="origins">
+          <as-interdependencies-table-stats
+            :data="prefixHegemonyDataOrigins"
+            :loading="loading"
+            :columnName=selection
+          />
+        </q-tab-panel>
+        <q-tab-panel name="transits">
+          <as-interdependencies-table-stats
+            :data="prefixHegemonyDataTransits"
+            :loading="loading"
+            :columnName=selection
           />
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
@@ -45,34 +70,23 @@
 import CommonChartMixin from "./CommonChartMixin";
 import { extend } from "quasar";
 import AsInterdependenciesTable from "./tables/PrefixHegemonyTable";
+import AsInterdependenciesTableStats from "./tables/PrefixHegemonyTableStats";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
 
 import { HegemonyPrefixQuery, AS_FAMILY, Query } from "@/plugins/IhrApi";
 
-const DEFAULT_TRACE = [
-  {
-    // First trace is used for the hegemony cone
-    x: [],
-    y: [],
-    yaxis: "y2",
-    name: i18n.t("charts.prefixHegemony.defaultTrace"),
-    showlegend: false,
-    hovertemplate:
-      "%{x}<br>" + "%{yaxis.title.text}: <b>%{y:.2f}</b>" + "<extra></extra>"
-  }
-];
-
 export default {
   mixins: [ CommonChartMixin ],
   components: {
-    AsInterdependenciesTable
+    AsInterdependenciesTable,
+    AsInterdependenciesTableStats
   },
   props: {
-    countryCode: {
-      type: String,
+    asNumber: {
+      type: Number,
     },
-    ASN: {
+    countryCode: {
       type: String,
     },
     addressFamily: {
@@ -84,42 +98,48 @@ export default {
     //prevent calls within 500ms and execute only the last one
     return {
       details: {
-        activeTab: "dependency",
+        activeTab: null,
         date: null,
         tablesData: {
-            dependency: {data:[]},
+            routes: [],
+            origins: [],
+            transits: []
         },
         tableVisible: true,
       },
       loading: true,
       hegemonyFilter: null,
-      traces: DEFAULT_TRACE,
+      routes: [],
+      origins: {},
+      transits: {},
       layout: AS_INTERDEPENDENCIES_LAYOUT,
-      selectionOptions: ['RPKI invalid', 'IRR invalid', 'Bogon prefix', 'Bogon ASN'],
-      selection: 'RPKI Invalid'
+      selectionOptions: ['Originated prefix', 'RPKI invalid', 'IRR invalid', 'Bogon prefix', 'Bogon ASN'],
+      selection: 'RPKI invalid'
     };
   },
   beforeMount() {
-    this.updateAxesLabel();
   },
   mounted() {
       this.details.date=`${this.startTime} - ${this.endTime}`
+      if (this.$route.query.rov_tb == null) this.details.activeTab = 'routes'
+      else this.details.activeTab = this.$route.query.rov_tb
   },
   methods: {
-    updateAxesLabel() {
-      this.layout.yaxis.title =
-        this.countryCode +
-        ` ${this.$t("charts.prefixHegemony.yaxis")}`;
-      this.layout.yaxis2.title =
-        `${this.$t("charts.prefixHegemony.yaxis2")} ` + this.countryCode;
-    },
     makeHegemonyFilter() {
-        console.log('Filter')
         console.log(this.selection)
         let filter = new HegemonyPrefixQuery()
-                .country(this.countryCode)
-                .addressFamily(this.addressFamily)
                 .timeInterval(this.startTime, this.endTime);
+        if(this.countryCode != null){
+            filter.country(this.countryCode)
+        }
+        if(this.asNumber != null){
+            if(this.selection == 'Originated prefix'){
+                filter.originAs(this.asNumber)
+            }
+            else { 
+                filter.asn(this.asNumber)
+            }
+        }
         if(this.selection == 'Bogon prefix'){
             filter.delegatedPrefixStatus('available')
         }
@@ -129,14 +149,12 @@ export default {
         else if(this.selection == 'IRR invalid'){ 
             filter.irrStatus('Invalid')
         }
-        else{ 
+        else if(this.selection == 'RPKI invalid'){ 
             filter.rpkiStatus('Invalid')
         }
         return filter
     },
     apiCall() {
-      if (this.asNumber == 0) return;
-      this.updateAxesLabel();
       this.hegemonyFilter = this.makeHegemonyFilter();
       this.loading = true;
       this.queryPrefixHegemonyAPI();
@@ -171,7 +189,9 @@ export default {
         return (values[half - 1] + values[half]) / 2.0;
     },
     fetchPrefixHegemony(data) {
-      this.traces = [];
+      this.routes = [];
+      this.origins = {};
+      this.transits = {};
       let traces = {};
       data.forEach(elem => {
 
@@ -186,6 +206,7 @@ export default {
             originasn: {asn:elem.originasn, name:elem.originasn_name},
             rpki_status: elem.rpki_status,
             irr_status: elem.irr_status,
+            country: elem.country,
             delegated_prefix_status: elem.delegated_prefix_status,
             delegated_asn_status: elem.delegated_asn_status,
             name:
@@ -203,35 +224,133 @@ export default {
               "<extra></extra>"
           };
           traces[trace_key] = trace;
-          this.traces.push(trace);
+          this.routes.push(trace);
         }
+
+        let route = elem.originasn+elem.prefix;
+
+        // Count the different status per origin ASN
+        if (! (elem.originasn in this.origins)){ 
+            this.origins[elem.originasn] = { 
+                count: {},
+                name: elem.originasn_name,
+                asn: elem.originasn
+            }
+        }
+        if (this.selection.startsWith('RPKI')){ 
+            if(elem.rpki_status in this.origins[elem.originasn]['count']){
+                this.origins[elem.originasn]['count'][elem.rpki_status][route] = 1;
+            }
+            else{
+                this.origins[elem.originasn]['count'][elem.rpki_status] = {route:1};
+            }
+        }
+        else if (this.selection.startsWith('IRR')){ 
+            if(elem.irr_status in this.origins[elem.originasn]['count']){
+                this.origins[elem.originasn]['count'][elem.irr_status][route] = 1;
+            }
+            else{
+                this.origins[elem.originasn]['count'][elem.irr_status] = {route:1};
+            }
+        }
+        else if (this.selection.startsWith('Bogon prefix')){ 
+            if(elem.delegated_prefix_status in this.origins[elem.originasn]['count']){
+                this.origins[elem.originasn]['count'][elem.delegated_prefix_status][route] = 1;
+            }
+            else{
+                this.origins[elem.originasn]['count'][elem.delegated_prefix_status] = {route:1};
+            }
+        }
+        else if (this.selection.startsWith('Bogon ASN')){ 
+            if(elem.delegated_asn_status in this.origins[elem.originasn]['count']){
+                this.origins[elem.originasn]['count'][elem.delegated_asn_status][route] = 1;
+            }
+            else{
+                this.origins[elem.originasn]['count'][elem.delegated_asn_status] = {route:1};
+            }
+        }
+
         if (elem.asn == elem.originasn){
             trace.maxHege = elem.hege
 
-        }
-          else{
+        } else{
             trace.dependencies[elem.asn] = {
                 asn: elem.asn, 
                 name: elem.asn_name,
                 hege: elem.hege
                 }
-      }
+
+            // Count the different status per transit ASN
+            if (! (elem.asn in this.transits)){ 
+                this.transits[elem.asn] = { 
+                    count: {},
+                    name: elem.asn_name,
+                    asn: elem.asn
+                }
+            }
+
+            if (this.selection.startsWith('RPKI')){ 
+                if(elem.rpki_status in this.transits[elem.asn]['count']){
+                    this.transits[elem.asn]['count'][elem.rpki_status][route] = 1;
+                }
+                else{
+                    this.transits[elem.asn]['count'][elem.rpki_status] = {route:1}
+                }
+            }
+            else if (this.selection.startsWith('IRR')){ 
+                if(elem.irr_status in this.transits[elem.asn]['count']){
+                    this.transits[elem.asn]['count'][elem.irr_status][route] = 1;
+                }
+                else{
+                    this.transits[elem.asn]['count'][elem.irr_status] = {route:1};
+                }
+            }
+            else if (this.selection.startsWith('Bogon prefix')){ 
+                if(elem.delegated_prefix_status in this.transits[elem.asn]['count']){
+                    this.transits[elem.asn]['count'][elem.delegated_prefix_status][route] = 1;
+                }
+                else{
+                    this.transits[elem.asn]['count'][elem.delegated_prefix_status] = {route:1};
+                }
+            }
+            else if (this.selection.startsWith('Bogon ASN')){ 
+                if(elem.delegated_asn_status in this.transits[elem.asn]['count']){
+                    this.transits[elem.asn]['count'][elem.delegated_asn_status][route] = 1;
+                }
+                else{
+                    this.transits[elem.asn]['count'][elem.delegated_asn_status] = {route:1};
+                }
+            }
+        }
       });
 
       // Compute median value of hegemony scores
-      this.traces.forEach(elem => { 
+      this.routes.forEach(elem => { 
         elem.hege_as = this.median(elem.hege_as)*100;
-
       });
 
-        // TODO remove the 2 fl
+      // Count unique routes
+      Object.values(this.transits).forEach(transit => {
+          Object.keys(transit.count).forEach(status => { 
+            transit.count[status] = Object.keys(transit.count[status]).length
+          })
+        }
+      )
+      Object.values(this.origins).forEach(origin => {
+          Object.keys(origin.count).forEach(status => { 
+            origin.count[status] = Object.keys(origin.count[status]).length
+          })
+        }
+      )
+
+        // TODO remove the 2 following lines?
       this.noData |= Object.keys(traces).length == 0;
       this.layout.datarevision = new Date().getTime();
 
       this.details.tableVisible = true;
-      this.details.tablesData['dependency'] = {
-          data: this.traces,
-      };
+      this.details.tablesData.routes = this.routes;
+      this.details.tablesData.origins = Object.values(this.origins)
+      this.details.tablesData.transits =  Object.values(this.transits)
     },
   },
   computed: {
@@ -252,7 +371,13 @@ export default {
       return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
     },
     prefixHegemonyData() {
-      return this.details.tablesData.dependency.data
+      return this.details.tablesData.routes
+    },
+    prefixHegemonyDataOrigins() {
+      return this.details.tablesData.origins
+    },
+    prefixHegemonyDataTransits() {
+      return this.details.tablesData.transits
     },
     hegemonyUrl() {
       return this.$ihr_api.getUrl(this.hegemonyFilter);
@@ -269,7 +394,7 @@ export default {
       this.debouncedApiCall();
     },
     "details.activeTab"(newValue) {
-      this.updateQuery("hege_tb", newValue);
+      this.updateQuery("rov_tb", newValue);
     },
     "details.date"(newValue) {
     },

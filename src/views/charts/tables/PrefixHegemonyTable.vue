@@ -1,8 +1,17 @@
 <i18n src="@/locales/long_langs/documentation.json"></i18n>
 <template>
+    <div> 
+        <div> 
+                <q-input debounce="300" v-model="tabFilter" placeholder="Search">
+                    <template v-slot:prepend>
+                        <q-icon name="fas fa-search" />
+                    </template>
+                </q-input>
+        </div> 
   <q-table
     :data="rows"
     :columns="columns"
+    :visible-columns="visibleColumns()"
     row-key="asNumber"
     :pagination.sync="pagination"
     :loading="loading"
@@ -12,19 +21,8 @@
     flat
   >
         <div slot="header" slot-scope="props" style="display: contents">
-            <q-tr> 
-                <q-th colspan="2">
-                    <div centered>
-                        <q-input filled debounce="300" v-model="tabFilter" placeholder="Search">
-                            <template v-slot:prepend>
-                                <q-icon name="fas fa-search" />
-                            </template>
-                        </q-input>
-                    </div>
-            </q-th>
-            </q-tr>
         <q-tr>
-            <q-th colspan="2" ><h3>Route</h3> </q-th>
+            <q-th :colspan="showCountry? 3 : 2" ><h3>Route</h3> </q-th>
             <q-th colspan="5" ><h3>Status 
                     <q-icon name="far fa-question-circle" color="grey" style="font-size: 0.9em;" right />
                         <q-tooltip max-width="360px"><div v-html="$t(`documentationPage.sections.prefixasdependency.description[0].body`)"></div></q-tooltip>
@@ -35,14 +33,15 @@
                 </h3></q-th>
         </q-tr>
         <q-tr>
+          <q-th key="country" :props="props" >Country</q-th>
           <q-th key="originASN" :props="props" >Origin ASN</q-th>
-          <q-th key="prefix" :props="props" >Prefix </q-th>
+          <q-th key="prefix" :props="props" >Prefix</q-th>
           <q-th key="rpkiStatus" :props="props" >RPKI</q-th>
           <q-th key="irrStatus" :props="props" >IRR</q-th>
           <q-th key="delegatedPrefixStatus" :props="props" >Prefix</q-th>
           <q-th key="delegatedASNStatus" :props="props" >Origin ASN</q-th>
           <q-th key="visibility" :props="props" >Visibility</q-th>
-          <q-th key="dependencies" :props="props" >AS Dependency</q-th>
+          <q-th key="dependencies" :props="props" >Main Transits</q-th>
         </q-tr>
         </div>
 
@@ -61,11 +60,17 @@
 
         <template v-slot:body-cell-dependencies="props">
             <q-td :props="props">
-                <span v-for="dep  in props.row.dependencies" :key="dep.prefix" class="comma">
-                    <span v-if="dep.hege/props.row.maxHege>0.5 & dep.asn!=props.row.originasn.asn">
+                <span v-for="dep  in sorted(props.row.dependencies)" :key="dep.prefix" class="comma">
+                    <span v-if="dep.hege/props.row.maxHege>0.5 & dep.asn!=props.row.originasn.asn" class="text-grey-10"
+                        :title="dep.name+'\n'+(dep.hege*100).toFixed(2)+'%'">
                         <b>AS{{ dep.asn }}</b>
                     </span>
-                    <span v-else-if="dep.hege/props.row.maxHege>0.1 & dep.asn!=props.row.originasn.asn">
+                    <span v-else-if="dep.hege/props.row.maxHege>0.1 & dep.asn!=props.row.originasn.asn" class="text-grey-8"
+                        :title="dep.name+'\n'+(dep.hege*100).toFixed(2)+'%'">
+                        AS{{ dep.asn }}
+                    </span>
+                    <span v-else-if="dep.asn!=props.row.originasn.asn" class="text-grey-5"
+                        :title="dep.name+'\n'+(dep.hege*100).toFixed(2)+'%'">
                         AS{{ dep.asn }}
                     </span>
                 </span>
@@ -74,9 +79,13 @@
 
         <template v-slot:body-cell-rpkiStatus="props">
             <q-td :props="props">
-                <span v-if="props.row.rpki_status.startsWith('Invalid')" justify>
+                <span v-if="props.row.rpki_status == 'Invalid'" justify>
                     <q-icon name="fas fa-times" color="red" left />
                     {{props.row.rpki_status}} 
+                </span>
+                <span v-else-if="props.row.rpki_status == 'Invalid,more-specific'">
+                    <q-icon name="fas fa-times" color="red" left />
+                    Invalid (more specific)
                 </span>
                 <span v-else-if="props.row.rpki_status.startsWith('Valid')">
                     <q-icon name="fas fa-check" color="green" left />
@@ -91,9 +100,13 @@
 
         <template v-slot:body-cell-irrStatus="props">
             <q-td :props="props">
-                <span v-if="props.row.irr_status.startsWith('Invalid')">
+                <span v-if="props.row.irr_status == 'Invalid'">
                     <q-icon name="fas fa-times" color="red" left />
                     {{props.row.irr_status}} 
+                </span>
+                <span v-else-if="props.row.irr_status == 'Invalid,more-specific'">
+                    <q-icon name="fas fa-times" color="orange" left />
+                    Invalid (more specific)
                 </span>
                 <span v-else-if="props.row.irr_status.startsWith('Valid')">
                     <q-icon name="fas fa-check" color="green" left />
@@ -140,6 +153,7 @@
             </q-td>
         </template>
   </q-table>
+</div>
 </template>
 
 <script>
@@ -147,17 +161,32 @@ import CommonTableMixin from "./CommonTableMixin";
 
 export default {
   mixins: [CommonTableMixin],
+  props: {
+      showCountry: {
+          type: Boolean,
+          default: true
+      }
+  },
   data() {
 
     return {
       pagination: {
-        sortBy: "originASN",
+        sortBy: "visibility",
         descending: true,
         page: 1,
         rowsPerPage: 10
       },
       tabFilter: "",
       columns: [
+        {
+          name: "country",
+          required: false,
+          label: `Country`,
+          align: "center",
+          field: row => row.country,
+          format: val => `${val}`,
+          sortable: true
+        },
         {
           name: "originASN",
           required: true,
@@ -246,6 +275,16 @@ export default {
       if (hegemony >= 25) return "IHR_color-deviation-high-threshold";
       if (hegemony >= 10) return "IHR_color-deviation-mid-threshold";
       return "";
+    },
+    visibleColumns(){ 
+        let vcolumns = [];
+        this.columns.forEach(elem => {
+            if (elem.name != 'country' | this.showCountry){ vcolumns.push(elem.name)}
+        });
+        return vcolumns;
+    },
+    sorted(obj) { 
+        return Object.values(obj).sort((a, b) => b.hege - a.hege)
     }
   }
 };

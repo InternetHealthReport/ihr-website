@@ -44,9 +44,9 @@
           :label="$t('charts.prefixHegemony.title')"
           caption="BGP / IRR / RPKI / delegated"
           header-class="IHR_charts-title"
-          icon="fas fa-project-diagram"
-          :disable="show.hegemony_disable"
-          v-model="show.hegemony"
+          icon="fas fa-route"
+          :disable="show.prefixHegemonyChart_disable"
+          v-model="show.prefixHegemonyChart"
         >
           <q-separator />
           <q-card class="IHR_charts-body">
@@ -57,7 +57,7 @@
                 :country-code="countryCode"
                 :address-family="family"
                 :fetch="fetch"
-                ref="asInterdependenciesChart"
+                ref="prefixHegemonyChart"
               />
             </q-card-section>
           </q-card>
@@ -242,6 +242,8 @@ export default {
       charRefs: CHART_REFS,
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
       show: {
+        prefixHegemonyChart: true,
+        prefixHegemonyChart_disable: false,
         disco: true,
         disco_disable: false,
         hegemony: true,

@@ -9,6 +9,7 @@ import Contact from "@/views/Contact";
 import Countries from "@/views/Countries";
 import Networks from "@/views/Networks";
 import Corona from "@/views/Corona";
+import ROV from "@/views/ROV";
 import SignUp from "@/views/user/SignUp";
 import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
@@ -93,6 +94,20 @@ export default new Router({
         default: Networks
       },
       meta: { title: "Network Report - IHR" }
+    },
+    {
+      name: "rov",
+      path: `${routerBase}rov`,
+      params: {
+        last: 1,
+        date: '2021-06-28'
+      },
+      components: {
+        header: Header,
+        footer: Footer,
+        default: ROV
+      },
+      meta: { title: "Route Origin Validation Report - IHR" }
     },
     {
       name: "covid19",
