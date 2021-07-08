@@ -12,7 +12,7 @@
   "dependencies": {
     "@quasar/extras": "^1.5.2",
     "autoprefixer": "^9.6.5",
-    "axios": "^0.19.2",
+    "axios": ">=0.21.1",
     "core-js": "^2.6.11",
     "datejs": "^1.0.0-rc3",
     "file-loader": "^4.2.0",
