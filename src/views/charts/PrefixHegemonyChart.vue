@@ -394,7 +394,7 @@ export default {
       this.debouncedApiCall();
     },
     "details.activeTab"(newValue) {
-      this.updateQuery("rov_tb", newValue);
+        this.updateQuery({rov_tb: newValue});
     },
     "details.date"(newValue) {
     },

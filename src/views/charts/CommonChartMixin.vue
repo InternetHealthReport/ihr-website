@@ -63,14 +63,16 @@ export default {
     filteredRows(val) {
       this.$emit("filteredRows", val);
     },
-    updateQuery(field, value) {
-      if ("URLSearchParams" in window) {
-        var searchParams = new URLSearchParams(window.location.search);
-        searchParams.set(field, value);
-        var newRelativePathQuery =
-          window.location.pathname + "?" + searchParams.toString();
-        history.pushState(null, "", newRelativePathQuery);
-      }
+    updateQuery(values) {
+        let changed = false;
+        for (const key in values){
+            if ( this.$route.query[key] != values[key]){ 
+                changed = true;
+            }
+        }
+        if ( changed ){
+            this.$router.replace({ query: Object.assign(this.$route.query, values) });
+        }
     }
   },
   computed: {

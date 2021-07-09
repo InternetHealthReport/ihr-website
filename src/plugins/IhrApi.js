@@ -8,6 +8,7 @@ import {
   QueryBase,
   Query,
   NetworkQuery,
+  CountryQuery,
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,
@@ -380,6 +381,15 @@ const IhrApi = {
             errorCallback
           );
         },
+        country(countryQuery, successCallback, errorCallback) {
+          this._generic(
+            CountryQuery.ENTRY_POINT,
+            CountryQuery.HTTP_METHOD,
+            countryQuery,
+            successCallback,
+            errorCallback
+          );
+        },
         network_delay(networkDelayQuery, successCallback, errorCallback) {
           this._generic(
             NetworkDelayQuery.ENTRY_POINT,
@@ -635,6 +645,7 @@ export {
   IhrApi,
   Query,
   NetworkQuery,
+  CountryQuery,
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,

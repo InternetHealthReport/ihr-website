@@ -258,7 +258,7 @@ export default {
       this.debouncedApiCall();
     },
     "details.activeTab"(newValue) {
-      this.updateQuery("hege_tb", newValue);
+        this.updateQuery( {hege_tb: newValue} );
     },
     "details.date"(newValue) {
     },

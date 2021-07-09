@@ -193,6 +193,40 @@ class Query extends QueryBase {
   }
 }
 
+class CountryQuery extends Query {
+  constructor() {
+    super(...arguments);
+  }
+
+  //static members
+  static get FILTER_TYPE() {
+    return CountryQuery.name;
+  }
+
+  static get ENTRY_POINT() {
+    return "countries/";
+  }
+
+  //methods
+
+  containsName(name) {
+    return this._set("name", name);
+  }
+
+  code(cc) {
+    return this._set("code", cc);
+  }
+
+  orderedByCode(order = Query.ASC) {
+    return this._setOrder("code", order);
+  }
+
+  clone() {
+    return new CountryQuery(this._clone());
+  }
+}
+
+
 class NetworkQuery extends Query {
   constructor() {
     super(...arguments);
@@ -1242,6 +1276,7 @@ export {
   QueryBase,
   Query,
   NetworkQuery,
+  CountryQuery,
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,

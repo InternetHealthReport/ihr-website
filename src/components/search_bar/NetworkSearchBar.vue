@@ -28,6 +28,7 @@
     <template v-slot:loading> </template>
     <template v-slot:option="scope">
       <q-item
+        v-if="scope.opt.type == 'asn'"
         v-bind="scope.itemProps"
         v-on="scope.itemEvents"
         @click="gotoASN(scope.opt.value)"
@@ -39,12 +40,25 @@
           scope.opt.name
         }}</q-item-section>
       </q-item>
+      <q-item
+        v-else-if="scope.opt.type == 'country'"
+        v-bind="scope.itemProps"
+        v-on="scope.itemEvents"
+        @click="gotoCountry(scope.opt.value)"
+      >
+        <q-item-section side color="accent">
+          Country
+        </q-item-section>
+        <q-item-section class="IHR_asn-element-name">{{
+          scope.opt.name
+        }}</q-item-section>
+      </q-item>
     </template>
   </q-select>
 </template>
 
 <script>
-import { NetworkQuery } from "@/plugins/IhrApi";
+import { NetworkQuery, CountryQuery } from "@/plugins/IhrApi";
 
 const MIN_CHARACTERS = 3;
 const MAX_RESULTS = 10;
@@ -65,6 +79,10 @@ export default {
     input: {
       type: String,
       default: "text-white text-weight-bold"
+    },
+    noAS: {
+        type: Boolean,
+        default: false
     }
   },
   data() {
@@ -76,36 +94,61 @@ export default {
       model: [],
       loading: false,
       always: false,
-      networkQuery: new NetworkQuery().orderedByNumber()
+      networkQuery: new NetworkQuery().orderedByNumber(),
+      countryQuery: new CountryQuery().orderedByCode()
     };
   },
   methods: {
     search(value, update) {
       this.loading = true;
       this.options = [];
-      this.networkQuery.mixedContentSearch(value);
-      this.$ihr_api.network(
-        this.networkQuery,
-        result => {
-          result.results.some(element => {
-            this.options.push({
-              value: element.number,
-              name: element.name
-            });
-            update();
-            return this.options.length > MAX_RESULTS;
-          });
-          this.loading = false;
-        },
-        error => {
-          console.error(error);
+      this.countryQuery.containsName(value);
+      this.$ihr_api.country(
+        this.countryQuery,
+        result => { 
+            result.results.some(element => { 
+                this.options.push({
+                value: element.code,
+                name: element.name,
+                type: 'country'
+                });
+                update();
+
+            })
         }
-      );
+      )
+      if ( ! this.noAS ){
+        this.networkQuery.mixedContentSearch(value);
+        this.$ihr_api.network(
+            this.networkQuery,
+            result => {
+            result.results.some(element => {
+                this.options.push({
+                value: element.number,
+                name: element.name,
+                type: 'asn'
+                });
+                update();
+                return this.options.length > MAX_RESULTS;
+            });
+            this.loading = false;
+            },
+            error => {
+            console.error(error);
+            }
+        );
+      }
     },
     gotoASN(number) {
       this.$router.push({
         name: "networks",
         params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(number) }
+      });
+    },
+    gotoCountry(code) {
+      this.$router.push({
+        name: "countries",
+        params: { cc: code }
       });
     },
     filter(value, update, abort) {

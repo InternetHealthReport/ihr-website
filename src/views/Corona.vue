@@ -160,7 +160,7 @@ export default {
   },
   watch: {
     selected(newValue) {
-      this.updateQuery("country", newValue.value);
+        this.updateQuery( {country: newValue.value} );
       this.fetch = false;
       this.clear += 1;
       this.yMax = 0;

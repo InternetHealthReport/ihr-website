@@ -2,7 +2,7 @@
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div v-if="countryCode">
       <div>
-        <h1 class="text-center">{{ headerString }} ({{ subHeader }})</h1>
+        <h1 class="text-center">{{ headerString }}</h1>
         <h3 class="text-center">
           {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
           <date-time-picker
@@ -82,6 +82,7 @@
                 :endPointNames="['AS415169', 'CT4Amsterdam, North Holland, NL', 'CT4Singapore, Central Singapore, SG', 'CT4New York City, New York, US']"
                 :eyeballThreshold="majorEyeballsThreshold"
                 :fetch="majorEyeballs.length!=0"
+                :clear="clear"
                 searchBar
                 ref="networkDelayChart"
                 @display="displayNetDelay"
@@ -102,7 +103,7 @@
           <q-card class="IHR_charts-body">
             <q-card-section>
               <disco-chart
-                :streamName="asNumber"
+                :streamName="countryCode"
                 :start-time="startTime"
                 :end-time="endTime"
                 :fetch="fetch"
@@ -119,12 +120,13 @@
       <div>
         <h1 class="text-center q-pa-xl">Country Report</h1>
         <div class="row justify-center">
-          <div class="col-8">
+          <div class="col-6">
             <network-search-bar
               bg="white"
               label="grey-8"
               input="black"
-              labelTxt="Enter an ASN, IXP ID, or network name (at least 3 characters)"
+              labelTxt="Enter a country name"
+              noAS=true
             />
           </div>
         </div>
@@ -140,23 +142,23 @@
             <ul>
               <li>
                 <router-link
-                  :to="{ name: 'networks', params: { asn: 'AS2497' } }"
+                  :to="{ name: 'countries', params: { cc: 'JP' } }"
                   class="IHR_delikify"
-                  >IIJ (AS2497)</router-link
+                  >Japan</router-link
                 >
               </li>
               <li>
                 <router-link
-                  :to="{ name: 'networks', params: { asn: 'AS15169' } }"
+                  :to="{ name: 'countries', params: { cc: 'FR' } }"
                   class="IHR_delikify"
-                  >Google (AS15169)</router-link
+                  >France</router-link
                 >
               </li>
               <li>
                 <router-link
-                  :to="{ name: 'networks', params: { asn: 'AS2501' } }"
+                  :to="{ name: 'countries', params: { cc: 'US' } }"
                   class="IHR_delikify"
-                  >University of Tokyo (AS2501)</router-link
+                  >United States</router-link
                 >
               </li>
             </ul>
@@ -165,23 +167,23 @@
             <ul>
               <li>
                 <router-link
-                  :to="{ name: 'networks', params: { asn: 'AS7922' } }"
+                  :to="{ name: 'countries', params: { cc: 'BR' } }"
                   class="IHR_delikify"
-                  >Comcast (AS7922)</router-link
+                  >Brazil</router-link
                 >
               </li>
               <li>
                 <router-link
-                  :to="{ name: 'networks', params: { asn: 'AS25152' } }"
+                  :to="{ name: 'countries', params: { cc: 'DE' } }"
                   class="IHR_delikify"
-                  >K-Root server (AS25152)</router-link
+                  >Germany</router-link
                 >
               </li>
               <li>
                 <router-link
-                  :to="{ name: 'networks', params: { asn: 'IXP208' } }"
+                  :to="{ name: 'countries', params: { cc: 'CN' } }"
                   class="IHR_delikify"
-                  >DE-CIX (IXP208)</router-link
+                  >China</router-link
                 >
               </li>
             </ul>
@@ -234,7 +236,6 @@ export default {
   data() {
     let addressFamily = this.$route.query.af;
     return {
-      asNumber: 2497,
       addressFamily: addressFamily == undefined ? 4 : addressFamily,
       loadingStatus: LOADING_STATUS.LOADING,
       countryCode: this.$route.params.cc,
@@ -253,11 +254,12 @@ export default {
       },
       majorEyeballs: [],
       majorEyeballsThreshold: 10,
+      clear: 0
     };
   },
   methods: {
     pushRoute() {
-      this.$router.push({
+      this.$router.replace({
         //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
         query: Object.assign({}, this.$route.query, {
           af: this.family,
@@ -276,6 +278,7 @@ export default {
     },
     setMajorEyeballs(asns){ 
         var tmp=[]
+        this.majorEyeballs = [];
         asns.forEach(elem => { 
             tmp.push('AS4'+elem)
         })
@@ -329,6 +332,15 @@ export default {
     addressFamily() {
       this.pushRoute();
     },
+    "$route.params.cc": {
+      handler: function(cc) {
+        (this.loadingStatus = LOADING_STATUS.LOADING),
+          (this.countryCode = cc);
+        this.clear += 1;
+        this.pushRoute();
+      },
+      deep: true
+    }
   }
 };
 </script>
