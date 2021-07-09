@@ -25,11 +25,15 @@
             <q-th :colspan="showCountry? 3 : 2" ><h3>Route</h3> </q-th>
             <q-th colspan="5" ><h3>Status 
                     <q-icon name="far fa-question-circle" color="grey" style="font-size: 0.9em;" right />
-                        <q-tooltip max-width="360px"><div v-html="$t(`documentationPage.sections.prefixasdependency.description[0].body`)"></div></q-tooltip>
+                        <q-tooltip max-width="360px">
+                            <div v-html="$t(`documentationPage.sections.prefixasdependency.description[0].body`)"></div>
+                        </q-tooltip>
                 </h3></q-th>
             <q-th colspan="2" ><h3>AS dependency
                     <q-icon name="far fa-question-circle" color="grey" style="font-size: 0.9em;" right />
-                        <q-tooltip max-width="360px"><div v-html="$t(`documentationPage.sections.prefixasdependency.description[1].body`)"></div></q-tooltip>
+                        <q-tooltip max-width="360px">
+                            <div v-html="$t(`documentationPage.sections.prefixasdependency.description[1].body`)"></div>
+                        </q-tooltip>
                 </h3></q-th>
         </q-tr>
         <q-tr>
@@ -45,6 +49,14 @@
         </q-tr>
         </div>
 
+        <template v-slot:body-cell-country="props">
+            <q-td :props="props">
+                <router-link class="IHR_delikify" :to="{ name: 'countries', params: { cc: props.row.country }}">
+                {{props.row.country}} 
+                </router-link>
+            </q-td>
+        </template>
+
         <template v-slot:body-cell-prefix="props">
             <q-td :props="props">
                 {{props.row.prefix.value}} 
@@ -54,13 +66,16 @@
 
         <template v-slot:body-cell-originASN="props">
             <q-td :props="props">
+                <router-link class="IHR_delikify" :to="{ name: 'networks', params: { asn: $options.filters.ihr_NumberToAsOrIxp(props.row.originasn.asn) }}">
                 <span :title='props.row.originasn.name'>AS{{props.row.originasn.asn}}</span>
+                </router-link>
             </q-td>
         </template>
 
         <template v-slot:body-cell-dependencies="props">
             <q-td :props="props">
                 <span v-for="dep  in sorted(props.row.dependencies)" :key="dep.prefix" class="comma">
+                    <router-link class="IHR_delikify" :to="{ name: 'networks', params: { asn: $options.filters.ihr_NumberToAsOrIxp(dep.asn) }}">
                     <span v-if="dep.hege/props.row.maxHege>0.5 & dep.asn!=props.row.originasn.asn" class="text-grey-10"
                         :title="dep.name+'\n'+(dep.hege*100).toFixed(2)+'%'">
                         <b>AS{{ dep.asn }}</b>
@@ -73,6 +88,7 @@
                         :title="dep.name+'\n'+(dep.hege*100).toFixed(2)+'%'">
                         AS{{ dep.asn }}
                     </span>
+                    </router-link>
                 </span>
             </q-td>
         </template>
@@ -192,8 +208,8 @@ export default {
           required: true,
           label: `ASN`,
           align: "center",
-          field: row => row.originasn,
-          format: val => `AS${val.asn}`,
+          field: row => row.originasn.asn,
+          format: val => `${val}`,
           sortable: true
         },
         {
@@ -201,8 +217,8 @@ export default {
           required: true,
           label: `Prefix`,
           align: "left",
-          field: row => row.prefix,
-          format: val => `AS${val.value} ${val.descr}`,
+          field: row => row.prefix.value,
+          format: val => `${val}`,
           sortable: true
         },
         {
@@ -255,8 +271,8 @@ export default {
           required: true,
           label: `Dependencies`,
           align: "left",
-          field: row => row.dependencies,
-            format: val => Object.keys(val), 
+          field: row => this.simpleDependenciesFormat(row.dependencies),
+          format: val => `${val}`, 
           sortable: true
         },
        
@@ -285,6 +301,13 @@ export default {
     },
     sorted(obj) { 
         return Object.values(obj).sort((a, b) => b.hege - a.hege)
+    },
+    simpleDependenciesFormat(val){ 
+        var txt = '';
+        for ( const dep in this.sorted(val) ){ 
+            txt += dep.asn;
+        }
+        return txt
     }
   }
 };

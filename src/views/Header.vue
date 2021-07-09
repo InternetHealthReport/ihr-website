@@ -1,12 +1,7 @@
 <template>
   <q-header elevated primary class="IHR_minimum-width">
     <q-toolbar class="q-py-sm q-px-lg row">
-      <div class="col-8 row no-wrap items-center">
-        <div>
-          <!--<q-btn flat @click="expandSidebar">-->
-          <!--<q-icon name="fas fa-bars" class="text-white" />-->
-          <!--</q-btn>-->
-        </div>
+      <div class="col-12 row no-wrap items-center">
         <q-item id="IHR_home-button">
           <router-link :to="{ name: 'home' }">
             <q-btn round dense flat :ripple="false" no-caps size="22px">
@@ -14,26 +9,34 @@
             </q-btn>
           </router-link>
         </q-item>
-        <network-search-bar />
-
+        <network-search-bar class="col-3 q-px-sm" />
         <div
-          class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
+          class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap"
         >
-          <router-link
+        <q-btn-group
+            flat 
             :key="item.entryName"
-            :to="{ name: item.routeName }"
             v-for="item in simple_menu"
-            >{{ $t(item.entryName) }}</router-link
-          >
+            >
+            <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }"/>
+            <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left" >
+                <q-list class="rounded-borders text-white bg-primary" bordered separator padding >
+                    <q-item clickable v-close-popup 
+                        :key="option.entryName"
+                        v-for="option in item.options"
+                        :to="{ name: option.routeName }"
+                        active-class="text-grey"
+                        >
+                        <q-item-section>
+                            <q-item-label class="text-bold">{{ $t(option.entryName) }}</q-item-label>
+                            <q-item-label class="text-grey" caption lines="2">{{ $t(option.summary) }}</q-item-label>
+                        </q-item-section>
+                    </q-item>
+                </q-list>
+            </q-btn-dropdown>
+        </q-btn-group>
         </div>
       </div>
-    <div class="col-4 row no-wrap justify-end">
-        <div
-          class="IHR_menu-entries q-ml-xs q-gutter-md text-body2 text-weight-bold row items-center no-wrap"
-        >
-        <router-link :to="{ name:'covid19' }">RTT/COVID-19</router-link>
-        </div>
-    </div>
       <!--Log in /Log out stuff here-->
     </q-toolbar>
   </q-header>
@@ -48,8 +51,35 @@ const simple_menu = [
     routeName: "home"
   },
   {
-    entryName: "header.globalReport",
-    routeName: "global_report"
+    entryName: "header.reports",
+    routeName: "global_report",
+    options: [
+        {
+            entryName: "header.globalReport",
+            routeName: "global_report",
+            summary: "Alarms reported across all networks"
+        },
+        {
+            entryName: "header.countryReport",
+            routeName: "countries",
+            summary: "Overview of Internet ressources per country"
+        },
+        {
+            entryName: "header.networkReport",
+            routeName: "networks",
+            summary: "Details for a single network (AS or IXP)"
+        },
+        {
+            entryName: "header.rovReport",
+            routeName: "rov",
+            summary: "Route Origin Validation of ressources seen on BGP"
+        },
+        {
+            entryName: "header.covid19",
+            routeName: "covid19",
+            summary: "RTT analysis during national lockdowns"
+        }
+    ]
   },
   {
     entryName: "header.documentation",
@@ -120,7 +150,7 @@ menu-delinkify(val)
 
 .IHR_
   &minimum-width
-    min-width 800px !important
+    min-width 640px !important
 
   &menu-entries
     a, button
@@ -130,50 +160,10 @@ menu-delinkify(val)
       box-shadow none
 
   &dropdown-menu
-    background-color $info
+    background-color $primary
 
     a
       menu-delinkify 1
-
-  &footer
-    & a
-      color white
-
-    ~/fsection
-      padding-top 5pt
-      border-left solid gray 1px
-
-      &first-child
-        border-left none
-
-    ~/copyright
-      & > div
-        margin 7pt 0pt
-
-    ~/external-links
-      font-size 3.0em
-      text-decoration none
-
-      & a
-        color white
-
-    ~/sitemap
-      font-size 12pt
-      font-weight 300
-      text-align center
-
-      & > span
-        padding-left 20pt
-        text-align left
-        & a
-            menu-delinkify 0
-        & > ul
-          margin-top 2pt
-          & > li
-            list-style-type: none;
-            text-align left
-            & > strong
-                text-transform capitalize
 
 #IHR_
   &home-button

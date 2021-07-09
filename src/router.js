@@ -29,15 +29,24 @@ export default new Router({
   //for apache use FallBackRessource
   mode: "history",
   base: "/ihr/",
-  scrollBehavior: to => {
-    if (to.hash) {
-      VueScrollTo.scrollTo(to.hash, 700);
-      return {
-        selector: to.hash,
-        offset: { x: 0, y: 50 }
-      };
+  scrollBehavior: (to, from, savedPosition)  => {
+    if (savedPosition) {
+        return savedPosition
+    } 
+    else if (to.hash) {
+        return {
+            selector: to.hash,
+            behavior: 'smooth',
+        }
     }
-    return { x: 0, y: 0 };
+    else {
+        if ( to.path === from.path){ 
+            return null
+        }
+        else{ 
+            return { x: 0, y: 0 }
+        }
+    }
   },
   routes: [
     {

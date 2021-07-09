@@ -396,7 +396,7 @@ export default {
       });
     },
     pushRoute() {
-      this.$router.push({
+      this.$router.replace({
         query: {
           filter_level: this.filterLevel,
           last: this.interval.dayDiff(),

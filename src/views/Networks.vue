@@ -277,7 +277,7 @@ export default {
   },
   methods: {
     pushRoute() {
-      this.$router.push({
+      this.$router.replace({
         //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
         query: Object.assign({}, this.$route.query, {
           af: this.family,
@@ -366,10 +366,14 @@ export default {
     },
     "$route.params.asn": {
       handler: function(asn) {
-        (this.loadingStatus = LOADING_STATUS.LOADING),
-          (this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn));
-        this.pushRoute();
-        this.netName();
+          console.log(this.asNumber)
+          console.log(asn)
+
+          if (this.$options.filters.ihr_AsOrIxpToNumber(asn) != this.asNumber){
+            this.loadingStatus = LOADING_STATUS.LOADING;
+            this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn);
+            this.netName();
+        }
       },
       deep: true
     }

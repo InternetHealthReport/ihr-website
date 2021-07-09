@@ -3,9 +3,6 @@
     <div class="row justify-center">
       <div class="col-2">
         <q-select v-model="selection" :options="selectionOptions">
-            <template v-slot:prepend>
-            <q-icon name="fas fa-exclamation-triangle" />
-            </template>
         </q-select>
       </div>
     </div>
@@ -25,8 +22,8 @@
           name="routes"
           :label="$t('charts.prefixHegemony.table.routesTitle')"
         />
-        <q-tab name="origins" :label="$t('charts.prefixHegemony.table.originsTitle')" />
-        <q-tab name="transits" :label="$t('charts.prefixHegemony.table.transitsTitle')" />
+        <q-tab name="origins" :disable="statsDisable" :label="$t('charts.prefixHegemony.table.originsTitle')" />
+        <q-tab name="transits" :disable="statsDisable" :label="$t('charts.prefixHegemony.table.transitsTitle')" />
         <q-tab name="api" label="API" />
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>
@@ -41,14 +38,14 @@
           <as-interdependencies-table-stats
             :data="prefixHegemonyDataOrigins"
             :loading="loading"
-            :columnName=selection
+            :columnName="selection.label"
           />
         </q-tab-panel>
         <q-tab-panel name="transits">
           <as-interdependencies-table-stats
             :data="prefixHegemonyDataTransits"
             :loading="loading"
-            :columnName=selection
+            :columnName="selection.label"
           />
         </q-tab-panel>
         <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
@@ -107,17 +104,55 @@ export default {
         },
         tableVisible: true,
       },
+      statsDisable: false,
       loading: true,
       hegemonyFilter: null,
       routes: [],
       origins: {},
       transits: {},
       layout: AS_INTERDEPENDENCIES_LAYOUT,
-      selectionOptions: ['Originated prefix', 'RPKI invalid', 'IRR invalid', 'Bogon prefix', 'Bogon ASN'],
-      selection: 'RPKI invalid'
+      selectionOptions: [
+          {
+              label: 'Originated prefix', 
+              value: 'Originated prefix', 
+              description: 'All routes observed in BGP data',
+              disable: false,
+              icon: 'fas fa-cloud-upload-alt'
+          },
+          {
+              label: 'RPKI invalid', 
+              value: 'RPKI invalid', 
+              description: 'Routes conflicting with RPKI data',
+              disable: false,
+              icon: 'fas fa-minus-circle'
+          },
+          {
+              label: 'IRR invalid', 
+              value: 'IRR invalid', 
+              description: 'Routes conflicting with IRR data',
+              disable: false,
+              icon: 'fas fa-exclamation'
+          },
+          {
+              label: 'Bogon prefix', 
+              value: 'Bogon prefix', 
+              description: 'Unregistered prefixes seen in BGP data',
+              disable: false,
+              icon: 'fas fa-exclamation-triangle'
+          },
+          {
+              label: 'Bogon ASN',
+              value: 'Bogon ASN',
+              description: 'Unregistered Autonomous System Numbers seen in BGP data',
+              disable: false,
+              icon: 'fas fa-exclamation-triangle'
+          }
+      ],
+      selection: null
     };
   },
   beforeMount() {
+      this.selection = this.selectionOptions[1]
   },
   mounted() {
       this.details.date=`${this.startTime} - ${this.endTime}`
@@ -126,31 +161,35 @@ export default {
   },
   methods: {
     makeHegemonyFilter() {
-        console.log(this.selection)
         let filter = new HegemonyPrefixQuery()
                 .timeInterval(this.startTime, this.endTime);
         if(this.countryCode != null){
             filter.country(this.countryCode)
         }
         if(this.asNumber != null){
-            if(this.selection == 'Originated prefix'){
-                filter.originAs(this.asNumber)
+            if(this.selection.value == 'Originated prefix'){
+                filter.originAs(this.asNumber);
+                this.statsDisable = true;
             }
             else { 
                 filter.asn(this.asNumber)
             }
         }
-        if(this.selection == 'Bogon prefix'){
+        if(this.selection.value == 'Bogon prefix'){
             filter.delegatedPrefixStatus('available')
+            this.statsDisable = true;
         }
-        else if(this.selection == 'Bogon ASN'){
+        else if(this.selection.value == 'Bogon ASN'){
             filter.delegatedASNStatus('available')
+            this.statsDisable = true;
         }
-        else if(this.selection == 'IRR invalid'){ 
+        else if(this.selection.value == 'IRR invalid'){ 
             filter.irrStatus('Invalid')
+            this.statsDisable = false;
         }
-        else if(this.selection == 'RPKI invalid'){ 
+        else if(this.selection.value == 'RPKI invalid'){ 
             filter.rpkiStatus('Invalid')
+            this.statsDisable = false;
         }
         return filter
     },
@@ -160,7 +199,6 @@ export default {
       this.queryPrefixHegemonyAPI();
     },
     queryPrefixHegemonyAPI() {
-        console.log('in queryPrefixHegemonyAPI')
       this.loading = true;
       this.$ihr_api.hegemony_prefix(
         this.hegemonyFilter,
@@ -237,37 +275,29 @@ export default {
                 asn: elem.originasn
             }
         }
-        if (this.selection.startsWith('RPKI')){ 
-            if(elem.rpki_status in this.origins[elem.originasn]['count']){
-                this.origins[elem.originasn]['count'][elem.rpki_status][route] = 1;
+        if (this.selection.value.startsWith('RPKI')){ 
+            if( !(elem.rpki_status in this.origins[elem.originasn]['count']) ){
+                this.origins[elem.originasn]['count'][elem.rpki_status] = {};
             }
-            else{
-                this.origins[elem.originasn]['count'][elem.rpki_status] = {route:1};
-            }
+            this.origins[elem.originasn]['count'][elem.rpki_status][route] = 1;
         }
-        else if (this.selection.startsWith('IRR')){ 
-            if(elem.irr_status in this.origins[elem.originasn]['count']){
-                this.origins[elem.originasn]['count'][elem.irr_status][route] = 1;
+        else if (this.selection.value.startsWith('IRR')){ 
+            if( !(elem.irr_status in this.origins[elem.originasn]['count']) ){
+                this.origins[elem.originasn]['count'][elem.irr_status] = {};
             }
-            else{
-                this.origins[elem.originasn]['count'][elem.irr_status] = {route:1};
-            }
+            this.origins[elem.originasn]['count'][elem.irr_status][route] = 1;
         }
-        else if (this.selection.startsWith('Bogon prefix')){ 
-            if(elem.delegated_prefix_status in this.origins[elem.originasn]['count']){
-                this.origins[elem.originasn]['count'][elem.delegated_prefix_status][route] = 1;
+        else if (this.selection.value.startsWith('Bogon prefix')){ 
+            if( !(elem.delegated_prefix_status in this.origins[elem.originasn]['count']) ){
+                this.origins[elem.originasn]['count'][elem.delegated_prefix_status] = {};
             }
-            else{
-                this.origins[elem.originasn]['count'][elem.delegated_prefix_status] = {route:1};
-            }
+            this.origins[elem.originasn]['count'][elem.delegated_prefix_status][route] = 1;
         }
-        else if (this.selection.startsWith('Bogon ASN')){ 
-            if(elem.delegated_asn_status in this.origins[elem.originasn]['count']){
-                this.origins[elem.originasn]['count'][elem.delegated_asn_status][route] = 1;
+        else if (this.selection.value.startsWith('Bogon ASN')){ 
+            if( !(elem.delegated_asn_status in this.origins[elem.originasn]['count']) ){
+                this.origins[elem.originasn]['count'][elem.delegated_asn_status] = {};
             }
-            else{
-                this.origins[elem.originasn]['count'][elem.delegated_asn_status] = {route:1};
-            }
+            this.origins[elem.originasn]['count'][elem.delegated_asn_status][route] = 1;
         }
 
         if (elem.asn == elem.originasn){
@@ -289,37 +319,29 @@ export default {
                 }
             }
 
-            if (this.selection.startsWith('RPKI')){ 
-                if(elem.rpki_status in this.transits[elem.asn]['count']){
-                    this.transits[elem.asn]['count'][elem.rpki_status][route] = 1;
+            if (this.selection.value.startsWith('RPKI')){ 
+                if( !(elem.rpki_status in this.transits[elem.asn]['count']) ){
+                    this.transits[elem.asn]['count'][elem.rpki_status] = {}
                 }
-                else{
-                    this.transits[elem.asn]['count'][elem.rpki_status] = {route:1}
-                }
+                this.transits[elem.asn]['count'][elem.rpki_status][route] = 1;
             }
-            else if (this.selection.startsWith('IRR')){ 
-                if(elem.irr_status in this.transits[elem.asn]['count']){
-                    this.transits[elem.asn]['count'][elem.irr_status][route] = 1;
+            else if (this.selection.value.startsWith('IRR')){ 
+                if( !(elem.irr_status in this.transits[elem.asn]['count'])) {
+                    this.transits[elem.asn]['count'][elem.irr_status] = {};
                 }
-                else{
-                    this.transits[elem.asn]['count'][elem.irr_status] = {route:1};
-                }
+                this.transits[elem.asn]['count'][elem.irr_status][route] = 1;
             }
-            else if (this.selection.startsWith('Bogon prefix')){ 
-                if(elem.delegated_prefix_status in this.transits[elem.asn]['count']){
+            else if (this.selection.value.startsWith('Bogon prefix')){ 
+                if( !(elem.delegated_prefix_status in this.transits[elem.asn]['count']) ){
+                    this.transits[elem.asn]['count'][elem.delegated_prefix_status] = {};
+                }
                     this.transits[elem.asn]['count'][elem.delegated_prefix_status][route] = 1;
-                }
-                else{
-                    this.transits[elem.asn]['count'][elem.delegated_prefix_status] = {route:1};
-                }
             }
-            else if (this.selection.startsWith('Bogon ASN')){ 
-                if(elem.delegated_asn_status in this.transits[elem.asn]['count']){
+            else if (this.selection.value.startsWith('Bogon ASN')){ 
+                if( !(elem.delegated_asn_status in this.transits[elem.asn]['count']) ){
+                    this.transits[elem.asn]['count'][elem.delegated_asn_status] = {};
+                }
                     this.transits[elem.asn]['count'][elem.delegated_asn_status][route] = 1;
-                }
-                else{
-                    this.transits[elem.asn]['count'][elem.delegated_asn_status] = {route:1};
-                }
             }
         }
       });
@@ -395,8 +417,6 @@ export default {
     },
     "details.activeTab"(newValue) {
         this.updateQuery({rov_tb: newValue});
-    },
-    "details.date"(newValue) {
     },
   }
 };

@@ -89,7 +89,7 @@ export default {
   },
   methods: {
     pushRoute() {
-      this.$router.push({
+      this.$router.replace({
         //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
         query: Object.assign({}, this.$route.query, {
           af: this.family,

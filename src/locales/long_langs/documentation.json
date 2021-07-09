@@ -139,6 +139,20 @@
                 }
             ]
         },
+        "prefixasdependency": {
+            "title":  "Route Origin Validation",
+            "summary": "We check the status of each IP prefix and its corresponding ASN seen in BGP data (RIS and Routeviews) in the RPKI, IRR, and delegated databases.",
+            "description": [
+                { 
+                    "header":"Status",
+                    "body": "<p>Following mostly the nomenclature given in RFC6811 the statuses for RPKI and IRR are: <ul><li><i>NotFound</i></li><li><i>Invalid</i></li><li><i>Invalid,more-specific</i></li><li><i>Valid</i></li></ul>The status <i>Invalid,more-specific</i> correspond to routes that are invalid only because of the maximum prefix length attribute.</p> <p>Using RIRs' delegated files the statues for the announced prefix and origin ASN are<ul><li><i>assigned</i></li><li><i>available</i></li><li><i>reserved</i></li><li><i>allocated</i></li><li><i>ianapool</i></li><li><i>NotFound</i></li></ul>Statuses other than <i>assigned</i> usually correspond to bogons.</i></p>"
+                },
+                { 
+                    "header":"AS dependency",
+                    "body": " <p>The main transit ASes for each prefix are identified using the AS Hegemony metric. The AS Hegemony value roughly corresponds to the percentage of AS paths that contain the transit AS (except for the API where the AS hegemony is expressed as a ration).</p>"
+                }
+            ]
+        },
         "netdelay": {
             "title":  "Network delay",
             "summary": "<p>Using traceroute data collected with the RIPE Atlas measurement platform, we compute network delays between pairs of ASes, Atlas probes, and cities (IP addresses are geolocated with <a href='https://ipmap.ripe.net/' target='_blank'>RIPE IPmap</a>). </p>",

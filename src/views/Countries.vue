@@ -91,28 +91,6 @@
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item
-          :label="$t('charts.disconnections.title')"
-          caption="RIPE Atlas log"
-          header-class="IHR_charts-title"
-          icon="fas fa-plug"
-          :disable="show.disco_disable"
-          v-model="show.disco"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <disco-chart
-                :streamName="countryCode"
-                :start-time="startTime"
-                :end-time="endTime"
-                :fetch="fetch"
-                :minAvgLevel="9"
-                ref="ihrChartDisco"
-              />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
         <div class="IHR_last-element">&nbsp;</div>
       </q-list>
     </div>
@@ -334,10 +312,12 @@ export default {
     },
     "$route.params.cc": {
       handler: function(cc) {
-        (this.loadingStatus = LOADING_STATUS.LOADING),
-          (this.countryCode = cc);
-        this.clear += 1;
-        this.pushRoute();
+
+          if (cc != this.countryCode){
+            this.loadingStatus = LOADING_STATUS.LOADING;
+            this.countryCode = cc
+            this.pushRoute();
+        }
       },
       deep: true
     }

@@ -24,27 +24,36 @@
         <q-tr>
           <q-th key="ASN" :props="props" >ASN</q-th>
           <q-th key="ASName" :props="props" >Name</q-th>
-          <q-th key="count" :props="props" >{{columnName}}</q-th>
+          <q-th key="invalid" :props="props" >{{columnName}}</q-th>
+          <q-th key="specific" :props="props" >{{columnName}} (more specific)</q-th>
           <q-th key="total" :props="props" >Total</q-th>
         </q-tr>
         </div>
 
         <template v-slot:body-cell-ASN="props">
             <q-td :props="props">
-                <span :title='props.row.name'>AS{{props.row.asn}}</span>
+                <router-link class="IHR_delikify" :to="{ name: 'networks', params: { asn: $options.filters.ihr_NumberToAsOrIxp(props.row.asn) }}">
+                    <span :title='props.row.name' >AS{{props.row.asn}}</span>
+                </router-link>
             </q-td>
         </template>
 
-        <template v-slot:body-cell-count="props">
+        <template v-slot:body-cell-ASName="props">
             <q-td :props="props">
-                <ul >
-                    <li>
-                        Invalid: {{"Invalid" in props.row.count? props.row.count["Invalid"] : 0}}
-                    </li>
-                    <li>
-                        More specific: {{"Invalid,more-specific" in props.row.count? props.row.count["Invalid,more-specific"] : 0}}
-                    </li>
-                </ul>
+                <router-link class="IHR_delikify" :to="{ name: 'networks', params: { asn: $options.filters.ihr_NumberToAsOrIxp(props.row.asn) }}">
+                    <span :title='props.row.name' >{{props.row.name}}</span>
+                </router-link>
+            </q-td>
+        </template>
+
+        <template v-slot:body-cell-invalid="props">
+            <q-td :props="props">
+                {{"Invalid" in props.row.count? props.row.count["Invalid"] : 0}}
+            </q-td>
+        </template>
+        <template v-slot:body-cell-specific="props">
+            <q-td :props="props">
+                {{"Invalid,more-specific" in props.row.count? props.row.count["Invalid,more-specific"] : 0}}
             </q-td>
         </template>
   </q-table>
@@ -92,11 +101,20 @@ export default {
           sortable: true
         },
         {
-          name: "count",
+          name: "invalid",
           required: true,
-          label: `Count`,
-          align: "left",
-          field: row => row.count,
+          label: `Invalid`,
+          align: "center",
+          field: row => row.count["Invalid"],
+          format: val => `${val}`,
+          sortable: true
+        },
+        {
+          name: "specific",
+          required: true,
+          label: `Invalid (more specific)`,
+          align: "center",
+          field: row => row.count["Invalid,more-specific"],
           format: val => `${val}`,
           sortable: true
         },

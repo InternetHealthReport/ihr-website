@@ -8,10 +8,14 @@
 	},
 	"header": {
 		"API": "API",
-		"globalReport": "global report",
-		"networkReport": "network report",
-		"contact": "contact",
-		"documentation": "documentation",
+		"reports": "Reports",
+		"globalReport": "Global",
+		"countryReport": "Country",
+		"networkReport": "Network",
+		"rovReport": "Route Origin Validation",
+		"covid19": "COVID19",
+		"contact": "Contact",
+		"documentation": "Documentation",
 		"signUp": "sign up",
 		"signIn": "log in",
 		"signInTitle": "log in",
@@ -22,8 +26,11 @@
 	"footer": {
 		"reportPages": {
 			"title" :"Reports",
-			"network": "network report",
-			"global": "global report"
+			"network": "network ",
+			"country": "country ",
+            "rov": "ROV ",
+            "covid19": "COVID19 ",
+			"global": "global "
 		},
 		"documentation": {
 			"title": "documentation",
@@ -38,7 +45,7 @@
 		}
 	},
 	"searchBar": {
-		"placeholder": "AS or IXP name",
+		"placeholder": "Enter an AS, IXP, or country name",
 		"locationHint": "ASN, city name, or Atlas probe ID",
 		"locationSource": "Source",
 		"locationDestination": "Destination",

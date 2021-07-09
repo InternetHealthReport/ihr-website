@@ -71,7 +71,7 @@ export default {
             }
         }
         if ( changed ){
-            this.$router.replace({ query: Object.assign(this.$route.query, values) });
+            this.$router.replace({ query: Object.assign({}, this.$route.query, values) });
         }
     }
   },

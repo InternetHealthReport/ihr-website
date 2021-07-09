@@ -470,6 +470,7 @@ export default {
     },
     asNumber() {
       this.debouncedApiCall();
+      this.details.tableVisible = false;
     },
     "details.activeTab"(newValue) {
         this.updateQuery( {hege_tb: newValue} );

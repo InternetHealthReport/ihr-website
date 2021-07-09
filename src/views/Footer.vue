@@ -29,8 +29,23 @@
               }}</router-link>
             </li>
             <li>
+              <router-link :to="{ name: 'countries', params: { cc: null } }">{{
+                $t("footer.reportPages.country")
+              }}</router-link>
+            </li>
+            <li>
               <router-link :to="{ name: 'networks', params: { asn: null } }">{{
                 $t("footer.reportPages.network")
+              }}</router-link>
+            </li>
+            <li>
+              <router-link :to="{ name: 'rov'  }">{{
+                $t("footer.reportPages.rov")
+              }}</router-link>
+            </li>
+            <li>
+              <router-link :to="{ name: 'covid19'  }">{{
+                $t("footer.reportPages.covid19")
               }}</router-link>
             </li>
           </ul>
@@ -161,12 +176,6 @@ menu-delinkify(val)
 
     button
       box-shadow none
-
-  &dropdown-menu
-    background-color $info
-
-    a
-      menu-delinkify 1
 
   &footer
     & a
