@@ -45,12 +45,6 @@ menu-delinkify(val)
     button
       box-shadow none
 
-  &dropdown-menu
-    background-color $info
-
-    a
-      menu-delinkify 1
-
   &footer
     & a
       color white

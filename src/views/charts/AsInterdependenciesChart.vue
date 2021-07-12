@@ -108,8 +108,6 @@ import { extend } from "quasar";
 import AsInterdependenciesTable from "./tables/AsInterdependenciesTable";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
-import "datejs";
-
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
 import ripeApi from "@/plugins/RipeApi";
 
@@ -472,16 +470,17 @@ export default {
     },
     asNumber() {
       this.debouncedApiCall();
+      this.details.tableVisible = false;
     },
     "details.activeTab"(newValue) {
-      this.updateQuery("hege_tb", newValue);
+        this.updateQuery( {hege_tb: newValue} );
     },
     "details.date"(newValue) {
       const str = newValue
         .toISOString()
         .slice(0, 16)
         .replace("T", " ");
-      this.updateQuery("hege_dt", str);
+        this.updateQuery( {hege_dt: str} );
     },
     clear() {
       this.clearGraph();

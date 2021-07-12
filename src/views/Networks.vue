@@ -40,6 +40,28 @@
         </q-expansion-item>
 
         <q-expansion-item
+          :label="$t('charts.prefixHegemony.title')"
+          caption="BGP / IRR / RPKI / delegated"
+          header-class="IHR_charts-title"
+          icon="fas fa-route"
+          :disable="show.rov_disable"
+          v-model="show.rov"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <prefix-hegemony-chart
+                :start-time="startTime"
+                :end-time="endTime"
+                :as-number="asNumber"
+                :fetch="fetch"
+                ref="prefixHegemonyChart"
+              />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
           :label="$t('charts.networkDelay.title')"
           caption="Traceroute data"
           header-class="IHR_charts-title"
@@ -190,6 +212,7 @@
 <script>
 import reportMixin from "@/views/mixin/reportMixin";
 import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
+import PrefixHegemonyChart from "@/views/charts/PrefixHegemonyChart";
 import DiscoChart, {
   DEFAULT_DISCO_AVG_LEVEL
 } from "@/views/charts/global/DiscoChart";
@@ -209,6 +232,7 @@ const LOADING_STATUS = {
 
 const CHART_REFS = [
   "asInterdependenciesChart",
+  "prefixHegemonyChart",
   "networkDelayChart",
   "delayAndForwardingChart",
   "ihrChartDisco"
@@ -218,6 +242,7 @@ export default {
   mixins: [reportMixin],
   components: {
     AsInterdependenciesChart,
+    PrefixHegemonyChart,
     DiscoChart,
     DelayAndForwardingChart,
     NetworkDelayChart,
@@ -237,6 +262,8 @@ export default {
       charRefs: CHART_REFS,
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
       show: {
+        rov: true,
+        rov_disable: false,
         delayAndForwarding: true,
         delayAndForwarding_disable: false,
         disco: true,
@@ -250,7 +277,7 @@ export default {
   },
   methods: {
     pushRoute() {
-      this.$router.push({
+      this.$router.replace({
         //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
         query: Object.assign({}, this.$route.query, {
           af: this.family,
@@ -262,8 +289,8 @@ export default {
     netName() {
       let filter = new NetworkQuery().asNumber(this.asNumber);
       this.$ihr_api.network(filter, results => {
-        if (results.count != 1) {
-          this.loadingStatus = LOADING_STATUS.ERROR;
+        if (results.count < 1) {
+          //this.loadingStatus = LOADING_STATUS.ERROR;
           return;
         }
 
@@ -339,10 +366,14 @@ export default {
     },
     "$route.params.asn": {
       handler: function(asn) {
-        (this.loadingStatus = LOADING_STATUS.LOADING),
-          (this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn));
-        this.pushRoute();
-        this.netName();
+          console.log(this.asNumber)
+          console.log(asn)
+
+          if (this.$options.filters.ihr_AsOrIxpToNumber(asn) != this.asNumber){
+            this.loadingStatus = LOADING_STATUS.LOADING;
+            this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn);
+            this.netName();
+        }
       },
       deep: true
     }

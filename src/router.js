@@ -9,6 +9,7 @@ import Contact from "@/views/Contact";
 import Countries from "@/views/Countries";
 import Networks from "@/views/Networks";
 import Corona from "@/views/Corona";
+import ROV from "@/views/ROV";
 import SignUp from "@/views/user/SignUp";
 import AccountActivation from "@/views/user/AccountActivation";
 import PersonalPage from "@/views/user/PersonalPage";
@@ -28,15 +29,24 @@ export default new Router({
   //for apache use FallBackRessource
   mode: "history",
   base: "/ihr/",
-  scrollBehavior: to => {
-    if (to.hash) {
-      VueScrollTo.scrollTo(to.hash, 700);
-      return {
-        selector: to.hash,
-        offset: { x: 0, y: 50 }
-      };
+  scrollBehavior: (to, from, savedPosition)  => {
+    if (savedPosition) {
+        return savedPosition
+    } 
+    else if (to.hash) {
+        return {
+            selector: to.hash,
+            behavior: 'smooth',
+        }
     }
-    return { x: 0, y: 0 };
+    else {
+        if ( to.path === from.path){ 
+            return null
+        }
+        else{ 
+            return { x: 0, y: 0 }
+        }
+    }
   },
   routes: [
     {
@@ -93,6 +103,20 @@ export default new Router({
         default: Networks
       },
       meta: { title: "Network Report - IHR" }
+    },
+    {
+      name: "rov",
+      path: `${routerBase}rov`,
+      params: {
+        last: 1,
+        date: '2021-06-28'
+      },
+      components: {
+        header: Header,
+        footer: Footer,
+        default: ROV
+      },
+      meta: { title: "Route Origin Validation Report - IHR" }
     },
     {
       name: "covid19",

@@ -393,6 +393,8 @@ export default {
       this.endPointKeysFilter = this.endPointNames;
       this.startPointKeysFilter = this.startPointNames;
 
+      this.clearGraph();
+
       // get updated data
       this.debouncedApiCall(); 
       
@@ -403,6 +405,8 @@ export default {
       this.startPointTypeFilter = this.startPointType;
       this.endPointKeysFilter = this.endPointNames;
       this.startPointKeysFilter = this.startPointNames;
+
+      this.clearGraph();
 
       // get updated data
       this.debouncedApiCall(); 

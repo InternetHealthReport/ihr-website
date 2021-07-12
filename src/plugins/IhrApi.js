@@ -8,10 +8,12 @@ import {
   QueryBase,
   Query,
   NetworkQuery,
+  CountryQuery,
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,
   HegemonyCountryQuery,
+  HegemonyPrefixQuery,
   HegemonyAlarmsQuery,
   HegemonyConeQuery,
   ForwardingQuery,
@@ -352,6 +354,15 @@ const IhrApi = {
             errorCallback
           );
         },
+        hegemony_prefix(hegemonyPrefixQuery, successCallback, errorCallback) {
+          this._generic(
+            HegemonyPrefixQuery.ENTRY_POINT,
+            HegemonyPrefixQuery.HTTP_METHOD,
+            hegemonyPrefixQuery,
+            successCallback,
+            errorCallback
+          );
+        },
         hegemony_cone(hegemonyConeQuery, successCallback, errorCallback) {
           this._generic(
             HegemonyConeQuery.ENTRY_POINT,
@@ -366,6 +377,15 @@ const IhrApi = {
             NetworkQuery.ENTRY_POINT,
             NetworkQuery.HTTP_METHOD,
             networkQuery,
+            successCallback,
+            errorCallback
+          );
+        },
+        country(countryQuery, successCallback, errorCallback) {
+          this._generic(
+            CountryQuery.ENTRY_POINT,
+            CountryQuery.HTTP_METHOD,
+            countryQuery,
             successCallback,
             errorCallback
           );
@@ -625,10 +645,12 @@ export {
   IhrApi,
   Query,
   NetworkQuery,
+  CountryQuery,
   DiscoEventQuery,
   DiscoProbesQuery,
   HegemonyQuery,
   HegemonyCountryQuery,
+  HegemonyPrefixQuery,
   HegemonyConeQuery,
   ForwardingQuery,
   DelayQuery,
