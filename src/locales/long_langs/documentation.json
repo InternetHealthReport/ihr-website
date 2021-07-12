@@ -80,6 +80,14 @@
                 { 
                     "header":"Route-views",
                     "body": "The University of Oregon <a href='http://www.routeviews.org/routeviews/' target='_blank'>Route Views Project</a> is another key source of data for IHR, in particular for computing AS dependency.  "
+                },
+                { 
+                    "header":"Internet Society",
+                    "body": "<a href='https://www.internetsociety.org/'>Internet Society</a> supported the development of IHR tool to monitor countries AS dependency and increase IHR computational power."
+                },
+                { 
+                    "header":"MANRS",
+                    "body": "<a href='https://www.manrs.org/'>Mutually Agreed Norms for Routing Security (MANRS)</a> is a global initiative that supported the development of IHR tools to monitor route origin validation via the <a href='https://www.manrs.org/ambassadors-program/fellows/'>MANRS Fellowship Program</a>."
                 }
             ]
         },
@@ -145,7 +153,7 @@
             "description": [
                 { 
                     "header":"Status",
-                    "body": "<p>Following mostly the nomenclature given in RFC6811 the statuses for RPKI and IRR are: <ul><li><i>NotFound</i></li><li><i>Invalid</i></li><li><i>Invalid,more-specific</i></li><li><i>Valid</i></li></ul>The status <i>Invalid,more-specific</i> correspond to routes that are invalid only because of the maximum prefix length attribute.</p> <p>Using RIRs' delegated files the statues for the announced prefix and origin ASN are<ul><li><i>assigned</i></li><li><i>available</i></li><li><i>reserved</i></li><li><i>allocated</i></li><li><i>ianapool</i></li><li><i>NotFound</i></li></ul>Statuses other than <i>assigned</i> usually correspond to bogons.</i></p>"
+                    "body": "<p>Following mostly the nomenclature given in RFC6811 the statuses for RPKI and IRR are: <ul><li><i>NotFound</i></li><li><i>Invalid</i></li><li><i>Invalid,more-specific</i></li><li><i>Valid</i></li></ul>The status <i>Invalid,more-specific</i> corresponds to routes that are invalid only because of the maximum prefix length attribute.</p> <p>Using RIRs' delegated files the statues for the announced prefix and origin ASN are<ul><li><i>assigned</i></li><li><i>available</i></li><li><i>reserved</i></li><li><i>allocated</i></li><li><i>ianapool</i></li><li><i>NotFound</i></li></ul>Statuses other than <i>assigned</i> usually correspond to bogons.</i></p><p><b>Visibility</b> corresponds to the percentage of RIS and Routeviews peers that observe the route.</p>"
                 },
                 { 
                     "header":"AS dependency",

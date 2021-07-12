@@ -289,8 +289,8 @@ export default {
     netName() {
       let filter = new NetworkQuery().asNumber(this.asNumber);
       this.$ihr_api.network(filter, results => {
-        if (results.count != 1) {
-          this.loadingStatus = LOADING_STATUS.ERROR;
+        if (results.count < 1) {
+          //this.loadingStatus = LOADING_STATUS.ERROR;
           return;
         }
 

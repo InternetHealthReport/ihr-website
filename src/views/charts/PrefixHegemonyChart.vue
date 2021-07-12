@@ -73,6 +73,109 @@ import i18n from "@/locales/i18n";
 
 import { HegemonyPrefixQuery, AS_FAMILY, Query } from "@/plugins/IhrApi";
 
+
+const ROV_SELECTIONS = { 
+
+    country: [
+          {
+              label: 'Originated prefix', 
+              value: 'Originated prefix', 
+              description: 'All routes observed in BGP data',
+              disable: false,
+              icon: 'fas fa-cloud-upload-alt'
+          },
+          {
+              label: 'RPKI invalid', 
+              value: 'RPKI invalid', 
+              description: 'Routes conflicting with RPKI data',
+              disable: false,
+              icon: 'fas fa-minus-circle'
+          },
+          {
+              label: 'IRR invalid', 
+              value: 'IRR invalid', 
+              description: 'Routes conflicting with IRR data',
+              disable: false,
+              icon: 'fas fa-exclamation'
+          },
+          {
+              label: 'Bogon ASN',
+              value: 'Bogon ASN',
+              description: 'Unregistered Autonomous System Numbers seen in BGP data',
+              disable: false,
+              icon: 'fas fa-exclamation-triangle'
+          }
+    ],
+    asn: [
+          {
+              label: 'Originated prefix', 
+              value: 'Originated prefix', 
+              description: 'All routes observed in BGP data',
+              disable: false,
+              icon: 'fas fa-cloud-upload-alt'
+          },
+          {
+              label: 'RPKI invalid (origin & transit)', 
+              value: 'RPKI invalid', 
+              description: 'Routes conflicting with RPKI data',
+              disable: false,
+              icon: 'fas fa-minus-circle'
+          },
+          {
+              label: 'IRR invalid (origin & transit)', 
+              value: 'IRR invalid', 
+              description: 'Routes conflicting with IRR data',
+              disable: false,
+              icon: 'fas fa-exclamation'
+          },
+          {
+              label: 'Bogon prefix (origin & transit)', 
+              value: 'Bogon prefix', 
+              description: 'Unregistered prefixes seen in BGP data',
+              disable: false,
+              icon: 'fas fa-exclamation-triangle'
+          },
+          {
+              label: 'Bogon ASN (transit)',
+              value: 'Bogon ASN',
+              description: 'Unregistered Autonomous System Numbers seen in BGP data',
+              disable: false,
+              icon: 'fas fa-exclamation-triangle'
+          }
+    ],
+    global: [
+          {
+              label: 'RPKI invalid', 
+              value: 'RPKI invalid', 
+              description: 'Routes conflicting with RPKI data',
+              disable: false,
+              icon: 'fas fa-minus-circle'
+          },
+          {
+              label: 'IRR invalid', 
+              value: 'IRR invalid', 
+              description: 'Routes conflicting with IRR data',
+              disable: false,
+              icon: 'fas fa-exclamation'
+          },
+          {
+              label: 'Bogon prefix', 
+              value: 'Bogon prefix', 
+              description: 'Unregistered prefixes seen in BGP data',
+              disable: false,
+              icon: 'fas fa-exclamation-triangle'
+          },
+          {
+              label: 'Bogon ASN',
+              value: 'Bogon ASN',
+              description: 'Unregistered Autonomous System Numbers seen in BGP data',
+              disable: false,
+              icon: 'fas fa-exclamation-triangle'
+          }
+        ]
+
+}
+
 export default {
   mixins: [ CommonChartMixin ],
   components: {
@@ -111,48 +214,23 @@ export default {
       origins: {},
       transits: {},
       layout: AS_INTERDEPENDENCIES_LAYOUT,
-      selectionOptions: [
-          {
-              label: 'Originated prefix', 
-              value: 'Originated prefix', 
-              description: 'All routes observed in BGP data',
-              disable: false,
-              icon: 'fas fa-cloud-upload-alt'
-          },
-          {
-              label: 'RPKI invalid', 
-              value: 'RPKI invalid', 
-              description: 'Routes conflicting with RPKI data',
-              disable: false,
-              icon: 'fas fa-minus-circle'
-          },
-          {
-              label: 'IRR invalid', 
-              value: 'IRR invalid', 
-              description: 'Routes conflicting with IRR data',
-              disable: false,
-              icon: 'fas fa-exclamation'
-          },
-          {
-              label: 'Bogon prefix', 
-              value: 'Bogon prefix', 
-              description: 'Unregistered prefixes seen in BGP data',
-              disable: false,
-              icon: 'fas fa-exclamation-triangle'
-          },
-          {
-              label: 'Bogon ASN',
-              value: 'Bogon ASN',
-              description: 'Unregistered Autonomous System Numbers seen in BGP data',
-              disable: false,
-              icon: 'fas fa-exclamation-triangle'
-          }
-      ],
+      selectionOptions: null,
       selection: null
     };
   },
   beforeMount() {
-      this.selection = this.selectionOptions[1]
+      if (this.asNumber != null){
+        this.selectionOptions = ROV_SELECTIONS.asn;
+        this.selection = this.selectionOptions[1]
+      }
+      else if(this.countryCode != null){
+        this.selectionOptions = ROV_SELECTIONS.country;
+        this.selection = this.selectionOptions[1]
+      }
+      else{ 
+        this.selectionOptions = ROV_SELECTIONS.global;
+        this.selection = this.selectionOptions[0]
+      }
   },
   mounted() {
       this.details.date=`${this.startTime} - ${this.endTime}`
@@ -180,7 +258,7 @@ export default {
             this.statsDisable = true;
         }
         else if(this.selection.value == 'Bogon ASN'){
-            filter.delegatedASNStatus('available')
+            filter.delegatedAsnStatus('available')
             this.statsDisable = true;
         }
         else if(this.selection.value == 'IRR invalid'){ 
