@@ -1,5 +1,11 @@
 <template>
   <div class="IHR_chart">
+    <as-graph-chart
+        :asNumber="asNumber"
+        :hegemonyValues="hegeSummary"
+        :plot="asGraphPlot"
+        class="col-6"
+    />
     <reactive-chart
       :layout="layout"
       :traces="traces"
@@ -110,6 +116,7 @@ import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from "@/plugins/IhrApi";
 import ripeApi from "@/plugins/RipeApi";
+import AsGraphChart from './AsGraphChart.vue';
 
 const DEFAULT_TRACE = [
   {
@@ -127,7 +134,8 @@ const DEFAULT_TRACE = [
 export default {
   mixins: [CommonChartMixin],
   components: {
-    AsInterdependenciesTable
+    AsInterdependenciesTable,
+    AsGraphChart
   },
   props: {
     asNumber: {
@@ -166,7 +174,9 @@ export default {
       hegemonyConeFilter: null,
       traces: DEFAULT_TRACE,
       layout: AS_INTERDEPENDENCIES_LAYOUT,
-      neighbours: []
+      neighbours: [],
+      hegeSummary: {},
+      asGraphPlot: 1,
     };
   },
   beforeMount() {
@@ -361,8 +371,9 @@ export default {
       let traces = {};
       let timeResolution = 900*1000;
       data.forEach(elem => {
-        if (elem.asn == this.asNumber) return;
+        this.hegeSummary[elem.asn] = elem.hege;
 
+        if (elem.asn == this.asNumber) return;
         let trace = traces[elem.asn];
         if (trace === undefined) {
           trace = {
@@ -398,6 +409,9 @@ export default {
       });
       this.noData |= Object.keys(traces).length == 0;
       this.layout.datarevision = new Date().getTime();
+
+      // Plot AS graph
+      this.asGraphPlot += 1;
     },
     fetchHegemonyCone(data) {
       console.log("fetchHegemonyCone");

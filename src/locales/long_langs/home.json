@@ -67,13 +67,11 @@
                 "name": "ISOC",
                 "logo": "isoc-logo.png",
                 "description": "For financial support"
-
             },
             {
                 "name": "MANRS",
                 "logo": "manrs-logo.jpg",
                 "description": "For financial support (MANRS Research Fellowship Program)"
-
             }
         ] 
     },
