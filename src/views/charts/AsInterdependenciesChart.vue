@@ -1,8 +1,8 @@
 <template>
   <div class="IHR_chart">
     <as-graph-chart
-        :asNumber="asNumber"
-        :hegemonyValues="hegeSummary"
+        :hegemonyValues="hegeSummary.dependency"
+        :dependentAses="hegeSummary.dependent"
         :plot="asGraphPlot"
         class="col-6"
     />
@@ -175,7 +175,10 @@ export default {
       traces: DEFAULT_TRACE,
       layout: AS_INTERDEPENDENCIES_LAYOUT,
       neighbours: [],
-      hegeSummary: {},
+      hegeSummary: {
+          dependency: {},
+          dependent: 0
+      },
       asGraphPlot: 1,
     };
   },
@@ -370,8 +373,9 @@ export default {
       console.log("fetchHegemony");
       let traces = {};
       let timeResolution = 900*1000;
+      let hegemonyValues = {}
       data.forEach(elem => {
-        this.hegeSummary[elem.asn] = elem.hege;
+        hegemonyValues[elem.asn] = elem.hege;
 
         if (elem.asn == this.asNumber) return;
         let trace = traces[elem.asn];
@@ -411,12 +415,18 @@ export default {
       this.layout.datarevision = new Date().getTime();
 
       // Plot AS graph
+      this.hegeSummary.dependency[this.asNumber] = {
+          hege:hegemonyValues,
+          maxHege:hegemonyValues[this.asNumber],
+          dependentASes: this.hegeSummary.dependent
+      };
       this.asGraphPlot += 1;
     },
     fetchHegemonyCone(data) {
       console.log("fetchHegemonyCone");
       let trace = this.traces[0];
       data.forEach(resp => {
+        this.hegeSummary.dependent = resp.conesize;
         trace.y.push(resp.conesize);
         trace.x.push(resp.timebin);
       });

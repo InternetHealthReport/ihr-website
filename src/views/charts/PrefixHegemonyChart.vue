@@ -1,5 +1,10 @@
 <template>
   <div class="IHR_chart">
+    <as-graph-chart
+        :hegemonyValues="asGraphData"
+        :plot="asGraphPlot"
+        class="col-6"
+    />
     <div class="row justify-center">
       <div class="col-2">
         <q-select v-model="selection" :options="selectionOptions">
@@ -70,6 +75,7 @@ import AsInterdependenciesTable from "./tables/PrefixHegemonyTable";
 import AsInterdependenciesTableStats from "./tables/PrefixHegemonyTableStats";
 import { AS_INTERDEPENDENCIES_LAYOUT } from "./layouts";
 import i18n from "@/locales/i18n";
+import AsGraphChart from './AsGraphChart.vue';
 
 import { HegemonyPrefixQuery, AS_FAMILY, Query } from "@/plugins/IhrApi";
 
@@ -180,7 +186,8 @@ export default {
   mixins: [ CommonChartMixin ],
   components: {
     AsInterdependenciesTable,
-    AsInterdependenciesTableStats
+    AsInterdependenciesTableStats,
+    AsGraphChart
   },
   props: {
     asNumber: {
@@ -215,7 +222,9 @@ export default {
       transits: {},
       layout: AS_INTERDEPENDENCIES_LAYOUT,
       selectionOptions: null,
-      selection: null
+      selection: null,
+      asGraphPlot: 1,
+      asGraphData: null 
     };
   },
   beforeMount() {
@@ -283,6 +292,8 @@ export default {
         result => {
           this.fetchPrefixHegemony(result.results);
           this.loading = false;
+          this.computeHegeASGraph();
+          this.asGraphPlot += 1;
         },
         error => {
           console.error(error); //FIXME do a correct alert
@@ -303,6 +314,24 @@ export default {
             return values[half];
 
         return (values[half - 1] + values[half]) / 2.0;
+    },
+    computeHegeASGraph() {
+        var summary = {}
+
+        this.routes.forEach( route => {
+            if(route.maxHege > 0.3 && 6762 in route.dependencies){
+            var hege_values = {}
+            for( var key in route.dependencies ){
+                hege_values[key] = route.dependencies[key].hege;
+            }
+            summary[route.prefix.value] = {
+                hege:hege_values, 
+                originasn: route.originasn.asn, 
+                maxHege: route.maxHege
+            }
+    }
+        })
+        this.asGraphData = summary
     },
     fetchPrefixHegemony(data) {
       this.routes = [];
