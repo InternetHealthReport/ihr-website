@@ -74,6 +74,12 @@
                 "logo": "manrs-logo.jpg",
                 "description": "For financial support (MANRS Research Fellowship Program)"
 
+            },
+            {
+                "name": "EdgeCast",
+                "logo": "edgecast-logo.png",
+                "description": "For providing IHR website and API on their CDN."
+
             }
         ] 
     },

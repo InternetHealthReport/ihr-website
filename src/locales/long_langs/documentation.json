@@ -88,6 +88,10 @@
                 { 
                     "header":"MANRS",
                     "body": "<a href='https://www.manrs.org/'>Mutually Agreed Norms for Routing Security (MANRS)</a> is a global initiative that supported the development of IHR tools to monitor route origin validation via the <a href='https://www.manrs.org/ambassadors-program/fellows/'>MANRS Fellowship Program</a>."
+                },
+                { 
+                    "header":"EdgeCast",
+                    "body": "<a href='https://www.verizondigitalmedia.com/media-platform/'>EdgeCast</a> is a Content Delivery Network (CDN) that distributes IHR website and API worldwide."
                 }
             ]
         },
