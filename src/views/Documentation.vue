@@ -211,6 +211,22 @@
                 hash:
                   '#' +
                   replaceSpaces(
+                    $t(`documentationPage.sections.dumps.title`)
+                  )
+              }"
+              class="IHR_delikify"
+              >{{
+                $t("documentationPage.sections.dumps.title")
+              }}</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              :to="{
+                name: 'documentation',
+                hash:
+                  '#' +
+                  replaceSpaces(
                     $t(`documentationPage.sections.datapolicy.title`)
                   )
               }"

@@ -271,6 +271,12 @@
                 }
             ]
         },
+        "dumps": {
+            "title":  "Daily Dumps",
+            "summary": "For users that need faster access to more IHR data, we also provide daily dumps of IHR database. Please refer to <a href='https://ihr-archive.iijlab.net'> https://ihr-archive.iijlab.net</a>",
+            "description": [
+            ]
+        },
         "datapolicy": {
             "title":  "Data policy",
             "summary": "<p>The goal of IHR is to advance network research and empower the public with useful information about the characteristics of networks that constitute the Internet. IHR data is provided 'as is,' with all faults, defects, bugs, and errors. IHR does not make any warranty as to the accuracy or completeness of the data.</p> <p><span xmlns:dct='http://purl.org/dc/terms/' href='http://purl.org/dc/dcmitype/Dataset' property='dct:title' rel='dct:type'> Internet Health Report</span> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Permissions beyond the scope of this license may be available at <a xmlns:cc='http://creativecommons.org/ns#' href='ihr-admin@iij-ii.co.jp' rel='cc:morePermissions'>ihr-admin@iij-ii.co.jp</a>.</p>",
