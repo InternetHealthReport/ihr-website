@@ -20,45 +20,62 @@ export default {
   props: {
     layout: {
       type: Object,
-      require: true
+      require: true,
     },
     traces: {
       type: Array,
-      require: true
+      require: true,
     },
     chartTitle: {
       type: String,
       require: false,
-      default: null
+      default: null,
     },
     noData: {
       require: false,
-      default: false
+      default: false,
     },
     yMax: {
       type: Number,
       require: false,
-      default: 0
-    }
+      default: 0,
+    },
   },
   data() {
     return {
       created: false,
-      myId: `ihrReactiveChart${this._uid}`
+      myId: `ihrReactiveChart${this._uid}`,
     };
+  },
+  created() {
+    this.layout["images"] = [
+      {
+        x: 1,
+        y: 1,
+        sizex: 0.2,
+        sizey: 0.2,
+        source:
+          "https://res.cloudinary.com/dguy8qpzi/image/upload/v1647356622/ihr_logo_xhsyh9.png",
+        xanchor: "right",
+        xref: "paper",
+        yanchor: "bottom",
+        yref: "paper",
+        opacity: 0.7,
+      },
+    ];
   },
   mounted() {
     var graphDiv = this.$refs[this.myId];
     Plotly.plot(graphDiv, this.traces, this.layout, {
       responsive: true,
-      displayModeBar: false
+      displayModeBar: false,
     });
 
     if (document.documentElement.clientWidth < 576) {
       Plotly.relayout(graphDiv, { showlegend: false });
     }
 
-    graphDiv.on("plotly_click", eventData => {
+    graphDiv.on("plotly_click", (eventData) => {
       this.$emit("plotly-click", eventData);
     });
 
@@ -74,34 +91,34 @@ export default {
     },
     relayout() {
       Plotly.relayout(this.$refs[this.myId], {});
-    }
+    },
   },
   watch: {
     traces: {
-      handler: function() {
+      handler: function () {
         this.react();
       },
-      deep: true
+      deep: true,
     },
     layout: {
-      handler: function() {
+      handler: function () {
         this.react();
       },
-      deep: true
+      deep: true,
     },
-    yMax(newValue){ 
-        var graphDiv = this.$refs[this.myId];
-        Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-    }
-  }
+    yMax(newValue) {
+      var graphDiv = this.$refs[this.myId];
+      Plotly.relayout(graphDiv, "yaxis.range", [0, newValue]);
+    },
+  },
 };
 </script>
 <style lang="stylus" scoped>
 .IHR_
   &no-data
     position absolute
-    bottom 50%
-    left 50%
+    bottom 0
+    left 0
     & > div:first-child
       box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
       padding 16pt
