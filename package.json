@@ -13,7 +13,7 @@
     "@quasar/extras": "^1.5.2",
     "autoprefixer": "^10.4.3",
     "axios": ">=0.21.1",
-    "core-js": "^2.6.11",
+    "core-js": "^3.21.1",
     "datejs": "^1.0.0-rc3",
     "file-loader": "^4.2.0",
     "ify-loader": "^1.1.0",
