@@ -40,7 +40,7 @@ $ git push origin <type>/<issue|issue-number>/{<additional-fixes>}
 # wip - Work in Progress; long term work; mainstream changes;
 # feat - New Feature; future planned; non-mainstream changes;
 # bug - Bug Fixes
-# exp - Experimental; random experiemntal features;
+# exp - Experimental; random experimental features;
 ```
 
 - On Task Completion:
