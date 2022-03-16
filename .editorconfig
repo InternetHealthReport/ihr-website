@@ -1,0 +1,16 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+max_line_length = 140
+quote_type = single
+spaces_around_brackets = true
+spaces_around_operators = true
+trim_trailing_whitespace = true
+
+
+# identation
+indent_style = space
+indent_size = 4
