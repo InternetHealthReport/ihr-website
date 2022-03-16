@@ -49,7 +49,7 @@
     "babel-jest": "^23.6.0",
     "babel-plugin-transform-imports": "1.5.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "eslint": "^5.16.0",
+    "eslint": "^8.11.0",
     "eslint-plugin-vue": "^8.5.0",
     "jsdom": "15.1.1",
     "jsdom-global": "3.0.2",
