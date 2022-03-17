@@ -144,9 +144,9 @@
 import reportMixin from '@/views/mixin/reportMixin'
 import CountryHegemonyChart from '@/views/charts/CountryHegemonyChart'
 import PrefixHegemonyChart from '@/views/charts/PrefixHegemonyChart'
-import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from '@/views/charts/global/DiscoChart'
+import { DEFAULT_DISCO_AVG_LEVEL } from '@/views/charts/global/DiscoChart'
 import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
-import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
+import { AS_FAMILY } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 import { isoCountries } from '@/plugins/countryName'
@@ -166,7 +166,6 @@ export default {
   components: {
     CountryHegemonyChart,
     PrefixHegemonyChart,
-    DiscoChart,
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,

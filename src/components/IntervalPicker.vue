@@ -32,7 +32,7 @@
 <script>
 import { debounce } from 'quasar'
 import DateTimePicker from '@/components/DateTimePicker'
-import { PROJECT_START_DATE, Query } from '@/plugins/IhrApi'
+import { PROJECT_START_DATE } from '@/plugins/IhrApi'
 
 const DEBOUNCE_TIME = 800
 

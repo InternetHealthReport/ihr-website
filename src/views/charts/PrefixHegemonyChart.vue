@@ -49,13 +49,11 @@
 
 <script>
 import CommonChartMixin from './CommonChartMixin'
-import { extend } from 'quasar'
 import AsInterdependenciesTable from './tables/PrefixHegemonyTable'
 import AsInterdependenciesTableStats from './tables/PrefixHegemonyTableStats'
 import { AS_INTERDEPENDENCIES_LAYOUT } from './layouts'
-import i18n from '@/locales/i18n'
 
-import { HegemonyPrefixQuery, AS_FAMILY, Query } from '@/plugins/IhrApi'
+import { HegemonyPrefixQuery, AS_FAMILY } from '@/plugins/IhrApi'
 
 const ROV_SELECTIONS = {
   country: [

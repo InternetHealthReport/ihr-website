@@ -16,7 +16,6 @@ import PersonalPage from '@/views/user/PersonalPage'
 import ResetPassword from '@/views/user/ResetPassword'
 import Documentation from '@/views/Documentation'
 import Bgplay from '@/components/ripe/Bgplay'
-import VueScrollTo from 'vue-scrollto'
 
 Vue.use(Router)
 

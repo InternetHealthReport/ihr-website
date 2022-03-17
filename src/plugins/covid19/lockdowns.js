@@ -12416,7 +12416,7 @@ const lockdowns = {
           {
             asn: 5438,
             hege: 1.0,
-            name: 'ATI-TN Agence Tunisienne d\'Internet, TN',
+            name: "ATI-TN Agence Tunisienne d'Internet, TN",
           },
           {
             asn: 6762,
@@ -12585,7 +12585,7 @@ const lockdowns = {
             name: 'LEVEL3 - Level 3 Parent, LLC, US',
           },
         ],
-        name: 'ATI-TN Agence Tunisienne d\'Internet, TN',
+        name: "ATI-TN Agence Tunisienne d'Internet, TN",
         percent: 9.514199031963898,
         samples: 195309,
         v6capable: 0.007680137628066295,
@@ -12616,7 +12616,7 @@ const lockdowns = {
           {
             asn: 5438,
             hege: 1.0,
-            name: 'ATI-TN Agence Tunisienne d\'Internet, TN',
+            name: "ATI-TN Agence Tunisienne d'Internet, TN",
           },
           {
             asn: 6762,

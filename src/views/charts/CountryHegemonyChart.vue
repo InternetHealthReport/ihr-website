@@ -36,12 +36,11 @@
 
 <script>
 import CommonChartMixin from './CommonChartMixin'
-import { extend } from 'quasar'
 import AsInterdependenciesTable from './tables/CountryHegemonyTable'
 import { AS_INTERDEPENDENCIES_LAYOUT } from './layouts'
 import i18n from '@/locales/i18n'
 
-import { HegemonyCountryQuery, AS_FAMILY, Query } from '@/plugins/IhrApi'
+import { HegemonyCountryQuery, AS_FAMILY } from '@/plugins/IhrApi'
 
 const DEFAULT_TRACE = [
   {
@@ -243,7 +242,7 @@ export default {
     'details.activeTab'(newValue) {
       this.updateQuery({ hege_tb: newValue })
     },
-    'details.date'(newValue) {},
+    'details.date'() {},
   },
 }
 </script>

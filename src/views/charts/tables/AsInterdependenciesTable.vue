@@ -111,7 +111,7 @@ export default {
           label: 'Direct Neighbour',
           align: 'center',
           field: row => row.direct,
-          format: val => '',
+          format: () => '',
           sortable: true,
         },
       ],

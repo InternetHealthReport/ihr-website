@@ -59,7 +59,7 @@ export default {
     }
   },
   methods: {
-    externalError(val) {
+    externalError() {
       return !this.value || this.$t('forms.loginUnsuccessful')
     },
   },
@@ -75,7 +75,7 @@ export default {
     },
   },
   watch: {
-    value(oldValue, newValue) {
+    value() {
       this.$refs.email.validate(this.email)
       this.$refs.password.validate(this.password)
     },

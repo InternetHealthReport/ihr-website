@@ -33,7 +33,6 @@
 
 <script>
 import CommonTableMixin from './CommonTableMixin'
-import prettyName from '@/plugins/networkName'
 
 export default {
   mixins: [CommonTableMixin],

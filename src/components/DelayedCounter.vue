@@ -42,7 +42,7 @@ export default {
     }
   },
   watch: {
-    value(newValue, oldValue) {
+    value(newValue) {
       //start from 0 if first call
       if (this.counter == '--') this.counter = 0
 
