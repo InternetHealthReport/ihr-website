@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <h1 v-if="chartTitle">{{ chartTitle }}</h1>
-    <div :ref="myId"></div>
-    <div v-show="noData" class="IHR_no-data">
-      <div class="bg-white">{{ noData }}</div>
+    <div>
+        <h1 v-if="chartTitle">{{ chartTitle }}</h1>
+        <div :ref="myId"></div>
+        <div v-show="noData" class="IHR_no-data">
+            <div class="bg-white">{{ noData }}</div>
+        </div>
     </div>
-  </div>
 </template>
 <script>
-import Plotly from "plotly.js-dist";
+import Plotly from 'plotly.js-dist'
 /*
 emitted events
   plotly-click: propagation of plotly onclick
@@ -17,84 +17,85 @@ emitted events
 */
 
 export default {
-  props: {
-    layout: {
-      type: Object,
-      require: true
+    props: {
+        layout: {
+            type: Object,
+            require: true,
+        },
+        traces: {
+            type: Array,
+            require: true,
+        },
+        chartTitle: {
+            type: String,
+            require: false,
+            default: null,
+        },
+        noData: {
+            require: false,
+            default: false,
+        },
+        yMax: {
+            type: Number,
+            require: false,
+            default: 0,
+        },
     },
-    traces: {
-      type: Array,
-      require: true
+    data() {
+        return {
+            created: false,
+            myId: `ihrReactiveChart${this._uid}`,
+        }
     },
-    chartTitle: {
-      type: String,
-      require: false,
-      default: null
-    },
-    noData: {
-      require: false,
-      default: false
-    },
-    yMax: {
-      type: Number,
-      require: false,
-      default: 0
-    }
-  },
-  data() {
-    return {
-      created: false,
-      myId: `ihrReactiveChart${this._uid}`
-    };
-  },
-  mounted() {
-    var graphDiv = this.$refs[this.myId];
-    Plotly.plot(graphDiv, this.traces, this.layout, {
-      responsive: true,
-      displayModeBar: false
-    });
+    mounted() {
+        var graphDiv = this.$refs[this.myId]
+        Plotly.plot(graphDiv, this.traces, this.layout, {
+            responsive: true,
+            displayModeBar: false,
+        })
 
-    if (document.documentElement.clientWidth < 576) {
-      Plotly.relayout(graphDiv, { showlegend: false });
-    }
+        if (document.documentElement.clientWidth < 576) {
+            Plotly.relayout(graphDiv, { showlegend: false })
+        }
 
-    graphDiv.on("plotly_click", eventData => {
-      this.$emit("plotly-click", eventData);
-    });
+        graphDiv.on('plotly_click', eventData => {
+            this.$emit('plotly-click', eventData)
+        })
 
-    this.created = true;
-  },
-  methods: {
-    react() {
-      if (!this.created) console.error("SHOULD NEVER HAPPEN");
+        this.created = true
+    },
+    methods: {
+        react() {
+            if (!this.created) console.error('SHOULD NEVER HAPPEN')
 
-      if (this.traces == undefined) return;
-      Plotly.react(this.$refs[this.myId], this.traces, this.layout);
-      this.$emit("loaded");
+            if (this.traces == undefined) return
+            console.log('reactive component', this.traces)
+            Plotly.react(this.$refs[this.myId], this.traces, this.layout)
+            this.$emit('loaded')
+        },
+        relayout() {
+            Plotly.relayout(this.$refs[this.myId], {})
+        },
     },
-    relayout() {
-      Plotly.relayout(this.$refs[this.myId], {});
-    }
-  },
-  watch: {
-    traces: {
-      handler: function() {
-        this.react();
-      },
-      deep: true
+    watch: {
+        traces: {
+            handler: function () {
+                this.react()
+            },
+            deep: true,
+        },
+        layout: {
+            handler: function () {
+                this.react()
+            },
+            deep: true,
+        },
+        yMax(newValue) {
+            var graphDiv = this.$refs[this.myId]
+            Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+        },
     },
-    layout: {
-      handler: function() {
-        this.react();
-      },
-      deep: true
-    },
-    yMax(newValue){ 
-        var graphDiv = this.$refs[this.myId];
-        Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-    }
-  }
-};
+}
 </script>
 <style lang="stylus" scoped>
 .IHR_
