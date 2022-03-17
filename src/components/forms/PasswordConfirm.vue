@@ -12,25 +12,19 @@
         :borderlessy="borderlessy"
         :rules="[
           val => $ihrStyle.validatePassword(val) || $t('genericErrors.invalid'),
-          val => val == password2 || $t('genericErrors.notMatchingPassword')
+          val => val == password2 || $t('genericErrors.notMatchingPassword'),
         ]"
         @input="$refs['passwordConfirm'].validate()"
         ref="password"
       >
         <template v-slot:append>
-          <q-icon
-            :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          />
+          <q-icon :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'" class="cursor-pointer" @click="isPwd = !isPwd" />
         </template>
       </q-input>
       <slot></slot>
     </div>
     <div v-show="!readOnly">
-      <label for="passwordConfrim" class="IHR_label">{{
-        $t("passwordConfirm")
-      }}</label>
+      <label for="passwordConfrim" class="IHR_label">{{ $t('passwordConfirm') }}</label>
       <q-input
         v-model="password2"
         name="passwordConfrim"
@@ -39,7 +33,7 @@
         :filled="filled"
         :rules="[
           val => val == password || $t('genericErrors.notMatchingPassword'),
-          val => $ihrStyle.validatePassword(val) || $t('genericErrors.invalid')
+          val => $ihrStyle.validatePassword(val) || $t('genericErrors.invalid'),
         ]"
         @input="$refs['password'].validate()"
         ref="passwordConfirm"
@@ -52,83 +46,83 @@
 const PASSWORD_STATE = {
   INVALID: {
     toString() {
-      return "InvalidPassword";
-    }
+      return 'InvalidPassword'
+    },
   },
   DONT_MATCH: {
     toString() {
-      return "NotMatchingPassword";
-    }
-  }
-};
+      return 'NotMatchingPassword'
+    },
+  },
+}
 
 export default {
   props: {
     value: {
-      required: true
+      required: true,
     },
     readOnly: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     borderlessy: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     filled: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      password: "default password",
-      password2: "",
-      isPwd: true
-    };
+      password: 'default password',
+      password2: '',
+      isPwd: true,
+    }
   },
   methods: {
     resetValidation(value) {
-      this.password = value;
-      this.password2 = "";
-      this.$refs["passwordConfirm"].resetValidation();
-      this.$refs["password"].resetValidation();
+      this.password = value
+      this.password2 = ''
+      this.$refs['passwordConfirm'].resetValidation()
+      this.$refs['password'].resetValidation()
     },
     checkPasswords() {
       if (!this.$ihrStyle.validatePassword(this.password)) {
-        this.$emit("input", PASSWORD_STATE.INVALID);
-        return;
+        this.$emit('input', PASSWORD_STATE.INVALID)
+        return
       }
       if (this.password != this.password2) {
-        this.$emit("input", PASSWORD_STATE.DONT_MATCH);
-        return;
+        this.$emit('input', PASSWORD_STATE.DONT_MATCH)
+        return
       }
-      this.$emit("input", this.password);
+      this.$emit('input', this.password)
     },
     isValid() {
-      return typeof this.value === "string" || this.value instanceof String;
-    }
+      return typeof this.value === 'string' || this.value instanceof String
+    },
   },
   mounted() {
-    this.checkPasswords();
+    this.checkPasswords()
   },
   computed: {
     passwordClass() {
-      return this.readOnly ? "IHR_input-readonly" : "IHR_input-editable";
-    }
+      return this.readOnly ? 'IHR_input-readonly' : 'IHR_input-editable'
+    },
   },
   watch: {
     password() {
-      this.checkPasswords();
+      this.checkPasswords()
     },
     password2() {
-      this.checkPasswords();
-    }
-  }
-};
+      this.checkPasswords()
+    },
+  },
+}
 </script>
 
 <style lang="stylus" scoped>

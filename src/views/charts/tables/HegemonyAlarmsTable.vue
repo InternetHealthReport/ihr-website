@@ -24,8 +24,8 @@
               newWindow({
                 name: 'networks',
                 params: {
-                  asn: $options.filters.ihr_NumberToAsOrIxp(props.row.originasn)
-                }
+                  asn: $options.filters.ihr_NumberToAsOrIxp(props.row.originasn),
+                },
               })
             "
             href="javascript:void(0)"
@@ -37,19 +37,12 @@
           {{ dependenciesBody(props.row.dependencies) }}
         </q-td>
         <q-td key="nbalarms">{{ props.row.nbalarms }}</q-td>
-        <q-td key="avgdev">{{
-          (props.row.cumdev / props.row.nbalarms).toFixed(2)
-        }}</q-td>
+        <q-td key="avgdev">{{ (props.row.cumdev / props.row.nbalarms).toFixed(2) }}</q-td>
       </q-tr>
       <q-tr v-show="props.expand" :props="props">
         <q-td colspan="100%" class="IHR_nohover" bordered>
           <div v-if="props.expand" class="IHR_side_borders">
-            <as-interdependencies-chart
-              :start-time="startTime"
-              :end-time="stopTime"
-              :as-number="props.row.originasn"
-              :fetch="fetch"
-            />
+            <as-interdependencies-chart :start-time="startTime" :end-time="stopTime" :as-number="props.row.originasn" :fetch="fetch" />
           </div>
         </q-td>
       </q-tr>
@@ -58,35 +51,35 @@
 </template>
 
 <script>
-import CommonTableMixin from "./CommonTableMixin.vue";
-import AsInterdependenciesChart from "@/views/charts/AsInterdependenciesChart";
+import CommonTableMixin from './CommonTableMixin.vue'
+import AsInterdependenciesChart from '@/views/charts/AsInterdependenciesChart'
 
 export default {
   mixins: [CommonTableMixin],
   components: {
-    AsInterdependenciesChart
+    AsInterdependenciesChart,
   },
   props: {
     data: {
       type: Array,
-      required: true
+      required: true,
     },
     loading: {
       type: Boolean,
-      required: true
+      required: true,
     },
     startTime: {
       type: Date,
-      required: true
+      required: true,
     },
     stopTime: {
       type: Date,
-      required: true
+      required: true,
     },
     filter: {
       type: String,
-      default: ""
-    }
+      default: '',
+    },
   },
   data() {
     return {
@@ -94,128 +87,122 @@ export default {
       expandedRow: [],
       rows: [],
       pagination: {
-        sortBy: "nbalarms",
+        sortBy: 'nbalarms',
         descending: true,
         page: 1,
-        rowsPerPage: 5
+        rowsPerPage: 5,
       },
       columns: [
         {
-          name: "overview",
-          label: "Overview",
-          align: "center"
+          name: 'overview',
+          label: 'Overview',
+          align: 'center',
         },
         {
-          name: "originasn",
+          name: 'originasn',
           required: true,
-          label: "Origin AS",
-          align: "left",
+          label: 'Origin AS',
+          align: 'left',
           field: row => row.originasn,
           format: val => this.$options.filters.ihr_NumberToAsOrIxp(val),
-          sortable: true
+          sortable: true,
         },
         {
-          name: "dependencies",
+          name: 'dependencies',
           required: false,
-          label: "Anomalous Dependencies",
-          align: "left",
+          label: 'Anomalous Dependencies',
+          align: 'left',
           field: row => row.dependencies,
           format: val => this.$options.filters.sortedKeys(val),
-          sortable: false
+          sortable: false,
         },
         {
-          name: "nbalarms",
+          name: 'nbalarms',
           required: true,
-          label: "Nb. Alarms",
-          align: "left",
+          label: 'Nb. Alarms',
+          align: 'left',
           field: row => row.nbalarms,
           format: val => val,
-          sortable: true
+          sortable: true,
         },
         {
-          name: "avgdev",
+          name: 'avgdev',
           required: true,
-          label: "Average Deviation",
-          align: "left",
+          label: 'Average Deviation',
+          align: 'left',
           field: row => row.cumdev / row.nbalarms,
           format: val => val.toFixed(2),
-          sortable: true
-        }
-      ]
-    };
+          sortable: true,
+        },
+      ],
+    }
   },
   mounted() {
-    this.computeDataSummary();
+    this.computeDataSummary()
   },
   methods: {
     computeDataSummary() {
-      if (!this.data.length) return;
+      if (!this.data.length) return
 
-      var datasum = {};
+      var datasum = {}
       this.data.forEach(alarm => {
-        var originasn = alarm.originasn;
+        var originasn = alarm.originasn
         if (originasn != 0) {
           if (originasn in datasum) {
-            datasum[originasn].nbalarms += 1;
-            datasum[originasn].cumdev += alarm.deviation;
+            datasum[originasn].nbalarms += 1
+            datasum[originasn].cumdev += alarm.deviation
           } else {
             datasum[originasn] = {
               originasn: originasn,
               nbalarms: 1,
               cumdev: alarm.deviation,
-              dependencies: {}
-            };
+              dependencies: {},
+            }
           }
 
           // Add destination
           if (alarm.asn in datasum[originasn].dependencies) {
-            datasum[originasn].dependencies[alarm.asn] += alarm.deviation;
+            datasum[originasn].dependencies[alarm.asn] += alarm.deviation
           } else {
-            datasum[originasn].dependencies[alarm.asn] = alarm.deviation;
+            datasum[originasn].dependencies[alarm.asn] = alarm.deviation
           }
         }
-      });
+      })
 
       // Select the AS with the largest number of alarms
-      const values = Object.values(datasum);
-      var first_row = values.reduce((prev, current) =>
-        prev.nbalarms > current.nbalarms ? prev : current
-      );
-      this.selectedRow = [first_row];
+      const values = Object.values(datasum)
+      var first_row = values.reduce((prev, current) => (prev.nbalarms > current.nbalarms ? prev : current))
+      this.selectedRow = [first_row]
 
-      this.rows = values;
+      this.rows = values
     },
     dependenciesSubtitle(val) {
-      return (
-        String(Object.keys(val).length) +
-        " " +
-        this.$t("charts.hegemonyAlarms.table.dependencies")
-      );
+      return String(Object.keys(val).length) + ' ' + this.$t('charts.hegemonyAlarms.table.dependencies')
     },
     dependenciesBody(val) {
-      var body = "";
-      var sortedVal = this.$options.filters.sortedKeys(val);
+      var body = ''
+      var sortedVal = this.$options.filters.sortedKeys(val)
       sortedVal.forEach(dest => {
-        body += this.$options.filters.ihr_NumberToAsOrIxp(dest) + ", ";
-      });
+        body += this.$options.filters.ihr_NumberToAsOrIxp(dest) + ', '
+      })
 
       //Remove the last comma
-      body = body.substring(0, body.length - 2);
-      return body;
+      body = body.substring(0, body.length - 2)
+      return body
     },
     nbAlarmsDisplayed(val) {
-      this.$emit("nbAlarmsDisplayed", val);
-    }
+      this.$emit('nbAlarmsDisplayed', val)
+    },
   },
   watch: {
     data() {
-      this.computeDataSummary();
+      this.computeDataSummary()
     },
     filter(newValue) {
-      this.filterTable = newValue;
-    }
-  }
-};
+      this.filterTable = newValue
+    },
+  },
+}
 </script>
 <style lang="stylus">
 .IHR_nohover

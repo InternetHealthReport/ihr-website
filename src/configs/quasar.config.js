@@ -1,8 +1,8 @@
-import Vue from "vue";
+import Vue from 'vue'
 
-import "swagger-ui/dist/swagger-ui.css";
-import "@/styles/quasar.styl";
-import "quasar/dist/quasar.ie.polyfills";
+import 'swagger-ui/dist/swagger-ui.css'
+import '@/styles/quasar.styl'
+import 'quasar/dist/quasar.ie.polyfills'
 import {
   Quasar,
   QLayout,
@@ -61,8 +61,8 @@ import {
   ClosePopup,
   Ripple,
   //plugins
-  Notify
-} from "quasar";
+  Notify,
+} from 'quasar'
 
 Vue.use(Quasar, {
   components: {
@@ -116,8 +116,8 @@ Vue.use(Quasar, {
     QToggle,
     QInnerLoading,
     QSpinnerGears,
-    QBtnToggle
+    QBtnToggle,
   },
   directives: { ClosePopup, Ripple },
   plugins: { Notify },
-});
+})

@@ -5,9 +5,7 @@
         <h1>Feedback</h1>
         <p class="IHR_description">
           Please submit bug reports and feature requests on Github:
-          <a
-            href="https://github.com/InternetHealthReport/ihr-website/issues"
-            target="_blank"
+          <a href="https://github.com/InternetHealthReport/ihr-website/issues" target="_blank"
             >https://github.com/InternetHealthReport/ihr-website/issues</a
           >
         </p>
@@ -21,7 +19,7 @@
     <div
       class="IHR_background"
       :style="{
-        backgroundImage: 'url(' + require('@/assets/imgs/ihr_logo.svg') + ')'
+        backgroundImage: 'url(' + require('@/assets/imgs/ihr_logo.svg') + ')',
       }"
     ></div>
   </div>
@@ -30,9 +28,9 @@
 export default {
   components: {},
   data() {
-    return {};
-  }
-};
+    return {}
+  },
+}
 </script>
 
 <style lang="stylus">

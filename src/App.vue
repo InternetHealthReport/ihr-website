@@ -9,19 +9,19 @@
   </q-layout>
 </template>
 <script>
-import languages from "quasar/lang/index.json";
-import routerBase from "@/router";
+import languages from 'quasar/lang/index.json'
+import routerBase from '@/router'
 
 // subset of router, see router.js
 export default {
-  name: "Default",
+  name: 'Default',
   components: {},
   data() {
     return {
-      text: ""
-    };
-  }
-};
+      text: '',
+    }
+  },
+}
 </script>
 <style lang="stylus">
 @import '~quasar-variables';

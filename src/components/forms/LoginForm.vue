@@ -6,10 +6,7 @@
           v-model="email"
           label="email"
           type="email"
-          :rules="[
-            val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail'),
-            externalError
-          ]"
+          :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail'), externalError]"
           @input="$emit('input', false)"
           ref="email"
         >
@@ -22,19 +19,12 @@
           v-model="password"
           label="password"
           :type="isPwd ? 'password' : 'text'"
-          :rules="[
-            val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword'),
-            externalError
-          ]"
+          :rules="[val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword'), externalError]"
           ref="password"
           @input="$emit('input', false)"
         >
           <template v-slot:append>
-            <q-icon
-              :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'"
-              class="cursor-pointer"
-              @click="isPwd = !isPwd"
-            />
+            <q-icon :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'" class="cursor-pointer" @click="isPwd = !isPwd" />
           </template>
         </q-input>
       </q-item-section>
@@ -50,7 +40,7 @@
 <script>
 class MalformedInput extends Error {
   constructor(message) {
-    super(message);
+    super(message)
   }
 }
 
@@ -58,43 +48,41 @@ export default {
   props: {
     value: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      email: "",
-      password: "",
-      isPwd: true
-    };
+      email: '',
+      password: '',
+      isPwd: true,
+    }
   },
   methods: {
     externalError(val) {
-      return !this.value || this.$t("forms.loginUnsuccessful");
-    }
+      return !this.value || this.$t('forms.loginUnsuccessful')
+    },
   },
   computed: {
     hasDefaultSlot() {
-      return !!this.$slots.default || !!this.$scopedSlots;
+      return !!this.$slots.default || !!this.$scopedSlots
     },
     validEmailOrNull() {
-      return this.$ihrStyle.validateEmail(this.email) ? this.email : null;
+      return this.$ihrStyle.validateEmail(this.email) ? this.email : null
     },
     validPasswordOrNull() {
-      return this.$ihrStyle.validatePassword(this.password)
-        ? this.password
-        : null;
-    }
+      return this.$ihrStyle.validatePassword(this.password) ? this.password : null
+    },
   },
   watch: {
     value(oldValue, newValue) {
-      this.$refs.email.validate(this.email);
-      this.$refs.password.validate(this.password);
-    }
-  }
-};
+      this.$refs.email.validate(this.email)
+      this.$refs.password.validate(this.password)
+    },
+  },
+}
 
-export { MalformedInput };
+export { MalformedInput }
 </script>
 
 <style lang="stylus">

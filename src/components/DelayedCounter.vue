@@ -6,69 +6,65 @@
     <div class="DC_counter row justify-around items-center">
       <span class="col-grow vertical-middle">{{ counter }}</span>
       <span class="col-1 DC_icon">&nbsp;</span>
-      <span class="col-4 DC_icon" v-resize-text="{ ratio: 0.23 }"
-        ><q-icon :name="icon"
-      /></span>
+      <span class="col-4 DC_icon" v-resize-text="{ ratio: 0.23 }"><q-icon :name="icon" /></span>
     </div>
   </div>
 </template>
 
 <script>
-import ResizeText from "vue-resize-text";
+import ResizeText from 'vue-resize-text'
 
-const animationDuration = 500; // magick number
+const animationDuration = 500 // magick number
 
 export default {
   directives: {
-    ResizeText
+    ResizeText,
   },
   props: {
     label: {
-      type: String
+      type: String,
     },
     incon: {
       type: String,
-      required: true
+      required: true,
     },
     value: {
       type: Number,
       require: true,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
-      counter: "--",
+      counter: '--',
       intervalHandler: null,
-      icon: this.incon
-    };
+      icon: this.incon,
+    }
   },
   watch: {
     value(newValue, oldValue) {
       //start from 0 if first call
-      if (this.counter == "--") this.counter = 0;
+      if (this.counter == '--') this.counter = 0
 
       //clear previouse cals
-      if (this.intervalHandler != null) clearInterval(this.intervalHandler);
+      if (this.intervalHandler != null) clearInterval(this.intervalHandler)
 
       //set the interval and the increment to fit animation duration
-      let timeInterval = Math.ceil(
-        animationDuration / Math.abs(newValue - this.counter)
-      );
+      let timeInterval = Math.ceil(animationDuration / Math.abs(newValue - this.counter))
       //if it can fit 500ms increment will be one otherwise will be more
-      let increment = Math.ceil((newValue - this.counter) / animationDuration);
+      let increment = Math.ceil((newValue - this.counter) / animationDuration)
       this.intervalHandler = setInterval(() => {
-        this.counter += increment;
+        this.counter += increment
         // stop interval and ensure no overflow
         if (this.counter >= newValue) {
-          clearInterval(this.intervalHandler);
-          this.counter = newValue;
+          clearInterval(this.intervalHandler)
+          this.counter = newValue
         }
-      }, timeInterval);
-    }
+      }, timeInterval)
+    },
   },
-  mounted() {}
-};
+  mounted() {},
+}
 </script>
 
 <style lang="stylus">
