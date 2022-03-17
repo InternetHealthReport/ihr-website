@@ -189,15 +189,14 @@
 </template>
 
 <script>
-import CommonTableMixin from './CommonTableMixin';
-
+import CommonTableMixin from './CommonTableMixin'
 export default {
   mixins: [CommonTableMixin],
   props: {
     showCountry: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   data() {
     return {
@@ -302,24 +301,26 @@ export default {
       })
     },
     getClassByHegemony(hegemony) {
-      if (hegemony >= 25) return 'IHR_color-deviation-high-threshold';
-      if (hegemony >= 10) return 'IHR_color-deviation-mid-threshold';
-      return '';
+      if (hegemony >= 25) return 'IHR_color-deviation-high-threshold'
+      if (hegemony >= 10) return 'IHR_color-deviation-mid-threshold'
+      return ''
     },
     visibleColumns() {
-      let vcolumns = [];
+      let vcolumns = []
       this.columns.forEach(elem => {
-        if (elem.name != 'country' | this.showCountry){ vcolumns.push(elem.name)}
-      }
-      return vcolumns;
+        if ((elem.name != 'country') | this.showCountry) {
+          vcolumns.push(elem.name)
+        }
+      })
+      return vcolumns
     },
     sorted(obj) {
       return Object.values(obj).sort((a, b) => b.hege - a.hege)
     },
     simpleDependenciesFormat(val) {
-      var txt = '';
-      for ( const dep in this.sorted(val) ){ 
-        txt += dep.asn;
+      var txt = ''
+      for (const dep in this.sorted(val)) {
+        txt += dep.asn
       }
       return txt
     },
@@ -327,7 +328,6 @@ export default {
 }
 </script>
 <style lang="stylus">
-
 .comma:not(:empty) ~ .comma:not(:empty):before
   content ", ";
 </style>
