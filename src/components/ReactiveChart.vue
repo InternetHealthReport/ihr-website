@@ -51,16 +51,16 @@ export default {
     this.layout["images"] = [
       {
         x: 1,
-        y: 1,
-        sizex: 0.2,
-        sizey: 0.2,
+        y: 1.05,
+        sizex: 0.1,
+        sizey: 0.1,
         source:
-          "https://res.cloudinary.com/dguy8qpzi/image/upload/v1647356622/ihr_logo_xhsyh9.png",
+          require("@/assets/imgs/ihr_logo.png"),
         xanchor: "right",
         xref: "paper",
         yanchor: "bottom",
         yref: "paper",
-        opacity: 0.7,
+        opacity: 0.2,
       },
     ];
   },
@@ -68,7 +68,7 @@ export default {
     var graphDiv = this.$refs[this.myId];
     Plotly.plot(graphDiv, this.traces, this.layout, {
       responsive: true,
-      displayModeBar: false,
+      displayModeBar: 'hover',
     });
 
     if (document.documentElement.clientWidth < 576) {
