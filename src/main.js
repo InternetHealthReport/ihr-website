@@ -1,7 +1,7 @@
 import Vue from "vue";
+import "@/configs/quasar.config";
 import App from "@/App.vue";
 import router from "@/router";
-import "@/configs/quasar";
 import VueResizeText from "vue-resize-text";
 import i18n from "@/locales/i18n";
 import { IhrApi } from "@/plugins/IhrApi";

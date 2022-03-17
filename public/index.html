@@ -1,81 +1,165 @@
 <!DOCTYPE html>
 <html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="icon" href="<%= BASE_URL %>favicon-16x16.png" />
+    <title>Internet Health Report</title>
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5"
+    />
+    <meta
+      name="keywords"
+      content="Internet,Health,Report,Organization,Open Source, GSoC,Global,Network,Infrastructure"
+    />
+    <meta
+      name="title"
+      content="Internet Health Report | Monitoring networks health"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ihr.iijlab.net/ihr/en-us/" />
+    <meta property="og:site_name" content="Internet Health Report" />
+    <meta
+      property="og:title"
+      content="Internet Health Report | Monitoring networks health"
+    />
+    <meta
+      name="description"
+      content="The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution."
+    />
+    <meta
+      property="twitter:card"
+      content="The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution."
+    />
+    <meta
+      property="twitter:image"
+      content="https://pbs.twimg.com/profile_images/1204608469728235522/qmOjAG8s_400x400.jpg"
+    />
+    <meta property="twitter:url" content="https://twitter.com/ihr_alerts" />
+    <meta
+      property="twitter:title"
+      content="Internet Health Report | Monitoring networks health"
+    />
+    <meta
+      property="twitter:description"
+      content=" The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution."
+    />
+    <meta name="color-schema" content="light" />
+    <meta name="theme-color" content="#ffffff" />
+    <base href="/" />
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "Organization",
+        "name": "Internet Health Report",
+        "url": "https://ihr.iijlab.net/ihr/en-us/",
+        "sameAs": [
+          "https://twitter.com/ihr_alerts",
+          "https://github.com/InternetHealthReport"
+        ]
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
+    <link href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" rel="stylesheet" type="text/css">
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <link rel="icon" href="<%= BASE_URL %>favicon-16x16.png">
-  <title>Internet Health Report</title>
-</head>
-
-<body bgcolor="#FFFFFF">
-  <noscript>
-    <strong>We're sorry but Internet Health Report doesn't work properly without JavaScript enabled. Please enable it to
-      continue.</strong>
-  </noscript>
-  <div id="app">
+  <body bgcolor="#FFFFFF">
+    <noscript>
+      <strong
+        >We're sorry but Internet Health Report doesn't work properly without
+        JavaScript enabled. Please enable it to continue.</strong
+      >
+    </noscript>
+    <div id="app">
       <div id="loading-wrapper">
         <div id="loading-content">
-            <img class="blink-image" src="https://avatars1.githubusercontent.com/u/40665700?s=200&v=4">
+          <img
+            class="blink-image"
+            src="https://avatars1.githubusercontent.com/u/40665700?s=200&v=4"
+          />
         </div>
         <div id="loading-text">Loading...</div>
       </div>
-  </div>
-  <!-- built files will be auto injected -->
-  <style>
-  #loading-wrapper {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    text-align: center;
-  }
+    </div>
+    <!-- built files will be auto injected -->
+    <style>
+      #loading-wrapper {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        text-align: center;
+      }
 
-  #loading-text {
-    width: 150px;
-    height: 30px;
-    text-align: center;
-    font-size: 20px;
-    margin: 20px 0 0 -75px;
-  }
+      #loading-text {
+        width: 150px;
+        height: 30px;
+        text-align: center;
+        font-size: 20px;
+        margin: 20px 0 0 -75px;
+      }
 
-  #loading-content {
-    text-align: center;
-    margin: -50px 0 0 -75px;
-  }
+      #loading-content {
+        text-align: center;
+        margin: -50px 0 0 -75px;
+      }
 
-/* Firefox old*/
-@-moz-keyframes blink {
-    0% { opacity:1; }
-    50% { opacity:0.1; }
-    100% { opacity:1; }
-} 
+      /* Firefox old*/
+      @-moz-keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
 
-@-webkit-keyframes blink {
-    0% { opacity:1; }
-    50% { opacity:0.1; }
-    100% { opacity:1; }
-}
-/* IE */
-@-ms-keyframes blink {
-    0% { opacity:1; }
-    50% { opacity:0.1; }
-    100% { opacity:1; }
-} 
-/* Opera and prob css3 final iteration */
-@keyframes blink {
-    0% { opacity:1; }
-    50% { opacity:0.1; }
-    100% { opacity:1; }
-} 
-.blink-image {
-    -moz-animation: blink normal 2s infinite ease-in-out; /* Firefox */
-    -webkit-animation: blink normal 2s infinite ease-in-out; /* Webkit */
-    -ms-animation: blink normal 2s infinite ease-in-out; /* IE */
-    animation: blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
-    width: 100px;
-    height: 100px;
-}
+      @-webkit-keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      /* IE */
+      @-ms-keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      /* Opera and prob css3 final iteration */
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      .blink-image {
+        -moz-animation: blink normal 2s infinite ease-in-out; /* Firefox */
+        -webkit-animation: blink normal 2s infinite ease-in-out; /* Webkit */
+        -ms-animation: blink normal 2s infinite ease-in-out; /* IE */
+        animation: blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
+        width: 100px;
+        height: 100px;
+      }
     </style>
-</body>
+  </body>
 </html>
