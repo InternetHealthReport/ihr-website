@@ -104,6 +104,8 @@ const DEFAULT_TRACE = [
     },
 ]
 
+const timeResolution = 900 * 1000
+
 export default {
     mixins: [CommonChartMixin],
     components: {
@@ -308,12 +310,17 @@ export default {
         },
         fetchHegemony(data) {
             console.log('fetchHegemony')
-            console.log('traces', this.traces)
             let traces = {}
-            let timeResolution = 900 * 1000
+            let missingDataList = []
+
+            let anotherAsn
+            let minX, maxX
+
             data.forEach(elem => {
                 if (elem.asn == this.asNumber) return
                 let trace = traces[elem.asn]
+
+                if (anotherAsn === undefined) anotherAsn = elem.asn
                 if (trace === undefined) {
                     trace = {
                         x: [],
@@ -336,11 +343,29 @@ export default {
                     this.traces.push(trace)
                 }
 
+                if (!minX) {
+                    minX = Date.parse(elem.timebin).getTime()
+                    maxX = Date.parse(elem.timebin).getTime()
+                } else {
+                    minX = Math.min(minX, Date.parse(elem.timebin).getTime())
+                    maxX = Math.max(maxX, Date.parse(elem.timebin).getTime())
+                }
+
                 // Add null if there is missing data
                 let prevDate = Date.parse(trace.x.slice(-1)[0])
                 let currDate = Date.parse(elem.timebin)
 
+                // let prevDateSeconds = prevDate && prevDate.getTime()
+                // console.log(prevDate, prevDateSeconds, prevDate)
+
                 if (prevDate && currDate.getTime() > prevDate.getTime() + timeResolution + 1) {
+                    if (anotherAsn === elem.asn) {
+                        missingDataList.push({
+                            start: trace.x.slice(-1)[0],
+                            end: elem.timebin,
+                        })
+                    }
+
                     trace.y.push(null)
                     trace.x.push('nodate')
                 }
@@ -350,6 +375,87 @@ export default {
             this.noData |= Object.keys(traces).length == 0
             this.layout.datarevision = new Date().getTime()
 
+            console.log('md', missingDataList)
+
+            let shapeList = []
+
+            missingDataList.forEach(interval => {
+                shapeList.push({
+                    type: 'rect',
+                    xref: 'x',
+                    yref: 'paper',
+                    x0: interval.start,
+                    y0: 0,
+                    x1: interval.end,
+                    y1: 1,
+                    fillcolor: '#d3d3d3',
+                    opacity: 0.2,
+                    line: {
+                        width: 0,
+                    },
+                })
+                let prevDate = Date.parse(interval.start).getTime()
+                let currDate = Date.parse(interval.end).getTime()
+                let x = (currDate - prevDate) / 2
+                let d = new Date(x + prevDate)
+
+                const noDataTrace = {
+                    mode: 'text',
+                    text: ['no data'],
+                    x: [d.toISOString()],
+                    y: [15],
+                }
+                this.traces.push(noDataTrace)
+            })
+
+            this.layout['shapes'] = shapeList
+
+            console.log('maxX', new Date(maxX).toISOString())
+            let maxXIso = new Date(maxX).toISOString().split('.')[0] + 'Z'
+            let minXIso = new Date(minX).toISOString().split('.')[0] + 'Z'
+
+            // const patchList = {}
+
+            for (let i = 1; i < this.traces.length; i++) {
+                let currentTrace = this.traces[i]
+                let lastDate = currentTrace.x.slice(-1)[0]
+                let firstDate = currentTrace.x[0]
+                let lastDateMilliSeconds = Date.parse(lastDate).getTime()
+                let firstDateMilliSeconds = Date.parse(firstDate).getTime()
+
+                if (lastDate !== maxXIso) {
+                    let noOfPointsToAdd
+                    let interval = maxX - Date.parse(currentTrace.x.slice(-1)[0]).getTime()
+                    noOfPointsToAdd = interval / timeResolution
+                    console.log('pts', interval / timeResolution)
+                    for (let j = 1; j <= noOfPointsToAdd; j++) {
+                        lastDateMilliSeconds += timeResolution
+                        let d = new Date(lastDateMilliSeconds).toISOString().split('.')[0] + 'Z'
+                        this.traces[i].x.push(d)
+                        this.traces[i].y.push(0)
+                    }
+                    console.log('lin traces', this.traces[i])
+                }
+
+                if (firstDate !== minXIso) {
+                    console.log('front defect', firstDate, minXIso)
+                    //         let noOfPointsToAdd
+                    //         let interval = Date.parse(currentTrace.x.slice(-1)[0]).getTime() - minX
+                    //         noOfPointsToAdd = interval / timeResolution
+                    //         const tempX = []
+                    //         const tempY = []
+                    //         for (let j = 1; j <= noOfPointsToAdd; j++) {
+                    //             firstDateMilliSeconds -= timeResolution
+                    //             let d = new Date(firstDateMilliSeconds).toISOString().split('.')[0] + 'Z'
+                    //             tempX.push(d)
+                    //             tempY.push(0)
+                    //         }
+                    //         tempX.reverse()
+                    //         this.traces[i].x = tempX.concat(this.traces[i].x)
+                    //         this.traces[i].y = tempY.concat(this.traces[i].y)
+                }
+            }
+
             console.log(this.traces)
             console.log(traces)
         },
@@ -357,6 +463,14 @@ export default {
             console.log('fetchHegemonyCone')
             let trace = this.traces[0]
             data.forEach(resp => {
+                let prevDate = Date.parse(trace.x.slice(-1)[0])
+                let currDate = Date.parse(resp.timebin)
+
+                if (prevDate && currDate.getTime() > prevDate.getTime() + timeResolution + 1) {
+                    trace.y.push(null)
+                    trace.x.push('nodate')
+                }
+
                 trace.y.push(resp.conesize)
                 trace.x.push(resp.timebin)
             })
