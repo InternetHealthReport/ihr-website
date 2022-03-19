@@ -79,7 +79,6 @@
             :options="{
               chrome: 'noheader',
               tweetLimit: '3',
-              showReplies: true
             }"
           >
             <div class="spinner"></div>
