@@ -375,7 +375,7 @@ export default {
             this.noData |= Object.keys(traces).length == 0
             this.layout.datarevision = new Date().getTime()
 
-            console.log('md', missingDataList)
+            // console.log('md', missingDataList)
 
             let shapeList = []
 
@@ -410,16 +410,17 @@ export default {
 
             this.layout['shapes'] = shapeList
 
-            console.log('maxX', new Date(maxX).toISOString())
+            // console.log('maxX', new Date(maxX).toISOString())
             let maxXIso = new Date(maxX).toISOString().split('.')[0] + 'Z'
             let minXIso = new Date(minX).toISOString().split('.')[0] + 'Z'
-
-            // const patchList = {}
+            // console.log(minXIso, maxXIso)
 
             for (let i = 1; i < this.traces.length; i++) {
+                if (this.traces[i].mode && this.traces[i].mode === 'text') continue
                 let currentTrace = this.traces[i]
                 let lastDate = currentTrace.x.slice(-1)[0]
                 let firstDate = currentTrace.x[0]
+                console.log('first date, last date', firstDate, lastDate)
                 let lastDateMilliSeconds = Date.parse(lastDate).getTime()
                 let firstDateMilliSeconds = Date.parse(firstDate).getTime()
 
@@ -427,37 +428,64 @@ export default {
                     let noOfPointsToAdd
                     let interval = maxX - Date.parse(currentTrace.x.slice(-1)[0]).getTime()
                     noOfPointsToAdd = interval / timeResolution
-                    console.log('pts', interval / timeResolution)
+                    // console.log('pts', interval / timeResolution)
                     for (let j = 1; j <= noOfPointsToAdd; j++) {
                         lastDateMilliSeconds += timeResolution
+                        let skip = false
+                        for (let k = 0; k < missingDataList.length; k++) {
+                            if (
+                                lastDateMilliSeconds > Date.parse(missingDataList[k].start).getTime() &&
+                                lastDateMilliSeconds < Date.parse(missingDataList[k].end).getTime()
+                            ) {
+                                skip = true
+                                break
+                            }
+                        }
+
+                        if (skip) continue
                         let d = new Date(lastDateMilliSeconds).toISOString().split('.')[0] + 'Z'
                         this.traces[i].x.push(d)
                         this.traces[i].y.push(0)
                     }
-                    console.log('lin traces', this.traces[i])
+                    // console.log('lin traces', this.traces[i])
                 }
 
                 if (firstDate !== minXIso) {
-                    console.log('front defect', firstDate, minXIso)
-                    //         let noOfPointsToAdd
-                    //         let interval = Date.parse(currentTrace.x.slice(-1)[0]).getTime() - minX
-                    //         noOfPointsToAdd = interval / timeResolution
-                    //         const tempX = []
-                    //         const tempY = []
-                    //         for (let j = 1; j <= noOfPointsToAdd; j++) {
-                    //             firstDateMilliSeconds -= timeResolution
-                    //             let d = new Date(firstDateMilliSeconds).toISOString().split('.')[0] + 'Z'
-                    //             tempX.push(d)
-                    //             tempY.push(0)
-                    //         }
-                    //         tempX.reverse()
-                    //         this.traces[i].x = tempX.concat(this.traces[i].x)
-                    //         this.traces[i].y = tempY.concat(this.traces[i].y)
+                    console.log('front defect', firstDate, this.traces[i], minXIso)
+                    let noOfPointsToAdd
+                    let interval = Date.parse(currentTrace.x[0]).getTime() - minX
+                    noOfPointsToAdd = interval / timeResolution
+                    console.log('npad', noOfPointsToAdd)
+
+                    const tempX = []
+                    const tempY = []
+                    for (let j = 1; j <= noOfPointsToAdd; j++) {
+                        firstDateMilliSeconds -= timeResolution
+                        let skip = false
+                        for (let k = 0; k < missingDataList.length; k++) {
+                            if (
+                                firstDateMilliSeconds > Date.parse(missingDataList[k].start).getTime() &&
+                                firstDateMilliSeconds < Date.parse(missingDataList[k].end).getTime()
+                            ) {
+                                skip = true
+                                break
+                            }
+                        }
+
+                        if (skip) continue
+                        let d = new Date(firstDateMilliSeconds).toISOString().split('.')[0] + 'Z'
+                        tempX.push(d)
+                        tempY.push(0)
+                    }
+                    tempX.reverse()
+                    // console.log('tempx tempy', tempX, tempY)
+                    this.traces[i].x = tempX.concat(this.traces[i].x)
+                    this.traces[i].y = tempY.concat(this.traces[i].y)
                 }
             }
 
-            console.log(this.traces)
-            console.log(traces)
+            // console.log(this.traces)
+            // console.log(traces)
         },
         fetchHegemonyCone(data) {
             console.log('fetchHegemonyCone')
