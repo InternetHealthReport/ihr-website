@@ -214,7 +214,7 @@ const IhrApi = {
          *      as parameter.
          */
         _generic: function (endpoint, method, query, successCallback, errorCallback) {
-          if (QueryBase.isPrototypeOf(query.constructor)) {
+          if (Object.prototype.isPrototypeOf.call(QueryBase, query.constructor)) {
             console.log('call to:', query, query.toString())
             console.log('query url:', this.getUrl(query))
             let resolvePagination = query.resolvePagination

@@ -26,6 +26,7 @@
 </template>
 <script>
 export default {
+  name: 'ContactView',
   components: {},
   data() {
     return {}

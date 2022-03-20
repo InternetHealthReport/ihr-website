@@ -93,7 +93,7 @@ const simple_menu = [
 
 // subset of router, see router.js
 export default {
-  name: 'Default',
+  name: 'AppHeader',
   components: {
     NetworkSearchBar,
   },

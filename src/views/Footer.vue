@@ -112,6 +112,12 @@
   </q-footer>
 </template>
 
+<script>
+export default {
+  name: 'AppFooter',
+}
+</script>
+
 <style lang="stylus">
 @import '~quasar-variables';
 

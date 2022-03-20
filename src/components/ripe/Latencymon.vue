@@ -1,8 +1,10 @@
 <template>
   <div class="IHR_nowrap" :id="myId"></div>
 </template>
+
 <script>
 export default {
+  name: 'LatencyMon',
   props: {
     startTime: {
       type: Date,
@@ -40,7 +42,6 @@ export default {
         })
       }
 
-      var lm = null
       try {
         //see https://atlas.ripe.net/docs/tools-latencymon/ for more options and details
         this.lm = initLatencymon(

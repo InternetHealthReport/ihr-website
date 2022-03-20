@@ -1,11 +1,10 @@
 <template>
   <div :id="myId"></div>
 </template>
-<script>
-const MESUREMENTS = [5014]
-const BOUNDARY_OFFSET = 1800 // half an hour
 
+<script>
 export default {
+  name: 'TraceMon',
   props: {
     startTime: {
       type: Date,

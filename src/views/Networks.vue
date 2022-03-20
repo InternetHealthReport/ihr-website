@@ -204,6 +204,7 @@ const LOADING_STATUS = {
 const CHART_REFS = ['asInterdependenciesChart', 'prefixHegemonyChart', 'networkDelayChart', 'delayAndForwardingChart', 'ihrChartDisco']
 
 export default {
+  name: 'NetworkReport',
   mixins: [reportMixin],
   components: {
     AsInterdependenciesChart,

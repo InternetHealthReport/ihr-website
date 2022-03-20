@@ -9,12 +9,13 @@
 import SwaggerUI, { presets } from 'swagger-ui'
 
 export default {
+  name: 'ApiView',
   components: {},
   data() {
     return {}
   },
   mounted: function () {
-    const ui = SwaggerUI({
+    SwaggerUI({
       url: 'https://ihr.iijlab.net/ihr/api/swagger.yaml?1234',
       dom_id: '#swagger-ui',
       layout: 'BaseLayout',

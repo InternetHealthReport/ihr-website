@@ -134,6 +134,7 @@ const PLACEHOLDER_VALUES = {
 }
 
 export default {
+  name: 'HomeView',
   components: {
     Timeline,
   },

@@ -11,7 +11,7 @@
 <script>
 // subset of router, see router.js
 export default {
-  name: 'Default',
+  name: 'App',
   components: {},
   data() {
     return {

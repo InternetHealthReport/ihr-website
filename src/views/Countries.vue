@@ -162,6 +162,7 @@ const LOADING_STATUS = {
 const CHART_REFS = ['countryHegemonyChart', 'prefixHegemonyChart', 'networkDelayChart', 'delayAndForwardingChart', 'ihrChartDisco']
 
 export default {
+  name: 'CountryReport',
   mixins: [reportMixin],
   components: {
     CountryHegemonyChart,

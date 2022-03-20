@@ -53,7 +53,7 @@
             </h3>
           </div>
         </div>
-        <div v-for="asn in asns">
+        <div v-for="asn in asns" :key="`${arn.name}-${asn.as}`">
           <div class="row">
             <div class="col-12 text-center q-pa-md">
               <div class="IHR_anchor" :id="asn.as"></div>
@@ -123,6 +123,7 @@ import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import lockdowns from '@/plugins/covid19/lockdowns'
 
 export default {
+  name: 'CoronaReport',
   mixins: [reportMixin],
   components: {
     NetworkDelayChart,

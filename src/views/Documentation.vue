@@ -190,6 +190,7 @@
 
 <script>
 export default {
+  name: 'DocumentationView',
   props: {
     showSidebar: {
       type: Boolean,
