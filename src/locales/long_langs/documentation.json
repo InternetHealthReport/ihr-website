@@ -45,7 +45,7 @@
                         },
                         {
                             "header": "<div class='IHR_anchor' id='faq_no_ixp'></div>Why is there no IXP in the AS dependency results?",
-                            "body": "AS dependency is computed from BGP data and IXP are usually no visible in BGP paths. Thus we currently cannot infer dependency to IXPs. This issue could be addressed by analyzing traceroutes insteaad of BGP's AS paths, let us know if it is something you really would like to see, we also welcome <a href='#faq_contribution'> contributions from anyone</a>. "
+                            "body": "AS dependency is computed from BGP data and IXP are usually not visible in BGP paths. Thus we currently cannot infer dependency to IXPs. This issue could be addressed by analyzing traceroutes instead of BGP's AS paths, let us know if it is something you really would like to see, we also welcome <a href='#faq_contribution'> contributions from anyone</a>. "
                         },
                         {
                             "header": "<div class='IHR_anchor' id='faq_ixp_numbers'></div>What are the numbers assigned to IXPs?",
@@ -97,7 +97,7 @@
                 },
                 "globalreport": {
                     "title": "Global report",
-                    "summary": " The general report is a summary of alarms detected accross all networks monitored by IHR. This report is specifically designed to provide an overview of the overall conditions of the Internet at a particular point in time. Anomalous metrics are visible via the overview switches or by following links to the corresponding network reports. In order to limit the amount of displayed data, the general report shows only the most prominent alarms. Smaller alarms might be visible only on network reports. ",
+                    "summary": " The general report is a summary of alarms detected across all networks monitored by IHR. This report is specifically designed to provide an overview of the overall conditions of the Internet at a particular point in time. Anomalous metrics are visible via the overview switches or by following links to the corresponding network reports. In order to limit the amount of displayed data, the general report shows only the most prominent alarms. Smaller alarms might be visible only on network reports. ",
                     "description": []
                 },
                 "networkreport": {
@@ -116,12 +116,13 @@
                     "description": [
                         {
                             "header": "What is AS dependency?",
-                            "body": " Networks connected to the Internet rely on other networks (a.k.a ASes) to transmit data. Consequently, the connectivity of a network depend on the connectivity of other networks.  AS hegemony is a metric to evaluate these AS-interdependences based on BGP data.  See our research report for more details: <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'>https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf</a>"
+                            "body": " Networks connected to the Internet rely on other networks (a.k.a ASes) to transmit data. Consequently, the connectivity of a network dependss on the connectivity of other networks.  AS hegemony is a metric to evaluate these AS-interdependences based on BGP data.  See our research report for more details: <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'>https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf</a>"
                         },
                         {
                             "header": "What the graphs mean?",
                             "img": ["assets/documentation/hegemony_AS2497.png", "max-width:100%"],
-                            "body": " <p>Let's take a look at the above example which corresponds to results obtained on March 2nd 2020 for AS2497 (IIJ). <p><b>The top plot</b> shows the AS dependencies of AS2497. That means the most common transit networks used to reach AS2497. The value (a.k.a AS hegemony) range between 0 and 1. This is an estimate of the ratio of AS paths towards AS2497 that go through a certain AS transit. A value close to 1 means that the reachability of the monitored AS is strongly depending on that transit AS. In the above example, the plot shows only few weak dependencies to Telia (AS1299), NTT America (AS2914), Level(3) (AS3356), and GTT (AS3257). On that day we estimate around 16% of the paths towards IIJ transit through Telia, 9% through NTT, and 2% through Level(3).</p> <p>Stub ASes usually have much higher values, for example the values goes up to 1 for  ASes with a single upstream provider (meaning that all the paths cross the upstream provider). You can click on the graph to display dependencies details at particular timestamp and a graphical representation of BGP changes around that time (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated-in-ripestat' target='_blank'>using BGPlay</a>).</p> <p><b>The bottom plot</b> shows the number of networks that depend on AS2497. In this case there is more than 370 networks that use IIJ for transit. This is somehow related to <a href='http://as-rank.caida.org/asns/2497' target='_blank'>IIJ's customer cone</a>. The main difference is that networks using IIJ as a backup transit are not counted here whereas they are counted in its customer cone. You can click on the graph to obtain the complete list of dependent networks. </p>"
+                            "body": " <p>Let's take a look at the above example which corresponds to results obtained on March 2nd 2020 for AS2497 (IIJ). <p><b>The top plot</b> shows the AS dependencies of AS2497. That means the most common transit networks used to reach AS2497. The value (a.k.a AS hegemony) ranges between 0 and 1. This is an estimate of the ratio of AS paths towards AS2497 that go through a certain AS transit. A value close to 1 means that the reachability of the monitored AS is strongly dependant on that transit AS. In the above example, the plot shows a few weak dependencies to Telia (AS1299), NTT America (AS2914), Level(3) (AS3356), and GTT (AS3257). On that day we estimate around 16% of the paths towards IIJ transit through Telia, 9% through NTT, and 2% through Level(3).</p> <p>Stub ASes usually have much higher values, for example the values go up to 1 for  ASes with a single upstream provider (meaning that all the paths cross the upstream provider). You can click on the graph to display dependencies details at a particular timestamp and a graphical representation of BGP changes around that time (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated-in-ripestat' target='_blank'>using BGPlay</a>).</p> <p><b>The bottom plot</b> shows the number of networks that depend on AS2497. In this case there are more than 370 networks that use IIJ for transit. This is somehow related to <a href='http://as-rank.caida.org/asns/2497' target='_blank'>IIJ's customer cone</a>. The main difference is that networks using IIJ as a backup transit are not counted here whereas they are counted in its customer cone. You can click on the graph to obtain the complete list of dependent networks. </p>"
+
                         },
                         {
                             "header": "Known issues",
@@ -135,11 +136,11 @@
                 },
                 "countryasdependency": {
                     "title": "Country's network dependency",
-                    "summary": "A Country network dependency is computed in two different ways, emphasizing either the distribution of the country's population or the of the country ASes.",
+                    "summary": "A Country network dependency is computed in two different ways, emphasizing either the distribution of the country's population or the country ASes.",
                     "description": [
                         {
                             "header": "Population coverage",
-                            "body": "<p>The population coverage combines two data sources, the estimated population for each AS and the paths from the Internet to these ASes. The <b>total</b> value represents the percentage of the population that is reached through the corresponding AS. This value is also dissected into two parts: <ul><li> <b>Direct</b> is the percentage of population directly connected to this AS</li> <li><b>Indirect</b> is the percentage of population that is reached via this AS but that is not directly connected to it.</li></ul></p>"
+                            "body": "<p>The population coverage combines two data sources, the estimated population for each AS and the paths from the Internet to these ASes. The <b>total</b> value represents the percentage of the population that is reached through the corresponding AS. This value is also dissected into two parts: <ul><li> <b>Direct</b> is the percentage of the population directly connected to this AS</li> <li><b>Indirect</b> is the percentage of the population that is reached via this AS but that is not directly connected to it.</li></ul></p>"
                         },
                         {
                             "header": "AS coverage",
@@ -192,7 +193,7 @@
                         {
                             "header": " What the forwarding anomlay graph means?",
                             "img": ["assets/documentation/forwarding_AS174.png", "max-width:100%"],
-                            "body": "<p>For forwarding anomalies let's look at another example,<a href='http://ihr.iijlab.net/ihr/174/asn/?date=2017-11-02&amp;last=3'> AS174 Cogent on November 2017</a>:</p> <img src='/static/ihr/tartiflette_AS174.png' style='max-width:100%'> <p><b>The bottom plot</b> represents the forwarding anomalies observed for AS174. Intuitively, this graph represents the presence and absence of IP addresses for AS174 in the monitored traceroutes. If the number of observed IP addresses for AS174 is constant then the forwarding anomaly level is close to 0. If we observe more IP addresses than usual then the forwarding anomaly level takes higher positive values. On the other hand if we observe less IP addresses than usual, the forwarding anomaly level takes lower negative values. In this example, IP addresses from AS174 are appearing more than usual due to an internal routing anomaly. You can click on the graphs to obtain the list of reported IP addresses, we used to have a visualization of corresponding traceroutes (TraceMON) but this currently not working. </p>"
+                            "body": "<p>For forwarding anomalies let's look at another example,<a href='http://ihr.iijlab.net/ihr/174/asn/?date=2017-11-02&amp;last=3'> AS174 Cogent on November 2017</a>:</p> <img src='/static/ihr/tartiflette_AS174.png' style='max-width:100%'> <p><b>The bottom plot</b> represents the forwarding anomalies observed for AS174. Intuitively, this graph represents the presence and absence of IP addresses for AS174 in the monitored traceroutes. If the number of observed IP addresses for AS174 is constant then the forwarding anomaly level is close to 0. If we observe more IP addresses than usual then the forwarding anomaly level takes higher positive values. On the other hand if we observe fewer IP addresses than usual, the forwarding anomaly level takes lower negative values. In this example, IP addresses from AS174 are appearing more than usual due to an internal routing anomaly. You can click on the graphs to obtain the list of reported IP addresses, we used to have a visualization of corresponding traceroutes (TraceMON) but this currently not working. </p>"
                         },
                         {
                             "header": "Known issues",
@@ -206,12 +207,12 @@
                 },
                 "disco": {
                     "title": "Network disconnections",
-                    "summary": "<p> To detect significant network disconnections we monitor the status of Atlas probes. We  essentially seek for synchronized disconnections of probes that are in the same geographical or topological area.  See our research report for more details: <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, Disco: Fast, Good, and Cheap Outage Detection. TMA 2017</a> </p>",
+                    "summary": "<p> To detect significant network disconnections we monitor the status of Atlas probes. We  essentially seek synchronized disconnections of probes that are in the same geographical or topological area.  See our research report for more details: <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, Disco: Fast, Good, and Cheap Outage Detection. TMA 2017</a> </p>",
                     "description": [
                         {
                             "header": "What the graph mean?",
                             "img": ["assets/documentation/disco_AS16322.png", "max-width:100%"],
-                            "body": "<p> The above example shows the disconnection of an Iranian network (AS16322) due to an update in an upstream provider on March 3rd 2020. The world map shows the location of disconnected Atlas probes and the below graphs show pings results from these probes. These ping measurements provide us with an internal view of the outage. Here we found that pings toward Google DNS and Atlas controller failed from around 00:45 until 01:35. Pings to the K-root server are, however, carried out as usual. This means that this network could still reach a K-root instance during the outage (probably the one located in Teheran).</p> <p>The table reports a deviation score, 11 in this case, and the number of disconnected Atlas probes. Larger deviation values represent stronger evidences of the network disconnection. To avoid too many false positives, only values higher values are reported (this threshold is different for the gloabl and network reports). We also monitors only networks and countries that have at least 5 Atlas probes. </p>"
+                            "body": "<p> The above example shows the disconnection of an Iranian network (AS16322) due to an update in an upstream provider on March 3rd 2020. The world map shows the location of disconnected Atlas probes and the below graphs show pings results from these probes. These ping measurements provide us with an internal view of the outage. Here we found that pings toward Google DNS and Atlas controller failed from around 00:45 until 01:35. Pings to the K-root server are, however, carried out as usual. This means that this network could still reach a K-root instance during the outage (probably the one located in Teheran).</p> <p>The table reports a deviation score, 11 in this case, and the number of disconnected Atlas probes. Larger deviation values represent stronger evidence of the network disconnection. To avoid too many false positives, only values higher values are reported (this threshold is different for the global and network reports). We also monitor only networks and countries that have at least 5 Atlas probes. </p>"
                         },
                         {
                             "header": "Known issues",
@@ -225,11 +226,11 @@
                 },
                 "api": {
                     "title": "REST API",
-                    "summary": "All results displayed on the Internet Health Report website are available via IHR REST API. For a quick access to plotted data just click on the graph and see the API tab below the graph.",
+                    "summary": "All results displayed on the Internet Health Report website are available via IHR REST API. For quick access to plotted data just click on the graph and see the API tab below the graph.",
                     "description": [
                         {
                             "header": "Format",
-                            "body": "Two formats are available, HTML and JSON. The HTML format allows developpers to easily play with the API. The JSON format provides a programmatic access to our reports. The results are formatted in HTML if you access the API with your web browser, JSON is used otherwise. "
+                            "body": "Two formats are available, HTML and JSON. The HTML format allowsdevelopers to easily play with the API. The JSON format provides a programmatic access to our reports. The results are formatted in HTML if you access the API with your web browser, JSON is used otherwise. "
                         },
                         {
                             "header": "Endpoints",
@@ -255,7 +256,7 @@
                         },
                         {
                             "header": "Example:",
-                            "body": "<p>Here is a simple example to fetch and print AS dependency results for AS2501 on September 15th, 2018. <pre><code>from ihr.hegemony import Hegemony\nhege = Hegemony(originasns=[2501], start='2018-09-15 00:00', end='2018-09-15 23:59')\nfor r in hege.get_results():\n    print(r)</code></pre> For more examples visit <a href='' target='_blank'>https://pypi.org/project/abondance/</a></p>"
+                            "body": "<p>Here is a simple example to fetch and print AS dependency results for AS2501 on September 15th, 2018. <pre><code>from ihr.hegemony import Hegemony\nhege = Hegemony(originasns=[2501], start='2018-09-15 00:00', end='2018-09-15 23:59')\nfor r in hege.get_results():\n    print(r)</code></pre> For more examples visit <a href='https://pypi.org/project/abondance/' target='_blank'>https://pypi.org/project/abondance/</a></p>"
                         },
                         {
                             "header": "",
