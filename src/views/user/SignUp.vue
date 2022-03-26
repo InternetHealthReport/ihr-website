@@ -10,12 +10,7 @@
     </transition>
     <h1>{{ title }}</h1>
     <div class="shadow-2" id="IHR_sig-in-form-container" v-if="!emailSent">
-      <q-input
-        v-model="email"
-        label="email"
-        type="email"
-        :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]"
-      >
+      <q-input v-model="email" label="email" type="email" :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]">
         <template v-slot:prepend>
           <q-icon name="fa fa-envelope" />
         </template>
@@ -24,25 +19,19 @@
         v-model="password"
         label="password"
         :type="isPwd ? 'password' : 'text'"
-        :rules="[
-          val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')
-        ]"
+        :rules="[val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')]"
       >
         <template v-slot:prepend>
           <q-icon name="fa fa-key" />
         </template>
         <template v-slot:append>
-          <q-icon
-            :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          />
+          <q-icon :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'" class="cursor-pointer" @click="isPwd = !isPwd" />
         </template>
       </q-input>
       <div
         :style="{
           height: recaptcha_loaded ? 'auto' : '90px',
-          position: 'relative'
+          position: 'relative',
         }"
       >
         <vue-recaptcha
@@ -56,83 +45,77 @@
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
       </div>
-      <div>{{ $t("sigIn.mailWillBeSent") }}</div>
-      <q-btn color="positive" @click="validateAndSend">{{
-        $t("header.signUp")
-      }}</q-btn>
+      <div>{{ $t('sigIn.mailWillBeSent') }}</div>
+      <q-btn color="positive" @click="validateAndSend">{{ $t('header.signUp') }}</q-btn>
     </div>
     <div class="shadow-2" id="IHR_confirm-your-email" v-else>
-      <div>{{ $t("sigIn.emailSentTo") }}</div>
+      <div>{{ $t('sigIn.emailSentTo') }}</div>
       <div id="IHR_email-confirmation">{{ email }}</div>
-      <div>{{ $t("sigIn.pleaseFollowTheLink") }}</div>
+      <div>{{ $t('sigIn.pleaseFollowTheLink') }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import VueRecaptcha from "vue-recaptcha";
+import VueRecaptcha from 'vue-recaptcha'
 
 export default {
   components: { VueRecaptcha },
   data() {
     return {
-      email: "",
-      password: "",
-      recaptcha: "",
+      email: '',
+      password: '',
+      recaptcha: '',
       emailSent: false,
       isPwd: true,
       recaptcha_loaded: false,
-      errors: []
-    };
+      errors: [],
+    }
   },
   mounted() {
-    this.$libraryDelayer.load("google_recaptcha", () => {
-      this.recaptcha_loaded = true;
-      this.$libraryDelayer.getRidOfInlineStyle("IHR_sig-in-captcha", "div");
-    });
+    this.$libraryDelayer.load('google_recaptcha', () => {
+      this.recaptcha_loaded = true
+      this.$libraryDelayer.getRidOfInlineStyle('IHR_sig-in-captcha', 'div')
+    })
   },
   methods: {
     expired() {
-      this.recaptcha = "";
-      console.log("expired");
+      this.recaptcha = ''
+      console.log('expired')
     },
     verify(response) {
-      this.recaptcha = response;
+      this.recaptcha = response
     },
     ensureCss(id) {
-      this.$libraryDelayer.getRidOfInlineStyle(id, "div");
+      this.$libraryDelayer.getRidOfInlineStyle(id, 'div')
     },
     validateAndSend() {
-      this.errors = [];
-      this.recaptcha != "" || this.errors.push("missingReCaptcha");
-      this.$ihrStyle.validatePassword(this.password) ||
-        this.errors.push("passwordTooWeak");
-      this.$ihrStyle.validateEmail(this.email) ||
-        this.errors.push("strangeEmail");
+      this.errors = []
+      this.recaptcha != '' || this.errors.push('missingReCaptcha')
+      this.$ihrStyle.validatePassword(this.password) || this.errors.push('passwordTooWeak')
+      this.$ihrStyle.validateEmail(this.email) || this.errors.push('strangeEmail')
       if (this.errors.length == 0)
         this.$ihr_api.userSignIn(
           this.email,
           this.password,
           this.recaptcha,
           () => {
-            this.emailSent = true;
-            this.password = "";
+            this.emailSent = true
+            this.password = ''
           },
           error => {
-            console.error(error); //TODO bettere error handling
-            console.log(error.detail);
+            console.error(error) //TODO bettere error handling
+            console.log(error.detail)
           }
-        );
-    }
+        )
+    },
   },
   computed: {
     title() {
-      return this.emailSent
-        ? this.$t("sigIn.thankYou")
-        : this.$t("sigIn.title");
-    }
-  }
-};
+      return this.emailSent ? this.$t('sigIn.thankYou') : this.$t('sigIn.title')
+    },
+  },
+}
 </script>
 <style lang="stylus" scoped>
 @import '../../styles/quasar.variables'

@@ -16,13 +16,13 @@
 </template>
 
 <script>
-import NetworkDisco from "../DiscoChart";
-import DiscoMap from "./DiscoMap.vue";
-import DiscoAlarmsTable from "../tables/DiscoAlarmsTable.vue";
-import { DiscoEventQuery } from "@/plugins/query/IhrQuery";
+import NetworkDisco from '../DiscoChart'
+import DiscoMap from './DiscoMap.vue'
+import DiscoAlarmsTable from '../tables/DiscoAlarmsTable.vue'
+import { DiscoEventQuery } from '@/plugins/query/IhrQuery'
 
-const DEFAULT_DISCO_AVG_LEVEL = 10;
-const DEFAULT_MIN_DISCO_DURATION = 5;
+const DEFAULT_DISCO_AVG_LEVEL = 10
+const DEFAULT_MIN_DISCO_DURATION = 5
 //under this gap 2 consecutive event are considered like 1 that change value
 
 //utility functions
@@ -35,61 +35,58 @@ export default {
   extends: NetworkDisco,
   components: {
     DiscoAlarmsTable,
-    DiscoMap
+    DiscoMap,
   },
   props: {
     minAvgLevel: {
-      default: DEFAULT_DISCO_AVG_LEVEL
+      default: DEFAULT_DISCO_AVG_LEVEL,
     },
     streamName: {
-      default: ""
-    }
+      default: '',
+    },
   },
   data() {
     return {
-      mapData: []
-    };
+      mapData: [],
+    }
   },
   methods: {
     apiCall() {
-      this.filters[0]
-        .streamName(this.streamName)
-        .timeInterval(this.startTime, this.endTime)
-        .avgLevel(this.minAvgLevel, DiscoEventQuery.GTE);
-      this.loading = true;
+      this.filters[0].streamName(this.streamName).timeInterval(this.startTime, this.endTime).avgLevel(this.minAvgLevel, DiscoEventQuery.GTE)
+      this.loading = true
       this.$ihr_api.disco_events(
         this.filters[0],
         result => {
-          var events = [];
+          var events = []
           result.results.forEach(event => {
-            event.duration = this.duration(event.starttime, event.endtime, 0);
+            event.duration = this.duration(event.starttime, event.endtime, 0)
             if (event.duration > DEFAULT_MIN_DISCO_DURATION || event.duration == 0) {
-              events.push(event);
+              events.push(event)
             }
-          });
-          this.dataEvents = events;
-          this.mapData = events;
-          this.loading = false;
+          })
+          this.dataEvents = events
+          this.mapData = events
+          this.loading = false
         },
         error => {
-          console.error(error); //FIXME do a correct alert
+          console.error(error) //FIXME do a correct alert
         }
-      );
+      )
     },
     filteredRows(data) {
-      this.mapData = data[1];
-      this.$emit("filteredRows", data);
-    }
+      this.mapData = data[1]
+      this.$emit('filteredRows', data)
+    },
   },
   watch: {
     minAvgLevel(newValue) {
       this.filters.forEach(filter => {
-        filter.avgLevel(newValue, DiscoEventQuery.GTE);
-      });
-      this.debouncedApiCall();
-    }
-  }
-};
+        filter.avgLevel(newValue, DiscoEventQuery.GTE)
+      })
+      this.debouncedApiCall()
+    },
+  },
+}
 
-export { DEFAULT_DISCO_AVG_LEVEL };
+export { DEFAULT_DISCO_AVG_LEVEL }
 </script>

@@ -20,23 +20,23 @@ Vue.use(VueResizeText)
 // internal plugins
 Vue.use(IhrApi)
 Vue.use(LibraryDelayer, {
-    libraries: {
-        ripe_widget_api: 'https://stat.ripe.net/widget-api/widget_api.js',
-        latencymon_widget: [
-            'https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/dev/libs/require.min.js', //preload require
-            'https://atlas.ripe.net/resource/latencymon/latencymon-widget-main.js',
-        ],
-        tracemon_widget: [
-            'https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/tracemon/dev/libs/require.min.js', //preload require
-            'https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js',
-        ],
-        google_recaptcha: 'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit',
-    },
+  libraries: {
+    ripe_widget_api: 'https://stat.ripe.net/widget-api/widget_api.js',
+    latencymon_widget: [
+      'https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/dev/libs/require.min.js', //preload require
+      'https://atlas.ripe.net/resource/latencymon/latencymon-widget-main.js',
+    ],
+    tracemon_widget: [
+      'https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/tracemon/dev/libs/require.min.js', //preload require
+      'https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js',
+    ],
+    google_recaptcha: 'https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit',
+  },
 })
 Vue.use(IhrStyle)
 
 new Vue({
-    router,
-    i18n,
-    render: h => h(App),
+  router,
+  i18n,
+  render: h => h(App),
 }).$mount('#app')

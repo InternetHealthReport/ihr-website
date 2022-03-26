@@ -5,36 +5,32 @@
         <q-item id="IHR_home-button">
           <router-link :to="{ name: 'home' }">
             <q-btn round dense flat :ripple="false" no-caps size="22px">
-              <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px;" />
+              <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px" />
             </q-btn>
           </router-link>
         </q-item>
         <network-search-bar class="col-3 q-px-sm" />
-        <div
-          class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap"
-        >
-        <q-btn-group
-            flat 
-            :key="item.entryName"
-            v-for="item in simple_menu"
-            >
-            <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }"/>
-            <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left" >
-                <q-list class="rounded-borders text-white bg-primary" bordered separator padding >
-                    <q-item clickable v-close-popup 
-                        :key="option.entryName"
-                        v-for="option in item.options"
-                        :to="{ name: option.routeName }"
-                        active-class="text-grey"
-                        >
-                        <q-item-section>
-                            <q-item-label class="text-bold">{{ $t(option.entryName) }}</q-item-label>
-                            <q-item-label class="text-grey" caption lines="2">{{ $t(option.summary) }}</q-item-label>
-                        </q-item-section>
-                    </q-item>
-                </q-list>
+        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap">
+          <q-btn-group flat :key="item.entryName" v-for="item in simple_menu">
+            <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }" />
+            <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
+              <q-list class="rounded-borders text-white bg-primary" bordered separator padding>
+                <q-item
+                  clickable
+                  v-close-popup
+                  :key="option.entryName"
+                  v-for="option in item.options"
+                  :to="{ name: option.routeName }"
+                  active-class="text-grey"
+                >
+                  <q-item-section>
+                    <q-item-label class="text-bold">{{ $t(option.entryName) }}</q-item-label>
+                    <q-item-label class="text-grey" caption lines="2">{{ $t(option.summary) }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
             </q-btn-dropdown>
-        </q-btn-group>
+          </q-btn-group>
         </div>
       </div>
       <!--Log in /Log out stuff here-->
@@ -43,99 +39,96 @@
 </template>
 
 <script>
-import NetworkSearchBar from "@/components/search_bar/NetworkSearchBar";
+import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 
 const simple_menu = [
   {
-    entryName: "header.home",
-    routeName: "home"
+    entryName: 'header.home',
+    routeName: 'home',
   },
   {
-    entryName: "header.reports",
-    routeName: "global_report",
+    entryName: 'header.reports',
+    routeName: 'global_report',
     options: [
-        {
-            entryName: "header.globalReport",
-            routeName: "global_report",
-            summary: "Alarms reported across all networks"
-        },
-        {
-            entryName: "header.countryReport",
-            routeName: "countries",
-            summary: "Overview of Internet ressources per country"
-        },
-        {
-            entryName: "header.networkReport",
-            routeName: "networks",
-            summary: "Details for a single network (AS or IXP)"
-        },
-        {
-            entryName: "header.rovReport",
-            routeName: "rov",
-            summary: "Route Origin Validation of ressources seen on BGP"
-        },
-        {
-            entryName: "header.covid19",
-            routeName: "covid19",
-            summary: "RTT analysis during national lockdowns"
-        }
-    ]
+      {
+        entryName: 'header.globalReport',
+        routeName: 'global_report',
+        summary: 'Alarms reported across all networks',
+      },
+      {
+        entryName: 'header.countryReport',
+        routeName: 'countries',
+        summary: 'Overview of Internet ressources per country',
+      },
+      {
+        entryName: 'header.networkReport',
+        routeName: 'networks',
+        summary: 'Details for a single network (AS or IXP)',
+      },
+      {
+        entryName: 'header.rovReport',
+        routeName: 'rov',
+        summary: 'Route Origin Validation of ressources seen on BGP',
+      },
+      {
+        entryName: 'header.covid19',
+        routeName: 'covid19',
+        summary: 'RTT analysis during national lockdowns',
+      },
+    ],
   },
   {
-    entryName: "header.documentation",
-    routeName: "documentation"
+    entryName: 'header.documentation',
+    routeName: 'documentation',
   },
   {
-    entryName: "header.API",
-    routeName: "api"
+    entryName: 'header.API',
+    routeName: 'api',
   },
   {
-    entryName: "header.contact",
-    routeName: "contact"
-  }
-];
+    entryName: 'header.contact',
+    routeName: 'contact',
+  },
+]
 
 // subset of router, see router.js
 export default {
-  name: "Default",
+  name: 'AppHeader',
   components: {
-    NetworkSearchBar
+    NetworkSearchBar,
   },
   data() {
     return {
-      text: "",
+      text: '',
       simple_menu: simple_menu,
       sidebarOpened: false,
-      loginError: false
-    };
+      loginError: false,
+    }
   },
   mounted() {
-    document.title = "Internet Health Report";
+    document.title = 'Internet Health Report'
   },
   methods: {
     expandSidebar() {
-      this.sidebarOpened = !this.sidebarOpened;
+      this.sidebarOpened = !this.sidebarOpened
     },
     login(email, password) {
-      if (
-        this.$ihrStyle.validateEmail(email) &&
-        this.$ihrStyle.validatePassword(password)
-      ) {
+      if (this.$ihrStyle.validateEmail(email) && this.$ihrStyle.validatePassword(password)) {
         this.$ihr_api.userLogin(
           email,
           password,
           () => {},
           () => {
-            this.loginError = true;
+            this.loginError = true
           }
-        );
+        )
       }
     },
     logout() {
-      this.$ihr_api.userLogout();
-    }
-  }
-};
+      this.$ihr_api.userLogout()
+    },
+  },
+}
 </script>
 <style lang="stylus">
 @import '~quasar-variables';

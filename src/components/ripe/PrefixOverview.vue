@@ -2,26 +2,27 @@
 import PrefixMixin from './mixins/PrefixMixin'
 
 export default {
-    mixins: [PrefixMixin],
-    data() {
-        return {
-            name: 'reverse-dns-ip',
-        }
-    },
-    mounted() {
-        this.$libraryDelayer.load('ripe_widget_api', () => {
-            ripestat.init(
-                'prefix-overview',
-                { max_related: 50, resource: this.ip },
-                this.myId,
-                {
-                    size: 'small',
-                    disable: ['controls', 'footer-buttons', 'logo', 'maximize'],
-                },
-                this.navigateAndRemove
-            )
-        })
-    },
+  mixins: [PrefixMixin],
+  data() {
+    return {
+      name: 'reverse-dns-ip',
+    }
+  },
+  mounted() {
+    this.$libraryDelayer.load('ripe_widget_api', () => {
+      // eslint-disable-next-line no-undef
+      ripestat.init(
+        'prefix-overview',
+        { max_related: 50, resource: this.ip },
+        this.myId,
+        {
+          size: 'small',
+          disable: ['controls', 'footer-buttons', 'logo', 'maximize'],
+        },
+        this.navigateAndRemove
+      )
+    })
+  },
 }
 </script>
 
