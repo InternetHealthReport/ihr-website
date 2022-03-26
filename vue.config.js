@@ -1,6 +1,14 @@
 const path = require('path')
 module.exports = {
   runtimeCompiler: true,
+  devServer: {
+    compress: true,
+    overlay: {
+      warnings: false,
+      errors: true,
+    },
+    open: 'Google Chrome',
+  },
   chainWebpack: webpackConfig => {
     webpackConfig.module
       .rule('ify-loader')

@@ -1,18 +1,18 @@
 {
-	"header": {
-		"API": "API",
-		"contacts": "contatti",
-		"countries": "paesi",
-		"documentation": "documentazione",
-		"networks": "reti",
-		"participants": "partecipanti"
-	},
-	"home": {
-		"monitoredCountries": "paesi monitorati",
-		"monitoredNetworks": "Reti monitorate"
-	},
-	"searchBar": {
-		"placeholder": " o nome",
-		"resultsFound": "risultati trovati"
-	}
+  "header": {
+    "API": "API",
+    "contacts": "contatti",
+    "countries": "paesi",
+    "documentation": "documentazione",
+    "networks": "reti",
+    "participants": "partecipanti"
+  },
+  "home": {
+    "monitoredCountries": "paesi monitorati",
+    "monitoredNetworks": "Reti monitorate"
+  },
+  "searchBar": {
+    "placeholder": " o nome",
+    "resultsFound": "risultati trovati"
+  }
 }

@@ -1,15 +1,16 @@
 <i18n src="@/locales/long_langs/home.json"></i18n>
 <template>
   <div id="IHR_home">
-    <router-link :to="{ name: 'global_report' }" class="IHR_delikify">
-      <div id="IHR_global-report" class="row">
-        <div class="col-6">
-          <div>Internet Health Report</div>
-          <div id="IHR_global-report-button">{{ $t('globalReport.name') }}</div>
-        </div>
-        <div class="col-6"></div>
+    <div id="IHR_global-report" class="row">
+      <div class="col-6">
+        <div>Internet Health Report</div>
+        <router-link id="IHR_global-report-button" :to="{ name: 'global_report' }">
+          {{ $t('globalReport.name') }}
+        </router-link>
       </div>
-    </router-link>
+      <div class="col-6"></div>
+    </div>
+
     <div
       class="IHR_description-main"
       v-html="
@@ -173,6 +174,9 @@ export default {
         font-weight 500
         transition all 0.6s
         width 300pt
+        display block
+        color white
+        text-decoration none
 
         &:hover
           background-color white
