@@ -50,7 +50,7 @@
               :end-time="stopTime"
               :startPointName="String(props.row.asNumber)"
               :startPointType="props.row.asNumber > 0 ? 'AS' : 'IX'"
-              :endPointName="endpointKeys(props.row.endpoints)"
+              :endPointNames="endpointKeys(props.row.endpoints)"
               fetch
             />
           </div>
@@ -64,7 +64,7 @@
 import CommonTableMixin from './CommonTableMixin'
 import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 
-const MAX_NETDELAY_PLOTS = 5
+const MAX_NETDELAY_PLOTS = 12
 
 export default {
   mixins: [CommonTableMixin],

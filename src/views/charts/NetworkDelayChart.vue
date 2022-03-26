@@ -371,6 +371,16 @@ export default {
       // get updated data
       this.debouncedApiCall()
     },
+    endPointNames() {
+      //reset filter
+      this.endPointKeysFilter = this.endPointNames
+      this.startPointKeysFilter = this.startPointNames
+
+      this.clearGraph()
+
+      // get updated data
+      this.debouncedApiCall()
+    },
     startPointName() {
       //reset filter
       this.startPointNameFilter = this.startPointName

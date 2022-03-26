@@ -9,7 +9,6 @@ import Contact from '@/views/Contact'
 import Countries from '@/views/Countries'
 import Networks from '@/views/Networks'
 import Corona from '@/views/Corona'
-import Ukraine2022View from '@/views/Ukraine2022View'
 import ROV from '@/views/ROV'
 import SignUp from '@/views/user/SignUp'
 import AccountActivation from '@/views/user/AccountActivation'
@@ -114,16 +113,6 @@ export default new Router({
         default: ROV,
       },
       meta: { title: 'Route Origin Validation Report - IHR' },
-    },
-    {
-      name: 'ukraine2022',
-      path: `${routerBase}ukraine2022`,
-      components: {
-        header: Header,
-        footer: Footer,
-        default: Ukraine2022View,
-      },
-      meta: { title: 'Ukraine 2022 Report - IHR' },
     },
     {
       name: 'covid19',
