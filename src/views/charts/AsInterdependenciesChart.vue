@@ -339,7 +339,9 @@ export default {
         trace.y.push(elem.hege * 100)
         trace.x.push(elem.timebin)
       })
-      this.noData |= Object.keys(traces).length == 0
+      if (Object.keys(traces).length == 0) {
+        this.noData = 'No data available'
+      }
       this.layout.datarevision = new Date().getTime()
     },
     fetchHegemonyCone(data) {
@@ -356,7 +358,6 @@ export default {
           console.error('error', a, b, b - a)
         }
       }
-      this.noData |= trace.length == 0
       this.layout.datarevision = new Date().getTime()
     },
     clearGraph() {

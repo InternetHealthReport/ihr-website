@@ -33,7 +33,7 @@ export default {
     },
     noData: {
       require: false,
-      default: false,
+      default: 'No data available',
     },
     yMax: {
       type: Number,
@@ -117,7 +117,7 @@ export default {
 <style lang="stylus" scoped>
 .IHR_
   &no-data
-    position absolute
+    position relative
     bottom 0
     left 0
     & > div:first-child
@@ -125,8 +125,8 @@ export default {
       padding 16pt
       position relative
       font-weight: 500;
-      top 50%
-      left -50%
+      top -250px
+      left 0%
       &:first-letter
         text-transform uppercase
 </style>
