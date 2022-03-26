@@ -1,29 +1,30 @@
 <template>
   <div class="row justify-center">
-    <div class="col-10 ">
+    <div class="col-10">
       <div id="swagger-ui"></div>
     </div>
   </div>
 </template>
 <script>
-import SwaggerUI, { presets } from "swagger-ui";
+import SwaggerUI, { presets } from 'swagger-ui'
 
 export default {
+  name: 'ApiView',
   components: {},
   data() {
-    return {};
+    return {}
   },
-  mounted: function() {
-    const ui = SwaggerUI({
-      url: "https://ihr.iijlab.net/ihr/api/swagger.yaml?1234",
-      dom_id: "#swagger-ui",
-      layout: "BaseLayout",
+  mounted: function () {
+    SwaggerUI({
+      url: 'https://ihr.iijlab.net/ihr/api/swagger.yaml?1234',
+      dom_id: '#swagger-ui',
+      layout: 'BaseLayout',
       defaultModelsExpandDepth: -1,
       presets: [presets.apis],
-      deepLinking: false
-    });
-  }
-};
+      deepLinking: false,
+    })
+  },
+}
 </script>
 
 <style lang="stylus" scoped>

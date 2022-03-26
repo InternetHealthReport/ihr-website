@@ -1,9 +1,7 @@
 <template>
   <div>
     <q-card v-if="loaded === false" negative>
-      <q-card-section>
-        {{ $t("genericErrors.cloudNotLoad") }} BGPlay
-      </q-card-section>
+      <q-card-section> {{ $t('genericErrors.cloudNotLoad') }} BGPlay </q-card-section>
     </q-card>
     <div v-if="loaded === null" class="IHR_loading-spinner">
       <q-spinner color="secondary" size="15em" />
@@ -13,94 +11,96 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
+import { setTimeout } from 'timers'
 export default {
+  name: 'BgplayWidget',
   props: {
     asNumber: {
       type: Number,
-      required: true
+      required: true,
     },
     dateTime: {
       type: Date,
-      required: true
+      required: true,
     },
     intervalLength: {
       type: Number,
-      default: 3600 //length of interval in seconds
-    }
+      default: 3600, //length of interval in seconds
+    },
   },
   data() {
     return {
       myId: `bgplayContainer${this._uid}`,
       bgplay: null,
-      loaded: null
-    };
+      loaded: null,
+    }
   },
   mounted() {
-    this.$libraryDelayer.load("ripe_widget_api", () => {
-      console.log("resolved");
+    this.$libraryDelayer.load('ripe_widget_api', () => {
+      console.log('resolved')
+      // eslint-disable-next-line no-undef
       this.bgplay = ripestat.init(
-        "bgplay",
+        'bgplay',
         {
-          unix_timestamps: "TRUE",
-          ignoreReannouncements: "true",
+          unix_timestamps: 'TRUE',
+          ignoreReannouncements: 'true',
           resource: this.asName,
           starttime: this.startTime,
           endtime: this.endTime,
-          rrcs: "10",
-          type: "bgp"
+          rrcs: '10',
+          type: 'bgp',
         },
         this.myId,
         {
-          size: "fit",
-          show_controls: "no",
-          disable: ["footer-buttons", "container"]
+          size: 'fit',
+          show_controls: 'no',
+          disable: ['footer-buttons', 'container'],
         },
         () => {
-          this.loaded = true;
+          this.loaded = true
           setTimeout(() => {
-            var elemt = document.getElementById(this.myId);
-            elemt.style.width = "100%";
-          }, 150);
+            var elemt = document.getElementById(this.myId)
+            elemt.style.width = '100%'
+          }, 150)
         }
-      );
-    });
+      )
+    })
   },
   watch: {
     asNumber(oldValue, newValue) {
-      if (oldValue == newValue) return;
-      this.bgplay.update({ resource: this.asName });
-      this.bgplay.reload();
+      if (oldValue == newValue) return
+      this.bgplay.update({ resource: this.asName })
+      this.bgplay.reload()
     },
     dateTime(oldValue, newValue) {
-      if (oldValue == newValue) return;
+      if (oldValue == newValue) return
       this.bgplay.update({
         starttime: this.startTime,
-        endtime: this.endTime
-      });
-      this.bgplay.reload();
+        endtime: this.endTime,
+      })
+      this.bgplay.reload()
     },
     intervalLength(oldValue, newValue) {
-      if (oldValue == newValue) return;
+      if (oldValue == newValue) return
       this.bgplay.update({
         starttime: this.startTime,
-        endtime: this.endTime
-      });
-      this.bgplay.reload();
-    }
+        endtime: this.endTime,
+      })
+      this.bgplay.reload()
+    },
   },
   computed: {
     asName() {
-      return `AS${this.asNumber}`;
+      return `AS${this.asNumber}`
     },
     startTime() {
-      return this.dateTime.getTime() / 1000 - this.intervalLength / 2;
+      return this.dateTime.getTime() / 1000 - this.intervalLength / 2
     },
     endTime() {
-      return this.dateTime.getTime() / 1000 + this.intervalLength / 2;
-    }
-  }
-};
+      return this.dateTime.getTime() / 1000 + this.intervalLength / 2
+    },
+  },
+}
 </script>
 
 <style lang="stylus">

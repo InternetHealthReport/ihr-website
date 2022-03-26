@@ -1,232 +1,228 @@
-import Vue from "vue";
-import Router from "vue-router";
-import Header from "@/views/Header";
-import Footer from "@/views/Footer";
-import Home from "@/views/Home";
-import GlobalReport from "@/views/GlobalReport";
-import API from "@/views/Api";
-import Contact from "@/views/Contact";
-import Countries from "@/views/Countries";
-import Networks from "@/views/Networks";
-import Corona from "@/views/Corona";
-import Ukraine2022View from "@/views/Ukraine2022View";
-import ROV from "@/views/ROV";
-import SignUp from "@/views/user/SignUp";
-import AccountActivation from "@/views/user/AccountActivation";
-import PersonalPage from "@/views/user/PersonalPage";
-import ResetPassword from "@/views/user/ResetPassword";
-import Documentation from "@/views/Documentation";
-import Bgplay from "@/components/ripe/Bgplay";
-import VueScrollTo from "vue-scrollto";
+import Vue from 'vue'
+import Router from 'vue-router'
+import Header from '@/views/Header'
+import Footer from '@/views/Footer'
+import Home from '@/views/Home'
+import GlobalReport from '@/views/GlobalReport'
+import API from '@/views/Api'
+import Contact from '@/views/Contact'
+import Countries from '@/views/Countries'
+import Networks from '@/views/Networks'
+import Corona from '@/views/Corona'
+import Ukraine2022View from '@/views/Ukraine2022View'
+import ROV from '@/views/ROV'
+import SignUp from '@/views/user/SignUp'
+import AccountActivation from '@/views/user/AccountActivation'
+import PersonalPage from '@/views/user/PersonalPage'
+import ResetPassword from '@/views/user/ResetPassword'
+import Documentation from '@/views/Documentation'
+import Bgplay from '@/components/ripe/Bgplay'
 
-Vue.use(Router);
+Vue.use(Router)
 
-const routerBase = "/:locale/";
-const DEFAULT_LOCALE = "en-us";
+const routerBase = '/:locale/'
+const DEFAULT_LOCALE = 'en-us'
 
 export default new Router({
   //The serving HTTP server should handle this properly
   //see https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations
   //for apache use FallBackRessource
-  mode: "history",
-  base: "/ihr/",
-  scrollBehavior: (to, from, savedPosition)  => {
+  mode: 'history',
+  base: '/ihr/',
+  scrollBehavior: (to, from, savedPosition) => {
     if (savedPosition) {
-        return savedPosition
-    } 
-    else if (to.hash) {
-        return {
-            selector: to.hash,
-            behavior: 'smooth',
-        }
-    }
-    else {
-        if ( to.path === from.path){ 
-            return null
-        }
-        else{ 
-            return { x: 0, y: 0 }
-        }
+      return savedPosition
+    } else if (to.hash) {
+      return {
+        selector: to.hash,
+        behavior: 'smooth',
+      }
+    } else {
+      if (to.path === from.path) {
+        return null
+      } else {
+        return { x: 0, y: 0 }
+      }
     }
   },
   routes: [
     {
-      path: "/",
-      redirect: "/en-us/",
-      meta: { title: "Internet Health Report" }
+      path: '/',
+      redirect: '/en-us/',
+      meta: { title: 'Internet Health Report' },
     },
     {
-      name: "home",
+      name: 'home',
       path: routerBase,
       components: {
         header: Header,
         footer: Footer,
-        default: Home
+        default: Home,
       },
-      meta: { title: "Internet Health Report" }
+      meta: { title: 'Internet Health Report' },
     },
     {
-      name: "global_report",
+      name: 'global_report',
       path: `${routerBase}global_report`,
       components: {
         header: Header,
         footer: Footer,
-        default: GlobalReport
+        default: GlobalReport,
       },
-      meta: { title: "Global Report - IHR" }
+      meta: { title: 'Global Report - IHR' },
     },
     {
-      name: "contact",
+      name: 'contact',
       path: `${routerBase}contact`,
       components: {
         header: Header,
         footer: Footer,
-        default: Contact
+        default: Contact,
       },
-      meta: { title: "Contact - IHR" }
+      meta: { title: 'Contact - IHR' },
     },
     {
-      name: "countries",
+      name: 'countries',
       path: `${routerBase}countries/:cc?`,
       components: {
         header: Header,
         footer: Footer,
-        default: Countries
+        default: Countries,
       },
-      meta: { title: "Country Report - IHR" }
+      meta: { title: 'Country Report - IHR' },
     },
     {
-      name: "networks",
+      name: 'networks',
       path: `${routerBase}networks/:asn?`,
       components: {
         header: Header,
         footer: Footer,
-        default: Networks
+        default: Networks,
       },
-      meta: { title: "Network Report - IHR" }
+      meta: { title: 'Network Report - IHR' },
     },
     {
-      name: "rov",
+      name: 'rov',
       path: `${routerBase}rov`,
       params: {
         last: 1,
-        date: '2021-06-28'
+        date: '2021-06-28',
       },
       components: {
         header: Header,
         footer: Footer,
-        default: ROV
+        default: ROV,
       },
-      meta: { title: "Route Origin Validation Report - IHR" }
+      meta: { title: 'Route Origin Validation Report - IHR' },
     },
     {
-      name: "ukraine2022",
+      name: 'ukraine2022',
       path: `${routerBase}ukraine2022`,
       components: {
         header: Header,
         footer: Footer,
-        default: Ukraine2022View
+        default: Ukraine2022View,
       },
-      meta: { title: "Ukraine 2022 Report - IHR" }
+      meta: { title: 'Ukraine 2022 Report - IHR' },
     },
     {
-      name: "covid19",
+      name: 'covid19',
       path: `${routerBase}covid19`,
       components: {
         header: Header,
         footer: Footer,
-        default: Corona
+        default: Corona,
       },
-      meta: { title: "COVID19 Report - IHR" }
+      meta: { title: 'COVID19 Report - IHR' },
     },
     {
-      name: "old_as_and_ixp",
-      path: "/ihr/:asn/asn/",
+      name: 'old_as_and_ixp',
+      path: '/ihr/:asn/asn/',
       redirect: to => {
         //ihr/:asn/asn/
-        const { hash, params, query } = to;
+        const { hash, params, query } = to
         return {
-          name: "networks",
+          name: 'networks',
           query: query,
           params: {
             locale: DEFAULT_LOCALE,
             asn: params.asn,
-            hash
-          }
-        };
-      }
+            hash,
+          },
+        }
+      },
     },
     {
-      name: "api",
+      name: 'api',
       path: `${routerBase}api/`,
       components: {
         header: Header,
         footer: Footer,
-        default: API
+        default: API,
       },
-      meta: { title: "API - IHR" }
+      meta: { title: 'API - IHR' },
     },
     {
-      name: "sign_up",
+      name: 'sign_up',
       path: `${routerBase}sign_up`,
       components: {
         header: Header,
         footer: Footer,
-        default: SignUp
+        default: SignUp,
       },
-      meta: { title: "Sign Up - IHR" }
+      meta: { title: 'Sign Up - IHR' },
     },
     {
-      name: "account_activation",
+      name: 'account_activation',
       path: `${routerBase}account_activation`,
       components: {
         header: Header,
         footer: Footer,
-        default: AccountActivation
+        default: AccountActivation,
       },
-      meta: { title: "Account Activation - IHR" }
+      meta: { title: 'Account Activation - IHR' },
     },
     {
-      name: "reset_password",
+      name: 'reset_password',
       path: `${routerBase}reset_password`,
       components: {
         header: Header,
         footer: Footer,
-        default: ResetPassword
+        default: ResetPassword,
       },
-      meta: { title: "Reset Password - IHR" }
+      meta: { title: 'Reset Password - IHR' },
     },
     {
-      name: "personal_page",
+      name: 'personal_page',
       path: `${routerBase}personal_page`,
       components: {
         header: Header,
         footer: Footer,
-        default: PersonalPage
+        default: PersonalPage,
       },
-      meta: { title: "Personnal Page - IHR" }
+      meta: { title: 'Personnal Page - IHR' },
     },
     {
-      name: "documentation",
+      name: 'documentation',
       path: `${routerBase}documentation`,
       components: {
         header: Header,
         footer: Footer,
-        default: Documentation
+        default: Documentation,
       },
-      meta: { title: "Documentation - IHR" }
+      meta: { title: 'Documentation - IHR' },
     },
 
     // Widgets
     {
-      name: "bgplay",
-      path: "/widget/bgplay",
+      name: 'bgplay',
+      path: '/widget/bgplay',
       component: Bgplay,
       props: route => ({
         asNumber: parseInt(route.query.asn),
-        dateTime: new Date(route.query.date)
+        dateTime: new Date(route.query.date),
       }),
-      meta: { title: "BGPlay - IHR" }
-    }
-  ]
-});
+      meta: { title: 'BGPlay - IHR' },
+    },
+  ],
+})

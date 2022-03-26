@@ -1,39 +1,34 @@
 <i18n src="@/locales/long_langs/home.json"></i18n>
 <template>
   <div id="IHR_home">
-    <router-link :to="{ name: 'global_report' }" class="IHR_delikify">
-      <div id="IHR_global-report" class="row">
-        <div class="col-6">
-          <div>Internet Health Report</div>
-          <div id="IHR_global-report-button">{{ $t("globalReport.name") }}</div>
-        </div>
-        <div class="col-6"></div>
+    <div id="IHR_global-report" class="row">
+      <div class="col-6">
+        <div>Internet Health Report</div>
+        <router-link id="IHR_global-report-button" :to="{ name: 'global_report' }">
+          {{ $t('globalReport.name') }}
+        </router-link>
       </div>
-    </router-link>
+      <div class="col-6"></div>
+    </div>
+
     <div
       class="IHR_description-main"
       v-html="
         $interpolateArray($t('globalReport.description'), {
-          ripe:
-            '<a href=\'https://atlas.ripe.net/\' target=\'_blank\'>RIPE Atlas</a>',
-          bgpstream:
-            '<a href=\'https://bgpstream.caida.org/\' target=\'_blank\'>BGPstream</a>'
+          ripe: '<a href=\'https://atlas.ripe.net/\' target=\'_blank\'>RIPE Atlas</a>',
+          bgpstream: '<a href=\'https://bgpstream.caida.org/\' target=\'_blank\'>BGPstream</a>',
         })
       "
     ></div>
-    <div class="IHR_description-main"> 
-    See latest alarms in the 
-    <router-link :to="{ name: 'global_report' }">global report</router-link>
-    and network metrics in 
-    <router-link :to="{ name: 'networks' }">network reports</router-link>.
+    <div class="IHR_description-main">
+      See latest alarms in the
+      <router-link :to="{ name: 'global_report' }">global report</router-link>
+      and network metrics in
+      <router-link :to="{ name: 'networks' }">network reports</router-link>.
     </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_description-main">
-      <q-card
-        class="analysis-modules"
-        v-for="graphT in graphTypes"
-        :key="graphT.name"
-      >
+      <q-card class="analysis-modules" v-for="graphT in graphTypes" :key="graphT.name">
         <q-card-section class="bg-primary text-white q-pa-sm">
           <div class="text-h2">
             <q-avatar :icon="graphT.icon"></q-avatar>
@@ -41,23 +36,14 @@
           </div>
         </q-card-section>
         <q-card-section class="q-pa-xs">
-          <div
-            class="IHR_description"
-            v-html="
-              $interpolateArray(
-                $t(`${graphT.name}.description`),
-                placeholderValues
-              )
-            "
-          ></div>
+          <div class="IHR_description" v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues)"></div>
           <div class="IHR_description IHR_description-link">
             <router-link
               :to="{
                 name: 'documentation',
-                hash: $t(`${graphT.name}.docHash`)
+                hash: $t(`${graphT.name}.docHash`),
               }"
-              >{{ $t("learnmore") }}
-              {{ $t(`${graphT.name}.title`) }}</router-link
+              >{{ $t('learnmore') }} {{ $t(`${graphT.name}.title`) }}</router-link
             >
           </div>
         </q-card-section>
@@ -69,7 +55,7 @@
         <q-card-section class="bg-white text-primary q-pa-sm">
           <div class="text-h2">
             <q-avatar icon="fab fa-twitter"></q-avatar>
-            {{ $t("ihrTweets.title") }}
+            {{ $t('ihrTweets.title') }}
           </div>
         </q-card-section>
         <q-card-section class="q-pa-xs">
@@ -90,15 +76,11 @@
     <div class="IHR_section">
       <h2>
         <q-icon name="fa fa-heart"></q-icon>
-        {{ $t("ack.title") }}
+        {{ $t('ack.title') }}
       </h2>
 
       <div class="row wrap justify-around">
-        <div
-          class="col-xs-3 col-xl-3 column"
-          v-for="org in $t('ack.organizations')"
-          :key="org.name"
-        >
+        <div class="col-xs-3 col-xl-3 column" v-for="org in $t('ack.organizations')" :key="org.name">
           <div class="IHR_ack-logo">
             <span></span>
             <img :src="require(`@/assets/imgs/${org.logo}`)" :alt="org.name" />
@@ -114,34 +96,33 @@
 </template>
 
 <script>
-import { Timeline } from "vue-tweet-embed";
+import { Timeline } from 'vue-tweet-embed'
 const GRAPHS_TYPES = [
   {
-    name: "analysisModules.asInterdependence",
-    icon: "fas fa-project-diagram",
-    docsQuery: {}
+    name: 'analysisModules.asInterdependence',
+    icon: 'fas fa-project-diagram',
+    docsQuery: {},
   },
   {
-    name: "analysisModules.networkDelay",
-    icon: "fas fa-shipping-fast",
-    docsQuery: {}
+    name: 'analysisModules.networkDelay',
+    icon: 'fas fa-shipping-fast',
+    docsQuery: {},
   },
   {
-    name: "analysisModules.delayAndForwarding",
-    icon: "fas fa-exchange-alt",
-    docsQuery: {}
+    name: 'analysisModules.delayAndForwarding',
+    icon: 'fas fa-exchange-alt',
+    docsQuery: {},
   },
   {
-    name: "analysisModules.disco",
-    icon: "fas fa-plug",
-    docsQuery: {}
-  }
-];
+    name: 'analysisModules.disco',
+    icon: 'fas fa-plug',
+    docsQuery: {},
+  },
+]
 
 const PLACEHOLDER_VALUES = {
-  asPaper:
-    "<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
-  close: "</a>"
+  asPaper: "<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
+  close: '</a>',
   /*
   ripe: "<a href='https://atlas.ripe.net/' target='_blank'>RIPE Atlas</a>",
   bgpstream:
@@ -151,25 +132,26 @@ const PLACEHOLDER_VALUES = {
   discoPaper:
     "<a href='https://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf' target='_blank'>"
   */
-};
+}
 
 export default {
+  name: 'HomeView',
   components: {
-    Timeline
+    Timeline,
   },
   props: {
     showSidebar: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
       graphTypes: GRAPHS_TYPES,
-      placeholderValues: PLACEHOLDER_VALUES
-    };
-  }
-};
+      placeholderValues: PLACEHOLDER_VALUES,
+    }
+  },
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -192,6 +174,9 @@ export default {
         font-weight 500
         transition all 0.6s
         width 300pt
+        display block
+        color white
+        text-decoration none
 
         &:hover
           background-color white

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import CommonTableMixin from "./CommonTableMixin";
+import CommonTableMixin from './CommonTableMixin'
 
 export default {
   mixins: [CommonTableMixin],
@@ -20,52 +20,52 @@ export default {
   data() {
     return {
       pagination: {
-        sortBy: "starttime",
+        sortBy: 'starttime',
         descending: true,
         page: 1,
-        rowsPerPage: 10
+        rowsPerPage: 10,
       },
       columns: [
         {
-          name: "starttime",
+          name: 'starttime',
           required: true,
-          label: "Disconnection Time",
-          align: "center",
+          label: 'Disconnection Time',
+          align: 'center',
           field: row => row.starttime,
           format: val => val,
-          sortable: true
+          sortable: true,
         },
         {
-          name: "endtime",
+          name: 'endtime',
           required: true,
-          label: "Reconnection Time",
-          align: "center",
+          label: 'Reconnection Time',
+          align: 'center',
           field: row => row.endtime,
           format: val => val,
-          sortable: true
+          sortable: true,
         },
         {
-          name: "prefixv4",
+          name: 'prefixv4',
           required: true,
-          label: "IP Prefix",
-          align: "center",
+          label: 'IP Prefix',
+          align: 'center',
           field: row => row.prefixv4,
           format: val => val,
-          sortable: false
+          sortable: false,
         },
         {
-          name: "probe_id",
+          name: 'probe_id',
           required: true,
-          label: "Probe ID",
-          align: "center",
+          label: 'Probe ID',
+          align: 'center',
           field: row => row.probe_id,
           format: val => val,
-          sortable: true
-        }
-      ]
-    };
-  }
-};
+          sortable: true,
+        },
+      ],
+    }
+  },
+}
 </script>
 
 <style lang="stylus" scoped></style>
