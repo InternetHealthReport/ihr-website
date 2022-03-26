@@ -10,6 +10,7 @@ export default {
   },
   mounted() {
     this.$libraryDelayer.load('ripe_widget_api', () => {
+      // eslint-disable-next-line no-undef
       ripestat.init(
         'prefix-overview',
         { max_related: 50, resource: this.ip },

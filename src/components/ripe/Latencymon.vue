@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'LatencyMon',
+  name: 'LatencymonWidget',
   props: {
     startTime: {
       type: Date,
@@ -44,6 +44,7 @@ export default {
 
       try {
         //see https://atlas.ripe.net/docs/tools-latencymon/ for more options and details
+        // eslint-disable-next-line no-undef
         this.lm = initLatencymon(
           `#${this.myId}`,
           {

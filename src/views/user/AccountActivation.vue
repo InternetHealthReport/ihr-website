@@ -8,7 +8,7 @@
       </div>
       <div v-else-if="actualState == state.VALIDATE" class="IHR_content IHR_content-confirm">
         <login-form v-model="loginError">
-          <template v-slot:default="user" @keydown.enter="login(user.email, user.password)">
+          <template v-slot:default="user">
             <q-btn color="positive" @click="validateAndSend(user.email, user.password)" id="IHR_validare-and-send">{{
               $t('header.signUp')
             }}</q-btn>

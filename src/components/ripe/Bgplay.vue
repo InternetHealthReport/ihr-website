@@ -13,6 +13,7 @@
 <script>
 import { setTimeout } from 'timers'
 export default {
+  name: 'BgplayWidget',
   props: {
     asNumber: {
       type: Number,
@@ -37,6 +38,7 @@ export default {
   mounted() {
     this.$libraryDelayer.load('ripe_widget_api', () => {
       console.log('resolved')
+      // eslint-disable-next-line no-undef
       this.bgplay = ripestat.init(
         'bgplay',
         {

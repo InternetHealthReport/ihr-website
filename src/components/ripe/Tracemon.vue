@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'TraceMon',
+  name: 'TracemonWidget',
   props: {
     startTime: {
       type: Date,
@@ -30,6 +30,7 @@ export default {
     console.log(this.startTime)
     console.log(this.endTime)
     this.$libraryDelayer.load('tracemon_widget', () => {
+      // eslint-disable-next-line no-undef
       initTracemon(
         `#${this.myId}`,
         {

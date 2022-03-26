@@ -11,6 +11,7 @@ export default {
   },
   mounted() {
     this.$libraryDelayer.load('ripe_widget_api', () => {
+      // eslint-disable-next-line no-undef
       ripestat.init(
         'reverse-dns-ip',
         { resource: this.ip },

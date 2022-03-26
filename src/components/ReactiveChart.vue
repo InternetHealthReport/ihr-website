@@ -48,6 +48,8 @@ export default {
     }
   },
   created() {
+    // TODO: need fix
+    // eslint-disable-next-line vue/no-mutating-props
     this.layout['images'] = [
       {
         x: 1,

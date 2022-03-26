@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 const SCRIPT_REGEXP = /src=('|")(.*(?=\1))/
 const LINK_REGEXP = /href=('|")(.*(?=\1))/
 
