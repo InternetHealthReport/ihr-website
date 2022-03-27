@@ -404,6 +404,7 @@ export default {
                     text: ['no data'],
                     x: [d.toISOString()],
                     y: [15],
+                    showlegend:false,
                 }
                 this.traces.push(noDataTrace)
             })
