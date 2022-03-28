@@ -1,20 +1,20 @@
 let config = {
-  presets: ["@vue/app"],
+  presets: ['@vue/app'],
   plugins: [
     [
-      "transform-imports",
+      'transform-imports',
       {
         quasar: {
-          transform: "quasar/dist/babel-transforms/imports.js",
-          preventFullImport: true
-        }
-      }
-    ]
-  ]
-};
-
-if (process.env.NODE_ENV === "production") {
-  config.plugins.push(["transform-remove-console"]);
+          transform: 'quasar/dist/babel-transforms/imports.js',
+          preventFullImport: true,
+        },
+      },
+    ],
+  ],
 }
 
-module.exports = config;
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(['transform-remove-console'])
+}
+
+module.exports = config

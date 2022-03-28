@@ -198,7 +198,6 @@
                     </div>
                     <div class="text-caption text-grey">RIPE Atlas log</div>
                 </q-item-section>
-
                 <q-item-section side>
                     <div class="text" v-if="discoExpanded">
                         <q-input debounce="300" v-model="discoFilter" placeholder="Filter">

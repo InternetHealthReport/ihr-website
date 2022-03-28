@@ -1,29 +1,29 @@
-import Vue from "vue";
-import VueI18n from "vue-i18n";
+import Vue from 'vue'
+import VueI18n from 'vue-i18n'
 
-Vue.use(VueI18n);
+Vue.use(VueI18n)
 
 function loadLocaleMessages() {
-  const locales = require.context("./langs", true, /[A-Za-z0-9-_,\s]+\.json$/i);
-  const messages = {};
+  const locales = require.context('./langs', true, /[A-Za-z0-9-_,\s]+\.json$/i)
+  const messages = {}
   locales.keys().forEach(key => {
-    const matched = key.match(/([A-Za-z0-9-_]+)\./i);
+    const matched = key.match(/([A-Za-z0-9-_]+)\./i)
     if (matched && matched.length > 1) {
-      const locale = matched[1];
-      messages[locale] = locales(key);
+      const locale = matched[1]
+      messages[locale] = locales(key)
     }
-  });
+  })
 
-  return messages;
+  return messages
 }
 
 let vueI18n = new VueI18n({
-  locale: process.env.VUE_APP_I18N_LOCALE || "en-us",
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || "en-us",
-  messages: loadLocaleMessages()
-});
+  locale: process.env.VUE_APP_I18N_LOCALE || 'en-us',
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en-us',
+  messages: loadLocaleMessages(),
+})
 
-const INTERPOLATION_REGEXP = /^{([^}]+)}|{([^}]+)}/g;
+const INTERPOLATION_REGEXP = /^{([^}]+)}|{([^}]+)}/g
 
 Vue.mixin({
   methods: {
@@ -35,42 +35,42 @@ Vue.mixin({
      */
     $interpolateArray(messageArray, values, wrapper) {
       if (wrapper == undefined) {
-        wrapper = ["<p>", "</p>"];
+        wrapper = ['<p>', '</p>']
       } else {
         if (wrapper.length != 2) {
-          throw Error("you need 2 element to wrap the string!");
+          throw Error('you need 2 element to wrap the string!')
         }
       }
       return Object.keys(messageArray)
         .map(e => messageArray[Number(e)])
         .map(message => {
-          let arr = message.split(INTERPOLATION_REGEXP);
+          let arr = message.split(INTERPOLATION_REGEXP)
           if (arr.length > 1) {
             if (values === undefined) {
-              throw Error("please provide the needed parameters");
+              throw Error('please provide the needed parameters')
             }
-            message = "";
-            let substitute = false;
+            message = ''
+            let substitute = false
             for (let i = 0; i < arr.length; ++i) {
               if (arr[i] === undefined) {
-                continue;
+                continue
               }
               if (substitute) {
                 if (values[arr[i]] === undefined) {
-                  throw Error("missing parameter -->" + arr[i]);
+                  throw Error('missing parameter -->' + arr[i])
                 }
-                message += values[arr[i]];
+                message += values[arr[i]]
               } else {
-                message += arr[i];
+                message += arr[i]
               }
-              substitute = !substitute;
+              substitute = !substitute
             }
           }
-          return wrapper[0] + message + wrapper[1];
+          return wrapper[0] + message + wrapper[1]
         })
-        .join(" ");
-    }
-  }
-});
+        .join(' ')
+    },
+  },
+})
 
-export default vueI18n;
+export default vueI18n

@@ -271,7 +271,6 @@ export default {
                     //this.loadingStatus = LOADING_STATUS.ERROR;
                     return
                 }
-
                 // Hide tabs if not necessary
                 this.$nextTick(function () {
                     this.show.delayAndForwarding_disable = !results.results[0].delay_forwarding

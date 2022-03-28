@@ -24,8 +24,8 @@
               newWindow({
                 name: 'networks',
                 params: {
-                  asn: $options.filters.ihr_NumberToAsOrIxp(props.row.asNumber)
-                }
+                  asn: $options.filters.ihr_NumberToAsOrIxp(props.row.asNumber),
+                },
               })
             "
             href="javascript:void(0)"
@@ -40,9 +40,7 @@
           </div>
         </q-td>
         <q-td key="nbalarms">{{ props.row.nbalarms }}</q-td>
-        <q-td key="avgdev">{{
-          (props.row.cumdev / props.row.nbalarms).toFixed(2)
-        }}</q-td>
+        <q-td key="avgdev">{{ (props.row.cumdev / props.row.nbalarms).toFixed(2) }}</q-td>
       </q-tr>
       <q-tr v-show="props.expand" :props="props">
         <q-td colspan="100%" class="IHR_nohover" bordered>
@@ -52,7 +50,7 @@
               :end-time="stopTime"
               :startPointName="String(props.row.asNumber)"
               :startPointType="props.row.asNumber > 0 ? 'AS' : 'IX'"
-              :endPointName="endpointKeys(props.row.endpoints)"
+              :endPointNames="endpointKeys(props.row.endpoints)"
               fetch
             />
           </div>
@@ -63,171 +61,164 @@
 </template>
 
 <script>
-import CommonTableMixin from "./CommonTableMixin";
-import NetworkDelayChart from "@/views/charts/NetworkDelayChart";
+import CommonTableMixin from './CommonTableMixin'
+import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 
-const MAX_NETDELAY_PLOTS = 5;
+const MAX_NETDELAY_PLOTS = 12
 
 export default {
   mixins: [CommonTableMixin],
   components: {
-    NetworkDelayChart
+    NetworkDelayChart,
   },
   props: {
     data: {
       type: Array,
-      required: true
+      required: true,
     },
     loading: {
       type: Boolean,
-      required: true
+      required: true,
     },
     startTime: {
       type: Date,
-      required: true
+      required: true,
     },
     stopTime: {
       type: Date,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       expandedRow: [],
       rows: [],
       pagination: {
-        sortBy: "nbalarms",
+        sortBy: 'nbalarms',
         descending: true,
         page: 1,
-        rowsPerPage: 5
+        rowsPerPage: 5,
       },
       columns: [
         {
-          name: "overview",
-          label: "Overview",
-          align: "center"
+          name: 'overview',
+          label: 'Overview',
+          align: 'center',
         },
         {
-          name: "asNumber",
+          name: 'asNumber',
           required: true,
-          label: "Source",
-          align: "left",
+          label: 'Source',
+          align: 'left',
           field: row => row.asNumber,
           format: val => this.$options.filters.ihr_NumberToAsOrIxp(val),
-          sortable: true
+          sortable: true,
         },
         {
-          name: "destinations",
+          name: 'destinations',
           required: false,
-          label: "Destinations",
-          align: "left",
+          label: 'Destinations',
+          align: 'left',
           field: row => row.endpoints,
           format: val => this.$options.filters.sortedKeys(val),
-          sortable: false
+          sortable: false,
         },
         {
-          name: "nbalarms",
+          name: 'nbalarms',
           required: true,
-          label: "Nb. Alarms",
-          align: "left",
+          label: 'Nb. Alarms',
+          align: 'left',
           field: row => row.nbalarms,
           format: val => val,
-          sortable: true
+          sortable: true,
         },
         {
-          name: "avgdev",
+          name: 'avgdev',
           required: true,
-          label: "Average Deviation",
-          align: "left",
+          label: 'Average Deviation',
+          align: 'left',
           field: row => row.cumdev / row.nbalarms,
           format: val => val.toFixed(2),
-          sortable: true
-        }
-      ]
-    };
+          sortable: true,
+        },
+      ],
+    }
   },
   mounted() {
-    this.computeDataSummary();
+    this.computeDataSummary()
   },
   methods: {
     computeDataSummary() {
-      if (!this.data.length) return;
+      if (!this.data.length) return
 
-      var datasum = {};
+      var datasum = {}
       this.data.forEach(alarm => {
-        var start = alarm.startpoint_type + alarm.startpoint_name;
-        var asNumber =
-          alarm.type == "IX"
-            ? -parseInt(alarm.startpoint_name)
-            : parseInt(alarm.startpoint_name);
+        var start = alarm.startpoint_type + alarm.startpoint_name
+        var asNumber = alarm.type == 'IX' ? -parseInt(alarm.startpoint_name) : parseInt(alarm.startpoint_name)
         if (asNumber != 0) {
           if (start in datasum) {
-            datasum[start].nbalarms += 1;
-            datasum[start].cumdev += alarm.deviation;
+            datasum[start].nbalarms += 1
+            datasum[start].cumdev += alarm.deviation
           } else {
             datasum[start] = {
               asNumber: asNumber,
               nbalarms: 1,
               cumdev: alarm.deviation,
-              endpoints: {}
-            };
+              endpoints: {},
+            }
           }
 
           // Add destination
-          var end = alarm.endpoint_type + alarm.endpoint_name;
+          var end = alarm.endpoint_type + alarm.endpoint_name
           if (end in datasum[start].endpoints) {
-            datasum[start].endpoints[end] += alarm.deviation;
+            datasum[start].endpoints[end] += alarm.deviation
           } else {
-            datasum[start].endpoints[end] = alarm.deviation;
+            datasum[start].endpoints[end] = alarm.deviation
           }
         }
-      });
+      })
 
-      const values = Object.values(datasum);
-      this.rows = values;
+      const values = Object.values(datasum)
+      this.rows = values
     },
     destinationsSubtitle(val) {
-      return (
-        String(Object.keys(val).length) +
-        " " +
-        this.$t("charts.networkDelayAlarms.table.destinations")
-      );
+      return String(Object.keys(val).length) + ' ' + this.$t('charts.networkDelayAlarms.table.destinations')
     },
     destinationsBody(val) {
-      var body = "";
+      var body = ''
       Object.keys(val).forEach(dest => {
-        var loc = dest.startsWith("CT") ? dest.substring(2) : dest;
-        body += loc + ", ";
-      });
+        var loc = dest.startsWith('CT') ? dest.substring(2) : dest
+        body += loc + ', '
+      })
 
       // Remove the last comma
-      body = body.substring(0, body.length - 2);
-      return body;
+      body = body.substring(0, body.length - 2)
+      return body
     },
     endpointKeys(endpoints) {
-      var keys = [];
+      var keys = []
       // Compute endpoints keys
       for (const key of Object.keys(endpoints)) {
-        var type = key.substring(0, 2);
-        var name = key.substring(2);
-        var af = "4"; //TODO get this value from global settings
-        keys.push(type + af + name);
+        var type = key.substring(0, 2)
+        var name = key.substring(2)
+        var af = '4' //TODO get this value from global settings
+        keys.push(type + af + name)
       }
 
       // Limit the number of values to display
       if (keys.length > MAX_NETDELAY_PLOTS) {
-        keys = keys.slice(0, MAX_NETDELAY_PLOTS);
+        keys = keys.slice(0, MAX_NETDELAY_PLOTS)
       }
 
-      return keys;
-    }
+      return keys
+    },
   },
   watch: {
     data() {
-      this.computeDataSummary();
-    }
-  }
-};
+      this.computeDataSummary()
+    },
+  },
+}
 </script>
 <style lang="stylus">
 .IHR_ndelay_table_cell

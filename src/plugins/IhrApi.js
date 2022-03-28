@@ -251,6 +251,7 @@ const IhrApi = {
           this._generic(DelayQuery.ENTRY_POINT, DelayQuery.HTTP_METHOD, delayQuery, successCallback, errorCallback)
         },
         delay_alarms(delayAlarmsQuery, successCallback, errorCallback) {
+
           this._generic(
             DelayAlarmsQuery.ENTRY_POINT,
             DelayAlarmsQuery.HTTP_METHOD,
