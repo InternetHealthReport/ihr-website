@@ -23,7 +23,7 @@
     "plotly.js-dist": "^1.52.3",
     "postcss-plugins": "^1.13.1",
     "quasar": "^1.15.22",
-    "swagger-ui": "^3.25.0",
+    "swagger-ui": "^4.10.0",
     "timeline-vuejs": "^1.1.1",
     "vue": "^2.6.11",
     "vue-animejs": "^2.1.1",
