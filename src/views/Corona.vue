@@ -53,7 +53,7 @@
             </h3>
           </div>
         </div>
-        <div v-for="asn in asns" :key="`${arn.name}-${asn.as}`">
+        <div v-for="asn in asns" :key="`${asn.name}-${asn.as}`">
           <div class="row">
             <div class="col-12 text-center q-pa-md">
               <div class="IHR_anchor" :id="asn.as"></div>
