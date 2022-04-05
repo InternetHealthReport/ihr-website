@@ -271,7 +271,7 @@ export default {
         key += elem.endpoint_type
         key += elem.endpoint_af
         key += elem.endpoint_name
-
+        elem.median = Math.abs(elem.median)
         let trace = traces[key]
         if (trace === undefined) {
           let startname = elem.startpoint_type + elem.startpoint_name
