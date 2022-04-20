@@ -1,37 +1,37 @@
 # Quick guide
-This guide purpose is to help maintainers to get used as quick as possible with the technologies used.
+This guide's purpose is to help maintainers to get used to the technologies as quick as possible.
 
 ## Prerequisites
-This guide cannot cover all missing knowledge so where a list to basic stuff:
+This guide cannot cover all missing knowledge so here is a list some references to get started with the basic stuff:
 * **es6 javascript**: https://github.com/lukehoban/es6features
 * **vuejs**: https://vuejs.org/v2/guide/
 * **CSS stylus**: http://stylus-lang.com/
 
 ## Plugins
 ### vue-fragment
-permit to have multiple elements as root of a template
+Permit to have multiple elements as root of a template
 https://www.npmjs.com/package/vue-fragments
 
 ## Quasar UI
-You can take a look here https://quasar.dev/introduction-to-quasar, but this
-guide summarize some simple stuff for maintenance.
+You can take a look here  [Introduction to Quasar](https://quasar.dev/introduction-to-quasar), here this
+guide summarizes some of the simpler stuff for maintenance.
 
 ### Component configuration
 
 *src/quasar.js* contains all loaded components. If some used components are missing you can probably see some weird locking stuff.
-check that the corresponding component is loaded and it's directive are loaded it's quasar page (e.g. https://quasar.dev/vue-components/ajax-bar, installation section)
+Check that the corresponding component is loaded and it's directive are loaded it's quasar page (e.g. https://quasar.dev/vue-components/ajax-bar, installation section)
 
 ### Layout
-Whenever possible the Flex Grid layout it's utilized. Briefly it consists in
-rows and columns (cols) elements. The row (class="row") is divided in 12 cols and the default behavior
-it's to wrap (moving to below row) cols (class="col") that cannot fit in those 12.
-A col can span into multiple cols (col-\[n\]) and can be defined differently for different
+Whenever possible the Flexbox layout is utilized over CSS grids layout. Briefly it consists of 
+rows and columns (cols) elements. The row (class="row") is divided in 12 coloumns and the default behaviour
+is to wrap (moving to below row) coloumns (class="col") that cannot fit in those 12.
+A coloumn can span into multiple coloumns (col-\[n\]) and can be defined differently for different
 viewport (col-\[vp\]-\[n\]).
-The full reference is in the quasar website https://quasar.dev/layout/grid/introduction-to-flexbox.
+The full reference to the flexbox is available [here] (https://quasar.dev/layout/grid/introduction-to-flexbox).
 
 ### Icons
-In this project is used Font Awesome https://fontawesome.com/.
-To keep the number of different icons short, here a list of already used icons:
+Font kit used in this project is [Font Awesome](https://fontawesome.com/).
+To keep the number of different icons less, here a list of already used icons:
 * **AS dependence** [*fas fa-project-diagram*](https://fontawesome.com/icons/project-diagram?style=solid)
 * **Delay** [*fas fa-shipping-fast*](https://fontawesome.com/icons/shipping-fast?style=solid)
 * **Disco** [*fas fa-plug*](https://fontawesome.com/icons/plug?style=solid)
@@ -54,8 +54,8 @@ To keep the number of different icons short, here a list of already used icons:
 * **account**: [*fas fa-user-circle*](https://fontawesome.com/icons/user-circle?style=solid)
 
 ## Translations
-if a view or a component has a few of unique elements to translate you can do
-it directly into is file
+If a view or a component have  one or few of unique elements to translate to you can do
+it directly into the file by using a translation editor.
 You can use https://www.codeandweb.com/babeledit (one time payment)
 
 ## Routes
