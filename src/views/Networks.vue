@@ -268,7 +268,7 @@ export default {
             let filter = new NetworkQuery().asNumber(this.asNumber)
             this.$ihr_api.network(filter, results => {
                 if (results.count < 1) {
-                    //this.loadingStatus = LOADING_STATUS.ERROR;
+                    this.loadingStatus = LOADING_STATUS.NOT_FOUND;
                     return
                 }
                 // Hide tabs if not necessary
