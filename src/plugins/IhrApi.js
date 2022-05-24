@@ -23,6 +23,7 @@ import {
   NetworkDelayQuery,
   NetworkDelayAlarmsQuery,
   NetworkDelayLocation,
+  MetisQuery,
 } from './query/IhrQuery'
 import { MonitoringUserQuery } from './query/IhrUserQuery'
 
@@ -176,8 +177,7 @@ const IhrApi = {
         },
 
         _resolveAxiosPromise(endpoint, method, query, successCallback, errorCallback) {
-          let promise =
-            method === 'get' ? this.axios_base.get(endpoint, { params: query }) : this.axios_base.post(endpoint, query)
+          let promise = method === 'get' ? this.axios_base.get(endpoint, { params: query }) : this.axios_base.post(endpoint, query)
 
           promise
             .then(response => {
@@ -251,26 +251,13 @@ const IhrApi = {
           this._generic(DelayQuery.ENTRY_POINT, DelayQuery.HTTP_METHOD, delayQuery, successCallback, errorCallback)
         },
         delay_alarms(delayAlarmsQuery, successCallback, errorCallback) {
-
-          this._generic(
-            DelayAlarmsQuery.ENTRY_POINT,
-            DelayAlarmsQuery.HTTP_METHOD,
-            delayAlarmsQuery,
-            successCallback,
-            errorCallback
-          )
+          this._generic(DelayAlarmsQuery.ENTRY_POINT, DelayAlarmsQuery.HTTP_METHOD, delayAlarmsQuery, successCallback, errorCallback)
         },
         disco_events(discoEventQuery, successCallback, errorCallback) {
           this._generic(DiscoEventQuery.ENTRY_POINT, DiscoEventQuery.HTTP_METHOD, discoEventQuery, successCallback, errorCallback)
         },
         disco_probes(discoProbesQuery, successCallback, errorCallback) {
-          this._generic(
-            DiscoProbesQuery.ENTRY_POINT,
-            DiscoProbesQuery.HTTP_METHOD,
-            discoProbesQuery,
-            successCallback,
-            errorCallback
-          )
+          this._generic(DiscoProbesQuery.ENTRY_POINT, DiscoProbesQuery.HTTP_METHOD, discoProbesQuery, successCallback, errorCallback)
         },
         forwarding(forwardingQuery, successCallback, errorCallback) {
           this._generic(ForwardingQuery.ENTRY_POINT, ForwardingQuery.HTTP_METHOD, forwardingQuery, successCallback, errorCallback)
@@ -306,13 +293,7 @@ const IhrApi = {
           )
         },
         hegemony_cone(hegemonyConeQuery, successCallback, errorCallback) {
-          this._generic(
-            HegemonyConeQuery.ENTRY_POINT,
-            HegemonyConeQuery.HTTP_METHOD,
-            hegemonyConeQuery,
-            successCallback,
-            errorCallback
-          )
+          this._generic(HegemonyConeQuery.ENTRY_POINT, HegemonyConeQuery.HTTP_METHOD, hegemonyConeQuery, successCallback, errorCallback)
         },
         network(networkQuery, successCallback, errorCallback) {
           this._generic(NetworkQuery.ENTRY_POINT, NetworkQuery.HTTP_METHOD, networkQuery, successCallback, errorCallback)
@@ -321,13 +302,7 @@ const IhrApi = {
           this._generic(CountryQuery.ENTRY_POINT, CountryQuery.HTTP_METHOD, countryQuery, successCallback, errorCallback)
         },
         network_delay(networkDelayQuery, successCallback, errorCallback) {
-          this._generic(
-            NetworkDelayQuery.ENTRY_POINT,
-            NetworkDelayQuery.HTTP_METHOD,
-            networkDelayQuery,
-            successCallback,
-            errorCallback
-          )
+          this._generic(NetworkDelayQuery.ENTRY_POINT, NetworkDelayQuery.HTTP_METHOD, networkDelayQuery, successCallback, errorCallback)
         },
         hegemony_alarms(hegemonyAlarmsQuery, successCallback, errorCallback) {
           this._generic(
@@ -356,15 +331,12 @@ const IhrApi = {
             errorCallback
           )
         },
+        metis(metisQuery, successCallback, errorCallback) {
+          this._generic(MetisQuery.ENTRY_POINT, MetisQuery.HTTP_METHOD, metisQuery, successCallback, errorCallback)
+        },
         // User management section
         userSignIn(email, password, recaptcha, successCallback, errorCallback) {
-          this._generic(
-            'user/sign_in/',
-            'post',
-            { email: email, password: password, recaptcha: recaptcha },
-            successCallback,
-            errorCallback
-          )
+          this._generic('user/sign_in/', 'post', { email: email, password: password, recaptcha: recaptcha }, successCallback, errorCallback)
         },
         userValidate(email, password, token, successCallback, errorCallback) {
           this._generic(
@@ -551,4 +523,5 @@ export {
   NetworkDelayAlarmsQuery,
   HegemonyAlarmsQuery,
   NetworkDelayLocation,
+  MetisQuery,
 }

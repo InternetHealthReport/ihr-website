@@ -10,6 +10,7 @@ import Countries from '@/views/Countries'
 import Networks from '@/views/Networks'
 import Corona from '@/views/Corona'
 import ROV from '@/views/ROV'
+import MetisSelection from '@/views/MetisSelection'
 import SignUp from '@/views/user/SignUp'
 import AccountActivation from '@/views/user/AccountActivation'
 import PersonalPage from '@/views/user/PersonalPage'
@@ -206,6 +207,16 @@ export default new Router({
       name : 'PageNotFound',
       path : '*',
       component : PageNotFound,
+    },
+    {
+      name: 'metis',
+      path: `${routerBase}metis`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: MetisSelection,
+      },
+      meta: { title: 'Metis - IHR' },
     },
 
     // Widgets
