@@ -1222,6 +1222,52 @@ class NetworkDelayLocation extends Query {
   }
 }
 
+class MetisQuery extends TimeQuery {
+  constructor() {
+    super(...arguments)
+  }
+
+  timeBin(time, comparator = Query.EXACT) {
+    return this._set('timebin', Query.dateFormatter(time), comparator)
+  }
+
+  startTime(time, comparator = Query.EXACT) {
+    return this.timeBin(time, comparator)
+  }
+
+  endTime(time, comparator = Query.EXACT) {
+    return this.timeBin(time, comparator)
+  }
+
+  addressFamily(family) {
+    return this._set('af', family)
+  }
+
+  metric(m) {
+    return this._set('metric', m)
+  }
+
+  ranking(rank) {
+    return this._set('rank', rank, Query.LTE)
+  }
+
+  orderedByTime(order = Query.ASC) {
+    return this._setOrder('timebin', order)
+  }
+
+  orderedAsFamily(order = Query.ASC) {
+    return this._setOrder('af', order)
+  }
+
+  orderedByRank(order = Query.ASC) {
+    return this._setOrder('rank', order)
+  }
+
+  static get ENTRY_POINT() {
+    return 'metis/'
+  }
+}
+
 export {
   AS_FAMILY,
   QueryBase,
@@ -1243,4 +1289,5 @@ export {
   NetworkDelayQuery,
   NetworkDelayAlarmsQuery,
   NetworkDelayLocation,
+  MetisQuery,
 }
