@@ -17,6 +17,7 @@ import PersonalPage from '@/views/user/PersonalPage'
 import ResetPassword from '@/views/user/ResetPassword'
 import Documentation from '@/views/Documentation'
 import Bgplay from '@/components/ripe/Bgplay'
+import PageNotFound from '@/views/PageNotFound'
 
 Vue.use(Router)
 
@@ -201,6 +202,11 @@ export default new Router({
         default: Documentation,
       },
       meta: { title: 'Documentation - IHR' },
+    },
+    {
+      name : 'PageNotFound',
+      path : '*',
+      component : PageNotFound,
     },
     {
       name: 'metis',
