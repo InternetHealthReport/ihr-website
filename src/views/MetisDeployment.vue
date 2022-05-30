@@ -1,19 +1,18 @@
 <template>
   <div id="IHR_as-and-ixp-container">
     <div>
-      <h1 class="text-center">Metis: Atlas probe selection</h1>
+      <h1 class="text-center">Metis: Atlas probe deployment recommendations</h1>
 
       <div class="row justify-center">
         <div class="col-4 IHR_description q-pa-lg">
           <p>
-            Select a number of Atlas probes, a distance metric, and IP version to generate a list of diverse probe-AS. The probe selection
-            algorithm is detailed in: https://url-to-the-paper
+            Select a distance metric, and IP version to generate a list of potential ASes for probe deployment. The implemented
+            recommendation algorithm is detailed in: https://url-to-the-paper
           </p>
         </div>
       </div>
       <div class="row justify-center">
         <div class="col-3">
-          <q-input v-model="nbprobes" label="Number of probes" />
           <q-select v-model="metric" :options="metricoptions" label="Distance metric" />
           <q-select v-model="af" :options="afoptions" label="IP version" />
           <q-btn @click="apiCall" label="Go"></q-btn>
@@ -48,7 +47,7 @@
 
 <script>
 import reportMixin from '@/views/mixin/reportMixin'
-import { MetisAtlasSelectionQuery } from '@/plugins/IhrApi'
+import { MetisAtlasDeploymentQuery } from '@/plugins/IhrApi'
 
 const ATLAS_PROBE = {
   tags: {
@@ -61,7 +60,7 @@ const ATLAS_PROBE = {
 }
 
 export default {
-  name: 'MetisSelection',
+  name: 'MetisDeployment',
   mixins: [reportMixin],
   data() {
     return {
@@ -81,17 +80,18 @@ export default {
     pushRoute() {},
     setFilter() {
       if (this.metric && this.nbprobes && this.af) {
-        this.apiFilter = new MetisAtlasSelectionQuery()
+        this.apiFilter = new MetisAtlasDeploymentQuery()
           .ranking(this.nbprobes)
           .addressFamily(this.af)
           .metric(this.metric)
-          .orderedByTime().orderedByRank()
+          .orderedByTime()
+          .orderedByRank()
       }
     },
     apiCall() {
       this.fetch = false
       this.setFilter()
-      this.$ihr_api.metisAtlasSelection(
+      this.$ihr_api.metisAtlasDeployment(
         this.apiFilter,
         result => {
           this.$nextTick(function () {

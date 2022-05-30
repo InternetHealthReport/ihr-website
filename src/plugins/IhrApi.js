@@ -23,7 +23,8 @@ import {
   NetworkDelayQuery,
   NetworkDelayAlarmsQuery,
   NetworkDelayLocation,
-  MetisQuery,
+  MetisAtlasSelectionQuery,
+  MetisAtlasDeploymentQuery,
 } from './query/IhrQuery'
 import { MonitoringUserQuery } from './query/IhrUserQuery'
 
@@ -331,9 +332,25 @@ const IhrApi = {
             errorCallback
           )
         },
-        metis(metisQuery, successCallback, errorCallback) {
-          this._generic(MetisQuery.ENTRY_POINT, MetisQuery.HTTP_METHOD, metisQuery, successCallback, errorCallback)
+        metisAtlasSelection(metisAtlasSelectionQuery, successCallback, errorCallback) {
+          this._generic(
+            MetisAtlasSelectionQuery.ENTRY_POINT,
+            MetisAtlasSelectionQuery.HTTP_METHOD,
+            metisAtlasSelectionQuery,
+            successCallback,
+            errorCallback
+          )
         },
+        metisAtlasDeployment(metisAtlasDeploymentQuery, successCallback, errorCallback) {
+          this._generic(
+            MetisAtlasDeploymentQuery.ENTRY_POINT,
+            MetisAtlasDeploymentQuery.HTTP_METHOD,
+            metisAtlasDeploymentQuery,
+            successCallback,
+            errorCallback
+          )
+        },
+
         // User management section
         userSignIn(email, password, recaptcha, successCallback, errorCallback) {
           this._generic('user/sign_in/', 'post', { email: email, password: password, recaptcha: recaptcha }, successCallback, errorCallback)
@@ -523,5 +540,6 @@ export {
   NetworkDelayAlarmsQuery,
   HegemonyAlarmsQuery,
   NetworkDelayLocation,
-  MetisQuery,
+  MetisAtlasSelectionQuery,
+  MetisAtlasDeploymentQuery,
 }

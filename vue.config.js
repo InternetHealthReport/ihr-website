@@ -45,6 +45,12 @@ module.exports = {
       },
       extensions: ['.js', '.vue', '.json', '.styl'],
     },
+    optimization: {
+      splitChunks: {
+        minSize: 10000,
+        maxSize: 250000,
+      },
+    },
   },
   publicPath: '/ihr/',
 }

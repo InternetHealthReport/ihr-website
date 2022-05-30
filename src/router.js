@@ -10,7 +10,9 @@ import Countries from '@/views/Countries'
 import Networks from '@/views/Networks'
 import Corona from '@/views/Corona'
 import ROV from '@/views/ROV'
+import MetisHome from '@/views/MetisHome'
 import MetisSelection from '@/views/MetisSelection'
+import MetisDeployment from '@/views/MetisDeployment'
 import SignUp from '@/views/user/SignUp'
 import AccountActivation from '@/views/user/AccountActivation'
 import PersonalPage from '@/views/user/PersonalPage'
@@ -204,9 +206,9 @@ export default new Router({
       meta: { title: 'Documentation - IHR' },
     },
     {
-      name : 'PageNotFound',
-      path : '*',
-      component : PageNotFound,
+      name: 'PageNotFound',
+      path: '*',
+      component: PageNotFound,
     },
     {
       name: 'metis',
@@ -214,9 +216,29 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: MetisSelection,
+        default: MetisHome,
       },
       meta: { title: 'Metis - IHR' },
+    },
+    {
+      name: 'metis_selection',
+      path: `${routerBase}metis/selection`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: MetisSelection,
+      },
+      meta: { title: 'Metis Selection - IHR' },
+    },
+    {
+      name: 'metis_deployment',
+      path: `${routerBase}metis/deployment`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: MetisDeployment,
+      },
+      meta: { title: 'Metis Deployment - IHR' },
     },
 
     // Widgets
