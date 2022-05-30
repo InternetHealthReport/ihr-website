@@ -251,6 +251,10 @@ export default {
       & a:active
         border-bottom 1px solid $accent
 
+      .router-link-active,
+      .router-link-exact-active 
+        border-bottom 1px solid red        
+
       & ul
         margin 5px
         padding 0px
