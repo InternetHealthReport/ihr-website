@@ -4,8 +4,8 @@
     <div class="row justify-center">
       <div class="IHR_description">
         <div class="row justify-evenly q-pb-lg">
-          <q-btn color="secondary" label="Probe selection dataset" to="metis/selection" />
-          <q-btn color="secondary" label="Probe deployment dataset" to="metis/deployment" />
+          <q-btn color="secondary" label="Atlas probe selection" to="metis/selection" />
+          <q-btn color="secondary" label="Atlas probe deployment" to="metis/deployment" />
         </div>
         <p>Welcome to Metis: A data-driven method to select diverse vantage points.</p>
         <p>
@@ -35,11 +35,11 @@
         <h3>Atlas probe selection and deployment recommendations</h3>
         <p>The first data set is for anyone who wants to start measurements and needs to select a suitable set of probes:</p>
         <div class="row justify-center q-pb-lg">
-          <q-btn color="secondary" label="Probe selection dataset" to="metis/selection" />
+          <q-btn color="secondary" label="Atlas probe selection" to="metis/selection" />
         </div>
         <p>The second data set shows recommendations on where to deploy new probes to increase the diversity of the probe pool:</p>
         <div class="row justify-center">
-          <q-btn color="secondary" label="Probe deployment dataset" to="metis/deployment" />
+          <q-btn color="secondary" label="Atlas probe deployment" to="metis/deployment" />
         </div>
       </div>
     </div>

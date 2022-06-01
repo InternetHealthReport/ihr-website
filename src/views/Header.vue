@@ -78,6 +78,17 @@ const simple_menu = [
     ],
   },
   {
+    entryName: 'header.tools',
+    routeName: 'global_report',
+    options: [
+      {
+        entryName: 'header.metis',
+        routeName: 'metis',
+        summary: 'Atlas probe selection and deployment',
+      },
+    ],
+  },
+  {
     entryName: 'header.documentation',
     routeName: 'documentation',
   },

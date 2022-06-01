@@ -9,6 +9,8 @@
   "header": {
     "API": "API",
     "reports": "Reports",
+    "tools": "Tools",
+    "metis": "Metis",
     "globalReport": "Global",
     "countryReport": "Country",
     "networkReport": "Network",
