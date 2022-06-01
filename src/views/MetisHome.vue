@@ -59,6 +59,5 @@ export default {
 @import '../styles/quasar.variables';
 
 .IHR_description
-    font-weight 400
     max-width 900px
 </style>

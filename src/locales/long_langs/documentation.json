@@ -153,7 +153,7 @@
         },
         "prefixasdependency": {
           "title": "Route Origin Validation",
-          "summary": "We check the status of each IP prefix and its corresponding ASN seen in BGP data (RIS and Routeviews) in the RPKI, IRR, and delegated databases.",
+          "summary": "For any route seen on BGP (RIS and Routeviews) we report its RPKI and IRR status, as well as the status of the prefix and origin ASN in Regional Internet Registries Statistics files. In addition, we also compute the visibility of the prefix, that is the percentage of BGP speakers in RIS and Routeviews that advertise the prefix, and the common transit networks found in AS paths.",
           "description": [
             {
               "header": "Status",
@@ -162,7 +162,16 @@
             {
               "header": "AS dependency",
               "body": " <p>The main transit ASes for each prefix are identified using the AS Hegemony metric. The AS Hegemony value roughly corresponds to the percentage of AS paths that contain the transit AS (except for the API where the AS hegemony is expressed as a ration).</p>"
+            },
+            {
+              "header": "Data Freshness",
+              "body": " <p>This dataset is updated daily and reflects routing data has observed at midnight UTC.</p>"
+            },
+            {
+              "header": "References",
+              "body": "<ul> <li>MANRS blog article: Romain Fontugne, <a href='https://www.manrs.org/2021/11/the-routing-game-hunting-invalid-routes/'>The Routing Game: Hunting Invalid Routes</a>.</li><li> ROV source code: <a href='https://github.com/InternetHealthReport/route-origin-validator'> https://github.com/InternetHealthReport/route-origin-validator</a></li><li> AS Hegemony source code: <a href='https://github.com/InternetHealthReport/as-hegemony'> https://github.com/InternetHealthReport/as-hegemony</a> </li></ul>"
             }
+            
           ]
         },
         "netdelay": {

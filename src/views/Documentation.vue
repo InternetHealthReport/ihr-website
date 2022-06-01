@@ -96,6 +96,26 @@
             <router-link
               :to="{
                 name: 'documentation',
+                hash: '#' + replaceSpaces($t(`documentationPage.sections.countryasdependency.title`)),
+              }"
+              class="IHR_delikify"
+              >{{ $t('documentationPage.sections.countryasdependency.title') }}</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              :to="{
+                name: 'documentation',
+                hash: '#' + replaceSpaces($t(`documentationPage.sections.prefixasdependency.title`)),
+              }"
+              class="IHR_delikify"
+              >{{ $t('documentationPage.sections.prefixasdependency.title') }}</router-link
+            >
+          </li>
+          <li>
+            <router-link
+              :to="{
+                name: 'documentation',
                 hash: '#' + replaceSpaces($t(`documentationPage.sections.netdelay.title`)),
               }"
               class="IHR_delikify"
@@ -202,7 +222,7 @@ export default {
   },
   methods: {
     replaceSpaces(text) {
-      return text.split(' ').join('_').split('(').join('_').split(')').join('_')
+      return text.split(' ').join('_').split('(').join('_').split(')').join('_').split("'").join('_')
     },
   },
 }
@@ -213,8 +233,8 @@ export default {
 
 #IHR_
   &documentation-page
-    width 90%
     margin 0pt auto
+    max-width 1200px
 
 .IHR_
   &documentation-page
