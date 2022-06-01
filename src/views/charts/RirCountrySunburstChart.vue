@@ -56,8 +56,8 @@ export default {
       rir_values.sort(function (a, b) {
         return b[0] - a[0]
       })
-      for (const [value, rir] of rir_values) {
-        this.layout.sunburstcolorway.push(colors.get(rir))
+      for (const rir of rir_values) {
+        this.layout.sunburstcolorway.push(colors.get(rir[1]))
       }
       values[0] = total
       if (total == 0) {

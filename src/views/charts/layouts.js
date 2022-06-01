@@ -97,7 +97,7 @@ var HEGEMONY_ALARMS_LAYOUT = {
 
 var RIR_COUNTRY_SUNBURST_LAYOUT = {
   ...COMMON_WITH_LEGEND,
-  margin: {l: 5, r: 5, b: 5, t: 5},
+  margin: { l: 5, r: 5, b: 5, t: 5 },
 }
 
 export {
