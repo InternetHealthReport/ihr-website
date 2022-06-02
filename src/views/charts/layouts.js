@@ -78,7 +78,6 @@ var AS_INTERDEPENDENCIES_LAYOUT = {
   yaxis2: {
     domain: [0, 0.4],
     autorange: true,
-    rangemode: 'tozero',
   },
 }
 
