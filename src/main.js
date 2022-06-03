@@ -10,6 +10,7 @@ import '@/styles/main.styl'
 import '@/styles/ihr.style.styl'
 import IhrStyle from './plugins/IhrStyle'
 import Fragment from 'vue-fragment'
+import './registerServiceWorker'
 //import LoadScript from 'vue-plugin-load-script';
 
 //external plugin
