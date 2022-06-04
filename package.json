@@ -56,7 +56,7 @@
     "eslint-plugin-vue": "^8.5.0",
     "jsdom": "15.1.1",
     "jsdom-global": "3.0.2",
-    "postcss": "^7.0.36",
+    "postcss": "^8.4.14",
     "postcss-rtl": "^1.7.2",
     "sass": "^1.26.2",
     "sass-loader": "^7.3.1",
