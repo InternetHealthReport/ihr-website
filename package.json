@@ -5,9 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
-    "test:unit": "vue-cli-service test:unit"
+    "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'"
   },
   "dependencies": {
     "@quasar/extras": "^1.5.2",
@@ -23,6 +23,7 @@
     "plotly.js-dist": "^1.52.3",
     "postcss-plugins": "^1.13.1",
     "quasar": "^1.15.22",
+    "register-service-worker": "^1.7.2",
     "swagger-ui": "^3.25.0",
     "timeline-vuejs": "^1.1.1",
     "vue": "^2.6.11",
@@ -39,6 +40,7 @@
     "@kazupon/vue-i18n-loader": "^0.5.0",
     "@vue/cli-plugin-babel": "^3.12.1",
     "@vue/cli-plugin-eslint": "^3.12.1",
+    "@vue/cli-plugin-pwa": "^4.5.17",
     "@vue/cli-plugin-unit-jest": "^3.12.1",
     "@vue/cli-service": "^3.12.1",
     "@vue/composition-api": "^1.1.5",

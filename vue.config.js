@@ -9,6 +9,15 @@ module.exports = {
     },
     open: 'Google Chrome',
   },
+  pwa: {
+    name : 'Internet Health Report',
+    shortName : 'IHR',
+    themeColor : '#343434',
+    workboxOptions: {
+      skipWaiting: true,
+      clientsClaim: true,
+    }
+  },
   chainWebpack: webpackConfig => {
     webpackConfig.module
       .rule('ify-loader')
