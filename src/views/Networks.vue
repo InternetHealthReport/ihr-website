@@ -209,152 +209,152 @@ import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 
 const LOADING_STATUS = {
-    ERROR: -3,
-    EXPIRED: -2,
-    NOT_FOUND: -1,
-    LOADING: 0,
-    LOADED: 1,
+  ERROR: -3,
+  EXPIRED: -2,
+  NOT_FOUND: -1,
+  LOADING: 0,
+  LOADED: 1,
 }
 
 const CHART_REFS = ['asInterdependenciesChart', 'prefixHegemonyChart', 'networkDelayChart', 'delayAndForwardingChart', 'ihrChartDisco']
 
 export default {
-    mixins: [reportMixin],
-    components: {
-        AsInterdependenciesChart,
-        PrefixHegemonyChart,
-        DiscoChart,
-        DelayAndForwardingChart,
-        NetworkDelayChart,
-        DateTimePicker,
-        NetworkSearchBar,
+  mixins: [reportMixin],
+  components: {
+    AsInterdependenciesChart,
+    PrefixHegemonyChart,
+    DiscoChart,
+    DelayAndForwardingChart,
+    NetworkDelayChart,
+    DateTimePicker,
+    NetworkSearchBar,
+  },
+  data() {
+    let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn)
+    let addressFamily = this.$route.query.af
+    return {
+      addressFamily: addressFamily == undefined ? 4 : addressFamily,
+      loadingStatus: LOADING_STATUS.LOADING,
+      asNumber: asNumber,
+      asName: null,
+      charRefs: CHART_REFS,
+      minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
+      show: {
+        rov: true,
+        rov_disable: false,
+        delayAndForwarding: true,
+        delayAndForwarding_disable: false,
+        disco: true,
+        disco_disable: false,
+        hegemony: true,
+        hegemony_disable: false,
+        net_delay: true,
+        net_delay_disable: false,
+      },
+    }
+  },
+  methods: {
+    pushRoute() {
+      this.$router.replace({
+        //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
+        query: Object.assign({}, this.$route.query, {
+          af: this.family,
+          last: this.interval.dayDiff(),
+          date: this.$options.filters.ihrUtcString(this.interval.end, false),
+        }),
+      })
     },
-    data() {
-        let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn)
-        let addressFamily = this.$route.query.af
-        return {
-            addressFamily: addressFamily == undefined ? 4 : addressFamily,
-            loadingStatus: LOADING_STATUS.LOADING,
-            asNumber: asNumber,
-            asName: null,
-            charRefs: CHART_REFS,
-            minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
-            show: {
-                rov: true,
-                rov_disable: false,
-                delayAndForwarding: true,
-                delayAndForwarding_disable: false,
-                disco: true,
-                disco_disable: false,
-                hegemony: true,
-                hegemony_disable: false,
-                net_delay: true,
-                net_delay_disable: false,
-            },
+    netName() {
+      let filter = new NetworkQuery().asNumber(this.asNumber)
+      this.$ihr_api.network(filter, results => {
+        if (results.count < 1) {
+          this.loadingStatus = LOADING_STATUS.NOT_FOUND;
+          return
         }
-    },
-    methods: {
-        pushRoute() {
-            this.$router.replace({
-                //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
-                query: Object.assign({}, this.$route.query, {
-                    af: this.family,
-                    last: this.interval.dayDiff(),
-                    date: this.$options.filters.ihrUtcString(this.interval.end, false),
-                }),
-            })
-        },
-        netName() {
-            let filter = new NetworkQuery().asNumber(this.asNumber)
-            this.$ihr_api.network(filter, results => {
-                if (results.count < 1) {
-                    this.loadingStatus = LOADING_STATUS.NOT_FOUND;
-                    return
-                }
-                // Hide tabs if not necessary
-                this.$nextTick(function () {
-                    this.show.delayAndForwarding_disable = !results.results[0].delay_forwarding
-                    this.show.delayAndForwarding = results.results[0].delay_forwarding
-                    this.show.disco_disable = !results.results[0].disco
-                    this.show.disco = results.results[0].disco
-                    this.show.hegemony_disable = !results.results[0].hegemony
-                    this.show.hegemony = results.results[0].hegemony
-                })
+        // Hide tabs if not necessary
+        this.$nextTick(function () {
+          this.show.delayAndForwarding_disable = !results.results[0].delay_forwarding
+          this.show.delayAndForwarding = results.results[0].delay_forwarding
+          this.show.disco_disable = !results.results[0].disco
+          this.show.disco = results.results[0].disco
+          this.show.hegemony_disable = !results.results[0].hegemony
+          this.show.hegemony = results.results[0].hegemony
+        })
 
-                this.asName = results.results[0].name
-                this.loadingStatus = LOADING_STATUS.LOADED
-                this.fetch = true
-            })
-        },
-        displayNetDelay(displayValue) {
-            this.show.net_delay = displayValue
-            this.$nextTick(function () {
-                this.show.net_delay_disable = !displayValue
-            })
-        },
+        this.asName = results.results[0].name
+        this.loadingStatus = LOADING_STATUS.LOADED
+        this.fetch = true
+      })
     },
-    mounted() {
-        this.netName()
+    displayNetDelay(displayValue) {
+      this.show.net_delay = displayValue
+      this.$nextTick(function () {
+        this.show.net_delay_disable = !displayValue
+      })
     },
-    computed: {
-        family() {
-            return this.addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
-        },
-        addressFamilyText() {
-            return this.addressFamily ? 'IPv4' : 'IPv6'
-        },
-        showGraphs() {
-            return this.loadingStatus == LOADING_STATUS.LOADED
-        },
-        headerString() {
-            switch (this.loadingStatus) {
-                case LOADING_STATUS.LOADING:
-                    return this.$t('Networks.headerString.loading')
-                case LOADING_STATUS.NOT_FOUND:
-                    return this.$t('Networks.headerString.notFound')
-                case LOADING_STATUS.EXPIRED:
-                    return this.$t('Networks.headerString.expired')
-                case LOADING_STATUS.LOADED:
-                    return this.asName
-                default:
-                case LOADING_STATUS.ERROR:
-                    return this.$t('genericErrors.ups')
-            }
-        },
-        subHeader() {
-            switch (this.loadingStatus) {
-                case LOADING_STATUS.LOADING:
-                    return this.$t('Networks.subHeader.loading')
-                case LOADING_STATUS.NOT_FOUND:
-                    return this.$t('Networks.subHeader.notFound')
-                case LOADING_STATUS.EXPIRED:
-                    return this.$t('Networks.subHeader.expired')
-                case LOADING_STATUS.LOADED:
-                    return this.$route.params.asn
-                default:
-                case LOADING_STATUS.ERROR:
-                    return this.$t('genericErrors.badHappened')
-            }
-        },
+  },
+  mounted() {
+    this.netName()
+  },
+  computed: {
+    family() {
+      return this.addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
     },
-    watch: {
-        addressFamily() {
-            this.pushRoute()
-        },
-        '$route.params.asn': {
-            handler: function (asn) {
-                console.log(this.asNumber)
-                console.log(asn)
+    addressFamilyText() {
+      return this.addressFamily ? 'IPv4' : 'IPv6'
+    },
+    showGraphs() {
+      return this.loadingStatus == LOADING_STATUS.LOADED
+    },
+    headerString() {
+      switch (this.loadingStatus) {
+        case LOADING_STATUS.LOADING:
+          return this.$t('Networks.headerString.loading')
+        case LOADING_STATUS.NOT_FOUND:
+          return this.$t('Networks.headerString.notFound')
+        case LOADING_STATUS.EXPIRED:
+          return this.$t('Networks.headerString.expired')
+        case LOADING_STATUS.LOADED:
+          return this.asName
+        default:
+        case LOADING_STATUS.ERROR:
+          return this.$t('genericErrors.ups')
+      }
+    },
+    subHeader() {
+      switch (this.loadingStatus) {
+        case LOADING_STATUS.LOADING:
+          return this.$t('Networks.subHeader.loading')
+        case LOADING_STATUS.NOT_FOUND:
+          return this.$t('Networks.subHeader.notFound')
+        case LOADING_STATUS.EXPIRED:
+          return this.$t('Networks.subHeader.expired')
+        case LOADING_STATUS.LOADED:
+          return this.$route.params.asn
+        default:
+        case LOADING_STATUS.ERROR:
+          return this.$t('genericErrors.badHappened')
+      }
+    },
+  },
+  watch: {
+    addressFamily() {
+      this.pushRoute()
+    },
+    '$route.params.asn': {
+      handler: function (asn) {
+        console.log(this.asNumber)
+        console.log(asn)
 
-                if (this.$options.filters.ihr_AsOrIxpToNumber(asn) != this.asNumber) {
-                    this.loadingStatus = LOADING_STATUS.LOADING
-                    this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn)
-                    this.netName()
-                }
-            },
-            deep: true,
-        },
+        if (this.$options.filters.ihr_AsOrIxpToNumber(asn) != this.asNumber) {
+          this.loadingStatus = LOADING_STATUS.LOADING
+          this.asNumber = this.$options.filters.ihr_AsOrIxpToNumber(asn)
+          this.netName()
+        }
+      },
+      deep: true,
     },
+  },
 }
 </script>
 

@@ -235,182 +235,182 @@ import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from './charts/global/DiscoChart'
 import NetworkDelayAlarmsChart from './charts/global/NetworkDelayAlarmsChart'
 import HegemonyAlarmsChart from './charts/global/HegemonyAlarmsChart'
 import DelayChart, {
-    DEFAULT_MIN_NPROBES,
-    DEFAULT_MIN_DEVIATION,
-    DEFAULT_MIN_DIFFMEDIAN,
-    DEFAULT_MAX_DIFFMEDIAN,
+  DEFAULT_MIN_NPROBES,
+  DEFAULT_MIN_DEVIATION,
+  DEFAULT_MIN_DIFFMEDIAN,
+  DEFAULT_MAX_DIFFMEDIAN,
 } from './charts/global/DelayChart'
 import DateTimePicker from '@/components/DateTimePicker'
 
 const CHART_REFS = ['ihrChartNetworkDelay', 'ihrChartDelay', 'ihrChartMap', 'ihrChartDisco']
 
 const REPORT_TYPE = {
-    GLOBAL: 0,
-    PERSONAL: 1,
-    TIER_1: 2,
+  GLOBAL: 0,
+  PERSONAL: 1,
+  TIER_1: 2,
 }
 
 const PARAMETERS_LEVEL = {
-    LOW: 0,
-    MEDIUM: 1,
-    HIGH: 2,
+  LOW: 0,
+  MEDIUM: 1,
+  HIGH: 2,
 }
 
 const LEVEL_OPTIONS = Object.keys(PARAMETERS_LEVEL).map(key => {
-    return { label: key, value: PARAMETERS_LEVEL[key] }
+  return { label: key, value: PARAMETERS_LEVEL[key] }
 })
 const LEVEL_COLOR = ['warning', 'positive', 'negative']
 
 //TODO use presets with some sense
 const PRAMETERS_PRESETS = {
-    DISCO_AVG_LEVEL: [7, DEFAULT_DISCO_AVG_LEVEL, 10],
-    MIN_NPROBES: [5, DEFAULT_MIN_NPROBES, 12],
-    MIN_DEVIATION: [100, DEFAULT_MIN_DEVIATION, 120],
-    MIN_DIFFMEDIAN: [10, DEFAULT_MIN_DIFFMEDIAN, 20],
-    MAX_DIFFMEDIAN: [150, DEFAULT_MAX_DIFFMEDIAN, 300],
+  DISCO_AVG_LEVEL: [7, DEFAULT_DISCO_AVG_LEVEL, 10],
+  MIN_NPROBES: [5, DEFAULT_MIN_NPROBES, 12],
+  MIN_DEVIATION: [100, DEFAULT_MIN_DEVIATION, 120],
+  MIN_DIFFMEDIAN: [10, DEFAULT_MIN_DIFFMEDIAN, 20],
+  MAX_DIFFMEDIAN: [150, DEFAULT_MAX_DIFFMEDIAN, 300],
 }
 
 const PRESETS_ASN_LISTS = []
 
 export default {
-    mixins: [reportMixin],
-    components: {
-        NetworkDelayAlarmsChart,
-        HegemonyAlarmsChart,
-        DiscoChart,
-        DelayChart,
-        DateTimePicker,
-    },
-    data() {
-        let filterLevel = Number(this.$route.query.filter_level)
-        filterLevel = filterLevel ? filterLevel : PARAMETERS_LEVEL.MEDIUM
+  mixins: [reportMixin],
+  components: {
+    NetworkDelayAlarmsChart,
+    HegemonyAlarmsChart,
+    DiscoChart,
+    DelayChart,
+    DateTimePicker,
+  },
+  data() {
+    let filterLevel = Number(this.$route.query.filter_level)
+    filterLevel = filterLevel ? filterLevel : PARAMETERS_LEVEL.MEDIUM
 
-        return {
-            globalFilter: '',
-            hegemonyFilter: '',
-            ndelayFilter: '',
-            linkFilter: '',
-            discoFilter: '',
-            hegemonyExpanded: true,
-            ndelayExpanded: true,
-            linkExpanded: true,
-            discoExpanded: true,
-            presetAsnLists: PRESETS_ASN_LISTS,
-            levelOptions: LEVEL_OPTIONS,
-            levelColors: LEVEL_COLOR,
-            filterLevel: filterLevel,
-            minAvgLevel: PRAMETERS_PRESETS.DISCO_AVG_LEVEL[filterLevel],
-            minNprobes: PRAMETERS_PRESETS.MIN_NPROBES[filterLevel],
-            minDeviation: PRAMETERS_PRESETS.MIN_DEVIATION[filterLevel],
-            minDeviationNetworkDelay: 20,
-            minDiffmedian: PRAMETERS_PRESETS.MIN_DIFFMEDIAN[filterLevel],
-            maxDiffmedian: PRAMETERS_PRESETS.MAX_DIFFMEDIAN[filterLevel],
-            charRefs: CHART_REFS,
-            asnList: [],
-            asnListState: REPORT_TYPE.GLOBAL,
-            geoProbes: [],
-            nbAlarms: {
-                hegemony: 0,
-                networkDelay: 0,
-                linkDelay: 0,
-                disco: 0,
-            },
-            loading: {
-                hegemony: true,
-                networkDelay: true,
-                linkDelay: true,
-                disco: true,
-            },
+    return {
+      globalFilter: '',
+      hegemonyFilter: '',
+      ndelayFilter: '',
+      linkFilter: '',
+      discoFilter: '',
+      hegemonyExpanded: true,
+      ndelayExpanded: true,
+      linkExpanded: true,
+      discoExpanded: true,
+      presetAsnLists: PRESETS_ASN_LISTS,
+      levelOptions: LEVEL_OPTIONS,
+      levelColors: LEVEL_COLOR,
+      filterLevel: filterLevel,
+      minAvgLevel: PRAMETERS_PRESETS.DISCO_AVG_LEVEL[filterLevel],
+      minNprobes: PRAMETERS_PRESETS.MIN_NPROBES[filterLevel],
+      minDeviation: PRAMETERS_PRESETS.MIN_DEVIATION[filterLevel],
+      minDeviationNetworkDelay: 20,
+      minDiffmedian: PRAMETERS_PRESETS.MIN_DIFFMEDIAN[filterLevel],
+      maxDiffmedian: PRAMETERS_PRESETS.MAX_DIFFMEDIAN[filterLevel],
+      charRefs: CHART_REFS,
+      asnList: [],
+      asnListState: REPORT_TYPE.GLOBAL,
+      geoProbes: [],
+      nbAlarms: {
+        hegemony: 0,
+        networkDelay: 0,
+        linkDelay: 0,
+        disco: 0,
+      },
+      loading: {
+        hegemony: true,
+        networkDelay: true,
+        linkDelay: true,
+        disco: true,
+      },
+    }
+  },
+  mounted() {
+    this.fetch = true
+  },
+  methods: {
+    hegemonyLoading(val) {
+      this.$nextTick(function () {
+        this.loading.hegemony = val
+      })
+    },
+    networkDelayLoading(val) {
+      this.$nextTick(function () {
+        this.loading.networkDelay = val
+      })
+    },
+    linkDelayLoading(val) {
+      this.$nextTick(function () {
+        this.loading.linkDelay = val
+      })
+    },
+    discoLoading(val) {
+      this.$nextTick(function () {
+        this.loading.disco = val
+      })
+    },
+    pushRoute() {
+      this.$router.replace({
+        query: {
+          filter_level: this.filterLevel,
+          last: this.interval.dayDiff(),
+          date: this.$options.filters.ihrUtcString(this.interval.end, false),
+        },
+      })
+
+      this.minAvgLevel = PRAMETERS_PRESETS.DISCO_AVG_LEVEL[this.filterLevel]
+      this.minNprobes = PRAMETERS_PRESETS.MIN_NPROBES[this.filterLevel]
+      this.minDeviation = PRAMETERS_PRESETS.MIN_DEVIATION[this.filterLevel]
+      this.minDiffmedian = PRAMETERS_PRESETS.MIN_DIFFMEDIAN[this.filterLevel]
+      this.maxDiffmedian = PRAMETERS_PRESETS.MAX_DIFFMEDIAN[this.filterLevel]
+    },
+    fetchList() {
+      this.$ihr_api.userShow(
+        results => {
+          let asnList = []
+          results.monitoredasn.forEach(monitored => {
+            asnList.push(monitored.asnumber)
+          })
+          this.asnList = asnList
+          this.asnListState = REPORT_TYPE.PERSONAL
+        },
+        error => {
+          console.error(error) //FIXME correct error handling
         }
+      )
     },
-    mounted() {
-        this.fetch = true
+    newFilteredRows(graphType, val) {
+      let search = val[0]
+      let rows = val[1]
+      if (this.globalFilter == search) {
+        this.$nextTick(function () {
+          this.nbAlarms[graphType] = rows.length
+        })
+      }
     },
-    methods: {
-        hegemonyLoading(val) {
-            this.$nextTick(function () {
-                this.loading.hegemony = val
-            })
-        },
-        networkDelayLoading(val) {
-            this.$nextTick(function () {
-                this.loading.networkDelay = val
-            })
-        },
-        linkDelayLoading(val) {
-            this.$nextTick(function () {
-                this.loading.linkDelay = val
-            })
-        },
-        discoLoading(val) {
-            this.$nextTick(function () {
-                this.loading.disco = val
-            })
-        },
-        pushRoute() {
-            this.$router.replace({
-                query: {
-                    filter_level: this.filterLevel,
-                    last: this.interval.dayDiff(),
-                    date: this.$options.filters.ihrUtcString(this.interval.end, false),
-                },
-            })
-
-            this.minAvgLevel = PRAMETERS_PRESETS.DISCO_AVG_LEVEL[this.filterLevel]
-            this.minNprobes = PRAMETERS_PRESETS.MIN_NPROBES[this.filterLevel]
-            this.minDeviation = PRAMETERS_PRESETS.MIN_DEVIATION[this.filterLevel]
-            this.minDiffmedian = PRAMETERS_PRESETS.MIN_DIFFMEDIAN[this.filterLevel]
-            this.maxDiffmedian = PRAMETERS_PRESETS.MAX_DIFFMEDIAN[this.filterLevel]
-        },
-        fetchList() {
-            this.$ihr_api.userShow(
-                results => {
-                    let asnList = []
-                    results.monitoredasn.forEach(monitored => {
-                        asnList.push(monitored.asnumber)
-                    })
-                    this.asnList = asnList
-                    this.asnListState = REPORT_TYPE.PERSONAL
-                },
-                error => {
-                    console.error(error) //FIXME correct error handling
-                }
-            )
-        },
-        newFilteredRows(graphType, val) {
-            let search = val[0]
-            let rows = val[1]
-            if (this.globalFilter == search) {
-                this.$nextTick(function () {
-                    this.nbAlarms[graphType] = rows.length
-                })
-            }
-        },
+  },
+  computed: {
+    title() {
+      switch (this.asnListState) {
+        case REPORT_TYPE.GLOBAL:
+          return this.$t('globalReport.title.global')
+        case REPORT_TYPE.PERSONAL:
+          return this.$t('globalReport.title.personal')
+      }
+      return this.$t('globalReport.title.global')
     },
-    computed: {
-        title() {
-            switch (this.asnListState) {
-                case REPORT_TYPE.GLOBAL:
-                    return this.$t('globalReport.title.global')
-                case REPORT_TYPE.PERSONAL:
-                    return this.$t('globalReport.title.personal')
-            }
-            return this.$t('globalReport.title.global')
-        },
+  },
+  watch: {
+    filterLevel(newValue, oldValue) {
+      if (newValue != oldValue) {
+        this.pushRoute()
+      }
     },
-    watch: {
-        filterLevel(newValue, oldValue) {
-            if (newValue != oldValue) {
-                this.pushRoute()
-            }
-        },
-        globalFilter(newValue) {
-            this.hegemonyFilter = newValue
-            this.ndelayFilter = newValue
-            this.linkFilter = newValue
-            this.discoFilter = newValue
-        },
+    globalFilter(newValue) {
+      this.hegemonyFilter = newValue
+      this.ndelayFilter = newValue
+      this.linkFilter = newValue
+      this.discoFilter = newValue
     },
+  },
 }
 </script>
 

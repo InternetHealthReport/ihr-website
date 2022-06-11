@@ -155,7 +155,7 @@ export default {
   },
   methods: {
     updateAxesLabel() {
-      this.layout.yaxis.title = `AS` + this.asNumber + ` ${this.$t('charts.asInterdependencies.yaxis')}`
+      this.layout.yaxis.title = 'AS' + this.asNumber + ` ${this.$t('charts.asInterdependencies.yaxis')}`
       this.layout.yaxis2.title = `${this.$t('charts.asInterdependencies.yaxis2')} AS` + this.asNumber
     },
     makeHegemonyFilter() {

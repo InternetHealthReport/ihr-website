@@ -201,140 +201,140 @@
 import CommonTableMixin from './CommonTableMixin'
 
 export default {
-    mixins: [CommonTableMixin],
-    props: {
-        showCountry: {
-            type: Boolean,
-            default: true,
-        },
+  mixins: [CommonTableMixin],
+  props: {
+    showCountry: {
+      type: Boolean,
+      default: true,
     },
-    data() {
-        return {
-            pagination: {
-                sortBy: 'visibility',
-                descending: true,
-                page: 1,
-                rowsPerPage: 10,
-            },
-            tabFilter: '',
-            columns: [
-                {
-                    name: 'country',
-                    required: false,
-                    label: `Country`,
-                    align: 'center',
-                    field: row => row.country,
-                    format: val => `${val}`,
-                    sortable: true,
-                },
-                {
-                    name: 'originASN',
-                    required: true,
-                    label: `ASN`,
-                    align: 'center',
-                    field: row => row.originasn.asn,
-                    format: val => `${val}`,
-                    sortable: true,
-                },
-                {
-                    name: 'prefix',
-                    required: true,
-                    label: `Prefix`,
-                    align: 'left',
-                    field: row => row.prefix.value,
-                    format: val => `${val}`,
-                    sortable: true,
-                },
-                {
-                    name: 'rpkiStatus',
-                    required: true,
-                    label: `RPKI`,
-                    align: 'left',
-                    field: row => row.rpki_status,
-                    format: val => `${val}`,
-                    sortable: true,
-                },
-                {
-                    name: 'irrStatus',
-                    required: true,
-                    label: `IRR`,
-                    align: 'left',
-                    field: row => row.irr_status,
-                    format: val => `${val}`,
-                    sortable: true,
-                },
-                {
-                    name: 'delegatedPrefixStatus',
-                    required: true,
-                    label: `Delegated (prefix)`,
-                    align: 'left',
-                    field: row => row.delegated_prefix_status,
-                    format: val => `${val}`,
-                    sortable: true,
-                },
-                {
-                    name: 'delegatedASNStatus',
-                    required: true,
-                    label: `Delegated (orig. ASN)`,
-                    align: 'left',
-                    field: row => row.delegated_asn_status,
-                    format: val => `${val}`,
-                    sortable: true,
-                },
-                {
-                    name: 'visibility',
-                    required: true,
-                    label: `Visibility`,
-                    align: 'left',
-                    field: row => row.visibility,
-                    format: val => `${val.toFixed(1)}%`,
-                    sortable: true,
-                },
-                {
-                    name: 'dependencies',
-                    required: true,
-                    label: `Dependencies`,
-                    align: 'left',
-                    field: row => this.simpleDependenciesFormat(row.dependencies),
-                    format: val => `${val}`,
-                    sortable: true,
-                },
-            ],
+  },
+  data() {
+    return {
+      pagination: {
+        sortBy: 'visibility',
+        descending: true,
+        page: 1,
+        rowsPerPage: 10,
+      },
+      tabFilter: '',
+      columns: [
+        {
+          name: 'country',
+          required: false,
+          label: 'Country',
+          align: 'center',
+          field: row => row.country,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        {
+          name: 'originASN',
+          required: true,
+          label: 'ASN',
+          align: 'center',
+          field: row => row.originasn.asn,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        {
+          name: 'prefix',
+          required: true,
+          label: 'Prefix',
+          align: 'left',
+          field: row => row.prefix.value,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        {
+          name: 'rpkiStatus',
+          required: true,
+          label: 'RPKI',
+          align: 'left',
+          field: row => row.rpki_status,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        {
+          name: 'irrStatus',
+          required: true,
+          label: 'IRR',
+          align: 'left',
+          field: row => row.irr_status,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        {
+          name: 'delegatedPrefixStatus',
+          required: true,
+          label: 'Delegated (prefix)',
+          align: 'left',
+          field: row => row.delegated_prefix_status,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        {
+          name: 'delegatedASNStatus',
+          required: true,
+          label: 'Delegated (orig. ASN)',
+          align: 'left',
+          field: row => row.delegated_asn_status,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        {
+          name: 'visibility',
+          required: true,
+          label: 'Visibility',
+          align: 'left',
+          field: row => row.visibility,
+          format: val => `${val.toFixed(1)}%`,
+          sortable: true,
+        },
+        {
+          name: 'dependencies',
+          required: true,
+          label: 'Dependencies',
+          align: 'left',
+          field: row => this.simpleDependenciesFormat(row.dependencies),
+          format: val => `${val}`,
+          sortable: true,
+        },
+      ],
+    }
+  },
+  methods: {
+    routeToAsn(asn, row) {
+      asn = asn.field(row)
+      this.$router.push({
+        name: 'networks',
+        params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(asn) },
+      })
+    },
+    getClassByHegemony(hegemony) {
+      if (hegemony >= 25) return 'IHR_color-deviation-high-threshold'
+      if (hegemony >= 10) return 'IHR_color-deviation-mid-threshold'
+      return ''
+    },
+    visibleColumns() {
+      let vcolumns = []
+      this.columns.forEach(elem => {
+        if ((elem.name != 'country') | this.showCountry) {
+          vcolumns.push(elem.name)
         }
+      })
+      return vcolumns
     },
-    methods: {
-        routeToAsn(asn, row) {
-            asn = asn.field(row)
-            this.$router.push({
-                name: 'networks',
-                params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(asn) },
-            })
-        },
-        getClassByHegemony(hegemony) {
-            if (hegemony >= 25) return 'IHR_color-deviation-high-threshold'
-            if (hegemony >= 10) return 'IHR_color-deviation-mid-threshold'
-            return ''
-        },
-        visibleColumns() {
-            let vcolumns = []
-            this.columns.forEach(elem => {
-                if ((elem.name != 'country') | this.showCountry) {
-                    vcolumns.push(elem.name)
-                }
-            })
-            return vcolumns
-        },
-        sorted(obj) {
-            return Object.values(obj).sort((a, b) => b.hege - a.hege)
-        },
-        simpleDependenciesFormat(val) {
-            var txt = ''
-            for (const dep in this.sorted(val)) {
-                txt += dep.asn
-            }
-            return txt
-        },
+    sorted(obj) {
+      return Object.values(obj).sort((a, b) => b.hege - a.hege)
     },
+    simpleDependenciesFormat(val) {
+      var txt = ''
+      for (const dep in this.sorted(val)) {
+        txt += dep.asn
+      }
+      return txt
+    },
+  },
 }
 </script>
 <style lang="stylus">
