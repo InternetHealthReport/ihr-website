@@ -16,6 +16,7 @@ import PersonalPage from "@/views/user/PersonalPage";
 import ResetPassword from "@/views/user/ResetPassword";
 import Documentation from "@/views/Documentation";
 import Bgplay from "@/components/ripe/Bgplay";
+import Datasets from "@/views/Datasets";
 import VueScrollTo from "vue-scrollto";
 
 Vue.use(Router);
@@ -29,30 +30,27 @@ export default new Router({
   //for apache use FallBackRessource
   mode: "history",
   base: "/ihr/",
-  scrollBehavior: (to, from, savedPosition)  => {
+  scrollBehavior: (to, from, savedPosition) => {
     if (savedPosition) {
-        return savedPosition
-    } 
-    else if (to.hash) {
-        return {
-            selector: to.hash,
-            behavior: 'smooth',
-        }
-    }
-    else {
-        if ( to.path === from.path){ 
-            return null
-        }
-        else{ 
-            return { x: 0, y: 0 }
-        }
+      return savedPosition;
+    } else if (to.hash) {
+      return {
+        selector: to.hash,
+        behavior: "smooth",
+      };
+    } else {
+      if (to.path === from.path) {
+        return null;
+      } else {
+        return { x: 0, y: 0 };
+      }
     }
   },
   routes: [
     {
       path: "/",
       redirect: "/en-us/",
-      meta: { title: "Internet Health Report" }
+      meta: { title: "Internet Health Report" },
     },
     {
       name: "home",
@@ -60,9 +58,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: Home
+        default: Home,
       },
-      meta: { title: "Internet Health Report" }
+      meta: { title: "Internet Health Report" },
     },
     {
       name: "global_report",
@@ -70,9 +68,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: GlobalReport
+        default: GlobalReport,
       },
-      meta: { title: "Global Report - IHR" }
+      meta: { title: "Global Report - IHR" },
     },
     {
       name: "contact",
@@ -80,9 +78,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: Contact
+        default: Contact,
       },
-      meta: { title: "Contact - IHR" }
+      meta: { title: "Contact - IHR" },
     },
     {
       name: "countries",
@@ -90,9 +88,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: Countries
+        default: Countries,
       },
-      meta: { title: "Country Report - IHR" }
+      meta: { title: "Country Report - IHR" },
     },
     {
       name: "networks",
@@ -100,23 +98,23 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: Networks
+        default: Networks,
       },
-      meta: { title: "Network Report - IHR" }
+      meta: { title: "Network Report - IHR" },
     },
     {
       name: "rov",
       path: `${routerBase}rov`,
       params: {
         last: 1,
-        date: '2021-06-28'
+        date: "2021-06-28",
       },
       components: {
         header: Header,
         footer: Footer,
-        default: ROV
+        default: ROV,
       },
-      meta: { title: "Route Origin Validation Report - IHR" }
+      meta: { title: "Route Origin Validation Report - IHR" },
     },
     {
       name: "covid19",
@@ -124,14 +122,14 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: Corona
+        default: Corona,
       },
-      meta: { title: "COVID19 Report - IHR" }
+      meta: { title: "COVID19 Report - IHR" },
     },
     {
       name: "old_as_and_ixp",
       path: "/ihr/:asn/asn/",
-      redirect: to => {
+      redirect: (to) => {
         //ihr/:asn/asn/
         const { hash, params, query } = to;
         return {
@@ -140,10 +138,10 @@ export default new Router({
           params: {
             locale: DEFAULT_LOCALE,
             asn: params.asn,
-            hash
-          }
+            hash,
+          },
         };
-      }
+      },
     },
     {
       name: "api",
@@ -151,9 +149,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: API
+        default: API,
       },
-      meta: { title: "API - IHR" }
+      meta: { title: "API - IHR" },
     },
     {
       name: "sign_up",
@@ -161,9 +159,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: SignUp
+        default: SignUp,
       },
-      meta: { title: "Sign Up - IHR" }
+      meta: { title: "Sign Up - IHR" },
     },
     {
       name: "account_activation",
@@ -171,9 +169,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: AccountActivation
+        default: AccountActivation,
       },
-      meta: { title: "Account Activation - IHR" }
+      meta: { title: "Account Activation - IHR" },
     },
     {
       name: "reset_password",
@@ -181,9 +179,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: ResetPassword
+        default: ResetPassword,
       },
-      meta: { title: "Reset Password - IHR" }
+      meta: { title: "Reset Password - IHR" },
     },
     {
       name: "personal_page",
@@ -191,9 +189,9 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: PersonalPage
+        default: PersonalPage,
       },
-      meta: { title: "Personnal Page - IHR" }
+      meta: { title: "Personnal Page - IHR" },
     },
     {
       name: "documentation",
@@ -201,9 +199,19 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: Documentation
+        default: Documentation,
       },
-      meta: { title: "Documentation - IHR" }
+      meta: { title: "Documentation - IHR" },
+    },
+    {
+      name: "datasets",
+      path: `${routerBase}datasets`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Datasets,
+      },
+      meta: { title: "Datasets - IHR" },
     },
 
     // Widgets
@@ -211,11 +219,11 @@ export default new Router({
       name: "bgplay",
       path: "/widget/bgplay",
       component: Bgplay,
-      props: route => ({
+      props: (route) => ({
         asNumber: parseInt(route.query.asn),
-        dateTime: new Date(route.query.date)
+        dateTime: new Date(route.query.date),
       }),
-      meta: { title: "BGPlay - IHR" }
-    }
-  ]
+      meta: { title: "BGPlay - IHR" },
+    },
+  ],
 });
