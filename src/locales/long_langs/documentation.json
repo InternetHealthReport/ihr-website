@@ -57,7 +57,7 @@
             },
             {
               "header": "<div class='IHR_anchor' id='faq_contribution'></div>How can I contribute to IHR?",
-              "body": "IHR is mainly built and maintained by reserachers and students. We need help at all levels for the frontend, backend, documentation, and data collection. Feel free to take a look at IHR projects on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a> or <a href='/ihr/en-us/contact'>contact us</a>. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>IIJ-II summer internship program</a> is also a good way to visit us and work on IHR tools."
+              "body": "IHR is mainly built and maintained by reserachers and students. We need help at all levels for the frontend, backend, documentation, and data collection. Feel free to take a look at IHR projects on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a> or <a href='/ihr/en-us/contact'>contact us</a>. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>The IIJ Research Laboratory summer internship program</a> is also a good way to visit us and work on IHR tools."
             }
           ]
         },
@@ -70,8 +70,8 @@
               "body": "<a href='https://www.iij.ad.jp/en/' target='_blank'>Internet Initiative Japan (IIJ)</a> is historically Japan's first ISP and the main sponsor of IHR. This include financial support, hardware, and rack space."
             },
             {
-              "header": "IIJ-II",
-              "body": "<a href='https://www.iijlab.net/en/' target='_blank'>IIJ Innovation Institute is IIJ's research lab and the home of IHR. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>IIJ-II summer internship program</a> has enabled invaluable students exchange for implementing and maintaining IHR projects."
+              "header": "IIJ Research Laboratory",
+              "body": "<a href='https://www.iijlab.net/en/' target='_blank'>IIJ Research Laboratory is the home of IHR. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>The IIJ Research Laboratory summer internship program</a> has enabled invaluable students exchange for implementing and maintaining IHR projects."
             },
             {
               "header": "RIPE NCC",
@@ -171,7 +171,6 @@
               "header": "References",
               "body": "<ul> <li>MANRS blog article: Romain Fontugne, <a href='https://www.manrs.org/2021/11/the-routing-game-hunting-invalid-routes/'>The Routing Game: Hunting Invalid Routes</a>.</li><li> ROV source code: <a href='https://github.com/InternetHealthReport/route-origin-validator'> https://github.com/InternetHealthReport/route-origin-validator</a></li><li> AS Hegemony source code: <a href='https://github.com/InternetHealthReport/as-hegemony'> https://github.com/InternetHealthReport/as-hegemony</a> </li></ul>"
             }
-            
           ]
         },
         "netdelay": {
