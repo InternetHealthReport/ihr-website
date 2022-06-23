@@ -23,7 +23,7 @@
             },
             {
               "header": "Under the hood",
-              "body": "Our monitoring tools are open source (<a href='https://github.com/InternetHealthReport'>https://github.com/InternetHealthReport</a>) and described in the following articles: <ul> <li>Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush,<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'> Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements.</a> ACM IMC 2017, London, UK (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_imc2017.bib'>bibtex</a>).  </li><li>  Anant Shah, Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>Disco: Fast, Good, and Cheap Outage Detection</a>, TMA 2017  (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/anant_tma2017.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, Proceedings of PAM'18. Berlin, Germany. March 2018  (<a href='hhttps://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam18.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17  (<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.bib'>bibtex</a>).  </li></ul>"
+              "body": "Our monitoring tools are open source (<a href='https://github.com/InternetHealthReport'>https://github.com/InternetHealthReport</a>) and described in the following articles: <ul> <li>Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush,<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'> Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements.</a> ACM IMC 2017, London, UK (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_imc2017.bib'>bibtex</a>).  </li><li>  Anant Shah, Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>Disco: Fast, Good, and Cheap Outage Detection</a>, TMA 2017  (<a href='https://www.iijlab.net/en/members/romain/pdf/anant_tma2017.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, Proceedings of PAM'18. Berlin, Germany. March 2018  (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17  (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.bib'>bibtex</a>).  </li></ul>"
             },
             {
               "header": "Citation policy",
@@ -49,7 +49,7 @@
             },
             {
               "header": "<div class='IHR_anchor' id='faq_ixp_numbers'></div>What are the numbers assigned to IXPs?",
-              "body": "<p>IHR uses unique identifiers to index results for IXPs. These identifiers are derived from the ones found in CAIDA's IXPs dataset (<a href='https://www.caida.org/data/ixps/' target='_default'>https://www.caida.org/data/ixps/</a>). To differentiate these identifiers with AS numbers, the API gives negative values to IXPs and positive values to ASes.<br>The list of all IXP names and identifiers is available at the following link: <a href='https://ihr.iijlab.net/ihr/api/network/?number__lte=-1' target='_default'>https://ihr.iijlab.net/ihr/api/network/?number__lte=-1</a></p>"
+              "body": "<p>IHR uses unique identifiers to index results for IXPs. These identifiers are derived from the ones found in CAIDA's IXPs dataset (<a href='https://www.caida.org/data/ixps/' target='_default'>https://www.caida.org/data/ixps/</a>). To differentiate these identifiers with AS numbers, the API gives negative values to IXPs and positive values to ASes.<br>The list of all IXP names and identifiers is available at the following link: <a href='https://ihr.iijlab.net/ihr/api/networks/?number__lte=-1' target='_default'>https://ihr.iijlab.net/ihr/api/networks/?number__lte=-1</a></p>"
             },
             {
               "header": "<div class='IHR_anchor' id='faq_report_bugs'></div>How can I report bugs or suggest new features?",
@@ -57,7 +57,7 @@
             },
             {
               "header": "<div class='IHR_anchor' id='faq_contribution'></div>How can I contribute to IHR?",
-              "body": "IHR is mainly built and maintained by reserachers and students. We need help at all levels for the frontend, backend, documentation, and data collection. Feel free to take a look at IHR projects on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a> or <a href='/ihr/en-us/contact'>contact us</a>. <a href='https://www.iij-ii.co.jp/en/career/internship.html' target='_blank'>IIJ-II summer internship program</a> is also a good way to visit us and work on IHR tools."
+              "body": "IHR is mainly built and maintained by reserachers and students. We need help at all levels for the frontend, backend, documentation, and data collection. Feel free to take a look at IHR projects on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a> or <a href='/ihr/en-us/contact'>contact us</a>. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>IIJ-II summer internship program</a> is also a good way to visit us and work on IHR tools."
             }
           ]
         },
@@ -71,7 +71,7 @@
             },
             {
               "header": "IIJ-II",
-              "body": "<a href='https://www.iij-ii.co.jp/en/' target='_blank'>IIJ Innovation Institute is IIJ's research lab and the home of IHR. <a href='https://www.iij-ii.co.jp/en/career/internship.html' target='_blank'>IIJ-II summer internship program</a> has enabled invaluable students exchange for implementing and maintaining IHR projects."
+              "body": "<a href='https://www.iijlab.net/en/' target='_blank'>IIJ Innovation Institute is IIJ's research lab and the home of IHR. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>IIJ-II summer internship program</a> has enabled invaluable students exchange for implementing and maintaining IHR projects."
             },
             {
               "header": "RIPE NCC",
@@ -91,7 +91,7 @@
             },
             {
               "header": "EdgeCast",
-              "body": "<a href='https://www.verizondigitalmedia.com/media-platform/'>EdgeCast</a> is a Content Delivery Network (CDN) that distributes IHR website and API worldwide."
+              "body": "<a href='https://www.edgecast.com/'>EdgeCast</a> is a Content Delivery Network (CDN) that distributes IHR website and API worldwide."
             }
           ]
         },
@@ -116,12 +116,12 @@
           "description": [
             {
               "header": "What is AS dependency?",
-              "body": " Networks connected to the Internet rely on other networks (a.k.a ASes) to transmit data. Consequently, the connectivity of a network dependss on the connectivity of other networks.  AS hegemony is a metric to evaluate these AS-interdependences based on BGP data.  See our research report for more details: <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'>https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf</a>"
+              "body": " Networks connected to the Internet rely on other networks (a.k.a ASes) to transmit data. Consequently, the connectivity of a network dependss on the connectivity of other networks.  AS hegemony is a metric to evaluate these AS-interdependences based on BGP data.  See our research report for more details: <a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'>https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf</a>"
             },
             {
               "header": "What the graphs mean?",
               "img": ["assets/documentation/hegemony_AS2497.png", "max-width:100%"],
-              "body": " <p>Let's take a look at the above example which corresponds to results obtained on March 2nd 2020 for AS2497 (IIJ). <p><b>The top plot</b> shows the AS dependencies of AS2497. That means the most common transit networks used to reach AS2497. The value (a.k.a AS hegemony) ranges between 0 and 1. This is an estimate of the ratio of AS paths towards AS2497 that go through a certain AS transit. A value close to 1 means that the reachability of the monitored AS is strongly dependant on that transit AS. In the above example, the plot shows a few weak dependencies to Telia (AS1299), NTT America (AS2914), Level(3) (AS3356), and GTT (AS3257). On that day we estimate around 16% of the paths towards IIJ transit through Telia, 9% through NTT, and 2% through Level(3).</p> <p>Stub ASes usually have much higher values, for example the values go up to 1 for  ASes with a single upstream provider (meaning that all the paths cross the upstream provider). You can click on the graph to display dependencies details at a particular timestamp and a graphical representation of BGP changes around that time (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated-in-ripestat' target='_blank'>using BGPlay</a>).</p> <p><b>The bottom plot</b> shows the number of networks that depend on AS2497. In this case there are more than 370 networks that use IIJ for transit. This is somehow related to <a href='http://as-rank.caida.org/asns/2497' target='_blank'>IIJ's customer cone</a>. The main difference is that networks using IIJ as a backup transit are not counted here whereas they are counted in its customer cone. You can click on the graph to obtain the complete list of dependent networks. </p>"
+              "body": " <p>Let's take a look at the above example which corresponds to results obtained on March 2nd 2020 for AS2497 (IIJ). <p><b>The top plot</b> shows the AS dependencies of AS2497. That means the most common transit networks used to reach AS2497. The value (a.k.a AS hegemony) ranges between 0 and 1. This is an estimate of the ratio of AS paths towards AS2497 that go through a certain AS transit. A value close to 1 means that the reachability of the monitored AS is strongly dependant on that transit AS. In the above example, the plot shows a few weak dependencies to Telia (AS1299), NTT America (AS2914), Level(3) (AS3356), and GTT (AS3257). On that day we estimate around 16% of the paths towards IIJ transit through Telia, 9% through NTT, and 2% through Level(3).</p> <p>Stub ASes usually have much higher values, for example the values go up to 1 for  ASes with a single upstream provider (meaning that all the paths cross the upstream provider). You can click on the graph to display dependencies details at a particular timestamp and a graphical representation of BGP changes around that time (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated-in-ripestat' target='_blank'>using BGPlay</a>).</p> <p><b>The bottom plot</b> shows the number of networks that depend on AS2497. In this case there are more than 370 networks that use IIJ for transit. This is somehow related to <a href='https://api.asrank.caida.org/v2/restful/asns/2497' target='_blank'>IIJ's customer cone</a>. The main difference is that networks using IIJ as a backup transit are not counted here whereas they are counted in its customer cone. You can click on the graph to obtain the complete list of dependent networks. </p>"
             },
             {
               "header": "Known issues",
@@ -129,7 +129,7 @@
             },
             {
               "header": "References",
-              "body": "<ul> <li>Research report: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17.  </li><li> Source code: <a href='https://github.com/InternetHealthReport/ashash'> https://github.com/InternetHealthReport/ashash</a> </li></ul>"
+              "body": "<ul> <li>Research report: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17.  </li><li> Source code: <a href='https://github.com/InternetHealthReport/ashash'> https://github.com/InternetHealthReport/ashash</a> </li></ul>"
             }
           ]
         },
@@ -147,7 +147,7 @@
             },
             {
               "header": "References",
-              "body": "<ul> <li>Research report: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> R. Fontugne, K. Ermoshina, E. Aben. <a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_sigcomm2017.pdf'>The Internet in Crimea: a Case Study on Routing Interregnum</a>, Global Internet Symposium 2020. Paris, France. June 2020. </li><li> Source code: <a href='https://github.com/InternetHealthReport/country-as-hegemony'> https://github.com/InternetHealthReport/country-as-hegemony</a> </li></ul>"
+              "body": "<ul> <li>Research report: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> R. Fontugne, K. Ermoshina, E. Aben. <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>The Internet in Crimea: a Case Study on Routing Interregnum</a>, Global Internet Symposium 2020. Paris, France. June 2020. </li><li> Source code: <a href='https://github.com/InternetHealthReport/country-as-hegemony'> https://github.com/InternetHealthReport/country-as-hegemony</a> </li></ul>"
             }
           ]
         },
@@ -246,11 +246,11 @@
             },
             {
               "header": "Filtering",
-              "body": "<p>You can filter your search by adding parameters in the URL. For example: </p><ul> <li> <a href='https://ihr.iijlab.net/ihr/api/delay/?asn=174'> https://ihr.iijlab.net/ihr/api/delay/?asn=174 </a> returns delay changes only for AS174.  </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712'> https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712 </a> returns network disconnections for AS20712.  </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR'> https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR </a> returns network disconnections in Iran.  </li></ul> <p></p> <p>You can also filter results using inequalities. Add the suffix '_gte' and '_lte' for 'greater than or equal' and 'less than or equal'. For example, <a href='https://ihr.iijlab.net/ihr/api/delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00'> https://ihr.iijlab.net/ihr/api/delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00 </a> returns delay change results for AS174 on June 2017. </p> "
+              "body": "<p>You can filter your search by adding parameters in the URL. For example: </p><ul> <li> <a href='https://ihr.iijlab.net/ihr/api/network_delay/?asn=174'> https://ihr.iijlab.net/ihr/api/network_delay/?asn=174 </a> returns delay changes only for AS174.  </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712'> https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712 </a> returns network disconnections for AS20712.  </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR'> https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR </a> returns network disconnections in Iran.  </li></ul> <p></p> <p>You can also filter results using inequalities. Add the suffix '_gte' and '_lte' for 'greater than or equal' and 'less than or equal'. For example, <a href='https://ihr.iijlab.net/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00'> https://ihr.iijlab.net/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00 </a> returns delay change results for AS174 on June 2017. </p> "
             },
             {
               "header": "Scripting",
-              "body": "<p>This is a python example to fetch the latest delay change results for AS174 on June 2017: </p> <pre><code>import sys\nimport requests\nurl = 'https://ihr.iijlab.net/ihr/api/delay/'\nparams={\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'} \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
+              "body": "<p>This is a python example to fetch the latest delay change results for AS174 on June 2017: </p> <pre><code>import sys\nimport requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams={\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'} \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
             }
           ]
         },
