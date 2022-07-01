@@ -57,7 +57,7 @@
     "cache-loader": "^4.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.5.0",
-    "jsdom": "15.1.1",
+    "jsdom": "20.0.0",
     "jsdom-global": "3.0.2",
     "postcss": "^7.0.36",
     "postcss-rtl": "^1.7.2",
