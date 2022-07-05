@@ -1,192 +1,239 @@
 <i18n src="@/locales/long_langs/documentation.json"></i18n>
 <template>
   <div>
-    <q-drawer :value="showSidebar" side="left" bordered content-class="IHR_documentation-page-sidebar">
-      <h3>{{ $t('documentationPage.title') }}</h3>
+    <q-drawer
+      :value="showSidebar"
+      side="left"
+      bordered
+      content-class="IHR_documentation-page-sidebar"
+    >
+      <h3>{{ $t("documentationPage.title") }}</h3>
       <div>
         <div class="text-weight-light">
-          {{ $t('documentationPage.sectionsTitle.general') }}
+          {{ $t("documentationPage.sectionsTitle.general") }}
         </div>
         <ul>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.about.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces($t(`documentationPage.sections.about.title`))
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.about.title') }}</router-link
+              >{{ $t("documentationPage.sections.about.title") }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.faq.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces($t(`documentationPage.sections.faq.title`))
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.faq.title') }}</router-link
+              >{{ $t("documentationPage.sections.faq.title") }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.ack.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces($t(`documentationPage.sections.ack.title`))
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.ack.title') }}</router-link
+              >{{ $t("documentationPage.sections.ack.title") }}</router-link
             >
           </li>
         </ul>
       </div>
       <div>
         <div class="text-weight-light">
-          {{ $t('documentationPage.sectionsTitle.reports') }}
+          {{ $t("documentationPage.sectionsTitle.reports") }}
         </div>
         <ul>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.globalreport.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.globalreport.title`)
+                  )
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.globalreport.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.globalreport.title")
+              }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.networkreport.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.networkreport.title`)
+                  )
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.networkreport.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.networkreport.title")
+              }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.countryreport.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.countryreport.title`)
+                  )
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.countryreport.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.countryreport.title")
+              }}</router-link
             >
           </li>
         </ul>
       </div>
       <div>
         <div class="text-weight-light">
-          {{ $t('documentationPage.sectionsTitle.analysisModules') }}
+          {{ $t("documentationPage.sectionsTitle.analysisModules") }}
         </div>
         <ul>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.asdependency.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.asdependency.title`)
+                  )
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.asdependency.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.asdependency.title")
+              }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.countryasdependency.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces($t(`documentationPage.sections.netdelay.title`))
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.countryasdependency.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.netdelay.title")
+              }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.prefixasdependency.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.delayforward.title`)
+                  )
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.prefixasdependency.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.delayforward.title")
+              }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.netdelay.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces($t(`documentationPage.sections.disco.title`))
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.netdelay.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.delayforward.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.delayforward.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.disco.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.disco.title') }}</router-link
+              >{{ $t("documentationPage.sections.disco.title") }}</router-link
             >
           </li>
         </ul>
       </div>
       <div>
         <div class="text-weight-light">
-          {{ $t('documentationPage.sectionsTitle.dataAccess') }}
+          {{ $t("documentationPage.sectionsTitle.dataAccess") }}
         </div>
         <ul>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.api.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces($t(`documentationPage.sections.api.title`))
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.api.title') }}</router-link
+              >{{ $t("documentationPage.sections.api.title") }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.pythonlibrary.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.pythonlibrary.title`)
+                  )
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.pythonlibrary.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.pythonlibrary.title")
+              }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.dumps.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.dumps.title`)
+                  )
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.dumps.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.dumps.title")
+              }}</router-link
             >
           </li>
           <li>
             <router-link
               :to="{
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.datapolicy.title`)),
+                hash:
+                  '#' +
+                  replaceSpaces(
+                    $t(`documentationPage.sections.datapolicy.title`)
+                  )
               }"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.datapolicy.title') }}</router-link
+              >{{
+                $t("documentationPage.sections.datapolicy.title")
+              }}</router-link
             >
           </li>
         </ul>
@@ -194,13 +241,21 @@
     </q-drawer>
 
     <div id="IHR_documentation-page">
-      <div v-for="(sec, idx) in $t('documentationPage.sections')" v-bind:key="idx" class="IHR_documentation-page">
+      <div
+        v-for="(sec, idx) in $t('documentationPage.sections')"
+        v-bind:key="idx"
+        class="IHR_documentation-page"
+      >
         <div class="IHR_anchor" :id="replaceSpaces(sec.title)"></div>
         <h1 v-html="sec.title"></h1>
         <p class="text-left text-body1" v-html="sec.summary"></p>
         <div v-for="(sub, idx) in sec.description" v-bind:key="idx">
           <h2 v-html="sub.header"></h2>
-          <img v-if="sub.img" :src="require(`@/${sub.img[0]}`)" :style="sub.img[1]" />
+          <img
+            v-if="sub.img"
+            :src="require(`@/${sub.img[0]}`)"
+            :style="sub.img[1]"
+          />
           <p class="text-left text-body1" v-html="sub.body"></p>
         </div>
       </div>
@@ -210,22 +265,27 @@
 
 <script>
 export default {
-  name: 'DocumentationView',
   props: {
     showSidebar: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   mounted() {
-    this.$emit('sidebar-action', true)
+    this.$emit("sidebar-action", true);
   },
   methods: {
     replaceSpaces(text) {
-      return text.split(' ').join('_').split('(').join('_').split(')').join('_').split("'").join('_')
-    },
-  },
-}
+      return text
+        .split(" ")
+        .join("_")
+        .split("(")
+        .join("_")
+        .split(")")
+        .join("_");
+    }
+  }
+};
 </script>
 
 <style lang="stylus">
@@ -233,8 +293,8 @@ export default {
 
 #IHR_
   &documentation-page
+    width 90%
     margin 0pt auto
-    max-width 1200px
 
 .IHR_
   &documentation-page
@@ -270,10 +330,6 @@ export default {
 
       & a:active
         border-bottom 1px solid $accent
-
-      .router-link-active,
-      .router-link-exact-active 
-        border-bottom 1px solid red        
 
       & ul
         margin 5px

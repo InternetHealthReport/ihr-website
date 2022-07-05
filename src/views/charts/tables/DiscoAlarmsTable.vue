@@ -23,7 +23,7 @@
               @click="
                 newWindow({
                   name: 'networks',
-                  params: { asn: 'AS' + props.row.streamname },
+                  params: { asn: 'AS' + props.row.streamname }
                 })
               "
               href="javascript:void(0)"
@@ -45,10 +45,20 @@
           <div class="text-h3 text-center">Pings from disconnected probes</div>
           <div v-if="props.expand" class="IHR_side_borders">
             <latencymon
-              :start-time="dateHourShift(props.row.starttime, -Math.max(props.row.duration, 120) / 60)"
-              :stop-time="dateHourShift(props.row.endtime, Math.max(props.row.duration, 120) / 60)"
+              :start-time="
+                dateHourShift(
+                  props.row.starttime,
+                  -Math.max(props.row.duration, 120) / 60
+                )
+              "
+              :stop-time="
+                dateHourShift(
+                  props.row.endtime,
+                  Math.max(props.row.duration, 120) / 60
+                )
+              "
               :msm-prb-ids="msmPrbIds(props.row.discoprobes)"
-              style="max-width: 93%; margin: 0 auto"
+              style="max-width: 93%; margin: 0 auto;"
             />
           </div>
         </q-td>
@@ -58,32 +68,32 @@
 </template>
 
 <script>
-import CommonTableMixin from './CommonTableMixin.vue'
-import Latencymon from '@/components/ripe/Latencymon'
-import getCountryName from '@/plugins/countryName.js'
+import CommonTableMixin from "./CommonTableMixin.vue";
+import Latencymon from "@/components/ripe/Latencymon";
+import getCountryName from "@/plugins/countryName.js";
 
 export default {
   mixins: [CommonTableMixin],
   components: {
-    Latencymon,
+    Latencymon
   },
   props: {
     data: {
       type: Array,
-      required: true,
+      required: true
     },
     loading: {
       type: Boolean,
-      required: true,
+      required: true
     },
     startTime: {
       type: Date,
-      required: true,
+      required: true
     },
     stopTime: {
       type: Date,
-      required: true,
-    },
+      required: true
+    }
   },
   data() {
     return {
@@ -91,89 +101,90 @@ export default {
       expandedRow: [],
       rows: [],
       pagination: {
-        sortBy: 'deviation',
+        sortBy: "deviation",
         descending: true,
         page: 1,
-        rowsPerPage: 5,
+        rowsPerPage: 5
       },
       columns: [
         {
-          name: 'overview',
-          label: 'Overview',
-          align: 'center',
+          name: "overview",
+          label: "Overview",
+          align: "center"
         },
         {
-          name: 'location',
+          name: "location",
           required: true,
-          label: 'Location',
-          align: 'left',
+          label: "Location",
+          align: "left",
           field: row => [row.streamtype, row.streamname],
-          format: val => (val[0] == 'country' ? this.countryName(val[1]) : val[1]),
-          sortable: true,
+          format: val =>
+            val[0] == "country" ? this.countryName(val[1]) : val[1],
+          sortable: true
         },
         {
-          name: 'starttime',
+          name: "starttime",
           required: false,
-          label: 'Disconnection Time',
-          align: 'left',
+          label: "Disconnection Time",
+          align: "left",
           field: row => row.starttime,
           format: val => val,
-          sortable: false,
+          sortable: false
         },
         {
-          name: 'duration',
+          name: "duration",
           required: true,
-          label: 'Duration (minutes)',
-          align: 'left',
+          label: "Duration (minutes)",
+          align: "left",
           field: row => row.duration,
           format: val => val,
-          sortable: true,
+          sortable: true
         },
         {
-          name: 'deviation',
+          name: "deviation",
           required: true,
-          label: 'Deviation',
-          align: 'left',
+          label: "Deviation",
+          align: "left",
           field: row => row.avglevel,
           format: val => val,
-          sortable: true,
+          sortable: true
         },
         {
-          name: 'discoProbes',
+          name: "discoProbes",
           required: true,
-          label: 'Nb. Disco. Probes',
-          align: 'left',
+          label: "Nb. Disco. Probes",
+          align: "left",
           field: row => row.nbdiscoprobes,
           format: val => val,
-          sortable: true,
-        },
-      ],
-    }
+          sortable: true
+        }
+      ]
+    };
   },
   methods: {
     dateFormatter(datetime) {
-      var dt = new Date(datetime)
+      var dt = new Date(datetime);
       var options = {
-        year: 'numeric',
-        month: 'long',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'UTC',
-      }
-      return dt.toLocaleDateString(undefined, options)
+        year: "numeric",
+        month: "long",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC"
+      };
+      return dt.toLocaleDateString(undefined, options);
     },
     countryName(code) {
-      return getCountryName(code)
+      return getCountryName(code);
     },
     msmPrbIds(probes) {
       var probeIds = probes.map(probe => {
-        return probe.probe_id
-      })
-      return { 1030: probeIds, 1001: probeIds, 1591146: probeIds }
-    },
-  },
-}
+        return probe.probe_id;
+      });
+      return { 1030: probeIds, 1001: probeIds, 1591146: probeIds };
+    }
+  }
+};
 </script>
 <style lang="stylus">
 .IHR_nohover

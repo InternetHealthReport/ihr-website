@@ -1,26 +1,24 @@
 <template>
-  <div id="IHR_reset-password">
+  <div id="IHR_sig-in-form">
     <transition name="IHR_errors-banner-animation">
-      <q-banner class="IHR_errors-banner" v-if="error != null">
-        <p>{{ $t(`resetPassword.error${error}`) }}</p>
+      <q-banner class="IHR_errors-banner" v-if="errors.length != 0">
+        <p v-for="error in errors" :key="error">{{ $t(`sigIn.${error}`) }}</p>
         <template v-slot:action>
-          <q-btn flat color="white" :label="$t('close')" @click="error = null" />
+          <q-btn flat color="white" :label="$t('close')" @click="errors = []" />
         </template>
       </q-banner>
     </transition>
-    <h1>{{ $t('resetPassword.title') }}</h1>
-    <!-- <div class="row justify-around IHR_content" v-if="$ihr_api.authenticated">
-            <q-btn color="secondary" class="col-3" @click="$router.push({ name: 'personal_page' })">{{ $t('personalPage.title') }}</q-btn>
-        </div> -->
-    <div class="shadow-2" id="IHR_reset-password-form">
+    <h1>{{ $t("sigIn.register") }}</h1>
+    <div class="shadow-2" id="IHR_sig-in-form-container">
       <q-input v-model="email" label="email" type="email"
         :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]">
         <template v-slot:prepend>
           <q-icon name="fa fa-envelope" />
         </template>
       </q-input>
-      <q-input v-model="password" label="new_password" @blur="showCode" :type="isPwd ? 'password' : 'text'"
-        :rules="[val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')]">
+      <q-input v-model="password" label="password" @blur="showCode" :type="isPwd ? 'password' : 'text'" :rules="[
+        val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')
+      ]">
         <template v-slot:prepend>
           <q-icon name="fa fa-key" />
         </template>
@@ -28,8 +26,9 @@
           <q-icon :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'" class="cursor-pointer" @click="isPwd = !isPwd" />
         </template>
       </q-input>
-      <q-input v-show="isShowCode" v-model="code" label="verification code"
-        :rules="[val => $ihrStyle.validateCode(val) || $t('forms.weakCode')]">
+      <q-input v-show="isShowCode" v-model="code" label="verification code" :rules="[
+        val => $ihrStyle.validateCode(val) || $t('forms.weakCode')
+      ]">
         <template v-slot:prepend>
           <q-icon name="fa fa-check" />
         </template>
@@ -40,7 +39,7 @@
       </q-input>
       <!-- <div :style="{
         height: recaptcha_loaded ? 'auto' : '90px',
-        position: 'relative',
+        position: 'relative'
       }">
         <vue-recaptcha
           :sitekey="$ihrStyle.recaptchaKey"
@@ -53,15 +52,12 @@
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
       </div> -->
-      <q-btn color="positive" @click="forgetpassword()">
-        {{ $t('resetPassword.resetPassword') }}
-      </q-btn>
+      <!-- <div>{{ $t("sigIn.mailWillBeSent") }}</div> -->
+      <div style="display:flex;justify-content:space-between;">
+        <router-link to="login">Login</router-link>
+      </div>
+      <q-btn color="positive" @click="validateAndSend">register</q-btn>
     </div>
-    <!-- <div class="shadow-2" id="IHR_confirm-your-email" v-else>
-            <div>{{ $t('resetPassword.instructionPart1') }}</div>
-            <div id="IHR_email-confirmation">{{ email }}</div>
-            <div>{{ $t('resetPassword.instructionPart2') }}</div>
-        </div> -->
     <q-dialog v-model="emailSent">
       <q-card style="width: 300px">
         <q-card-section>
@@ -84,41 +80,66 @@
 // import VueRecaptcha from "vue-recaptcha";
 
 export default {
-  components: {
-    // VueRecaptcha,
-  },
+  // components: { VueRecaptcha },
+  name: 'RegisterPage',
   data() {
     return {
-      email: '',
-      recaptcha: '',
-      password: '',
-      code: '',
-      isPwd: true,
-      message: '',
-      error: null,
+      email: "",
+      password: "",
+      recaptcha: "",
+      code: "",
+      codeText: "send code",
+      message: "",
       emailSent: false,
+      isPwd: true,
       isShowCode: false,
       recaptcha_loaded: false,
-      codeText: "send code",
       countShow: false,
       codeCount: 60,
-    }
+      errors: []
+    };
   },
   mounted() {
-    this.$libraryDelayer.load('google_recaptcha', () => {
-      this.recaptcha_loaded = true
-    })
+    this.$libraryDelayer.load("google_recaptcha", () => {
+      this.recaptcha_loaded = true;
+      this.$libraryDelayer.getRidOfInlineStyle("IHR_sig-in-captcha", "div");
+    });
   },
   methods: {
     expired() {
-      this.recaptcha = ''
-      console.log('expired')
+      this.recaptcha = "";
+      console.log("expired");
     },
     verify(response) {
-      this.recaptcha = response
+      this.recaptcha = response;
     },
     ensureCss(id) {
-      this.$libraryDelayer.getRidOfInlineStyle(id, 'div')
+      this.$libraryDelayer.getRidOfInlineStyle(id, "div");
+    },
+    validateAndSend() {
+      this.errors = [];
+      // this.recaptcha != "" || this.errors.push("missingReCaptcha");
+      this.$ihrStyle.validatePassword(this.password) ||
+        this.errors.push("passwordTooWeak");
+      this.$ihrStyle.validateEmail(this.email) ||
+        this.errors.push("strangeEmail");
+      if (this.errors.length == 0)
+        this.$ihr_api.userSignIn(
+          this.email,
+          this.password,
+          this.code,
+          (res) => {
+            this.emailSent = true
+            this.message = res.msg
+            if (res.code === 200) {
+              this.$router.push('/en-us/login')
+            }
+          },
+          error => {
+            this.emailSent = true
+            this.message = error.detail
+          }
+        );
     },
     showCode() {
       this.isShowCode = true
@@ -136,74 +157,53 @@ export default {
           codeTimer = null
         }
       }, 1000)
-      this.$ihr_api.sendforgetpasswordemail(
-        this.email,
-        res => {
+      this.$ihr_api.sendsendregisteremail(this.email,
+        (res) => {
           this.emailSent = true
           this.message = res.msg
         },
-        error => {
+        (error) => {
           this.emailSent = true
           this.message = error.detail
-        }
-      )
-    },
-    forgetpassword() {
-      if (!this.$ihrStyle.validateEmail(this.email)) {
-        this.error = 'InvalidEmail'
-        return
-      }
-      if (!this.$ihrStyle.validatePassword(this.password)) {
-        this.error = 'passwordTooWeak'
-        return
-      }
-      // if (this.recaptcha == '') {
-      //     this.error = 'AreYouRobot'
-      //     return
-      // }
-      this.error = null
-      this.$ihr_api.userforgetpassword(
-        this.email,
-        this.password,
-        this.code,
-        res => {
-          this.emailSent = true
-          this.message = res.msg
-          if (res.code === 200) {
-            this.$router.push('/en-us/login')
-          }
-        },
-        error => {
-          this.emailSent = true
-          this.message = error.detail
-        }
-      )
-    },
+        })
+    }
+
   },
-  computed: {},
-}
+  computed: {
+  }
+};
 </script>
 <style lang="stylus" scoped>
 @import '../../styles/quasar.variables'
 #IHR_
-  &reset-password
-    width 50%
-    margin 2vh auto
-    text-align center
-    font-size 20pt
+  &sig-in-
+    &form
+      width 90%
+      margin 2vh auto
+      text-align center
 
-    & > h1:first-letter
-      text-transform capitalize
+      & > h1:first-letter
+        text-transform capitalize
 
-    & > &-form, ~/confirm-your-email
-      width 80%
-      margin: 0 auto
-      max-width 500px
-      padding 10px 0px
-
-      > *
+      & > &-container
         width 80%
-        margin: 8pt auto
+        margin: 0 auto
+        max-width 500px
+        padding 10px 0px
+
+        > *
+          width 80%
+          margin: 8pt auto
+
+  &confirm-your-email
+    width 70%
+    margin 0px auto
+    padding 20pt 0pt 10pt 0pt
+    font-size 20pt
+    & > div
+      margin-bottom 20pt
+      &:first-child:first-letter
+        text-transform capitalize
 
   &email-confirmation
     background-color $secondary
