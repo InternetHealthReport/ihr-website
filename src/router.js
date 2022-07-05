@@ -20,6 +20,7 @@ import ResetPassword from '@/views/user/ResetPassword'
 import Documentation from '@/views/Documentation'
 import Bgplay from '@/components/ripe/Bgplay'
 import PageNotFound from '@/views/PageNotFound'
+import Datasets from '@/views/Datasets'
 
 Vue.use(Router)
 
@@ -239,6 +240,16 @@ export default new Router({
         default: MetisDeployment,
       },
       meta: { title: 'Metis Deployment - IHR' },
+    },
+    {
+      name: 'dataset',
+      path: `${routerBase}dataset`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Datasets,
+      },
+      meta: { title: 'Dataset - IHR' },
     },
 
     // Widgets
