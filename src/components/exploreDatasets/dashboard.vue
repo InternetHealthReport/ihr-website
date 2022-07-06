@@ -1,48 +1,45 @@
 <template>
   <div>
-    <h1>M-Lab Integration</h1>
-    <div class="container">
-      <form class="navbar-form m-2">
-        <div class="input-group no border">
-          <input type="text" value="" class="form-control" placeholder="Search" v-model="year" />
-          <button @click="update(year)">
-            <i class="material-icons ml-3">search</i>
-          </button>
-        </div>
-      </form>
-      <div class="row">
-        <div class="col-md-3">1</div>
-        <div class="col-md-3">2</div>
-        <div class="col-md-3">3</div>
-        <div class="col-md-3">4</div>
-      </div>
-    </div>
+    <h1>Exploratory Dashboard</h1>
+    <q-select v-model="datasetSelected" label="Select a Dataset" :options="datasets"></q-select>
+    <q-select v-model="countrySelected" label="Select a country" :options="countries"></q-select>
+    <q-select v-model="xSelected" label="Select X-axis" :options="xaxis"></q-select>
+    <q-select v-model="ySelected" label="Select Y-axis" :options="yaxis"></q-select>
+    <q-select v-model="yearSelected" label="Select Year" :options="years"></q-select>
+    <button @click="getInfo(yearSelected)">Search</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Exploratory-Dashboard',
+  name: 'Exploratory Dashboard',
   data() {
+    var countries = ['India', 'Japan', 'Nepal', 'France']
+    var datasets = ['D1', 'D2', 'D3']
+    var xaxis = ['X1', 'X2', 'X3']
+    var yaxis = ['Y1', 'Y2', 'Y3']
+    var years = ['2019', '2020', '2021']
     return {
-      year: '',
-      data: '',
+      countries: countries,
+      countrySelected: null,
+      datasets: datasets,
+      datasetSelected: null,
+      xaxis: xaxis,
+      xSelected: null,
+      yaxis: yaxis,
+      ySelected: null,
+      years: years,
+      yearSelected: null,
     }
   },
   methods: {
-    update(year) {
-      console.log(year)
-      this.getData(year)
-    },
-    getData(year) {
-      axios
-        .get(`https://statistics.measurementlab.net/v0/NA/US/US-MD/2020/histogram_daily_stats.json`)
-        .then(res => {
-          this.data = res.data
-        })
-        .catch(e => console.log(e))
-      console.log(this.data)
+    getInfo(yearSelected) {
+      console.log(yearSelected)
     },
   },
 }
 </script>
+
+<style lang="stylus">
+@import '../../styles/quasar.variables';
+</style>
