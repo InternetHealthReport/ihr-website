@@ -129,8 +129,10 @@
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
+                <measurement-lab />
                 <div class="IHR_last-element">&nbsp;</div>
             </q-list>
+            
         </div>
         <div v-else>
             <div>
@@ -207,6 +209,7 @@ import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
+import MeasurementLab from './charts/MeasurementLab.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -228,7 +231,8 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
-  },
+    MeasurementLab
+},
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn)
     let addressFamily = this.$route.query.af
