@@ -129,7 +129,20 @@
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
-                <cloudflare-chart />
+                <q-expansion-item
+                    :label="$t('Cloudflare')"
+                    caption="Cloudflare Netflow Change Data"
+                    header-class="IHR_charts-title"
+                    icon="fas fa-plug"
+                    :disable="show.disco_disable"
+                    
+                >
+                    <q-separator />
+                    <q-card class="IHR_charts-body">
+                        <cloudflare-chart />
+                    </q-card>
+                </q-expansion-item>
+                
                 <div class="IHR_last-element">&nbsp;</div>
             </q-list>
         </div>
