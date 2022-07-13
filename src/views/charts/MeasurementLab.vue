@@ -1,8 +1,9 @@
 <template>
   <div>
     <h1>M Lab dataset</h1>
-    <button @click="getInfo()">Get Chart</button>
+    <button @click="getInfo(Year)">Get Chart</button>
     <reactive-chart :layout="layout" :traces="traces" :no-data="noData" :chartTitle="MLab" />
+    <!-- <h1>Start date is: {{Year}} {{AS}}</h1> -->
   </div>
 </template>
 
@@ -13,6 +14,10 @@ export default {
   name: 'Measurement Lab Network',
   components: {
     ReactiveChart,
+  },
+  props:{
+    AS:String,
+    Year:String,
   },
   data() {
     var layout = {
@@ -26,9 +31,9 @@ export default {
     }
   },
   methods: {
-    getInfo() {
+    getInfo(Year) {
       axios
-        .get('https://statistics.measurementlab.net/v0/NA/US/US-MD/2020/histogram_daily_stats.json')
+        .get(`https://statistics.measurementlab.net/v0/NA/US/US-MD/${Year}/histogram_daily_stats.json`)
         .then(response => {
           this.networks = response.data
           this.getChart(this.networks)

@@ -129,7 +129,7 @@
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
-                <measurement-lab />
+                <measurement-lab :Year="startTime.getFullYear()" :AS="asNumber"/>
                 <div class="IHR_last-element">&nbsp;</div>
             </q-list>
             
