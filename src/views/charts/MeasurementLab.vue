@@ -20,6 +20,12 @@ export default {
   data() {
     var layout = {
       title: 'Line and Scatter Plot',
+      xaxis:{
+        title:"Timeline",
+      },
+      yaxis:{
+        title:"Bucket Max"
+      }
     }
     return {
       networks: [],
@@ -54,8 +60,6 @@ export default {
         {
           x: networkDates,
           y: networkBuckets,
-          yaxis:'Panda',
-          xaxis:"Gublu",
           mode: 'box',
         },
       ]
