@@ -129,7 +129,26 @@
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
-                <measurement-lab :Year="startTime.getFullYear()" :AS="asNumber"/>
+                <q-expansion-item
+                    :label="$t('Measurement Lab')"
+                    caption="Speed Test Data"
+                    header-class="IHR_charts-title"
+                    icon="fas fa-plug"
+                    v-model="show.measurementLab"
+                >
+                    <q-separator />
+                    <q-card class="IHR_charts-body">
+                        <q-card-section>
+                            <measurement-lab 
+                              :Year="startTime.getFullYear()"
+                              :AS="asNumber"
+                              :fetch="fetch"
+                              ref="measurementLabChart"
+                            />
+                        </q-card-section>
+                    </q-card>
+                </q-expansion-item>
+                <!-- <measurement-lab :Year="startTime.getFullYear()" :AS="asNumber"/> -->
                 <div class="IHR_last-element">&nbsp;</div>
             </q-list>
             

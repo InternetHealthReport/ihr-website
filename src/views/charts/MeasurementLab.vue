@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>M Lab dataset</h1>
     <reactive-chart :layout="layout" :traces="traces" :no-data="noData" :chartTitle="MLab" />
   </div>
 </template>
@@ -19,7 +18,7 @@ export default {
   },
   data() {
     var layout = {
-      title: 'Line and Scatter Plot',
+      title: 'Measurement lab dataset of time vs timeline',
       xaxis:{
         title:"Timeline",
       },
