@@ -129,6 +129,7 @@
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
+                <cloudflare-chart />
                 <div class="IHR_last-element">&nbsp;</div>
             </q-list>
         </div>
@@ -207,6 +208,7 @@ import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
+import CloudflareChart from './charts/CloudflareChart.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -228,6 +230,7 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
+    CloudflareChart
   },
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn)
