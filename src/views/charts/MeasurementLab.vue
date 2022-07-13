@@ -1,9 +1,7 @@
 <template>
   <div>
     <h1>M Lab dataset</h1>
-    <button @click="getInfo(Year)">Get Chart</button>
     <reactive-chart :layout="layout" :traces="traces" :no-data="noData" :chartTitle="MLab" />
-    <!-- <h1>Start date is: {{Year}} {{AS}}</h1> -->
   </div>
 </template>
 
@@ -56,11 +54,16 @@ export default {
         {
           x: networkDates,
           y: networkBuckets,
+          yaxis:'Panda',
+          xaxis:"Gublu",
           mode: 'box',
         },
       ]
     },
   },
+ mounted:function(){
+    this.getInfo(this.Year);
+ }
 }
 </script>
 
