@@ -129,6 +129,20 @@
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
+                <q-expansion-item
+                    :label="$t('IODA HTTP Chart')"
+                    caption="Time Series Signals"
+                    header-class="IHR_charts-title"
+                    icon="fas fa-plug"
+                    :disable="show.disco_disable"
+                >
+                    <q-separator />
+                    <q-card class="IHR_charts-body">
+                        <q-card-section>
+                           <ioda-chart />
+                        </q-card-section>
+                    </q-card>
+                </q-expansion-item>
                 <div class="IHR_last-element">&nbsp;</div>
             </q-list>
         </div>
@@ -207,6 +221,7 @@ import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
+import IodaChart from './charts/IodaChart.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -228,7 +243,8 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
-  },
+    IodaChart
+},
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn)
     let addressFamily = this.$route.query.af
