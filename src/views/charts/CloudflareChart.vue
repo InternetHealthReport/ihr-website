@@ -40,9 +40,6 @@ export default{
             axios.get("https://radar.cloudflare.com/api/netrep/net/netflowchangerange?date_token=last_30_days&location=UA")
             .then(response =>{
                 this.networks = response.data 
-                 console.log("*************************************")
-            console.log(networks)
-            console.log("*************************************")
                 this.getChart(this.networks)
             })
             .catch(error=>{
