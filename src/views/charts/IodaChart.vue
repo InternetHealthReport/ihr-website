@@ -2,7 +2,7 @@
 <div>
     <h1>Ioda Chart</h1>
     <reactive-chart :layout="layout" :traces="traces" :noData="noData" :chartTitle="iodaChart" /> 
-    <button @click="getInfo()">Search</button>
+    <button @click="getInfo(ASN)">Search</button>
 </div>
 </template>
 
@@ -13,6 +13,11 @@ export default {
     name:"Ioda Chart",
     components:{
         ReactiveChart
+    },
+    props:{
+        ASN:String,
+        StartTime : String,
+        EndTime : String
     },
     data(){
         var layout = {
@@ -30,8 +35,8 @@ export default {
         }
     },
     methods:{
-        getInfo(){
-            axios.get("https://api.ioda.inetintel.cc.gatech.edu/v2/signals/raw/asn/2497?from=1657756780&until=1657766780&datasource=ping-slash24")
+        getInfo(ASN){
+            axios.get(`https://api.ioda.inetintel.cc.gatech.edu/v2/signals/raw/asn/${ASN}?from=1657756780&until=1657766780&datasource=ping-slash24`)
             .then(response =>{
                 this.networks = response.data
                 console.log(this.networks)

@@ -139,7 +139,11 @@
                     <q-separator />
                     <q-card class="IHR_charts-body">
                         <q-card-section>
-                           <ioda-chart />
+                           <ioda-chart
+                              :ASN="asNumber"
+                              :fetch="fetch"
+                              ref = "iodaChart"
+                           />
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
