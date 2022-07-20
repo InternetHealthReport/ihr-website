@@ -18,12 +18,12 @@ export default {
   },
   data() {
     var layout = {
-      title: 'Measurement lab dataset of time vs timeline',
+     // title: 'Measurement lab dataset of time vs timeline',
       xaxis:{
         title:"Timeline",
       },
       yaxis:{
-        title:"Bucket Max"
+        title:"Download and Upload Speed comparison"
       }
     }
     return {
@@ -51,15 +51,29 @@ export default {
       networks.forEach(network => {
         networkDates.push(network.date)
       })
-      let networkBuckets = []
+      
+      let networkDownload = []
       networks.forEach(network => {
-        networkBuckets.push(network.bucket_max)
+        networkDownload.push(network.download_AVG)
       })
+
+      let networkUpload = [] 
+      networks.forEach(network =>{
+        networkUpload.push(network.upload_AVG)
+      })
+
       this.traces = [
         {
           x: networkDates,
-          y: networkBuckets,
-          mode: 'box',
+          y: networkDownload,
+          mode: 'scatter',
+          name:'Download'
+        },
+        {
+          x: networkDates,
+          y: networkUpload,
+          mode: 'scatter',
+          name:'Upload'
         },
       ]
     },
