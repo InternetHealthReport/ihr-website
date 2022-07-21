@@ -38,7 +38,7 @@ export default {
         getInfo(ASN){
             axios.get(`https://api.ioda.inetintel.cc.gatech.edu/v2/signals/raw/asn/${ASN}?from=1657756780&until=1657766780&datasource=ping-slash24`)
             .then(response =>{
-                this.networks = response.data
+                this.networks = response.data              
                 console.log(this.networks)
             })
             .catch(error =>{
