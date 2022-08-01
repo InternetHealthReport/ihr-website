@@ -42,8 +42,13 @@ export default {
             const endUnixTimeStamp = Math.floor(endDate.getTime()/1000);
             axios.get(`https://api.ioda.inetintel.cc.gatech.edu/v2/signals/raw/asn/${ASN}?from=${startUnixTimeStamp}&until=${endUnixTimeStamp}&datasource=ping-slash24`)
             .then(response =>{
-                this.networks = response.data              
-                console.log(this.networks)
+                this.networks = response.data
+                const networksData = this.networks.data    
+                for(const networkLayer of networksData){
+                    for(const network of networkLayer){
+                        console.log(network)
+                    }       
+                }
             })
             .catch(error =>{
                 console.log(error)
