@@ -142,6 +142,8 @@
                            <ioda-chart
                               :ASN="asNumber"
                               :fetch="fetch"
+                              :StartTime="startTime"
+                              :EndTime="endTime"
                               ref = "iodaChart"
                            />
                         </q-card-section>
