@@ -31,7 +31,8 @@ export default {
         }
         return{
             layout:layout,
-            errorMsg:""
+            errorMsg:"",
+            traces:[]
         }
     },
     methods:{
@@ -46,7 +47,8 @@ export default {
                 const networksData = this.networks.data    
                 for(const networkLayer of networksData){
                     for(const network of networkLayer){
-                        console.log(network)
+                       this.getChart(network)
+                       console.log(network)
                     }       
                 }
             })
@@ -54,7 +56,35 @@ export default {
                 console.log(error)
                 this.errorMsg = "Ioda API end point is not working"
             })
-        }
+        },
+        getChart(network){
+        let networkDates = []
+        let networkStart = network.from 
+        let networkEnd = network.until
+        let networkStep = network.nativeStep
+        // neglecting from and until timestamps
+        while(networkStart<networkEnd){
+            networkStart += networkStep 
+            networkDates.push(networkStart);
+        }                
+        
+        // storing network Values
+        let networkValues = network.values;
+
+        // building the trace
+        this.traces = [
+            {
+                x:networkDates,
+                y:networkValues,
+                mode:"Scatter",
+                name:"Ping-Slash 24"
+            }
+        ]
+    }
     }
 }
 </script>
+
+<style lang="stylus">
+@import '../../styles/quasar.variables';
+</style>
