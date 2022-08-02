@@ -1,8 +1,11 @@
 <template>
 <div>
-    <h1>Ioda Chart</h1>
-    <reactive-chart :layout="layout" :traces="traces" :noData="noData" :chartTitle="iodaChart" /> 
-    <button @click="getInfo(ASN,StartTime,EndTime)">Search</button>
+    <reactive-chart 
+        :layout="layout" 
+        :traces="traces" 
+        :noData="noData" 
+        :chartTitle="iodaChart"
+    /> 
 </div>
 </template>
 
@@ -81,6 +84,9 @@ export default {
             }
         ]
     }
+    },
+    mounted:function(){
+        this.getInfo(this.ASN,this.StartTime,this.EndTime);
     }
 }
 </script>
