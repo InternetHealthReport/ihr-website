@@ -141,7 +141,7 @@
                         <q-card-section>
                             <measurement-lab 
                               :Year="startTime.getFullYear()"
-                              :AS="asNumber"
+                              :ASN="asNumber"
                               :fetch="fetch"
                               ref="measurementLabChart"
                             />

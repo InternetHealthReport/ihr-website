@@ -1,6 +1,11 @@
 <template>
   <div>
-    <reactive-chart :layout="layout" :traces="traces" :no-data="noData" :chartTitle="MLab" />
+    <reactive-chart
+     :layout="layout" 
+     :traces="traces" 
+     :no-data="noData" 
+     :chartTitle="MLab"
+    />
   </div>
 </template>
 
@@ -13,7 +18,7 @@ export default {
     ReactiveChart,
   },
   props:{
-    AS:String,
+    ASN:String,
     Year:String,
   },
   data() {
@@ -34,9 +39,9 @@ export default {
     }
   },
   methods: {
-    getInfo(Year) {
+    getInfo(Year,ASN) {
       axios
-        .get(`https://statistics.measurementlab.net/v0/NA/US/US-MD/${Year}/histogram_daily_stats.json`)
+        .get(`https://statistics.measurementlab.net/v0/asn/${ASN}/${Year}/histogram_daily_stats.json`)
         .then(response => {
           this.networks = response.data
           this.getChart(this.networks)
@@ -79,7 +84,7 @@ export default {
     },
   },
  mounted:function(){
-    this.getInfo(this.Year);
+    this.getInfo(this.Year,this.ASN);
  }
 }
 </script>
