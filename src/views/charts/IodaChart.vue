@@ -34,7 +34,7 @@ export default {
     }
   },
   methods: {
-    getInfo(ASN, StartTime, EndTime) {
+    getPingSlashData(ASN, StartTime, EndTime) {
       const startDate = new Date(StartTime)
       const startUnixTimeStamp = Math.floor(startDate.getTime() / 1000)
       const endDate = new Date(EndTime)
@@ -80,15 +80,15 @@ export default {
 
       // storing network Values
       let networkValues = network.values
-      console.log(networkValues)
-      const highestValue = Math.max(...networkValues)
 
+      // normalizing the data
+      const highestValue = Math.max(...networkValues)
       let normalizedNetworkValues = []
       for (const val of networkValues) {
-        console.log(val, val / highestValue, highestValue)
         let normalizedVal = (val / highestValue) * 100
         normalizedNetworkValues.push(normalizedVal)
       }
+
       // building the trace
       this.traces = [
         {
@@ -101,7 +101,7 @@ export default {
     },
   },
   mounted: function () {
-    this.getInfo(this.ASN, this.StartTime, this.EndTime)
+    this.getPingSlashData(this.ASN, this.StartTime, this.EndTime)
   },
 }
 </script>
