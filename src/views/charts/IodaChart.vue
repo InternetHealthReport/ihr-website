@@ -77,14 +77,23 @@ export default {
 
         readableDate.push(dateString)
       }
-      console.log(readableDate)
+
       // storing network Values
       let networkValues = network.values
+      console.log(networkValues)
+      const highestValue = Math.max(...networkValues)
+
+      let normalizedNetworkValues = []
+      for (const val of networkValues) {
+        console.log(val, val / highestValue, highestValue)
+        let normalizedVal = (val / highestValue) * 100
+        normalizedNetworkValues.push(normalizedVal)
+      }
       // building the trace
       this.traces = [
         {
           x: readableDate,
-          y: networkValues,
+          y: normalizedNetworkValues,
           mode: 'Scatter',
           name: 'Ping-Slash 24',
         },
