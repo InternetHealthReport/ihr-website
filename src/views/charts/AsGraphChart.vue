@@ -215,7 +215,7 @@ export default {
                     // Add link no dep node
                     if( target == 'Internet' & source == identifier ){ 
                         let dep_idx = this.traces[0].node.label.length;
-                        this.traces[0].node.label.push('No dependency')
+                        this.traces[0].node.label.push('misc.')
                         this.traces[0].link.target.push(dep_idx);
                         this.traces[0].link.source.push(source_idx);
                         this.traces[0].link.value.push(100*weight);
@@ -246,7 +246,7 @@ export default {
             // set node colors
             this.traces[0].node.label.forEach( asn => { 
                 let node_color = 'rgba(214, 39, 40, 1)';
-                if( asn == 'No dependency' | asn == 'Internet') node_color =  'rgba(44, 160, 44, 0.1)'
+                if( asn == 'misc.' | asn == 'Internet') node_color =  'rgba(44, 160, 44, 0.1)'
                 else if( asn == identifier ) node_color = 'rgba(31, 119, 180, 1)'
                 else {
                     if( this.hegemonyValues[asn] < 0.5 ) node_color = 'rgba(255, 127, 14, 1)';
