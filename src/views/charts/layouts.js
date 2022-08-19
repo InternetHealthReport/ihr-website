@@ -30,6 +30,14 @@ var NET_DELAY_LAYOUT = {
   },
 }
 
+var NET_DELAY_BOXPLOT_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  yaxis: {
+    title: i18n.t('charts.networkDelay.yaxis'),
+    autorange: true,
+  },
+}
+
 var NET_DELAY_ALARMS_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
@@ -108,5 +116,6 @@ export {
   AS_INTERDEPENDENCIES_LAYOUT,
   DELAY_CHART_LAYOUT,
   NET_DELAY_LAYOUT,
+  NET_DELAY_BOXPLOT_LAYOUT,
   RIR_COUNTRY_SUNBURST_LAYOUT,
 }

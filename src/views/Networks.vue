@@ -82,6 +82,14 @@
                                 ref="networkDelayChart"
                                 @display="displayNetDelay"
                             />
+                            <network-delay-box-plot
+                                :msmIds="cdnMsmIds"
+                                :start-time="startTime"
+                                :end-time="endTime"
+                                :sources="[Math.abs(asNumber).toString()]"
+                                :fetch="fetch"
+                                ref="networkDelayBoxPlot"
+                            />
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
@@ -204,6 +212,7 @@ import PrefixHegemonyChart from '@/views/charts/PrefixHegemonyChart'
 import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from '@/views/charts/global/DiscoChart'
 import DelayAndForwardingChart from '@/views/charts/DelayAndForwardingChart'
 import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
+import NetworkDelayBoxPlot from '@/views/charts/NetworkDelayBoxPlot'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
@@ -226,6 +235,7 @@ export default {
     DiscoChart,
     DelayAndForwardingChart,
     NetworkDelayChart,
+    NetworkDelayBoxPlot,
     DateTimePicker,
     NetworkSearchBar,
   },
@@ -239,6 +249,7 @@ export default {
       asName: null,
       charRefs: CHART_REFS,
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
+      cdnMsmIds: [43573971],
       show: {
         rov: true,
         rov_disable: false,
