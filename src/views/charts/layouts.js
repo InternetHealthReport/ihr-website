@@ -31,11 +31,11 @@ var NET_DELAY_LAYOUT = {
 }
 
 var NET_DELAY_BOXPLOT_LAYOUT = {
-  ...COMMON_WITH_LEGEND,
   yaxis: {
-    title: i18n.t('charts.networkDelay.yaxis'),
-    autorange: true,
+    title: 'RTT',
+    zeroline: false
   },
+  boxmode: 'group'
 }
 
 var NET_DELAY_ALARMS_LAYOUT = {

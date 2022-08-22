@@ -70,53 +70,111 @@ export default {
     }
   },
   methods: {
+    getProbeInfo() {
+        console.log('BOX get probes')
+      // update probe information
+      this.probes = {}
+      var promises = []
+      this.msmIds.forEach( msmId => {
+        promises.push(ripeApi.atlasMeasurementProbes(msmId).then( probes => {
+          for (const probe of Object.entries(probes)) {
+              if( ( 'asn_v4' in probe[1] && this.sources.includes(probe[1].asn_v4.toString()) ) ){
+                // TODO IPv6
+                //|| ('asn_v6' in probe[1] && this.sources.includes(probe[1].asn_v6.toString()) ) ){
+              this.probes[probe[0]] = probe[1]
+            }
+          }
+        }))
+      })
+      console.log('getProbes promises')
+        console.log(promises)
+      return Promise.all(promises)
+    },
     getTraceroutes() {
+      var pids = Object.keys(this.probes)
+      var promises = []
       this.traceroutes = []
       this.msmIds.forEach( msmId => {
-        // update probe information
-        ripeApi.atlasMeasurementProbes(msmId).then( probes => {
-          this.probes = probes
-        })
-        console.log('PROBES')
-        console.log(this.probes)
-
         // fetch traceroute data
-        ripeApi.atlasMeasurementResults(msmId, this.startTime, this.endTime).then( res => {
-          res.forEach( trace => { 
-            // Add ASN of the Atlas probe
-            //TODO make sure the AF of the traceroute
-            trace.fromASN = this.probes[trace.prb_id].asn_v4.toString()
+        promises.push(
+          ripeApi.atlasMeasurementResults(msmId, this.startTime, this.endTime, pids).then( res => {
+            res.forEach( trace => { 
+              // Add ASN of the Atlas probe
+              //TODO make sure the AF of the traceroute
+              trace.fromASN = this.probes[trace.prb_id].asn_v4.toString()
 
-            // TODO add check for destinations and handle empty arrays
-            if( this.sources.includes(trace.fromASN) ){
-              // Add ASN of the destination IP
+              // TODO add check for destinations and handle empty arrays
+              if( this.sources.includes(trace.fromASN) ){
+                // Add ASN of the destination IP
 
-              if (! trace.dst_addr in this.dstIPs){
-                this.dstIPs[trace.dst_addr] = false
+                if ((typeof trace.dst_addr !== 'undefined') && !(trace.dst_addr in this.dstIPs)){
+                  this.dstIPs[trace.dst_addr] = {}
+                }
+                this.traceroutes.push(trace)
               }
-              //ripeApi.relatedPrefixes(trace.dst_addr).then( prefixes => {
-              //    this.ip2asn[trace.dst_addr] = prefixes[prefixes.length - 1]
-              //  }
-              //let match = this.ip2asn[trace.dst_addr]
-              //trace.dstASN = match.origin_asn; 
-              //trace.dstASName = match.asn_name; 
-              this.traceroutes.push(trace)
-              console.log(`PUSHED a traceroute ${trace.fromASN}`)
-            }
+            })
           })
-        })
+        )
       })
+      return Promise.all(promises)
     },
-    filterTraceroutes() {
-      this.traceroutes.forEach( res => {
-        
+    getDstInfo() {
+      var promises = [];
+      Object.keys(this.dstIPs).forEach( ip => {
+            promises.push(ripeApi.relatedPrefixes(ip).then( prefixes => {
+              if( typeof prefixes !== 'undefined' ){
+                this.dstIPs[ip] = prefixes[prefixes.length - 1]
+              }
+              else{
+                console.log(`ERROR COULD NOT FIND PREFIX FOR ${ip}`)
+              }
+            }))
+      })
+      return Promise.all(promises).then( () => {
+        this.traceroutes.forEach( trace => { 
+          if( typeof trace.dst_addr !== 'undefined') {
+            trace.dstASN = this.dstIPs[trace.dst_addr].origin_asn
+            trace.dstASName = this.dstIPs[trace.dst_addr].asn_name
+          }
+        })
       })
     },
     apiCall() {
         console.log('BOX in apiCall')
       this.loading = true
-      this.getTraceroutes()
-      console.log(this.traceroutes)
+      this.getProbeInfo()
+       .then( this.getTraceroutes )
+       .then( this.getDstInfo )
+       .then( this.computeBoxplot )
+      
+    },
+    computeBoxplot() {
+      var traces = {}
+      this.traceroutes.forEach( traceroute => {
+        if( typeof traceroute.dst_addr == 'undefined' ) return;
+
+        if( !(traceroute.fromASN in traces) ){
+          traces[traceroute.fromASN] = {
+            y: [],
+            x: [],
+            name: `AS${traceroute.fromASN}`,
+            type: 'box'
+          };
+        }
+        else{
+          let lasthop = traceroute.result[traceroute.result.length - 1]
+          lasthop.result.forEach( res => {
+              if(res.from == traceroute.dst_addr){
+                traces[traceroute.fromASN].y.push(res.rtt)
+                traces[traceroute.fromASN].x.push(traceroute.dstASName)
+              }
+          })
+        }
+      })
+      this.loading = false
+      this.traces = Object.values(traces)
+        console.log(this.traces)
+      this.layout.datarevision = new Date().getTime()
     },
     showSankey() {
       console.log('show sankey!')
