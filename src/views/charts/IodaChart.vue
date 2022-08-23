@@ -65,106 +65,82 @@ export default {
         }
       }
     },
-    getBgpData: async (ASN, StartTime, EndTime) => {
-      const startDate = new Date(StartTime)
-      const startUnixTimeStamp = Math.floor(startDate.getTime() / 1000)
-      const endDate = new Date(EndTime)
-      const endUnixTimeStamp = Math.floor(endDate.getTime() / 1000)
-      const response = await axios.get(
-        `https://api.ioda.inetintel.cc.gatech.edu/v2/signals/raw/asn/${ASN}?from=${startUnixTimeStamp}&until=${endUnixTimeStamp}&datasource=bgp`
-      )
-      let bgpNetworks = response.data
-      const bgpNetworksData = bgpNetworks.data
-      for (const networkLayer of bgpNetworksData) {
-        for (const network of networkLayer) {
-          return network
-        }
-      }
-    },
     async getChart() {
-      const network1 = await this.getPingSlashData(this.ASN, this.StartTime, this.EndTime)
-      const network2 = await this.getBgpData(this.ASN, this.StartTime, this.EndTime)
-      // console.log('****************************')
-      // console.log(this.StartTime)
-      // console.log('****************************')
-      let network1Dates = []
-      let network1Start = network1.from
-      let network1End = network1.until
-      let network1Step = network1.nativeStep
-      // neglecting from and until timestamps
-      while (network1Start < network1End) {
-        network1Start += network1Step
-        // console.log('****************************')
-        // console.log(network1Start)
-        // console.log('****************************')
-        network1Dates.push(network1Start)
-      }
-      // console.log(network1Dates)
+      const pingData = await this.getPingSlashData(this.ASN, this.StartTime, this.EndTime)
+      const bgpData = await this.getBgpData(this.ASN, this.StartTime, this.EndTime)
 
-      let readableDate1 = []
-      for (let unixDate of network1Dates) {
-        console.log('***************************')
-        console.log(unixDate)
-        console.log('****************************')
+      let pingDataDates = []
+      let pingDataStart = pingData.from
+      let pingDataEnd = pingData.until
+      let pingDataStep = pingData.nativeStep
+
+      // neglecting from and until timestamps
+      while (pingDataStart < pingDataEnd) {
+        pingDataStart += pingDataStep
+        pingDataDates.push(pingDataStart)
+      }
+
+      let pingDates = []
+      for (let unixDate of pingDataDates) {
         var newDate = new Date()
         newDate.setTime(unixDate * 1000)
         let dateString = newDate.toUTCString()
-
-        readableDate1.push(dateString)
+        pingDates.push(dateString)
       }
 
-      // storing network1 Values
-      let network1Values = network1.values
+      // storing pingData Values
+      let pingDataValues = pingData.values
 
       // normalizing the data
-      const highestValue1 = Math.max(...network1Values)
-      let normalizedNetwork1Values = []
-      for (const val of network1Values) {
+      const highestValue1 = Math.max(...pingDataValues)
+      let normalizedpingDataValues = []
+      for (const val of pingDataValues) {
         let normalizedVal = (val / highestValue1) * 100
-        normalizedNetwork1Values.push(normalizedVal)
+        normalizedpingDataValues.push(normalizedVal)
       }
 
-      let network2Dates = []
-      let network2Start = network2.from
-      let network2End = network2.until
-      let network2Step = network2.nativeStep
+      let bgpDataDates = []
+      let bgpDataStart = bgpData.from
+      let bgpDataEnd = bgpData.until
+      let bgpDataStep = bgpData.nativeStep
+
       // neglecting from and until timestamps
-      while (network2Start < network2End) {
-        network2Start += network2Step
-        network2Dates.push(network2Start)
+      while (bgpDataStart < bgpDataEnd) {
+        bgpDataStart += bgpDataStep
+        bgpDataDates.push(bgpDataStart)
       }
 
-      let readableDate2 = []
-      for (let unixDate in network2Dates) {
+      let bgpDates = []
+      for (let unixDate of bgpDataDates) {
         var newDate = new Date()
         newDate.setTime(unixDate * 1000)
         let dateString = newDate.toUTCString()
 
-        readableDate2.push(dateString)
+        bgpDates.push(dateString)
       }
 
-      // storing network2 Values
-      let network2Values = network2.values
+      // storing bgpData Values
+      let bgpDataValues = bgpData.values
 
       // normalizing the data
-      const highestValue2 = Math.max(...network2Values)
-      let normalizedNetwork2Values = []
-      for (const val of network2Values) {
+      const highestValue2 = Math.max(...bgpDataValues)
+      let normalizedbgpDataValues = []
+      for (const val of bgpDataValues) {
         let normalizedVal = (val / highestValue2) * 100
-        normalizedNetwork2Values.push(normalizedVal)
+        normalizedbgpDataValues.push(normalizedVal)
       }
 
       // building the trace
       this.traces = [
         {
-          x: readableDate1,
-          y: normalizedNetwork1Values,
+          x: pingDates,
+          y: normalizedpingDataValues,
           mode: 'Scatter',
           name: 'Ping',
         },
         {
-          x: readableDate2,
-          y: normalizedNetwork2Values,
+          x: bgpDates,
+          y: normalizedbgpDataValues,
           mode: 'Scatter',
           name: 'BGP',
         },
