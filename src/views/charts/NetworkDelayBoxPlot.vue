@@ -2,7 +2,12 @@
   <div class="IHR_chart">
     <div class="row">
       <div class="col">
-        <reactive-chart :layout="layout" :traces="traces" @plotly-click="showSankey" :ref="myId" :no-data="noData" />
+        <reactive-chart :layout="boxPlotLayout" :traces="traces" @plotly-click="showSankey" :ref="myId" :no-data="noData" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <reactive-chart :layout="sankeyLayout" :traces="dataSankey" :ref="myId" :no-data="noData" />
       </div>
     </div>
     <div v-if="loading" class="IHR_loading-spinner">
@@ -13,7 +18,7 @@
 
 <script>
 import CommonChartMixin from './CommonChartMixin'
-import { NET_DELAY_BOXPLOT_LAYOUT } from './layouts'
+import { NET_DELAY_BOXPLOT_LAYOUT, NET_DELAY_SANKEY_LAYOUT } from './layouts'
 import ripeApi from '@/plugins/RipeApi'
 
 const LINE_COLORS = [
@@ -51,16 +56,18 @@ export default {
     },
   },
   data() {
-    var layout = NET_DELAY_BOXPLOT_LAYOUT
     return {
+      boxPlotLayout: NET_DELAY_BOXPLOT_LAYOUT,
+      sankeyLayout: NET_DELAY_SANKEY_LAYOUT,
+      traces: [],
+      tracesASN: [],
+      dataSankey: [],
       traceroutes: {},
       probes: {},
       dstIPs: {},
       ip2asn: {},
       loading: true,
       openClose: true,
-      traces: [],
-      layout: layout,
       selectedStart: '',
       selectedEnd: '',
       endPointKeysFilter: this.endPointNames,
@@ -158,30 +165,144 @@ export default {
             y: [],
             x: [],
             name: `AS${traceroute.fromASN}`,
-            type: 'box'
+            type: 'box',
+            boxpoints: 'outliers'
           };
         }
         else{
           let lasthop = traceroute.result[traceroute.result.length - 1]
-          lasthop.result.forEach( res => {
+          if( typeof lasthop.result !== 'undefined'){
+            lasthop.result.forEach( res => {
               if(res.from == traceroute.dst_addr){
                 traces[traceroute.fromASN].y.push(res.rtt)
                 traces[traceroute.fromASN].x.push(traceroute.dstASName)
               }
-          })
+            })
+          }
         }
       })
       this.loading = false
       this.traces = Object.values(traces)
-        console.log(this.traces)
-      this.layout.datarevision = new Date().getTime()
+      this.tracesASNs = Object.keys(traces)
+      this.boxPlotLayout.datarevision = new Date().getTime()
     },
-    showSankey() {
+    computeSankey(srcASN, dstName) {
+      var data = {
+        type: "sankey",
+        orientation: "h",
+        valueformat: ".0f",
+        valuesuffix: "pkts",
+        node: {
+          pad: 5,
+          thickness: 3,
+          label: [],
+          color: []
+        },
+
+        link: {
+            source: [],
+            target: [],
+            value:  [],
+            label:  [],
+            color:  [],
+            hovertemplate: '%{label}'
+        }
+      }
+
+      var labelIdx = {} 
+
+      this.traceroutes.forEach( traceroute => {
+        // Filter out unrelated traceroutes
+        if( traceroute.dstASName !== dstName ) return;
+        if( traceroute.fromASN !== srcASN ) return;
+
+        // Filter out traceroutes that doesn't reach the final destination
+        let lasthop = traceroute.result[traceroute.result.length - 1]
+        if( typeof lasthop.result == 'undefined') return;
+        var reachDest = true;
+        lasthop.result.forEach( res => {
+            if(res.from !== traceroute.dst_addr) reachDest = false;
+        })
+        if(!reachDest) return;
+
+        // Compute sankey
+        var prevIdx = -1;
+
+        // Find probe index
+        if( !(traceroute.from in labelIdx) ){
+          prevIdx = data.node.label.length
+          labelIdx[traceroute.from] = prevIdx
+          data.node.label.push(traceroute.from)
+          data.node.color.push('#1f77b4')
+        }
+        else{
+            prevIdx = labelIdx[traceroute.from]
+        }
+
+        traceroute.result.forEach( hop => { 
+          if( typeof hop.result == 'undefined') return
+            
+          var currIdx = -1;
+          hop.result.forEach( res => {
+            if( typeof res.from == 'undefined') return;
+            if( this.isPrivate(res.from) ) return;
+
+            // Find node index
+            if( !(res.from in labelIdx) ){
+              currIdx = data.node.label.length
+              labelIdx[res.from] = currIdx
+              data.node.label.push(res.from)
+              data.node.color.push('rgb(51, 139, 200)')
+            }
+            else{
+              currIdx = labelIdx[res.from]
+            }
+
+            if(prevIdx != currIdx){
+              // add new link
+              data.link.source.push(prevIdx)
+              data.link.target.push(currIdx)
+              data.link.value.push(1)
+              data.link.label.push(`${res.rtt} ms`)
+              if( res.rtt < 50) data.link.color.push( '#2ca02c')
+              else if( res.rtt < 100) data.link.color.push('#ff7f0e')
+              else if( res.rtt >= 100) data.link.color.push('#d62728')
+            }
+
+          })
+
+          // Go forward in the sankey
+          if( currIdx != -1){
+            prevIdx = currIdx
+          }
+        })
+
+      })
+      this.dataSankey = [data]
+      console.log(data)
+      this.sankeyLayout.title = `Traceroutes from AS${srcASN} to ${dstName}`
+      this.sankeyLayout.datarevision = new Date().getTime()
+    },
+    showSankey(click) {
       console.log('show sankey!')
+      console.log(click)
+      let srcASN = this.tracesASNs[click.points[0].curveNumber]
+      let dstName = click.points[0].x 
+
+      this.computeSankey(srcASN, dstName)
+    },
+    isPrivate(ip){
+      if(ip.startsWith('192.')) return true;
+      if(ip.startsWith('10.')) return true;
+      // TODO this is not correct, should be 172.16. to 172.31
+      if(ip.startsWith('172.')) return true;
+
+      return false;
     },
     clearGraph() {
       this.traces = []
-      this.layout.datarevision = new Date().getTime()
+      this.boxPlotLayout.datarevision = new Date().getTime()
+      this.sankeyLayout.datarevision = new Date().getTime()
     },
     fetchNetworkDelay(data) {
       let traces = {}

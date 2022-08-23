@@ -13,6 +13,7 @@ import ROV from '@/views/ROV'
 import MetisHome from '@/views/MetisHome'
 import MetisSelection from '@/views/MetisSelection'
 import MetisDeployment from '@/views/MetisDeployment'
+import AtlasTracerouteExplorer from '@/views/AtlasTracerouteExplorer'
 import SignUp from '@/views/user/SignUp'
 import AccountActivation from '@/views/user/AccountActivation'
 import PersonalPage from '@/views/user/PersonalPage'
@@ -219,6 +220,16 @@ export default new Router({
         default: MetisHome,
       },
       meta: { title: 'Metis - IHR' },
+    },
+    {
+      name: 'atlas_traceroute_explorer',
+      path: `${routerBase}atlas/explorer`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: AtlasTracerouteExplorer,
+      },
+      meta: { title: 'Atlas Traceroute - IHR' },
     },
     {
       name: 'metis_selection',

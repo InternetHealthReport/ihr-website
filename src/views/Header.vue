@@ -86,6 +86,11 @@ const simple_menu = [
         routeName: 'metis',
         summary: 'Atlas probe selection and deployment',
       },
+      {
+        entryName: 'header.atlasExplorer',
+        routeName: 'atlas_traceroute_explorer',
+        summary: 'Atlas traceroute explorer',
+      },
     ],
   },
   {

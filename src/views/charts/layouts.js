@@ -33,9 +33,19 @@ var NET_DELAY_LAYOUT = {
 var NET_DELAY_BOXPLOT_LAYOUT = {
   yaxis: {
     title: 'RTT',
+    zeroline: true
+  },
+  boxmode: 'group',
+  hovermode:'closest'
+}
+
+var NET_DELAY_SANKEY_LAYOUT = {
+  yaxis: {
     zeroline: false
   },
-  boxmode: 'group'
+  font: {
+    size: 10
+  }
 }
 
 var NET_DELAY_ALARMS_LAYOUT = {
@@ -117,5 +127,6 @@ export {
   DELAY_CHART_LAYOUT,
   NET_DELAY_LAYOUT,
   NET_DELAY_BOXPLOT_LAYOUT,
+  NET_DELAY_SANKEY_LAYOUT,
   RIR_COUNTRY_SUNBURST_LAYOUT,
 }
