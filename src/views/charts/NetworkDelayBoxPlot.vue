@@ -132,7 +132,7 @@ export default {
       })
       return Promise.all(promises).then( () => {
         this.traceroutes.forEach( trace => { 
-          if( typeof trace.dst_addr !== 'undefined') {
+          if( typeof this.dstIPs[trace.dst_addr] !== 'undefined') {
             trace.dstASN = this.dstIPs[trace.dst_addr].origin_asn
             trace.dstASName = this.dstIPs[trace.dst_addr].asn_name
           }
