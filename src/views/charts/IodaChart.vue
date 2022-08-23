@@ -84,6 +84,9 @@ export default {
     async getChart() {
       const network1 = await this.getPingSlashData(this.ASN, this.StartTime, this.EndTime)
       const network2 = await this.getBgpData(this.ASN, this.StartTime, this.EndTime)
+      // console.log('****************************')
+      // console.log(this.StartTime)
+      // console.log('****************************')
       let network1Dates = []
       let network1Start = network1.from
       let network1End = network1.until
@@ -91,11 +94,18 @@ export default {
       // neglecting from and until timestamps
       while (network1Start < network1End) {
         network1Start += network1Step
+        // console.log('****************************')
+        // console.log(network1Start)
+        // console.log('****************************')
         network1Dates.push(network1Start)
       }
+      // console.log(network1Dates)
 
       let readableDate1 = []
-      for (let unixDate in network1Dates) {
+      for (let unixDate of network1Dates) {
+        console.log('***************************')
+        console.log(unixDate)
+        console.log('****************************')
         var newDate = new Date()
         newDate.setTime(unixDate * 1000)
         let dateString = newDate.toUTCString()
