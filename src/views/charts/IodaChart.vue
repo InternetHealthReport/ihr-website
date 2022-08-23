@@ -20,11 +20,9 @@ export default {
   data() {
     var layout = {
       title: '',
-      xaxis: {
-        title: 'Timeline',
-      },
+      xaxis: {},
       yaxis: {
-        title: 'Metadata access',
+        title: 'Rechability of /24s (%)',
       },
     }
     return {
@@ -46,6 +44,22 @@ export default {
       const networksData = networks.data
 
       for (const networkLayer of networksData) {
+        for (const network of networkLayer) {
+          return network
+        }
+      }
+    },
+    getBgpData: async (ASN, StartTime, EndTime) => {
+      const startDate = new Date(StartTime)
+      const startUnixTimeStamp = Math.floor(startDate.getTime() / 1000)
+      const endDate = new Date(EndTime)
+      const endUnixTimeStamp = Math.floor(endDate.getTime() / 1000)
+      const response = await axios.get(
+        `https://api.ioda.inetintel.cc.gatech.edu/v2/signals/raw/asn/${ASN}?from=${startUnixTimeStamp}&until=${endUnixTimeStamp}&datasource=bgp`
+      )
+      let bgpNetworks = response.data
+      const bgpNetworksData = bgpNetworks.data
+      for (const networkLayer of bgpNetworksData) {
         for (const network of networkLayer) {
           return network
         }
@@ -136,7 +150,7 @@ export default {
           x: readableDate1,
           y: normalizedNetwork1Values,
           mode: 'Scatter',
-          name: 'Ping-Slash 24',
+          name: 'Ping',
         },
         {
           x: readableDate2,
@@ -148,8 +162,6 @@ export default {
     },
   },
   mounted: function () {
-    // this.getPingSlashData(this.ASN, this.StartTime, this.EndTime)
-    // this.getBgpData(this.ASN, this.StartTime, this.EndTime)
     this.getChart()
   },
 }
