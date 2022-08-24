@@ -132,7 +132,7 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card-section>
-              <ioda-chart :ASN="asNumber" :fetch="fetch" :StartTime="startTime" :EndTime="endTime" ref="iodaChart" />
+              <ioda-chart :ASN="asNumber" :fetch="fetch" :start-time="startTime" :end-time="endTime" ref="iodaChart" />
             </q-card-section>
           </q-card>
         </q-expansion-item>
