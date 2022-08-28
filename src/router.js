@@ -20,6 +20,7 @@ import ResetPassword from '@/views/user/ResetPassword'
 import Documentation from '@/views/Documentation'
 import Bgplay from '@/components/ripe/Bgplay'
 import PageNotFound from '@/views/PageNotFound'
+import Dashboard from './components/dashboard/Dashboard'
 
 Vue.use(Router)
 
@@ -239,6 +240,16 @@ export default new Router({
         default: MetisDeployment,
       },
       meta: { title: 'Metis Deployment - IHR' },
+    },
+    {
+      name: 'exploratory_dashboard',
+      path: `${routerBase}dashboard`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Dashboard,
+      },
+      meta: { title: 'Exploratory Dashboard' },
     },
 
     // Widgets
