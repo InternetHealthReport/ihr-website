@@ -2,7 +2,7 @@
   <div class="IHR_chart">
     <div class="row">
       <div class="col">
-        <reactive-chart :layout="boxPlotLayout" :traces="traces" @plotly-click="showSankey" :ref="myId" :no-data="noData" />
+        <reactive-chart :layout="boxPlotLayout" :traces="tracesBox" @plotly-click="showSankey" :ref="myId" :no-data="noData" />
       </div>
     </div>
     <div class="row">
@@ -18,7 +18,7 @@
 
 <script>
 import CommonChartMixin from './CommonChartMixin'
-import { NET_DELAY_BOXPLOT_LAYOUT, NET_DELAY_SANKEY_LAYOUT } from './layouts'
+import { NET_DELAY_LINEPLOT_LAYOUT, NET_DELAY_BOXPLOT_LAYOUT, NET_DELAY_SANKEY_LAYOUT } from './layouts'
 import ripeApi from '@/plugins/RipeApi'
 
 const LINE_COLORS = [
@@ -58,8 +58,10 @@ export default {
   data() {
     return {
       boxPlotLayout: NET_DELAY_BOXPLOT_LAYOUT,
+      linePlotLayout: NET_DELAY_LINEPLOT_LAYOUT,
       sankeyLayout: NET_DELAY_SANKEY_LAYOUT,
-      traces: [],
+      tracesBox: [],
+      tracesLine: [],
       tracesASN: [],
       dataSankey: [],
       traceroutes: {},
@@ -128,14 +130,14 @@ export default {
     getDstInfo() {
       var promises = [];
       Object.keys(this.dstIPs).forEach( ip => {
-            promises.push(ripeApi.relatedPrefixes(ip).then( prefixes => {
-              if( typeof prefixes !== 'undefined' ){
-                this.dstIPs[ip] = prefixes[prefixes.length - 1]
-              }
-              else{
-                console.log(`ERROR COULD NOT FIND PREFIX FOR ${ip}`)
-              }
-            }))
+        promises.push(ripeApi.relatedPrefixes(ip).then( prefixes => {
+          if( typeof prefixes !== 'undefined' ){
+            this.dstIPs[ip] = prefixes[prefixes.length - 1]
+          }
+          else{
+            console.log(`ERROR COULD NOT FIND PREFIX FOR ${ip}`)
+          }
+        }))
       })
       return Promise.all(promises).then( () => {
         this.traceroutes.forEach( trace => { 
@@ -150,10 +152,75 @@ export default {
         console.log('BOX in apiCall')
       this.loading = true
       this.getProbeInfo()
-       .then( this.getTraceroutes )
-       .then( this.getDstInfo )
-       .then( this.computeBoxplot )
+        .then( this.getTraceroutes )
+        .then( this.getDstInfo )
+        .then( () => {
+          //this.computeLineplot();
+          this.computeBoxplot();
+        } )
       
+    },
+    computeLineplot() {
+      var traces = {}
+      var pltIds = []
+      this.linePlotLayout = NET_DELAY_LINEPLOT_LAYOUT
+
+      this.traceroutes.forEach( traceroute => {
+        if( typeof traceroute.dst_addr == 'undefined' ) return;
+
+        let pltId = pltIds.indexOf( traceroute.dstASName )+1
+        if( pltId == 0 ){
+          // Add a new subplot
+          pltId = pltIds.length+1
+          pltIds.push( traceroute.dstASName )
+          if( pltId == 1 ){
+            this.linePlotLayout['xaxis'] = { anchor: 'y' }
+            this.linePlotLayout['yaxis'] = { anchor: 'x' }
+          }
+          else{
+            this.linePlotLayout['xaxis'+pltId] = { anchor: 'y'+pltId }
+            this.linePlotLayout['yaxis'+pltId] = { anchor: 'x'+pltId }
+          }
+        }
+
+        if( !(traceroute.fromASN in traces) ){
+          if( pltId == 1 ){
+            traces[traceroute.fromASN] = {
+              y: [],
+              x: [],
+              name: `AS${traceroute.fromASN}`,
+              type: 'scatter',
+              xaxis: 'x',
+              yaxis: 'y'
+            };
+          }
+          else{
+            traces[traceroute.fromASN] = {
+              y: [],
+              x: [],
+              name: `AS${traceroute.fromASN}`,
+              type: 'scatter',
+              xaxis: 'x' + pltId,
+              yaxis: 'y' + pltId
+            };
+          }
+        }
+        let lasthop = traceroute.result[traceroute.result.length - 1]
+        if( typeof lasthop.result !== 'undefined'){
+          lasthop.result.forEach( res => {
+            if(res.from == traceroute.dst_addr){
+              traces[traceroute.fromASN].y.push(res.rtt)
+              traces[traceroute.fromASN].x.push( new Date(traceroute.endtime * 1000))
+            }
+          })
+        }
+      })
+      this.loading = false
+      this.tracesLine = Object.values(traces)
+      this.linePlotLayout.grid.rows = pltIds.length
+      this.linePlotLayout.datarevision = new Date().getTime()
+      console.log('LAYOUT')
+      console.log(this.linePlotLayout)
     },
     computeBoxplot() {
       var traces = {}
@@ -169,29 +236,28 @@ export default {
             boxpoints: 'outliers'
           };
         }
-        else{
-          let lasthop = traceroute.result[traceroute.result.length - 1]
-          if( typeof lasthop.result !== 'undefined'){
-            lasthop.result.forEach( res => {
-              if(res.from == traceroute.dst_addr){
-                traces[traceroute.fromASN].y.push(res.rtt)
-                traces[traceroute.fromASN].x.push(traceroute.dstASName)
-              }
-            })
-          }
+        let lasthop = traceroute.result[traceroute.result.length - 1]
+        if( typeof lasthop.result !== 'undefined'){
+          lasthop.result.forEach( res => {
+            if(res.from == traceroute.dst_addr){
+              traces[traceroute.fromASN].y.push(res.rtt)
+              traces[traceroute.fromASN].x.push(traceroute.dstASName)
+            }
+          })
         }
       })
       this.loading = false
-      this.traces = Object.values(traces)
+      this.tracesBox = Object.values(traces)
       this.tracesASNs = Object.keys(traces)
+      this.boxPlotLayout = NET_DELAY_BOXPLOT_LAYOUT;
       this.boxPlotLayout.datarevision = new Date().getTime()
     },
     computeSankey(srcASN, dstName) {
       var data = {
-        type: "sankey",
-        orientation: "h",
-        valueformat: ".0f",
-        valuesuffix: "pkts",
+        type: 'sankey',
+        orientation: 'h',
+        valueformat: '.0f',
+        valuesuffix: 'pkts',
         node: {
           pad: 5,
           thickness: 3,
@@ -200,12 +266,12 @@ export default {
         },
 
         link: {
-            source: [],
-            target: [],
-            value:  [],
-            label:  [],
-            color:  [],
-            hovertemplate: '%{label}'
+          source: [],
+          target: [],
+          value:  [],
+          label:  [],
+          color:  [],
+          hovertemplate: '%{label}'
         }
       }
 
@@ -221,7 +287,7 @@ export default {
         if( typeof lasthop.result == 'undefined') return;
         var reachDest = true;
         lasthop.result.forEach( res => {
-            if(res.from !== traceroute.dst_addr) reachDest = false;
+          if(res.from !== traceroute.dst_addr) reachDest = false;
         })
         if(!reachDest) return;
 
@@ -236,7 +302,7 @@ export default {
           data.node.color.push('#1f77b4')
         }
         else{
-            prevIdx = labelIdx[traceroute.from]
+          prevIdx = labelIdx[traceroute.from]
         }
 
         traceroute.result.forEach( hop => { 
@@ -301,93 +367,9 @@ export default {
     },
     clearGraph() {
       this.traces = []
+      this.linePlotLayout.datarevision = new Date().getTime()
       this.boxPlotLayout.datarevision = new Date().getTime()
       this.sankeyLayout.datarevision = new Date().getTime()
-    },
-    fetchNetworkDelay(data) {
-      let traces = {}
-      let maxValue = 0
-      let timeResolution = 1800 * 1000
-      let groups = []
-      data.forEach(elem => {
-        let key = elem.startpoint_type
-        key += elem.startpoint_af
-        key += elem.startpoint_name
-        key += elem.endpoint_type
-        key += elem.endpoint_af
-        key += elem.endpoint_name
-        elem.median = Math.abs(elem.median)
-        let trace = traces[key]
-        if (trace === undefined) {
-          let startname = elem.startpoint_type + elem.startpoint_name
-          if (elem.startpoint_type === 'CT') {
-            startname = elem.startpoint_name.split(',')[0]
-          }
-          let endname = elem.endpoint_type + elem.endpoint_name
-
-          if (elem.endpoint_type === 'CT') {
-            endname = elem.endpoint_name.split(',')[0]
-          }
-
-          startname = this.prettyName(startname)
-          endname = this.prettyName(endname)
-
-          trace = {
-            x: [],
-            y: [],
-            //name: `${elem.startpoint_type} ${elem.startpoint_name} ipv${elem.startpoint_af} => ${elem.endpoint_type} ${elem.endpoint_name} ipv${elem.endpoint_af}`
-            name: `${startname} to ${endname}`,
-            hovertemplate:
-              '<b>' +
-              startname +
-              ' to ' +
-              endname +
-              '</b><br><br>' +
-              '%{x}<br>' +
-              '%{yaxis.title.text}: <b>%{y:.2f}</b>' +
-              '<extra></extra>',
-          }
-
-          // Group traces if needed
-          if (this.group == 'start') {
-            let idx = groups.indexOf(startname)
-            if (idx == -1) {
-              groups.push(startname)
-              idx = groups.length - 1
-            } else {
-              trace.showlegend = false
-            }
-            trace.name = startname
-            trace.legendgroup = startname
-            trace.line = { color: LINE_COLORS[idx] }
-          }
-
-          traces[key] = trace
-        }
-
-        maxValue = maxValue > elem.median ? maxValue : elem.median
-
-        // Add null if there is missing data
-        let prevDate = Date.parse(trace.x.slice(-1)[0])
-        let currDate = Date.parse(elem.timebin)
-        if (currDate > prevDate + timeResolution + 1) {
-          trace.y.push(null)
-          trace.x.push(elem.timbin)
-        }
-
-        trace.y.push(elem.median)
-        trace.x.push(elem.timebin)
-      })
-      // Sort traces by alphabetical order
-      let keys = Object.keys(traces).sort()
-      keys.forEach(key => this.traces.push(traces[key]))
-
-      // emit max value
-      this.$emit('max-value', maxValue)
-
-      this.loading = false
-      this.notifyDisplay(this.traces.length > 0)
-      this.layout.datarevision = new Date().getTime()
     },
     notifyDisplay(displayed) {
       this.$emit('display', displayed)
@@ -400,33 +382,7 @@ export default {
   },
   watch: {
     // TODO watch inputs
-    startPointNames() {
-      //reset filter
-      this.endPointKeysFilter = this.endPointNames
-      this.startPointKeysFilter = this.startPointNames
-
-      this.clearGraph()
-
-      // get updated data
-      this.debouncedApiCall()
-    },
-    endPointNames() {
-      //reset filter
-      this.endPointKeysFilter = this.endPointNames
-      this.startPointKeysFilter = this.startPointNames
-
-      this.clearGraph()
-
-      // get updated data
-      this.debouncedApiCall()
-    },
-    startPointName() {
-      //reset filter
-      this.startPointNameFilter = this.startPointName
-      this.startPointTypeFilter = this.startPointType
-      this.endPointKeysFilter = this.endPointNames
-      this.startPointKeysFilter = this.startPointNames
-
+    msmIds() {
       this.clearGraph()
 
       // get updated data

@@ -39,15 +39,15 @@ export default {
     NetworkDelayBoxPlot,
   },
   data() {
-      return {
-        msmIds: [43573971],
-        startTime: new Date('2022/08/21'),
-        endTime: new Date('2022/08/22'),
-        fetch: true,
-        dateRange: {},
-        sources: ['4713', '2497', '2516']
-      }
-   }, 
+    return {
+      msmIds: [43573971],
+      startTime: new Date('2022/08/21'),
+      endTime: new Date('2022/08/22'),
+      fetch: true,
+      dateRange: {},
+      sources: ['4713', '2497', '2516']
+    }
+  }, 
   methods: {
     replot() {
         

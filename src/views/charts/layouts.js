@@ -30,6 +30,20 @@ var NET_DELAY_LAYOUT = {
   },
 }
 
+var NET_DELAY_LINEPLOT_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  yaxis: {
+    title: 'RTT',
+    zeroline: true
+  },
+  hovermode:'closest',
+  grid: {
+    rows: 1, 
+    columns: 1, 
+    pattern: 'independent'
+  }
+}
+
 var NET_DELAY_BOXPLOT_LAYOUT = {
   yaxis: {
     title: 'RTT',
@@ -127,6 +141,7 @@ export {
   DELAY_CHART_LAYOUT,
   NET_DELAY_LAYOUT,
   NET_DELAY_BOXPLOT_LAYOUT,
+  NET_DELAY_LINEPLOT_LAYOUT,
   NET_DELAY_SANKEY_LAYOUT,
   RIR_COUNTRY_SUNBURST_LAYOUT,
 }
