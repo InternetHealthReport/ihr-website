@@ -24,7 +24,8 @@ export default {
   data() {
     var layout = {
       yaxis:{
-        title:this.$t('charts.speedtest.yaxis')
+        title:this.$t('charts.speedtest.yaxis'),
+        rangemode: 'tozero',
       }
     }
     return {
