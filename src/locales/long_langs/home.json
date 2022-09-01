@@ -59,11 +59,6 @@
           "description": "For BGP data"
         },
         {
-          "name": "IIJ-II",
-          "logo": "iijii-logo.png",
-          "description": "For financial support"
-        },
-        {
           "name": "ISOC",
           "logo": "isoc-logo.png",
           "description": "For financial support"
