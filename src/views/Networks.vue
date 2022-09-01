@@ -130,17 +130,18 @@
                     </q-card>
                 </q-expansion-item>
                 <q-expansion-item
-                    :label="$t('Measurement Lab')"
-                    caption="Speed Test Data"
+                    :label="$t('charts.speedtest.title')"
+                    caption="Measurement Lab (NDT)"
                     header-class="IHR_charts-title"
-                    icon="fas fa-plug"
+                    icon="fas fa-tachometer-alt"
                     v-model="show.measurementLab"
                 >
                     <q-separator />
                     <q-card class="IHR_charts-body">
                         <q-card-section>
                             <measurement-lab 
-                              :Year="startTime.getFullYear()"
+                              :start-time="startTime"
+                              :end-time="endTime"
                               :ASN="asNumber"
                               :fetch="fetch"
                               ref="measurementLabChart"
@@ -228,7 +229,7 @@ import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
-import MeasurementLab from './charts/MeasurementLab.vue'
+import MeasurementLab from '@/views/charts/MeasurementLab.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -251,7 +252,7 @@ export default {
     DateTimePicker,
     NetworkSearchBar,
     MeasurementLab
-},
+  },
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn)
     let addressFamily = this.$route.query.af
@@ -273,6 +274,7 @@ export default {
         hegemony_disable: false,
         net_delay: true,
         net_delay_disable: false,
+        measurementLab: true,
       },
     }
   },

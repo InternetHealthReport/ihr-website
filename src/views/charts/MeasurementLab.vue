@@ -4,31 +4,27 @@
      :layout="layout" 
      :traces="traces" 
      :no-data="noData" 
-     :chartTitle="MLab"
+     :ref="myId" 
     />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import ReactiveChart from '../../components/ReactiveChart.vue'
+import CommonChartMixin from './CommonChartMixin'
+
 export default {
-  name: 'Measurement Lab Network',
-  components: {
-    ReactiveChart,
-  },
+  mixins: [CommonChartMixin],
   props:{
-    ASN:String,
-    Year:String,
+    ASN: {
+      type: Number,
+      required: true,
+    },
   },
   data() {
     var layout = {
-     // title: 'Measurement lab dataset of time vs timeline',
-      xaxis:{
-        title:"Timeline",
-      },
       yaxis:{
-        title:"Download and Upload Speed comparison"
+        title:this.$t('charts.speedtest.yaxis')
       }
     }
     return {
@@ -39,9 +35,10 @@ export default {
     }
   },
   methods: {
-    getInfo(Year,ASN) {
+    apiCall() {
+      let year = this.endTime.getFullYear();
       axios
-        .get(`https://statistics.measurementlab.net/v0/asn/${ASN}/${Year}/histogram_daily_stats.json`)
+        .get(`https://statistics.measurementlab.net/v0/asn/${this.ASN}/${year}/histogram_daily_stats.json`)
         .then(response => {
           this.networks = response.data
           this.getChart(this.networks)
@@ -83,9 +80,6 @@ export default {
       ]
     },
   },
- mounted:function(){
-    this.getInfo(this.Year,this.ASN);
- }
 }
 </script>
 
