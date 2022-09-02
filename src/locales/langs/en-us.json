@@ -169,6 +169,14 @@
         "destinations": " Destinations",
         "apiTitle": "Displayed data is available at the following links:"
       }
+    },
+    "speedtest": {
+      "title": "speed test",
+      "yaxis": "Average Throughput (Mbps)",
+      "table": {
+        "title": "Average throughput",
+        "apiTitle": "Displayed data is available at MLab's API:"
+      }
     }
   },
   "sigIn": {
