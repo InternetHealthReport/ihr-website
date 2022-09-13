@@ -8,6 +8,7 @@
           <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
         </h3>
       </div>
+      <button @click="generateReport()" class="np-btn">Generate Report</button>
       <q-list v-if="showGraphs">
         <q-expansion-item
           :label="$t('charts.countryHegemony.title')"
@@ -150,6 +151,7 @@ import { AS_FAMILY } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 import { isoCountries } from '@/plugins/countryName'
+import html2pdf from 'html2pdf.js'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -221,6 +223,18 @@ export default {
         tmp.push('AS4' + elem)
       })
       this.majorEyeballs = tmp
+    },
+    generateReport() {
+      let element = document.getElementById('IHR_as-and-ixp-container')
+      let opt = {
+        margin: 0,
+        filename: 'Report.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
+      }
+      html2pdf(element, opt)
+      console.log('button is clicked')
     },
   },
   mounted() {},

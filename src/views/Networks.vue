@@ -8,6 +8,7 @@
           <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
         </h3>
       </div>
+      <button @click="generateReport()" class="np-btn">Generate Report</button>
       <q-list v-if="showGraphs">
         <q-expansion-item
           :label="$t('charts.asInterdependencies.title')"
@@ -136,26 +137,20 @@
             </q-card-section>
           </q-card>
         </q-expansion-item>
-         <q-expansion-item
-                    :label="$t('charts.speedtest.title')"
-                    caption="Measurement Lab (NDT)"
-                    header-class="IHR_charts-title"
-                    icon="fas fa-tachometer-alt"
-                    v-model="show.measurementLab"
-                >
-                    <q-separator />
-                    <q-card class="IHR_charts-body">
-                        <q-card-section>
-                            <measurement-lab 
-                              :start-time="startTime"
-                              :end-time="endTime"
-                              :ASN="asNumber"
-                              :fetch="fetch"
-                              ref="measurementLabChart"
-                            />
-                        </q-card-section>
-                    </q-card>
-                </q-expansion-item>
+        <q-expansion-item
+          :label="$t('charts.speedtest.title')"
+          caption="Measurement Lab (NDT)"
+          header-class="IHR_charts-title"
+          icon="fas fa-tachometer-alt"
+          v-model="show.measurementLab"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <measurement-lab :start-time="startTime" :end-time="endTime" :ASN="asNumber" :fetch="fetch" ref="measurementLabChart" />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
         <div class="IHR_last-element">&nbsp;</div>
       </q-list>
     </div>
@@ -228,6 +223,7 @@ import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 import MeasurementLab from '@/views/charts/MeasurementLab.vue'
 import IodaChart from './charts/IodaChart.vue'
+import html2pdf from 'html2pdf.js'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -249,7 +245,7 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
-    MeasurementLab
+    MeasurementLab,
     IodaChart,
   },
   data() {
@@ -315,6 +311,18 @@ export default {
       this.$nextTick(function () {
         this.show.net_delay_disable = !displayValue
       })
+    },
+    generateReport() {
+      let element = document.getElementById('IHR_as-and-ixp-container')
+      let opt = {
+        margin: 0,
+        filename: 'Report.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
+      }
+      html2pdf(element, opt)
+      console.log('button is clicked')
     },
   },
   mounted() {
