@@ -1,5 +1,5 @@
 <template>
-    <div class="IHR_char-container">
+    <div id="IHR_as-and-ixp-container" class="IHR_char-container">
         <div class="q-mb-xs">
             <div class="text-center">
                 <div class="text-h1">{{ title }}</div>
