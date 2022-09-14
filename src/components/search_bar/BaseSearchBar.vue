@@ -82,7 +82,7 @@ export default {
       if (value.length >= MIN_CHARACTERS) {
         update(() => {
           // eslint-disable-next-line vue/no-mutating-props
-          this.value = null // TODO: need fix
+          //this.value = null // TODO: need fix
           this.debouncedSearch(value)
         })
       }

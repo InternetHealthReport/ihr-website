@@ -8,7 +8,7 @@
         </template>
       </q-banner>
     </transition>
-    <h1>{{ $t("sigIn.login") }}</h1>
+    <h1>{{ $t("sigIn.register") }}</h1>
     <div class="shadow-2" id="IHR_sig-in-form-container">
       <q-input v-model="email" label="email" type="email"
         :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]">
@@ -16,7 +16,7 @@
           <q-icon name="fa fa-envelope" />
         </template>
       </q-input>
-      <q-input v-model="password" label="password" :type="isPwd ? 'password' : 'text'" :rules="[
+      <q-input v-model="password" label="password" @blur="showCode" :type="isPwd ? 'password' : 'text'" :rules="[
         val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')
       ]">
         <template v-slot:prepend>
@@ -24,6 +24,17 @@
         </template>
         <template v-slot:append>
           <q-icon :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'" class="cursor-pointer" @click="isPwd = !isPwd" />
+        </template>
+      </q-input>
+      <q-input v-show="isShowCode" v-model="code" label="verification code" :rules="[
+        val => $ihrStyle.validateCode(val) || $t('forms.weakCode')
+      ]">
+        <template v-slot:prepend>
+          <q-icon name="fa fa-check" />
+        </template>
+        <template v-slot:append>
+          <q-btn v-if="!countShow" @click="sendCode" color="secondary" no-caps>{{ codeText }}</q-btn>
+          <q-btn v-else color="secondary" no-caps>{{ codeCount }}</q-btn>
         </template>
       </q-input>
       <!-- <div :style="{
@@ -43,16 +54,10 @@
       </div> -->
       <!-- <div>{{ $t("sigIn.mailWillBeSent") }}</div> -->
       <div style="display:flex;justify-content:space-between;">
-        <router-link to="register">Register</router-link>
-        <router-link to="reset_password">Forget Password?</router-link>
+        <router-link to="login">Login</router-link>
       </div>
-      <q-btn color="positive" @click="login">login</q-btn>
+      <q-btn color="positive" @click="validateAndSend">register</q-btn>
     </div>
-    <!-- <div class="shadow-2" id="IHR_confirm-your-email" v-else>
-      <div>{{ $t("sigIn.emailSentTo") }}</div>
-      <div id="IHR_email-confirmation">{{ email }}</div>
-      <div>{{ $t("sigIn.pleaseFollowTheLink") }}</div>
-    </div> -->
     <q-dialog v-model="emailSent">
       <q-card style="width: 300px">
         <q-card-section>
@@ -72,65 +77,101 @@
 </template>
 
 <script>
-//import VueRecaptcha from 'vue-recaptcha'
+// import VueRecaptcha from "vue-recaptcha";
 
 export default {
-  //components: { VueRecaptcha },
+  // components: { VueRecaptcha },
+  name: 'RegisterPage',
   data() {
     return {
       email: "",
       password: "",
       recaptcha: "",
+      code: "",
+      codeText: "send code",
       message: "",
       emailSent: false,
       isPwd: true,
+      isShowCode: false,
       recaptcha_loaded: false,
+      countShow: false,
+      codeCount: 60,
       errors: []
-    }
+    };
   },
   mounted() {
-    // this.$libraryDelayer.load('google_recaptcha', () => {
-    //   this.recaptcha_loaded = true
-    //   this.$libraryDelayer.getRidOfInlineStyle('IHR_sig-in-captcha', 'div')
-    // })
+    this.$libraryDelayer.load("google_recaptcha", () => {
+      this.recaptcha_loaded = true;
+      this.$libraryDelayer.getRidOfInlineStyle("IHR_sig-in-captcha", "div");
+    });
   },
   methods: {
     expired() {
-      this.recaptcha = ''
-      console.log('expired')
+      this.recaptcha = "";
+      console.log("expired");
     },
     verify(response) {
-      this.recaptcha = response
+      this.recaptcha = response;
     },
     ensureCss(id) {
-      this.$libraryDelayer.getRidOfInlineStyle(id, 'div')
+      this.$libraryDelayer.getRidOfInlineStyle(id, "div");
     },
-    login() {
-      this.errors = []
-      //this.recaptcha != '' || this.errors.push('missingReCaptcha')
-      this.$ihrStyle.validatePassword(this.password) || this.errors.push('passwordTooWeak')
-      this.$ihrStyle.validateEmail(this.email) || this.errors.push('strangeEmail')
+    validateAndSend() {
+      this.errors = [];
+      // this.recaptcha != "" || this.errors.push("missingReCaptcha");
+      this.$ihrStyle.validatePassword(this.password) ||
+        this.errors.push("passwordTooWeak");
+      this.$ihrStyle.validateEmail(this.email) ||
+        this.errors.push("strangeEmail");
       if (this.errors.length == 0)
         this.$ihr_api.userSignIn(
           this.email,
           this.password,
-          res => {
+          this.code,
+          (res) => {
             this.emailSent = true
             this.message = res.msg
             if (res.code === 200) {
-              this.$emit('isLogin', true)
-              this.$router.push('/en-us')
+              this.$router.push('/en-us/login')
             }
           },
           error => {
             this.emailSent = true
-            this.message = error.data.detail
+            this.message = error.detail
           }
-        )
+        );
     },
+    showCode() {
+      this.isShowCode = true
+    },
+    sendCode() {
+      const TIME_COUNT = 60
+      this.countShow = true
+      let codeTimer = setInterval(() => {
+        if (this.codeCount > 0 && this.codeCount <= TIME_COUNT) {
+          this.codeCount--
+        } else {
+          this.countShow = false
+          this.codeCount = 60
+          clearInterval(codeTimer)
+          codeTimer = null
+        }
+      }, 1000)
+      this.$ihr_api.sendsendregisteremail(this.email,
+        (res) => {
+          this.emailSent = true
+          this.message = res.msg
+        },
+        (error) => {
+          this.emailSent = true
+          this.message = error.detail
+        })
+    }
+
   },
-  computed: {},
-}
+  computed: {
+  }
+};
 </script>
 <style lang="stylus" scoped>
 @import '../../styles/quasar.variables'

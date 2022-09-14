@@ -23,7 +23,11 @@
     "signInTitle": "log in",
     "here": "here",
     "home": "Home",
-    "ForgottenPassword": "forgot your password?"
+    "ForgottenPassword": "forgot your password?",
+    "select": "Select",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register"
   },
   "footer": {
     "reportPages": {
@@ -242,7 +246,7 @@
   },
   "forms": {
     "fancyEmail": "fancy email, are you sure?",
-    "weakPassword": "weak password",
+    "weakPassword": "Six digit",
     "loginUnsuccessful": "login unsuccessful"
   },
   "user": {
