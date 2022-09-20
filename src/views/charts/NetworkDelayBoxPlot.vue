@@ -7,6 +7,11 @@
     </div>
     <div class="row">
       <div class="col">
+        <reactive-chart :layout="linePlotLayout" :traces="tracesLine" @plotly-click="showSankey" :ref="myId" :no-data="noData" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
         <reactive-chart :layout="sankeyLayout" :traces="dataSankey" :ref="myId" :no-data="noData" />
       </div>
     </div>
@@ -33,6 +38,32 @@ const LINE_COLORS = [
   '#bcbd22', // curry yellow-green
   '#17becf', // blue-teal
 ]
+
+const binarySearch = (arr, target, l, r) => {
+   while (l < r) {
+      const mid = Math.floor((l + r) / 2);
+      if (arr[mid] < target) l = mid + 1;
+      else if (arr[mid] > target) r = mid;
+      else return mid;
+   };
+   if (l === r) return arr[l] >= target ? l : l + 1;
+}
+const medianSlidingWindow = (arr = [], num = 1) => {
+   let l = 0, r = num - 1, res = [];
+   const window = arr.slice(l, num);
+   window.sort((a, b) => a - b);
+   while (r < arr.length) {
+      const median = num % 2 === 0 ? (window[Math.floor(num / 2) - 1] + window[Math.floor(num / 2)]) / 2 : window[Math.floor(num / 2)];
+      res.push(median);
+      let char = arr[l++];
+      let index = binarySearch(window, char, 0, window.length - 1);
+      window.splice(index, 1);
+      char = arr[++r];
+      index = binarySearch(window, char, 0, window.length - 1);
+      window.splice(index, 0, char);
+   }
+   return res;
+};
 
 export default {
   mixins: [CommonChartMixin],
@@ -80,7 +111,6 @@ export default {
   },
   methods: {
     getProbeInfo() {
-        console.log('BOX get probes')
       // update probe information
       this.probes = {}
       var promises = []
@@ -95,8 +125,6 @@ export default {
           }
         }))
       })
-      console.log('getProbes promises')
-        console.log(promises)
       return Promise.all(promises)
     },
     getTraceroutes() {
@@ -155,69 +183,93 @@ export default {
         .then( this.getTraceroutes )
         .then( this.getDstInfo )
         .then( () => {
-          //this.computeLineplot();
+          this.computeLineplot();
           this.computeBoxplot();
         } )
       
     },
-    computeLineplot() {
+    computeLineplot(){
       var traces = {}
       var pltIds = []
       this.linePlotLayout = NET_DELAY_LINEPLOT_LAYOUT
 
+
       this.traceroutes.forEach( traceroute => {
         if( typeof traceroute.dst_addr == 'undefined' ) return;
 
-        let pltId = pltIds.indexOf( traceroute.dstASName )+1
-        if( pltId == 0 ){
-          // Add a new subplot
-          pltId = pltIds.length+1
-          pltIds.push( traceroute.dstASName )
-          if( pltId == 1 ){
-            this.linePlotLayout['xaxis'] = { anchor: 'y' }
-            this.linePlotLayout['yaxis'] = { anchor: 'x' }
-          }
-          else{
-            this.linePlotLayout['xaxis'+pltId] = { anchor: 'y'+pltId }
-            this.linePlotLayout['yaxis'+pltId] = { anchor: 'x'+pltId }
-          }
-        }
-
-        if( !(traceroute.fromASN in traces) ){
-          if( pltId == 1 ){
-            traces[traceroute.fromASN] = {
-              y: [],
-              x: [],
-              name: `AS${traceroute.fromASN}`,
-              type: 'scatter',
-              xaxis: 'x',
-              yaxis: 'y'
-            };
-          }
-          else{
-            traces[traceroute.fromASN] = {
-              y: [],
-              x: [],
-              name: `AS${traceroute.fromASN}`,
-              type: 'scatter',
-              xaxis: 'x' + pltId,
-              yaxis: 'y' + pltId
-            };
-          }
-        }
         let lasthop = traceroute.result[traceroute.result.length - 1]
         if( typeof lasthop.result !== 'undefined'){
+          let pltId = pltIds.indexOf( traceroute.dstASName )+1
+          if( pltId == 0 ){
+            // Add a new subplot
+            pltId = pltIds.length+1
+            pltIds.push( traceroute.dstASName )
+            if( pltId == 1 ){
+                //this.linePlotLayout['xaxis'] = { anchor: 'y'}
+            //    this.linePlotLayout['yaxis'] = { 
+             //     title: 'median RTT', 
+              //  }
+                this.linePlotLayout.subplots.push(['xy'])
+            }
+            else{
+                ////this.linePlotLayout['xaxis'+pltId] = { anchor: 'y'+pltId, rangemode: 'tozero' }
+                //this.linePlotLayout['yaxis'+pltId] = { 
+                  //title: 'median RTT',
+                //}
+                this.linePlotLayout.subplots.push(['xy'+pltId])
+            }
+          }
+
+
+          let traceKey = traceroute.fromASN + traceroute.dstASName
+          if( !(traceKey in traces) ){
+            if( pltId == 1 ){
+                traces[traceKey] = {
+                y: [],
+                x: [],
+                name: `AS${traceroute.fromASN}`,
+                type: 'scatter',
+                xaxis: 'x',
+                yaxis: 'y',
+                probes: new Set(),
+                line: {
+                  color: LINE_COLORS[this.sources.indexOf(traceroute.fromASN)]
+                }
+                };
+            }
+            else{
+                traces[traceKey] = {
+                y: [],
+                x: [],
+                name: `AS${traceroute.fromASN}`,
+                type: 'scatter',
+                xaxis: 'x',
+                yaxis: 'y' + pltId,
+                probes: new Set(),
+                line: {
+                  color: LINE_COLORS[this.sources.indexOf(traceroute.fromASN)]
+                }
+                };
+            }
+          }
           lasthop.result.forEach( res => {
             if(res.from == traceroute.dst_addr){
-              traces[traceroute.fromASN].y.push(res.rtt)
-              traces[traceroute.fromASN].x.push( new Date(traceroute.endtime * 1000))
+              traces[traceKey].y.push(res.rtt)
+              traces[traceKey].x.push( new Date(traceroute.endtime * 1000))
+              traces[traceKey].probes.add(traceroute.prb_id)
             }
           })
         }
       })
       this.loading = false
-      this.tracesLine = Object.values(traces)
+      this.tracesLine = []
+      Object.values(traces).forEach( trace => {
+        let y = trace.y
+        trace.y = medianSlidingWindow(y, trace.probes.size * 9 ) 
+        this.tracesLine.push( trace )
+      })
       this.linePlotLayout.grid.rows = pltIds.length
+      this.linePlotLayout.height = pltIds.length * 100
       this.linePlotLayout.datarevision = new Date().getTime()
       console.log('LAYOUT')
       console.log(this.linePlotLayout)
@@ -233,7 +285,10 @@ export default {
             x: [],
             name: `AS${traceroute.fromASN}`,
             type: 'box',
-            boxpoints: 'outliers'
+            boxpoints: 'outliers',
+            marker: {
+              color: LINE_COLORS[this.sources.indexOf(traceroute.fromASN)]
+            }
           };
         }
         let lasthop = traceroute.result[traceroute.result.length - 1]

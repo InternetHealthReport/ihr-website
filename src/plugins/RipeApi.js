@@ -35,15 +35,12 @@ export default {
   },
 
   atlasMeasurementResults(msmid, start, end, pids){
-      console.log('JOIN')
-      console.log(pids)
-      let list_pids = pids.join(',');
-      console.log(list_pids)
+    let list_pids = pids.join(',');
     let queryarg = {
       params: {
         probe_ids: list_pids ,
         start: start.getTime() / 1000,
-        end: end.getTime() / 1000,
+        stop: end.getTime() / 1000,
         format: 'json',
       },
     }
@@ -60,7 +57,6 @@ export default {
     return atlas_axios.get(`measurements/${msmid}/routequake/meta/`, queryarg).then(response => {
       var probeInfo = {};
       response.data.probes.forEach( prb => { probeInfo[prb.id] = prb })
-        console.log('ATLAS API got probes')
       return probeInfo;
     })
   }

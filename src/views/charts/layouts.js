@@ -32,16 +32,21 @@ var NET_DELAY_LAYOUT = {
 
 var NET_DELAY_LINEPLOT_LAYOUT = {
   ...COMMON_WITH_LEGEND,
+  xaxis: {
+    title: 'time',
+  },
   yaxis: {
-    title: 'RTT',
+    title: 'median RTT',
     zeroline: true
   },
   hovermode:'closest',
+  showlegend: false,
   grid: {
     rows: 1, 
     columns: 1, 
     pattern: 'independent'
-  }
+  },
+  subplots:[],
 }
 
 var NET_DELAY_BOXPLOT_LAYOUT = {
