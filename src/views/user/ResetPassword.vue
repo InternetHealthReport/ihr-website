@@ -48,7 +48,7 @@
           @verify="verify"
           @expired="expired"
           :render="ensureCss"
-        ></vue-recaptcha>
+        ></vue-recaptcha> -->
         <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
@@ -81,8 +81,7 @@
 </template>
 
 <script>
-import VueRecaptcha from 'vue-recaptcha'
-import PasswordConfirm from '@/components/forms/PasswordConfirm'
+// import VueRecaptcha from "vue-recaptcha";
 
 export default {
   components: {

@@ -36,7 +36,7 @@
           @verify="verify"
           @expired="expired"
           :render="ensureCss"
-        ></vue-recaptcha>
+        ></vue-recaptcha> -->
         <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
@@ -96,14 +96,14 @@ export default {
   },
   methods: {
     expired() {
-      this.recaptcha = ''
-      console.log('expired')
+      this.recaptcha = "";
+      console.log("expired");
     },
     verify(response) {
-      this.recaptcha = response
+      this.recaptcha = response;
     },
     ensureCss(id) {
-      this.$libraryDelayer.getRidOfInlineStyle(id, 'div')
+      this.$libraryDelayer.getRidOfInlineStyle(id, "div");
     },
     login() {
       this.errors = []
@@ -111,7 +111,7 @@ export default {
       this.$ihrStyle.validatePassword(this.password) || this.errors.push('passwordTooWeak')
       this.$ihrStyle.validateEmail(this.email) || this.errors.push('strangeEmail')
       if (this.errors.length == 0)
-        this.$ihr_api.userSignIn(
+        this.$ihr_api.userLogin(
           this.email,
           this.password,
           res => {
@@ -126,8 +126,8 @@ export default {
             this.emailSent = true
             this.message = error.data.detail
           }
-        )
-    },
+        );
+    }
   },
   computed: {},
 }
