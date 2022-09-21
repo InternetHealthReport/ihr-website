@@ -26,11 +26,11 @@
           <q-icon :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'" class="cursor-pointer" @click="isPwd = !isPwd" />
         </template>
       </q-input>
-      <div :style="{
+      <!-- <div :style="{
         height: recaptcha_loaded ? 'auto' : '90px',
         position: 'relative'
       }">
-        <!-- <vue-recaptcha
+        <vue-recaptcha
           :sitekey="$ihrStyle.recaptchaKey"
           id="IHR_sig-in-captcha"
           @verify="verify"
@@ -40,7 +40,7 @@
         <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
-      </div>
+      </div> -->
       <!-- <div>{{ $t("sigIn.mailWillBeSent") }}</div> -->
       <div style="display:flex;justify-content:space-between;">
         <router-link to="register">Register</router-link>
@@ -72,10 +72,10 @@
 </template>
 
 <script>
-// import VueRecaptcha from "vue-recaptcha";
+//import VueRecaptcha from 'vue-recaptcha'
 
 export default {
-  // components: { VueRecaptcha },
+  //components: { VueRecaptcha },
   data() {
     return {
       email: "",
@@ -86,13 +86,13 @@ export default {
       isPwd: true,
       recaptcha_loaded: false,
       errors: []
-    };
+    }
   },
   mounted() {
-    // this.$libraryDelayer.load("google_recaptcha", () => {
-    //   this.recaptcha_loaded = true;
-    //   this.$libraryDelayer.getRidOfInlineStyle("IHR_sig-in-captcha", "div");
-    // });
+    // this.$libraryDelayer.load('google_recaptcha', () => {
+    //   this.recaptcha_loaded = true
+    //   this.$libraryDelayer.getRidOfInlineStyle('IHR_sig-in-captcha', 'div')
+    // })
   },
   methods: {
     expired() {
@@ -106,12 +106,10 @@ export default {
       this.$libraryDelayer.getRidOfInlineStyle(id, "div");
     },
     login() {
-      this.errors = [];
-      // this.recaptcha != "" || this.errors.push("missingReCaptcha");
-      this.$ihrStyle.validatePassword(this.password) ||
-        this.errors.push("passwordTooWeak");
-      this.$ihrStyle.validateEmail(this.email) ||
-        this.errors.push("strangeEmail");
+      this.errors = []
+      //this.recaptcha != '' || this.errors.push('missingReCaptcha')
+      this.$ihrStyle.validatePassword(this.password) || this.errors.push('passwordTooWeak')
+      this.$ihrStyle.validateEmail(this.email) || this.errors.push('strangeEmail')
       if (this.errors.length == 0)
         this.$ihr_api.userLogin(
           this.email,
@@ -131,9 +129,8 @@ export default {
         );
     }
   },
-  computed: {
-  }
-};
+  computed: {},
+}
 </script>
 <style lang="stylus" scoped>
 @import '../../styles/quasar.variables'

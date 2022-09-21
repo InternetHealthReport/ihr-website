@@ -31,10 +31,33 @@
               </q-list>
             </q-btn-dropdown>
           </q-btn-group>
+          <div v-if="!user || user === 'null'" style="position:absolute;right:30px;line-height:68px">
+            <q-btn flat :label="$t('header.login')" :to="{ name: 'login' }" />
+            <q-btn flat :label="$t('header.register')" :to="{ name: 'register' }" />
+          </div>
+          <div v-else style="position:absolute;right:30px;line-height:68px">
+            <q-btn flat :label="user" :to="{ name: 'select' }" />
+            <q-btn flat :label="$t('header.logout')" @click="logout" />
+          </div>
         </div>
       </div>
       <!--Log in /Log out stuff here-->
     </q-toolbar>
+    <q-dialog v-model="emailSent">
+      <q-card style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Alert</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          {{ message }}
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-header>
 </template>
 
@@ -108,35 +131,47 @@ export default {
   components: {
     NetworkSearchBar,
   },
+  props: ["login"],
+  watch: {
+    login(newV, oldV) {
+      console.log(111, newV, oldV)
+      this.user = newV
+    },
+    deep: true
+  },
   data() {
     return {
-      text: '',
+      text: "",
+      user: "",
       simple_menu: simple_menu,
       sidebarOpened: false,
-      loginError: false,
+      emailSent: false,
+      message: "",
     }
   },
   mounted() {
     document.title = 'Internet Health Report'
+    this.user = this.$ihr_api._get_user()
   },
   methods: {
     expandSidebar() {
       this.sidebarOpened = !this.sidebarOpened
     },
-    login(email, password) {
-      if (this.$ihrStyle.validateEmail(email) && this.$ihrStyle.validatePassword(password)) {
-        this.$ihr_api.userLogin(
-          email,
-          password,
-          () => {},
-          () => {
-            this.loginError = true
-          }
-        )
-      }
-    },
+    
     logout() {
-      this.$ihr_api.userLogout()
+      this.$ihr_api.userLogout(
+        res => {
+          this.emailSent = true
+          this.message = res.msg
+          if (res.code === 200) {
+            this.user = ''
+            this.$emit('logout')
+          }
+        },
+        error => {
+          this.emailSent = true
+          this.message = error.detail
+        });
     },
   },
 }

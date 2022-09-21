@@ -9,83 +9,63 @@
       </q-banner>
     </transition>
     <h1>{{ $t("sigIn.register") }}</h1>
-    <div class="shadow-2" id="IHR_sig-in-form-container" >
-      <q-input
-        v-model="email"
-        label="email"
-        type="email"
-        :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]"
-      >
+    <div class="shadow-2" id="IHR_sig-in-form-container">
+      <q-input v-model="email" label="email" type="email"
+        :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]">
         <template v-slot:prepend>
           <q-icon name="fa fa-envelope" />
         </template>
       </q-input>
-      <q-input
-        v-model="password"
-        label="password"
-        :type="isPwd ? 'password' : 'text'"
-        :rules="[
-          val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')
-        ]"
-      >
+      <q-input v-model="password" label="password" @blur="showCode" :type="isPwd ? 'password' : 'text'" :rules="[
+        val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')
+      ]">
         <template v-slot:prepend>
           <q-icon name="fa fa-key" />
         </template>
         <template v-slot:append>
-          <q-icon
-            :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          />
+          <q-icon :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'" class="cursor-pointer" @click="isPwd = !isPwd" />
         </template>
       </q-input>
-      <q-input
-        v-model="code"
-        label="code"
-        :rules="[
-          val => $ihrStyle.validateCode(val) || $t('forms.weakCode')
-        ]"
-      >
+      <q-input v-show="isShowCode" v-model="code" label="verification code" :rules="[
+        val => $ihrStyle.validateCode(val) || $t('forms.weakCode')
+      ]">
         <template v-slot:prepend>
           <q-icon name="fa fa-check" />
         </template>
         <template v-slot:append>
-          <q-btn @click="sendCode" color="secondary" no-caps>send</q-btn>
+          <q-btn v-if="!countShow" @click="sendCode" color="secondary" no-caps>{{ codeText }}</q-btn>
+          <q-btn v-else color="secondary" no-caps>{{ codeCount }}</q-btn>
         </template>
       </q-input>
-      <div
-        :style="{
-          height: recaptcha_loaded ? 'auto' : '90px',
-          position: 'relative'
-        }"
-      >
-        <!-- <vue-recaptcha
+      <!-- <div :style="{
+        height: recaptcha_loaded ? 'auto' : '90px',
+        position: 'relative'
+      }">
+        <vue-recaptcha
           :sitekey="$ihrStyle.recaptchaKey"
           id="IHR_sig-in-captcha"
           @verify="verify"
           @expired="expired"
           :render="ensureCss"
-        ></vue-recaptcha> -->
+        ></vue-recaptcha>
         <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
-      </div>
+      </div> -->
       <!-- <div>{{ $t("sigIn.mailWillBeSent") }}</div> -->
       <div style="display:flex;justify-content:space-between;">
         <router-link to="login">Login</router-link>
       </div>
       <q-btn color="positive" @click="validateAndSend">register</q-btn>
     </div>
-    <q-dialog
-      v-model="emailSent"
-    >
+    <q-dialog v-model="emailSent">
       <q-card style="width: 300px">
         <q-card-section>
           <div class="text-h6">Alert</div>
         </q-card-section>
 
         <q-card-section class="q-pt-none">
-          {{message}}
+          {{ message }}
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
@@ -101,17 +81,21 @@
 
 export default {
   // components: { VueRecaptcha },
-  name:'RegisterPage',
+  name: 'RegisterPage',
   data() {
     return {
       email: "",
       password: "",
       recaptcha: "",
       code: "",
-      message:"",
+      codeText: "send code",
+      message: "",
       emailSent: false,
       isPwd: true,
+      isShowCode: false,
       recaptcha_loaded: false,
+      countShow: false,
+      codeCount: 60,
       errors: []
     };
   },
@@ -147,6 +131,9 @@ export default {
           (res) => {
             this.emailSent = true
             this.message = res.msg
+            if (res.code === 200) {
+              this.$router.push('/en-us/login')
+            }
           },
           error => {
             this.emailSent = true
@@ -154,16 +141,31 @@ export default {
           }
         );
     },
+    showCode() {
+      this.isShowCode = true
+    },
     sendCode() {
+      const TIME_COUNT = 60
+      this.countShow = true
+      let codeTimer = setInterval(() => {
+        if (this.codeCount > 0 && this.codeCount <= TIME_COUNT) {
+          this.codeCount--
+        } else {
+          this.countShow = false
+          this.codeCount = 60
+          clearInterval(codeTimer)
+          codeTimer = null
+        }
+      }, 1000)
       this.$ihr_api.sendsendregisteremail(this.email,
         (res) => {
           this.emailSent = true
           this.message = res.msg
         },
         (error) => {
-            this.emailSent = true
-            this.message = error.detail
-          })
+          this.emailSent = true
+          this.message = error.detail
+        })
     }
 
   },

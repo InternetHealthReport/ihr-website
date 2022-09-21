@@ -136,6 +136,26 @@
             </q-card-section>
           </q-card>
         </q-expansion-item>
+         <q-expansion-item
+                    :label="$t('charts.speedtest.title')"
+                    caption="Measurement Lab (NDT)"
+                    header-class="IHR_charts-title"
+                    icon="fas fa-tachometer-alt"
+                    v-model="show.measurementLab"
+                >
+                    <q-separator />
+                    <q-card class="IHR_charts-body">
+                        <q-card-section>
+                            <measurement-lab 
+                              :start-time="startTime"
+                              :end-time="endTime"
+                              :ASN="asNumber"
+                              :fetch="fetch"
+                              ref="measurementLabChart"
+                            />
+                        </q-card-section>
+                    </q-card>
+                </q-expansion-item>
         <div class="IHR_last-element">&nbsp;</div>
       </q-list>
     </div>
@@ -206,6 +226,7 @@ import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
+import MeasurementLab from '@/views/charts/MeasurementLab.vue'
 import IodaChart from './charts/IodaChart.vue'
 
 const LOADING_STATUS = {
@@ -228,6 +249,7 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
+    MeasurementLab
     IodaChart,
   },
   data() {
@@ -251,6 +273,7 @@ export default {
         hegemony_disable: false,
         net_delay: true,
         net_delay_disable: false,
+        measurementLab: true,
       },
     }
   },

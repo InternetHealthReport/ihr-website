@@ -23,7 +23,11 @@
     "signInTitle": "log in",
     "here": "here",
     "home": "Home",
-    "ForgottenPassword": "forgot your password?"
+    "ForgottenPassword": "forgot your password?",
+    "select": "Select",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register"
   },
   "footer": {
     "reportPages": {
@@ -169,6 +173,14 @@
         "destinations": " Destinations",
         "apiTitle": "Displayed data is available at the following links:"
       }
+    },
+    "speedtest": {
+      "title": "speed test",
+      "yaxis": "Average Throughput (Mbps)",
+      "table": {
+        "title": "Average throughput",
+        "apiTitle": "Displayed data is available at MLab's API:"
+      }
     }
   },
   "sigIn": {
@@ -234,7 +246,7 @@
   },
   "forms": {
     "fancyEmail": "fancy email, are you sure?",
-    "weakPassword": "weak password",
+    "weakPassword": "Six digit",
     "loginUnsuccessful": "login unsuccessful"
   },
   "user": {

@@ -19,7 +19,7 @@
           <q-icon name="fa fa-envelope" />
         </template>
       </q-input>
-      <q-input v-model="password" label="new_password" :type="isPwd ? 'password' : 'text'"
+      <q-input v-model="password" label="new_password" @blur="showCode" :type="isPwd ? 'password' : 'text'"
         :rules="[val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')]">
         <template v-slot:prepend>
           <q-icon name="fa fa-key" />
@@ -28,19 +28,21 @@
           <q-icon :name="isPwd ? 'far fa-eye' : 'far fa-eye-slash'" class="cursor-pointer" @click="isPwd = !isPwd" />
         </template>
       </q-input>
-      <q-input v-model="code" label="code" :rules="[val => $ihrStyle.validateCode(val) || $t('forms.weakCode')]">
+      <q-input v-show="isShowCode" v-model="code" label="verification code"
+        :rules="[val => $ihrStyle.validateCode(val) || $t('forms.weakCode')]">
         <template v-slot:prepend>
           <q-icon name="fa fa-check" />
         </template>
         <template v-slot:append>
-          <q-btn @click="sendCode" color="secondary" no-caps>send</q-btn>
+          <q-btn v-if="!countShow" @click="sendCode" color="secondary" no-caps>{{ codeText }}</q-btn>
+          <q-btn v-else color="secondary" no-caps>{{ codeCount }}</q-btn>
         </template>
       </q-input>
-      <div :style="{
+      <!-- <div :style="{
         height: recaptcha_loaded ? 'auto' : '90px',
         position: 'relative',
       }">
-        <!-- <vue-recaptcha
+        <vue-recaptcha
           :sitekey="$ihrStyle.recaptchaKey"
           id="IHR_sig-in-captcha"
           @verify="verify"
@@ -50,7 +52,7 @@
         <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
-      </div>
+      </div> -->
       <q-btn color="positive" @click="forgetpassword()">
         {{ $t('resetPassword.resetPassword') }}
       </q-btn>
@@ -83,7 +85,8 @@
 
 export default {
   components: {
-    // VueRecaptcha,
+    //VueRecaptcha,
+    //PasswordConfirm,
   },
   data() {
     return {
@@ -95,7 +98,11 @@ export default {
       message: '',
       error: null,
       emailSent: false,
+      isShowCode: false,
       recaptcha_loaded: false,
+      codeText: "send code",
+      countShow: false,
+      codeCount: 60,
     }
   },
   mounted() {
@@ -114,7 +121,22 @@ export default {
     ensureCss(id) {
       this.$libraryDelayer.getRidOfInlineStyle(id, 'div')
     },
+    showCode() {
+      this.isShowCode = true
+    },
     sendCode() {
+      const TIME_COUNT = 60
+      this.countShow = true
+      let codeTimer = setInterval(() => {
+        if (this.codeCount > 0 && this.codeCount <= TIME_COUNT) {
+          this.codeCount--
+        } else {
+          this.countShow = false
+          this.codeCount = 60
+          clearInterval(codeTimer)
+          codeTimer = null
+        }
+      }, 1000)
       this.$ihr_api.sendforgetpasswordemail(
         this.email,
         res => {
@@ -136,10 +158,6 @@ export default {
         this.error = 'passwordTooWeak'
         return
       }
-      // if (this.recaptcha == '') {
-      //     this.error = 'AreYouRobot'
-      //     return
-      // }
       this.error = null
       this.$ihr_api.userforgetpassword(
         this.email,
@@ -148,6 +166,9 @@ export default {
         res => {
           this.emailSent = true
           this.message = res.msg
+          if (res.code === 200) {
+            this.$router.push('/en-us/login')
+          }
         },
         error => {
           this.emailSent = true
