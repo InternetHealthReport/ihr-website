@@ -3,26 +3,48 @@
     <h1>IODA plots will appear here</h1>
     <div class="col-12">
       <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter the ASN you are looking for" />
-      <date-time-picker :min="minDate" :max="maxDate" @input="setReportDate" :value="maxDate" hideTime class="IHR_subtitle_calendar" />
-      <!-- <h1>{{ interval.end }}</h1>
-      <h1>{{ interval.begin }}</h1> -->
-      <h1>{{ interval.exact }}</h1>
+      <div class="q-pa-md">
+        <div class="q-pb-sm">Model: {{ dateRange }}</div>
+        <q-card class="IHR_charts-body">
+          <q-card-section v-if="dateRange">
+            <ioda-chart :ASN="asNumber" :fetch="true" :start-time="getFrom(dateRange)" :end-time="getTo(dateRange)" ref="iodaChart" />
+          </q-card-section>
+        </q-card>
+        <q-date v-model="dateRange" range />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import reportMixin from './middleware/reportMixin.vue'
-// import reportMixin from '../../views/mixin/reportMixin.vue'
-import NetworkSearchBar from '../../components/search_bar/NetworkSearchBar.vue'
+import NetworkSearchBar from './middleware/networkSearchBar.vue'
 import DateTimePicker from '../../components/DateTimePicker.vue'
+import DateRangePicker from './middleware/dateRangePicker.vue'
+import IodaChart from '../../views/charts/IodaChart.vue'
 export default {
-  mixins: [reportMixin],
   components: {
     NetworkSearchBar,
     DateTimePicker,
+    DateRangePicker,
+    IodaChart,
+  },
+  data() {
+    let dateRange
+    let asNumber = '2497'
+    return {
+      dateRange: dateRange,
+      asNumber: asNumber,
+    }
+  },
+  methods: {
+    getFrom(dateRange) {
+      let from = new Date(dateRange.from)
+      return from
+    },
+    getTo(dateRange) {
+      let to = new Date(dateRange.to)
+      return to
+    },
   },
 }
 </script>
-
-DateTimePicker
