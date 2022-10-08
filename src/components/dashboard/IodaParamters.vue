@@ -10,16 +10,24 @@
           <q-date v-model="dateRange" range />
         </div>
         <div class="col-2">
-          <button @click="getParam()">Add plot</button>
+          <button @click="addPlot()">Add plot</button>
         </div>
       </div>
       <div class="q-pa-md">
         <div class="q-pb-sm">Model: {{ dateRange }}</div>
-        <div v-for="dateRange in iodaChartArray" :key="dateRange">
+        <div v-for="index in iodaChartArray.length" :key="index">
           <q-card class="IHR_charts-body">
-            <q-card-section v-if="dateRange">
+            <q-card-section v-if="iodaChartArray[index]">
               <h1>{{ asNumber }}</h1>
-              <ioda-chart :ASN="asNumber" :fetch="true" :start-time="getFrom(dateRange)" :end-time="getTo(dateRange)" ref="iodaChart" />
+              <h1 @click="deletePlot(index)">X</h1>
+
+              <ioda-chart
+                :ASN="asNumber"
+                :fetch="true"
+                :start-time="getFrom(iodaChartArray[index])"
+                :end-time="getTo(iodaChartArray[index])"
+                ref="iodaChart"
+              />
             </q-card-section>
           </q-card>
         </div>
@@ -59,9 +67,11 @@ export default {
       let to = new Date(dateRange.to)
       return to
     },
-    getParam() {
-      console.log('HEHE')
+    addPlot() {
       this.iodaChartArray.push(this.dateRange)
+    },
+    deletePlot(index) {
+      this.iodaChartArray.splice(index)
     },
   },
 }
