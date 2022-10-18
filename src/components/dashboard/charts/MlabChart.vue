@@ -10,12 +10,12 @@ import CommonChartMixin from '../../../views/charts/CommonChartMixin.vue'
 
 export default {
   mixins: [CommonChartMixin],
-  props: {
-    ASN: {
-      type: Number,
-      required: true,
-    },
-  },
+  // props: {
+  //   ASN: {
+  //     type: Number,
+  //     required: true,
+  //   },
+  // },
   data() {
     var layout = {
       yaxis: {
@@ -34,7 +34,8 @@ export default {
     apiCall() {
       let year = this.endTime.getFullYear()
       axios
-        .get(`https://statistics.measurementlab.net/v0/asn/${this.ASN}/${year}/histogram_daily_stats.json`)
+        .get(`https://statistics.measurementlab.net/v0/asn/2497/2020/histogram_daily_stats.json`)
+        //  .get(`https://statistics.measurementlab.net/v0/asn/${this.ASN}/${year}/histogram_daily_stats.json`)
         .then(response => {
           this.networks = response.data
           this.getChart(this.networks)

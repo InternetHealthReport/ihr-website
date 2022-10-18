@@ -58,10 +58,12 @@ export default {
   methods: {
     getYear(YearPicker) {
       let year = new Date(YearPicker.year)
+      console.log('getYear called')
       return year
     },
     addPlot() {
       this.mlabChartArray.push(this.YearPicker)
+      console.log(this.YearPicker)
     },
     deletePlot(index) {
       this.mlabChartArray.splice(index)

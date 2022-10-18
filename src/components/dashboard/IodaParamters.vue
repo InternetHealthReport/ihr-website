@@ -14,7 +14,6 @@
         </div>
       </div>
       <div class="q-pa-md">
-        <div class="q-pb-sm">Model: {{ dateRange }}</div>
         <div v-for="index in iodaChartArray.length" :key="index">
           <q-card class="IHR_charts-body">
             <q-card-section v-if="iodaChartArray[index]">
@@ -38,13 +37,11 @@
 
 <script>
 import NetworkSearchBar from './middleware/networkSearchBar.vue'
-import DateTimePicker from '../../components/DateTimePicker.vue'
 import DateRangePicker from './middleware/dateRangePicker.vue'
 import IodaChart from '../../views/charts/IodaChart.vue'
 export default {
   components: {
     NetworkSearchBar,
-    DateTimePicker,
     DateRangePicker,
     IodaChart,
   },
