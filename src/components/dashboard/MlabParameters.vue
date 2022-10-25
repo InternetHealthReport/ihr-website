@@ -7,7 +7,7 @@
           <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter the ASN you are looking for" />
         </div>
         <div class="col-5">
-          <q-date v-model="YearPicker" />
+          <year-selector />
         </div>
         <div class="col-2">
           <button @click="addPlot()">Add Plot</button>
@@ -38,13 +38,13 @@
 
 <script>
 import NetworkSearchBar from './middleware/networkSearchBar.vue'
-import YearPicker from './middleware/yearPicker.vue'
 import MeasurementLab from './charts/MlabChart.vue'
+import YearSelector from './middleware/yearSelector.vue'
 export default {
   components: {
     NetworkSearchBar,
-    YearPicker,
     MeasurementLab,
+    YearSelector,
   },
   data() {
     let YearPicker
