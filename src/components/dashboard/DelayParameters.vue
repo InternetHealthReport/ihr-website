@@ -98,7 +98,6 @@ export default {
       word: '',
       emailSent: false,
       dataList: [],
-      message: '',
       country: [
         'Japan',
         'France',

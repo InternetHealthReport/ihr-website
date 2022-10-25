@@ -3,10 +3,6 @@
     <h1>IODA plots will appear here</h1>
     <div class="col-12">
       <div class="row justify-center">
-        <!-- <div class="col-5">
-          <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter the ASN you are looking for" />
-        </div> -->
-
         <!-- Search Bar Start -->
         <div class="searchbar_div">
           <div class="Subscribe">
@@ -25,11 +21,7 @@
               @click="changePanel(panel)"
               toggle-color="blue"
               no-caps
-              :options="[
-                { label: 'counties', value: 'country' },
-                { label: 'cities', value: 'city' },
-                { label: 'networks', value: 'network' },
-              ]"
+              :options="[{ label: 'networks', value: 'network' }]"
             />
             <search-bar class="col-3 q-px-sm" :type="panel" @searchRes="searchChange" style="margin: 20px 0" />
             <q-tab-panels v-model="panel" animated style="border-top: 1px solid #ccc">
@@ -101,11 +93,11 @@
       <div v-for="index in iodaChartArray.length" :key="index">
         <q-card class="IHR_charts-body">
           <q-card-section v-if="iodaChartArray[index]">
-            <h1>{{ asNumber }}</h1>
+            <h1>{{ tags[index - 1].channel }}</h1>
             <h1 @click="deletePlot(index)">X</h1>
 
             <ioda-chart
-              :ASN="asNumber"
+              :ASN="getASN(tags[index - 1].channel)"
               :fetch="true"
               :start-time="getFrom(iodaChartArray[index])"
               :end-time="getTo(iodaChartArray[index])"
@@ -139,6 +131,7 @@ export default {
       asNumber: asNumber,
       iodaChartArray: iodaChartArray,
       tags: [],
+      asNumberArray: [],
       panel: 'network',
       word: '',
       dataList: [],
@@ -198,6 +191,10 @@ export default {
     getTo(dateRange) {
       let to = new Date(dateRange.to)
       return to
+    },
+    getASN(tagNumber) {
+      let ASN = tagNumber.substring(2, tagNumber.indexOf(' '))
+      return ASN
     },
     addPlot() {
       this.iodaChartArray.push(this.dateRange)
