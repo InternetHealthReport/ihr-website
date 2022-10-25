@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="width: 20%">
+    <div style="width: 100%">
       <reactive-chart :layout="layout" :traces="traces" :no-data="noData" :chartTitle="iodaChart" />
     </div>
   </div>
