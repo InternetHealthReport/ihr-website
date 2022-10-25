@@ -1,14 +1,17 @@
 <template>
   <div>
-    <h1></h1>
     <div id="IHR_contact-page">
       <div class="Subscribe">
-        <p v-if="tags.length == 0" class="IHR_description">Selected Networks</p>
+        <p v-if="tags.length == 0" class="IHR_description">Your resources</p>
         <div v-else class="tag">
           <el-tag v-for="(item, index) in tags" :key="index" type="warning" style="margin: 5px 8px" @close="handleClose(item)" closable>
             {{ item.channel.split(',')[0] }}
           </el-tag>
         </div>
+        <!-- <div class="group_select">
+          <q-btn style="width: 120px" outline color="orange-5" label="save resource" @click="saveResource()" no-caps />
+          <q-btn color="orange-5" unelevated label="setting" @click="toSetting()" no-caps />
+        </div> -->
       </div>
       <div class="select">
         <q-btn-toggle
@@ -23,7 +26,13 @@
             { label: 'networks', value: 'network' },
           ]"
         />
-        <search-bar class="col-3 q-px-sm" :type="panel" @searchRes="searchChange" style="margin: 20px 0" />
+        <!-- <q-input v-model="word" outlined style="width: 40%; margin: 30px 0 20px 0" placeholder="search resource"
+                    @keyup.enter="searchChange(word)">
+                    <template v-slot:append>
+                        <q-icon name="search" @click="searchChange(word)" color="blue" style="cursor: pointer" />
+                    </template>
+                </q-input> -->
+        <select-search-bar class="col-3 q-px-sm" :type="panel" @searchRes="searchChange" style="margin: 20px 0" />
         <q-tab-panels v-model="panel" animated style="border-top: 1px solid #ccc">
           <q-tab-panel name="country">
             <div class="btn_list">
@@ -61,7 +70,7 @@
             </div>
           </q-tab-panel>
 
-          <q-tab-panel keep-alive name="network">
+          <q-tab-panel name="network">
             <div class="btn_list">
               <q-btn
                 outline
@@ -81,20 +90,40 @@
         </q-tab-panels>
       </div>
     </div>
+    <div
+      class="IHR_background"
+      :style="{
+        backgroundImage: 'url(' + require('@/assets/imgs/ihr_logo.svg') + ')',
+      }"
+    ></div>
+    <q-dialog v-model="emailSent">
+      <q-card style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Alert</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          {{ message }}
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-white text-teal">
+          <q-btn flat label="OK" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
-
 <script>
-import searchBar from './middleware/searchBar.vue'
+import SelectSearchBar from '../middleware/searchBar.vue'
 export default {
-  name: 'DelayCharts',
+  name: 'SelectPage',
   components: {
-    searchBar,
+    SelectSearchBar,
   },
   data() {
     return {
       tags: [],
-      panel: 'network',
+      panel: 'country',
       word: '',
       emailSent: false,
       dataList: [],
@@ -202,6 +231,29 @@ export default {
           this.dataList = this.network
           break
       }
+    },
+    saveResource() {
+      this.$ihr_api.saveChannel(
+        this.tags,
+        res => {
+          if (res.code === 200) {
+            this.emailSent = true
+            this.message = 'save successfully!'
+          } else {
+            this.emailSent = true
+            this.message = res.msg
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
+    toSetting() {
+      this.$router.push({
+        path: '/en-us/setting',
+        query: { data: JSON.stringify(this.tags) },
+      })
     },
   },
 }

@@ -13,7 +13,7 @@
           <button @click="addPlot()">Add Plot</button>
         </div>
       </div>
-      <div class="q-pa-md">
+      <!-- <div class="q-pa-md">
         <div class="q-pb-sm">Model:{{ YearPicker }}</div>
         <div v-for="index in mlabChartArray.length" :key="index">
           <q-card class="IHR_charts-body">
@@ -30,7 +30,14 @@
             </q-card-section>
           </q-card>
         </div>
-      </div>
+      </div> -->
+      <measurement-lab
+        :start-time="getYear(2020 / 10 / 10)"
+        :end-time="getYear(2020 / 10 / 10)"
+        :ASN="asNumber"
+        :fetch="fetch"
+        ref="measurementLabChart"
+      />
     </div>
   </div>
 </template>

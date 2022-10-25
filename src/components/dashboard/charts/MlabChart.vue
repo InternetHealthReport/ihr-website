@@ -10,16 +10,15 @@ import CommonChartMixin from '../../../views/charts/CommonChartMixin.vue'
 
 export default {
   mixins: [CommonChartMixin],
-  // props: {
-  //   ASN: {
-  //     type: Number,
-  //     required: true,
-  //   },
-  // },
+  props: {
+    ASN: {
+      type: String,
+    },
+  },
   data() {
     var layout = {
       yaxis: {
-        title: this.$t('charts.speedtest.yaxis'),
+        title: this.$t('speed-test'),
         rangemode: 'tozero',
       },
     }
@@ -39,6 +38,7 @@ export default {
         .then(response => {
           this.networks = response.data
           this.getChart(this.networks)
+          console.log('Method called')
         })
         .catch(error => {
           console.log(error)
