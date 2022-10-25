@@ -1,15 +1,21 @@
 <template>
   <div>
-    <reactive-chart :layout="layout" :traces="traces" :no-data="noData" :ref="myId" />
+    <div style="width: 20%">
+      <reactive-chart :layout="layout" :traces="traces" :no-data="noData" :chartTitle="iodaChart" />
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import CommonChartMixin from '../../../views/charts/CommonChartMixin.vue'
+import ReactiveChart from '../../../../src/components/ReactiveChart.vue'
 
 export default {
   mixins: [CommonChartMixin],
+  components: {
+    ReactiveChart,
+  },
   props: {
     ASN: {
       type: String,
@@ -17,6 +23,10 @@ export default {
   },
   data() {
     var layout = {
+      title: '',
+      xaxis: {
+        title: 'timestamp',
+      },
       yaxis: {
         title: this.$t('speed-test'),
         rangemode: 'tozero',
@@ -31,13 +41,14 @@ export default {
   },
   methods: {
     apiCall() {
-      let year = this.endTime.getFullYear()
+      // let year = this.endTime.getFullYear()
       axios
         .get(`https://statistics.measurementlab.net/v0/asn/2497/2020/histogram_daily_stats.json`)
         //  .get(`https://statistics.measurementlab.net/v0/asn/${this.ASN}/${year}/histogram_daily_stats.json`)
         .then(response => {
           this.networks = response.data
           this.getChart(this.networks)
+          console.log(this.networks)
           console.log('Method called')
         })
         .catch(error => {
@@ -46,6 +57,7 @@ export default {
         })
     },
     getChart(networks) {
+      console.log('network called')
       let networkDates = []
       networks.forEach(network => {
         networkDates.push(network.date)
@@ -76,6 +88,9 @@ export default {
         },
       ]
     },
+  },
+  mounted: function () {
+    this.apiCall()
   },
 }
 </script>

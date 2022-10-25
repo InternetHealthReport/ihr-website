@@ -31,14 +31,8 @@
           </q-card>
         </div>
       </div> -->
-      <measurement-lab
-        :start-time="getYear(2020 / 10 / 10)"
-        :end-time="getYear(2020 / 10 / 10)"
-        :ASN="asNumber"
-        :fetch="fetch"
-        ref="measurementLabChart"
-      />
     </div>
+    <measurement-lab />
   </div>
 </template>
 
