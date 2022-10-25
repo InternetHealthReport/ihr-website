@@ -89,7 +89,7 @@
         <button @click="addPlot()">Add plot</button>
       </div>
     </div>
-    <div class="q-pa-md">
+    <div class="col-12">
       <div v-for="index in iodaChartArray.length" :key="index">
         <q-card class="IHR_charts-body">
           <q-card-section v-if="iodaChartArray[index]">
@@ -261,7 +261,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
+@import '../../styles/quasar.variables';
 .searchbar_div {
   width: 60%;
   margin: 0 auto;
