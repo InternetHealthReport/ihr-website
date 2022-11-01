@@ -24,7 +24,7 @@
     "object-hash": "^3.0.0",
     "plotly.js-dist": "^1.52.3",
     "postcss-plugins": "^1.13.1",
-    "quasar": "^1.15.22",
+    "quasar": "^2.10.1",
     "register-service-worker": "^1.7.2",
     "swagger-ui": "^3.25.0",
     "timeline-vuejs": "^1.1.1",
