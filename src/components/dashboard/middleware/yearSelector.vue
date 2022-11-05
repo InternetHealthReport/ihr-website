@@ -21,6 +21,8 @@ export default {
     getMonthPicked() {
       let fullDate = this.monthPicked
       if (fullDate != null) {
+        this.monthPicked = fullDate.substring(0, 4)
+        this.$emit('clicked', this.monthPicked)
         return fullDate.substring(0, 4)
       }
     },

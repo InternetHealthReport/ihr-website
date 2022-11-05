@@ -91,7 +91,7 @@
         </div>
         <!-- Search Bar End -->
         <div class="col-5">
-          <year-selector />
+          <year-selector @clicked="onClickChild" />
         </div>
         <div class="col-2">
           <button @click="addPlot()">Add Plot</button>
@@ -116,7 +116,7 @@
         </div>
       </div> -->
     </div>
-    <measurement-lab />
+    <measurement-lab :year="YearPicker" />
   </div>
 </template>
 
@@ -134,9 +134,11 @@ export default {
   },
   data() {
     let asNumber = '2497'
+    let YearPicker = ''
     let mlabChartArray = []
     return {
       asNumber: asNumber,
+      YearPicker: YearPicker,
       mlabChartArray: mlabChartArray,
       tags: [],
       asNumberArray: [],
@@ -192,14 +194,12 @@ export default {
     this.dataList = this.country
   },
   methods: {
-    getYear(YearPicker) {
-      let year = new Date(YearPicker.year)
-      console.log('getYear called')
-      return year
+    onClickChild(value) {
+      this.YearPicker = value
     },
     addPlot() {
       this.mlabChartArray.push(this.YearPicker)
-      console.log(this.YearPicker)
+      // console.log(this.YearPicker)
     },
     deletePlot(index) {
       this.mlabChartArray.splice(index)
@@ -258,6 +258,10 @@ export default {
           this.dataList = this.network
           break
       }
+    },
+    result(fromSquare) {
+      console.log('haha', fromSquare)
+      this.YearPicker = fromSquare
     },
   },
 }
