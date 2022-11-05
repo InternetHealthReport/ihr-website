@@ -47,7 +47,7 @@ export default {
       // let year = this.endTime.getFullYear()
       console.log('Year:', this.year)
       axios
-        .get(`https://statistics.measurementlab.net/v0/asn/2497/2020/histogram_daily_stats.json`)
+        .get(`https://statistics.measurementlab.net/v0/asn/2497/${this.year}/histogram_daily_stats.json`)
         //  .get(`https://statistics.measurementlab.net/v0/asn/${this.ASN}/${year}/histogram_daily_stats.json`)
         .then(response => {
           this.networks = response.data

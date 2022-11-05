@@ -97,26 +97,28 @@
           <button @click="addPlot()">Add Plot</button>
         </div>
       </div>
-      <!-- <div class="q-pa-md">
-        <div class="q-pb-sm">Model:{{ YearPicker }}</div>
-        <div v-for="index in mlabChartArray.length" :key="index">
-          <q-card class="IHR_charts-body">
-            <q-card-section v-if="mlabChartArray[index]">
-              <h1>{{ asNumber }}</h1>
-              <h1 @click="deletePlot(index)">X</h1>
-              <measurement-lab
+      <div class="col-12">
+        <div class="q-pa-md">
+          <div v-for="index in mlabChartArray.length" :key="index">
+            <q-card class="IHR_charts-body">
+              <q-card-section v-if="mlabChartArray[index]">
+                <h1>{{ asNumber }}</h1>
+                <!-- <h1 @click="deletePlot(index)">X</h1> -->
+                <!-- <measurement-lab
                 :start-time="getFrom(mlabChartArray[index])"
                 :end-time="getFrom(mlabChartArray[index])"
                 :ASN="asNumber"
                 :fetch="fetch"
                 ref="measurementLabChart"
-              />
-            </q-card-section>
-          </q-card>
+              /> -->
+                <measurement-lab :year="YearPicker" />
+              </q-card-section>
+            </q-card>
+          </div>
         </div>
-      </div> -->
+      </div>
     </div>
-    <measurement-lab :year="YearPicker" />
+    <!-- <measurement-lab :year="YearPicker" /> -->
   </div>
 </template>
 
@@ -199,7 +201,7 @@ export default {
     },
     addPlot() {
       this.mlabChartArray.push(this.YearPicker)
-      // console.log(this.YearPicker)
+      console.log(this.mlabChartArray)
     },
     deletePlot(index) {
       this.mlabChartArray.splice(index)
