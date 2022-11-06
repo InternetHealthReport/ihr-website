@@ -174,18 +174,30 @@
       </div>
     </div>
     <!-- Selected Destination Search Bar end -->
+    <div class="col-5" align="center">
+      <q-date v-model="dateRange" range />
+    </div>
+    <h6 align="center">{{ dateRange }}</h6>
+
+    <network-delay-chart />
   </div>
 </template>
 
 <script>
+import NetworkDelayChart from '../../views/charts/NetworkDelayChart.vue'
 import searchBar from './middleware/searchBar.vue'
+import DateRangePicker from './middleware/dateRangePicker.vue'
 export default {
   name: 'DelayCharts',
   components: {
     searchBar,
+    NetworkDelayChart,
+    DateRangePicker,
   },
   data() {
+    let dateRange
     return {
+      dateRange: dateRange,
       tags: [],
       destinationNetworks: [],
       panel: 'network',
@@ -245,6 +257,18 @@ export default {
     this.destinationDataList = this.network
   },
   methods: {
+    getFrom(dateRange) {
+      let from = new Date(dateRange.from)
+      return from
+    },
+    getTo(dateRange) {
+      let to = new Date(dateRange.to)
+      return to
+    },
+    getASN(tagNumber) {
+      let ASN = tagNumber.substring(2, tagNumber.indexOf(''))
+      return ASN
+    },
     oldChannel() {
       this.$ihr_api.getChannel(
         res => {
