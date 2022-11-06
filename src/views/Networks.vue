@@ -249,7 +249,7 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
-    MeasurementLab
+    MeasurementLab,
     IodaChart,
   },
   data() {
