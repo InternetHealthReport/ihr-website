@@ -102,23 +102,15 @@
           <div v-for="index in mlabChartArray.length" :key="index">
             <q-card class="IHR_charts-body">
               <q-card-section v-if="mlabChartArray[index]">
-                <h1>{{ asNumber }}</h1>
-                <!-- <h1 @click="deletePlot(index)">X</h1> -->
-                <!-- <measurement-lab
-                :start-time="getFrom(mlabChartArray[index])"
-                :end-time="getFrom(mlabChartArray[index])"
-                :ASN="asNumber"
-                :fetch="fetch"
-                ref="measurementLabChart"
-              /> -->
-                <measurement-lab :year="YearPicker" />
+                <h6 align="center">{{ tags[index - 1].channel }}</h6>
+                <h1 @click="deletePlot(index)">x</h1>
+                <measurement-lab :ASN="getASN(tags[index - 1].channel)" :year="YearPicker" />
               </q-card-section>
             </q-card>
           </div>
         </div>
       </div>
     </div>
-    <!-- <measurement-lab :year="YearPicker" /> -->
   </div>
 </template>
 
@@ -135,46 +127,15 @@ export default {
     searchBar,
   },
   data() {
-    let asNumber = '2497'
     let YearPicker = ''
     let mlabChartArray = []
     return {
-      asNumber: asNumber,
       YearPicker: YearPicker,
       mlabChartArray: mlabChartArray,
       tags: [],
-      asNumberArray: [],
       panel: 'network',
       word: '',
       dataList: [],
-      country: [
-        'Japan',
-        'France',
-        'United States',
-        'Brazil',
-        'Germany',
-        'China',
-        'Singapore',
-        'Canada',
-        'Netherlands',
-        'United Kingdom',
-        'Russia',
-        'Australia',
-      ],
-      city: [
-        'Amsterdam, North Holland NL',
-        'Ashburn, Virginia US',
-        'London, England GB',
-        'Singapore, Central Singapore SG',
-        'Hong Kong, Central and Western HK',
-        'Frankfurt am Main, Hesse DE',
-        'Paris, Île - de - France FR',
-        'Los Angeles, California US',
-        'Tokyo, Tokyo JP',
-        'Sydney, New South Wales AU',
-        'New York City, New York US',
-        'Toronto, Ontario CA',
-      ],
       network: [
         'AS3356 - Lumen',
         'AS2914 - NTT',
@@ -205,6 +166,11 @@ export default {
     },
     deletePlot(index) {
       this.mlabChartArray.splice(index)
+    },
+    getASN(tagNumber) {
+      let ASN = tagNumber.substring(2, tagNumber.indexOf(' '))
+      console.log('*************' + ASN)
+      return ASN
     },
     oldChannel() {
       this.$ihr_api.getChannel(
