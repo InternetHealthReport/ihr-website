@@ -179,7 +179,19 @@
     </div>
     <h6 align="center">{{ dateRange }}</h6>
 
-    <network-delay-chart />
+    <network-delay-chart
+      :start-time="before_start"
+      :end-time="before_end"
+      :startPointName="asn.as.toString()"
+      startPointType="AS"
+      :endPointNames="endpoints[asn.as]"
+      ref="networkDelayChart_before"
+      :fetch="fetch"
+      :clear="clear"
+      @max-value="updateYaxis"
+      :yMax="yMax"
+      :searchBar="searchBar"
+    />
   </div>
 </template>
 
