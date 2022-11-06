@@ -1,10 +1,12 @@
 <template>
   <div>
     <h1></h1>
+    <!-- Selected Source Network start -->
     <div id="IHR_contact-page">
       <div class="Subscribe">
-        <p v-if="tags.length == 0" class="IHR_description">Selected Networks</p>
+        <p v-if="tags.length == 0" class="IHR_description">Select Source Networks</p>
         <div v-else class="tag">
+          <p class="IHR_description">Selected Source:</p>
           <el-tag v-for="(item, index) in tags" :key="index" type="warning" style="margin: 5px 8px" @close="handleClose(item)" closable>
             {{ item.channel.split(',')[0] }}
           </el-tag>
@@ -81,6 +83,97 @@
         </q-tab-panels>
       </div>
     </div>
+    <!-- Selected Source Network Search Bar End -->
+    <!-- Selected Destination Search Bar start -->
+    <div id="IHR_contact-page">
+      <div class="Subscribe">
+        <p v-if="destinationNetworks.length == 0" class="IHR_description">Select Destination Networks</p>
+        <div v-else class="tag">
+          <p class="IHR_description">Selected Destination:</p>
+          <el-tag
+            v-for="(item, index) in destinationNetworks"
+            :key="index"
+            type="warning"
+            style="margin: 5px 8px"
+            @close="destinationHandleClose(item)"
+            closable
+          >
+            {{ item.channel.split(',')[0] }}
+          </el-tag>
+        </div>
+      </div>
+      <div class="select">
+        <q-btn-toggle
+          v-model="destinationPanel"
+          rounded
+          @click="destinationChangePanel(destinationPanel)"
+          toggle-color="blue"
+          no-caps
+          :options="[
+            { label: 'counties', value: 'country' },
+            { label: 'cities', value: 'city' },
+            { label: 'networks', value: 'network' },
+          ]"
+        />
+        <search-bar class="col-3 q-px-sm" :type="destinationPanel" @searchRes="destinationSearchChange" style="margin: 20px 0" />
+        <q-tab-panels v-model="destinationPanel" animated style="border-top: 1px solid #ccc">
+          <q-tab-panel name="country">
+            <div class="btn_list">
+              <q-btn
+                outline
+                v-for="(item, index) in destinationDataList"
+                :key="index"
+                color="white"
+                style="width: 150px !important"
+                text-color="black"
+                :label="item.split(',')[0]"
+                @click="selectDestination(item)"
+                no-caps
+              >
+                <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
+              </q-btn>
+            </div>
+          </q-tab-panel>
+
+          <q-tab-panel name="city">
+            <div class="btn_list">
+              <q-btn
+                outline
+                v-for="(item, index) in destinationDataList"
+                :key="index"
+                color="white"
+                style="width: 150px !important"
+                text-color="black"
+                :label="item.split(',')[0]"
+                @click="selectDestination(item)"
+                no-caps
+              >
+                <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
+              </q-btn>
+            </div>
+          </q-tab-panel>
+
+          <q-tab-panel keep-alive name="network">
+            <div class="btn_list">
+              <q-btn
+                outline
+                v-for="(item, index) in destinationDataList"
+                :key="index"
+                color="white"
+                style="width: 175px !important"
+                text-color="black"
+                :label="item.split(',')[0]"
+                @click="selectDestination(item)"
+                no-caps
+              >
+                <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
+              </q-btn>
+            </div>
+          </q-tab-panel>
+        </q-tab-panels>
+      </div>
+    </div>
+    <!-- Selected Destination Search Bar end -->
   </div>
 </template>
 
@@ -94,10 +187,13 @@ export default {
   data() {
     return {
       tags: [],
+      destinationNetworks: [],
       panel: 'network',
+      destinationPanel: 'network',
       word: '',
       emailSent: false,
       dataList: [],
+      destinationDataList: [],
       country: [
         'Japan',
         'France',
@@ -144,7 +240,9 @@ export default {
   },
   mounted() {
     this.oldChannel()
+    this.destinationChannel()
     this.dataList = this.country
+    this.destinationDataList = this.network
   },
   methods: {
     oldChannel() {
@@ -160,12 +258,35 @@ export default {
         }
       )
     },
+    destinationChannel() {
+      this.$ihr_api.getChannel(
+        res => {
+          console.log(res)
+          if (res.hasOwnProperty('data')) {
+            this.destinationNetworks = res.data.channel
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
     select(label) {
       let flag = true
       flag = this.tags.find(item => item.channel === label)
       if (!flag) {
         this.tags.push({ channel: label, frequency: 'normal' })
       }
+    },
+    selectDestination(label) {
+      let flag = true
+      flag = this.destinationNetworks.find(item => item.channel === label)
+      if (!flag) {
+        this.destinationNetworks.push({ channel: label, frequency: 'normal' })
+      }
+    },
+    destinationHandleClose(tag) {
+      this.destinationNetworks.splice(this.destinationNetworks.indexOf(tag), 1)
     },
     handleClose(tag) {
       this.tags.splice(this.tags.indexOf(tag), 1)
@@ -187,6 +308,23 @@ export default {
         }
       }
     },
+    destinationSearchChange(data) {
+      if (data) {
+        this.destinationDataList = [data]
+      } else {
+        switch (this.panel) {
+          case 'country':
+            this.destinationDataList = this.country
+            break
+          case 'city':
+            this.destinationDataList = this.city
+            break
+          case 'network':
+            this.destinationDataList = this.network
+            break
+        }
+      }
+    },
     changePanel(val) {
       this.word = ''
       console.log(val)
@@ -199,6 +337,21 @@ export default {
           break
         case 'network':
           this.dataList = this.network
+          break
+      }
+    },
+    destinationChangePanel(val) {
+      this.word = ''
+      console.log(val)
+      switch (val) {
+        case 'country':
+          this.destinationDataList = this.country
+          break
+        case 'city':
+          this.destinationDataList = this.city
+          break
+        case 'network':
+          this.destinationDataList = this.network
           break
       }
     },
