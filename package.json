@@ -17,6 +17,7 @@
     "axios": ">=0.21.1",
     "datejs": "^1.0.0-rc3",
     "file-loader": "^4.2.0",
+    "husky": "^7.0.4",
     "ify-loader": "^1.1.0",
     "imap": "^0.8.19",
     "jquery": "^3.4.1",
@@ -28,8 +29,7 @@
     "register-service-worker": "^1.7.2",
     "swagger-ui": "^3.25.0",
     "timeline-vuejs": "^1.1.1",
-    "husky": "^7.0.4",
-    "vue": "^2.6.11",
+    "vue": "2.6.11",
     "vue-animejs": "^2.1.1",
     "vue-fragment": "^1.5.1",
     "vue-i18n": "^8.0.0",
@@ -37,7 +37,8 @@
     "vue-resize-text": "^0.1.1",
     "vue-router": "^3.1.6",
     "vue-scrollto": "^2.17.1",
-    "vue-tweet-embed": "^2.4.0"
+    "vue-tweet-embed": "^2.4.0",
+    "vuetify": "^2.6.12"
   },
   "devDependencies": {
     "@kazupon/vue-i18n-loader": "^0.5.0",
@@ -68,7 +69,7 @@
     "vue-cli-plugin-i18n": "^0.6.1",
     "vue-cli-plugin-quasar": "^1.0.0",
     "vue-plugin-load-script": "^2.0.0",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "2.6.11"
   },
   "jest": {
     "moduleNameMapper": {

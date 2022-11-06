@@ -129,6 +129,7 @@ menu-delinkify(val)
   if val
     font-weight 700
 
+
 .IHR_
   &minimum-width
     min-width 800px !important
