@@ -6,7 +6,7 @@ When contributing to this repository, please first discuss the change you wish t
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [IHR Code of Conduct](), please follow it in all your interaction with the project. By participating, you are expected to uphold this code. Please report unacceptable behavior to ihr-admin@iij-ii.co.jp
+This project and everyone participating in it is governed by the [IHR Code of Conduct](), please follow it in all your interaction with the project. By participating, you are expected to uphold this code. Please report unacceptable behavior to admin@ihr.live
 
 ## Pull Request Process
 

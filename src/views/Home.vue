@@ -121,7 +121,7 @@ const GRAPHS_TYPES = [
 ]
 
 const PLACEHOLDER_VALUES = {
-  asPaper: "<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
+  asPaper: "<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
   close: '</a>',
   /*
   ripe: "<a href='https://atlas.ripe.net/' target='_blank'>RIPE Atlas</a>",

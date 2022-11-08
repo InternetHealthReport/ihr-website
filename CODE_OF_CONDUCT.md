@@ -59,7 +59,7 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at ihr-admin@iij-ii.co.jp
+reported to the community leaders responsible for enforcement at admin@ihr.live
 .
 All complaints will be reviewed and investigated promptly and fairly.
 

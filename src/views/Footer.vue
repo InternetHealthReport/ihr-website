@@ -88,8 +88,8 @@
           <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
             >Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a
           >. Permissions beyond the scope of this license may be available at
-          <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:ihr-admin@iij-ii.co.jp" rel="cc:morePermissions"
-            >ihr-admin@iij-ii.co.jp</a
+          <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:admin@ihr.live" rel="cc:morePermissions"
+            >admin@ihr.live</a
           >.
         </div>
       </div>
