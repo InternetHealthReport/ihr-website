@@ -257,7 +257,14 @@ export default {
         case LOADING_STATUS.EXPIRED:
           return this.$t('Networks.headerString.expired')
         case LOADING_STATUS.LOADED:
-          return isoCountries[this.countryCode]
+          if(this.countryCode in isoCountries){
+            return isoCountries[this.countryCode]
+          }
+          else{
+            this.countryCode = null; 
+            return this.$t('Networks.headerString.notFound')
+          }
+
         default:
         case LOADING_STATUS.ERROR:
           return this.$t('genericErrors.ups')

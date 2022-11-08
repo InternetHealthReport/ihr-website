@@ -123,7 +123,7 @@
             </q-card-section>
           </q-card>
         </q-expansion-item>
-        <q-expansion-item
+        <!-- <q-expansion-item
           :label="$t('IODA')"
           caption="© Georgia Tech Research Corporation, 2022"
           header-class="IHR_charts-title"
@@ -137,20 +137,28 @@
             </q-card-section>
           </q-card>
         </q-expansion-item>
-        <q-expansion-item
-          :label="$t('charts.speedtest.title')"
-          caption="Measurement Lab (NDT)"
-          header-class="IHR_charts-title"
-          icon="fas fa-tachometer-alt"
-          v-model="show.measurementLab"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <measurement-lab :start-time="startTime" :end-time="endTime" :ASN="asNumber" :fetch="fetch" ref="measurementLabChart" />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+        -->
+        <!-- <q-expansion-item
+                    :label="$t('charts.speedtest.title')"
+                    caption="Measurement Lab (NDT)"
+                    header-class="IHR_charts-title"
+                    icon="fas fa-tachometer-alt"
+                    v-model="show.measurementLab"
+                >
+                    <q-separator />
+                    <q-card class="IHR_charts-body">
+                        <q-card-section>
+                            <measurement-lab 
+                              :start-time="startTime"
+                              :end-time="endTime"
+                              :ASN="asNumber"
+                              :fetch="fetch"
+                              ref="measurementLabChart"
+                            />
+                        </q-card-section>
+                    </q-card>
+                </q-expansion-item>
+            -->
         <div class="IHR_last-element">&nbsp;</div>
       </q-list>
     </div>
