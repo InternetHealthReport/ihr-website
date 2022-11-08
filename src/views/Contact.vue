@@ -12,7 +12,7 @@
         <h1>Others</h1>
         <p>
           For questions and inquiries, please contact us at:
-          <a href="mailto:ihr-admin@iij-ii.co.jp">ihr-admin@iij-ii.co.jp</a>
+          <a href="mailto:admin@ihr.live">admin@ihr.live</a>
         </p>
       </div>
     </div>
