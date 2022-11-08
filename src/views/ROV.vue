@@ -8,6 +8,7 @@
       </h3>
     </div>
     <prefix-hegemony-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" ref="asInterdependenciesChart" />
+    <button @click="generateReport()" class="np-btn">Generate Report</button>
   </div>
 </template>
 
@@ -18,6 +19,7 @@ import { DEFAULT_DISCO_AVG_LEVEL } from '@/views/charts/global/DiscoChart'
 import { AS_FAMILY } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import { isoCountries } from '@/plugins/countryName'
+import html2pdf from 'html2pdf.js'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -83,6 +85,18 @@ export default {
         tmp.push('AS4' + elem)
       })
       this.majorEyeballs = tmp
+    },
+    generateReport() {
+      let element = document.getElementById('IHR_as-and-ixp-container')
+      let opt = {
+        margin: 0,
+        filename: 'ROV.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
+      }
+      html2pdf(element, opt)
+      console.log('button is clicked')
     },
   },
   mounted() {},

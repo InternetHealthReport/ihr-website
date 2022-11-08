@@ -29,6 +29,7 @@
       </div>
       <div class="row justify-center">
         <div class="col-3">
+          <button @click="generateReport()" class="np-btn">Generate Report</button>
           <q-select v-model="selected" :options="selection" label="Select a country" />
         </div>
       </div>
@@ -121,6 +122,7 @@
 import reportMixin from '@/views/mixin/reportMixin'
 import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import lockdowns from '@/plugins/covid19/lockdowns'
+import html2pdf from 'html2pdf.js'
 
 export default {
   name: 'CoronaReport',
@@ -159,6 +161,18 @@ export default {
     pushRoute() {}, //required for mixin
     updateYaxis(newMaxY) {
       this.yMax = this.yMax > newMaxY ? this.yMax : newMaxY
+    },
+    generateReport() {
+      let element = document.getElementById('IHR_as-and-ixp-container')
+      let opt = {
+        margin: 0,
+        filename: 'Corona.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
+      }
+      html2pdf(element, opt)
+      console.log('button is clicked')
     },
   },
   mounted() {},

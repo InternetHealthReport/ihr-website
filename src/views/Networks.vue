@@ -8,6 +8,7 @@
           <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
         </h3>
       </div>
+      <button @click="generateReport()" class="np-btn">Generate Report</button>
       <q-list v-if="showGraphs">
         <q-expansion-item
           :label="$t('charts.asInterdependencies.title')"
@@ -230,6 +231,7 @@ import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 import MeasurementLab from '@/views/charts/MeasurementLab.vue'
 import IodaChart from './charts/IodaChart.vue'
+import html2pdf from 'html2pdf.js'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -317,6 +319,18 @@ export default {
       this.$nextTick(function () {
         this.show.net_delay_disable = !displayValue
       })
+    },
+    generateReport() {
+      let element = document.getElementById('IHR_as-and-ixp-container')
+      let opt = {
+        margin: 0,
+        filename: 'Networks.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
+      }
+      html2pdf(element, opt)
+      console.log('button is clicked')
     },
   },
   mounted() {
