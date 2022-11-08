@@ -87,11 +87,11 @@
     <!-- Selected Destination Search Bar start -->
     <div id="IHR_contact-page">
       <div class="Subscribe">
-        <p v-if="destinationNetworks.length == 0" class="IHR_description">Select Destination Networks</p>
+        <p v-if="tagsEnd.length == 0" class="IHR_description">Select Destination Networks</p>
         <div v-else class="tag">
           <p class="IHR_description">Selected Destination:</p>
           <el-tag
-            v-for="(item, index) in destinationNetworks"
+            v-for="(item, index) in tagsEnd"
             :key="index"
             type="warning"
             style="margin: 5px 8px"
@@ -178,20 +178,40 @@
       <q-date v-model="dateRange" range />
     </div>
     <h6 align="center">{{ dateRange }}</h6>
-
-    <network-delay-chart
-      :start-time="before_start"
-      :end-time="before_end"
-      :startPointName="asn.as.toString()"
+    <div class="col-2">
+      <button @click="addPlot()">Add Plot</button>
+    </div>
+    <!--<network-delay-chart
+      :start-time="getFrom(dateRange)"
+      :end-time="getTo(dateRange)"
+      :startPointName="'2914'"
       startPointType="AS"
-      :endPointNames="endpoints[asn.as]"
-      ref="networkDelayChart_before"
+      :endPointNames="['AS174', 'AS15169']"
+      ref="networkDelayChart"
       :fetch="fetch"
       :clear="clear"
       @max-value="updateYaxis"
       :yMax="yMax"
-      :searchBar="searchBar"
-    />
+      v-if="dateRange"
+    />-->
+    <div class="col-12">
+      <div class="q-pa-md">
+        <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
+          <q-card class="IHR_charts-body">
+            <q-card-section v-if="sourceNetworks[i]">
+              <h5 align="center">{{ sourceNetworks[i].channel }}</h5>
+              <div v-for="(destinationNetwork, j) in destinationNetworks.length" :key="destinationNetwork">
+                <h6 align="center">{{ destinationNetworks[j].channel }}</h6>
+              </div>
+              <h1 @click="deletePlot(i)">x</h1>
+              <h3>{{ getFrom(dateRange) }}</h3>
+              <h3>{{ getTo(dateRange) }}</h3>
+              <h2>{{ getASN(sourceNetworks[i].channel) }}</h2>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -211,12 +231,18 @@ export default {
     return {
       dateRange: dateRange,
       tags: [],
+      tagsEnd: [],
+      sourceNetworks: [],
       destinationNetworks: [],
       panel: 'network',
       destinationPanel: 'network',
       word: '',
       emailSent: false,
       dataList: [],
+      fetch: false,
+      clear: 1,
+      yMax: 0,
+      searchBar: false,
       destinationDataList: [],
       country: [
         'Japan',
@@ -269,6 +295,9 @@ export default {
     this.destinationDataList = this.network
   },
   methods: {
+    updateYaxis(newMaxY) {
+      this.yMax = this.yMax > newMaxY ? this.yMax : newMaxY
+    },
     getFrom(dateRange) {
       let from = new Date(dateRange.from)
       return from
@@ -299,7 +328,7 @@ export default {
         res => {
           console.log(res)
           if (res.hasOwnProperty('data')) {
-            this.destinationNetworks = res.data.channel
+            this.tagsEnd = res.data.channel
           }
         },
         error => {
@@ -316,13 +345,13 @@ export default {
     },
     selectDestination(label) {
       let flag = true
-      flag = this.destinationNetworks.find(item => item.channel === label)
+      flag = this.tagsEnd.find(item => item.channel === label)
       if (!flag) {
-        this.destinationNetworks.push({ channel: label, frequency: 'normal' })
+        this.tagsEnd.push({ channel: label, frequency: 'normal' })
       }
     },
     destinationHandleClose(tag) {
-      this.destinationNetworks.splice(this.destinationNetworks.indexOf(tag), 1)
+      this.tagsEnd.splice(this.tagsEnd.indexOf(tag), 1)
     },
     handleClose(tag) {
       this.tags.splice(this.tags.indexOf(tag), 1)
@@ -390,6 +419,14 @@ export default {
           this.destinationDataList = this.network
           break
       }
+    },
+    addPlot() {
+      this.sourceNetworks = this.tags
+      this.destinationNetworks = this.tagsEnd
+      console.log(this.sourceNetworks, this.destinationNetworks)
+    },
+    deletePlot(index) {
+      this.sourceNetworks.splice(index, 1)
     },
   },
 }
