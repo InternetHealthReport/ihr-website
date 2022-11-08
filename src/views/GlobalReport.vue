@@ -1,5 +1,5 @@
 <template>
-    <div class="IHR_char-container">
+    <div id="IHR_as-and-ixp-container" class="IHR_char-container">
         <div class="q-mb-xs">
             <div class="text-center">
                 <div class="text-h1">{{ title }}</div>
@@ -14,6 +14,7 @@
                         class="IHR_subtitle_calendar"
                     />
                 </div>
+                <button @click="generateReport()" class="np-btn">Generate Report</button>
             </div>
         </div>
         <q-card class="q-mb-xl" flat>
@@ -241,6 +242,7 @@ import DelayChart, {
   DEFAULT_MAX_DIFFMEDIAN,
 } from './charts/global/DelayChart'
 import DateTimePicker from '@/components/DateTimePicker'
+import html2pdf from 'html2pdf.js'
 
 const CHART_REFS = ['ihrChartNetworkDelay', 'ihrChartDelay', 'ihrChartMap', 'ihrChartDisco']
 
@@ -385,6 +387,18 @@ export default {
           this.nbAlarms[graphType] = rows.length
         })
       }
+    },
+    generateReport(){
+      let element = document.getElementById('IHR_as-and-ixp-container');
+      let opt = {
+        margin:      0,
+        filename:    'GlobalReport.pdf',
+        image:       { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF:       { unit: 'in', format: 'a3', orientation: 'l' }
+      };
+      html2pdf(element,opt)
+      console.log('button is clicked')
     },
   },
   computed: {
