@@ -506,7 +506,7 @@ const IhrApi = {
           }
           let routePieces = asnString.match(/[0-9]+$/)
           let asNumber = Number(routePieces[0])
-          return asnString.startsWith('IXP') ? -asNumber : asNumber
+          return asnString.startsWith('IX') ? -asNumber : asNumber
         },
         sortedKeys(val) {
           return Object.keys(val).sort(function (a, b) {
