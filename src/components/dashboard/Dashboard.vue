@@ -26,6 +26,13 @@
       </div>
     </div>
     <!-- MLab plot end -->
+    <!-- AS Interdependency plot start -->
+    <div v-if="selectedPlot == 'AS Interdependency'">
+      <div class="row justify-center">
+        <dependency-parameters />
+      </div>
+    </div>
+    <!-- AS Interdependency plot end -->
   </div>
 </template>
 
@@ -33,11 +40,12 @@
 import DelayParameters from './DelayParameters.vue'
 import IodaParamters from './IodaParamters.vue'
 import MlabParameters from './MlabParameters.vue'
+import DependencyParameters from './DependencyParameters.vue'
 export default {
-  components: { DelayParameters, MlabParameters, IodaParamters },
+  components: { DelayParameters, MlabParameters, IodaParamters, DependencyParameters },
   name: 'ExploratoryDashboard',
   data() {
-    var plots = ['Network Delay', 'IODA Rechability of /24s (%)', 'NDT Speed Test']
+    var plots = ['Network Delay', 'IODA Rechability of /24s (%)', 'NDT Speed Test', 'AS Interdependency']
     return {
       plots: plots,
       selectedPlot: null,
