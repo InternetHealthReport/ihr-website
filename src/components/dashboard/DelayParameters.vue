@@ -181,19 +181,19 @@
     <div class="col-2">
       <button @click="addPlot()">Add Plot</button>
     </div>
-    <!--<network-delay-chart
+    <network-delay-chart
       :start-time="getFrom(dateRange)"
       :end-time="getTo(dateRange)"
       :startPointName="'2914'"
       startPointType="AS"
-      :endPointNames="['AS174', 'AS15169']"
+      :endPointNames="['AS4174', 'AS415169']"
       ref="networkDelayChart"
       :fetch="fetch"
       :clear="clear"
       @max-value="updateYaxis"
       :yMax="yMax"
       v-if="dateRange"
-    />-->
+    />
     <div class="col-12">
       <div class="q-pa-md">
         <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
@@ -239,7 +239,7 @@ export default {
       word: '',
       emailSent: false,
       dataList: [],
-      fetch: false,
+      fetch: true,
       clear: 1,
       yMax: 0,
       searchBar: false,
@@ -289,8 +289,6 @@ export default {
     }
   },
   mounted() {
-    this.oldChannel()
-    this.destinationChannel()
     this.dataList = this.country
     this.destinationDataList = this.network
   },
@@ -309,32 +307,6 @@ export default {
     getASN(tagNumber) {
       let ASN = tagNumber.substring(2, tagNumber.indexOf(''))
       return ASN
-    },
-    oldChannel() {
-      this.$ihr_api.getChannel(
-        res => {
-          console.log(res)
-          if (res.hasOwnProperty('data')) {
-            this.tags = res.data.channel
-          }
-        },
-        error => {
-          console.log(error)
-        }
-      )
-    },
-    destinationChannel() {
-      this.$ihr_api.getChannel(
-        res => {
-          console.log(res)
-          if (res.hasOwnProperty('data')) {
-            this.tagsEnd = res.data.channel
-          }
-        },
-        error => {
-          console.log(error)
-        }
-      )
     },
     select(label) {
       let flag = true
