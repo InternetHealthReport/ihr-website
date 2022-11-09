@@ -216,15 +216,11 @@
 </template>
 
 <script>
-import NetworkDelayChart from '../../views/charts/NetworkDelayChart.vue'
 import searchBar from './middleware/searchBar.vue'
-import DateRangePicker from './middleware/dateRangePicker.vue'
 export default {
   name: 'DelayCharts',
   components: {
     searchBar,
-    NetworkDelayChart,
-    DateRangePicker,
   },
   data() {
     let dateRange
