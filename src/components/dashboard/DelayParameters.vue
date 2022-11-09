@@ -216,10 +216,12 @@
 </template>
 
 <script>
+import NetworkDelayChart from '../../views/charts/NetworkDelayChart.vue'
 import searchBar from './middleware/searchBar.vue'
 export default {
   name: 'DelayCharts',
   components: {
+    NetworkDelayChart,
     searchBar,
   },
   data() {
