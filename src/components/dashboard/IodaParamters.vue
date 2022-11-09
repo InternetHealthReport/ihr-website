@@ -111,14 +111,10 @@
 </template>
 
 <script>
-import NetworkSearchBar from './middleware/networkSearchBar.vue'
-import DateRangePicker from './middleware/dateRangePicker.vue'
 import IodaChart from '../../views/charts/IodaChart.vue'
 import searchBar from './middleware/searchBar.vue'
 export default {
   components: {
-    NetworkSearchBar,
-    DateRangePicker,
     IodaChart,
     searchBar,
   },

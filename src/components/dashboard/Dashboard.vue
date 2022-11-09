@@ -35,7 +35,7 @@ import IodaParamters from './IodaParamters.vue'
 import MlabParameters from './MlabParameters.vue'
 export default {
   components: { DelayParameters, MlabParameters, IodaParamters },
-  name: 'Exploratory Dashboard',
+  name: 'ExploratoryDashboard',
   data() {
     var plots = ['Network Delay', 'IODA Rechability of /24s (%)', 'NDT Speed Test']
     return {
