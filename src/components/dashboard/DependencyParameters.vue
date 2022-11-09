@@ -47,24 +47,56 @@
           </div>
         </div>
         <!-- Search Bar End -->
+
+        <!-- Date Range Picker Start -->
         <div class="col-5">
           <q-date v-model="dateRange" range />
           <p>{{ dateRange }}</p>
         </div>
+        <!-- Date Range Picker End -->
+
+        <div class="col-2">
+          <button @click="addPlot()">Add plot</button>
+        </div>
       </div>
     </div>
+    <!-- AS Interdependency Chart Start -->
+    <div class="col-12">
+      <div v-for="index in dependencyChartArray.length" :key="index">
+        <q-card class="IHR_charts-body">
+          <q-card-section v-if="dependencyChartArray[index]">
+            <h1>{{ tags[index - 1].channel }}</h1>
+            <h1 @click="deletePlot(index)">X</h1>
+
+            <as-interdependencies-chart
+              :start-time="getFrom(dependencyChartArray[index])"
+              :end-time="getTo(dependencyChartArray[index])"
+              :as-number="getASN(tags[index - 1].channel)"
+              :address-family="family"
+              :fetch="true"
+              ref="asInterdependenciesChart"
+            />
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+    <!-- AS Interdependency Chart End -->
   </div>
 </template>
 
 <script>
+import AsInterdependenciesChart from '../../views/charts/AsInterdependenciesChart.vue'
 import searchBar from './middleware/searchBar.vue'
 export default {
   components: {
     searchBar,
+    AsInterdependenciesChart,
   },
   data() {
     let dateRange
+    let dependencyChartArray = []
     return {
+      dependencyChartArray: dependencyChartArray,
       dateRange: dateRange,
       tags: [],
       asNumberArray: [],
@@ -105,10 +137,10 @@ export default {
       return ASN
     },
     addPlot() {
-      this.iodaChartArray.push(this.dateRange)
+      this.dependencyChartArray.push(this.dateRange)
     },
     deletePlot(index) {
-      this.iodaChartArray.splice(index)
+      this.dependencyChartArray.splice(index)
     },
     oldChannel() {
       this.$ihr_api.getChannel(
