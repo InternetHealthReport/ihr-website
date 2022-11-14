@@ -99,12 +99,12 @@
       </div>
       <div class="col-12">
         <div class="q-pa-md">
-          <div v-for="index in mlabChartArray.length" :key="index">
+          <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
             <q-card class="IHR_charts-body">
-              <q-card-section v-if="mlabChartArray[index]">
-                <h6 align="center">{{ tags[index - 1].channel }}</h6>
-                <h1 @click="deletePlot(index)">x</h1>
-                <measurement-lab :ASN="getASN(tags[index - 1].channel)" :year="YearPicker" />
+              <q-card-section v-if="sourceNetworks[i]">
+                <h6 align="center">{{ sourceNetworks[i].channel }}</h6>
+                <h1 @click="deletePlot(i)">x</h1>
+                <measurement-lab :ASN="getASN(sourceNetworks[i].channel)" :year="YearPicker" />
               </q-card-section>
             </q-card>
           </div>
@@ -133,6 +133,7 @@ export default {
       YearPicker: YearPicker,
       mlabChartArray: mlabChartArray,
       tags: [],
+      sourceNetworks: [],
       panel: 'network',
       word: '',
       dataList: [],
@@ -161,11 +162,10 @@ export default {
       this.YearPicker = value
     },
     addPlot() {
-      this.mlabChartArray.push(this.YearPicker)
-      console.log(this.mlabChartArray)
+      this.sourceNetworks = this.tags
     },
     deletePlot(index) {
-      this.mlabChartArray.splice(index)
+      this.sourceNetworks.splice(index, 1)
     },
     getASN(tagNumber) {
       let ASN = tagNumber.substring(2, tagNumber.indexOf(' '))
