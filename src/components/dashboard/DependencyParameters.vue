@@ -1,13 +1,14 @@
 <template>
   <div class="row justify-center">
-    <h1>IODA plots will appear here</h1>
+    <h1>AS Interdependency Matrix</h1>
     <div class="col-12">
       <div class="row justify-center">
         <!-- Search Bar Start -->
         <div class="searchbar_div">
           <div class="Subscribe">
-            <p v-if="tags.length == 0" class="IHR_description">Selected Networks</p>
+            <p v-if="tags.length == 0" class="IHR_description">Select Networks</p>
             <div v-else class="tag">
+              <p class="IHR_description">Selected Networks:</p>
               <el-tag v-for="(item, index) in tags" :key="index" type="warning" style="margin: 5px 8px" @close="handleClose(item)" closable>
                 {{ item.channel.split(',')[0] }}
               </el-tag>
@@ -25,41 +26,6 @@
             />
             <search-bar class="col-3 q-px-sm" :type="panel" @searchRes="searchChange" style="margin: 20px 0" />
             <q-tab-panels v-model="panel" animated style="border-top: 1px solid #ccc">
-              <q-tab-panel name="country">
-                <div class="btn_list">
-                  <q-btn
-                    outline
-                    v-for="(item, index) in dataList"
-                    :key="index"
-                    color="white"
-                    style="width: 150px !important"
-                    text-color="black"
-                    :label="item.split(',')[0]"
-                    @click="select(item)"
-                    no-caps
-                  >
-                    <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
-                  </q-btn>
-                </div>
-              </q-tab-panel>
-              <q-tab-panel name="city">
-                <div class="btn_list">
-                  <q-btn
-                    outline
-                    v-for="(item, index) in dataList"
-                    :key="index"
-                    color="white"
-                    style="width: 150px !important"
-                    text-color="black"
-                    :label="item.split(',')[0]"
-                    @click="select(item)"
-                    no-caps
-                  >
-                    <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
-                  </q-btn>
-                </div>
-              </q-tab-panel>
-
               <q-tab-panel keep-alive name="network">
                 <div class="btn_list">
                   <q-btn
@@ -80,85 +46,63 @@
             </q-tab-panels>
           </div>
         </div>
-      </div>
-      <!-- Search Bar End -->
-      <div class="col-5">
-        <q-date v-model="dateRange" range />
-      </div>
-      <div class="col-2">
-        <button @click="addPlot()">Add plot</button>
+        <!-- Search Bar End -->
+
+        <!-- Date Range Picker Start -->
+        <div class="col-5">
+          <q-date v-model="dateRange" range />
+          <p>{{ dateRange }}</p>
+        </div>
+        <!-- Date Range Picker End -->
+
+        <div class="col-2">
+          <button @click="addPlot()">Add plot</button>
+        </div>
       </div>
     </div>
+    <!-- AS Interdependency Chart Start -->
     <div class="col-12">
-      <div v-for="index in iodaChartArray.length" :key="index">
+      <div v-for="index in dependencyChartArray.length" :key="index">
         <q-card class="IHR_charts-body">
-          <q-card-section v-if="iodaChartArray[index]">
+          <q-card-section v-if="dependencyChartArray[index]">
             <h1>{{ tags[index - 1].channel }}</h1>
             <h1 @click="deletePlot(index)">X</h1>
 
-            <ioda-chart
-              :ASN="getASN(tags[index - 1].channel)"
+            <as-interdependencies-chart
+              :start-time="getFrom(dependencyChartArray[index])"
+              :end-time="getTo(dependencyChartArray[index])"
+              :as-number="getASN(tags[index - 1].channel)"
+              :address-family="family"
               :fetch="true"
-              :start-time="getFrom(iodaChartArray[index])"
-              :end-time="getTo(iodaChartArray[index])"
-              ref="iodaChart"
+              ref="asInterdependenciesChart"
             />
           </q-card-section>
         </q-card>
       </div>
     </div>
+    <!-- AS Interdependency Chart End -->
   </div>
 </template>
 
 <script>
-import IodaChart from '../../views/charts/IodaChart.vue'
+import AsInterdependenciesChart from '../../views/charts/AsInterdependenciesChart.vue'
 import searchBar from './middleware/searchBar.vue'
 export default {
   components: {
-    IodaChart,
     searchBar,
+    AsInterdependenciesChart,
   },
   data() {
     let dateRange
-    let asNumber = '2497'
-    let iodaChartArray = []
+    let dependencyChartArray = []
     return {
+      dependencyChartArray: dependencyChartArray,
       dateRange: dateRange,
-      asNumber: asNumber,
-      iodaChartArray: iodaChartArray,
       tags: [],
       asNumberArray: [],
       panel: 'network',
       word: '',
       dataList: [],
-      country: [
-        'Japan',
-        'France',
-        'United States',
-        'Brazil',
-        'Germany',
-        'China',
-        'Singapore',
-        'Canada',
-        'Netherlands',
-        'United Kingdom',
-        'Russia',
-        'Australia',
-      ],
-      city: [
-        'Amsterdam, North Holland NL',
-        'Ashburn, Virginia US',
-        'London, England GB',
-        'Singapore, Central Singapore SG',
-        'Hong Kong, Central and Western HK',
-        'Frankfurt am Main, Hesse DE',
-        'Paris, Île - de - France FR',
-        'Los Angeles, California US',
-        'Tokyo, Tokyo JP',
-        'Sydney, New South Wales AU',
-        'New York City, New York US',
-        'Toronto, Ontario CA',
-      ],
       network: [
         'AS3356 - Lumen',
         'AS2914 - NTT',
@@ -193,10 +137,10 @@ export default {
       return ASN
     },
     addPlot() {
-      this.iodaChartArray.push(this.dateRange)
+      this.dependencyChartArray.push(this.dateRange)
     },
     deletePlot(index) {
-      this.iodaChartArray.splice(index)
+      this.dependencyChartArray.splice(index)
     },
     oldChannel() {
       this.$ihr_api.getChannel(

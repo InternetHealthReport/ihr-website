@@ -19,11 +19,7 @@
           @click="changePanel(panel)"
           toggle-color="blue"
           no-caps
-          :options="[
-            { label: 'counties', value: 'country' },
-            { label: 'cities', value: 'city' },
-            { label: 'networks', value: 'network' },
-          ]"
+          :options="[{ label: 'networks', value: 'network' }]"
         />
         <search-bar class="col-3 q-px-sm" :type="panel" @searchRes="searchChange" style="margin: 20px 0" />
         <q-tab-panels v-model="panel" animated style="border-top: 1px solid #ccc">
@@ -109,11 +105,7 @@
           @click="destinationChangePanel(destinationPanel)"
           toggle-color="blue"
           no-caps
-          :options="[
-            { label: 'counties', value: 'country' },
-            { label: 'cities', value: 'city' },
-            { label: 'networks', value: 'network' },
-          ]"
+          :options="[{ label: 'networks', value: 'network' }]"
         />
         <search-bar class="col-3 q-px-sm" :type="destinationPanel" @searchRes="destinationSearchChange" style="margin: 20px 0" />
         <q-tab-panels v-model="destinationPanel" animated style="border-top: 1px solid #ccc">
@@ -177,36 +169,28 @@
     <div class="col-5" align="center">
       <q-date v-model="dateRange" range />
     </div>
-    <h6 align="center">{{ dateRange }}</h6>
     <div class="col-2">
       <button @click="addPlot()">Add Plot</button>
     </div>
-    <!--<network-delay-chart
-      :start-time="getFrom(dateRange)"
-      :end-time="getTo(dateRange)"
-      :startPointName="'2914'"
-      startPointType="AS"
-      :endPointNames="['AS174', 'AS15169']"
-      ref="networkDelayChart"
-      :fetch="fetch"
-      :clear="clear"
-      @max-value="updateYaxis"
-      :yMax="yMax"
-      v-if="dateRange"
-    />-->
     <div class="col-12">
       <div class="q-pa-md">
         <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
           <q-card class="IHR_charts-body">
             <q-card-section v-if="sourceNetworks[i]">
-              <h5 align="center">{{ sourceNetworks[i].channel }}</h5>
-              <div v-for="(destinationNetwork, j) in destinationNetworks.length" :key="destinationNetwork">
-                <h6 align="center">{{ destinationNetworks[j].channel }}</h6>
-              </div>
               <h1 @click="deletePlot(i)">x</h1>
-              <h3>{{ getFrom(dateRange) }}</h3>
-              <h3>{{ getTo(dateRange) }}</h3>
-              <h2>{{ getASN(sourceNetworks[i].channel) }}</h2>
+              <network-delay-chart
+                :start-time="getFrom(dateRange)"
+                :end-time="getTo(dateRange)"
+                :startPointName="getASN(sourceNetworks[i].channel)"
+                startPointType="AS"
+                :endPointNames="destinationNetworksASN"
+                ref="networkDelayChart"
+                :fetch="fetch"
+                :clear="clear"
+                @max-value="updateYaxis"
+                :yMax="yMax"
+                v-if="dateRange"
+              />
             </q-card-section>
           </q-card>
         </div>
@@ -218,13 +202,11 @@
 <script>
 import NetworkDelayChart from '../../views/charts/NetworkDelayChart.vue'
 import searchBar from './middleware/searchBar.vue'
-import DateRangePicker from './middleware/dateRangePicker.vue'
 export default {
   name: 'DelayCharts',
   components: {
-    searchBar,
     NetworkDelayChart,
-    DateRangePicker,
+    searchBar,
   },
   data() {
     let dateRange
@@ -234,12 +216,13 @@ export default {
       tagsEnd: [],
       sourceNetworks: [],
       destinationNetworks: [],
+      destinationNetworksASN: [],
       panel: 'network',
       destinationPanel: 'network',
       word: '',
       emailSent: false,
       dataList: [],
-      fetch: false,
+      fetch: true,
       clear: 1,
       yMax: 0,
       searchBar: false,
@@ -289,9 +272,7 @@ export default {
     }
   },
   mounted() {
-    this.oldChannel()
-    this.destinationChannel()
-    this.dataList = this.country
+    this.dataList = this.network
     this.destinationDataList = this.network
   },
   methods: {
@@ -307,34 +288,8 @@ export default {
       return to
     },
     getASN(tagNumber) {
-      let ASN = tagNumber.substring(2, tagNumber.indexOf(''))
+      let ASN = tagNumber.substring(2, tagNumber.indexOf(' '))
       return ASN
-    },
-    oldChannel() {
-      this.$ihr_api.getChannel(
-        res => {
-          console.log(res)
-          if (res.hasOwnProperty('data')) {
-            this.tags = res.data.channel
-          }
-        },
-        error => {
-          console.log(error)
-        }
-      )
-    },
-    destinationChannel() {
-      this.$ihr_api.getChannel(
-        res => {
-          console.log(res)
-          if (res.hasOwnProperty('data')) {
-            this.tagsEnd = res.data.channel
-          }
-        },
-        error => {
-          console.log(error)
-        }
-      )
     },
     select(label) {
       let flag = true
@@ -423,7 +378,11 @@ export default {
     addPlot() {
       this.sourceNetworks = this.tags
       this.destinationNetworks = this.tagsEnd
-      console.log(this.sourceNetworks, this.destinationNetworks)
+      this.destinationNetworksASN=[]
+      for (let i = 0; i < this.destinationNetworks.length; i++) {
+        let ASN = this.destinationNetworks[i].channel.substring(2, this.destinationNetworks[i].channel.indexOf(' '))
+        this.destinationNetworksASN[i]="AS4"+ASN
+      }
     },
     deletePlot(index) {
       this.sourceNetworks.splice(index, 1)

@@ -26,6 +26,13 @@
       </div>
     </div>
     <!-- MLab plot end -->
+    <!-- AS Interdependency plot start -->
+    <div v-if="selectedPlot == 'AS Interdependency'">
+      <div class="row justify-center">
+        <dependency-parameters />
+      </div>
+    </div>
+    <!-- AS Interdependency plot end -->
     <!-- Cloudflare plot start -->
     <div v-if="selectedPlot == 'Cloudflare Report'">
       <div class="row justify-center">
@@ -40,12 +47,13 @@
 import DelayParameters from './DelayParameters.vue'
 import IodaParamters from './IodaParamters.vue'
 import MlabParameters from './MlabParameters.vue'
+import DependencyParameters from './DependencyParameters.vue'
 import CloudflareParameters from './CloudflareParameters.vue'
 export default {
-  components: { DelayParameters, MlabParameters, IodaParamters, CloudflareParameters },
-  name: 'Exploratory Dashboard',
+  components: { DelayParameters, MlabParameters, IodaParamters, DependencyParameters, CloudflareParameters },
+  name: 'ExploratoryDashboard',
   data() {
-    var plots = ['Network Delay', 'IODA Rechability of /24s (%)', 'NDT Speed Test', 'Cloudflare Report']
+    var plots = ['Network Delay', 'IODA Rechability of /24s (%)', 'NDT Speed Test', 'AS Interdependency', 'Cloudflare Report']
     return {
       plots: plots,
       selectedPlot: null,
