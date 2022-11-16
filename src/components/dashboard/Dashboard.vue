@@ -26,6 +26,13 @@
       </div>
     </div>
     <!-- MLab plot end -->
+    <!-- Cloudflare plot start -->
+    <div v-if="selectedPlot == 'Cloudflare Report'">
+      <div class="row justify-center">
+        <cloudflare-parameters />
+      </div>
+    </div>
+    <!-- Cloudflare plot end -->
   </div>
 </template>
 
@@ -33,11 +40,12 @@
 import DelayParameters from './DelayParameters.vue'
 import IodaParamters from './IodaParamters.vue'
 import MlabParameters from './MlabParameters.vue'
+import CloudflareParameters from './CloudflareParameters.vue'
 export default {
-  components: { DelayParameters, MlabParameters, IodaParamters },
+  components: { DelayParameters, MlabParameters, IodaParamters, CloudflareParameters },
   name: 'Exploratory Dashboard',
   data() {
-    var plots = ['Network Delay', 'IODA Rechability of /24s (%)', 'NDT Speed Test']
+    var plots = ['Network Delay', 'IODA Rechability of /24s (%)', 'NDT Speed Test', 'Cloudflare Report']
     return {
       plots: plots,
       selectedPlot: null,
