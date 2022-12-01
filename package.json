@@ -24,7 +24,7 @@
     "jquery": "^3.4.1",
     "n-readlines": "^1.0.0",
     "object-hash": "^3.0.0",
-    "plotly.js-dist": "^1.52.3",
+    "plotly.js-dist": "^2.16.3",
     "postcss-plugins": "^1.13.1",
     "quasar": "^1.15.22",
     "register-service-worker": "^1.7.2",
