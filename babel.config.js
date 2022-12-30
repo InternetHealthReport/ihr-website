@@ -1,5 +1,5 @@
 let config = {
-  presets: ['@vue/app'],
+  presets: [['@vue/app', { useBuiltIns: 'entry' }]],
   plugins: [
     [
       'transform-imports',
