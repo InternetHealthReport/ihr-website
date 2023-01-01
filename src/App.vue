@@ -1,7 +1,7 @@
 <template>
-  <q-layout view="hHh LpR fff" id="app" class="IHR_minimum-width bg-white">
+  <q-layout view="hHh LpR fff" id="app" class="IHR bg-white">
     <router-view name="header" />
-    <q-page-container class="IHR_minimum-width">
+    <q-page-container>
       <router-view />
       <div id="IHR_last-element">&nbsp;</div>
     </q-page-container>
@@ -32,9 +32,6 @@ menu-delinkify(val)
     font-weight 700
 
 .IHR_
-  &minimum-width
-    min-width 800px !important
-
   &menu-entries
     a, button
       menu-delinkify 1
