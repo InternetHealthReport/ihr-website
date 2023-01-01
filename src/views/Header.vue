@@ -1,7 +1,7 @@
 <template>
-  <q-header elevated primary class="IHR_minimum-width">
+  <q-header elevated primary>
     <q-toolbar class="q-py-sm q-px-lg row">
-      <div class="col-12 row no-wrap items-center">
+      <div class="col-12 row no-wrap justify-between items-center">
         <q-item id="IHR_home-button">
           <router-link :to="{ name: 'home' }">
             <q-btn round dense flat :ripple="false" no-caps size="22px">
@@ -9,8 +9,8 @@
             </q-btn>
           </router-link>
         </q-item>
-        <network-search-bar class="col-3 q-px-sm" />
-        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap">
+        <network-search-bar class="col-4" />
+        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm">
           <q-btn-group flat :key="item.entryName" v-for="item in simple_menu">
             <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }" />
             <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
@@ -32,9 +32,37 @@
             </q-btn-dropdown>
           </q-btn-group>
         </div>
+        <div class="lt-md">
+          <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"></q-btn>
+        </div>
       </div>
       <!--Log in /Log out stuff here-->
     </q-toolbar>
+    <q-drawer v-model="leftDrawerOpen" bordered content-class="bg-primary">
+      <q-list>
+        <q-item-label header>Essential Links</q-item-label>
+        <q-item flat :key="item.entryName" v-for="item in simple_menu">
+          <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }" />
+          <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
+            <q-list class="rounded-borders text-white bg-primary" bordered separator padding>
+              <q-item
+                clickable
+                v-close-popup
+                :key="option.entryName"
+                v-for="option in item.options"
+                :to="{ name: option.routeName }"
+                active-class="text-grey"
+              >
+                <q-item-section>
+                  <q-item-label class="text-bold">{{ $t(option.entryName) }}</q-item-label>
+                  <q-item-label class="text-grey" caption lines="2">{{ $t(option.summary) }}</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </q-item>
+      </q-list>
+    </q-drawer>
   </q-header>
 </template>
 
@@ -114,6 +142,7 @@ export default {
       simple_menu: simple_menu,
       sidebarOpened: false,
       loginError: false,
+      leftDrawerOpen: false,
     }
   },
   mounted() {

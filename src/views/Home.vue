@@ -2,13 +2,12 @@
 <template>
   <div id="IHR_home">
     <div id="IHR_global-report" class="row">
-      <div class="col-6">
+      <div class="col">
         <div>Internet Health Report</div>
         <router-link id="IHR_global-report-button" :to="{ name: 'global_report' }">
           {{ $t('globalReport.name') }}
         </router-link>
       </div>
-      <div class="col-6"></div>
     </div>
 
     <div
@@ -30,7 +29,7 @@
     <div class="row wrap justify-center q-gutter-md IHR_description-main">
       <q-card class="analysis-modules" v-for="graphT in graphTypes" :key="graphT.name">
         <q-card-section class="bg-primary text-white q-pa-sm">
-          <div class="text-h2">
+          <div>
             <q-avatar :icon="graphT.icon"></q-avatar>
             {{ $t(`${graphT.name}.title`) }}
           </div>
@@ -74,13 +73,13 @@
     </div>
 
     <div class="IHR_section">
-      <h2>
+      <h2 class="text-h2">
         <q-icon name="fa fa-heart"></q-icon>
         {{ $t('ack.title') }}
       </h2>
 
       <div class="row wrap justify-around">
-        <div class="col-xs-3 col-xl-3 column" v-for="org in $t('ack.organizations')" :key="org.name">
+        <div class="col-xl" v-for="org in $t('ack.organizations')" :key="org.name">
           <div class="IHR_ack-logo">
             <span></span>
             <img :src="require(`@/assets/imgs/${org.logo}`)" :alt="org.name" />
@@ -155,17 +154,22 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+
 #IHR_
   &home
     ~/global-report
       margin-bottom 60pt
-      width 100%
+      max-width 100%
       height 450px
       background-color black
       background-image url('~@/assets/imgs/global-banner.png')
       background-repeat no-repeat
       background-position right top
       background-size contain
+      @media screen and (max-width: 600px)
+        padding-left 1rem
+        padding-right 1rem
+        max-height 350px
 
       &-button
         margin-top 40px
@@ -173,10 +177,16 @@ export default {
         text-align center
         font-weight 500
         transition all 0.6s
-        width 300pt
+        max-width 300pt
         display block
         color white
+        font-size 2rem
         text-decoration none
+        @media screen and (max-width: 600px)
+          font-size 1.5rem
+          margin-left auto
+          margin-right auto
+          max-width 200pt
 
         &:hover
           background-color white
@@ -194,7 +204,11 @@ export default {
           padding-left 60pt
           display inline-block
           text-shadow 0 0 8px #000000;
-
+          @media screen and (max-width: 600px)
+            padding-top 100pt
+            padding-left 0
+            text-align center
+            font-size 2rem
 
     ~/graphs-types
       width 100%
@@ -207,6 +221,9 @@ export default {
         > h2
           font-weight 400
           margin-bottom 4pt
+          font-size 28pt
+          @media screen and (max-width: 600px)
+            font-size 22pt
           &:first-letter
             text-transform uppercase
 
@@ -218,6 +235,8 @@ export default {
     width 90%
     margin 30pt auto
     text-align left
+    @media screen and (max-width: 600px)
+        font-size 12pt
     #IHR_graphs-types &
       text-align justify
 
@@ -226,17 +245,22 @@ export default {
       margin 30pt auto
       text-align center
       width 85%
+      @media screen and (max-width: 600px)
+        font-size 14pt
 
     &-link
       position relative
       text-align right
 
   &section
-    margin 40pt auto 40px auto
+    margin 60pt auto 40pxs auto
     width 85%
     font-size 18pt
     text-align center
-
+    & > h2
+      font-size 32pt
+      @media screen and (max-width: 600px)
+        font-size 22pt
 
   ~/ack-logo
       margin-left auto
@@ -265,8 +289,8 @@ export default {
       margin-left auto
       margin-right auto
       width 70%
+      min-width 320px
       max-width 800px
-      min-width 600px
       text-align center
 
       & > div

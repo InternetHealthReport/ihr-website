@@ -1,9 +1,5 @@
 <template>
-  <q-footer
-    elevated
-    primary
-    class="IHR_minimum-width IHR_footer text-white text-center row items-streatch content-stretch no-wrap justiy-between"
-  >
+  <q-footer elevated primary class="IHR_footer text-white text-center row items-streatch content-stretch no-wrap justify-between">
     <div class="col-2 IHR_copyright IHR_fsection q-pt-md">
       <div class="text-weight-bold">Internet Health Report</div>
       <div>
@@ -16,7 +12,7 @@
     </div>
     <div class="IHR_fsection col-8 q-pt-md">
       <div class="IHR_sitemap row justify-start">
-        <span class="col-3">
+        <span class="col-12 col-md">
           <ul>
             <li class="text-weight-bold">
               {{ $t('footer.reportPages.title') }}
@@ -38,7 +34,7 @@
             </li>
           </ul>
         </span>
-        <span class="col-3">
+        <span class="col-12 col-md">
           <ul>
             <li class="text-weight-bold">
               <router-link :to="{ name: 'documentation' }">
@@ -58,7 +54,7 @@
             </li>
           </ul>
         </span>
-        <span class="col-3">
+        <span class="col-12 col-md">
           <ul>
             <li class="text-weight-bold">
               <router-link :to="{ name: 'contact' }">
@@ -75,12 +71,12 @@
         </span>
       </div>
       <div class="row items-center q-pt-lg">
-        <div class="col-2">
+        <div class="col-12 col-md">
           <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
             ><img alt="Creative Commons License" style="border-width: 0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
           /></a>
         </div>
-        <div class="col-10 text-caption text-left q-pa-md">
+        <div class="col-12 col-md text-caption text-left q-pa-md">
           <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" property="dct:title" rel="dct:type">
             Internet Health Report</span
           >
@@ -88,23 +84,21 @@
           <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
             >Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a
           >. Permissions beyond the scope of this license may be available at
-          <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:admin@ihr.live" rel="cc:morePermissions"
-            >admin@ihr.live</a
-          >.
+          <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:admin@ihr.live" rel="cc:morePermissions">admin@ihr.live</a>.
         </div>
       </div>
     </div>
     <div class="IHR_external-links col-2 IHR_fsection">
       <div class="row wrap justify-center q-pt-lg">
-        <a href="https://twitter.com/ihr_alerts" class="col-1" target="_blank">
+        <a href="https://twitter.com/ihr_alerts" class="col-12 col-md" target="_blank">
           <q-icon name="fab fa-twitter-square" />
         </a>
         <div class="col-1 q-pa-md"></div>
-        <a href="https://github.com/InternetHealthReport" class="col-1" target="_blank">
+        <a href="https://github.com/InternetHealthReport" class="col-12 col-md" target="_blank">
           <q-icon name="fab fa-github-square" />
         </a>
         <div class="col-1 q-pa-md"></div>
-        <router-link :to="{ name: 'contact' }" class="col-1" target="_blank">
+        <router-link :to="{ name: 'contact' }" class="col-12 col-md" target="_blank">
           <q-icon name="fas fa-envelope-square" />
         </router-link>
       </div>
@@ -130,8 +124,6 @@ menu-delinkify(val)
     font-weight 700
 
 .IHR_
-  &minimum-width
-    min-width 800px !important
 
   &menu-entries
     a, button
@@ -170,10 +162,16 @@ menu-delinkify(val)
       & > span
         padding-left 20pt
         text-align left
+        @media screen and (max-width: 600px)
+          padding-left 5pt
         & a
             menu-delinkify 0
         & > ul
           margin-top 2pt
+            @media screen and (max-width: 600px)
+              padding 0
+              list-style: none;
+              margin 0
           & > li
             list-style-type: none;
             text-align left
