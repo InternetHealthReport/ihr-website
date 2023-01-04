@@ -253,7 +253,7 @@ export default {
       text-align right
 
   &section
-    margin 60pt auto 40pxs auto
+    margin 60pt auto 40px auto
     width 85%
     font-size 18pt
     text-align center
