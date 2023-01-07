@@ -1,0 +1,26 @@
+.np-btn {
+  font-family: Roboto, sans-serif;
+  font-weight: 0;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #0a2647;
+  padding: 0.6em 1.3em;
+  border: solid #0a2647 2px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  border-radius: 50px;
+  transition: 1000ms;
+  transform: translateY(0);
+  /* display: flex;
+      flex-direction: row;
+      align-items: center; */
+  cursor: pointer;
+}
+
+.np-btn:hover {
+  transition: 1000ms;
+  padding: 0.6em 2.5em;
+  transform: translateY(-0px);
+  background-color: #fff;
+  color: #0a2647;
+  border: solid 2px #0a2647;
+}

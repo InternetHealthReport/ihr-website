@@ -1,3 +1,7 @@
+<style>
+@import './generate-report-btn.css';
+</style>
+
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div>

@@ -1,3 +1,7 @@
+<style>
+@import './generate-report-btn.css';
+</style>
+
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div v-if="asNumber">
@@ -148,7 +152,7 @@
                     <q-separator />
                     <q-card class="IHR_charts-body">
                         <q-card-section>
-                            <measurement-lab 
+                            <measurement-lab
                               :start-time="startTime"
                               :end-time="endTime"
                               :ASN="asNumber"

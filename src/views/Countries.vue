@@ -1,3 +1,7 @@
+<style>
+@import './generate-report-btn.css';
+</style>
+
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div v-if="countryCode">
@@ -257,11 +261,10 @@ export default {
         case LOADING_STATUS.EXPIRED:
           return this.$t('Networks.headerString.expired')
         case LOADING_STATUS.LOADED:
-          if(this.countryCode in isoCountries){
+          if (this.countryCode in isoCountries) {
             return isoCountries[this.countryCode]
-          }
-          else{
-            this.countryCode = null; 
+          } else {
+            this.countryCode = null
             return this.$t('Networks.headerString.notFound')
           }
 
