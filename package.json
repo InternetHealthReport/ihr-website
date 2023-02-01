@@ -18,7 +18,7 @@
     "datejs": "^1.0.0-rc3",
     "file-loader": "^4.2.0",
     "html2pdf.js": "^0.10.1",
-    "husky": "^7.0.4",
+    "husky": "^8.0.3",
     "ify-loader": "^1.1.0",
     "imap": "^0.8.19",
     "jquery": "^3.4.1",
