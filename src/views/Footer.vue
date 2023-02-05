@@ -160,10 +160,11 @@ menu-delinkify(val)
       text-align center
 
       & > span
-        padding-left 20pt
-        text-align left
+        padding-left 25pt
+        text-align center
         @media screen and (max-width: 600px)
           padding-left 5pt
+           
         & a
             menu-delinkify 0
         & > ul
@@ -172,9 +173,11 @@ menu-delinkify(val)
               padding 0
               list-style: none;
               margin 0
+              
           & > li
             list-style-type: none;
-            text-align left
+            text-align center
+    
             & > strong
                 text-transform capitalize
 
