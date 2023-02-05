@@ -1,7 +1,7 @@
 {
   "en-us": {
     "globalReport": {
-      "name": "Global report",
+      "name": "GLOBAL REPORT",
       "description": [
         "The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. "
       ]
@@ -12,7 +12,7 @@
         "title": "AS Dependency",
         "docHash": "#AS_dependency",
         "description": [
-          "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of networks connectivity and resiliency. "
+          "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of network connectivity and resiliency. "
         ]
       },
       "networkDelay": {
