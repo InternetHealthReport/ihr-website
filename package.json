@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
     "build": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service build",
-    "test:unit": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service lint",
+    "test:unit": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service test:unit",
     "lint": "vue-cli-service lint --no-fix",
     "lint:fix": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
