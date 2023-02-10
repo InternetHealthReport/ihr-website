@@ -90,15 +90,18 @@
     </div>
     <div class="IHR_external-links col-2 IHR_fsection">
       <div class="row wrap justify-center q-pt-lg">
-        <a href="https://twitter.com/ihr_alerts" class="col-12 col-md" target="_blank">
-          <q-icon name="fab fa-twitter-square" class="inline-block" />
+        <a href="https://twitter.com/ihr_alerts" class="col-12 col-md" target="_blank" 
+    >
+          <q-icon name="fab fa-twitter-square" class="inline-block"  />
         </a>
         <div class="col-1 q-pa-md"></div>
-        <a href="https://github.com/InternetHealthReport" class="col-12 col-md" target="_blank">
+        <a href="https://github.com/InternetHealthReport" class="col-12 col-md" target="_blank" 
+    >
           <q-icon name="fab fa-github-square" class="inline-block" />
         </a>
         <div class="col-1 q-pa-md"></div>
-        <router-link :to="{ name: 'contact' }" class="col-12 col-md" target="_blank">
+        <router-link :to="{ name: 'contact' }" class="col-12 col-md" target="_blank" 
+    >
           <q-icon name="fas fa-envelope-square" class="inline-block" />
         </router-link>
       </div>
@@ -108,6 +111,7 @@
 
 <script>
 export default {
+  
   name: 'AppFooter',
 }
 </script>
@@ -115,6 +119,11 @@ export default {
 <style lang="stylus">
 @import '~quasar-variables';
 
+
+.inline-block:hover{
+    
+    transform: translateY(-5px);
+}
 menu-delinkify(val)
   font-size 12pt
   color white
