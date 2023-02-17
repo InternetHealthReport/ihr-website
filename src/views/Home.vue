@@ -269,7 +269,7 @@ export default {
       margin-left auto
       margin-right auto
       text-align center
-      height 250px
+      height 200px
       width 300px
 
       & > span
@@ -283,6 +283,11 @@ export default {
         max-width 300px
         width auto
         height auto
+
+      & > img:hover {
+        transform: scale(1.1);
+      }  
+        
 
 .analysis-modules
     max-width 600px
