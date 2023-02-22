@@ -3,7 +3,7 @@
   <div id="IHR_home">
     <div id="IHR_global-report" class="row">
       <div class="col">
-        <div>INTERNET HEALTH REPORT</div>
+        <div>Internet Health Report</div>
         <router-link id="IHR_global-report-button" :to="{ name: 'global_report' }">
           {{ $t('globalReport.name') }}
         </router-link>
@@ -165,13 +165,14 @@ export default {
       background-image url('~@/assets/imgs/global-banner.png')
       background-repeat no-repeat
       background-position right top
-      background-size cover
       @media screen and (max-width: 600px)
         padding-left 1rem
         padding-right 1rem
         max-height 350px
-      @media screen and (max-width: 768px) {
+        background-size contain
+      @media screen and (max-width: 1024px) {
         background-position center center
+        background-size cover
       }
 
       &-button
