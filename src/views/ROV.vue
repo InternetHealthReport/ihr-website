@@ -8,7 +8,7 @@
       </h3>
     </div>
     <prefix-hegemony-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" ref="asInterdependenciesChart" />
-    <button @click="generateReport()" class="np-btn">Generate Report</button>
+    <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
   </div>
 </template>
 

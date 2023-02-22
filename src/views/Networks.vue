@@ -8,7 +8,7 @@
           <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
         </h3>
       </div>
-      <button @click="generateReport()" class="np-btn">Generate Report</button>
+      <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       <q-list v-if="showGraphs">
         <q-expansion-item
           :label="$t('charts.asInterdependencies.title')"
