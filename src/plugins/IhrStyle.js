@@ -49,6 +49,11 @@ export default {
           let routeData = this.$router.resolve(route)
           window.open(routeData.href, '_blank')
         },
+        thisWindow(route) {
+          let routeData = this.$router.resolve(route)
+          window.open(routeData.href, '_self')
+        },
+
       },
       filters: {
         // utilities
