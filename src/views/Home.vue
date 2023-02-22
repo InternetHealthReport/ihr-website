@@ -3,7 +3,7 @@
   <div id="IHR_home">
     <div id="IHR_global-report" class="row">
       <div class="col">
-        <div>INTERNET HEALTH REPORT</div>
+        <div>Internet Health Report</div>
         <router-link id="IHR_global-report-button" :to="{ name: 'global_report' }">
           {{ $t('globalReport.name') }}
         </router-link>
@@ -165,13 +165,10 @@ export default {
       background-image url('~@/assets/imgs/global-banner.png')
       background-repeat no-repeat
       background-position right top
-      background-size cover
-      @media screen and (max-width: 600px)
-        padding-left 1rem
-        padding-right 1rem
-        max-height 350px
-      @media screen and (max-width: 768px) {
+      background-size contain
+      @media screen and (max-width: 1024px) {
         background-position center center
+        background-size cover
       }
 
       &-button
@@ -269,7 +266,7 @@ export default {
       margin-left auto
       margin-right auto
       text-align center
-      height 250px
+      height 200px
       width 300px
 
       & > span
@@ -284,17 +281,31 @@ export default {
         width auto
         height auto
 
+      & > img:hover {
+        transform: scale(1.1);
+      }  
+        
+
 .analysis-modules
     max-width 600px
     text-align left
+    border-radius 15px
+
+@media(max-width 1411px)
+  .analysis-modules
+    margin-left 0
+
+@media(max-width 1450px)
+  .IHR_tweets-types
+        max-width 600px !important
+
 
 .IHR_tweets-types
       margin-left auto
       margin-right auto
-      width 70%
-      min-width 320px
       max-width 800px
       text-align center
+      border-radius 15px
 
       & > div
         background-color white

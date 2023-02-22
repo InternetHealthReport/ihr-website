@@ -29,7 +29,7 @@
       </div>
       <div class="row justify-center">
         <div class="col-3">
-          <button @click="generateReport()" class="np-btn">Generate Report</button>
+            <!-- <button @click="generateReport()" class="np-btn">Save this report as pdf</button> -->
           <q-select v-model="selected" :options="selection" label="Select a country" />
         </div>
       </div>

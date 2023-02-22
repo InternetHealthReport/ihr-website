@@ -234,20 +234,34 @@ export default {
 #IHR_
   &documentation-page
     margin 0pt auto
+    width 100%
     max-width 1200px
+    padding 0 1rem
 
 .IHR_
   &documentation-page
     & > h1
+      line-height 2rem
+      padding 0.5rem 0
+      font-weight 500
+      border-bottom 1px solid #ccc
+      margin 4rem 0 1.5rem
+      @media screen and (max-width: 720px)
+        font-size 22pt
+        margin 2rem 0 1rem
+
+    & > div
+      & > h2
+        margin-bottom 20pt
+        font-size 18pt
         line-height 1.5rem
-        padding 0.5rem 0
-        font-weight 500;
-        border-bottom 1px solid #ccc
-        margin 4rem 0 1.5rem
-
-    & > h2
-      margin-bottom 20pt
-
+        @media screen and (max-width: 600px)
+          font-size 16pt
+          margin-bottom 10pt
+      & > .text-body1
+        overflow-anchor none
+        & > a
+          overflow-anchor none
 
 .IHR_
   &documentation-page-sidebar
@@ -255,8 +269,10 @@ export default {
       margin-top 2pt
       width 88%
       margin 0px auto
-      font-size 15pt
+      font-size 16pt
       font-weight 500
+      @media screen and (max-width: 600px)
+        font-size 12pt
 
       &:first-letter
         text-transform capitalize
@@ -286,8 +302,12 @@ export default {
         padding-left 15px
 
 .IHR_anchor
-    display block
-    position relative
-    top -100px
-    visibility hidden
+  display block
+  position relative
+  top -100px
+  visibility hidden
+
+pre
+  overflow-x scroll
+
 </style>

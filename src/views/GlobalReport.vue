@@ -14,7 +14,7 @@
                         class="IHR_subtitle_calendar"
                     />
                 </div>
-                <button @click="generateReport()" class="np-btn">Generate Report</button>
+                <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
             </div>
         </div>
         <q-card class="q-mb-xl" flat>
