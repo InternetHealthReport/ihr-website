@@ -60,7 +60,7 @@
             </q-card-section>
             <q-separator />
         </q-card>
-        <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
+        <q-expansion-item class="expanded-div" header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
             <template v-slot:header  >
               <div class="graph-header-div">
                 <q-item-section class="graph-header">
@@ -103,7 +103,7 @@
                 </q-card-section>
             </q-card>
         </q-expansion-item>
-        <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
+        <q-expansion-item class="expanded-div" header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
             <template v-slot:header  >
               <div class="graph-header-div">
                 <q-item-section class="graph-header">
@@ -143,7 +143,7 @@
                 </q-card-section>
             </q-card>
         </q-expansion-item>
-        <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
+        <q-expansion-item class="expanded-div" header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
             <template v-slot:header  >
               <div class="graph-header-div">
                 <q-item-section class="graph-header">
@@ -192,6 +192,7 @@
         </q-expansion-item>
         <q-expansion-item
             caption="RIPE Atlas log"
+            class="expanded-div"
             header-class="IHR_charts-title"
             default-opened
             expand-icon-toggle
@@ -457,6 +458,7 @@ export default {
     grid-template-columns: 1fr;
 .stat-cards
   width 100% !important 
+  margin-bottom 28px
 .stat-tab
   border-radius 10px
   min-height 120px
@@ -475,13 +477,16 @@ export default {
   align-items center;
   flex-direction column;
 .IHR_charts-body 
-  border-radius 20px
   background: white;
-  border 1px solid #E9E8E8
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 .IHR_charts-title 
   width 100%
-  margin-top 10px  
+  margin 10px 0px
+.expanded-div
+  border-radius 10px
+  margin-top 20px
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border 1px solid #E9E8E8
 .graph-header 
   display flex
   justify-content start
