@@ -288,14 +288,23 @@ export default {
 .analysis-modules
     max-width 600px
     text-align left
+    border-radius 15px
+
+@media(max-width 1411px)
+  .analysis-modules
+    margin-left 0
+
+@media(max-width 1450px)
+  .IHR_tweets-types
+        max-width 600px !important
+
 
 .IHR_tweets-types
       margin-left auto
       margin-right auto
-      width 70%
-      min-width 320px
       max-width 800px
       text-align center
+      border-radius 15px
 
       & > div
         background-color white
