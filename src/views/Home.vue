@@ -165,11 +165,7 @@ export default {
       background-image url('~@/assets/imgs/global-banner.png')
       background-repeat no-repeat
       background-position right top
-      @media screen and (max-width: 600px)
-        padding-left 1rem
-        padding-right 1rem
-        max-height 350px
-        background-size contain
+      background-size contain
       @media screen and (max-width: 1024px) {
         background-position center center
         background-size cover
