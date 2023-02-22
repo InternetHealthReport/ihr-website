@@ -54,6 +54,12 @@
           "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
         },
         {
+          "name": "GSOC",
+          "logo": "gsoc-logo.jpg",
+          "description": "Google Summer of Code supports new contributors into the development of IHR"
+        },
+
+        {
           "name": "Route Views",
           "logo": "rv-logo.png",
           "description": "For BGP data"
