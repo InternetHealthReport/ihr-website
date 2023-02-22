@@ -29,28 +29,28 @@
                     </div>
                 </div>
             </q-card-section>
-            <q-card-section class="stat-cards" >
-                <div class="stat-grid">
-                    <div class=" stat-tab text-center text-h3">
+            <q-card-section>
+                <div class="row">
+                    <div class="col text-center text-h3">
                         <a href="#hegemony" class="IHR_global_stats">
                             <q-spinner v-if="loading.hegemony" color="primary" size="1em" />
                             <b v-else>{{ nbAlarms.hegemony }}</b>
                             AS dependency alarms
                         </a>
                     </div>
-                    <div class=" stat-tab text-center text-h3">
+                    <div class="col text-center text-h3">
                         <a href="#networkDelay" class="IHR_global_stats">
                             <q-spinner v-if="loading.networkDelay" color="primary" size="1em" />
                             <b v-else>{{ nbAlarms.networkDelay }}</b> network delay alarms
                         </a>
                     </div>
-                    <div class=" stat-tab text-center text-h3">
+                    <div class="col text-center text-h3">
                         <a href="#linkDelay" class="IHR_global_stats">
                             <q-spinner v-if="loading.linkDelay" color="primary" size="1em" />
                             <b v-else>{{ nbAlarms.linkDelay }}</b> link delay alarms
                         </a>
                     </div>
-                    <div class=" stat-tab text-center text-h3">
+                    <div class="col text-center text-h3">
                         <a href="#disco" class="IHR_global_stats">
                             <q-spinner v-if="loading.disco" color="primary" size="1em" />
                             <b v-else>{{ nbAlarms.disco }}</b> network disconnections
@@ -61,23 +61,20 @@
             <q-separator />
         </q-card>
         <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
-            <template v-slot:header  >
-              <div class="graph-header-div">
-                <q-item-section class="graph-header">
-                  <q-item-section avatar>
+            <template v-slot:header>
+                <q-item-section avatar>
                     <q-icon name="fas fa-project-diagram" color="primary" text-color="white" />
-                  </q-item-section>
+                </q-item-section>
 
-                  <q-item-section>
+                <q-item-section>
                     <a id="hegemony"></a>
                     <div class="text-primary">
                         {{ $t('charts.asInterdependencies.title') }}
                     </div>
                     <div class="text-caption text-grey">BGP data</div>
-                  </q-item-section>
                 </q-item-section>
 
-                <q-item-section class="filter-div" >
+                <q-item-section side>
                     <div class="text" v-if="hegemonyExpanded">
                         <q-input debounce="300" v-model="hegemonyFilter" placeholder="Filter">
                             <template v-slot:append>
@@ -86,7 +83,6 @@
                         </q-input>
                     </div>
                 </q-item-section>
-              </div>
             </template>
             <q-card class="IHR_charts-body">
                 <q-card-section>
@@ -104,20 +100,18 @@
             </q-card>
         </q-expansion-item>
         <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
-            <template v-slot:header  >
-              <div class="graph-header-div">
-                <q-item-section class="graph-header">
-                  <q-item-section avatar>
+            <template v-slot:header>
+                <q-item-section avatar>
                     <q-icon name="fas fa-shipping-fast" color="primary" text-color="white" />
-                  </q-item-section>
+                </q-item-section>
 
-                  <q-item-section>
+                <q-item-section>
                     <a id="networkDelay"></a>
                     <div class="text-primary">{{ $t('charts.networkDelay.title') }}</div>
                     <div class="text-caption text-grey">Traceroute data</div>
-                  </q-item-section>
                 </q-item-section>
-                <q-item-section class="filter-div" >
+
+                <q-item-section side>
                     <div class="text" v-if="ndelayExpanded">
                         <q-input debounce="300" v-model="ndelayFilter" placeholder="Filter">
                             <template v-slot:append>
@@ -126,7 +120,6 @@
                         </q-input>
                     </div>
                 </q-item-section>
-              </div>
             </template>
             <q-card class="IHR_charts-body">
                 <q-card-section>
@@ -144,22 +137,20 @@
             </q-card>
         </q-expansion-item>
         <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
-            <template v-slot:header  >
-              <div class="graph-header-div">
-                <q-item-section class="graph-header">
-                  <q-item-section avatar>
+            <template v-slot:header>
+                <q-item-section avatar>
                     <q-icon name="fas fa-exchange-alt" color="primary" text-color="white" />
-                  </q-item-section>
+                </q-item-section>
 
-                  <q-item-section>
+                <q-item-section>
                     <a id="linkDelay"></a>
                     <div class="text-primary">
                         {{ $t('charts.delayAndForwarding.title') }}
                     </div>
                     <div class="text-caption text-grey">Traceroute data</div>
-                  </q-item-section>
                 </q-item-section>
-                <q-item-section class="filter-div">
+
+                <q-item-section side>
                     <div class="text" v-if="linkExpanded">
                         <q-input debounce="300" v-model="linkFilter" placeholder="Filter">
                             <template v-slot:append>
@@ -168,7 +159,6 @@
                         </q-input>
                     </div>
                 </q-item-section>
-              </div>
             </template>
             <q-card class="IHR_charts-body">
                 <q-card-section>
@@ -197,22 +187,19 @@
             expand-icon-toggle
             v-model="discoExpanded"
         >
-            <template v-slot:header  >
-              <div class="graph-header-div">
-                <q-item-section class="graph-header">
-                  <q-item-section avatar>
+            <template v-slot:header>
+                <q-item-section avatar>
                     <q-icon name="fas fa-plug" color="primary" text-color="white" />
-                  </q-item-section>
+                </q-item-section>
 
-                  <q-item-section>
+                <q-item-section>
                     <a id="disco"></a>
                     <div class="text-primary">
                         {{ $t('charts.disconnections.title') }}
                     </div>
                     <div class="text-caption text-grey">RIPE Atlas log</div>
-                  </q-item-section>
                 </q-item-section>
-                <q-item-section class="filter-div">
+                <q-item-section side>
                     <div class="text" v-if="discoExpanded">
                         <q-input debounce="300" v-model="discoFilter" placeholder="Filter">
                             <template v-slot:append>
@@ -221,7 +208,6 @@
                         </q-input>
                     </div>
                 </q-item-section>
-              </div>  
             </template>
 
             <q-card class="IHR_charts-body">
@@ -444,69 +430,8 @@ export default {
 
 <style lang="stylus">
 @import '../styles/quasar.variables';
-.stat-grid 
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 20px;
-  align-items: stretch;
-@media screen and (max-width: 768px) 
-  .stat-grid 
-    grid-template-columns: repeat(2, 1fr);
-@media screen and (max-width: 480px) 
-  .stat-grid
-    grid-template-columns: 1fr;
-.stat-cards
-  width 100% !important 
-.stat-tab
-  border-radius 10px
-  min-height 120px
-  background: white;
-  border 1px solid #E9E8E8
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  display flex 
-  flex-direction column
-  justify-content center
-  align-items center
 .IHR_global_stats
   text-decoration none;
-  display flex;
-  justify-content center;
-  align-items center;
-  flex-direction column;
-.IHR_charts-body 
-  border-radius 20px
-  background: white;
-  border 1px solid #E9E8E8
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-.IHR_charts-title 
-  width 100%
-  margin-top 10px  
-.graph-header 
-  display flex
-  justify-content start
-  align-items center
-  flex-direction row
-  width 100%
-.graph-header-div 
-  display flex
-  justify-content space-between
-  align-items center
-  width 100%
-.filter-div
-  max-width 300px  
-.toggle-arrow
-  padding 0px 0px 0px 16px !important
-@media screen and (max-width: 650px)   
-  .graph-header-div 
-    flex-direction column
-    justify-content center
-    align-items start
-  .filter-div
-    margin-top 5px   
-[dir=ltr] .q-item__section--side 
-  padding-right: 0;
-  padding-left: 16px;
 .IHR_
   &subtitle_calendar
       position relative
