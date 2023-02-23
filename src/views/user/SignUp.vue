@@ -37,9 +37,9 @@
           @expired="expired"
           :render="ensureCss"
         ></vue-recaptcha> -->
-        <!-- <q-inner-loading :showing="!recaptcha_loaded">
+        <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
-        </q-inner-loading> -->
+        </q-inner-loading>
       <!-- </div> -->
       <!-- <div>{{ $t("sigIn.mailWillBeSent") }}</div> -->
       <div style="display:flex;justify-content:space-between;">
