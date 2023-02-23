@@ -52,7 +52,7 @@
         <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
-      </div> -->
+      <!-- </div> -->
       <q-btn color="positive" @click="forgetpassword()">
         {{ $t('resetPassword.resetPassword') }}
       </q-btn>
