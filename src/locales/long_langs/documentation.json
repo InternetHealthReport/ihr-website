@@ -74,9 +74,14 @@
               "body": "<a href='https://www.iijlab.net/en/' target='_blank'>IIJ Research Laboratory is the home of IHR. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>The IIJ Research Laboratory summer internship program</a> has enabled invaluable students exchange for implementing and maintaining IHR projects."
             },
             {
+              "header": "Google Summer of Code",
+              "body": "<a href='https://summerofcode.withgoogle.com/' target='_blank'>Google Summer of Code</a>  supports new contributors into the development of IHR."
+            },
+            {
               "header": "RIPE NCC",
               "body": "IHR is built on top of large datasets and <a href='https://www.ripe.net/' target='_blank'>RIPE NCC</a> is our main provider. Data from RIPE's <a href='https://www.ripe.net/analyse/internet-measurements/routing-information-service-ris' target='_blank'>Routing Information Service (RIS)</a> and <a href='https://atlas.ripe.net/' target='_blank'>Atlas measurement platform</a> is crucial for us. IHR has also been partly founded by the <a href='https://www.ripe.net/support/cpf/funding-recipients-2018' target='_blank'>RIPE NCC Community Projects Fund</a>."
             },
+           
             {
               "header": "Route Views",
               "body": "The University of Oregon <a href='http://www.routeviews.org/routeviews/' target='_blank'>Route Views Project</a> is another key source of data for IHR, in particular for computing AS dependency."
