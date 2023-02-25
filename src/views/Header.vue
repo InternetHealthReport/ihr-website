@@ -1,40 +1,40 @@
 <template>
   <q-header elevated primary>
     <q-toolbar class="q-py-sm q-px-lg row">
-      <div class="col-12 row no-wrap items-center">
-        <q-item id="IHR_home-button">
-          <router-link :to="{ name: 'home' }">
-            <q-btn round dense flat :ripple="false" no-caps size="22px">
-              <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px" />
-            </q-btn>
-          </router-link>
-        </q-item>
-        <network-search-bar class="col-4" />
-        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm">
-          <q-btn-group flat :key="item.entryName" v-for="item in simple_menu">
-            <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }" />
-            <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
-              <q-list class="rounded-borders text-white bg-primary" bordered separator padding>
-                <q-item
-                  clickable
-                  v-close-popup
-                  :key="option.entryName"
-                  v-for="option in item.options"
-                  :to="{ name: option.routeName }"
-                  active-class="text-grey"
-                >
-                  <q-item-section>
-                    <q-item-label class="text-bold">{{ $t(option.entryName) }}</q-item-label>
-                    <q-item-label class="text-grey" caption lines="2">{{ $t(option.summary) }}</q-item-label>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-btn-dropdown>
-          </q-btn-group>
-        </div>
-        <div class="lt-md">
-          <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"></q-btn>
-        </div>
+      <div class="col-12 row no-wrap items-center justify-between">
+          <q-item id="IHR_home-button">
+            <router-link :to="{ name: 'home' }">
+              <q-btn round dense flat :ripple="false" no-caps size="22px">
+                <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px" />
+              </q-btn>
+            </router-link>
+          </q-item>
+          <network-search-bar class="col-4" />
+          <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm">
+            <q-btn-group flat :key="item.entryName" v-for="item in simple_menu">
+              <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }" />
+              <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
+                <q-list class="rounded-borders text-white bg-primary" bordered separator padding>
+                  <q-item
+                    clickable
+                    v-close-popup
+                    :key="option.entryName"
+                    v-for="option in item.options"
+                    :to="{ name: option.routeName }"
+                    active-class="text-grey"
+                  >
+                    <q-item-section>
+                      <q-item-label class="text-bold">{{ $t(option.entryName) }}</q-item-label>
+                      <q-item-label class="text-grey" caption lines="2">{{ $t(option.summary) }}</q-item-label>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </q-btn-dropdown>
+            </q-btn-group>
+          </div>
+          <div class="lt-md">
+            <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"></q-btn>
+          </div>
       </div>
       <!--Log in /Log out stuff here-->
     </q-toolbar>
