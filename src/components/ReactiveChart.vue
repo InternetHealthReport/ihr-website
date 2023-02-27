@@ -1,11 +1,11 @@
 <template>
-    <div>
-        <h1 v-if="chartTitle">{{ chartTitle }}</h1>
-        <div :ref="myId"></div>
-        <div v-show="noData" class="IHR_no-data">
-            <div class="bg-white">{{ noData }}</div>
-        </div>
+  <div>
+    <h1 v-if="chartTitle">{{ chartTitle }}</h1>
+    <div :ref="myId"></div>
+    <div v-show="noData" class="IHR_no-data">
+      <div class="bg-white">{{ noData }}</div>
     </div>
+  </div>
 </template>
 <script>
 import Plotly from 'plotly.js-dist'
@@ -45,10 +45,11 @@ export default {
     return {
       created: false,
       myId: `ihrReactiveChart${this._uid}`,
+      layoutLocal: this.layout,
     }
   },
   created() {
-    this.layout['images'] = [
+    this.layoutLocal['images'] = [
       {
         x: 1,
         y: 1.05,
@@ -65,7 +66,7 @@ export default {
   },
   mounted() {
     var graphDiv = this.$refs[this.myId]
-    Plotly.plot(graphDiv, this.traces, this.layout, {
+    Plotly.plot(graphDiv, this.traces, this.layoutLocal, {
       responsive: true,
       displayModeBar: 'hover',
     })
@@ -85,7 +86,7 @@ export default {
       if (!this.created) console.error('SHOULD NEVER HAPPEN')
 
       if (this.traces == undefined) return
-      Plotly.react(this.$refs[this.myId], this.traces, this.layout)
+      Plotly.react(this.$refs[this.myId], this.traces, this.layoutLocal)
       this.$emit('loaded')
     },
     relayout() {
