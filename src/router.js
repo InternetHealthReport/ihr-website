@@ -20,6 +20,7 @@ import ResetPassword from '@/views/user/ResetPassword'
 import Documentation from '@/views/Documentation'
 import Bgplay from '@/components/ripe/Bgplay'
 import PageNotFound from '@/views/PageNotFound'
+import Register from '@/views/user/Register'
 
 Vue.use(Router)
 
@@ -156,14 +157,24 @@ export default new Router({
       meta: { title: 'API - IHR' },
     },
     {
-      name: 'sign_up',
+      name: 'register',
       path: `${routerBase}sign_up`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Register,
+      },
+      meta: { title: 'Sign Up - IHR' },
+    },
+    {
+      name: 'login',
+      path: `${routerBase}login`,
       components: {
         header: Header,
         footer: Footer,
         default: SignUp,
       },
-      meta: { title: 'Sign Up - IHR' },
+      meta: { title: 'Login - IHR' },
     },
     {
       name: 'account_activation',
