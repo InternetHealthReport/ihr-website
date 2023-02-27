@@ -1,5 +1,5 @@
 <template>
-  <q-footer elevated primary class="IHR_footer text-white text-center row items-streatch content-stretch no-wrap justify-between">
+  <q-footer elevated primary class="IHR_footer text-white text-center row items-stretch content-stretch no-wrap justify-between">
     <div class="col-2 IHR_copyright IHR_fsection q-pt-md">
       <div class="text-weight-bold">Internet Health Report</div>
       <div>
