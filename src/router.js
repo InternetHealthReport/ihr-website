@@ -13,7 +13,7 @@ import ROV from '@/views/ROV'
 import MetisHome from '@/views/MetisHome'
 import MetisSelection from '@/views/MetisSelection'
 import MetisDeployment from '@/views/MetisDeployment'
-import SignUp from '@/views/user/SignUp'
+import Login from '@/views/user/Login'
 import AccountActivation from '@/views/user/AccountActivation'
 import PersonalPage from '@/views/user/PersonalPage'
 import ResetPassword from '@/views/user/ResetPassword'
@@ -172,7 +172,7 @@ export default new Router({
       components: {
         header: Header,
         footer: Footer,
-        default: SignUp,
+        default: Login,
       },
       meta: { title: 'Login - IHR' },
     },
