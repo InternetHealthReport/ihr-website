@@ -10,6 +10,7 @@
 import SwaggerUI, { presets } from 'swagger-ui'
 
 export default {
+  name: 'ApiView',
   components: {},
   data() {
     return {}

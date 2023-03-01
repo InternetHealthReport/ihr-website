@@ -175,10 +175,11 @@ export default {
   },
   data() {
     let addressFamily = this.$route.query.af
+    let { cc } = this.$route.params
     return {
       addressFamily: addressFamily == undefined ? 4 : addressFamily,
       loadingStatus: LOADING_STATUS.LOADING,
-      countryCode: this.$route.params.cc,
+      countryCode: cc in isoCountries ? cc : null,
       countryName: null,
       charRefs: CHART_REFS,
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
@@ -257,11 +258,9 @@ export default {
         case LOADING_STATUS.EXPIRED:
           return this.$t('Networks.headerString.expired')
         case LOADING_STATUS.LOADED:
-          if(this.countryCode in isoCountries){
+          if (this.countryCode in isoCountries) {
             return isoCountries[this.countryCode]
-          }
-          else{
-            this.countryCode = null; 
+          } else {
             return this.$t('Networks.headerString.notFound')
           }
 

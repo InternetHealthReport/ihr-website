@@ -244,6 +244,7 @@ const LOADING_STATUS = {
 const CHART_REFS = ['asInterdependenciesChart', 'prefixHegemonyChart', 'networkDelayChart', 'delayAndForwardingChart', 'ihrChartDisco']
 
 export default {
+  name: 'NetworksReport',
   mixins: [reportMixin],
   components: {
     AsInterdependenciesChart,
@@ -253,8 +254,8 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
-    MeasurementLab,
-    IodaChart,
+    // MeasurementLab,
+    // IodaChart,
   },
   data() {
     let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn)
