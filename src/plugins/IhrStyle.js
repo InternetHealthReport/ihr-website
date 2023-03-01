@@ -50,8 +50,7 @@ export default {
           window.open(routeData.href, '_blank')
         },
         thisWindow(route) {
-          let routeData = this.$router.resolve(route)
-          window.open(routeData.href, '_self')
+          this.$router.push(route);
         },
 
       },
