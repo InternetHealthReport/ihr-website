@@ -1,7 +1,7 @@
 <template>
   <q-header elevated primary>
     <q-toolbar class="q-py-sm q-px-lg row">
-      <div class="col-12 row no-wrap items-center">
+      <div class="col-12 row no-wrap justify-between items-center">
         <q-item id="IHR_home-button">
           <router-link :to="{ name: 'home' }">
             <q-btn round dense flat :ripple="false" no-caps size="22px">
