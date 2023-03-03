@@ -21,7 +21,7 @@
           <div v-if="props.row.streamtype == 'asn'">
             <a
               @click="
-                newWindow({
+                thisWindow({
                   name: 'networks',
                   params: { asn: 'AS' + props.row.streamname },
                 })
