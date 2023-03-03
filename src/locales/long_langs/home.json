@@ -46,37 +46,44 @@
         {
           "name": "IIJ",
           "logo": "iij-logo.jpg",
+          "url":"https://www.iij.ad.jp/en/",
           "description": "For financial support, rack space, etc..."
         },
         {
           "name": "RIPE NCC",
           "logo": "ripe-logo.png",
+          "url":"https://www.ripe.net/",
           "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
         },
         {
           "name": "GSOC",
           "logo": "gsoc-logo.jpg",
+          "url":"https://summerofcode.withgoogle.com/",
           "description": "Google Summer of Code supports new contributors into the development of IHR"
         },
 
         {
           "name": "Route Views",
           "logo": "rv-logo.png",
+          "url":"https://www.routeviews.org/routeviews/",
           "description": "For BGP data"
         },
         {
           "name": "ISOC",
           "logo": "isoc-logo.png",
+          "url":"https://www.internetsociety.org/",
           "description": "For financial support"
         },
         {
           "name": "MANRS",
           "logo": "manrs-logo.jpg",
+          "url":"https://www.manrs.org/",
           "description": "For financial support (MANRS Research Fellowship Program)"
         },
         {
           "name": "EdgeCast",
           "logo": "edgecast-logo.png",
+          "url":"https://edg.io/",
           "description": "For providing IHR website and API on their CDN."
         }
       ]
