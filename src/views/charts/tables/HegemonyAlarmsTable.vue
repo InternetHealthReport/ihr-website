@@ -21,7 +21,7 @@
         <q-td key="originasn" align>
           <a
             @click="
-              newWindow({
+              thisWindow({
                 name: 'networks',
                 params: {
                   asn: $options.filters.ihr_NumberToAsOrIxp(props.row.originasn),

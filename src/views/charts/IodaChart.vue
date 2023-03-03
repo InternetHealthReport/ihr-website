@@ -9,7 +9,7 @@ import axios from 'axios'
 import ReactiveChart from '../../components/ReactiveChart.vue'
 import CommonChartMixin from './CommonChartMixin'
 export default {
-  name: 'Ioda Chart',
+  name: 'IodaChart',
   mixins: [CommonChartMixin],
   components: {
     ReactiveChart,
