@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { setTimeout } from 'timers'
 export default {
   name: 'BgplayWidget',
   props: {
@@ -36,11 +35,15 @@ export default {
     }
   },
   mounted() {
-    this.$libraryDelayer.load('ripe_widget_api', () => {
+    this.$libraryDelayer.load('bgplay_api', () => {
       console.log('resolved')
-      // eslint-disable-next-line no-undef
-      this.bgplay = ripestat.init(
-        'bgplay',
+      this.bgplay = BGPlayWidget(
+        'BGPlay', // Version type (classic)
+        this.myId, // DOM element ID to populate
+        {
+          width: '100vw',
+          height: 800,
+        },
         {
           unix_timestamps: 'TRUE',
           ignoreReannouncements: 'true',
@@ -49,19 +52,6 @@ export default {
           endtime: this.endTime,
           rrcs: '10',
           type: 'bgp',
-        },
-        this.myId,
-        {
-          size: 'fit',
-          show_controls: 'no',
-          disable: ['footer-buttons', 'container'],
-        },
-        () => {
-          this.loaded = true
-          setTimeout(() => {
-            var elemt = document.getElementById(this.myId)
-            elemt.style.width = '100%'
-          }, 150)
         }
       )
     })
@@ -69,24 +59,21 @@ export default {
   watch: {
     asNumber(oldValue, newValue) {
       if (oldValue == newValue) return
-      this.bgplay.update({ resource: this.asName })
-      this.bgplay.reload()
+      this.bgplay.shell.set_params({ resource: this.asName })
     },
     dateTime(oldValue, newValue) {
       if (oldValue == newValue) return
-      this.bgplay.update({
+      this.bgplay.shell.set_params({
         starttime: this.startTime,
         endtime: this.endTime,
       })
-      this.bgplay.reload()
     },
     intervalLength(oldValue, newValue) {
       if (oldValue == newValue) return
-      this.bgplay.update({
+      this.bgplay.shell.set_params({
         starttime: this.startTime,
         endtime: this.endTime,
       })
-      this.bgplay.reload()
     },
   },
   computed: {
