@@ -80,7 +80,7 @@
 
       <div class="row wrap justify-around">
         <div class="col-xl" v-for="org in $t('ack.organizations')" :key="org.name">
-          <a :href="org.url">
+          <a :href="org.url" target="_blank">
           <div class="IHR_ack-logo">
             <span></span>
             <img :src="require(`@/assets/imgs/${org.logo}`)" :alt="org.name" />
