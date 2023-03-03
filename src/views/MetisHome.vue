@@ -55,7 +55,12 @@ export default {
 
 .IHR_description
     max-width 900px
-    padding 1rem
+    padding 0 1rem
+h1
+  font-size 32pt
+  @media screen and (max-width: 600px)
+    font-size 24pt
+    line-height 2
 h2
   font-size 20pt
   line-height 1.5
