@@ -226,4 +226,8 @@ menu-delinkify(val)
 
   &last-element
     height 50px;
+    
+@media screen and (max-width: 1024px)
+  .col-12.row.no-wrap.items-center
+    justify-content space-around
 </style>
