@@ -42,6 +42,7 @@
 
 <script>
 import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
+import IhrQuery from '@/plugins/query/IhrQuery.js';
 
 const MIN_CHARACTERS = 3
 const MAX_RESULTS = 10
@@ -82,7 +83,10 @@ export default {
     search(value, update) {
       this.loading = true
       this.options = []
-      this.countryQuery.containsName(value)
+      const prefix = value.endsWith('/') ? value : ''
+      const searchTerm = prefix ? '' : value
+
+      this.countryQuery.containsName(searchTerm)
       this.$ihr_api.country(this.countryQuery, result => {
         result.results.some(element => {
           this.options.push({
@@ -94,7 +98,7 @@ export default {
         })
       })
       if (!this.noAS) {
-        this.networkQuery.mixedContentSearch(value)
+        this.networkQuery.mixedContentSearch(searchTerm)
         this.$ihr_api.network(
           this.networkQuery,
           result => {
@@ -107,13 +111,28 @@ export default {
               update()
               return this.options.length > MAX_RESULTS
             })
-            this.loading = false
           },
           error => {
             console.error(error)
           }
         )
       }
+      if (prefix) {
+        const query = new IhrQuery()
+        query.hegemonyPrefix(prefix)
+        this.$ihr_api.hegemonyPrefix(query, result => {
+          result.results.some(element => {
+            this.options.push({
+              value: element.prefix,
+              name: element.description,
+              type: 'prefix',
+            })
+            update()
+            return this.options.length > MAX_RESULTS
+          })
+          this.loading = false
+        })
+    }
     },
     gotoASN(number) {
       this.$router.push({
