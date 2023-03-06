@@ -72,7 +72,7 @@
       </div>
       <div class="row items-center q-pt-lg">
         <div class="col-12 col-md">
-          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
             ><img alt="Creative Commons License" style="border-width: 0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
           /></a>
         </div>
@@ -81,7 +81,7 @@
             Internet Health Report</span
           >
           is licensed under a
-          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
             >Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a
           >. Permissions beyond the scope of this license may be available at
           <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:admin@ihr.live" rel="cc:morePermissions">admin@ihr.live</a>.
