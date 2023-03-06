@@ -201,6 +201,7 @@ export default {
       }
     },
     apiCall() {
+      this.clearGraph()
       this.loadingDelay = true
       this.setFilter()
       this.loading = true
