@@ -3,11 +3,7 @@
     <h1 class="text-center">Metis</h1>
     <div class="row justify-center">
       <div class="IHR_description">
-        <div class="row justify-evenly q-pb-lg">
-          <q-btn color="secondary" label="Atlas probe selection" to="metis/selection" />
-          <q-btn color="secondary" label="Atlas probe deployment" to="metis/deployment" />
-        </div>
-        <p>Welcome to Metis: A data-driven method to select diverse vantage points.</p>
+        <p>Welcome to Metis! A data-driven method to select diverse vantage points.</p>
         <p>
           Metis is a tool that can help researchers, network administrators, basically everyone working with large-scale measurement
           platforms, make a diverse selection of vantage points (VPs).
@@ -27,12 +23,11 @@
           representative VPs from the pool of all available VPs, that will yield results which are less influenced by the VP distribution.
         </p>
         <p>
-          The approach is described in detail in our paper <b>„Metis: Better Atlas Vantage Point Selection for Everyone”</b>, which we will
-          link here once it is published. We are also working on a high-level explanation for the
+          The approach is described in detail in our paper <a href="https://tma.ifip.org/2022/wp-content/uploads/sites/11/2022/06/tma2022-paper18.pdf">"Metis: Better Atlas Vantage Point Selection for Everyone”</a>. We are also working on a high-level explanation for the
           <router-link to="documentation/">documentation</router-link>.
         </p>
         <p>Although the approach is applicable to any kind of measurement platform, we currently only provide data for RIPE Atlas.</p>
-        <h3>Atlas probe selection and deployment recommendations</h3>
+        <h2>Atlas Probe Selection and Deployment Recommendations</h2>
         <p>The first data set is for anyone who wants to start measurements and needs to select a suitable set of probes:</p>
         <div class="row justify-center q-pb-lg">
           <q-btn color="secondary" label="Atlas probe selection" to="metis/selection" />
@@ -60,4 +55,16 @@ export default {
 
 .IHR_description
     max-width 900px
+    padding 0 1rem
+h1
+  font-size 32pt
+  @media screen and (max-width: 600px)
+    font-size 24pt
+    line-height 2
+h2
+  font-size 20pt
+  line-height 1.5
+  margin-bottom 1rem
+  @media screen and (max-width: 600px)
+    font-size 14pt
 </style>
