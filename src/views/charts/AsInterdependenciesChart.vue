@@ -311,7 +311,6 @@ export default {
 
       let anotherAsn
       let minX, maxX
-
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return
         let trace = traces[elem.asn]
@@ -494,8 +493,14 @@ export default {
         }
       }
 
-      // console.log(this.traces)
-      // console.log(traces)
+      //console.log(this.traces.length)
+      //console.log(traces)
+
+      if(this.traces.length > 12){
+        this.layout.showlegend = false
+      }else{
+        this.layout.showlegend = true
+      }
     },
     fetchHegemonyCone(data) {
       console.log('fetchHegemonyCone')
