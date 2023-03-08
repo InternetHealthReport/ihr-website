@@ -24,4 +24,4 @@ jsconfig.json
 
 #TODO remove
 src/locales/babel_project.babel
-
+package-lock.json
