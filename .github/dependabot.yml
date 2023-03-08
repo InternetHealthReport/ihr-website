@@ -1,7 +1,14 @@
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: '/'
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "master"
     schedule:
-      interval: monthly
-    open-pull-requests-limit: 20
+      interval: "weekly"
+    versioning-strategy: "increase"
+    pull-request-branch-name:
+      separator: "-"
+    labels:
+      - "Dependabot"
+    commit-message:
+      prefix: "update"
