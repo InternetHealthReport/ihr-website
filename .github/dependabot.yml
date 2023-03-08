@@ -5,6 +5,7 @@ updates:
     target-branch: "master"
     schedule:
       interval: "weekly"
+      open-pull-requests-limit: 20
     versioning-strategy: "increase"
     pull-request-branch-name:
       separator: "-"
@@ -12,3 +13,7 @@ updates:
       - "Dependabot"
     commit-message:
       prefix: "update"
+      
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
