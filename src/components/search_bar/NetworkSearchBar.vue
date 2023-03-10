@@ -82,6 +82,26 @@ export default {
     search(value, update) {
       this.loading = true
       this.options = []
+
+      if (value.includes('/')) {
+        const prefixQuery = { prefix: value }
+        this.$ihr_api.prefixes(prefixQuery, result => {
+          result.results.some(element => {
+            this.options.push({
+              value: element.prefix,
+              name: element.country,
+              type: 'prefix',
+            })
+            update()
+            return this.options.length > MAX_RESULTS
+          })
+          this.loading = false
+        }, error => {
+          console.error(error)
+        })
+      }
+
+
       this.countryQuery.containsName(value)
       this.$ihr_api.country(this.countryQuery, result => {
         result.results.some(element => {
