@@ -96,7 +96,8 @@ export default {
             update()
             return this.options.length > MAX_RESULTS
           })
-          this.loading = false
+          this.loading = false;
+          window.location.href = 'prefixResults.html'; 
         }, error => {
           console.error(error)
         })
