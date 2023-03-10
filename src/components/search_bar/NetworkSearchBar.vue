@@ -151,6 +151,13 @@ export default {
         })
       }
     },
+
+    gotoPrefix(code) {
+      this.$router.push({
+        name: 'prefixes',
+        params: { prefix: code } ,
+      })
+    },
     gotoASN(number) {
       this.$router.push({
         name: 'networks',
