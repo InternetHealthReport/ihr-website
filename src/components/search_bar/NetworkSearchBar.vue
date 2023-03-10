@@ -139,6 +139,16 @@ export default {
         query.hegemonyPrefix(prefix)
         this.$ihr_api.hegemonyPrefix(query, result => {
           result.results.some(element => {
+
+            const countryCode = element.country_code
+            const rpki = element.rpki
+            const irr = element.irr
+            const delegatedStatus = element.delegated_status
+
+            // display in table form in the html
+            const asDependencies = element.as_dependencies
+            //use this data for the graph
+
             this.options.push({
               value: element.prefix,
               name: element.description,
