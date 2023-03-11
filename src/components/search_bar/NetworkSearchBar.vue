@@ -28,13 +28,14 @@
         <q-item-section class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-section>
       </q-item>
       <q-item
-        v-else-if="scope.opt.type == 'country'"
-        v-bind="scope.itemProps"
-        v-on="scope.itemEvents"
-        @click="gotoCountry(scope.opt.value)"
-      >
+        v-else-if="scope.opt.type == 'country'" v-bind="scope.itemProps" v-on="scope.itemEvents" @click="gotoCountry(scope.opt.value)">
         <q-item-section side color="accent"> Country </q-item-section>
         <q-item-section class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-section>
+      </q-item>
+      <q-item>
+        v-else-if="scope.opt.type == 'prefix'" v-bind= ="scope.itemProps" v-on="scope.itemEvents" @click="$event =>gotoPrefix(scope.opt.value)">
+        <q-item-selection side color="accent">Prefix</q-item-selection>
+        <q-item-selection class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-selection>
       </q-item>
     </template>
   </q-select>
