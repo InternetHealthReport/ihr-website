@@ -178,6 +178,7 @@ menu-delinkify(val)
   color white
   text-decoration none
   text-transform capitalize
+  margin-right 10px
   if val
     font-weight 700
 
