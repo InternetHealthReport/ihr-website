@@ -61,7 +61,7 @@ export default {
     },
     input: {
       type: String,
-      default: 'text-white text-weight-bold',
+      default: 'text-white text-weight-bold q-mt-xs',
     },
     noAS: {
       type: Boolean,
