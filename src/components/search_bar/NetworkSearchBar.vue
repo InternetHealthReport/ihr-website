@@ -152,6 +152,7 @@ export default {
     padding 0px
     &-name
       text-align left
+      margin-left 10px
 
 .IHR_search-bar
   text-color 'white'
