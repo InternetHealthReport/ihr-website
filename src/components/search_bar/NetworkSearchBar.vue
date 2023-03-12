@@ -15,7 +15,7 @@
   >
     <template v-slot:append>
       <div v-if="!loading">
-        <q-icon :color="label" name="fas fa-search q-mb-xs" size="0.82em" />
+        <q-icon :color="label" name="fas fa-search q-mb-sm" style="font-size: 0.8em" />
       </div>
       <div v-else>
         <q-spinner :color="label" size="0.82em" />
