@@ -6,6 +6,7 @@
       <div id="IHR_last-element">&nbsp;</div>
     </q-page-container>
     <router-view name="footer" />
+    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><q-icon name="fas fa-arrow-up"></q-icon></button>
   </q-layout>
 </template>
 <script>
@@ -16,8 +17,31 @@ export default {
   data() {
     return {
       text: '',
+      scrollPosition: 0
     }
   },
+  computed: {
+    showScrollTopButton() {
+      return this.scrollPosition > 0;
+    }
+  },
+  methods: { 
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+    updateScrollPosition() {
+      this.scrollPosition = window.scrollY;
+    }
+  }, 
+  mounted() {
+    window.addEventListener('scroll', this.updateScrollPosition);
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.updateScrollPosition);
+  }
 }
 </script>
 <style lang="stylus">
@@ -78,6 +102,21 @@ menu-delinkify(val)
             text-align left
             & > strong
                 text-transform capitalize
+
+  &scroll-btn
+    position fixed
+    bottom 20px
+    right 20px
+    z-index 2000
+    cursor pointer
+    transition all 0.6s
+    border-radius 50%
+    color white
+    padding 0.7rem 0.8rem
+    border 1px solid white
+    opacity 0.8
+    &:hover
+      transform scale(1.1)
 
 #IHR_
   &home-button
