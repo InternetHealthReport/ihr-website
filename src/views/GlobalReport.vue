@@ -254,7 +254,7 @@
         </q-card>
       </q-expansion-item>
     </div>
-    <div v-show="!this.nbAlarms['disco']">
+    <!-- <div v-show="!this.nbAlarms['disco']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
           <div class="graph-header-div">
@@ -283,46 +283,46 @@
           </div>
         </template>
       </q-expansion-item>
-    </div>
-    <div v-show="this.nbAlarms['disco']">
-      <q-expansion-item caption="RIPE Atlas log" header-class="IHR_charts-title" default-opened expand-icon-toggle
-        v-model="discoExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <q-item-section class="graph-header">
-              <q-item-section avatar>
-                <q-icon name="fas fa-plug" color="primary" text-color="white" />
-              </q-item-section>
-
-              <q-item-section>
-                <a id="disco"></a>
-                <div class="text-primary">
-                  {{ $t('charts.disconnections.title') }}
-                </div>
-                <div class="text-caption text-grey">RIPE Atlas log</div>
-              </q-item-section>
+    </div> -->
+    <!-- <div v-show="this.nbAlarms['disco']"> -->
+    <q-expansion-item caption="RIPE Atlas log" header-class="IHR_charts-title" default-opened expand-icon-toggle
+      v-model="discoExpanded">
+      <template v-slot:header>
+        <div class="graph-header-div">
+          <q-item-section class="graph-header">
+            <q-item-section avatar>
+              <q-icon name="fas fa-plug" color="primary" text-color="white" />
             </q-item-section>
-            <q-item-section class="filter-div">
-              <div class="text" v-if="discoExpanded">
-                <q-input debounce="300" v-model="discoFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <q-icon name="fas fa-filter" />
-                  </template>
-                </q-input>
+
+            <q-item-section>
+              <a id="disco"></a>
+              <div class="text-primary">
+                {{ $t('charts.disconnections.title') }}
               </div>
+              <div class="text-caption text-grey">RIPE Atlas log</div>
             </q-item-section>
-          </div>
-        </template>
+          </q-item-section>
+          <q-item-section class="filter-div">
+            <div class="text" v-if="discoExpanded">
+              <q-input debounce="300" v-model="discoFilter" placeholder="Filter">
+                <template v-slot:append>
+                  <q-icon name="fas fa-filter" />
+                </template>
+              </q-input>
+            </div>
+          </q-item-section>
+        </div>
+      </template>
 
-        <q-card class="IHR_charts-body">
-          <q-card-section>
-            <disco-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
-              :geoprobes.sync="geoProbes" :filter="discoFilter" @filteredRows="newFilteredRows('disco', $event)"
-              @loading="discoLoading" :selected-asn="asnList" ref="ihrChartDisco" />
-          </q-card-section>
-        </q-card>
-      </q-expansion-item>
-    </div>
+      <q-card class="IHR_charts-body">
+        <q-card-section>
+          <disco-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
+            :geoprobes.sync="geoProbes" :filter="discoFilter" @filteredRows="newFilteredRows('disco', $event)"
+            @loading="discoLoading" :selected-asn="asnList" ref="ihrChartDisco" />
+        </q-card-section>
+      </q-card>
+    </q-expansion-item>
+    <!-- </div> -->
   </div>
 </template>
 
