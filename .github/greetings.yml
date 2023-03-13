@@ -1,9 +1,15 @@
 name: Greetings
 
-on: [pull_request, issues]
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    branches: [master]
+    types: [opened]
+
 
 jobs:
-    greeting:
+    check_for_first_interaction:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/first-interaction@v1
