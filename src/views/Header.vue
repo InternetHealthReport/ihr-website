@@ -10,7 +10,7 @@
           </router-link>
         </q-item>
         <network-search-bar class="col-4" />
-        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm">
+        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md">
           <q-btn-group flat :key="item.entryName" v-for="item in simple_menu">
             <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }" />
             <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
@@ -178,6 +178,7 @@ menu-delinkify(val)
   color white
   text-decoration none
   text-transform capitalize
+  margin-right 10px
   if val
     font-weight 700
 
