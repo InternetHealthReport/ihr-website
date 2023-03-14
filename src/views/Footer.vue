@@ -1,30 +1,47 @@
 <template>
-  <q-footer elevated primary class="IHR_footer text-white text-center row items-streatch content-stretch no-wrap justify-between">
-    <div class="col-2 IHR_copyright IHR_fsection q-pt-md">
-      <div class="text-weight-bold">Internet Health Report</div>
-      <div>
-        <router-link :to="{ name: 'home' }">
-          <q-btn round dense flat :ripple="false" no-caps size="22px">
-            <img src="@/assets/imgs/ihr_logo.svg" style="width: 50px" />
-          </q-btn>
-        </router-link>
+  <q-footer elevated primary class="IHR_footer text-white text-center ">
+    <div class="IHR_footer_contents">
+      <div class="IHR_fsection">
+        <div class="" style="width:360px;max-width: 400px;">
+          <div>
+            <router-link :to="{ name: 'home' }">
+              <q-btn round dense flat :ripple="false" no-caps>
+                <img src="@/assets/imgs/ihr_logo.svg" class="ihr-logo" />
+              </q-btn>
+            </router-link>
+            <h1 class="text-weight-bold text-h5 q-mt-sm">Internet Health Report</h1>
+          </div>
+          <div class="IHR_external-links ">
+            <div class="row nowrap justify-evenly ">
+              <a href="https://twitter.com/ihr_alerts" class="" target="_blank">
+                <q-icon name="fab fa-twitter-square" class="inline-block" />
+              </a>
+              <a href="https://github.com/InternetHealthReport" class="" target="_blank">
+                <q-icon name="fab fa-github-square" class="inline-block" />
+              </a>
+              <router-link :to="{ name: 'contact' }" class="" target="_blank">
+                <q-icon name="fas fa-envelope-square" class="inline-block" />
+              </router-link>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="IHR_fsection col-8 q-pt-md">
-      <div class="IHR_sitemap row justify-start">
-        <span class="col-12 col-md">
+      <div class="IHR_fsection ">
+        <div class="IHR_sitemap " style="max-width: 700px;">
           <ul>
-            <li class="text-weight-bold">
+            <li class="text-weight-bold links-title text-capitalize">
               {{ $t('footer.reportPages.title') }}
             </li>
             <li>
               <router-link :to="{ name: 'global_report' }">{{ $t('footer.reportPages.global') }}</router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'countries', params: { cc: null } }">{{ $t('footer.reportPages.country') }}</router-link>
+              <router-link :to="{ name: 'countries', params: { cc: null } }">{{ $t('footer.reportPages.country')
+              }}</router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'networks', params: { asn: null } }">{{ $t('footer.reportPages.network') }}</router-link>
+              <router-link :to="{ name: 'networks', params: { asn: null } }">{{ $t('footer.reportPages.network')
+              }}</router-link>
             </li>
             <li>
               <router-link :to="{ name: 'rov' }">{{ $t('footer.reportPages.rov') }}</router-link>
@@ -33,10 +50,8 @@
               <router-link :to="{ name: 'covid19' }">{{ $t('footer.reportPages.covid19') }}</router-link>
             </li>
           </ul>
-        </span>
-        <span class="col-12 col-md">
           <ul>
-            <li class="text-weight-bold">
+            <li class="text-weight-bold links-title text-capitalize">
               <router-link :to="{ name: 'documentation' }">
                 {{ $t('footer.documentation.title') }}
               </router-link>
@@ -50,60 +65,46 @@
               }}</router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'documentation', hash: '#REST_API' }">{{ $t('footer.documentation.dataAccess') }}</router-link>
+              <router-link :to="{ name: 'documentation', hash: '#REST_API' }">{{ $t('footer.documentation.dataAccess')
+              }}</router-link>
             </li>
           </ul>
-        </span>
-        <span class="col-12 col-md">
           <ul>
-            <li class="text-weight-bold">
+            <li class="text-weight-bold links-title text-capitalize">
               <router-link :to="{ name: 'contact' }">
                 {{ $t('footer.about.contact') }}
               </router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'documentation', hash: '#Acknowledgements' }">{{ $t('footer.about.acknowledgments') }}</router-link>
+              <router-link :to="{ name: 'documentation', hash: '#Acknowledgements' }">{{
+                $t('footer.about.acknowledgments') }}</router-link>
             </li>
             <li>
-              <router-link :to="{ name: 'documentation', hash: '#Data_policy' }">{{ $t('footer.about.datapolicy') }}</router-link>
+              <router-link :to="{ name: 'documentation', hash: '#Data_policy' }">{{ $t('footer.about.datapolicy')
+              }}</router-link>
             </li>
           </ul>
-        </span>
-      </div>
-      <div class="row items-center q-pt-lg">
-        <div class="col-12 col-md">
-          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
-            ><img alt="Creative Commons License" style="border-width: 0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
-          /></a>
-        </div>
-        <div class="col-12 col-md text-caption text-left q-pa-md">
-          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" property="dct:title" rel="dct:type">
-            Internet Health Report</span
-          >
-          is licensed under a
-          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
-            >Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a
-          >. Permissions beyond the scope of this license may be available at
-          <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:admin@ihr.live" rel="cc:morePermissions">admin@ihr.live</a>.
         </div>
       </div>
     </div>
-    <div class="IHR_external-links col-2 IHR_fsection">
-      <div class="row wrap justify-center q-pt-lg">
-        <a href="https://twitter.com/ihr_alerts" class="col-12 col-md" target="_blank" 
-    >
-          <q-icon name="fab fa-twitter-square" class="inline-block"  />
-        </a>
-        <div class="col-1 q-pa-md"></div>
-        <a href="https://github.com/InternetHealthReport" class="col-12 col-md" target="_blank" 
-    >
-          <q-icon name="fab fa-github-square" class="inline-block" />
-        </a>
-        <div class="col-1 q-pa-md"></div>
-        <router-link :to="{ name: 'contact' }" class="col-12 col-md" target="_blank" 
-    >
-          <q-icon name="fas fa-envelope-square" class="inline-block" />
-        </router-link>
+    <div class="IHR_fsection ">
+      <div class="row items-center IHR_license-section" style="max-width: 800px;">
+        <div class="col-3 ">
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img
+              alt="Creative Commons License" style="border-width: 0"
+              src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+        </div>
+        <div class="col-9 text-caption text-center q-pa-sm">
+          <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" property="dct:title"
+            rel="dct:type">
+            Internet Health Report</span>
+          is licensed under a
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons
+            Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Permissions beyond the scope of this
+          license may be available at
+          <a xmlns:cc="http://creativecommons.org/ns#" href="mailto:admin@ihr.live"
+            rel="cc:morePermissions">admin@ihr.live</a>.
+        </div>
       </div>
     </div>
   </q-footer>
@@ -111,7 +112,7 @@
 
 <script>
 export default {
-  
+
   name: 'AppFooter',
 }
 </script>
@@ -120,10 +121,14 @@ export default {
 @import '~quasar-variables';
 
 
-.inline-block:hover{
-    
-    transform: translateY(-5px);
+.inline-block:hover{    
+  transform: scale(1.2);
 }
+.ihr-logo{
+  width: 80px;
+  border 4px solid transparent
+}
+
 menu-delinkify(val)
   font-size 12pt
   color white
@@ -141,55 +146,79 @@ menu-delinkify(val)
     button
       box-shadow none
 
-  &footer
+  &footer    
+    display flex
+    flex-direction column
+    align-items center
+    
+  &footer_contents      
+      display flex
+      flex-direction column
+      align-items center      
+      @media screen and (min-width: 1000px)
+        width 80%
+        margin-left auto
+        margin-right auto
+        flex-direction row
+        justify-content space-evenly
+        align-items flex-start
+
     & a
       color white
 
     ~/fsection
-      padding-top 5pt
-      border-left solid gray 1px
-
-      &first-child
-        border-left none
-
-    ~/copyright
-      & > div
-        margin 7pt 0pt
-
+      padding-top 1.5rem
+      padding-bottom 1.5rem       
+      border none
+      @media screen and (max-width: 600px)
+        padding-top 1rem
+        padding-bottom 1rem 
+      
+    ~/license-section
+      @media screen and (max-width: 1000px)
+        display flex
+        flex-direction column
+        
     ~/external-links
       font-size 3.0em
-      text-decoration none
+      margin-top .5rem     
 
       & a
         color white
+        text-decoration none
 
     ~/sitemap
+      display flex      
+      justify-content center
       font-size 12pt
       font-weight 300
       text-align center
+      @media screen and (max-width 600px)
+        flex-direction column
 
-      & > span
-        padding-left 25pt
-        text-align center
-        @media screen and (max-width: 600px)
-          padding-left 5pt
-           
-        & a
-            menu-delinkify 0
-        & > ul
-          margin-top 2pt
-            @media screen and (max-width: 600px)
-              padding 0
-              list-style: none;
-              margin 0
-              
-          & > li
-            list-style-type: none;
-            text-align center
-    
-            & > strong
-                text-transform capitalize
+      & > ul
+        min-width 10rem
+        list-style-type none
+        margin 0
+        padding .5rem 1.5rem
 
+        & > li > a 
+          text-decoration none
+
+          &:hover
+            text-decoration underline
+          
+
+        & > .links-title
+          font-size 1.25rem
+          
+          & > a:hover
+            text-decoration none
+
+        
+        
+      
+  
 #IHR_
   &home-button
     padding 0px 13px 0px 2px
