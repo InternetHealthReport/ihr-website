@@ -1,7 +1,5 @@
 <template>
   <q-footer elevated primary class="IHR_footer text-white text-center ">
-    <!-- logo and social links section -->
-
     <div class="IHR_footer_contents">
       <div class="IHR_fsection">
         <div class="" style="width:360px;max-width: 400px;">
@@ -13,7 +11,6 @@
             </router-link>
             <h1 class="text-weight-bold text-h5 q-mt-sm">Internet Health Report</h1>
           </div>
-          <!-- Ihr social links  -->
           <div class="IHR_external-links ">
             <div class="row nowrap justify-evenly ">
               <a href="https://twitter.com/ihr_alerts" class="" target="_blank">
@@ -29,10 +26,8 @@
           </div>
         </div>
       </div>
-
       <div class="IHR_fsection ">
         <div class="IHR_sitemap " style="max-width: 700px;">
-
           <ul>
             <li class="text-weight-bold links-title text-capitalize">
               {{ $t('footer.reportPages.title') }}
@@ -55,7 +50,6 @@
               <router-link :to="{ name: 'covid19' }">{{ $t('footer.reportPages.covid19') }}</router-link>
             </li>
           </ul>
-
           <ul>
             <li class="text-weight-bold links-title text-capitalize">
               <router-link :to="{ name: 'documentation' }">
@@ -75,7 +69,6 @@
               }}</router-link>
             </li>
           </ul>
-
           <ul>
             <li class="text-weight-bold links-title text-capitalize">
               <router-link :to="{ name: 'contact' }">
@@ -91,18 +84,15 @@
               }}</router-link>
             </li>
           </ul>
-
         </div>
       </div>
     </div>
-
     <div class="IHR_fsection ">
       <div class="row items-center IHR_license-section" style="max-width: 800px;">
         <div class="col-3 ">
           <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img
               alt="Creative Commons License" style="border-width: 0"
-              src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" 
-              /></a>
+              src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
         </div>
         <div class="col-9 text-caption text-center q-pa-sm">
           <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Dataset" property="dct:title"
@@ -117,7 +107,6 @@
         </div>
       </div>
     </div>
-
   </q-footer>
 </template>
 
@@ -190,7 +179,6 @@ menu-delinkify(val)
         display flex
         flex-direction column
         
-
     ~/external-links
       font-size 3.0em
       margin-top .5rem     
