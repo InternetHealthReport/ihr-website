@@ -312,7 +312,6 @@ export default {
       let anotherAsn
       let minX, maxX
       //console.log(data);
-      // Showing a message if there is no data
       if (data.length==0){
         this.traces = extend(true, [], DEFAULT_TRACE)
         this.layout.annotations = [{
@@ -328,7 +327,6 @@ export default {
         }]
         return
       }
-      //showing the message if there is no dependency
       else{
         var noDependency = false;
         data.forEach(elem =>{
