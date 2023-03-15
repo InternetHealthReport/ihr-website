@@ -74,6 +74,7 @@ var AS_INTERDEPENDENCIES_LAYOUT = {
     title: '',
     domain: [0.6, 1],
     range: [0, 101],
+    ticksuffix: "%"
   },
   yaxis2: {
     domain: [0, 0.4],
