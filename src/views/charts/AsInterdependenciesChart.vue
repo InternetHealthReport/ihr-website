@@ -311,7 +311,7 @@ export default {
 
       let anotherAsn
       let minX, maxX
-      //console.log(data);
+      console.log(data);
       if (data.length==0){
         this.traces = extend(true, [], DEFAULT_TRACE)
         this.layout.annotations = [{
@@ -326,8 +326,7 @@ export default {
           }
         }]
         return
-      }
-      else{
+      }else{
         var noDependency = false;
         data.forEach(elem =>{
           if(elem.originasn == 0){
