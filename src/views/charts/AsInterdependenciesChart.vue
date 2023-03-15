@@ -328,7 +328,7 @@ export default {
         }]
         return
       }
-      //showing a message if there is no dependency
+      //showing the message if there is no dependency
       else{
         var noDependency = false;
         data.forEach(elem =>{
