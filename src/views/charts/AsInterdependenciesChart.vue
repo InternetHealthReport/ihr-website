@@ -311,6 +311,45 @@ export default {
 
       let anotherAsn
       let minX, maxX
+
+      console.log(data);
+      if (data.length==0){
+        this.traces = extend(true, [], DEFAULT_TRACE)
+        this.layout.annotations = [{
+          x: 0.45,
+          y: 0.23,
+          xref: 'paper',
+          yref: 'paper',
+          text: 'Network is unreachable',
+          showarrow: false,
+          font: {
+            size: 22
+          }
+        }]
+        return
+      }else{
+        var noDependency = false;
+        data.forEach(elem =>{
+          if(elem.originasn == 0){
+            noDependency = true;
+          }
+        })
+        if(noDependency){
+          this.layout.annotations = [{
+              x: 0.45,
+              y: 0.23,
+              xref: 'paper',
+              yref: 'paper',
+              text: 'No dependency',
+              showarrow: false,
+              font: {
+                size: 22
+              }
+            }]
+        }
+        return
+      }
+
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return
         let trace = traces[elem.asn]
