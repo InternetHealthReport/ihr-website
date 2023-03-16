@@ -336,16 +336,16 @@ export default {
         })
         if(noDependency){
           this.layout.annotations = [{
-              x: 0.45,
-              y: 0.23,
-              xref: 'paper',
-              yref: 'paper',
-              text: 'No dependency',
-              showarrow: false,
-              font: {
-                size: 22
-              }
-            }]
+            x: 0.45,
+            y: 0.23,
+            xref: 'paper',
+            yref: 'paper',
+            text: 'No dependency',
+            showarrow: false,
+            font: {
+              size: 22
+            }
+          }]
         }
         return
       }  
