@@ -98,7 +98,7 @@
         <h1 class="text-center q-pa-xl">Country Report</h1>
         <div class="row justify-center">
           <div class="col-6">
-            <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" noAS="true" />
+            <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true"/>
           </div>
         </div>
       </div>
