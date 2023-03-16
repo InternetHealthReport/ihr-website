@@ -30,8 +30,8 @@ viewport (col-\[vp\]-\[n\]).
 The full reference is in the quasar website https://quasar.dev/layout/grid/introduction-to-flexbox.
 
 ### Icons
-In this project is used Font Awesome https://fontawesome.com/.
-To keep the number of different icons short, here a list of already used icons:
+In this project Font Awesome (https://fontawesome.com/) is used.
+To keep the number of different icons short, here is a list of already used icons:
 * **AS dependence** [*fas fa-project-diagram*](https://fontawesome.com/icons/project-diagram?style=solid)
 * **Delay** [*fas fa-shipping-fast*](https://fontawesome.com/icons/shipping-fast?style=solid)
 * **Disco** [*fas fa-plug*](https://fontawesome.com/icons/plug?style=solid)
