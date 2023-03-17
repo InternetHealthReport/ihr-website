@@ -1,26 +1,18 @@
 <template>
-  <div>
-    <h1></h1>
-    <!-- Selected Source Network start -->
-    <div id="IHR_contact-page">
-      <div class="Subscribe">
-        <p v-if="tags.length == 0" class="IHR_description">Select Source Networks</p>
-        <div v-else class="tag">
-          <p class="IHR_description">Selected Source:</p>
-          <el-tag v-for="(item, index) in tags" :key="index" type="warning" style="margin: 5px 8px" @close="handleClose(item)" closable>
-            {{ item.channel.split(',')[0] }}
-          </el-tag>
+  <div class="row">
+    <div class="col-4">
+      <h1></h1>
+      <!-- Selected Source Network start -->
+      <div id="IHR_contact-page">
+        <div>
+          <p v-if="tags.length == 0" class="IHR_description">Select Source Networks</p>
+          <div v-else class="tag">
+            <p class="IHR_description">Selected Source:</p>
+            <el-tag v-for="(item, index) in tags" :key="index" type="warning" style="margin: 5px 8px" @close="handleClose(item)" closable>
+              {{ item.channel.split(',')[0] }}
+            </el-tag>
+          </div>
         </div>
-      </div>
-      <div class="select">
-        <q-btn-toggle
-          v-model="panel"
-          rounded
-          @click="changePanel(panel)"
-          toggle-color="blue"
-          no-caps
-          :options="[{ label: 'networks', value: 'network' }]"
-        />
         <search-bar class="col-3 q-px-sm" :type="panel" @searchRes="searchChange" style="margin: 20px 0" />
         <q-tab-panels v-model="panel" animated style="border-top: 1px solid #ccc">
           <q-tab-panel name="country">
@@ -78,121 +70,115 @@
           </q-tab-panel>
         </q-tab-panels>
       </div>
-    </div>
-    <!-- Selected Source Network Search Bar End -->
-    <!-- Selected Destination Search Bar start -->
-    <div id="IHR_contact-page">
-      <div class="Subscribe">
-        <p v-if="tagsEnd.length == 0" class="IHR_description">Select Destination Networks</p>
-        <div v-else class="tag">
-          <p class="IHR_description">Selected Destination:</p>
-          <el-tag
-            v-for="(item, index) in tagsEnd"
-            :key="index"
-            type="warning"
-            style="margin: 5px 8px"
-            @close="destinationHandleClose(item)"
-            closable
-          >
-            {{ item.channel.split(',')[0] }}
-          </el-tag>
+      <!-- Selected Source Network Search Bar End -->
+      <!-- Selected Destination Search Bar start -->
+      <div id="IHR_contact-page">
+        <div class="Subscribe">
+          <p v-if="tagsEnd.length == 0" class="IHR_description">Select Destination Networks</p>
+          <div v-else class="tag">
+            <p class="IHR_description">Selected Destination:</p>
+            <el-tag
+              v-for="(item, index) in tagsEnd"
+              :key="index"
+              type="warning"
+              style="margin: 5px 8px"
+              @close="destinationHandleClose(item)"
+              closable
+            >
+              {{ item.channel.split(',')[0] }}
+            </el-tag>
+          </div>
+        </div>
+        <div class="select">
+          <q-tab-panels v-model="destinationPanel" animated style="border-top: 1px solid #ccc">
+            <q-tab-panel name="country">
+              <div class="btn_list">
+                <q-btn
+                  outline
+                  v-for="(item, index) in destinationDataList"
+                  :key="index"
+                  color="white"
+                  style="width: 150px !important"
+                  text-color="black"
+                  :label="item.split(',')[0]"
+                  @click="selectDestination(item)"
+                  no-caps
+                >
+                  <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
+                </q-btn>
+              </div>
+            </q-tab-panel>
+
+            <q-tab-panel name="city">
+              <div class="btn_list">
+                <q-btn
+                  outline
+                  v-for="(item, index) in destinationDataList"
+                  :key="index"
+                  color="white"
+                  style="width: 150px !important"
+                  text-color="black"
+                  :label="item.split(',')[0]"
+                  @click="selectDestination(item)"
+                  no-caps
+                >
+                  <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
+                </q-btn>
+              </div>
+            </q-tab-panel>
+
+            <q-tab-panel keep-alive name="network">
+              <div class="btn_list">
+                <q-btn
+                  outline
+                  v-for="(item, index) in destinationDataList"
+                  :key="index"
+                  color="white"
+                  style="width: 175px !important"
+                  text-color="black"
+                  :label="item.split(',')[0]"
+                  @click="selectDestination(item)"
+                  no-caps
+                >
+                  <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
+                </q-btn>
+              </div>
+            </q-tab-panel>
+          </q-tab-panels>
+          <search-bar class="col-3 q-px-sm" :type="destinationPanel" @searchRes="destinationSearchChange" style="margin: 20px 0" />
         </div>
       </div>
-      <div class="select">
-        <q-btn-toggle
-          v-model="destinationPanel"
-          rounded
-          @click="destinationChangePanel(destinationPanel)"
-          toggle-color="blue"
-          no-caps
-          :options="[{ label: 'networks', value: 'network' }]"
-        />
-        <search-bar class="col-3 q-px-sm" :type="destinationPanel" @searchRes="destinationSearchChange" style="margin: 20px 0" />
-        <q-tab-panels v-model="destinationPanel" animated style="border-top: 1px solid #ccc">
-          <q-tab-panel name="country">
-            <div class="btn_list">
-              <q-btn
-                outline
-                v-for="(item, index) in destinationDataList"
-                :key="index"
-                color="white"
-                style="width: 150px !important"
-                text-color="black"
-                :label="item.split(',')[0]"
-                @click="selectDestination(item)"
-                no-caps
-              >
-                <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
-              </q-btn>
-            </div>
-          </q-tab-panel>
-
-          <q-tab-panel name="city">
-            <div class="btn_list">
-              <q-btn
-                outline
-                v-for="(item, index) in destinationDataList"
-                :key="index"
-                color="white"
-                style="width: 150px !important"
-                text-color="black"
-                :label="item.split(',')[0]"
-                @click="selectDestination(item)"
-                no-caps
-              >
-                <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
-              </q-btn>
-            </div>
-          </q-tab-panel>
-
-          <q-tab-panel keep-alive name="network">
-            <div class="btn_list">
-              <q-btn
-                outline
-                v-for="(item, index) in destinationDataList"
-                :key="index"
-                color="white"
-                style="width: 175px !important"
-                text-color="black"
-                :label="item.split(',')[0]"
-                @click="selectDestination(item)"
-                no-caps
-              >
-                <q-tooltip class="bg-accent">{{ item }}</q-tooltip>
-              </q-btn>
-            </div>
-          </q-tab-panel>
-        </q-tab-panels>
+      <!-- Selected Destination Search Bar end -->
+      <div class="col-5" align="center">
+        <q-date v-model="dateRange" range />
+      </div>
+      <div class="col-2">
+        <button @click="addPlot()">Add Plot</button>
       </div>
     </div>
-    <!-- Selected Destination Search Bar end -->
-    <div class="col-5" align="center">
-      <q-date v-model="dateRange" range />
-    </div>
-    <div class="col-2">
-      <button @click="addPlot()">Add Plot</button>
-    </div>
-    <div class="col-12">
-      <div class="q-pa-md">
-        <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
-          <q-card class="IHR_charts-body">
-            <q-card-section v-if="sourceNetworks[i]">
-              <h1 @click="deletePlot(i)">x</h1>
-              <network-delay-chart
-                :start-time="getFrom(dateRange)"
-                :end-time="getTo(dateRange)"
-                :startPointName="getASN(sourceNetworks[i].channel)"
-                startPointType="AS"
-                :endPointNames="destinationNetworksASN"
-                ref="networkDelayChart"
-                :fetch="fetch"
-                :clear="clear"
-                @max-value="updateYaxis"
-                :yMax="yMax"
-                v-if="dateRange"
-              />
-            </q-card-section>
-          </q-card>
+    <div class="col-8">
+      <div class="col-12">
+        <div class="q-pa-md">
+          <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
+            <q-card class="IHR_charts-body">
+              <q-card-section v-if="sourceNetworks[i]">
+                <h1 @click="deletePlot(i)">x</h1>
+                <network-delay-chart
+                  :start-time="getFrom(dateRange)"
+                  :end-time="getTo(dateRange)"
+                  :startPointName="getASN(sourceNetworks[i].channel)"
+                  startPointType="AS"
+                  :endPointNames="destinationNetworksASN"
+                  ref="networkDelayChart"
+                  :fetch="fetch"
+                  :clear="clear"
+                  @max-value="updateYaxis"
+                  :yMax="yMax"
+                  v-if="dateRange"
+                />
+              </q-card-section>
+            </q-card>
+          </div>
         </div>
       </div>
     </div>
@@ -378,10 +364,10 @@ export default {
     addPlot() {
       this.sourceNetworks = this.tags
       this.destinationNetworks = this.tagsEnd
-      this.destinationNetworksASN=[]
+      this.destinationNetworksASN = []
       for (let i = 0; i < this.destinationNetworks.length; i++) {
         let ASN = this.destinationNetworks[i].channel.substring(2, this.destinationNetworks[i].channel.indexOf(' '))
-        this.destinationNetworksASN[i]="AS4"+ASN
+        this.destinationNetworksASN[i] = 'AS4' + ASN
       }
     },
     deletePlot(index) {
