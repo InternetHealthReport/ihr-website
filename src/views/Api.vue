@@ -39,9 +39,4 @@ export default {
   padding-top 100px
   color $primary
 
-  #swagger-ui
-  & .opblock-summary-path
-    min-width 105px !important
-  & .opblock-body
-    overflow-x auto
 </style>
