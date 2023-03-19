@@ -54,13 +54,12 @@ To keep the number of different icons short, here is a list of already used icon
 * **account**: [*fas fa-user-circle*](https://fontawesome.com/icons/user-circle?style=solid)
 
 ## Translations
-if a view or a component has a few of unique elements to translate you can do
-it directly into is file
-You can use https://www.codeandweb.com/babeledit (one time payment)
+If a view or component only has a few distinct elements that require translation, you can directly add the translations to its files by using: https://www.codeandweb.com/babeledit (which is a one-time payment)
 
 ## Routes
 The structure of the urls contain the locale in use (*/:locale/...*)".
-The simplest way to take this in account in routes is [named routes](https://router.vuejs.org/guide/essentials/named-routes.html).
-briefly:
+One simple way to incorporate this information into routes is to use [named routes](https://router.vuejs.org/guide/essentials/named-routes.html).
+
+Briefly:
 * name all routes in *router.js* file, and prepend routerBase to each route
 * when routing (using either \<router-link\> or router.update()) use the name. This will prevent te change of the parameters
