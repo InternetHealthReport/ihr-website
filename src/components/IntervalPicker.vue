@@ -86,6 +86,16 @@ export default {
       type: Boolean,
     },
   },
+  emits: {
+    'input': function(chartInterval) {
+      if (chartInterval !== null) {
+        return true;
+      } else {
+        console.warn('ChartInterval object is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     let debouncedEmit = debounce(
       () => {

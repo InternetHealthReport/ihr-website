@@ -141,6 +141,16 @@ export default {
       required: true,
     },
   },
+  emits: {
+    'prefix-details': function(event) {
+      if (event !== null) {
+        return true;
+      } else {
+        console.warn('Event is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     let delayFilter = new DelayQuery().asNumber(this.asNumber).timeInterval(this.startTime, this.endTime).orderedByTime()
 

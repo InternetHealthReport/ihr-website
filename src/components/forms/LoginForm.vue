@@ -51,6 +51,16 @@ export default {
       default: false,
     },
   },
+  emits: {
+    'input': function(isValidInput) {
+      if (isValidInput !== null) {
+        return true;
+      } else {
+        console.warn('isValidInput is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     return {
       email: '',

@@ -57,6 +57,16 @@ export default {
       default: '',
     },
   },
+  emits: {
+    'select': function(location) {
+      if (location !== null) {
+        return true;
+      } else {
+        console.warn('Location is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     return {
       options: [],

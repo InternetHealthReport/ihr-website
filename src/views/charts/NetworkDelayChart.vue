@@ -159,6 +159,33 @@ export default {
       default: '',
     },
   },
+  emits: {
+    'prefix-details': function(event) {
+      if (event !== null) {
+        return true;
+      } else {
+        console.warn('Event is missing!');
+        return false;
+      }
+    },
+    'max-value': function(newMaxY) {
+      if (newMaxY !== null) {
+        return true;
+      } else {
+        console.warn('NewMaxY is missing!');
+        return false;
+      }
+    },
+    'display': function(isDisplayed) {
+      if (isDisplayed !== null) {
+        return true;
+      } else {
+        console.warn('IsDisplayed is missing!');
+        return false;
+      }
+    }
+
+  },
   data() {
     var layout = NET_DELAY_LAYOUT
     return {

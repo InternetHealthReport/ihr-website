@@ -41,6 +41,19 @@ export default {
       default: 0,
     },
   },
+  emits: {
+    'plotly-click': function(clickData) {
+      if (clickData !== null) {
+        return true;
+      } else {
+        console.warn('Click Data is missing!');
+        return false;
+      }
+    },
+    'loaded': function() {
+      return true;
+    }
+  },
   data() {
     return {
       created: false,
