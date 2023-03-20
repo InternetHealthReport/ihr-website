@@ -12,18 +12,18 @@ export default {
   props: {
     value: {
       type: Date,
-      require: true,
+      required: true,
     },
     min: {
       type: Date,
-      require: true,
+      required: true,
       default: () => {
         return new Date()
       },
     },
     max: {
       type: Date,
-      require: true,
+      required: true,
       default: () => {
         return new Date()
       },

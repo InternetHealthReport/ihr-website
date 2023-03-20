@@ -14,15 +14,15 @@ export default {
   props: {
     startTime: {
       type: Date,
-      require: true,
+      required: true,
     },
     endTime: {
       type: Date,
-      require: true,
+      required: true,
     },
     fetch: {
       type: Boolean,
-      require: true,
+      required: true,
     },
     filter: {
       type: String,

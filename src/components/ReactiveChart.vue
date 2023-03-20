@@ -20,24 +20,24 @@ export default {
   props: {
     layout: {
       type: Object,
-      require: true,
+      required: true,
     },
     traces: {
       type: Array,
-      require: true,
+      required: true,
     },
     chartTitle: {
       type: String,
-      require: false,
+      required: false,
       default: null,
     },
     noData: {
-      require: false,
+      required: false,
       default: false,
     },
     yMax: {
       type: Number,
-      require: false,
+      required: false,
       default: 0,
     },
   },
