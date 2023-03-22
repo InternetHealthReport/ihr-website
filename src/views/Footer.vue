@@ -204,6 +204,7 @@ menu-delinkify(val)
 
         & > li > a 
           text-decoration none
+          text-transform capitalize
 
           &:hover
             text-decoration underline
