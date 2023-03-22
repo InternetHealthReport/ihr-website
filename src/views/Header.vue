@@ -86,7 +86,7 @@ const simple_menu = [
       {
         entryName: 'header.countryReport',
         routeName: 'countries',
-        summary: 'Overview of Internet ressources per country',
+        summary: 'Overview of Internet resources per country',
       },
       {
         entryName: 'header.networkReport',
@@ -96,7 +96,7 @@ const simple_menu = [
       {
         entryName: 'header.rovReport',
         routeName: 'rov',
-        summary: 'Route Origin Validation of ressources seen on BGP',
+        summary: 'Route Origin Validation of resources seen on BGP',
       },
       {
         entryName: 'header.covid19',

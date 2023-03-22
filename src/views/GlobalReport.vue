@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div class="q-mb-xs">
       <div class="text-center">
         <div class="text-h1">{{ title }}</div>
@@ -499,7 +499,7 @@ export default {
       // }
     },
     generateReport() {
-      let element = document.getElementById('IHR_as-and-ixp-container')
+      let element = this.$refs['ihrAsAndIxpContainer']
       let opt = {
         margin: 0,
         filename: 'GlobalReport.pdf',

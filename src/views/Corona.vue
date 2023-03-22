@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <div>
       <h1 class="text-center">Network Delays During National Lockdowns</h1>
 
@@ -163,7 +163,7 @@ export default {
       this.yMax = this.yMax > newMaxY ? this.yMax : newMaxY
     },
     generateReport() {
-      let element = document.getElementById('IHR_as-and-ixp-container')
+      let element = this.$refs['ihrAsAndIxpContainer']
       let opt = {
         margin: 0,
         filename: 'Corona.pdf',

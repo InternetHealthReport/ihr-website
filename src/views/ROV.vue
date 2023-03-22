@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div>
       <h1 class="text-center"><q-icon name="fas fa-route" />&nbsp; Route Origin Validation</h1>
       <h3 class="text-center">
@@ -87,7 +87,7 @@ export default {
       this.majorEyeballs = tmp
     },
     generateReport() {
-      let element = document.getElementById('IHR_as-and-ixp-container')
+      let element = this.$refs['ihrAsAndIxpContainer']
       let opt = {
         margin: 0,
         filename: 'ROV.pdf',
