@@ -347,7 +347,6 @@ export default {
             }
           }]
         }
-        return
       }  
 
       data.forEach(elem => {
