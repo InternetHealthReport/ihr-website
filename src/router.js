@@ -249,6 +249,7 @@ export default new Router({
         footer: Footer,
         default: Dashboard,
       },
+      meta: { title: 'Exploratory Dashboard' },
     },
 
     // Widgets
