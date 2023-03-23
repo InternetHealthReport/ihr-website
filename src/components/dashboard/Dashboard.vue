@@ -1,46 +1,24 @@
-<template>
+<template> 
   <div>
-    <h1 class="text-center">Explorer</h1>
+    <div>
+    <div>
+      <h1 class="text-center">Exploratory Dashboard</h1>
+    </div>
     <div class="row justify-center">
-      <div class="col-3">
-        <q-select v-model="selectedPlot" :options="plots" label="Type of Plot" />
-      </div>
+      <q-select 
+        label="Select a plot"
+        v-model="selectedPlot"
+        :options="plots"
+        option-value="value"
+        option-label="label"
+        @click="UpdateURL(selectedPlot.value)"
+      />
     </div>
-    <!-- Network Delay plot start -->
-    <div v-if="selectedPlot == 'Network Delay'">
-      <div class="row justify-center"></div>
-      <delay-parameters />
-    </div>
-    <!-- Network Delay plot end -->
-    <!-- IODA plot start -->
-    <div v-if="selectedPlot == 'IODA Rechability of /24s (%)'">
-      <div class="row justify-center">
-        <ioda-paramters />
-      </div>
-    </div>
-    <!-- IODA plot end-->
-    <!-- MLab plot start -->
-    <div v-if="selectedPlot == 'NDT Speed Test'">
-      <div class="row justify-center">
-        <mlab-parameters />
-      </div>
-    </div>
-    <!-- MLab plot end -->
-    <!-- AS Interdependency plot start -->
-    <div v-if="selectedPlot == 'AS Interdependency'">
-      <div class="row justify-center">
-        <dependency-parameters />
-      </div>
-    </div>
-    <!-- AS Interdependency plot end -->
-    <!-- Cloudflare plot start -->
-    <div v-if="selectedPlot == 'Cloudflare Report'">
-      <div class="row justify-center">
-        <cloudflare-parameters />
-      </div>
-    </div>
-    <!-- Cloudflare plot end -->
   </div>
+  <div>
+    <component :is="selectedPlot.component"  />
+  </div> 
+</div>
 </template>
 
 <script>
@@ -53,11 +31,41 @@ export default {
   components: { DelayParameters, MlabParameters, IodaParamters, DependencyParameters, CloudflareParameters },
   name: 'ExploratoryDashboard',
   data() {
-    var plots = ['Network Delay', 'IODA Rechability of /24s (%)', 'NDT Speed Test', 'AS Interdependency', 'Cloudflare Report']
+    var plots =[
+      { name: 'NetworkDelay', label: 'Network Delay', component: DelayParameters },
+      { name: 'IodaParams', label: 'IODA Rechability of /24s (%)', component: IodaParamters },
+      { name: 'Mlab', label: 'NDT Speed Test', component: MlabParameters },
+      { name: 'DependencyParam', label: 'AS Interdependency', component: DependencyParameters },
+      { name: 'Cloudflare', label: 'Cloudflare Report', component: CloudflareParameters },
+    ]
     return {
       plots: plots,
-      selectedPlot: null,
+      selectedPlot: plots[0],
     }
   },
+  mounted(){
+    this.selectedPlot = this.plots[0]
+    // If the route has a plot parameter, select that plot
+    if (this.$route.params.plot) {
+      this.selectedPlot = this.plots.find(plot => plot.name === this.$route.params.plot)
+    }
+  },
+  methods: {
+    plotSelected(plot){
+      this.selectedPlot = plot;
+    },
+    // Update the route when the selected plot changes
+    updateRoute(){
+      this.$router.push({ name: 'dashboard', params: { plot: this.selectedPlot.name } })
+    },
+  },
+  watch: {  
+    selectedPlot: {
+      handler: function (val, oldVal) {
+        this.updateRoute()
+      },
+      deep: true
+    }
+  }
 }
 </script>
