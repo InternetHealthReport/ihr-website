@@ -4,7 +4,7 @@
       <q-spinner color="secondary" size="2em" />
       Loading RIPEstat widgets...
     </div>
-    <div :id="myId"></div>
+    <div :id="myId" :ref="myId"></div>
   </div>
 </template>
 <script>
@@ -34,8 +34,7 @@ export default {
     navigateAndRemove() {
       if (!this.removeStyle) return
       this.$libraryDelayer.getRidOfInlineStyle(this.myId, '*')
-      var elemt = document.getElementById(this.myId)
-      elemt.style.width = '100%'
+      this.$refs[this.myId].style.width = '100%'
       this.loaded = true
     },
   },
