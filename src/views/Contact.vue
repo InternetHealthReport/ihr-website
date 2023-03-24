@@ -1,20 +1,19 @@
 <template>
-  <div id="IHR_contact-page">
-    <div class="IHR_contact-page">
-      <h1>Feedback</h1>
-      <p class="IHR_description">
-        Please submit bug reports and feature requests on Github:
-        <a href="https://github.com/InternetHealthReport/ihr-website/issues"
-          target="_blank">https://github.com/InternetHealthReport/ihr-website/issues</a>
-      </p>
-      <h1>Others</h1>
-      <p>
-        For questions and inquiries, please contact us at:
-        <a href="mailto:admin@ihr.live">admin@ihr.live</a>
-      </p>
-    </div>
+  <div class="contact-page">
+    <h1 class="title">Feedback</h1>
+    <p class="description">
+      Please submit bug reports and feature requests on Github:
+      <a href="https://github.com/InternetHealthReport/ihr-website/issues"
+        target="_blank">https://github.com/InternetHealthReport/ihr-website/issues</a>
+    </p>
+    <h1 class="title">Contact Us</h1>
+    <p class="description">
+      For questions and inquiries, please contact us at:
+      <a href="mailto:admin@ihr.live">admin@ihr.live</a>
+    </p>
   </div>
 </template>
+
 <script>
 export default {
   name: 'ContactView',
@@ -25,57 +24,53 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-#IHR_
-  &contact-page
-    width 60%
-    margin 0pt auto
-    @media screen and (max-width: 600px)
-      width 100%
-      padding: 0 1rem;
+<style scoped>
+.contact-page {
+  max-width: 800px;
+  margin: auto;
+  margin-top: 20px;
+  padding: 30px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
 
-.IHR_background
-    width 1000px
-    height 1000px
-    max-width 100%
-    background-repeat no-repeat
-    background-position left top
-    background-size 1000px 1000px
-    opacity 0.1
-    position absolute
-    top 450px
-    overflow-x hidden
-    position fixed
-    @media screen and (max-width: 600px)
-      width: 100%
+.title {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #01111f;
+}
 
+.description {
+  font-size: 20px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
 
-.IHR_
-  &contact-page
+a {
+  color: #0078d7;
+  text-decoration: none;
+}
 
-    & > h1
-        line-height 1.5rem
-        padding 0.5rem 0
-        font-weight 500;
-        border-bottom 1px solid #ccc
-        margin 4rem 0 1.5rem
-        @media screen and (max-width: 600px)
-          font-size 22pt
+a:hover {
+  text-decoration: underline;
+}
 
-    & > h2
-      margin-bottom 20pt
-      font-weight 500;
-      line-height 1.5rem
-      border-bottom 1px solid #ccc
-      margin 4rem 0 1.5rem
-      @media screen and (max-width: 600px)
-        font-size 18pt
+@media screen and (max-width: 600px) {
+  .contact-page {
+    max-width: 90%;
+    padding: 20px;
+  }
 
-    & > p
-      font-size 18pt
-      width 100%
-      margin 30pt auto
-      text-align left
-      @media screen and (max-width: 600px)
-        font-size 12pt
+  .title {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+
+  .description {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+}
 </style>
