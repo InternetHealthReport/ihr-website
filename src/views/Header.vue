@@ -125,6 +125,10 @@ const simple_menu = [
     routeName: 'api',
   },
   {
+    entryName: 'News',
+    routeName: 'news',
+  },
+  {
     entryName: 'header.contact',
     routeName: 'contact',
   },

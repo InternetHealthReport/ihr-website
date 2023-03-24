@@ -6,6 +6,7 @@ import Home from '@/views/Home'
 import GlobalReport from '@/views/GlobalReport'
 import API from '@/views/Api'
 import Contact from '@/views/Contact'
+import NewsSection from '@/views/NewsSection'
 import Countries from '@/views/Countries'
 import Networks from '@/views/Networks'
 import Corona from '@/views/Corona'
@@ -85,6 +86,16 @@ export default new Router({
       meta: { title: 'Contact - IHR' },
     },
     {
+      name: 'news',
+      path: `${routerBase}news`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: NewsSection,
+      },
+      meta: { title: 'News - IHR' },
+    },
+    {
       name: 'countries',
       path: `${routerBase}countries/:cc?`,
       components: {
@@ -155,6 +166,7 @@ export default new Router({
       },
       meta: { title: 'API - IHR' },
     },
+   
     {
       name: 'sign_up',
       path: `${routerBase}sign_up`,
