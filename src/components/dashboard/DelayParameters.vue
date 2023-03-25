@@ -166,10 +166,12 @@
       </div>
     </div>
     <!-- Selected Destination Search Bar end -->
+    <br>
     <div class="col-5" align="center">
       <q-date v-model="dateRange" range />
     </div>
-    <div class="col-2">
+    <br>
+    <div class="col-2" align="center">
       <button @click="addPlot()">Add Plot</button>
     </div>
     <div class="col-12">
@@ -381,7 +383,7 @@ export default {
       this.destinationNetworksASN=[]
       for (let i = 0; i < this.destinationNetworks.length; i++) {
         let ASN = this.destinationNetworks[i].channel.substring(2, this.destinationNetworks[i].channel.indexOf(' '))
-        this.destinationNetworksASN[i]="AS4"+ASN
+        this.destinationNetworksASN[i]='AS4'+ASN
       }
     },
     deletePlot(index) {
