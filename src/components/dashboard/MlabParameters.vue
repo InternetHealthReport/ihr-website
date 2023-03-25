@@ -121,6 +121,7 @@ import YearSelector from './middleware/yearSelector.vue'
 import searchBar from './middleware/searchBar.vue'
 export default {
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     NetworkSearchBar,
     MeasurementLab,
     YearSelector,

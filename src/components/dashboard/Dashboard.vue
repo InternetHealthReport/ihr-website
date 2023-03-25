@@ -2,8 +2,10 @@
   <div>
     <h1 class="text-center">Explorer</h1>
     <div class="row justify-center">
-      <div class="col-3">
-        <q-select v-model="selectedPlot" :options="plots" label="Type of Plot" />
+      
+        <div class="col-3">     
+
+        <q-select v-model="selectedPlot" :options="plots" label="Type of Plot" dropdown-icon="change_history" />
       </div>
     </div>
     <!-- Network Delay plot start -->
@@ -49,6 +51,7 @@ import IodaParamters from './IodaParamters.vue'
 import MlabParameters from './MlabParameters.vue'
 import DependencyParameters from './DependencyParameters.vue'
 import CloudflareParameters from './CloudflareParameters.vue'
+import dropdown from 'vue-dropdowns';
 export default {
   components: { DelayParameters, MlabParameters, IodaParamters, DependencyParameters, CloudflareParameters },
   name: 'ExploratoryDashboard',
