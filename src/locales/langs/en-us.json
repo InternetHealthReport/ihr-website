@@ -64,12 +64,12 @@
   },
   "Networks": {
     "headerString": {
-      "loading": "Loading in progress...",
+      "loading": "loading in progress...",
       "notFound": "AS doesn't exists",
       "expired": "Request expired"
     },
     "subHeader": {
-      "loading": "please wait",
+      "loading": "Please wait",
       "notFound": "The queried network",
       "expired": "the sever is under load, please try again later"
     }
