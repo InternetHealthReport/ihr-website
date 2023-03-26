@@ -6,6 +6,7 @@
         <div class="col-3">     
 
         <q-select v-model="selectedPlot" :options="plots" label="Type of Plot" dropdown-icon="change_history" />
+        <br>
       </div>
     </div>
     <!-- Network Delay plot start -->

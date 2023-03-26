@@ -81,6 +81,7 @@
     </div>
     <!-- Selected Source Network Search Bar End -->
     <!-- Selected Destination Search Bar start -->
+    <br>
     <div id="IHR_contact-page">
       <div class="Subscribe">
         <p v-if="tagsEnd.length == 0" class="IHR_description">Select Destination Networks</p>
@@ -167,6 +168,7 @@
     </div>
     <!-- Selected Destination Search Bar end -->
     <br>
+    <br>
     <div class="col-5" align="center">
       <q-date v-model="dateRange" range />
     </div>
@@ -198,6 +200,8 @@
               />
             </q-card-section>
           </q-card>
+          <br> 
+          <br>
         </div>
       </div>
     </div>
