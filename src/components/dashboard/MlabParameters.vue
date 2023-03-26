@@ -90,10 +90,11 @@
           </div>
         </div>
         <!-- Search Bar End -->
-        <div class="col-5">
-          <year-selector @clicked="onClickChild" />
+        <div class="col-5" align="center">
+          <q-date v-model="dateRange" range />
         </div>
-        <div class="col-2">
+        <br>
+        <div class="col-2" align="center">
           <button @click="addPlot()">Add Plot</button>
         </div>
       </div>
@@ -124,7 +125,7 @@ export default {
     // eslint-disable-next-line vue/no-unused-components
     NetworkSearchBar,
     MeasurementLab,
-    YearSelector,
+    //YearSelector,
     searchBar,
   },
   data() {

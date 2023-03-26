@@ -49,13 +49,14 @@
         <!-- Search Bar End -->
 
         <!-- Date Range Picker Start -->
-        <div class="col-5">
+        <div class="col-5" align = "center">
           <q-date v-model="dateRange" range />
           <p>{{ dateRange }}</p>
         </div>
+        <br>
         <!-- Date Range Picker End -->
 
-        <div class="col-2">
+        <div class="col-2" align = "center">
           <button @click="addPlot()">Add plot</button>
         </div>
       </div>

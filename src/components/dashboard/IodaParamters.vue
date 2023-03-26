@@ -82,10 +82,11 @@
         </div>
       </div>
       <!-- Search Bar End -->
-      <div class="col-5">
+      <div class="col-5" align="center">
         <q-date v-model="dateRange" range />
       </div>
-      <div class="col-2">
+    <br>
+      <div class="col-2" align="center">
         <button @click="addPlot()">Add plot</button>
       </div>
     </div>
