@@ -219,3 +219,30 @@ menu-delinkify(val)
   &last-element
     height 50px;
 </style>
+<style>
+ li {
+  position: relative;
+  
+}
+
+li:hover:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: #ffffff;
+  animation: underline 0.5s ease forwards;
+}
+
+@keyframes underline {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+</style>
