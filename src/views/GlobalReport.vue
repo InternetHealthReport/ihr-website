@@ -323,6 +323,44 @@
       </q-card>
     </q-expansion-item>
     <!-- </div> -->
+    <q-expansion-item
+      caption="IHR Aggregated Alarms"
+      header-class="IHR_charts-title"
+      default-opened
+      expand-icon-toggle
+      v-model="aggregatedAlarmsExpanded"
+    >
+      <template v-slot:header>
+        <div class="graph-header-div">
+          <q-item-section class="graph-header">
+            <q-item-section avatar>
+              <q-icon name="fas fa-plug" color="primary" text-color="white" />
+            </q-item-section>
+
+            <q-item-section>
+              <a id="aggregatedAlarms"></a>
+              <div class="text-primary">
+                {{ $t('charts.aggregatedAlarms.title') }}
+              </div>
+              <div class="text-caption text-grey">IHR Aggregated Alarms</div>
+            </q-item-section>
+          </q-item-section>
+        </div>
+      </template>
+
+      <q-card class="IHR_charts-body">
+        <q-card-section>
+          <aggregated-alarms-chart
+            :start-time="startTime"
+            :end-time="endTime"
+            :fetch="fetch"
+            ::min-deviation="minDeviationNetworkDelay"
+            @loading="aggregatedAlarmsLoading"
+            ref="ihrAggregatedAlarmsMap"
+          />
+        </q-card-section>
+      </q-card>
+    </q-expansion-item>
   </div>
 </template>
 
@@ -331,6 +369,7 @@ import reportMixin from '@/views/mixin/reportMixin'
 import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from './charts/global/DiscoChart'
 import NetworkDelayAlarmsChart from './charts/global/NetworkDelayAlarmsChart'
 import HegemonyAlarmsChart from './charts/global/HegemonyAlarmsChart'
+import AggregatedAlarmsChart from './charts/global/AggregatedAlarmsChart'
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -376,6 +415,7 @@ export default {
     NetworkDelayAlarmsChart,
     HegemonyAlarmsChart,
     DiscoChart,
+    AggregatedAlarmsChart,
     DelayChart,
     DateTimePicker,
   },
@@ -393,6 +433,7 @@ export default {
       ndelayExpanded: true,
       linkExpanded: true,
       discoExpanded: true,
+      aggregatedAlarmsExpanded: true,
       presetAsnLists: PRESETS_ASN_LISTS,
       levelOptions: LEVEL_OPTIONS,
       levelColors: LEVEL_COLOR,
@@ -424,6 +465,7 @@ export default {
         networkDelay: true,
         linkDelay: true,
         disco: true,
+        aggregatedAlarms: true,
       },
     }
   },
@@ -449,6 +491,11 @@ export default {
     discoLoading(val) {
       this.$nextTick(function () {
         this.loading.disco = val
+      })
+    },
+    aggregatedAlarmsLoading(val) {
+      this.$nextTick(function () {
+        this.loading.aggregatedAlarms = val
       })
     },
     pushRoute() {
