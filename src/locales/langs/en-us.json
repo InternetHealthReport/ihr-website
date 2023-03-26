@@ -71,7 +71,7 @@
     "subHeader": {
       "loading": "Please wait",
       "notFound": "The queried network",
-      "expired": "the sever is under load, please try again later"
+      "expired": "the server is under load, please try again later"
     }
   },
   "charts": {
