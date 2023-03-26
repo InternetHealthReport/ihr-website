@@ -19,12 +19,16 @@
         })
       "
     ></div>
-    <div class="IHR_description-main">
-      See latest alarms in the
-      <router-link :to="{ name: 'global_report' }">global report</router-link>
-      and network metrics in
-      <router-link :to="{ name: 'networks' }">network reports</router-link>.
-    </div>
+    <div class="q-pa-md">
+    <q-card class="q-pa-md" style="max-width: 800px; margin: auto;">
+      <div class="q-card-section text-center">
+        See latest alarms in the
+        <router-link to="{ name: 'global_report' }">global report</router-link>
+        and network metrics in
+        <router-link to="{ name: 'networks' }">network reports</router-link>.
+      </div>
+    </q-card>
+  </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_description-main">
       <q-card class="analysis-modules" v-for="graphT in graphTypes" :key="graphT.name">
@@ -318,3 +322,21 @@ export default {
           &:first-letter
             text-transform uppercase
 </style>
+<style scoped>
+@media (max-width: 599px) {
+  .q-card {
+    border-radius: 0 !important;
+  }
+}
+@media (min-width: 600px) {
+  .q-card {
+    border-radius: 10px;
+  }
+}
+</style>
+
+
+
+
+
+
