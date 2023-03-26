@@ -179,7 +179,10 @@
         <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
           <q-card class="IHR_charts-body">
             <q-card-section v-if="sourceNetworks[i]">
-              <h1 @click="deletePlot(i)">x</h1>
+              <!-- <h1 @click="deletePlot(i)">x</h1> -->
+              <h1>
+                <button class="btn-close" @click="deletePlot(i)">&times;</button>
+              </h1>
               <network-delay-chart
                 :start-time="getFrom(dateRange)"
                 :end-time="getTo(dateRange)"
@@ -497,5 +500,19 @@ export default {
   height: 36px !important;
   line-height: 36px !important;
   font-size: 16px !important;
+}
+
+.btn-close {
+  background-color: transparent;
+  border: 0 ;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease-in;
+  size: 0cap;
+}
+
+.btn-close:hover {
+  opacity: 0.9;
+  background-color: white
 }
 </style>
