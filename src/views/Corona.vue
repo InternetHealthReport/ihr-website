@@ -145,18 +145,18 @@ export default {
     updateYaxis(newMaxY) {
       this.yMax = this.yMax > newMaxY ? this.yMax : newMaxY
     },
-     generateReport() {
-       let element = this.$refs['ihrAsAndIxpContainer']
-       let opt = {
-         margin: 0,
-         filename: 'Corona.pdf',
-         image: { type: 'jpeg', quality: 0.98 },
-         html2canvas: { scale: 2 },
-         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
-       }
-       html2pdf(element, opt)
-       console.log('button is clicked')
-     },
+    generateReport() {
+      let element = this.$refs['ihrAsAndIxpContainer']
+      let opt = {
+        margin: 0,
+        filename: 'Corona.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
+      }
+      html2pdf(element, opt)
+      console.log('button is clicked')
+    },
   },
   mounted() {},
   watch: {
