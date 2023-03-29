@@ -20,6 +20,7 @@ Clone the project in localhost
 
 ```bash
 git clone https://github.com/InternetHealthReport/ihr-website.git
+cd ihr-website
 ```
 Note: 
 - Currently the project supports node  --version =< 16.9.1 
