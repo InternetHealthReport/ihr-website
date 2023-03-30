@@ -33,6 +33,12 @@
           <q-select v-model="selected" :options="selection" label="Select a country" />
         </div>
       </div>
+      <div class="row toolbox">
+        <div class="offset-10">
+          <h3>Toolbox</h3>
+          <q-toggle v-model="searchBar" label="Add more destination networks" />
+        </div>
+      </div>
       <div v-if="selected">
         <div class="row justify-center q-pa-xl">
           <div class="col-4">
@@ -105,12 +111,6 @@
                 :searchBar="searchBar"
               />
             </div>
-          </div>
-        </div>
-        <div class="row self-end">
-          <div class="col-2 offset-10">
-            <h3>Toolbox</h3>
-            <q-toggle v-model="searchBar" label="Add more destination networks" />
           </div>
         </div>
       </div>
@@ -228,4 +228,8 @@ export default {
     position relative
     top -250px
     visibility hidden
+.toolbox
+    margin-right 12pt
+    margin-top 15pt
+    
 </style>
