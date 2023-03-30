@@ -13,8 +13,8 @@
         <location-search-bar @select="addEndLocation" :hint="$t('searchBar.locationDestination')" :label="$t('searchBar.locationHint')" />
       </div>
       <div class="col-3 q-pa-sm">
-        <q-btn @click="debouncedApiCall" color="secondary" class="q-ml-sm">Add</q-btn>
-        <q-btn @click="clearGraph" class="q-ml-sm">Clear all</q-btn>
+        <q-btn @click="debouncedApiCall" color="secondary" class="btn">Add</q-btn>
+        <q-btn @click="clearGraph" class="btn">Clear all</q-btn>
       </div>
     </div>
     <div class="row">
@@ -417,4 +417,8 @@ export default {
   &hidden-bar
     top 60px
     opacity 0
+.btn
+    margin-bottom 10pt
+    width 80pt
+    margin-right 10pt
 </style>
