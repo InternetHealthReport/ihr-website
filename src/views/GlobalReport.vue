@@ -64,7 +64,7 @@
               </q-item-section>
 
               <q-item-section>
-                <a id=" hegemony"></a>
+                <a id="hegemony"></a>
                 <div class="text-primary text-grey">
                   {{ $t('charts.asInterdependencies.title') }}
                 </div>
@@ -95,7 +95,7 @@
               </q-item-section>
 
               <q-item-section>
-                <a id=" hegemony"></a>
+                <a id="hegemony"></a>
                 <div class="text-primary">
                   {{ $t('charts.asInterdependencies.title') }}
                 </div>
