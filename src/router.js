@@ -242,8 +242,8 @@ export default new Router({
       meta: { title: 'Metis Deployment - IHR' },
     },
     {
-      name: 'exploratory_dashboard',
-      path: `${routerBase}dashboard`,
+      name: 'dashboard',
+      path: `${routerBase}dashboard/:plot?`,
       components: {
         header: Header,
         footer: Footer,
