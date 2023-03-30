@@ -144,6 +144,35 @@ const ConfirmElement = {
       required: true,
     },
   },
+  emits: {
+    'save': function() {
+      return true;
+    },
+    'input': function(inputValue) {
+      if (inputValue !== null) {
+        return true;
+      } else {
+        console.warn('InputValue is missing!');
+        return false;
+      }
+    },
+    'restore': function(passwordContent) {
+      if (passwordContent !== null) {
+        return true;
+      } else {
+        console.warn('PasswordContent is missing!');
+        return false;
+      }
+    },
+    'sidebar-action': function(sideBarAction) {
+      if (sideBarAction !== null) {
+        return true;
+      } else {
+        console.warn('Sidebar Action is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     return {
       savedRelatedInput: this.relatedInput,

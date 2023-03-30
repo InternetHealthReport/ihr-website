@@ -36,6 +36,16 @@ export default {
       default: false,
     },
   },
+  emits: {
+    'input': function(selectedDate) {
+      if (selectedDate !== null) {
+        return true;
+      } else {
+        console.warn('SelectedDate is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     console.log(this.value.toISOString())
     return {

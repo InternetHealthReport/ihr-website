@@ -217,6 +217,16 @@ export default {
       default: true,
     },
   },
+  emits: {
+    'sidebar-action': function(sideBarAction) {
+      if (sideBarAction !== null) {
+        return true;
+      } else {
+        console.warn('Sidebar Action is missing!');
+        return false;
+      }
+    }
+  },
   mounted() {
     this.$emit('sidebar-action', true)
   },
