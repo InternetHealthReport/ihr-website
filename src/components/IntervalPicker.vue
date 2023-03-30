@@ -80,7 +80,7 @@ export default {
   props: {
     value: {
       type: ChartInterval,
-      require: true,
+      required: true,
     },
     white: {
       type: Boolean,
