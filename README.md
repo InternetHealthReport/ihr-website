@@ -66,6 +66,10 @@ npm run test:unit
 
 See [Configuration Reference](https://cli.vuejs.org/config/) test
 
+## Set up
+Check out our installation video [here](https://youtu.be/mdjMdaLdlfY) for a step-by-step guide on how to install and set up our software
+
+
 ## Ways to contribute
 
 First off, thanks for taking the time to contribute! 🎉🎉
