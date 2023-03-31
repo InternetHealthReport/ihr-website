@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="asNumber">
       <div>
         <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
@@ -322,7 +322,7 @@ export default {
       })
     },
     generateReport() {
-      let element = document.getElementById('IHR_as-and-ixp-container')
+      let element = this.$refs['ihrAsAndIxpContainer']
       let opt = {
         margin: 0,
         filename: 'Networks.pdf',

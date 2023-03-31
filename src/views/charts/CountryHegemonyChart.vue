@@ -73,6 +73,16 @@ export default {
       default: 10,
     },
   },
+  emits: {
+    'eyeballs': function(asns) {
+      if (asns !== null) {
+        return true;
+      } else {
+        console.warn('ASns is missing!');
+        return false
+      }
+    }
+  },
   data() {
     //prevent calls within 500ms and execute only the last one
     return {

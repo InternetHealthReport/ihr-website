@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div class="q-mb-xs">
       <div class="text-center">
         <div class="text-h1">{{ title }}</div>
@@ -64,7 +64,7 @@
               </q-item-section>
 
               <q-item-section>
-                <a id=" hegemony"></a>
+                <a id="hegemony"></a>
                 <div class="text-primary text-grey">
                   {{ $t('charts.asInterdependencies.title') }}
                 </div>
@@ -95,7 +95,7 @@
               </q-item-section>
 
               <q-item-section>
-                <a id=" hegemony"></a>
+                <a id="hegemony"></a>
                 <div class="text-primary">
                   {{ $t('charts.asInterdependencies.title') }}
                 </div>
@@ -499,7 +499,7 @@ export default {
       // }
     },
     generateReport() {
-      let element = document.getElementById('IHR_as-and-ixp-container')
+      let element = this.$refs['ihrAsAndIxpContainer']
       let opt = {
         margin: 0,
         filename: 'GlobalReport.pdf',

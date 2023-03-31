@@ -7,6 +7,11 @@
 
 <script>
 export default {
+  emits: {
+    'close-me': function(){
+      return true;
+    }
+  },
   data() {
     return {}
   },

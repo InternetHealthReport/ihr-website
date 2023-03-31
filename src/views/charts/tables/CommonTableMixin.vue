@@ -16,6 +16,16 @@ export default {
       default: '',
     },
   },
+  emits: {
+    'filteredRows': function(filteredSearchRowValues) {
+      if (filteredSearchRowValues !== null) {
+        return true;
+      } else {
+        console.warn('FilteredSearchRowValues is missing');
+        return false;
+      }
+    }
+  },
   data() {
     return {
       filteredRows: [],
