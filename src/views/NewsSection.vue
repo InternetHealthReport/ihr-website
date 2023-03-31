@@ -4,7 +4,7 @@
     <div class="card-deck">
       <div v-for="(article, index) in articles.slice(0,12)" :key="index" class="card">
         <div class="card-image">
-          <!-- <img :src="article.urlToImage" alt="Article Image" /> -->
+          <!-- Image included if use paid News API -->
         </div>
         <div class="card-content">
           <h3 class="card-title">{{ article.data.title }}</h3>
@@ -73,7 +73,7 @@
 .card-link:hover {
   background-color: #0056b3;
 }
-/* Responsive layout for the card deck */
+
 @media screen and (max-width: 768px) {
   .card-deck {
     display: flex;
@@ -87,7 +87,7 @@
   }
 }
 
-/* Responsive layout for the cards */
+
 @media screen and (min-width: 769px) and (max-width: 991px) {
   .card {
     width: calc(50% - 30px);
@@ -117,7 +117,6 @@ export default {
   },
   methods: {
     async fetchNews() {
-      const apiKey = 'YOUR_API_KEY'; // Replace with your News API key
       const response = await fetch('https://www.reddit.com/r/netsec/search.json?q=internet%20security&restrict_sr=1', {
         headers: {
           'User-Agent': 'MyApp/1.0.0'
