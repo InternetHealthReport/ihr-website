@@ -29,25 +29,25 @@
             <a href="#hegemony" class="IHR_global_stats">
               <q-spinner v-if="loading.hegemony" color="primary" size="1em" />
               <b v-else>{{ nbAlarms.hegemony }}</b>
-              AS dependency alarms
+              AS Dependency Alarms
             </a>
           </div>
           <div class="stat-tab text-center text-h3">
             <a href="#networkDelay" class="IHR_global_stats">
               <q-spinner v-if="loading.networkDelay" color="primary" size="1em" />
-              <b v-else>{{ nbAlarms.networkDelay }}</b> network delay alarms
+              <b v-else>{{ nbAlarms.networkDelay }}</b> Network Delay Alarms
             </a>
           </div>
           <div class="stat-tab text-center text-h3">
             <a href="#linkDelay" class="IHR_global_stats">
               <q-spinner v-if="loading.linkDelay" color="primary" size="1em" />
-              <b v-else>{{ nbAlarms.linkDelay }}</b> link delay alarms
+              <b v-else>{{ nbAlarms.linkDelay }}</b> Link Delay Alarms
             </a>
           </div>
           <div class="stat-tab text-center text-h3">
             <a href="#disco" class="IHR_global_stats">
               <q-spinner v-if="loading.disco" color="primary" size="1em" />
-              <b v-else>{{ nbAlarms.disco }}</b> network disconnections
+              <b v-else>{{ nbAlarms.disco }}</b> Network Disconnections
             </a>
           </div>
         </div>
