@@ -27,7 +27,7 @@
           <p>Be patient. Loading all graphs may take some time for certain countries.</p>
         </div>
       </div>
-      <div class="row justify-center box">
+      <div class="row justify-center box_corona">
         <div class="col-3">
             <!-- <button @click="generateReport()" class="np-btn">Save this report as pdf</button> -->
           <q-select v-model="selected" :options="selection" label="Select a country" />
@@ -41,7 +41,7 @@
               <div class="IHR_anchor" :id="asn.as"></div>
               <h2>{{ asn.name }} (AS{{ asn.as }})</h2>
             </div>
-            <div class="column">
+            <div class="column_corona">
               <network-delay-chart
                 :start-time="before_start"
                 :end-time="before_end"
@@ -57,7 +57,7 @@
               />
               <p><center>One month before Lockdown</center></p>
             </div>
-            <div class="column">
+            <div class="column_corona">
               <network-delay-chart
                 :start-time="during_start"
                 :end-time="during_end"
@@ -73,7 +73,7 @@
               />
               <p><center>Lockdown({{ countriesInfo[selected['value']].start }})</center></p>
             </div>
-            <div class="column">
+            <div class="column_corona">
               <network-delay-chart
                 :start-time="startTime"
                 :end-time="endTime"
@@ -213,16 +213,16 @@ export default {
     visibility hidden
 p
     font-size 1.2rem
-.box
+.box_corona
     padding-top 40px
     padding-bottom 50px
-.column
+.column_corona
   float left
   width 33.33%
 @media screen and (max-width:720px)
-  .column
+  .column_corona
     width 100%
 @media screen and (max-width:1024px) and (min-width 720px)
-  .column
+  .column_corona
     width 50%
 </style>
