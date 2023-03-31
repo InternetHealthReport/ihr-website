@@ -23,7 +23,7 @@
           representative VPs from the pool of all available VPs, that will yield results which are less influenced by the VP distribution.
         </p>
         <p>
-          The approach is described in detail in our paper <a href="https://tma.ifip.org/2022/wp-content/uploads/sites/11/2022/06/tma2022-paper18.pdf">"Metis: Better Atlas Vantage Point Selection for Everyone”</a>. We are also working on a high-level explanation for the
+          The approach is described in detail in our paper <a href="https://tma.ifip.org/2022/wp-content/uploads/sites/11/2022/06/tma2022-paper18.pdf">"Metis: Better Atlas Vantage Point Selection for Everyone"</a>. We are also working on a high-level explanation for the
           <router-link to="documentation/">documentation</router-link>.
         </p>
         <p>Although the approach is applicable to any kind of measurement platform, we currently only provide data for RIPE Atlas.</p>
