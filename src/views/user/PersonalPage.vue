@@ -294,11 +294,11 @@ export default {
           user.monitoredasn.length == 0 ? MonitoringUserQuery.NOTIFY_LEVEL.LOW : user.monitoredasn[0].notifylevel
       },
       error => {
-        console.log(error)
+        // console.log(error)
         if (error.status == 401)
           // unauthorized
           this.$ihr_api.userLogout()
-        console.log(error)
+        // console.log(error)
       }
     )
   },
@@ -318,13 +318,13 @@ export default {
       this.toSave = { ...this.toSave, ...changedElement }
     },
     submit() {
-      console.log(this.toSave)
+      // console.log(this.toSave)
       this.$ihr_api.userChangeCredentials(
         this.toSave,
         (_, response) => {
           let message = ''
           let data = JSON.parse(response.config.data)
-          console.log(data)
+          // console.log(data)
           if (data.password != undefined) {
             message += this.$t('personalPage.changesApplied')
           }
@@ -363,7 +363,7 @@ export default {
     addAsn(asn) {
       this.monitoring.query.push(asn, this.monitoring.globalLevel)
       this.monitoring.modified = true
-      console.log('addAsn', asn)
+      // console.log('addAsn', asn)
     },
     removeMonitored() {
       this.monitoring.selected.forEach(elem => {
@@ -372,7 +372,7 @@ export default {
       this.monitoring.selected = []
     },
     getCellValue(props, columnName) {
-      console.log('getCellValue', props, columnName)
+      // console.log('getCellValue', props, columnName)
       let col = props.colsMap[columnName]
       return col.format(col.field(props.row))
     },

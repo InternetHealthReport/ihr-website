@@ -78,7 +78,7 @@ export default {
   methods: {
     expired() {
       this.recaptcha = ''
-      console.log('expired')
+      // console.log('expired')
     },
     verify(response) {
       this.recaptcha = response
@@ -104,7 +104,7 @@ export default {
         },
         error => {
           this.error = error.status
-          console.log(error.detail)
+          // console.log(error.detail)
         }
       )
     },
@@ -130,7 +130,7 @@ export default {
         },
         error => {
           this.error = error.status
-          console.log(error.detail)
+          // console.log(error.detail)
         }
       )
     },

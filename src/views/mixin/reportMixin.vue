@@ -35,7 +35,7 @@ export default {
       interval = this.getDateInterval(this.$route.query.date + 'T00:00+00:00', this.$route.query.last)
     } catch (e) {
       if (!(e instanceof RangeError)) {
-        console.log('Range Error')
+        // console.log('Range Error')
       }
       interval = this.getDateInterval(new Date(), 3) // fallback to last few days
     }

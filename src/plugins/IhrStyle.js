@@ -43,7 +43,8 @@ export default {
       },
       methods: {
         logger(something) {
-          console.log(something)
+          // console.log(something)
+          window.alert(something)
         },
         newWindow(route) {
           let routeData = this.$router.resolve(route)

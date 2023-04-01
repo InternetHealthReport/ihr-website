@@ -1,32 +1,38 @@
-/* eslint-disable no-console */
-
+import winston from 'winston'
 import { register } from 'register-service-worker'
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: { service: 'my-app' },
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+})
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     ready () {
-      console.log(
-        'App is being served from cache by a service worker.\n' +
-        'For more details, visit https://goo.gl/AFskqB'
-      )
+      logger.info('App is being served from cache by a service worker.')
     },
     registered () {
-      console.log('Service worker has been registered.')
+      logger.info('Service worker has been registered.')
     },
     cached () {
-      console.log('Content has been cached for offline use.')
+      logger.info('Content has been cached for offline use.')
     },
     updatefound () {
-      console.log('New content is downloading.')
+      logger.info('New content is downloading.')
     },
     updated () {
-      console.log('New content is available; please refresh.')
+      logger.info('New content is available; please refresh.')
     },
     offline () {
-      console.log('No internet connection found. App is running in offline mode.')
+      logger.info('No internet connection found. App is running in offline mode.')
     },
     error (error) {
-      console.error('Error during service worker registration:', error)
+      logger.error('Error during service worker registration:', error)
     }
   })
 }
