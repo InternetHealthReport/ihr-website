@@ -103,15 +103,6 @@ class LibraryDelayer {
   }
 
   loadNext(body) {
-    const logger = (message) => {
-      // implement your custom logging mechanism here, e.g. write to a log file
-      // instead of the console
-      // For example:
-      fs.appendFile('logfile.txt', message + '\n', (err) => {
-        if (err) throw err;
-      });
-    }
-    
     return new Promise(async resolve => {
       let script = this.popScriptUrl()
       if (script != null) {
@@ -120,16 +111,13 @@ class LibraryDelayer {
         let promise = new Promise(localResolve => {
           scriptElem.onload = () => {
             localResolve()
-            // console.log('loaded: ' + script)
-            logger('loaded: ' + script)
+            console.log('loaded: ' + script)
           }
           body.appendChild(scriptElem)
           // console.log('appended: ' + script)
-          logger('appended: ' + script)
         })
         await promise
         // console.log('promise concluded: ' + script)
-        logger('promise concluded: ' + script)
         await this.loadNext(body)
       }
       resolve()
