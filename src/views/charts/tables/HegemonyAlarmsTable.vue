@@ -12,6 +12,7 @@
     row-key="originasn"
     :expanded.sync="expandedRow"
     loading-label="Fetching the latest network dependency alarms..."
+    class="scroller"
   >
     <template v-slot:body="props">
       <q-tr :props="props">
@@ -230,4 +231,21 @@ export default {
 
     tbody td
         text-align left
+
+.scroller
+    max-height 350pt
+    overflow-y auto
+
+.scroller::-webkit-scrollbar
+  width: 9px;
+  
+.scroller::-webkit-scrollbar-track
+  background: lightgrey
+  border: 4px solid transparent;
+  background-clip: content-box;  
+  
+  
+.scroller::-webkit-scrollbar-thumb
+  background: #c3c3c3;
+  border-radius 6pt
 </style>

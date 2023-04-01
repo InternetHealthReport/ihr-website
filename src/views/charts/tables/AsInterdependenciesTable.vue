@@ -1,5 +1,7 @@
 <template>
-  <q-table :data="rows" :columns="columns" row-key="asNumber" :pagination.sync="pagination" :loading="loading" binary-state-sort flat>
+  <q-table :data="rows" :columns="columns" row-key="asNumber" :pagination.sync="pagination" :loading="loading" binary-state-sort flat 
+  class="scroller"
+  >
     <template v-slot:body="props">
       <q-tr :props="props" @click.native="routeToAsn(props.colsMap.asNumber, props.row)" class="IHR_table-row">
         <q-td
@@ -142,4 +144,21 @@ export default {
   },
 }
 </script>
-<style lang="stylus"></style>
+<style lang="stylus">
+.scroller
+    max-height 350pt
+    overflow-y auto
+
+.scroller::-webkit-scrollbar
+  width: 9px;
+  
+.scroller::-webkit-scrollbar-track
+  background: lightgrey
+  border: 4px solid transparent;
+  background-clip: content-box;  
+  
+  
+.scroller::-webkit-scrollbar-thumb
+  background: #c3c3c3;
+  border-radius 6pt
+</style>

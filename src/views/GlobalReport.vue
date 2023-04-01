@@ -115,11 +115,11 @@
           </div>
         </template>
         <q-card class="IHR_charts-body">
-          <q-card-section>
-            <hegemony-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
-              :min-deviation="minDeviationNetworkDelay" :filter="hegemonyFilter"
-              @filteredRows="newFilteredRows('hegemony', $event)" @loading="hegemonyLoading"
-              ref="ihrChartHegemonyAlarms" />
+          <q-card-section >
+            <hegemony-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" class="scroller"
+            :min-deviation="minDeviationNetworkDelay" :filter="hegemonyFilter"
+            @filteredRows="newFilteredRows('hegemony', $event)" @loading="hegemonyLoading"
+            ref="ihrChartHegemonyAlarms" />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -178,7 +178,7 @@
         </template>
         <q-card class="IHR_charts-body">
           <q-card-section>
-            <network-delay-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
+            <network-delay-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" class="scroller"
               :min-deviation="minDeviationNetworkDelay" :filter="ndelayFilter"
               @filteredRows="newFilteredRows('networkDelay', $event)" @loading="networkDelayLoading"
               ref="ihrChartNetworkDelay" />
@@ -246,7 +246,7 @@
         </template>
         <q-card class="IHR_charts-body">
           <q-card-section>
-            <delay-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-nprobes="minNprobes"
+            <delay-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-nprobes="minNprobes" class="scroller"
               :min-deviation="minDeviation" :min-diffmedian="minDiffmedian" :max-diffmedian="maxDiffmedian"
               :filter="linkFilter" @filteredRows="newFilteredRows('linkDelay', $event)" @loading="linkDelayLoading"
               :selected-asn="asnList" ref="ihrChartDelay" @prefix-details="showDetails($event)" />
@@ -316,7 +316,7 @@
 
       <q-card class="IHR_charts-body">
         <q-card-section>
-          <disco-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
+          <disco-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel" 
             :geoprobes.sync="geoProbes" :filter="discoFilter" @filteredRows="newFilteredRows('disco', $event)"
             @loading="discoLoading" :selected-asn="asnList" ref="ihrChartDisco" />
         </q-card-section>
@@ -540,6 +540,23 @@ export default {
 
 <style lang="stylus">
 @import '../styles/quasar.variables';
+.scroller
+    max-height 300pt
+    overflow-y auto
+
+.scroller::-webkit-scrollbar 
+  width: 9px;
+  
+.scroller::-webkit-scrollbar-track 
+  background: lightgrey
+  border: 4px solid transparent;
+  background-clip: content-box;  
+  
+  
+.scroller::-webkit-scrollbar-thumb 
+  background: #c3c3c3;
+  border-radius 6pt
+  
 .stat-grid
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -640,4 +657,5 @@ export default {
           letter-spacing -7px
           */
           cursor pointer
+  
 </style>
