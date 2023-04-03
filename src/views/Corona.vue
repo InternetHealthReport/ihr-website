@@ -71,7 +71,7 @@
                 :yMax="yMax"
                 :searchBar="searchBar"
               />
-              <p><center>Lockdown({{ countriesInfo[selected['value']].start }})</center></p>
+              <p><center>Lockdown ({{ countriesInfo[selected['value']].start }})</center></p>
             </div>
             <div class="column_corona">
               <network-delay-chart
