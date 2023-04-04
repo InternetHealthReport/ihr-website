@@ -217,6 +217,16 @@ export default {
       default: true,
     },
   },
+  emits: {
+    'sidebar-action': function(sideBarAction) {
+      if (sideBarAction !== null) {
+        return true;
+      } else {
+        console.warn('Sidebar Action is missing!');
+        return false;
+      }
+    }
+  },
   mounted() {
     this.$emit('sidebar-action', true)
   },
@@ -252,8 +262,9 @@ export default {
 
     & > div
       & > h2
-        margin-bottom 20pt
+        margin-top 34pt
         font-size 18pt
+        font-weight 500
         line-height 1.5rem
         @media screen and (max-width: 600px)
           font-size 16pt
@@ -262,6 +273,11 @@ export default {
         overflow-anchor none
         & > a
           overflow-anchor none
+#cod
+      background-color: #e7e9eb
+      padding:1em
+      border-radius: 6pt
+      padding-bottom: 0
 
 .IHR_
   &documentation-page-sidebar

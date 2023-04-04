@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <div>
       <h1 class="text-center">Network Delays During National Lockdowns</h1>
 
@@ -27,32 +27,13 @@
           <p>Be patient. Loading all graphs may take some time for certain countries.</p>
         </div>
       </div>
-      <div class="row justify-center">
+      <div class="row justify-center box_corona">
         <div class="col-3">
             <!-- <button @click="generateReport()" class="np-btn">Save this report as pdf</button> -->
           <q-select v-model="selected" :options="selection" label="Select a country" />
         </div>
       </div>
       <div v-if="selected">
-        <div class="row justify-center q-pa-xl">
-          <div class="col-4">
-            <h3 class="text-center">
-              One month before lockdown
-              <q-icon name="fas fa-level-down-alt"></q-icon>
-            </h3>
-          </div>
-          <div class="col-4">
-            <h3 class="text-center">
-              Lockdown ({{ countriesInfo[selected['value']].start }})
-              <q-icon name="fas fa-level-down-alt"></q-icon>
-            </h3>
-          </div>
-          <div class="col-4">
-            <h3 class="text-center">
-              Latest
-              <q-icon name="fas fa-level-down-alt"></q-icon>
-            </h3>
-          </div>
         </div>
         <div v-for="asn in asns" :key="`${asn.name}-${asn.as}`">
           <div class="row">
@@ -60,7 +41,7 @@
               <div class="IHR_anchor" :id="asn.as"></div>
               <h2>{{ asn.name }} (AS{{ asn.as }})</h2>
             </div>
-            <div class="col-4 q-pa-xs">
+            <div class="column_corona">
               <network-delay-chart
                 :start-time="before_start"
                 :end-time="before_end"
@@ -74,8 +55,9 @@
                 :yMax="yMax"
                 :searchBar="searchBar"
               />
+              <p><center>One month before Lockdown</center></p>
             </div>
-            <div class="col-4 q-pa-xs">
+            <div class="column_corona">
               <network-delay-chart
                 :start-time="during_start"
                 :end-time="during_end"
@@ -89,8 +71,9 @@
                 :yMax="yMax"
                 :searchBar="searchBar"
               />
+              <p><center>Lockdown({{ countriesInfo[selected['value']].start }})</center></p>
             </div>
-            <div class="col-4 q-pa-xs">
+            <div class="column_corona">
               <network-delay-chart
                 :start-time="startTime"
                 :end-time="endTime"
@@ -104,6 +87,7 @@
                 :yMax="yMax"
                 :searchBar="searchBar"
               />
+              <p><center>Latest</center></p>
             </div>
           </div>
         </div>
@@ -115,7 +99,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -163,7 +146,7 @@ export default {
       this.yMax = this.yMax > newMaxY ? this.yMax : newMaxY
     },
     generateReport() {
-      let element = document.getElementById('IHR_as-and-ixp-container')
+      let element = this.$refs['ihrAsAndIxpContainer']
       let opt = {
         margin: 0,
         filename: 'Corona.pdf',
@@ -228,4 +211,18 @@ export default {
     position relative
     top -250px
     visibility hidden
+p
+    font-size 1.2rem
+.box_corona
+    padding-top 40px
+    padding-bottom 50px
+.column_corona
+  float left
+  width 33.33%
+@media screen and (max-width:720px)
+  .column_corona
+    width 100%
+@media screen and (max-width:1024px) and (min-width 720px)
+  .column_corona
+    width 50%
 </style>

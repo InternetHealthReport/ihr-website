@@ -60,6 +60,24 @@ export default {
       required: true,
     },
   },
+  emits: {
+    'input': function(list) {
+      if (list !== null) {
+        return true;
+      } else {
+        console.warn('List is missing!');
+        return false;
+      }
+    },
+    'search': function(searchValue) {
+      if (searchValue !== null) {
+        return true;
+      } else {
+        console.warn('Search Value is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     return {
       text: '',

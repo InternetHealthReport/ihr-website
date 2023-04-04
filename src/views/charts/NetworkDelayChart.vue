@@ -1,6 +1,36 @@
 <template>
   <div class="IHR_chart">
-    <div class="row justify-center" v-if="searchBar">
+    <div class="justify-center" v-if="searchBar">
+      <div v-if="isCovid">
+        <div class="q-pa-sm"
+        >
+          <location-search-bar
+            @select="addStartLocation"
+            :hint="$t('searchBar.locationSource')"
+            :label="$t('searchBar.locationHint')"
+            :selected="startPointNameStr"
+            style="width: 65%;margin: auto; margin-bottom: -6px;"
+            />
+        </div>
+        <div class="q-pa-sm"
+        >
+          <location-search-bar 
+          @select="addEndLocation" 
+          :hint="$t('searchBar.locationDestination')" 
+          :label="$t('searchBar.locationHint')" 
+          :selected="startPointNameStr"
+          style="width: 65%;margin: auto;margin-bottom: -6px;"
+          />
+        </div>
+        <div style="display: block;">
+      <div class="col-3 q-pa-sm">
+        <q-btn @click="debouncedApiCall" color="secondary" class="q-ml-sm">Add</q-btn>
+        <q-btn @click="clearGraph" class="q-ml-sm">Clear all</q-btn>
+      </div>
+      </div>
+      </div>
+      <div v-else>
+        <div class="row justify-center">
       <div class="col-4 q-pa-sm">
         <location-search-bar
           @select="addStartLocation"
@@ -16,6 +46,8 @@
         <q-btn @click="debouncedApiCall" color="secondary" class="q-ml-sm">Add</q-btn>
         <q-btn @click="clearGraph" class="q-ml-sm">Clear all</q-btn>
       </div>
+      </div>
+    </div>
     </div>
     <div class="row">
       <div class="col">
@@ -159,6 +191,33 @@ export default {
       default: '',
     },
   },
+  emits: {
+    'prefix-details': function(event) {
+      if (event !== null) {
+        return true;
+      } else {
+        console.warn('Event is missing!');
+        return false;
+      }
+    },
+    'max-value': function(newMaxY) {
+      if (newMaxY !== null) {
+        return true;
+      } else {
+        console.warn('NewMaxY is missing!');
+        return false;
+      }
+    },
+    'display': function(isDisplayed) {
+      if (isDisplayed !== null) {
+        return true;
+      } else {
+        console.warn('IsDisplayed is missing!');
+        return false;
+      }
+    }
+
+  },
   data() {
     var layout = NET_DELAY_LAYOUT
     return {
@@ -201,6 +260,7 @@ export default {
       }
     },
     apiCall() {
+      this.clearGraph()
       this.loadingDelay = true
       this.setFilter()
       this.loading = true
@@ -349,6 +409,9 @@ export default {
     },
   },
   computed: {
+    isCovid(){
+      return window.location.href.includes('covid')
+    },
     delayUrl() {
       return this.$ihr_api.getUrl(this.apiFilter)
     },

@@ -10,7 +10,7 @@
           </router-link>
         </q-item>
         <network-search-bar class="col-4" />
-        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm">
+        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md">
           <q-btn-group flat :key="item.entryName" v-for="item in simple_menu">
             <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }" />
             <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
@@ -86,7 +86,7 @@ const simple_menu = [
       {
         entryName: 'header.countryReport',
         routeName: 'countries',
-        summary: 'Overview of Internet ressources per country',
+        summary: 'Overview of Internet resources per country',
       },
       {
         entryName: 'header.networkReport',
@@ -96,7 +96,7 @@ const simple_menu = [
       {
         entryName: 'header.rovReport',
         routeName: 'rov',
-        summary: 'Route Origin Validation of ressources seen on BGP',
+        summary: 'Route Origin Validation of resources seen on BGP',
       },
       {
         entryName: 'header.covid19',
@@ -178,6 +178,7 @@ menu-delinkify(val)
   color white
   text-decoration none
   text-transform capitalize
+  margin-right 10px
   if val
     font-weight 700
 
@@ -226,4 +227,8 @@ menu-delinkify(val)
 
   &last-element
     height 50px;
+    
+@media screen and (max-width: 1024px)
+  .col-12.row.no-wrap.items-center
+    justify-content space-around
 </style>

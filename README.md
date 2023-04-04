@@ -20,13 +20,18 @@ Clone the project in localhost
 
 ```bash
 git clone https://github.com/InternetHealthReport/ihr-website.git
+cd ihr-website
 ```
+Note: 
+- Currently the project supports node  --version =< 16.9.1 
+- you can use [nvm](https://github.com/nvm-sh/nvm) to switch between node versions as per your need 
 
 Install all the npm packages. Go to root directory and type the following command to install all npm packages
 
 ```bash
 npm install
 ```
+
 
 For compilations and hot-reloads in development
 
@@ -61,6 +66,10 @@ npm run test:unit
 ### Customize configuration
 
 See [Configuration Reference](https://cli.vuejs.org/config/) test
+
+## Set up
+Check out our installation video [here](https://youtu.be/mdjMdaLdlfY) for a step-by-step guide on how to install and set up our software
+
 
 ## Ways to contribute
 
