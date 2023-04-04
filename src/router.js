@@ -8,6 +8,7 @@ import API from '@/views/Api'
 import Contact from '@/views/Contact'
 import Countries from '@/views/Countries'
 import Networks from '@/views/Networks'
+import Prefixes from '@/views/Prefixes'
 import Corona from '@/views/Corona'
 import ROV from '@/views/ROV'
 import MetisHome from '@/views/MetisHome'
@@ -103,6 +104,16 @@ export default new Router({
         default: Networks,
       },
       meta: { title: 'Network Report - IHR' },
+    },
+    {
+      name: 'prefixes',
+      path: `${routerBase}prefixes/:asn?`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Prefixes,
+      },
+      meta: { title: 'Prefix Report - IHR' },
     },
     {
       name: 'rov',

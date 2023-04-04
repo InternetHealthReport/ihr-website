@@ -81,6 +81,15 @@ var AS_INTERDEPENDENCIES_LAYOUT = {
   },
 }
 
+var PREFIX_DEPENDENCIES_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  yaxis: {
+    title: '',
+    domain: [0.6, 1],
+    range: [0, 101],
+  },
+}
+
 var HEGEMONY_ALARMS_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
