@@ -54,6 +54,7 @@
       </q-card-section>
       <q-separator />
     </q-card>
+    <a id="hegemony"></a>
     <div v-show="!this.nbAlarms['hegemony']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -64,7 +65,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="hegemony"></a>
                 <div class="text-primary text-grey">
                   {{ $t('charts.asInterdependencies.title') }}
                 </div>
@@ -95,7 +95,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="hegemony"></a>
                 <div class="text-primary">
                   {{ $t('charts.asInterdependencies.title') }}
                 </div>
@@ -124,6 +123,7 @@
         </q-card>
       </q-expansion-item>
     </div>
+    <a id="networkDelay"></a>
     <div v-show="!this.nbAlarms['networkDelay']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -133,7 +133,6 @@
                 <q-icon name="fas fa-shipping-fast" color="primary" text-color="white" />
               </q-item-section>
               <q-item-section>
-                <a id="networkDelay"></a>
                 <div class="text-primary text-grey">{{ $t('charts.networkDelay.title') }}</div>
                 <div class="text-caption text-grey">Traceroute data</div>
               </q-item-section>
@@ -160,7 +159,6 @@
                 <q-icon name="fas fa-shipping-fast" color="primary" text-color="white" />
               </q-item-section>
               <q-item-section>
-                <a id="networkDelay"></a>
                 <div class="text-primary">{{ $t('charts.networkDelay.title') }}</div>
                 <div class="text-caption text-grey">Traceroute data</div>
               </q-item-section>
@@ -186,6 +184,7 @@
         </q-card>
       </q-expansion-item>
     </div>
+    <a id="linkDelay"></a>
     <div v-show="!this.nbAlarms['linkDelay']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -196,7 +195,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="linkDelay"></a>
                 <div class="text-primary text-grey">
                   {{ $t('charts.delayAndForwarding.title') }}
                 </div>
@@ -226,7 +224,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="linkDelay"></a>
                 <div class="text-primary">
                   {{ $t('charts.delayAndForwarding.title') }}
                 </div>
@@ -254,6 +251,7 @@
         </q-card>
       </q-expansion-item>
     </div>
+    <a id="disco"></a>
     <!-- <div v-show="!this.nbAlarms['disco']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -264,7 +262,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="disco"></a>
                 <div class="text-primary text-grey">
                   {{ $t('charts.disconnections.title') }}
                 </div>
@@ -295,7 +292,6 @@
             </q-item-section>
 
             <q-item-section>
-              <a id="disco"></a>
               <div class="text-primary">
                 {{ $t('charts.disconnections.title') }}
               </div>
