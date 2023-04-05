@@ -260,7 +260,6 @@ export default {
       }
     },
     apiCall() {
-      this.clearGraph()
       this.loadingDelay = true
       this.setFilter()
       this.loading = true
@@ -424,6 +423,9 @@ export default {
     },
   },
   watch: {
+    startTime(){
+        this.clearGraph()
+    },
     startPointNames() {
       //reset filter
       this.endPointKeysFilter = this.endPointNames
@@ -458,7 +460,9 @@ export default {
     },
     clear() {
       this.clearGraph()
-      this.loading = true
+      this.$nextTick(function () {
+        this.loading = true
+      })
     },
   },
 }
