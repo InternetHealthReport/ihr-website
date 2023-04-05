@@ -570,11 +570,17 @@ export default {
 .IHR_charts-body
   border-radius 20px
   background: white;
-  border 1px solid #E9E8E8
+  border-left 1px solid #F9F8F8
+  border-right 1px solid #F9F8F8
+  border-bottom 1px solid #F9F8F8
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 .IHR_charts-title
   width 100%
   margin-top 10px
+  border-top 1px solid #F9F8F8
+  border-left 1px solid #F9F8F8
+  border-right 1px solid #F9F8F8
+  border-bottom 1px solid #F9F8F8
 .graph-header
   display flex
   justify-content flex-start
