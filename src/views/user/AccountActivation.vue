@@ -71,7 +71,7 @@ export default {
             this.actualState = TOKEN_STATE.VALID
           },
           error => {
-            console.log(error.status)
+            // console.log(error.status)
             switch (error.status) {
               case 403:
                 this.$q.notify({

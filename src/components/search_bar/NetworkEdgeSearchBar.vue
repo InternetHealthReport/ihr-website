@@ -39,7 +39,7 @@ export default {
             })
             return this.retrievedValues.length > MAX_RESULTS
           })
-          console.log(result)
+          // console.log(result)
         },
         error => {
           console.error(error)

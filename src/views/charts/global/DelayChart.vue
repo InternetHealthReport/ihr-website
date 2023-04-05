@@ -99,7 +99,7 @@ export default {
       this.$ihr_api.delay_alarms(
         this.delayAlarmsFilter,
         result => {
-          console.log('queryDelayAlarmsAPI', result)
+          // console.log('queryDelayAlarmsAPI', result)
           let data = []
           let asn_list = []
           result.results.forEach(alarm => {

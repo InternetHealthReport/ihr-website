@@ -36,7 +36,7 @@ export default {
   },
   mounted() {
     this.$libraryDelayer.load('bgplay_api', () => {
-      console.log('resolved')
+      // console.log('resolved')
       this.bgplay = BGPlayWidget(
         'BGPlay', // Version type (classic)
         this.myId, // DOM element ID to populate
