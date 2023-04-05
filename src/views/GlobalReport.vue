@@ -26,29 +26,29 @@
       <q-card-section class="stat-cards">
         <div class="stat-grid">
           <div class="stat-tab text-center text-h3">
-            <a href="#hegemony" class="IHR_global_stats">
+            <router-link :to="{ path: this.$route.path, query: this.$route.query, hash: 'hegemony' }" class="IHR_global_stats">
               <q-spinner v-if="loading.hegemony" color="primary" size="1em" />
               <b v-else>{{ nbAlarms.hegemony }}</b>
               AS Dependency Alarms
-            </a>
+            </router-link>
           </div>
           <div class="stat-tab text-center text-h3">
-            <a href="#networkDelay" class="IHR_global_stats">
+            <router-link :to="{ path: this.$route.path, query: this.$route.query, hash: 'networkDelay' }" class="IHR_global_stats">
               <q-spinner v-if="loading.networkDelay" color="primary" size="1em" />
               <b v-else>{{ nbAlarms.networkDelay }}</b> Network Delay Alarms
-            </a>
+            </router-link>
           </div>
           <div class="stat-tab text-center text-h3">
-            <a href="#linkDelay" class="IHR_global_stats">
+            <router-link :to="{ path: this.$route.path, query: this.$route.query, hash: 'linkDelay' }" class="IHR_global_stats">
               <q-spinner v-if="loading.linkDelay" color="primary" size="1em" />
               <b v-else>{{ nbAlarms.linkDelay }}</b> Link Delay Alarms
-            </a>
+            </router-link>
           </div>
           <div class="stat-tab text-center text-h3">
-            <a href="#disco" class="IHR_global_stats">
+            <router-link :to="{ path: this.$route.path, query: this.$route.query, hash: 'disco' }" class="IHR_global_stats">
               <q-spinner v-if="loading.disco" color="primary" size="1em" />
               <b v-else>{{ nbAlarms.disco }}</b> Network Disconnections
-            </a>
+            </router-link>
           </div>
         </div>
       </q-card-section>
@@ -458,6 +458,7 @@ export default {
           last: this.interval.dayDiff(),
           date: this.$options.filters.ihrUtcString(this.interval.end, false),
         },
+        hash: this.$route.hash,
       })
 
       this.minAvgLevel = PRAMETERS_PRESETS.DISCO_AVG_LEVEL[this.filterLevel]
