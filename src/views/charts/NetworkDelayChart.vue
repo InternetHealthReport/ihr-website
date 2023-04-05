@@ -424,7 +424,7 @@ export default {
   },
   watch: {
     startTime(){
-        this.clearGraph()
+      this.clearGraph()
     },
     startPointNames() {
       //reset filter
