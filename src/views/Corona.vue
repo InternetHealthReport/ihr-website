@@ -155,7 +155,7 @@ export default {
         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
       }
       html2pdf(element, opt)
-      console.log('button is clicked')
+      // console.log('button is clicked')
     },
   },
   mounted() {},

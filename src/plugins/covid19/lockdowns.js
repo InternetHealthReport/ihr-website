@@ -291,7 +291,7 @@ const lockdowns = {
     },
     name: 'Albania',
     scope: 'National',
-    start: '\t2020-03-13',
+    start: '2020-03-13',
   },
   Argentina: {
     cc: 'AR',
@@ -575,7 +575,7 @@ const lockdowns = {
     },
     name: 'Argentina',
     scope: 'National',
-    start: '\t2020-03-19',
+    start: '2020-03-19',
   },
   Armenia: {
     cc: 'AM',
@@ -731,7 +731,7 @@ const lockdowns = {
     },
     name: 'Armenia',
     scope: 'National',
-    start: '\t2020-03-24',
+    start: '2020-03-24',
   },
   Australia: {
     cc: 'AU',
@@ -917,7 +917,7 @@ const lockdowns = {
     },
     name: 'Australia',
     scope: 'National',
-    start: '\t2020-03-23',
+    start: '2020-03-23',
   },
   Austria: {
     cc: 'AT',
@@ -1096,7 +1096,7 @@ const lockdowns = {
     },
     name: 'Austria',
     scope: 'National',
-    start: '\t2020-03-16',
+    start: '2020-03-16',
   },
   Azerbaijan: {
     cc: 'AZ',
@@ -1360,7 +1360,7 @@ const lockdowns = {
     },
     name: 'Azerbaijan',
     scope: 'National',
-    start: '\t2020-03-31',
+    start: '2020-03-31',
   },
   Bangladesh: {
     cc: 'BD',
@@ -1617,7 +1617,7 @@ const lockdowns = {
     },
     name: 'Bangladesh',
     scope: 'National',
-    start: '\t2020-03-26',
+    start: '2020-03-26',
   },
   Belgium: {
     cc: 'BE',
@@ -1763,7 +1763,7 @@ const lockdowns = {
     },
     name: 'Belgium',
     scope: 'National',
-    start: '\t2020-03-18',
+    start: '2020-03-18',
   },
   Bolivia: {
     cc: 'BO',
@@ -2019,7 +2019,7 @@ const lockdowns = {
     },
     name: 'Bolivia',
     scope: 'National',
-    start: '\t2020-03-22',
+    start: '2020-03-22',
   },
   Botswana: {
     cc: 'BW',
@@ -2269,7 +2269,7 @@ const lockdowns = {
     },
     name: 'Botswana',
     scope: 'National',
-    start: '\t2020-04-02',
+    start: '2020-04-02',
   },
   Chile: {
     cc: 'CL',
@@ -2558,7 +2558,7 @@ const lockdowns = {
     },
     name: 'Chile',
     scope: 'National',
-    start: '\t2020-03-19',
+    start: '2020-03-19',
   },
   Colombia: {
     cc: 'CO',
@@ -2862,7 +2862,7 @@ const lockdowns = {
     },
     name: 'Colombia',
     scope: 'National',
-    start: '\t2020-03-25',
+    start: '2020-03-25',
   },
   'Costa Rica': {
     cc: 'CR',
@@ -3156,7 +3156,7 @@ const lockdowns = {
     },
     name: 'Costa Rica',
     scope: 'National',
-    start: '\t2020-03-23',
+    start: '2020-03-23',
   },
   Croatia: {
     cc: 'HR',
@@ -3365,7 +3365,7 @@ const lockdowns = {
     },
     name: 'Croatia',
     scope: 'National',
-    start: '\t2020-03-18',
+    start: '2020-03-18',
   },
   Cuba: {
     cc: 'CU',
@@ -3454,7 +3454,7 @@ const lockdowns = {
     },
     name: 'Cuba',
     scope: 'National',
-    start: '\t2020-03-23',
+    start: '2020-03-23',
   },
   Czech: {
     cc: 'CZ',
@@ -3595,7 +3595,7 @@ const lockdowns = {
     },
     name: 'Czech',
     scope: 'National',
-    start: '\t2020-03-16',
+    start: '2020-03-16',
   },
   Denmark: {
     cc: 'DK',
@@ -3818,7 +3818,7 @@ const lockdowns = {
     },
     name: 'Denmark',
     scope: 'National',
-    start: '\t2020-03-11',
+    start: '2020-03-11',
   },
   Dominican: {
     cc: 'DO',
@@ -3926,7 +3926,7 @@ const lockdowns = {
     },
     name: 'Dominican',
     scope: 'National',
-    start: '\t2020-03-19',
+    start: '2020-03-19',
   },
   Ecuador: {
     cc: 'EC',
@@ -4408,7 +4408,7 @@ const lockdowns = {
     },
     name: 'Ecuador',
     scope: 'National',
-    start: '\t2020-03-16',
+    start: '2020-03-16',
   },
   'El Salvador': {
     cc: 'SV',
@@ -4604,7 +4604,7 @@ const lockdowns = {
     },
     name: 'El Salvador',
     scope: 'National',
-    start: '\t2020-03-12',
+    start: '2020-03-12',
   },
   Eritrea: {
     cc: 'ER',
@@ -4668,7 +4668,7 @@ const lockdowns = {
     },
     name: 'Eritrea',
     scope: 'National',
-    start: '\t2020-04-02',
+    start: '2020-04-02',
   },
   France: {
     cc: 'FR',
@@ -4862,7 +4862,7 @@ const lockdowns = {
     },
     name: 'France',
     scope: 'National',
-    start: '\t2020-03-17',
+    start: '2020-03-17',
   },
   Georgia: {
     cc: 'GE',
@@ -4960,7 +4960,7 @@ const lockdowns = {
     },
     name: 'Georgia',
     scope: 'National',
-    start: '\t2020-03-31',
+    start: '2020-03-31',
   },
   Germany: {
     cc: 'DE',
@@ -5285,7 +5285,7 @@ const lockdowns = {
     },
     name: 'Greece',
     scope: 'National',
-    start: '\t2020-03-23',
+    start: '2020-03-23',
   },
   Guernsey: {
     cc: 'GG',
@@ -5358,7 +5358,7 @@ const lockdowns = {
     },
     name: 'Guernsey',
     scope: 'National',
-    start: '\t2020-03-25',
+    start: '2020-03-25',
   },
   Hungary: {
     cc: 'HU',
@@ -5528,7 +5528,7 @@ const lockdowns = {
     },
     name: 'Hungary',
     scope: 'National',
-    start: '\t2020-03-28',
+    start: '2020-03-28',
   },
   India: {
     cc: 'IN',
@@ -5734,7 +5734,7 @@ const lockdowns = {
     },
     name: 'India',
     scope: 'National',
-    start: '\t2020-03-25',
+    start: '2020-03-25',
   },
   Iraq: {
     cc: 'IQ',
@@ -5936,7 +5936,7 @@ const lockdowns = {
     },
     name: 'Iraq',
     scope: 'National',
-    start: '\t2020-03-22',
+    start: '2020-03-22',
   },
   Ireland: {
     cc: 'IE',
@@ -6145,7 +6145,7 @@ const lockdowns = {
     },
     name: 'Ireland',
     scope: 'National',
-    start: '\t2020-03-12',
+    start: '2020-03-12',
   },
   Italy: {
     cc: 'IT',
@@ -6325,7 +6325,7 @@ const lockdowns = {
     },
     name: 'Italy',
     scope: 'National',
-    start: '\t2020-03-09',
+    start: '2020-03-09',
   },
   Japan: {
     cc: 'JP',
@@ -6667,7 +6667,7 @@ const lockdowns = {
     },
     name: 'Jordan',
     scope: 'National',
-    start: '\t2020-03-18',
+    start: '2020-03-18',
   },
   Kuwait: {
     cc: 'KW',
@@ -6824,7 +6824,7 @@ const lockdowns = {
     },
     name: 'Kuwait',
     scope: 'National',
-    start: '\t2020-03-14',
+    start: '2020-03-14',
   },
   Lebanon: {
     cc: 'LB',
@@ -7142,7 +7142,7 @@ const lockdowns = {
     },
     name: 'Lebanon',
     scope: 'National',
-    start: '\t2020-03-15',
+    start: '2020-03-15',
   },
   Libya: {
     cc: 'LY',
@@ -7318,7 +7318,7 @@ const lockdowns = {
     },
     name: 'Libya',
     scope: 'National',
-    start: '\t2020-03-22',
+    start: '2020-03-22',
   },
   Lithuania: {
     cc: 'LT',
@@ -7493,7 +7493,7 @@ const lockdowns = {
     },
     name: 'Lithuania',
     scope: 'National',
-    start: '\t2020-03-16',
+    start: '2020-03-16',
   },
   Luxembourg: {
     cc: 'LU',
@@ -7580,7 +7580,7 @@ const lockdowns = {
     },
     name: 'Luxembourg',
     scope: 'National',
-    start: '\t2020-03-18',
+    start: '2020-03-18',
   },
   Malaysia: {
     cc: 'MY',
@@ -7760,7 +7760,7 @@ const lockdowns = {
     },
     name: 'Malaysia',
     scope: 'National',
-    start: '\t2020-03-18',
+    start: '2020-03-18',
   },
   Morocco: {
     cc: 'MA',
@@ -7907,7 +7907,7 @@ const lockdowns = {
     },
     name: 'Morocco',
     scope: 'National',
-    start: '\t2020-03-19',
+    start: '2020-03-19',
   },
   Nepal: {
     cc: 'NP',
@@ -8127,7 +8127,7 @@ const lockdowns = {
     },
     name: 'Nepal',
     scope: 'National',
-    start: '\t2020-03-24',
+    start: '2020-03-24',
   },
   Netherlands: {
     cc: 'NL',
@@ -8229,7 +8229,7 @@ const lockdowns = {
     },
     name: 'Netherlands',
     scope: 'National',
-    start: '\t2020-03-16',
+    start: '2020-03-16',
   },
   'New Zealand': {
     cc: 'NZ',
@@ -8389,7 +8389,7 @@ const lockdowns = {
     },
     name: 'New Zealand',
     scope: 'National',
-    start: '\t2020-03-26',
+    start: '2020-03-26',
   },
   'Northern Cyprus': {
     cc: 'CY',
@@ -8560,7 +8560,7 @@ const lockdowns = {
     },
     name: 'Northern Cyprus',
     scope: 'National',
-    start: '\t2020-03-30',
+    start: '2020-03-30',
   },
   Norway: {
     cc: 'NO',
@@ -8779,7 +8779,7 @@ const lockdowns = {
     },
     name: 'Norway',
     scope: 'National',
-    start: '\t2020-03-12',
+    start: '2020-03-12',
   },
   Pakistan: {
     cc: 'PK',
@@ -9153,7 +9153,7 @@ const lockdowns = {
     },
     name: 'Pakistan',
     scope: 'National',
-    start: '\t2020-03-24',
+    start: '2020-03-24',
   },
   Panama: {
     cc: 'PA',
@@ -9398,7 +9398,7 @@ const lockdowns = {
     },
     name: 'Panama',
     scope: 'National',
-    start: '\t2020-03-25',
+    start: '2020-03-25',
   },
   Papua: {
     cc: 'PG',
@@ -9570,7 +9570,7 @@ const lockdowns = {
     },
     name: 'Papua',
     scope: 'National',
-    start: '\t2020-03-24',
+    start: '2020-03-24',
   },
   Paraguay: {
     cc: 'PY',
@@ -9727,7 +9727,7 @@ const lockdowns = {
     },
     name: 'Paraguay',
     scope: 'National',
-    start: '\t2020-03-20',
+    start: '2020-03-20',
   },
   Peru: {
     cc: 'PE',
@@ -9933,7 +9933,7 @@ const lockdowns = {
     },
     name: 'Peru',
     scope: 'National',
-    start: '\t2020-03-16',
+    start: '2020-03-16',
   },
   Poland: {
     cc: 'PL',
@@ -10113,7 +10113,7 @@ const lockdowns = {
     },
     name: 'Poland',
     scope: 'National',
-    start: '\t2020-03-13',
+    start: '2020-03-13',
   },
   Portugal: {
     cc: 'PT',
@@ -10264,7 +10264,7 @@ const lockdowns = {
     },
     name: 'Portugal',
     scope: 'National',
-    start: '\t2020-03-19',
+    start: '2020-03-19',
   },
   'Republic of the Congo': {
     cc: 'CG',
@@ -10455,7 +10455,7 @@ const lockdowns = {
     },
     name: 'Republic of the Congo',
     scope: 'National',
-    start: '\t2020-03-31',
+    start: '2020-03-31',
   },
   Romania: {
     cc: 'RO',
@@ -10668,7 +10668,7 @@ const lockdowns = {
     },
     name: 'Romania',
     scope: 'National',
-    start: '\t2020-03-25',
+    start: '2020-03-25',
   },
   Rwanda: {
     cc: 'RW',
@@ -10864,7 +10864,7 @@ const lockdowns = {
     },
     name: 'Rwanda',
     scope: 'National',
-    start: '\t2020-03-21',
+    start: '2020-03-21',
   },
   Samoa: {
     cc: 'WS',
@@ -10957,7 +10957,7 @@ const lockdowns = {
     },
     name: 'Samoa',
     scope: 'National',
-    start: '\t2020-03-26',
+    start: '2020-03-26',
   },
   'San Marino': {
     cc: 'SM',
@@ -11070,7 +11070,7 @@ const lockdowns = {
     },
     name: 'San Marino',
     scope: 'National',
-    start: '\t2020-03-14',
+    start: '2020-03-14',
   },
   Serbia: {
     cc: 'RS',
@@ -11201,7 +11201,7 @@ const lockdowns = {
     },
     name: 'Serbia',
     scope: 'National',
-    start: '\t2020-03-15',
+    start: '2020-03-15',
   },
   Singapore: {
     cc: 'SG',
@@ -11436,7 +11436,7 @@ const lockdowns = {
     },
     name: 'Singapore',
     scope: 'National',
-    start: '\t2020-04-07',
+    start: '2020-04-07',
   },
   Slovakia: {
     cc: 'SK',
@@ -11606,7 +11606,7 @@ const lockdowns = {
     },
     name: 'Slovakia',
     scope: 'National',
-    start: '\t2020-03-16',
+    start: '2020-03-16',
   },
   'South Africa': {
     cc: 'ZA',
@@ -11781,7 +11781,7 @@ const lockdowns = {
     },
     name: 'South Africa',
     scope: 'National',
-    start: '\t2020-03-26',
+    start: '2020-03-26',
   },
   Spain: {
     cc: 'ES',
@@ -11942,7 +11942,7 @@ const lockdowns = {
     },
     name: 'Spain',
     scope: 'National',
-    start: '\t2020-03-14',
+    start: '2020-03-14',
   },
   Switzerland: {
     cc: 'CH',
@@ -12078,7 +12078,7 @@ const lockdowns = {
     },
     name: 'Switzerland',
     scope: 'National',
-    start: '\t2020-03-17',
+    start: '2020-03-17',
   },
   Thailand: {
     cc: 'TH',
@@ -12379,7 +12379,7 @@ const lockdowns = {
     },
     name: 'Thailand',
     scope: 'National',
-    start: '\t2020-03-25',
+    start: '2020-03-25',
   },
   Tunisia: {
     cc: 'TN',
@@ -12653,7 +12653,7 @@ const lockdowns = {
     },
     name: 'Tunisia',
     scope: 'National',
-    start: '\t2020-03-22',
+    start: '2020-03-22',
   },
   Turkey: {
     cc: 'TR',
@@ -12967,7 +12967,7 @@ const lockdowns = {
     },
     name: 'Turkey',
     scope: 'National',
-    start: '\t2020-04-11',
+    start: '2020-04-11',
   },
   Ukraine: {
     cc: 'UA',
@@ -13084,7 +13084,7 @@ const lockdowns = {
     },
     name: 'Ukraine',
     scope: 'National',
-    start: '\t2020-03-17',
+    start: '2020-03-17',
   },
   'United Arab Emirates': {
     cc: 'AE',
@@ -13167,7 +13167,7 @@ const lockdowns = {
     },
     name: 'United Arab Emirates',
     scope: 'National',
-    start: '\t2020-03-26',
+    start: '2020-03-26',
   },
   'United Kingdom': {
     cc: 'GB',
@@ -13332,7 +13332,7 @@ const lockdowns = {
     },
     name: 'United Kingdom',
     scope: 'National',
-    start: '\t2020-03-23',
+    start: '2020-03-23',
   },
   'United States': {
     cc: 'US',
@@ -13743,7 +13743,7 @@ const lockdowns = {
     },
     name: 'Venezuela',
     scope: 'National',
-    start: '\t2020-03-17',
+    start: '2020-03-17',
   },
 }
 export default lockdowns

@@ -65,8 +65,8 @@ export default {
     apiCall() {
       const pingPromise = this.getPingSlashData(this.ASN, this.startTime, this.endTime)
 
-      console.log(this.startTime)
-      console.log(this.endTime)
+      // console.log(this.startTime)
+      // console.log(this.endTime)
       let pingDataDates = []
       let pingDates = []
       let pingDataValues = []
@@ -90,7 +90,7 @@ export default {
 
         // storing pingData Values
         pingDataValues = pingData.values
-        console.log(pingData)
+        // console.log(pingData)
         // normalizing the data
         const highestValue1 = Math.max(...pingDataValues)
 

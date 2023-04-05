@@ -331,7 +331,7 @@ export default {
         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
       }
       html2pdf(element, opt)
-      console.log('button is clicked')
+      // console.log('button is clicked')
     },
   },
   mounted() {
@@ -384,8 +384,8 @@ export default {
     },
     '$route.params.asn': {
       handler: function (asn) {
-        console.log(this.asNumber)
-        console.log(asn)
+        // console.log(this.asNumber)
+        // console.log(asn)
 
         if (this.$options.filters.ihr_AsOrIxpToNumber(asn) != this.asNumber) {
           this.loadingStatus = LOADING_STATUS.LOADING

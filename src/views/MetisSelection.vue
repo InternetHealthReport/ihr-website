@@ -93,15 +93,15 @@ function loadRirMap() {
     const cc_set = new Set(cc_list)
     RIR_MAP.set(rir, cc_set)
   }
-  console.log(RIR_MAP)
+  // console.log(RIR_MAP)
 }
 
 function translateCC(cc) {
-  console.log(cc)
+  // console.log(cc)
   for (const [rir, cc_set] of RIR_MAP) {
-    console.log(cc_set)
+    // console.log(cc_set)
     if (cc_set.has(cc)) {
-      console.log(rir)
+      // console.log(rir)
       return rir
     }
   }

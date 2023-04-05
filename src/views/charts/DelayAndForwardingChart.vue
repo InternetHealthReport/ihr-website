@@ -276,11 +276,11 @@ export default {
       this.layout.datarevision = new Date().getTime()
     },
     fetchDelay(data) {
-      console.log('fetchDelay')
+      // console.log('fetchDelay')
       this.fetchData(this.traces[0], data)
     },
     fetchForwarding(data) {
-      console.log('fetchForwarding')
+      // console.log('fetchForwarding')
       this.fetchData(this.traces[1], data)
     },
   },

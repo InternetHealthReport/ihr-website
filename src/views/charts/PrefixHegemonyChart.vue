@@ -1,7 +1,7 @@
 <template>
     <div class="IHR_chart">
         <div class="row justify-center">
-            <div class="col-2">
+            <div class="col-12 col-md-6 col-lg-2">
                 <q-select v-model="selection" :options="selectionOptions"> </q-select>
             </div>
         </div>
