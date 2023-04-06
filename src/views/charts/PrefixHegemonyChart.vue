@@ -2,7 +2,7 @@
     <div class="IHR_chart">
         <div class="row justify-center">
             <div class="col-2">
-                <q-select v-model="selection" :options="selectionOptions"> </q-select>
+                <q-select v-model="selection" :options="selectionOptions" ref="selectValidity"></q-select>
             </div>
         </div>
         <div v-if="loading" class="IHR_loading-spinner">
@@ -215,6 +215,15 @@ export default {
     this.details.date = `${this.startTime} - ${this.endTime}`
     if (this.$route.query.rov_tb == null) this.details.activeTab = 'routes'
     else this.details.activeTab = this.$route.query.rov_tb
+    const selectValiditySelect = this.$refs.selectValidity.$el
+    const toObserve = new IntersectionObserver(entries =>{
+      const [entry] = entries
+      const isVisible = entry.intersectionRatio === 1
+      if(!isVisible){
+        this.$refs.selectValidity.hidePopup()
+      }
+    })
+    toObserve.observe(selectValiditySelect)
   },
   methods: {
     makeHegemonyFilter() {
