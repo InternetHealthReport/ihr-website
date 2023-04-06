@@ -12,18 +12,18 @@ export default {
   props: {
     value: {
       type: Date,
-      require: true,
+      required: true,
     },
     min: {
       type: Date,
-      require: true,
+      required: true,
       default: () => {
         return new Date()
       },
     },
     max: {
       type: Date,
-      require: true,
+      required: true,
       default: () => {
         return new Date()
       },
@@ -36,8 +36,18 @@ export default {
       default: false,
     },
   },
+  emits: {
+    'input': function(selectedDate) {
+      if (selectedDate !== null) {
+        return true;
+      } else {
+        console.warn('SelectedDate is missing!');
+        return false;
+      }
+    }
+  },
   data() {
-    console.log(this.value.toISOString())
+    // console.log(this.value.toISOString())
     return {
       myId: `dateTimePicker${this._uid}`,
       selectedDateTime: this.$options.filters.ihrUtcString(this.value),

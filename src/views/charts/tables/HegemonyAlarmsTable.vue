@@ -81,6 +81,16 @@ export default {
       default: '',
     },
   },
+  emits: {
+    'nbAlarmsDisplayed': function(isNbAlarmsDisplayed) {
+      if (isNbAlarmsDisplayed !== null) {
+        return true;
+      } else {
+        console.warn('isNbAlarmsDisplayed is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     return {
       fetch: true,

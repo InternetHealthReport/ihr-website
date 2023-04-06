@@ -30,7 +30,7 @@ export default {
     },
     value: {
       type: Number,
-      require: true,
+      required: true,
       default: null,
     },
   },

@@ -182,7 +182,8 @@ export default {
       this.rows = values
     },
     destinationsSubtitle(val) {
-      return String(Object.keys(val).length) + ' ' + this.$t('charts.networkDelayAlarms.table.destinations')
+      if(Object.keys(val).length===1)return String(Object.keys(val).length) + ' ' + this.$t('charts.networkDelayAlarms.table.destinations').slice(0,-1)
+      return String(Object.keys(val).length) + ' ' + this.$t('charts.networkDelayAlarms.table.destinations');
     },
     destinationsBody(val) {
       var body = ''

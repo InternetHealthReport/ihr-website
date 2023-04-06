@@ -54,6 +54,16 @@ export default {
       required: true,
     },
   },
+  emits: {
+    'prefix-details': function(event) {
+      if (event !== null) {
+        return true;
+      } else {
+        console.warn('Event is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     let delayAlarmsFilter = new DelayAlarmsQuery()
       .numberOfProbes(this.minNprobes, DelayQuery.GTE)
@@ -89,7 +99,7 @@ export default {
       this.$ihr_api.delay_alarms(
         this.delayAlarmsFilter,
         result => {
-          console.log('queryDelayAlarmsAPI', result)
+          // console.log('queryDelayAlarmsAPI', result)
           let data = []
           let asn_list = []
           result.results.forEach(alarm => {

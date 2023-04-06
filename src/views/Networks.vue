@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="asNumber">
       <div>
         <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
@@ -322,7 +322,7 @@ export default {
       })
     },
     generateReport() {
-      let element = document.getElementById('IHR_as-and-ixp-container')
+      let element = this.$refs['ihrAsAndIxpContainer']
       let opt = {
         margin: 0,
         filename: 'Networks.pdf',
@@ -331,7 +331,7 @@ export default {
         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
       }
       html2pdf(element, opt)
-      console.log('button is clicked')
+      // console.log('button is clicked')
     },
   },
   mounted() {
@@ -384,8 +384,8 @@ export default {
     },
     '$route.params.asn': {
       handler: function (asn) {
-        console.log(this.asNumber)
-        console.log(asn)
+        // console.log(this.asNumber)
+        // console.log(asn)
 
         if (this.$options.filters.ihr_AsOrIxpToNumber(asn) != this.asNumber) {
           this.loadingStatus = LOADING_STATUS.LOADING

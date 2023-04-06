@@ -114,10 +114,10 @@ class LibraryDelayer {
             console.log('loaded: ' + script)
           }
           body.appendChild(scriptElem)
-          console.log('appended: ' + script)
+          // console.log('appended: ' + script)
         })
         await promise
-        console.log('promise concluded: ' + script)
+        // console.log('promise concluded: ' + script)
         await this.loadNext(body)
       }
       resolve()

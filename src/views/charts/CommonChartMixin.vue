@@ -14,20 +14,38 @@ export default {
   props: {
     startTime: {
       type: Date,
-      require: true,
+      required: true,
     },
     endTime: {
       type: Date,
-      require: true,
+      required: true,
     },
     fetch: {
       type: Boolean,
-      require: true,
+      required: true,
     },
     filter: {
       type: String,
       default: '',
     },
+  },
+  emits: {
+    'filteredRows': function(filteredSearchRowValues) {
+      if (filteredSearchRowValues !== null) {
+        return true;
+      } else {
+        console.warn('FilteredSearchRowValues is missing');
+        return false;
+      }
+    },
+    'loading': function(isLoading){
+      if (isLoading !== null) {
+        return true;
+      } else {
+        console.warn('IsLoading is missing!');
+        return false;
+      }
+    }
   },
   data() {
     //prevent calls within 500ms and execute only the last one

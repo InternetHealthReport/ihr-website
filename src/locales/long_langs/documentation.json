@@ -254,7 +254,7 @@
             },
             {
               "header": "Scripting",
-              "body": "<p>This is a python example to fetch the latest delay change results for AS174 on June 2017: </p> <pre><code>import sys\nimport requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams={\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'} \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
+              "body": "<p>This is a python example to fetch the latest delay change results for AS174 on June 2017: </p> <pre id='cod'><code>import sys\nimport requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams={\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'} \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
             }
           ]
         },
@@ -264,11 +264,11 @@
           "description": [
             {
               "header": "Installation",
-              "body": "Installing the library requires only the standard python package manager, pip. From a terminal type: <pre><code>pip install abondance</code></pre>"
+              "body": "Installing the library requires only the standard python package manager, pip. From a terminal type: <pre id='cod'><code>pip install abondance</code></pre>"
             },
             {
               "header": "Example:",
-              "body": "Here is a simple example to fetch and print AS dependency results for AS2501 on September 15th, 2018. <pre><code>from ihr.hegemony import Hegemony\nhege = Hegemony(originasns=[2501], start='2018-09-15 00:00', end='2018-09-15 23:59')\nfor r in hege.get_results():\n    print(r)</code></pre> For more examples visit <a href='https://pypi.org/project/abondance/' target='_blank'>https://pypi.org/project/abondance/</a>"
+              "body": "Here is a simple example to fetch and print AS dependency results for AS2501 on September 15th, 2018. <pre id='cod'><code>from ihr.hegemony import Hegemony\nhege = Hegemony(originasns=[2501], start='2018-09-15 00:00', end='2018-09-15 23:59')\nfor r in hege.get_results():\n    print(r)</code></pre> For more examples visit <a href='https://pypi.org/project/abondance/' target='_blank'>https://pypi.org/project/abondance/</a>"
             },
             {
               "header": "",

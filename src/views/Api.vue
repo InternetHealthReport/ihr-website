@@ -38,4 +38,5 @@ export default {
   background red
   padding-top 100px
   color $primary
+
 </style>

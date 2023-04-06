@@ -21,6 +21,7 @@ let vueI18n = new VueI18n({
   locale: process.env.VUE_APP_I18N_LOCALE || 'en-us',
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en-us',
   messages: loadLocaleMessages(),
+  silentTranslationWarn:true
 })
 
 const INTERPOLATION_REGEXP = /^{([^}]+)}|{([^}]+)}/g

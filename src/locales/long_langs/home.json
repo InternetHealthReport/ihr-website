@@ -57,7 +57,7 @@
         },
         {
           "name": "GSOC",
-          "logo": "gsoc-logo.jpg",
+          "logo": "gsoc-logo.svg",
           "url":"https://summerofcode.withgoogle.com/",
           "description": "Google Summer of Code supports new contributors into the development of IHR"
         },
