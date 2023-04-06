@@ -115,7 +115,7 @@ export default {
         })
       })
       if (!this.noAS) {
-        this.networkQuery.mixedContentSearch(value)
+        this.networkQuery.mixedContentSearch(searchTerm)
         this.$ihr_api.network(
           this.networkQuery,
           result => {
