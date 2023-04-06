@@ -28,20 +28,22 @@
         <q-item-section class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-section>
       </q-item>
       <q-item
-        v-else-if="scope.opt.type == 'country'"
-        v-bind="scope.itemProps"
-        v-on="scope.itemEvents"
-        @click="gotoCountry(scope.opt.value)"
-      >
+        v-else-if="scope.opt.type == 'country'" v-bind="scope.itemProps" v-on="scope.itemEvents" @click="gotoCountry(scope.opt.value)">     
         <q-item-section side color="accent"> Country </q-item-section>
         <q-item-section class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-section>
+      </q-item>
+      <q-item>
+        v-else-if="scope.opt.type == 'prefix'" v-bind= ="scope.itemProps" v-on="scope.itemEvents" @click="$event =>gotoPrefix(scope.opt.value)">
+        <q-item-selection side color="accent">Prefix</q-item-selection>
+        <q-item-selection class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-selection>
       </q-item>
     </template>
   </q-select>
 </template>
 
 <script>
-import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
+import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi';
+import IhrQuery from '@/plugins/query/IhrQuery.js';
 
 const MIN_CHARACTERS = 3
 const MAX_RESULTS = 10
@@ -82,6 +84,24 @@ export default {
     search(value, update) {
       this.loading = true
       this.options = []
+      if (value.includes('/')) {
+        const prefixQuery = { prefix: value }
+        this.$ihr_api.prefixes(prefixQuery, result => {
+          result.results.some(element => {
+            this.options.push({
+              value: element.prefix,
+              name: element.country,
+              type: 'prefix',
+            })
+            update()
+            return this.options.length > MAX_RESULTS
+          })
+          this.loading = false;
+          window.location.href = 'prefixResults.html';
+        }, error => {
+          console.error(error)
+        })
+      }
       this.countryQuery.containsName(value)
       this.$ihr_api.country(this.countryQuery, result => {
         result.results.some(element => {
@@ -107,13 +127,41 @@ export default {
               update()
               return this.options.length > MAX_RESULTS
             })
-            this.loading = false
           },
           error => {
             console.error(error)
           }
         )
       }
+      if (prefix) {
+        const query = new IhrQuery()
+        query.hegemonyPrefix(prefix)
+        this.$ihr_api.hegemonyPrefix(query, result => {
+          result.results.some(element => {
+            const countryCode = element.country_code
+            const rpki = element.rpki
+            const irr = element.irr
+            const delegatedStatus = element.delegated_status
+            // display in table form in the html
+            const asDependencies = element.as_dependencies
+            //use this data for the graph
+            this.options.push({
+              value: element.prefix,
+              name: element.description,
+              type: 'prefix',
+            })
+            update()
+            return this.options.length > MAX_RESULTS
+          })
+          this.loading = false
+        })
+      }
+    },
+    gotoPrefix(code) {
+      this.$router.push({
+        name: 'prefixes',
+        params: { prefix: code },
+      })
     },
     gotoASN(number) {
       this.$router.push({
