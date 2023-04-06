@@ -99,6 +99,7 @@ export default {
           this.loading = false;
           window.location.href = 'prefixResults.html';
         }, error => {
+          // eslint-disable-next-line no-console
           console.error(error)
         })
       }
@@ -129,6 +130,7 @@ export default {
             })
           },
           error => {
+            // eslint-disable-next-line no-console
             console.error(error)
           }
         )
