@@ -53,76 +53,6 @@
             </q-card-section>
           </q-card>
         </q-expansion-item>
-
-        <q-expansion-item
-          :label="$t('charts.networkDelay.title')"
-          caption="Traceroute data"
-          header-class="IHR_charts-title"
-          icon="fas fa-shipping-fast"
-          v-model="show.net_delay"
-          :disable="show.net_delay_disable"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <network-delay-chart
-                :start-time="startTime"
-                :end-time="endTime"
-                :startPointName="prefix.toString()"
-                :startPointType="prefix"
-                :fetch="fetch"
-                searchBar
-                ref="networkDelayChart"
-                @display="displayNetDelay"
-              />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
-
-        <q-expansion-item
-          :label="$t('charts.delayAndForwarding.title')"
-          caption="Traceroute data"
-          header-class="IHR_charts-title"
-          icon="fas fa-exchange-alt"
-          :disable="show.delayAndForwarding_disable"
-          v-model="show.delayAndForwarding"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <delay-and-forwarding-chart
-                :start-time="startTime"
-                :end-time="endTime"
-                :prefix="prefix"
-                :fetch="fetch"
-                ref="delayAndForwardingChart"
-              />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
-
-        <q-expansion-item
-          :label="$t('charts.disconnections.title')"
-          caption="RIPE Atlas log"
-          header-class="IHR_charts-title"
-          icon="fas fa-plug"
-          :disable="show.disco_disable"
-          v-model="show.disco"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <disco-chart
-                :streamName="prefix"
-                :start-time="startTime"
-                :end-time="endTime"
-                :fetch="fetch"
-                :minAvgLevel="9"
-                ref="ihrChartDisco"
-              />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
         <div class="IHR_last-element">&nbsp;</div>
       </q-list>
     </div>
@@ -187,9 +117,6 @@
 import reportMixin from '@/views/mixin/reportMixin'
 import PrefixDependenciesChart from '@/views/charts/PrefixDependenciesChart'
 import PrefixHegemonyChart from '@/views/charts/PrefixHegemonyChart'
-import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from '@/views/charts/global/DiscoChart'
-import DelayAndForwardingChart from '@/views/charts/DelayAndForwardingChart'
-import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import { AS_FAMILY, HegemonyPrefixQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
@@ -211,33 +138,25 @@ export default {
   components: {
     PrefixDependenciesChart,
     PrefixHegemonyChart,
-    DiscoChart,
-    DelayAndForwardingChart,
-    NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
   },
   data() {
     let prefix = this.$route.params.prefix
+    //let prefixLength = this.$route.params.prefix_length
     let addressFamily = this.$route.query.af
     return {
       addressFamily: addressFamily == undefined ? 4 : addressFamily,
       loadingStatus: LOADING_STATUS.LOADING,
       prefix: prefix,
       charRefs: CHART_REFS,
-      minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
       show: {
         rov: true,
         rov_disable: false,
-        delayAndForwarding: true,
-        delayAndForwarding_disable: false,
-        disco: true,
-        disco_disable: false,
         hegemony: true,
         hegemony_disable: false,
         net_delay: true,
         net_delay_disable: false,
-        measurementLab: true,
       },
     }
   },
@@ -260,10 +179,6 @@ export default {
         }
         // Hide tabs if not necessary
         this.$nextTick(function () {
-          this.show.delayAndForwarding_disable = !results.results[0].delay_forwarding
-          this.show.delayAndForwarding = results.results[0].delay_forwarding
-          this.show.disco_disable = !results.results[0].disco
-          this.show.disco = results.results[0].disco
           this.show.hegemony_disable = !results.results[0].hege
           this.show.hegemony = results.results[0].hege
         })
@@ -341,9 +256,9 @@ export default {
     },
     '$route.params.prefix': {
       handler: function(prefix) {
-        if (this.$route.query.prefix != this.prefix) {
+        if (this.$route.params.prefix != this.prefix) {
           this.loadingStatus = LOADING_STATUS.LOADING
-          this.prefix = this.$route.query.prefix
+          this.prefix = this.$route.params.prefix
           this.netName()
         }
       },
