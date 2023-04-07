@@ -1,20 +1,20 @@
 <template>
   <div class="row">
-    <div class="col-4">
+    <div class="col-3 IHR_dashboard-options-panel column no-wrap">
       <h1></h1>
       <!-- Selected Source Network start -->
-      <div id="IHR_contact-page">
+      <div>
         <div>
-          <p v-if="tags.length == 0" class="IHR_description">Select Source Networks</p>
-          <div v-else class="tag">
-            <p class="IHR_description">Selected Source:</p>
+          <h2 class="q-pa text-h6">Selected Source Networks</h2>
+          <div class="tag">
+            <p v-if="tags.length === 0">no networks selected</p>
             <el-tag v-for="(item, index) in tags" :key="index" type="warning" style="margin: 5px 8px" @close="handleClose(item)" closable>
               {{ item.channel.split(',')[0] }}
             </el-tag>
           </div>
         </div>
         <search-bar class="col-3 q-px-sm" :type="panel" @searchRes="searchChange" style="margin: 20px 0" />
-        <q-tab-panels v-model="panel" animated style="border-top: 1px solid #ccc">
+        <!-- <q-tab-panels v-model="panel" animated style="border-top: 1px solid #ccc">
           <q-tab-panel name="country">
             <div class="btn_list">
               <q-btn
@@ -68,15 +68,15 @@
               </q-btn>
             </div>
           </q-tab-panel>
-        </q-tab-panels>
+        </q-tab-panels> -->
       </div>
       <!-- Selected Source Network Search Bar End -->
       <!-- Selected Destination Search Bar start -->
-      <div id="IHR_contact-page">
+      <div>
         <div class="Subscribe">
-          <p v-if="tagsEnd.length == 0" class="IHR_description">Select Destination Networks</p>
-          <div v-else class="tag">
-            <p class="IHR_description">Selected Destination:</p>
+          <h2 class="q-pa text-h6">Selected Destination Networks</h2>
+          <div class="tag">
+            <p v-if="tagsEnd.length === 0">no networks selected</p>
             <el-tag
               v-for="(item, index) in tagsEnd"
               :key="index"
@@ -90,7 +90,7 @@
           </div>
         </div>
         <div class="select">
-          <q-tab-panels v-model="destinationPanel" animated style="border-top: 1px solid #ccc">
+          <!-- <q-tab-panels v-model="destinationPanel" animated style="border-top: 1px solid #ccc">
             <q-tab-panel name="country">
               <div class="btn_list">
                 <q-btn
@@ -144,19 +144,20 @@
                 </q-btn>
               </div>
             </q-tab-panel>
-          </q-tab-panels>
+          </q-tab-panels> -->
           <search-bar class="col-3 q-px-sm" :type="destinationPanel" @searchRes="destinationSearchChange" style="margin: 20px 0" />
         </div>
       </div>
       <!-- Selected Destination Search Bar end -->
-      <div class="col-5" align="center">
+      <q-btn style="background: #ff0080; color: white" label="select date interval" @click="$event => toggleDatePicker()" />
+      <div class="column" v-if="showDatePicker">
         <q-date v-model="dateRange" range />
       </div>
-      <div class="col-2">
-        <button @click="addPlot()">Add Plot</button>
+      <div class="row justify-center q-mt-lg">
+        <q-btn class="IHR_button-primary" @click="addPlot()">Add Plot</q-btn>
       </div>
     </div>
-    <div class="col-8">
+    <div class="col-8 IHR_dashboard-graph-panel">
       <div class="col-12">
         <div class="q-pa-md">
           <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
@@ -198,6 +199,7 @@ export default {
     let dateRange
     return {
       dateRange: dateRange,
+      showDatePicker: false,
       tags: [],
       tagsEnd: [],
       sourceNetworks: [],
@@ -373,6 +375,10 @@ export default {
     deletePlot(index) {
       this.sourceNetworks.splice(index, 1)
     },
+    toggleDatePicker() {
+      this.showDatePicker = !this.showDatePicker
+      console.log('abc')
+    },
   },
 }
 </script>
@@ -397,7 +403,17 @@ export default {
   position: fixed;
   pointer-events: none;
 }
-
+.IHR_dashboard-graph-panel {
+  height: 75vh !important;
+  overflow: scroll;
+  padding: 1em;
+}
+.IHR_dashboard-options-panel {
+  height: 75vh !important;
+  overflow: scroll;
+  padding: 1em;
+  /* background-color: #efefef; */
+}
 .Subscribe {
   position: relative;
   padding-bottom: 20px;
@@ -472,7 +488,7 @@ export default {
   align-content: space-between;
   flex-wrap: wrap;
   width: 78%;
-  min-height: 46px;
+  min-height: 120px;
 }
 
 .el-tag {
