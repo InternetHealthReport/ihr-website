@@ -47,7 +47,7 @@ export default {
     }
   },
   data() {
-    console.log(this.value.toISOString())
+    // console.log(this.value.toISOString())
     return {
       myId: `dateTimePicker${this._uid}`,
       selectedDateTime: this.$options.filters.ihrUtcString(this.value),

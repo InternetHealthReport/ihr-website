@@ -33,6 +33,12 @@
           <q-select v-model="selected" :options="selection" label="Select a country" />
         </div>
       </div>
+      <div class="row toolbox">
+        <div class="offset-10">
+          <h3>Toolbox</h3>
+          <q-toggle v-model="searchBar" label="Add more destination networks" />
+        </div>
+      </div>
       <div v-if="selected">
         </div>
         <div v-for="asn in asns" :key="`${asn.name}-${asn.as}`">
@@ -89,12 +95,6 @@
               />
               <p><center>Latest</center></p>
             </div>
-          </div>
-        </div>
-        <div class="row self-end">
-          <div class="col-2 offset-10">
-            <h3>Toolbox</h3>
-            <q-toggle v-model="searchBar" label="Add more destination networks" />
           </div>
         </div>
       </div>
@@ -155,7 +155,7 @@ export default {
         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
       }
       html2pdf(element, opt)
-      console.log('button is clicked')
+      // console.log('button is clicked')
     },
   },
   mounted() {},
@@ -211,6 +211,11 @@ export default {
     position relative
     top -250px
     visibility hidden
+
+.toolbox
+    margin-right 12pt
+    margin-top 15pt
+
 p
     font-size 1.2rem
 .box_corona
@@ -225,4 +230,5 @@ p
 @media screen and (max-width:1024px) and (min-width 720px)
   .column_corona
     width 50%
+
 </style>

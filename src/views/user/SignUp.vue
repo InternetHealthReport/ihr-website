@@ -90,24 +90,26 @@ export default {
       this.$libraryDelayer.getRidOfInlineStyle(id, 'div')
     },
     validateAndSend() {
-      this.errors = []
-      this.recaptcha != '' || this.errors.push('missingReCaptcha')
-      this.$ihrStyle.validatePassword(this.password) || this.errors.push('passwordTooWeak')
-      this.$ihrStyle.validateEmail(this.email) || this.errors.push('strangeEmail')
-      if (this.errors.length == 0)
+      this.errors = [];
+      if (this.recaptcha == '') {  this.errors.push('missingReCaptcha'); }
+      if (!this.$ihrStyle.validatePassword(this.password)) {this.errors.push('passwordTooWeak');}
+      if (!this.$ihrStyle.validateEmail(this.email)) {this.errors.push('strangeEmail');}
+      if (this.errors.length == 0) {
         this.$ihr_api.userSignIn(
           this.email,
           this.password,
           this.recaptcha,
           () => {
-            this.emailSent = true
-            this.password = ''
+            this.emailSent = true;
+            this.password = '';
           },
           error => {
-            console.error(error) //TODO bettere error handling
-            console.log(error.detail)
+            console.error(error);
+            // console.log(error.detail);
+            this.errors.push('signInFailed');
           }
-        )
+        );
+      }
     },
   },
   computed: {

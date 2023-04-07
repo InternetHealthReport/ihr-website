@@ -26,34 +26,35 @@
       <q-card-section class="stat-cards">
         <div class="stat-grid">
           <div class="stat-tab text-center text-h3">
-            <a href="#hegemony" class="IHR_global_stats">
+            <router-link :to="{ path: this.$route.path, query: this.$route.query, hash: 'hegemony' }" class="IHR_global_stats">
               <q-spinner v-if="loading.hegemony" color="primary" size="1em" />
               <b v-else>{{ nbAlarms.hegemony }}</b>
-              AS dependency alarms
-            </a>
+              AS Dependency Alarms
+            </router-link>
           </div>
           <div class="stat-tab text-center text-h3">
-            <a href="#networkDelay" class="IHR_global_stats">
+            <router-link :to="{ path: this.$route.path, query: this.$route.query, hash: 'networkDelay' }" class="IHR_global_stats">
               <q-spinner v-if="loading.networkDelay" color="primary" size="1em" />
-              <b v-else>{{ nbAlarms.networkDelay }}</b> network delay alarms
-            </a>
+              <b v-else>{{ nbAlarms.networkDelay }}</b> Network Delay Alarms
+            </router-link>
           </div>
           <div class="stat-tab text-center text-h3">
-            <a href="#linkDelay" class="IHR_global_stats">
+            <router-link :to="{ path: this.$route.path, query: this.$route.query, hash: 'linkDelay' }" class="IHR_global_stats">
               <q-spinner v-if="loading.linkDelay" color="primary" size="1em" />
-              <b v-else>{{ nbAlarms.linkDelay }}</b> link delay alarms
-            </a>
+              <b v-else>{{ nbAlarms.linkDelay }}</b> Link Delay Alarms
+            </router-link>
           </div>
           <div class="stat-tab text-center text-h3">
-            <a href="#disco" class="IHR_global_stats">
+            <router-link :to="{ path: this.$route.path, query: this.$route.query, hash: 'disco' }" class="IHR_global_stats">
               <q-spinner v-if="loading.disco" color="primary" size="1em" />
-              <b v-else>{{ nbAlarms.disco }}</b> network disconnections
-            </a>
+              <b v-else>{{ nbAlarms.disco }}</b> Network Disconnections
+            </router-link>
           </div>
         </div>
       </q-card-section>
       <q-separator />
     </q-card>
+    <a id="hegemony"></a>
     <div v-show="!this.nbAlarms['hegemony']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -64,7 +65,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="hegemony"></a>
                 <div class="text-primary text-grey">
                   {{ $t('charts.asInterdependencies.title') }}
                 </div>
@@ -95,7 +95,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="hegemony"></a>
                 <div class="text-primary">
                   {{ $t('charts.asInterdependencies.title') }}
                 </div>
@@ -124,6 +123,7 @@
         </q-card>
       </q-expansion-item>
     </div>
+    <a id="networkDelay"></a>
     <div v-show="!this.nbAlarms['networkDelay']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -133,7 +133,6 @@
                 <q-icon name="fas fa-shipping-fast" color="primary" text-color="white" />
               </q-item-section>
               <q-item-section>
-                <a id="networkDelay"></a>
                 <div class="text-primary text-grey">{{ $t('charts.networkDelay.title') }}</div>
                 <div class="text-caption text-grey">Traceroute data</div>
               </q-item-section>
@@ -160,7 +159,6 @@
                 <q-icon name="fas fa-shipping-fast" color="primary" text-color="white" />
               </q-item-section>
               <q-item-section>
-                <a id="networkDelay"></a>
                 <div class="text-primary">{{ $t('charts.networkDelay.title') }}</div>
                 <div class="text-caption text-grey">Traceroute data</div>
               </q-item-section>
@@ -186,6 +184,7 @@
         </q-card>
       </q-expansion-item>
     </div>
+    <a id="linkDelay"></a>
     <div v-show="!this.nbAlarms['linkDelay']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -196,7 +195,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="linkDelay"></a>
                 <div class="text-primary text-grey">
                   {{ $t('charts.delayAndForwarding.title') }}
                 </div>
@@ -226,7 +224,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="linkDelay"></a>
                 <div class="text-primary">
                   {{ $t('charts.delayAndForwarding.title') }}
                 </div>
@@ -254,6 +251,7 @@
         </q-card>
       </q-expansion-item>
     </div>
+    <a id="disco"></a>
     <!-- <div v-show="!this.nbAlarms['disco']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -264,7 +262,6 @@
               </q-item-section>
 
               <q-item-section>
-                <a id="disco"></a>
                 <div class="text-primary text-grey">
                   {{ $t('charts.disconnections.title') }}
                 </div>
@@ -295,7 +292,6 @@
             </q-item-section>
 
             <q-item-section>
-              <a id="disco"></a>
               <div class="text-primary">
                 {{ $t('charts.disconnections.title') }}
               </div>
@@ -458,6 +454,7 @@ export default {
           last: this.interval.dayDiff(),
           date: this.$options.filters.ihrUtcString(this.interval.end, false),
         },
+        hash: this.$route.hash,
       })
 
       this.minAvgLevel = PRAMETERS_PRESETS.DISCO_AVG_LEVEL[this.filterLevel]
@@ -508,7 +505,7 @@ export default {
         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
       }
       html2pdf(element, opt)
-      console.log('button is clicked')
+      // console.log('button is clicked')
     },
   },
   computed: {
@@ -573,11 +570,17 @@ export default {
 .IHR_charts-body
   border-radius 20px
   background: white;
-  border 1px solid #E9E8E8
+  border-left 1px solid #F9F8F8
+  border-right 1px solid #F9F8F8
+  border-bottom 1px solid #F9F8F8
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 .IHR_charts-title
   width 100%
   margin-top 10px
+  border-top 1px solid #F9F8F8
+  border-left 1px solid #F9F8F8
+  border-right 1px solid #F9F8F8
+  border-bottom 1px solid #F9F8F8
 .graph-header
   display flex
   justify-content flex-start
