@@ -98,6 +98,20 @@
         "apiTitle": "Displayed data is available at the following links:"
       }
     },
+    "prefixDependencies": {
+      "title": "Prefix dependency",
+      "defaultTrace": "Number of dependents",
+      "yaxis": "dependency",
+      "yaxis2": "Number of ASes<br> dependent on ",
+      "table": {
+        "dependencyTitle": "prefix dependency",
+        "dependentTitle": "dependent networks",
+        "increment": "increment",
+        "dependencies": "Dependency",
+        "dependent": "dependent",
+        "apiTitle": "Displayed data is available at the following links:"
+      }
+    },
     "countryHegemony": {
       "title": "Network Dependency",
       "table": {

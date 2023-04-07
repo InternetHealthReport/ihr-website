@@ -37,7 +37,7 @@
       </q-tabs>
       <q-tab-panels v-model="details.activeTab" animated>
         <q-tab-panel name="dependency">
-          <prefix-dependencies-table :data="networkDependencyData" :loading="details.tablesData.dependency.loading" />
+          <prefix-dependencies-table :data="prefixDependencyData" :loading="details.tablesData.dependency.loading" />
         </q-tab-panel>
         <q-tab-panel name="bgpPlay">
           <div class="bgplay-container">
@@ -78,7 +78,6 @@ const DEFAULT_TRACE = [
     // First trace is used for the hegemony cone
     x: [],
     y: [],
-    yaxis: 'y2',
     name: i18n.t('charts.prefixDependencies.defaultTrace'),
     showlegend: false,
     hovertemplate: '%{x}<br>' + '%{yaxis.title.text}: <b>%{y:.2f}</b>' + '<extra></extra>',
@@ -260,7 +259,6 @@ export default {
     },
     fetchHegemony(data) {
       console.log('fetchHegemony')
-      console.log(data)
       let traces = {}
       let missingDataList = []
 
@@ -478,14 +476,14 @@ export default {
 
       return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`
     },
-    networkDependencyData() {
+    prefixDependencyData() {
       return this.details.tablesData.dependency.data.filter(elem => {
-        return elem.asn != this.asNumber
+        return true
       })
     },
     dependentNetworksData() {
       return this.details.tablesData.dependent.data.filter(elem => {
-        return elem.originasn != this.asNumber
+        return true
       })
     },
     hegemonyUrl() {

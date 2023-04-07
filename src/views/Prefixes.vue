@@ -79,7 +79,7 @@
           </q-card>
         </q-expansion-item>
 
-        <!-- <q-expansion-item
+        <q-expansion-item
           :label="$t('charts.delayAndForwarding.title')"
           caption="Traceroute data"
           header-class="IHR_charts-title"
@@ -99,7 +99,7 @@
               />
             </q-card-section>
           </q-card>
-        </q-expansion-item> -->
+        </q-expansion-item>
 
         <q-expansion-item
           :label="$t('charts.disconnections.title')"
@@ -264,8 +264,8 @@ export default {
           this.show.delayAndForwarding = results.results[0].delay_forwarding
           this.show.disco_disable = !results.results[0].disco
           this.show.disco = results.results[0].disco
-          this.show.hegemony_disable = !results.results[0].hegemony
-          this.show.hegemony = results.results[0].hegemony
+          this.show.hegemony_disable = !results.results[0].hege
+          this.show.hegemony = results.results[0].hege
         })
 
         this.prefix = results.results[0].prefix
@@ -289,7 +289,6 @@ export default {
         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
       }
       html2pdf(element, opt)
-      console.log('button is clicked')
     },
   },
   mounted() {
@@ -347,8 +346,6 @@ export default {
           this.prefix = this.$route.query.prefix
           this.netName()
         }
-        console.log(this.prefix)
-        console.log(prefix)
       },
       deep: true,
     },
