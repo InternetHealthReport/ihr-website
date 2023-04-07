@@ -1,6 +1,6 @@
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <div v-if="asNumber">
+    <div v-if="prefix">
       <div>
         <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
         <h3 class="text-center">
@@ -8,10 +8,9 @@
           <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
         </h3>
       </div>
-      <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       <q-list v-if="showGraphs">
         <q-expansion-item
-          :label="$t('charts.asInterdependencies.title')"
+          :label="$t('charts.prefixDependencies.title')"
           caption="BGP data"
           header-class="IHR_charts-title"
           icon="fas fa-project-diagram"
@@ -24,7 +23,7 @@
               <prefix-dependencies-chart
                 :start-time="startTime"
                 :end-time="endTime"
-                :as-number="asNumber"
+                :prefix="prefix"
                 :address-family="family"
                 :fetch="fetch"
                 ref="prefixDependenciesChart"
@@ -47,7 +46,7 @@
               <prefix-hegemony-chart
                 :start-time="startTime"
                 :end-time="endTime"
-                :as-number="asNumber"
+                :prefix="prefix"
                 :fetch="fetch"
                 ref="prefixHegemonyChart"
               />
@@ -69,8 +68,8 @@
               <network-delay-chart
                 :start-time="startTime"
                 :end-time="endTime"
-                :startPointName="Math.abs(asNumber).toString()"
-                :startPointType="this.$route.params.asn.substring(0, 2)"
+                :startPointName="prefix.toString()"
+                :startPointType="prefix"
                 :fetch="fetch"
                 searchBar
                 ref="networkDelayChart"
@@ -80,7 +79,7 @@
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item
+        <!-- <q-expansion-item
           :label="$t('charts.delayAndForwarding.title')"
           caption="Traceroute data"
           header-class="IHR_charts-title"
@@ -94,13 +93,14 @@
               <delay-and-forwarding-chart
                 :start-time="startTime"
                 :end-time="endTime"
-                :as-number="asNumber"
+                :prefix="prefix"
                 :fetch="fetch"
                 ref="delayAndForwardingChart"
               />
             </q-card-section>
           </q-card>
-        </q-expansion-item>
+        </q-expansion-item> -->
+
         <q-expansion-item
           :label="$t('charts.disconnections.title')"
           caption="RIPE Atlas log"
@@ -113,7 +113,7 @@
           <q-card class="IHR_charts-body">
             <q-card-section>
               <disco-chart
-                :streamName="asNumber"
+                :streamName="prefix"
                 :start-time="startTime"
                 :end-time="endTime"
                 :fetch="fetch"
@@ -190,7 +190,7 @@ import PrefixHegemonyChart from '@/views/charts/PrefixHegemonyChart'
 import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from '@/views/charts/global/DiscoChart'
 import DelayAndForwardingChart from '@/views/charts/DelayAndForwardingChart'
 import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
-import { AS_FAMILY, NetworkQuery, HegemonyPrefixQuery } from '@/plugins/IhrApi'
+import { AS_FAMILY, HegemonyPrefixQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 import html2pdf from 'html2pdf.js'
@@ -218,14 +218,12 @@ export default {
     NetworkSearchBar,
   },
   data() {
-    // let asNumber = this.$options.filters.ihr_AsOrIxpToNumber(this.$route.params.asn)
-    let prefix = this.$route.query.prefix
+    let prefix = this.$route.params.prefix
     let addressFamily = this.$route.query.af
     return {
       addressFamily: addressFamily == undefined ? 4 : addressFamily,
       loadingStatus: LOADING_STATUS.LOADING,
       prefix: prefix,
-      asName: null,
       charRefs: CHART_REFS,
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
       show: {
@@ -246,7 +244,6 @@ export default {
   methods: {
     pushRoute() {
       this.$router.replace({
-        //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
         query: Object.assign({}, this.$route.query, {
           af: this.family,
           last: this.interval.dayDiff(),
@@ -344,15 +341,14 @@ export default {
       this.pushRoute()
     },
     '$route.params.prefix': {
-      handler: function (prefix) {
-        console.log(this.prefix)
-        console.log(prefix)
-
+      handler: function(prefix) {
         if (this.$route.query.prefix != this.prefix) {
           this.loadingStatus = LOADING_STATUS.LOADING
           this.prefix = this.$route.query.prefix
           this.netName()
         }
+        console.log(this.prefix)
+        console.log(prefix)
       },
       deep: true,
     },

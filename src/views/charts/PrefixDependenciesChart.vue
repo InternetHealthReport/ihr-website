@@ -57,16 +57,6 @@
                 <a :href="dependencyUrl" target="_blank" id="tableUrl">{{ dependencyUrl }}</a>
               </td>
             </tr>
-            <tr>
-              <td>
-                <p class="text-subtitle1">
-                  {{ $t('charts.prefixDependencies.table.dependentTitle') }}
-                </p>
-              </td>
-              <td>
-                <a :href="dependentUrl" target="_blank" id="tableUrl">{{ dependentUrl }}</a>
-              </td>
-            </tr>
           </table>
         </q-tab-panel>
       </q-tab-panels>
@@ -80,7 +70,7 @@ import { extend } from 'quasar'
 import PrefixDependenciesTable from './tables/PrefixDependenciesTable'
 import { PREFIX_DEPENDENCIES_LAYOUT } from './layouts'
 import i18n from '@/locales/i18n'
-import { HegemonyPrefixQuery, HegemonyConeQuery, AS_FAMILY } from '@/plugins/IhrApi'
+import { HegemonyPrefixQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import ripeApi from '@/plugins/RipeApi'
 
 const DEFAULT_TRACE = [
@@ -132,10 +122,9 @@ export default {
         tableVisible: false,
         enableBgpPlay: false,
       },
+      asNumber: null,
       loadingHegemony: true,
-      loadingHegemonyCone: true,
       hegemonyFilter: null,
-      hegemonyConeFilter: null,
       traces: DEFAULT_TRACE,
       layout: PREFIX_DEPENDENCIES_LAYOUT,
       neighbours: [],
@@ -158,25 +147,17 @@ export default {
         .timeInterval(this.startTime, this.endTime)
         .orderedByTime()
     },
-    makeHegemonyConeFilter() {
-      return new HegemonyConeQuery()
-        .prefix(this.prefix)
-        .addressFamily(this.addressFamily)
-        .timeInterval(this.startTime, this.endTime)
-        .orderedByTime()
-    },
     apiCall() {
       if (this.prefix == '') return
       this.updateAxesLabel()
       this.hegemonyFilter = this.makeHegemonyFilter()
-      this.hegemonyConeFilter = this.makeHegemonyConeFilter()
       this.traces = extend(true, [], DEFAULT_TRACE)
       this.loading = true
       this.loadingHegemony = true
       this.loadingHegemonyCone = true
       this.queryHegemonyAPI()
-      this.queryHegemonyConeAPI()
       this.neighbours = []
+
       ripeApi.asnNeighbours(this.asNumber).then(res => {
         res.data.neighbours.forEach(neighbour => {
           this.neighbours.push(neighbour.asn)
@@ -208,7 +189,6 @@ export default {
 
       this.details.activeTab = table
       let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd)
-      let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber)
       this.updateTable('dependency', 'prefix', dependencyFilter, intervalStart, intervalEnd)
     },
     updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
@@ -266,26 +246,12 @@ export default {
     },
     queryHegemonyAPI() {
       this.loadingHegemony = true
-      this.$ihr_api.hegemony(
+      this.$ihr_api.hegemony_prefix(
         this.hegemonyFilter,
         result => {
           this.fetchHegemony(result.results)
           this.loadingHegemony = false
-          this.loading = this.loadingHegemony || this.loadingHegemonyCone
-        },
-        error => {
-          console.error(error) //FIXME do a correct alert
-        }
-      )
-    },
-    queryHegemonyConeAPI() {
-      this.loadingHegemonyCone = true
-      this.$ihr_api.hegemony_cone(
-        this.hegemonyConeFilter,
-        result => {
-          this.fetchHegemonyCone(result.results)
-          this.loadingHegemonyCone = false
-          this.loading = this.loadingHegemony || this.loadingHegemonyCone
+          this.loading = this.loadingHegemony
         },
         error => {
           console.error(error) //FIXME do a correct alert
@@ -294,6 +260,7 @@ export default {
     },
     fetchHegemony(data) {
       console.log('fetchHegemony')
+      console.log(data)
       let traces = {}
       let missingDataList = []
 
@@ -301,7 +268,7 @@ export default {
       let minX, maxX
 
       data.forEach(elem => {
-        if (elem.asn == this.asNumber) return
+        //if (elem.asn == this.asNumber) return
         let trace = traces[elem.asn]
 
         if (anotherAsn === undefined) anotherAsn = elem.asn
@@ -486,31 +453,6 @@ export default {
       // console.log(this.traces)
       // console.log(traces)
     },
-    fetchHegemonyCone(data) {
-      console.log('fetchHegemonyCone')
-      let trace = this.traces[0]
-      data.forEach(resp => {
-        let prevDate = Date.parse(trace.x.slice(-1)[0])
-        let currDate = Date.parse(resp.timebin)
-
-        if (prevDate && currDate.getTime() > prevDate.getTime() + timeResolution + 1) {
-          trace.y.push(null)
-          trace.x.push('nodate')
-        }
-
-        trace.y.push(resp.conesize)
-        trace.x.push(resp.timebin)
-      })
-      for (let i = 1; i < trace.length; i++) {
-        let a = new Date(trace[i - 1].x)
-        let b = new Date(trace[i].x)
-        if (isNaN(a) || isNaN(b) || b - a < 0) {
-          console.error('error', a, b, b - a)
-        }
-      }
-      this.noData |= trace.length == 0
-      this.layout.datarevision = new Date().getTime()
-    },
     clearGraph() {
       this.traces = []
       this.layout.datarevision = new Date().getTime()
@@ -548,9 +490,6 @@ export default {
     },
     hegemonyUrl() {
       return this.$ihr_api.getUrl(this.hegemonyFilter)
-    },
-    hegemonyConeUrl() {
-      return this.$ihr_api.getUrl(this.hegemonyConeFilter)
     },
     dependencyUrl() {
       return this.$ihr_api.getUrl(this.details.tablesData.dependency.filter)

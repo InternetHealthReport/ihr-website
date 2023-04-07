@@ -107,7 +107,8 @@ export default new Router({
     },
     {
       name: 'prefixes',
-      path: `${routerBase}prefixes/:asn?`,
+      path: `${routerBase}prefixes/:prefix?`,
+      //path: `${routerBase}prefixes/:prefix/:prefix_length?`,
       components: {
         header: Header,
         footer: Footer,
