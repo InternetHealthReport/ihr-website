@@ -179,8 +179,8 @@ export default {
         }
         // Hide tabs if not necessary
         this.$nextTick(function () {
-          this.show.hegemony_disable = !results.results[0].hege
-          this.show.hegemony = results.results[0].hege
+          this.show.hegemony_disable = !results.results[0].hege == 1 ? true : false
+          this.show.hegemony = results.results[0].hege == 1 ? true : false
         })
 
         this.prefix = results.results[0].prefix
