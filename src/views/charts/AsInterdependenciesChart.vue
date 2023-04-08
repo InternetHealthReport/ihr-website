@@ -200,6 +200,8 @@ export default {
       }      
       if(!this.loadingNeighbours){
         this.showTable(table, clickData.points[0].x)
+      }else{
+        console.info("neighbours data not loaded yet")
       }
     },
     tableFromQuery() {
