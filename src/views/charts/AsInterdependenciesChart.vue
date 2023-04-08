@@ -144,6 +144,7 @@ export default {
       hegemonyConeFilter: null,
       traces: DEFAULT_TRACE,
       layout: AS_INTERDEPENDENCIES_LAYOUT,
+      loadingNeighbours: true,
       neighbours: [],
     }
   },
@@ -189,13 +190,14 @@ export default {
         res.data.neighbours.forEach(neighbour => {
           this.neighbours.push(neighbour.asn)
         })
+        this.loadingNeighbours = false;
       })
     },
     plotClick(clickData) {
       var table = 'dependency'
       if (clickData.points[0].data.yaxis == 'y2') {
         table = 'dependent'
-      }
+      }      
       this.showTable(table, clickData.points[0].x)
     },
     tableFromQuery() {
