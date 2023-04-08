@@ -198,7 +198,9 @@ export default {
       if (clickData.points[0].data.yaxis == 'y2') {
         table = 'dependent'
       }      
-      this.showTable(table, clickData.points[0].x)
+      if(!this.loadingNeighbours){
+        this.showTable(table, clickData.points[0].x)
+      }
     },
     tableFromQuery() {
       // if query parameter have click information then show corresponding tables
