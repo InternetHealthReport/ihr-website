@@ -201,34 +201,5 @@ export default {
 </script>
 
 <style lang="stylus">
-@import '../styles/quasar.variables';
-
-.IHR_description
-    font-weight 400
-
-.IHR_anchor
-    display block
-    position relative
-    top -250px
-    visibility hidden
-
-.toolbox
-    margin-right 12pt
-    margin-top 15pt
-
-p
-    font-size 1.2rem
-.box_corona
-    padding-top 40px
-    padding-bottom 50px
-.column_corona
-  float left
-  width 33.33%
-@media screen and (max-width:720px)
-  .column_corona
-    width 100%
-@media screen and (max-width:1024px) and (min-width 720px)
-  .column_corona
-    width 50%
-
+@import '~@/styles/corona.styl';
 </style>

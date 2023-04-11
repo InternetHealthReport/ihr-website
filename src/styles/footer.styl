@@ -1,0 +1,130 @@
+@import '~quasar-variables';
+
+
+.inline-block:hover{    
+  transform: scale(1.2);
+}
+.ihr-logo{
+  width: 80px;
+  border 4px solid transparent
+}
+
+menu-delinkify(val)
+  font-size 12pt
+  color white
+  text-decoration none
+  text-transform capitalize
+  if val
+    font-weight 700
+
+.IHR_
+
+  &menu-entries
+    a, button
+      menu-delinkify 1
+
+    button
+      box-shadow none
+
+  &footer    
+    display flex
+    flex-direction column
+    align-items center
+    
+  &footer_contents      
+      display flex
+      flex-direction column
+      align-items center      
+      @media screen and (min-width: 1000px)
+        width 80%
+        margin-left auto
+        margin-right auto
+        flex-direction row
+        justify-content space-evenly
+        align-items flex-start
+
+    & a
+      color white
+
+    ~/fsection
+      padding-top 1.5rem
+      padding-bottom 1.5rem       
+      border none
+      @media screen and (max-width: 600px)
+        padding-top 1rem
+        padding-bottom 1rem 
+      
+    ~/license-section
+      @media screen and (max-width: 1000px)
+        display flex
+        flex-direction column
+        
+    ~/external-links
+      font-size 3.0em
+      margin-top .5rem     
+
+      & a
+        color white
+        text-decoration none
+
+    ~/sitemap
+      display flex      
+      justify-content center
+      font-size 12pt
+      font-weight 300
+      text-align center
+      @media screen and (max-width 600px)
+        flex-direction column
+
+      & > ul
+        min-width 10rem
+        list-style-type none
+        margin 0
+        padding .5rem 1.5rem
+
+        & > li > a 
+          text-decoration none
+          text-transform capitalize
+
+          &:hover
+            text-decoration underline
+          
+
+        & > .links-title
+          font-size 1.25rem
+          
+          & > a:hover
+            text-decoration none
+
+        
+        
+      
+  
+#IHR_
+  &home-button
+    padding 0px 13px 0px 2px
+
+  &signin-button
+    margin 2pt 0pt 3pt 0pt
+
+  &sigin-title
+    font-weight 500
+    font-size 15pt
+    margin 3pt auto 2pt auto
+    &:first-letter
+      text-transform capitalize
+
+  &local-selector
+    margin-left 7pt
+
+  &forgotten-password
+    white-space nowrap
+
+  &user-menu
+    padding 3pt
+    font-size 12pt
+    & *:first-letter
+      text-transform capitalize
+
+  &last-element
+    height 50px;
