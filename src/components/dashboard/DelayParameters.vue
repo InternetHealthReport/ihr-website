@@ -150,7 +150,7 @@
         </div>
       </div>
       <!-- Selected Destination Search Bar end -->
-      <q-btn style="background: #ff0080; color: white" label="select date interval" @click="$event => toggleDatePicker()" />
+      <q-btn class="IHR_button-secondary" label="select date interval" @click="$event => toggleDatePicker()" />
       <div class="column" v-if="showDatePicker">
         <q-date v-model="dateRange" range />
       </div>
