@@ -56,6 +56,7 @@ import {
   QInnerLoading,
   QSpinnerGears,
   QBtnToggle,
+  QChip,
 
   //directives
   ClosePopup,
@@ -117,6 +118,7 @@ Vue.use(Quasar, {
     QInnerLoading,
     QSpinnerGears,
     QBtnToggle,
+    QChip,
   },
   directives: { ClosePopup, Ripple },
   plugins: { Notify },

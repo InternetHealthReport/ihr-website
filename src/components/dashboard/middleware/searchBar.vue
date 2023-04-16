@@ -1,6 +1,6 @@
 <template>
   <q-select
-    v-model="model"
+    :value="model"
     outlined
     dense
     :label="placeholder"
@@ -75,7 +75,7 @@ export default {
   data() {
     return {
       options: [],
-      model: '',
+      model: [],
       loading: false,
       always: false,
       networkDelayLocation: new NetworkDelayLocation().orderedByName(),
@@ -86,63 +86,69 @@ export default {
     search(value, type, update) {
       this.loading = true
       this.options = []
-      if (type === 'country') {
-        this.countryQuery.containsName(value)
-        this.$ihr_api.country(
-          this.countryQuery,
-          result => {
-            setTimeout(() => {
-              this.loading = false
-              result.results.some(element => {
-                this.options.push(element.name)
-              })
-              update()
-            }, 1000)
-          },
-          error => {
-            console.error(error)
-          }
-        )
-      } else if (type === 'city') {
-        this.networkDelayLocation.name(value)
-        this.networkDelayLocation.type('CT')
-        this.$ihr_api.network_delay_location(
-          this.networkDelayLocation,
-          result => {
-            setTimeout(() => {
-              this.loading = false
-              result.results.some(element => {
-                this.options.push(element.name)
-              })
-              update()
-            }, 1000)
-          },
-          error => {
-            console.error(error)
-          }
-        )
-      } else {
-        this.$ihr_api.searchNetwork(
-          value,
-          result => {
-            setTimeout(() => {
-              this.loading = false
-              result.results.some(element => {
-                this.options.push(element.name)
-              })
-              update()
-            }, 1000)
-          },
-          error => {
-            console.error(error)
-          }
-        )
-      }
+
+      // if (type === 'country') {
+      // this.countryQuery.containsName(value)
+      // this.$ihr_api.country(
+      //   this.countryQuery,
+      //   result => {
+      //     setTimeout(() => {
+      //       this.loading = false
+      //       result.results.some(element => {
+      //         this.options.push(element.name)
+      //       })
+      //       update()
+      //     }, 1000)
+      //   },
+      //   error => {
+      //     console.error(error)
+      //     console.log('why bt')
+      //   }
+      // )
+      // } else if (type === 'city') {
+      //   this.networkDelayLocation.name(value)
+      //   this.networkDelayLocation.type('CT')
+      //   this.$ihr_api.network_delay_location(
+      //     this.networkDelayLocation,
+      //     result => {
+      //       setTimeout(() => {
+      //         this.loading = false
+      //         result.results.some(element => {
+      //           this.options.push(element.name)
+      //         })
+      //         update()
+      //       }, 1000)
+      //     },
+      //     error => {
+      //       console.error(error)
+      //     }
+      //   )
+      // } else {
+      console.log(value)
+      this.networkDelayLocation.name(value)
+      this.$ihr_api.network_delay_location(
+        this.networkDelayLocation,
+        result => {
+          this.loading = false;
+          result.results.some(element => {
+            this.options.push(
+              {name: element.type, value: element.name, af: element.af}
+            );
+          })  
+          update()
+          console.log(this.options)
+        },
+        error => {
+          console.error(error)
+        }
+      )
+      // }
     },
     filter(value, update, abort) {
       if (value.length < MIN_CHARACTERS) {
         abort()
       } else {
+        console.log('searching')
         this.search(value, this.type, update)
       }
     },
@@ -166,8 +172,10 @@ export default {
 <style lang="stylus" scoped>
 .IHR_
   &search-bar
+    width 460px
 
   &asn-element
+    width 460px
     margin 0px
     padding 0px
     &-name

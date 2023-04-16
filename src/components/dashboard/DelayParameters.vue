@@ -8,9 +8,13 @@
           <h2 class="q-pa text-h6">Selected Source Networks</h2>
           <div class="tag">
             <p v-if="tags.length === 0">no networks selected</p>
-            <el-tag v-for="(item, index) in tags" :key="index" type="warning" style="margin: 5px 8px" @close="handleClose(item)" closable>
-              {{ item.channel.split(',')[0] }}
-            </el-tag>
+            <q-chip 
+              v-for="(item, index) in tags" 
+              :key="index" 
+              :title="item.value"
+              :label="item.value"
+              removable>
+            </q-chip>
           </div>
         </div>
         <search-bar class="col-3 q-px-sm" :type="panel" @searchRes="searchChange" style="margin: 20px 0" />
@@ -77,16 +81,13 @@
           <h2 class="q-pa text-h6">Selected Destination Networks</h2>
           <div class="tag">
             <p v-if="tagsEnd.length === 0">no networks selected</p>
-            <el-tag
-              v-for="(item, index) in tagsEnd"
-              :key="index"
-              type="warning"
-              style="margin: 5px 8px"
-              @close="destinationHandleClose(item)"
-              closable
-            >
-              {{ item.channel.split(',')[0] }}
-            </el-tag>
+            <q-chip 
+              v-for="(item, index) in tagsEnd" 
+              :key="index" 
+              :title="item.value"
+              :label="item.value"
+              removable>
+            </q-chip>
           </div>
         </div>
         <div class="select">
@@ -159,17 +160,20 @@
     </div>
     <div class="col-8 IHR_dashboard-graph-panel">
       <div class="col-12">
-        <div class="q-pa-md">
+        <div class="q-pa-md" v-if="dateRange && destinationNetworks.length !== 0 && sourceNetworks.length !== 0">
           <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
             <q-card class="IHR_charts-body">
               <q-card-section v-if="sourceNetworks[i]">
                 <h1 @click="deletePlot(i)">x</h1>
+                {{ getNetworkCode(sourceNetworks[i]) }}
+                {{  sourceNetworks[i] }}
+                {{ destinationNetworks }}
                 <network-delay-chart
                   :start-time="getFrom(dateRange)"
                   :end-time="getTo(dateRange)"
-                  :startPointName="getASN(sourceNetworks[i].channel)"
-                  startPointType="AS"
-                  :endPointNames="destinationNetworksASN"
+                  :startPointName="sourceNetworks[i].value"
+                  :startPointType="sourceNetworks[i].name"
+                  :endPointNames="destinationNetworks"
                   ref="networkDelayChart"
                   :fetch="fetch"
                   :clear="clear"
@@ -215,53 +219,53 @@ export default {
       yMax: 0,
       searchBar: false,
       destinationDataList: [],
-      country: [
-        'Japan',
-        'France',
-        'United States',
-        'Brazil',
-        'Germany',
-        'China',
-        'Singapore',
-        'Canada',
-        'Netherlands',
-        'United Kingdom',
-        'Russia',
-        'Australia',
-      ],
-      city: [
-        'Amsterdam, North Holland NL',
-        'Ashburn, Virginia US',
-        'London, England GB',
-        'Singapore, Central Singapore SG',
-        'Hong Kong, Central and Western HK',
-        'Frankfurt am Main, Hesse DE',
-        'Paris, Île - de - France FR',
-        'Los Angeles, California US',
-        'Tokyo, Tokyo JP',
-        'Sydney, New South Wales AU',
-        'New York City, New York US',
-        'Toronto, Ontario CA',
-      ],
-      network: [
-        'AS3356 - Lumen',
-        'AS2914 - NTT',
-        'AS6939 - HE',
-        'AS1299 - Telia',
-        'AS174  - Cogent',
-        'AS15169 - Google',
-        'AS20940 - Akamai',
-        'AS16509 - Amazon',
-        'AS13335 - Cloudflare',
-        'AS32934 - Facebook',
-        'AS7922  - Comcast',
-        'AS8075  - Microsoft',
-      ],
+      // country: [
+      //   'Japan',
+      //   'France',
+      //   'United States',
+      //   'Brazil',
+      //   'Germany',
+      //   'China',
+      //   'Singapore',
+      //   'Canada',
+      //   'Netherlands',
+      //   'United Kingdom',
+      //   'Russia',
+      //   'Australia',
+      // ],
+      // city: [
+      //   'Amsterdam, North Holland NL',
+      //   'Ashburn, Virginia US',
+      //   'London, England GB',
+      //   'Singapore, Central Singapore SG',
+      //   'Hong Kong, Central and Western HK',
+      //   'Frankfurt am Main, Hesse DE',
+      //   'Paris, Île - de - France FR',
+      //   'Los Angeles, California US',
+      //   'Tokyo, Tokyo JP',
+      //   'Sydney, New South Wales AU',
+      //   'New York City, New York US',
+      //   'Toronto, Ontario CA',
+      // ],
+      // network: [
+      //   'AS3356 - Lumen',
+      //   'AS2914 - NTT',
+      //   'AS6939 - HE',
+      //   'AS1299 - Telia',
+      //   'AS174  - Cogent',
+      //   'AS15169 - Google',
+      //   'AS20940 - Akamai',
+      //   'AS16509 - Amazon',
+      //   'AS13335 - Cloudflare',
+      //   'AS32934 - Facebook',
+      //   'AS7922  - Comcast',
+      //   'AS8075  - Microsoft',
+      // ],
     }
   },
   mounted() {
-    this.dataList = this.network
-    this.destinationDataList = this.network
+    this.dataList = []
+    this.destinationDataList = []
   },
   methods: {
     updateYaxis(newMaxY) {
@@ -276,23 +280,28 @@ export default {
       return to
     },
     getASN(tagNumber) {
-      let ASN = tagNumber.substring(2, tagNumber.indexOf(' '))
+      console.log(tagNumber);
+      // let ASN = tagNumber.substring(2, tagNumber.indexOf(' '))
       return ASN
     },
-    select(label) {
-      let flag = true
-      flag = this.tags.find(item => item.channel === label)
-      if (!flag) {
-        this.tags.push({ channel: label, frequency: 'normal' })
-      }
+    getNetworkCode(data) {
+      const {af, name, value} = data;
+      return name + af + value;
     },
-    selectDestination(label) {
-      let flag = true
-      flag = this.tagsEnd.find(item => item.channel === label)
-      if (!flag) {
-        this.tagsEnd.push({ channel: label, frequency: 'normal' })
-      }
-    },
+    // select(label) {
+    //   let flag = true
+    //   flag = this.tags.find(item => item.channel === label)
+    //   if (!flag) {
+    //     this.tags.push({ channel: label, frequency: 'normal' })
+    //   }
+    // },
+    // selectDestination(label) {
+    //   let flag = true
+    //   flag = this.tagsEnd.find(item => item.channel === label)
+    //   if (!flag) {
+    //     this.tagsEnd.push({ channel: label, frequency: 'normal' })
+    //   }
+    // },
     destinationHandleClose(tag) {
       this.tagsEnd.splice(this.tagsEnd.indexOf(tag), 1)
     },
@@ -300,38 +309,41 @@ export default {
       this.tags.splice(this.tags.indexOf(tag), 1)
     },
     searchChange(data) {
-      if (data) {
-        this.dataList = [data]
-      } else {
-        switch (this.panel) {
-          case 'country':
-            this.dataList = this.country
-            break
-          case 'city':
-            this.dataList = this.city
-            break
-          case 'network':
-            this.dataList = this.network
-            break
-        }
-      }
+      this.tags.push(data);
+      // this.sourceNetwork.push(data)
+      // if (data) {
+      // this.dataList = data
+      // } else {
+      //   switch (this.panel) {
+      //     case 'country':
+      //       this.dataList = this.country
+      //       break
+      //     case 'city':
+      //       this.dataList = this.city
+      //       break
+      //     case 'network':
+      //       this.dataList = this.network
+      //       break
+      //   }
+      // }
     },
     destinationSearchChange(data) {
-      if (data) {
-        this.destinationDataList = [data]
-      } else {
-        switch (this.panel) {
-          case 'country':
-            this.destinationDataList = this.country
-            break
-          case 'city':
-            this.destinationDataList = this.city
-            break
-          case 'network':
-            this.destinationDataList = this.network
-            break
-        }
-      }
+      this.tagsEnd.push(data);
+      // if (data) {
+      //   this.destinationDataList = [data]
+      // } else {
+      //   switch (this.panel) {
+      //     case 'country':
+      //       this.destinationDataList = this.country
+      //       break
+      //     case 'city':
+      //       this.destinationDataList = this.city
+      //       break
+      //     case 'network':
+      //       this.destinationDataList = this.network
+      //       break
+      //   }
+      // }
     },
     changePanel(val) {
       this.word = ''
@@ -365,7 +377,10 @@ export default {
     },
     addPlot() {
       this.sourceNetworks = this.tags
-      this.destinationNetworks = this.tagsEnd
+      this.destinationNetworks = []
+      this.tagsEnd.forEach(item => {
+        this.destinationNetworks.push(this.getNetworkCode(item));
+      })
       this.destinationNetworksASN = []
       for (let i = 0; i < this.destinationNetworks.length; i++) {
         let ASN = this.destinationNetworks[i].channel.substring(2, this.destinationNetworks[i].channel.indexOf(' '))
@@ -377,7 +392,6 @@ export default {
     },
     toggleDatePicker() {
       this.showDatePicker = !this.showDatePicker
-      console.log('abc')
     },
   },
 }

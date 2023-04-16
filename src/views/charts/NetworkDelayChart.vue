@@ -1,6 +1,36 @@
 <template>
   <div class="IHR_chart">
-    <div class="row justify-center" v-if="searchBar">
+    <div class="justify-center" v-if="searchBar">
+      <div v-if="isCovid">
+        <div class="q-pa-sm"
+        >
+          <location-search-bar
+            @select="addStartLocation"
+            :hint="$t('searchBar.locationSource')"
+            :label="$t('searchBar.locationHint')"
+            :selected="startPointNameStr"
+            style="width: 65%;margin: auto; margin-bottom: -6px;"
+            />
+        </div>
+        <div class="q-pa-sm"
+        >
+          <location-search-bar 
+          @select="addEndLocation" 
+          :hint="$t('searchBar.locationDestination')" 
+          :label="$t('searchBar.locationHint')" 
+          :selected="startPointNameStr"
+          style="width: 65%;margin: auto;margin-bottom: -6px;"
+          />
+        </div>
+        <div style="display: block;">
+      <div class="col-3 q-pa-sm">
+        <q-btn @click="debouncedApiCall" color="secondary" class="q-ml-sm">Add</q-btn>
+        <q-btn @click="clearGraph" class="q-ml-sm">Clear all</q-btn>
+      </div>
+      </div>
+      </div>
+      <div v-else>
+        <div class="row justify-center">
       <div class="col-4 q-pa-sm">
         <location-search-bar
           @select="addStartLocation"
@@ -13,9 +43,11 @@
         <location-search-bar @select="addEndLocation" :hint="$t('searchBar.locationDestination')" :label="$t('searchBar.locationHint')" />
       </div>
       <div class="col-3 q-pa-sm">
-        <q-btn @click="debouncedApiCall" color="secondary" class="q-ml-sm">Add</q-btn>
-        <q-btn @click="clearGraph" class="q-ml-sm">Clear all</q-btn>
+        <q-btn @click="debouncedApiCall" color="secondary" class="btn">Add</q-btn>
+        <q-btn @click="clearGraph" class="btn">Clear all</q-btn>
       </div>
+      </div>
+    </div>
     </div>
     <div class="row">
       <div class="col">
@@ -158,6 +190,33 @@ export default {
       type: String,
       default: '',
     },
+  },
+  emits: {
+    'prefix-details': function(event) {
+      if (event !== null) {
+        return true;
+      } else {
+        console.warn('Event is missing!');
+        return false;
+      }
+    },
+    'max-value': function(newMaxY) {
+      if (newMaxY !== null) {
+        return true;
+      } else {
+        console.warn('NewMaxY is missing!');
+        return false;
+      }
+    },
+    'display': function(isDisplayed) {
+      if (isDisplayed !== null) {
+        return true;
+      } else {
+        console.warn('IsDisplayed is missing!');
+        return false;
+      }
+    }
+
   },
   data() {
     var layout = NET_DELAY_LAYOUT
@@ -349,6 +408,9 @@ export default {
     },
   },
   computed: {
+    isCovid(){
+      return window.location.href.includes('covid')
+    },
     delayUrl() {
       return this.$ihr_api.getUrl(this.apiFilter)
     },
@@ -361,6 +423,9 @@ export default {
     },
   },
   watch: {
+    startTime(){
+      this.clearGraph()
+    },
     startPointNames() {
       //reset filter
       this.endPointKeysFilter = this.endPointNames
@@ -395,7 +460,9 @@ export default {
     },
     clear() {
       this.clearGraph()
-      this.loading = true
+      this.$nextTick(function () {
+        this.loading = true
+      })
     },
   },
 }
@@ -416,4 +483,8 @@ export default {
   &hidden-bar
     top 60px
     opacity 0
+.btn
+    margin-bottom 10pt
+    width 80pt
+    margin-right 10pt
 </style>
