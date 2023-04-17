@@ -309,7 +309,9 @@ export default {
       this.tags.splice(this.tags.indexOf(tag), 1)
     },
     searchChange(data) {
-      this.tags.push(data);
+      if (data !== '') {
+        this.tags.push(data);
+      }
       // this.sourceNetwork.push(data)
       // if (data) {
       // this.dataList = data
@@ -328,7 +330,9 @@ export default {
       // }
     },
     destinationSearchChange(data) {
-      this.tagsEnd.push(data);
+      if (data !== '') {
+        this.tagsEnd.push(data);
+      }
       // if (data) {
       //   this.destinationDataList = [data]
       // } else {
