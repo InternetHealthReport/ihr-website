@@ -13,7 +13,8 @@
               :key="index" 
               :title="item.value"
               :label="item.value"
-              removable>
+              removable
+              @remove="tags.splice(index, 1)">
             </q-chip>
           </div>
         </div>
@@ -86,7 +87,8 @@
               :key="index" 
               :title="item.value"
               :label="item.value"
-              removable>
+              removable
+              @remove="removeDestinationNetwork(index)">
             </q-chip>
           </div>
         </div>
@@ -379,6 +381,10 @@ export default {
           this.destinationDataList = this.network
           break
       }
+    },
+    removeDestinationNetwork(index) {
+      this.destinationNetworks.splice(index, 1);
+      this.tagsEnd.splice(index, 1);
     },
     addPlot() {
       this.sourceNetworks = this.tags
