@@ -153,11 +153,8 @@
       </div>
       <!-- Selected Destination Search Bar end -->
       <q-btn class="IHR_button-secondary" label="select date interval" @click="$event => toggleDatePicker()" />
-      <div class="column" v-if="showDatePicker">
-        <q-date v-model="dateRange" range />
-      </div>
-      <div class="row justify-center q-mt-lg">
-        <q-btn class="IHR_button-primary" @click="addPlot()">Add Plot</q-btn>
+        <div class="row justify-center q-mt-lg">
+          <q-btn class="IHR_button-primary" @click="addPlot()">Add Plot</q-btn>
       </div>
     </div>
     <div class="col-8 IHR_dashboard-graph-panel">
@@ -190,6 +187,9 @@
         </div>
       </div>
     </div>
+    <div class="column" v-if="showDatePicker">
+        <q-date class="date-picker" v-model="dateRange" range @range-end="toggleDatePicker" />
+      </div>
   </div>
 </template>
 
@@ -522,5 +522,10 @@ export default {
   height: 36px !important;
   line-height: 36px !important;
   font-size: 16px !important;
+}
+
+.date-picker {
+  position: absolute;
+  left: 25%;
 }
 </style>
