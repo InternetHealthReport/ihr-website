@@ -39,8 +39,17 @@
       </q-item>
     </template>
     <template v-slot:option="scope">
-      <q-item v-bind="scope.itemProps" v-on="scope.itemEvents" @click="searchRes(scope.opt)">
-        <q-item-section side color="accent">{{ scope.opt }}</q-item-section>
+      <q-item v-if="scope.opt.name === 'CT'" v-bind="scope.itemProps" v-on="scope.itemEvents" @click="searchRes(scope.opt)"">
+        <q-item-section side color="accent">City</q-item-section>
+        <q-item-section class="IHR_asn-element-name">{{ scope.opt.value }}</q-item-section>
+      </q-item>
+      <q-item v-else-if="scope.opt.name === 'PB'" v-bind="scope.itemProps" v-on="scope.itemEvents" @click="searchRes(scope.opt)">
+        <q-item-section side color="accent">Probe</q-item-section>
+        <q-item-section class="IHR_asn-element-name">{{ scope.opt.value }}</q-item-section>
+      </q-item>
+      <q-item v-else-if="scope.opt.name === 'AS'" v-bind="scope.itemProps" v-on="scope.itemEvents" @click="searchRes(scope.opt)">
+        <q-item-section side color="accent">AS</q-item-section>
+        <q-item-section class="IHR_asn-element-name">{{ scope.opt.value }}</q-item-section>
       </q-item>
     </template>
   </q-select>
