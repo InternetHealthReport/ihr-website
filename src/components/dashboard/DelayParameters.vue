@@ -11,8 +11,8 @@
             <q-chip 
               v-for="(item, index) in tags" 
               :key="index" 
-              :title="item.value"
-              :label="item.value"
+              :title="selectedNetworkLabelFilter(item)"
+              :label="selectedNetworkLabelFilter(item)"
               removable
               @remove="tags.splice(index, 1)">
             </q-chip>
@@ -85,8 +85,8 @@
             <q-chip 
               v-for="(item, index) in tagsEnd" 
               :key="index" 
-              :title="item.value"
-              :label="item.value"
+              :title="selectedNetworkLabelFilter(item)"
+              :label="selectedNetworkLabelFilter(item)"
               removable
               @remove="removeDestinationNetwork(index)">
             </q-chip>
@@ -404,6 +404,13 @@ export default {
     toggleDatePicker() {
       this.showDatePicker = !this.showDatePicker
     },
+    selectedNetworkLabelFilter(item) {
+      if (item.name == 'PB' || item.name == 'AS') {
+        return item.name + item.value;
+      }
+
+      return item.value;
+    }
   },
 }
 </script>
