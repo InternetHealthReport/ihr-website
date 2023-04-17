@@ -172,10 +172,10 @@ export default {
 <style lang="stylus" scoped>
 .IHR_
   &search-bar
-    width 460px
+    max-width 100%
 
   &asn-element
-    width 460px
+    max-width 100%
     margin 0px
     padding 0px
     &-name

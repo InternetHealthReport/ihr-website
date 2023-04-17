@@ -5,9 +5,9 @@
       <!-- Selected Source Network start -->
       <div>
         <div>
-          <h2 class="q-pa text-h6">Selected Source Networks</h2>
+          <h2 class="q-px-sm text-h6">Selected Source Networks</h2>
           <div class="tag">
-            <p v-if="tags.length === 0">no networks selected</p>
+            <p class="q-px-sm" v-if="tags.length === 0">no networks selected</p>
             <q-chip 
               v-for="(item, index) in tags" 
               :key="index" 
@@ -78,9 +78,9 @@
       <!-- Selected Destination Search Bar start -->
       <div>
         <div class="Subscribe">
-          <h2 class="q-pa text-h6">Selected Destination Networks</h2>
+          <h2 class="q-px-sm text-h6">Selected Destination Networks</h2>
           <div class="tag">
-            <p v-if="tagsEnd.length === 0">no networks selected</p>
+            <p class="q-px-sm"  v-if="tagsEnd.length === 0">no networks selected</p>
             <q-chip 
               v-for="(item, index) in tagsEnd" 
               :key="index" 
