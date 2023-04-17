@@ -164,10 +164,11 @@
           <div v-for="(tag, i) in sourceNetworks.length" :key="tag">
             <q-card class="IHR_charts-body">
               <q-card-section v-if="sourceNetworks[i]">
-                <h1 @click="deletePlot(i)">x</h1>
-                {{ getNetworkCode(sourceNetworks[i]) }}
-                {{  sourceNetworks[i] }}
-                {{ destinationNetworks }}
+                <div class="row justify-end q-mb-xs">
+                    <q-btn round @click="deletePlot" size="0.7em" color="red" center>
+                      <q-icon name="fa fa-times" left style="font-size: 1.5em; margin:0" />
+                    </q-btn>
+                </div>
                 <network-delay-chart
                   :start-time="getFrom(dateRange)"
                   :end-time="getTo(dateRange)"
