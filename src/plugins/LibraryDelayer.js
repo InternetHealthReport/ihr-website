@@ -111,13 +111,13 @@ class LibraryDelayer {
         let promise = new Promise(localResolve => {
           scriptElem.onload = () => {
             localResolve()
-            console.log('loaded: ' + script)
+            // console.log('loaded: ' + script)
           }
           body.appendChild(scriptElem)
-          console.log('appended: ' + script)
+          // console.log('appended: ' + script)
         })
         await promise
-        console.log('promise concluded: ' + script)
+        // console.log('promise concluded: ' + script)
         await this.loadNext(body)
       }
       resolve()

@@ -45,7 +45,7 @@ export default {
           this.getChart(this.networks)
         })
         .catch(error => {
-          console.log(error)
+          // console.log(error)
           this.errorMsg = 'MLab API end point not working'
         })
     },

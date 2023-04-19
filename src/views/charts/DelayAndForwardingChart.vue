@@ -141,6 +141,16 @@ export default {
       required: true,
     },
   },
+  emits: {
+    'prefix-details': function(event) {
+      if (event !== null) {
+        return true;
+      } else {
+        console.warn('Event is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     let delayFilter = new DelayQuery().asNumber(this.asNumber).timeInterval(this.startTime, this.endTime).orderedByTime()
 
@@ -266,11 +276,11 @@ export default {
       this.layout.datarevision = new Date().getTime()
     },
     fetchDelay(data) {
-      console.log('fetchDelay')
+      // console.log('fetchDelay')
       this.fetchData(this.traces[0], data)
     },
     fetchForwarding(data) {
-      console.log('fetchForwarding')
+      // console.log('fetchForwarding')
       this.fetchData(this.traces[1], data)
     },
   },

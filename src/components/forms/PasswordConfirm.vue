@@ -77,6 +77,16 @@ export default {
       default: false,
     },
   },
+  emits: {
+    'input': function(passwordResult) {
+      if (passwordResult !== null) {
+        return true;
+      } else {
+        console.warn('Password Result is missing!');
+        return false;
+      }
+    }
+  },
   data() {
     return {
       password: 'default password',

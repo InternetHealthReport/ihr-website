@@ -25,10 +25,10 @@ export default {
     }
   },
   mounted() {
-    console.log('tracemon mounted')
-    console.log(this.probeIds)
-    console.log(this.startTime)
-    console.log(this.endTime)
+    // console.log('tracemon mounted')
+    // console.log(this.probeIds)
+    // console.log(this.startTime)
+    // console.log(this.endTime)
     this.$libraryDelayer.load('tracemon_widget', () => {
       // eslint-disable-next-line no-undef
       initTracemon(

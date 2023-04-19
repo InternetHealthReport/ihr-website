@@ -5,7 +5,7 @@
     clearable
     dense
     outlined
-    :label="label"
+    :placeholder="!model?label:''"
     :options="options"
     v-model="model"
     @filter="filter"
@@ -16,7 +16,7 @@
   >
     <template v-slot:append>
       <div v-if="!loading">
-        <q-icon name="fas fa-search" style="font-size: 0.82em; margin-rigth: 4px" />
+        <q-icon name="fas fa-search" style="font-size: 0.82em; margin-right: 4px" />
       </div>
       <div v-else>
         <q-spinner color="primary" size="0.82em" />
@@ -56,6 +56,16 @@ export default {
       type: String,
       default: '',
     },
+  },
+  emits: {
+    'select': function(location) {
+      if (location !== null) {
+        return true;
+      } else {
+        console.warn('Location is missing!');
+        return false;
+      }
+    }
   },
   data() {
     return {

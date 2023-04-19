@@ -73,6 +73,16 @@ export default {
       default: 10,
     },
   },
+  emits: {
+    'eyeballs': function(asns) {
+      if (asns !== null) {
+        return true;
+      } else {
+        console.warn('ASns is missing!');
+        return false
+      }
+    }
+  },
   data() {
     //prevent calls within 500ms and execute only the last one
     return {
@@ -103,7 +113,7 @@ export default {
       this.layout.yaxis2.title = `${this.$t('charts.countryHegemony.yaxis2')} ` + this.countryCode
     },
     makeHegemonyFilter() {
-      console.log('going to query country hegemony')
+      // console.log('going to query country hegemony')
       return new HegemonyCountryQuery()
         .country(this.countryCode)
         .addressFamily(this.addressFamily)
@@ -117,7 +127,7 @@ export default {
       this.queryCountryHegemonyAPI()
     },
     queryCountryHegemonyAPI() {
-      console.log('in queryCountryHegemonyAPI')
+      // console.log('in queryCountryHegemonyAPI')
       this.loading = true
       this.$ihr_api.hegemony_country(
         this.hegemonyFilter,

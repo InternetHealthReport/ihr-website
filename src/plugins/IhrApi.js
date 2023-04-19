@@ -217,8 +217,8 @@ const IhrApi = {
          */
         _generic: function (endpoint, method, query, successCallback, errorCallback) {
           if (Object.prototype.isPrototypeOf.call(QueryBase, query.constructor)) {
-            console.log('call to:', query, query.toString())
-            console.log('query url:', this.getUrl(query))
+            // console.log('call to:', query, query.toString())
+            // console.log('query url:', this.getUrl(query))
             let resolvePagination = query.resolvePagination
             query = query.get_filter()
             if (resolvePagination && successCallback instanceof Function) {
@@ -226,14 +226,14 @@ const IhrApi = {
               let recursiveSuccess = (data, response) => {
                 singleSuccess(data, response)
                 if (data.next != null) {
-                  console.log(data.next)
+                  // console.log(data.next)
                   this._resolveAxiosPromise(data.next, method, '', recursiveSuccess, errorCallback)
                 }
               }
               successCallback = recursiveSuccess
             }
           } else {
-            console.log('call with non Query object:', JSON.stringify(query), endpoint, method)
+            // console.log('call with non Query object:', JSON.stringify(query), endpoint, method)
           }
 
           this._resolveAxiosPromise(endpoint, method, query, successCallback, errorCallback)

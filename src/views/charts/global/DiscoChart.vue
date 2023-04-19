@@ -45,6 +45,24 @@ export default {
       default: '',
     },
   },
+  emits: {
+    'prefix-details': function(event) {
+      if (event !== null) {
+        return true;
+      } else {
+        console.warn('Event is missing!');
+        return false;
+      }
+    },
+    'filteredRows': function(filteredSearchRowValues) {
+      if (filteredSearchRowValues !== null) {
+        return true;
+      } else {
+        console.warn('FilteredSearchRowValues is missing');
+        return false;
+      }
+    }
+  },
   data() {
     return {
       mapData: [],

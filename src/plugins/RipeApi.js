@@ -16,7 +16,7 @@ export default {
         resource: asn,
       },
     }
-    console.log(ripe_axios)
+    // console.log(ripe_axios)
     return ripe_axios.get('asn-neighbours/data.json', queryarg).then(response => {
       return response.data
     })

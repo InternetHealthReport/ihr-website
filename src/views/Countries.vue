@@ -1,5 +1,5 @@
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="countryCode">
       <div>
         <h1 class="text-center">{{ headerString }}</h1>
@@ -84,7 +84,6 @@
                 :clear="clear"
                 searchBar
                 ref="networkDelayChart"
-                @display="displayNetDelay"
               />
             </q-card-section>
           </q-card>
@@ -98,7 +97,7 @@
         <h1 class="text-center q-pa-xl">Country Report</h1>
         <div class="row justify-center">
           <div class="col-6">
-            <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" noAS="true" />
+            <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true"/>
           </div>
         </div>
       </div>
@@ -226,7 +225,7 @@ export default {
       this.majorEyeballs = tmp
     },
     generateReport() {
-      let element = document.getElementById('IHR_as-and-ixp-container')
+      let element = this.$refs['ihrAsAndIxpContainer']
       let opt = {
         margin: 0,
         filename: 'Countries.pdf',

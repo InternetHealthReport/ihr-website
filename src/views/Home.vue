@@ -16,7 +16,7 @@
         $interpolateArray($t('globalReport.description'), {
           ripe: '<a href=\'https://atlas.ripe.net/\' target=\'_blank\'>RIPE Atlas</a>',
           bgpstream: '<a href=\'https://bgpstream.caida.org/\' target=\'_blank\'>BGPstream</a>',
-        })
+          }, ['<div>','</div>'])
       "
     ></div>
     <div class="IHR_description-main">
@@ -35,7 +35,7 @@
           </div>
         </q-card-section>
         <q-card-section class="q-pa-xs">
-          <div class="IHR_description" v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues)"></div>
+          <div class="IHR_description" v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues, ['<div>','</div>'])"></div>
           <div class="IHR_description IHR_description-link">
             <router-link
               :to="{
@@ -78,7 +78,7 @@
         {{ $t('ack.title') }}
       </h2>
 
-      <div class="row wrap justify-around">
+      <div class="row wrap justify-center">
         <div class="col-xl" v-for="org in $t('ack.organizations')" :key="org.name">
           <a :href="org.url" target="_blank">
           <div class="IHR_ack-logo">
@@ -269,7 +269,7 @@ export default {
       margin-right auto
       text-align center
       height 200px
-      width 300px
+      width 400px
 
       & > span
         display inline-block

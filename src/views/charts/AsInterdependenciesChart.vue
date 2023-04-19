@@ -311,6 +311,44 @@ export default {
 
       let anotherAsn
       let minX, maxX
+      //console.log(data);
+      if (data.length==0){
+        this.traces = extend(true, [], DEFAULT_TRACE)
+        this.layout.annotations = [{
+          x: 0.45,
+          y: 0.23,
+          xref: 'paper',
+          yref: 'paper',
+          text: 'Network is unreachable',
+          showarrow: false,
+          font: {
+            size: 22
+          }
+        }]
+        return
+      }
+      else{
+        var noDependency = false;
+        data.forEach(elem =>{
+          if(elem.originasn == 0){
+            noDependency = true;
+          }
+        })
+        if(noDependency){
+          this.layout.annotations = [{
+            x: 0.45,
+            y: 0.23,
+            xref: 'paper',
+            yref: 'paper',
+            text: 'No dependency',
+            showarrow: false,
+            font: {
+              size: 22
+            }
+          }]
+        }
+      }  
+
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return
         let trace = traces[elem.asn]
@@ -429,7 +467,7 @@ export default {
         let currentTrace = this.traces[i]
         let lastDate = currentTrace.x.slice(-1)[0]
         let firstDate = currentTrace.x[0]
-        console.log('first date, last date', firstDate, lastDate)
+        // console.log('first date, last date', firstDate, lastDate)
         let lastDateMilliSeconds = Date.parse(lastDate).getTime()
         let firstDateMilliSeconds = Date.parse(firstDate).getTime()
 
@@ -460,11 +498,11 @@ export default {
         }
 
         if (firstDate !== minXIso) {
-          console.log('front defect', firstDate, this.traces[i], minXIso)
+          // console.log('front defect', firstDate, this.traces[i], minXIso)
           let noOfPointsToAdd
           let interval = Date.parse(currentTrace.x[0]).getTime() - minX
           noOfPointsToAdd = interval / timeResolution
-          console.log('npad', noOfPointsToAdd)
+          // console.log('npad', noOfPointsToAdd)
 
           const tempX = []
           const tempY = []
@@ -503,7 +541,7 @@ export default {
       }
     },
     fetchHegemonyCone(data) {
-      console.log('fetchHegemonyCone')
+      // console.log('fetchHegemonyCone')
       let trace = this.traces[0]
       data.forEach(resp => {
         let prevDate = Date.parse(trace.x.slice(-1)[0])
