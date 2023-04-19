@@ -349,8 +349,8 @@ export default {
           trace = {
             x: [],
             y: [],
-            mode: "markers",
-            type: "scatter",
+            mode: 'markers',
+            type: 'scatter',
             //name: `${elem.startpoint_type} ${elem.startpoint_name} ipv${elem.startpoint_af} => ${elem.endpoint_type} ${elem.endpoint_name} ipv${elem.endpoint_af}`
             name: `${startname} to ${endname}`,
             hovertemplate:
