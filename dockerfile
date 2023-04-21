@@ -1,13 +1,28 @@
-FROM node:16-alpine
+#BUILDER
+FROM node:16.9.1-alpine as builder
 
-WORKDIR /ihr_website
+RUN apk add --no-cache python3 make g++
 
-COPY . /ihr_website/
+#Builder directory
+WORKDIR /ihr-website
 
-RUN npm install 
+#Copy builder source
+COPY package*.json ./
 
-RUN export NODE_OPTIONS=--openssl-legacy-provider
+# installing all dependencies
+RUN npm install
 
-EXPOSE 8080
+# Copy all files
+COPY . .
 
+# MAIN
+FROM node:16.9.1-alpine as main
+
+# Make main app directory
+WORKDIR /app
+
+#Copy all from builder stage
+COPY --from=builder /ihr-website/.  ./
+
+#Start the serve
 CMD ["npm", "run", "serve"]
