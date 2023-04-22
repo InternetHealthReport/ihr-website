@@ -12,3 +12,39 @@
       height 35%
       margin-top @height
       transition transform 0.2s linear
+
+
+      /* Small screens */
+    @media only screen and (max-width: 767px)
+      &rotate-item
+        &-off
+          height: 20%;
+          font-size: 14px;
+        &-on
+          height: 20%;
+          font-size: 14px;
+
+
+    /* Medium screens */
+    @media only screen and (min-width: 768px) and (max-width: 1023px) 
+      &rotate-item
+        &-off
+          height: 25%;
+          font-size: 16px;
+        &-on
+          height: 25%;
+          font-size: 16px;
+
+
+    /* Large screens */
+    @media only screen and (min-width: 1024px) 
+      &rotate-item
+        &-off
+          height: 35%;
+          font-size: 18px;
+        &-on
+          height: 35%;
+          font-size: 18px;
+      
+    
+     

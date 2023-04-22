@@ -20,3 +20,72 @@ h3,
   margin 0pt
   font-size 14pt
   font-weight 300
+
+
+// Set different styles for different screen sizes
+@media (max-width: 768px) {
+  // Small screens
+  h1,
+  .text-h1 {
+    font-size: 28pt;
+  }
+
+  h2,
+  .text-h2 {
+    font-size: 20pt;
+  }
+
+  h3,
+  .text-h3 {
+    font-size: 12pt;
+  }
+
+  .box {
+    height: 80px;
+  }
+}
+
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  // Medium screens
+  h1,
+  .text-h1 {
+    font-size: 30pt;
+  }
+
+  h2,
+  .text-h2 {
+    font-size: 22pt;
+  }
+
+  h3,
+  .text-h3 {
+    font-size: 13pt;
+  }
+
+  .box {
+    height: 90px;
+  }
+}
+
+@media (min-width: 1025px) {
+  // Large screens
+  h1,
+  .text-h1 {
+    font-size: $font-size-h1;
+  }
+
+  h2,
+  .text-h2 {
+    font-size: $font-size-h2;
+  }
+
+  h3,
+  .text-h3 {
+    font-size: $font-size-h3;
+  }
+
+  .box {
+    height: $box-height;
+  }
+}

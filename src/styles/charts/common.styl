@@ -64,3 +64,35 @@
 .q-td
     white-space: normal !important;
 
+  /* Modify font size and box height for different screen sizes */
+  @media screen and (max-width: 768px) {
+    /* Small screens */
+    &h1 {
+      font-size: 20pt;
+    }
+    &table-card {
+      height: 300px;
+    }
+  }
+
+   @media screen and (min-width: 769px) and (max-width: 1024px) {
+    /* Medium screens */
+    &h1 {
+      font-size: 22pt;
+    }
+    &table-card {
+      height: 400px;
+    }
+  }
+
+  @media screen and (min-width: 1025px) {
+    /* Large screens */
+    &h1 {
+      font-size: 25pt;
+    }
+    &table-card {
+      height: 500px;
+    }
+  }
+
+

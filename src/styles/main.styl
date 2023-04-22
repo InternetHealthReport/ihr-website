@@ -52,3 +52,34 @@ p
     min-width 105px !important
   & .opblock-body
     overflow-x auto
+
+
+@media only screen and (max-width: 480px) {
+  .IHR_ &errors-banner & p {
+    font-size: 12pt;
+  }
+  .IHR_ &errors-banner &-animation-enter,
+  .IHR_ &errors-banner &-animation-leave-to {
+    height: 0;
+  }
+}
+
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  .IHR_ &errors-banner & p {
+    font-size: 16pt;
+  }
+  .IHR_ &errors-banner &-animation-enter,
+  .IHR_ &errors-banner &-animation-leave-to {
+    height: 1em;
+  }
+}
+
+@media only screen and (min-width: 769px) {
+  .IHR_ &errors-banner & p {
+    font-size: 18pt;
+  }
+  .IHR_ &errors-banner &-animation-enter,
+  .IHR_ &errors-banner &-animation-leave-to {
+    height: 2em;
+  }
+}
