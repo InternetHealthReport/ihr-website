@@ -198,7 +198,6 @@ export default {
         let intervalEnd = this.details.date
         let intervalStart = new Date(intervalEnd.getTime() - 15 * 60000)
 
-        this.details.activeTab = table
         let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd)
         let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber)
         this.updateTable('dependency', 'asn', dependencyFilter, intervalStart, intervalEnd)
@@ -252,12 +251,7 @@ export default {
       }
     },
     updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
-      // this.details.tablesData[tableType] = {
-      //   data: [],
-      //   loading: true,
-      //   filter: filter,
-      // }
-
+      
       this.$ihr_api.hegemony(
         filter,
         results => {
