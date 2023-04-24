@@ -153,7 +153,7 @@ export default {
   },
   mounted() {
     this.tableFromQuery()
-    this.getNeighboursData();
+    this.getNeighboursData()
   },
   methods: {
     updateAxesLabel() {
@@ -188,24 +188,29 @@ export default {
 
       this.neighbours = []
     },
-    getNeighboursData(){
+    getNeighboursData() {
       ripeApi.asnNeighbours(this.asNumber).then(res => {
         res.data.neighbours.forEach(neighbour => {
           this.neighbours.push(neighbour.asn)
         })
-        this.loadingNeighbours = false;
+        this.loadingNeighbours = false
+        console.log('asnNeighbours data loaded')
+        let intervalEnd = this.details.date
+        let intervalStart = new Date(intervalEnd.getTime() - 15 * 60000)
+
+        this.details.activeTab = table
+        let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd)
+        let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber)
+        this.updateTable('dependency', 'asn', dependencyFilter, intervalStart, intervalEnd)
+        this.updateTable('dependent', 'originasn', dependentFilter, intervalStart, intervalEnd)
       })
     },
     plotClick(clickData) {
       var table = 'dependency'
       if (clickData.points[0].data.yaxis == 'y2') {
         table = 'dependent'
-      }      
-      if(!this.loadingNeighbours){
-        this.showTable(table, clickData.points[0].x)
-      }else{
-        console.info('neighbours data not loaded yet')
       }
+      this.showTable(table, clickData.points[0].x)
     },
     tableFromQuery() {
       // if query parameter have click information then show corresponding tables
@@ -321,42 +326,45 @@ export default {
       let anotherAsn
       let minX, maxX
       //console.log(data);
-      if (data.length==0){
+      if (data.length == 0) {
         this.traces = extend(true, [], DEFAULT_TRACE)
-        this.layout.annotations = [{
-          x: 0.45,
-          y: 0.23,
-          xref: 'paper',
-          yref: 'paper',
-          text: 'Network is unreachable',
-          showarrow: false,
-          font: {
-            size: 22
-          }
-        }]
-        return
-      }
-      else{
-        var noDependency = false;
-        data.forEach(elem =>{
-          if(elem.originasn == 0){
-            noDependency = true;
-          }
-        })
-        if(noDependency){
-          this.layout.annotations = [{
+        this.layout.annotations = [
+          {
             x: 0.45,
             y: 0.23,
             xref: 'paper',
             yref: 'paper',
-            text: 'No dependency',
+            text: 'Network is unreachable',
             showarrow: false,
             font: {
-              size: 22
-            }
-          }]
+              size: 22,
+            },
+          },
+        ]
+        return
+      } else {
+        var noDependency = false
+        data.forEach(elem => {
+          if (elem.originasn == 0) {
+            noDependency = true
+          }
+        })
+        if (noDependency) {
+          this.layout.annotations = [
+            {
+              x: 0.45,
+              y: 0.23,
+              xref: 'paper',
+              yref: 'paper',
+              text: 'No dependency',
+              showarrow: false,
+              font: {
+                size: 22,
+              },
+            },
+          ]
         }
-      }  
+      }
 
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return
@@ -543,9 +551,9 @@ export default {
       //console.log(this.traces.length)
       //console.log(traces)
 
-      if(this.traces.length > 12){
+      if (this.traces.length > 12) {
         this.layout.showlegend = false
-      }else{
+      } else {
         this.layout.showlegend = true
       }
     },
