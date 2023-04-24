@@ -153,6 +153,7 @@ export default {
   },
   mounted() {
     this.tableFromQuery()
+    this.getNeighboursData();
   },
   methods: {
     updateAxesLabel() {
@@ -186,6 +187,8 @@ export default {
       this.queryHegemonyConeAPI()
 
       this.neighbours = []
+    },
+    getNeighboursData(){
       ripeApi.asnNeighbours(this.asNumber).then(res => {
         res.data.neighbours.forEach(neighbour => {
           this.neighbours.push(neighbour.asn)
