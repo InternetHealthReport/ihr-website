@@ -234,15 +234,29 @@ export default {
       this.details.activeTab = table
       let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd)
       let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber)
-      this.updateTable('dependency', 'asn', dependencyFilter, intervalStart, intervalEnd)
-      this.updateTable('dependent', 'originasn', dependentFilter, intervalStart, intervalEnd)
-    },
-    updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
-      this.details.tablesData[tableType] = {
+
+      this.details.tablesData['dependency'] = {
         data: [],
         loading: true,
-        filter: filter,
+        filter: dependencyFilter,
       }
+      this.details.tablesData['dependent'] = {
+        data: [],
+        loading: true,
+        filter: dependentFilter,
+      }
+      this.details.tableVisible = true
+      if (!this.loadingNeighbours) {
+        this.updateTable('dependency', 'asn', dependencyFilter, intervalStart, intervalEnd)
+        this.updateTable('dependent', 'originasn', dependentFilter, intervalStart, intervalEnd)
+      }
+    },
+    updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
+      // this.details.tablesData[tableType] = {
+      //   data: [],
+      //   loading: true,
+      //   filter: filter,
+      // }
 
       this.$ihr_api.hegemony(
         filter,
@@ -278,7 +292,7 @@ export default {
             results.results = res
           }
 
-          this.details.tableVisible = true
+          
           this.details.tablesData[tableType] = {
             data: results.results,
             loading: false,
