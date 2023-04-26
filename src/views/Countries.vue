@@ -84,7 +84,6 @@
                 :clear="clear"
                 searchBar
                 ref="networkDelayChart"
-                @display="displayNetDelay"
               />
             </q-card-section>
           </q-card>

@@ -62,6 +62,7 @@ export default {
       return selectDate >= this.min && selectDate <= this.max
     },
     propagate(event) {
+      if(event === null) return;
       let selectedDate = new Date(event)
       this.qTimeModel = selectedDate.toISOString()
       ;(this.selectedDateTime = this.$options.filters.ihrUtcString(selectedDate)), (this.show = false)
