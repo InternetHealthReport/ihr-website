@@ -1,28 +1,15 @@
-#BUILDER
-FROM node:16.9.1-alpine as builder
-
+FROM node:16.9.1-alpine as dependencies
+WORKDIR /app
 RUN apk add --no-cache python3 make g++
-
-#Builder directory
-WORKDIR /ihr-website
-
-#Copy builder source
 COPY package*.json ./
-
-# installing all dependencies
 RUN npm install
 
-# Copy all files
-COPY . .
 
-# MAIN
-FROM node:16.9.1-alpine as main
-
-# Make main app directory
+FROM node:16.9.1-alpine as build
 WORKDIR /app
+COPY . .
+COPY --from=dependencies /app/node_modules ./node_modules
+RUN npm run build
 
-#Copy all from builder stage
-COPY --from=builder /ihr-website/.  ./
-
-#Start the serve
-CMD ["npm", "run", "serve"]
+FROM nginx:1.20-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
