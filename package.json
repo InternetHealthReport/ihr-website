@@ -14,7 +14,7 @@
   "dependencies": {
     "@quasar/extras": "^1.5.2",
     "autoprefixer": "^9.6.5",
-    "axios": ">=0.21.1",
+    "axios": ">=1.4.0",
     "datejs": "^1.0.0-rc3",
     "file-loader": "^4.2.0",
     "html2pdf.js": "^0.10.1",
