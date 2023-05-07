@@ -17,24 +17,24 @@
       </div>
     </div>
     <div class="row justify-center">
-      <div class="coloumn">
+      <div class="container">
         <metis-widget widget-title="IPv4 AS-path length" af="4" metric="as_path_length" :nbprobes="nbprobes" />
       </div>
-      <div class="coloumn">
+      <div class="container">
         <metis-widget widget-title="IPv4 RTT" af="4" metric="rtt" :nbprobes="nbprobes" />
       </div>
-      <div class="coloumn">
+      <div class="container">
         <metis-widget widget-title="IPv4 IP hops" af="4" metric="ip_hops" :nbprobes="nbprobes" />
       </div>
     </div>
     <div class="row justify-center">
-      <div class="coloumn">
+      <div class="container">
         <metis-widget widget-title="IPv6 AS-path length" af="6" metric="as_path_length" :nbprobes="nbprobes" />
       </div>
-      <div class="coloumn">
+      <div class="container">
         <metis-widget widget-title="IPv6 RTT" af="6" metric="rtt" :nbprobes="nbprobes" />
       </div>
-      <div class="coloumn">
+      <div class="container">
         <metis-widget widget-title="IPv6 IP hops" af="6" metric="ip_hops" :nbprobes="nbprobes" />
       </div>
     </div>
@@ -63,14 +63,15 @@ export default {
 .IHR_description
     font-weight 400
     max-width 900px
-.coloumn
+
+.container
   float left
-  width 33.33%
+   width 33.33%
 @media screen and (max-width:720px)
-  .coloumn
+  .container
     width 100%
 @media screen and (max-width:1024px) and (min-width 720px)
-  .coloumn
+  .container
     width 50%
-
+  
 </style>
