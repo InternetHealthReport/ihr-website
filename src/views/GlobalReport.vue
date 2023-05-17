@@ -119,6 +119,7 @@
             <hegemony-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
               :min-deviation="minDeviationNetworkDelay" :filter="hegemonyFilter"
               @filteredRows="newFilteredRows('hegemony', $event)" @loading="hegemonyLoading"
+              @hegemony-alarms-data-loaded="hegemonyAlarms = $event"
               ref="ihrChartHegemonyAlarms" />
           </q-card-section>
         </q-card>
@@ -181,6 +182,7 @@
             <network-delay-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
               :min-deviation="minDeviationNetworkDelay" :filter="ndelayFilter"
               @filteredRows="newFilteredRows('networkDelay', $event)" @loading="networkDelayLoading"
+              @network-delay-alarms-data-loaded="networkDelayAlarms = $event"
               ref="ihrChartNetworkDelay" />
           </q-card-section>
         </q-card>
@@ -354,6 +356,9 @@
             :start-time="startTime"
             :end-time="endTime"
             :fetch="fetch"
+            :hegemonyAlarms="hegemonyAlarms"
+            :networkDelayAlarms="networkDelayAlarms"
+            :key="aggregatedAlarmsChartKey"
             ::min-deviation="minDeviationNetworkDelay"
             @loading="aggregatedAlarmsLoading"
             ref="ihrAggregatedAlarmsMap"
@@ -467,6 +472,8 @@ export default {
         disco: true,
         aggregatedAlarms: true,
       },
+      hegemonyAlarms: [],
+      networkDelayAlarms: []
     }
   },
   mounted() {
@@ -568,6 +575,9 @@ export default {
       }
       return this.$t('globalReport.title.global')
     },
+    aggregatedAlarmsChartKey() {
+      return `${JSON.stringify(this.hegemonyAlarms)}-${JSON.stringify(this.networkDelayAlarms)}`
+    }
   },
   watch: {
     filterLevel(newValue, oldValue) {
