@@ -43,7 +43,7 @@ export default {
           customdata: [],
           hovertemplate: '',
           colorscale: 'Viridis',
-          showscale: false,
+          showscale: true,
           marker: {
             line: {
               color: 'rgb(255,255,255)',
@@ -53,6 +53,9 @@ export default {
           hoverlabel: {
             bgcolor: 'white',
           },
+          colorbar: {
+            title: 'Alarm Counts',
+          }
         },
       ],
       layout: {
@@ -100,16 +103,18 @@ export default {
     transformData(networkDelayAlarms, hegemonyAlarms) {
       const request = () => {
         return new Promise((resolve, reject) => {
+          const counts = {hegemonyAlarmCounts: 'hegemony_alarm_counts', networkDelayAlarmCounts: 'network_delay_alarm_counts'}
           const netDelayAlarmsFiltered = networkDelayAlarms.filter(alarm => alarm.startpoint_type === 'AS')
-          const netDelayAlarmsAggregated = this.aggregateIHRAlarms(netDelayAlarmsFiltered, 'startpoint_name', 'network_delay_alarm_counts')
-          const hegemonyAlarmsAggregated = this.aggregateIHRAlarms(hegemonyAlarms, 'asn', 'hegemony_alarm_counts')
+          const netDelayAlarmsAggregated = this.aggregateIHRAlarms(netDelayAlarmsFiltered, 'startpoint_name', counts.networkDelayAlarmCounts)
+          const hegemonyAlarmsAggregated = this.aggregateIHRAlarms(hegemonyAlarms, 'asn', counts.hegemonyAlarmCounts)
           const hegemonyNetDelayAlarmsMerged = this.fullOuterJoinIHRAlarms(hegemonyAlarmsAggregated, netDelayAlarmsAggregated)
           this.addASNNameAndCountryIsoCode2(hegemonyNetDelayAlarmsMerged).then(() => {
             this.addCountryIsoCode3AndCountryName(hegemonyNetDelayAlarmsMerged, 'country_iso_code2')
-            this.addTotalAlarmCounts(hegemonyNetDelayAlarmsMerged, ['hegemony_alarm_counts', 'network_delay_alarm_counts'])
+            this.addTotalAlarmCounts(hegemonyNetDelayAlarmsMerged, Object.values(counts))
             this.addASNKeyValue(hegemonyNetDelayAlarmsMerged)
             const alarms = Object.values(hegemonyNetDelayAlarmsMerged).filter(alarm => alarm.country_iso_code3)
-            resolve(alarms)
+            const totalAlarmsByCountry = this.calculateTotalAlarmsByCountry(alarms)
+            resolve(totalAlarmsByCountry)
           }).catch(error => {
             reject(error)
           })
@@ -271,6 +276,35 @@ export default {
       for (const key in alarms) {
         alarms[key].asn = key;
       }
+    },
+
+    calculateTotalAlarmsByCountry(alarms) {
+      const alarmsByCountry = alarms.reduce((result, obj) => {
+        const existingEntry = result.find(
+          entry =>
+            entry.country_iso_code2 === obj.country_iso_code2 &&
+            entry.country_iso_code3 === obj.country_iso_code3 &&
+            entry.country_name === obj.country_name
+        );
+
+        if (existingEntry) {
+          existingEntry.hegemony_alarm_counts += obj.hegemony_alarm_counts;
+          existingEntry.network_delay_alarm_counts += obj.network_delay_alarm_counts;
+          existingEntry.total_alarm_counts += obj.total_alarm_counts;
+        } else {
+          result.push({
+            hegemony_alarm_counts: obj.hegemony_alarm_counts,
+            network_delay_alarm_counts: obj.network_delay_alarm_counts,
+            country_iso_code2: obj.country_iso_code2,
+            country_iso_code3: obj.country_iso_code3,
+            country_name: obj.country_name,
+            total_alarm_counts: obj.total_alarm_counts
+          });
+        }
+
+        return result;
+      }, []);
+      return alarmsByCountry
     },
 
     loadAndDisplayPlot(alarms) {
