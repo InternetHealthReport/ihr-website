@@ -167,10 +167,8 @@ export default {
       const params = {
         length: chunkSize,
         start: 0,
-        // ts_start: formatTime(this.startTime),
-        // ts_end: formatTime(this.endTime),
-        ts_start: '2023-05-19T06:46',
-        ts_end: '2023-05-20T06:46',
+        ts_start: formatTime(this.startTime),
+        ts_end: formatTime(this.endTime),
         min_susp: 80,
         max_susp: chunkSize,
         event_type: 'all'
