@@ -11,7 +11,6 @@
 
 <script>
 import ReactiveChart from '@/components/ReactiveChart'
-import { COMMON_FEATURE } from '../layouts.js'
 
 export default {
   components: { ReactiveChart },
@@ -35,12 +34,13 @@ export default {
   watch: {
     loading: {
       handler: function() {
-        let noDataToShow = !this.loading && (this.chart.traces[0].locations.length == 0 || this.chart.traces[0].z.length == 0)
-        if (noDataToShow) {
-          this.noData = this.$t('No data to show')
-        } else if (!this.loading) {
-          this.noData = false
-        }
+        this.noData = false
+        // let noDataToShow = !this.loading && (this.chart.traces[0].locations.length == 0 || this.chart.traces[0].z.length == 0)
+        // if (noDataToShow) {
+        //   this.noData = this.$t('No data to show')
+        // } else if (!this.loading) {
+          
+        // }
       }
     }
 
