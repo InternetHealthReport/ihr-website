@@ -238,32 +238,38 @@ export default {
     },
 
     filterAndGetGripAlarms(gripAlarms) {
-      const gripAlarmsTransformed = [];
-
-      gripAlarms.forEach((entry) => {
-        const event_type = entry['event_type'];
-        const summary = entry['summary'];
-        const trWorthy = entry['summary']['tr_worthy'];
+      const gripAlarmsTransformed = gripAlarms.reduce((acc, curr) => {
+        const trWorthy = curr.summary.tr_worthy;
+        let bgpAlertAlarm = {}
 
         if (trWorthy === true) {
-          summary['victims'].forEach((victim) => {
-            const bgpAlertAlarm = { asn_name: victim, event_type }
-            gripAlarmsTransformed.push(bgpAlertAlarm);
+          curr.summary.victims.forEach((victim) => {
+            const asnInfo = curr.asinfo[victim]
+            const asn_name = asnInfo && asnInfo.asrank && asnInfo.asrank.organization ? asnInfo.asrank.asnName.trim() + `, ${asnInfo.asrank.organization.country.iso}` : victim,
+              bgpAlertAlarm = {
+                asn_name,
+                asn: victim,
+                timebin: new Date(curr.last_modified_ts * 1000),
+                event_type: curr.event_type,
+              };
+
+            acc.push(bgpAlertAlarm);
           });
         }
-      });
 
+        return acc;
+      }, []);
       return gripAlarmsTransformed;
     },
 
-
     aggregateGripAlarms(gripAlarmsTransformed) {
       const aggregatedAlarms = gripAlarmsTransformed.reduce((acc, curr) => {
-        const { asn_name, event_type } = curr;
+        const { asn, asn_name, event_type } = curr;
 
-        if (!acc[asn_name]) {
-          acc[asn_name] = {
+        if (!acc[asn]) {
+          acc[asn] = {
             asn_name,
+            asn,
             moas_alarm_counts: [],
             submoas_alarm_counts: [],
             edges_alarm_counts: [],
@@ -277,16 +283,16 @@ export default {
 
         switch (event_type) {
           case 'moas':
-            this.updateAlarmData(acc[asn_name].moas_alarm_counts, acc[asn_name].moas_alarm_timebins, curr['timebin']);
+            this.updateAlarmData(acc[asn].moas_alarm_counts, acc[asn].moas_alarm_timebins, curr['timebin']);
             break;
           case 'submoas':
-            this.updateAlarmData(acc[asn_name].submoas_alarm_counts, acc[asn_name].submoas_alarm_timebins, curr['timebin']);
+            this.updateAlarmData(acc[asn].submoas_alarm_counts, acc[asn].submoas_alarm_timebins, curr['timebin']);
             break;
           case 'defcon':
-            this.updateAlarmData(acc[asn_name].defcon_alarm_counts, acc[asn_name].defcon_alarm_timebins, curr['timebin']);
+            this.updateAlarmData(acc[asn].defcon_alarm_counts, acc[asn].defcon_alarm_timebins, curr['timebin']);
             break;
           case 'edges':
-            this.updateAlarmData(acc[asn_name].edges_alarm_counts, acc[asn_name].edges_alarm_timebins, curr['timebin']);
+            this.updateAlarmData(acc[asn].edges_alarm_counts, acc[asn].edges_alarm_timebins, curr['timebin']);
             break;
           default:
             break;
@@ -431,7 +437,7 @@ export default {
 
       for (let asnNumber in data) {
         const asnName = data[asnNumber].asn_name.toString();
-        if (isNaN(asnName)) {
+        if (asnName || isNaN(asnName)) {
           data[asnNumber].country_iso_code2 = this.normalizeCountryIsoCode2(asnName);
           data[asnNumber].asn_name = this.normalizeASNName(asnName);
         } else {
