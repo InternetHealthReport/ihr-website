@@ -21,7 +21,7 @@
     "husky": "^7.0.4",
     "ify-loader": "^1.1.0",
     "imap": "^0.8.19",
-    "jquery": "^3.4.1",
+    "jquery": "^3.7.0",
     "n-readlines": "^1.0.0",
     "object-hash": "^3.0.0",
     "plotly.js-dist": "^1.52.3",
