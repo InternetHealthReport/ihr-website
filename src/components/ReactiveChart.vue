@@ -9,12 +9,6 @@
 </template>
 <script>
 import Plotly from 'plotly.js-dist'
-/*
-emitted events
-  plotly-click: propagation of plotly onclick
-
-  loading: emited (with false) when the plot has been rendered (for 2 way binding)
-*/
 
 export default {
   props: {
@@ -39,7 +33,19 @@ export default {
       type: Number,
       require: false,
       default: 0,
+    }
+  },
+  emits: {
+    'plotly-click': function(plotlyClickedData) {
+      if (plotlyClickedData) {
+        return true;
+      } else {
+        return false;
+      }
     },
+    'loaded': function() {
+      return false
+    }
   },
   data() {
     return {

@@ -29,7 +29,7 @@ export default {
     watch: {
         loading: {
             handler: function () {
-                let noDataToShow = !this.loading && (this.chart.traces[0].locations.length == 0 || this.chart.traces[0].z.length == 0)
+                let noDataToShow = !this.loading && !this.chart.traces.length
                 if (noDataToShow) {
                     this.noData = this.$t('No data to show')
                 } else if (!this.loading) {

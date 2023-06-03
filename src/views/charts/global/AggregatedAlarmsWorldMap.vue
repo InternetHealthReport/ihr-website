@@ -1,7 +1,8 @@
 <template>
   <div class="IHR_chart">
     <div>
-      <aggregated-alarms-world-map-reactive :chart="chart" :loading="loading" />
+      <aggregated-alarms-world-map-reactive :chart="chart" :loading="loading"
+        @plotly-click="plotlyClickedData = $event" />
     </div>
   </div>
 </template>
@@ -39,6 +40,15 @@ export default {
       required: true,
       default: () => []
     }
+  },
+  emits: {
+    'country-click': function (countryIsoCode3Clicked) {
+      if (countryIsoCode3Clicked) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
   data() {
     let chart = {
@@ -89,25 +99,41 @@ export default {
     return {
       chart: chart,
       alarmCounts: alarmCounts,
+      plotlyClickedData: null,
+    }
+  },
+  watch: {
+    plotlyClickedData: {
+      handler: function () {
+        let countryIsoCode3Clicked = this.plotlyClickedData.points[0].location
+        this.$emit('country-click', countryIsoCode3Clicked)
+      }
     }
   },
   methods: {
     apiCall() {
       this.loading = true
       if (this.networkDelayAlarms.length && this.hegemonyAlarms.length) {
-        this.etlAlarms()
+        this.etlAlarms().then(() => {
+          this.loading = false;
+        }).catch(error => {
+          console.error(error)
+        })
       }
     },
 
     etlAlarms() {
-      this.extractAlarms().then((alarms) => {
-        this.transformAlarms(alarms.gripAlarms, this.networkDelayAlarms, this.hegemonyAlarms).then((alarms) => {
-          this.loadAndDisplayWorldMap(alarms)
-        })
-          .catch(error => {
-            console.error(error)
+      return new Promise((resolve, reject) => {
+        this.extractAlarms().then((alarms) => {
+          this.transformAlarms(alarms.gripAlarms, this.networkDelayAlarms, this.hegemonyAlarms).then((alarms) => {
+            this.loadAndDisplayWorldMap(alarms)
+            resolve()
           })
+            .catch(error => {
+              reject(error)
+            })
 
+        })
       })
     },
 
@@ -147,7 +173,6 @@ export default {
       const plotlyData = this.getPlotlyData(totalAlarmsByCountry)
       const customHoverData = this.getZippedCustomHoverData(Object.values(this.alarmCounts), plotlyData)
       this.updateChart(plotlyData, customHoverData);
-      this.loading = false;
     },
 
     getGRIPAlarms() {
