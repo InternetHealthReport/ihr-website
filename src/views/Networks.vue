@@ -10,6 +10,15 @@
       </div>
       <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       <q-list v-if="showGraphs">
+        <q-expansion-item :label="$t('iyp.title')" caption="Overview of AS" header-class="IHR_charts-title" icon="fas fa-search">
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <overview :as-number="asNumber" />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
         <q-expansion-item
           :label="$t('charts.asInterdependencies.title')"
           caption="BGP data"
@@ -232,6 +241,7 @@ import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 import MeasurementLab from '@/views/charts/MeasurementLab.vue'
 import IodaChart from './charts/IodaChart.vue'
 import html2pdf from 'html2pdf.js'
+import Overview from './charts/iyp/Overview.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -254,6 +264,7 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
+    Overview,
     // MeasurementLab,
     // IodaChart,
   },

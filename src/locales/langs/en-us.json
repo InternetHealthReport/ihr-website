@@ -252,6 +252,9 @@
     "signOut": "sign out",
     "logout": "logout"
   },
+  "iyp": {
+    "title": "AS Overview"
+  },
   "passwordConfirm": "confirm password",
   "asn": "AS number",
   "prefix": "prefix",
