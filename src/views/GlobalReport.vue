@@ -348,13 +348,14 @@
           <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
             :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
             ::min-deviation="minDeviationNetworkDelay" @loading="aggregatedAlarmsLoading"
-            @aggregated-alarms-data-loaded="aggregatedAlarms = $event" ref="aggregatedAlarmsWorldMap" />
+            @aggregated-alarms-data-loaded="aggregatedAlarms = $event" @country-click="countryClicked = $event"
+            ref="aggregatedAlarmsWorldMap" />
         </q-card-section>
       </q-card>
       <q-card class="IHR_charts-body">
         <q-card-section>
           <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey"
-          ref="aggregatedAlarmsTimeSeries" />
+            :countryClicked="countryClicked" @time-series-reset="countryClicked = ''" ref="aggregatedAlarmsTimeSeries" />
         </q-card-section>
       </q-card>
     </q-expansion-item>
@@ -468,7 +469,8 @@ export default {
       },
       hegemonyAlarms: [],
       networkDelayAlarms: [],
-      aggregatedAlarms: []
+      aggregatedAlarms: [],
+      countryClicked: null
     }
   },
   mounted() {
@@ -574,7 +576,7 @@ export default {
       return `${JSON.stringify(this.hegemonyAlarms)}-${JSON.stringify(this.networkDelayAlarms)}`
     },
     aggregatedAlarmsTimeSeriesKey() {
-      return `${JSON.stringify(this.aggregatedAlarms)}`
+      return `${JSON.stringify(this.aggregatedAlarms)}-${JSON.stringify(this.countryClicked)}`
     }
   },
   watch: {

@@ -1,26 +1,37 @@
 <template>
     <div class="IHR_chart">
         <div>
-            <aggregated-alarms-world-map-reactive :chart="chart" :loading="loading" />
+            <button @click="resetTimeSeries">Reset</button>
+            <aggregated-alarms-time-series-reactive :chart="chart" :loading="loading" />
         </div>
+
     </div>
 </template>
     
 <script>
 import { COMMON_FEATURE } from '../layouts';
 import CommonChartMixin from '../CommonChartMixin'
-import AggregatedAlarmsWorldMapReactive from './AggregatedAlarmsWorldMapReactive.vue'
+import AggregatedAlarmsTimeSeriesReactive from './AggregatedAlarmsTimeSeriesReactive.vue'
 
 export default {
     mixins: [CommonChartMixin],
     components: {
-        AggregatedAlarmsWorldMapReactive,
+        AggregatedAlarmsTimeSeriesReactive,
     },
     props: {
         aggregatedAlarms: {
             type: Array,
             required: true,
             default: () => []
+        },
+        countryClicked: {
+            type: String,
+            required: false,
+        }
+    },
+    emits: {
+        'time-series-reset': function () {
+            return false
         },
     },
     data() {
@@ -47,18 +58,47 @@ export default {
             chart: chart,
         }
     },
+
     mounted() {
         this.loading = true
-        if (this.aggregatedAlarms.length > 0) {
-            const alarmsByCountryData = this.groupAlarmsByCountry(this.aggregatedAlarms)
-            this.processAlarmCategories(alarmsByCountryData)
-            this.processAggregatedAlarm(alarmsByCountryData)
-            const customHoverData = this.getCustomHoverData(alarmsByCountryData)
-            this.drawChart(alarmsByCountryData, customHoverData);
+        if (this.aggregatedAlarms.length) {
+            let groupedAlarms, legendName;
+
+            if (this.countryClicked) {
+                groupedAlarms = this.aggregatedAlarms.filter(item => item.country_iso_code3 === this.countryClicked && item.asn_name)
+                groupedAlarms = this.groupAlarmsByASNNumber(groupedAlarms)
+                legendName = 'asn_name'
+            } else {
+                groupedAlarms = this.groupAlarmsByCountry(this.aggregatedAlarms)
+                legendName = 'country_name'
+            }
+
+            this.processAlarmCategories(groupedAlarms)
+            this.processAggregatedAlarm(groupedAlarms)
+            const customHoverData = this.getCustomHoverData(groupedAlarms)
+            this.drawChart(groupedAlarms, customHoverData, legendName);
             this.loading = false
         }
     },
+
     methods: {
+        resetTimeSeries() {
+            if (this.chart.traces.length) {
+                this.untoggleLegend(this.chart.traces)
+                this.$emit('time-series-reset')
+            }
+        },
+        untoggleLegend(traces) {
+            for (let i = 0; i < traces.length; i++) {
+                if (i == 0) {
+                    traces[i].visible = true
+                    traces[i].hoverinfo = 'all'
+                } else {
+                    traces[i].visible = 'legendonly'
+                    traces[i].hoverinfo = 'none'
+                }
+            }
+        },
         groupAlarmsByCountry(alarms) {
             const alarmsByCountry = alarms.reduce((result, obj) => {
                 const existingEntry = result.find(
@@ -83,6 +123,49 @@ export default {
                     existingEntry.submoas_alarm_timebins = existingEntry.submoas_alarm_timebins.concat(obj.submoas_alarm_timebins)
                 } else {
                     result.push({
+                        country_iso_code2: obj.country_iso_code2,
+                        country_iso_code3: obj.country_iso_code3,
+                        country_name: obj.country_name,
+                        hegemony_alarm_counts: obj.hegemony_alarm_counts,
+                        network_delay_alarm_counts: obj.network_delay_alarm_counts,
+                        defcon_alarm_counts: obj.defcon_alarm_counts,
+                        edges_alarm_counts: obj.edges_alarm_counts,
+                        moas_alarm_counts: obj.moas_alarm_counts,
+                        submoas_alarm_counts: obj.submoas_alarm_counts,
+                        hegemony_alarm_timebins: obj.hegemony_alarm_timebins,
+                        network_delay_alarm_timebins: obj.network_delay_alarm_timebins,
+                        defcon_alarm_timebins: obj.defcon_alarm_timebins,
+                        edges_alarm_timebins: obj.edges_alarm_timebins,
+                        moas_alarm_timebins: obj.moas_alarm_timebins,
+                        submoas_alarm_timebins: obj.submoas_alarm_timebins,
+                    });
+                }
+
+                return result;
+            }, []);
+            return alarmsByCountry
+        },
+
+        groupAlarmsByASNNumber(alarms) {
+            const alarmsByCountry = alarms.reduce((result, obj) => {
+                const existingEntry = result.find(entry => entry.asn === obj.asn);
+
+                if (existingEntry) {
+                    existingEntry.hegemony_alarm_counts = existingEntry.hegemony_alarm_counts.concat(obj.hegemony_alarm_counts)
+                    existingEntry.network_delay_alarm_counts = existingEntry.network_delay_alarm_counts.concat(obj.network_delay_alarm_counts)
+                    existingEntry.defcon_alarm_counts = existingEntry.defcon_alarm_counts.concat(obj.defcon_alarm_counts)
+                    existingEntry.edges_alarm_counts = existingEntry.edges_alarm_counts.concat(obj.edges_alarm_counts)
+                    existingEntry.moas_alarm_counts = existingEntry.moas_alarm_counts.concat(obj.moas_alarm_counts)
+                    existingEntry.submoas_alarm_counts = existingEntry.submoas_alarm_counts.concat(obj.submoas_alarm_counts)
+                    existingEntry.hegemony_alarm_timebins = existingEntry.hegemony_alarm_timebins.concat(obj.hegemony_alarm_timebins)
+                    existingEntry.network_delay_alarm_timebins = existingEntry.network_delay_alarm_timebins.concat(obj.network_delay_alarm_timebins)
+                    existingEntry.defcon_alarm_timebins = existingEntry.defcon_alarm_timebins.concat(obj.defcon_alarm_timebins)
+                    existingEntry.edges_alarm_timebins = existingEntry.edges_alarm_timebins.concat(obj.edges_alarm_timebins)
+                    existingEntry.moas_alarm_timebins = existingEntry.moas_alarm_timebins.concat(obj.moas_alarm_timebins)
+                    existingEntry.submoas_alarm_timebins = existingEntry.submoas_alarm_timebins.concat(obj.submoas_alarm_timebins)
+                } else {
+                    result.push({
+                        asn_name: obj.asn_name,
                         country_iso_code2: obj.country_iso_code2,
                         country_iso_code3: obj.country_iso_code3,
                         country_name: obj.country_name,
@@ -234,7 +317,7 @@ export default {
             return result;
         },
 
-        drawChart(data, customHoverData) {
+        drawChart(data, customHoverData, name) {
             let traces = []
             for (let i = 0; i < data.length; i++) {
                 let trace = {
@@ -242,7 +325,7 @@ export default {
                     y: data[i].total_alarm_count_across_timebins,
                     type: 'scatter',
                     mode: 'lines',
-                    name: data[i].country_name,
+                    name: data[i][name],
                     customdata: customHoverData[i],
                     hovertemplate:
                         '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>' +
