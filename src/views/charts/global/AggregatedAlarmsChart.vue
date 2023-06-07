@@ -43,7 +43,7 @@ export default {
           customdata: [],
           hovertemplate: '',
           colorscale: 'Viridis',
-          showscale: false,
+          showscale: true,
           marker: {
             line: {
               color: 'rgb(255,255,255)',
@@ -53,6 +53,9 @@ export default {
           hoverlabel: {
             bgcolor: 'white',
           },
+          colorbar: {
+            title: 'Alarm Counts',
+          }
         },
       ],
       layout: {
@@ -79,23 +82,49 @@ export default {
     apiCall() {
       this.loading = true
       if (this.networkDelayAlarms.length && this.hegemonyAlarms.length) {
-        const networkDelayAlarmsAggregated = this.getAggregatedAlarms(this.networkDelayAlarms, 'startpoint_name', 'network_delay_alarm_counts')
-        const hegemonyAlarmsAggregated = this.getAggregatedAlarms(this.hegemonyAlarms, 'asn', 'hegemony_alarm_counts')
-        const hegemonyNetworkDelayAlarmsMerged = this.fullOuterJoinAlarms(hegemonyAlarmsAggregated, networkDelayAlarmsAggregated, 'asn', { hegemony_alarm_counts: 0, network_delay_alarm_counts: 0 })
-        this.addTotalAlarmCounts(hegemonyNetworkDelayAlarmsMerged, ['hegemony_alarm_counts', 'network_delay_alarm_counts'])
-        this.initalizeASNNameAndIsoCodes2(hegemonyNetworkDelayAlarmsMerged).then(() => {
-          this.initializeCountryCode3AndName(hegemonyNetworkDelayAlarmsMerged, 'country_iso_code2')
-          const ihrAlarmsAggregated = this.getDataPreparedForPlotly(hegemonyNetworkDelayAlarmsMerged)
-          this.updateChart(ihrAlarmsAggregated)
-          this.loading = false
-        })
-          .catch(error => {
-            console.error(error)
-          })
+        this.etlData()
       }
     },
 
-    getAggregatedAlarms(alarms, asnKey, alarmCountsAccumlator) {
+    etlData() {
+      this.extractData()
+      this.transformData(this.networkDelayAlarms, this.hegemonyAlarms).then((alarms) => {
+        this.loadAndDisplayPlot(alarms)
+      })
+        .catch(error => {
+          console.error(error)
+        })
+    },
+
+    extractData() {
+
+    },
+
+    transformData(networkDelayAlarms, hegemonyAlarms) {
+      const request = () => {
+        return new Promise((resolve, reject) => {
+          const counts = {hegemonyAlarmCounts: 'hegemony_alarm_counts', networkDelayAlarmCounts: 'network_delay_alarm_counts'}
+          const netDelayAlarmsFiltered = networkDelayAlarms.filter(alarm => alarm.startpoint_type === 'AS')
+          const netDelayAlarmsAggregated = this.aggregateIHRAlarms(netDelayAlarmsFiltered, 'startpoint_name', counts.networkDelayAlarmCounts)
+          const hegemonyAlarmsAggregated = this.aggregateIHRAlarms(hegemonyAlarms, 'asn', counts.hegemonyAlarmCounts)
+          const hegemonyNetDelayAlarmsMerged = this.fullOuterJoinIHRAlarms(hegemonyAlarmsAggregated, netDelayAlarmsAggregated)
+          this.addASNNameAndCountryIsoCode2(hegemonyNetDelayAlarmsMerged).then(() => {
+            this.addCountryIsoCode3AndCountryName(hegemonyNetDelayAlarmsMerged, 'country_iso_code2')
+            this.addTotalAlarmCounts(hegemonyNetDelayAlarmsMerged, Object.values(counts))
+            this.addASNKeyValue(hegemonyNetDelayAlarmsMerged)
+            const alarms = Object.values(hegemonyNetDelayAlarmsMerged).filter(alarm => alarm.country_iso_code3)
+            const totalAlarmsByCountry = this.calculateTotalAlarmsByCountry(alarms)
+            resolve(totalAlarmsByCountry)
+          }).catch(error => {
+            reject(error)
+          })
+        })
+      }
+
+      return request()
+    },
+
+    aggregateIHRAlarms(alarms, asnKey, alarmCountsAccumlator) {
       const alarmsAggregated = alarms.reduce((acc, curr) => {
         acc[curr[asnKey]] = acc[curr[asnKey]] || {
           [alarmCountsAccumlator]: 0,
@@ -107,71 +136,66 @@ export default {
       return alarmsAggregated
     },
 
-    fullOuterJoinAlarms(alarms1, alarms2, asnKey, accumulatedKeys) {
-      const mergedData = []
+    fullOuterJoinIHRAlarms(hegemonyAlarms, netDelayAlarms) {
+      const result = {};
 
-      for (let prop in alarms1) {
-        if (alarms1.hasOwnProperty(prop)) {
-          const data = this.mergeAlarmData(prop, alarms1[prop], alarms2[prop], asnKey, accumulatedKeys);
-          mergedData.push(data)
+      for (const key in hegemonyAlarms) {
+        if (hegemonyAlarms.hasOwnProperty(key)) {
+          result[key] = { ...hegemonyAlarms[key], hegemony_alarm_counts: hegemonyAlarms[key].hegemony_alarm_counts, network_delay_alarm_counts: 0 };
         }
       }
 
-      for (let prop in alarms2) {
-        if (alarms2.hasOwnProperty(prop) && !alarms1.hasOwnProperty(prop)) {
-          const data = this.mergeAlarmData(prop, alarms1[prop], alarms2[prop], asnKey, accumulatedKeys);
-          mergedData.push(data)
+      for (const key in netDelayAlarms) {
+        if (netDelayAlarms.hasOwnProperty(key)) {
+          if (result.hasOwnProperty(key)) {
+            result[key].network_delay_alarm_counts = netDelayAlarms[key].network_delay_alarm_counts;
+          } else {
+            result[key] = { ...netDelayAlarms[key], hegemony_alarm_counts: 0 };
+          }
         }
       }
 
-      return mergedData
+      return result;
     },
 
-    mergeAlarmData(prop, alarm1, alarm2, asnKey, accumulatedKeys) {
-      return Object.assign({ [asnKey]: prop, ...accumulatedKeys }, alarm1, alarm2);
-    },
+    addASNNameAndCountryIsoCode2(data) {
+      const promises = [];
 
-    addTotalAlarmCounts(alarms, columnsToSum) {
-      for (let i = 0; i < alarms.length; i++) {
-        let totalAlarmCounts = 0
-        for (let j = 0; j < columnsToSum.length; j++) {
-          totalAlarmCounts += alarms[i][columnsToSum[j]]
-        }
-        alarms[i]['total_alarm_counts'] = totalAlarmCounts
-      }
-    },
-
-    initalizeASNNameAndIsoCodes2(data) {
-      const promises = []
-      for (let i = 0; i < data.length; i++) {
-        const asnNumber = data[i].asn.toString()
-        const asnName = data[i].asn_name.toString()
-        if (!isNaN(asnName)) {
-          const promise = this.getASNNameAndIsoCodeWithDelay(asnNumber, data, i)
-          promises.push(promise)
+      for (let asnNumber in data) {
+        const asnName = data[asnNumber].asn_name.toString();
+        if (isNaN(asnName)) {
+          data[asnNumber].country_iso_code2 = this.normalizeCountryIsoCode2(asnName);
+          data[asnNumber].asn_name = this.normalizeASNName(asnName);
         } else {
-          data[i].country_iso_code2 = asnName.split(', ').splice(-1)[0]
+          const promise = this.getASNNameAndCountryIsoCode2Proxy(asnNumber)
+            .then(asnNameAndIsoCode2 => {
+              data[asnNumber].country_iso_code2 = asnNameAndIsoCode2['country_iso_code2'];
+              data[asnNumber].asn_name = asnNameAndIsoCode2['asn_name'];
+            })
+            .catch(error => {
+              console.error('Error retrieving ASN name and country ISO code:', error);
+              throw error;
+            });
+
+          promises.push(promise);
         }
+
       }
-      return Promise.all(promises)
+
+      return Promise.all(promises);
     },
 
-    getASNNameAndIsoCodeWithDelay(asnNumber, data, i, maxRetries = 5, delay = 1000) {
+    getASNNameAndCountryIsoCode2Proxy(asnNumber, maxRetries = 5, delay = 1000) {
       let retries = 0;
 
       const request = () => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            this.getASNNameAndIsoCode(asnNumber)
+            this.getASNNameAndCountryIsoCode2(asnNumber)
               .then(asnNameAndIsoCode2 => {
-                data[i].country_iso_code2 = asnNameAndIsoCode2['country_iso_code2'];
-                data[i].asn_name = asnNameAndIsoCode2['asn_name'];
-                resolve();
+                resolve(asnNameAndIsoCode2);
               })
               .catch(error => {
-                console.error(error);
-                retries++;
-
                 if (retries < maxRetries) {
                   retryRequest(asnNumber, resolve, reject)
                 } else {
@@ -194,7 +218,7 @@ export default {
       return request();
     },
 
-    getASNNameAndIsoCode(asnNumber) {
+    getASNNameAndCountryIsoCode2(asnNumber) {
       let networkQueryFilter = new NetworkQuery().asNumber(asnNumber)
       const request = () => {
         return new Promise((resolve, reject) => {
@@ -203,9 +227,10 @@ export default {
             results => {
               results.results.forEach(network => {
                 if (network.number == asnNumber) {
-                  let countryIsoCode2 = network.name.split(', ').slice(-1)[0]
+                  const countryIsoCode2 = this.normalizeCountryIsoCode2(network.name)
+                  const asnName = this.normalizeASNName(network.name)
                   resolve({
-                    asn_name: network.name,
+                    asn_name: asnName,
                     country_iso_code2: countryIsoCode2,
                   })
                 }
@@ -221,42 +246,100 @@ export default {
       return request();
     },
 
-    initializeCountryCode3AndName(data, countryCode2Key) {
-      for (let i = 0; i < data.length; i++) {
-        const countryCode2 = data[i][countryCode2Key]
-        const countryName = getCountryName(countryCode2)
-        if (countryCode2 && countryName) {
-          data[i]['country_iso_code3'] = getCountryISOCode3(countryCode2)
-          data[i]['country_name'] = countryName
-        }
+    normalizeCountryIsoCode2(asnName) {
+      return asnName.split(',').splice(-1)[0].trim()
+    },
+
+    normalizeASNName(asnName) {
+      return asnName.split(',').splice(0, asnName.split(',').length - 1).join(',').trim()
+    },
+
+    addCountryIsoCode3AndCountryName(data, countryCode2Key) {
+      for (let asnNumber in data) {
+        const countryCode2 = data[asnNumber][countryCode2Key]
+        data[asnNumber].country_iso_code3 = getCountryISOCode3(countryCode2)
+        data[asnNumber].country_name = getCountryName(countryCode2)
       }
     },
 
-    getDataPreparedForPlotly(inputData) {
+    addTotalAlarmCounts(alarms, columnsToSum) {
+      for (let i in alarms) {
+        let totalAlarmCounts = 0;
+        for (let j = 0; j < columnsToSum.length; j++) {
+          totalAlarmCounts += alarms[i][columnsToSum[j]];
+        }
+        alarms[i].total_alarm_counts = totalAlarmCounts;
+      }
+    },
+
+    addASNKeyValue(alarms) {
+      for (const key in alarms) {
+        alarms[key].asn = key;
+      }
+    },
+
+    calculateTotalAlarmsByCountry(alarms) {
+      const alarmsByCountry = alarms.reduce((result, obj) => {
+        const existingEntry = result.find(
+          entry =>
+            entry.country_iso_code2 === obj.country_iso_code2 &&
+            entry.country_iso_code3 === obj.country_iso_code3 &&
+            entry.country_name === obj.country_name
+        );
+
+        if (existingEntry) {
+          existingEntry.hegemony_alarm_counts += obj.hegemony_alarm_counts;
+          existingEntry.network_delay_alarm_counts += obj.network_delay_alarm_counts;
+          existingEntry.total_alarm_counts += obj.total_alarm_counts;
+        } else {
+          result.push({
+            hegemony_alarm_counts: obj.hegemony_alarm_counts,
+            network_delay_alarm_counts: obj.network_delay_alarm_counts,
+            country_iso_code2: obj.country_iso_code2,
+            country_iso_code3: obj.country_iso_code3,
+            country_name: obj.country_name,
+            total_alarm_counts: obj.total_alarm_counts
+          });
+        }
+
+        return result;
+      }, []);
+      return alarmsByCountry
+    },
+
+    loadAndDisplayPlot(alarms) {
+      const plotlyData = this.getPlotlyData(alarms)
+      const customHoverData = this.getZippedCustomHoverData(['hegemony_alarm_counts', 'network_delay_alarm_counts'], plotlyData)
+      this.updateChart(plotlyData, customHoverData);
+      this.loading = false;
+    },
+
+    getPlotlyData(inputData) {
       const data = {}
       for (let field in inputData[0]) {
-        data[field] = inputData.map(item => item[field])
+        for (let index in inputData) {
+          if (!data[field]) {
+            data[field] = []
+          }
+          data[field].push(inputData[index][field])
+        }
       }
       return data
     },
 
-    getZippedHoverData(keys, alarmsData) {
+    getZippedCustomHoverData(keys, alarmsData) {
       const zippedData = []
-      const isSameLength = keys.every(key => alarmsData[key].length === alarmsData[keys[0]].length)
-
-      if (isSameLength) {
-        for (let i = 0; i < alarmsData[keys[0]].length; i++) {
-          const tempObj = []
-          keys.forEach(key => tempObj.push(alarmsData[key][i]))
-          zippedData.push(tempObj)
-        }
+      for (let i = 0; i < alarmsData[keys[0]].length; i++) {
+        const tempObj = []
+        keys.forEach(key => tempObj.push(alarmsData[key][i]))
+        zippedData.push(tempObj)
       }
       return zippedData
     },
 
-    updateChart(ihrAlarms) {
+    updateChart(ihrAlarms, customHoverData) {
       this.chart.layout.datarevision = new Date().getTime()
-      this.chart.traces[0]['customdata'] = this.getZippedHoverData(['hegemony_alarm_counts', 'network_delay_alarm_counts'], ihrAlarms)
+      this.chart.traces[0]['customdata'] = customHoverData
       this.chart.traces[0]['locations'] = ihrAlarms['country_iso_code3']
       this.chart.traces[0]['z'] = ihrAlarms['total_alarm_counts']
       this.chart.traces[0]['text'] = ihrAlarms['country_name']

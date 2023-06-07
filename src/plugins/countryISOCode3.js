@@ -247,6 +247,7 @@ var countryISOMapping = {
   ZM: 'ZMB',
   ZW: 'ZWE',
   XK: 'XKX',
+  SX: 'SXM'
 }
 
 export default function getCountryISO3(countryCode) {

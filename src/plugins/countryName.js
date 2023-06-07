@@ -251,11 +251,7 @@ const isoCountries = {
 }
 
 export default function getCountryName(countryCode) {
-  if (Object.prototype.hasOwnProperty.call(isoCountries, countryCode)) {
-    return isoCountries[countryCode]
-  } else {
-    return countryCode
-  }
+  return isoCountries[countryCode]
 }
 
 export { getCountryName, isoCountries }
