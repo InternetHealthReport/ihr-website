@@ -17,7 +17,20 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      overview: null,
+    }
+  },
+  mounted() {
+    this.fetchData()
+  },
+  methods: {
+    async fetchData() {
+      let query = 'MATCH (a:AS {asn: $asn})-[r:NAME]-(b) RETURN a, b'
+      let res = await this.$iyp_api.run(query, { asn: this.asNumber })
+      this.overview = res
+      console.log(res)
+    },
   },
 }
 </script>

@@ -83,6 +83,7 @@ export default {
       this.loading = true
       this.options = []
       this.countryQuery.containsName(value)
+      console.log(this)
       this.$ihr_api.country(this.countryQuery, result => {
         result.results.some(element => {
           this.options.push({

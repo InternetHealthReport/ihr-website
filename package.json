@@ -23,6 +23,7 @@
     "imap": "^0.8.19",
     "jquery": "^3.4.1",
     "n-readlines": "^1.0.0",
+    "neo4j-driver": "^5.9.0",
     "object-hash": "^3.0.0",
     "plotly.js-dist": "^1.52.3",
     "postcss-plugins": "^1.13.1",

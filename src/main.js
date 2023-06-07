@@ -5,6 +5,7 @@ import router from '@/router'
 import VueResizeText from 'vue-resize-text'
 import i18n from '@/locales/i18n'
 import { IhrApi } from '@/plugins/IhrApi'
+import IypApi from './plugins/IypApi'
 import LibraryDelayer from '@/plugins/LibraryDelayer'
 import '@/styles/main.styl'
 import '@/styles/ihr.style.styl'
@@ -20,6 +21,7 @@ Vue.use(VueResizeText)
 
 // internal plugins
 Vue.use(IhrApi)
+Vue.use(IypApi)
 Vue.use(LibraryDelayer, {
   libraries: {
     ripe_widget_api: 'https://stat.ripe.net/widget-api/widget_api.js',
