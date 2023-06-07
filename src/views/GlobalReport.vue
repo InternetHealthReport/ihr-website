@@ -119,8 +119,7 @@
             <hegemony-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
               :min-deviation="minDeviationNetworkDelay" :filter="hegemonyFilter"
               @filteredRows="newFilteredRows('hegemony', $event)" @loading="hegemonyLoading"
-              @hegemony-alarms-data-loaded="hegemonyAlarms = $event"
-              ref="ihrChartHegemonyAlarms" />
+              @hegemony-alarms-data-loaded="hegemonyAlarms = $event" ref="ihrChartHegemonyAlarms" />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -182,8 +181,7 @@
             <network-delay-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
               :min-deviation="minDeviationNetworkDelay" :filter="ndelayFilter"
               @filteredRows="newFilteredRows('networkDelay', $event)" @loading="networkDelayLoading"
-              @network-delay-alarms-data-loaded="networkDelayAlarms = $event"
-              ref="ihrChartNetworkDelay" />
+              @network-delay-alarms-data-loaded="networkDelayAlarms = $event" ref="ihrChartNetworkDelay" />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -325,13 +323,8 @@
       </q-card>
     </q-expansion-item>
     <!-- </div> -->
-    <q-expansion-item
-      caption="IHR Aggregated Alarms"
-      header-class="IHR_charts-title"
-      default-opened
-      expand-icon-toggle
-      v-model="aggregatedAlarmsExpanded"
-    >
+    <q-expansion-item caption="IHR Aggregated Alarms" header-class="IHR_charts-title" default-opened expand-icon-toggle
+      v-model="aggregatedAlarmsExpanded">
       <template v-slot:header>
         <div class="graph-header-div">
           <q-item-section class="graph-header">
@@ -352,17 +345,16 @@
 
       <q-card class="IHR_charts-body">
         <q-card-section>
-          <aggregated-alarms-chart
-            :start-time="startTime"
-            :end-time="endTime"
-            :fetch="fetch"
-            :hegemonyAlarms="hegemonyAlarms"
-            :networkDelayAlarms="networkDelayAlarms"
-            :key="aggregatedAlarmsChartKey"
-            ::min-deviation="minDeviationNetworkDelay"
-            @loading="aggregatedAlarmsLoading"
-            ref="ihrAggregatedAlarmsMap"
-          />
+          <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
+            :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
+            ::min-deviation="minDeviationNetworkDelay" @loading="aggregatedAlarmsLoading"
+            @aggregated-alarms-data-loaded="aggregatedAlarms = $event" ref="aggregatedAlarmsWorldMap" />
+        </q-card-section>
+      </q-card>
+      <q-card class="IHR_charts-body">
+        <q-card-section>
+          <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey"
+          ref="aggregatedAlarmsTimeSeries" />
         </q-card-section>
       </q-card>
     </q-expansion-item>
@@ -374,7 +366,8 @@ import reportMixin from '@/views/mixin/reportMixin'
 import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from './charts/global/DiscoChart'
 import NetworkDelayAlarmsChart from './charts/global/NetworkDelayAlarmsChart'
 import HegemonyAlarmsChart from './charts/global/HegemonyAlarmsChart'
-import AggregatedAlarmsChart from './charts/global/AggregatedAlarmsChart'
+import AggregatedAlarmsWorldMap from './charts/global/AggregatedAlarmsWorldMap'
+import AggregatedAlarmsTimeSeries from './charts/global/AggregatedAlarmsTimeSeries'
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -420,7 +413,8 @@ export default {
     NetworkDelayAlarmsChart,
     HegemonyAlarmsChart,
     DiscoChart,
-    AggregatedAlarmsChart,
+    AggregatedAlarmsWorldMap,
+    AggregatedAlarmsTimeSeries,
     DelayChart,
     DateTimePicker,
   },
@@ -470,10 +464,11 @@ export default {
         networkDelay: true,
         linkDelay: true,
         disco: true,
-        aggregatedAlarms: true,
+        aggregatedData: true,
       },
       hegemonyAlarms: [],
-      networkDelayAlarms: []
+      networkDelayAlarms: [],
+      aggregatedAlarms: []
     }
   },
   mounted() {
@@ -502,7 +497,7 @@ export default {
     },
     aggregatedAlarmsLoading(val) {
       this.$nextTick(function () {
-        this.loading.aggregatedAlarms = val
+        this.loading.aggregatedData = val
       })
     },
     pushRoute() {
@@ -575,8 +570,11 @@ export default {
       }
       return this.$t('globalReport.title.global')
     },
-    aggregatedAlarmsChartKey() {
+    aggregatedAlarmsWorldMapKey() {
       return `${JSON.stringify(this.hegemonyAlarms)}-${JSON.stringify(this.networkDelayAlarms)}`
+    },
+    aggregatedAlarmsTimeSeriesKey() {
+      return `${JSON.stringify(this.aggregatedAlarms)}`
     }
   },
   watch: {
