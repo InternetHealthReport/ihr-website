@@ -11,6 +11,21 @@
       <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       <q-list v-if="showGraphs">
         <q-expansion-item
+          :label="$t('iyp.overview.country.title')"
+          caption="Overview of a Country"
+          header-class="IHR_charts-title"
+          icon="fas fa-search"
+          v-model="show.overview"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <overview :country-code="countryCode" />
+            </q-card-section>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
           :label="$t('charts.countryHegemony.title')"
           caption="BGP data / APNIC population estimates"
           header-class="IHR_charts-title"
@@ -97,7 +112,7 @@
         <h1 class="text-center q-pa-xl">Country Report</h1>
         <div class="row justify-center">
           <div class="col-6">
-            <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true"/>
+            <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true" />
           </div>
         </div>
       </div>
@@ -149,6 +164,7 @@ import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import { AS_FAMILY } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
+import Overview from './charts/iyp/CountryOverview.vue'
 import { isoCountries } from '@/plugins/countryName'
 import html2pdf from 'html2pdf.js'
 
@@ -171,6 +187,7 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
+    Overview,
   },
   data() {
     let addressFamily = this.$route.query.af
@@ -191,6 +208,7 @@ export default {
         hegemony_disable: false,
         net_delay: true,
         net_delay_disable: false,
+        overview: true,
       },
       majorEyeballs: [],
       majorEyeballsThreshold: 10,

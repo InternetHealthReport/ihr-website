@@ -60,11 +60,49 @@ const IypApi = {
       )
     }
 
+    let getASOverview = async (query) => {
+      let queries = Object.entries(query.queries)
+      let result = {}
+      for(let [key, value] of queries) {
+        let res = await run(value, { asn: query.asn })
+        if(key == 'asNameQuery') {
+          result.name = res.records[0].get('name')
+        } else if(key == 'asWebsiteQuery') {
+          result.website = res.records[0].get('url')
+        } else if(key == 'asCountryQuery') {
+          result.country = res.records[0].get('country')
+        } else if(key == 'asPrefixesCount') {
+          result.prefixesCount = res.records[0].get('prefixes_count')
+        } else if(key == 'asPeersCount') {
+          result.peersCount =  res.records[0].get('peers_count')
+        } else if(key == 'asSiblingsCount') {
+          result.siblingsCount =  res.records[0].get('siblings_count')
+        }
+      }
+      return result
+    }
+
+    let getCountryOverview = async (query) => {
+      let queries = Object.entries(query.queries)
+      let result = {}
+      for(let [key, value] of queries) {
+        let res = await run(value, { cc: query.country_code })
+        if(key == 'countryASQuery') {
+          result.asCount = res.records[0].get('as_count').low
+        } else if(key == 'countryPrefixesQuery') {
+          result.prefixesCount = res.records[0].get('prefixes_count').low
+        }
+      }
+      return result
+    }
+
     Vue.$iyp_api = Vue.prototype.$iyp_api = {
       connect,
       getDriver,
       getSession,
       run,
+      getASOverview,
+      getCountryOverview
     }
 
     init()

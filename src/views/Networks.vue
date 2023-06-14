@@ -10,11 +10,17 @@
       </div>
       <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       <q-list v-if="showGraphs">
-        <q-expansion-item :label="$t('iyp.title')" caption="Overview of AS" header-class="IHR_charts-title" icon="fas fa-search">
+        <q-expansion-item
+          :label="$t('iyp.overview.as.title')"
+          caption="Overview of AS"
+          header-class="IHR_charts-title"
+          icon="fas fa-search"
+          v-model="show.overview"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card-section>
-              <overview :as-number="asNumber" />
+              <overview :as-number="asNumber" :as-name="asName" />
             </q-card-section>
           </q-card>
         </q-expansion-item>
@@ -241,7 +247,7 @@ import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 import MeasurementLab from '@/views/charts/MeasurementLab.vue'
 import IodaChart from './charts/IodaChart.vue'
 import html2pdf from 'html2pdf.js'
-import Overview from './charts/iyp/Overview.vue'
+import Overview from './charts/iyp/ASOverview.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -279,6 +285,7 @@ export default {
       charRefs: CHART_REFS,
       minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
       show: {
+        overview: true,
         rov: true,
         rov_disable: false,
         delayAndForwarding: true,
@@ -320,7 +327,6 @@ export default {
           this.show.hegemony_disable = !results.results[0].hegemony
           this.show.hegemony = results.results[0].hegemony
         })
-
         this.asName = results.results[0].name
         this.loadingStatus = LOADING_STATUS.LOADED
         this.fetch = true

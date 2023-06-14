@@ -253,7 +253,14 @@
     "logout": "logout"
   },
   "iyp": {
-    "title": "AS Overview"
+    "overview": {
+      "as": {
+        "title": "AS Overview"
+      },
+      "country": {
+        "title": "Country Overview"
+      }
+    }
   },
   "passwordConfirm": "confirm password",
   "asn": "AS number",
