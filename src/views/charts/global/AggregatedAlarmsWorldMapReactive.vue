@@ -49,8 +49,10 @@ export default {
       }
     },
     plotlyClickedData: {
-      handler: function () {
-        this.$emit('plotly-click', this.plotlyClickedData)
+      handler: function (newPlotlyClickedData) {
+        if (newPlotlyClickedData) {
+          this.$emit('plotly-click', newPlotlyClickedData)
+        }
       }
     }
 

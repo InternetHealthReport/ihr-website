@@ -1,4 +1,4 @@
-<template>
+f<template>
     <div class="IHR_chart">
         <div>
             <button @click="resetTimeSeries">Reset</button>
@@ -77,7 +77,6 @@ export default {
             this.addTotalAlarmCountsRecord(groupedAlarms)
             this.processAggregatedAlarm(groupedAlarms)
             this.sortAlarmsByCountry(groupedAlarms)
-            console.log('groupedAlarms:', groupedAlarms)
             const customHoverData = this.getCustomHoverData(groupedAlarms)
             this.drawChart(groupedAlarms, customHoverData, legendName);
             this.loading = false
@@ -86,7 +85,7 @@ export default {
 
     methods: {
         resetTimeSeries() {
-            if (this.chart.traces.length) {
+            if (!this.loading) {
                 this.untoggleLegend(this.chart.traces)
                 this.$emit('time-series-reset')
             }
@@ -408,6 +407,6 @@ export default {
 
 <style>
 .IHR_chart {
-    height: 340px;
+    height: 380px;
 }
 </style>

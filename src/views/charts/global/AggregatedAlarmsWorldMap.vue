@@ -1,9 +1,22 @@
 <template>
-  <div class="IHR_chart">
-    <div>
-      <aggregated-alarms-world-map-reactive :chart="chart" :loading="loading"
-        @plotly-click="plotlyClickedData = $event" />
+  <div style="height: 450px;" class="IHR_chart">
+    <div style="margin: 3px 3px 3px 3px;" class="filters">
+      <div>
+        <label for="start-date">Start Date and Time:</label>
+        <input style="margin-left: 5px;" type="datetime-local" id="start-date" v-model="startDate" :min="minStartDate"
+          :max="maxEndDate">
+      </div>
+      <div style="margin: 5px 3px 3px 3px;">
+        <label for="end-date">End Date and Time:</label>
+        <input style="margin-left: 9px;" type="datetime-local" id="end-date" v-model="endDate" :min="minStartDate"
+          :max="maxEndDate">
+      </div>
+      <div style="margin-top: 6px;" class="button-container">
+        <button @click="applyTimeFiltersWorldMap">Apply Filters</button>
+        <button @click="resetWorldMap" style="margin-left: 3px;" class="reset-button">Reset</button>
+      </div>
     </div>
+    <aggregated-alarms-world-map-reactive :chart="chart" :loading="loading" @plotly-click="plotlyClickedData = $event" />
   </div>
 </template>
 
@@ -98,19 +111,121 @@ export default {
     }
     return {
       chart: chart,
+      alarms: [],
+      timeFilteredAlarms: [],
+      backupAlarms: [],
       alarmCounts: alarmCounts,
       plotlyClickedData: null,
+      startDate: this.formatTime(this.startTime),
+      endDate: this.formatTime(this.endTime),
+      minStartDate: this.formatTime(this.startTime),
+      maxEndDate: this.formatTime(this.endTime),
     }
   },
   watch: {
     plotlyClickedData: {
-      handler: function () {
-        let countryIsoCode3Clicked = this.plotlyClickedData.points[0].location
-        this.$emit('country-click', countryIsoCode3Clicked)
+      handler: function (newPlotlyClickedData) {
+        if (newPlotlyClickedData) {
+          let countryIsoCode3Clicked = newPlotlyClickedData.points[0].location
+          this.$emit('country-click', countryIsoCode3Clicked)
+        }
       }
-    }
+    },
+    timeFilteredAlarms: {
+      handler: function (newTimeFilteredAlarms) {
+        if (newTimeFilteredAlarms) {
+          this.loadAndDisplayWorldMap(newTimeFilteredAlarms, this.alarmCounts)
+        }
+      },
+    },
   },
   methods: {
+    resetWorldMap() {
+      this.loadAndDisplayWorldMap(this.alarms, this.alarmCounts)
+      this.$emit('aggregated-alarms-data-loaded', this.alarms)
+      this.startDate = null
+      this.endDate = null
+    },
+    applyTimeFiltersWorldMap() {
+      if (this.alarms && this.alarms.length && this.startDate && this.endDate) {
+        let startDate = new Date(this.startDate)
+        let endDate = new Date(this.endDate)
+
+        if (startDate > endDate) {
+          alert('Start Date cannot be greater than End Date')
+          return
+        }
+
+        const formattedStartDate = startDate.toISOString().slice(0, 16);
+        const formattedEndDate = endDate.toISOString().slice(0, 16);
+
+        startDate = new Date(formattedStartDate);
+        endDate = new Date(formattedEndDate);
+
+        const timeFilteredAlarms = this.deepCopy(this.alarms).map(alarm => {
+          alarm.hegemony_alarm_timebins = alarm.hegemony_alarm_timebins.filter((timebin) => {
+            return timebin >= startDate && timebin <= endDate
+          })
+          alarm.network_delay_alarm_timebins = alarm.network_delay_alarm_timebins.filter((timebin) => {
+            return timebin >= startDate && timebin <= endDate
+          })
+          alarm.moas_alarm_timebins = alarm.moas_alarm_timebins.filter((timebin) => {
+            return timebin >= startDate && timebin <= endDate
+          })
+          alarm.submoas_alarm_timebins = alarm.submoas_alarm_timebins.filter((timebin) => {
+            return timebin >= startDate && timebin <= endDate
+          })
+          alarm.defcon_alarm_timebins = alarm.defcon_alarm_timebins.filter((timebin) => {
+            return timebin >= startDate && timebin <= endDate
+          })
+          alarm.edges_alarm_timebins = alarm.edges_alarm_timebins.filter((timebin) => {
+            return timebin >= startDate && timebin <= endDate
+          })
+          const allTimebinsEmpty =
+            alarm.hegemony_alarm_timebins.length === 0 &&
+            alarm.network_delay_alarm_timebins.length === 0 &&
+            alarm.moas_alarm_timebins.length === 0 &&
+            alarm.submoas_alarm_timebins.length === 0 &&
+            alarm.defcon_alarm_timebins.length === 0 &&
+            alarm.edges_alarm_timebins.length === 0
+
+          if (allTimebinsEmpty) {
+            return null
+          } else {
+            alarm.hegemony_alarm_counts = Array(alarm.hegemony_alarm_timebins.length).fill(1)
+            alarm.network_delay_alarm_counts = Array(alarm.network_delay_alarm_timebins.length).fill(1)
+            alarm.moas_alarm_counts = Array(alarm.moas_alarm_timebins.length).fill(1)
+            alarm.submoas_alarm_counts = Array(alarm.submoas_alarm_timebins.length).fill(1)
+            alarm.defcon_alarm_counts = Array(alarm.defcon_alarm_timebins.length).fill(1)
+            alarm.edges_alarm_counts = Array(alarm.edges_alarm_timebins.length).fill(1)
+            return alarm
+          }
+        })
+        this.timeFilteredAlarms = timeFilteredAlarms.filter(alarm => alarm !== null)
+        this.$emit('aggregated-alarms-data-loaded', this.timeFilteredAlarms)
+      }
+    },
+
+    deepCopy(obj) {
+      if (typeof obj !== 'object' || obj === null) {
+        return obj;
+      }
+
+      if (obj instanceof Date) {
+        return new Date(obj.getTime());
+      }
+
+      const copy = Array.isArray(obj) ? [] : {};
+
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          copy[key] = this.deepCopy(obj[key]);
+        }
+      }
+
+      return copy;
+    },
+
     apiCall() {
       this.loading = true
       if (this.networkDelayAlarms.length && this.hegemonyAlarms.length) {
@@ -125,8 +240,8 @@ export default {
     etlAlarms() {
       return new Promise((resolve, reject) => {
         this.extractAlarms().then((alarms) => {
-          this.transformAlarms(alarms.gripAlarms, this.networkDelayAlarms, this.hegemonyAlarms).then((alarms) => {
-            this.loadAndDisplayWorldMap(alarms)
+          this.transformAlarms(alarms.gripAlarms, this.networkDelayAlarms, this.hegemonyAlarms).then(() => {
+            this.loadAndDisplayWorldMap(this.alarms, this.alarmCounts)
             resolve()
           })
             .catch(error => {
@@ -157,8 +272,8 @@ export default {
       const request = () => {
         return new Promise((resolve, reject) => {
           const hegemonyNetDelayAlarms = this.transformIHRAlarms(networkDelayAlarms, hegemonyAlarms)
-          this.transformAlarmsHelper(hegemonyNetDelayAlarms, gripAlarmsTransformed).then((totalAlarmsByCountry) => {
-            resolve(totalAlarmsByCountry)
+          this.transformAlarmsHelper(hegemonyNetDelayAlarms, gripAlarmsTransformed).then(() => {
+            resolve()
           }).catch(error => {
             reject(error)
           })
@@ -167,11 +282,11 @@ export default {
       return request()
     },
 
-    loadAndDisplayWorldMap(alarms) {
+    loadAndDisplayWorldMap(alarms, alarmCounts) {
       const totalAlarmsByCountry = this.groupTotalAlarmCountsByCountry(alarms)
       this.addTotalAlarmCountsColumn(totalAlarmsByCountry)
       const plotlyData = this.getPlotlyData(totalAlarmsByCountry)
-      const customHoverData = this.getZippedCustomHoverData(Object.values(this.alarmCounts), plotlyData)
+      const customHoverData = alarms.length ? this.getZippedCustomHoverData(Object.values(alarmCounts), plotlyData) : []
       this.updateChart(plotlyData, customHoverData);
     },
 
@@ -179,21 +294,11 @@ export default {
       const apiURL = 'https://api.grip.inetintel.cc.gatech.edu/json/events';
       const chunkSize = 100;
 
-      const formatTime = (date) => {
-        const year = date.getUTCFullYear();
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        const hours = String(date.getUTCHours()).padStart(2, '0');
-        const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
-        return formattedDate;
-      };
-
       const params = {
         length: chunkSize,
         start: 0,
-        ts_start: formatTime(this.startTime),
-        ts_end: formatTime(this.endTime),
+        ts_start: this.formatTime(this.startTime),
+        ts_end: this.formatTime(this.endTime),
         min_susp: 80,
         max_susp: chunkSize,
         event_type: 'all'
@@ -256,6 +361,16 @@ export default {
       return request();
     },
 
+    formatTime(date) {
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(date.getUTCDate()).padStart(2, '0');
+      const hours = String(date.getUTCHours()).padStart(2, '0');
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+      return formattedDate;
+    },
+
     transformGRIPAlarms(gripAlarms) {
       const gripAlarmsTransformed = this.filterAndGetGripAlarms(gripAlarms);
       const gripAlarmsAggregated = this.aggregateGripAlarms(gripAlarmsTransformed);
@@ -265,18 +380,18 @@ export default {
     filterAndGetGripAlarms(gripAlarms) {
       const gripAlarmsTransformed = gripAlarms.reduce((acc, curr) => {
         const trWorthy = curr.summary.tr_worthy;
-        let bgpAlertAlarm = {}
 
         if (trWorthy === true) {
           curr.summary.victims.forEach((victim) => {
             const asnInfo = curr.asinfo[victim]
-            const asn_name = asnInfo && asnInfo.asrank && asnInfo.asrank.organization ? asnInfo.asrank.asnName.trim() + `, ${asnInfo.asrank.organization.country.iso}` : victim,
-              bgpAlertAlarm = {
-                asn_name,
-                asn: victim,
-                timebin: new Date(curr.last_modified_ts * 1000),
-                event_type: curr.event_type,
-              };
+            const asn_name = asnInfo && asnInfo.asrank && asnInfo.asrank.organization ? asnInfo.asrank.asnName.trim() + `, ${asnInfo.asrank.organization.country.iso}` : victim
+
+            let bgpAlertAlarm = {
+              asn_name,
+              asn: victim,
+              timebin: new Date(curr.last_modified_ts * 1000),
+              event_type: curr.event_type,
+            };
 
             acc.push(bgpAlertAlarm);
           });
@@ -366,8 +481,9 @@ export default {
             this.addCountryIsoCode3AndCountryNameProxy(alarms, 'country_iso_code2')
             const alarmsList = this.addASNNumberToAlarmsAndConvertToArray(alarms)
             const alarmsFiltered = Object.values(alarmsList).filter(alarm => alarm.country_iso_code3)
-            this.$emit('aggregated-alarms-data-loaded', alarmsFiltered)
-            resolve(alarmsFiltered)
+            this.alarms = alarmsFiltered
+            this.$emit('aggregated-alarms-data-loaded', this.alarms)
+            resolve()
           }).catch(error => {
             reject(error)
           })
@@ -669,8 +785,4 @@ export default {
 }
 </script>
 
-<style>
-.IHR_chart {
-  height: 340px;
-}
-</style>
+<style></style>

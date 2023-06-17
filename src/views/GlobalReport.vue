@@ -54,6 +54,42 @@
       </q-card-section>
       <q-separator />
     </q-card>
+    <q-expansion-item caption="IHR Aggregated Alarms" header-class="IHR_charts-title" default-opened expand-icon-toggle
+      v-model="aggregatedAlarmsExpanded">
+      <template v-slot:header>
+        <div class="graph-header-div">
+          <q-item-section class="graph-header">
+            <q-item-section avatar>
+              <q-icon name="fas fa-plug" color="primary" text-color="white" />
+            </q-item-section>
+
+            <q-item-section>
+              <a id="aggregatedAlarms"></a>
+              <div class="text-primary">
+                {{ $t('charts.aggregatedAlarms.title') }}
+              </div>
+              <div class="text-caption text-grey">IHR Aggregated Alarms</div>
+            </q-item-section>
+          </q-item-section>
+        </div>
+      </template>
+
+      <q-card class="IHR_charts-body">
+        <q-card-section>
+          <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
+            :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
+            ::min-deviation="minDeviationNetworkDelay" @loading="aggregatedAlarmsLoading"
+            @aggregated-alarms-data-loaded="aggregatedAlarms = $event" @country-click="countryClicked = $event"
+            ref="aggregatedAlarmsWorldMap" />
+        </q-card-section>
+      </q-card>
+      <q-card class="IHR_charts-body">
+        <q-card-section>
+          <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey"
+            :countryClicked="countryClicked" @time-series-reset="countryClicked = ''" ref="aggregatedAlarmsTimeSeries" />
+        </q-card-section>
+      </q-card>
+    </q-expansion-item>
     <div v-show="!this.nbAlarms['hegemony']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
         <template v-slot:header>
@@ -323,42 +359,6 @@
       </q-card>
     </q-expansion-item>
     <!-- </div> -->
-    <q-expansion-item caption="IHR Aggregated Alarms" header-class="IHR_charts-title" default-opened expand-icon-toggle
-      v-model="aggregatedAlarmsExpanded">
-      <template v-slot:header>
-        <div class="graph-header-div">
-          <q-item-section class="graph-header">
-            <q-item-section avatar>
-              <q-icon name="fas fa-plug" color="primary" text-color="white" />
-            </q-item-section>
-
-            <q-item-section>
-              <a id="aggregatedAlarms"></a>
-              <div class="text-primary">
-                {{ $t('charts.aggregatedAlarms.title') }}
-              </div>
-              <div class="text-caption text-grey">IHR Aggregated Alarms</div>
-            </q-item-section>
-          </q-item-section>
-        </div>
-      </template>
-
-      <q-card class="IHR_charts-body">
-        <q-card-section>
-          <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
-            :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
-            ::min-deviation="minDeviationNetworkDelay" @loading="aggregatedAlarmsLoading"
-            @aggregated-alarms-data-loaded="aggregatedAlarms = $event" @country-click="countryClicked = $event"
-            ref="aggregatedAlarmsWorldMap" />
-        </q-card-section>
-      </q-card>
-      <q-card class="IHR_charts-body">
-        <q-card-section>
-          <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey"
-            :countryClicked="countryClicked" @time-series-reset="countryClicked = ''" ref="aggregatedAlarmsTimeSeries" />
-        </q-card-section>
-      </q-card>
-    </q-expansion-item>
   </div>
 </template>
 
