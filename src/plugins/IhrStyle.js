@@ -29,6 +29,9 @@ export default {
         validatePassword(password) {
           return password.length >= 8 //the bare minimum...
         },
+        validateCode(code) {
+          return code.length == 6
+        }
       },
       computed: {
         recaptchaKey() {
