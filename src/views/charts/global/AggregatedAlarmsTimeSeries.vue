@@ -74,7 +74,10 @@ export default {
             }
 
             this.processAlarmCategories(groupedAlarms)
+            this.addTotalAlarmCountsRecord(groupedAlarms)
             this.processAggregatedAlarm(groupedAlarms)
+            this.sortAlarmsByCountry(groupedAlarms)
+            console.log('groupedAlarms:', groupedAlarms)
             const customHoverData = this.getCustomHoverData(groupedAlarms)
             this.drawChart(groupedAlarms, customHoverData, legendName);
             this.loading = false
@@ -290,7 +293,50 @@ export default {
                 }
 
             });
-            alarmsByCountryData.sort((a, b) => (a.country_name > b.country_name) ? 1 : -1)
+        },
+
+        sortAlarmsByCountry(alarmsByCountryData) {
+            alarmsByCountryData.sort((a, b) => {
+                if (a.country_name.toLowerCase() === 'all') {
+                    return -1
+                } else if (b.country_name.toLowerCase() === 'all') {
+                    return 1
+                } else {
+                    return a.country_name.toLowerCase().localeCompare(b.country_name.toLowerCase())
+                }
+            });
+        },
+
+        addTotalAlarmCountsRecord(groupedData) {
+            let totalAlarmCountsRecord = {
+                country_iso_code2: 'All',
+                country_iso_code3: 'All',
+                country_name: 'All',
+                asn_name: 'All',
+                hegemony_alarm_counts: [],
+                network_delay_alarm_counts: [],
+                defcon_alarm_counts: [],
+                edges_alarm_counts: [],
+                moas_alarm_counts: [],
+                submoas_alarm_counts: [],
+                hegemony_alarm_timebins: [],
+                network_delay_alarm_timebins: [],
+                defcon_alarm_timebins: [],
+                edges_alarm_timebins: [],
+                moas_alarm_timebins: [],
+                submoas_alarm_timebins: [],
+                timebins: []
+            }
+
+            groupedData.forEach(alarm => {
+                Object.keys(totalAlarmCountsRecord).forEach(key => {
+                    if (Array.isArray(totalAlarmCountsRecord[key])) {
+                        totalAlarmCountsRecord[key] = totalAlarmCountsRecord[key].concat(alarm[key]);
+                    }
+                });
+            });
+
+            groupedData.push(totalAlarmCountsRecord)
         },
 
         getCustomHoverData(data) {
