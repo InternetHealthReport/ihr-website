@@ -8,8 +8,11 @@
         </template>
       </q-banner>
     </transition>
-    <h1>{{ $t("sigIn.register") }}</h1>
+    <h1>{{ $t("register") }}</h1>
     <div class="shadow-2" id="IHR_sig-in-form-container">
+      <q-card-section :class="{ 'IHR_errors-banner': isError, 'positive': !isError }" >
+          <label style="color: white;" >{{ message }}</label> 
+      </q-card-section>
       <q-input v-model="email" label="email" type="email"
         :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]">
         <template v-slot:prepend>
@@ -17,7 +20,7 @@
         </template>
       </q-input>
       <q-input v-model="password" label="password" @blur="showCode" :type="isPwd ? 'password' : 'text'" :rules="[
-        val => $ihrStyle.validatePassword(val) || $t('forms.weakPassword')
+        val => $ihrStyle.validatePassword(val) || $t('Please enter a password with at least 8 characters, including at least one number, one lowercase letter, and one uppercase letter.')
       ]">
         <template v-slot:prepend>
           <q-icon name="fa fa-key" />
@@ -27,7 +30,7 @@
         </template>
       </q-input>
       <q-input v-show="isShowCode" v-model="code" label="verification code" :rules="[
-        val => $ihrStyle.validateCode(val) || $t('forms.weakCode')
+        val => $ihrStyle.validateCode(val) || $t('Are you sure you entered the correct code?')
       ]">
         <template v-slot:prepend>
           <q-icon name="fa fa-check" />
@@ -58,21 +61,7 @@
       </div>
       <q-btn color="positive" @click="validateAndSend">register</q-btn>
     </div>
-    <q-dialog v-model="emailSent">
-      <q-card style="width: 300px">
-        <q-card-section>
-          <div class="text-h6">Alert</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          {{ message }}
-        </q-card-section>
-
-        <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="OK" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    
   </div>
 </template>
 
@@ -96,7 +85,8 @@ export default {
       recaptcha_loaded: false,
       countShow: false,
       codeCount: 60,
-      errors: []
+      errors: [],
+      isError: false
     };
   },
   mounted() {
@@ -131,13 +121,15 @@ export default {
           (res) => {
             this.emailSent = true
             this.message = res.msg
-            if (res.code === 200) {
+            if (res.code === 201) {
               this.$router.push('/en-us/login')
             }
           },
           error => {
             this.emailSent = true
-            this.message = error.detail
+            console.log(error);
+            this.message = error.data.msg
+            this.isError = true
           }
         );
     },

@@ -39,7 +39,7 @@
         <q-btn
           color="positive"
           class="col-3"
-          @click="$router.push({ name: 'sign_up' })"
+          @click="$router.push({ name: 'register' })"
           >{{ $t("header.signUp") }}</q-btn
         >
         <q-btn

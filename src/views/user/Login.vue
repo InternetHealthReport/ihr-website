@@ -8,8 +8,11 @@
         </template>
       </q-banner>
     </transition>
-    <h1>{{ $t("sigIn.login") }}</h1>
+    <h1>{{ $t("login") }}</h1>
     <div class="shadow-2" id="IHR_sig-in-form-container">
+      <q-card-section :class="{ 'IHR_errors-banner': isError, 'positive': !isError }" >
+         <label style="color: white;" >{{ message }}</label> 
+        </q-card-section>
       <q-input v-model="email" label="email" type="email"
         :rules="[val => $ihrStyle.validateEmail(val) || $t('forms.fancyEmail')]">
         <template v-slot:prepend>
@@ -37,9 +40,9 @@
           @expired="expired"
           :render="ensureCss"
         ></vue-recaptcha> -->
-        <q-inner-loading :showing="!recaptcha_loaded">
+        <!-- <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
-        </q-inner-loading>
+        </q-inner-loading> -->
       <!-- </div> -->
       <!-- <div>{{ $t("sigIn.mailWillBeSent") }}</div> -->
       <div style="display:flex;justify-content:space-between;">
@@ -53,21 +56,7 @@
       <div id="IHR_email-confirmation">{{ email }}</div>
       <div>{{ $t("sigIn.pleaseFollowTheLink") }}</div>
     </div> -->
-    <q-dialog v-model="emailSent">
-      <q-card style="width: 300px">
-        <q-card-section>
-          <div class="text-h6">Alert</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          {{ message }}
-        </q-card-section>
-
-        <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="OK" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    
   </div>
 </template>
 
@@ -85,7 +74,8 @@ export default {
       emailSent: false,
       isPwd: true,
       recaptcha_loaded: false,
-      errors: []
+      errors: [],
+      isError: false
     }
   },
   mounted() {
@@ -110,6 +100,7 @@ export default {
       //this.recaptcha != '' || this.errors.push('missingReCaptcha')
       this.$ihrStyle.validatePassword(this.password) || this.errors.push('passwordTooWeak')
       this.$ihrStyle.validateEmail(this.email) || this.errors.push('strangeEmail')
+      console.log(this.errors);
       if (this.errors.length == 0)
         this.$ihr_api.userLogin(
           this.email,
@@ -121,10 +112,12 @@ export default {
               this.$emit('isLogin', true)
               this.$router.push('/en-us')
             }
+            this.isError = res.code !== 200
           },
           error => {
             this.emailSent = true
             this.message = error.data.detail
+            this.isError = true
           }
         );
     }

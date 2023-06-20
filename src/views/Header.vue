@@ -36,28 +36,13 @@
             <q-btn flat :label="$t('header.register')" :to="{ name: 'register' }" />
           </div>
           <div v-else style="position:absolute;right:30px;line-height:68px">
-            <q-btn flat :label="user" :to="{ name: 'select' }" />
+            <q-btn flat :label="user" :to="{ name: 'personal_page' }" />
             <q-btn flat :label="$t('header.logout')" @click="logout" />
           </div>
         </div>
       </div>
       <!--Log in /Log out stuff here-->
     </q-toolbar>
-    <q-dialog v-model="emailSent">
-      <q-card style="width: 300px">
-        <q-card-section>
-          <div class="text-h6">Alert</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          {{ message }}
-        </q-card-section>
-
-        <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="OK" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-header>
 </template>
 

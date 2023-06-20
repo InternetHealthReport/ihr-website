@@ -6,7 +6,7 @@
         <q-btn
           color="secondary"
           class="col-3"
-          @click="$router.push({ name: 'sign_up' })"
+          @click="$router.push({ name: 'register' })"
           >{{ $t("header.signUp") }}</q-btn
         >
         <q-btn
@@ -324,9 +324,9 @@ export default {
       },
       error => {
         console.log(error);
-        if (error.status == 401)
-          // unauthorized
-          this.$ihr_api.userLogout();
+        // if (error.status == 401)
+        //   // unauthorized
+        //   this.$ihr_api.userLogout();
         console.log(error);
       }
     );

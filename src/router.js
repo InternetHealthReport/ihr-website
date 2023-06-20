@@ -158,7 +158,7 @@ export default new Router({
     },
     {
       name: 'register',
-      path: `${routerBase}sign_up`,
+      path: `${routerBase}register`,
       components: {
         header: Header,
         footer: Footer,
