@@ -40,9 +40,11 @@
           @expired="expired"
           :render="ensureCss"
         ></vue-recaptcha> -->
+
         <!-- <q-inner-loading :showing="!recaptcha_loaded">
           <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading> -->
+
       <!-- </div> -->
       <!-- <div>{{ $t("sigIn.mailWillBeSent") }}</div> -->
       <div style="display:flex;justify-content:space-between;">
@@ -56,7 +58,7 @@
       <div id="IHR_email-confirmation">{{ email }}</div>
       <div>{{ $t("sigIn.pleaseFollowTheLink") }}</div>
     </div> -->
-    
+
   </div>
 </template>
 
@@ -100,7 +102,6 @@ export default {
       //this.recaptcha != '' || this.errors.push('missingReCaptcha')
       this.$ihrStyle.validatePassword(this.password) || this.errors.push('passwordTooWeak')
       this.$ihrStyle.validateEmail(this.email) || this.errors.push('strangeEmail')
-      console.log(this.errors);
       if (this.errors.length == 0)
         this.$ihr_api.userLogin(
           this.email,
@@ -117,7 +118,9 @@ export default {
           error => {
             this.emailSent = true
             this.message = error.data.detail
+
             this.isError = true
+
           }
         );
     }
