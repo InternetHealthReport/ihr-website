@@ -1,0 +1,58 @@
+class ASOverviewQuery {
+    constructor(asn) {
+        this.asn = asn
+        this.filter = ['as_name', 'website', 'country_of_origin', 'siblings_count', 'prefixes_count', 'peers_count', 'siblings_count']
+        this.queries = {}
+        this.generateQuery()
+    }
+
+    generateQuery() {
+        this.filter.forEach((item) => {
+            if(item == 'as_name') {
+                let asNameQuery = 'MATCH (a:AS {asn: $asn})-[r:NAME]-(b) RETURN b.name AS name LIMIT (1)'
+                this.queries.asNameQuery = asNameQuery
+            } else if(item == 'website') {
+                let asWebsiteQuery = 'MATCH (a:AS {asn: $asn})-[r:WEBSITE]-(b) RETURN b.url AS url LIMIT (1)'
+                this.queries.asWebsiteQuery = asWebsiteQuery
+            } else if(item == 'country_of_origin') {
+                let asCountryQuery = 'MATCH (a:AS {asn: $asn})-[r:COUNTRY]-(b) RETURN b.country_code AS country LIMIT (1)'
+                this.queries.asCountryQuery = asCountryQuery
+            } else if(item == 'prefixes_count') {
+                let asPrefixesCount = 'MATCH (a:AS {asn: $asn})-[r:DEPENDS_ON]-(b:Prefix) RETURN COUNT(b) AS prefixes_count'
+                this.queries.asPrefixesCount = asPrefixesCount
+            } else if(item == 'peers_count') {
+                let asPeersCount = 'MATCH (a:AS {asn: $asn})-[r:PEERS_WITH]-(b) RETURN COUNT(b) AS peers_count'
+                this.queries.asPeersCount = asPeersCount
+            } else if(item == 'siblings_count') {
+                let asSiblingsCount = 'MATCH (a:AS {asn: $asn})-[r:SIBLING_OF]-(b) RETURN COUNT(b) AS siblings_count'
+                this.queries.asSiblingsCount = asSiblingsCount
+            }
+        })
+    }
+}
+
+class CountryOverviewQuery {
+    constructor(country_code) {
+        this.country_code = country_code
+        this.filter = ['as', 'prefixes_count']
+        this.queries = {}
+        this.generateQuery()
+    }
+
+    generateQuery() {
+        this.filter.forEach((item) => {
+            if(item == 'as') {
+                let countryASQuery = 'MATCH (a:Country {country_code: $cc})-[r:COUNTRY]-(b:AS) RETURN COUNT(b) as as_count'
+                this.queries.countryASQuery = countryASQuery
+            } else if(item == 'ixp') {
+                let countryIXPQuery = 'MATCH (a:Country {country_code: $cc})-[r:MEMBER_OF]-(b:IXP) RETURN COUNT(b) as ixp_count'
+                this.queries.countryIXPQuery = countryIXPQuery
+            } else if(item == 'prefixes_count') {
+                let countryPrefixesQuery = 'MATCH (a:Country {country_code: $cc})-[r]-(b:Prefix) RETURN  COUNT(b) as prefixes_count'
+                this.queries.countryPrefixesQuery = countryPrefixesQuery
+            }
+        })
+    }
+}
+
+export {ASOverviewQuery, CountryOverviewQuery}
