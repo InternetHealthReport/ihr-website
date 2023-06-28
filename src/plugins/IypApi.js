@@ -60,6 +60,25 @@ const IypApi = {
       )
     }
 
+    let formatResponse = (results, mapping) => {
+      let formattedResults = []
+      for (let record of results.records) {
+        let formattedRecord = {}
+        for (let key in mapping) {
+          let field = ''
+          if(mapping[key] instanceof Array) {
+            field = mapping[key][0]
+            formattedRecord[key] = record.get(field)[mapping[key][1]]
+          } else {
+            field =  mapping[key]
+            formattedRecord[key] = record.get(field)
+          }
+        }
+        formattedResults.push(formattedRecord)
+      }
+      return formattedResults;
+    }
+
     let getASOverview = async (query) => {
       let queries = Object.entries(query.queries)
       let result = {}
@@ -101,6 +120,7 @@ const IypApi = {
       getDriver,
       getSession,
       run,
+      formatResponse,
       getASOverview,
       getCountryOverview
     }
@@ -108,6 +128,8 @@ const IypApi = {
     init()
   },
 }
+
+// Tried to implement IypApi using existing implementation adopted for IhrApi
 
 // const IypApi = {
 //   install(Vue) {
