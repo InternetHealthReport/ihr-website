@@ -22,7 +22,6 @@ export default {
     },
     asName: {
       type: String,
-      required: true,
     },
   },
   data() {

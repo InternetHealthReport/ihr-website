@@ -260,6 +260,26 @@
       "country": {
         "title": "Country Overview"
       }
+    },
+    "as": {
+      "peers": {
+        "title": "Peer ASes"
+      },
+      "ipPrefix": {
+        "title": "IP Prefix"
+      },
+      "ixp": {
+        "title": "IXPs"
+      },
+      "rankings": {
+        "title": "Rankings"
+      },
+      "popularDomains": {
+        "title": "Popular Domains"
+      },
+      "tags": {
+        "title": "Tags"
+      }
     }
   },
   "passwordConfirm": "confirm password",

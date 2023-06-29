@@ -20,6 +20,7 @@ import ResetPassword from '@/views/user/ResetPassword'
 import Documentation from '@/views/Documentation'
 import Bgplay from '@/components/ripe/Bgplay'
 import PageNotFound from '@/views/PageNotFound'
+import AS from '@/views/iyp/AS'
 
 Vue.use(Router)
 
@@ -252,5 +253,17 @@ export default new Router({
       }),
       meta: { title: 'BGPlay - IHR' },
     },
+
+    // IYP
+    {
+      name: 'iyp_asn',
+      path: `${routerBase}iyp/asn/:asn`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: AS,
+      },
+      meta: { title: 'IYP ASN - IHR' },
+    }
   ],
 })

@@ -6,7 +6,9 @@
       <div id="IHR_last-element">&nbsp;</div>
     </q-page-container>
     <router-view name="footer" />
-    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><q-icon name="fas fa-arrow-up"></q-icon></button>
+    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white">
+      <q-icon name="fas fa-arrow-up"></q-icon>
+    </button>
   </q-layout>
 </template>
 <script>
@@ -17,31 +19,31 @@ export default {
   data() {
     return {
       text: '',
-      scrollPosition: 0
+      scrollPosition: 0,
     }
   },
   computed: {
     showScrollTopButton() {
-      return this.scrollPosition > 0;
-    }
+      return this.scrollPosition > 0
+    },
   },
-  methods: { 
+  methods: {
     scrollToTop() {
       window.scrollTo({
         top: 0,
-        behavior: 'smooth'
-      });
+        behavior: 'smooth',
+      })
     },
     updateScrollPosition() {
-      this.scrollPosition = window.scrollY;
-    }
-  }, 
+      this.scrollPosition = window.scrollY
+    },
+  },
   mounted() {
-    window.addEventListener('scroll', this.updateScrollPosition);
+    window.addEventListener('scroll', this.updateScrollPosition)
   },
   beforeUnmount() {
-    window.removeEventListener('scroll', this.updateScrollPosition);
-  }
+    window.removeEventListener('scroll', this.updateScrollPosition)
+  },
 }
 </script>
 <style lang="stylus">
