@@ -21,6 +21,7 @@ import Documentation from '@/views/Documentation'
 import Bgplay from '@/components/ripe/Bgplay'
 import PageNotFound from '@/views/PageNotFound'
 import AS from '@/views/iyp/AS'
+import IYP from '@/views/iyp/IYP'
 
 Vue.use(Router)
 
@@ -255,6 +256,16 @@ export default new Router({
     },
 
     // IYP
+    {
+      name: 'iyp',
+      path: `${routerBase}iyp`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: IYP,
+      },
+      meta: { title: 'IYP - IHR' },
+    },
     {
       name: 'iyp_asn',
       path: `${routerBase}iyp/asn/:asn`,

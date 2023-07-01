@@ -67,6 +67,9 @@ export default {
       type: Boolean,
       default: false,
     },
+    origin: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -83,7 +86,6 @@ export default {
       this.loading = true
       this.options = []
       this.countryQuery.containsName(value)
-      console.log(this)
       this.$ihr_api.country(this.countryQuery, result => {
         result.results.some(element => {
           this.options.push({
@@ -117,10 +119,17 @@ export default {
       }
     },
     gotoASN(number) {
-      this.$router.push({
-        name: 'networks',
-        params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(number) },
-      })
+      if (this.origin == 'iyp') {
+        this.$router.push({
+          name: 'iyp_asn',
+          params: { asn: number },
+        })
+      } else {
+        this.$router.push({
+          name: 'networks',
+          params: { asn: this.$options.filters.ihr_NumberToAsOrIxp(number) },
+        })
+      }
     },
     gotoCountry(code) {
       this.$router.push({
