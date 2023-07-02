@@ -1,27 +1,10 @@
 <template>
-  <div style="height: 450px;" class="IHR_chart">
-    <div style="margin: 3px 3px 3px 3px;" class="filters">
-      <div>
-        <label for="start-date">Start Date and Time:</label>
-        <input style="margin-left: 5px;" type="datetime-local" id="start-date" v-model="startDate" :min="minStartDate"
-          :max="maxEndDate">
-      </div>
-      <div style="margin: 5px 3px 3px 3px;">
-        <label for="end-date">End Date and Time:</label>
-        <input style="margin-left: 9px;" type="datetime-local" id="end-date" v-model="endDate" :min="minStartDate"
-          :max="maxEndDate">
-      </div>
-      <div style="margin-top: 6px;" class="button-container">
-        <button @click="applyTimeFiltersWorldMap">Apply Filters</button>
-        <button @click="resetWorldMap" style="margin-left: 3px;" class="reset-button">Reset</button>
-      </div>
-    </div>
+  <div class="IHR_chart">
     <aggregated-alarms-world-map-reactive :chart="chart" :loading="loading" @plotly-click="plotlyClickedData = $event" />
   </div>
 </template>
 
 <script>
-import { COMMON_FEATURE } from '../layouts.js'
 import CommonChartMixin from '../CommonChartMixin'
 import AggregatedAlarmsWorldMapReactive from './AggregatedAlarmsWorldMapReactive.vue'
 import { NetworkQuery } from '@/plugins/IhrApi'
@@ -43,6 +26,41 @@ export default {
       type: Date,
       required: true,
     },
+    dateTimeFilter: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {
+          startDateTime: null,
+          endDateTime: null,
+        }
+      },
+    },
+    alarmTypesFilter: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {
+          hegemony: true,
+          network_delay: true,
+        }
+      }
+    },
+    alarmDataSourcesFilter: {
+      type: Object,
+      required: false,
+      default: () => { }
+    },
+    resetTimeFlag: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    resetGranularityFlag: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     networkDelayAlarms: {
       type: Array,
       required: true,
@@ -63,6 +81,7 @@ export default {
       }
     },
   },
+
   data() {
     let chart = {
       uuid: 'world-map',
@@ -93,7 +112,9 @@ export default {
         },
       ],
       layout: {
-        ...COMMON_FEATURE,
+        hovermode: 'closest',
+        margin: { t: 80, b: 10, l: 80, r: 80 },
+        title: 'Aggregated Alarm Counts across Countries',
         geo: {
           showframe: false,
           showcoastlines: false,
@@ -104,22 +125,32 @@ export default {
         },
       },
     }
-    let alarmCounts = {
-      hegemonyAlarmCounts: 'hegemony_alarm_counts', networkDelayAlarmCounts: 'network_delay_alarm_counts',
-      moasAlarmCounts: 'moas_alarm_counts', submoasAlarmCounts: 'submoas_alarm_counts', defconAlarmCounts: 'defcon_alarm_counts',
-      edgesAlarmCounts: 'edges_alarm_counts',
-    }
+
+
     return {
       chart: chart,
       alarms: [],
-      timeFilteredAlarms: [],
-      backupAlarms: [],
-      alarmCounts: alarmCounts,
+      gripAlarms: null,
       plotlyClickedData: null,
+      gripAlarmsToggled: false,
       startDate: this.formatTime(this.startTime),
       endDate: this.formatTime(this.endTime),
       minStartDate: this.formatTime(this.startTime),
       maxEndDate: this.formatTime(this.endTime),
+      timeFilteredAlarms: [],
+    }
+  },
+  computed: {
+    alarmCounts() {
+      let alarmCountsDict = { hegemonyAlarmCounts: 'hegemony_alarm_counts', networkDelayAlarmCounts: 'network_delay_alarm_counts' }
+      if (this.alarmDataSourcesFilter.grip) {
+        alarmCountsDict = {
+          ...alarmCountsDict,
+          moasAlarmCounts: 'moas_alarm_counts', submoasAlarmCounts: 'submoas_alarm_counts', defconAlarmCounts: 'defcon_alarm_counts',
+          edgesAlarmCounts: 'edges_alarm_counts',
+        }
+      }
+      return alarmCountsDict
     }
   },
   watch: {
@@ -138,72 +169,92 @@ export default {
         }
       },
     },
+    dateTimeFilter: {
+      handler: function (newDateTimeFilter) {
+        if (newDateTimeFilter) {
+          this.filterAlarmsByTime(newDateTimeFilter.startDateTime, newDateTimeFilter.endDateTime)
+        }
+      }
+    },
+    resetTimeFlag: {
+      handler: function (newResetTimeFlag) {
+        if (newResetTimeFlag) {
+          this.resetWorldMap(this.alarms, this.alarmCounts)
+        }
+      }
+    },
+    alarmTypesFilter: {
+      handler: function (newAlarmTypesFilter) {
+      },
+      deep: true,
+    },
+    alarmDataSourcesFilter: {
+      handler: function () {
+        this.apiCall()
+      },
+      deep: true
+    },
   },
   methods: {
-    resetWorldMap() {
-      this.loadAndDisplayWorldMap(this.alarms, this.alarmCounts)
-      this.$emit('aggregated-alarms-data-loaded', this.alarms)
-      this.startDate = null
-      this.endDate = null
+    resetWorldMap(alarms, alarmCounts) {
+      this.loadAndDisplayWorldMap(alarms, alarmCounts)
+      this.$emit('aggregated-alarms-data-loaded', alarms)
+      this.dateTimeFilter.startDateTime = null
+      this.dateTimeFilter.endDateTime = null
     },
-    applyTimeFiltersWorldMap() {
-      if (this.alarms && this.alarms.length && this.startDate && this.endDate) {
-        let startDate = new Date(this.startDate)
-        let endDate = new Date(this.endDate)
 
-        if (startDate > endDate) {
-          alert('Start Date cannot be greater than End Date')
-          return
-        }
+    filterAlarmsByTime(startDateTime, endDateTime) {
+      this.timeFilteredAlarms = this.deepCopy(this.alarms).map(alarm => {
+        alarm.hegemony_alarm_timebins = alarm.hegemony_alarm_timebins.filter((timebin) => {
+          return timebin >= startDateTime && timebin <= endDateTime
+        })
+        alarm.network_delay_alarm_timebins = alarm.network_delay_alarm_timebins.filter((timebin) => {
+          return timebin >= startDateTime && timebin <= endDateTime
+        })
 
-        const formattedStartDate = startDate.toISOString().slice(0, 16);
-        const formattedEndDate = endDate.toISOString().slice(0, 16);
-
-        startDate = new Date(formattedStartDate);
-        endDate = new Date(formattedEndDate);
-
-        const timeFilteredAlarms = this.deepCopy(this.alarms).map(alarm => {
-          alarm.hegemony_alarm_timebins = alarm.hegemony_alarm_timebins.filter((timebin) => {
-            return timebin >= startDate && timebin <= endDate
-          })
-          alarm.network_delay_alarm_timebins = alarm.network_delay_alarm_timebins.filter((timebin) => {
-            return timebin >= startDate && timebin <= endDate
-          })
+        if (this.alarmDataSourcesFilter.grip) {
           alarm.moas_alarm_timebins = alarm.moas_alarm_timebins.filter((timebin) => {
-            return timebin >= startDate && timebin <= endDate
+            return timebin >= startDateTime && timebin <= endDateTime
           })
           alarm.submoas_alarm_timebins = alarm.submoas_alarm_timebins.filter((timebin) => {
-            return timebin >= startDate && timebin <= endDate
+            return timebin >= startDateTime && timebin <= endDateTime
           })
           alarm.defcon_alarm_timebins = alarm.defcon_alarm_timebins.filter((timebin) => {
-            return timebin >= startDate && timebin <= endDate
+            return timebin >= startDateTime && timebin <= endDateTime
           })
           alarm.edges_alarm_timebins = alarm.edges_alarm_timebins.filter((timebin) => {
-            return timebin >= startDate && timebin <= endDate
+            return timebin >= startDateTime && timebin <= endDateTime
           })
-          const allTimebinsEmpty =
-            alarm.hegemony_alarm_timebins.length === 0 &&
-            alarm.network_delay_alarm_timebins.length === 0 &&
+        }
+
+        let allTimebinsEmpty =
+          alarm.hegemony_alarm_timebins.length === 0 &&
+          alarm.network_delay_alarm_timebins.length === 0
+
+        if (this.alarmDataSourcesFilter.grip) {
+          allTimebinsEmpty = allTimebinsEmpty &&
             alarm.moas_alarm_timebins.length === 0 &&
             alarm.submoas_alarm_timebins.length === 0 &&
             alarm.defcon_alarm_timebins.length === 0 &&
             alarm.edges_alarm_timebins.length === 0
+        }
 
-          if (allTimebinsEmpty) {
-            return null
-          } else {
-            alarm.hegemony_alarm_counts = Array(alarm.hegemony_alarm_timebins.length).fill(1)
-            alarm.network_delay_alarm_counts = Array(alarm.network_delay_alarm_timebins.length).fill(1)
+        if (allTimebinsEmpty) {
+          return null
+        } else {
+          alarm.hegemony_alarm_counts = Array(alarm.hegemony_alarm_timebins.length).fill(1)
+          alarm.network_delay_alarm_counts = Array(alarm.network_delay_alarm_timebins.length).fill(1)
+          if (this.alarmDataSourcesFilter.grip) {
             alarm.moas_alarm_counts = Array(alarm.moas_alarm_timebins.length).fill(1)
             alarm.submoas_alarm_counts = Array(alarm.submoas_alarm_timebins.length).fill(1)
             alarm.defcon_alarm_counts = Array(alarm.defcon_alarm_timebins.length).fill(1)
             alarm.edges_alarm_counts = Array(alarm.edges_alarm_timebins.length).fill(1)
-            return alarm
           }
-        })
-        this.timeFilteredAlarms = timeFilteredAlarms.filter(alarm => alarm !== null)
-        this.$emit('aggregated-alarms-data-loaded', this.timeFilteredAlarms)
-      }
+          return alarm
+        }
+      })
+      this.timeFilteredAlarms = this.timeFilteredAlarms.filter(alarm => alarm !== null)
+      this.$emit('aggregated-alarms-data-loaded', this.timeFilteredAlarms)
     },
 
     deepCopy(obj) {
@@ -239,44 +290,69 @@ export default {
 
     etlAlarms() {
       return new Promise((resolve, reject) => {
-        this.extractAlarms().then((alarms) => {
-          this.transformAlarms(alarms.gripAlarms, this.networkDelayAlarms, this.hegemonyAlarms).then(() => {
+        if (this.alarmDataSourcesFilter.grip) {
+          this.extractAlarms().then((extractedAlarms) => {
+            this.transformAlarms(this.networkDelayAlarms, this.hegemonyAlarms, extractedAlarms.gripAlarms).then(() => {
+              this.loadAndDisplayWorldMap(this.alarms, this.alarmCounts)
+              resolve()
+            })
+              .catch(error => {
+                reject(error)
+              })
+
+          })
+        } else {
+          this.transformAlarms(this.networkDelayAlarms, this.hegemonyAlarms).then(() => {
             this.loadAndDisplayWorldMap(this.alarms, this.alarmCounts)
             resolve()
           })
             .catch(error => {
               reject(error)
             })
+        }
 
-        })
       })
     },
 
     extractAlarms() {
       const request = () => {
         return new Promise((resolve, reject) => {
-          this.getGRIPAlarms().then((gripAlarms) => {
-            resolve({ gripAlarms })
-          })
-            .catch(error => {
-              reject(error)
+          if (this.alarmDataSourcesFilter.grip && !this.gripAlarms) {
+            this.getGRIPAlarms().then((gripAlarms) => {
+              this.gripAlarms = gripAlarms
+              resolve({ gripAlarms })
             })
+              .catch(error => {
+                reject(error)
+              })
+          } else if (this.alarmDataSourcesFilter.grip && this.gripAlarms) {
+            resolve({ gripAlarms: this.gripAlarms })
+          }
         })
 
       }
       return request()
     },
 
-    transformAlarms(gripAlarms, networkDelayAlarms, hegemonyAlarms) {
-      const gripAlarmsTransformed = this.transformGRIPAlarms(gripAlarms)
+    transformAlarms(networkDelayAlarms, hegemonyAlarms, gripAlarms = []) {
       const request = () => {
         return new Promise((resolve, reject) => {
           const hegemonyNetDelayAlarms = this.transformIHRAlarms(networkDelayAlarms, hegemonyAlarms)
-          this.transformAlarmsHelper(hegemonyNetDelayAlarms, gripAlarmsTransformed).then(() => {
-            resolve()
-          }).catch(error => {
-            reject(error)
-          })
+          if (this.alarmDataSourcesFilter.grip) {
+            const gripAlarmsTransformed = this.transformGRIPAlarms(gripAlarms)
+            const alarms = this.fullOuterJoinGRIPAlarms(hegemonyNetDelayAlarms, gripAlarmsTransformed)
+            this.transformAlarmsHelper(alarms).then(() => {
+              resolve()
+            }).catch(error => {
+              reject(error)
+            })
+          } else {
+            this.transformAlarmsHelper(hegemonyNetDelayAlarms).then(() => {
+              resolve()
+            }).catch(error => {
+              reject(error)
+            })
+          }
         })
       }
       return request()
@@ -473,10 +549,9 @@ export default {
       return alarmsAggregated
     },
 
-    transformAlarmsHelper(hegemonyNetDelayAlarms, gripAlarms) {
+    transformAlarmsHelper(alarms) {
       const request = () => {
         return new Promise((resolve, reject) => {
-          const alarms = this.fullOuterJoinGRIPAlarms(hegemonyNetDelayAlarms, gripAlarms)
           this.addASNNameAndCountryIsoCode2(alarms).then(() => {
             this.addCountryIsoCode3AndCountryNameProxy(alarms, 'country_iso_code2')
             const alarmsList = this.addASNNumberToAlarmsAndConvertToArray(alarms)
@@ -711,26 +786,36 @@ export default {
             entry.country_name === obj.country_name
         );
 
+
         if (existingEntry) {
           existingEntry.hegemony_alarm_counts += obj.hegemony_alarm_counts.length
           existingEntry.network_delay_alarm_counts += obj.network_delay_alarm_counts.length
-          existingEntry.defcon_alarm_counts += obj.defcon_alarm_counts.length
-          existingEntry.edges_alarm_counts += obj.edges_alarm_counts.length
-          existingEntry.moas_alarm_counts += obj.moas_alarm_counts.length
-          existingEntry.submoas_alarm_counts += obj.submoas_alarm_counts.length
+          if (this.alarmDataSourcesFilter.grip) {
+            existingEntry.defcon_alarm_counts += obj.defcon_alarm_counts.length
+            existingEntry.edges_alarm_counts += obj.edges_alarm_counts.length
+            existingEntry.moas_alarm_counts += obj.moas_alarm_counts.length
+            existingEntry.submoas_alarm_counts += obj.submoas_alarm_counts.length
+          }
+
         } else {
-          result.push({
-            hegemony_alarm_counts: obj.hegemony_alarm_counts.length,
-            network_delay_alarm_counts: obj.network_delay_alarm_counts.length,
-            defcon_alarm_counts: obj.defcon_alarm_counts.length,
-            edges_alarm_counts: obj.edges_alarm_counts.length,
-            moas_alarm_counts: obj.moas_alarm_counts.length,
-            submoas_alarm_counts: obj.submoas_alarm_counts.length,
+          let alarmsInitial = {
             country_iso_code2: obj.country_iso_code2,
             country_iso_code3: obj.country_iso_code3,
             country_name: obj.country_name,
+            hegemony_alarm_counts: obj.hegemony_alarm_counts.length,
+            network_delay_alarm_counts: obj.network_delay_alarm_counts.length,
             total_alarm_counts: obj.total_alarm_counts
-          });
+          }
+          if (this.alarmDataSourcesFilter.grip) {
+            alarmsInitial = {
+              ...alarmsInitial,
+              defcon_alarm_counts: obj.defcon_alarm_counts.length,
+              edges_alarm_counts: obj.edges_alarm_counts.length,
+              moas_alarm_counts: obj.moas_alarm_counts.length,
+              submoas_alarm_counts: obj.submoas_alarm_counts.length,
+            }
+          }
+          result.push(alarmsInitial);
         }
 
         return result;
@@ -775,14 +860,22 @@ export default {
         '<b>%{text}</b><br>' +
         'Total Alarm Counts: %{z}<br>' +
         'Hegemony Dependency Alarm Counts: %{customdata[0]}<br>' +
-        'Network Delay Alarm Counts: %{customdata[1]}<br>' +
-        'Moas Alarm Counts: %{customdata[2]}<br>' +
-        'SubMoas Alarm Counts: %{customdata[3]}<br>' +
-        'Defcon Alarm Counts: %{customdata[4]}<br>' +
-        'Edges Alarm Counts: %{customdata[5]}<br>'
+        'Network Delay Alarm Counts: %{customdata[1]}<br>'
+      if (this.alarmDataSourcesFilter.grip) {
+        this.chart.traces[0]['hovertemplate'] +=
+          'Moas Alarm Counts: %{customdata[2]}<br>' +
+          'SubMoas Alarm Counts: %{customdata[3]}<br>' +
+          'Defcon Alarm Counts: %{customdata[4]}<br>' +
+          'Edges Alarm Counts: %{customdata[5]}<br>'
+      }
+
     },
   },
 }
 </script>
 
-<style></style>
+<style>
+.IHR_chart {
+  height: 380px;
+}
+</style>

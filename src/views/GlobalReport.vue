@@ -74,19 +74,31 @@
         </div>
       </template>
 
-      <q-card class="IHR_charts-body">
+      <q-card>
         <q-card-section>
-          <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
-            :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
-            ::min-deviation="minDeviationNetworkDelay" @loading="aggregatedAlarmsLoading"
-            @aggregated-alarms-data-loaded="aggregatedAlarms = $event" @country-click="countryClicked = $event"
-            ref="aggregatedAlarmsWorldMap" />
+          <aggregated-alarm-filters-overview :start-time="startTime" :end-time="endTime" :alarms="aggregatedAlarms"
+            @filter-alarms-by-time="dateTimeFilter = $event" @reset-time="resetTimeFlag = !resetTimeFlag"
+            @reset-granularity="resetGranularityFlag = !resetGranularityFlag"
+            @filter-alarms-by-alarm-types="alarmTypesFilter = $event"
+            @filter-alarms-by-data-sources="alarmDataSourcesFilter = $event" />
         </q-card-section>
       </q-card>
       <q-card class="IHR_charts-body">
         <q-card-section>
-          <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey"
-            :countryClicked="countryClicked" @time-series-reset="countryClicked = ''" ref="aggregatedAlarmsTimeSeries" />
+          <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
+            :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
+            ::min-deviation="minDeviationNetworkDelay" @loading="aggregatedAlarmsWorldMapLoading" :dateTimeFilter="dateTimeFilter"
+            :resetTimeFlag="resetTimeFlag" :alarmTypesFilter="alarmTypesFilter"
+            :alarmDataSourcesFilter="alarmDataSourcesFilter" @aggregated-alarms-data-loaded="aggregatedAlarms = $event"
+            @country-click="countryClicked = $event" ref="aggregatedAlarmsWorldMap" />
+        </q-card-section>
+      </q-card>
+      <q-card class="IHR_charts-body">
+        <q-card-section>
+          <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey" @loading="aggregatedAlarmsTimeSeriesLoading"
+            :countryClicked="countryClicked" :resetGranularityFlag="resetGranularityFlag"
+            @time-series-reset="countryClicked = ''" :alarmTypesFilter="alarmTypesFilter"
+            :alarmDataSourcesFilter="alarmDataSourcesFilter" ref="aggregatedAlarmsTimeSeries" />
         </q-card-section>
       </q-card>
     </q-expansion-item>
@@ -367,6 +379,7 @@ import reportMixin from '@/views/mixin/reportMixin'
 import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from './charts/global/DiscoChart'
 import NetworkDelayAlarmsChart from './charts/global/NetworkDelayAlarmsChart'
 import HegemonyAlarmsChart from './charts/global/HegemonyAlarmsChart'
+import AggregatedAlarmFiltersOverview from './charts/global/AggregatedAlarmFiltersOverview.vue'
 import AggregatedAlarmsWorldMap from './charts/global/AggregatedAlarmsWorldMap'
 import AggregatedAlarmsTimeSeries from './charts/global/AggregatedAlarmsTimeSeries'
 import DelayChart, {
@@ -414,6 +427,7 @@ export default {
     NetworkDelayAlarmsChart,
     HegemonyAlarmsChart,
     DiscoChart,
+    AggregatedAlarmFiltersOverview,
     AggregatedAlarmsWorldMap,
     AggregatedAlarmsTimeSeries,
     DelayChart,
@@ -465,12 +479,18 @@ export default {
         networkDelay: true,
         linkDelay: true,
         disco: true,
-        aggregatedData: true,
+        aggregatedAlarmsWorldMapData: false,
+        aggregatedAlarmsTimeSeriesData: false,
       },
       hegemonyAlarms: [],
       networkDelayAlarms: [],
       aggregatedAlarms: [],
-      countryClicked: null
+      countryClicked: null,
+      dateTimeFilter: null,
+      resetTimeFlag: false,
+      resetGranularityFlag: false,
+      alarmTypesFilter: {},
+      alarmDataSourcesFilter: {}
     }
   },
   mounted() {
@@ -497,9 +517,14 @@ export default {
         this.loading.disco = val
       })
     },
-    aggregatedAlarmsLoading(val) {
+    aggregatedAlarmsWorldMapLoading(val) {
       this.$nextTick(function () {
-        this.loading.aggregatedData = val
+        this.loading.aggregatedAlarmsWorldMapData = val
+      })
+    },
+    aggregatedAlarmsTimeSeriesLoading(val) {
+      this.$nextTick(function () {
+        this.loading.aggregatedAlarmsTimeSeriesData = val
       })
     },
     pushRoute() {
@@ -561,6 +586,8 @@ export default {
       html2pdf(element, opt)
       console.log('button is clicked')
     },
+
+
   },
   computed: {
     title() {
