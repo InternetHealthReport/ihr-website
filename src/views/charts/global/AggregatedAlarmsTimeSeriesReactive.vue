@@ -28,19 +28,24 @@ export default {
 
     watch: {
         loading: {
-            handler: function () {
-                if (!this.loading && !this.chart.traces.length) {
-                    this.noData = this.$t('No data to show')
-                } else if (!this.loading) {
+            handler: function (newLoadingValue) {
+                if (!newLoadingValue) {
                     this.noData = false
                 } else {
                     this.noData = this.$t('loading')
                 }
-
-            }
+            },
+            deep: true
         },
+        chart: {
+            handler: function (newChart) {
+                if (!this.loading && !newChart.traces.length) {
+                    this.noData = this.$t('No data to show')
+                }
+            },
+            deep: true
+        }
     },
-
 }
 </script>
   

@@ -111,8 +111,8 @@ export default {
                 { value: "edges", label: "Edges", showModal: false },
             ],
             dataSources: [
+                { value: "ihr", label: "IHR", showModal: false },
                 { value: "grip", label: "GRIP", showModal: false },
-                { value: "source2", label: "Data Source 2", showModal: false },
                 { value: "source3", label: "Data Source 3", showModal: false },
                 { value: "source4", label: "Data Source 4", showModal: false },
                 { value: "source5", label: "Data Source 5", showModal: false },
@@ -126,30 +126,55 @@ export default {
         }
     },
     created() {
-        this.alarmTypes.forEach((alarm) => {
-            this.$set(this.selectedAlarmTypes, alarm.value, false);
-        });
-
-        this.dataSources.forEach((dataSource) => {
-            this.$set(this.selectedDataSources, dataSource.value, false);
-        });
+        this.$set(this.selectedDataSources, 'ihr', true);
     },
     watch: {
         selectedAlarmTypes: {
             handler: function (newSelectedAlarmTypes) {
-                this.$emit('filter-alarms-by-alarm-types', newSelectedAlarmTypes);
+                if (!newSelectedAlarmTypes.hegemony && !newSelectedAlarmTypes.network_delay) {
+                    this.$set(this.selectedDataSources, 'ihr', false);
+                } else {
+                    this.$set(this.selectedDataSources, 'ihr', true);
+                }
+
+                if (!newSelectedAlarmTypes.moas && !newSelectedAlarmTypes.submoas && !newSelectedAlarmTypes.defcon && !newSelectedAlarmTypes.edges) {
+                    this.$set(this.selectedDataSources, 'grip', false);
+                } else {
+                    this.$set(this.selectedDataSources, 'grip', true);
+                }
+                this.$emit('filter-alarms-by-alarm-types', newSelectedAlarmTypes)
             },
-            deep: true,
+            deep: true
         },
         selectedDataSources: {
             handler: function (newSelectedDataSources) {
-                let includeCheckedDataSources = Object.values(newSelectedDataSources).includes(true);
-                if (includeCheckedDataSources) {
-                    this.$emit('filter-alarms-by-data-sources', newSelectedDataSources);
+                if (newSelectedDataSources.ihr) {
+                    if (!this.selectedAlarmTypes.hegemony && !this.selectedAlarmTypes.network_delay) {
+                        this.$set(this.selectedAlarmTypes, 'hegemony', true);
+                        this.$set(this.selectedAlarmTypes, 'network_delay', true);
+                    }
+                } else {
+                    this.$set(this.selectedAlarmTypes, 'hegemony', false);
+                    this.$set(this.selectedAlarmTypes, 'network_delay', false);
                 }
+
+                if (newSelectedDataSources.grip) {
+                    if (!this.selectedAlarmTypes.moas && !this.selectedAlarmTypes.submoas && !this.selectedAlarmTypes.defcon && !this.selectedAlarmTypes.edges) {
+                        this.$set(this.selectedAlarmTypes, 'moas', true);
+                        this.$set(this.selectedAlarmTypes, 'submoas', true);
+                        this.$set(this.selectedAlarmTypes, 'defcon', true);
+                        this.$set(this.selectedAlarmTypes, 'edges', true);
+                    }
+                } else {
+                    this.$set(this.selectedAlarmTypes, 'moas', false);
+                    this.$set(this.selectedAlarmTypes, 'submoas', false);
+                    this.$set(this.selectedAlarmTypes, 'defcon', false);
+                    this.$set(this.selectedAlarmTypes, 'edges', false);
+                }
+                this.$emit('filter-alarms-by-data-sources', newSelectedDataSources);
             },
-            deep: true,
-        }
+            deep: true
+        },
     },
     methods: {
         toggleHelpModal(index) {

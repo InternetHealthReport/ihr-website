@@ -130,7 +130,7 @@ export default {
     return {
       chart: chart,
       alarms: [],
-      gripAlarms: null,
+      gripAlarms: { downloading: false, data: null },
       plotlyClickedData: null,
       gripAlarmsToggled: false,
       startDate: this.formatTime(this.startTime),
@@ -142,12 +142,10 @@ export default {
   },
   computed: {
     alarmCounts() {
-      let alarmCountsDict = { hegemonyAlarmCounts: 'hegemony_alarm_counts', networkDelayAlarmCounts: 'network_delay_alarm_counts' }
-      if (this.alarmDataSourcesFilter.grip) {
-        alarmCountsDict = {
-          ...alarmCountsDict,
-          moasAlarmCounts: 'moas_alarm_counts', submoasAlarmCounts: 'submoas_alarm_counts', defconAlarmCounts: 'defcon_alarm_counts',
-          edgesAlarmCounts: 'edges_alarm_counts',
+      let alarmCountsDict = {}
+      for (const [alarmType, isSelected] of Object.entries(this.alarmTypesFilter)) {
+        if (isSelected) {
+          alarmCountsDict[alarmType + '_alarm_counts'] = alarmType + '_alarm_counts'
         }
       }
       return alarmCountsDict
@@ -184,7 +182,8 @@ export default {
       }
     },
     alarmTypesFilter: {
-      handler: function (newAlarmTypesFilter) {
+      handler: function () {
+        this.apiCall()
       },
       deep: true,
     },
@@ -199,57 +198,99 @@ export default {
     resetWorldMap(alarms, alarmCounts) {
       this.loadAndDisplayWorldMap(alarms, alarmCounts)
       this.$emit('aggregated-alarms-data-loaded', alarms)
-      this.dateTimeFilter.startDateTime = null
-      this.dateTimeFilter.endDateTime = null
     },
 
     filterAlarmsByTime(startDateTime, endDateTime) {
       this.timeFilteredAlarms = this.deepCopy(this.alarms).map(alarm => {
-        alarm.hegemony_alarm_timebins = alarm.hegemony_alarm_timebins.filter((timebin) => {
-          return timebin >= startDateTime && timebin <= endDateTime
-        })
-        alarm.network_delay_alarm_timebins = alarm.network_delay_alarm_timebins.filter((timebin) => {
-          return timebin >= startDateTime && timebin <= endDateTime
-        })
+        if (this.alarmTypesFilter.hegemony) {
+          alarm.hegemony_alarm_timebins = alarm.hegemony_alarm_timebins.filter((timebin) => {
+            return timebin >= startDateTime && timebin <= endDateTime
+          })
+        }
 
-        if (this.alarmDataSourcesFilter.grip) {
+        if (this.alarmTypesFilter.network_delay) {
+          alarm.network_delay_alarm_timebins = alarm.network_delay_alarm_timebins.filter((timebin) => {
+            return timebin >= startDateTime && timebin <= endDateTime
+          })
+        }
+
+        if (this.alarmTypesFilter.moas) {
           alarm.moas_alarm_timebins = alarm.moas_alarm_timebins.filter((timebin) => {
             return timebin >= startDateTime && timebin <= endDateTime
           })
+        }
+
+        if (this.alarmTypesFilter.submoas) {
           alarm.submoas_alarm_timebins = alarm.submoas_alarm_timebins.filter((timebin) => {
             return timebin >= startDateTime && timebin <= endDateTime
           })
+        }
+
+        if (this.alarmTypesFilter.defcon) {
           alarm.defcon_alarm_timebins = alarm.defcon_alarm_timebins.filter((timebin) => {
             return timebin >= startDateTime && timebin <= endDateTime
           })
+        }
+
+        if (this.alarmTypesFilter.edges) {
           alarm.edges_alarm_timebins = alarm.edges_alarm_timebins.filter((timebin) => {
             return timebin >= startDateTime && timebin <= endDateTime
           })
         }
 
-        let allTimebinsEmpty =
-          alarm.hegemony_alarm_timebins.length === 0 &&
-          alarm.network_delay_alarm_timebins.length === 0
+        let allTimebinsEmpty;
 
-        if (this.alarmDataSourcesFilter.grip) {
-          allTimebinsEmpty = allTimebinsEmpty &&
-            alarm.moas_alarm_timebins.length === 0 &&
-            alarm.submoas_alarm_timebins.length === 0 &&
-            alarm.defcon_alarm_timebins.length === 0 &&
-            alarm.edges_alarm_timebins.length === 0
+        if (this.alarmTypesFilter.hegmeony) {
+          allTimebinsEmpty = alarm.hegemony_alarm_timebins.length === 0
+        }
+
+        if (this.alarmTypesFilter.network_delay) {
+          allTimebinsEmpty = allTimebinsEmpty && alarm.network_delay_alarm_timebins.length === 0
+        }
+
+        if (this.alarmTypesFilter.moas) {
+          allTimebinsEmpty = allTimebinsEmpty && alarm.moas_alarm_timebins.length === 0
+        }
+
+        if (this.alarmTypesFilter.submaos) {
+          allTimebinsEmpty = allTimebinsEmpty && alarm.submoas_alarm_timebins.length === 0
+        }
+
+        if (this.alarmTypesFilter.defcon) {
+          allTimebinsEmpty = allTimebinsEmpty && alarm.defcon_alarm_timebins.length === 0
+        }
+
+        if (this.alarmTypesFilter.edges) {
+          allTimebinsEmpty = allTimebinsEmpty && alarm.edges_alarm_timebins.length === 0
         }
 
         if (allTimebinsEmpty) {
           return null
         } else {
-          alarm.hegemony_alarm_counts = Array(alarm.hegemony_alarm_timebins.length).fill(1)
-          alarm.network_delay_alarm_counts = Array(alarm.network_delay_alarm_timebins.length).fill(1)
-          if (this.alarmDataSourcesFilter.grip) {
+          if (this.alarmTypesFilter.hegemony) {
+            alarm.hegemony_alarm_counts = Array(alarm.hegemony_alarm_timebins.length).fill(1)
+          }
+
+          if (this.alarmTypesFilter.network_delay) {
+            alarm.network_delay_alarm_counts = Array(alarm.network_delay_alarm_timebins.length).fill(1)
+          }
+
+          if (this.alarmTypesFilter.moas) {
             alarm.moas_alarm_counts = Array(alarm.moas_alarm_timebins.length).fill(1)
+          }
+
+          if (this.alarmTypesFilter.submoas) {
             alarm.submoas_alarm_counts = Array(alarm.submoas_alarm_timebins.length).fill(1)
+          }
+
+          if (this.alarmTypesFilter.defcon) {
             alarm.defcon_alarm_counts = Array(alarm.defcon_alarm_timebins.length).fill(1)
+          }
+
+          if (this.alarmTypesFilter.edges) {
             alarm.edges_alarm_counts = Array(alarm.edges_alarm_timebins.length).fill(1)
           }
+
           return alarm
         }
       })
@@ -279,12 +320,15 @@ export default {
 
     apiCall() {
       this.loading = true
-      if (this.networkDelayAlarms.length && this.hegemonyAlarms.length) {
+      if (this.networkDelayAlarms.length && this.hegemonyAlarms.length && Object.values(this.alarmDataSourcesFilter).includes(true)) {
         this.etlAlarms().then(() => {
           this.loading = false;
         }).catch(error => {
           console.error(error)
         })
+      } else if (!Object.values(this.alarmDataSourcesFilter).includes(true)) {
+        this.clearWorldMap()
+        this.loading = false
       }
     },
 
@@ -317,16 +361,18 @@ export default {
     extractAlarms() {
       const request = () => {
         return new Promise((resolve, reject) => {
-          if (this.alarmDataSourcesFilter.grip && !this.gripAlarms) {
+          if (this.alarmDataSourcesFilter.grip && !this.gripAlarms.data && !this.gripAlarms.downloading) {
+            this.gripAlarms.downloading = true
             this.getGRIPAlarms().then((gripAlarms) => {
-              this.gripAlarms = gripAlarms
+              this.gripAlarms.downloading = false
+              this.gripAlarms.data = gripAlarms
               resolve({ gripAlarms })
             })
               .catch(error => {
                 reject(error)
               })
-          } else if (this.alarmDataSourcesFilter.grip && this.gripAlarms) {
-            resolve({ gripAlarms: this.gripAlarms })
+          } else if (this.alarmDataSourcesFilter.grip && this.gripAlarms.data && !this.gripAlarms.downloading) {
+            resolve({ gripAlarms: this.gripAlarms.data })
           }
         })
 
@@ -373,6 +419,8 @@ export default {
       const params = {
         length: chunkSize,
         start: 0,
+        // ts_start: '2023-07-01 14:45:00',
+        // ts_end: '2023-07-01 15:45:00',
         ts_start: this.formatTime(this.startTime),
         ts_end: this.formatTime(this.endTime),
         min_susp: 80,
@@ -527,8 +575,8 @@ export default {
 
     transformIHRAlarms(networkDelayAlarms, hegemonyAlarms) {
       const netDelayAlarms = this.processNetDelayAlarms(networkDelayAlarms)
-      const netDelayAlarmsAggregated = this.aggregateIHRAlarms(netDelayAlarms, this.alarmCounts.networkDelayAlarmCounts, 'network_delay_alarm_timebins')
-      const hegemonyAlarmsAggregated = this.aggregateIHRAlarms(hegemonyAlarms, this.alarmCounts.hegemonyAlarmCounts, 'hegemony_alarm_timebins')
+      const netDelayAlarmsAggregated = this.aggregateIHRAlarms(netDelayAlarms, this.alarmCounts.network_delay_alarm_counts, 'network_delay_alarm_timebins')
+      const hegemonyAlarmsAggregated = this.aggregateIHRAlarms(hegemonyAlarms, this.alarmCounts.hegemony_alarm_counts, 'hegemony_alarm_timebins')
       const hegemonyNetDelayAlarmsMerged = this.fullOuterJoinIHRAlarms(hegemonyAlarmsAggregated, netDelayAlarmsAggregated)
       return hegemonyNetDelayAlarmsMerged
     },
@@ -788,13 +836,27 @@ export default {
 
 
         if (existingEntry) {
-          existingEntry.hegemony_alarm_counts += obj.hegemony_alarm_counts.length
-          existingEntry.network_delay_alarm_counts += obj.network_delay_alarm_counts.length
-          if (this.alarmDataSourcesFilter.grip) {
-            existingEntry.defcon_alarm_counts += obj.defcon_alarm_counts.length
-            existingEntry.edges_alarm_counts += obj.edges_alarm_counts.length
+          if (this.alarmTypesFilter.hegmeony) {
+            existingEntry.hegemony_alarm_counts += obj.hegemony_alarm_counts.length
+          }
+          if (this.alarmTypesFilter.network_delay) {
+            existingEntry.network_delay_alarm_counts += obj.network_delay_alarm_counts.length
+          }
+
+          if (this.alarmTypesFilter.moas) {
             existingEntry.moas_alarm_counts += obj.moas_alarm_counts.length
+          }
+
+          if (this.alarmTypesFilter.submoas) {
             existingEntry.submoas_alarm_counts += obj.submoas_alarm_counts.length
+          }
+
+          if (this.alarmTypesFilter.defcon) {
+            existingEntry.defcon_alarm_counts += obj.defcon_alarm_counts.length
+          }
+
+          if (this.alarmTypesFilter.edges) {
+            existingEntry.edges_alarm_counts += obj.edges_alarm_counts.length
           }
 
         } else {
@@ -802,19 +864,51 @@ export default {
             country_iso_code2: obj.country_iso_code2,
             country_iso_code3: obj.country_iso_code3,
             country_name: obj.country_name,
-            hegemony_alarm_counts: obj.hegemony_alarm_counts.length,
-            network_delay_alarm_counts: obj.network_delay_alarm_counts.length,
             total_alarm_counts: obj.total_alarm_counts
           }
-          if (this.alarmDataSourcesFilter.grip) {
+
+          if (this.alarmTypesFilter.hegemony) {
             alarmsInitial = {
               ...alarmsInitial,
-              defcon_alarm_counts: obj.defcon_alarm_counts.length,
-              edges_alarm_counts: obj.edges_alarm_counts.length,
+              hegemony_alarm_counts: obj.hegemony_alarm_counts.length,
+            }
+          }
+
+          if (this.alarmTypesFilter.network_delay) {
+            alarmsInitial = {
+              ...alarmsInitial,
+              network_delay_alarm_counts: obj.network_delay_alarm_counts.length,
+            }
+          }
+
+          if (this.alarmTypesFilter.moas) {
+            alarmsInitial = {
+              ...alarmsInitial,
               moas_alarm_counts: obj.moas_alarm_counts.length,
+            }
+          }
+
+          if (this.alarmTypesFilter.submoas) {
+            alarmsInitial = {
+              ...alarmsInitial,
               submoas_alarm_counts: obj.submoas_alarm_counts.length,
             }
           }
+
+          if (this.alarmTypesFilter.defcon) {
+            alarmsInitial = {
+              ...alarmsInitial,
+              defcon_alarm_counts: obj.defcon_alarm_counts.length,
+            }
+          }
+
+          if (this.alarmTypesFilter.edges) {
+            alarmsInitial = {
+              ...alarmsInitial,
+              edges_alarm_counts: obj.edges_alarm_counts.length,
+            }
+          }
+
           result.push(alarmsInitial);
         }
 
@@ -843,9 +937,12 @@ export default {
     getZippedCustomHoverData(keys, alarmsData) {
       const zippedData = []
       for (let i = 0; i < alarmsData[keys[0]].length; i++) {
-        const tempObj = []
-        keys.forEach(key => tempObj.push(alarmsData[key][i]))
-        zippedData.push(tempObj)
+        const customDataElement = {};
+        keys.forEach(key => {
+          let alarmCountsValue = alarmsData[key][i];
+          customDataElement[key] = alarmCountsValue;
+        });
+        zippedData.push(customDataElement)
       }
       return zippedData
     },
@@ -859,17 +956,21 @@ export default {
       this.chart.traces[0]['hovertemplate'] =
         '<b>%{text}</b><br>' +
         'Total Alarm Counts: %{z}<br>' +
-        'Hegemony Dependency Alarm Counts: %{customdata[0]}<br>' +
-        'Network Delay Alarm Counts: %{customdata[1]}<br>'
-      if (this.alarmDataSourcesFilter.grip) {
-        this.chart.traces[0]['hovertemplate'] +=
-          'Moas Alarm Counts: %{customdata[2]}<br>' +
-          'SubMoas Alarm Counts: %{customdata[3]}<br>' +
-          'Defcon Alarm Counts: %{customdata[4]}<br>' +
-          'Edges Alarm Counts: %{customdata[5]}<br>'
-      }
-
+        (this.alarmTypesFilter.hegemony ? 'Hegemony Dependency Alarm Counts: %{customdata.hegemony_alarm_counts}<br>' : '') +
+        (this.alarmTypesFilter.network_delay ? 'Network Delay Alarm Counts: %{customdata.network_delay_alarm_counts}<br>' : '') +
+        (this.alarmTypesFilter.moas ? 'Moas Alarm Counts: %{customdata.moas_alarm_counts}<br>' : '') +
+        (this.alarmTypesFilter.submoas ? 'Submoas Alarm Counts: %{customdata.submoas_alarm_counts}<br>' : '') +
+        (this.alarmTypesFilter.defcon ? 'Defcon Alarm Counts: %{customdata.defcon_alarm_counts}<br>' : '') +
+        (this.alarmTypesFilter.edges ? 'Edges Alarm Counts: %{customdata.edges_alarm_counts}<br>' : '')
     },
+    clearWorldMap() {
+      this.chart.traces[0].locations = []
+      this.chart.traces[0].z = []
+      this.chart.traces[0].text = []
+      this.chart.traces[0].customdata = []
+      this.chart.traces[0].hovertemplate = ''
+      this.chart.traces[0].name = ''
+    }
   },
 }
 </script>
