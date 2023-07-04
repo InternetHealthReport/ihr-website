@@ -132,10 +132,17 @@ export default {
       }
     },
     gotoCountry(code) {
-      this.$router.push({
-        name: 'countries',
-        params: { cc: code },
-      })
+      if (this.origin == 'iyp') {
+        this.$router.push({
+          name: 'iyp_country',
+          params: { cc: code },
+        })
+      } else {
+        this.$router.push({
+          name: 'countries',
+          params: { cc: code },
+        })
+      }
     },
     filter(value, update, abort) {
       if (value.length < MIN_CHARACTERS) {

@@ -36,7 +36,7 @@ const IypApi = {
       return driver
     }
 
-    let getSession = (options = {}) => {
+    let getSession = (options = { defaultAccessMode: neo4j.session.READ }) => {
       if (!driver) {
         throw new Error('A connection has not been made to Neo4j.')
       }
@@ -44,13 +44,12 @@ const IypApi = {
       return driver.session(options)
     }
 
-    let run = (query, params, options = {}) => {
+    let run = (query, params, options = { defaultAccessMode: neo4j.session.READ }) => {
       const session = getSession(options)
 
       return session.run(query, params).then(
         results => {
           session.close()
-
           return results
         },
         err => {
@@ -58,6 +57,30 @@ const IypApi = {
           throw err
         }
       )
+    }
+
+    async function runMany(queries) {
+      // This method will execute multiple queries by creating multiple sessions which will reduce loading time
+      // query object contains cypherQuery, params, mapping, data
+      // const session = this.getSession()
+      try {
+        const response = await Promise.all(queries.map((query) => executeQuery(query)))
+        let resultToBeReturn = {}
+        for(let i = 0; i < response.length; i++) {
+          let res = this.formatResponse(response[i], queries[i].mapping)
+          resultToBeReturn[queries[i].data] = res
+        }
+        return resultToBeReturn
+      } catch(e) {
+        console.error(e)
+        return {}
+      } finally {
+        // session.close()
+      }
+    }
+
+    let executeQuery = ({ cypherQuery, params }) => {
+      return getSession().run(cypherQuery, params)
     }
 
     let formatResponse = (results, mapping) => {
@@ -120,6 +143,7 @@ const IypApi = {
       getDriver,
       getSession,
       run,
+      runMany,
       formatResponse,
       getASOverview,
       getCountryOverview

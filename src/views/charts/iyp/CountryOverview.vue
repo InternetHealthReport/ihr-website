@@ -3,7 +3,7 @@
     <p>Country of origin: {{ countryCode }}</p>
     <p>Autonomus Systems: {{ overview.asCount }}</p>
     <p>Prefix count: {{ countryCode }} has {{ overview.prefixesCount }} prefix</p>
-    <p>Internet Exchange Points: {{ asNumber }}</p>
+    <p>Internet Exchange Points: 0</p>
   </div>
 </template>
 <script>

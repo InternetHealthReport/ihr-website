@@ -22,6 +22,7 @@ import Bgplay from '@/components/ripe/Bgplay'
 import PageNotFound from '@/views/PageNotFound'
 import AS from '@/views/iyp/AS'
 import IYP from '@/views/iyp/IYP'
+import Country from '@/views/iyp/Country'
 
 Vue.use(Router)
 
@@ -275,6 +276,16 @@ export default new Router({
         default: AS,
       },
       meta: { title: 'IYP ASN - IHR' },
+    },
+    {
+      name: 'iyp_country',
+      path: `${routerBase}iyp/country/:cc`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Country,
+      },
+      meta: { title: 'IYP Country - IHR' },
     }
   ],
 })

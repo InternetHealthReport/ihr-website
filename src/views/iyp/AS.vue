@@ -19,10 +19,26 @@
 
         <q-expansion-item :label="$t('iyp.as.peers.title')" caption="AS Peers" header-class="IHR_charts-title">
           <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <q-table :data="peers" :columns="peerColumns"></q-table>
-            </q-card-section>
+          <q-card v-if="tableVisible" class="q-ma-xl">
+            <q-tabs
+              class="table-card text-grey bg-grey-2"
+              v-model="activeTab"
+              indicator-color="secondary"
+              active-color="primary"
+              align="justify"
+              narrow-indicator
+            >
+              <q-tab name="data" label="DATA"></q-tab>
+              <q-tab name="api" label="API"></q-tab>
+            </q-tabs>
+            <q-tab-panels v-model="activeTab" animated>
+              <q-tab-panel name="data">
+                <q-table :data="peers" :columns="peerColumns"></q-table>
+              </q-tab-panel>
+              <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
+                <p>Query</p>
+              </q-tab-panel>
+            </q-tab-panels>
           </q-card>
         </q-expansion-item>
 
@@ -67,7 +83,7 @@
           <q-card class="IHR_charts-body">
             <q-card-section>
               <q-list>
-                <q-item v-for="tag in tags" :key="tag.tag">
+                <q-item v-for="(tag, idx) in tags" :key="idx">
                   <q-item-section>{{ tag.tag }}</q-item-section>
                 </q-item>
               </q-list>
@@ -88,6 +104,9 @@ export default {
   data() {
     return {
       asn: null,
+      activeTab: 'data',
+      tableVisible: true,
+      statsDisable: false,
       peerColumns: [
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.peer, format: val => `AS${val}` },
@@ -127,85 +146,172 @@ export default {
     this.asn = parseInt(this.$route.params.asn)
   },
   async mounted() {
-    await this.getPeers()
-    await this.getIpPrefix()
-    await this.getIxps()
-    await this.getTags()
-    await this.getRankings()
-    await this.getPopularDomains()
+    const queries = [this.getPeers(), this.getIpPrefix(), this.getIxps(), this.getTags(), this.getRankings(), this.getPopularDomains()]
+    let res = await this.$iyp_api.runMany(queries)
+    console.log(res)
+
+    this.peers = res.peers
+    this.ipPrefixes = res.ipPrefixes
+    this.ixps = res.ixps
+    this.tags = res.tags
+    this.rankings = res.rankings
+    this.popularDomains = res.popularDomains
+
+    // await this.getPeers()
+    // await this.getIpPrefix()
+    // await this.getIxps()
+    // await this.getTags()
+    // await this.getRankings()
+    // await this.getPopularDomains()
   },
   methods: {
-    async getPeers() {
+    // async getPeers() {
+    //   const query =
+    //     'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, collect(DISTINCT(n.name)) AS name RETURN cc, peer, name LIMIT 10'
+    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
+    //   const mapping = {
+    //     cc: 'cc',
+    //     peer: 'peer',
+    //     name: 'name',
+    //   }
+    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
+    //   // let formattedResults = []
+    //   // for (let record of results.records) {
+    //   //   formattedResults.push({ cc: record.get('cc'), peer: record.get('peer'), name: record.get('name')[0] })
+    //   // }
+    //   this.peers = formattedRes
+    // },
+    // async getIpPrefix() {
+    //   const query =
+    //     'MATCH (a:AS {asn: $asn})-[r:DEPENDS_ON]-(p:Prefix)-[:COUNTRY]-(c:Country) MATCH (p)-[:CATEGORIZED]-(t:Tag) WITH c, p, collect(DISTINCT(t.label)) AS tags RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, tags LIMIT 100'
+    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
+    //   const mapping = {
+    //     cc: 'cc',
+    //     af: ['af', 'low'],
+    //     prefix: 'prefix',
+    //     tags: 'tags',
+    //   }
+    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
+    //   this.ipPrefixes = formattedRes
+    // },
+    // async getIxps() {
+    //   const query =
+    //     'MATCH (a:AS {asn: $asn})-[:MEMBER_OF]-(i:IXP)-[:COUNTRY]-(c:Country) RETURN c.country_code as cc, i.name as ixp LIMIT 10'
+    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
+    //   const mapping = {
+    //     cc: 'cc',
+    //     name: 'ixp',
+    //   }
+    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
+    //   this.ixps = formattedRes
+    // },
+    // async getRankings() {
+    //   const query = 'MATCH (a:AS {asn: $asn})-[r:RANK]-(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank'
+    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
+    //   const mapping = {
+    //     rank: 'rank',
+    //     name: 'name',
+    //   }
+    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
+    //   this.rankings = formattedRes
+    // },
+    // async getPopularDomains() {
+    //   const query =
+    //     'MATCH (:AS {asn: $asn})-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)-[:RESOLVES_TO]-(d:DomainName)-[r:RANK]-(ranking:Ranking) WHERE r.rank < 100000 RETURN d.name AS domainName, r.rank AS rank, ranking.name AS rankingName ORDER BY rank'
+    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
+    //   const mapping = {
+    //     domainName: 'domainName',
+    //     rank: 'rank',
+    //     rankingName: 'rankingName',
+    //   }
+    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
+    //   this.popularDomains = formattedRes
+    // },
+    // async getTags() {
+    //   const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
+    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
+    //   const mapping = {
+    //     tag: 'tag',
+    //   }
+    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
+    //   this.tags = formattedRes
+    // },
+
+    getPeers() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, collect(DISTINCT(n.name)) AS name RETURN cc, peer, name LIMIT 10'
-      const results = await this.$iyp_api.run(query, { asn: this.asn })
+        'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, collect(DISTINCT(n.name)) AS name RETURN cc, peer, name LIMIT 100'
       const mapping = {
         cc: 'cc',
         peer: 'peer',
         name: 'name',
       }
-      const formattedRes = this.$iyp_api.formatResponse(results, mapping)
-      // let formattedResults = []
-      // for (let record of results.records) {
-      //   formattedResults.push({ cc: record.get('cc'), peer: record.get('peer'), name: record.get('name')[0] })
-      // }
-      this.peers = formattedRes
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'peers' }
     },
-    async getIpPrefix() {
+    getIpPrefix() {
       const query =
         'MATCH (a:AS {asn: $asn})-[r:DEPENDS_ON]-(p:Prefix)-[:COUNTRY]-(c:Country) MATCH (p)-[:CATEGORIZED]-(t:Tag) WITH c, p, collect(DISTINCT(t.label)) AS tags RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, tags LIMIT 100'
-      const results = await this.$iyp_api.run(query, { asn: this.asn })
       const mapping = {
         cc: 'cc',
         af: ['af', 'low'],
         prefix: 'prefix',
         tags: 'tags',
       }
-      const formattedRes = this.$iyp_api.formatResponse(results, mapping)
-      this.ipPrefixes = formattedRes
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'ipPrefixes' }
     },
-    async getIxps() {
+    getIxps() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[:MEMBER_OF]-(i:IXP)-[:COUNTRY]-(c:Country) RETURN c.country_code as cc, i.name as ixp LIMIT 10'
-      const results = await this.$iyp_api.run(query, { asn: this.asn })
+        'MATCH (a:AS {asn: $asn})-[:MEMBER_OF]-(i:IXP)-[:COUNTRY]-(c:Country) RETURN c.country_code as cc, i.name as ixp LIMIT 100'
       const mapping = {
         cc: 'cc',
         name: 'ixp',
       }
-      const formattedRes = this.$iyp_api.formatResponse(results, mapping)
-      this.ixps = formattedRes
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'ixps' }
     },
-    async getRankings() {
+    getRankings() {
       const query = 'MATCH (a:AS {asn: $asn})-[r:RANK]-(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank'
-      const results = await this.$iyp_api.run(query, { asn: this.asn })
       const mapping = {
         rank: 'rank',
         name: 'name',
       }
-      const formattedRes = this.$iyp_api.formatResponse(results, mapping)
-      this.rankings = formattedRes
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'rankings' }
     },
-    async getPopularDomains() {
+    getPopularDomains() {
       const query =
         'MATCH (:AS {asn: $asn})-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)-[:RESOLVES_TO]-(d:DomainName)-[r:RANK]-(ranking:Ranking) WHERE r.rank < 100000 RETURN d.name AS domainName, r.rank AS rank, ranking.name AS rankingName ORDER BY rank'
-      const results = await this.$iyp_api.run(query, { asn: this.asn })
       const mapping = {
         domainName: 'domainName',
         rank: 'rank',
         rankingName: 'rankingName',
       }
-      const formattedRes = this.$iyp_api.formatResponse(results, mapping)
-      this.popularDomains = formattedRes
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'popularDomains' }
     },
-    async getTags() {
+    getTags() {
       const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
-      const results = await this.$iyp_api.run(query, { asn: this.asn })
       const mapping = {
         tag: 'tag',
       }
-      const formattedRes = this.$iyp_api.formatResponse(results, mapping)
-      this.tags = formattedRes
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
     },
+
+    // Structure of the function to fetch the data previously,
+    // async getTagsPrevious() {
+    //   const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
+    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
+    //   const mapping = {
+    //     tag: 'tag',
+    //   }
+    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
+    //   this.tags = formattedRes
+    // },
+
+    // Structure of the function to fetch the data at present,
+    // getTagsPresent() {
+    //   const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
+    //   const mapping = {
+    //     tag: 'tag',
+    //   }
+    //   return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
+    // },
   },
 }
 </script>
