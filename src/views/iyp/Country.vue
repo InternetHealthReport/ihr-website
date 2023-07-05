@@ -21,25 +21,16 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <q-tabs
-                class="table-card text-grey bg-grey-2"
-                v-model="activeTab"
-                indicator-color="secondary"
-                active-color="primary"
-                align="justify"
-                narrow-indicator
-              >
-                <q-tab name="data" label="DATA"></q-tab>
-                <q-tab name="api" label="API"></q-tab>
-              </q-tabs>
-              <q-tab-panels v-model="activeTab" animated>
-                <q-tab-panel name="data">
-                  <q-table :data="ases" :columns="asesColumns"></q-table>
-                </q-tab-panel>
-                <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
-                  <p>Query</p>
-                </q-tab-panel>
-              </q-tab-panels>
+              <GenericTable :data="ases" :columns="asesColumns" :cypher-query="cypherQueries.ases" />
+            </q-card>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item :label="$t('iyp.country.ixps.title')" caption="Internet Exchange Points (IXPs)" header-class="IHR_charts-title">
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card v-if="tableVisible" class="q-ma-xl">
+              <GenericTable :data="ixps" :columns="ixpsColumns" :cypher-query="cypherQueries.ixps" />
             </q-card>
           </q-card>
         </q-expansion-item>
@@ -50,9 +41,11 @@
 
 <script>
 import Overview from '@/views/charts/iyp/CountryOverview'
+import GenericTable from '@/views/charts/iyp/GenericTable'
 export default {
   components: {
     Overview,
+    GenericTable,
   },
   data() {
     return {
@@ -62,9 +55,14 @@ export default {
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}` },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}` },
       ],
+      ixpsColumns: [
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.ixp, format: val => `${val}` },
+      ],
       // ases stands for autonomous systems
       ases: [],
-      activeTab: 'data',
+      ixps: [],
+      cypherQueries: {},
       tableVisible: true,
       show: {
         overview: true,
@@ -75,10 +73,16 @@ export default {
     this.cc = this.$route.params.cc
   },
   async mounted() {
-    const queries = [this.getASes()]
+    const queries = [this.getASes(), this.getIXPs()]
     let res = await this.$iyp_api.runMany(queries)
     console.log(res)
     this.ases = res.ases
+    this.ixps = res.ixps
+    let queriesObj = {}
+    queries.forEach(query => {
+      queriesObj[query.data] = query.cypherQuery
+    })
+    this.cypherQueries = queriesObj
   },
   methods: {
     // ases stands for autonomous systems
@@ -91,6 +95,15 @@ export default {
         name: 'name',
       }
       return { cypherQuery: query, params: { cc: this.cc }, mapping, data: 'ases' }
+    },
+    getIXPs() {
+      const query =
+        'MATCH (a:Country {country_code: $cc})-[:COUNTRY {reference_name: $ref}]-(b:IXP) RETURN a.country_code AS cc, b.name as ixp'
+      const mapping = {
+        cc: 'cc',
+        ixp: 'ixp',
+      }
+      return { cypherQuery: query, params: { cc: this.cc, ref: 'peeringdb.ix' }, mapping, data: 'ixps' }
     },
   },
 }

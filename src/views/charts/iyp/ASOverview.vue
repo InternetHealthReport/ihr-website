@@ -16,6 +16,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import { ASOverviewQuery } from '../../../plugins/query/IypQuery'
 
@@ -47,11 +48,13 @@ export default {
         this.loadingStatus = false
       } catch (e) {
         console.error(e)
+        this.loadingStatus = false
       }
     },
   },
 }
 </script>
+
 <style lang="stylus">
 @import '../../../styles/quasar.variables';
 p {

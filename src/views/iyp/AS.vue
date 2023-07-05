@@ -12,7 +12,7 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card-section>
-              <overview :as-number="this.asn" />
+              <Overview :as-number="this.asn" />
             </q-card-section>
           </q-card>
         </q-expansion-item>
@@ -20,61 +20,35 @@
         <q-expansion-item :label="$t('iyp.as.peers.title')" caption="AS Peers" header-class="IHR_charts-title">
           <q-separator />
           <q-card v-if="tableVisible" class="q-ma-xl">
-            <q-tabs
-              class="table-card text-grey bg-grey-2"
-              v-model="activeTab"
-              indicator-color="secondary"
-              active-color="primary"
-              align="justify"
-              narrow-indicator
-            >
-              <q-tab name="data" label="DATA"></q-tab>
-              <q-tab name="api" label="API"></q-tab>
-            </q-tabs>
-            <q-tab-panels v-model="activeTab" animated>
-              <q-tab-panel name="data">
-                <q-table :data="peers" :columns="peerColumns"></q-table>
-              </q-tab-panel>
-              <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
-                <p>Query</p>
-              </q-tab-panel>
-            </q-tab-panels>
+            <GenericTable :data="peers" :columns="peerColumns" :cypher-query="cypherQueries.peers" />
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item :label="$t('iyp.as.ipPrefix.title')" caption="IP Prefix" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
-            <q-card-section>
-              <q-table :data="ipPrefixes" :columns="ipPrefixColumns"> </q-table>
-            </q-card-section>
+            <GenericTable :data="ipPrefixes" :columns="ipPrefixColumns" :cypher-query="cypherQueries.ipPrefixes" />
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item :label="$t('iyp.as.ixp.title')" caption="Internet Exchange Points" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
-            <q-card-section>
-              <q-table :data="ixps" :columns="ixpsColumns"> </q-table>
-            </q-card-section>
+            <GenericTable :data="ixps" :columns="ixpsColumns" :cypher-query="cypherQueries.ixps" />
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item :label="$t('iyp.as.rankings.title')" caption="Rankings" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
-            <q-card-section>
-              <q-table :data="rankings" :columns="rankingsColumns"> </q-table>
-            </q-card-section>
+            <GenericTable :data="rankings" :columns="rankingsColumns" :cypher-query="cypherQueries.rankings" />
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item :label="$t('iyp.as.popularDomains.title')" caption="Popular Domain Names" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
-            <q-card-section>
-              <q-table :data="popularDomains" :columns="popularDomainsColumns"> </q-table>
-            </q-card-section>
+            <GenericTable :data="popularDomains" :columns="popularDomainsColumns" :cypher-query="cypherQueries.popularDomains" />
           </q-card>
         </q-expansion-item>
 
@@ -97,9 +71,11 @@
 
 <script>
 import Overview from '@/views/charts/iyp/ASOverview'
+import GenericTable from '@/views/charts/iyp/GenericTable'
 export default {
   components: {
     Overview,
+    GenericTable,
   },
   data() {
     return {
@@ -137,6 +113,7 @@ export default {
       tags: [],
       rankings: [],
       popularDomains: [],
+      cypherQueries: {},
       show: {
         overview: true,
       },
@@ -156,6 +133,12 @@ export default {
     this.tags = res.tags
     this.rankings = res.rankings
     this.popularDomains = res.popularDomains
+
+    let queriesObj = {}
+    queries.forEach(query => {
+      queriesObj[query.data] = query.cypherQuery
+    })
+    this.cypherQueries = queriesObj
 
     // await this.getPeers()
     // await this.getIpPrefix()
@@ -237,6 +220,26 @@ export default {
     //   this.tags = formattedRes
     // },
 
+    // Structure of the function to fetch the data previously,
+    // async getTagsPrevious() {
+    //   const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
+    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
+    //   const mapping = {
+    //     tag: 'tag',
+    //   }
+    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
+    //   this.tags = formattedRes
+    // },
+
+    // Structure of the function to fetch the data at present,
+    // getTagsPresent() {
+    //   const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
+    //   const mapping = {
+    //     tag: 'tag',
+    //   }
+    //   return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
+    // },
+
     getPeers() {
       const query =
         'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, collect(DISTINCT(n.name)) AS name RETURN cc, peer, name LIMIT 100'
@@ -292,26 +295,6 @@ export default {
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
     },
-
-    // Structure of the function to fetch the data previously,
-    // async getTagsPrevious() {
-    //   const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
-    //   const results = await this.$iyp_api.run(query, { asn: this.asn })
-    //   const mapping = {
-    //     tag: 'tag',
-    //   }
-    //   const formattedRes = this.$iyp_api.formatResponse(results, mapping)
-    //   this.tags = formattedRes
-    // },
-
-    // Structure of the function to fetch the data at present,
-    // getTagsPresent() {
-    //   const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
-    //   const mapping = {
-    //     tag: 'tag',
-    //   }
-    //   return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
-    // },
   },
 }
 </script>

@@ -128,11 +128,13 @@ const IypApi = {
       let queries = Object.entries(query.queries)
       let result = {}
       for(let [key, value] of queries) {
-        let res = await run(value, { cc: query.country_code })
+        let res = await run(value, { cc: query.country_code, ref: query.ref})
         if(key == 'countryASQuery') {
           result.asCount = res.records[0].get('as_count').low
         } else if(key == 'countryPrefixesQuery') {
           result.prefixesCount = res.records[0].get('prefixes_count').low
+        } else if(key == 'countryIXPsQuery') {
+          result.ixpsCount = res.records[0].get('ixps_count').low
         }
       }
       return result
