@@ -1,6 +1,6 @@
 <template>
     <div class="IHR_chart">
-        <aggregated-alarms-time-series-reactive :chart="chart" :loading="loading" />
+        <aggregated-alarms-time-series-reactive :chart="chart" :aggregatedAlarms="aggregatedAlarms" :loading="loading" />
     </div>
 </template>
     
@@ -17,7 +17,7 @@ export default {
     props: {
         aggregatedAlarms: {
             type: Array,
-            required: true,
+            required: false,
             default: () => []
         },
         countryClicked: {
@@ -44,7 +44,10 @@ export default {
             required: false,
             default: () => { }
         },
-
+        loading: {
+            type: Boolean,
+            required: true,
+        }
     },
     emits: {
         'time-series-reset': function () {
@@ -58,20 +61,7 @@ export default {
                     this.resetTimeSeries()
                 }
             }
-        },
-        alarmDataSourcesFilter: {
-            handler: function (newAlarmDataSourcesFilter) {
-                if (newAlarmDataSourcesFilter.grip) {
-                    this.loading = true
-                }
-
-                if (!Object.values(newAlarmDataSourcesFilter).includes(true)) {
-                    this.chart.traces = []
-                    this.loading = false
-                }
-            },
-            deep: true
-        },
+        }
     },
     data() {
         const chartLayout = {
@@ -114,7 +104,6 @@ export default {
     },
     methods: {
         initTimeSeries() {
-            this.loading = true
             if (this.aggregatedAlarms.length) {
                 let groupedAlarms, legendName;
 
@@ -133,7 +122,6 @@ export default {
                 this.sortAlarmsByCountry(groupedAlarms)
                 const customHoverData = this.getCustomHoverData(groupedAlarms)
                 this.drawChart(groupedAlarms, customHoverData, legendName);
-                this.loading = false
             }
         },
         resetTimeSeries() {

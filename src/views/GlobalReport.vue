@@ -86,8 +86,8 @@
       <q-card class="IHR_charts-body">
         <q-card-section>
           <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
-            :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
-            ::min-deviation="minDeviationNetworkDelay" @loading="aggregatedAlarmsWorldMapLoading" :dateTimeFilter="dateTimeFilter"
+            :loading="loading.aggregatedAlarms" :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
+            ::min-deviation="minDeviationNetworkDelay" @loading="loading.aggregatedAlarms = $event" :dateTimeFilter="dateTimeFilter"
             :resetTimeFlag="resetTimeFlag" :alarmTypesFilter="alarmTypesFilter"
             :alarmDataSourcesFilter="alarmDataSourcesFilter" @aggregated-alarms-data-loaded="aggregatedAlarms = $event"
             @country-click="countryClicked = $event" ref="aggregatedAlarmsWorldMap" />
@@ -95,7 +95,7 @@
       </q-card>
       <q-card class="IHR_charts-body">
         <q-card-section>
-          <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey" @loading="aggregatedAlarmsTimeSeriesLoading"
+          <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey" :loading="loading.aggregatedAlarms"
             :countryClicked="countryClicked" :resetGranularityFlag="resetGranularityFlag"
             @time-series-reset="countryClicked = ''" :alarmTypesFilter="alarmTypesFilter"
             :alarmDataSourcesFilter="alarmDataSourcesFilter" ref="aggregatedAlarmsTimeSeries" />
@@ -479,8 +479,7 @@ export default {
         networkDelay: true,
         linkDelay: true,
         disco: true,
-        aggregatedAlarmsWorldMapData: false,
-        aggregatedAlarmsTimeSeriesData: false,
+        aggregatedAlarms: true,
       },
       hegemonyAlarms: [],
       networkDelayAlarms: [],
@@ -515,16 +514,6 @@ export default {
     discoLoading(val) {
       this.$nextTick(function () {
         this.loading.disco = val
-      })
-    },
-    aggregatedAlarmsWorldMapLoading(val) {
-      this.$nextTick(function () {
-        this.loading.aggregatedAlarmsWorldMapData = val
-      })
-    },
-    aggregatedAlarmsTimeSeriesLoading(val) {
-      this.$nextTick(function () {
-        this.loading.aggregatedAlarmsTimeSeriesData = val
       })
     },
     pushRoute() {
