@@ -23,6 +23,8 @@ import PageNotFound from '@/views/PageNotFound'
 import AS from '@/views/iyp/AS'
 import IYP from '@/views/iyp/IYP'
 import Country from '@/views/iyp/Country'
+import IXP from '@/views/iyp/IXP'
+import Prefix from '@/views/iyp/Prefix'
 
 Vue.use(Router)
 
@@ -286,6 +288,26 @@ export default new Router({
         default: Country,
       },
       meta: { title: 'IYP Country - IHR' },
+    },
+    {
+      name: 'iyp_ixp',
+      path: `${routerBase}iyp/ixp/:id`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: IXP,
+      },
+      meta: { title: 'IYP IXP - IHR' },
+    },
+    {
+      name: 'iyp_prefix',
+      path: `${routerBase}iyp/prefix/:host/:prefix_length`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Prefix,
+      },
+      meta: { title: 'IYP Prefix - IHR' },
     }
   ],
 })

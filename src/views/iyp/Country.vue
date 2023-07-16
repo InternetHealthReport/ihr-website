@@ -74,7 +74,7 @@ export default {
   },
   async mounted() {
     const queries = [this.getASes(), this.getIXPs()]
-    let res = await this.$iyp_api.runMany(queries)
+    let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
     console.log(res)
     this.ases = res.ases
     this.ixps = res.ixps

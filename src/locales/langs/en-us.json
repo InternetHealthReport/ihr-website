@@ -260,6 +260,12 @@
       },
       "country": {
         "title": "Country Overview"
+      },
+      "ixp": {
+        "title": "IXP Overview"
+      },
+      "prefix": {
+        "title": "Prefix Overview"
       }
     },
     "as": {
@@ -288,6 +294,25 @@
       },
       "ixps": {
         "title": "IXPs"
+      }
+    },
+    "ixp": {
+      "prefixes": {
+        "title": "Prefixes"
+      },
+      "members": {
+        "title": "Members"
+      },
+      "facilities": {
+        "title": "Co-location Facilities"
+      }
+    },
+    "prefix": {
+      "domains": {
+        "title": "Domain Names"
+      },
+      "dependencies": {
+        "title": "Dependencies"
       }
     }
   },

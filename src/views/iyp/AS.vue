@@ -1,6 +1,6 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1>AS {{ this.asn }}</h1>
+    <h1>{{ pageTitle }}</h1>
     <div>
       <q-list>
         <q-expansion-item
@@ -12,7 +12,7 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card-section>
-              <Overview :as-number="this.asn" />
+              <Overview :as-number="this.asn" :title="setPageTitle" />
             </q-card-section>
           </q-card>
         </q-expansion-item>
@@ -80,6 +80,7 @@ export default {
   data() {
     return {
       asn: null,
+      pageTitle: 'ASN - AS Name',
       activeTab: 'data',
       tableVisible: true,
       statsDisable: false,
@@ -124,7 +125,7 @@ export default {
   },
   async mounted() {
     const queries = [this.getPeers(), this.getIpPrefix(), this.getIxps(), this.getTags(), this.getRankings(), this.getPopularDomains()]
-    let res = await this.$iyp_api.runMany(queries)
+    let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
     console.log(res)
 
     this.peers = res.peers
@@ -242,7 +243,7 @@ export default {
 
     getPeers() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, collect(DISTINCT(n.name)) AS name RETURN cc, peer, name LIMIT 100'
+        'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, head(collect(DISTINCT(n.name))) AS name RETURN cc, peer, name LIMIT 100'
       const mapping = {
         cc: 'cc',
         peer: 'peer',
@@ -294,6 +295,20 @@ export default {
         tag: 'tag',
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
+    },
+    setPageTitle(title) {
+      this.pageTitle = `AS${this.asn} - ${title}`
+    },
+  },
+  watch: {
+    '$route.params.asn': {
+      handler: function (asn) {
+        if (parseInt(asn) != this.asn) {
+          this.loadingStatus = true
+          this.asn = parseInt(asn)
+        }
+      },
+      deep: true,
     },
   },
 }

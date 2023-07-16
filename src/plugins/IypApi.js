@@ -65,12 +65,7 @@ const IypApi = {
       // const session = this.getSession()
       try {
         const response = await Promise.all(queries.map((query) => executeQuery(query)))
-        let resultToBeReturn = {}
-        for(let i = 0; i < response.length; i++) {
-          let res = this.formatResponse(response[i], queries[i].mapping)
-          resultToBeReturn[queries[i].data] = res
-        }
-        return resultToBeReturn
+        return response
       } catch(e) {
         console.error(e)
         return {}
@@ -81,6 +76,26 @@ const IypApi = {
 
     let executeQuery = ({ cypherQuery, params }) => {
       return getSession().run(cypherQuery, params)
+    }
+
+    async function runManyAndGetFormattedResponse(queries) {
+      let response = await this.runMany(queries)
+      let resultToBeReturn = {}
+      for(let i = 0; i < response.length; i++) {
+        let res = this.formatResponse(response[i], queries[i].mapping)
+        resultToBeReturn[queries[i].data] = res
+      }
+      return resultToBeReturn
+    }
+
+    async function searchIYP(queries) {
+      let response = await this.runMany(queries)
+      let searchResults = []
+      for(let i = 0; i < response.length; i++) {
+        let res = this.formatResponse(response[i], queries[i].mapping)
+        searchResults = [...searchResults, ...res]
+      }
+      return searchResults
     }
 
     let formatResponse = (results, mapping) => {
@@ -146,6 +161,8 @@ const IypApi = {
       getSession,
       run,
       runMany,
+      runManyAndGetFormattedResponse,
+      searchIYP,
       formatResponse,
       getASOverview,
       getCountryOverview

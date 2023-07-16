@@ -13,7 +13,20 @@
     </q-tabs>
     <q-tab-panels v-model="activeTab" animated>
       <q-tab-panel name="data">
-        <q-table :data="data" :columns="columns"></q-table>
+        <q-table :data="data" :columns="columns">
+          <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td
+                v-for="column in columns"
+                :props="props"
+                :key="column.name"
+                @click.native="column.name === 'ASN' ? routeToASN(column.field(props.row)) : null"
+              >
+                {{ column.format(column.field(props.row)) }}
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
       </q-tab-panel>
       <q-tab-panel name="api" class="IHR_api-table q-pa-lg" light>
         <p>{{ cypherQuery }}</p>
@@ -39,6 +52,15 @@ export default {
     return {
       activeTab: 'data',
     }
+  },
+  methods: {
+    routeToASN(asn) {
+      console.log(asn.low)
+      this.$router.push({
+        name: 'iyp_asn',
+        params: { asn: asn.low },
+      })
+    },
   },
 }
 </script>
