@@ -1,11 +1,17 @@
 <template>
   <div>
-    <p>Country of origin: {{ countryCode }}</p>
-    <p>Autonomus Systems: {{ overview.asCount }}</p>
-    <p>Prefix count: {{ countryCode }} has {{ overview.prefixesCount }} prefix</p>
-    <p>Internet Exchange Points: {{ asNumber }}</p>
+    <div v-if="loadingStatus" class="IHR_loading-spinner">
+      <q-spinner color="secondary" size="15em" />
+    </div>
+    <div>
+      <p>Country of origin: {{ countryCode }}</p>
+      <p>Autonomus Systems: {{ overview.asCount }}</p>
+      <p>Prefix count: {{ countryCode }} has {{ overview.prefixesCount }} prefix</p>
+      <p>Internet Exchange Points: {{ overview.ixpsCount }}</p>
+    </div>
   </div>
 </template>
+
 <script>
 import { CountryOverviewQuery } from '../../../plugins/query/IypQuery'
 
@@ -19,6 +25,7 @@ export default {
   data() {
     return {
       overview: {},
+      loadingStatus: true,
     }
   },
   mounted() {
@@ -26,14 +33,22 @@ export default {
   },
   methods: {
     async fetchData() {
-      let query = new CountryOverviewQuery(this.countryCode)
-      let countryOverview = await this.$iyp_api.getCountryOverview(query)
-      this.overview = countryOverview
+      let query = new CountryOverviewQuery(this.countryCode, 'peeringdb.ix')
+      try {
+        let countryOverview = await this.$iyp_api.getCountryOverview(query)
+        this.overview = countryOverview
+        this.loadingStatus = false
+      } catch (e) {
+        console.error(e)
+        this.loadingStatus = false
+      }
     },
   },
 }
 </script>
-<style>
+
+<style lang="stylus">
+@import '../../../styles/quasar.variables';
 p {
   font-size: 1rem;
   margin-bottom: 0;

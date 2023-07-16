@@ -32,21 +32,22 @@ class ASOverviewQuery {
 }
 
 class CountryOverviewQuery {
-    constructor(country_code) {
+    constructor(country_code, ref) {
         this.country_code = country_code
-        this.filter = ['as', 'prefixes_count']
+        this.ref = ref
+        this.filter = ['as_count', 'prefixes_count', 'ixps_count']
         this.queries = {}
         this.generateQuery()
     }
 
     generateQuery() {
         this.filter.forEach((item) => {
-            if(item == 'as') {
+            if(item == 'as_count') {
                 let countryASQuery = 'MATCH (a:Country {country_code: $cc})-[r:COUNTRY]-(b:AS) RETURN COUNT(b) as as_count'
                 this.queries.countryASQuery = countryASQuery
-            } else if(item == 'ixp') {
-                let countryIXPQuery = 'MATCH (a:Country {country_code: $cc})-[r:MEMBER_OF]-(b:IXP) RETURN COUNT(b) as ixp_count'
-                this.queries.countryIXPQuery = countryIXPQuery
+            } else if(item == 'ixps_count') {
+                let countryIXPsQuery = 'MATCH (a:Country {country_code: $cc})-[:COUNTRY {reference_name: $ref}]-(b:IXP) RETURN COUNT(b) as ixps_count'
+                this.queries.countryIXPsQuery = countryIXPsQuery
             } else if(item == 'prefixes_count') {
                 let countryPrefixesQuery = 'MATCH (a:Country {country_code: $cc})-[r]-(b:Prefix) RETURN  COUNT(b) as prefixes_count'
                 this.queries.countryPrefixesQuery = countryPrefixesQuery
