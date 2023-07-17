@@ -86,21 +86,34 @@
       <q-card class="IHR_charts-body">
         <q-card-section>
           <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
-            :loading="loading.aggregatedAlarms" :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsWorldMapKey"
-            ::min-deviation="minDeviationNetworkDelay" @loading="loading.aggregatedAlarms = $event" :dateTimeFilter="dateTimeFilter"
-            :resetTimeFlag="resetTimeFlag" :alarmTypesFilter="alarmTypesFilter"
-            :alarmDataSourcesFilter="alarmDataSourcesFilter" @aggregated-alarms-data-loaded="aggregatedAlarms = $event"
-            @country-click="countryClicked = $event" ref="aggregatedAlarmsWorldMap" />
+            :loading="loading.aggregatedAlarms" :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms"
+            :key="aggregatedAlarmsWorldMapKey" ::min-deviation="minDeviationNetworkDelay"
+            @loading="loading.aggregatedAlarms = $event" :dateTimeFilter="dateTimeFilter" :resetTimeFlag="resetTimeFlag"
+            :alarmTypesFilter="alarmTypesFilter" :alarmDataSourcesFilter="alarmDataSourcesFilter"
+            @aggregated-alarms-data-loaded="aggregatedAlarms = $event" @country-click="countryClicked = $event"
+            ref="aggregatedAlarmsWorldMap" />
         </q-card-section>
       </q-card>
-      <q-card class="IHR_charts-body">
-        <q-card-section>
-          <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey" :loading="loading.aggregatedAlarms"
-            :countryClicked="countryClicked" :resetGranularityFlag="resetGranularityFlag"
-            @time-series-reset="countryClicked = ''" :alarmTypesFilter="alarmTypesFilter"
-            :alarmDataSourcesFilter="alarmDataSourcesFilter" ref="aggregatedAlarmsTimeSeries" />
-        </q-card-section>
-      </q-card>
+      <div class="card-container">
+        <div class="card-wrapper">
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey"
+                :loading="loading.aggregatedAlarms" :countryClicked="countryClicked"
+                :resetGranularityFlag="resetGranularityFlag" @time-series-reset="countryClicked = ''" @loading="loading.aggregatedAlarms = $event"
+                :alarmTypesFilter="alarmTypesFilter" ref="aggregatedAlarmsTimeSeries" />
+            </q-card-section>
+          </q-card>
+        </div>
+        <div class="card-wrapper">
+          <q-card class="IHR_charts-body">
+            <q-card-section>
+              <aggregated-alarms-tree-map :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTreeMapKey"
+                :loading="loading.aggregatedAlarms" :alarmTypesFilter="alarmTypesFilter" :countryClicked="countryClicked"/>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
     </q-expansion-item>
     <div v-show="!this.nbAlarms['hegemony']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
@@ -382,6 +395,7 @@ import HegemonyAlarmsChart from './charts/global/HegemonyAlarmsChart'
 import AggregatedAlarmFiltersOverview from './charts/global/AggregatedAlarmFiltersOverview.vue'
 import AggregatedAlarmsWorldMap from './charts/global/AggregatedAlarmsWorldMap'
 import AggregatedAlarmsTimeSeries from './charts/global/AggregatedAlarmsTimeSeries'
+import AggregatedAlarmsTreeMap from './charts/global/AggregatedAlarmsTreeMap.vue'
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -430,6 +444,7 @@ export default {
     AggregatedAlarmFiltersOverview,
     AggregatedAlarmsWorldMap,
     AggregatedAlarmsTimeSeries,
+    AggregatedAlarmsTreeMap,
     DelayChart,
     DateTimePicker,
   },
@@ -593,6 +608,9 @@ export default {
     },
     aggregatedAlarmsTimeSeriesKey() {
       return `${JSON.stringify(this.aggregatedAlarms)}-${JSON.stringify(this.countryClicked)}`
+    },
+    aggregatedAlarmsTreeMapKey() {
+      return `${JSON.stringify(this.aggregatedAlarms)}-${JSON.stringify(this.countryClicked)}`
     }
   },
   watch: {
@@ -613,6 +631,15 @@ export default {
 
 <style lang="stylus">
 @import '../styles/quasar.variables';
+.card-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.card-wrapper {
+  flex: 1;
+  margin: 10px; /* Adjust the margin as needed */
+}
 .stat-grid
   display: grid;
   grid-template-columns: repeat(4, 1fr);

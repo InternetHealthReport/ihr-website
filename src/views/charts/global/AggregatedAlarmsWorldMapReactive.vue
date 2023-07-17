@@ -31,30 +31,21 @@ export default {
   },
   data() {
     return {
-      probes: [],
       plotlyClickedData: null,
-      noData: this.$t('loading')
+    }
+  },
+  computed: {
+    noData() {
+      if (!this.loading && !this.chart.traces[0].locations.length) {
+        return this.$t('No data to show')
+      } else if (!this.loading) {
+        return false
+      } else {
+        return this.$t('loading')
+      }
     }
   },
   watch: {
-    loading: {
-      handler: function (newLoadingValue) {
-        if (!newLoadingValue) {
-          this.noData = false
-        } else {
-          this.noData = this.$t('loading')
-        }
-      },
-      deep: true
-    },
-    chart: {
-      handler: function (newChart) {
-        if (!this.loading && !newChart.traces[0].locations.length) {
-          this.noData = this.$t('No data to show')
-        }
-      },
-      deep: true
-    },
     plotlyClickedData: {
       handler: function (newPlotlyClickedData) {
         if (newPlotlyClickedData) {
@@ -62,9 +53,7 @@ export default {
         }
       }
     }
-
   },
-
 }
 </script>
 

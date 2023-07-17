@@ -12,6 +12,8 @@ import getCountryISOCode3 from '@/plugins/countryISOCode3.js'
 import getCountryName from '@/plugins/countryName.js'
 import axios from 'axios'
 
+const GRIP_ALARMS_SEVERITY = 80;
+
 export default {
   mixins: [CommonChartMixin],
   components: {
@@ -423,11 +425,11 @@ export default {
       const params = {
         length: chunkSize,
         start: 0,
-        // ts_start: '2023-07-01 14:45:00',
-        // ts_end: '2023-07-01 15:45:00',
-        ts_start: this.formatTime(this.startTime),
-        ts_end: this.formatTime(this.endTime),
-        min_susp: 80,
+        ts_start: '2023-07-01 14:45:00',
+        ts_end: '2023-07-01 15:45:00',
+        // ts_start: this.formatTime(this.startTime),
+        // ts_end: this.formatTime(this.endTime),
+        min_susp: GRIP_ALARMS_SEVERITY,
         max_susp: chunkSize,
         event_type: 'all'
       };
@@ -538,6 +540,10 @@ export default {
           acc[asn] = {
             asn_name,
             asn,
+            moas_alarm_severities: [],
+            submoas_alarm_severities: [],
+            edges_alarm_severities: [],
+            defcon_alarm_severities: [],
             moas_alarm_counts: [],
             submoas_alarm_counts: [],
             edges_alarm_counts: [],
@@ -551,16 +557,16 @@ export default {
 
         switch (event_type) {
           case 'moas':
-            this.updateAlarmData(acc[asn].moas_alarm_counts, acc[asn].moas_alarm_timebins, curr['timebin']);
+            this.updateAlarmData(acc[asn].moas_alarm_counts, acc[asn].moas_alarm_timebins, curr['timebin'], acc[asn].moas_alarm_severities, GRIP_ALARMS_SEVERITY);
             break;
           case 'submoas':
-            this.updateAlarmData(acc[asn].submoas_alarm_counts, acc[asn].submoas_alarm_timebins, curr['timebin']);
+            this.updateAlarmData(acc[asn].submoas_alarm_counts, acc[asn].submoas_alarm_timebins, curr['timebin'], acc[asn].submoas_alarm_severities, GRIP_ALARMS_SEVERITY);
             break;
           case 'defcon':
-            this.updateAlarmData(acc[asn].defcon_alarm_counts, acc[asn].defcon_alarm_timebins, curr['timebin']);
+            this.updateAlarmData(acc[asn].defcon_alarm_counts, acc[asn].defcon_alarm_timebins, curr['timebin'], acc[asn].defcon_alarm_severities, GRIP_ALARMS_SEVERITY);
             break;
           case 'edges':
-            this.updateAlarmData(acc[asn].edges_alarm_counts, acc[asn].edges_alarm_timebins, curr['timebin']);
+            this.updateAlarmData(acc[asn].edges_alarm_counts, acc[asn].edges_alarm_timebins, curr['timebin'], acc[asn].edges_alarm_severities, GRIP_ALARMS_SEVERITY);
             break;
           default:
             break;
@@ -572,15 +578,28 @@ export default {
       return aggregatedAlarms;
     },
 
-    updateAlarmData(alarmCounts, timebins, timebin) {
+    updateAlarmData(alarmCounts, timebins, timebin, severities, deviation) {
       alarmCounts.push(1);
       timebins.push(new Date(timebin));
+      let severity;
+
+      if (deviation >= 0 && deviation < 21) {
+        severity = 'low';
+      } else if (deviation >= 21 && deviation < 80) {
+        severity = 'mid';
+      } else if (deviation >= 80) {
+        severity = 'high';
+      } else {
+        severity = 'low';
+      }
+
+      severities.push(severity);
     },
 
     transformIHRAlarms(networkDelayAlarms, hegemonyAlarms) {
       const netDelayAlarms = this.processNetDelayAlarms(networkDelayAlarms)
-      const netDelayAlarmsAggregated = this.aggregateIHRAlarms(netDelayAlarms, this.alarmCounts.network_delay_alarm_counts, 'network_delay_alarm_timebins')
-      const hegemonyAlarmsAggregated = this.aggregateIHRAlarms(hegemonyAlarms, this.alarmCounts.hegemony_alarm_counts, 'hegemony_alarm_timebins')
+      const netDelayAlarmsAggregated = this.aggregateIHRAlarms(netDelayAlarms, this.alarmCounts.network_delay_alarm_counts, 'network_delay_alarm_timebins', 'network_delay_alarm_severities')
+      const hegemonyAlarmsAggregated = this.aggregateIHRAlarms(hegemonyAlarms, this.alarmCounts.hegemony_alarm_counts, 'hegemony_alarm_timebins', 'hegemony_alarm_severities')
       const hegemonyNetDelayAlarmsMerged = this.fullOuterJoinIHRAlarms(hegemonyAlarmsAggregated, netDelayAlarmsAggregated)
       return hegemonyNetDelayAlarmsMerged
     },
@@ -591,11 +610,11 @@ export default {
         .map(alarm => ({ ...alarm, asn: alarm.startpoint_name, asn_name: alarm.startpoint_name }));
     },
 
-    aggregateIHRAlarms(alarms, alarmCountsAccumlator, timebinsAccumulator) {
+    aggregateIHRAlarms(alarms, alarmCountsAccumlator, timebinsAccumulator, severitiesAccumulator) {
       const alarmsAggregated = alarms.reduce((acc, curr) => {
         const asnNumber = curr['asn']
-        acc[asnNumber] = acc[asnNumber] || { asn_name: curr['asn_name'], [alarmCountsAccumlator]: [], [timebinsAccumulator]: [] }
-        this.updateAlarmData(acc[asnNumber][alarmCountsAccumlator], acc[asnNumber][timebinsAccumulator], curr['timebin'])
+        acc[asnNumber] = acc[asnNumber] || { asn_name: curr['asn_name'], [alarmCountsAccumlator]: [], [timebinsAccumulator]: [], [severitiesAccumulator]: [] }
+        this.updateAlarmData(acc[asnNumber][alarmCountsAccumlator], acc[asnNumber][timebinsAccumulator], curr['timebin'], acc[asnNumber][severitiesAccumulator], curr['deviation'])
         return acc
       }, {})
       return alarmsAggregated
@@ -620,12 +639,13 @@ export default {
     },
 
     fullOuterJoinIHRAlarms(hegemonyAlarms, netDelayAlarms) {
+
       const performFullOuterJoin = (hegemonAlarmsInput) => {
         const mergedResult = {};
         for (const asnNumber in hegemonAlarmsInput) {
           if (hegemonAlarmsInput.hasOwnProperty(asnNumber)) {
             const hegemonyAlarmAggregated = hegemonAlarmsInput[asnNumber];
-            mergedResult[asnNumber] = { ...hegemonyAlarmAggregated, network_delay_alarm_counts: [], network_delay_alarm_timebins: [] };
+            mergedResult[asnNumber] = { ...hegemonyAlarmAggregated, network_delay_alarm_counts: [], network_delay_alarm_timebins: [], network_delay_alarm_severities: [] };
           }
         }
         return mergedResult
@@ -638,13 +658,17 @@ export default {
             if (result[asnNumber]) {
               result[asnNumber].network_delay_alarm_counts = netDelayAlarmAggregated.network_delay_alarm_counts
               result[asnNumber].network_delay_alarm_timebins = netDelayAlarmAggregated.network_delay_alarm_timebins
+              result[asnNumber].network_delay_alarm_severities = netDelayAlarmAggregated.network_delay_alarm_severities
             } else {
-              result[asnNumber] = { ...netDelayAlarmAggregated, hegemony_alarm_counts: [], hegemony_alarm_timebins: [] }
+              result[asnNumber] = { ...netDelayAlarmAggregated, hegemony_alarm_counts: [], hegemony_alarm_timebins: [], hegemony_alarm_severities: [] }
             }
           }
         }
       }
 
+      if (!Object.keys(hegemonyAlarms).length) {
+        return netDelayAlarms
+      }
       let mergedAlarms = performFullOuterJoin(hegemonyAlarms);
       updateResultWithNetDelayAlarms(mergedAlarms, netDelayAlarms);
       return mergedAlarms;
@@ -658,6 +682,10 @@ export default {
             const entry = hegemonyNetDelayAlarmsInput[asnNumber];
             mergedResult[asnNumber] = {
               ...entry,
+              moas_alarm_severities: [],
+              submoas_alarm_severities: [],
+              defcon_alarm_severities: [],
+              edges_alarm_severities: [],
               moas_alarm_counts: [],
               submoas_alarm_counts: [],
               defcon_alarm_counts: [],
@@ -685,17 +713,22 @@ export default {
               result[asnNumber].submoas_alarm_timebins = gripAlarmAggregatedEntry.submoas_alarm_timebins
               result[asnNumber].defcon_alarm_timebins = gripAlarmAggregatedEntry.defcon_alarm_timebins
               result[asnNumber].edges_alarm_timebins = gripAlarmAggregatedEntry.edges_alarm_timebins
+              result[asnNumber].moas_alarm_severities = gripAlarmAggregatedEntry.moas_alarm_severities
+              result[asnNumber].submoas_alarm_severities = gripAlarmAggregatedEntry.submoas_alarm_severities
+              result[asnNumber].defcon_alarm_severities = gripAlarmAggregatedEntry.defcon_alarm_severities
+              result[asnNumber].edges_alarm_severities = gripAlarmAggregatedEntry.edges_alarm_severities
             } else {
               result[asnNumber] = {
                 ...gripAlarmAggregatedEntry, hegemony_alarm_counts: [], network_delay_alarm_counts: [],
-                hegemony_alarm_timebins: [], network_delay_alarm_timebins: []
+                hegemony_alarm_timebins: [], network_delay_alarm_timebins: [], hegemony_alarm_severities: [],
+                network_delay_alarm_severities: []
               }
             }
           }
         }
       }
 
-      let mergedAlarms = performFullOuterJoin(hegemonyNetDelayAlarms);
+      const mergedAlarms = performFullOuterJoin(hegemonyNetDelayAlarms);
       updateResultWithGripAlarms(mergedAlarms, gripAlarms);
       return mergedAlarms;
     },
@@ -872,45 +905,27 @@ export default {
           }
 
           if (this.alarmTypesFilter.hegemony) {
-            alarmsInitial = {
-              ...alarmsInitial,
-              hegemony_alarm_counts: obj.hegemony_alarm_counts.length,
-            }
+            alarmsInitial.hegemony_alarm_counts = obj.hegemony_alarm_counts.length
           }
 
           if (this.alarmTypesFilter.network_delay) {
-            alarmsInitial = {
-              ...alarmsInitial,
-              network_delay_alarm_counts: obj.network_delay_alarm_counts.length,
-            }
+            alarmsInitial.network_delay_alarm_counts = obj.network_delay_alarm_counts.length
           }
 
           if (this.alarmTypesFilter.moas) {
-            alarmsInitial = {
-              ...alarmsInitial,
-              moas_alarm_counts: obj.moas_alarm_counts.length,
-            }
+            alarmsInitial.moas_alarm_counts = obj.moas_alarm_counts.length
           }
 
           if (this.alarmTypesFilter.submoas) {
-            alarmsInitial = {
-              ...alarmsInitial,
-              submoas_alarm_counts: obj.submoas_alarm_counts.length,
-            }
+            alarmsInitial.submoas_alarm_counts = obj.submoas_alarm_counts.length
           }
 
           if (this.alarmTypesFilter.defcon) {
-            alarmsInitial = {
-              ...alarmsInitial,
-              defcon_alarm_counts: obj.defcon_alarm_counts.length,
-            }
+            alarmsInitial.defcon_alarm_counts = obj.defcon_alarm_counts.length
           }
 
           if (this.alarmTypesFilter.edges) {
-            alarmsInitial = {
-              ...alarmsInitial,
-              edges_alarm_counts: obj.edges_alarm_counts.length,
-            }
+            alarmsInitial.edges_alarm_counts = obj.edges_alarm_counts.length
           }
 
           result.push(alarmsInitial);
@@ -954,9 +969,9 @@ export default {
     updateChart(alarms, customHoverData) {
       this.chart.layout.datarevision = new Date().getTime()
       this.chart.traces[0]['customdata'] = customHoverData
-      this.chart.traces[0]['locations'] = alarms['country_iso_code3']
-      this.chart.traces[0]['z'] = alarms['total_alarm_counts']
-      this.chart.traces[0]['text'] = alarms['country_name']
+      this.chart.traces[0]['locations'] = alarms['country_iso_code3'] ? alarms['country_iso_code3'] : []
+      this.chart.traces[0]['z'] = alarms['total_alarm_counts'] ? alarms['total_alarm_counts'] : []
+      this.chart.traces[0]['text'] = alarms['country_name'] ? alarms['country_name'] : []
       this.chart.traces[0]['hovertemplate'] =
         '<b>%{text}</b><br>' +
         'Total Alarm Counts: %{z}<br>' +

@@ -8,13 +8,11 @@
                         v-model="selectedAlarmTypes[alarm.value]">
                     <span class="label__input">{{ alarm.label }}</span>
                     <div class="help">
-                        <button class="help__button" @click="toggleHelpModal(index)">?</button>
+                        <button class="help__button" @click="toggleHelpModal(index, alarmTypes)">?</button>
                         <div class="help__modal" v-show="alarm.showModal">
                             <div class="help__modal-content">
-                                <div class="help__title">Search</div>
-                                <div class="help__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In aliquet
-                                    ligula ultricies libero imperdiet, at pharetra mi molestie. Fusce mollis ut mauris non
-                                    pretium. Integer varius tellus id metus bibendum.
+                                <div class="help__title">{{ alarmTypes[index].content.title }}</div>
+                                <div class="help__text">{{ alarmTypes[index].content.description }}
                                 </div>
                             </div>
                         </div>
@@ -36,13 +34,11 @@
                         v-model="selectedDataSources[dataSource.value]">
                     <span class="label__input">{{ dataSource.label }}</span>
                     <div class="help">
-                        <button class="help__button" @click="toggleHelpModal(index)">?</button>
+                        <button class="help__button" @click="toggleHelpModal(index, dataSources)">?</button>
                         <div class="help__modal" v-show="dataSource.showModal">
                             <div class="help__modal-content">
-                                <div class="help__title">Search</div>
-                                <div class="help__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In aliquet
-                                    ligula ultricies libero imperdiet, at pharetra mi molestie. Fusce mollis ut mauris non
-                                    pretium. Integer varius tellus id metus bibendum.
+                                <div class="help__title">{{ dataSources[index].content.title }}</div>
+                                <div class="help__text">{{ dataSources[index].content.description }}
                                 </div>
                             </div>
                         </div>
@@ -103,19 +99,17 @@ export default {
     data() {
         return {
             alarmTypes: [
-                { value: "hegemony", label: "Hegemony", showModal: false },
-                { value: "network_delay", label: "Network Delay", showModal: false },
-                { value: "moas", label: "MOAS", showModal: false },
-                { value: "submoas", label: "SubMOAS", showModal: false },
-                { value: "defcon", label: "Defcon", showModal: false },
-                { value: "edges", label: "Edges", showModal: false },
+                { value: "hegemony", label: "Hegemony", showModal: false, content: { title: 'Hegemony', description: 'Hegemony Alarm Type' } },
+                { value: "network_delay", label: "Network Delay", showModal: false, content: { title: 'Network Delay', description: 'Network Delay Alarm Type' } },
+                { value: "moas", label: "MOAS", showModal: false, content: { title: 'Moas', description: 'Moas Alarm Type' } },
+                { value: "submoas", label: "SubMOAS", showModal: false, content: { title: 'Submoas', description: 'Submoas Alarm Type' } },
+                { value: "defcon", label: "Defcon", showModal: false, content: { title: 'Defcon', description: 'Defcon Alarm Type' } },
+                { value: "edges", label: "Edges", showModal: false, content: { title: 'Edges', description: 'Edges Alarm Type' } },
             ],
             dataSources: [
-                { value: "ihr", label: "IHR", showModal: false },
-                { value: "grip", label: "GRIP", showModal: false },
-                { value: "source3", label: "Data Source 3", showModal: false },
-                { value: "source4", label: "Data Source 4", showModal: false },
-                { value: "source5", label: "Data Source 5", showModal: false },
+                { value: "ihr", label: "IHR", showModal: false, content: { title: 'IHR', description: 'IHR Data Source' } },
+                { value: "grip", label: "GRIP", showModal: false, content: { title: 'GRIP', description: 'GRIP Data Source' } },
+                { value: "ioda", label: "IODA", showModal: false, content: { title: 'IODA', description: 'IODA Data Source' } },
             ],
             selectedAlarmTypes: {},
             selectedDataSources: {},
@@ -177,8 +171,17 @@ export default {
         },
     },
     methods: {
-        toggleHelpModal(index) {
-            this.alarmTypes[index].showModal = !this.alarmTypes[index].showModal;
+        toggleHelpModal(index, helpModals) {
+            this.unToggleOtherActiveHelpModals(helpModals, helpModals[index]);
+            helpModals[index].showModal = !helpModals[index].showModal;
+        },
+
+        unToggleOtherActiveHelpModals(helpModals, onlyActiveHelpModal) {
+            helpModals.forEach(helpModal => {
+                if (helpModal.showModal && helpModal != onlyActiveHelpModal) {
+                    helpModal.showModal = false;
+                }
+            });
         },
 
         formatTime(date) {
@@ -328,7 +331,7 @@ button {
 
 .help__text,
 .help__title {
-    padding: 0.5rem 1.5rem;
+    padding: 0.2rem 0.5rem;
 }
 
 .help__title {
@@ -346,7 +349,7 @@ button {
     border-radius: 0.3rem;
     box-shadow: 0 1px 2px #9f9d9d;
     flex-direction: column;
-    width: 16rem;
+    width: 6rem;
     font-size: 0.6rem;
     color: #2c3e50;
     border: 0.1rem solid #b3b3b3;
@@ -362,7 +365,6 @@ button {
 .tooltip {
     position: absolute;
     background-color: #fff;
-    padding: px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 9999;

@@ -17,16 +17,12 @@ export default {
         loading: {
             type: Boolean,
             required: true,
-        },
-        aggregatedAlarms: {
-            type: Array,
-            required: false,
-            default: () => [],
         }
+
     },
     computed: {
         noData() {
-            if (!this.loading && !this.aggregatedAlarms.length) {
+            if (!this.loading && !this.chart.traces.length) {
                 return this.$t('No data to show')
             } else if (!this.loading) {
                 return false

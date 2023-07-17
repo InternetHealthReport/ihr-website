@@ -5,7 +5,6 @@
 </template>
     
 <script>
-import { COMMON_FEATURE } from '../layouts';
 import CommonChartMixin from '../CommonChartMixin'
 import AggregatedAlarmsTimeSeriesReactive from './AggregatedAlarmsTimeSeriesReactive.vue'
 
@@ -39,11 +38,6 @@ export default {
                 }
             }
         },
-        alarmDataSourcesFilter: {
-            type: Object,
-            required: false,
-            default: () => { }
-        },
         loading: {
             type: Boolean,
             required: true,
@@ -65,8 +59,8 @@ export default {
     },
     data() {
         const chartLayout = {
-            ...COMMON_FEATURE,
-            title: 'Aggregated Alarm Counts across Countries over the Time',
+            margin: { t: 50, b: 65, l: 40, r: 0 },
+            title: 'Alarm Counts by Country, ASN, and Time',
             xaxis: {
                 title: 'Date',
             },
@@ -75,7 +69,11 @@ export default {
             },
             hovermode: 'closest',
             showlegend: true,
-            margin: { t: -10 }
+            legend: {
+                x: 1,
+                xanchor: 'top',
+                y: 1
+            },
         };
         const chart = {
             uuid: 'aggregatedAlarmsTimeSeries',
@@ -109,6 +107,7 @@ export default {
 
                 if (this.countryClicked) {
                     groupedAlarms = this.aggregatedAlarms.filter(item => item.country_iso_code3 === this.countryClicked && item.asn_name)
+                    console.log('groupedAlarms inside initTimeSeries: ', groupedAlarms)
                     groupedAlarms = this.groupAlarmsByASNNumber(groupedAlarms)
                     legendName = 'asn_name'
                 } else {
@@ -263,7 +262,7 @@ export default {
 
                 } else {
                     let alarmsByASNNumberInitial = {
-                        asn_name: obj.asn_name,
+                        asn_name: this.truncateString(obj.asn_name, 25),
                         country_iso_code2: obj.country_iso_code2,
                         country_iso_code3: obj.country_iso_code3,
                         country_name: obj.country_name,
@@ -555,6 +554,14 @@ export default {
             }
 
             return result;
+        },
+
+        truncateString(str, maxLength) {
+            if (str.length <= maxLength) {
+                return str;
+            } else {
+                return str.slice(0, maxLength) + '...';
+            }
         },
 
         drawChart(data, customHoverData, name) {
