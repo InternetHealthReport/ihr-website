@@ -36,21 +36,24 @@ export default {
       noData: this.$t('loading')
     }
   },
-
   watch: {
     loading: {
       handler: function () {
-        let noDataToShow = !this.loading && !this.chart.traces.length
-        if (noDataToShow) {
+        if (!this.loading && !this.chart.traces.length) {
           this.noData = this.$t('No data to show')
         } else if (!this.loading) {
           this.noData = false
+        } else {
+          this.noData = this.$t('loading')
         }
+
       }
     },
     plotlyClickedData: {
-      handler: function () {
-        this.$emit('plotly-click', this.plotlyClickedData)
+      handler: function (newPlotlyClickedData) {
+        if (newPlotlyClickedData) {
+          this.$emit('plotly-click', newPlotlyClickedData)
+        }
       }
     }
 
