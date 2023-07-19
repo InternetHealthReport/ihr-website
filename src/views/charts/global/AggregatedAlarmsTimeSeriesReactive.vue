@@ -16,8 +16,13 @@ export default {
         },
         loading: {
             type: Boolean,
-            default: true,
+            required: true,
         },
+        aggregatedAlarms: {
+            type: Array,
+            required: false,
+            default: () => [],
+        }
     },
     data() {
         return {
@@ -37,9 +42,9 @@ export default {
             },
             deep: true
         },
-        chart: {
-            handler: function (newChart) {
-                if (!this.loading && !newChart.traces.length) {
+        aggregatedAlarms: {
+            handler: function () {
+                if (!this.loading && !this.aggregatedAlarms.length) {
                     this.noData = this.$t('No data to show')
                 }
             },

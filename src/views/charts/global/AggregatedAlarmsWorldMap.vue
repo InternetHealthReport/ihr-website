@@ -70,6 +70,10 @@ export default {
       type: Array,
       required: true,
       default: () => []
+    },
+    loading: {
+      type: Boolean,
+      required: true,
     }
   },
   emits: {
@@ -319,16 +323,17 @@ export default {
     },
 
     apiCall() {
-      this.loading = true
+      this.$emit('loading', true)
       if (this.networkDelayAlarms.length && this.hegemonyAlarms.length && Object.values(this.alarmDataSourcesFilter).includes(true)) {
         this.etlAlarms().then(() => {
-          this.loading = false;
+          this.$emit('loading', false)
         }).catch(error => {
           console.error(error)
         })
       } else if (!Object.values(this.alarmDataSourcesFilter).includes(true)) {
         this.clearWorldMap()
-        this.loading = false
+        this.$emit('aggregated-alarms-data-loaded', [])
+        this.$emit('loading', false)
       }
     },
 
@@ -354,7 +359,6 @@ export default {
               reject(error)
             })
         }
-
       })
     },
 
@@ -371,7 +375,7 @@ export default {
               .catch(error => {
                 reject(error)
               })
-          } else if (this.alarmDataSourcesFilter.grip && this.gripAlarms.data && !this.gripAlarms.downloading) {
+          } else if (this.alarmDataSourcesFilter.grip && this.gripAlarms.data) {
             resolve({ gripAlarms: this.gripAlarms.data })
           }
         })
