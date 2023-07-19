@@ -5,13 +5,14 @@
         <h1 class="text-center q-pa-xl">Internet Yellow Pages</h1>
         <div class="row justify-center">
           <div class="col-8">
-            <NetworkSearchBar
+            <!-- <NetworkSearchBar
               bg="white"
               label="grey-8"
               input="black"
               labelTxt="Enter an ASN, ID of an IXP, Country or the name of the Network (at least 3 characters)"
               origin="iyp"
-            />
+            /> -->
+            <IYPSearchBar />
           </div>
         </div>
       </div>
@@ -73,13 +74,14 @@
 
 <script>
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar.vue'
+import IYPSearchBar from '@/components/search_bar/IYPSearchBar.vue'
 export default {
   name: 'IYP',
   data() {
     return {}
   },
   methods: {},
-  components: { NetworkSearchBar },
+  components: { NetworkSearchBar, IYPSearchBar },
 }
 </script>
 

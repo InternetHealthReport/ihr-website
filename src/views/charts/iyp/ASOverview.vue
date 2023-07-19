@@ -29,6 +29,10 @@ export default {
     asName: {
       type: String,
     },
+    title: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
@@ -45,6 +49,7 @@ export default {
       try {
         let asOverview = await this.$iyp_api.getASOverview(query)
         this.overview = asOverview
+        this.title(this.overview.name)
         this.loadingStatus = false
       } catch (e) {
         console.error(e)
