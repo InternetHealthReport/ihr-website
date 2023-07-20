@@ -173,6 +173,9 @@ export default {
         error => {
           this.emailSent = true
           this.message = error.detail
+          if (error.status === 400) {
+            this.message = error.data.msg
+          }
         }
       )
     },
