@@ -22,7 +22,7 @@ export default {
     },
     computed: {
         noData() {
-            if (!this.loading && !this.chart.traces.length) {
+            if (!this.loading && !this.chart.traces[0].ids.length) {
                 return this.$t('No data to show')
             } else if (!this.loading) {
                 return false
