@@ -60,6 +60,10 @@ export default {
     extractedAlarms: {
       type: Object,
       required: true
+    },
+    clearWorldMap: {
+      type: Boolean,
+      required: true
     }
   },
   emits: {
@@ -189,18 +193,13 @@ export default {
       },
       deep: true
     },
-    // alarmDataSourcesFilter: {
-    //   handler: function (newAlarmDataSourcesFilter) {
-    //     const anyNewDataSourcesSelected = O
-    //     if (anyNewDataSourcesSelected) {
-    //       this.apiCall()
-    //     } else {
-    //       this.clearWorldMap()
-    //       this.$emit('aggregated-alarms-data-loaded', [])
-    //     }
-    //   },
-    //   deep: true
-    // },
+
+    clearWorldMap: {
+      handler: function() {
+        this.clearMap()
+      }
+    }
+
   },
   methods: {
     resetWorldMap(alarms, alarmCounts) {
@@ -751,7 +750,7 @@ export default {
       }
     },
 
-    clearWorldMap() {
+    clearMap() {
       this.chart.traces[0].locations = []
       this.chart.traces[0].z = []
       this.chart.traces[0].text = []

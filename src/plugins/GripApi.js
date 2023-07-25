@@ -9,10 +9,8 @@ export function getGRIPAlarms(startTime, endTime, severity, eventType='all') {
     const params = {
         length: chunkSize,
         start: 0,
-        ts_start: '2023-07-01 14:45:00',
-        ts_end: '2023-07-01 15:45:00',
-        // ts_start: formatTime(startTime),
-        // ts_end: formatTime(endTime),
+        ts_start: formatTime(startTime),
+        ts_end: formatTime(endTime),
         min_susp: severity,
         max_susp: chunkSize,
         event_type: eventType

@@ -43,17 +43,7 @@ export default {
             data: [],
             chart: {
                 uuid: 'aggregatedAlarmsTreeMap',
-                traces: [
-                    {
-                        type: 'treemap',
-                        ids: [],
-                        labels: [],
-                        parents: [],
-                        values: [],
-                        text: [],
-                        hoverinfo: 'label+text+value',
-                    }
-                ],
+                traces: [],
                 layout: chartLayout
             },
         }
@@ -61,23 +51,8 @@ export default {
     watch: {
         countryClicked: {
             handler: function (newCountryClicked) {
-                let granularity = 'Country'
-                let chartTitle;
-                if (!this.loadingVal) {
-                    if (newCountryClicked) {
-                        granularity = 'ASNName';
-                        const filteredData = this.filterAlarmsByCountryAndASNName(this.aggregatedAlarms);
-                        this.data = this.aggregatedAlarmsTreeMapView(filteredData, this.selectedAlarmTypes, granularity)
-                        const countryISO2 = getCountryISO2FromISO3(newCountryClicked)
-                        const countryName = getCountryName(countryISO2)
-                        chartTitle = `Alarm Counts by ASN, Alarm Type, and Severity for ${countryName}`
-                    } else {
-                        this.data = this.aggregatedAlarmsTreeMapView(this.aggregatedAlarms, this.selectedAlarmTypes, granularity)
-                        chartTitle = 'Alarm Counts by Country, ASN, Alarm Type, and Severity'
-                    }
-                    this.$set(this.chart.layout, 'title', chartTitle);
-                    this.initTreeMap(granularity);
-                }
+                this.countryClickedHandler(newCountryClicked)
+
             },
             immediate: true
         },
@@ -95,26 +70,52 @@ export default {
         }
     },
     methods: {
-
+        countryClickedHandler(newCountryClicked) {
+            let granularity = 'Country'
+            let chartTitle;
+            if (!this.loadingVal) {
+                if (newCountryClicked) {
+                    granularity = 'ASNName';
+                    const filteredData = this.filterAlarmsByCountryAndASNName(this.aggregatedAlarms);
+                    this.data = this.aggregatedAlarmsTreeMapView(filteredData, this.selectedAlarmTypes, granularity)
+                    const countryISO2 = getCountryISO2FromISO3(newCountryClicked)
+                    const countryName = getCountryName(countryISO2)
+                    chartTitle = `Alarm Counts by ASN, Alarm Type, and Severity for ${countryName}`
+                } else {
+                    this.data = this.aggregatedAlarmsTreeMapView(this.aggregatedAlarms, this.selectedAlarmTypes, granularity)
+                    chartTitle = 'Alarm Counts by Country, ASN, Alarm Type, and Severity'
+                }
+                this.$set(this.chart.layout, 'title', chartTitle);
+                this.initTreeMap(granularity);
+            }
+        },
         initTreeMap(granularity) {
-            console.log('granularity', granularity)
             const { data } = this;
-            console.log('data', data)
+
             const granularityValues = this.getUniqueValues(data, granularity);
             const alarmTypes = this.getUniqueValues(data, 'AlarmType');
             const severities = this.getUniqueValues(data, 'Severity');
 
-            console.log('granularityValues', granularityValues)
-
-            const trace = this.chart.traces[0]
+            const trace = this.createBaseTrace()
 
             this.addGranularityData(trace, data, granularity, granularityValues);
 
             this.addAlarmTypeData(trace, data, granularity, granularityValues, alarmTypes);
 
             this.addSeverityData(trace, data, granularity, granularityValues, alarmTypes, severities);
-            console.log('trace', trace)
-            this.chart.traces.push(trace);
+            this.chart.traces = [trace];
+        },
+
+        createBaseTrace() {
+            return {
+                type: 'treemap',
+                ids: [],
+                labels: [],
+                parents: [],
+                values: [],
+                text: [],
+                hoverinfo: 'label+text+value',
+            }
         },
 
         filterAlarmsByCountryAndASNName(alarms) {

@@ -3,7 +3,6 @@ import { getGRIPAlarms } from "@/plugins/GripApi.js"
 export function extractAlarms(alarmDataSourcesFilter, alarmTypesFilter, hegemonyAlarms, networkDelayAlarms, gripAlarmsState, startTime, endTime, severity) {
     const request = () => {
         return new Promise((resolve, reject) => {
-            
             const extractedAlarms = {
                 hegemoneyAlarms: alarmTypesFilter.hegemony ? hegemonyAlarms : [],
                 networkDelayAlarms: alarmTypesFilter.network_delay ? networkDelayAlarms : [],
@@ -48,5 +47,3 @@ function extractGRIPAlarmsHelper(gripAlarmsState, startTime, endTime, severity) 
     }
     return request()
 }
-
-

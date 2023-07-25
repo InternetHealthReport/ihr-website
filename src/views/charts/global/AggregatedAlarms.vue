@@ -17,8 +17,8 @@
                     :alarmDataSourcesFilter="alarmDataSourcesFilter" :loadingVal="loadingVal"
                     :extracted-alarms="extractedAlarms" @aggregated-alarms-data-loaded="aggregatedAlarms = $event"
                     @country-click="countryClicked = $event" :severity="SEVERITY_THRESHOLDS.HIGH"
-                    :ihr-aggregated-attrs="IHR_AGGREGATED_ATTRS" :grip-aggregated-attrs="GRIP_AGGREGATED_ATTRS"
-                    ref="aggregatedAlarmsWorldMap" />
+                    :clearWorldMap="clearWorldMap" :ihr-aggregated-attrs="IHR_AGGREGATED_ATTRS"
+                    :grip-aggregated-attrs="GRIP_AGGREGATED_ATTRS" ref="aggregatedAlarmsWorldMap" />
             </q-card-section>
         </q-card>
 
@@ -39,7 +39,7 @@
                     <q-card-section>
                         <aggregated-alarms-tree-map :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTreeMapKey"
                             :loadingVal="loadingVal" :alarmTypesFilter="alarmTypesFilter"
-                            :countryClicked="countryClicked" />
+                            :countryClicked="countryClicked" ref="aggregatedAlarmsTreeMap"/>
                     </q-card-section>
                 </q-card>
             </div>
@@ -52,7 +52,9 @@ import AggregatedAlarmFiltersOverview from './AggregatedAlarmFiltersOverview.vue
 import AggregatedAlarmsWorldMap from './AggregatedAlarmsWorldMap'
 import AggregatedAlarmsTimeSeries from './AggregatedAlarmsTimeSeries'
 import AggregatedAlarmsTreeMap from './AggregatedAlarmsTreeMap.vue'
-import { extractAlarms } from '@/models/AggregatedAlarmsDataModel.js'
+import * as AggregatedAlarsmDataModel from '@/models/AggregatedAlarmsDataModel.js'
+
+
 
 const SEVERITY_THRESHOLDS = {
     LOW: 0,
@@ -107,13 +109,9 @@ export default {
             countryClicked: null,
             resetTimeFlag: false,
             resetGranularityFlag: false,
-            alarmTypesFilter: {
-                hegemony: true,
-                network_delay: true,
-            },
-            alarmDataSourcesFilter: {
-                ihr: true
-            },
+            clearWorldMap: false,
+            alarmTypesFilter: {},
+            alarmDataSourcesFilter: {},
             dateTimeFilter: {
                 startDateTime: null,
                 endDateTime: null,
@@ -166,22 +164,29 @@ export default {
         alarmDataSourcesFilter: {
             handler: function (newDataSources) {
                 const anyNewDataSourcesSelected = Object.values(newDataSources).includes(true)
-                if (!this.hegemonyLoading && !this.networkDelayLoading &&anyNewDataSourcesSelected) {
+                if (!this.hegemonyLoading && !this.networkDelayLoading && anyNewDataSourcesSelected) {
                     this.extractAlarmsHelper()
                 }
 
                 if (!anyNewDataSourcesSelected) {
+                    this.clearWorldMap = true
                     this.aggregatedAlarms = []
                 }
             },
             deep: true
-        }
+        },
+        alarmTypesFilter: {
+            handler: function () {
+                this.$refs.aggregatedAlarmsTimeSeries.countryClickedHandler(this.countryClicked)
+                this.$refs.aggregatedAlarmsTreeMap.countryClickedHandler(this.countryClicked)
+            },
+            deep: true
+        },
     },
-
     methods: {
         extractAlarmsHelper() {
             this.loadingVal = true
-            extractAlarms(
+            AggregatedAlarsmDataModel.extractAlarms(
                 this.alarmDataSourcesFilter,
                 this.alarmTypesFilter,
                 this.hegemonyAlarms,

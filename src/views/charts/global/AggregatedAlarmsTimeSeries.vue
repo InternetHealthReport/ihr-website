@@ -50,24 +50,7 @@ export default {
         },
         countryClicked: {
             handler: function (newCountryClicked) {
-                let legendName = 'country_name'
-                let chartTitle;
-                if (!this.loadingVal) {
-                    if (newCountryClicked) {
-                        this.groupedAlarms = this.filterAlarmsByCountryAndASN(this.aggregatedAlarms)
-                        this.groupedAlarms = this.groupAlarmsByKey(this.groupedAlarms, 'asn', 25)
-                        const countryISO2 = getCountryISO2FromISO3(newCountryClicked)
-                        const countryName = getCountryName(countryISO2)
-                        legendName = 'asn_name'
-                        chartTitle = `Alarm Counts by ASN and Time for ${countryName}`
-
-                    } else {
-                        this.groupedAlarms = this.groupAlarmsByKey(this.aggregatedAlarms, 'country_name')
-                        chartTitle = 'Alarm Counts by Country, ASN, and Time'
-                    }
-                    this.$set(this.chart.layout, 'title', chartTitle)
-                    this.initTimeSeries(legendName)
-                }
+                this.countryClickedHandler(newCountryClicked)
             },
             immediate: true
         },
@@ -115,6 +98,25 @@ export default {
         },
     },
     methods: {
+        countryClickedHandler(newCountryClicked) {
+            let legendName = 'country_name'
+            let chartTitle;
+            if (!this.loadingVal) {
+                if (newCountryClicked) {
+                    this.groupedAlarms = this.filterAlarmsByCountryAndASN(this.aggregatedAlarms)
+                    this.groupedAlarms = this.groupAlarmsByKey(this.groupedAlarms, 'asn', 25)
+                    const countryISO2 = getCountryISO2FromISO3(newCountryClicked)
+                    const countryName = getCountryName(countryISO2)
+                    legendName = 'asn_name'
+                    chartTitle = `Alarm Counts by ASN and Time for ${countryName}`
+                } else {
+                    this.groupedAlarms = this.groupAlarmsByKey(this.aggregatedAlarms, 'country_name')
+                    chartTitle = 'Alarm Counts by Country, ASN, and Time'
+                }
+                this.$set(this.chart.layout, 'title', chartTitle)
+                this.initTimeSeries(legendName)
+            }
+        },
         initTimeSeries(legendName) {
             this.processAlarmTypes(this.groupedAlarms, this.alarmTypesFilter)
             this.addTotalAlarmCountsRecord(this.groupedAlarms)
