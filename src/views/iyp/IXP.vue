@@ -2,6 +2,9 @@
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <h1>{{ pageTitle }}</h1>
     <div>
+      <q-chip clickable @click="handleReference" color="blue" text-color="white"> PeeringDB </q-chip>
+    </div>
+    <div>
       <q-list>
         <q-expansion-item
           :label="$t('iyp.overview.ixp.title')"
@@ -34,18 +37,32 @@
             </q-card>
           </q-card>
         </q-expansion-item>
+
+        <q-expansion-item :label="$t('iyp.ixp.peeringLANs.title')" caption="Peering LANs of an IXP" header-class="IHR_charts-title">
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <q-card v-if="tableVisible" class="q-ma-xl">
+              <GenericTable :data="peeringLANs" :columns="peeringLANsColumns" :cypher-query="cypherQueries.peeringLANs" />
+            </q-card>
+          </q-card>
+        </q-expansion-item>
       </q-list>
     </div>
   </div>
 </template>
 
 <script>
+import { QChip } from 'quasar'
 import Overview from '@/views/charts/iyp/IXPOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
+const references = {
+  peeringDB: 'https://www.peeringdb.com/ix',
+}
 export default {
   components: {
     Overview,
     GenericTable,
+    QChip,
   },
   data() {
     return {
@@ -62,9 +79,11 @@ export default {
         { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}` },
       ],
       facilitiesColumns: [{ name: 'Facility', label: 'Facility', align: 'left', field: row => row.name, format: val => `${val}` }],
+      peeringLANsColumns: [{ name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}` }],
       prefixes: [],
       members: [],
       facilities: [],
+      peeringLANs: [],
       cypherQueries: {},
       tableVisible: true,
       show: {
@@ -76,11 +95,12 @@ export default {
     this.id = parseInt(this.$route.params.id)
   },
   async mounted() {
-    const queries = [this.getMembers(), this.getFacilities()]
+    const queries = [this.getMembers(), this.getFacilities(), this.getPeeringLANs()]
     let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
     console.log(res)
     this.members = res.members
     this.facilities = res.facilities
+    this.peeringLANs = res.peeringLANs
     let queriesObj = {}
     queries.forEach(query => {
       queriesObj[query.data] = query.cypherQuery
@@ -116,8 +136,26 @@ export default {
       }
       return { cypherQuery: query, params: { id: this.id }, mapping, data: 'facilities' }
     },
+    getPeeringLANs() {
+      const query = 'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)<-[:MANAGED_BY]-(s:Prefix) RETURN s.prefix as prefix'
+      const mapping = {
+        prefix: 'prefix',
+      }
+      return { cypherQuery: query, params: { id: this.id }, mapping, data: 'peeringLANs' }
+    },
     setTitle(title) {
       this.pageTitle = title
+    },
+    handleReference(e) {
+      console.log('Redirect')
+      console.log(e.srcElement.outerText)
+      let reference = e.srcElement.outerText.trim()
+      let externalLink = ''
+      if (reference === 'PeeringDB') {
+        externalLink = `${references.peeringDB}/${this.id}`
+      }
+      console.log(externalLink)
+      window.open(externalLink, '_blank')
     },
   },
 }

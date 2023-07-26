@@ -88,7 +88,7 @@ export default {
     // ases stands for autonomous systems
     getASes() {
       const query =
-        'MATCH (c:Country {country_code: $cc})-[r]-(a:AS)-[:NAME]-(n:Name) WITH c.country_code AS cc, a.asn AS asn, collect(DISTINCT(n.name)) AS name RETURN cc, asn, name LIMIT 100'
+        'MATCH (c:Country {country_code: $cc})-[r]-(a:AS)-[:NAME]-(n:Name) WITH c.country_code AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name RETURN cc, asn, name LIMIT 100'
       const mapping = {
         cc: 'cc',
         asn: 'asn',

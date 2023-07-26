@@ -88,9 +88,8 @@ export default {
     },
     async mixedEntitySearch(value) {
       const searchTerm = value.toLowerCase()
-      const queries = [this.queryASNames(searchTerm), this.queryIXPs(searchTerm)]
-      let res = await this.$iyp_api.searchIYP(queries)
-      return res
+      const queries = [this.queryIXPs(searchTerm), this.queryASNames(searchTerm), this.queryCountries(searchTerm)]
+      return await this.$iyp_api.searchIYP(queries)
     },
     queryASNames(value) {
       const query =
@@ -103,7 +102,14 @@ export default {
       return { cypherQuery: query, params: { value: value }, mapping }
     },
     queryCountries(value) {
-      const query = ''
+      const query =
+        'MATCH (c:Country) WHERE toLower(c.name) STARTS WITH $value RETURN c.country_code AS cc, c.name AS name, head(labels(c)) as node LIMIT 10'
+      const mapping = {
+        name: 'name',
+        id: 'cc',
+        node: 'node',
+      }
+      return { cypherQuery: query, params: { value: value }, mapping }
     },
     queryIXPs(value) {
       const query =
@@ -121,14 +127,11 @@ export default {
       } else if (res.node == 'IXP') {
         this.routeToIXP(res.id)
       } else if (res.node == 'Prefix') {
-        console.log('Prefix')
-        console.log(res)
         const [host, prefixLength] = res.name.split('/')
         this.routeToPrefix(host, prefixLength)
-      } else if (res.node == 'CC') {
-        console.log('CC')
+      } else if (res.node == 'Country') {
+        this.routeToCountry(res.id)
       } else {
-        console.log('none')
         return
       }
     },
@@ -138,7 +141,7 @@ export default {
         params: { asn: asn },
       })
     },
-    routeToCC(cc) {
+    routeToCountry(cc) {
       this.$router.push({
         name: 'iyp_country',
         params: { cc: cc },

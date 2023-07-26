@@ -2,25 +2,25 @@
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <h1>{{ pageTitle }}</h1>
     <div>
+      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Bgp </q-chip>
+      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Bgp.Tools </q-chip>
+      <q-chip clickable @click="handleReference" color="gray" text-color="black"> PeeringDB </q-chip>
+      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Cloudflare Radar </q-chip>
+      <q-chip clickable @click="handleReference" color="gray" text-color="black"> RIPEstat </q-chip>
+    </div>
+    <div>
       <q-list>
-        <q-expansion-item
-          :label="$t('iyp.overview.as.title')"
-          caption="Overview of AS"
-          header-class="IHR_charts-title"
-          v-model="show.overview"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <Overview :as-number="this.asn" :title="setPageTitle" />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+        <div class="q-pl-sm q-mt-lg q-mb-lg">
+          <h2 class="q-mb-sm">Overview</h2>
+          <div class="q-pl-md">
+            <Overview :as-number="this.asn" :title="setPageTitle" />
+          </div>
+        </div>
 
         <q-expansion-item :label="$t('iyp.as.peers.title')" caption="AS Peers" header-class="IHR_charts-title">
           <q-separator />
-          <q-card v-if="tableVisible" class="q-ma-xl">
-            <GenericTable :data="peers" :columns="peerColumns" :cypher-query="cypherQueries.peers" />
+          <q-card v-if="peers" class="q-ma-xl">
+            <GenericTable :data="peers" :columns="peerColumns" :cypher-query="cypherQueries.peers" :chart-data="peers" />
           </q-card>
         </q-expansion-item>
 
@@ -70,12 +70,23 @@
 </template>
 
 <script>
+import { QChip } from 'quasar'
 import Overview from '@/views/charts/iyp/ASOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
+
+const references = {
+  bgp: 'https://bgp.he.net',
+  bgpTools: 'https://bgp.tools/as',
+  peeringDB: 'https://www.peeringdb.com/net',
+  cloudflareRadar: 'https://radar.cloudflare.com',
+  ripeStat: 'https://stat.ripe.net/app/launchpad',
+}
+
 export default {
   components: {
     Overview,
     GenericTable,
+    QChip,
   },
   data() {
     return {
@@ -86,7 +97,7 @@ export default {
       statsDisable: false,
       peerColumns: [
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.peer, format: val => `AS${val}` },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}` },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}` },
       ],
       ipPrefixColumns: [
@@ -97,7 +108,7 @@ export default {
       ],
       ixpsColumns: [
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}` },
+        { name: 'IXP', label: 'IXP Name', align: 'left', field: row => row.name, format: val => `${val}` },
       ],
       rankingsColumns: [
         { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}` },
@@ -118,36 +129,15 @@ export default {
       show: {
         overview: true,
       },
+      chartData: [],
     }
   },
-  created() {
+  async created() {
     this.asn = parseInt(this.$route.params.asn)
+    await this.getData()
   },
-  async mounted() {
-    const queries = [this.getPeers(), this.getIpPrefix(), this.getIxps(), this.getTags(), this.getRankings(), this.getPopularDomains()]
-    let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-    console.log(res)
-
-    this.peers = res.peers
-    this.ipPrefixes = res.ipPrefixes
-    this.ixps = res.ixps
-    this.tags = res.tags
-    this.rankings = res.rankings
-    this.popularDomains = res.popularDomains
-
-    let queriesObj = {}
-    queries.forEach(query => {
-      queriesObj[query.data] = query.cypherQuery
-    })
-    this.cypherQueries = queriesObj
-
-    // await this.getPeers()
-    // await this.getIpPrefix()
-    // await this.getIxps()
-    // await this.getTags()
-    // await this.getRankings()
-    // await this.getPopularDomains()
-  },
+  async mounted() {},
+  computed: {},
   methods: {
     // async getPeers() {
     //   const query =
@@ -241,12 +231,36 @@ export default {
     //   return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
     // },
 
+    async getData() {
+      const queries = [this.getPeers(), this.getIpPrefix(), this.getIxps(), this.getTags(), this.getRankings(), this.getPopularDomains()]
+      let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
+
+      this.peers = res.peers
+      this.ipPrefixes = res.ipPrefixes
+      this.ixps = res.ixps
+      this.tags = res.tags
+      this.rankings = res.rankings
+      this.popularDomains = res.popularDomains
+
+      let queriesObj = {}
+      queries.forEach(query => {
+        queriesObj[query.data] = query.cypherQuery
+      })
+      this.cypherQueries = queriesObj
+
+      // await this.getPeers()
+      // await this.getIpPrefix()
+      // await this.getIxps()
+      // await this.getTags()
+      // await this.getRankings()
+      // await this.getPopularDomains()
+    },
     getPeers() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, head(collect(DISTINCT(n.name))) AS name RETURN cc, peer, name LIMIT 100'
+        'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, head(collect(DISTINCT(n.name))) AS name RETURN cc, peer, name'
       const mapping = {
         cc: 'cc',
-        peer: 'peer',
+        asn: 'peer',
         name: 'name',
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'peers' }
@@ -264,10 +278,11 @@ export default {
     },
     getIxps() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[:MEMBER_OF]-(i:IXP)-[:COUNTRY]-(c:Country) RETURN c.country_code as cc, i.name as ixp LIMIT 100'
+        'MATCH (a:AS {asn: $asn})-[:MEMBER_OF]-(i:IXP)-[:COUNTRY]-(c:Country) MATCH (i)-[:EXTERNAL_ID]-(p:PeeringdbIXID) RETURN c.country_code as cc, i.name as ixp, p.id as id LIMIT 100'
       const mapping = {
         cc: 'cc',
         name: 'ixp',
+        id: 'id',
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'ixps' }
     },
@@ -281,13 +296,13 @@ export default {
     },
     getPopularDomains() {
       const query =
-        'MATCH (:AS {asn: $asn})-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)-[:RESOLVES_TO]-(d:DomainName)-[r:RANK]-(ranking:Ranking) WHERE r.rank < 100000 RETURN d.name AS domainName, r.rank AS rank, ranking.name AS rankingName ORDER BY rank'
+        'MATCH (:AS {asn: $asn})-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)-[:RESOLVES_TO]-(D:DomainName)-[R:RANK]-(Ranking:Ranking) WHERE R.rank < 100000 and R.reference_name = $rankingName RETURN DISTINCT D.name AS domainName, R.rank AS rank, Ranking.name AS rankingName ORDER BY rank'
       const mapping = {
         domainName: 'domainName',
         rank: 'rank',
         rankingName: 'rankingName',
       }
-      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'popularDomains' }
+      return { cypherQuery: query, params: { asn: this.asn, rankingName: 'tranco.top1M' }, mapping, data: 'popularDomains' }
     },
     getTags() {
       const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
@@ -299,13 +314,35 @@ export default {
     setPageTitle(title) {
       this.pageTitle = `AS${this.asn} - ${title}`
     },
+    handleReference(e) {
+      console.log('Redirect')
+      console.log(e.srcElement.outerText)
+      let reference = e.srcElement.outerText.trim()
+      let externalLink = ''
+      if (reference === 'Bgp') {
+        externalLink = `${references.bgp}/AS${this.asn}`
+      } else if (reference === 'Bgp.Tools') {
+        externalLink = `${references.bgpTools}/${this.asn}`
+      } else if (reference === 'PeeringDB') {
+        externalLink = `${references.peeringDB}/${this.asn}`
+      } else if (reference === 'Cloudflare Radar') {
+        externalLink = `${references.cloudflareRadar}/as${this.asn}`
+      } else if (reference === 'RIPEstat') {
+        externalLink = `${references.ripeStat}/${this.asn}`
+      } else {
+        console.log('none')
+        return
+      }
+      console.log(externalLink)
+      window.open(externalLink, '_blank')
+    },
   },
   watch: {
     '$route.params.asn': {
-      handler: function (asn) {
+      handler: async function (asn) {
         if (parseInt(asn) != this.asn) {
-          this.loadingStatus = true
           this.asn = parseInt(asn)
+          await this.getData()
         }
       },
       deep: true,
