@@ -158,6 +158,12 @@ export default {
         this.error = 'passwordTooWeak'
         return
       }
+
+      if (!this.code === "" || !this.code === null || this.code.length === 0) {
+        this.message = 'Please enter the verification code'
+        return
+      }
+      console.log(this.code);
       this.error = null
       this.$ihr_api.userforgetpassword(
         this.email,
@@ -173,6 +179,9 @@ export default {
         error => {
           this.emailSent = true
           this.message = error.detail
+          if (error.status === 400) {
+            this.message = error.data.msg
+          }
         }
       )
     },

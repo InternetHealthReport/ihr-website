@@ -1,5 +1,6 @@
 <template>
   <q-layout view="hHh LpR fff" id="app" class="IHR_minimum-width bg-white">
+    <CookieBanner v-if="showBanner" @hideBanner="showBanner = false"/>
     <router-view :login="user" @logout="logout" name="header" />
     <q-page-container class="IHR_minimum-width">
       <router-view @isLogin="isLogin" />
@@ -11,15 +12,18 @@
 <script>
 import languages from 'quasar/lang/index.json'
 import routerBase from '@/router'
-
+import CookieBanner from '@/views/user/cookies.vue'
 // subset of router, see router.js
 export default {
   name: 'APP-Default',
-  components: {},
+  components: {
+    CookieBanner
+  },
   data() {
     return {
       text: '',
       user: '',
+      showBanner: !(localStorage.getItem('cookiesAccepted') === 'true')
     }
   },
   methods: {
