@@ -41,11 +41,11 @@ export default {
     }
   },
   mounted() {
-    this.fetchData()
+    this.fetchData(this.asNumber)
   },
   methods: {
-    async fetchData() {
-      let query = new ASOverviewQuery(this.asNumber)
+    async fetchData(asn) {
+      let query = new ASOverviewQuery(asn)
       try {
         let asOverview = await this.$iyp_api.getASOverview(query)
         this.overview = asOverview
@@ -55,6 +55,12 @@ export default {
         console.error(e)
         this.loadingStatus = false
       }
+    },
+  },
+  watch: {
+    async asNumber(newAsn, oldAsn) {
+      this.loadingStatus = true
+      await this.fetchData(newAsn)
     },
   },
 }

@@ -305,6 +305,9 @@
       },
       "facilities": {
         "title": "Co-location Facilities"
+      },
+      "peeringLANs": {
+        "title": "Peering LANs"
       }
     },
     "prefix": {
@@ -313,6 +316,9 @@
       },
       "dependencies": {
         "title": "Dependencies"
+      },
+      "part": {
+        "title": "Prefixes that are part of"
       }
     }
   },
