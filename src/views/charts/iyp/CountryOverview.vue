@@ -4,9 +4,10 @@
       <q-spinner color="secondary" size="15em" />
     </div>
     <div>
-      <p>Country of origin: {{ countryCode }}</p>
+      <p>Country of origin: {{ overview.country }}</p>
+      <p>Country Code: {{ countryCode }}</p>
       <p>Autonomus Systems: {{ overview.asCount }}</p>
-      <p>Prefix count: {{ countryCode }} has {{ overview.prefixesCount }} prefix</p>
+      <p>Prefix count: {{ countryCode }} has {{ overview.prefixesCount }} prefixes</p>
       <p>Internet Exchange Points: {{ overview.ixpsCount }}</p>
     </div>
   </div>
@@ -21,6 +22,10 @@ export default {
       type: String,
       required: true,
     },
+    title: {
+      type: Function,
+      required: true,
+    },
   },
   data() {
     return {
@@ -28,8 +33,8 @@ export default {
       loadingStatus: true,
     }
   },
-  mounted() {
-    this.fetchData()
+  async mounted() {
+    await this.fetchData()
   },
   methods: {
     async fetchData() {
@@ -37,6 +42,7 @@ export default {
       try {
         let countryOverview = await this.$iyp_api.getCountryOverview(query)
         this.overview = countryOverview
+        this.title(this.overview.country)
         this.loadingStatus = false
       } catch (e) {
         console.error(e)

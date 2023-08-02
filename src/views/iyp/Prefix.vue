@@ -2,31 +2,27 @@
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <h1>{{ getPrefix() }}</h1>
     <div>
-      <q-chip name="bgp" clickable @click="handleReference" color="blue" text-color="white"> Bgp </q-chip>
-      <q-chip name="bgp.tools" clickable @click="handleReference" color="blue" text-color="white"> Bgp.Tools </q-chip>
-      <q-chip name="ripe" clickable @click="handleReference" color="blue" text-color="white"> RIPEstat </q-chip>
+      <q-chip name="bgp" clickable @click="handleReference" color="gray" text-color="black"> Bgp </q-chip>
+      <q-chip name="bgp.tools" clickable @click="handleReference" color="gray" text-color="black"> Bgp.Tools </q-chip>
+      <q-chip name="ripe" clickable @click="handleReference" color="gray" text-color="black"> RIPEstat </q-chip>
     </div>
     <div>
       <q-list>
-        <q-expansion-item
-          :label="$t('iyp.overview.prefix.title')"
-          caption="Overview of a Prefix"
-          header-class="IHR_charts-title"
-          v-model="show.overview"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <Overview :host="host" :prefixLength="prefixLength" />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+        <div class="q-pl-sm q-mt-lg q-mb-lg">
+          <h2 class="q-mb-sm">Overview</h2>
+          <div class="q-pl-md">
+            <Overview :host="host" :prefixLength="prefixLength" />
+          </div>
+        </div>
 
         <q-expansion-item :label="$t('iyp.prefix.domains.title')" caption="Corresponding Domain Names" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="domains" :columns="domainsColumns" :cypher-query="cypherQueries.domains" />
+              <GenericTable :data="domains" :columns="domainsColumns" :cypher-query="cypherQueries.domains" :slot-length="2">
+                <GenericPieChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Country' }" />
+                <GenericBarChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Tags' }" />
+              </GenericTable>
             </q-card>
           </q-card>
         </q-expansion-item>
@@ -35,7 +31,9 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="dependencies" :columns="dependenciesColumns" :cypher-query="cypherQueries.dependencies" />
+              <GenericTable :data="dependencies" :columns="dependenciesColumns" :cypher-query="cypherQueries.dependencies" :slot-length="1">
+                <GenericPieChart v-if="dependencies.length > 0" :chart-data="dependencies" :chart-layout="{ title: 'Tags' }" />
+              </GenericTable>
             </q-card>
           </q-card>
         </q-expansion-item>
@@ -44,7 +42,10 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="part" :columns="partColumns" :cypher-query="cypherQueries.part" />
+              <GenericTable :data="part" :columns="partColumns" :cypher-query="cypherQueries.part" :slot-length="2">
+                <GenericPieChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Country' }" />
+                <GenericBarChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Tags' }" />
+              </GenericTable>
             </q-card>
           </q-card>
         </q-expansion-item>
@@ -57,36 +58,42 @@
 import { QChip } from 'quasar'
 import Overview from '@/views/charts/iyp/PrefixOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
+import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
+import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
+
 const references = {
   bgp: 'https://bgp.he.net/net',
   bgpTools: 'https://bgp.tools/prefix',
   ripeStat: 'https://stat.ripe.net/app/launchpad',
 }
+
 export default {
   components: {
     Overview,
     GenericTable,
     QChip,
+    GenericPieChart,
+    GenericBarChart,
   },
   data() {
     return {
       host: null,
       prefixLength: null,
       domainsColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}` },
-        { name: 'Domain', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}` },
-        { name: 'Tags', label: 'Domain Tags', align: 'left', field: row => row.tags, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
+        { name: 'Domain', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Domain Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
       dependenciesColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS ${val}` },
-        { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS ${val}`, sortable: true },
+        { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       partColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}` },
-        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
       domains: [],
       dependencies: [],
