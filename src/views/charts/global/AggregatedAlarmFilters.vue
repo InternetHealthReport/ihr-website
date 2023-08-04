@@ -110,7 +110,6 @@ export default {
     watch: {
         selectedAlarmTypes: {
             handler: function (newSelectedAlarmTypes) {
-                console.log('called here inside selectedAlarmTypes watcher')
                 const { data_sources: dataSources } = this.alarmsInfo.metadata
                 for (const dataSource in dataSources) {
                     const alarmTypes = dataSources[dataSource].alarm_types
@@ -129,8 +128,6 @@ export default {
         },
         selectedDataSources: {
             handler: function (newSelectedDataSources) {
-                console.log('called here inside selectedDataSources watcher')
-
                 const { data_sources: dataSources } = this.alarmsInfo.metadata
 
                 for (const dataSource in dataSources) {

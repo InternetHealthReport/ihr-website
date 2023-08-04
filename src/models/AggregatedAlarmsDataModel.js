@@ -335,10 +335,7 @@ function addASNameAndCountryIsoCode2(data) {
         const alarm = alarms[asnNumber]
         const containsCountryIsoCode2 = alarm.country_iso_code2
         if (!containsCountryIsoCode2 || !isNaN(alarm.asn_name)) {
-            console.log('alarm need countryIsoCode2', alarm)
             asnNumbers.push(asnNumber)
-        } else {
-            console.log('alarm doesnt need countryIsoCode2', alarm)
         }
     }
 
@@ -432,7 +429,6 @@ function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
     const request = () => {
         return new Promise((resolve, reject) => {
             getNetworkInfoIHR(asnNumbersCommaSeperated).then((networks) => {
-                console.log('Making an api request to get Network Information', networks)
                 networks.forEach(network => {
                     for (let asnNumber of asnNumbersCommaSeperated.split(',')) {
                         if (network.number == asnNumber) {
