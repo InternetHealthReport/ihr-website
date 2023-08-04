@@ -175,6 +175,30 @@
               </div>
             </div>
           </div>
+          <div class="notification">
+            <h4>Want to notify you whenever there is any alert ?</h4>
+            <p>Please note that add to slack and add to discord buttons will add the notification bot to the channel 
+              you choose<br/> so when there is any alert, it will be sent to the channel </p>
+            <div>
+              <button @click="SaveEmailNotify()">
+                <i class="fa fa-envelope"></i>
+                Notify using email
+              </button>
+            </div>
+            <div>
+              <button @click="discordRedirect()">
+                <i class='fab fa-discord discord'></i>
+                Add to Discord
+              </button>
+            </div>
+            <div>
+              <button class="slack">
+                <a href="https://slack.com/oauth/v2/authorize?client_id=5613925479254.5613934881478&scope=channels:join,chat:write,chat:write.public,incoming-webhook&user_scope=">
+                  <img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" 
+                  srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -221,6 +245,9 @@ const ConfirmElement = {
     },
     restore() {
       this.$emit("restore", this.savedRelatedInput);
+    },
+    discordRedirect() {
+      window.location.href = "https://discord.com/api/oauth2/authorize?client_id=1133115981108097147&permissions=2048&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fihr%2Fen-us%2Fdiscord_redirect&response_type=code&scope=bot%20messages.read";
     }
   },
   computed: {
@@ -394,6 +421,20 @@ export default {
       this.monitoring.modified = true;
       console.log("addAsn", asn);
     },
+    discordRedirect() {
+      window.location.href = "https://discord.com/api/oauth2/authorize?client_id=1133115981108097147&permissions=2048&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Fihr%2Fen-us%2Fdiscord_redirect&response_type=code&scope=bot%20messages.read";
+    },
+    SaveEmailNotify(){
+      this.$ihr_api.userEmail(
+        (_, response) => {
+              alert("Email saved successfully");
+          },
+        err => {
+          console.error(err);
+          alert("Error saving email");
+        }
+      );
+    },
     removeMonitored() {
       this.monitoring.selected.forEach(elem => {
         this.monitoring.query.remove(elem.asnumber);
@@ -541,4 +582,46 @@ export default {
   display: none;
 }
 
+.notification {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.notification button {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: .6rem 0.5rem;
+  cursor: pointer;
+  gap: .6rem;
+  background-color: transparent;
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.notification button:hover {
+  background-color: gainsboro;
+}
+
+.notification .discord {
+  color: blue;
+}
+
+.notification .slack {
+  border : none;
+  margin : 0px;
+  padding : 0px;
+}
+
+.notification h4 {
+  margin-bottom: 0.5rem;
+}
 </style>
