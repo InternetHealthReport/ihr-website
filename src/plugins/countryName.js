@@ -250,8 +250,8 @@ const isoCountries = {
   ZW: 'Zimbabwe',
 }
 
-export default function getCountryName(countryCode) {
-  return isoCountries[countryCode]
+export default function getCountryName(countryIsoCode2) {
+  return isoCountries[countryIsoCode2]
 }
 
 export { isoCountries, getCountryName }

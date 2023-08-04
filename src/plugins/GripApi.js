@@ -1,24 +1,26 @@
-import { formatTime } from './AggregatedAlarmsUtils.js'
+import { formatUTCTime } from '@/plugins/AggregatedAlarmsUtils'
 import axios from 'axios'
 
-const API_URL = 'https://api.grip.inetintel.cc.gatech.edu/json/events';
+export function getGripAlarms(startTime, endTime, minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all') {
+    const API_URL = 'https://api.grip.inetintel.cc.gatech.edu/json/events';
 
-export function getGRIPAlarms(startTime, endTime, severity, eventType='all') {
     const chunkSize = 100;
+    const startUTCTimeFormatted = formatUTCTime(startTime, '00Z')
+    const endUTCTimeFormatted = formatUTCTime(endTime, '00Z')
 
     const params = {
         length: chunkSize,
         start: 0,
-        ts_start: formatTime(startTime),
-        ts_end: formatTime(endTime),
-        min_susp: severity,
-        max_susp: chunkSize,
+        ts_start: startUTCTimeFormatted,
+        ts_end: endUTCTimeFormatted,
+        min_susp: minSuspicionLevel,
+        max_susp: maxSuspicionLevel,
         event_type: eventType
     };
 
     const request = () => {
         return axios.get(API_URL, { params })
-            .then(handleResponse)
+            .then((handleResponse))
             .catch(handleError);
     };
 
@@ -39,7 +41,7 @@ export function getGRIPAlarms(startTime, endTime, severity, eventType='all') {
     const createGetPageDataPromises = (totalRecords, bgpAlertsData, params) => {
         const getPageDataPromises = [];
 
-        for (let i = 0; i < totalRecords; i += 100) {
+        for (let i = 100; i < totalRecords; i += 100) {
             params.start = i;
             const getPromise = getPageData(API_URL, params)
                 .then(pageData => {
