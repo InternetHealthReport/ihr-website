@@ -36,14 +36,14 @@ export default {
     }
   },
   emits: {
-    'plotly-click': function(plotlyClickedData) {
+    'plotly-click': function (plotlyClickedData) {
       if (plotlyClickedData) {
         return true;
       } else {
         return false;
       }
     },
-    'loaded': function() {
+    'loaded': function () {
       return false
     }
   },
@@ -81,8 +81,19 @@ export default {
       Plotly.relayout(graphDiv, { showlegend: false })
     }
 
-    graphDiv.on('plotly_click', eventData => {
-      this.$emit('plotly-click', eventData)
+    graphDiv.on('plotly_relayout', (event) => {
+      const start = event['xaxis.range[0]'];
+      const end = event['xaxis.range[1]'];
+      if (start && end) {
+        const dateTimeFilter = { startDateTime: start, endDateTime: end };
+        this.$emit('filter-alarms-by-time', dateTimeFilter)
+      }
+    })
+
+    graphDiv.on('plotly_click', (eventData) => {
+      if (eventData) {
+        this.$emit('plotly-click', eventData)
+      }
     })
 
     this.created = true

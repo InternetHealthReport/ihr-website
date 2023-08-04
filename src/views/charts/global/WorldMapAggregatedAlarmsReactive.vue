@@ -1,7 +1,7 @@
 <template>
   <div class="IHR_disco-chart">
     <reactive-chart :layout="chart.layout" :traces="chart.traces" :ref="chart.uuid" :no-data="noData"
-      @plotly-click="plotlyClickedData = $event" />
+      @plotly-click="plotlyClickedDataHandler" />
   </div>
 </template>
 
@@ -29,11 +29,6 @@ export default {
       }
     },
   },
-  data() {
-    return {
-      plotlyClickedData: null,
-    }
-  },
   computed: {
     noData() {
       if (!this.loading && !this.chart.traces[0].locations.length) {
@@ -45,15 +40,11 @@ export default {
       }
     }
   },
-  watch: {
-    plotlyClickedData: {
-      handler: function (newPlotlyClickedData) {
-        if (newPlotlyClickedData) {
-          this.$emit('plotly-click', newPlotlyClickedData)
-        }
-      }
+  methods: {
+    plotlyClickedDataHandler(newPlotlyClickedData) {
+      this.$emit('plotly-click', newPlotlyClickedData)
     }
-  },
+  }
 }
 </script>
 

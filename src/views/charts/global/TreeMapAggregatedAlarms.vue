@@ -40,13 +40,15 @@ export default {
                 this.clearDataViz()
             } else {
                 const chartTitle = countryName ? `Aggregated Alarms by ASN, Alarm Type, and Severity for ${countryName}` : 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity'
-                this.$set(this.chart, 'traces', [treeMapTrace])
-                this.$set(this.chart.layout, 'title', chartTitle)
+                this.initTreeMap([treeMapTrace], chartTitle)
             }
         },
         clearDataViz() {
-            this.$set(this.chart, 'traces', [])
-            this.$set(this.chart.layout, 'title', 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity')
+            this.initTreeMap([], 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity')
+        },
+        initTreeMap(traces, chartTitle) {
+            this.$set(this.chart, 'traces', traces)
+            this.$set(this.chart.layout, 'title', chartTitle)
         }
     },
 }
