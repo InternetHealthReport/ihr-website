@@ -585,3 +585,52 @@ function isAlarmTimebinInRange(alarm, startDateTime, endDateTime, aggregatedAttr
         return filteredTimebins
     }
 }
+
+
+export function filterAlarmsBySeverity(alarms, severitiesSelected, aggregatedAttrsZipped) {
+    const filteredAlarms = alarms.map((alarm) => {
+        const filteredAlarm = filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped);
+        return filteredAlarm
+    }).filter((alarm) => alarm !== null)
+    return filteredAlarms
+}
+
+function filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped) {
+    const isAlarmInSeveritiesRangeResult = isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped);
+
+    if (isAlarmInSeveritiesRangeResult === null) {
+        return null;
+    }
+
+    const filteredAlarm = { ...alarm };
+    for (const [alarmCountType, alarmTimebinType, alarmSeverityType] of aggregatedAttrsZipped) {
+        filteredAlarm[alarmSeverityType] = isAlarmInSeveritiesRangeResult[alarmSeverityType]
+        filteredAlarm[alarmTimebinType] = isAlarmInSeveritiesRangeResult[alarmTimebinType]
+        filteredAlarm[alarmCountType] = Array(filteredAlarm[alarmSeverityType].length).fill(1);
+    }
+
+    return filteredAlarm;
+}
+
+function isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped) {
+    let areAllSeveritiesEmpty = true;
+
+    const filteredAlarm = {};
+    for (const [alarmCountType, alarmTimebinType, alarmSeverityType] of aggregatedAttrsZipped) {
+        filteredAlarm[alarmTimebinType] = []
+        filteredAlarm[alarmSeverityType] = []
+        for (let i = 0; i < alarm[alarmSeverityType].length; i++) {
+            if (severitiesSelected.includes(alarm[alarmSeverityType][i])) {
+                filteredAlarm[alarmSeverityType].push(alarm[alarmSeverityType][i])
+                filteredAlarm[alarmTimebinType].push(alarm[alarmTimebinType][i])
+            }
+        }
+        areAllSeveritiesEmpty = areAllSeveritiesEmpty && filteredAlarm[alarmSeverityType].length === 0
+    }
+
+    if (areAllSeveritiesEmpty) {
+        return null
+    } else {
+        return filteredAlarm
+    }
+}

@@ -24,12 +24,24 @@
                     :disabled="loadingVal">Apply</button>
                 <button @click="resetTime" id="reset-time-btn" type="button" :disabled="loadingVal">Reset Time</button>
             </div>
-
+            <div class="severity-filter">
+                <h3 class="filter__category-title">Severity Levels:</h3>
+                <label>
+                    <input type="checkbox" v-model="severities.low" :disabled="loadingVal"> Low
+                </label>
+                <label>
+                    <input type="checkbox" v-model="severities.normal" :disabled="loadingVal"> Normal
+                </label>
+                <label>
+                    <input type="checkbox" v-model="severities.high" :disabled="loadingVal"> High
+                </label>
+            </div>
             <div class="reset-granularity">
                 <h3 class="filter__category-title">Reset Granularity:</h3>
                 <button @click="resetGranularity" id="reset-granularity-btn" type="button" :disabled="loadingVal">Reset
                     Granularity</button>
             </div>
+
         </div>
     </div>
 </template>
@@ -55,6 +67,10 @@ export default {
         },
         loadingVal: {
             type: Boolean,
+            required: true
+        },
+        severities: {
+            type: Object,
             required: true
         }
     },
@@ -149,9 +165,14 @@ export default {
             },
             deep: true
         },
+        severities: {
+            handler: function (newSelectedSeverities) {
+                this.$emit('filter-alarms-by-severities', newSelectedSeverities)
+            },
+            deep: true
+        },
         startTime: {
             handler: function () {
-                console.log('called here inside startTime Watcher')
                 this.dateTimeWatcher()
             },
             deep: true
@@ -161,7 +182,8 @@ export default {
                 this.dateTimeWatcher()
             },
             deep: true
-        }
+        },
+
     },
     data() {
         return {
@@ -197,6 +219,7 @@ export default {
             this.$emit('filter-alarms-by-time', dateTimeFilter);
         },
 
+
         resetTime() {
             this.startDateTime = formatUTCTime(this.startTime)
             this.endDateTime = formatUTCTime(this.endTime)
@@ -223,8 +246,19 @@ export default {
     display: flex;
 }
 
-.datetime-filter,
-.reset-granularity {
+
+.reset-granularity,
+.severity-filter {
+    flex: 1;
+    text-align: center;
+
+}
+
+.severity-filter label {
+    margin-right: 10px;
+}
+
+.datetime-filter {
     flex: 1;
 }
 
