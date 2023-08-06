@@ -3,7 +3,7 @@
         <q-card class="IHR_charts-body">
             <q-card-section>
                 <aggregated-alarm-filters :start-time="timeFiltersCurrent.startTime" :end-time="timeFiltersCurrent.endTime"
-                    :alarmsInfo="alarmsInfo" :loadingVal="loadingVal" :severities="severities"
+                    :alarms-metadata="alarmsInfo.metadata" :loadingVal="loadingVal" :severities="severities"
                     @filter-alarms-by-time="filterAlarmsByTimeHandler"
                     @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler"
                     @filter-alarms-by-severities="filterAlarmsBySeveritiesHandler" @reset-time="resetTimeFlagHandler"
@@ -91,44 +91,56 @@ const ALARMS_INFO = {
             ihr: {
                 alarm_types: {
                     hegemony: {
-                        description: 'HEGEMONY Alarm Type',
+                        description: 'Hegemony Alarm Type',
+                        showHelpModal: false
                     },
                     network_delay: {
-                        description: 'NETWORK_DELAY Alarm Type',
+                        description: 'Network Delay Alarm Type',
+                        showHelpModal: false
                     },
                 },
-                description: 'IHR Data Source'
+                description: 'IHR Data Source',
+                showHelpModal: false
             },
             grip: {
                 alarm_types: {
                     moas: {
-                        description: 'MOAS Alarm Type',
+                        description: 'Moas Alarm Type',
+                        showHelpModal: false
                     },
                     submoas: {
-                        description: 'SUBMOAS Alarm Type',
+                        description: 'Submoas Alarm type',
+                        showHelpModal: false
                     },
                     defcon: {
-                        description: 'DEFCON Alarm Type',
+                        description: 'Defcon Alarm Type',
+                        showHelpModal: false
                     },
                     edges: {
-                        description: 'EDGES Alarm Type',
+                        description: 'Edges Alarm Type',
+                        showHelpModal: false
                     },
                 },
-                description: 'GRIP Data Source'
+                description: 'Grip Data Source',
+                showHelpModal: false
             },
             ioda: {
                 alarm_types: {
                     ping_slash24: {
-                        description: 'PING_SLASH24 Alarm Type',
+                        description: 'Ping Slash24 Alarm Type',
+                        showHelpModal: false
                     },
                     bgp: {
                         description: 'BGP Alarm Type',
+                        showHelpModal: false
                     },
                     ucsd_nt: {
-                        description: 'UCSD_NT Alarm Type',
+                        description: 'UCSD NT Alarm Type',
+                        showHelpModal: false
                     },
                 },
-                description: 'IODA Data Source'
+                description: 'IODA Data Source',
+                showHelpModal: false
             },
         }
 

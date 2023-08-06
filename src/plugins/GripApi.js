@@ -1,12 +1,12 @@
 import { formatUTCTime } from '@/plugins/AggregatedAlarmsUtils'
 import axios from 'axios'
 
-export function getGripAlarms(startTime, endTime, minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all') {
+export function getGripAlarms(startTime, endTime, timezone='', minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all') {
     const API_URL = 'https://api.grip.inetintel.cc.gatech.edu/json/events';
 
     const chunkSize = 100;
-    const startUTCTimeFormatted = formatUTCTime(startTime, '00Z')
-    const endUTCTimeFormatted = formatUTCTime(endTime, '00Z')
+    const startUTCTimeFormatted = formatUTCTime(startTime, timezone)
+    const endUTCTimeFormatted = formatUTCTime(endTime, timezone)
 
     const params = {
         length: chunkSize,

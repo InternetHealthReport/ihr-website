@@ -1,11 +1,11 @@
 import { formatUTCTime } from '@/plugins/AggregatedAlarmsUtils'
 import axios from 'axios'
 
-export function getIodaAlarms(startTime, endTime, entityType = 'asn', ignoreMethods = '*.sarima') {
+export function getIodaAlarms(startTime, endTime, timezone='00Z', entityType = 'asn', ignoreMethods = '*.sarima',) {
     const API_URL = "https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts"
 
-    const startUTCTimeFormatted = formatUTCTime(startTime, '00Z')
-    const endUTCTimeFormatted = formatUTCTime(endTime, '00Z')
+    const startUTCTimeFormatted = formatUTCTime(startTime, timezone)
+    const endUTCTimeFormatted = formatUTCTime(endTime, timezone)
 
     const startUnixTime = Date.parse(startUTCTimeFormatted) / 1000;
     const endUnixTime = Date.parse(endUTCTimeFormatted) / 1000;
