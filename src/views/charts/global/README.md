@@ -214,8 +214,7 @@ And that's it! You've successfully added the "outages" Internet Alarms Data Sour
 # How to add Internet Alarm Type and Integrate with Aggregated Alarms Data Visualizations
 This guide will walk you through the process of creating a fake ihr alarm type named "ihr_outages" and integrating it with Aggregated Alarms Data Visualization.
 
-## Step 1: Alarms Metadata and Data Source Setup
-
+## Step 1: Alarms Metadata and Alarm Type Setup
 1. Open the `AggregatedAlarmsController.vue` file.
 2. Add the alarms metadata information for the `ihr_outages` alarm type under the `Alarms info` section:
 ```javascript
@@ -246,7 +245,6 @@ const alarmsInfo = {
     },
 };
 ```
-
 ## Step 2: Ihr Outages Alarm Type Extraction
 We need to extract Ihr outages alarm type either by dependency injection  by passing it through the parent componenet `AggregatedAlarmsController.vue` inside `GlobalReport.vue` or you could create an alarm type plugin same as before in data source I would make it simple and just create fake data within the `AggregatedAlarmsDataModel.js` file. Paste the following `getIhrOutagesAlarms` function inside `AggregatedAlarmsDataModel.js`:
 ```javascript
@@ -291,7 +289,6 @@ Inside the `extractAlarms` function of `AggregatedAlarmsDataModel`, call the `ge
 // AggregatedAlarmsController.vue
 extractedAlarms.ihr.ihr_outages = alarmTypesFilter.ihr_outages ? getIhrOutagesAlarms() : []
 ```
-
 ## Step 4: Data Transformation
 1. extract `ihr_outages` from `extractedAlarms`:
 ```javascript
