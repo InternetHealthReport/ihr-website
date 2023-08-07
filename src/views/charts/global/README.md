@@ -1,4 +1,4 @@
-# How to add Internet Alarms Data Source and Integrating with Aggregated Alarms Data Visualizations
+# How to add Internet Alarms Data Source and Integrate with Aggregated Alarms Data Visualizations
 
 This guide will walk you through the process of creating a fake alarms data source named "outages" and integrating it with Aggregated Alarms Data Visualization.
 
