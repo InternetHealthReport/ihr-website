@@ -14,7 +14,7 @@ const dataSourcesTransformers = {
     },
     ioda: {
         transformFunc: transformIodaAlarms,
-    },
+    }
 }
 
 export function etl(dataSourcesMetadata, dataSourcesSelected, alarmTypesFilter, aggregatedAttrsSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
@@ -30,20 +30,17 @@ export function etl(dataSourcesMetadata, dataSourcesSelected, alarmTypesFilter, 
 function extractAlarms(dataSourcesSelected, alarmTypesFilter, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
     const request = () => {
         return new Promise((resolve, reject) => {
-            let extractedAlarms = {
-                ihr: { hegemony: [], network_delay: [] },
-                grip: [], ioda: []
-            }
+            let extractedAlarms = { ihr: {} }
 
             extractedAlarms.ihr.hegemony = alarmTypesFilter.hegemony ? hegemonyAlarms : []
             extractedAlarms.ihr.network_delay = alarmTypesFilter.network_delay ? networkDelayAlarms : []
 
             const gripAlarmsPromise = dataSourcesSelected.grip
-                ? extractGripAlarmsHelper(thirdPartyAlarmsStates.grip, startTime, endTime)
+                ? getGripAlarms(thirdPartyAlarmsStates.grip, startTime, endTime)
                 : Promise.resolve([]);
 
             const iodaAlarmsPromise = dataSourcesSelected.ioda
-                ? extractIodaAlarmsHelper(thirdPartyAlarmsStates.ioda, startTime, endTime)
+                ? getIodaAlarms(thirdPartyAlarmsStates.ioda, startTime, endTime)
                 : Promise.resolve([]);
 
             Promise.all([gripAlarmsPromise, iodaAlarmsPromise]).then(([gripAlarms, iodaAlarms]) => {
@@ -498,49 +495,7 @@ function getCountryIsoCode3AndName(countryIsoCode2) {
     return { country_iso_code3, country_name }
 }
 
-function extractGripAlarmsHelper(gripAlarmsState, startTime, endTime) {
-    const request = () => {
-        return new Promise((resolve, reject) => {
-            if (gripAlarmsState.data) {
-                return resolve(gripAlarmsState.data)
-            }
-            if (!gripAlarmsState.data && !gripAlarmsState.downloading) {
-                gripAlarmsState.downloading = true
-                getGripAlarms(startTime, endTime).then((gripAlarms) => {
-                    gripAlarmsState.downloading = false
-                    gripAlarmsState.data = gripAlarms
-                    return resolve(gripAlarmsState.data)
-                })
-                    .catch(error => {
-                        return reject(error)
-                    })
-            }
-        })
-    }
-    return request()
-}
 
-function extractIodaAlarmsHelper(iodaAlarmsState, startTime, endTime) {
-    const request = () => {
-        return new Promise((resolve, reject) => {
-            if (iodaAlarmsState.data) {
-                return resolve(iodaAlarmsState.data)
-            }
-            if (!iodaAlarmsState.data && !iodaAlarmsState.downloading) {
-                iodaAlarmsState.downloading = true
-                getIodaAlarms(startTime, endTime).then((iodaAlarms) => {
-                    iodaAlarmsState.downloading = false
-                    iodaAlarmsState.data = iodaAlarms
-                    return resolve(iodaAlarmsState.data)
-                })
-                    .catch(error => {
-                        return reject(error)
-                    })
-            }
-        })
-    }
-    return request()
-}
 
 export function filterAlarmsByTime(alarms, startDateTime, endDateTime, aggregatedAttrsZipped) {
     const filteredAlarms = alarms.map((alarm) => {

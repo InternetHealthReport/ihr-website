@@ -47,9 +47,6 @@ import WorldMapAggregatedAlarms from './WorldMapAggregatedAlarms'
 import TimeSeriesAggregatedAlarms from './TimeSeriesAggregatedAlarms'
 import TreeMapAggregatedAlarms from './TreeMapAggregatedAlarms'
 
-
-
-
 const ALARMS_INFO = {
     data_sources: {
         ihr: {
@@ -141,12 +138,11 @@ const ALARMS_INFO = {
                 },
                 description: 'IODA Data Source',
                 showHelpModal: false
-            },
+            }
         }
 
     }
 }
-
 
 export default {
     components: {
@@ -170,7 +166,7 @@ export default {
             },
             thirdPartyAlarmsStates: {
                 grip: { downloading: false, data: null },
-                ioda: { downloading: false, data: null },
+                ioda: { downloading: false, data: null }
             },
             severities: {
                 low: true,
