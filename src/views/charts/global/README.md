@@ -159,7 +159,7 @@ Promise.all([..., outagesAlarmsPromise])
         return reject(error);
     });
 ```
-# Step 4: Data Transformation
+## Step 4: Data Transformation
 1. Inside `dataSourcesTransformers` in `AggregatedAlarmsController.vue`, add metadata for the outages transformation function:
 ```javascript
 // AggregatedAlarmsController.vue
