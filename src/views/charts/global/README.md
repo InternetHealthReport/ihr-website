@@ -4,7 +4,7 @@ This guide will walk you through the process of creating a fake alarms data sour
 
 ## Step 1: Alarms Metadata and Data Source Setup
 
-1. Open the AggregatedAlarmsController.js file.
+1. Open the `AggregatedAlarmsController.vue` file.
 2. Add the alarms metadata information for the "outages" data source under the `Alarms info` section:
 ```javascript
 // Alarms info in AggregatedAlarmsController
@@ -134,21 +134,21 @@ function getOutagesAlarmsHelper(startTime, endTime, timezone = '00Z', entityType
 }
 ```
 ## Step 3: Integrating the Outages Plugin
-1. Import the `getOutagesAlarms` function in `AggregatedAlarmsController.js`:
+1. Import the `getOutagesAlarms` function in `AggregatedAlarmsController.vue`:
 ```javascript
-// AggregatedAlarmsController.js
+// AggregatedAlarmsController.vue
 import { getOutagesAlarms } from "@/plugins/OutagesApi";
 ```
 2. Inside the `extractAlarms` function of `AggregatedAlarmsDataModel`, call the `getOutagesAlarms` function:
 ```javascript
-// AggregatedAlarmsController.js
+// AggregatedAlarmsController.vue
 const outagesAlarmsPromise = dataSourcesSelected.outages
     ? getOutagesAlarms(thirdPartyAlarmsStates.outages, startTime, endTime)
     : Promise.resolve([]);
 ```
 3. Store the extracted outages alarms after resolving the promises:
 ```javascript
-// AggregatedAlarmsController.js
+// AggregatedAlarmsController.vue
 Promise.all([..., outagesAlarmsPromise])
     .then(([..., outagesAlarms]) => {
         // Storing other data sources sources 
@@ -160,9 +160,9 @@ Promise.all([..., outagesAlarmsPromise])
     });
 ```
 # Step 4: Data Transformation
-1. Inside `dataSourcesTransformers` in `AggregatedAlarmsController.js`, add metadata for the outages transformation function:
+1. Inside `dataSourcesTransformers` in `AggregatedAlarmsController.vue`, add metadata for the outages transformation function:
 ```javascript
-// AggregatedAlarmsController.js
+// AggregatedAlarmsController.vue
 dataSourcesTransformers: {
     // Other data sources...
     outages: {
@@ -172,7 +172,7 @@ dataSourcesTransformers: {
 ```
 2. Create the `transformOutagesAlarms` function:
 ```javascript
-// AggregatedAlarmsController.js
+// AggregatedAlarmsController.vue
 function transformOutagesAlarms(outagesAlarms, outagesAggregatedAttrs) {
     // Transformation logic for outages alarms
     const outagesAlarmsTransformed = filterOutagesAlarms(outagesAlarms);
