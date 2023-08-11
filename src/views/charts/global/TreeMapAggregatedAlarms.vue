@@ -5,7 +5,7 @@
 </template>
   
 <script>
-import { isDictEmpty } from '@/plugins/AggregatedAlarmsUtils.js'
+import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
 import * as TreeMapAggregatedAlarmsDataModel from '@/models/TreeMapAggregatedAlarmsDataModel'
 import TreeMapAggregatedAlarmsReactive from './TreeMapAggregatedAlarmsReactive'
 
@@ -35,7 +35,7 @@ export default {
     methods: {
         etl(alarms, aggregatedAttrsZipped, countryName) {
             const treeMapTrace = TreeMapAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName)
-            const isTreeMapTraceEmpty = isDictEmpty(treeMapTrace)
+            const isTreeMapTraceEmpty = AggregatedAlarmsUtils.isDictEmpty(treeMapTrace)
             if (isTreeMapTraceEmpty) {
                 this.clearDataViz()
             } else {

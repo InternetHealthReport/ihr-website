@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { titleCase, formatUTCTime, compareUtcStrings } from '@/plugins/AggregatedAlarmsUtils'
+import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
 import AggregatedAlarmsCustomTable from './AggregatedAlarmsCustomTable'
 export default {
     components: {
@@ -77,8 +77,8 @@ export default {
 
             const dataSourceAlarmTypes = {}
             for (const dataSourceKey in dataSources) {
-                const dataSourceLabel = titleCase(dataSourceKey)
-                const dataSourceDescriptionTitled = titleCase(dataSources[dataSourceKey].description)
+                const dataSourceLabel = AggregatedAlarmsUtils.titleCase(dataSourceKey)
+                const dataSourceDescriptionTitled = AggregatedAlarmsUtils.titleCase(dataSources[dataSourceKey].description)
                 dataSourceAlarmTypes[dataSourceKey] = {
                     alarm_types: {},
                     value: {
@@ -90,8 +90,8 @@ export default {
 
                 const alarmTypesMetaData = dataSources[dataSourceKey].alarm_types
                 for (const alarmTypeKey in alarmTypesMetaData) {
-                    const alarmTypeLabel = titleCase(alarmTypeKey)
-                    const alarmTypeDescriptionTitled = titleCase(alarmTypesMetaData[alarmTypeKey].description)
+                    const alarmTypeLabel = AggregatedAlarmsUtils.titleCase(alarmTypeKey)
+                    const alarmTypeDescriptionTitled = AggregatedAlarmsUtils.titleCase(alarmTypesMetaData[alarmTypeKey].description)
                     dataSourceAlarmTypes[dataSourceKey]['alarm_types'][alarmTypeKey] = {
                         value: alarmTypeKey,
                         label: alarmTypeLabel,
@@ -111,8 +111,8 @@ export default {
                 const alarmTypesMetaData = dataSources[dataSourceKey].alarm_types
 
                 for (const alarmTypeKey in alarmTypesMetaData) {
-                    const alarmTypeLabel = titleCase(alarmTypeKey)
-                    const alarmTypeDescriptionTitled = titleCase(alarmTypesMetaData[alarmTypeKey].description)
+                    const alarmTypeLabel = AggregatedAlarmsUtils.titleCase(alarmTypeKey)
+                    const alarmTypeDescriptionTitled = AggregatedAlarmsUtils.titleCase(alarmTypesMetaData[alarmTypeKey].description)
 
                     alarmTypes.push({
                         value: alarmTypeKey,
@@ -125,13 +125,12 @@ export default {
             return alarmTypes;
         },
         dataSources() {
-            console.log('called in dataSources computed property')
             const dataSources = this.alarmsMetadata.data_sources
 
             const dataSourcesResult = []
             for (const dataSourceKey in dataSources) {
-                const dataSourceLabel = titleCase(dataSourceKey)
-                const dataSourceDescriptionTitled = titleCase(dataSources[dataSourceKey].description)
+                const dataSourceLabel = AggregatedAlarmsUtils.titleCase(dataSourceKey)
+                const dataSourceDescriptionTitled = AggregatedAlarmsUtils.titleCase(dataSources[dataSourceKey].description)
 
                 dataSourcesResult.push({
                     value: dataSourceKey,
@@ -145,7 +144,7 @@ export default {
         isStartTimeTheMax() {
             const startDateUTCTime = this.startDateTime + ':00Z'
             const endDateUTCTime = this.endDateTime + ':00Z'
-            const compareStartAndEndDateTime = compareUtcStrings(startDateUTCTime, endDateUTCTime)
+            const compareStartAndEndDateTime = AggregatedAlarmsUtils.compareUtcStrings(startDateUTCTime, endDateUTCTime)
             if (compareStartAndEndDateTime === 1) {
                 return true
             }
@@ -221,10 +220,10 @@ export default {
             selectedAlarmTypes: {},
             selectedDataSources: {},
             maxAlarmTypesLength: 0,
-            startDateTime: formatUTCTime(this.startTime),
-            endDateTime: formatUTCTime(this.endTime),
-            minStartDateTime: formatUTCTime(this.startTime),
-            maxEndDateTime: formatUTCTime(this.endTime),
+            startDateTime: AggregatedAlarmsUtils.formatUTCTime(this.startTime),
+            endDateTime: AggregatedAlarmsUtils.formatUTCTime(this.endTime),
+            minStartDateTime: AggregatedAlarmsUtils.formatUTCTime(this.startTime),
+            maxEndDateTime: AggregatedAlarmsUtils.formatUTCTime(this.endTime),
         };
     },
     created() {
@@ -238,8 +237,8 @@ export default {
                 const alertMessage = 'Start Date cannot be greater than End Date'
                 alert(alertMessage);
             }
-            this.startDateTime = formatUTCTime(this.startTime)
-            this.endDateTime = formatUTCTime(this.endTime)
+            this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(this.startTime)
+            this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(this.endTime)
         },
 
         filterAlarmsByTime(startDateTime, endDateTime) {
@@ -251,8 +250,8 @@ export default {
 
 
         resetTime() {
-            this.startDateTime = formatUTCTime(this.startTime)
-            this.endDateTime = formatUTCTime(this.endTime)
+            this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(this.startTime)
+            this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(this.endTime)
             this.filterAlarmsByTime(this.startDateTime, this.endDateTime)
             this.$emit('reset-time');
         },

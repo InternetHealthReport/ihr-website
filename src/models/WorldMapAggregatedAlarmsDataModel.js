@@ -1,4 +1,4 @@
-import { deepCopy, titleCase } from '@/plugins/AggregatedAlarmsUtils'
+import * as AggregatedAlarmsUtils from './AggregatedAlarmsUtils'
 
 export function etl(alarms, alarmCountsSelected) {
     const alarmCountsByCountry = groupAlarmCountsByCountry(alarms, alarmCountsSelected)
@@ -43,7 +43,7 @@ function addAlarmCountsAttr(accumulator, current, alarmCountsSelected) {
 }
 
 function addTotalAlarmCountsAttr(alarms, alarmCountsSelected) {
-    const alarmsCopied = deepCopy(alarms)
+    const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
     alarmsCopied.forEach(alarm => {
         let totalAlarmCounts = 0
         alarmCountsSelected.forEach(alarmCountColumn => {
@@ -68,6 +68,9 @@ function getWorldMapData(inputData) {
 }
 
 function getHoverZippedData(alarmsData, alarmCountsSelected) {
+    if (AggregatedAlarmsUtils.isDictEmpty(alarmsData) || !alarmCountsSelected.length) {
+        return []
+    }
     const zippedData = []
     const alarmCountsTypeList = alarmsData[alarmCountsSelected[0]]
     for (let i = 0; i < alarmCountsTypeList.length; i++) {
@@ -95,7 +98,7 @@ function getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected) {
 function getHoverTemplate(alarmCountsSelected) {
     let hoverTemplate = '<b>%{text}</b><br>' + 'Total Alarm Counts: %{z}<br>'
     for (const alarmCountType of alarmCountsSelected) {
-        const alarmCountTypeTitledCase = titleCase(alarmCountType)
+        const alarmCountTypeTitledCase = AggregatedAlarmsUtils.titleCase(alarmCountType)
         hoverTemplate += `${alarmCountTypeTitledCase}: %{customdata.${alarmCountType}}<br>`
     }
     return hoverTemplate

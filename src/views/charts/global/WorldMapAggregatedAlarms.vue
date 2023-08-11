@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { isDictEmpty } from '@/plugins/AggregatedAlarmsUtils.js'
+import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
 import * as WorldMapAggregatedAlarmsDataModel from '@/models/WorldMapAggregatedAlarmsDataModel'
 import WorldMapAggregatedAlarmsReactive from './WorldMapAggregatedAlarmsReactive'
 
@@ -92,7 +92,7 @@ export default {
   methods: {
     etl(alarms, alarmCountsSelected) {
       let worldMapTrace = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected)
-      const isWorldMapTraceEmpty = isDictEmpty(worldMapTrace)
+      const isWorldMapTraceEmpty = AggregatedAlarmsUtils.isDictEmpty(worldMapTrace)
       if (isWorldMapTraceEmpty) {
         this.clearDataViz()
       } else {
