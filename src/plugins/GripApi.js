@@ -50,12 +50,10 @@ function getGripAlarmsHelper(startTime, endTime, timezone = '', minSuspicionLeve
     };
 
     const handleResponse = (response) => {
-        console.log('response:', response)
         const data = response.data;
         const totalRecords = parseInt(data.recordsTotal);
         const bgpAlertsData = [...data.data];
         if (onePage) {
-            console.log('bgpAlertsData')
             return bgpAlertsData
         }
         const getPageDataPromises = createGetPageDataPromises(totalRecords, bgpAlertsData, params);
