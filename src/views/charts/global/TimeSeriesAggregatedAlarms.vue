@@ -48,6 +48,7 @@ export default {
                     xanchor: 'top',
                     y: 1
                 },
+                height: 400
             }
         }
 
@@ -88,11 +89,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .IHR_chart {
-    height: 380px;
+    height: 300px;
 }
 </style>
-
-
-

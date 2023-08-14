@@ -28,6 +28,7 @@ export default {
                 layout: {
                     margin: { t: 70, b: 0, l: 0, r: 0 },
                     title: 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity',
+                    height: 400
                 }
             },
         }
@@ -54,3 +55,9 @@ export default {
 }
 
 </script>
+
+<style scoped>
+.IHR_chart {
+    height: 300px;
+}
+</style>

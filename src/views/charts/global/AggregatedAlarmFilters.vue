@@ -2,7 +2,7 @@
     <div class="container">
         <aggregated-alarms-custom-table :data-source-alarm-types="dataSourceAlarmTypes"
             :selected-data-sources="selectedDataSources" :selected-alarm-types="selectedAlarmTypes"
-            :alarms-metadata="alarmsMetadata" :loadingVal="loadingVal"/>
+            :alarms-metadata="alarmsMetadata" :loadingVal="loadingVal" />
         <div class="flex-container">
             <div class="datetime-filter">
                 <h3 class="filter__category-title">Date Time Filter:</h3>
@@ -195,17 +195,18 @@ export default {
         },
         severities: {
             handler: function (newSelectedSeverities) {
+                console.log('newSelectedSeverities:',newSelectedSeverities)
                 this.$emit('filter-alarms-by-severities', newSelectedSeverities)
             },
             deep: true
         },
-        startTime: {
+        startDateTime: {
             handler: function () {
                 this.dateTimeWatcher()
             },
             deep: true
         },
-        endTime: {
+        endDateTime: {
             handler: function () {
                 this.dateTimeWatcher()
             },
@@ -236,9 +237,9 @@ export default {
             if (this.isStartTimeTheMax) {
                 const alertMessage = 'Start Date cannot be greater than End Date'
                 alert(alertMessage);
+                this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(this.startTime)
+                this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(this.endTime)
             }
-            this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(this.startTime)
-            this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(this.endTime)
         },
 
         filterAlarmsByTime(startDateTime, endDateTime) {

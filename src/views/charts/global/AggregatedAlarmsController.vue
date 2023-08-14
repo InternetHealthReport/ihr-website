@@ -389,9 +389,14 @@ export default {
             }
         },
 
-        filterAlarmsBySeveritiesHandler() {
-            const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-            this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelected, aggregatedAttrsZipped)
+        filterAlarmsBySeveritiesHandler(newSeveritiesSelected) {
+            const anySeveritySelected = Object.values(newSeveritiesSelected).includes(true)
+            if (anySeveritySelected) {
+                const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
+                this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelected, aggregatedAttrsZipped)
+            } else {
+                this.clearDataVizHandler()
+            }
         },
 
         resetTimeFlagHandler() {

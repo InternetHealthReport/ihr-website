@@ -71,6 +71,7 @@ export default {
           countrycolor: 'rgb(235, 235, 235)',
           showcountries: true,
         },
+        height: 400
       },
     }
 
@@ -108,8 +109,8 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .IHR_chart {
-  height: 380px;
+  height: 300px;
 }
 </style>
