@@ -390,12 +390,14 @@ export default {
         },
 
         filterAlarmsBySeveritiesHandler(newSeveritiesSelected) {
-            const anySeveritySelected = Object.values(newSeveritiesSelected).includes(true)
-            if (anySeveritySelected) {
-                const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-                this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelected, aggregatedAttrsZipped)
-            } else {
-                this.clearDataVizHandler()
+            if (newSeveritiesSelected) {
+                const anySeveritySelected = Object.values(newSeveritiesSelected).includes(true)
+                if (anySeveritySelected) {
+                    const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
+                    this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelected, aggregatedAttrsZipped)
+                } else {
+                    this.clearDataVizHandler()
+                }
             }
         },
 

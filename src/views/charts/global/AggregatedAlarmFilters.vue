@@ -141,15 +141,6 @@ export default {
             }
             return dataSourcesResult;
         },
-        isStartTimeTheMax() {
-            const startDateUTCTime = this.startDateTime + ':00Z'
-            const endDateUTCTime = this.endDateTime + ':00Z'
-            const compareStartAndEndDateTime = AggregatedAlarmsUtils.compareUtcStrings(startDateUTCTime, endDateUTCTime)
-            if (compareStartAndEndDateTime === 1) {
-                return true
-            }
-            return false
-        },
     },
     watch: {
         selectedAlarmTypes: {
@@ -195,20 +186,32 @@ export default {
         },
         severities: {
             handler: function (newSelectedSeverities) {
-                console.log('newSelectedSeverities:',newSelectedSeverities)
                 this.$emit('filter-alarms-by-severities', newSelectedSeverities)
             },
             deep: true
         },
+
+        startTime: {
+            handler: function (newStartTime) {
+                this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(newStartTime)
+            },
+            deep: true
+        },
+        endTime: {
+            handler: function (newEndTime) {
+                this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(newEndTime)
+            },
+            deep: true
+        },
         startDateTime: {
-            handler: function () {
-                this.dateTimeWatcher()
+            handler: function (newStartDateTime) {
+                this.startAndEndDateTimeRangesHandler(newStartDateTime, this.endDateTime)
             },
             deep: true
         },
         endDateTime: {
-            handler: function () {
-                this.dateTimeWatcher()
+            handler: function (newEndDateTime) {
+                this.startAndEndDateTimeRangesHandler(this.startDateTime, newEndDateTime)
             },
             deep: true
         },
@@ -233,8 +236,9 @@ export default {
         }
     },
     methods: {
-        dateTimeWatcher() {
-            if (this.isStartTimeTheMax) {
+        startAndEndDateTimeRangesHandler(startDateTime, endDateTime) {
+            const isStartTimeTheMax = this.isStartTimeTheMax(startDateTime, endDateTime)
+            if (isStartTimeTheMax) {
                 const alertMessage = 'Start Date cannot be greater than End Date'
                 alert(alertMessage);
                 this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(this.startTime)
@@ -242,6 +246,15 @@ export default {
             }
         },
 
+        isStartTimeTheMax(startDateTime, endDateTime) {
+            const startDateUTCTime = startDateTime + ':00Z'
+            const endDateUTCTime = endDateTime + ':00Z'
+            const compareStartAndEndDateTime = AggregatedAlarmsUtils.compareUtcStrings(startDateUTCTime, endDateUTCTime)
+            if (compareStartAndEndDateTime === 1) {
+                return true
+            }
+            return false
+        },
         filterAlarmsByTime(startDateTime, endDateTime) {
             const startDateUTCTime = `${startDateTime}:00Z`
             const endDateUTCTime = `${endDateTime}:00Z`

@@ -343,7 +343,6 @@
             :geoprobes.sync="geoProbes" :filter="discoFilter" @filteredRows="newFilteredRows('disco', $event)"
             @loading="discoLoading" :selected-asn="asnList" ref="ihrChartDisco" />
         </q-card-section>
-        <div style="margin: 350px;"></div>
       </q-card>
     </q-expansion-item>
 
