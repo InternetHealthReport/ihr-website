@@ -150,6 +150,8 @@ const IypApi = {
           result.prefixesCount = res.records[0].get('prefixes_count').low
         } else if(key == 'countryIXPsQuery') {
           result.ixpsCount = res.records[0].get('ixps_count').low
+        } else if(key == 'countryQuery') {
+          result.country =res.records[0].get('country')
         }
       }
       return result

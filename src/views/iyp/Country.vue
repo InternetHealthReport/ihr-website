@@ -1,25 +1,18 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1>{{ this.cc }}</h1>
+    <h1>{{ this.pageTitle }}</h1>
     <div>
       <q-list>
-        <q-expansion-item
-          :label="$t('iyp.overview.country.title')"
-          caption="Overview of a country"
-          header-class="IHR_charts-title"
-          v-model="show.overview"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <Overview :country-code="cc" />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+        <div class="q-pl-sm q-mt-lg q-mb-lg">
+          <h2 class="q-mb-sm">Overview</h2>
+          <div class="q-pl-md">
+            <Overview :country-code="cc" :title="setPageTitle" />
+          </div>
+        </div>
 
         <q-expansion-item :label="$t('iyp.country.ases.title')" caption="Autonomous Systems (ASes)" header-class="IHR_charts-title">
           <q-separator />
-          <q-card class="IHR_charts-body">
+          <q-card>
             <q-card v-if="tableVisible" class="q-ma-xl">
               <GenericTable :data="ases" :columns="asesColumns" :cypher-query="cypherQueries.ases" />
             </q-card>
@@ -28,7 +21,7 @@
 
         <q-expansion-item :label="$t('iyp.country.ixps.title')" caption="Internet Exchange Points (IXPs)" header-class="IHR_charts-title">
           <q-separator />
-          <q-card class="IHR_charts-body">
+          <q-card>
             <q-card v-if="tableVisible" class="q-ma-xl">
               <GenericTable :data="ixps" :columns="ixpsColumns" :cypher-query="cypherQueries.ixps" />
             </q-card>
@@ -42,6 +35,7 @@
 <script>
 import Overview from '@/views/charts/iyp/CountryOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
+
 export default {
   components: {
     Overview,
@@ -50,14 +44,15 @@ export default {
   data() {
     return {
       cc: null,
+      pageTitle: null,
       asesColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}` },
-        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       ixpsColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'Name', label: 'Name', align: 'left', field: row => row.ixp, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.ixp, format: val => `${val}`, sortable: true },
       ],
       // ases stands for autonomous systems
       ases: [],
@@ -75,7 +70,6 @@ export default {
   async mounted() {
     const queries = [this.getASes(), this.getIXPs()]
     let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-    console.log(res)
     this.ases = res.ases
     this.ixps = res.ixps
     let queriesObj = {}
@@ -104,6 +98,9 @@ export default {
         ixp: 'ixp',
       }
       return { cypherQuery: query, params: { cc: this.cc, ref: 'peeringdb.ix' }, mapping, data: 'ixps' }
+    },
+    setPageTitle(title) {
+      this.pageTitle = `${title} (${this.cc})`
     },
   },
 }

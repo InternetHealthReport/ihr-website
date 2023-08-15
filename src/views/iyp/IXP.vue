@@ -2,29 +2,24 @@
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <h1>{{ pageTitle }}</h1>
     <div>
-      <q-chip clickable @click="handleReference" color="blue" text-color="white"> PeeringDB </q-chip>
+      <q-chip clickable @click="handleReference" color="gray" text-color="black"> PeeringDB </q-chip>
     </div>
     <div>
       <q-list>
-        <q-expansion-item
-          :label="$t('iyp.overview.ixp.title')"
-          caption="Overview of an IXP"
-          header-class="IHR_charts-title"
-          v-model="show.overview"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <Overview :id="id" :title="setTitle" />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+        <div class="q-pl-sm q-mt-lg q-mb-lg">
+          <h2 class="q-mb-sm">Overview</h2>
+          <div class="q-pl-md">
+            <Overview :id="id" :title="setTitle" />
+          </div>
+        </div>
 
         <q-expansion-item :label="$t('iyp.ixp.members.title')" caption="Member Autonomous Systems (ASes)" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="members" :columns="membersColumns" :cypher-query="cypherQueries.members" />
+              <GenericTable :data="members" :columns="membersColumns" :cypher-query="cypherQueries.members" :slot-length="1">
+                <GenericPieChart v-if="members.length > 0" :chart-data="members" :chart-layout="{ title: 'Country' }" />
+              </GenericTable>
             </q-card>
           </q-card>
         </q-expansion-item>
@@ -33,7 +28,9 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="facilities" :columns="facilitiesColumns" :cypher-query="cypherQueries.facilities" />
+              <GenericTable :data="facilities" :columns="facilitiesColumns" :cypher-query="cypherQueries.facilities" :slot-length="1">
+                <GenericPieChart v-if="facilities.length > 0" :chart-data="facilities" :chart-layout="{ title: 'Country' }" />
+              </GenericTable>
             </q-card>
           </q-card>
         </q-expansion-item>
@@ -42,7 +39,9 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="peeringLANs" :columns="peeringLANsColumns" :cypher-query="cypherQueries.peeringLANs" />
+              <GenericTable :data="peeringLANs" :columns="peeringLANsColumns" :cypher-query="cypherQueries.peeringLANs" :slot-length="1">
+                <GenericPieChart v-if="peeringLANs.length > 0" :chart-data="peeringLANs" :chart-layout="{ title: 'Country' }" />
+              </GenericTable>
             </q-card>
           </q-card>
         </q-expansion-item>
@@ -55,31 +54,41 @@
 import { QChip } from 'quasar'
 import Overview from '@/views/charts/iyp/IXPOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
+import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
+
 const references = {
   peeringDB: 'https://www.peeringdb.com/ix',
 }
+
 export default {
   components: {
     Overview,
     GenericTable,
     QChip,
+    GenericPieChart,
   },
   data() {
     return {
       id: null,
       pageTitle: 'IXP',
       prefixesColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}` },
-        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
       membersColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS ${val}` },
-        { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS ${val}`, sortable: true },
+        { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
-      facilitiesColumns: [{ name: 'Facility', label: 'Facility', align: 'left', field: row => row.name, format: val => `${val}` }],
-      peeringLANsColumns: [{ name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}` }],
+      facilitiesColumns: [
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Facility', label: 'Facility', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+      ],
+      peeringLANsColumns: [
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+      ],
       prefixes: [],
       members: [],
       facilities: [],
@@ -121,25 +130,29 @@ export default {
     },
     getMembers() {
       const query =
-        'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)-[:MEMBER_OF]-(a:AS)-[:NAME]-(n:Name) MATCH (a)-[:COUNTRY]-(c:Country) RETURN collect(DISTINCT(c.country_code)) AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name'
+        'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)-[:MEMBER_OF]-(a:AS)-[:NAME]-(n:Name) MATCH (a)-[:COUNTRY {reference_org: $org}]-(c:Country) RETURN collect(DISTINCT(c.country_code)) AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name'
       const mapping = {
         cc: 'cc',
         asn: 'asn',
         name: 'name',
       }
-      return { cypherQuery: query, params: { id: this.id }, mapping, data: 'members' }
+      return { cypherQuery: query, params: { id: this.id, org: 'NRO' }, mapping, data: 'members' }
     },
     getFacilities() {
-      const query = 'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)-[:LOCATED_IN]-(f:Facility) RETURN f.name as name'
+      const query =
+        'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)-[:LOCATED_IN]-(f:Facility) MATCH (f)-[:COUNTRY]-(c:Country) RETURN f.name as name, c.country_code AS cc'
       const mapping = {
         name: 'name',
+        cc: 'cc',
       }
       return { cypherQuery: query, params: { id: this.id }, mapping, data: 'facilities' }
     },
     getPeeringLANs() {
-      const query = 'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)<-[:MANAGED_BY]-(s:Prefix) RETURN s.prefix as prefix'
+      const query =
+        'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)<-[:MANAGED_BY]-(s:Prefix) MATCH (s)-[:COUNTRY]-(c:Country) RETURN s.prefix as prefix, c.country_code as cc'
       const mapping = {
         prefix: 'prefix',
+        cc: 'cc',
       }
       return { cypherQuery: query, params: { id: this.id }, mapping, data: 'peeringLANs' }
     },

@@ -13,28 +13,37 @@
         <div class="q-pl-sm q-mt-lg q-mb-lg">
           <h2 class="q-mb-sm">Overview</h2>
           <div class="q-pl-md">
-            <Overview :as-number="this.asn" :title="setPageTitle" />
+            <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
           </div>
         </div>
 
         <q-expansion-item :label="$t('iyp.as.peers.title')" caption="AS Peers" header-class="IHR_charts-title">
           <q-separator />
-          <q-card v-if="peers" class="q-ma-xl">
-            <GenericTable :data="peers" :columns="peerColumns" :cypher-query="cypherQueries.peers" :chart-data="peers" />
+          <q-card v-if="peers" class="IHR_charts-body">
+            <q-card-section>
+              <GenericTable :data="peers" :columns="peerColumns" :cypher-query="cypherQueries.peers" :slot-length="1">
+                <GenericPieChart v-if="peers.length > 0" :chart-data="peers" :chart-layout="{ title: 'Country' }" />
+              </GenericTable>
+            </q-card-section>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item :label="$t('iyp.as.ipPrefix.title')" caption="IP Prefix" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
-            <GenericTable :data="ipPrefixes" :columns="ipPrefixColumns" :cypher-query="cypherQueries.ipPrefixes" />
+            <GenericTable :data="ipPrefixes" :columns="ipPrefixColumns" :cypher-query="cypherQueries.ipPrefixes" :slot-length="2">
+              <GenericPieChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Country' }" />
+              <GenericBarChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Tags' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item :label="$t('iyp.as.ixp.title')" caption="Internet Exchange Points" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
-            <GenericTable :data="ixps" :columns="ixpsColumns" :cypher-query="cypherQueries.ixps" />
+            <GenericTable :data="ixps" :columns="ixpsColumns" :cypher-query="cypherQueries.ixps" :slot-length="2">
+              <GenericPieChart v-if="ixps.length > 0" :chart-data="ixps" :chart-layout="{ title: 'Country' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
@@ -49,6 +58,13 @@
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable :data="popularDomains" :columns="popularDomainsColumns" :cypher-query="cypherQueries.popularDomains" />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item :label="$t('iyp.as.facilities.title')" caption="Facilities" header-class="IHR_charts-title">
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable :data="facilities" :columns="facilitiesColumns" :cypher-query="cypherQueries.facilities" />
           </q-card>
         </q-expansion-item>
 
@@ -73,6 +89,8 @@
 import { QChip } from 'quasar'
 import Overview from '@/views/charts/iyp/ASOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
+import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
+import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
 
 const references = {
   bgp: 'https://bgp.he.net',
@@ -87,37 +105,51 @@ export default {
     Overview,
     GenericTable,
     QChip,
+    GenericPieChart,
+    GenericBarChart,
   },
   data() {
     return {
       asn: null,
+      peeringdbId: null,
       pageTitle: 'ASN - AS Name',
       activeTab: 'data',
       tableVisible: true,
       statsDisable: false,
       peerColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}` },
-        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       ipPrefixColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
-        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}` },
-        { name: 'AF', label: 'IP version', align: 'left', field: row => row.af, format: val => `${val}` },
-        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+        { name: 'AF', label: 'IP version', align: 'left', field: row => row.af, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
       ixpsColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}` },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'IXP', label: 'IXP Name', align: 'left', field: row => row.name, format: val => `${val}` },
       ],
       rankingsColumns: [
-        { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}` },
-        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}` },
+        { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       popularDomainsColumns: [
-        { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}` },
-        { name: 'Domain Name', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}` },
-        { name: 'Ranking Name', label: 'Ranking Name', align: 'left', field: row => row.rankingName, format: val => `${val}` },
+        { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
+        { name: 'Domain Name', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
+        {
+          name: 'Ranking Name',
+          label: 'Ranking Name',
+          align: 'left',
+          field: row => row.rankingName,
+          format: val => `${val}`,
+          sortable: true,
+        },
+      ],
+      facilitiesColumns: [
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       ipPrefixes: [],
       peers: [],
@@ -125,6 +157,7 @@ export default {
       tags: [],
       rankings: [],
       popularDomains: [],
+      facilities: [],
       cypherQueries: {},
       show: {
         overview: true,
@@ -232,8 +265,18 @@ export default {
     // },
 
     async getData() {
-      const queries = [this.getPeers(), this.getIpPrefix(), this.getIxps(), this.getTags(), this.getRankings(), this.getPopularDomains()]
+      const queries = [
+        this.getPeers(),
+        this.getIpPrefix(),
+        this.getIxps(),
+        this.getTags(),
+        this.getRankings(),
+        this.getPopularDomains(),
+        this.getFacilities(),
+      ]
       let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
+
+      console.log(res)
 
       this.peers = res.peers
       this.ipPrefixes = res.ipPrefixes
@@ -241,6 +284,7 @@ export default {
       this.tags = res.tags
       this.rankings = res.rankings
       this.popularDomains = res.popularDomains
+      this.facilities = res.facilities
 
       let queriesObj = {}
       queries.forEach(query => {
@@ -267,7 +311,7 @@ export default {
     },
     getIpPrefix() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[r:DEPENDS_ON]-(p:Prefix)-[:COUNTRY]-(c:Country) MATCH (p)-[:CATEGORIZED]-(t:Tag) WITH c, p, collect(DISTINCT(t.label)) AS tags RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, tags LIMIT 100'
+        'MATCH (a:AS {asn: $asn})-[r:DEPENDS_ON]-(p:Prefix)-[:COUNTRY]-(c:Country) MATCH (p)-[:CATEGORIZED]-(t:Tag) WITH c, p, collect(DISTINCT(t.label)) AS tags RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, tags'
       const mapping = {
         cc: 'cc',
         af: ['af', 'low'],
@@ -311,8 +355,20 @@ export default {
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
     },
+    getFacilities() {
+      const query =
+        'MATCH (n:AS {asn: $asn})-[:LOCATED_IN]->(f:Facility)<-[:LOCATED_IN]-(p:AS) MATCH (n)-[:PEERS_WITH]->(p) RETURN p.asn as asn, collect(DISTINCT f.name) as name'
+      const mapping = {
+        asn: 'asn',
+        name: 'name',
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'facilities' }
+    },
     setPageTitle(title) {
       this.pageTitle = `AS${this.asn} - ${title}`
+    },
+    setPeeringdbId(id) {
+      this.peeringdbId = id
     },
     handleReference(e) {
       console.log('Redirect')
@@ -324,7 +380,7 @@ export default {
       } else if (reference === 'Bgp.Tools') {
         externalLink = `${references.bgpTools}/${this.asn}`
       } else if (reference === 'PeeringDB') {
-        externalLink = `${references.peeringDB}/${this.asn}`
+        externalLink = `${references.peeringDB}/${this.peeringdbId}`
       } else if (reference === 'Cloudflare Radar') {
         externalLink = `${references.cloudflareRadar}/as${this.asn}`
       } else if (reference === 'RIPEstat') {
@@ -335,6 +391,9 @@ export default {
       }
       console.log(externalLink)
       window.open(externalLink, '_blank')
+    },
+    getSlotLength() {
+      return this.$children.filter(child => child.$options.name === 'PieChart' || child.$options.name === 'BarChart').length
     },
   },
   watch: {

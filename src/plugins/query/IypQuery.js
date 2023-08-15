@@ -35,7 +35,7 @@ class CountryOverviewQuery {
     constructor(country_code, ref) {
         this.country_code = country_code
         this.ref = ref
-        this.filter = ['as_count', 'prefixes_count', 'ixps_count']
+        this.filter = ['as_count', 'prefixes_count', 'ixps_count', 'country']
         this.queries = {}
         this.generateQuery()
     }
@@ -51,6 +51,9 @@ class CountryOverviewQuery {
             } else if(item == 'prefixes_count') {
                 let countryPrefixesQuery = 'MATCH (a:Country {country_code: $cc})-[r]-(b:Prefix) RETURN  COUNT(b) as prefixes_count'
                 this.queries.countryPrefixesQuery = countryPrefixesQuery
+            } else if(item == 'country') {
+                let countryQuery= 'MATCH (c:Country {country_code: $cc}) RETURN c.name as country'
+                this.queries.countryQuery = countryQuery
             }
         })
     }

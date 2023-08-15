@@ -286,6 +286,9 @@
       },
       "tags": {
         "title": "Tags"
+      },
+      "facilities": {
+        "title": "Facilities"
       }
     },
     "country": {
