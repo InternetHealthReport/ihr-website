@@ -73,8 +73,9 @@
           </q-item-section>
         </div>
       </template>
-      <aggregated-alarms :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
-        :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony" :networkDelayLoading="loading.networkDelay"/>
+      <aggregated-alarms-controller :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
+        :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony"
+        :networkDelayLoading="loading.networkDelay" />
     </q-expansion-item>
     <div v-show="!this.nbAlarms['hegemony']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
@@ -353,7 +354,7 @@ import reportMixin from '@/views/mixin/reportMixin'
 import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from './charts/global/DiscoChart'
 import NetworkDelayAlarmsChart from './charts/global/NetworkDelayAlarmsChart'
 import HegemonyAlarmsChart from './charts/global/HegemonyAlarmsChart'
-import AggregatedAlarms from './charts/global/AggregatedAlarms'
+import AggregatedAlarmsController from './charts/global/AggregatedAlarmsController'
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -399,7 +400,7 @@ export default {
     NetworkDelayAlarmsChart,
     HegemonyAlarmsChart,
     DiscoChart,
-    AggregatedAlarms,
+    AggregatedAlarmsController,
     DelayChart,
     DateTimePicker,
   },
@@ -551,9 +552,7 @@ export default {
       return this.$t('globalReport.title.global')
     },
     aggregatedAlarmsKey() {
-      if (!this.loading.hegemony && !this.loading.networkDelay) {
-        return `${JSON.stringify(this.loading.hegemony)}-${JSON.stringify(this.loading.networkDelay)}`
-      }
+      return `${JSON.stringify(this.loading.hegemony)}-${JSON.stringify(this.loading.networkDelay)}`
     },
   },
   watch: {

@@ -1,3 +1,5 @@
+import getCountryName from "./countryName"
+
 var countryISOMapping = {
   AF: 'AFG',
   AX: 'ALA',
@@ -250,12 +252,18 @@ var countryISOMapping = {
   SX: 'SXM'
 }
 
-export function getCountryISOCode3(countryCode) {
-  return countryISOMapping[countryCode]
+export function getCountryISOCode3(countryIsoCode2) {
+  return countryISOMapping[countryIsoCode2]
 };
 
 export function getCountryISO2FromISO3(countryIsoCode3) {
   return Object.keys(countryISOMapping).find(
     key => countryISOMapping[key] === countryIsoCode3
   )
+}
+
+export function getCountryNameFromIsoCode3(countryIsoCode3) {
+  const countryIsoCode2 = getCountryISO2FromISO3(countryIsoCode3)
+  const countryName = getCountryName(countryIsoCode2)
+  return countryName
 }
