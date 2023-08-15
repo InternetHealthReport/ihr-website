@@ -210,7 +210,6 @@ function filterOutagesAlarms(outagesAlarms) {
 And that's it! You've successfully added the "outages" Internet Alarms Data Source and integrated it with Aggregated Alarms Data Visualization.
 ![Outages Demo Data Source Integration](../../../assets/documentation/outages-demo-data-source-integration.png)
 
-
 # How to add Internet Alarm Type and Integrate with Aggregated Alarms Data Visualizations
 This guide will walk you through the process of creating a fake ihr alarm type named "ihr_outages" and integrating it with Aggregated Alarms Data Visualization.
 
