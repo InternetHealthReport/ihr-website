@@ -1,7 +1,29 @@
 import { formatUTCTime } from '@/plugins/AggregatedAlarmsUtils'
 import axios from 'axios'
 
-export function getGripAlarms(startTime, endTime, timezone='', minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all') {
+export function getGripAlarms(gripAlarmsState, startTime, endTime) {
+    const request = () => {
+        return new Promise((resolve, reject) => {
+            if (gripAlarmsState.data) {
+                return resolve(gripAlarmsState.data)
+            }
+            if (!gripAlarmsState.data && !gripAlarmsState.downloading) {
+                gripAlarmsState.downloading = true
+                getGripAlarmsHelper(startTime, endTime).then((gripAlarms) => {
+                    gripAlarmsState.downloading = false
+                    gripAlarmsState.data = gripAlarms
+                    return resolve(gripAlarmsState.data)
+                })
+                    .catch(error => {
+                        return reject(error)
+                    })
+            }
+        })
+    }
+    return request()
+}
+
+function getGripAlarmsHelper(startTime, endTime, timezone='', minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all') {
     const API_URL = 'https://api.grip.inetintel.cc.gatech.edu/json/events';
 
     const chunkSize = 100;
