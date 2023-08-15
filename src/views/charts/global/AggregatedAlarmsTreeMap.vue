@@ -1,13 +1,16 @@
 <template>
     <div class="IHR_chart">
-        <aggregated-alarms-tree-map-reactive :chart="chart" :loading="loading" />
-
-        <!-- <div ref="plotlyChart"></div> -->
+        <aggregated-alarms-tree-map-reactive :chart="chart" :loading="loadingVal" />
     </div>
 </template>
   
 <script>
-import AggregatedAlarmsTreeMapReactive from './AggregatedAlarmsTreeMapReactive.vue';
+
+import { truncateString } from '@/plugins/AggregatedAlarmsUtils.js'
+import { getCountryISO2FromISO3 } from '@/plugins/countryISOCode3.js'
+import getCountryName from '@/plugins/countryName.js'
+import AggregatedAlarmsTreeMapReactive from './AggregatedAlarmsTreeMapReactive.vue'
+
 export default {
     components: {
         AggregatedAlarmsTreeMapReactive
@@ -15,22 +18,15 @@ export default {
     props: {
         aggregatedAlarms: {
             type: Array,
-            required: false,
-            default: () => []
+            required: true,
         },
-        loading: {
+        loadingVal: {
             type: Boolean,
             required: true,
         },
         alarmTypesFilter: {
             type: Object,
-            required: false,
-            default: () => {
-                return {
-                    hegemony: true,
-                    network_delay: true,
-                }
-            }
+            required: true,
         },
         countryClicked: {
             type: String,
@@ -40,7 +36,7 @@ export default {
     data() {
         const chartLayout = {
             margin: { t: 70, b: 0, l: 0, r: 0 },
-            title: 'Alarm Counts by Country, Alarm Type, and Severity',
+            title: 'Alarm Counts by Country, ASN, Alarm Type, and Severity',
         };
 
         return {
@@ -52,18 +48,14 @@ export default {
             },
         }
     },
-    mounted() {
-        if (this.aggregatedAlarms.length) {
-            let granularity = 'Country';
-            if (this.countryClicked) {
-                granularity = 'ASNName';
-                let filteredData = this.aggregatedAlarms.filter(item => item.country_iso_code3 === this.countryClicked && item.asn_name)
-                this.data = this.aggregatedAlarmsTreeMapView(filteredData, this.selectedAlarmTypes, granularity)
-            } else {
-                this.data = this.aggregatedAlarmsTreeMapView(this.aggregatedAlarms, this.selectedAlarmTypes, granularity)
-            }
-            this.initTreeMap(granularity);
-        }
+    watch: {
+        countryClicked: {
+            handler: function (newCountryClicked) {
+                this.countryClickedHandler(newCountryClicked)
+
+            },
+            immediate: true
+        },
     },
 
     computed: {
@@ -78,6 +70,110 @@ export default {
         }
     },
     methods: {
+        countryClickedHandler(newCountryClicked) {
+            let granularity = 'Country'
+            let chartTitle;
+            if (!this.loadingVal) {
+                if (newCountryClicked) {
+                    granularity = 'ASNName';
+                    const filteredData = this.filterAlarmsByCountryAndASNName(this.aggregatedAlarms);
+                    this.data = this.aggregatedAlarmsTreeMapView(filteredData, this.selectedAlarmTypes, granularity)
+                    const countryISO2 = getCountryISO2FromISO3(newCountryClicked)
+                    const countryName = getCountryName(countryISO2)
+                    chartTitle = `Alarm Counts by ASN, Alarm Type, and Severity for ${countryName}`
+                } else {
+                    this.data = this.aggregatedAlarmsTreeMapView(this.aggregatedAlarms, this.selectedAlarmTypes, granularity)
+                    chartTitle = 'Alarm Counts by Country, ASN, Alarm Type, and Severity'
+                }
+                this.$set(this.chart.layout, 'title', chartTitle);
+                this.initTreeMap(granularity);
+            }
+        },
+        initTreeMap(granularity) {
+            const { data } = this;
+
+            const granularityValues = this.getUniqueValues(data, granularity);
+            const alarmTypes = this.getUniqueValues(data, 'AlarmType');
+            const severities = this.getUniqueValues(data, 'Severity');
+
+            const trace = this.createBaseTrace()
+
+            this.addGranularityData(trace, data, granularity, granularityValues);
+
+            this.addAlarmTypeData(trace, data, granularity, granularityValues, alarmTypes);
+
+            this.addSeverityData(trace, data, granularity, granularityValues, alarmTypes, severities);
+            this.chart.traces = [trace];
+        },
+
+        createBaseTrace() {
+            return {
+                type: 'treemap',
+                ids: [],
+                labels: [],
+                parents: [],
+                values: [],
+                text: [],
+                hoverinfo: 'label+text+value',
+            }
+        },
+
+        filterAlarmsByCountryAndASNName(alarms) {
+            return alarms.filter(item => item.country_iso_code3 === this.countryClicked && item.asn_name)
+        },
+
+        getUniqueValues(data, property) {
+            return [...new Set(data.map(item => item[property]))];
+        },
+
+        addGranularityData(trace, data, granularity, granularityValues) {
+            for (const granularityValue of granularityValues) {
+                trace.ids.push(granularityValue);
+                trace.labels.push(truncateString(granularityValue, 15));
+                trace.parents.push('');
+                const granularityCount = data
+                    .filter(item => item[granularity] === granularityValue)
+                    .reduce((sum, item) => sum + item.Count, 0);
+                trace.values.push(0);
+                trace.text.push(
+                    (granularity === 'ASNName' ? 'asn_name' : 'country_name') + ': ' + granularityValue + '<br>' +
+                    'total_alarm_counts: ' + granularityCount
+                );
+            }
+        },
+
+        addAlarmTypeData(trace, data, granularity, granularityValues, alarmTypes) {
+            for (const granularityValue of granularityValues) {
+                for (const alarmType of alarmTypes) {
+                    trace.ids.push(`${granularityValue}-${alarmType}`);
+                    trace.labels.push(alarmType);
+                    trace.parents.push(granularityValue);
+                    const alarmTypeCount = data
+                        .filter(item => item[granularity] === granularityValue && item.AlarmType === alarmType)
+                        .reduce((sum, item) => sum + item.Count, 0);
+                    trace.values.push(0);
+                    trace.text.push(alarmType + '_alarm_counts: ' + alarmTypeCount);
+                }
+            }
+        },
+
+        addSeverityData(trace, data, granularity, granularityValues, alarmTypes, severities) {
+            for (const granularityValue of granularityValues) {
+                for (const alarmType of alarmTypes) {
+                    for (const severity of severities) {
+                        const item = data.find(item => item[granularity] === granularityValue && item.AlarmType === alarmType && item.Severity === severity);
+                        if (item) {
+                            trace.ids.push(`${granularityValue}-${alarmType}-${severity}`);
+                            trace.labels.push(severity);
+                            trace.parents.push(`${granularityValue}-${alarmType}`);
+                            trace.values.push(item.Count);
+                            trace.text.push('');
+                        }
+                    }
+                }
+            }
+        },
+
         aggregatedAlarmsTreeMapView(data, alarmTypes, granularity = 'Country') {
             const aggregatedData = []
             for (const alarmType of alarmTypes) {
@@ -104,78 +200,6 @@ export default {
                 }
             }
             return aggregatedData;
-        },
-
-        initTreeMap(granularity = 'Country') {
-            const { data } = this;
-            const granularityValues = [...new Set(data.map(item => item[granularity]))];
-            const alarmTypes = [...new Set(data.map(item => item.AlarmType))];
-            const severities = [...new Set(data.map(item => item.Severity))];
-
-            const trace = {
-                type: 'treemap',
-                ids: [], // To create unique IDs for each node
-                labels: [], // To store labels (alarmTypes and countries)
-                parents: [], // To store parent references for each node
-                values: [], // To store count values for each leaf node
-                text: [], // To store tooltip text (alarm types)
-                hoverinfo: 'label+text+value',
-            };
-
-            // Add root nodes (countries)
-            for (const granularityValue of granularityValues) {
-                trace.ids.push(granularityValue);
-                trace.labels.push(this.truncateString(granularityValue, 15));
-                trace.parents.push('');
-                const granularityCount = data
-                    .filter(item => item[granularity] === granularityValue)
-                    .reduce((sum, item) => sum + item.Count, 0);
-                trace.values.push(0);
-                trace.text.push(
-                    (granularity === 'ASNName' ? 'asn_name' : 'country_name') + ': ' + granularityValue + '<br>' +
-                    'total_alarm_counts: ' + granularityCount 
-                    );
-            }
-
-            // Add alarmType nodes as children of country nodes
-            for (const granularityValue of granularityValues) {
-                for (const alarmType of alarmTypes) {
-                    trace.ids.push(`${granularityValue}-${alarmType}`);
-                    trace.labels.push(alarmType);
-                    trace.parents.push(granularityValue);
-                    const alarmTypeCount = data
-                        .filter(item => item[granularity] === granularityValue && item.AlarmType === alarmType)
-                        .reduce((sum, item) => sum + item.Count, 0);
-                    trace.values.push(0);
-                    trace.text.push(alarmType + '_alarm_counts: ' + alarmTypeCount);
-                }
-            }
-
-            // Add severity nodes as children of alarmType nodes
-            for (const granularityValue of granularityValues) {
-                for (const alarmType of alarmTypes) {
-                    for (const severity of severities) {
-                        const item = data.find(item => item[granularity] === granularityValue && item.AlarmType === alarmType && item.Severity === severity);
-                        if (item) {
-                            trace.ids.push(`${granularityValue}-${alarmType}-${severity}`);
-                            trace.labels.push(severity);
-                            trace.parents.push(`${granularityValue}-${alarmType}`);
-                            trace.values.push(item.Count);
-                            trace.text.push('');
-                        }
-                    }
-                }
-            }
-            this.chart.traces.push(trace);
-        },
-
-
-        truncateString(str, maxLength) {
-            if (str.length <= maxLength) {
-                return str;
-            } else {
-                return str.slice(0, maxLength) + '...';
-            }
         },
     },
 }

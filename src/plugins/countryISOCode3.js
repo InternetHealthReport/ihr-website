@@ -250,8 +250,12 @@ var countryISOMapping = {
   SX: 'SXM'
 }
 
-export default function getCountryISO3(countryCode) {
+export function getCountryISOCode3(countryCode) {
   return countryISOMapping[countryCode]
-}
+};
 
-export { getCountryISO3, countryISOMapping }
+export function getCountryISO2FromISO3(countryIsoCode3) {
+  return Object.keys(countryISOMapping).find(
+    key => countryISOMapping[key] === countryIsoCode3
+  )
+}

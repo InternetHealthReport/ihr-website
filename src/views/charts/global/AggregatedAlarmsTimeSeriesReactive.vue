@@ -20,8 +20,7 @@ export default {
         },
         aggregatedAlarms: {
             type: Array,
-            required: false,
-            default: () => [],
+            required: true,
         }
     },
     computed: {

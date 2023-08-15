@@ -73,47 +73,8 @@
           </q-item-section>
         </div>
       </template>
-
-      <q-card>
-        <q-card-section>
-          <aggregated-alarm-filters-overview :start-time="startTime" :end-time="endTime" :alarms="aggregatedAlarms"
-            @filter-alarms-by-time="dateTimeFilter = $event" @reset-time="resetTimeFlag = !resetTimeFlag"
-            @reset-granularity="resetGranularityFlag = !resetGranularityFlag"
-            @filter-alarms-by-alarm-types="alarmTypesFilter = $event"
-            @filter-alarms-by-data-sources="alarmDataSourcesFilter = $event" />
-        </q-card-section>
-      </q-card>
-      <q-card class="IHR_charts-body">
-        <q-card-section>
-          <aggregated-alarms-world-map :start-time="startTime" :end-time="endTime" :fetch="fetch"
-            :loading="loading.aggregatedAlarms" :hegemonyAlarms="hegemonyAlarms" :networkDelayAlarms="networkDelayAlarms"
-            :key="aggregatedAlarmsWorldMapKey" ::min-deviation="minDeviationNetworkDelay"
-            @loading="loading.aggregatedAlarms = $event" :dateTimeFilter="dateTimeFilter" :resetTimeFlag="resetTimeFlag"
-            :alarmTypesFilter="alarmTypesFilter" :alarmDataSourcesFilter="alarmDataSourcesFilter"
-            @aggregated-alarms-data-loaded="aggregatedAlarms = $event" @country-click="countryClicked = $event"
-            ref="aggregatedAlarmsWorldMap" />
-        </q-card-section>
-      </q-card>
-      <div class="card-container">
-        <div class="card-wrapper">
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <aggregated-alarms-time-series :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTimeSeriesKey"
-                :loading="loading.aggregatedAlarms" :countryClicked="countryClicked"
-                :resetGranularityFlag="resetGranularityFlag" @time-series-reset="countryClicked = ''" @loading="loading.aggregatedAlarms = $event"
-                :alarmTypesFilter="alarmTypesFilter" ref="aggregatedAlarmsTimeSeries" />
-            </q-card-section>
-          </q-card>
-        </div>
-        <div class="card-wrapper">
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <aggregated-alarms-tree-map :aggregatedAlarms="aggregatedAlarms" :key="aggregatedAlarmsTreeMapKey"
-                :loading="loading.aggregatedAlarms" :alarmTypesFilter="alarmTypesFilter" :countryClicked="countryClicked"/>
-            </q-card-section>
-          </q-card>
-        </div>
-      </div>
+      <aggregated-alarms :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
+        :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony" :networkDelayLoading="loading.networkDelay"/>
     </q-expansion-item>
     <div v-show="!this.nbAlarms['hegemony']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
@@ -392,10 +353,7 @@ import reportMixin from '@/views/mixin/reportMixin'
 import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from './charts/global/DiscoChart'
 import NetworkDelayAlarmsChart from './charts/global/NetworkDelayAlarmsChart'
 import HegemonyAlarmsChart from './charts/global/HegemonyAlarmsChart'
-import AggregatedAlarmFiltersOverview from './charts/global/AggregatedAlarmFiltersOverview.vue'
-import AggregatedAlarmsWorldMap from './charts/global/AggregatedAlarmsWorldMap'
-import AggregatedAlarmsTimeSeries from './charts/global/AggregatedAlarmsTimeSeries'
-import AggregatedAlarmsTreeMap from './charts/global/AggregatedAlarmsTreeMap.vue'
+import AggregatedAlarms from './charts/global/AggregatedAlarms'
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -441,10 +399,7 @@ export default {
     NetworkDelayAlarmsChart,
     HegemonyAlarmsChart,
     DiscoChart,
-    AggregatedAlarmFiltersOverview,
-    AggregatedAlarmsWorldMap,
-    AggregatedAlarmsTimeSeries,
-    AggregatedAlarmsTreeMap,
+    AggregatedAlarms,
     DelayChart,
     DateTimePicker,
   },
@@ -494,17 +449,9 @@ export default {
         networkDelay: true,
         linkDelay: true,
         disco: true,
-        aggregatedAlarms: true,
       },
       hegemonyAlarms: [],
       networkDelayAlarms: [],
-      aggregatedAlarms: [],
-      countryClicked: null,
-      dateTimeFilter: null,
-      resetTimeFlag: false,
-      resetGranularityFlag: false,
-      alarmTypesFilter: {},
-      alarmDataSourcesFilter: {}
     }
   },
   mounted() {
@@ -603,15 +550,11 @@ export default {
       }
       return this.$t('globalReport.title.global')
     },
-    aggregatedAlarmsWorldMapKey() {
-      return `${JSON.stringify(this.hegemonyAlarms)}-${JSON.stringify(this.networkDelayAlarms)}`
+    aggregatedAlarmsKey() {
+      if (!this.loading.hegemony && !this.loading.networkDelay) {
+        return `${JSON.stringify(this.loading.hegemony)}-${JSON.stringify(this.loading.networkDelay)}`
+      }
     },
-    aggregatedAlarmsTimeSeriesKey() {
-      return `${JSON.stringify(this.aggregatedAlarms)}-${JSON.stringify(this.countryClicked)}`
-    },
-    aggregatedAlarmsTreeMapKey() {
-      return `${JSON.stringify(this.aggregatedAlarms)}-${JSON.stringify(this.countryClicked)}`
-    }
   },
   watch: {
     filterLevel(newValue, oldValue) {

@@ -81,6 +81,8 @@
 </template>
 
 <script>
+import { formatTime } from '@/plugins/AggregatedAlarmsUtils.js'
+
 export default {
     props: {
         alarms: {
@@ -113,10 +115,10 @@ export default {
             ],
             selectedAlarmTypes: {},
             selectedDataSources: {},
-            startDateTime: this.formatTime(this.startTime),
-            endDateTime: this.formatTime(this.endTime),
-            minStartDateTime: this.formatTime(this.startTime),
-            maxEndDateTime: this.formatTime(this.endTime),
+            startDateTime: formatTime(this.startTime),
+            endDateTime: formatTime(this.endTime),
+            minStartDateTime: formatTime(this.startTime),
+            maxEndDateTime: formatTime(this.endTime),
         }
     },
     created() {
@@ -184,16 +186,6 @@ export default {
             });
         },
 
-        formatTime(date) {
-            const year = date.getUTCFullYear();
-            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(date.getUTCDate()).padStart(2, '0');
-            const hours = String(date.getUTCHours()).padStart(2, '0');
-            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
-            return formattedDate;
-        },
-
         filterAlarmsByTime() {
             if (this.alarms && this.alarms.length && this.startDateTime && this.endDateTime) {
                 let startDateTime = new Date(this.startDateTime);
@@ -212,6 +204,8 @@ export default {
         },
 
         resetTime() {
+            this.startDateTime = formatTime(this.startTime);
+            this.endDateTime = formatTime(this.endTime);
             this.$emit('reset-time');
         },
 

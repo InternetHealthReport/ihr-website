@@ -254,4 +254,4 @@ export default function getCountryName(countryCode) {
   return isoCountries[countryCode]
 }
 
-export { getCountryName, isoCountries }
+export { isoCountries, getCountryName }
