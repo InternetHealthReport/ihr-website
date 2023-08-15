@@ -2,8 +2,8 @@
     <div>
         <q-card class="IHR_charts-body">
             <q-card-section>
-                <aggregated-alarm-filters :start-time="startTime" :end-time="endTime" :alarmsInfo="alarmsInfo"
-                    :loadingVal="loadingVal" @filter-alarms-by-time="filterAlarmsByTimeHandler"
+                <aggregated-alarm-filters :start-time="timeFiltersCurrent.startTime" :end-time="timeFiltersCurrent.endTime"
+                    :alarmsInfo="alarmsInfo" :loadingVal="loadingVal" @filter-alarms-by-time="filterAlarmsByTimeHandler"
                     @reset-time="resetTimeFlagHandler" @reset-granularity="resetGranularityFlagHandler"
                     @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler" />
             </q-card-section>
@@ -20,7 +20,8 @@
             <div class="card-wrapper">
                 <q-card class="IHR_charts-body">
                     <q-card-section>
-                        <time-series-aggregated-alarms :loadingVal="loadingVal" ref="timeSeriesAggregatedAlarms" />
+                        <time-series-aggregated-alarms :loadingVal="loadingVal"
+                            @filter-alarms-by-time="filterAlarmsByPlotlyTimeHandler" ref="timeSeriesAggregatedAlarms" />
                     </q-card-section>
                 </q-card>
             </div>
@@ -150,6 +151,8 @@ export default {
             alarmsTimeFiltered: null,
             aggregatedAlarmsLoadingVal: false,
             alarmTypesFilter: {},
+            startDateTimePlotly: null,
+            endDateTimePlotly: null,
             dateTimeFilter: {
                 startDateTime: null,
                 endDateTime: null
@@ -191,6 +194,12 @@ export default {
     },
 
     computed: {
+        timeFiltersCurrent() {
+            const startTime = this.startDateTimePlotly ? new Date(this.startDateTimePlotly) : this.startTime
+            const endTime = this.endDateTimePlotly ? new Date(this.endDateTimePlotly) : this.endTime
+            const dateTimeFilter = { startTime, endTime }
+            return dateTimeFilter
+        },
         loadingVal() {
             return this.hegemonyLoading || this.networkDelayLoading || this.aggregatedAlarmsLoadingVal
         },
@@ -232,20 +241,6 @@ export default {
     },
 
     watch: {
-        alarmTypesFilter: {
-            handler: function (newAlarmTypes) {
-                const anyNewAlarmTypesSelected = Object.values(newAlarmTypes).includes(true)
-                const aggregatedAttrsSelectedFlattened = flattenDictionary(this.aggregatedAttrsSelected)
-                const isThereAnyCachedAlarms = this.getCachedAlarmsIfExist(this.alarmsCurrent, aggregatedAttrsSelectedFlattened)
-                if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarms) {
-                    this.etlAggregatedAlarmsDataModel(aggregatedAttrsSelectedFlattened)
-                }
-                if (!this.loadingVal || !anyNewAlarmTypesSelected || !this.alarmsCurrent.length) {
-                    this.clearDataVizHandler()
-                }
-            },
-            deep: true
-        },
         alarms: {
             handler: function (newAlarms) {
                 const anyAlarmTypesSelected = Object.values(this.alarmTypesFilter).includes(true)
@@ -255,6 +250,20 @@ export default {
                     this.$refs.worldMapAggregatedAlarms.etl(newAlarms, countAggregatedAttrsSelected)
                     this.$refs.timeSeriesAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, null)
                     this.$refs.treeMapAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, null)
+                }
+            },
+            deep: true
+        },
+        alarmTypesFilter: {
+            handler: function (newAlarmTypesFilter) {
+                const anyNewAlarmTypesSelected = Object.values(newAlarmTypesFilter).includes(true)
+                const aggregatedAttrsSelectedFlattened = flattenDictionary(this.aggregatedAttrsSelected)
+                const isThereAnyCachedAlarms = this.getCachedAlarmsIfExist(this.alarmsCurrent, aggregatedAttrsSelectedFlattened)
+                if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarms) {
+                    this.etlAggregatedAlarmsDataModel(aggregatedAttrsSelectedFlattened)
+                }
+                if (!this.loadingVal || !anyNewAlarmTypesSelected || !this.alarmsCurrent.length) {
+                    this.clearDataVizHandler()
                 }
             },
             deep: true
@@ -299,8 +308,8 @@ export default {
                 this.hegemonyAlarms,
                 this.networkDelayAlarms,
                 this.thirdPartyAlarmsStates,
-                this.startTime,
-                this.endTime,
+                this.timeFiltersCurrent.startTime,
+                this.timeFiltersCurrent.endTime,
             ).then((alarms) => {
                 this.alarms = alarms
                 this.aggregatedAlarmsLoadingVal = false
@@ -310,7 +319,7 @@ export default {
         },
 
         countryClickedHandler(newCountryIsoCode3Clicked) {
-            if (this.alarmsCurrent.length) {
+            if (this.alarmsCurrent.length && newCountryIsoCode3Clicked) {
                 const countryName = newCountryIsoCode3Clicked ? getCountryNameFromIsoCode3(newCountryIsoCode3Clicked) : null
                 const aggregatedAttrsZipped = zipAggregatedAttrs(this.aggregatedAttrsSelected)
                 this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName)
@@ -329,13 +338,26 @@ export default {
             }
         },
 
+        filterAlarmsByPlotlyTimeHandler(newDateTimeFilter) {
+            if (this.alarmsCurrent.length) {
+                const { startDateTime, endDateTime } = newDateTimeFilter
+                if (startDateTime && endDateTime) {
+                    this.startDateTimePlotly = startDateTime
+                    this.endDateTimePlotly = endDateTime
+                    const aggregatedAttrsZipped = zipAggregatedAttrs(this.aggregatedAttrsSelected)
+                    const alarmsTimeFiltered = AggregatedAlarmsDataModel.filterAlarmsByTime(this.alarmsCurrent, startDateTime, endDateTime, aggregatedAttrsZipped)
+                    this.alarmsTimeFiltered = alarmsTimeFiltered
+                }
+            }
+        },
+
         resetTimeFlagHandler() {
-            this.alarmsTimeFiltered = null
+            this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly = null;
             const alarmCountsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
             const aggregatedAttrsZipped = zipAggregatedAttrs(this.aggregatedAttrsSelected)
-            this.$refs.worldMapAggregatedAlarms.etl(this.alarmsCurrent, alarmCountsSelected)
-            this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null)
-            this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null)
+            this.$refs.worldMapAggregatedAlarms.etl(this.alarms, alarmCountsSelected)
+            this.$refs.timeSeriesAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, null)
+            this.$refs.treeMapAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, null)
         },
 
         resetGranularityFlagHandler() {

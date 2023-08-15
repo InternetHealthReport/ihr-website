@@ -529,7 +529,6 @@ function extractIodaAlarmsHelper(iodaAlarmsState, startTime, endTime) {
             if (!iodaAlarmsState.data && !iodaAlarmsState.downloading) {
                 iodaAlarmsState.downloading = true
                 getIodaAlarms(startTime, endTime).then((iodaAlarms) => {
-                    console.log('iodaAlarms', iodaAlarms)
                     iodaAlarmsState.downloading = false
                     iodaAlarmsState.data = iodaAlarms
                     return resolve(iodaAlarmsState.data)

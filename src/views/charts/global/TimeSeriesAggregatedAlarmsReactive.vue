@@ -1,6 +1,7 @@
 <template>
     <div class="IHR_disco-chart">
-        <reactive-chart :layout="chart.layout" :traces="chart.traces" :ref="chart.uuid" :no-data="noData" />
+        <reactive-chart :layout="chart.layout" :traces="chart.traces" :ref="chart.uuid" :no-data="noData"
+            @filter-alarms-by-time="filterAlarmsByTimeHandler" />
     </div>
 </template>
   
@@ -30,6 +31,11 @@ export default {
             }
         }
     },
+    methods: {
+        filterAlarmsByTimeHandler(newPlotlyDateTimeFilter) {
+            this.$emit('filter-alarms-by-time', newPlotlyDateTimeFilter)
+        }
+    }
 }
 </script>
   

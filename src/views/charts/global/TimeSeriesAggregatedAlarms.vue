@@ -1,6 +1,7 @@
 <template>
     <div class="IHR_chart">
-        <time-series-aggregated-alarms-reactive :chart="chart" :loading="loadingVal" />
+        <time-series-aggregated-alarms-reactive :chart="chart" :loading="loadingVal"
+            @filter-alarms-by-time="filterAlarmsByTimeHandler" />
     </div>
 </template>
     
@@ -11,6 +12,15 @@ import TimeSeriesAggregatedAlarmsReactive from './TimeSeriesAggregatedAlarmsReac
 export default {
     components: {
         TimeSeriesAggregatedAlarmsReactive,
+    },
+    emits: {
+        'filter-alarms-by-time': function (newDateTimeFilter) {
+            if (newDateTimeFilter) {
+                return true;
+            } else {
+                return false;
+            }
+        },
     },
     props: {
         loadingVal: {
@@ -42,11 +52,15 @@ export default {
         }
 
         return {
-            chart: chart,
+            chart: chart
         }
     },
-
     methods: {
+        filterAlarmsByTimeHandler(newPlotlyDateTimeFilter) {
+            newPlotlyDateTimeFilter.startDateTime += 'Z'
+            newPlotlyDateTimeFilter.endDateTime += 'Z'
+            this.$emit('filter-alarms-by-time', newPlotlyDateTimeFilter)
+        },
         etl(alarms, aggregatedAttrsZipped, countryName) {
             const timeSeriesTraces = TimeSeriesAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName)
             const areTimeSeriesTracesEmpty = !timeSeriesTraces.length
@@ -54,14 +68,22 @@ export default {
                 this.clearDataViz()
             } else {
                 const chartTitle = countryName ? `Aggregated Alarms by ASNs, and Time for ${countryName}` : 'Alarm Alarms by Countries, ASNs, and Time'
-                this.$set(this.chart, 'traces', timeSeriesTraces)
-                this.$set(this.chart.layout, 'title', chartTitle)
+                this.initTreeMap(timeSeriesTraces, chartTitle)
             }
         },
         clearDataViz() {
-            this.$set(this.chart, 'traces', [])
-            this.$set(this.chart.layout, 'title', 'Alarm Alarms by Countries, ASNs, and Time')
+            this.initTreeMap([], 'Alarm Alarms by Countries, ASNs, and Time')
         },
+        initTreeMap(traces, chartTitle) {
+            this.$set(this.chart, 'traces', traces)
+            this.$set(this.chart.layout, 'title', chartTitle)
+            this.zoomoutByDefault()
+        },
+        zoomoutByDefault() {
+            Object.assign(this.chart.layout.xaxis, { autorange: true })
+            Object.assign(this.chart.layout.yaxis, { autorange: true })
+        },
+
     },
 };
 </script>

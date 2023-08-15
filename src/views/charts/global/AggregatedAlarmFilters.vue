@@ -149,13 +149,14 @@ export default {
             },
             deep: true
         },
-        startDateTime: {
+        startTime: {
             handler: function () {
+                console.log('called here inside startTime Watcher')
                 this.dateTimeWatcher()
             },
             deep: true
         },
-        endDateTime: {
+        endTime: {
             handler: function () {
                 this.dateTimeWatcher()
             },
@@ -182,11 +183,11 @@ export default {
     methods: {
         dateTimeWatcher() {
             if (this.isStartTimeTheMax) {
-                this.startDateTime = formatUTCTime(this.startTime)
-                this.endDateTime = formatUTCTime(this.endTime)
                 const alertMessage = 'Start Date cannot be greater than End Date'
                 alert(alertMessage);
             }
+            this.startDateTime = formatUTCTime(this.startTime)
+            this.endDateTime = formatUTCTime(this.endTime)
         },
 
         filterAlarmsByTime(startDateTime, endDateTime) {
