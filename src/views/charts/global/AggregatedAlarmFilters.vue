@@ -1,12 +1,8 @@
 <template>
     <div class="container">
-        <aggregated-alarm-filters-helper :categoryTitle="alarmTypesCategoryTitle" :items="alarmTypes"
-            :selectedItems="selectedAlarmTypes" :loadingVal="loadingVal" />
-
-        <aggregated-alarm-filters-helper :categoryTitle="dataSourcesCategoryTitle" :items="dataSources"
-            :selectedItems="selectedDataSources" :loadingVal="loadingVal" />
-
-
+        <aggregated-alarms-custom-table :data-source-alarm-types="dataSourceAlarmTypes"
+            :selected-data-sources="selectedDataSources" :selected-alarm-types="selectedAlarmTypes"
+            :alarms-metadata="alarmsMetadata" :loadingVal="loadingVal"/>
         <div class="flex-container">
             <div class="datetime-filter">
                 <h3 class="filter__category-title">Date Time Filter:</h3>
@@ -48,10 +44,11 @@
 
 <script>
 import { titleCase, formatUTCTime, compareUtcStrings } from '@/plugins/AggregatedAlarmsUtils'
-import AggregatedAlarmFiltersHelper from './AggregatedAlarmFiltersHelper';
-
+import AggregatedAlarmsCustomTable from './AggregatedAlarmsCustomTable'
 export default {
-    components: { AggregatedAlarmFiltersHelper },
+    components: {
+        AggregatedAlarmsCustomTable
+    },
     props: {
         startTime: {
             type: Date,
@@ -61,7 +58,7 @@ export default {
             type: Date,
             required: true,
         },
-        alarmsInfo: {
+        alarmsMetadata: {
             type: Object,
             required: true,
         },
@@ -75,11 +72,42 @@ export default {
         }
     },
     computed: {
+        dataSourceAlarmTypes() {
+            const dataSources = this.alarmsMetadata.data_sources
+
+            const dataSourceAlarmTypes = {}
+            for (const dataSourceKey in dataSources) {
+                const dataSourceLabel = titleCase(dataSourceKey)
+                const dataSourceDescriptionTitled = titleCase(dataSources[dataSourceKey].description)
+                dataSourceAlarmTypes[dataSourceKey] = {
+                    alarm_types: {},
+                    value: {
+                        value: dataSourceKey,
+                        label: dataSourceLabel,
+                        content: { title: dataSourceLabel, description: dataSourceDescriptionTitled }
+                    }
+                }
+
+                const alarmTypesMetaData = dataSources[dataSourceKey].alarm_types
+                for (const alarmTypeKey in alarmTypesMetaData) {
+                    const alarmTypeLabel = titleCase(alarmTypeKey)
+                    const alarmTypeDescriptionTitled = titleCase(alarmTypesMetaData[alarmTypeKey].description)
+                    dataSourceAlarmTypes[dataSourceKey]['alarm_types'][alarmTypeKey] = {
+                        value: alarmTypeKey,
+                        label: alarmTypeLabel,
+                        content: { title: alarmTypeLabel, description: alarmTypeDescriptionTitled },
+                    }
+                }
+            }
+
+            return dataSourceAlarmTypes
+        },
         alarmTypes() {
-            const { data_sources: dataSources } = this.alarmsInfo.metadata
+            const dataSources = this.alarmsMetadata.data_sources
 
             const alarmTypes = []
             for (const dataSourceKey in dataSources) {
+
                 const alarmTypesMetaData = dataSources[dataSourceKey].alarm_types
 
                 for (const alarmTypeKey in alarmTypesMetaData) {
@@ -97,7 +125,8 @@ export default {
             return alarmTypes;
         },
         dataSources() {
-            const { data_sources: dataSources } = this.alarmsInfo.metadata
+            console.log('called in dataSources computed property')
+            const dataSources = this.alarmsMetadata.data_sources
 
             const dataSourcesResult = []
             for (const dataSourceKey in dataSources) {
@@ -126,7 +155,7 @@ export default {
     watch: {
         selectedAlarmTypes: {
             handler: function (newSelectedAlarmTypes) {
-                const { data_sources: dataSources } = this.alarmsInfo.metadata
+                const dataSources = this.alarmsMetadata.data_sources
                 for (const dataSource in dataSources) {
                     const alarmTypes = dataSources[dataSource].alarm_types
                     let dataSourceSelected = false
@@ -144,7 +173,7 @@ export default {
         },
         selectedDataSources: {
             handler: function (newSelectedDataSources) {
-                const { data_sources: dataSources } = this.alarmsInfo.metadata
+                const dataSources = this.alarmsMetadata.data_sources
 
                 for (const dataSource in dataSources) {
                     const alarmTypes = dataSources[dataSource].alarm_types
@@ -191,6 +220,7 @@ export default {
             dataSourcesCategoryTitle: "Data Sources:",
             selectedAlarmTypes: {},
             selectedDataSources: {},
+            maxAlarmTypesLength: 0,
             startDateTime: formatUTCTime(this.startTime),
             endDateTime: formatUTCTime(this.endTime),
             minStartDateTime: formatUTCTime(this.startTime),
@@ -234,9 +264,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
-    background-color: #f2f2f2;
     border-radius: 10px;
     padding: 2px 20px 20px 20px;
     color: #283237;
@@ -245,7 +274,6 @@ export default {
 .flex-container {
     display: flex;
 }
-
 
 .reset-granularity,
 .severity-filter {
@@ -293,85 +321,6 @@ button {
     font-size: 2rem;
 }
 
-.help {
-    margin: 3px;
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.help__button {
-    background: linear-gradient(2deg, #1a5dae, #598dcc, #1a5dae, #598dcc);
-    color: #fff;
-    font-weight: 700;
-    cursor: pointer;
-    text-align: center;
-    border: none;
-    background-size: 100% 300%;
-    transition: all .4s ease-in-out;
-    position: relative;
-    z-index: 10;
-    box-shadow: inset 0 0.2rem 0.1rem hsla(0, 0%, 100%, .2), inset 0 0 0 0.1rem rgba(0, 0, 0, .15), 0 0.1rem 0 hsla(0, 0%, 100%, .15);
-    border-radius: 3rem;
-    font-size: 0.7rem;
-    height: 0.8rem;
-    width: 0.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.help__text,
-.help__title {
-    padding: 0.2rem 0.5rem;
-}
-
-.help__title {
-    background-color: #f7f7f7;
-    text-align: left;
-    border-bottom: 0.1rem solid #ebebeb;
-    border-top-right-radius: 0.3rem;
-    border-top-left-radius: 0.3rem;
-}
-
-.help__modal {
-    position: absolute;
-    z-index: 9999;
-    background: #fff;
-    border-radius: 0.3rem;
-    box-shadow: 0 1px 2px #9f9d9d;
-    flex-direction: column;
-    width: 6rem;
-    font-size: 0.6rem;
-    color: #2c3e50;
-    border: 0.1rem solid #b3b3b3;
-    left: 3rem;
-    top: 0;
-}
-
-.help__modal-content {
-    position: relative;
-    z-index: 10002;
-}
-
-.tooltip {
-    position: absolute;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 9999;
-    font-size: 0.8rem;
-}
-
-.searchbar__heading-container {
-    display: inline-flex;
-    align-items: center;
-    margin: 3px 3px 3px 3px;
-}
-
-.searchbar__heading-container label {
-    margin-right: 10px;
-}
 
 label {
     display: inline-block;
