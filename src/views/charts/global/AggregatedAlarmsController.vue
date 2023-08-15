@@ -3,9 +3,11 @@
         <q-card class="IHR_charts-body">
             <q-card-section>
                 <aggregated-alarm-filters :start-time="timeFiltersCurrent.startTime" :end-time="timeFiltersCurrent.endTime"
-                    :alarmsInfo="alarmsInfo" :loadingVal="loadingVal" @filter-alarms-by-time="filterAlarmsByTimeHandler"
-                    @reset-time="resetTimeFlagHandler" @reset-granularity="resetGranularityFlagHandler"
-                    @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler" />
+                    :alarmsInfo="alarmsInfo" :loadingVal="loadingVal" :severities="severities"
+                    @filter-alarms-by-time="filterAlarmsByTimeHandler"
+                    @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler"
+                    @filter-alarms-by-severities="filterAlarmsBySeveritiesHandler" @reset-time="resetTimeFlagHandler"
+                    @reset-granularity="resetGranularityFlagHandler" />
             </q-card-section>
         </q-card>
 
@@ -46,11 +48,7 @@ import TimeSeriesAggregatedAlarms from './TimeSeriesAggregatedAlarms'
 import TreeMapAggregatedAlarms from './TreeMapAggregatedAlarms'
 
 
-const SEVERITY_THRESHOLDS = {
-    LOW: 0,
-    MID: 21,
-    HIGH: 80,
-}
+
 
 const ALARMS_INFO = {
     data_sources: {
@@ -149,6 +147,7 @@ export default {
         return {
             alarms: [],
             alarmsTimeFiltered: null,
+            alarmsSeveritiesFiltered: null,
             aggregatedAlarmsLoadingVal: false,
             alarmTypesFilter: {},
             startDateTimePlotly: null,
@@ -160,6 +159,11 @@ export default {
             thirdPartyAlarmsStates: {
                 grip: { downloading: false, data: null },
                 ioda: { downloading: false, data: null },
+            },
+            severities: {
+                low: true,
+                normal: true,
+                high: true
             },
             alarmsInfo: ALARMS_INFO
         }
@@ -235,9 +239,19 @@ export default {
             }
             return dataSourcesSelected
         },
+        severitiesSelected() {
+            const severitiesSelected = []
+            for (const [severityType, isSelected] of Object.entries(this.severities)) {
+                if (isSelected) {
+                    severitiesSelected.push(severityType)
+                }
+            }
+            return severitiesSelected
+        },
         alarmsCurrent() {
-            return this.alarmsTimeFiltered ? this.alarmsTimeFiltered : this.alarms
-        }
+            const currentTimedAlarms = this.alarmsTimeFiltered ? this.alarmsTimeFiltered : this.alarms
+            return currentTimedAlarms
+        },
     },
 
     watch: {
@@ -262,7 +276,23 @@ export default {
                 if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarms) {
                     this.etlAggregatedAlarmsDataModel(aggregatedAttrsSelectedFlattened)
                 }
-                if (!this.loadingVal || !anyNewAlarmTypesSelected || !this.alarmsCurrent.length) {
+                if (!this.loadingVal && (!anyNewAlarmTypesSelected || !this.alarmsCurrent.length)) {
+                    this.clearDataVizHandler()
+                }
+            },
+            deep: true
+        },
+        alarmsSeveritiesFiltered: {
+            handler: function (newAlarmSeveritiesFiltered) {
+                if (newAlarmSeveritiesFiltered && newAlarmSeveritiesFiltered.length) {
+                    const countAggregatedAttrsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
+                    const aggregatedAttrsZipped = zipAggregatedAttrs(this.aggregatedAttrsSelected)
+                    this.$refs.worldMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, countAggregatedAttrsSelected)
+                    this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, null)
+                    this.$refs.treeMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, null)
+                }
+
+                if (!newAlarmSeveritiesFiltered.length) {
                     this.clearDataVizHandler()
                 }
             },
@@ -313,6 +343,7 @@ export default {
             ).then((alarms) => {
                 this.alarms = alarms
                 this.aggregatedAlarmsLoadingVal = false
+                this.filterAlarmsBySeveritiesHandler()
             }).catch((error) => {
                 console.log(error)
             })
@@ -349,6 +380,11 @@ export default {
                     this.alarmsTimeFiltered = alarmsTimeFiltered
                 }
             }
+        },
+
+        filterAlarmsBySeveritiesHandler() {
+            const aggregatedAttrsZipped = zipAggregatedAttrs(this.aggregatedAttrsSelected)
+            this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelected, aggregatedAttrsZipped)
         },
 
         resetTimeFlagHandler() {
