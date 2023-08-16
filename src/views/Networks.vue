@@ -229,8 +229,8 @@ import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import DateTimePicker from '@/components/DateTimePicker'
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
-import MeasurementLab from '@/views/charts/MeasurementLab.vue'
-import IodaChart from './charts/IodaChart.vue'
+// import MeasurementLab from '@/views/charts/MeasurementLab.vue'
+// import IodaChart from './charts/IodaChart.vue'
 import html2pdf from 'html2pdf.js'
 
 const LOADING_STATUS = {

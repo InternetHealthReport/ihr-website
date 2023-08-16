@@ -37,16 +37,15 @@
         <q-item-section class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-section>
       </q-item>
       <q-item v-else-if="scope.opt.type == 'prefix'" v-bind="scope.itemProps" v-on="scope.itemEvents" @click="gotoPrefix(scope.opt.value)">
-        <q-item-selection side color="accent">Prefix</q-item-selection>
-        <q-item-selection class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-selection>
+        <q-item-section side color="accent">Prefix</q-item-section>
+        <q-item-section class="IHR_asn-element-name">{{ scope.opt.name }}</q-item-section>
       </q-item>
     </template>
   </q-select>
 </template>
 
 <script>
-import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
-import IhrQuery from '@/plugins/query/IhrQuery.js'
+import { NetworkQuery, CountryQuery, HegemonyPrefixQuery } from '@/plugins/IhrApi'
 
 const MIN_CHARACTERS = 3
 const MAX_RESULTS = 10
@@ -81,29 +80,34 @@ export default {
       always: false,
       networkQuery: new NetworkQuery().orderedByNumber(),
       countryQuery: new CountryQuery().orderedByCode(),
+      prefixQuery: new HegemonyPrefixQuery(),
     }
   },
   methods: {
     search(value, update) {
+      console.log('triggered!')
+      const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
+      const prefixMatch = prefixRegex.exec(value)
+      console.log(prefixMatch)
       this.loading = true
       this.options = []
-      if (value.includes('/')) {
-        const prefixQuery = { prefix: value }
-        this.$ihr_api.prefixes(
-          prefixQuery,
+      if (prefixMatch) {
+        this.prefixQuery.prefix(value)
+        console.log(this.prefixQuery)
+        this.$ihr_api.hegemony_prefix(
+          this.prefixQuery,
           result => {
-            console.log(result)
             result.results.some(element => {
+              console.log(element)
               this.options.push({
                 value: element.prefix,
-                name: element.country,
+                name: element.prefix,
                 type: 'prefix',
               })
               update()
               return this.options.length > MAX_RESULTS
             })
             this.loading = false
-            window.location.href = 'prefixResults.html'
           },
           error => {
             // eslint-disable-next-line no-console
@@ -123,7 +127,7 @@ export default {
         })
       })
       if (!this.noAS) {
-        this.networkQuery.mixedContentSearch(searchTerm)
+        this.networkQuery.mixedContentSearch(value)
         this.$ihr_api.network(
           this.networkQuery,
           result => {
@@ -143,29 +147,6 @@ export default {
             console.error(error)
           }
         )
-      }
-      if (prefix) {
-        const query = new IhrQuery()
-        query.hegemonyPrefix(prefix)
-        this.$ihr_api.hegemonyPrefix(query, result => {
-          result.results.some(element => {
-            const countryCode = element.country_code
-            const rpki = element.rpki
-            const irr = element.irr
-            const delegatedStatus = element.delegated_status
-            // display in table form in the html
-            const asDependencies = element.as_dependencies
-            //use this data for the graph
-            this.options.push({
-              value: element.prefix,
-              name: element.description,
-              type: 'prefix',
-            })
-            update()
-            return this.options.length > MAX_RESULTS
-          })
-          this.loading = false
-        })
       }
     },
     gotoPrefix(code) {
