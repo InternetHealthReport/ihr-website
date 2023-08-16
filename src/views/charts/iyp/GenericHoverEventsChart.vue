@@ -1,0 +1,110 @@
+<template>
+  <div>
+    <div ref="myDiv"></div>
+    <div ref="hoverInfo"></div>
+  </div>
+</template>
+
+<script>
+import Plotly from 'plotly.js-dist'
+
+export default {
+  props: {
+    chartData: {
+      type: Array,
+      default: () => [],
+    },
+    chartLayout: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  data() {
+    return {
+      localChartData: [],
+    }
+  },
+  mounted() {
+    if (this.chartData && this.chartData.length > 0) {
+      this.localChartData = this.chartData
+      this.renderChart()
+    }
+  },
+  methods: {
+    renderChart() {
+      let myPlot = this.$refs.myDiv
+      let hoverInfo = this.$refs.hoverInfo
+
+      let data = this.formatChartData(this.localChartData)
+      let layout = {
+        hovermode: 'closest',
+        ...this.chartLayout,
+      }
+
+      Plotly.newPlot(myPlot, data, layout)
+
+      myPlot
+        .on('plotly_hover', function (data) {
+          let infotext = data.points.map(function (d) {
+            return `.${d.data.domains[d.pointIndex]}`
+          })
+
+          hoverInfo.innerHTML = infotext.join('<br/>')
+        })
+        .on('plotly_unhover', function (data) {
+          hoverInfo.innerHTML = ''
+        })
+    },
+    formatChartData(arrayOfObjects) {
+      if (!arrayOfObjects || arrayOfObjects.length === 0) {
+        return []
+      }
+
+      let ccMap = {}
+      this.localChartData.forEach(i => {
+        let topLevelDomain = i.domainName.split('.').pop()
+        if (!ccMap[topLevelDomain]) {
+          ccMap[topLevelDomain] = [i]
+        } else {
+          ccMap[topLevelDomain].push(i)
+        }
+      })
+
+      let plot = {}
+      for (const [key, value] of Object.entries(ccMap)) {
+        let count = value.length
+        const y = Array(count).fill(count)
+        const x = value.map(val => val.rank.low)
+        const domains = value.map(val => val.domainName)
+        plot[key] = { x, y, domains }
+      }
+
+      let data = []
+      for (const [key, value] of Object.entries(plot)) {
+        data.push({
+          x: value.x,
+          y: value.y,
+          domains: value.domains,
+          type: 'scatter',
+          name: '.' + key,
+          mode: 'markers',
+          marker: { size: 12 },
+        })
+      }
+
+      return data
+    },
+  },
+  chartData: {
+    handler() {
+      console.log('Yep, watching!')
+
+      if (this.chartData && this.chartData.length > 0) {
+        this.localChartData = this.chartData
+        this.renderChart()
+      }
+    },
+    deep: true,
+  },
+}
+</script>
