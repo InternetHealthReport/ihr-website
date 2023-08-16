@@ -1,4 +1,4 @@
-import { truncateString, getUniqueValues, titleCase } from '@/plugins/AggregatedAlarmsUtils.js'
+import * as AggregatedAlarmsUtils from './AggregatedAlarmsUtils'
 
 export function etl(alarms, aggregatedAttrsZipped, countryName) {
     const groupByKey = countryName ? 'asn_name' : 'country_name'
@@ -29,8 +29,8 @@ function aggregateAlarmCountsBySeverityType(alarms, aggregatedAttrsZipped, group
 
             for (const severityType in severityTypeAlarmCounts) {
                 const alarmType = alarmCountType.split('_alarm')[0]
-                const alarmTypeTitledCase = titleCase(alarmType)
-                const severityTypeTitledCase = titleCase(severityType)
+                const alarmTypeTitledCase = AggregatedAlarmsUtils.titleCase(alarmType)
+                const severityTypeTitledCase = AggregatedAlarmsUtils.titleCase(severityType)
                 const count = severityTypeAlarmCounts[severityType];
                 const alarmCountAggregatedBySeverity = { [groupByKey]: groupByKeyValue, alarm_type: alarmTypeTitledCase, severity: severityTypeTitledCase, count: count }
                 alarmCountsAggregatedBySeverity.push(alarmCountAggregatedBySeverity);
@@ -41,12 +41,12 @@ function aggregateAlarmCountsBySeverityType(alarms, aggregatedAttrsZipped, group
 }
 
 function getTreeMapTrace(alarmCountsAggregatedBySeverity, groupByKey) {
-    if (!alarmCountsAggregatedBySeverity.length) {
+    if (!alarmCountsAggregatedBySeverity.length || !groupByKey) {
         return {}
     }
-    const groupByKeyUniqueValues = getUniqueValues(alarmCountsAggregatedBySeverity, groupByKey);
-    const alarmTypesUniqueValues = getUniqueValues(alarmCountsAggregatedBySeverity, 'alarm_type');
-    const severitiesUniqueValues = getUniqueValues(alarmCountsAggregatedBySeverity, 'severity');
+    const groupByKeyUniqueValues = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(alarmCountsAggregatedBySeverity, groupByKey);
+    const alarmTypesUniqueValues = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(alarmCountsAggregatedBySeverity, 'alarm_type');
+    const severitiesUniqueValues = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(alarmCountsAggregatedBySeverity, 'severity');
 
     const trace = createBaseTrace()
 
@@ -73,10 +73,10 @@ function createBaseTrace() {
 
 function addGroupByKeyValues(trace, alarms, groupByKey, groupByKeyUniqueValues) {
     for (const groupByKeyUniqueValue of groupByKeyUniqueValues) {
-        const traceLabelTruncated = truncateString(groupByKeyUniqueValue, 15)
+        const traceLabelTruncated = AggregatedAlarmsUtils.truncateString(groupByKeyUniqueValue, 15)
         const groupByKeyAlarmCounts = alarms.filter(alarm => alarm[groupByKey] === groupByKeyUniqueValue).reduce((sum, alarm) => sum + alarm.count, 0);
-        const totalAlarmCountsLabel = titleCase(`total_alarm_counts`)
-        const groupByKeyLabel = titleCase(groupByKey)
+        const totalAlarmCountsLabel = AggregatedAlarmsUtils.titleCase(`total_alarm_counts`)
+        const groupByKeyLabel = AggregatedAlarmsUtils.titleCase(groupByKey)
         const traceText = `${groupByKeyLabel}: ${groupByKeyUniqueValue}<br>` + `${totalAlarmCountsLabel}: ${groupByKeyAlarmCounts}`
         trace.ids.push(groupByKeyUniqueValue);
         trace.labels.push(traceLabelTruncated);
@@ -91,7 +91,7 @@ function addAlarmTypeValues(trace, alarms, groupByKey, groupByKeyUniqueValues, a
         for (const alarmTypeUniqueValue of alarmTypesUniqueValues) {
             const traceId = `${groupByKeyUniqueValue}-${alarmTypeUniqueValue}`
             const alarmTypeCount = alarms.filter(alarm => alarm[groupByKey] === groupByKeyUniqueValue && alarm.alarm_type === alarmTypeUniqueValue).reduce((sum, alarm) => sum + alarm.count, 0);
-            const alarmTypeCountLabel = titleCase(`${alarmTypeUniqueValue}_alarm_counts`)
+            const alarmTypeCountLabel = AggregatedAlarmsUtils.titleCase(`${alarmTypeUniqueValue}_alarm_counts`)
             const traceText = `${alarmTypeCountLabel}: ${alarmTypeCount}`
             trace.ids.push(traceId);
             trace.labels.push(alarmTypeUniqueValue);

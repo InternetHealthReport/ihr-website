@@ -1,7 +1,7 @@
-import { formatUTCTime } from '@/plugins/AggregatedAlarmsUtils'
+import * as AggregatedAlarmsUtils from '../models/AggregatedAlarmsUtils'
 import axios from 'axios'
 
-export function getGripAlarms(gripAlarmsState, startTime, endTime) {
+export function getGripAlarms(gripAlarmsState, startTime, endTime, timezone = '', minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all', onePage = false) {
     const request = () => {
         return new Promise((resolve, reject) => {
             if (gripAlarmsState.data) {
@@ -9,7 +9,7 @@ export function getGripAlarms(gripAlarmsState, startTime, endTime) {
             }
             if (!gripAlarmsState.data && !gripAlarmsState.downloading) {
                 gripAlarmsState.downloading = true
-                getGripAlarmsHelper(startTime, endTime).then((gripAlarms) => {
+                getGripAlarmsHelper(startTime, endTime, timezone, minSuspicionLevel, maxSuspicionLevel, eventType, onePage).then((gripAlarms) => {
                     gripAlarmsState.downloading = false
                     gripAlarmsState.data = gripAlarms
                     return resolve(gripAlarmsState.data)
@@ -23,12 +23,12 @@ export function getGripAlarms(gripAlarmsState, startTime, endTime) {
     return request()
 }
 
-function getGripAlarmsHelper(startTime, endTime, timezone='', minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all') {
+function getGripAlarmsHelper(startTime, endTime, timezone = '', minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all', onePage) {
     const API_URL = 'https://api.grip.inetintel.cc.gatech.edu/json/events';
 
     const chunkSize = 100;
-    const startUTCTimeFormatted = formatUTCTime(startTime, timezone)
-    const endUTCTimeFormatted = formatUTCTime(endTime, timezone)
+    const startUTCTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(startTime, timezone)
+    const endUTCTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(endTime, timezone)
 
     const params = {
         length: chunkSize,
@@ -43,13 +43,19 @@ function getGripAlarmsHelper(startTime, endTime, timezone='', minSuspicionLevel 
     const request = () => {
         return axios.get(API_URL, { params })
             .then((handleResponse))
-            .catch(handleError);
+            .catch((error) => {
+                console.error(error)
+                return []
+            });
     };
 
     const handleResponse = (response) => {
         const data = response.data;
         const totalRecords = parseInt(data.recordsTotal);
-        const bgpAlertsData = [];
+        const bgpAlertsData = [...data.data];
+        if (onePage) {
+            return bgpAlertsData
+        }
         const getPageDataPromises = createGetPageDataPromises(totalRecords, bgpAlertsData, params);
 
         return Promise.all(getPageDataPromises)
@@ -81,13 +87,9 @@ function getGripAlarmsHelper(startTime, endTime, timezone='', minSuspicionLevel 
         return getPageDataPromises;
     };
 
-    const getPageData = (url, params) => {
+    const getPageData = async (url, params) => {
         return axios.get(url, { params })
             .then(response => response.data.data);
-    };
-
-    const handleError = (error) => {
-        throw error;
     };
 
     const delay = (ms) => {

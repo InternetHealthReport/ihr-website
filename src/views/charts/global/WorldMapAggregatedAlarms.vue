@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { isDictEmpty } from '@/plugins/AggregatedAlarmsUtils.js'
+import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
 import * as WorldMapAggregatedAlarmsDataModel from '@/models/WorldMapAggregatedAlarmsDataModel'
 import WorldMapAggregatedAlarmsReactive from './WorldMapAggregatedAlarmsReactive'
 
@@ -71,6 +71,7 @@ export default {
           countrycolor: 'rgb(235, 235, 235)',
           showcountries: true,
         },
+        height: 400
       },
     }
 
@@ -92,7 +93,7 @@ export default {
   methods: {
     etl(alarms, alarmCountsSelected) {
       let worldMapTrace = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected)
-      const isWorldMapTraceEmpty = isDictEmpty(worldMapTrace)
+      const isWorldMapTraceEmpty = AggregatedAlarmsUtils.isDictEmpty(worldMapTrace)
       if (isWorldMapTraceEmpty) {
         this.clearDataViz()
       } else {
@@ -108,8 +109,8 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .IHR_chart {
-  height: 380px;
+  height: 300px;
 }
 </style>

@@ -1,5 +1,4 @@
-import { truncateString, titleCase } from "@/plugins/AggregatedAlarmsUtils"
-import { deepCopy } from "@/plugins/AggregatedAlarmsUtils"
+import * as AggregatedAlarmUtils from "./AggregatedAlarmsUtils"
 
 export function etl(alarms, aggregatedAttrsZipped, countryName) {
     const groupByKey = countryName ? 'asn' : 'country_name'
@@ -21,7 +20,7 @@ function filterAlarmsByCountry(alarms, countryName) {
 }
 
 function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped, truncateLength = null) {
-    const alarmsCopied = deepCopy(alarms)
+    const alarmsCopied = AggregatedAlarmUtils.deepCopy(alarms)
     const alarmsGroupedByKey = alarmsCopied.reduce((result, obj) => {
         const existingEntry = result.find((entry) => entry[key] === obj[key]);
 
@@ -40,7 +39,7 @@ function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped, truncateLength = n
             };
 
             if (truncateLength && obj.asn_name) {
-                alarmEntry.asn_name = truncateString(obj.asn_name, truncateLength);
+                alarmEntry.asn_name = AggregatedAlarmUtils.truncateString(obj.asn_name, truncateLength);
             }
 
             result.push(alarmEntry);
@@ -52,12 +51,12 @@ function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped, truncateLength = n
 }
 
 function aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped) {
-    const alarmCountsAggregatedByTime = deepCopy(alarmsGroupedByKey)
+    const alarmCountsAggregatedByTime = AggregatedAlarmUtils.deepCopy(alarmsGroupedByKey)
     for (let i = 0; i < alarmCountsAggregatedByTime.length; i++) {
         for (const [alarmCountTypeSelected, alarmTimebinTypeSelected, _] of aggregatedAttrsZipped) {
             const alarm = alarmCountsAggregatedByTime[i]
             const timebins = alarm[alarmTimebinTypeSelected];
-            const duplicatesCount = findDuplicatesTimebinsCount(timebins)
+            const duplicatesCount = AggregatedAlarmUtils.countItemOccurrences(timebins)
             const uniqueSortedTimebins = Array.from(new Set(timebins.sort()));
             const summedCounts = uniqueSortedTimebins.map(timebin => {
                 const alarmCountsSum = duplicatesCount[timebin] ? duplicatesCount[timebin] : 1
@@ -71,14 +70,13 @@ function aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped) {
 }
 
 function addAllAlarmCountsRecord(alarms, aggregatedAttrsZipped) {
-    const alarmsWithTotalAlarmCountsRecord = deepCopy(alarms)
+    const alarmsWithTotalAlarmCountsRecord = AggregatedAlarmUtils.deepCopy(alarms)
 
     let totalAlarmCountsRecord = {
         country_iso_code2: 'All',
         country_iso_code3: 'All',
         country_name: 'All',
-        asn_name: 'All',
-        timebins: [],
+        asn_name: 'All'
     }
 
     for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
@@ -98,20 +96,9 @@ function addAllAlarmCountsRecord(alarms, aggregatedAttrsZipped) {
     return alarmsWithTotalAlarmCountsRecord
 }
 
-function findDuplicatesTimebinsCount(alarmTimebins) {
-    const dateCounts = {}
-    alarmTimebins.forEach(timebin => {
-        if (dateCounts[timebin]) {
-            dateCounts[timebin]++;
-        } else {
-            dateCounts[timebin] = 1;
-        }
-    });
-    return dateCounts;
-}
 
 function addAlarmCountsAcrossAllTimebins(alarmsAggregated, aggregatedAttrsZipped) {
-    const alarmsAggregatedCopy = deepCopy(alarmsAggregated)
+    const alarmsAggregatedCopy = AggregatedAlarmUtils.deepCopy(alarmsAggregated)
     alarmsAggregatedCopy.forEach(alarmAggregated => {
         let allTimebins = []
         for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
@@ -141,9 +128,9 @@ function addAlarmCountsValuesAcrossTimebinsTypes(alarmAggregated, aggregatedAttr
     for (let i = 0; i < alarmAggregated.timebins.length; i++) {
         const timebin = alarmAggregated.timebins[i];
         for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
-            const alarm_timebin_index = alarmAggregated[alarmTimebinType].findIndex(timebinValue => timebinValue === timebin);
-            if (alarm_timebin_index !== -1) {
-                alarmAggregated[`${alarmCountType}_across_timebins`][i] = alarmAggregated[alarmCountType][alarm_timebin_index] || 0;
+            const alarmTimebinIndicies = AggregatedAlarmUtils.findIndicesOfValue(alarmAggregated[alarmTimebinType], timebin)
+            for (const alarmTimebinIndex of alarmTimebinIndicies) {
+                alarmAggregated[`${alarmCountType}_across_timebins`][i] += (alarmAggregated[alarmCountType][alarmTimebinIndex] || 0);
             }
         }
     }
@@ -163,7 +150,7 @@ function addTotalAlarmCountsValuesAcrossAllTimebins(alarmAggregated, aggregatedA
 }
 
 function sortAlarmsByCountry(alarmsByCountryData) {
-    const alarmsByCountryDataCopied = deepCopy(alarmsByCountryData)
+    const alarmsByCountryDataCopied = AggregatedAlarmUtils.deepCopy(alarmsByCountryData)
     alarmsByCountryDataCopied.sort((a, b) => {
         if (a.country_name.toLowerCase() === 'all') {
             return -1
@@ -198,34 +185,36 @@ function getHoverZippedData(data, aggregatedAttrsZipped) {
 }
 
 function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZipped) {
-    if (!hoverData.length) {
+    if (!alarms.length || !hoverData.length || !legendName || !aggregatedAttrsZipped.length) {
         return []
     }
     const traces = []
     for (let i = 0; i < alarms.length; i++) {
-        const trace = {
-            x: alarms[i].timebins,
-            y: alarms[i].total_alarm_counts_across_all_timebins,
-            type: 'scatter',
-            mode: 'lines',
-            name: alarms[i][legendName],
-            customdata: hoverData[i],
-            marker: {
-                line: {
-                    color: 'rgb(255,255,255)',
-                    width: 1,
+        if (alarms[i].timebins.length && alarms[i].total_alarm_counts_across_all_timebins.length) {
+            const trace = {
+                x: alarms[i].timebins,
+                y: alarms[i].total_alarm_counts_across_all_timebins,
+                type: 'scatter',
+                mode: 'lines',
+                name: alarms[i][legendName],
+                customdata: hoverData[i],
+                marker: {
+                    line: {
+                        color: 'rgb(255,255,255)',
+                        width: 1,
+                    },
                 },
-            },
-            hoverlabel: {
-                bgcolor: 'white',
-            },
+                hoverlabel: {
+                    bgcolor: 'white',
+                },
+            }
+            trace.hovertemplate = getHoverTemplate(aggregatedAttrsZipped)
+            if (i !== 0) {
+                trace.visible = 'legendonly'
+                trace.hoverinfo = 'none'
+            }
+            traces.push(trace)
         }
-        trace.hovertemplate = getHoverTemplate(aggregatedAttrsZipped)
-        if (i !== 0) {
-            trace.visible = 'legendonly'
-            trace.hoverinfo = 'none'
-        }
-        traces.push(trace)
     }
     return traces
 }
@@ -233,7 +222,7 @@ function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZippe
 function getHoverTemplate(aggregatedAttrsZipped) {
     let hoverTemplate = '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>' + 'Total Alarm Counts: %{y}<br>'
     for (const [alarmCountType, alarmTimebinsType, _] of aggregatedAttrsZipped) {
-        const alarmCountTypeTitledCase = titleCase(alarmCountType)
+        const alarmCountTypeTitledCase = AggregatedAlarmUtils.titleCase(alarmCountType)
         hoverTemplate += `${alarmCountTypeTitledCase}: %{customdata.${alarmCountType}}<br>`
     }
     return hoverTemplate

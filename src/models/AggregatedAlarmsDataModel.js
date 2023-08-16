@@ -1,9 +1,9 @@
-import { getGripAlarms } from "@/plugins/GripApi"
-import { getIodaAlarms } from "@/plugins/IodaApi"
-import { getKeysValuesEndWithSuffixes, deepCopy, filterDictByPrefixes, formatUTCTime, compareUtcStrings } from '@/plugins/AggregatedAlarmsUtils'
-import { getCountryISOCode3 } from '@/plugins/countryISOCode3'
-import getCountryName from '@/plugins/countryName'
-import axios from 'axios'
+import * as GripApiPlugin from '../plugins/GripApi';
+import * as IodaApiPlugin from '../plugins/IodaApi';
+import * as AggregatedAlarmsUtils from './AggregatedAlarmsUtils'
+import * as NetworkIhr from './NetworkIhr'
+import { getCountryISOCode3 } from '../plugins/countryISOCode3'
+import getCountryName from '../plugins/countryName'
 
 const dataSourcesTransformers = {
     ihr: {
@@ -17,9 +17,9 @@ const dataSourcesTransformers = {
     }
 }
 
-export function etl(dataSourcesMetadata, dataSourcesSelected, alarmTypesFilter, aggregatedAttrsSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
+export function etl(dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
     return new Promise((resolve, reject) => {
-        extractAlarms(dataSourcesSelected, alarmTypesFilter, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime).then((extractedAlarms) => {
+        extractAlarms(dataSourcesSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime).then((extractedAlarms) => {
             transformAlarms(extractedAlarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected).then((alarms) => {
                 resolve(alarms)
             }).catch((error) => reject(error))
@@ -27,20 +27,25 @@ export function etl(dataSourcesMetadata, dataSourcesSelected, alarmTypesFilter, 
     })
 }
 
-function extractAlarms(dataSourcesSelected, alarmTypesFilter, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
+export function extractAlarms(dataSourcesSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
     const request = () => {
         return new Promise((resolve, reject) => {
             let extractedAlarms = { ihr: {} }
 
-            extractedAlarms.ihr.hegemony = alarmTypesFilter.hegemony ? hegemonyAlarms : []
-            extractedAlarms.ihr.network_delay = alarmTypesFilter.network_delay ? networkDelayAlarms : []
+            if (dataSourcesSelected.ihr) {
+                extractedAlarms.ihr.hegemony = hegemonyAlarms
+                extractedAlarms.ihr.network_delay = networkDelayAlarms
+            } else {
+                extractedAlarms.ihr.hegemony = []
+                extractedAlarms.ihr.network_delay = []
+            }
 
             const gripAlarmsPromise = dataSourcesSelected.grip
-                ? getGripAlarms(thirdPartyAlarmsStates.grip, startTime, endTime)
+                ? GripApiPlugin.getGripAlarms(thirdPartyAlarmsStates.grip, startTime, endTime)
                 : Promise.resolve([]);
 
             const iodaAlarmsPromise = dataSourcesSelected.ioda
-                ? getIodaAlarms(thirdPartyAlarmsStates.ioda, startTime, endTime)
+                ? IodaApiPlugin.getIodaAlarms(thirdPartyAlarmsStates.ioda, startTime, endTime)
                 : Promise.resolve([]);
 
             Promise.all([gripAlarmsPromise, iodaAlarmsPromise]).then(([gripAlarms, iodaAlarms]) => {
@@ -48,7 +53,8 @@ function extractAlarms(dataSourcesSelected, alarmTypesFilter, hegemonyAlarms, ne
                 extractedAlarms.ioda = iodaAlarms;
                 return resolve(extractedAlarms)
             }).catch((error) => {
-                return reject(error)
+                console.error(error)
+                return resolve(extractedAlarms)
             })
 
         });
@@ -57,7 +63,7 @@ function extractAlarms(dataSourcesSelected, alarmTypesFilter, hegemonyAlarms, ne
     return request();
 }
 
-function transformAlarms(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
+export function transformAlarms(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
     const request = () => {
         return new Promise((resolve, reject) => {
             const transformedAlarms = dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected)
@@ -71,26 +77,26 @@ function transformAlarms(alarms, dataSourcesMetadata, dataSourcesSelected, aggre
     return request()
 }
 
-function dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
+export function dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
     let alarmsTransformed = {}
     for (const dataSource in dataSourcesSelected) {
         const isDataSourceSelected = dataSourcesSelected[dataSource]
         if (isDataSourceSelected) {
             const { transformFunc } = dataSourcesTransformers[dataSource];
             const alarmTypesDataSource = Object.keys(dataSourcesMetadata[dataSource].alarm_types)
-            const aggregatedAttrsDataSource = filterDictByPrefixes(aggregatedAttrsSelected, alarmTypesDataSource)
+            const aggregatedAttrsDataSource = AggregatedAlarmsUtils.filterDictByPrefixes(aggregatedAttrsSelected, alarmTypesDataSource)
             const alarmsDataSourceTransformed = transformFunc(alarms[dataSource], aggregatedAttrsDataSource);
             const listOfTransformedAlarmsDict = Object.values(alarmsTransformed)[0];
-            const alarmsTransformedAggregatedAttrs = getKeysValuesEndWithSuffixes(listOfTransformedAlarmsDict, ['_alarm_counts', '_alarm_timebins', '_alarm_severities']);
+            const alarmsTransformedAggregatedAttrs = AggregatedAlarmsUtils.getKeysWithEmptyListsEndsWithSuffixes(listOfTransformedAlarmsDict, ['_alarm_counts', '_alarm_timebins', '_alarm_severities']);
             alarmsTransformed = fullOuterJoinAlarms(alarmsTransformed, alarmsDataSourceTransformed, alarmsTransformedAggregatedAttrs, aggregatedAttrsDataSource);
         }
     }
     return alarmsTransformed
 }
 
-function transformIHRAlarms(ihrAlarmsSegregated, ihrAggregatedAttrs) {
+export function transformIHRAlarms(ihrAlarmsSegregated, ihrAggregatedAttrs) {
     const { hegemony: hegemonyAlarms, network_delay: networkDelayAlarms } = ihrAlarmsSegregated
-    const networkDelayAlarmsASFiltered = filterASNetworkDelayAlarms(networkDelayAlarms)
+    const networkDelayAlarmsASFiltered = filterAndMapASNetworkDelayAlarms(networkDelayAlarms)
     const hegemonyAlarmsTransformed = transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms)
     const hegemonyAlarmsWithEventType = addEventType(hegemonyAlarmsTransformed, 'hegemony')
     const networkDelayAlarmsWithEventType = addEventType(networkDelayAlarmsASFiltered, 'network_delay')
@@ -100,41 +106,49 @@ function transformIHRAlarms(ihrAlarmsSegregated, ihrAggregatedAttrs) {
     return ihrAlarmsAggregated
 }
 
-function transformGripAlarms(gripAlarms, gripAggregatedAttrs) {
+export function transformGripAlarms(gripAlarms, gripAggregatedAttrs) {
     const gripAlarmsTransformed = filterGripAlarms(gripAlarms);
     const gripAlarmsSeveritiesTransformed = transformAlarmsSeverities(gripAlarmsTransformed, gripSeverityMapper)
     const gripAlarmsAggregated = aggregateAlarms(gripAlarmsSeveritiesTransformed, gripAggregatedAttrs);
     return gripAlarmsAggregated;
 }
 
-function transformIodaAlarms(iodaAlarms, iodaAggregatedAttrs) {
+export function transformIodaAlarms(iodaAlarms, iodaAggregatedAttrs) {
     const iodaAlarmsTransformed = filterIodaAlarms(iodaAlarms);
     const iodaAlarmsSeveritiesTransformed = transformAlarmsSeverities(iodaAlarmsTransformed, iodaSeverityMapper)
     const iodaAlarmsAggregated = aggregateAlarms(iodaAlarmsSeveritiesTransformed, iodaAggregatedAttrs);
     return iodaAlarmsAggregated;
 }
 
-function filterASNetworkDelayAlarms(networkDelayAlarms) {
+export function filterAndMapASNetworkDelayAlarms(networkDelayAlarms) {
     const filteredASNetworkDelayAlarms = networkDelayAlarms
         .filter(alarm => alarm.startpoint_type === 'AS')
         .map(alarm => ({ ...alarm, asn: alarm.startpoint_name, asn_name: alarm.startpoint_name }));
     return filteredASNetworkDelayAlarms
 }
 
-function filterGripAlarms(gripAlarms) {
+export function filterGripAlarms(gripAlarms) {
     const gripAlarmsTransformed = gripAlarms.reduce((acc, curr) => {
         const trustWorthy = curr.summary.tr_worthy;
 
         if (trustWorthy === true) {
-            curr.summary.victims.forEach((victim) => {
-                const asnInfo = curr.asinfo[victim]
+            for (let index = 0; index < curr.summary.victims.length; index++) {
+                const victim = curr.summary.victims[index]
+                const asnInfo = curr.asinfo ? curr.asinfo[victim] : null
                 const asnName = asnInfo && asnInfo.asrank && asnInfo.asrank.asnName ? asnInfo.asrank.asnName.trim() : victim
                 const countryIsoCode2 = asnInfo && asnInfo.asrank && asnInfo.asrank.organization && asnInfo.asrank.organization.country
                     && asnInfo.asrank.organization.country.iso ? asnInfo.asrank.organization.country.iso : null
                 const eventType = curr.event_type
-                const severityValue = curr.pfx_events[0].inferences[0].suspicion_level
+
+                let severityValue;
+                if (curr.summary.inference_result.inferences[index]) {
+                    severityValue = curr.summary.inference_result.inferences[index].suspicion_level
+                } else {
+                    severityValue = curr.summary.inference_result.primary_inference.suspicion_level
+                }
+
                 const eventLocalDateTime = new Date(curr.last_modified_ts * 1000)
-                const eventUTCDateTimeFormatted = formatUTCTime(eventLocalDateTime, '00Z')
+                const eventUTCDateTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(eventLocalDateTime, '00Z')
 
                 let bgpAlertAlarm = {
                     asn_name: asnName,
@@ -146,7 +160,7 @@ function filterGripAlarms(gripAlarms) {
                 };
 
                 acc.push(bgpAlertAlarm);
-            });
+            }
         }
 
         return acc;
@@ -154,15 +168,15 @@ function filterGripAlarms(gripAlarms) {
     return gripAlarmsTransformed;
 }
 
-function filterIodaAlarms(iodaAlarms) {
+export function filterIodaAlarms(iodaAlarms) {
     const iodaAlarmsNonEmpty = iodaAlarms.filter((alarm) => Object.keys(alarm).length)
     const iodaAlarmsTransformed = iodaAlarmsNonEmpty.reduce((acc, curr) => {
-        const asnName = curr.entity.attrs.name ? curr.entity.attrs.name : curr.entity.attrs.org
+        const asnName = extractASNameBetweeParenthese(curr.entity.name, curr.entity)
         const asnNumber = curr.entity.code
         const eventType = curr.datasource.replace('-', '_')
         const iodaSeverityLevel = curr.level
         const eventLocalDateTime = new Date(curr.time * 1000)
-        const eventUTCDateTimeFormatted = formatUTCTime(eventLocalDateTime, '00Z')
+        const eventUTCDateTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(eventLocalDateTime, '00Z')
 
         const iodaAlarm = {
             asn_name: asnName,
@@ -178,23 +192,33 @@ function filterIodaAlarms(iodaAlarms) {
     return iodaAlarmsTransformed;
 }
 
-function addEventType(alarms, eventTypeName) {
-    const alarmsWithEventType = deepCopy(alarms)
+export function extractASNameBetweeParenthese(asNameWithParenthese) {
+    let asNameExtracted = ''
+    const regex = /\(([^)]+)\)/;
+    const match = asNameWithParenthese.match(regex);
+    if (match && match.length > 1) {
+        asNameExtracted = match[1];
+    }
+    return asNameExtracted
+}
+
+export function addEventType(alarms, eventTypeName) {
+    const alarmsWithEventType = AggregatedAlarmsUtils.deepCopy(alarms)
     for (const alarm of alarmsWithEventType) {
         alarm.event_type = eventTypeName
     }
     return alarmsWithEventType
 }
 
-function transformAlarmsSeverities(alarms, alarmSeverityMapper) {
-    const alarmsSeveritiesTransformed = deepCopy(alarms)
+export function transformAlarmsSeverities(alarms, alarmSeverityMapper) {
+    const alarmsSeveritiesTransformed = AggregatedAlarmsUtils.deepCopy(alarms)
     for (const alarm of alarmsSeveritiesTransformed) {
         alarm.severity = alarmSeverityMapper(alarm)
     }
     return alarmsSeveritiesTransformed
 }
 
-function gripSeverityMapper(alarm) {
+export function gripSeverityMapper(alarm) {
     const severityValue = alarm.severity
     let severityLabel;
     if (severityValue >= 80 && severityValue <= 100) {
@@ -204,10 +228,11 @@ function gripSeverityMapper(alarm) {
     } else if (severityValue >= 0 && severityValue <= 20) {
         severityLabel = 'low'
     }
+
     return severityLabel
 }
 
-function iodaSeverityMapper(alarm) {
+export function iodaSeverityMapper(alarm) {
     const severityValue = alarm.severity
     let severityLabel;
     if (severityValue === 'critical') {
@@ -220,7 +245,7 @@ function iodaSeverityMapper(alarm) {
     return severityLabel
 }
 
-function ihrSeverityMapper(alarm) {
+export function ihrSeverityMapper(alarm) {
     const severityValue = alarm.deviation
     let severityLabel;
     if (severityValue >= 20) {
@@ -229,15 +254,15 @@ function ihrSeverityMapper(alarm) {
     return severityLabel
 }
 
-function transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms) {
-    const hegemonyAlarmsUpdatedWithASNameAndIsoCode2 = deepCopy(hegemonyAlarms)
+export function transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms) {
+    const hegemonyAlarmsUpdatedWithASNameAndIsoCode2 = AggregatedAlarmsUtils.deepCopy(hegemonyAlarms)
     for (const alarm of hegemonyAlarmsUpdatedWithASNameAndIsoCode2) {
         updateASNameAndCountryIsoCode2(alarm, alarm.asn_name)
     }
     return hegemonyAlarmsUpdatedWithASNameAndIsoCode2
 }
 
-function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
+export function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
     const aggregatedAlarms = alarmsTransformed.reduce((acc, curr) => {
 
         const { asn, asn_name, country_iso_code2, timebin, severity, event_type } = curr;
@@ -247,7 +272,7 @@ function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
                 asn_name,
                 asn,
                 country_iso_code2,
-                ...deepCopy(aggregatedAttrs)
+                ...AggregatedAlarmsUtils.deepCopy(aggregatedAttrs)
             };
         }
 
@@ -259,7 +284,7 @@ function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
     return aggregatedAlarms;
 }
 
-function updateAlarmAggregatedAttrs(alarm, timebin, severity, eventType) {
+export function updateAlarmAggregatedAttrs(alarm, timebin, severity, eventType) {
     const alarmCountsAttr = `${eventType}_alarm_counts`
     const alarmTimebinsAttr = `${eventType}_alarm_timebins`
     const alarmSeveritiesAttr = `${eventType}_alarm_severities`
@@ -274,13 +299,12 @@ function updateAlarmAggregatedAttrs(alarm, timebin, severity, eventType) {
     }
 }
 
-function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAggregatedAttrs2) {
-    const fullOuterJoin = (alarmsInput, alarmAggregatedAttrs) => {
+export function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAggregatedAttrs2) {
+    const fullOuterJoin = (alarmsInput) => {
         const mergedResult = {};
         for (const asnNumber in alarmsInput) {
             const alarmAggregated = alarmsInput[asnNumber];
-            const alarmAggregatedAttrsCopied = deepCopy(alarmAggregatedAttrs);
-            mergedResult[asnNumber] = { ...alarmAggregated, ...alarmAggregatedAttrsCopied };
+            mergedResult[asnNumber] = alarmAggregated;
         }
         return mergedResult
     }
@@ -291,7 +315,7 @@ function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAgg
             if (mergedAlarms[asnNumber]) {
                 Object.assign(mergedAlarms[asnNumber], alarmAggregated);
             } else {
-                const alarmAggregatedAttrsASNotFoundCopied = deepCopy(alarmAggregatedAttrsASNotFound);
+                const alarmAggregatedAttrsASNotFoundCopied = AggregatedAlarmsUtils.deepCopy(alarmAggregatedAttrsASNotFound);
                 mergedAlarms[asnNumber] = { ...alarmAggregated, ...alarmAggregatedAttrsASNotFoundCopied }
             }
         }
@@ -299,16 +323,16 @@ function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAgg
 
     let mergedAlarms = {}
 
-    const mergedAlarms1 = fullOuterJoin(alarms1, alarmsAggregatedAttrs2);
+    const mergedAlarms1 = fullOuterJoin(alarms1);
     updateMergedAlarms(mergedAlarms, mergedAlarms1, alarmsAggregatedAttrs2);
 
-    const mergedAlarms2 = fullOuterJoin(alarms2, alarmsAggregatedAttrs1);
+    const mergedAlarms2 = fullOuterJoin(alarms2);
     updateMergedAlarms(mergedAlarms, mergedAlarms2, alarmsAggregatedAttrs1);
     return mergedAlarms;
 }
 
 
-function transformAlarmsHelper(alarms) {
+export function transformAlarmsHelper(alarms) {
     const request = () => {
         return new Promise((resolve, reject) => {
             addASNameAndCountryIsoCode2(alarms).then((alarmsWithCountryIsoCodes2) => {
@@ -324,8 +348,8 @@ function transformAlarmsHelper(alarms) {
     return request()
 }
 
-function addASNameAndCountryIsoCode2(data) {
-    const alarms = deepCopy(data);
+export function addASNameAndCountryIsoCode2(data) {
+    const alarms = AggregatedAlarmsUtils.deepCopy(data);
     const asnNumbers = [];
 
     for (let asnNumber in alarms) {
@@ -345,8 +369,8 @@ function addASNameAndCountryIsoCode2(data) {
     }
 }
 
-function addCountryIsoCode3AndCountryName(data) {
-    const alarms = deepCopy(data)
+export function addCountryIsoCode3AndCountryName(data) {
+    const alarms = AggregatedAlarmsUtils.deepCopy(data)
     for (let asnNumber in alarms) {
         const countryCode2 = alarms[asnNumber].country_iso_code2
         Object.assign(alarms[asnNumber], getCountryIsoCode3AndName(countryCode2))
@@ -354,8 +378,8 @@ function addCountryIsoCode3AndCountryName(data) {
     return alarms
 }
 
-function convertAlarmsDictToList(alarms) {
-    const alarmsCopied = deepCopy(alarms)
+export function convertAlarmsDictToList(alarms) {
+    const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
     for (const asnNumber in alarmsCopied) {
         alarmsCopied[asnNumber].asn = asnNumber;
     }
@@ -363,13 +387,13 @@ function convertAlarmsDictToList(alarms) {
     return alarmsArray
 }
 
-function filterAlarmsByCountryIsoCode3(alarmsList) {
+export function filterAlarmsByCountryIsoCode3(alarmsList) {
     return Object.values(alarmsList).filter(alarm => alarm.country_iso_code3)
 }
 
-function getASNamesAndIsoCodes(alarms, asnNumbers) {
+export function getASNamesAndIsoCodes(alarms, asnNumbers) {
     return new Promise((resolve, reject) => {
-        const alarmsCopied = deepCopy(alarms)
+        const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
         const asnNumbersCommaSeparated = asnNumbers.join(',');
         getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeparated)
             .then(asnNamesAndIsoCodes2 => {
@@ -387,25 +411,22 @@ function getASNamesAndIsoCodes(alarms, asnNumbers) {
     });
 }
 
-function getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeperated, maxRetries = 5, delay = 1000) {
+export function getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeperated, maxRetries = 5, delay = 500) {
     let retries = 0;
 
     const request = () => {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                getASNameAndCountryIsoCode2(asnNumbersCommaSeperated)
-                    .then(asnNamesAndIsoCodes2 => {
-                        resolve(asnNamesAndIsoCodes2);
-                    })
-                    .catch(error => {
-                        if (retries < maxRetries) {
-                            retryRequest(asnNumbersCommaSeperated, resolve, reject)
-                        } else {
-                            console.error(`Maximum retries reached for ASN ${asnNumbersCommaSeperated}`)
-                            reject(error);
-                        }
-                    });
-            }, delay)
+            getASNameAndCountryIsoCode2(asnNumbersCommaSeperated)
+                .then(asnNamesAndIsoCodes2 => resolve(asnNamesAndIsoCodes2))
+                .catch(error => {
+                    console.error(error)
+                    if (retries < maxRetries) {
+                        retryRequest(asnNumbersCommaSeperated, resolve, reject)
+                    } else {
+                        console.error(`Maximum retries reached for ASN ${asnNumbersCommaSeperated}`)
+                        reject(error);
+                    }
+                });
         });
     };
 
@@ -420,12 +441,12 @@ function getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeperated, maxRetries =
     return request();
 }
 
-function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
+export function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
     const asnNamesAndIsoCodes2 = []
 
     const request = () => {
         return new Promise((resolve, reject) => {
-            getNetworkInfoIHR(asnNumbersCommaSeperated).then((networks) => {
+            NetworkIhr.getNetworkInfo(asnNumbersCommaSeperated).then((networks) => {
                 networks.forEach(network => {
                     for (let asnNumber of asnNumbersCommaSeperated.split(',')) {
                         if (network.number == asnNumber) {
@@ -447,57 +468,29 @@ function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
     return request();
 }
 
-
-function getNetworkInfoIHR(asnList) {
-    const API_URL = "https://ihr.iijlab.net/ihr/api/networks";
-    const MAX_ASNS_PER_REQUEST = 30; // Adjust this as needed
-
-    const asnArray = asnList.split(',').map(asn => asn.trim());
-    const numRequests = Math.ceil(asnArray.length / MAX_ASNS_PER_REQUEST);
-
-    const requests = [];
-    for (let i = 0; i < numRequests; i++) {
-        const startIdx = i * MAX_ASNS_PER_REQUEST;
-        const endIdx = (i + 1) * MAX_ASNS_PER_REQUEST;
-        const slicedASNs = asnArray.slice(startIdx, endIdx);
-
-        const params = { number: slicedASNs.join(',') };
-
-        requests.push(
-            axios.get(API_URL, { params })
-                .then(response => response.data.results)
-                .catch(error => {
-                    throw error;
-                })
-        );
-    }
-
-    return Promise.all(requests)
-        .then(resultsArray => resultsArray.flat()); // Combine results from all requests
-}
-
-function updateASNameAndCountryIsoCode2(alarm, asnName) {
+export function updateASNameAndCountryIsoCode2(alarm, asnName) {
     alarm.country_iso_code2 = normalizeCountryIsoCode2(asnName);
     alarm.asn_name = normalizeASName(asnName);
 }
 
-function normalizeCountryIsoCode2(asnName) {
+export function normalizeCountryIsoCode2(asnName) {
     return asnName.split(',').splice(-1)[0].trim()
 }
 
-function normalizeASName(asnName) {
+export function normalizeASName(asnName) {
     return asnName.split(',').splice(0, asnName.split(',').length - 1).join(',').trim()
 }
 
-function getCountryIsoCode3AndName(countryIsoCode2) {
+export function getCountryIsoCode3AndName(countryIsoCode2) {
     const country_iso_code3 = getCountryISOCode3(countryIsoCode2)
     const country_name = getCountryName(countryIsoCode2)
     return { country_iso_code3, country_name }
 }
 
-
-
 export function filterAlarmsByTime(alarms, startDateTime, endDateTime, aggregatedAttrsZipped) {
+    if (!aggregatedAttrsZipped.length) {
+        return alarms
+    }
     const filteredAlarms = alarms.map((alarm) => {
         const filteredAlarm = filterAlarmByTime(alarm, startDateTime, endDateTime, aggregatedAttrsZipped);
         return filteredAlarm;
@@ -505,44 +498,53 @@ export function filterAlarmsByTime(alarms, startDateTime, endDateTime, aggregate
     return filteredAlarms;
 }
 
-function filterAlarmByTime(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
-    const isAlarmTimebinInRangeResult = isAlarmTimebinInRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped);
+export function filterAlarmByTime(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
+    const isAlarmInTimebinRangeResult = isAlarmInTimebinRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped);
 
-    if (isAlarmTimebinInRangeResult === null) {
+    if (isAlarmInTimebinRangeResult === null) {
         return null;
     }
 
     const filteredAlarm = { ...alarm };
-    for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
-        filteredAlarm[alarmTimebinType] = isAlarmTimebinInRangeResult[alarmTimebinType];
+    for (const [alarmCountType, alarmTimebinType, alarmSeverityType] of aggregatedAttrsZipped) {
+        filteredAlarm[alarmTimebinType] = isAlarmInTimebinRangeResult[alarmTimebinType];
+        filteredAlarm[alarmSeverityType] = isAlarmInTimebinRangeResult[alarmSeverityType]
         filteredAlarm[alarmCountType] = Array(filteredAlarm[alarmTimebinType].length).fill(1);
     }
 
     return filteredAlarm;
 }
 
-function isAlarmTimebinInRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
+export function isAlarmInTimebinRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
     let areAllTimebinTypesEmpty = true;
 
-    const filteredTimebins = {};
-    for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
-        filteredTimebins[alarmTimebinType] = alarm[alarmTimebinType].filter((timebin) => {
-            const timebinStartDateTimeComp = compareUtcStrings(timebin, startDateTime);
-            const timebinEndDateTimeComp = compareUtcStrings(timebin, endDateTime);
-            return timebinStartDateTimeComp >= 0 && timebinEndDateTimeComp <= 0;
-        });
-        areAllTimebinTypesEmpty = areAllTimebinTypesEmpty && filteredTimebins[alarmTimebinType].length === 0;
+    const filteredAlarm = {};
+    for (const [alarmCountType, alarmTimebinType, alarmSeverityType] of aggregatedAttrsZipped) {
+        filteredAlarm[alarmTimebinType] = []
+        filteredAlarm[alarmSeverityType] = []
+        for (let i = 0; i < alarm[alarmTimebinType].length; i++) {
+            const timebinStartDateTimeComp = AggregatedAlarmsUtils.compareUtcStrings(alarm[alarmTimebinType][i], startDateTime);
+            const timebinEndDateTimeComp = AggregatedAlarmsUtils.compareUtcStrings(alarm[alarmTimebinType][i], endDateTime);
+            if (timebinStartDateTimeComp >= 0 && timebinEndDateTimeComp <= 0) {
+                filteredAlarm[alarmTimebinType].push(alarm[alarmTimebinType][i])
+                filteredAlarm[alarmSeverityType].push(alarm[alarmSeverityType][i])
+            }
+        }
+        areAllTimebinTypesEmpty = areAllTimebinTypesEmpty && filteredAlarm[alarmTimebinType].length === 0;
     }
 
     if (areAllTimebinTypesEmpty) {
         return null
     } else {
-        return filteredTimebins
+        return filteredAlarm
     }
 }
 
-
 export function filterAlarmsBySeverity(alarms, severitiesSelected, aggregatedAttrsZipped) {
+    if (!severitiesSelected.length || !aggregatedAttrsZipped.length) {
+        return alarms
+    }
+
     const filteredAlarms = alarms.map((alarm) => {
         const filteredAlarm = filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped);
         return filteredAlarm
@@ -550,7 +552,7 @@ export function filterAlarmsBySeverity(alarms, severitiesSelected, aggregatedAtt
     return filteredAlarms
 }
 
-function filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped) {
+export function filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped) {
     const isAlarmInSeveritiesRangeResult = isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped);
 
     if (isAlarmInSeveritiesRangeResult === null) {
@@ -567,7 +569,7 @@ function filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped)
     return filteredAlarm;
 }
 
-function isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped) {
+export function isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped) {
     let areAllSeveritiesEmpty = true;
 
     const filteredAlarm = {};

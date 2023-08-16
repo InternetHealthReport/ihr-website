@@ -345,7 +345,7 @@
         </q-card-section>
       </q-card>
     </q-expansion-item>
-    <!-- </div> -->
+
   </div>
 </template>
 
@@ -573,15 +573,6 @@ export default {
 
 <style lang="stylus">
 @import '../styles/quasar.variables';
-.card-container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.card-wrapper {
-  flex: 1;
-  margin: 10px; /* Adjust the margin as needed */
-}
 .stat-grid
   display: grid;
   grid-template-columns: repeat(4, 1fr);
