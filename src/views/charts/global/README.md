@@ -209,3 +209,99 @@ function filterOutagesAlarms(outagesAlarms) {
 ```
 And that's it! You've successfully added the "outages" Internet Alarms Data Source and integrated it with Aggregated Alarms Data Visualization.
 ![Outages Demo Data Source Integration](../../../assets/documentation/outages-demo-data-source-integration.png)
+
+# How to add Internet Alarm Type and Integrate with Aggregated Alarms Data Visualizations
+This guide will walk you through the process of creating a fake ihr alarm type named "ihr_outages" and integrating it with Aggregated Alarms Data Visualization.
+
+## Step 1: Alarms Metadata and Alarm Type Setup
+1. Open the `AggregatedAlarmsController.vue` file.
+2. Add the alarms metadata information for the `ihr_outages` alarm type under the `Alarms info` section:
+```javascript
+// Alarms info in AggregatedAlarmsController
+const alarmsInfo = {
+        ihr: {
+            // Other Ihr Alarm Types Metrics
+            ihr_outages_alarm_counts: [],
+            ihr_outages_alarm_timebins: [],
+            ihr_outages_alarm_severities: []
+        },
+}
+```
+3. Add metadata for the `ihr_outages` alarm type:
+```javascript
+// Alarms info in AggregatedAlarmsController
+const alarmsInfo = {
+    ihr: {
+        alarm_types: {
+            // Other Alarm Types metadata
+            ihr_outages: {
+                description: 'IHR Outages Alarm Type',
+                showHelpModal: false
+            }
+        },
+        description: 'IHR Data Source',
+        showHelpModal: false
+    },
+};
+```
+## Step 2: Ihr Outages Alarm Type Extraction
+We need to extract Ihr outages alarm type either by dependency injection  by passing it through the parent componenet `AggregatedAlarmsController.vue` inside `GlobalReport.vue` or you could create an alarm type plugin same as before in data source I would make it simple and just create fake data within the `AggregatedAlarmsDataModel.js` file. Paste the following `getIhrOutagesAlarms` function inside `AggregatedAlarmsDataModel.js`:
+```javascript
+function getIhrOutagesAlarms() {
+    return [
+        {
+            "timebin": "2023-08-07T14:15:00Z",
+            "originasn": 266274,
+            "asn": 262988,
+            "deviation": 26.2362032001593,
+            "af": 4,
+            "asn_name": "Pombonet Telecomunicacoes e Informatica",
+            "country_iso_code2": "BR",
+            "originasn_name": "NETWEST TELECOM, BR"
+        },
+        {
+            "timebin": "2023-08-07T14:15:00Z",
+            "originasn": 266274,
+            "asn": 13786,
+            "deviation": 26.2362032001593,
+            "af": 4,
+            "asn_name": "SEABORN",
+            "country_iso_code2": "US",
+            "originasn_name": "NETWEST TELECOM, BR"
+        },
+        {
+            "timebin": "2023-08-07T14:15:00Z",
+            "originasn": 269566,
+            "asn": 3356,
+            "deviation": 27.2312233357285,
+            "af": 4,
+            "asn_name": "LEVEL3",
+            "country_iso_code2": "US",
+            "originasn_name": "PHI TELECOM LTDA.ME, BR"
+        }
+    ]
+}
+```
+## Step 3: Integrating the Ihr Outages Alarm Type Data
+Inside the `extractAlarms` function of `AggregatedAlarmsDataModel`, call the `getIhrOutagesAlarms` function:
+```javascript
+// AggregatedAlarmsController.vue
+extractedAlarms.ihr.ihr_outages = alarmTypesFilter.ihr_outages ? getIhrOutagesAlarms() : []
+```
+## Step 4: Data Transformation
+1. extract `ihr_outages` from `extractedAlarms`:
+```javascript
+const { /* other ihr alarm types */, ihr_outages: ihrOutagesAlarms } = ihrAlarmsSegregated
+```
+2. Transform `ihrOutagesAlarms` data if needed
+3. Add `ihr_outages` event type by using the following code:
+```javascript
+const ihrOutagesAlarmsWithEventType = addEventType(ihrOutagesAlarms, 'ihr_outages')
+```
+4. Add `ihrOutagesAlarmsWithEventType` to the ihr joined data:
+```javascript
+const ihrAlarms = [/* other ihr alarm types data */, ...ihrOutagesAlarmsWithEventType]
+```
+
+And that's it! You've successfully added the "ihr_outages" alarm type and integrated it with Aggregated Alarms Data Visualization:
+![Ihr Outages Demo Alarm Type Integration](../../../assets/documentation/ihr-outages-demo-alarm-type-integration.png)
