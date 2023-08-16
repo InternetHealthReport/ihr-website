@@ -6,6 +6,7 @@
 </template>
     
 <script>
+import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
 import * as TimeSeriesAggregatedAlarmsDataModel from '@/models/TimeSeriesAggregatedAlarmsDataModel'
 import TimeSeriesAggregatedAlarmsReactive from './TimeSeriesAggregatedAlarmsReactive'
 
@@ -63,7 +64,8 @@ export default {
             this.$emit('filter-alarms-by-time', newPlotlyDateTimeFilter)
         },
         etl(alarms, aggregatedAttrsZipped, countryName) {
-            const timeSeriesTraces = TimeSeriesAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName)
+            const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
+            const timeSeriesTraces = TimeSeriesAggregatedAlarmsDataModel.etl(alarmsCopied, aggregatedAttrsZipped, countryName)
             const areTimeSeriesTracesEmpty = !timeSeriesTraces.length
             if (areTimeSeriesTracesEmpty) {
                 this.clearDataViz()

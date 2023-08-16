@@ -2,8 +2,8 @@ import * as AggregatedAlarmsUtils from './AggregatedAlarmsUtils'
 
 export function etl(alarms, alarmCountsSelected) {
     const alarmCountsByCountry = groupAlarmCountsByCountry(alarms, alarmCountsSelected)
-    const alarmsWithTotalAlarmCountsAttr = addTotalAlarmCountsAttr(alarmCountsByCountry, alarmCountsSelected)
-    const worldMapData = getWorldMapData(alarmsWithTotalAlarmCountsAttr)
+    addTotalAlarmCountsAttr(alarmCountsByCountry, alarmCountsSelected)
+    const worldMapData = getWorldMapData(alarmCountsByCountry)
     const hoverData = getHoverZippedData(worldMapData, alarmCountsSelected)
     const worldMapTrace = getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected);
     return worldMapTrace
@@ -43,15 +43,13 @@ function addAlarmCountsAttr(accumulator, current, alarmCountsSelected) {
 }
 
 function addTotalAlarmCountsAttr(alarms, alarmCountsSelected) {
-    const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
-    alarmsCopied.forEach(alarm => {
+    alarms.forEach(alarm => {
         let totalAlarmCounts = 0
         alarmCountsSelected.forEach(alarmCountColumn => {
             totalAlarmCounts += alarm[alarmCountColumn]
         });
         alarm.total_alarm_counts = totalAlarmCounts
     });
-    return alarmsCopied
 }
 
 function getWorldMapData(inputData) {

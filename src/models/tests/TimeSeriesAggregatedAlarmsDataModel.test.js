@@ -3,7 +3,7 @@ import * as TimeSeriesAggregatedAlarmsDataModel from '../TimeSeriesAggregatedAla
 const ALARMS =
     [
         {
-            asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+            asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
             asn: '34467',
             country_iso_code2: 'RU',
             country_iso_code3: 'RUS',
@@ -37,7 +37,7 @@ const ALARMS =
             ucsd_nt_alarm_severities: [],
         },
         {
-            asn_name: 'CONNETRO-AS CONNET - RO SRL',
+            asn_name: 'CONNETRO-AS CONNET - (AS34469)',
             asn: '34469',
             country_iso_code2: 'RO',
             country_iso_code3: 'ROU',
@@ -71,7 +71,7 @@ const ALARMS =
             ucsd_nt_alarm_severities: []
         },
         {
-            asn_name: 'YOUTUBE',
+            asn_name: 'YOUTUBE (AS36040)',
             asn: '36040',
             country_iso_code2: 'US',
             country_iso_code3: 'USA',
@@ -224,7 +224,7 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
                 y: [2, 1],
                 type: 'scatter',
                 mode: 'lines',
-                name: 'CONNETRO-AS CONNET -...',
+                name: 'CONNETRO-AS CONNET - (AS34469)',
                 customdata: [
                     { hegemony_alarm_counts: 2 },
                     { hegemony_alarm_counts: 1 },

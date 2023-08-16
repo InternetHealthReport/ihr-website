@@ -244,7 +244,7 @@ describe('etlAggregatedAlarmsDataModel', () => {
         const expectedResult =
             [
                 {
-                    asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+                    asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
                     asn: '34467',
                     country_iso_code2: 'RU',
                     hegemony_alarm_counts: [1],
@@ -278,7 +278,7 @@ describe('etlAggregatedAlarmsDataModel', () => {
                     country_name: 'Russia'
                 },
                 {
-                    asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                    asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                     asn: '34469',
                     country_iso_code2: 'RO',
                     hegemony_alarm_counts: [1],
@@ -312,7 +312,7 @@ describe('etlAggregatedAlarmsDataModel', () => {
                     country_name: 'Romania'
                 },
                 {
-                    asn_name: 'YOUTUBE',
+                    asn_name: 'YOUTUBE (AS36040)',
                     asn: '36040',
                     country_iso_code2: 'US',
                     ping_slash24_alarm_counts: [],
@@ -368,7 +368,7 @@ describe('etlAggregatedAlarmsDataModel', () => {
         const expectedResult =
             [
                 {
-                    asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+                    asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
                     asn: '34467',
                     country_iso_code2: 'RU',
                     hegemony_alarm_counts: [1],
@@ -381,7 +381,7 @@ describe('etlAggregatedAlarmsDataModel', () => {
                     country_name: 'Russia'
                 },
                 {
-                    asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                    asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                     asn: '34469',
                     country_iso_code2: 'RO',
                     hegemony_alarm_counts: [1],
@@ -415,7 +415,7 @@ describe('etlAggregatedAlarmsDataModel', () => {
         const expectedResult =
             [
                 {
-                    asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+                    asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
                     asn: '34467',
                     country_iso_code2: 'RU',
                     moas_alarm_counts: [1],
@@ -443,7 +443,7 @@ describe('etlAggregatedAlarmsDataModel', () => {
                     country_name: 'Russia'
                 },
                 {
-                    asn_name: 'YOUTUBE',
+                    asn_name: 'YOUTUBE (AS36040)',
                     asn: '36040',
                     country_iso_code2: 'US',
                     ping_slash24_alarm_counts: [],
@@ -500,7 +500,7 @@ describe('filterAlarmsByTime', () => {
     const alarms =
         [
             {
-                asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+                asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
                 asn: '34467',
                 country_iso_code2: 'RU',
                 hegemony_alarm_counts: [1],
@@ -513,7 +513,7 @@ describe('filterAlarmsByTime', () => {
                 country_name: 'Russia'
             },
             {
-                asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                 asn: '34469',
                 country_iso_code2: 'RO',
                 hegemony_alarm_counts: [1],
@@ -526,7 +526,7 @@ describe('filterAlarmsByTime', () => {
                 country_name: 'Romania'
             },
             {
-                asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                 asn: '34469',
                 country_iso_code2: 'RO',
                 hegemony_alarm_counts: [1],
@@ -560,7 +560,7 @@ describe('filterAlarmsByTime', () => {
         const expectedResult =
             [
                 {
-                    asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+                    asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
                     asn: '34467',
                     country_iso_code2: 'RU',
                     hegemony_alarm_counts: [1],
@@ -573,7 +573,7 @@ describe('filterAlarmsByTime', () => {
                     country_name: 'Russia'
                 },
                 {
-                    asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                    asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                     asn: '34469',
                     country_iso_code2: 'RO',
                     hegemony_alarm_counts: [1],
@@ -608,7 +608,7 @@ describe('filterAlarmsBySeverity', () => {
     const alarms =
         [
             {
-                asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+                asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
                 asn: '34467',
                 country_iso_code2: 'RU',
                 hegemony_alarm_counts: [1, 1],
@@ -621,7 +621,7 @@ describe('filterAlarmsBySeverity', () => {
                 country_name: 'Russia'
             },
             {
-                asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                 asn: '34469',
                 country_iso_code2: 'RO',
                 hegemony_alarm_counts: [1],
@@ -634,7 +634,7 @@ describe('filterAlarmsBySeverity', () => {
                 country_name: 'Romania'
             },
             {
-                asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                 asn: '34469',
                 country_iso_code2: 'RO',
                 hegemony_alarm_counts: [1],
@@ -668,7 +668,7 @@ describe('filterAlarmsBySeverity', () => {
 
         const expectedResult = [
             {
-                asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+                asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
                 asn: '34467',
                 country_iso_code2: 'RU',
                 hegemony_alarm_counts: [1],
@@ -681,7 +681,7 @@ describe('filterAlarmsBySeverity', () => {
                 country_name: 'Russia'
             },
             {
-                asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                 asn: '34469',
                 country_iso_code2: 'RO',
                 hegemony_alarm_counts: [1],
@@ -694,7 +694,7 @@ describe('filterAlarmsBySeverity', () => {
                 country_name: 'Romania'
             },
             {
-                asn_name: 'CONNETRO-AS CONNET - RO SRL',
+                asn_name: 'CONNETRO-AS CONNET - (AS34469)',
                 asn: '34469',
                 country_iso_code2: 'RO',
                 hegemony_alarm_counts: [1],

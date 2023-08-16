@@ -2,15 +2,15 @@ import * as AggregatedAlarmUtils from "./AggregatedAlarmsUtils"
 
 export function etl(alarms, aggregatedAttrsZipped, countryName) {
     const groupByKey = countryName ? 'asn' : 'country_name'
-    const legendName = countryName ? `asn_name` : 'country_name'
+    const legendName = countryName ? 'asn_name' : 'country_name'
     const alarmsFilteredByCountryOptional = countryName ? filterAlarmsByCountry(alarms, countryName) : alarms
-    const alarmsGroupedByKey = groupAlarmsByKey(alarmsFilteredByCountryOptional, groupByKey, aggregatedAttrsZipped, 20);
-    const alarmCountsAggregatedByTime = aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped)
-    const alarmsWithAllCountsRecord = addAllAlarmCountsRecord(alarmCountsAggregatedByTime, aggregatedAttrsZipped)
-    const alarmsWithCountsAcrossAllTimebins = addAlarmCountsAcrossAllTimebins(alarmsWithAllCountsRecord, aggregatedAttrsZipped)
-    const alarmsByCountrySorted = sortAlarmsByCountry(alarmsWithCountsAcrossAllTimebins)
-    const hoverData = getHoverZippedData(alarmsByCountrySorted, aggregatedAttrsZipped)
-    const timeSeriesTraces = getTimeSeriesTraces(alarmsByCountrySorted, hoverData, legendName, aggregatedAttrsZipped)
+    const alarmsGroupedByKey = groupAlarmsByKey(alarmsFilteredByCountryOptional, groupByKey, aggregatedAttrsZipped);
+    aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped)
+    addAllAlarmCountsRecord(alarmsGroupedByKey, aggregatedAttrsZipped)
+    addAlarmCountsAcrossAllTimebins(alarmsGroupedByKey, aggregatedAttrsZipped)
+    sortAlarmsByCountry(alarmsGroupedByKey)
+    const hoverData = getHoverZippedData(alarmsGroupedByKey, aggregatedAttrsZipped)
+    const timeSeriesTraces = getTimeSeriesTraces(alarmsGroupedByKey, hoverData, legendName, aggregatedAttrsZipped)
     return timeSeriesTraces
 }
 
@@ -19,9 +19,8 @@ function filterAlarmsByCountry(alarms, countryName) {
     return alarmsFilteredByCountry
 }
 
-function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped, truncateLength = null) {
-    const alarmsCopied = AggregatedAlarmUtils.deepCopy(alarms)
-    const alarmsGroupedByKey = alarmsCopied.reduce((result, obj) => {
+function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped) {
+    const alarmsGroupedByKey = alarms.reduce((result, obj) => {
         const existingEntry = result.find((entry) => entry[key] === obj[key]);
 
         if (existingEntry) {
@@ -38,10 +37,6 @@ function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped, truncateLength = n
                 country_name: obj.country_name,
             };
 
-            if (truncateLength && obj.asn_name) {
-                alarmEntry.asn_name = AggregatedAlarmUtils.truncateString(obj.asn_name, truncateLength);
-            }
-
             result.push(alarmEntry);
         }
         return result;
@@ -51,10 +46,9 @@ function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped, truncateLength = n
 }
 
 function aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped) {
-    const alarmCountsAggregatedByTime = AggregatedAlarmUtils.deepCopy(alarmsGroupedByKey)
-    for (let i = 0; i < alarmCountsAggregatedByTime.length; i++) {
+    for (let i = 0; i < alarmsGroupedByKey.length; i++) {
         for (const [alarmCountTypeSelected, alarmTimebinTypeSelected, _] of aggregatedAttrsZipped) {
-            const alarm = alarmCountsAggregatedByTime[i]
+            const alarm = alarmsGroupedByKey[i]
             const timebins = alarm[alarmTimebinTypeSelected];
             const duplicatesCount = AggregatedAlarmUtils.countItemOccurrences(timebins)
             const uniqueSortedTimebins = Array.from(new Set(timebins.sort()));
@@ -66,11 +60,9 @@ function aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped) {
             alarm[alarmCountTypeSelected] = summedCounts;
         }
     }
-    return alarmCountsAggregatedByTime
 }
 
 function addAllAlarmCountsRecord(alarms, aggregatedAttrsZipped) {
-    const alarmsWithTotalAlarmCountsRecord = AggregatedAlarmUtils.deepCopy(alarms)
 
     let totalAlarmCountsRecord = {
         country_iso_code2: 'All',
@@ -84,7 +76,7 @@ function addAllAlarmCountsRecord(alarms, aggregatedAttrsZipped) {
         totalAlarmCountsRecord[alarmTimebinType] = []
     }
 
-    for (const alarm of alarmsWithTotalAlarmCountsRecord) {
+    for (const alarm of alarms) {
         for (const key in alarm) {
             if (Array.isArray(totalAlarmCountsRecord[key])) {
                 totalAlarmCountsRecord[key] = totalAlarmCountsRecord[key].concat(alarm[key]);
@@ -92,14 +84,13 @@ function addAllAlarmCountsRecord(alarms, aggregatedAttrsZipped) {
         }
     }
 
-    alarmsWithTotalAlarmCountsRecord.push(totalAlarmCountsRecord)
-    return alarmsWithTotalAlarmCountsRecord
+    alarms.push(totalAlarmCountsRecord)
+    return alarms
 }
 
 
 function addAlarmCountsAcrossAllTimebins(alarmsAggregated, aggregatedAttrsZipped) {
-    const alarmsAggregatedCopy = AggregatedAlarmUtils.deepCopy(alarmsAggregated)
-    alarmsAggregatedCopy.forEach(alarmAggregated => {
+    alarmsAggregated.forEach(alarmAggregated => {
         let allTimebins = []
         for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
             allTimebins = allTimebins.concat(...alarmAggregated[alarmTimebinType])
@@ -115,7 +106,6 @@ function addAlarmCountsAcrossAllTimebins(alarmsAggregated, aggregatedAttrsZipped
 
         addTotalAlarmCountsValuesAcrossAllTimebins(alarmAggregated, aggregatedAttrsZipped);
     });
-    return alarmsAggregatedCopy
 }
 
 function addAlarmCountsAttrsAcrossTimebinsTypes(alarmAggregated, aggregatedAttrsZipped) {
@@ -150,8 +140,7 @@ function addTotalAlarmCountsValuesAcrossAllTimebins(alarmAggregated, aggregatedA
 }
 
 function sortAlarmsByCountry(alarmsByCountryData) {
-    const alarmsByCountryDataCopied = AggregatedAlarmUtils.deepCopy(alarmsByCountryData)
-    alarmsByCountryDataCopied.sort((a, b) => {
+    alarmsByCountryData.sort((a, b) => {
         if (a.country_name.toLowerCase() === 'all') {
             return -1
         } else if (b.country_name.toLowerCase() === 'all') {
@@ -160,7 +149,6 @@ function sortAlarmsByCountry(alarmsByCountryData) {
             return a.country_name.toLowerCase().localeCompare(b.country_name.toLowerCase())
         }
     });
-    return alarmsByCountryDataCopied
 }
 
 function getHoverZippedData(data, aggregatedAttrsZipped) {

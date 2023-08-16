@@ -280,8 +280,8 @@ export default {
             handler: function (newAlarmTypesFilter) {
                 const anyNewAlarmTypesSelected = Object.values(newAlarmTypesFilter).includes(true)
                 const aggregatedAttrsSelectedFlattened = AggregatedAlarmsUtils.flattenDictionary(this.aggregatedAttrsSelected)
-                const isThereAnyCachedAlarms = this.getCachedAlarmsIfExist(this.alarmsCurrent, aggregatedAttrsSelectedFlattened)
-                if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarms) {
+                const isThereAnyCachedAlarmsResult = this.isThereAnyCachedAlarms(this.alarmsCurrent, aggregatedAttrsSelectedFlattened)
+                if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarmsResult) {
                     this.etlAggregatedAlarmsDataModel(aggregatedAttrsSelectedFlattened)
                 }
                 if (!this.loadingVal && (!anyNewAlarmTypesSelected || !this.alarmsCurrent.length)) {
@@ -426,15 +426,15 @@ export default {
             this.alarmTypesFilter = newAlarmTypesFilter
         },
 
-        getCachedAlarmsIfExist(cachedAlarms, aggregatedAttrsSelected) {
+        isThereAnyCachedAlarms(cachedAlarms, aggregatedAttrsSelected) {
             if (cachedAlarms.length) {
                 const cachedAlarmsFirstElement = Object.values(cachedAlarms)[0]
                 const dataContainsSelectedAlarmAttrs = AggregatedAlarmsUtils.isDictKeysSubset(aggregatedAttrsSelected, cachedAlarmsFirstElement)
                 if (dataContainsSelectedAlarmAttrs) {
-                    return AggregatedAlarmsUtils.deepCopy(cachedAlarms)
+                    return true
                 }
             }
-            return null
+            return false
         },
 
         isDataSourceSelected(dataSourceObj, alarmTypesFilter) {

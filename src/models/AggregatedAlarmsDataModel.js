@@ -27,7 +27,7 @@ export function etl(dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSel
     })
 }
 
-export function extractAlarms(dataSourcesSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
+function extractAlarms(dataSourcesSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
     const request = () => {
         return new Promise((resolve, reject) => {
             let extractedAlarms = { ihr: {} }
@@ -63,7 +63,7 @@ export function extractAlarms(dataSourcesSelected, hegemonyAlarms, networkDelayA
     return request();
 }
 
-export function transformAlarms(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
+function transformAlarms(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
     const request = () => {
         return new Promise((resolve, reject) => {
             const transformedAlarms = dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected)
@@ -77,7 +77,7 @@ export function transformAlarms(alarms, dataSourcesMetadata, dataSourcesSelected
     return request()
 }
 
-export function dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
+function dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
     let alarmsTransformed = {}
     for (const dataSource in dataSourcesSelected) {
         const isDataSourceSelected = dataSourcesSelected[dataSource]
@@ -94,40 +94,41 @@ export function dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSou
     return alarmsTransformed
 }
 
-export function transformIHRAlarms(ihrAlarmsSegregated, ihrAggregatedAttrs) {
+function transformIHRAlarms(ihrAlarmsSegregated, ihrAggregatedAttrs) {
     const { hegemony: hegemonyAlarms, network_delay: networkDelayAlarms } = ihrAlarmsSegregated
     const networkDelayAlarmsASFiltered = filterAndMapASNetworkDelayAlarms(networkDelayAlarms)
     const hegemonyAlarmsTransformed = transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms)
-    const hegemonyAlarmsWithEventType = addEventType(hegemonyAlarmsTransformed, 'hegemony')
-    const networkDelayAlarmsWithEventType = addEventType(networkDelayAlarmsASFiltered, 'network_delay')
-    const ihrAlarms = [...hegemonyAlarmsWithEventType, ...networkDelayAlarmsWithEventType]
-    const ihrAlarmsSeveritiesTransformed = transformAlarmsSeverities(ihrAlarms, ihrSeverityMapper)
-    const ihrAlarmsAggregated = aggregateAlarms(ihrAlarmsSeveritiesTransformed, ihrAggregatedAttrs)
+    addEventType(hegemonyAlarmsTransformed, 'hegemony')
+    addEventType(networkDelayAlarmsASFiltered, 'network_delay')
+    const ihrAlarms = [...hegemonyAlarmsTransformed, ...networkDelayAlarmsASFiltered]
+    transformAlarmsSeverities(ihrAlarms, ihrSeverityMapper)
+    const ihrAlarmsAggregated = aggregateAlarms(ihrAlarms, ihrAggregatedAttrs)
     return ihrAlarmsAggregated
 }
 
-export function transformGripAlarms(gripAlarms, gripAggregatedAttrs) {
+function transformGripAlarms(gripAlarms, gripAggregatedAttrs) {
     const gripAlarmsTransformed = filterGripAlarms(gripAlarms);
-    const gripAlarmsSeveritiesTransformed = transformAlarmsSeverities(gripAlarmsTransformed, gripSeverityMapper)
-    const gripAlarmsAggregated = aggregateAlarms(gripAlarmsSeveritiesTransformed, gripAggregatedAttrs);
+    transformAlarmsSeverities(gripAlarmsTransformed, gripSeverityMapper)
+    const gripAlarmsAggregated = aggregateAlarms(gripAlarmsTransformed, gripAggregatedAttrs);
     return gripAlarmsAggregated;
 }
 
-export function transformIodaAlarms(iodaAlarms, iodaAggregatedAttrs) {
+function transformIodaAlarms(iodaAlarms, iodaAggregatedAttrs) {
     const iodaAlarmsTransformed = filterIodaAlarms(iodaAlarms);
-    const iodaAlarmsSeveritiesTransformed = transformAlarmsSeverities(iodaAlarmsTransformed, iodaSeverityMapper)
-    const iodaAlarmsAggregated = aggregateAlarms(iodaAlarmsSeveritiesTransformed, iodaAggregatedAttrs);
+    transformAlarmsSeverities(iodaAlarmsTransformed, iodaSeverityMapper)
+    const iodaAlarmsAggregated = aggregateAlarms(iodaAlarmsTransformed, iodaAggregatedAttrs);
     return iodaAlarmsAggregated;
 }
 
-export function filterAndMapASNetworkDelayAlarms(networkDelayAlarms) {
-    const filteredASNetworkDelayAlarms = networkDelayAlarms
+function filterAndMapASNetworkDelayAlarms(networkDelayAlarms) {
+    const networkDelayAlarmsCopied = AggregatedAlarmsUtils.deepCopy(networkDelayAlarms)
+    const filteredASNetworkDelayAlarms = networkDelayAlarmsCopied
         .filter(alarm => alarm.startpoint_type === 'AS')
         .map(alarm => ({ ...alarm, asn: alarm.startpoint_name, asn_name: alarm.startpoint_name }));
     return filteredASNetworkDelayAlarms
 }
 
-export function filterGripAlarms(gripAlarms) {
+function filterGripAlarms(gripAlarms) {
     const gripAlarmsTransformed = gripAlarms.reduce((acc, curr) => {
         const trustWorthy = curr.summary.tr_worthy;
 
@@ -168,7 +169,7 @@ export function filterGripAlarms(gripAlarms) {
     return gripAlarmsTransformed;
 }
 
-export function filterIodaAlarms(iodaAlarms) {
+function filterIodaAlarms(iodaAlarms) {
     const iodaAlarmsNonEmpty = iodaAlarms.filter((alarm) => Object.keys(alarm).length)
     const iodaAlarmsTransformed = iodaAlarmsNonEmpty.reduce((acc, curr) => {
         const asnName = extractASNameBetweeParenthese(curr.entity.name, curr.entity)
@@ -192,7 +193,7 @@ export function filterIodaAlarms(iodaAlarms) {
     return iodaAlarmsTransformed;
 }
 
-export function extractASNameBetweeParenthese(asNameWithParenthese) {
+function extractASNameBetweeParenthese(asNameWithParenthese) {
     let asNameExtracted = ''
     const regex = /\(([^)]+)\)/;
     const match = asNameWithParenthese.match(regex);
@@ -202,23 +203,19 @@ export function extractASNameBetweeParenthese(asNameWithParenthese) {
     return asNameExtracted
 }
 
-export function addEventType(alarms, eventTypeName) {
-    const alarmsWithEventType = AggregatedAlarmsUtils.deepCopy(alarms)
-    for (const alarm of alarmsWithEventType) {
+function addEventType(alarms, eventTypeName) {
+    for (const alarm of alarms) {
         alarm.event_type = eventTypeName
     }
-    return alarmsWithEventType
 }
 
-export function transformAlarmsSeverities(alarms, alarmSeverityMapper) {
-    const alarmsSeveritiesTransformed = AggregatedAlarmsUtils.deepCopy(alarms)
-    for (const alarm of alarmsSeveritiesTransformed) {
+function transformAlarmsSeverities(alarms, alarmSeverityMapper) {
+    for (const alarm of alarms) {
         alarm.severity = alarmSeverityMapper(alarm)
     }
-    return alarmsSeveritiesTransformed
 }
 
-export function gripSeverityMapper(alarm) {
+function gripSeverityMapper(alarm) {
     const severityValue = alarm.severity
     let severityLabel;
     if (severityValue >= 80 && severityValue <= 100) {
@@ -232,7 +229,7 @@ export function gripSeverityMapper(alarm) {
     return severityLabel
 }
 
-export function iodaSeverityMapper(alarm) {
+function iodaSeverityMapper(alarm) {
     const severityValue = alarm.severity
     let severityLabel;
     if (severityValue === 'critical') {
@@ -245,7 +242,7 @@ export function iodaSeverityMapper(alarm) {
     return severityLabel
 }
 
-export function ihrSeverityMapper(alarm) {
+function ihrSeverityMapper(alarm) {
     const severityValue = alarm.deviation
     let severityLabel;
     if (severityValue >= 20 && severityValue <= 30) {
@@ -260,7 +257,7 @@ export function ihrSeverityMapper(alarm) {
     return severityLabel
 }
 
-export function transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms) {
+function transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms) {
     const hegemonyAlarmsUpdatedWithASNameAndIsoCode2 = AggregatedAlarmsUtils.deepCopy(hegemonyAlarms)
     for (const alarm of hegemonyAlarmsUpdatedWithASNameAndIsoCode2) {
         updateASNameAndCountryIsoCode2(alarm, alarm.originasn_name, alarm.originasn)
@@ -268,7 +265,7 @@ export function transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms) {
     return hegemonyAlarmsUpdatedWithASNameAndIsoCode2
 }
 
-export function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
+function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
     const aggregatedAlarms = alarmsTransformed.reduce((acc, curr) => {
 
         const { asn, asn_name, country_iso_code2, timebin, severity, event_type } = curr;
@@ -290,7 +287,7 @@ export function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
     return aggregatedAlarms;
 }
 
-export function updateAlarmAggregatedAttrs(alarm, timebin, severity, eventType) {
+function updateAlarmAggregatedAttrs(alarm, timebin, severity, eventType) {
     const alarmCountsAttr = `${eventType}_alarm_counts`
     const alarmTimebinsAttr = `${eventType}_alarm_timebins`
     const alarmSeveritiesAttr = `${eventType}_alarm_severities`
@@ -305,7 +302,7 @@ export function updateAlarmAggregatedAttrs(alarm, timebin, severity, eventType) 
     }
 }
 
-export function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAggregatedAttrs2) {
+function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAggregatedAttrs2) {
     const fullOuterJoin = (alarmsInput) => {
         const mergedResult = {};
         for (const asnNumber in alarmsInput) {
@@ -338,13 +335,14 @@ export function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, al
 }
 
 
-export function transformAlarmsHelper(alarms) {
+function transformAlarmsHelper(alarms) {
     const request = () => {
         return new Promise((resolve, reject) => {
             addASNameAndCountryIsoCode2(alarms).then((alarmsWithCountryIsoCodes2) => {
-                const alarmsWithCountries = addCountryIsoCode3AndCountryName(alarmsWithCountryIsoCodes2)
-                const alarmsList = convertAlarmsDictToList(alarmsWithCountries)
+                addCountryIsoCode3AndCountryName(alarmsWithCountryIsoCodes2)
+                const alarmsList = convertAlarmsDictToList(alarmsWithCountryIsoCodes2)
                 const filteredAlarms = filterAlarmsByCountryIsoCode3(alarmsList)
+                normalizeASNames(filteredAlarms)
                 resolve(filteredAlarms)
             }).catch(error => {
                 reject(error)
@@ -354,8 +352,13 @@ export function transformAlarmsHelper(alarms) {
     return request()
 }
 
-export function addASNameAndCountryIsoCode2(data) {
-    const alarms = AggregatedAlarmsUtils.deepCopy(data);
+function normalizeASNames(alarms) {
+    alarms.forEach((alarm) => {
+        const asNameTruncated = AggregatedAlarmsUtils.truncateString(alarm.asn_name, 20);
+        alarm.asn_name = `${asNameTruncated} (AS${alarm.asn})`
+    })
+}
+function addASNameAndCountryIsoCode2(alarms) {
     const asnNumbers = [];
 
     for (let asnNumber in alarms) {
@@ -375,40 +378,36 @@ export function addASNameAndCountryIsoCode2(data) {
     }
 }
 
-export function addCountryIsoCode3AndCountryName(data) {
-    const alarms = AggregatedAlarmsUtils.deepCopy(data)
+function addCountryIsoCode3AndCountryName(alarms) {
     for (let asnNumber in alarms) {
         const countryCode2 = alarms[asnNumber].country_iso_code2
         Object.assign(alarms[asnNumber], getCountryIsoCode3AndName(countryCode2))
     }
-    return alarms
 }
 
-export function convertAlarmsDictToList(alarms) {
-    const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
-    for (const asnNumber in alarmsCopied) {
-        alarmsCopied[asnNumber].asn = asnNumber;
+function convertAlarmsDictToList(alarms) {
+    for (const asnNumber in alarms) {
+        alarms[asnNumber].asn = asnNumber;
     }
-    const alarmsArray = Object.values(alarmsCopied)
+    const alarmsArray = Object.values(alarms)
     return alarmsArray
 }
 
-export function filterAlarmsByCountryIsoCode3(alarmsList) {
+function filterAlarmsByCountryIsoCode3(alarmsList) {
     return Object.values(alarmsList).filter(alarm => alarm.country_iso_code3)
 }
 
-export function getASNamesAndIsoCodes(alarms, asnNumbers) {
+function getASNamesAndIsoCodes(alarms, asnNumbers) {
     return new Promise((resolve, reject) => {
-        const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
         const asnNumbersCommaSeparated = asnNumbers.join(',');
         getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeparated)
             .then(asnNamesAndIsoCodes2 => {
                 for (const asnNameAndIsoCode2 of asnNamesAndIsoCodes2) {
-                    const { asn_number } = asnNameAndIsoCode2;
-                    alarmsCopied[asn_number].country_iso_code2 = asnNameAndIsoCode2.country_iso_code2;
-                    alarmsCopied[asn_number].asn_name = asnNameAndIsoCode2.asn_name;
+                    const { asn_number: asNumber, asn_name: asName, country_iso_code2: countryIsoCode2 } = asnNameAndIsoCode2;
+                    alarms[asNumber].country_iso_code2 = countryIsoCode2;
+                    alarms[asNumber].asn_name = asName
                 }
-                return resolve(alarmsCopied);
+                return resolve(alarms);
             })
             .catch(error => {
                 console.error('Error retrieving ASN name and country ISO code:', error);
@@ -417,7 +416,7 @@ export function getASNamesAndIsoCodes(alarms, asnNumbers) {
     });
 }
 
-export function getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeperated, maxRetries = 5, delay = 500) {
+function getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeperated, maxRetries = 5, delay = 500) {
     let retries = 0;
 
     const request = () => {
@@ -447,7 +446,7 @@ export function getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeperated, maxRe
     return request();
 }
 
-export function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
+function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
     const asnNamesAndIsoCodes2 = []
 
     const request = () => {
@@ -474,21 +473,21 @@ export function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
     return request();
 }
 
-export function updateASNameAndCountryIsoCode2(alarm, asName, asNumber) {
+function updateASNameAndCountryIsoCode2(alarm, asName, asNumber) {
     alarm.country_iso_code2 = normalizeCountryIsoCode2(asName);
     alarm.asn_name = normalizeASName(asName);
     alarm.asn = asNumber
 }
 
-export function normalizeCountryIsoCode2(asnName) {
+function normalizeCountryIsoCode2(asnName) {
     return asnName.split(',').splice(-1)[0].trim()
 }
 
-export function normalizeASName(asnName) {
+function normalizeASName(asnName) {
     return asnName.split(',').splice(0, asnName.split(',').length - 1).join(',').trim()
 }
 
-export function getCountryIsoCode3AndName(countryIsoCode2) {
+function getCountryIsoCode3AndName(countryIsoCode2) {
     const country_iso_code3 = getCountryISOCode3(countryIsoCode2)
     const country_name = getCountryName(countryIsoCode2)
     return { country_iso_code3, country_name }
@@ -505,7 +504,7 @@ export function filterAlarmsByTime(alarms, startDateTime, endDateTime, aggregate
     return filteredAlarms;
 }
 
-export function filterAlarmByTime(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
+function filterAlarmByTime(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
     const isAlarmInTimebinRangeResult = isAlarmInTimebinRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped);
 
     if (isAlarmInTimebinRangeResult === null) {
@@ -522,7 +521,7 @@ export function filterAlarmByTime(alarm, startDateTime, endDateTime, aggregatedA
     return filteredAlarm;
 }
 
-export function isAlarmInTimebinRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
+function isAlarmInTimebinRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
     let areAllTimebinTypesEmpty = true;
 
     const filteredAlarm = {};
@@ -559,7 +558,7 @@ export function filterAlarmsBySeverity(alarms, severitiesSelected, aggregatedAtt
     return filteredAlarms
 }
 
-export function filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped) {
+function filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped) {
     const isAlarmInSeveritiesRangeResult = isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped);
 
     if (isAlarmInSeveritiesRangeResult === null) {
@@ -576,7 +575,7 @@ export function filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrs
     return filteredAlarm;
 }
 
-export function isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped) {
+function isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped) {
     let areAllSeveritiesEmpty = true;
 
     const filteredAlarm = {};

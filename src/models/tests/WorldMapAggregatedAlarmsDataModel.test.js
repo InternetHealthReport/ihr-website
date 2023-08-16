@@ -3,7 +3,7 @@ import * as WorldMapAggregatedAlarmsDataModel from '../WorldMapAggregatedAlarmsD
 
 const ALARMS = [
     {
-        asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+        asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
         asn: '34467',
         country_iso_code2: 'RU',
         hegemony_alarm_counts: [1],
@@ -37,7 +37,7 @@ const ALARMS = [
         country_name: 'Russia'
     },
     {
-        asn_name: 'CONNETRO-AS CONNET - RO SRL',
+        asn_name: 'CONNETRO-AS CONNET - (AS34469)',
         asn: '34469',
         country_iso_code2: 'RO',
         hegemony_alarm_counts: [1],
@@ -71,7 +71,7 @@ const ALARMS = [
         country_name: 'Romania'
     },
     {
-        asn_name: 'YOUTUBE',
+        asn_name: 'YOUTUBE (AS36040)',
         asn: '36040',
         country_iso_code2: 'US',
         ping_slash24_alarm_counts: [],
@@ -181,7 +181,7 @@ describe('etlWorldMapAggregatedAlarmsDataModel', () => {
     it('should correctly handle aggregating alarm data for specified metrics and countries even if they not exist in the data', () => {
         const alarms = [
             {
-                asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+                asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
                 asn: '34467',
                 country_iso_code2: 'RU',
                 moas_alarm_counts: [1],
@@ -209,7 +209,7 @@ describe('etlWorldMapAggregatedAlarmsDataModel', () => {
                 country_name: 'Russia'
             },
             {
-                asn_name: 'YOUTUBE',
+                asn_name: 'YOUTUBE (AS36040)',
                 asn: '36040',
                 country_iso_code2: 'US',
                 ping_slash24_alarm_counts: [],
