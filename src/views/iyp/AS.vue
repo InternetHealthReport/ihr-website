@@ -50,14 +50,27 @@
         <q-expansion-item :label="$t('iyp.as.rankings.title')" caption="Rankings" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
-            <GenericTable :data="rankings" :columns="rankingsColumns" :cypher-query="cypherQueries.rankings" />
+            <GenericTable :data="rankings" :columns="rankingsColumns" :cypher-query="cypherQueries.rankings" :slot-length="1">
+              <GenericIndicatorsChart v-if="rankings.length > 0" :chart-data="rankings" :chart-layout="{ title: 'Rankings' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item :label="$t('iyp.as.popularDomains.title')" caption="Popular Domain Names" header-class="IHR_charts-title">
           <q-separator />
           <q-card class="IHR_charts-body">
-            <GenericTable :data="popularDomains" :columns="popularDomainsColumns" :cypher-query="cypherQueries.popularDomains" />
+            <GenericTable
+              :data="popularDomains"
+              :columns="popularDomainsColumns"
+              :cypher-query="cypherQueries.popularDomains"
+              :slot-length="1"
+            >
+              <GenericHoverEventsChart
+                v-if="popularDomains.length > 0"
+                :chart-data="popularDomains"
+                :chart-layout="{ title: 'Popular Domains' }"
+              />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
@@ -91,6 +104,8 @@ import Overview from '@/views/charts/iyp/ASOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
 import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
 import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
+import GenericHoverEventsChart from '@/views/charts/iyp/GenericHoverEventsChart'
+import GenericIndicatorsChart from '@/views/charts/iyp/GenericIndicatorsChart'
 
 const references = {
   bgp: 'https://bgp.he.net',
@@ -107,6 +122,8 @@ export default {
     QChip,
     GenericPieChart,
     GenericBarChart,
+    GenericHoverEventsChart,
+    GenericIndicatorsChart,
   },
   data() {
     return {

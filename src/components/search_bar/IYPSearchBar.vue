@@ -61,7 +61,9 @@ export default {
       } else {
         // Mixed search of AS name, country, and ixp
         const res = await this.mixedEntitySearch(value)
-        this.results = res
+        const optimizedRes = this.optimizeSearchResults(res)
+        this.results = optimizedRes
+        console.log(this.results)
       }
     },
     async queryAS(asn) {
@@ -170,6 +172,9 @@ export default {
         return
       }
       return `${res.node} ${res.id}`
+    },
+    optimizeSearchResults(res) {
+      return res.sort((a, b) => a.name.length - b.name.length)
     },
   },
   watch: {
