@@ -1,5 +1,9 @@
 <template>
     <table class="custom-table">
+        <thead>
+            <th> Data Source </th>
+            <th :colspan="maxAlarmTypesLength"> Alarm Types</th>
+        </thead>
         <tr v-for="(dataSource, index) in dataSourceAlarmTypes" :key="index">
             <th>
                 <label>

@@ -248,8 +248,14 @@ export function iodaSeverityMapper(alarm) {
 export function ihrSeverityMapper(alarm) {
     const severityValue = alarm.deviation
     let severityLabel;
-    if (severityValue >= 20) {
+    if (severityValue >= 20 && severityValue <= 30) {
+        severityLabel = 'low'
+    } else if (severityValue >= 31 && severityValue <= 50) {
+        severityLabel = 'normal'
+    } else if (severityValue >= 51) {
         severityLabel = 'high'
+    } else {
+        severityLabel = 'low'
     }
     return severityLabel
 }
@@ -257,7 +263,7 @@ export function ihrSeverityMapper(alarm) {
 export function transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms) {
     const hegemonyAlarmsUpdatedWithASNameAndIsoCode2 = AggregatedAlarmsUtils.deepCopy(hegemonyAlarms)
     for (const alarm of hegemonyAlarmsUpdatedWithASNameAndIsoCode2) {
-        updateASNameAndCountryIsoCode2(alarm, alarm.asn_name)
+        updateASNameAndCountryIsoCode2(alarm, alarm.originasn_name, alarm.originasn)
     }
     return hegemonyAlarmsUpdatedWithASNameAndIsoCode2
 }
@@ -468,9 +474,10 @@ export function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
     return request();
 }
 
-export function updateASNameAndCountryIsoCode2(alarm, asnName) {
-    alarm.country_iso_code2 = normalizeCountryIsoCode2(asnName);
-    alarm.asn_name = normalizeASName(asnName);
+export function updateASNameAndCountryIsoCode2(alarm, asName, asNumber) {
+    alarm.country_iso_code2 = normalizeCountryIsoCode2(asName);
+    alarm.asn_name = normalizeASName(asName);
+    alarm.asn = asNumber
 }
 
 export function normalizeCountryIsoCode2(asnName) {
