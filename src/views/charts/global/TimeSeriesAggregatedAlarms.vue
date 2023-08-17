@@ -35,7 +35,7 @@ export default {
             traces: [],
             layout: {
                 margin: { t: 50, b: 65, l: 40, r: 0 },
-                title: 'Alarm Alarms by Countries, ASNs, and Time',
+                title: 'Aggregated Alarms by Countries, ASNs, and Time',
                 xaxis: {
                     title: 'Date',
                 },
