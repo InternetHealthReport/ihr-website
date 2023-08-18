@@ -3,7 +3,7 @@ import * as AggregatedAlarmsUtils from '../AggregatedAlarmsUtils'
 describe('truncateString', () => {
     test('should truncate a string if it exceeds the max length', () => {
         const result = AggregatedAlarmsUtils.truncateString('Hello, world!', 5);
-        expect(result).toEqual('Hello...');
+        expect(result).toEqual('Hello');
     });
 
     test('should not truncate a string if it is within or equal to the max length', () => {

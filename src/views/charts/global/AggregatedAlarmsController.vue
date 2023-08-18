@@ -157,6 +157,7 @@ export default {
             alarmsTimeFiltered: null,
             alarmsSeveritiesFiltered: null,
             aggregatedAlarmsLoadingVal: false,
+            countryNameClicked: null,
             alarmTypesFilter: {},
             startDateTimePlotly: null,
             endDateTimePlotly: null,
@@ -280,8 +281,8 @@ export default {
             handler: function (newAlarmTypesFilter) {
                 const anyNewAlarmTypesSelected = Object.values(newAlarmTypesFilter).includes(true)
                 const aggregatedAttrsSelectedFlattened = AggregatedAlarmsUtils.flattenDictionary(this.aggregatedAttrsSelected)
-                const isThereAnyCachedAlarms = this.getCachedAlarmsIfExist(this.alarmsCurrent, aggregatedAttrsSelectedFlattened)
-                if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarms) {
+                const isThereAnyCachedAlarmsResult = this.isThereAnyCachedAlarms(this.alarmsCurrent, aggregatedAttrsSelectedFlattened)
+                if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarmsResult) {
                     this.etlAggregatedAlarmsDataModel(aggregatedAttrsSelectedFlattened)
                 }
                 if (!this.loadingVal && (!anyNewAlarmTypesSelected || !this.alarmsCurrent.length)) {
@@ -325,8 +326,8 @@ export default {
                     const countAggregatedAttrsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
                     const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
                     this.$refs.worldMapAggregatedAlarms.etl(newAlarmsTimeFiltered, countAggregatedAttrsSelected)
-                    this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmsTimeFiltered, aggregatedAttrsZipped, null)
-                    this.$refs.treeMapAggregatedAlarms.etl(newAlarmsTimeFiltered, aggregatedAttrsZipped, null)
+                    this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmsTimeFiltered, aggregatedAttrsZipped, this.countryNameClicked)
+                    this.$refs.treeMapAggregatedAlarms.etl(newAlarmsTimeFiltered, aggregatedAttrsZipped, this.countryNameClicked)
                 }
                 if (newAlarmsTimeFiltered && !newAlarmsTimeFiltered.length) {
                     this.clearDataVizHandler()
@@ -362,6 +363,7 @@ export default {
                 const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
                 this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName)
                 this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName)
+                this.countryNameClicked = countryName
             }
         },
 
@@ -402,18 +404,19 @@ export default {
         },
 
         resetTimeFlagHandler() {
-            this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly = null;
+            this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly;
             const alarmCountsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
             const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
             this.$refs.worldMapAggregatedAlarms.etl(this.alarms, alarmCountsSelected)
-            this.$refs.timeSeriesAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, null)
-            this.$refs.treeMapAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, null)
+            this.$refs.timeSeriesAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, this.countryNameClicked)
+            this.$refs.treeMapAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, this.countryNameClicked)
         },
 
         resetGranularityFlagHandler() {
+            this.countryNameClicked = null
             const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-            this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null)
-            this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null)
+            this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, this.countryNameClicked)
+            this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, this.countryNameClicked)
         },
 
         clearDataVizHandler() {
@@ -426,15 +429,15 @@ export default {
             this.alarmTypesFilter = newAlarmTypesFilter
         },
 
-        getCachedAlarmsIfExist(cachedAlarms, aggregatedAttrsSelected) {
+        isThereAnyCachedAlarms(cachedAlarms, aggregatedAttrsSelected) {
             if (cachedAlarms.length) {
                 const cachedAlarmsFirstElement = Object.values(cachedAlarms)[0]
                 const dataContainsSelectedAlarmAttrs = AggregatedAlarmsUtils.isDictKeysSubset(aggregatedAttrsSelected, cachedAlarmsFirstElement)
                 if (dataContainsSelectedAlarmAttrs) {
-                    return AggregatedAlarmsUtils.deepCopy(cachedAlarms)
+                    return true
                 }
             }
-            return null
+            return false
         },
 
         isDataSourceSelected(dataSourceObj, alarmTypesFilter) {

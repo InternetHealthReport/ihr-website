@@ -37,7 +37,28 @@ function aggregateAlarmCountsBySeverityType(alarms, aggregatedAttrsZipped, group
             }
         }
     }
-    return alarmCountsAggregatedBySeverity;
+    const alarmsAggregated = aggregateAlarmCountsByCriteria(alarmCountsAggregatedBySeverity)
+    return alarmsAggregated;
+}
+
+function aggregateAlarmCountsByCriteria(alarmCountsAggregatedBySeverity) {
+    const alarmCountsMap = {};
+    for (const alarm of alarmCountsAggregatedBySeverity) {
+        const key = JSON.stringify({
+            country_name: alarm.country_name,
+            alarm_type: alarm.alarm_type,
+            severity: alarm.severity,
+            asn_name: alarm.asn_name
+        });
+
+        if (!alarmCountsMap[key]) {
+            alarmCountsMap[key] = alarm;
+        } else {
+            alarmCountsMap[key].count += alarm.count;
+        }
+    }
+    const groupedAlarms = Object.values(alarmCountsMap);
+    return groupedAlarms
 }
 
 function getTreeMapTrace(alarmCountsAggregatedBySeverity, groupByKey) {
@@ -73,13 +94,11 @@ function createBaseTrace() {
 
 function addGroupByKeyValues(trace, alarms, groupByKey, groupByKeyUniqueValues) {
     for (const groupByKeyUniqueValue of groupByKeyUniqueValues) {
-        const traceLabelTruncated = AggregatedAlarmsUtils.truncateString(groupByKeyUniqueValue, 15)
         const groupByKeyAlarmCounts = alarms.filter(alarm => alarm[groupByKey] === groupByKeyUniqueValue).reduce((sum, alarm) => sum + alarm.count, 0);
-        const totalAlarmCountsLabel = AggregatedAlarmsUtils.titleCase(`total_alarm_counts`)
-        const groupByKeyLabel = AggregatedAlarmsUtils.titleCase(groupByKey)
-        const traceText = `${groupByKeyLabel}: ${groupByKeyUniqueValue}<br>` + `${totalAlarmCountsLabel}: ${groupByKeyAlarmCounts}`
+        const totalAlarmCountsLabel = AggregatedAlarmsUtils.titleCase('total_alarm_counts')
+        const traceText = `${totalAlarmCountsLabel}: ${groupByKeyAlarmCounts}`
         trace.ids.push(groupByKeyUniqueValue);
-        trace.labels.push(traceLabelTruncated);
+        trace.labels.push(groupByKeyUniqueValue);
         trace.parents.push('');
         trace.values.push(0);
         trace.text.push(traceText);

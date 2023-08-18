@@ -3,7 +3,7 @@ import * as TreeMapAggregatedAlarmsDataModel from '../TreeMapAggregatedAlarmsDat
 const ALARMS =
     [
         {
-            asn_name: 'SOTCOM-AS JSC Telephone Company "Sotcom"',
+            asn_name: 'SOTCOM-AS JSC Teleph (AS34467)',
             asn: '34467',
             country_iso_code2: 'RU',
             country_iso_code3: 'RUS',
@@ -37,7 +37,7 @@ const ALARMS =
             ucsd_nt_alarm_severities: [],
         },
         {
-            asn_name: 'CONNETRO-AS CONNET - RO SRL',
+            asn_name: 'CONNETRO-AS CONNET - (AS34469)',
             asn: '34469',
             country_iso_code2: 'RO',
             country_iso_code3: 'ROU',
@@ -71,7 +71,7 @@ const ALARMS =
             ucsd_nt_alarm_severities: []
         },
         {
-            asn_name: 'YOUTUBE',
+            asn_name: 'YOUTUBE (AS36040)',
             asn: '36040',
             country_iso_code2: 'US',
             country_iso_code3: 'USA',
@@ -167,8 +167,8 @@ describe('etlTreeMapAggregatedAlarmsDataModel', () => {
                 0, 1, 1, 2
             ],
             text: [
-                'Country Name: Russia<br>Total Alarm Counts: 2',
-                'Country Name: Romania<br>Total Alarm Counts: 2',
+                "Total Alarm Counts: 2",
+                "Total Alarm Counts: 2",
                 'Hegemony Alarm Counts: 1',
                 'Network Delay Alarm Counts: 1',
                 'Hegemony Alarm Counts: 2',
@@ -216,25 +216,25 @@ describe('etlTreeMapAggregatedAlarmsDataModel', () => {
         const expectedResult = {
             type: 'treemap',
             ids: [
-                'CONNETRO-AS CONNET - RO SRL',
-                'CONNETRO-AS CONNET - RO SRL-Hegemony',
-                'CONNETRO-AS CONNET - RO SRL-Hegemony-High'
+                'CONNETRO-AS CONNET - (AS34469)',
+                'CONNETRO-AS CONNET - (AS34469)-Hegemony',
+                'CONNETRO-AS CONNET - (AS34469)-Hegemony-High'
             ],
-            labels: ['CONNETRO-AS CON...', 'Hegemony', 'High'],
+            labels: ['CONNETRO-AS CONNET - (AS34469)', 'Hegemony', 'High'],
             parents: [
                 '',
-                'CONNETRO-AS CONNET - RO SRL',
-                'CONNETRO-AS CONNET - RO SRL-Hegemony'
+                'CONNETRO-AS CONNET - (AS34469)',
+                'CONNETRO-AS CONNET - (AS34469)-Hegemony'
             ],
             values: [0, 0, 2],
             text: [
-                'Asn Name: CONNETRO-AS CONNET - RO SRL<br>Total Alarm Counts: 2',
+                "Total Alarm Counts: 2",
                 'Hegemony Alarm Counts: 2',
                 ''
             ],
             hoverinfo: 'label+text+value'
         }
-        
+
         expect(result).toEqual(expectedResult)
     });
 
