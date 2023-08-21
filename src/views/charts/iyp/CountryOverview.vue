@@ -1,14 +1,21 @@
 <template>
-  <div>
-    <div v-if="loadingStatus" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
+  <div class="IYP_chart">
+    <div v-if="loadingStatus" class="IYP_loading-spinner">
+      <q-spinner color="secondary" size="3em" />
     </div>
     <div>
-      <p>Country of origin: {{ overview.country }}</p>
-      <p>Country Code: {{ countryCode }}</p>
-      <p>Autonomus Systems: {{ overview.asCount }}</p>
-      <p>Prefix count: {{ countryCode }} has {{ overview.prefixesCount }} prefixes</p>
-      <p>Internet Exchange Points: {{ overview.ixpsCount }}</p>
+      <div class="q-pl-sm q-mt-lg q-mb-lg">
+        <h2 class="q-mb-sm">Overview</h2>
+        <div class="q-pl-md">
+          <div>
+            <p>Country of origin: {{ overview.country }}</p>
+            <p>Country Code: {{ countryCode }}</p>
+            <p>Autonomus Systems: {{ overview.asCount }}</p>
+            <p>Prefix count: {{ countryCode }} has {{ overview.prefixesCount }} prefixes</p>
+            <p>Internet Exchange Points: {{ overview.ixpsCount }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

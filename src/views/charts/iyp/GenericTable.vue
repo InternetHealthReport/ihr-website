@@ -1,44 +1,49 @@
 <template>
-  <div class="IHR_chart">
-    <q-tabs
-      class="table-card text-grey bg-grey-2"
-      v-model="activeTab"
-      indicator-color="secondary"
-      active-color="primary"
-      align="justify"
-      narrow-indicator
-    >
-      <q-tab name="chart" label="CHART" :disable="slotLength <= 0 ? true : false"></q-tab>
-      <q-tab name="data" label="DATA"></q-tab>
-      <q-tab name="api" label="CYPHER QUERY"></q-tab>
-    </q-tabs>
-    <q-tab-panels v-model="activeTab" animated>
-      <q-tab-panel name="chart">
-        <div class="row justify-start items-center" id="chartContainer">
-          <slot></slot>
-        </div>
-      </q-tab-panel>
-      <q-tab-panel name="data">
-        <q-table :data="data" :columns="columns">
-          <template v-slot:body="props">
-            <q-tr :props="props">
-              <q-td
-                class="cursor-pointer"
-                v-for="column in columns"
-                :props="props"
-                :key="column.name"
-                @click.native="routeToEntity(column.name, props.row)"
-              >
-                {{ column.format(column.field(props.row)) }}
-              </q-td>
-            </q-tr>
-          </template>
-        </q-table>
-      </q-tab-panel>
-      <q-tab-panel name="api" class="text-left q-pa-lg" light>
-        <code>{{ cypherQuery }}</code>
-      </q-tab-panel>
-    </q-tab-panels>
+  <div class="IYP_chart">
+    <div v-if="this.loadingStatus" class="IYP_loading-spinner">
+      <q-spinner color="secondary" size="3em" />
+    </div>
+    <q-card>
+      <q-tabs
+        class="table-card text-grey bg-grey-2"
+        v-model="activeTab"
+        indicator-color="secondary"
+        active-color="primary"
+        align="justify"
+        narrow-indicator
+      >
+        <q-tab name="chart" label="CHART" :disable="slotLength <= 0 ? true : false"></q-tab>
+        <q-tab name="data" label="DATA"></q-tab>
+        <q-tab name="api" label="CYPHER QUERY"></q-tab>
+      </q-tabs>
+      <q-tab-panels v-model="activeTab" animated>
+        <q-tab-panel name="chart">
+          <div class="row justify-start items-center" id="chartContainer">
+            <slot></slot>
+          </div>
+        </q-tab-panel>
+        <q-tab-panel name="data">
+          <q-table :data="data" :columns="columns">
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td
+                  class="cursor-pointer"
+                  v-for="column in columns"
+                  :props="props"
+                  :key="column.name"
+                  @click.native="routeToEntity(column.name, props.row)"
+                >
+                  {{ column.format(column.field(props.row)) }}
+                </q-td>
+              </q-tr>
+            </template>
+          </q-table>
+        </q-tab-panel>
+        <q-tab-panel name="api" class="text-left q-pa-lg" light>
+          <code>{{ cypherQuery }}</code>
+        </q-tab-panel>
+      </q-tab-panels>
+    </q-card>
   </div>
 </template>
 
@@ -50,6 +55,10 @@ export default {
     },
     data: {
       type: Array,
+    },
+    loadingStatus: {
+      type: Boolean,
+      default: false,
     },
     cypherQuery: {
       type: String,
@@ -65,6 +74,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.loadingStatus)
     if (this.slotLength <= 0) {
       this.activeTab = 'data'
     }
@@ -127,5 +137,6 @@ export default {
 </script>
 
 <style lang="stylus">
+@import "~@/styles/quasar.variables.styl";
 @import "~@/styles/charts/common.styl";
 </style>

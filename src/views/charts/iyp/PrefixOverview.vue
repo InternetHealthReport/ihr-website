@@ -1,15 +1,20 @@
 <template>
-  <div>
-    <div v-if="loadingStatus" class="IHR_loading-spinner">
+  <div class="IYP_chart">
+    <div v-if="loadingStatus" class="IYP_loading-spinner">
       <q-spinner color="secondary" size="15em" />
     </div>
-    <div>
-      <p>Prefix: {{ overview.prefix }}</p>
-      <p>Desc: {{ overview.description }}</p>
-      <p>Originating ASN: {{ overview.asn }}</p>
-      <p>Originating AS Name: {{ overview.name }}</p>
-      <p>Country of origin: {{ overview.cc }}</p>
-      <p>Categorized Tags: {{ overview.tags }}</p>
+    <div class="q-pl-sm q-mt-lg q-mb-lg">
+      <h2 class="q-mb-sm">Overview</h2>
+      <div class="q-pl-md">
+        <div>
+          <p>Prefix: {{ overview.prefix }}</p>
+          <p>Desc: {{ overview.description }}</p>
+          <p>Originating ASN: {{ overview.asn }}</p>
+          <p>Originating AS Name: {{ overview.name }}</p>
+          <p>Country of origin: {{ overview.cc }}</p>
+          <p>Categorized Tags: {{ overview.tags }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -38,7 +43,7 @@ export default {
   methods: {
     async fetchData() {
       const query =
-        'MATCH (p:Prefix {prefix: $prefix})-[o:ORIGINATE]-(a:AS)-[:NAME]-(n:Name) MATCH(p)-[:COUNTRY]-(c:Country) MATCH (p)-[:CATEGORIZED]-(t:Tag) RETURN p.prefix AS prefix, collect(DISTINCT(o.descr)) AS descr, collect(DISTINCT(a.asn)) AS asn, head(collect(DISTINCT(n.name))) AS name, collect(DISTINCT(c.country_code)) AS cc, collect(DISTINCT(t.label)) AS tags'
+        'MATCH (p:Prefix {prefix: $prefix})-[o:ORIGINATE]-(a:AS)-[:NAME]-(n:Name) MATCH(p)-[:COUNTRY]-(c:Country) MATCH (p)-[:CATEGORIZED]-(t:Tag) RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, head(collect(DISTINCT(a.asn))) AS asn, head(collect(DISTINCT(n.name))) AS name, head(collect(DISTINCT(c.country_code))) AS cc, collect(DISTINCT(t.label)) AS tags'
       const mapping = {
         prefix: 'prefix',
         description: 'descr',

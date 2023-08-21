@@ -1,19 +1,24 @@
 <template>
-  <div>
-    <div v-if="loadingStatus" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
+  <div class="IYP_chart">
+    <div v-if="loadingStatus" class="IYP_loading-spinner">
+      <q-spinner color="secondary" size="3em" />
     </div>
-    <div>
-      <p>AS Name: {{ firstPart.name }}</p>
-      <p>AS Number: {{ asNumber }}</p>
-      <p>Country of origin: {{ firstPart.country }}</p>
-      <p>Country Code: {{ firstPart.cc }}</p>
-      <p>
-        Website: <a :href="firstPart.website" target="_blank" rel="noopener noreferrer">{{ firstPart.website }}</a>
-      </p>
-      <p>AS Prefix Count: AS{{ asNumber }} has {{ firstPart.prefixes }} prefixes</p>
-      <p>AS Peers: AS{{ asNumber }} has {{ secondPart.peers }} peers</p>
-      <p>AS Siblings: AS{{ asNumber }} has {{ secondPart.siblings }} siblings</p>
+    <div class="q-pl-sm q-mt-lg q-mb-lg">
+      <h2 class="q-mb-sm">Overview</h2>
+      <div class="q-pl-md">
+        <div>
+          <p>AS Name: {{ firstPart.name }}</p>
+          <p>AS Number: {{ asNumber }}</p>
+          <p>Country of origin: {{ firstPart.country }}</p>
+          <p>Country Code: {{ firstPart.cc }}</p>
+          <p>
+            Website: <a :href="firstPart.website" target="_blank" rel="noopener noreferrer">{{ firstPart.website }}</a>
+          </p>
+          <p>AS Prefix Count: AS{{ asNumber }} has {{ firstPart.prefixes }} prefixes</p>
+          <p>AS Peers: AS{{ asNumber }} has {{ secondPart.peers }} peers</p>
+          <p>AS Siblings: AS{{ asNumber }} has {{ secondPart.siblings }} siblings</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -30,14 +35,15 @@ export default {
     },
     asName: {
       type: String,
+      required: false,
     },
     title: {
       type: Function,
-      required: true,
+      required: false,
     },
     peeringdbId: {
       type: Function,
-      required: true,
+      required: false,
     },
   },
   data() {
@@ -48,20 +54,26 @@ export default {
     }
   },
   async mounted() {
-    this.loadingStatus = true
     await this.fetchData(this.asNumber)
-    this.loadingStatus = false
   },
   methods: {
     async fetchData(asn) {
       const queries = this.getOverview(asn)
+      this.loadingStatus = true
       let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-      console.log(res)
 
       this.firstPart = res.firstPart[0]
       this.secondPart = res.secondPart[0]
-      this.title(this.firstPart.name)
-      this.peeringdbId(this.secondPart.peeringdbId)
+
+      if (this.title !== undefined) {
+        this.title(this.firstPart.name)
+      }
+
+      if (this.peeringdbId !== undefined) {
+        this.peeringdbId(this.secondPart.peeringdbId)
+      }
+
+      this.loadingStatus = false
     },
     getOverview(asn) {
       // Depreceated

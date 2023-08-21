@@ -6,12 +6,7 @@
     </div>
     <div>
       <q-list>
-        <div class="q-pl-sm q-mt-lg q-mb-lg">
-          <h2 class="q-mb-sm">Overview</h2>
-          <div class="q-pl-md">
-            <Overview :id="id" :title="setTitle" />
-          </div>
-        </div>
+        <Overview :id="id" :title="setTitle" />
 
         <q-expansion-item :label="$t('iyp.ixp.members.title')" caption="Member Autonomous Systems (ASes)" header-class="IHR_charts-title">
           <q-separator />

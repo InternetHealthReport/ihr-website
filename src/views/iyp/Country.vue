@@ -3,12 +3,7 @@
     <h1>{{ this.pageTitle }}</h1>
     <div>
       <q-list>
-        <div class="q-pl-sm q-mt-lg q-mb-lg">
-          <h2 class="q-mb-sm">Overview</h2>
-          <div class="q-pl-md">
-            <Overview :country-code="cc" :title="setPageTitle" />
-          </div>
-        </div>
+        <Overview :country-code="cc" :title="setPageTitle" />
 
         <q-expansion-item :label="$t('iyp.country.ases.title')" caption="Autonomous Systems (ASes)" header-class="IHR_charts-title">
           <q-separator />

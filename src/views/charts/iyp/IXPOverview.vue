@@ -1,15 +1,20 @@
 <template>
-  <div>
-    <div v-if="loadingStatus" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
+  <div class="IYP_chart">
+    <div v-if="loadingStatus" class="IYP_loading-spinner">
+      <q-spinner color="secondary" size="3em" />
     </div>
-    <div>
-      <p>IXP Name: {{ overview.name }}</p>
-      <p>Country of origin: {{ overview.country }}</p>
-      <p>organization: {{ overview.organization }}</p>
-      <p>
-        Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
-      </p>
+    <div class="q-pl-sm q-mt-lg q-mb-lg">
+      <h2 class="q-mb-sm">Overview</h2>
+      <div class="q-pl-md">
+        <div>
+          <p>IXP Name: {{ overview.name }}</p>
+          <p>Country of origin: {{ overview.country }}</p>
+          <p>organization: {{ overview.organization }}</p>
+          <p>
+            Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,7 +28,7 @@ export default {
     },
     title: {
       type: Function,
-      required: true,
+      required: false,
     },
   },
   data() {
@@ -54,7 +59,11 @@ export default {
       // this.overview.website = formattedResponse[0].website
       const [data] = formattedResponse
       this.overview = { ...data }
-      this.title(this.overview.name)
+
+      if (this.title !== undefined) {
+        this.title(this.overview.name)
+      }
+
       this.loadingStatus = false
     },
   },

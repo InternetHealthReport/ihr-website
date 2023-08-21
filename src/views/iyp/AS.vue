@@ -10,25 +10,31 @@
     </div>
     <div>
       <q-list>
-        <div class="q-pl-sm q-mt-lg q-mb-lg">
-          <h2 class="q-mb-sm">Overview</h2>
-          <div class="q-pl-md">
-            <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
-          </div>
-        </div>
+        <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
 
-        <q-expansion-item :label="$t('iyp.as.peers.title')" caption="AS Peers" header-class="IHR_charts-title">
+        <q-expansion-item :label="$t('iyp.as.peers.title')" caption="AS Peers" header-class="IHR_charts-title" v-model="show.peers">
           <q-separator />
           <q-card v-if="peers" class="IHR_charts-body">
             <q-card-section>
-              <GenericTable :data="peers" :columns="peerColumns" :cypher-query="cypherQueries.peers" :slot-length="1">
+              <GenericTable
+                :data="peers"
+                :columns="peerColumns"
+                :loading-status="this.loadingStatus.peers"
+                :cypher-query="cypherQueries.peers"
+                :slot-length="1"
+              >
                 <GenericPieChart v-if="peers.length > 0" :chart-data="peers" :chart-layout="{ title: 'Country' }" />
               </GenericTable>
             </q-card-section>
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.as.ipPrefix.title')" caption="IP Prefix" header-class="IHR_charts-title">
+        <q-expansion-item
+          :label="$t('iyp.as.ipPrefix.title')"
+          caption="IP Prefix"
+          header-class="IHR_charts-title"
+          v-model="show.ipPrefixes"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable :data="ipPrefixes" :columns="ipPrefixColumns" :cypher-query="cypherQueries.ipPrefixes" :slot-length="2">
@@ -38,7 +44,12 @@
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.as.ixp.title')" caption="Internet Exchange Points" header-class="IHR_charts-title">
+        <q-expansion-item
+          :label="$t('iyp.as.ixp.title')"
+          caption="Internet Exchange Points"
+          header-class="IHR_charts-title"
+          v-model="show.ixps"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable :data="ixps" :columns="ixpsColumns" :cypher-query="cypherQueries.ixps" :slot-length="2">
@@ -47,7 +58,7 @@
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.as.rankings.title')" caption="Rankings" header-class="IHR_charts-title">
+        <q-expansion-item :label="$t('iyp.as.rankings.title')" caption="Rankings" header-class="IHR_charts-title" v-model="show.rankings">
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable :data="rankings" :columns="rankingsColumns" :cypher-query="cypherQueries.rankings" :slot-length="1">
@@ -56,7 +67,12 @@
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.as.popularDomains.title')" caption="Popular Domain Names" header-class="IHR_charts-title">
+        <q-expansion-item
+          :label="$t('iyp.as.popularDomains.title')"
+          caption="Popular Domain Names"
+          header-class="IHR_charts-title"
+          v-model="show.popularDomains"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable
@@ -74,14 +90,19 @@
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.as.facilities.title')" caption="Facilities" header-class="IHR_charts-title">
+        <q-expansion-item
+          :label="$t('iyp.as.facilities.title')"
+          caption="Facilities"
+          header-class="IHR_charts-title"
+          v-model="show.facilities"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable :data="facilities" :columns="facilitiesColumns" :cypher-query="cypherQueries.facilities" />
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.as.tags.title')" caption="Tags" header-class="IHR_charts-title">
+        <q-expansion-item :label="$t('iyp.as.tags.title')" caption="Tags" header-class="IHR_charts-title" v-model="show.tags">
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card-section>
@@ -178,8 +199,18 @@ export default {
       cypherQueries: {},
       show: {
         overview: true,
+        peers: true,
       },
       chartData: [],
+      loadingStatus: {
+        peers: true,
+        ipPrefixes: false,
+        ixps: false,
+        rankings: false,
+        popularDomains: false,
+        facilities: false,
+        tags: false,
+      },
     }
   },
   async created() {
@@ -308,6 +339,8 @@ export default {
         queriesObj[query.data] = query.cypherQuery
       })
       this.cypherQueries = queriesObj
+
+      this.loadingStatus.peers = false
 
       // await this.getPeers()
       // await this.getIpPrefix()
