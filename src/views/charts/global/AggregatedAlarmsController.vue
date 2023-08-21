@@ -404,7 +404,7 @@ export default {
         },
 
         resetTimeFlagHandler() {
-            this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly;
+            this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly = null;
             const alarmCountsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
             const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
             this.$refs.worldMapAggregatedAlarms.etl(this.alarms, alarmCountsSelected)
