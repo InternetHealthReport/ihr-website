@@ -64,8 +64,8 @@ export default {
   created() {
     this.layoutLocal['images'] = [
       {
-        x: 1,
-        y: 1.05,
+        x: 0.98,
+        y: 0.92,
         sizex: 0.1,
         sizey: 0.1,
         source: require('@/assets/imgs/ihr_logo.png'),
