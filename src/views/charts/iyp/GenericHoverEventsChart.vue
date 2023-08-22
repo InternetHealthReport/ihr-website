@@ -1,7 +1,7 @@
 <template>
   <div>
     <div ref="myDiv"></div>
-    <div ref="hoverInfo"></div>
+    <!-- <div ref="hoverInfo"></div> -->
   </div>
 </template>
 
@@ -33,27 +33,33 @@ export default {
   methods: {
     renderChart() {
       let myPlot = this.$refs.myDiv
-      let hoverInfo = this.$refs.hoverInfo
+      // let hoverInfo = this.$refs.hoverInfo
 
       let data = this.formatChartData(this.localChartData)
       let layout = {
+        xaxis: {
+          type: 'log',
+          autorange: false,
+          rangemode: 'tozero',
+        },
         hovermode: 'closest',
         ...this.chartLayout,
       }
 
       Plotly.newPlot(myPlot, data, layout)
 
-      myPlot
-        .on('plotly_hover', function (data) {
-          let infotext = data.points.map(function (d) {
-            return `.${d.data.domains[d.pointIndex]}`
-          })
+      // Reference: https://plotly.com/javascript/hover-events/
+      // myPlot
+      //   .on('plotly_hover', function (data) {
+      //     let infotext = data.points.map(function (d) {
+      //       return `.${d.data.domains[d.pointIndex]}`
+      //     })
 
-          hoverInfo.innerHTML = infotext.join('<br/>')
-        })
-        .on('plotly_unhover', function (data) {
-          hoverInfo.innerHTML = ''
-        })
+      //     hoverInfo.innerHTML = infotext.join('<br/>')
+      //   })
+      //   .on('plotly_unhover', function (data) {
+      //     hoverInfo.innerHTML = ''
+      //   })
     },
     formatChartData(arrayOfObjects) {
       if (!arrayOfObjects || arrayOfObjects.length === 0) {
@@ -84,7 +90,8 @@ export default {
         data.push({
           x: value.x,
           y: value.y,
-          domains: value.domains,
+          text: value.domains,
+          hovertemplate: '%{x}' + '<b>%{text}</b>',
           type: 'scatter',
           name: '.' + key,
           mode: 'markers',

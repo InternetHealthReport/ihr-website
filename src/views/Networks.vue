@@ -10,20 +10,14 @@
       </div>
       <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       <q-list v-if="showGraphs">
-        <q-expansion-item
-          :label="$t('iyp.overview.as.title')"
-          caption="Overview of AS"
-          header-class="IHR_charts-title"
-          icon="fas fa-search"
-          v-model="show.overview"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <overview :as-number="asNumber" :as-name="asName" />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+        <div>
+          <div v-if="this.$route.params.asn.includes('IXP')">
+            <IXPOverview :id="asNumber" />
+          </div>
+          <div v-else>
+            <ASOverview :as-number="asNumber" />
+          </div>
+        </div>
 
         <q-expansion-item
           :label="$t('charts.asInterdependencies.title')"
@@ -247,7 +241,8 @@ import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
 import MeasurementLab from '@/views/charts/MeasurementLab.vue'
 import IodaChart from './charts/IodaChart.vue'
 import html2pdf from 'html2pdf.js'
-import Overview from './charts/iyp/ASOverview.vue'
+import ASOverview from './charts/iyp/ASOverview.vue'
+import IXPOverview from './charts/iyp/IXPOverview.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -270,7 +265,8 @@ export default {
     NetworkDelayChart,
     DateTimePicker,
     NetworkSearchBar,
-    Overview,
+    ASOverview,
+    IXPOverview,
     // MeasurementLab,
     // IodaChart,
   },
@@ -353,6 +349,8 @@ export default {
   },
   mounted() {
     this.netName()
+    console.log(this.$route.params.asn.includes('IXP'))
+    console.log(this.asNumber)
   },
   computed: {
     family() {

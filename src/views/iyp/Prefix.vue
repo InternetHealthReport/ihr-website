@@ -8,12 +8,7 @@
     </div>
     <div>
       <q-list>
-        <div class="q-pl-sm q-mt-lg q-mb-lg">
-          <h2 class="q-mb-sm">Overview</h2>
-          <div class="q-pl-md">
-            <Overview :host="host" :prefixLength="prefixLength" />
-          </div>
-        </div>
+        <Overview :host="host" :prefixLength="prefixLength" />
 
         <q-expansion-item :label="$t('iyp.prefix.domains.title')" caption="Corresponding Domain Names" header-class="IHR_charts-title">
           <q-separator />

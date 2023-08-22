@@ -10,20 +10,7 @@
       </div>
       <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       <q-list v-if="showGraphs">
-        <q-expansion-item
-          :label="$t('iyp.overview.country.title')"
-          caption="Overview of a Country"
-          header-class="IHR_charts-title"
-          icon="fas fa-search"
-          v-model="show.overview"
-        >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <overview :country-code="countryCode" />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+        <Overview :country-code="countryCode" />
 
         <q-expansion-item
           :label="$t('charts.countryHegemony.title')"
