@@ -62,6 +62,8 @@ export default {
       this.loadingStatus = true
       let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
 
+      console.log(res)
+
       this.firstPart = res.firstPart[0]
       this.secondPart = res.secondPart[0]
 

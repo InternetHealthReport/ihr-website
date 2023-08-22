@@ -12,24 +12,29 @@
       <q-list>
         <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
 
-        <q-expansion-item :label="$t('iyp.as.peers.title')" caption="AS Peers" header-class="IHR_charts-title" v-model="show.peers">
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.as.peers.title')"
+          caption="AS Peers"
+          header-class="IHR_charts-title"
+          v-model="show.peers"
+        >
           <q-separator />
           <q-card v-if="peers" class="IHR_charts-body">
-            <q-card-section>
-              <GenericTable
-                :data="peers"
-                :columns="peerColumns"
-                :loading-status="this.loadingStatus.peers"
-                :cypher-query="cypherQueries.peers"
-                :slot-length="1"
-              >
-                <GenericPieChart v-if="peers.length > 0" :chart-data="peers" :chart-layout="{ title: 'Country' }" />
-              </GenericTable>
-            </q-card-section>
+            <GenericTable
+              :data="peers"
+              :columns="peerColumns"
+              :loading-status="this.loadingStatus.peers"
+              :cypher-query="cypherQueries.peers"
+              :slot-length="1"
+            >
+              <GenericPieChart v-if="peers.length > 0" :chart-data="peers" :chart-layout="{ title: 'Country' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item
+          @click="this.handleClick"
           :label="$t('iyp.as.ipPrefix.title')"
           caption="IP Prefix"
           header-class="IHR_charts-title"
@@ -37,7 +42,13 @@
         >
           <q-separator />
           <q-card class="IHR_charts-body">
-            <GenericTable :data="ipPrefixes" :columns="ipPrefixColumns" :cypher-query="cypherQueries.ipPrefixes" :slot-length="2">
+            <GenericTable
+              :data="ipPrefixes"
+              :columns="ipPrefixColumns"
+              :loading-status="this.loadingStatus.ipPrefixes"
+              :cypher-query="cypherQueries.ipPrefixes"
+              :slot-length="2"
+            >
               <GenericPieChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Country' }" />
               <GenericBarChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Tags' }" />
             </GenericTable>
@@ -45,6 +56,7 @@
         </q-expansion-item>
 
         <q-expansion-item
+          @click="this.handleClick"
           :label="$t('iyp.as.ixp.title')"
           caption="Internet Exchange Points"
           header-class="IHR_charts-title"
@@ -52,22 +64,41 @@
         >
           <q-separator />
           <q-card class="IHR_charts-body">
-            <GenericTable :data="ixps" :columns="ixpsColumns" :cypher-query="cypherQueries.ixps" :slot-length="2">
+            <GenericTable
+              :data="ixps"
+              :columns="ixpsColumns"
+              :loading-status="this.loadingStatus.ixps"
+              :cypher-query="cypherQueries.ixps"
+              :slot-length="2"
+            >
               <GenericPieChart v-if="ixps.length > 0" :chart-data="ixps" :chart-layout="{ title: 'Country' }" />
             </GenericTable>
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.as.rankings.title')" caption="Rankings" header-class="IHR_charts-title" v-model="show.rankings">
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.as.rankings.title')"
+          caption="Rankings"
+          header-class="IHR_charts-title"
+          v-model="show.rankings"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
-            <GenericTable :data="rankings" :columns="rankingsColumns" :cypher-query="cypherQueries.rankings" :slot-length="1">
+            <GenericTable
+              :data="rankings"
+              :columns="rankingsColumns"
+              :loading-status="this.loadingStatus.rankings"
+              :cypher-query="cypherQueries.rankings"
+              :slot-length="1"
+            >
               <GenericIndicatorsChart v-if="rankings.length > 0" :chart-data="rankings" :chart-layout="{ title: 'Rankings' }" />
             </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item
+          @click="this.handleClick"
           :label="$t('iyp.as.popularDomains.title')"
           caption="Popular Domain Names"
           header-class="IHR_charts-title"
@@ -78,6 +109,7 @@
             <GenericTable
               :data="popularDomains"
               :columns="popularDomainsColumns"
+              :loading-status="this.loadingStatus.popularDomains"
               :cypher-query="cypherQueries.popularDomains"
               :slot-length="1"
             >
@@ -91,6 +123,7 @@
         </q-expansion-item>
 
         <q-expansion-item
+          @click="this.handleClick"
           :label="$t('iyp.as.facilities.title')"
           caption="Facilities"
           header-class="IHR_charts-title"
@@ -98,11 +131,22 @@
         >
           <q-separator />
           <q-card class="IHR_charts-body">
-            <GenericTable :data="facilities" :columns="facilitiesColumns" :cypher-query="cypherQueries.facilities" />
+            <GenericTable
+              :data="facilities"
+              :columns="facilitiesColumns"
+              :loading-status="this.loadingStatus.facilities"
+              :cypher-query="cypherQueries.facilities"
+            />
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.as.tags.title')" caption="Tags" header-class="IHR_charts-title" v-model="show.tags">
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.as.tags.title')"
+          caption="Tags"
+          header-class="IHR_charts-title"
+          v-model="show.tags"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card-section>
@@ -134,6 +178,39 @@ const references = {
   peeringDB: 'https://www.peeringdb.com/net',
   cloudflareRadar: 'https://radar.cloudflare.com',
   ripeStat: 'https://stat.ripe.net/app/launchpad',
+}
+
+const expansionIcon = 'keyboard_arrow_down'
+
+const expansionItems = {
+  peers: {
+    title: 'Peer ASes',
+    subTitle: 'AS Peers',
+  },
+  ipPrefixes: {
+    title: 'IP Prefix',
+    subTitle: 'IP Prefix',
+  },
+  ixps: {
+    title: 'IXPs',
+    subTitle: 'Internet Exchange Points',
+  },
+  rankings: {
+    title: 'Rankings',
+    subTitle: 'Rankings',
+  },
+  popularDomains: {
+    title: 'Popular Domains',
+    subTitle: 'Popular Domain Names',
+  },
+  facilities: {
+    title: 'Facilities',
+    subTitle: 'Facilities',
+  },
+  tags: {
+    title: 'Tags',
+    subTitle: 'Tags',
+  },
 }
 
 export default {
@@ -198,12 +275,7 @@ export default {
       facilities: [],
       cypherQueries: {},
       show: {
-        overview: true,
-        peers: true,
-      },
-      chartData: [],
-      loadingStatus: {
-        peers: true,
+        peers: false,
         ipPrefixes: false,
         ixps: false,
         rankings: false,
@@ -211,11 +283,32 @@ export default {
         facilities: false,
         tags: false,
       },
+      chartData: [],
+      loadingStatus: {
+        peers: false,
+        ipPrefixes: false,
+        ixps: false,
+        rankings: false,
+        popularDomains: false,
+        facilities: false,
+        tags: false,
+      },
+      count: {
+        peers: 0,
+        ipPrefixes: 0,
+        ixps: 0,
+        rankings: 0,
+        popularDomains: 0,
+        facilities: 0,
+        tags: 0,
+      },
     }
   },
   async created() {
     this.asn = parseInt(this.$route.params.asn)
-    await this.getData()
+
+    // getData will run multiple queries in parallel
+    // await this.getData()
   },
   async mounted() {},
   computed: {},
@@ -312,22 +405,13 @@ export default {
     //   return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
     // },
 
+    // getData will run multiple queries in parallel
+    // This method is not in use
     async getData() {
-      const queries = [
-        this.getPeers(),
-        this.getIpPrefix(),
-        this.getIxps(),
-        this.getTags(),
-        this.getRankings(),
-        this.getPopularDomains(),
-        this.getFacilities(),
-      ]
+      const queries = [this.getPeers(), this.getIxps(), this.getTags(), this.getRankings(), this.getPopularDomains(), this.getFacilities()]
       let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
 
-      console.log(res)
-
       this.peers = res.peers
-      this.ipPrefixes = res.ipPrefixes
       this.ixps = res.ixps
       this.tags = res.tags
       this.rankings = res.rankings
@@ -339,7 +423,6 @@ export default {
         queriesObj[query.data] = query.cypherQuery
       })
       this.cypherQueries = queriesObj
-
       this.loadingStatus.peers = false
 
       // await this.getPeers()
@@ -441,6 +524,42 @@ export default {
       }
       console.log(externalLink)
       window.open(externalLink, '_blank')
+    },
+    async handleClick(e) {
+      console.log(e.srcElement.innerText)
+      const clickedItem = e.srcElement.innerText
+
+      let query = {}
+      if (clickedItem === expansionItems.ipPrefixes.title || clickedItem === expansionItems.ipPrefixes.subTitle) {
+        query = this.getIpPrefix()
+      } else if (clickedItem === expansionItems.peers.title || clickedItem === expansionItems.peers.subTitle) {
+        query = this.getPeers()
+      } else if (clickedItem === expansionItems.ixps.title || clickedItem === expansionItems.ixps.subTitle) {
+        query = this.getIxps()
+      } else if (clickedItem === expansionItems.rankings.title || clickedItem === expansionItems.rankings.subTitle) {
+        query = this.getRankings()
+      } else if (clickedItem === expansionItems.popularDomains.title || clickedItem === expansionItems.popularDomains.subTitle) {
+        query = this.getPopularDomains()
+      } else if (clickedItem === expansionItems.facilities.title || clickedItem === expansionItems.facilities.subTitle) {
+        query = this.getFacilities()
+      } else if (clickedItem === expansionItems.tags.title || clickedItem === expansionItems.tags.subTitle) {
+        query = this.getTags()
+      } else {
+        return
+      }
+
+      this.count[query.data] += 1
+      if (this.count[query.data] > 1) {
+        return
+      }
+      // console.log(`${this.count[query.data]} time`)
+      this.loadingStatus[query.data] = true
+      const results = await this.$iyp_api.run(query.cypherQuery, query.params)
+      const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)
+      this[query.data] = formattedRes
+
+      this.cypherQueries[query.data] = query.cypherQuery
+      this.loadingStatus[query.data] = false
     },
     getSlotLength() {
       return this.$children.filter(child => child.$options.name === 'PieChart' || child.$options.name === 'BarChart').length

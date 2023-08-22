@@ -31,7 +31,7 @@ export default {
       results: [],
     }
   },
-  mounted() {
+  async mounted() {
     this.searchInputContainer = this.$refs.searchInputContainer.querySelector('input')
     this.searchInputContainer.focus()
   },
@@ -63,7 +63,6 @@ export default {
         const res = await this.mixedEntitySearch(value)
         const optimizedRes = this.optimizeSearchResults(res)
         this.results = optimizedRes
-        console.log(this.results)
       }
     },
     async queryAS(asn) {
@@ -91,7 +90,7 @@ export default {
     async mixedEntitySearch(value) {
       const searchTerm = value.toLowerCase()
       const queries = [this.queryIXPs(searchTerm), this.queryASNames(searchTerm), this.queryCountries(searchTerm)]
-      return await this.$iyp_api.searchIYP(queries)
+      return await this.$iyp_api.searchIYPInOneSession(queries)
     },
     queryASNames(value) {
       const query =

@@ -54,15 +54,13 @@
           <div class="col-3">
             <ul>
               <li>
-                <router-link :to="{ name: 'iyp_ixp', params: { ixp: 'equinix' } }" class="IHR_delikify">Equinix Exchange</router-link>
+                <router-link :to="{ name: 'iyp_ixp', params: { id: 1997 } }" class="IHR_delikify">Equinix London</router-link>
               </li>
               <li>
-                <router-link :to="{ name: 'iyp_ixp', params: { asn: 'ix' } }" class="IHR_delikify">Brazil Internet Exchange</router-link>
+                <router-link :to="{ name: 'iyp_ixp', params: { id: 26 } }" class="IHR_delikify">AMS-IX</router-link>
               </li>
               <li>
-                <router-link :to="{ name: 'iyp_ixp', params: { asn: 'de' } }" class="IHR_delikify"
-                  >Deutscher Commercial Internet Exchange</router-link
-                >
+                <router-link :to="{ name: 'iyp_ixp', params: { id: 2588 } }" class="IHR_delikify">DE-CIX Chennai</router-link>
               </li>
             </ul>
           </div>

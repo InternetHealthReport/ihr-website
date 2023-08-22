@@ -52,7 +52,6 @@ export default {
       }
       const response = await this.$iyp_api.run(query, { id: this.id })
       const formattedResponse = this.$iyp_api.formatResponse(response, mapping)
-      console.log(formattedResponse)
       // this.overview.name = formattedResponse[0].name
       // this.overview.cc = formattedResponse[0].cc
       // this.overview.organization = formattedResponse[0].organization
