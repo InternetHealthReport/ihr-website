@@ -138,7 +138,6 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
                     { hegemony_alarm_counts: 3, network_delay_alarm_counts: 0 },
                     { hegemony_alarm_counts: 1, network_delay_alarm_counts: 1 }
                 ],
-                hovertemplate: '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>Total Alarm Counts: %{y}<br>Hegemony Alarm Counts: %{customdata.hegemony_alarm_counts}<br>Network Delay Alarm Counts: %{customdata.network_delay_alarm_counts}<br>'
             },
             {
                 x: ['2023-08-10T00:00:00Z', '2023-08-10T00:15:00Z'],
@@ -150,9 +149,6 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
                     { hegemony_alarm_counts: 2, network_delay_alarm_counts: 0 },
                     { hegemony_alarm_counts: 1, network_delay_alarm_counts: 0 }
                 ],
-                hovertemplate: '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>Total Alarm Counts: %{y}<br>Hegemony Alarm Counts: %{customdata.hegemony_alarm_counts}<br>Network Delay Alarm Counts: %{customdata.network_delay_alarm_counts}<br>',
-                visible: 'legendonly',
-                hoverinfo: 'none'
             },
             {
                 x: ['2023-08-10T00:00:00Z', '2023-08-10T00:15:00Z'],
@@ -164,9 +160,6 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
                     { hegemony_alarm_counts: 1, network_delay_alarm_counts: 0 },
                     { hegemony_alarm_counts: 0, network_delay_alarm_counts: 1 }
                 ],
-                hovertemplate: '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>Total Alarm Counts: %{y}<br>Hegemony Alarm Counts: %{customdata.hegemony_alarm_counts}<br>Network Delay Alarm Counts: %{customdata.network_delay_alarm_counts}<br>',
-                visible: 'legendonly',
-                hoverinfo: 'none'
             }
         ]
 
@@ -217,7 +210,6 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
                     { hegemony_alarm_counts: 2 },
                     { hegemony_alarm_counts: 1 },
                 ],
-                hovertemplate: '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>Total Alarm Counts: %{y}<br>Hegemony Alarm Counts: %{customdata.hegemony_alarm_counts}<br>'
             },
             {
                 x: ['2023-08-10T00:00:00Z', '2023-08-10T00:15:00Z'],
@@ -229,9 +221,6 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
                     { hegemony_alarm_counts: 2 },
                     { hegemony_alarm_counts: 1 },
                 ],
-                hovertemplate: '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>Total Alarm Counts: %{y}<br>Hegemony Alarm Counts: %{customdata.hegemony_alarm_counts}<br>',
-                visible: 'legendonly',
-                hoverinfo: 'none'
             }
         ]
 
