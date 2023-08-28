@@ -11,83 +11,83 @@ import * as TimeSeriesAggregatedAlarmsDataModel from '@/models/TimeSeriesAggrega
 import TimeSeriesAggregatedAlarmsReactive from './TimeSeriesAggregatedAlarmsReactive'
 
 export default {
-    components: {
-        TimeSeriesAggregatedAlarmsReactive,
+  components: {
+    TimeSeriesAggregatedAlarmsReactive,
+  },
+  emits: {
+    'filter-alarms-by-time': function (newDateTimeFilter) {
+      if (newDateTimeFilter) {
+        return true;
+      } else {
+        return false;
+      }
     },
-    emits: {
-        'filter-alarms-by-time': function (newDateTimeFilter) {
-            if (newDateTimeFilter) {
-                return true;
-            } else {
-                return false;
-            }
+  },
+  props: {
+    loadingVal: {
+      type: Boolean,
+      required: true,
+    }
+  },
+  data() {
+    const chart = {
+      uuid: 'timeseries',
+      traces: [],
+      layout: {
+        margin: { t: 50, b: 65, l: 40, r: 0 },
+        title: 'Alarms for all Countries over Time',
+        xaxis: {
+          title: 'Date',
         },
-    },
-    props: {
-        loadingVal: {
-            type: Boolean,
-            required: true,
-        }
-    },
-    data() {
-        const chart = {
-            uuid: 'timeseries',
-            traces: [],
-            layout: {
-                margin: { t: 50, b: 65, l: 40, r: 0 },
-                title: 'Alarms for all Countries over Time',
-                xaxis: {
-                    title: 'Date',
-                },
-                yaxis: {
-                    title: 'Number of Alarms',
-                },
-                hovermode: 'closest',
-                showlegend: true,
-                legend: {
-                    x: 1,
-                    xanchor: 'top',
-                    y: 1
-                },
-                height: 400
-            }
-        }
+        yaxis: {
+          title: 'Number of Alarms',
+        },
+        hovermode: 'closest',
+        showlegend: true,
+        legend: {
+          x: 1,
+          xanchor: 'top',
+          y: 1
+        },
+        height: 400
+      }
+    }
 
-        return {
-            chart: chart
-        }
+    return {
+      chart: chart
+    }
+  },
+  methods: {
+    filterAlarmsByTimeHandler(newPlotlyDateTimeFilter) {
+      newPlotlyDateTimeFilter.startDateTime += 'Z'
+      newPlotlyDateTimeFilter.endDateTime += 'Z'
+      this.$emit('filter-alarms-by-time', newPlotlyDateTimeFilter)
     },
-    methods: {
-        filterAlarmsByTimeHandler(newPlotlyDateTimeFilter) {
-            newPlotlyDateTimeFilter.startDateTime += 'Z'
-            newPlotlyDateTimeFilter.endDateTime += 'Z'
-            this.$emit('filter-alarms-by-time', newPlotlyDateTimeFilter)
-        },
-        etl(alarms, aggregatedAttrsZipped, countryName) {
-            const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
-            const timeSeriesTraces = TimeSeriesAggregatedAlarmsDataModel.etl(alarmsCopied, aggregatedAttrsZipped, countryName)
-            const areTimeSeriesTracesEmpty = !timeSeriesTraces.length
-            if (areTimeSeriesTracesEmpty) {
-                this.clearDataViz()
-            } else {
-                const chartTitle = countryName ? `Alarms by ASNs over Time for ${countryName}` : 'Alarms for all Countries over Time'
-                this.initTreeMap(timeSeriesTraces, chartTitle)
-            }
-        },
-        clearDataViz() {
-            this.initTreeMap([], 'Alarms for all Countries over Time')
-        },
-        initTreeMap(traces, chartTitle) {
-            this.$set(this.chart, 'traces', traces)
-            this.$set(this.chart.layout, 'title', chartTitle)
-            this.zoomoutByDefault()
-        },
-        zoomoutByDefault() {
-            Object.assign(this.chart.layout.xaxis, { autorange: true })
-            Object.assign(this.chart.layout.yaxis, { autorange: true })
-        },
+    etl(alarms, aggregatedAttrsZipped, countryName) {
+      const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
+      const timeSeriesTraces = TimeSeriesAggregatedAlarmsDataModel.etl(alarmsCopied, aggregatedAttrsZipped, countryName)
+      const areTimeSeriesTracesEmpty = !timeSeriesTraces.length
+      if (areTimeSeriesTracesEmpty) {
+        this.clearDataViz()
+      } else {
+        const chartTitle = countryName ? `Alarms by ASNs over Time for ${countryName}` : 'Alarms for all Countries over Time'
+        this.initTreeMap(timeSeriesTraces, chartTitle)
+      }
+    },
+    clearDataViz() {
+      this.initTreeMap([], 'Alarms for all Countries over Time')
+    },
+    initTreeMap(traces, chartTitle) {
+      this.$set(this.chart, 'traces', traces)
+      this.$set(this.chart.layout, 'title', chartTitle)
+      this.zoomoutByDefault()
+    },
+    zoomoutByDefault() {
+      Object.assign(this.chart.layout.xaxis, { autorange: true })
+      Object.assign(this.chart.layout.yaxis, { autorange: true })
+    },
 
-    },
+  },
 };
 </script>
 

@@ -11,68 +11,75 @@
 </template>
 
 <script>
+import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
+
 export default {
-    props: {
-        dataSource: {
-            type: String,
-            required: true
-        },
-        alarmType: {
-            type: String,
-            required: false
-        },
-        alarmsMetadata: {
-            type: Object,
-            required: true
-        },
-        dataSourceAlarmTypes: {
-            type: Object,
-            required: true
-        },
+  props: {
+    dataSource: {
+      type: String,
+      required: true
     },
-    computed: {
-        showHelpModal() {
-            if (this.alarmType) {
-                return this.alarmsMetadata.data_sources[this.dataSource].alarm_types[this.alarmType].showHelpModal;
-            } else {
-                return this.alarmsMetadata.data_sources[this.dataSource].showHelpModal;
-            }
-        },
-        title() {
-            return this.alarmType ? this.alarmsMetadata.data_sources[this.dataSource].alarm_types[this.alarmType].title : this.alarmsMetadata.data_sources[this.dataSource].title;
-        },
-        description() {
-            return this.alarmType ? this.alarmsMetadata.data_sources[this.dataSource].alarm_types[this.alarmType].description : this.alarmsMetadata.data_sources[this.dataSource].description;
-        },
+    alarmType: {
+      type: String,
+      required: false
     },
-    methods: {
-        toggleHelpModal(dataSource, alarmType, alarmDataSourcesMetadata) {
-            this.unToggleActiveHelpModals(dataSource, alarmType, alarmDataSourcesMetadata)
-            this.toggleHelpModalHelper(dataSource, alarmType)
-        },
+    alarmsMetadata: {
+      type: Object,
+      required: true
+    },
+    dataSourceAlarmTypes: {
+      type: Object,
+      required: true
+    },
+  },
+  data(){
+    return {
+      alarmsMetadataCopied: AggregatedAlarmsUtils.deepCopy(this.alarmsMetadata)
+    }
+  },
+  computed: {
+    showHelpModal() {
+      if (this.alarmType) {
+        return this.alarmsMetadataCopied.data_sources[this.dataSource].alarm_types[this.alarmType].showHelpModal;
+      } else {
+        return this.alarmsMetadataCopied.data_sources[this.dataSource].showHelpModal;
+      }
+    },
+    title() {
+      return this.alarmType ? this.alarmsMetadataCopied.data_sources[this.dataSource].alarm_types[this.alarmType].title : this.alarmsMetadataCopied.data_sources[this.dataSource].title;
+    },
+    description() {
+      return this.alarmType ? this.alarmsMetadataCopied.data_sources[this.dataSource].alarm_types[this.alarmType].description : this.alarmsMetadataCopied.data_sources[this.dataSource].description;
+    },
+  },
+  methods: {
+    toggleHelpModal(dataSource, alarmType, alarmDataSourcesMetadata) {
+      this.unToggleActiveHelpModals(dataSource, alarmType, alarmDataSourcesMetadata)
+      this.toggleHelpModalHelper(dataSource, alarmType)
+    },
 
-        unToggleActiveHelpModals(dataSourceSelected, alarmTypeSelected, dataSourcesAlarmsMetadata) {
-            for (const dataSourceKey in dataSourcesAlarmsMetadata) {
-                if (dataSourceSelected !== dataSourceKey) {
-                    dataSourcesAlarmsMetadata[dataSourceKey].showHelpModal = false
-                }
-                const alarmTypes = dataSourcesAlarmsMetadata[dataSourceKey].alarm_types
-                for (const alarmType in alarmTypes) {
-                    if (alarmTypeSelected !== alarmType) {
-                        alarmTypes[alarmType].showHelpModal = false
-                    }
-                }
-            }
-        },
-
-        toggleHelpModalHelper(dataSource, alarmType) {
-            if (alarmType) {
-                this.alarmsMetadata.data_sources[dataSource].alarm_types[alarmType].showHelpModal = !this.alarmsMetadata.data_sources[dataSource].alarm_types[alarmType].showHelpModal
-            } else {
-                this.alarmsMetadata.data_sources[dataSource].showHelpModal = !this.alarmsMetadata.data_sources[dataSource].showHelpModal;
-            }
-        },
+    unToggleActiveHelpModals(dataSourceSelected, alarmTypeSelected, dataSourcesAlarmsMetadata) {
+      for (const dataSourceKey in dataSourcesAlarmsMetadata) {
+        if (dataSourceSelected !== dataSourceKey) {
+          dataSourcesAlarmsMetadata[dataSourceKey].showHelpModal = false
+        }
+        const alarmTypes = dataSourcesAlarmsMetadata[dataSourceKey].alarm_types
+        for (const alarmType in alarmTypes) {
+          if (alarmTypeSelected !== alarmType) {
+            alarmTypes[alarmType].showHelpModal = false
+          }
+        }
+      }
     },
+
+    toggleHelpModalHelper(dataSource, alarmType) {
+      if (alarmType) {
+        this.alarmsMetadataCopied.data_sources[dataSource].alarm_types[alarmType].showHelpModal = !this.alarmsMetadataCopied.data_sources[dataSource].alarm_types[alarmType].showHelpModal
+      } else {
+        this.alarmsMetadataCopied.data_sources[dataSource].showHelpModal = !this.alarmsMetadataCopied.data_sources[dataSource].showHelpModal;
+      }
+    },
+  },
 };
 </script>
 

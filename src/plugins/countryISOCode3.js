@@ -1,4 +1,4 @@
-import getCountryName from "./countryName"
+import getCountryName from './countryName'
 
 var countryISOMapping = {
   AF: 'AFG',
