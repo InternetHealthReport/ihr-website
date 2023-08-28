@@ -91,7 +91,7 @@ import ripeApi from '@/plugins/RipeApi'
 const DEFAULT_TRACE = [
   {
     // First trace is used for the hegemony cone
-    mode: 'lines+markers',
+    mode: 'lines',
     type: 'scatter',
     x: [],
     y: [],
