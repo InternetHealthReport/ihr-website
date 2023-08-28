@@ -282,8 +282,8 @@ export default {
           const countAggregatedAttrsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
           this.$refs.worldMapAggregatedAlarms.etl(newAlarms, countAggregatedAttrsSelected, this.alarmTypeTitlesMap)
-          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
-          this.$refs.treeMapAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
+          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
+          this.$refs.treeMapAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
         }
       },
       deep: true
@@ -308,8 +308,8 @@ export default {
           const countAggregatedAttrsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
           this.$refs.worldMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, countAggregatedAttrsSelected, this.alarmTypeTitlesMap)
-          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
-          this.$refs.treeMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
+          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
+          this.$refs.treeMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
         }
 
         if (!newAlarmSeveritiesFiltered.length) {
@@ -325,8 +325,8 @@ export default {
           const countAggregatedAttrsSelected = Object.keys(newAggregatedAttrsSelected.counts)
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(newAggregatedAttrsSelected)
           this.$refs.worldMapAggregatedAlarms.etl(this.alarmsCurrent, countAggregatedAttrsSelected, this.alarmTypeTitlesMap)
-          this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
-          this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
+          this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
+          this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
         }
       },
       deep: true
