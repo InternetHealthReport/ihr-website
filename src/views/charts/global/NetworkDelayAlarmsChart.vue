@@ -26,6 +26,11 @@ export default {
   components: {
     NetworkDelayAlarmsTable,
   },
+  emits: {
+    'network-delay-alarms-data-loaded': function() {
+      return true;
+	  }
+  },
   props: {
     minDeviation: {
       type: Number,
@@ -78,6 +83,7 @@ export default {
           })
           this.table.data = data
           this.loading = false
+          this.$emit('network-delay-alarms-data-loaded', data)
         },
         error => {
           console.error(error) //FIXME do a correct alert

@@ -25,6 +25,11 @@ export default {
   components: {
     HegemonyAlarmsTable,
   },
+  emits: {
+    'hegemony-alarms-data-loaded': function() {
+		  return true;
+	  },
+  },
   props: {
     minDeviation: {
       type: Number,
@@ -65,6 +70,7 @@ export default {
           })
           this.table.data = data
           this.loading = false
+          this.$emit('hegemony-alarms-data-loaded', data)
         },
         error => {
           console.error(error) //FIXME do a correct alert

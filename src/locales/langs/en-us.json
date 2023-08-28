@@ -153,6 +153,9 @@
         "apiTitle": "Displayed data is available at the following links:"
       }
     },
+    "aggregatedAlarms": {
+      "title": "Aggregated Alarms"
+    },
     "networkDelay": {
       "title": "network delay",
       "yaxis": "Median RTT (ms)",
