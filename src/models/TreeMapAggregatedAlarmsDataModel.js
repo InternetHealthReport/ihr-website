@@ -1,10 +1,10 @@
 import * as AggregatedAlarmsUtils from './AggregatedAlarmsUtils'
 
-export function etl(alarms, aggregatedAttrsZipped, countryName) {
+export function etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap) {
   const groupByKey = countryName ? 'asn_name' : 'country_name'
   const alarmsFilteredByCountryOptional = countryName ? filterAlarmsByCountry(alarms, countryName) : alarms
   const alarmCountsAggregatedBySeverity = aggregateAlarmCountsBySeverityType(alarmsFilteredByCountryOptional, aggregatedAttrsZipped, groupByKey)
-  const treeMapTrace = getTreeMapTrace(alarmCountsAggregatedBySeverity, groupByKey)
+  const treeMapTrace = getTreeMapTrace(alarmCountsAggregatedBySeverity, groupByKey, alarmTypeTitlesMap)
   return treeMapTrace
 }
 
@@ -61,7 +61,7 @@ function aggregateAlarmCountsByCriteria(alarmCountsAggregatedBySeverity) {
   return groupedAlarms
 }
 
-function getTreeMapTrace(alarmCountsAggregatedBySeverity, groupByKey) {
+function getTreeMapTrace(alarmCountsAggregatedBySeverity, groupByKey, alarmTypeTitlesMap) {
   if (!alarmCountsAggregatedBySeverity.length || !groupByKey) {
     return {}
   }
@@ -73,7 +73,7 @@ function getTreeMapTrace(alarmCountsAggregatedBySeverity, groupByKey) {
 
   addGroupByKeyValues(trace, alarmCountsAggregatedBySeverity, groupByKey, groupByKeyUniqueValues);
 
-  addAlarmTypeValues(trace, alarmCountsAggregatedBySeverity, groupByKey, groupByKeyUniqueValues, alarmTypesUniqueValues);
+  addAlarmTypeValues(trace, alarmCountsAggregatedBySeverity, groupByKey, groupByKeyUniqueValues, alarmTypesUniqueValues, alarmTypeTitlesMap);
 
   addSeverityValues(trace, alarmCountsAggregatedBySeverity, groupByKey, groupByKeyUniqueValues, alarmTypesUniqueValues, severitiesUniqueValues)
 
@@ -104,15 +104,16 @@ function addGroupByKeyValues(trace, alarms, groupByKey, groupByKeyUniqueValues) 
   }
 }
 
-function addAlarmTypeValues(trace, alarms, groupByKey, groupByKeyUniqueValues, alarmTypesUniqueValues) {
+function addAlarmTypeValues(trace, alarms, groupByKey, groupByKeyUniqueValues, alarmTypesUniqueValues, alarmTypeTitlesMap) {
   for (const groupByKeyUniqueValue of groupByKeyUniqueValues) {
     for (const alarmTypeUniqueValue of alarmTypesUniqueValues) {
       const traceId = `${groupByKeyUniqueValue}-${alarmTypeUniqueValue}`
       const alarmTypeCount = alarms.filter(alarm => alarm[groupByKey] === groupByKeyUniqueValue && alarm.alarm_type === alarmTypeUniqueValue).reduce((sum, alarm) => sum + alarm.count, 0);
-      const alarmTypeCountLabel = AggregatedAlarmsUtils.titleCase(`${alarmTypeUniqueValue}_alarm_counts`)
-      const traceText = `${alarmTypeCountLabel}: ${alarmTypeCount}`
+      const alarmType = alarmTypeUniqueValue.trim().toLowerCase().replace(/\s/g,'_')
+      const alarmTypeTitle = alarmTypeTitlesMap[alarmType]
+      const traceText = `${alarmTypeTitle} Alarm Counts: ${alarmTypeCount}`
       trace.ids.push(traceId);
-      trace.labels.push(alarmTypeUniqueValue);
+      trace.labels.push(alarmTypeTitle);
       trace.parents.push(groupByKeyUniqueValue);
       trace.values.push(0);
       trace.text.push(traceText);

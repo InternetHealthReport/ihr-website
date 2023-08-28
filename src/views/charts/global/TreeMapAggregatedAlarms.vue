@@ -34,9 +34,9 @@ export default {
     }
   },
   methods: {
-    etl(alarms, aggregatedAttrsZipped, countryName) {
+    etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap) {
       const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
-      const treeMapTrace = TreeMapAggregatedAlarmsDataModel.etl(alarmsCopied, aggregatedAttrsZipped, countryName)
+      const treeMapTrace = TreeMapAggregatedAlarmsDataModel.etl(alarmsCopied, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap)
       const isTreeMapTraceEmpty = AggregatedAlarmsUtils.isDictEmpty(treeMapTrace)
       if (isTreeMapTraceEmpty) {
         this.clearDataViz()

@@ -1,6 +1,6 @@
 import * as AggregatedAlarmUtils from './AggregatedAlarmsUtils'
 
-export function etl(alarms, aggregatedAttrsZipped, countryName) {
+export function etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap) {
   const groupByKey = countryName ? 'asn' : 'country_name'
   const legendName = countryName ? 'asn_name' : 'country_name'
   const alarmsFilteredByCountryOptional = countryName ? filterAlarmsByCountry(alarms, countryName) : alarms
@@ -10,7 +10,7 @@ export function etl(alarms, aggregatedAttrsZipped, countryName) {
   addAlarmCountsAcrossAllTimebins(alarmsGroupedByKey, aggregatedAttrsZipped)
   sortAlarmsByCountry(alarmsGroupedByKey)
   const hoverData = getHoverZippedData(alarmsGroupedByKey, aggregatedAttrsZipped)
-  const timeSeriesTraces = getTimeSeriesTraces(alarmsGroupedByKey, hoverData, legendName, aggregatedAttrsZipped)
+  const timeSeriesTraces = getTimeSeriesTraces(alarmsGroupedByKey, hoverData, legendName, aggregatedAttrsZipped, alarmTypeTitlesMap)
   return timeSeriesTraces
 }
 
@@ -172,7 +172,7 @@ function getHoverZippedData(data, aggregatedAttrsZipped) {
   return result
 }
 
-function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZipped) {
+function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZipped, alarmTypeTitlesMap) {
   if (!alarms.length || !hoverData.length || !legendName || !aggregatedAttrsZipped.length) {
     return []
   }
@@ -196,7 +196,7 @@ function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZippe
           bgcolor: 'white',
         },
       }
-      trace.hovertemplate = getHoverTemplate(aggregatedAttrsZipped)
+      trace.hovertemplate = getHoverTemplate(aggregatedAttrsZipped, alarmTypeTitlesMap)
       if (i !== 0) {
         trace.visible = 'legendonly'
         trace.hoverinfo = 'none'
@@ -207,10 +207,11 @@ function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZippe
   return traces
 }
 
-function getHoverTemplate(aggregatedAttrsZipped) {
+function getHoverTemplate(aggregatedAttrsZipped, alarmTypeTitlesMap) {
   let hoverTemplate = '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>' + 'Total Number of Alarms: %{y}<br>'
   for (const [alarmCountType, alarmTimebinsType, _] of aggregatedAttrsZipped) {
-    const alarmCountTypeTitledCase = AggregatedAlarmUtils.titleCase(alarmCountType)
+    const alarmType = alarmCountType.split('_alarm_counts')[0]
+    const alarmCountTypeTitledCase = `${alarmTypeTitlesMap[alarmType]} Alarm Counts`
     hoverTemplate += `${alarmCountTypeTitledCase}: %{customdata.${alarmCountType}}<br>`
   }
   return hoverTemplate

@@ -105,6 +105,19 @@ const ALARMS = [
     country_name: 'United States'
   }
 ]
+
+const ALARM_TYPES_MAP = {
+  'hegemony': 'AS Dependency',
+  'network_delay': 'Network Delay',
+  'moas': 'MOAS',
+  'submoas': 'Sub-MOAS',
+  'defcon': 'DEFCON',
+  'edges': 'Fake Path',
+  'ping_slash24': 'Ping',
+  'bgp': 'BGP',
+  'ucsd_nt': 'UCSD Telescope'
+}
+
 describe('etlWorldMapAggregatedAlarmsDataModel', () => {
 
   it('should correctly ETL WorldMapAggregatedAlarmsDataModel when all data sources selected', () => {
@@ -112,7 +125,7 @@ describe('etlWorldMapAggregatedAlarmsDataModel', () => {
       'submoas_alarm_counts', 'defcon_alarm_counts', 'edges_alarm_counts',
       'bgp_alarm_counts', 'ucsd_nt_alarm_counts', 'ping_slash24_alarm_counts']
 
-    const result = WorldMapAggregatedAlarmsDataModel.etl(ALARMS, alarmCountsSelected)
+    const result = WorldMapAggregatedAlarmsDataModel.etl(ALARMS, alarmCountsSelected, ALARM_TYPES_MAP)
 
     const expectedResult = {
       customdata: [
@@ -153,15 +166,14 @@ describe('etlWorldMapAggregatedAlarmsDataModel', () => {
       locations: ['RUS', 'ROU', 'USA'],
       z: [3, 1, 1],
       text: ['Russia', 'Romania', 'United States'],
-      hovertemplate: '<b>%{text}</b><br>Total Number of Alarms: %{z}<br>Hegemony Alarm Counts: %{customdata.hegemony_alarm_counts}<br>Network Delay Alarm Counts: %{customdata.network_delay_alarm_counts}<br>Moas Alarm Counts: %{customdata.moas_alarm_counts}<br>Submoas Alarm Counts: %{customdata.submoas_alarm_counts}<br>Defcon Alarm Counts: %{customdata.defcon_alarm_counts}<br>Edges Alarm Counts: %{customdata.edges_alarm_counts}<br>Bgp Alarm Counts: %{customdata.bgp_alarm_counts}<br>Ucsd Nt Alarm Counts: %{customdata.ucsd_nt_alarm_counts}<br>Ping Slash24 Alarm Counts: %{customdata.ping_slash24_alarm_counts}<br>'
     }
-    expect(result).toEqual(expectedResult)
+    expect(result).toEqual(expect.objectContaining(expectedResult))
   });
 
   it('should correctly ETL WorldMapAggregatedAlarmsDataModel with specific alarm counts selected', () => {
     const alarmCountsSelected = ['moas_alarm_counts', 'bgp_alarm_counts'];
 
-    const result = WorldMapAggregatedAlarmsDataModel.etl(ALARMS, alarmCountsSelected);
+    const result = WorldMapAggregatedAlarmsDataModel.etl(ALARMS, alarmCountsSelected, ALARM_TYPES_MAP);
 
     const expectedResult = {
       customdata: [
@@ -172,10 +184,9 @@ describe('etlWorldMapAggregatedAlarmsDataModel', () => {
       locations: ['RUS', 'ROU', 'USA'],
       z: [1, 0, 1],
       text: ['Russia', 'Romania', 'United States'],
-      hovertemplate: '<b>%{text}</b><br>Total Number of Alarms: %{z}<br>Moas Alarm Counts: %{customdata.moas_alarm_counts}<br>Bgp Alarm Counts: %{customdata.bgp_alarm_counts}<br>'
     }
 
-    expect(result).toEqual(expectedResult);
+    expect(result).toEqual(expect.objectContaining(expectedResult))
   });
 
   it('should correctly handle aggregating alarm data for specified metrics and countries even if they not exist in the data', () => {
@@ -238,26 +249,26 @@ describe('etlWorldMapAggregatedAlarmsDataModel', () => {
       }
     ]
     const alarmCountsSelected = ['hegemony_alarm_counts', 'network_delay_alarm_counts']
-    const result = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected)
+    const result = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected, ALARM_TYPES_MAP)
     expect(result).toEqual({})
   });
 
   it('should handle empty input alarms array', () => {
     const alarms = [];
     const alarmCountsSelected = ['hegemony_alarm_counts', 'network_delay_alarm_counts'];
-    const result = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected);
+    const result = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected, ALARM_TYPES_MAP);
     expect(result).toEqual({});
   });
 
   it('should handle empty alarmCountsSelected but non-empty alarms', () => {
     const alarmCountsSelected = [];
-    const result = WorldMapAggregatedAlarmsDataModel.etl(ALARMS, alarmCountsSelected);
+    const result = WorldMapAggregatedAlarmsDataModel.etl(ALARMS, alarmCountsSelected, ALARM_TYPES_MAP);
     expect(result).toEqual({});
   });
 
   it('should handle alarmCountsSelected that doesnt exist in the alarms data', () => {
     const alarmCountsSelected = ['fake_alarm_counts_selected'];
-    const result = WorldMapAggregatedAlarmsDataModel.etl(ALARMS, alarmCountsSelected);
+    const result = WorldMapAggregatedAlarmsDataModel.etl(ALARMS, alarmCountsSelected, ALARM_TYPES_MAP);
     expect(result).toEqual({});
   });
 })

@@ -91,9 +91,9 @@ export default {
     },
   },
   methods: {
-    etl(alarms, alarmCountsSelected) {
+    etl(alarms, alarmCountsSelected, alarmTypeTitlesMap) {
       const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
-      const worldMapTrace = WorldMapAggregatedAlarmsDataModel.etl(alarmsCopied, alarmCountsSelected)
+      const worldMapTrace = WorldMapAggregatedAlarmsDataModel.etl(alarmsCopied, alarmCountsSelected, alarmTypeTitlesMap)
       const isWorldMapTraceEmpty = AggregatedAlarmsUtils.isDictEmpty(worldMapTrace)
       if (isWorldMapTraceEmpty) {
         this.clearDataViz()

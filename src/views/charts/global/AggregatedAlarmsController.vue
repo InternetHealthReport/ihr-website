@@ -1,41 +1,41 @@
 <template>
-  <div>
-    <q-card class="IHR_charts-body">
-      <q-card-section>
-        <aggregated-alarm-filters :start-time="timeFiltersCurrent.startTime" :end-time="timeFiltersCurrent.endTime"
-          :alarms-metadata="alarmsInfo.metadata" :loadingVal="loadingVal"
-          @filter-alarms-by-time="filterAlarmsByTimeHandler"
-          @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler"
-          @filter-alarms-by-severities="filterAlarmsBySeveritiesHandler" @reset-time="resetTimeFlagHandler"
-          @reset-granularity="resetGranularityFlagHandler" />
-      </q-card-section>
-    </q-card>
-
-    <q-card class="IHR_charts-body">
-      <q-card-section>
-        <world-map-aggregated-alarms :loadingVal="loadingVal" @country-clicked="countryClickedHandler"
-          ref="worldMapAggregatedAlarms" />
-      </q-card-section>
-    </q-card>
-
-    <div class="card-container">
-      <div class="card-wrapper">
+    <div>
         <q-card class="IHR_charts-body">
-          <q-card-section>
-            <time-series-aggregated-alarms :loadingVal="loadingVal"
-              @filter-alarms-by-time="filterAlarmsByPlotlyTimeHandler" ref="timeSeriesAggregatedAlarms" />
-          </q-card-section>
+            <q-card-section>
+                <aggregated-alarm-filters :start-time="timeFiltersCurrent.startTime" :end-time="timeFiltersCurrent.endTime"
+                    :alarms-metadata="alarmsInfo.metadata" :loadingVal="loadingVal"
+                    @filter-alarms-by-time="filterAlarmsByTimeHandler"
+                    @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler"
+                    @filter-alarms-by-severities="filterAlarmsBySeveritiesHandler" @reset-time="resetTimeFlagHandler"
+                    @reset-granularity="resetGranularityFlagHandler" />
+            </q-card-section>
         </q-card>
-      </div>
-      <div class="card-wrapper">
+
         <q-card class="IHR_charts-body">
-          <q-card-section>
-            <tree-map-aggregated-alarms :loadingVal="loadingVal" ref="treeMapAggregatedAlarms" />
-          </q-card-section>
+            <q-card-section>
+                <world-map-aggregated-alarms :loadingVal="loadingVal" @country-clicked="countryClickedHandler"
+                    ref="worldMapAggregatedAlarms" />
+            </q-card-section>
         </q-card>
-      </div>
+
+        <div class="card-container">
+            <div class="card-wrapper">
+                <q-card class="IHR_charts-body">
+                    <q-card-section>
+                        <time-series-aggregated-alarms :loadingVal="loadingVal"
+                            @filter-alarms-by-time="filterAlarmsByPlotlyTimeHandler" ref="timeSeriesAggregatedAlarms" />
+                    </q-card-section>
+                </q-card>
+            </div>
+            <div class="card-wrapper">
+                <q-card class="IHR_charts-body">
+                    <q-card-section>
+                        <tree-map-aggregated-alarms :loadingVal="loadingVal" ref="treeMapAggregatedAlarms" />
+                    </q-card-section>
+                </q-card>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -256,6 +256,18 @@ export default {
       }
       return dataSourcesSelected
     },
+    alarmTypeTitlesMap() {
+      const alarmTypesToTitles = {}
+      const { data_sources: dataSources } = ALARMS_INFO.metadata
+      for (const dataSource in dataSources) {
+        const dataSourceAlarmTypes = dataSources[dataSource].alarm_types
+        for (const dataSourceAlarmTypeKey in dataSourceAlarmTypes) {
+          const dataSourceAlarmTypeTitle = dataSourceAlarmTypes[dataSourceAlarmTypeKey].title
+          alarmTypesToTitles[dataSourceAlarmTypeKey] = dataSourceAlarmTypeTitle
+        }
+      }
+      return alarmTypesToTitles
+    },
     alarmsCurrent() {
       const currentTimedAlarms = this.alarmsTimeFiltered ? this.alarmsTimeFiltered : this.alarms
       return currentTimedAlarms
@@ -269,9 +281,9 @@ export default {
         if (!this.loadingVal && anyAlarmTypesSelected && this.alarmsCurrent.length) {
           const countAggregatedAttrsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          this.$refs.worldMapAggregatedAlarms.etl(newAlarms, countAggregatedAttrsSelected)
-          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, null)
-          this.$refs.treeMapAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, null)
+          this.$refs.worldMapAggregatedAlarms.etl(newAlarms, countAggregatedAttrsSelected, this.alarmTypeTitlesMap)
+          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
+          this.$refs.treeMapAggregatedAlarms.etl(newAlarms, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
         }
       },
       deep: true
@@ -295,9 +307,9 @@ export default {
         if (newAlarmSeveritiesFiltered && newAlarmSeveritiesFiltered.length) {
           const countAggregatedAttrsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          this.$refs.worldMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, countAggregatedAttrsSelected)
-          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, null)
-          this.$refs.treeMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, null)
+          this.$refs.worldMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, countAggregatedAttrsSelected, this.alarmTypeTitlesMap)
+          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
+          this.$refs.treeMapAggregatedAlarms.etl(newAlarmSeveritiesFiltered, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
         }
 
         if (!newAlarmSeveritiesFiltered.length) {
@@ -312,9 +324,9 @@ export default {
         if (!this.loadingVal && anyAlarmTypesSelected && this.alarmsCurrent.length) {
           const countAggregatedAttrsSelected = Object.keys(newAggregatedAttrsSelected.counts)
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(newAggregatedAttrsSelected)
-          this.$refs.worldMapAggregatedAlarms.etl(this.alarmsCurrent, countAggregatedAttrsSelected)
-          this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null)
-          this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null)
+          this.$refs.worldMapAggregatedAlarms.etl(this.alarmsCurrent, countAggregatedAttrsSelected, this.alarmTypeTitlesMap)
+          this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
+          this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, null, this.alarmTypeTitlesMap)
         }
       },
       deep: true
@@ -324,9 +336,9 @@ export default {
         if (!this.loadingVal && newAlarmsTimeFiltered && newAlarmsTimeFiltered.length) {
           const countAggregatedAttrsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          this.$refs.worldMapAggregatedAlarms.etl(newAlarmsTimeFiltered, countAggregatedAttrsSelected)
-          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmsTimeFiltered, aggregatedAttrsZipped, this.countryNameClicked)
-          this.$refs.treeMapAggregatedAlarms.etl(newAlarmsTimeFiltered, aggregatedAttrsZipped, this.countryNameClicked)
+          this.$refs.worldMapAggregatedAlarms.etl(newAlarmsTimeFiltered, countAggregatedAttrsSelected, this.alarmTypeTitlesMap)
+          this.$refs.timeSeriesAggregatedAlarms.etl(newAlarmsTimeFiltered, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
+          this.$refs.treeMapAggregatedAlarms.etl(newAlarmsTimeFiltered, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
         }
         if (newAlarmsTimeFiltered && !newAlarmsTimeFiltered.length) {
           this.clearDataVizHandler()
@@ -360,8 +372,8 @@ export default {
       if (this.alarmsCurrent.length && newCountryIsoCode3Clicked) {
         const countryName = newCountryIsoCode3Clicked ? getCountryNameFromIsoCode3(newCountryIsoCode3Clicked) : null
         const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-        this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName)
-        this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName)
+        this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName, this.alarmTypeTitlesMap)
+        this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName, this.alarmTypeTitlesMap)
         this.countryNameClicked = countryName
       }
     },
@@ -405,16 +417,16 @@ export default {
       this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly = null;
       const alarmCountsSelected = Object.keys(this.aggregatedAttrsSelected.counts)
       const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-      this.$refs.worldMapAggregatedAlarms.etl(this.alarms, alarmCountsSelected)
-      this.$refs.timeSeriesAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, this.countryNameClicked)
-      this.$refs.treeMapAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, this.countryNameClicked)
+      this.$refs.worldMapAggregatedAlarms.etl(this.alarms, alarmCountsSelected, this.alarmTypeTitlesMap)
+      this.$refs.timeSeriesAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
+      this.$refs.treeMapAggregatedAlarms.etl(this.alarms, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
     },
 
     resetGranularityFlagHandler() {
       this.countryNameClicked = null
       const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-      this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, this.countryNameClicked)
-      this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, this.countryNameClicked)
+      this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
+      this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
     },
 
     clearDataVizHandler() {

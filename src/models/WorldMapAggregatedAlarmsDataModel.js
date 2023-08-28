@@ -1,11 +1,12 @@
 import * as AggregatedAlarmsUtils from './AggregatedAlarmsUtils'
 
-export function etl(alarms, alarmCountsSelected) {
+
+export function etl(alarms, alarmCountsSelected, alarmTypeTitlesMap) {
   const alarmCountsByCountry = groupAlarmCountsByCountry(alarms, alarmCountsSelected)
   addTotalAlarmCountsAttr(alarmCountsByCountry, alarmCountsSelected)
   const worldMapData = getWorldMapData(alarmCountsByCountry)
   const hoverData = getHoverZippedData(worldMapData, alarmCountsSelected)
-  const worldMapTrace = getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected);
+  const worldMapTrace = getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected, alarmTypeTitlesMap);
   return worldMapTrace
 }
 
@@ -14,8 +15,8 @@ function groupAlarmCountsByCountry(alarms, alarmCountsSelected) {
     const existingEntry = result.find(
       entry =>
         entry.country_iso_code2 === obj.country_iso_code2 &&
-                entry.country_iso_code3 === obj.country_iso_code3 &&
-                entry.country_name === obj.country_name
+        entry.country_iso_code3 === obj.country_iso_code3 &&
+        entry.country_name === obj.country_name
     );
 
     if (existingEntry) {
@@ -82,21 +83,22 @@ function getHoverZippedData(alarmsData, alarmCountsSelected) {
   return zippedData
 }
 
-function getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected) {
+function getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected, alarmTypeTitlesMap) {
   let trace = {}
   trace.customdata = hoverData
   trace.locations = worldMapData['country_iso_code3'] ? worldMapData['country_iso_code3'] : []
   trace.z = worldMapData['total_alarm_counts'] ? worldMapData['total_alarm_counts'] : []
   trace.text = worldMapData['country_name'] ? worldMapData['country_name'] : []
-  trace.hovertemplate = getHoverTemplate(alarmCountsSelected)
+  trace.hovertemplate = getHoverTemplate(alarmCountsSelected, alarmTypeTitlesMap)
   trace = trace.z.every((element) => element === 0) ? {} : trace
   return trace
 }
 
-function getHoverTemplate(alarmCountsSelected) {
+function getHoverTemplate(alarmCountsSelected, alarmTypeTitlesMap) {
   let hoverTemplate = '<b>%{text}</b><br>' + 'Total Number of Alarms: %{z}<br>'
   for (const alarmCountType of alarmCountsSelected) {
-    const alarmCountTypeTitledCase = AggregatedAlarmsUtils.titleCase(alarmCountType)
+    const alarmType = alarmCountType.split('_alarm_counts')[0]
+    const alarmCountTypeTitledCase = `${alarmTypeTitlesMap[alarmType]} Alarm Counts`
     hoverTemplate += `${alarmCountTypeTitledCase}: %{customdata.${alarmCountType}}<br>`
   }
   return hoverTemplate

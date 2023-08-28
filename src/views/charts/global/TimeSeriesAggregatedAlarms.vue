@@ -63,9 +63,9 @@ export default {
       newPlotlyDateTimeFilter.endDateTime += 'Z'
       this.$emit('filter-alarms-by-time', newPlotlyDateTimeFilter)
     },
-    etl(alarms, aggregatedAttrsZipped, countryName) {
+    etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap) {
       const alarmsCopied = AggregatedAlarmsUtils.deepCopy(alarms)
-      const timeSeriesTraces = TimeSeriesAggregatedAlarmsDataModel.etl(alarmsCopied, aggregatedAttrsZipped, countryName)
+      const timeSeriesTraces = TimeSeriesAggregatedAlarmsDataModel.etl(alarmsCopied, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap)
       const areTimeSeriesTracesEmpty = !timeSeriesTraces.length
       if (areTimeSeriesTracesEmpty) {
         this.clearDataViz()
