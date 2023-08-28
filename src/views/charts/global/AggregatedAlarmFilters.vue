@@ -146,7 +146,6 @@ export default {
             severitiesSelectedList.push(severityType)
           }
         }
-        console.log('severitiesSelectedList:', severitiesSelectedList)
         this.$emit('filter-alarms-by-severities', severitiesSelectedList)
       },
       deep: true
