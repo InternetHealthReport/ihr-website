@@ -74,7 +74,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.loadingStatus)
     if (this.slotLength <= 0) {
       this.activeTab = 'data'
     }

@@ -8,33 +8,66 @@
       <q-list>
         <Overview :id="id" :title="setTitle" />
 
-        <q-expansion-item :label="$t('iyp.ixp.members.title')" caption="Member Autonomous Systems (ASes)" header-class="IHR_charts-title">
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.ixp.members.title')"
+          caption="Member Autonomous Systems (ASes)"
+          header-class="IHR_charts-title"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="members" :columns="membersColumns" :cypher-query="cypherQueries.members" :slot-length="1">
+              <GenericTable
+                :data="members"
+                :columns="membersColumns"
+                :loading-status="this.loadingStatus.members"
+                :cypher-query="cypherQueries.members"
+                :slot-length="1"
+              >
                 <GenericPieChart v-if="members.length > 0" :chart-data="members" :chart-layout="{ title: 'Country' }" />
               </GenericTable>
             </q-card>
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.ixp.facilities.title')" caption="Facilities" header-class="IHR_charts-title">
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.ixp.facilities.title')"
+          caption="Facilities"
+          header-class="IHR_charts-title"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="facilities" :columns="facilitiesColumns" :cypher-query="cypherQueries.facilities" :slot-length="1">
+              <GenericTable
+                :data="facilities"
+                :columns="facilitiesColumns"
+                :loading-status="this.loadingStatus.facilities"
+                :cypher-query="cypherQueries.facilities"
+                :slot-length="1"
+              >
                 <GenericPieChart v-if="facilities.length > 0" :chart-data="facilities" :chart-layout="{ title: 'Country' }" />
               </GenericTable>
             </q-card>
           </q-card>
         </q-expansion-item>
 
-        <q-expansion-item :label="$t('iyp.ixp.peeringLANs.title')" caption="Peering LANs of an IXP" header-class="IHR_charts-title">
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.ixp.peeringLANs.title')"
+          caption="Peering LANs of an IXP"
+          header-class="IHR_charts-title"
+        >
           <q-separator />
           <q-card class="IHR_charts-body">
             <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable :data="peeringLANs" :columns="peeringLANsColumns" :cypher-query="cypherQueries.peeringLANs" :slot-length="1">
+              <GenericTable
+                :data="peeringLANs"
+                :columns="peeringLANsColumns"
+                :loading-status="this.loadingStatus.peeringLANs"
+                :cypher-query="cypherQueries.peeringLANs"
+                :slot-length="1"
+              >
                 <GenericPieChart v-if="peeringLANs.length > 0" :chart-data="peeringLANs" :chart-layout="{ title: 'Country' }" />
               </GenericTable>
             </q-card>
@@ -53,6 +86,21 @@ import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
 
 const references = {
   peeringDB: 'https://www.peeringdb.com/ix',
+}
+
+const expansionItems = {
+  members: {
+    title: 'Members',
+    subTitle: 'Member Autonomous Systems (ASes)',
+  },
+  facilities: {
+    title: 'Co-Location Facilities',
+    subTitle: 'Facilities',
+  },
+  peeringLANs: {
+    title: 'Peering LANs',
+    subTitle: 'Peering LANs Of An IXP',
+  },
 }
 
 export default {
@@ -90,29 +138,44 @@ export default {
       peeringLANs: [],
       cypherQueries: {},
       tableVisible: true,
+      loadingStatus: {
+        members: false,
+        facilities: false,
+        peeringLANs: false,
+      },
       show: {
         overview: true,
+        members: false,
+        facilities: false,
+        peeringLANs: false,
+      },
+      count: {
+        members: 0,
+        facilities: 0,
+        peeringLANs: 0,
       },
     }
   },
   created() {
     this.id = parseInt(this.$route.params.id)
   },
-  async mounted() {
-    const queries = [this.getMembers(), this.getFacilities(), this.getPeeringLANs()]
-    let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-    console.log(res)
-    this.members = res.members
-    this.facilities = res.facilities
-    this.peeringLANs = res.peeringLANs
-    let queriesObj = {}
-    queries.forEach(query => {
-      queriesObj[query.data] = query.cypherQuery
-    })
-    this.cypherQueries = queriesObj
-  },
+  async mounted() {},
   methods: {
-    // ases stands for autonomous systems
+    // getData will run multiple queries in parallel
+    // This method is not in use
+    async getData() {
+      const queries = [this.getMembers(), this.getFacilities(), this.getPeeringLANs()]
+      let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
+      console.log(res)
+      this.members = res.members
+      this.facilities = res.facilities
+      this.peeringLANs = res.peeringLANs
+      let queriesObj = {}
+      queries.forEach(query => {
+        queriesObj[query.data] = query.cypherQuery
+      })
+      this.cypherQueries = queriesObj
+    },
     getPrefixes() {
       const query =
         'MATCH (c:Country {country_code: $cc})-[r]-(a:AS)-[:NAME]-(n:Name) WITH c.country_code AS cc, a.asn AS asn, collect(DISTINCT(n.name)) AS name RETURN cc, asn, name LIMIT 100'
@@ -165,10 +228,38 @@ export default {
       console.log(externalLink)
       window.open(externalLink, '_blank')
     },
+    async handleClick(e) {
+      console.log(e.srcElement.innerText)
+      const clickedItem = e.srcElement.innerText
+
+      let query = {}
+      if (clickedItem === expansionItems.members.title || clickedItem === expansionItems.members.subTitle) {
+        query = this.getMembers()
+      } else if (clickedItem === expansionItems.facilities.title || clickedItem === expansionItems.facilities.subTitle) {
+        query = this.getFacilities()
+      } else if (clickedItem === expansionItems.peeringLANs.title || clickedItem === expansionItems.peeringLANs.subTitle) {
+        query = this.getPeeringLANs()
+      } else {
+        return
+      }
+
+      this.count[query.data] += 1
+      if (this.count[query.data] > 1) {
+        return
+      }
+      console.log(`${this.count[query.data]} time`)
+      this.loadingStatus[query.data] = true
+      const results = await this.$iyp_api.run(query.cypherQuery, query.params)
+      const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)
+      this[query.data] = formattedRes
+
+      this.cypherQueries[query.data] = query.cypherQuery
+      this.loadingStatus[query.data] = false
+    },
   },
 }
 </script>
 
 <style lang="stylus">
-@import '../../styles/quasar.variables';
+@import "~@/styles/quasar.variables.styl";
 </style>

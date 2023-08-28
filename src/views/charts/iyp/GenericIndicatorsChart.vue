@@ -29,7 +29,6 @@ export default {
   },
   methods: {
     renderChart() {
-      console.log(this.localChartData)
       let myPlot = this.$refs.chart
       let data = this.formatChartData(this.localChartData)
       let layout = {

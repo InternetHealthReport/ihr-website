@@ -1,19 +1,21 @@
 import neo4j from 'neo4j-driver'
 
 const IypApi = {
-  install: Vue => {
+  install: async Vue => {
     let driver
 
-    let init = () => {
-      connect('neo4j', 'iyp.iijlab.net', '7687')
+    let init = async () => {
+      await connect('neo4j', 'iyp.iijlab.net', '7687')
     }
 
-    let connect = (protocol, host, port) => {
+    let connect = async (protocol, host, port) => {
       try {
         const connectionString = `${protocol}://${host}:${port}`
         driver = neo4j.driver(connectionString)
-      } catch (e) {
-        console.error(e)
+        await driver.verifyConnectivity()
+      } catch (err) {
+        console.log(`-- Connection error --\n${err}\n-- Cause --\n${err.cause}`)
+        return
       }
     }
 
@@ -59,14 +61,36 @@ const IypApi = {
       )
     }
 
+    async function runManyInOneSession(queries, options = { defaultAccessMode: neo4j.session.READ }) {
+      // This method will execute multiple queries by creating one session which will reduce loading time
+      // But the execution is not parallel
+      console.log('Executing queries in a single session...')
+
+      let session = await getSession(options)
+      let transaction = await session.beginTransaction()
+
+      let result = []
+      queries.forEach(async q => {
+        try {
+          let res = await transaction.run(q.cypherQuery, q.params)
+          result.push(res)
+        } catch (e) {
+          console.error(e)
+        }
+      })
+
+      await transaction.close()
+      return result
+    }
+
     async function runMany(queries) {
       // This method will execute multiple queries by creating multiple sessions which will reduce loading time
       // query object contains cypherQuery, params, mapping, data
       // const session = this.getSession()
       try {
-        const response = await Promise.all(queries.map((query) => executeQuery(query)))
+        const response = await Promise.all(queries.map(query => executeQuery(query)))
         return response
-      } catch(e) {
+      } catch (e) {
         console.error(e)
         return {}
       } finally {
@@ -81,7 +105,7 @@ const IypApi = {
     async function runManyAndGetFormattedResponse(queries) {
       let response = await this.runMany(queries)
       let resultToBeReturn = {}
-      for(let i = 0; i < response.length; i++) {
+      for (let i = 0; i < response.length; i++) {
         let res = this.formatResponse(response[i], queries[i].mapping)
         resultToBeReturn[queries[i].data] = res
       }
@@ -90,8 +114,20 @@ const IypApi = {
 
     async function searchIYP(queries) {
       let response = await this.runMany(queries)
+      console.log(response)
       let searchResults = []
-      for(let i = 0; i < response.length; i++) {
+      for (let i = 0; i < response.length; i++) {
+        let res = this.formatResponse(response[i], queries[i].mapping)
+        searchResults = [...searchResults, ...res]
+      }
+      return searchResults
+    }
+
+    async function searchIYPInOneSession(queries) {
+      let response = await this.runManyInOneSession(queries)
+      console.log(response)
+      let searchResults = []
+      for (let i = 0; i < response.length; i++) {
         let res = this.formatResponse(response[i], queries[i].mapping)
         searchResults = [...searchResults, ...res]
       }
@@ -104,54 +140,54 @@ const IypApi = {
         let formattedRecord = {}
         for (let key in mapping) {
           let field = ''
-          if(mapping[key] instanceof Array) {
+          if (mapping[key] instanceof Array) {
             field = mapping[key][0]
             formattedRecord[key] = record.get(field)[mapping[key][1]]
           } else {
-            field =  mapping[key]
+            field = mapping[key]
             formattedRecord[key] = record.get(field)
           }
         }
         formattedResults.push(formattedRecord)
       }
-      return formattedResults;
+      return formattedResults
     }
 
-    let getASOverview = async (query) => {
+    let getASOverview = async query => {
       let queries = Object.entries(query.queries)
       let result = {}
-      for(let [key, value] of queries) {
+      for (let [key, value] of queries) {
         let res = await run(value, { asn: query.asn })
-        if(key == 'asNameQuery') {
+        if (key == 'asNameQuery') {
           result.name = res.records[0].get('name')
-        } else if(key == 'asWebsiteQuery') {
+        } else if (key == 'asWebsiteQuery') {
           result.website = res.records[0].get('url')
-        } else if(key == 'asCountryQuery') {
+        } else if (key == 'asCountryQuery') {
           result.country = res.records[0].get('country')
-        } else if(key == 'asPrefixesCount') {
+        } else if (key == 'asPrefixesCount') {
           result.prefixesCount = res.records[0].get('prefixes_count')
-        } else if(key == 'asPeersCount') {
-          result.peersCount =  res.records[0].get('peers_count')
-        } else if(key == 'asSiblingsCount') {
-          result.siblingsCount =  res.records[0].get('siblings_count')
+        } else if (key == 'asPeersCount') {
+          result.peersCount = res.records[0].get('peers_count')
+        } else if (key == 'asSiblingsCount') {
+          result.siblingsCount = res.records[0].get('siblings_count')
         }
       }
       return result
     }
 
-    let getCountryOverview = async (query) => {
+    let getCountryOverview = async query => {
       let queries = Object.entries(query.queries)
       let result = {}
-      for(let [key, value] of queries) {
-        let res = await run(value, { cc: query.country_code, ref: query.ref})
-        if(key == 'countryASQuery') {
+      for (let [key, value] of queries) {
+        let res = await run(value, { cc: query.country_code, ref: query.ref })
+        if (key == 'countryASQuery') {
           result.asCount = res.records[0].get('as_count').low
-        } else if(key == 'countryPrefixesQuery') {
+        } else if (key == 'countryPrefixesQuery') {
           result.prefixesCount = res.records[0].get('prefixes_count').low
-        } else if(key == 'countryIXPsQuery') {
+        } else if (key == 'countryIXPsQuery') {
           result.ixpsCount = res.records[0].get('ixps_count').low
-        } else if(key == 'countryQuery') {
-          result.country =res.records[0].get('country')
+        } else if (key == 'countryQuery') {
+          result.country = res.records[0].get('country')
         }
       }
       return result
@@ -162,15 +198,17 @@ const IypApi = {
       getDriver,
       getSession,
       run,
+      runManyInOneSession,
       runMany,
       runManyAndGetFormattedResponse,
       searchIYP,
+      searchIYPInOneSession,
       formatResponse,
       getASOverview,
-      getCountryOverview
+      getCountryOverview,
     }
 
-    init()
+    await init()
   },
 }
 

@@ -38,9 +38,17 @@ export default {
       let data = this.formatChartData(this.localChartData)
       let layout = {
         xaxis: {
+          title: {
+            text: 'Rank',
+          },
           type: 'log',
           autorange: false,
           rangemode: 'tozero',
+        },
+        yaxis: {
+          title: {
+            text: 'No. of Top-level Domains',
+          },
         },
         hovermode: 'closest',
         ...this.chartLayout,
@@ -91,7 +99,7 @@ export default {
           x: value.x,
           y: value.y,
           text: value.domains,
-          hovertemplate: '%{x}' + '<b>%{text}</b>',
+          hovertemplate: '<b>%{x}</b> ' + '%{text}',
           type: 'scatter',
           name: '.' + key,
           mode: 'markers',
