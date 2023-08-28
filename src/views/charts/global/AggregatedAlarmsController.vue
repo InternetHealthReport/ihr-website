@@ -1,41 +1,41 @@
 <template>
-    <div>
-        <q-card class="IHR_charts-body">
-            <q-card-section>
-                <aggregated-alarm-filters :start-time="timeFiltersCurrent.startTime" :end-time="timeFiltersCurrent.endTime"
-                    :alarms-metadata="alarmsInfo.metadata" :loadingVal="loadingVal"
-                    @filter-alarms-by-time="filterAlarmsByTimeHandler"
-                    @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler"
-                    @filter-alarms-by-severities="filterAlarmsBySeveritiesHandler" @reset-time="resetTimeFlagHandler"
-                    @reset-granularity="resetGranularityFlagHandler" />
-            </q-card-section>
-        </q-card>
+  <div>
+    <q-card class="IHR_charts-body">
+      <q-card-section>
+        <aggregated-alarm-filters :start-time="timeFiltersCurrent.startDateTime"
+          :end-time="timeFiltersCurrent.endDateTime" :alarms-metadata="alarmsInfo.metadata" :loadingVal="loadingVal"
+          @filter-alarms-by-time="filterAlarmsByTimeHandler"
+          @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler"
+          @filter-alarms-by-severities="filterAlarmsBySeveritiesHandler" @reset-time="resetTimeFlagHandler"
+          @reset-granularity="resetGranularityFlagHandler" />
+      </q-card-section>
+    </q-card>
 
-        <q-card class="IHR_charts-body">
-            <q-card-section>
-                <world-map-aggregated-alarms :loadingVal="loadingVal" @country-clicked="countryClickedHandler"
-                    ref="worldMapAggregatedAlarms" />
-            </q-card-section>
-        </q-card>
+    <q-card class="IHR_charts-body">
+      <q-card-section>
+        <world-map-aggregated-alarms :loadingVal="loadingVal" @country-clicked="countryClickedHandler"
+          ref="worldMapAggregatedAlarms" />
+      </q-card-section>
+    </q-card>
 
-        <div class="card-container">
-            <div class="card-wrapper">
-                <q-card class="IHR_charts-body">
-                    <q-card-section>
-                        <time-series-aggregated-alarms :loadingVal="loadingVal"
-                            @filter-alarms-by-time="filterAlarmsByPlotlyTimeHandler" ref="timeSeriesAggregatedAlarms" />
-                    </q-card-section>
-                </q-card>
-            </div>
-            <div class="card-wrapper">
-                <q-card class="IHR_charts-body">
-                    <q-card-section>
-                        <tree-map-aggregated-alarms :loadingVal="loadingVal" ref="treeMapAggregatedAlarms" />
-                    </q-card-section>
-                </q-card>
-            </div>
-        </div>
+    <div class="card-container">
+      <div class="card-wrapper">
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+            <time-series-aggregated-alarms :loadingVal="loadingVal" @filter-alarms-by-time="filterAlarmsByTimeHandler"
+              ref="timeSeriesAggregatedAlarms" />
+          </q-card-section>
+        </q-card>
+      </div>
+      <div class="card-wrapper">
+        <q-card class="IHR_charts-body">
+          <q-card-section>
+            <tree-map-aggregated-alarms :loadingVal="loadingVal" ref="treeMapAggregatedAlarms" />
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -171,6 +171,7 @@ export default {
       aggregatedAlarmsLoadingVal: false,
       countryNameClicked: null,
       alarmTypesFilter: {},
+      severitiesSelectedList: [],
       startDateTimePlotly: null,
       endDateTimePlotly: null,
       dateTimeFilter: {
@@ -215,12 +216,6 @@ export default {
   },
 
   computed: {
-    timeFiltersCurrent() {
-      const startTime = this.startDateTimePlotly ? new Date(this.startDateTimePlotly) : this.startTime
-      const endTime = this.endDateTimePlotly ? new Date(this.endDateTimePlotly) : this.endTime
-      const dateTimeFilter = { startTime, endTime }
-      return dateTimeFilter
-    },
     loadingVal() {
       return this.hegemonyLoading || this.networkDelayLoading || this.aggregatedAlarmsLoadingVal
     },
@@ -272,8 +267,13 @@ export default {
       const currentTimedAlarms = this.alarmsTimeFiltered ? this.alarmsTimeFiltered : this.alarms
       return currentTimedAlarms
     },
+    timeFiltersCurrent() {
+      const startTime = this.startDateTimePlotly ? new Date(this.startDateTimePlotly) : this.startTime
+      const endTime = this.endDateTimePlotly ? new Date(this.endDateTimePlotly) : this.endTime
+      const dateTimeFilter = { startDateTime: startTime, endDateTime: endTime }
+      return dateTimeFilter
+    },
   },
-
   watch: {
     alarms: {
       handler: function (newAlarms) {
@@ -294,6 +294,7 @@ export default {
         const aggregatedAttrsSelectedFlattened = AggregatedAlarmsUtils.flattenDictionary(this.aggregatedAttrsSelected)
         const isThereAnyCachedAlarmsResult = this.isThereAnyCachedAlarms(this.alarmsCurrent, aggregatedAttrsSelectedFlattened)
         if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarmsResult) {
+          this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly = null;
           this.etlAggregatedAlarmsDataModel(aggregatedAttrsSelectedFlattened)
         }
         if (!this.loadingVal && (!anyNewAlarmTypesSelected || !this.alarmsCurrent.length)) {
@@ -357,12 +358,12 @@ export default {
         this.hegemonyAlarms,
         this.networkDelayAlarms,
         this.thirdPartyAlarmsStates,
-        this.timeFiltersCurrent.startTime,
-        this.timeFiltersCurrent.endTime,
+        this.timeFiltersCurrent.startDateTime,
+        this.timeFiltersCurrent.endDateTime,
       ).then((alarms) => {
         this.alarms = alarms
         this.aggregatedAlarmsLoadingVal = false
-        this.filterAlarmsBySeveritiesHandler()
+        this.filterAlarmsBySeveritiesHandler(this.severitiesSelectedList)
       }).catch((error) => {
         console.error(error)
       })
@@ -382,21 +383,10 @@ export default {
       if (this.alarmsCurrent.length) {
         const { startDateTime, endDateTime } = newDateTimeFilter
         if (startDateTime && endDateTime) {
-          const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          const alarmsTimeFiltered = AggregatedAlarmsDataModel.filterAlarmsByTime(this.alarmsCurrent, startDateTime, endDateTime, aggregatedAttrsZipped)
-          this.alarmsTimeFiltered = alarmsTimeFiltered
-        }
-      }
-    },
-
-    filterAlarmsByPlotlyTimeHandler(newDateTimeFilter) {
-      if (this.alarmsCurrent.length) {
-        const { startDateTime, endDateTime } = newDateTimeFilter
-        if (startDateTime && endDateTime) {
           this.startDateTimePlotly = startDateTime
           this.endDateTimePlotly = endDateTime
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          const alarmsTimeFiltered = AggregatedAlarmsDataModel.filterAlarmsByTime(this.alarmsCurrent, startDateTime, endDateTime, aggregatedAttrsZipped)
+          const alarmsTimeFiltered = AggregatedAlarmsDataModel.filterAlarmsByTime(this.alarmsCurrent, this.timeFiltersCurrent.startDateTime, this.timeFiltersCurrent.endDateTime, aggregatedAttrsZipped)
           this.alarmsTimeFiltered = alarmsTimeFiltered
         }
       }
@@ -404,6 +394,7 @@ export default {
 
     filterAlarmsBySeveritiesHandler(newSeveritiesSelectedList) {
       if (newSeveritiesSelectedList) {
+        this.severitiesSelectedList = newSeveritiesSelectedList
         if (newSeveritiesSelectedList.length) {
           const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
           this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, newSeveritiesSelectedList, aggregatedAttrsZipped)
@@ -441,8 +432,7 @@ export default {
 
     isThereAnyCachedAlarms(cachedAlarms, aggregatedAttrsSelected) {
       if (cachedAlarms.length) {
-        const cachedAlarmsFirstElement = Object.values(cachedAlarms)[0]
-        const dataContainsSelectedAlarmAttrs = AggregatedAlarmsUtils.isDictKeysSubset(aggregatedAttrsSelected, cachedAlarmsFirstElement)
+        const dataContainsSelectedAlarmAttrs = AggregatedAlarmsUtils.isDictKeysSubset(aggregatedAttrsSelected, cachedAlarms[0])
         if (dataContainsSelectedAlarmAttrs) {
           return true
         }
