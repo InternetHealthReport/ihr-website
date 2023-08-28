@@ -37,7 +37,7 @@
         </div>
     </div>
 </template>
-  
+
 <script>
 import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
 import { getCountryNameFromIsoCode3 } from '@/plugins/countryISOCode3'
@@ -88,59 +88,58 @@ export const ALARMS_INFO = {
             ihr: {
                 alarm_types: {
                     hegemony: {
-                        description: 'Hegemony Alarm Type',
+                        description: 'Routing changes found in AS Hegemony (AS Dependency) data.',
                         showHelpModal: false
                     },
                     network_delay: {
-                        description: 'Network Delay Alarm Type',
+                        description: 'Network delay changes observed in traceroute data.',
                         showHelpModal: false
                     }
                 },
-                description: 'IHR Data Source',
+                description: 'Alarms reported by IHR.',
                 showHelpModal: false
             },
             grip: {
                 alarm_types: {
                     moas: {
-                        description: 'Moas Alarm Type',
+                        description: 'Multi Origin-AS. Prefixes concurently announced in BGP by multiple ASes.',
                         showHelpModal: false
                     },
                     submoas: {
-                        description: 'Submoas Alarm type',
+                        description: 'Sub-prefix MOAS. Sup-prefix announced by a different origin AS.',
                         showHelpModal: false
                     },
                     defcon: {
-                        description: 'Defcon Alarm Type',
+                        description: 'Hijack using a more specific prefix on an existing AS path.',
                         showHelpModal: false
                     },
                     edges: {
-                        description: 'Edges Alarm Type',
+                        description: 'Hijack creating new AS links in BGP (fake path).',
                         showHelpModal: false
                     },
                 },
-                description: 'Grip Data Source',
+                description: "BGP hijacks reported by Georgia Tech's GRIP platform.",
                 showHelpModal: false
             },
             ioda: {
                 alarm_types: {
                     ping_slash24: {
-                        description: 'Ping Slash24 Alarm Type',
+                        description: 'Data plane outages detected in ping data.',
                         showHelpModal: false
                     },
                     bgp: {
-                        description: 'BGP Alarm Type',
+                        description: 'Routing outages detected in BGP data.',
                         showHelpModal: false
                     },
                     ucsd_nt: {
-                        description: 'UCSD NT Alarm Type',
+                        description: 'Outages detected with the UCSD network telescope.',
                         showHelpModal: false
                     },
                 },
-                description: 'IODA Data Source',
+                description: "Internet outages reported by Georgia Tech's IODA platform",
                 showHelpModal: false
             }
         }
-
     }
 }
 
@@ -454,7 +453,7 @@ export default {
     display: flex;
     justify-content: space-between;
   }
-  
+
 .card-wrapper {
     flex: 1;
     margin: 10px; /* Adjust the margin as needed */
