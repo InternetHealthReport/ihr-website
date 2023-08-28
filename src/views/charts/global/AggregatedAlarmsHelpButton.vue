@@ -9,7 +9,7 @@
         </div>
     </div>
 </template>
-  
+
 <script>
 export default {
     props: {
@@ -39,10 +39,10 @@ export default {
             }
         },
         title() {
-            return this.alarmType ? this.dataSourceAlarmTypes[this.dataSource].alarm_types[this.alarmType].content.title : this.dataSourceAlarmTypes[this.dataSource].value.content.title;
+            return this.alarmType ? this.alarmsMetadata.data_sources[this.dataSource].alarm_types[this.alarmType].title : this.alarmsMetadata.data_sources[this.dataSource].title;
         },
         description() {
-            return this.alarmType ? this.dataSourceAlarmTypes[this.dataSource].alarm_types[this.alarmType].content.description : this.dataSourceAlarmTypes[this.dataSource].value.content.description;
+            return this.alarmType ? this.alarmsMetadata.data_sources[this.dataSource].alarm_types[this.alarmType].description : this.alarmsMetadata.data_sources[this.dataSource].description;
         },
     },
     methods: {
@@ -75,7 +75,7 @@ export default {
     },
 };
 </script>
-  
+
 <style scoped>
 .help {
     margin: 3px;

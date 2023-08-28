@@ -9,7 +9,7 @@
                 <label>
                     <input type="checkbox" :name="dataSource.value.value" :value="dataSource.value.value"
                         v-model="selectedDataSources[dataSource.value.value]" :disabled="loadingVal">
-                    <span> {{ dataSource.value.label }} </span>
+                    <span> {{ alarmsMetadata.data_sources[dataSource.value.value].title }} </span>
                     <aggregated-alarms-help-button :dataSource="dataSource.value.value" :alarms-metadata="alarmsMetadata"
                         :data-source-alarm-types="dataSourceAlarmTypes" />
                 </label>
@@ -18,7 +18,7 @@
                 <label>
                     <input type="checkbox" :name="alarmType.value" :value="alarmType.value"
                         v-model="selectedAlarmTypes[alarmType.value]" :disabled="loadingVal">
-                    <span> {{ alarmType.label }} </span>
+                    <span> {{ alarmsMetadata.data_sources[dataSource.value.value].alarm_types[alarmType.value].title }} </span>
                     <aggregated-alarms-help-button :dataSource="dataSource.value.value" :alarmType="alarmType.value"
                         :alarms-metadata="alarmsMetadata" :data-source-alarm-types="dataSourceAlarmTypes" />
                 </label>
@@ -29,7 +29,7 @@
         </tr>
     </table>
 </template>
-  
+
 <script>
 import AggregatedAlarmsHelpButton from './AggregatedAlarmsHelpButton';
 export default {
@@ -70,7 +70,7 @@ export default {
     }
 };
 </script>
-  
+
 <style scoped>
 .custom-table {
     width: 100%;

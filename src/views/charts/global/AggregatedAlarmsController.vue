@@ -88,54 +88,66 @@ export const ALARMS_INFO = {
             ihr: {
                 alarm_types: {
                     hegemony: {
-                        description: 'Routing changes found in AS Hegemony (AS Dependency) data.',
+                        title: 'AS Dependency',
+                        description: 'Routing changes found in AS Dependency data (a.k.a. AS Hegemony).',
                         showHelpModal: false
                     },
                     network_delay: {
+                        title: 'Network Delay',
                         description: 'Network delay changes observed in traceroute data.',
                         showHelpModal: false
                     }
                 },
+                title: 'IHR',
                 description: 'Alarms reported by IHR.',
                 showHelpModal: false
             },
             grip: {
                 alarm_types: {
                     moas: {
+                        title: 'MOAS',
                         description: 'Multi Origin-AS. Prefixes concurently announced in BGP by multiple ASes.',
                         showHelpModal: false
                     },
                     submoas: {
+                        title: 'Sub-MOAS',
                         description: 'Sub-prefix MOAS. Sup-prefix announced by a different origin AS.',
                         showHelpModal: false
                     },
                     defcon: {
+                        title: 'DEFCON',
                         description: 'Hijack using a more specific prefix on an existing AS path.',
                         showHelpModal: false
                     },
                     edges: {
-                        description: 'Hijack creating new AS links in BGP (fake path).',
+                        title: 'Fake Path',
+                        description: 'Hijack using forged AS paths to legitimate origin AS.',
                         showHelpModal: false
                     },
                 },
+                title: 'GRIP',
                 description: "BGP hijacks reported by Georgia Tech's GRIP platform.",
                 showHelpModal: false
             },
             ioda: {
                 alarm_types: {
                     ping_slash24: {
+                        title: 'Ping',
                         description: 'Data plane outages detected in ping data.',
                         showHelpModal: false
                     },
                     bgp: {
+                        title: 'BGP',
                         description: 'Routing outages detected in BGP data.',
                         showHelpModal: false
                     },
                     ucsd_nt: {
+                        title: 'UCSD Telescope',
                         description: 'Outages detected with the UCSD network telescope.',
                         showHelpModal: false
                     },
                 },
+                title: 'IODA',
                 description: "Internet outages reported by Georgia Tech's IODA platform",
                 showHelpModal: false
             }
