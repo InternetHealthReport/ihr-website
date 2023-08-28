@@ -208,7 +208,7 @@ function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZippe
 }
 
 function getHoverTemplate(aggregatedAttrsZipped) {
-    let hoverTemplate = '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>' + 'Total Alarm Counts: %{y}<br>'
+    let hoverTemplate = '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>' + 'Total Number of Alarms: %{y}<br>'
     for (const [alarmCountType, alarmTimebinsType, _] of aggregatedAttrsZipped) {
         const alarmCountTypeTitledCase = AggregatedAlarmUtils.titleCase(alarmCountType)
         hoverTemplate += `${alarmCountTypeTitledCase}: %{customdata.${alarmCountType}}<br>`

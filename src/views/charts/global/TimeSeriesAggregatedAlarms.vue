@@ -4,7 +4,7 @@
             @filter-alarms-by-time="filterAlarmsByTimeHandler" />
     </div>
 </template>
-    
+
 <script>
 import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
 import * as TimeSeriesAggregatedAlarmsDataModel from '@/models/TimeSeriesAggregatedAlarmsDataModel'
@@ -35,12 +35,12 @@ export default {
             traces: [],
             layout: {
                 margin: { t: 50, b: 65, l: 40, r: 0 },
-                title: 'Aggregated Alarms by Countries, ASNs, and Time',
+                title: 'Alarms for all Countries over Time',
                 xaxis: {
                     title: 'Date',
                 },
                 yaxis: {
-                    title: 'Total Alarm Counts',
+                    title: 'Number of Alarms',
                 },
                 hovermode: 'closest',
                 showlegend: true,
@@ -70,12 +70,12 @@ export default {
             if (areTimeSeriesTracesEmpty) {
                 this.clearDataViz()
             } else {
-                const chartTitle = countryName ? `Aggregated Alarms by ASNs, and Time for ${countryName}` : 'Alarm Alarms by Countries, ASNs, and Time'
+                const chartTitle = countryName ? `Alarms by ASNs over Time for ${countryName}` : 'Alarms for all Countries over Time'
                 this.initTreeMap(timeSeriesTraces, chartTitle)
             }
         },
         clearDataViz() {
-            this.initTreeMap([], 'Alarm Alarms by Countries, ASNs, and Time')
+            this.initTreeMap([], 'Alarms for all Countries over Time')
         },
         initTreeMap(traces, chartTitle) {
             this.$set(this.chart, 'traces', traces)

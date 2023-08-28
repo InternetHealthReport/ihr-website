@@ -50,9 +50,9 @@ import TreeMapAggregatedAlarms from './TreeMapAggregatedAlarms'
 export const ALARMS_INFO = {
     data_sources: {
         ihr: {
-            hegemony_alarm_counts: [],
-            hegemony_alarm_timebins: [],
-            hegemony_alarm_severities: [],
+            dependency_alarm_counts: [],
+            dependency_alarm_timebins: [],
+            dependency_alarm_severities: [],
             network_delay_alarm_counts: [],
             network_delay_alarm_timebins: [],
             network_delay_alarm_severities: []
@@ -67,27 +67,27 @@ export const ALARMS_INFO = {
             defcon_alarm_counts: [],
             defcon_alarm_timebins: [],
             defcon_alarm_severities: [],
-            edges_alarm_counts: [],
-            edges_alarm_timebins: [],
-            edges_alarm_severities: [],
+            fake_path_alarm_counts: [],
+            fake_path_alarm_timebins: [],
+            fake_path_alarm_severities: [],
         },
         ioda: {
-            ping_slash24_alarm_counts: [],
-            ping_slash24_alarm_timebins: [],
-            ping_slash24_alarm_severities: [],
+            ping_alarm_counts: [],
+            ping_alarm_timebins: [],
+            ping_alarm_severities: [],
             bgp_alarm_counts: [],
             bgp_alarm_timebins: [],
             bgp_alarm_severities: [],
-            ucsd_nt_alarm_counts: [],
-            ucsd_nt_alarm_timebins: [],
-            ucsd_nt_alarm_severities: [],
+            telescope_alarm_counts: [],
+            telescope_alarm_timebins: [],
+            telescope_alarm_severities: [],
         }
     },
     metadata: {
         data_sources: {
             ihr: {
                 alarm_types: {
-                    hegemony: {
+                    dependency: {
                         title: 'AS Dependency',
                         description: 'Routing changes found in AS Dependency data (a.k.a. AS Hegemony).',
                         showHelpModal: false
@@ -119,7 +119,7 @@ export const ALARMS_INFO = {
                         description: 'Hijack using a more specific prefix on an existing AS path.',
                         showHelpModal: false
                     },
-                    edges: {
+                    fake_path: {
                         title: 'Fake Path',
                         description: 'Hijack using forged AS paths to legitimate origin AS.',
                         showHelpModal: false
@@ -131,7 +131,7 @@ export const ALARMS_INFO = {
             },
             ioda: {
                 alarm_types: {
-                    ping_slash24: {
+                    ping: {
                         title: 'Ping',
                         description: 'Data plane outages detected in ping data.',
                         showHelpModal: false
@@ -141,7 +141,7 @@ export const ALARMS_INFO = {
                         description: 'Routing outages detected in BGP data.',
                         showHelpModal: false
                     },
-                    ucsd_nt: {
+                    telescope: {
                         title: 'UCSD Telescope',
                         description: 'Outages detected with the UCSD network telescope.',
                         showHelpModal: false
