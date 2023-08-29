@@ -43,10 +43,15 @@ export default {
   methods: {
     async fetchData() {
       const query =
-        'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)-[:MANAGED_BY]-(o:Organization) MATCH (i)-[:COUNTRY]-(c:Country) MATCH (i)-[:WEBSITE]-(u:URL) RETURN i.name as name, o.name as organization, c.country_code AS cc, u.url as website'
+        `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(i:IXP)
+         OPTIONAL MATCH (i)-[:MANAGED_BY]->(o:Organization)
+         OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
+         OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
+         RETURN i.name as name, o.name as organization, c.name AS country, u.url as website
+        `
       const mapping = {
         name: 'name',
-        cc: 'cc',
+        country: 'country',
         organization: 'organization',
         website: 'website',
       }

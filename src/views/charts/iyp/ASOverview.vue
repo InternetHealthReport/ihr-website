@@ -90,9 +90,19 @@ export default {
       //   this.loadingStatus = false
       // }
       const queryOne =
-        'MATCH (a:AS {asn: $asn})-[:NAME]-(n:Name) MATCH (a)-[:WEBSITE]-(u:URL) MATCH (a)-[:COUNTRY]-(c:Country) MATCH (a)-[:DEPENDS_ON]-(p:Prefix)  RETURN u.url AS website, c.country_code AS cc, c.name AS country, count(p) AS prefixes, n.name AS name LIMIT (1)'
+        `MATCH (a:AS {asn: $asn})
+         OPTIONAL MATCH (a)-[:NAME]->(n:Name)
+         OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)
+         OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+         OPTIONAL MATCH (a)-[:ORIGINATE]->(p:Prefix)
+         RETURN u.url AS website, c.country_code AS cc, c.name AS country, COUNT(DISTINCT p.prefix) AS prefixes, n.name AS name LIMIT 1
+        `
       const queryTwo =
-        'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]-(b) MATCH(a)-[:SIBLING_OF]-(c) MATCH (a)-[:EXTERNAL_ID]-(p) RETURN count(b) AS peers, count(c) AS siblings, p.id as peeringdbNetId'
+        `MATCH (a:AS {asn: $asn})
+         OPTIONAL MATCH (a)-[:PEERS_WITH]-(b:AS)
+         OPTIONAL MATCH (a)-[:SIBLING_OF]-(c:AS)
+         OPTIONAL MATCH (a)-[:EXTERNAL_ID]->(p:PeeringdbNetID)
+         RETURN COUNT(DISTINCT b.asn) AS peers, COUNT(DISTINCT c.asn) AS siblings, p.id AS peeringdbNetId`
       const mappingOne = {
         website: 'website',
         cc: 'cc',

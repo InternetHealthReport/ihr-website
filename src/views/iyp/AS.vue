@@ -434,7 +434,12 @@ export default {
     },
     getPeers() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, head(collect(DISTINCT(n.name))) AS name RETURN cc, peer, name'
+        `MATCH (a:AS {asn: $asn})-[:PEERS_WITH]-(peer:AS)
+         OPTIONAL MATCH (peer)-[:NAME]->(n:Name)
+         OPTIONAL MATCH (peer)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+         RETURN c.country_code AS cc, peer.asn AS peer, head(collect(DISTINCT(n.name))) AS name
+         ORDER BY peer
+        `
       const mapping = {
         cc: 'cc',
         asn: 'peer',
@@ -444,7 +449,11 @@ export default {
     },
     getIpPrefix() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[r:DEPENDS_ON]-(p:Prefix)-[:COUNTRY]-(c:Country) MATCH (p)-[:CATEGORIZED]-(t:Tag) WITH c, p, collect(DISTINCT(t.label)) AS tags RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, tags'
+        `MATCH (:AS {asn: 2497})<-[:DEPENDS_ON]-(p:Prefix)
+         OPTIONAL MATCH (p)-[:COUNTRY]->(c:Country)
+         OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
+         RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, collect(DISTINCT(t.label)) AS tags
+        `
       const mapping = {
         cc: 'cc',
         af: ['af', 'low'],
@@ -455,7 +464,10 @@ export default {
     },
     getIxps() {
       const query =
-        'MATCH (a:AS {asn: $asn})-[:MEMBER_OF]-(i:IXP)-[:COUNTRY]-(c:Country) MATCH (i)-[:EXTERNAL_ID]-(p:PeeringdbIXID) RETURN c.country_code as cc, i.name as ixp, p.id as id LIMIT 100'
+        `MATCH (a:AS {asn: $asn})-[:MEMBER_OF]->(i:IXP)-[:EXTERNAL_ID]->(p:PeeringdbIXID)
+         OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
+         RETURN c.country_code as cc, i.name as ixp, p.id as id
+        `
       const mapping = {
         cc: 'cc',
         name: 'ixp',
@@ -464,7 +476,7 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'ixps' }
     },
     getRankings() {
-      const query = 'MATCH (a:AS {asn: $asn})-[r:RANK]-(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank'
+      const query = 'MATCH (:AS {asn: $asn})-[r:RANK]->(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank'
       const mapping = {
         rank: 'rank',
         name: 'name',
@@ -473,7 +485,11 @@ export default {
     },
     getPopularDomains() {
       const query =
-        'MATCH (:AS {asn: $asn})-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)-[:RESOLVES_TO]-(D:DomainName)-[R:RANK]-(Ranking:Ranking) WHERE R.rank < 100000 and R.reference_name = $rankingName RETURN DISTINCT D.name AS domainName, R.rank AS rank, Ranking.name AS rankingName ORDER BY rank'
+        `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
+         WHERE rr.rank < 100000 and rr.reference_name = $rankingName
+         RETURN DISTINCT d.name AS domainName, rr.rank AS rank, rn.name AS rankingName
+         ORDER BY rank
+        `
       const mapping = {
         domainName: 'domainName',
         rank: 'rank',
@@ -482,7 +498,7 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn, rankingName: 'tranco.top1M' }, mapping, data: 'popularDomains' }
     },
     getTags() {
-      const query = 'MATCH (a:AS {asn: $asn})-[c:CATEGORIZED]-(t:Tag) return t.label as tag'
+      const query = 'MATCH (:AS {asn: $asn})-[c:CATEGORIZED]->(t:Tag) return t.label as tag'
       const mapping = {
         tag: 'tag',
       }
@@ -490,7 +506,10 @@ export default {
     },
     getFacilities() {
       const query =
-        'MATCH (n:AS {asn: $asn})-[:LOCATED_IN]->(f:Facility)<-[:LOCATED_IN]-(p:AS) MATCH (n)-[:PEERS_WITH]->(p) RETURN p.asn as asn, collect(DISTINCT f.name) as name'
+        `MATCH (n:AS {asn: $asn})-[:LOCATED_IN]->(f:Facility)<-[:LOCATED_IN]-(p:AS)
+         MATCH (n)-[:PEERS_WITH]-(p)
+         RETURN p.asn as asn, collect(DISTINCT f.name) as name
+        `
       const mapping = {
         asn: 'asn',
         name: 'name',

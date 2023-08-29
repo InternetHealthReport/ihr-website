@@ -121,7 +121,12 @@ export default {
     // ases stands for autonomous systems
     getASes() {
       const query =
-        'MATCH (c:Country {country_code: $cc})-[r]-(a:AS)-[:NAME]-(n:Name) WITH c.country_code AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name RETURN cc, asn, name LIMIT 100'
+        `MATCH (c:Country {country_code: $cc})<-[:COUNTRY]-(a:AS)
+         OPTIONAL MATCH (a)-[:NAME]->(n:Name)
+         WITH c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
+         RETURN cc, asn, name
+         LIMIT 100
+        `
       const mapping = {
         cc: 'cc',
         asn: 'asn',
@@ -131,7 +136,7 @@ export default {
     },
     getIXPs() {
       const query =
-        'MATCH (a:Country {country_code: $cc})-[:COUNTRY {reference_name: $ref}]-(b:IXP) RETURN a.country_code AS cc, b.name as ixp'
+        'MATCH (a:Country {country_code: $cc})<-[:COUNTRY {reference_name: $ref}]-(b:IXP) RETURN a.country_code AS cc, b.name as ixp'
       const mapping = {
         cc: 'cc',
         ixp: 'ixp',

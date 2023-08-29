@@ -43,7 +43,12 @@ export default {
   methods: {
     async fetchData() {
       const query =
-        'MATCH (p:Prefix {prefix: $prefix})-[o:ORIGINATE]-(a:AS)-[:NAME]-(n:Name) MATCH(p)-[:COUNTRY]-(c:Country) MATCH (p)-[:CATEGORIZED]-(t:Tag) RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, head(collect(DISTINCT(a.asn))) AS asn, head(collect(DISTINCT(n.name))) AS name, head(collect(DISTINCT(c.country_code))) AS cc, collect(DISTINCT(t.label)) AS tags'
+        `MATCH (p:Prefix {prefix: $prefix})<-[o:ORIGINATE]-(a:AS)
+         OPTIONAL MATCH (a)-[:NAME]->(n:Name)
+         OPTIONAL MATCH(p)-[:COUNTRY]->(c:Country)
+         OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
+         RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, head(collect(DISTINCT(a.asn))) AS asn, head(collect(DISTINCT(n.name))) AS name, head(collect(DISTINCT(c.country_code))) AS cc, collect(DISTINCT(t.label)) AS tags
+        `
       const mapping = {
         prefix: 'prefix',
         description: 'descr',
