@@ -17,6 +17,10 @@
           <p>AS Prefix Count: AS{{ asNumber }} has {{ firstPart.prefixes }} prefixes</p>
           <p>AS Peers: AS{{ asNumber }} has {{ secondPart.peers }} peers</p>
           <p>AS Siblings: AS{{ asNumber }} has {{ secondPart.siblings }} siblings</p>
+          <div>
+            Tags:
+            <q-chip v-for="tag in firstPart.tags" color="gray" text-color="black"> {{ tag }}</q-chip>
+          </div>
         </div>
       </div>
     </div>
@@ -27,7 +31,12 @@
 // Depreceated
 // import { ASOverviewQuery } from '../../../plugins/query/IypQuery'
 
+import { QChip } from 'quasar'
+
 export default {
+  components: {
+    QChip,
+  },
   props: {
     asNumber: {
       type: Number,
@@ -89,31 +98,42 @@ export default {
       //   console.error(e)
       //   this.loadingStatus = false
       // }
-      const queryOne =
-        `MATCH (a:AS {asn: $asn})
+      const queryOne = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:NAME]->(n:Name)
          OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)
          OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
          OPTIONAL MATCH (a)-[:ORIGINATE]->(p:Prefix)
-         RETURN u.url AS website, c.country_code AS cc, c.name AS country, COUNT(DISTINCT p.prefix) AS prefixes, n.name AS name LIMIT 1
+         MATCH (a)-[:CATEGORIZED]->(t:Tag)
+         RETURN u.url AS website, c.country_code AS cc, c.name AS country, COUNT(DISTINCT p.prefix) AS prefixes, head(collect(DISTINCT(n.name))) AS name, collect(DISTINCT(t.label)) as tags
         `
-      const queryTwo =
-        `MATCH (a:AS {asn: $asn})
+      const queryTwo = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:PEERS_WITH]-(b:AS)
          OPTIONAL MATCH (a)-[:SIBLING_OF]-(c:AS)
          OPTIONAL MATCH (a)-[:EXTERNAL_ID]->(p:PeeringdbNetID)
-         RETURN COUNT(DISTINCT b.asn) AS peers, COUNT(DISTINCT c.asn) AS siblings, p.id AS peeringdbNetId`
+         OPTIONAL MATCH (a)-[r:RANK]->(s:Ranking)
+         RETURN COUNT(DISTINCT b.asn) AS peers, COUNT(DISTINCT c.asn) AS siblings, p.id AS peeringdbNetId, r.rank AS rank, s.name AS ranking_name ORDER BY rank LIMIT 1`
+
+      const top5DomainNamesQuery = `
+      MATCH (:AS {asn:2497})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
+      WHERE rr.rank < 100000 and rr.reference_name = "tranco.top1M"
+      RETURN DISTINCT d.name AS domainName, rr.rank AS rank
+      ORDER BY rank LIMIT 5
+      `
+
       const mappingOne = {
         website: 'website',
         cc: 'cc',
         country: 'country',
         prefixes: 'prefixes',
         name: 'name',
+        tags: 'tags',
       }
       const mappingTwo = {
         peers: 'peers',
         siblings: 'siblings',
         peeringdbId: 'peeringdbNetId',
+        rank: 'rank',
+        rankingName: 'ranking_name',
       }
       return [
         { cypherQuery: queryOne, params: { asn }, mapping: mappingOne, data: 'firstPart' },
