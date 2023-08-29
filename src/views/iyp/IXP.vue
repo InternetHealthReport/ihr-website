@@ -188,7 +188,11 @@ export default {
     },
     getMembers() {
       const query =
-        'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)-[:MEMBER_OF]-(a:AS)-[:NAME]-(n:Name) MATCH (a)-[:COUNTRY {reference_org: $org}]-(c:Country) RETURN collect(DISTINCT(c.country_code)) AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name'
+        `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MEMBER_OF]-(a:AS)
+         OPTIONAL MATCH (a)-[:NAME]->(n:Name)
+         OPTIONAL MATCH (a)-[:COUNTRY {reference_org: $org}]->(c:Country)
+         RETURN c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
+        `
       const mapping = {
         cc: 'cc',
         asn: 'asn',
@@ -198,7 +202,10 @@ export default {
     },
     getFacilities() {
       const query =
-        'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)-[:LOCATED_IN]-(f:Facility) MATCH (f)-[:COUNTRY]-(c:Country) RETURN f.name as name, c.country_code AS cc'
+        `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility)
+         OPTIONAL MATCH (f)-[:COUNTRY]->(c:Country)
+         RETURN f.name as name, c.country_code AS cc
+        `
       const mapping = {
         name: 'name',
         cc: 'cc',
@@ -207,7 +214,10 @@ export default {
     },
     getPeeringLANs() {
       const query =
-        'MATCH (p:PeeringdbIXID {id: $id})-[:EXTERNAL_ID]-(i:IXP)<-[:MANAGED_BY]-(s:Prefix) MATCH (s)-[:COUNTRY]-(c:Country) RETURN s.prefix as prefix, c.country_code as cc'
+        `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY]-(s:Prefix)
+         OPTIONAL MATCH (s)-[:COUNTRY]->(c:Country)
+         RETURN s.prefix as prefix, c.country_code as cc
+        `
       const mapping = {
         prefix: 'prefix',
         cc: 'cc',
