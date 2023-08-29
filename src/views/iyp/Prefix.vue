@@ -57,8 +57,8 @@
 
         <q-expansion-item
           @click="this.handleClick"
-          :label="$t('iyp.prefix.part.title')"
-          caption="Prefixes that are part of"
+          :label="$t('iyp.prefix.prefixes.title')"
+          caption="Covering Prefixes"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -72,7 +72,7 @@
                 :slot-length="2"
               >
                 <GenericPieChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Country' }" />
-                <GenericBarChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Tags' }" />
+                <!-- <GenericBarChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Tags' }" /> -->
               </GenericTable>
             </q-card>
           </q-card>
@@ -104,9 +104,9 @@ const expansionItems = {
     title: 'Dependencies',
     subTitle: 'List Of Dependencies',
   },
-  part: {
-    title: 'Prefixes That Are Part Of',
-    subTitle: 'Prefixes That Are Part Of',
+  prefixes: {
+    title: 'Covering Prefixes',
+    subTitle: 'Covering Prefixes',
   },
 }
 
@@ -123,9 +123,10 @@ export default {
       host: null,
       prefixLength: null,
       domainsColumns: [
+        { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
+        { name: 'Domain', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
-        { name: 'Domain', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
         { name: 'Tags', label: 'Domain Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
       dependenciesColumns: [
@@ -136,6 +137,7 @@ export default {
       partColumns: [
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+        { name: 'Origin ASN', label: 'Origin ASN', align: 'left', field: row => row.origin, format: val => `${val}`, sortable: true },
         { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
       domains: [],
@@ -187,9 +189,21 @@ export default {
     },
     getDomains() {
       // '203.13.32.0/24'
-      const query =
-        'MATCH (p:Prefix {prefix: $prefix})-[:PART_OF]-(i:IP)-[:RESOLVES_TO]-(d:DomainName) MATCH (p)-[:CATEGORIZED]-(t:Tag) MATCH (p)-[:COUNTRY]-(c:Country) RETURN c.country_code as cc, i.ip AS ip, d.name as domain, collect(DISTINCT(t.label)) as tags'
+      // const query = `
+      // MATCH (p:Prefix {prefix: $prefix})-[:PART_OF]-(i:IP)-[:RESOLVES_TO]-(d:DomainName)
+      // MATCH (p)-[:CATEGORIZED]-(t:Tag)
+      // OPTIONAL MATCH (p)-[:COUNTRY]-(c:Country)
+      // RETURN c.country_code as cc, i.ip AS ip, d.name as domain, collect(DISTINCT(t.label)) as tags
+      // `
+      const query = `
+      MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(d:DomainName)
+      OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
+      OPTIONAL MATCH (p)-[:COUNTRY]->(c:Country)
+      OPTIONAL MATCH (d)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
+      RETURN c.country_code as cc, i.ip AS ip, d.name as domain, collect(DISTINCT t.label) as tags, ra.rank AS rank
+      `
       const mapping = {
+        rank: 'rank',
         cc: 'cc',
         ip: 'ip',
         domainName: 'domain',
@@ -200,8 +214,11 @@ export default {
       return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'domains' }
     },
     getDependencies() {
-      const query =
-        'MATCH (p:Prefix {prefix: $prefix})-[:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name) MATCH (a)-[:COUNTRY]-(c:Country) RETURN c.country_code AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name'
+      const query = `
+      MATCH (p:Prefix {prefix: $prefix})-[:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name) 
+      OPTIONAL MATCH (a)-[:COUNTRY]-(c:Country) 
+      RETURN c.country_code AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name
+      `
       const mapping = {
         cc: 'cc',
         asn: 'asn',
@@ -211,11 +228,22 @@ export default {
       return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'dependencies' }
     },
     getPartOfPrefixes() {
-      const query =
-        'MATCH (p:Prefix {prefix: $prefix})-[:PART_OF*]->(x:Prefix)-[:CATEGORIZED]-(t:Tag) MATCH (x)-[:COUNTRY]-(c:Country) RETURN c.country_code as cc, x.prefix as prefix, collect(DISTINCT(t.label)) as tags'
+      // const query = `
+      // MATCH (p:Prefix {prefix: $prefix})-[:PART_OF*]->(x:Prefix)-[:CATEGORIZED]-(t:Tag)
+      // OPTIONAL MATCH (x)-[:COUNTRY]-(c:Country)
+      // RETURN c.country_code as cc, x.prefix as prefix, collect(DISTINCT(t.label)) as tags
+      // `
+      const query = `
+      MATCH (p:Prefix {prefix: '8.8.8.0/24'})-[:PART_OF*]->(x:Prefix)
+      OPTIONAL MATCH (x)-[:CATEGORIZED]->(t:Tag)
+      OPTIONAL MATCH (x)-[:COUNTRY]->(c:Country)
+      OPTIONAL MATCH (x)<-[:ORIGINATE]-(a:AS)
+      RETURN c.country_code as cc, x.prefix as prefix, collect(a.asn) as origin_asn, collect(DISTINCT t.label) as tags
+      `
       const mapping = {
         cc: 'cc',
         prefix: 'prefix',
+        origin: 'origin_asn',
         tags: 'tags',
       }
       const prefix = this.getPrefix()
@@ -248,7 +276,7 @@ export default {
         query = this.getDomains()
       } else if (clickedItem === expansionItems.dependencies.title || clickedItem === expansionItems.dependencies.subTitle) {
         query = this.getDependencies()
-      } else if (clickedItem === expansionItems.part.title || clickedItem === expansionItems.part.subTitle) {
+      } else if (clickedItem === expansionItems.prefixes.title || clickedItem === expansionItems.prefixes.subTitle) {
         query = this.getPartOfPrefixes()
       } else {
         return
