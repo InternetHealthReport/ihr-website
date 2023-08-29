@@ -43,7 +43,7 @@ class CountryOverviewQuery {
     generateQuery() {
         this.filter.forEach((item) => {
             if(item == 'as_count') {
-                let countryASQuery = 'MATCH (:Country {country_code: $cc})<-[:COUNTRY]-(b:AS) RETURN COUNT(DISTINCT b.asn) as as_count'
+                let countryASQuery = 'MATCH (:Country {country_code: $cc})<-[:COUNTRY {reference_name: "nro.delegated_stats"}]-(b:AS) RETURN COUNT(DISTINCT b.asn) as as_count'
                 this.queries.countryASQuery = countryASQuery
             } else if(item == 'ixps_count') {
                 let countryIXPsQuery = 'MATCH (:Country {country_code: $cc})<-[:COUNTRY {reference_name: $ref}]-(b:IXP) RETURN COUNT(DISTINCT b) as ixps_count'

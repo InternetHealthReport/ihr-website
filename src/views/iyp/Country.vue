@@ -121,10 +121,9 @@ export default {
     // ases stands for autonomous systems
     getASes() {
       const query =
-        `MATCH (c:Country {country_code: $cc})<-[:COUNTRY]-(a:AS)
+        `MATCH (c:Country {country_code: $cc})<-[:COUNTRY {reference_name: 'nro.delegated_stats'}]-(a:AS)
          OPTIONAL MATCH (a)-[:NAME]->(n:Name)
-         WITH c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
-         RETURN cc, asn, name
+         RETURN c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
          LIMIT 100
         `
       const mapping = {

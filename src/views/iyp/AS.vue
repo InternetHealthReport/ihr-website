@@ -449,10 +449,11 @@ export default {
     },
     getIpPrefix() {
       const query =
-        `MATCH (:AS {asn: 2497})<-[:DEPENDS_ON]-(p:Prefix)
+        `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)
          OPTIONAL MATCH (p)-[:COUNTRY]->(c:Country)
          OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
          RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, collect(DISTINCT(t.label)) AS tags
+         ORDER BY prefix
         `
       const mapping = {
         cc: 'cc',
@@ -467,6 +468,7 @@ export default {
         `MATCH (a:AS {asn: $asn})-[:MEMBER_OF]->(i:IXP)-[:EXTERNAL_ID]->(p:PeeringdbIXID)
          OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
          RETURN c.country_code as cc, i.name as ixp, p.id as id
+         ORDER BY cc, ixp
         `
       const mapping = {
         cc: 'cc',
@@ -498,7 +500,11 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn, rankingName: 'tranco.top1M' }, mapping, data: 'popularDomains' }
     },
     getTags() {
-      const query = 'MATCH (:AS {asn: $asn})-[c:CATEGORIZED]->(t:Tag) return t.label as tag'
+      const query =
+      `MATCH (:AS {asn: $asn})-[:CATEGORIZED]->(t:Tag)
+       RETURN t.label as tag
+       ORDER BY tag
+      `
       const mapping = {
         tag: 'tag',
       }
