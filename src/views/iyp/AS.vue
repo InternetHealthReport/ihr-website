@@ -142,6 +142,60 @@
 
         <q-expansion-item
           @click="this.handleClick"
+          :label="$t('iyp.as.siblings.title')"
+          caption="AS Siblings"
+          header-class="IHR_charts-title"
+          v-model="show.siblings"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="siblings"
+              :columns="siblingsColumns"
+              :loading-status="this.loadingStatus.siblings"
+              :cypher-query="cypherQueries.siblings"
+            />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.as.dependents.title')"
+          caption="AS Dependents"
+          header-class="IHR_charts-title"
+          v-model="show.dependents"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="dependents"
+              :columns="dependentsColumns"
+              :loading-status="this.loadingStatus.dependents"
+              :cypher-query="cypherQueries.dependents"
+            />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.as.dependencies.title')"
+          caption="AS Dependencies"
+          header-class="IHR_charts-title"
+          v-model="show.dependencies"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="dependencies"
+              :columns="dependenciesColumns"
+              :loading-status="this.loadingStatus.dependencies"
+              :cypher-query="cypherQueries.dependencies"
+            />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="this.handleClick"
           :label="$t('iyp.as.tags.title')"
           caption="Tags"
           header-class="IHR_charts-title"
@@ -211,6 +265,18 @@ const expansionItems = {
     title: 'Tags',
     subTitle: 'Tags',
   },
+  siblings: {
+    title: 'Sibling ASes',
+    subTitle: 'AS Siblings',
+  },
+  dependents: {
+    title: 'Dependent ASes',
+    subTitle: 'AS Dependents',
+  },
+  dependencies: {
+    title: 'Dependency ASes',
+    subTitle: 'AS Dependencies',
+  },
 }
 
 export default {
@@ -266,6 +332,38 @@ export default {
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
+      siblingsColumns: [
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+      ],
+      dependentsColumns: [
+        { name: 'Dependent AS', label: 'Dependent AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        {
+          name: 'Hegemony Score',
+          label: 'Hegemony Score',
+          align: 'left',
+          field: row => row.hegemonyScore,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
+      ],
+      dependenciesColumns: [
+        { name: 'Dependency AS', label: 'Dependency AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        {
+          name: 'Hegemony Score',
+          label: 'Hegemony Score',
+          align: 'left',
+          field: row => row.hegemonyScore,
+          format: val => `${val}`,
+          sortable: true,
+        },
+      ],
       ipPrefixes: [],
       peers: [],
       ixps: [],
@@ -273,6 +371,9 @@ export default {
       rankings: [],
       popularDomains: [],
       facilities: [],
+      siblings: [],
+      dependents: [],
+      dependencies: [],
       cypherQueries: {},
       show: {
         peers: false,
@@ -282,6 +383,9 @@ export default {
         popularDomains: false,
         facilities: false,
         tags: false,
+        siblings: false,
+        dependents: false,
+        dependencies: false,
       },
       chartData: [],
       loadingStatus: {
@@ -292,6 +396,9 @@ export default {
         popularDomains: false,
         facilities: false,
         tags: false,
+        siblings: false,
+        dependents: false,
+        dependencies: false,
       },
       count: {
         peers: 0,
@@ -301,6 +408,9 @@ export default {
         popularDomains: 0,
         facilities: 0,
         tags: 0,
+        siblings: 0,
+        dependents: 0,
+        dependencies: 0,
       },
     }
   },
@@ -522,6 +632,49 @@ export default {
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'facilities' }
     },
+    getSiblings() {
+      const query =
+        'MATCH (a:AS {asn: $asn})-[:SIBLING_OF]-(sibling:AS)-[:NAME]->(n:Name) MATCH (sibling)-[:COUNTRY]->(c) RETURN c.country_code AS cc, sibling.asn AS asn, head(collect(DISTINCT(n.name))) as name'
+      const mapping = {
+        cc: 'cc',
+        asn: 'asn',
+        name: 'name',
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'siblings' }
+    },
+    getDependents() {
+      const query = `MATCH (a:AS {asn: $asn})<-[d:DEPENDS_ON]-(b:AS)
+            WHERE a.asn <> b.asn
+            OPTIONAL MATCH (b)-[:NAME]->(n:Name)
+            OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+            OPTIONAL MATCH (b)-[:CATEGORIZED]->(t:Tag)
+            RETURN DISTINCT b.asn AS dependent, head(collect(n.name)) AS name, c.country_code AS cc, d.hege AS hegemony_score, collect(t.label) AS tags
+            `
+      const mapping = {
+        asn: 'dependent',
+        name: 'name',
+        cc: 'cc',
+        hegemonyScore: 'hegemony_score',
+        tags: 'tags',
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependents' }
+    },
+    getDependencies() {
+      const query = `MATCH (a:AS {asn: $asn})-[d:DEPENDS_ON]->(b:AS)
+            WHERE a.asn <> b.asn
+            OPTIONAL MATCH (b)-[:NAME]->(n:Name)
+            OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+            RETURN DISTINCT b.asn AS dependency, head(collect(n.name)) AS name, c.country_code AS country, d.hege AS hegemony_score
+            ORDER BY country
+            `
+      const mapping = {
+        asn: 'dependency',
+        name: 'name',
+        cc: 'country',
+        hegemonyScore: 'hegemony_score',
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependencies' }
+    },
     setPageTitle(title) {
       this.pageTitle = `AS${this.asn} - ${title}`
     },
@@ -569,6 +722,12 @@ export default {
         query = this.getFacilities()
       } else if (clickedItem === expansionItems.tags.title || clickedItem === expansionItems.tags.subTitle) {
         query = this.getTags()
+      } else if (clickedItem === expansionItems.siblings.title || clickedItem === expansionItems.siblings.subTitle) {
+        query = this.getSiblings()
+      } else if (clickedItem === expansionItems.dependents.title || clickedItem === expansionItems.dependents.subTitle) {
+        query = this.getDependents()
+      } else if (clickedItem === expansionItems.dependencies.title || clickedItem === expansionItems.dependencies.subTitle) {
+        query = this.getDependencies()
       } else {
         return
       }
@@ -581,6 +740,7 @@ export default {
       this.loadingStatus[query.data] = true
       const results = await this.$iyp_api.run(query.cypherQuery, query.params)
       const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)
+      console.log(formattedRes)
       this[query.data] = formattedRes
 
       this.cypherQueries[query.data] = query.cypherQuery

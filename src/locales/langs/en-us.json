@@ -289,6 +289,15 @@
       },
       "facilities": {
         "title": "Facilities"
+      },
+      "siblings": {
+        "title": "Sibling ASes"
+      },
+      "dependents": {
+        "title": "Dependent ASes"
+      },
+      "dependencies": {
+        "title": "Dependency ASes"
       }
     },
     "country": {
@@ -320,8 +329,8 @@
       "dependencies": {
         "title": "Dependencies"
       },
-      "part": {
-        "title": "Prefixes that are part of"
+      "prefixes": {
+        "title": "Covering Prefixes"
       }
     }
   },
