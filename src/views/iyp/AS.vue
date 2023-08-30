@@ -1,13 +1,6 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1>{{ pageTitle }}</h1>
-    <div>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Bgp </q-chip>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Bgp.Tools </q-chip>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> PeeringDB </q-chip>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Cloudflare Radar </q-chip>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> RIPEstat </q-chip>
-    </div>
+    <h1 class="text-center">{{ pageTitle }}</h1>
     <div>
       <q-list>
         <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
@@ -206,14 +199,6 @@ import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
 import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
 import GenericHoverEventsChart from '@/views/charts/iyp/GenericHoverEventsChart'
 import GenericIndicatorsChart from '@/views/charts/iyp/GenericIndicatorsChart'
-
-const references = {
-  bgp: 'https://bgp.he.net',
-  bgpTools: 'https://bgp.tools/as',
-  peeringDB: 'https://www.peeringdb.com/net',
-  cloudflareRadar: 'https://radar.cloudflare.com',
-  ripeStat: 'https://stat.ripe.net/app/launchpad',
-}
 
 const expansionIcon = 'keyboard_arrow_down'
 
@@ -613,7 +598,7 @@ export default {
             OPTIONAL MATCH (b)-[:NAME]->(n:Name)
             OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
             OPTIONAL MATCH (b)-[:CATEGORIZED]->(t:Tag)
-            RETURN DISTINCT b.asn AS dependent, head(collect(n.name)) AS name, c.country_code AS cc, d.hege AS hegemony_score, collect(t.label) AS tags
+            RETURN DISTINCT b.asn AS dependent, head(collect(n.name)) AS name, c.country_code AS cc, d.hege AS hegemony_score, collect(DISTINCT t.label) AS tags
             `
       const mapping = {
         asn: 'dependent',
@@ -645,28 +630,6 @@ export default {
     },
     setPeeringdbId(id) {
       this.peeringdbId = id
-    },
-    handleReference(e) {
-      console.log('Redirect')
-      console.log(e.srcElement.outerText)
-      let reference = e.srcElement.outerText.trim()
-      let externalLink = ''
-      if (reference === 'Bgp') {
-        externalLink = `${references.bgp}/AS${this.asn}`
-      } else if (reference === 'Bgp.Tools') {
-        externalLink = `${references.bgpTools}/${this.asn}`
-      } else if (reference === 'PeeringDB') {
-        externalLink = `${references.peeringDB}/${this.peeringdbId}`
-      } else if (reference === 'Cloudflare Radar') {
-        externalLink = `${references.cloudflareRadar}/as${this.asn}`
-      } else if (reference === 'RIPEstat') {
-        externalLink = `${references.ripeStat}/${this.asn}`
-      } else {
-        console.log('none')
-        return
-      }
-      console.log(externalLink)
-      window.open(externalLink, '_blank')
     },
     async handleClick(e) {
       console.log(e.srcElement.innerText)
