@@ -25,6 +25,7 @@ cd ihr-website
 Note: 
 - Currently the project supports node  --version =< 16.9.1 
 - you can use [nvm](https://github.com/nvm-sh/nvm) to switch between node versions as per your need 
+- You need to install one of the following python versions `v3.7`, `v3.8`, `v3.9`, or `v3.10` that currently [node-gyp](https://www.npmjs.com/package/node-gyp) supports. You could use [pyenv](https://github.com/pyenv/pyenv) for managing python versions.
 
 Install all the npm packages. Go to root directory and type the following command to install all npm packages
 
