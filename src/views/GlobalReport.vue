@@ -11,6 +11,7 @@
         <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       </div>
     </div>
+<!--
     <q-card class="q-mb-xl" flat>
       <q-card-section>
         <div class="row justify-center q-pa-md">
@@ -54,6 +55,7 @@
       </q-card-section>
       <q-separator />
     </q-card>
+ -->
     <q-expansion-item caption="IHR Aggregated Alarms" header-class="IHR_charts-title" default-opened expand-icon-toggle
       v-model="aggregatedAlarmsExpanded">
       <template v-slot:header>

@@ -24,7 +24,7 @@ export function getIodaAlarms(iodaAlarmsState, startTime, endTime, timezone='00Z
 }
 
 function getIodaAlarmsHelper(startTime, endTime, timezone, entityType, ignoreMethods) {
-  const API_URL = 'https://api.ioda.inetintel.cc.gatech.edu/v2/outages/alerts'
+  const API_URL = 'https://ihr.iijlab.net/proxy/ioda/alerts'
 
   const startUTCTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(startTime, timezone)
   const endUTCTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(endTime, timezone)
