@@ -1,7 +1,7 @@
 import * as AggregatedAlarmsUtils from '../models/AggregatedAlarmsUtils'
 import axios from 'axios'
 
-export function getGripAlarms(gripAlarmsState, startTime, endTime, timezone = '', minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all', onePage = false) {
+export function getGripAlarms(gripAlarmsState, startTime, endTime, timezone = '', minSuspicionLevel = 80, maxSuspicionLevel = 100, eventType = 'all', onePage = false) {
   const request = () => {
     return new Promise((resolve, reject) => {
       if (gripAlarmsState.data) {
@@ -23,8 +23,8 @@ export function getGripAlarms(gripAlarmsState, startTime, endTime, timezone = ''
   return request()
 }
 
-function getGripAlarmsHelper(startTime, endTime, timezone = '', minSuspicionLevel = 0, maxSuspicionLevel = 100, eventType = 'all', onePage) {
-  const API_URL = 'https://api.grip.inetintel.cc.gatech.edu/json/events';
+function getGripAlarmsHelper(startTime, endTime, timezone = '', minSuspicionLevel = 80, maxSuspicionLevel = 100, eventType = 'all', onePage) {
+  const API_URL = 'https://ihr.iijlab.net/proxy/grip/events';
 
   const chunkSize = 100;
   const startUTCTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(startTime, timezone)
