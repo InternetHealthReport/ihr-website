@@ -66,6 +66,11 @@ export default {
       required: true
     }
   },
+  created() {
+    if (!this.loadingVal) {
+      this.$emit('filter-alarms-by-severities', this.severitiesSelectedList)
+    }
+  },
   computed: {
     dataSourceAlarmTypes() {
       const dataSources = this.alarmsMetadata.data_sources
@@ -136,17 +141,20 @@ export default {
       }
       return dataSourcesResult;
     },
+    severitiesSelectedList() {
+      const severitiesSelectedList = []
+      for (const [severityType, isSelected] of Object.entries(this.severities)) {
+        if (isSelected) {
+          severitiesSelectedList.push(severityType)
+        }
+      }
+      return severitiesSelectedList
+    }
   },
   watch: {
-    severities: {
-      handler: function (newSelectedSeverities) {
-        const severitiesSelectedList = []
-        for (const [severityType, isSelected] of Object.entries(newSelectedSeverities)) {
-          if (isSelected) {
-            severitiesSelectedList.push(severityType)
-          }
-        }
-        this.$emit('filter-alarms-by-severities', severitiesSelectedList)
+    severitiesSelectedList: {
+      handler: function (newSeveritiesSelectedList) {
+        this.$emit('filter-alarms-by-severities', newSeveritiesSelectedList)
       },
       deep: true
     },
@@ -227,7 +235,7 @@ export default {
       this.$emit('reset-granularity');
     },
 
-    filterAlarmsByAlarmTypesHandler(newSelectedAlarmTypes){
+    filterAlarmsByAlarmTypesHandler(newSelectedAlarmTypes) {
       this.$emit('filter-alarms-by-alarm-types', newSelectedAlarmTypes)
     }
   },
