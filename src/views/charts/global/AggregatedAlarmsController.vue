@@ -171,7 +171,7 @@ export default {
       aggregatedAlarmsLoadingVal: false,
       countryNameClicked: null,
       alarmTypesFilter: {},
-      severitiesSelectedList: ['low', 'normal', 'high'],
+      severitiesSelectedList: ['low', 'medium', 'high'],
       startDateTimePlotly: null,
       endDateTimePlotly: null,
       dateTimeFilter: {

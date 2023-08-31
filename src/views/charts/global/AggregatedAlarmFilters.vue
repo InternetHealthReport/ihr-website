@@ -25,7 +25,7 @@
           <input type="checkbox" v-model="severities.low" :disabled="loadingVal"> Low
         </label>
         <label>
-          <input type="checkbox" v-model="severities.normal" :disabled="loadingVal"> Normal
+          <input type="checkbox" v-model="severities.medium" :disabled="loadingVal"> Medium
         </label>
         <label>
           <input type="checkbox" v-model="severities.high" :disabled="loadingVal"> High
@@ -181,7 +181,7 @@ export default {
     return {
       alarmTypesCategoryTitle: 'Alarm Types:',
       dataSourcesCategoryTitle: 'Data Sources:',
-      severities: { low: true, normal: true, high: true },
+      severities: { low: true, medium: true, high: true },
       maxAlarmTypesLength: 0,
       startDateTime: AggregatedAlarmsUtils.formatUTCTime(this.startTime),
       endDateTime: AggregatedAlarmsUtils.formatUTCTime(this.endTime),
