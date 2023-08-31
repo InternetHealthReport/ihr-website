@@ -94,11 +94,6 @@ const simple_menu = [
         summary: 'Details for a single network (AS or IXP)',
       },
       {
-        entryName: 'header.iyp',
-        routeName: 'iyp',
-        summary: 'A knowledge graph for Internet resources',
-      },
-      {
         entryName: 'header.rovReport',
         routeName: 'rov',
         summary: 'Route Origin Validation of resources seen on BGP',
@@ -114,6 +109,11 @@ const simple_menu = [
     entryName: 'header.tools',
     routeName: 'global_report',
     options: [
+      {
+        entryName: 'header.iyp',
+        routeName: 'iyp',
+        summary: 'A knowledge graph for Internet resources',
+      },
       {
         entryName: 'header.metis',
         routeName: 'metis',

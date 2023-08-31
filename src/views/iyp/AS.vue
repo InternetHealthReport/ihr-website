@@ -1,13 +1,6 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1>{{ pageTitle }}</h1>
-    <div>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Bgp </q-chip>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Bgp.Tools </q-chip>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> PeeringDB </q-chip>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> Cloudflare Radar </q-chip>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> RIPEstat </q-chip>
-    </div>
+    <h1 class="text-center">{{ pageTitle }}</h1>
     <div>
       <q-list>
         <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
@@ -142,20 +135,55 @@
 
         <q-expansion-item
           @click="this.handleClick"
-          :label="$t('iyp.as.tags.title')"
-          caption="Tags"
+          :label="$t('iyp.as.siblings.title')"
+          caption="AS Siblings"
           header-class="IHR_charts-title"
-          v-model="show.tags"
+          v-model="show.siblings"
         >
           <q-separator />
           <q-card class="IHR_charts-body">
-            <q-card-section>
-              <q-list>
-                <q-item v-for="(tag, idx) in tags" :key="idx">
-                  <q-item-section>{{ tag.tag }}</q-item-section>
-                </q-item>
-              </q-list>
-            </q-card-section>
+            <GenericTable
+              :data="siblings"
+              :columns="siblingsColumns"
+              :loading-status="this.loadingStatus.siblings"
+              :cypher-query="cypherQueries.siblings"
+            />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.as.dependents.title')"
+          caption="AS Dependents"
+          header-class="IHR_charts-title"
+          v-model="show.dependents"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="dependents"
+              :columns="dependentsColumns"
+              :loading-status="this.loadingStatus.dependents"
+              :cypher-query="cypherQueries.dependents"
+            />
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="this.handleClick"
+          :label="$t('iyp.as.dependencies.title')"
+          caption="AS Dependencies"
+          header-class="IHR_charts-title"
+          v-model="show.dependencies"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="dependencies"
+              :columns="dependenciesColumns"
+              :loading-status="this.loadingStatus.dependencies"
+              :cypher-query="cypherQueries.dependencies"
+            />
           </q-card>
         </q-expansion-item>
       </q-list>
@@ -171,14 +199,6 @@ import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
 import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
 import GenericHoverEventsChart from '@/views/charts/iyp/GenericHoverEventsChart'
 import GenericIndicatorsChart from '@/views/charts/iyp/GenericIndicatorsChart'
-
-const references = {
-  bgp: 'https://bgp.he.net',
-  bgpTools: 'https://bgp.tools/as',
-  peeringDB: 'https://www.peeringdb.com/net',
-  cloudflareRadar: 'https://radar.cloudflare.com',
-  ripeStat: 'https://stat.ripe.net/app/launchpad',
-}
 
 const expansionIcon = 'keyboard_arrow_down'
 
@@ -207,9 +227,17 @@ const expansionItems = {
     title: 'Facilities',
     subTitle: 'Facilities',
   },
-  tags: {
-    title: 'Tags',
-    subTitle: 'Tags',
+  siblings: {
+    title: 'Sibling ASes',
+    subTitle: 'AS Siblings',
+  },
+  dependents: {
+    title: 'Dependent ASes',
+    subTitle: 'AS Dependents',
+  },
+  dependencies: {
+    title: 'Dependency ASes',
+    subTitle: 'AS Dependencies',
   },
 }
 
@@ -266,13 +294,47 @@ export default {
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
+      siblingsColumns: [
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+      ],
+      dependentsColumns: [
+        { name: 'Dependent AS', label: 'Dependent AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        {
+          name: 'Hegemony Score',
+          label: 'Hegemony Score',
+          align: 'left',
+          field: row => row.hegemonyScore,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
+      ],
+      dependenciesColumns: [
+        { name: 'Dependency AS', label: 'Dependency AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        {
+          name: 'Hegemony Score',
+          label: 'Hegemony Score',
+          align: 'left',
+          field: row => row.hegemonyScore,
+          format: val => `${val}`,
+          sortable: true,
+        },
+      ],
       ipPrefixes: [],
       peers: [],
       ixps: [],
-      tags: [],
       rankings: [],
       popularDomains: [],
       facilities: [],
+      siblings: [],
+      dependents: [],
+      dependencies: [],
       cypherQueries: {},
       show: {
         peers: false,
@@ -281,7 +343,9 @@ export default {
         rankings: false,
         popularDomains: false,
         facilities: false,
-        tags: false,
+        siblings: false,
+        dependents: false,
+        dependencies: false,
       },
       chartData: [],
       loadingStatus: {
@@ -291,7 +355,9 @@ export default {
         rankings: false,
         popularDomains: false,
         facilities: false,
-        tags: false,
+        siblings: false,
+        dependents: false,
+        dependencies: false,
       },
       count: {
         peers: 0,
@@ -300,7 +366,9 @@ export default {
         rankings: 0,
         popularDomains: 0,
         facilities: 0,
-        tags: 0,
+        siblings: 0,
+        dependents: 0,
+        dependencies: 0,
       },
     }
   },
@@ -408,12 +476,11 @@ export default {
     // getData will run multiple queries in parallel
     // This method is not in use
     async getData() {
-      const queries = [this.getPeers(), this.getIxps(), this.getTags(), this.getRankings(), this.getPopularDomains(), this.getFacilities()]
+      const queries = [this.getPeers(), this.getIxps(), this.getRankings(), this.getPopularDomains(), this.getFacilities()]
       let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
 
       this.peers = res.peers
       this.ixps = res.ixps
-      this.tags = res.tags
       this.rankings = res.rankings
       this.popularDomains = res.popularDomains
       this.facilities = res.facilities
@@ -428,13 +495,11 @@ export default {
       // await this.getPeers()
       // await this.getIpPrefix()
       // await this.getIxps()
-      // await this.getTags()
       // await this.getRankings()
       // await this.getPopularDomains()
     },
     getPeers() {
-      const query =
-        `MATCH (a:AS {asn: $asn})-[:PEERS_WITH]-(peer:AS)
+      const query = `MATCH (a:AS {asn: $asn})-[:PEERS_WITH]-(peer:AS)
          OPTIONAL MATCH (peer)-[:NAME]->(n:Name)
          OPTIONAL MATCH (peer)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
          RETURN c.country_code AS cc, peer.asn AS peer, head(collect(DISTINCT(n.name))) AS name
@@ -448,8 +513,7 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'peers' }
     },
     getIpPrefix() {
-      const query =
-        `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)
+      const query = `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)
          OPTIONAL MATCH (p)-[:COUNTRY]->(c:Country)
          OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
          RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, collect(DISTINCT(t.label)) AS tags
@@ -464,8 +528,7 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'ipPrefixes' }
     },
     getIxps() {
-      const query =
-        `MATCH (a:AS {asn: $asn})-[:MEMBER_OF]->(i:IXP)-[:EXTERNAL_ID]->(p:PeeringdbIXID)
+      const query = `MATCH (a:AS {asn: $asn})-[:MEMBER_OF]->(i:IXP)-[:EXTERNAL_ID]->(p:PeeringdbIXID)
          OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
          RETURN c.country_code as cc, i.name as ixp, p.id as id
          ORDER BY cc, ixp
@@ -486,8 +549,7 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'rankings' }
     },
     getPopularDomains() {
-      const query =
-        `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
+      const query = `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
          WHERE rr.rank < 100000 and rr.reference_name = $rankingName
          RETURN DISTINCT d.name AS domainName, rr.rank AS rank, rn.name AS rankingName
          ORDER BY rank
@@ -500,8 +562,7 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn, rankingName: 'tranco.top1M' }, mapping, data: 'popularDomains' }
     },
     getTags() {
-      const query =
-      `MATCH (:AS {asn: $asn})-[:CATEGORIZED]->(t:Tag)
+      const query = `MATCH (:AS {asn: $asn})-[:CATEGORIZED]->(t:Tag)
        RETURN t.label as tag
        ORDER BY tag
       `
@@ -511,8 +572,7 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'tags' }
     },
     getFacilities() {
-      const query =
-        `MATCH (n:AS {asn: $asn})-[:LOCATED_IN]->(f:Facility)<-[:LOCATED_IN]-(p:AS)
+      const query = `MATCH (n:AS {asn: $asn})-[:LOCATED_IN]->(f:Facility)<-[:LOCATED_IN]-(p:AS)
          MATCH (n)-[:PEERS_WITH]-(p)
          RETURN p.asn as asn, collect(DISTINCT f.name) as name
         `
@@ -522,33 +582,54 @@ export default {
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'facilities' }
     },
+    getSiblings() {
+      const query =
+        'MATCH (a:AS {asn: $asn})-[:SIBLING_OF]-(sibling:AS)-[:NAME]->(n:Name) MATCH (sibling)-[:COUNTRY]->(c) RETURN c.country_code AS cc, sibling.asn AS asn, head(collect(DISTINCT(n.name))) as name'
+      const mapping = {
+        cc: 'cc',
+        asn: 'asn',
+        name: 'name',
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'siblings' }
+    },
+    getDependents() {
+      const query = `MATCH (a:AS {asn: $asn})<-[d:DEPENDS_ON]-(b:AS)
+            WHERE a.asn <> b.asn
+            OPTIONAL MATCH (b)-[:NAME]->(n:Name)
+            OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+            OPTIONAL MATCH (b)-[:CATEGORIZED]->(t:Tag)
+            RETURN DISTINCT b.asn AS dependent, head(collect(n.name)) AS name, c.country_code AS cc, d.hege AS hegemony_score, collect(DISTINCT t.label) AS tags
+            `
+      const mapping = {
+        asn: 'dependent',
+        name: 'name',
+        cc: 'cc',
+        hegemonyScore: 'hegemony_score',
+        tags: 'tags',
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependents' }
+    },
+    getDependencies() {
+      const query = `MATCH (a:AS {asn: $asn})-[d:DEPENDS_ON]->(b:AS)
+            WHERE a.asn <> b.asn
+            OPTIONAL MATCH (b)-[:NAME]->(n:Name)
+            OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+            RETURN DISTINCT b.asn AS dependency, head(collect(n.name)) AS name, c.country_code AS country, d.hege AS hegemony_score
+            ORDER BY country
+            `
+      const mapping = {
+        asn: 'dependency',
+        name: 'name',
+        cc: 'country',
+        hegemonyScore: 'hegemony_score',
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependencies' }
+    },
     setPageTitle(title) {
       this.pageTitle = `AS${this.asn} - ${title}`
     },
     setPeeringdbId(id) {
       this.peeringdbId = id
-    },
-    handleReference(e) {
-      console.log('Redirect')
-      console.log(e.srcElement.outerText)
-      let reference = e.srcElement.outerText.trim()
-      let externalLink = ''
-      if (reference === 'Bgp') {
-        externalLink = `${references.bgp}/AS${this.asn}`
-      } else if (reference === 'Bgp.Tools') {
-        externalLink = `${references.bgpTools}/${this.asn}`
-      } else if (reference === 'PeeringDB') {
-        externalLink = `${references.peeringDB}/${this.peeringdbId}`
-      } else if (reference === 'Cloudflare Radar') {
-        externalLink = `${references.cloudflareRadar}/as${this.asn}`
-      } else if (reference === 'RIPEstat') {
-        externalLink = `${references.ripeStat}/${this.asn}`
-      } else {
-        console.log('none')
-        return
-      }
-      console.log(externalLink)
-      window.open(externalLink, '_blank')
     },
     async handleClick(e) {
       console.log(e.srcElement.innerText)
@@ -567,8 +648,12 @@ export default {
         query = this.getPopularDomains()
       } else if (clickedItem === expansionItems.facilities.title || clickedItem === expansionItems.facilities.subTitle) {
         query = this.getFacilities()
-      } else if (clickedItem === expansionItems.tags.title || clickedItem === expansionItems.tags.subTitle) {
-        query = this.getTags()
+      } else if (clickedItem === expansionItems.siblings.title || clickedItem === expansionItems.siblings.subTitle) {
+        query = this.getSiblings()
+      } else if (clickedItem === expansionItems.dependents.title || clickedItem === expansionItems.dependents.subTitle) {
+        query = this.getDependents()
+      } else if (clickedItem === expansionItems.dependencies.title || clickedItem === expansionItems.dependencies.subTitle) {
+        query = this.getDependencies()
       } else {
         return
       }
@@ -581,6 +666,7 @@ export default {
       this.loadingStatus[query.data] = true
       const results = await this.$iyp_api.run(query.cypherQuery, query.params)
       const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)
+      console.log(formattedRes)
       this[query.data] = formattedRes
 
       this.cypherQueries[query.data] = query.cypherQuery
