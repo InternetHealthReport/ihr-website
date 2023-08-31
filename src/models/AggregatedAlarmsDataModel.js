@@ -221,7 +221,7 @@ function gripSeverityMapper(alarm) {
   if (severityValue >= 80 && severityValue <= 100) {
     severityLabel = 'high'
   } else if (severityValue >= 21 && severityValue <= 79) {
-    severityLabel = 'normal'
+    severityLabel = 'medium'
   } else if (severityValue >= 0 && severityValue <= 20) {
     severityLabel = 'low'
   }
@@ -235,7 +235,7 @@ function iodaSeverityMapper(alarm) {
   if (severityValue === 'critical') {
     severityLabel = 'high'
   } else if (severityValue === 'normal') {
-    severityLabel = 'normal'
+    severityLabel = 'medium'
   } else {
     severityLabel = 'low'
   }
@@ -248,7 +248,7 @@ function ihrSeverityMapper(alarm) {
   if (severityValue >= 20 && severityValue <= 30) {
     severityLabel = 'low'
   } else if (severityValue >= 31 && severityValue <= 50) {
-    severityLabel = 'normal'
+    severityLabel = 'medium'
   } else if (severityValue >= 51) {
     severityLabel = 'high'
   } else {
