@@ -171,7 +171,7 @@ export default {
       aggregatedAlarmsLoadingVal: false,
       countryNameClicked: null,
       alarmTypesFilter: {},
-      severitiesSelectedList: ['low', 'medium', 'high'],
+      severitiesSelectedList: [],
       startDateTimePlotly: null,
       endDateTimePlotly: null,
       dateTimeFilter: {
@@ -367,8 +367,9 @@ export default {
       if (this.alarmsCurrent.length && newCountryIsoCode3Clicked) {
         const countryName = newCountryIsoCode3Clicked ? getCountryNameFromIsoCode3(newCountryIsoCode3Clicked) : null
         const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-        this.$refs.timeSeriesAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName, this.alarmTypeTitlesMap)
-        this.$refs.treeMapAggregatedAlarms.etl(this.alarmsCurrent, aggregatedAttrsZipped, countryName, this.alarmTypeTitlesMap)
+        const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelectedList, aggregatedAttrsZipped)
+        this.$refs.timeSeriesAggregatedAlarms.etl(alarmsSeverityFiltered, aggregatedAttrsZipped, countryName, this.alarmTypeTitlesMap)
+        this.$refs.treeMapAggregatedAlarms.etl(alarmsSeverityFiltered, aggregatedAttrsZipped, countryName, this.alarmTypeTitlesMap)
         this.countryNameClicked = countryName
       }
     },
@@ -387,14 +388,12 @@ export default {
     },
 
     filterAlarmsBySeveritiesHandler(newSeveritiesSelectedList) {
-      if (newSeveritiesSelectedList) {
-        this.severitiesSelectedList = newSeveritiesSelectedList
-        if (newSeveritiesSelectedList.length) {
-          const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, newSeveritiesSelectedList, aggregatedAttrsZipped)
-        } else {
-          this.clearDataVizHandler()
-        }
+      this.severitiesSelectedList = newSeveritiesSelectedList
+      if (this.severitiesSelectedList.length) {
+        const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
+        this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, newSeveritiesSelectedList, aggregatedAttrsZipped)
+      } else {
+        this.clearDataVizHandler()
       }
     },
 
