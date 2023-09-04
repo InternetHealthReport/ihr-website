@@ -1,11 +1,6 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1>{{ getPrefix() }}</h1>
-    <div>
-      <q-chip name="bgp" clickable @click="handleReference" color="gray" text-color="black"> Bgp </q-chip>
-      <q-chip name="bgp.tools" clickable @click="handleReference" color="gray" text-color="black"> Bgp.Tools </q-chip>
-      <q-chip name="ripe" clickable @click="handleReference" color="gray" text-color="black"> RIPEstat </q-chip>
-    </div>
+    <h1 class="text-center">{{ getPrefix() }}</h1>
     <div>
       <q-list>
         <Overview :host="host" :prefixLength="prefixLength" />
@@ -17,19 +12,18 @@
           header-class="IHR_charts-title"
         >
           <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable
-                :data="domains"
-                :columns="domainsColumns"
-                :loading-status="this.loadingStatus.domains"
-                :cypher-query="cypherQueries.domains"
-                :slot-length="2"
-              >
-                <GenericPieChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Country' }" />
-                <GenericBarChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Tags' }" />
-              </GenericTable>
-            </q-card>
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="domains"
+              :columns="domainsColumns"
+              :loading-status="this.loadingStatus.domains"
+              :cypher-query="cypherQueries.domains"
+              :slot-length="2"
+            >
+              <GenericPieChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Country' }" />
+              <GenericBarChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Tags' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
@@ -40,18 +34,17 @@
           header-class="IHR_charts-title"
         >
           <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable
-                :data="dependencies"
-                :columns="dependenciesColumns"
-                :loading-status="this.loadingStatus.dependencies"
-                :cypher-query="cypherQueries.dependencies"
-                :slot-length="1"
-              >
-                <GenericPieChart v-if="dependencies.length > 0" :chart-data="dependencies" :chart-layout="{ title: 'Tags' }" />
-              </GenericTable>
-            </q-card>
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="dependencies"
+              :columns="dependenciesColumns"
+              :loading-status="this.loadingStatus.dependencies"
+              :cypher-query="cypherQueries.dependencies"
+              :slot-length="1"
+            >
+              <GenericPieChart v-if="dependencies.length > 0" :chart-data="dependencies" :chart-layout="{ title: 'Tags' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
@@ -62,19 +55,18 @@
           header-class="IHR_charts-title"
         >
           <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable
-                :data="part"
-                :columns="partColumns"
-                :loading-status="this.loadingStatus.part"
-                :cypher-query="cypherQueries.part"
-                :slot-length="2"
-              >
-                <GenericPieChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Country' }" />
-                <!-- <GenericBarChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Tags' }" /> -->
-              </GenericTable>
-            </q-card>
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="part"
+              :columns="partColumns"
+              :loading-status="this.loadingStatus.part"
+              :cypher-query="cypherQueries.part"
+              :slot-length="2"
+            >
+              <GenericPieChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Country' }" />
+              <!-- <GenericBarChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Tags' }" /> -->
+            </GenericTable>
           </q-card>
         </q-expansion-item>
       </q-list>
@@ -88,12 +80,6 @@ import Overview from '@/views/charts/iyp/PrefixOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
 import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
 import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
-
-const references = {
-  bgp: 'https://bgp.he.net/net',
-  bgpTools: 'https://bgp.tools/prefix',
-  ripeStat: 'https://stat.ripe.net/app/launchpad',
-}
 
 const expansionItems = {
   domains: {
@@ -248,24 +234,6 @@ export default {
       }
       const prefix = this.getPrefix()
       return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'part' }
-    },
-    handleReference(e) {
-      console.log('Redirect')
-      console.log(e.srcElement.outerText)
-      let reference = e.srcElement.outerText.trim()
-      let externalLink = ''
-      if (reference === 'Bgp') {
-        externalLink = `${references.bgp}/${this.host}/${this.prefixLength}`
-      } else if (reference === 'Bgp.Tools') {
-        externalLink = `${references.bgpTools}/${this.host}/${this.prefixLength}`
-      } else if (reference === 'RIPEstat') {
-        externalLink = `${references.ripeStat}/${this.host}/${this.prefixLength}`
-      } else {
-        console.log('none')
-        return
-      }
-      console.log(externalLink)
-      window.open(externalLink, '_blank')
     },
     async handleClick(e) {
       console.log(e.srcElement.innerText)

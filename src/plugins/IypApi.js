@@ -61,6 +61,7 @@ const IypApi = {
       )
     }
 
+    // Return as an Array
     async function runManyInOneSession(queries, options = { defaultAccessMode: neo4j.session.READ }) {
       // This method will execute multiple queries by creating one session which will reduce loading time
       // But the execution is not parallel
@@ -81,6 +82,31 @@ const IypApi = {
 
       await transaction.close()
       return result
+    }
+
+    // Return as an Object
+    async function runManyInOneSessionAndReturnAnObject(queries, options = { defaultAccessMode: neo4j.session.READ }) {
+      let session = await getSession(options)
+      let transaction = await session.beginTransaction()
+
+      let response = []
+      queries.forEach(async q => {
+        try {
+          let res = await transaction.run(q.cypherQuery, q.params)
+          response.push(res)
+        } catch (e) {
+          console.error(e)
+        }
+      })
+
+      await transaction.close()
+
+      let resultToBeReturn = {}
+      for (let i = 0; i < response.length; i++) {
+        let res = this.formatResponse(response[i], queries[i].mapping)
+        resultToBeReturn[queries[i].data] = res
+      }
+      return resultToBeReturn
     }
 
     async function runMany(queries) {
@@ -199,6 +225,7 @@ const IypApi = {
       getSession,
       run,
       runManyInOneSession,
+      runManyInOneSessionAndReturnAnObject,
       runMany,
       runManyAndGetFormattedResponse,
       searchIYP,

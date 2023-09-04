@@ -15,7 +15,7 @@
             <IXPOverview :id="asNumber" />
           </div>
           <div v-else>
-            <ASOverview :as-number="asNumber" />
+            <ASOverview :as-number="asNumber" :external="true" />
           </div>
         </div>
 

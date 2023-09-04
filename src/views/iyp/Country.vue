@@ -12,15 +12,14 @@
           header-class="IHR_charts-title"
         >
           <q-separator />
-          <q-card>
-            <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable
-                :data="ases"
-                :columns="asesColumns"
-                :loading-status="this.loadingStatus.ases"
-                :cypher-query="cypherQueries.ases"
-              />
-            </q-card>
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="ases"
+              :columns="asesColumns"
+              :loading-status="this.loadingStatus.ases"
+              :cypher-query="cypherQueries.ases"
+            />
           </q-card>
         </q-expansion-item>
 
@@ -30,16 +29,13 @@
           caption="Internet Exchange Points (IXPs)"
           header-class="IHR_charts-title"
         >
-          <q-separator />
-          <q-card>
-            <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable
-                :data="ixps"
-                :columns="ixpsColumns"
-                :loading-status="this.loadingStatus.ixps"
-                :cypher-query="cypherQueries.ixps"
-              />
-            </q-card>
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="ixps"
+              :columns="ixpsColumns"
+              :loading-status="this.loadingStatus.ixps"
+              :cypher-query="cypherQueries.ixps"
+            />
           </q-card>
         </q-expansion-item>
       </q-list>
@@ -120,8 +116,7 @@ export default {
     },
     // ases stands for autonomous systems
     getASes() {
-      const query =
-        `MATCH (c:Country {country_code: $cc})<-[:COUNTRY {reference_name: 'nro.delegated_stats'}]-(a:AS)
+      const query = `MATCH (c:Country {country_code: $cc})<-[:COUNTRY {reference_name: 'nro.delegated_stats'}]-(a:AS)
          OPTIONAL MATCH (a)-[:NAME]->(n:Name)
          RETURN c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
          LIMIT 100
