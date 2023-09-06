@@ -5,6 +5,11 @@
       <q-list>
         <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
 
+        <div>
+          <p @click="handleExpansion('prefix')">Prefix</p>
+          <p @click="handleExpansion('dependents')">Dependents</p>
+        </div>
+
         <q-expansion-item
           @click="this.handleClick"
           :label="$t('iyp.as.peers.title')"
@@ -22,6 +27,12 @@
               :slot-length="1"
             >
               <GenericPieChart v-if="peers.length > 0" :chart-data="peers" :chart-layout="{ title: 'Country' }" />
+              <!-- <GenericTreemapChart
+                v-if="peers.length > 0"
+                :chart-data="peers"
+                :chart-layout="{ title: 'Peer ASes' }"
+                :config="{ key: 'cc', root: this.asn, values: false }"
+              /> -->
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -165,7 +176,15 @@
               :columns="dependentsColumns"
               :loading-status="this.loadingStatus.dependents"
               :cypher-query="cypherQueries.dependents"
-            />
+              :slot-length="1"
+            >
+              <GenericTreemapChart
+                v-if="dependents.length > 0"
+                :chart-data="dependents"
+                :chart-layout="{ title: 'Dependents' }"
+                :config="{ key: 'cc', root: this.asn, values: true }"
+              />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
@@ -183,7 +202,15 @@
               :columns="dependingsColumns"
               :loading-status="this.loadingStatus.dependings"
               :cypher-query="cypherQueries.dependings"
-            />
+              :slot-length="1"
+            >
+              <GenericTreemapChart
+                v-if="dependings.length > 0"
+                :chart-data="dependings"
+                :chart-layout="{ title: 'Dependings' }"
+                :config="{ key: 'cc', root: this.asn, values: true }"
+              />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
       </q-list>
@@ -199,8 +226,7 @@ import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
 import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
 import GenericHoverEventsChart from '@/views/charts/iyp/GenericHoverEventsChart'
 import GenericIndicatorsChart from '@/views/charts/iyp/GenericIndicatorsChart'
-
-const expansionIcon = 'keyboard_arrow_down'
+import GenericTreemapChart from '@/views/charts/iyp/GenericTreemapChart'
 
 const expansionItems = {
   peers: {
@@ -250,6 +276,7 @@ export default {
     GenericBarChart,
     GenericHoverEventsChart,
     GenericIndicatorsChart,
+    GenericTreemapChart,
   },
   data() {
     return {
@@ -674,6 +701,13 @@ export default {
     },
     getSlotLength() {
       return this.$children.filter(child => child.$options.name === 'PieChart' || child.$options.name === 'BarChart').length
+    },
+    handleExpansion(key) {
+      if (key == 'prefix') {
+        this.show.ipPrefixes = !this.show.ipPrefixes
+      } else if (key == 'dependents') {
+        this.show.dependents = !this.show.dependents
+      }
     },
   },
   watch: {
