@@ -293,8 +293,8 @@
       "dependents": {
         "title": "Dependent ASes"
       },
-      "dependencies": {
-        "title": "Dependency ASes"
+      "dependings": {
+        "title": "Depending ASes"
       }
     },
     "country": {

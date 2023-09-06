@@ -23,7 +23,14 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="data">
-          <q-table :data="data" :columns="columns">
+          <q-table :data="data" :columns="columns" :filter="filter">
+            <template v-slot:top-right>
+              <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+            </template>
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td
@@ -71,6 +78,7 @@ export default {
   data() {
     return {
       activeTab: 'chart',
+      filter: '',
     }
   },
   mounted() {

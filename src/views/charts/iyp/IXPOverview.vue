@@ -4,15 +4,32 @@
       <q-spinner color="secondary" size="3em" />
     </div>
     <div class="q-pl-sm q-mt-lg q-mb-lg">
-      <h2 class="q-mb-sm">Overview</h2>
+      <!-- <h2 class="q-mb-sm">Overview</h2> -->
       <div class="q-pl-md">
-        <div>
-          <p>IXP Name: {{ overview.name }}</p>
-          <p>Country of origin: {{ overview.country }}</p>
-          <p>organization: {{ overview.organization }}</p>
-          <p>
-            Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
-          </p>
+        <div class="row q-gutter-md q-mt-md justify-center">
+          <div class="col-8">
+            <div class="row q-gutter-md">
+              <div class="col-12 col-md-auto">
+                <h3>IXP Info</h3>
+                <div>
+                  <p>IXP Name: {{ overview.name }}</p>
+                  <p>Country of origin: {{ overview.country }}</p>
+                  <p>organization: {{ overview.organization }}</p>
+                  <p>
+                    Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
+                  </p>
+                </div>
+              </div>
+              <div class="col-12 col-md-2">
+                <h3>Reference</h3>
+                <div class="column">
+                  <a :href="handleReference(key)" v-for="(value, key) in references" target="_blank" rel="noreferrer">{{
+                    handleReference(key)
+                  }}</a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -20,6 +37,10 @@
 </template>
 
 <script>
+const references = {
+  peeringDB: 'https://www.peeringdb.com/ix',
+}
+
 export default {
   props: {
     id: {
@@ -34,7 +55,8 @@ export default {
   data() {
     return {
       overview: {},
-      loadingStatus: true,
+      loadingStatus: false,
+      references: references,
     }
   },
   mounted() {
@@ -42,8 +64,26 @@ export default {
   },
   methods: {
     async fetchData() {
-      const query =
-        `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(i:IXP)
+      let queries = this.getOverview()
+
+      this.loadingStatus = true
+
+      try {
+        let res = await this.$iyp_api.runManyInOneSessionAndReturnAnObject(queries)
+        this.overview = res.overview[0]
+        this.loadingStatus = false
+      } catch (e) {
+        console.error(e)
+        this.loadingStatus = false
+        return
+      }
+
+      if (this.title !== undefined) {
+        this.title(this.overview.name)
+      }
+    },
+    getOverview() {
+      const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(i:IXP)
          OPTIONAL MATCH (i)-[:MANAGED_BY]->(o:Organization)
          OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
          OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
@@ -55,20 +95,14 @@ export default {
         organization: 'organization',
         website: 'website',
       }
-      const response = await this.$iyp_api.run(query, { id: this.id })
-      const formattedResponse = this.$iyp_api.formatResponse(response, mapping)
-      // this.overview.name = formattedResponse[0].name
-      // this.overview.cc = formattedResponse[0].cc
-      // this.overview.organization = formattedResponse[0].organization
-      // this.overview.website = formattedResponse[0].website
-      const [data] = formattedResponse
-      this.overview = { ...data }
-
-      if (this.title !== undefined) {
-        this.title(this.overview.name)
+      return [{ cypherQuery: query, params: { id: this.id }, mapping, data: 'overview' }]
+    },
+    handleReference(key) {
+      let externalLink = ''
+      if (key === 'peeringDB') {
+        externalLink = `${references.peeringDB}/${this.id}`
       }
-
-      this.loadingStatus = false
+      return externalLink
     },
   },
 }

@@ -8,8 +8,8 @@
       <div class="q-pl-md">
         <div class="row q-gutter-md q-mt-md justify-center">
           <div class="col-8">
-            <div class="row">
-              <div class="col-12 col-md-2">
+            <div class="row q-gutter-md">
+              <div class="col-12 col-md-auto">
                 <h3>AS Info</h3>
                 <div>
                   <p>
@@ -20,30 +20,32 @@
                   <p>{{ secondPart.peers }} Peer ASes</p>
                 </div>
               </div>
-              <div class="col-12 col-md-auto">
+              <div v-if="this.secondPart.rank <= 10" class="col-12 col-md-auto">
                 <h3>Ranking</h3>
-                <GenericIndicatorsChart
+                <div>
+                  <div>{{ this.secondPart.rankingName }}</div>
+                  <div class="text-h2 text-center">{{ this.secondPart.rank }}</div>
+                </div>
+                <!-- <GenericIndicatorsChart
                   v-if="Object.keys(secondPart).length > 0"
                   :chart-data="formatRank(this.secondPart.rank, this.secondPart.rankingName)"
                   :chart-layout="{ title: 'Rankings' }"
-                />
+                /> -->
               </div>
               <div class="col-12 col-md-2">
                 <h3>Top 5 Domains</h3>
                 <div class="column">
-                  <a :href="formatHref(item.domainName)" v-for="item in thirdPart" target="_blank" rel="noreferrer">{{
-                    item.domainName
+                  <a :href="handleDomainName(item.domainName)" v-for="item in thirdPart" target="_blank" rel="noreferrer">{{
+                    handleDomainName(item.domainName)
                   }}</a>
                 </div>
               </div>
               <div class="col-12 col-md-2">
                 <h3>Reference</h3>
                 <div class="column">
-                  <q-chip clickable @click="handleReference" color="gray" text-color="black"> https://bgp.he.net </q-chip>
-                  <q-chip clickable @click="handleReference" color="gray" text-color="black"> https://bgp.Tools </q-chip>
-                  <q-chip clickable @click="handleReference" color="gray" text-color="black"> https://peeringdb.com </q-chip>
-                  <q-chip clickable @click="handleReference" color="gray" text-color="black"> https://radar.cloudflare.com </q-chip>
-                  <q-chip clickable @click="handleReference" color="gray" text-color="black"> https://stat.ripe.net </q-chip>
+                  <a :href="handleReference(key)" v-for="(value, key) in references" target="_blank" rel="noreferrer">{{
+                    handleReference(key)
+                  }}</a>
                 </div>
               </div>
             </div>
@@ -54,10 +56,14 @@
                 <q-chip v-for="tag in firstPart.tags" dense size="md" color="gray" text-color="black"> {{ tag }}</q-chip>
               </div>
             </div>
+
+            <div class="row">
+              <div v-if="external" @click="handleRoutingFromNetworksToIYP" class="q-mt-lg overview-footer">
+                View more details on IYP for AS{{ asNumber }}
+              </div>
+            </div>
           </div>
         </div>
-
-        <!-- <div class="q-mt-md">View more details on IYP</div> -->
       </div>
     </div>
   </div>
@@ -100,6 +106,11 @@ export default {
       type: Function,
       required: false,
     },
+    external: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data() {
     return {
@@ -107,6 +118,7 @@ export default {
       secondPart: {},
       thirdPart: [],
       loadingStatus: true,
+      references: references,
     }
   },
   async mounted() {
@@ -116,10 +128,8 @@ export default {
     async fetchData(asn) {
       const queries = this.getOverview(asn)
       this.loadingStatus = true
-      let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
 
-      console.log(res)
-
+      let res = await this.$iyp_api.runManyInOneSessionAndReturnAnObject(queries)
       this.firstPart = res.firstPart[0]
       this.secondPart = res.secondPart[0]
       this.thirdPart = res.thirdPart
@@ -199,31 +209,35 @@ export default {
       })
       return arr
     },
-    formatHref(name) {
+    handleDomainName(name) {
       return 'https://' + name
     },
-    handleReference(e) {
-      console.log('Redirect')
-      console.log(e.srcElement.outerText)
-      let reference = e.srcElement.outerText.trim()
+    handleReference(key) {
       let externalLink = ''
       let asn = this.asNumber
-      if (reference === 'Bgp') {
+
+      if (key === 'bgp') {
         externalLink = `${references.bgp}/AS${asn}`
-      } else if (reference === 'Bgp.Tools') {
+      } else if (key === 'bgpTools') {
         externalLink = `${references.bgpTools}/${asn}`
-      } else if (reference === 'PeeringDB') {
+      } else if (key === 'peeringDB') {
         externalLink = `${references.peeringDB}/${this.secondPart.peeringdbId}`
-      } else if (reference === 'Cloudflare Radar') {
+      } else if (key === 'cloudflareRadar') {
         externalLink = `${references.cloudflareRadar}/as${asn}`
-      } else if (reference === 'RIPEstat') {
+      } else if (key === 'ripeStat') {
         externalLink = `${references.ripeStat}/${asn}`
       } else {
         console.log('none')
         return
       }
-      console.log(externalLink)
-      window.open(externalLink, '_blank')
+      return externalLink
+    },
+    handleRoutingFromNetworksToIYP(e) {
+      console.log('Routing to IYP')
+      this.$router.push({
+        name: 'iyp_asn',
+        params: { asn: this.asNumber },
+      })
     },
   },
   watch: {
@@ -244,5 +258,11 @@ p {
 h3 {
   font-size: 1rem;
   line-height: 1.5
+}
+.overview-footer {
+  text-decoration: underline;
+  cursor: pointer;
+  width: 100%;
+  text-align: right;
 }
 </style>

@@ -1,9 +1,6 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1>{{ pageTitle }}</h1>
-    <div>
-      <q-chip clickable @click="handleReference" color="gray" text-color="black"> PeeringDB </q-chip>
-    </div>
+    <h1 class="text-center">{{ pageTitle }}</h1>
     <div>
       <q-list>
         <Overview :id="id" :title="setTitle" />
@@ -15,18 +12,17 @@
           header-class="IHR_charts-title"
         >
           <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable
-                :data="members"
-                :columns="membersColumns"
-                :loading-status="this.loadingStatus.members"
-                :cypher-query="cypherQueries.members"
-                :slot-length="1"
-              >
-                <GenericPieChart v-if="members.length > 0" :chart-data="members" :chart-layout="{ title: 'Country' }" />
-              </GenericTable>
-            </q-card>
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="members"
+              :columns="membersColumns"
+              :loading-status="this.loadingStatus.members"
+              :cypher-query="cypherQueries.members"
+              :slot-length="1"
+            >
+              <GenericPieChart v-if="members.length > 0" :chart-data="members" :chart-layout="{ title: 'Country' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
@@ -37,18 +33,17 @@
           header-class="IHR_charts-title"
         >
           <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable
-                :data="facilities"
-                :columns="facilitiesColumns"
-                :loading-status="this.loadingStatus.facilities"
-                :cypher-query="cypherQueries.facilities"
-                :slot-length="1"
-              >
-                <GenericPieChart v-if="facilities.length > 0" :chart-data="facilities" :chart-layout="{ title: 'Country' }" />
-              </GenericTable>
-            </q-card>
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="facilities"
+              :columns="facilitiesColumns"
+              :loading-status="this.loadingStatus.facilities"
+              :cypher-query="cypherQueries.facilities"
+              :slot-length="1"
+            >
+              <GenericPieChart v-if="facilities.length > 0" :chart-data="facilities" :chart-layout="{ title: 'Country' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
@@ -59,18 +54,17 @@
           header-class="IHR_charts-title"
         >
           <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card v-if="tableVisible" class="q-ma-xl">
-              <GenericTable
-                :data="peeringLANs"
-                :columns="peeringLANsColumns"
-                :loading-status="this.loadingStatus.peeringLANs"
-                :cypher-query="cypherQueries.peeringLANs"
-                :slot-length="1"
-              >
-                <GenericPieChart v-if="peeringLANs.length > 0" :chart-data="peeringLANs" :chart-layout="{ title: 'Country' }" />
-              </GenericTable>
-            </q-card>
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="peeringLANs"
+              :columns="peeringLANsColumns"
+              :loading-status="this.loadingStatus.peeringLANs"
+              :cypher-query="cypherQueries.peeringLANs"
+              :slot-length="1"
+            >
+              <GenericPieChart v-if="peeringLANs.length > 0" :chart-data="peeringLANs" :chart-layout="{ title: 'Country' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
       </q-list>
@@ -83,10 +77,6 @@ import { QChip } from 'quasar'
 import Overview from '@/views/charts/iyp/IXPOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
 import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
-
-const references = {
-  peeringDB: 'https://www.peeringdb.com/ix',
-}
 
 const expansionItems = {
   members: {
@@ -187,8 +177,7 @@ export default {
       return { cypherQuery: query, params: { id: this.id }, mapping, data: 'prefixes' }
     },
     getMembers() {
-      const query =
-        `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MEMBER_OF]-(a:AS)
+      const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MEMBER_OF]-(a:AS)
          OPTIONAL MATCH (a)-[:NAME]->(n:Name)
          OPTIONAL MATCH (a)-[:COUNTRY {reference_org: $org}]->(c:Country)
          RETURN c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
@@ -201,8 +190,7 @@ export default {
       return { cypherQuery: query, params: { id: this.id, org: 'NRO' }, mapping, data: 'members' }
     },
     getFacilities() {
-      const query =
-        `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility)
+      const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility)
          OPTIONAL MATCH (f)-[:COUNTRY]->(c:Country)
          RETURN f.name as name, c.country_code AS cc
         `
@@ -213,8 +201,7 @@ export default {
       return { cypherQuery: query, params: { id: this.id }, mapping, data: 'facilities' }
     },
     getPeeringLANs() {
-      const query =
-        `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY]-(s:Prefix)
+      const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY]-(s:Prefix)
          OPTIONAL MATCH (s)-[:COUNTRY]->(c:Country)
          RETURN s.prefix as prefix, c.country_code as cc
         `
@@ -226,17 +213,6 @@ export default {
     },
     setTitle(title) {
       this.pageTitle = title
-    },
-    handleReference(e) {
-      console.log('Redirect')
-      console.log(e.srcElement.outerText)
-      let reference = e.srcElement.outerText.trim()
-      let externalLink = ''
-      if (reference === 'PeeringDB') {
-        externalLink = `${references.peeringDB}/${this.id}`
-      }
-      console.log(externalLink)
-      window.open(externalLink, '_blank')
     },
     async handleClick(e) {
       console.log(e.srcElement.innerText)

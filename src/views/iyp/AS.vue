@@ -171,18 +171,18 @@
 
         <q-expansion-item
           @click="this.handleClick"
-          :label="$t('iyp.as.dependencies.title')"
-          caption="AS Dependencies"
+          :label="$t('iyp.as.dependings.title')"
+          caption="AS Dependings"
           header-class="IHR_charts-title"
-          v-model="show.dependencies"
+          v-model="show.dependings"
         >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable
-              :data="dependencies"
-              :columns="dependenciesColumns"
-              :loading-status="this.loadingStatus.dependencies"
-              :cypher-query="cypherQueries.dependencies"
+              :data="dependings"
+              :columns="dependingsColumns"
+              :loading-status="this.loadingStatus.dependings"
+              :cypher-query="cypherQueries.dependings"
             />
           </q-card>
         </q-expansion-item>
@@ -235,9 +235,9 @@ const expansionItems = {
     title: 'Dependent ASes',
     subTitle: 'AS Dependents',
   },
-  dependencies: {
-    title: 'Dependency ASes',
-    subTitle: 'AS Dependencies',
+  dependings: {
+    title: 'Depending ASes',
+    subTitle: 'AS Dependings',
   },
 }
 
@@ -260,7 +260,7 @@ export default {
       tableVisible: true,
       statsDisable: false,
       peerColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
@@ -313,8 +313,8 @@ export default {
         },
         { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
-      dependenciesColumns: [
-        { name: 'Dependency AS', label: 'Dependency AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+      dependingsColumns: [
+        { name: 'Depending AS', label: 'Depending AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         {
@@ -334,7 +334,7 @@ export default {
       facilities: [],
       siblings: [],
       dependents: [],
-      dependencies: [],
+      dependings: [],
       cypherQueries: {},
       show: {
         peers: false,
@@ -345,7 +345,7 @@ export default {
         facilities: false,
         siblings: false,
         dependents: false,
-        dependencies: false,
+        dependings: false,
       },
       chartData: [],
       loadingStatus: {
@@ -357,7 +357,7 @@ export default {
         facilities: false,
         siblings: false,
         dependents: false,
-        dependencies: false,
+        dependings: false,
       },
       count: {
         peers: 0,
@@ -368,7 +368,7 @@ export default {
         facilities: 0,
         siblings: 0,
         dependents: 0,
-        dependencies: 0,
+        dependings: 0,
       },
     }
   },
@@ -609,7 +609,7 @@ export default {
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependents' }
     },
-    getDependencies() {
+    getDependings() {
       const query = `MATCH (a:AS {asn: $asn})-[d:DEPENDS_ON]->(b:AS)
             WHERE a.asn <> b.asn
             OPTIONAL MATCH (b)-[:NAME]->(n:Name)
@@ -623,7 +623,7 @@ export default {
         cc: 'country',
         hegemonyScore: 'hegemony_score',
       }
-      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependencies' }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependings' }
     },
     setPageTitle(title) {
       this.pageTitle = `AS${this.asn} - ${title}`
@@ -652,8 +652,8 @@ export default {
         query = this.getSiblings()
       } else if (clickedItem === expansionItems.dependents.title || clickedItem === expansionItems.dependents.subTitle) {
         query = this.getDependents()
-      } else if (clickedItem === expansionItems.dependencies.title || clickedItem === expansionItems.dependencies.subTitle) {
-        query = this.getDependencies()
+      } else if (clickedItem === expansionItems.dependings.title || clickedItem === expansionItems.dependings.subTitle) {
+        query = this.getDependings()
       } else {
         return
       }
