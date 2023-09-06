@@ -8,11 +8,11 @@ The Internet Health Report monitors the conditions of networks that compose the 
 
 #### Install Node JS
 
-Refer to https://nodejs.org/en/ to install nodejs
+Install [Node v16.20.0 (LTS)](https://nodejs.org/en/blog/release/v16.20.0)
 
 #### Install npm package manager
 
-Refer to https://docs.npmjs.com/cli/v6/configuring-npm to install npm
+Install [Npm v8.19.4](https://docs.npmjs.com/cli/v8/configuring-npm)
 
 #### Cloning and Running the Application in local
 
@@ -23,7 +23,6 @@ git clone https://github.com/InternetHealthReport/ihr-website.git
 cd ihr-website
 ```
 Note: 
-- Currently the project supports node  --version =< 16.9.1 
 - you can use [nvm](https://github.com/nvm-sh/nvm) to switch between node versions as per your need 
 
 Install all the npm packages. Go to root directory and type the following command to install all npm packages
