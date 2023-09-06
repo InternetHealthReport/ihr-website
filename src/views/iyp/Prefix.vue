@@ -19,10 +19,16 @@
               :columns="domainsColumns"
               :loading-status="this.loadingStatus.domains"
               :cypher-query="cypherQueries.domains"
-              :slot-length="2"
+              :slot-length="3"
             >
               <GenericPieChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Country' }" />
               <GenericBarChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Tags' }" />
+              <GenericTreemapChart
+                v-if="domains.length > 0"
+                :chart-data="domains"
+                :chart-layout="{ title: 'Domain Names' }"
+                :config="{ key: 'domainName', root: this.getPrefix(), values: false }"
+              />
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -80,6 +86,7 @@ import Overview from '@/views/charts/iyp/PrefixOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
 import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
 import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
+import GenericTreemapChart from '@/views/charts/iyp/GenericTreemapChart'
 
 const expansionItems = {
   domains: {
@@ -103,6 +110,7 @@ export default {
     QChip,
     GenericPieChart,
     GenericBarChart,
+    GenericTreemapChart,
   },
   data() {
     return {
