@@ -1,17 +1,3 @@
-# How to Resolve CORS Error in GRIP Alarms Server [Client-Side]
-If you encounter a CORS (Cross-Origin Resource Sharing) error while attempting to select GRIP alarms, it's due to the current lack of CORS support in GRIP. This issue is typically depicted as shown in the image below:
-![grip-cors-error](../../../assets/documentation/grip-cors-error.png)
-
-Configuring CORS is the responsibility of the server side (GRIP). However, until this is resolved on the server, you can use the [Allow CORS: Access-Control-Allow-Origin Chrome Extension](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) to mitigate the issue. This extension essentially adds the `Access-Control-Allow-Origin: *` rule to the response header.
-
-Here's how to use the extension:
-1. Install the [Allow CORS Chrome Extension](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) from the Chrome Web Store.
-2. Toggle the extension to activate it, as illustrated below:
-![allow-cors-extension-toggled](../../../assets/documentation/allow-cors-chrome-extension.png)
-
-With the extension activated, you should now be able to fetch data from GRIP without encountering any CORS errors:
-![grip-without-cors-error](../../../assets/documentation/grip-without-cors-error.png)
-
 # How to customize the text inside Alarms Table (Aggregated Alarms Area)
 If you would like to customize the text inside Alarms Table Area for both Alarm Types and Data Sources, you could only change the content of the attributes `title` and `description`. Refer to the alarms metadata inside [AggregatedAlarmsController.vue](./AggregatedAlarmsController.vue). These attributes are loosely coupled from the actual Data transformation code. Be cautious not to alter any key inside the meatadata, as doing so disrupt the code.
 ![alarms-filters-area-ui](../../../assets/documentation/alarms-filters-area-ui.png)
