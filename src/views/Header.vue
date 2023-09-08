@@ -17,6 +17,7 @@
               <q-list @mouseover.native="toggleValue(index,2,true)" @mouseout.native="toggleValue(index,2,false)" class="rounded-borders text-white bg-primary" bordered separator padding>
                 <q-item
                   clickable
+                  @click="closeMenu"
                   v-close-popup
                   :key="option.entryName"
                   v-for="option in item.options"
@@ -181,6 +182,15 @@ export default {
       }
       else if(_type==2){
         this.simple_menu[_index].listOver=_value
+      }
+    },
+    closeMenu() {
+      for(const x in this.simple_menu){
+        if(this.simple_menu[x].menu!=undefined){
+          this.simple_menu[x].menuOver=false
+          this.simple_menu[x].listOver=false
+          this.simple_menu[x].menu=false
+        }
       }
     },
     checkMenu () {
