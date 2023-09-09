@@ -5,13 +5,13 @@
       <q-list>
         <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
 
-        <div>
+        <!-- <div>
           <p @click="handleExpansion('prefix')">Prefix</p>
           <p @click="handleExpansion('dependents')">Dependents</p>
-        </div>
+        </div> -->
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.peers.title)"
           :label="$t('iyp.as.peers.title')"
           caption="AS Peers"
           header-class="IHR_charts-title"
@@ -27,18 +27,18 @@
               :slot-length="1"
             >
               <GenericPieChart v-if="peers.length > 0" :chart-data="peers" :chart-layout="{ title: 'Country' }" />
-              <!-- <GenericTreemapChart
+              <GenericTreemapChart
                 v-if="peers.length > 0"
                 :chart-data="peers"
                 :chart-layout="{ title: 'Peer ASes' }"
                 :config="{ key: 'cc', root: this.asn, values: false }"
-              /> -->
+              />
             </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.ipPrefixes.title)"
           :label="$t('iyp.as.ipPrefix.title')"
           caption="IP Prefix"
           header-class="IHR_charts-title"
@@ -60,7 +60,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.ixps.title)"
           :label="$t('iyp.as.ixp.title')"
           caption="Internet Exchange Points"
           header-class="IHR_charts-title"
@@ -81,7 +81,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.rankings.title)"
           :label="$t('iyp.as.rankings.title')"
           caption="Rankings"
           header-class="IHR_charts-title"
@@ -102,7 +102,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.popularDomains.title)"
           :label="$t('iyp.as.popularDomains.title')"
           caption="Popular Domain Names"
           header-class="IHR_charts-title"
@@ -127,7 +127,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.facilities.title)"
           :label="$t('iyp.as.facilities.title')"
           caption="Facilities"
           header-class="IHR_charts-title"
@@ -145,7 +145,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.siblings.title)"
           :label="$t('iyp.as.siblings.title')"
           caption="AS Siblings"
           header-class="IHR_charts-title"
@@ -163,7 +163,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.dependents.title)"
           :label="$t('iyp.as.dependents.title')"
           caption="AS Dependents"
           header-class="IHR_charts-title"
@@ -189,7 +189,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.dependings.title)"
           :label="$t('iyp.as.dependings.title')"
           caption="AS Dependings"
           header-class="IHR_charts-title"
@@ -397,6 +397,8 @@ export default {
         dependents: 0,
         dependings: 0,
       },
+      expansionItems: expansionItems,
+      expanded: [],
     }
   },
   async created() {
@@ -658,10 +660,12 @@ export default {
     setPeeringdbId(id) {
       this.peeringdbId = id
     },
-    async handleClick(e) {
-      console.log(e.srcElement.innerText)
-      const clickedItem = e.srcElement.innerText
+    async handleClick(key) {
+      if (!this.expanded.includes(key)) {
+        this.expanded.push(key)
+      }
 
+      const clickedItem = key
       let query = {}
       if (clickedItem === expansionItems.ipPrefixes.title || clickedItem === expansionItems.ipPrefixes.subTitle) {
         query = this.getIpPrefix()
@@ -713,9 +717,14 @@ export default {
   watch: {
     '$route.params.asn': {
       handler: async function (asn) {
+        console.log('ASN Changed')
         if (parseInt(asn) != this.asn) {
           this.asn = parseInt(asn)
-          await this.getData()
+          let items = Object.keys(this.count)
+          items.forEach(item => (this.count[item] = 0))
+          this.expanded.forEach(async key => {
+            await this.handleClick(key)
+          })
         }
       },
       deep: true,

@@ -6,7 +6,7 @@
         <Overview :host="host" :prefixLength="prefixLength" />
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.domains.title)"
           :label="$t('iyp.prefix.domains.title')"
           caption="Corresponding Domain Names"
           header-class="IHR_charts-title"
@@ -34,7 +34,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.dependencies.title)"
           :label="$t('iyp.prefix.dependencies.title')"
           caption="List of Dependencies"
           header-class="IHR_charts-title"
@@ -55,7 +55,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.prefixes.title)"
           :label="$t('iyp.prefix.prefixes.title')"
           caption="Covering Prefixes"
           header-class="IHR_charts-title"
@@ -155,6 +155,8 @@ export default {
         dependencies: 0,
         part: 0,
       },
+      expansionItems: expansionItems,
+      expanded: [],
     }
   },
   created() {
@@ -228,7 +230,7 @@ export default {
       // RETURN c.country_code as cc, x.prefix as prefix, collect(DISTINCT(t.label)) as tags
       // `
       const query = `
-      MATCH (p:Prefix {prefix: '8.8.8.0/24'})-[:PART_OF*]->(x:Prefix)
+      MATCH (p:Prefix {prefix: $prefix})-[:PART_OF*]->(x:Prefix)
       OPTIONAL MATCH (x)-[:CATEGORIZED]->(t:Tag)
       OPTIONAL MATCH (x)-[:COUNTRY]->(c:Country)
       OPTIONAL MATCH (x)<-[:ORIGINATE]-(a:AS)
@@ -243,10 +245,12 @@ export default {
       const prefix = this.getPrefix()
       return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'part' }
     },
-    async handleClick(e) {
-      console.log(e.srcElement.innerText)
-      const clickedItem = e.srcElement.innerText
+    async handleClick(key) {
+      if (!this.expanded.includes(key)) {
+        this.expanded.push(key)
+      }
 
+      const clickedItem = key
       let query = {}
       if (clickedItem === expansionItems.domains.title || clickedItem === expansionItems.domains.subTitle) {
         query = this.getDomains()
@@ -270,6 +274,27 @@ export default {
 
       this.cypherQueries[query.data] = query.cypherQuery
       this.loadingStatus[query.data] = false
+    },
+  },
+  watch: {
+    '$route.params': {
+      handler: async function (params) {
+        console.log('Prefix Changed')
+        console.log(params.host)
+        if (params.host != this.host || params.prefixLength != this.prefixLength) {
+          this.host = this.$route.params.host
+          this.prefixLength = this.$route.params.prefix_length
+
+          // reset to zero
+          let items = Object.keys(this.count)
+          items.forEach(item => (this.count[item] = 0))
+
+          this.expanded.forEach(async key => {
+            await this.handleClick(key)
+          })
+        }
+      },
+      deep: true,
     },
   },
 }

@@ -32,7 +32,7 @@
                   :chart-layout="{ title: 'Rankings' }"
                 /> -->
               </div>
-              <div class="col-12 col-md-2">
+              <div v-if="this.thirdPart.length > 0" class="col-12 col-md-2">
                 <h3>Top 5 Domains</h3>
                 <div class="column">
                   <a :href="handleDomainName(item.domainName)" v-for="item in thirdPart" target="_blank" rel="noreferrer">{{

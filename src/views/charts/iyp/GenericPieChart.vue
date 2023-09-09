@@ -98,16 +98,18 @@ export default {
       return { chartLabels, chartValues }
     },
   },
-  chartData: {
-    handler() {
-      console.log('Yep, watching!')
+  watch: {
+    chartData: {
+      handler() {
+        console.log('Yep, watching!')
 
-      if (this.chartData && this.chartData.length > 0) {
-        this.localChartData = this.chartData
-        this.renderChart()
-      }
+        if (this.chartData && this.chartData.length > 0) {
+          this.localChartData = this.chartData
+          this.renderChart()
+        }
+      },
+      deep: true,
     },
-    deep: true,
   },
 }
 </script>
