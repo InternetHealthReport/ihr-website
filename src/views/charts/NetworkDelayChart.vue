@@ -14,10 +14,10 @@
         </div>
         <div class="q-pa-sm"
         >
-          <location-search-bar 
-          @select="addEndLocation" 
-          :hint="$t('searchBar.locationDestination')" 
-          :label="$t('searchBar.locationHint')" 
+          <location-search-bar
+          @select="addEndLocation"
+          :hint="$t('searchBar.locationDestination')"
+          :label="$t('searchBar.locationHint')"
           :selected="startPointNameStr"
           style="width: 65%;margin: auto;margin-bottom: -6px;"
           />
@@ -349,6 +349,8 @@ export default {
           trace = {
             x: [],
             y: [],
+            mode: 'lines',
+            type: 'scatter',
             //name: `${elem.startpoint_type} ${elem.startpoint_name} ipv${elem.startpoint_af} => ${elem.endpoint_type} ${elem.endpoint_name} ipv${elem.endpoint_af}`
             name: `${startname} to ${endname}`,
             hovertemplate:
@@ -382,8 +384,8 @@ export default {
         maxValue = maxValue > elem.median ? maxValue : elem.median
 
         // Add null if there is missing data
-        let prevDate = Date.parse(trace.x.slice(-1)[0])
-        let currDate = Date.parse(elem.timebin)
+        let prevDate = new Date(trace.x.slice(-1)[0]).getTime()
+        let currDate = new Date(elem.timebin).getTime()
         if (currDate > prevDate + timeResolution + 1) {
           trace.y.push(null)
           trace.x.push(elem.timbin)
@@ -395,7 +397,6 @@ export default {
       // Sort traces by alphabetical order
       let keys = Object.keys(traces).sort()
       keys.forEach(key => this.traces.push(traces[key]))
-
       // emit max value
       this.$emit('max-value', maxValue)
 

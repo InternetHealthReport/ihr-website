@@ -11,6 +11,7 @@
         <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       </div>
     </div>
+<!--
     <q-card class="q-mb-xl" flat>
       <q-card-section>
         <div class="row justify-center q-pa-md">
@@ -54,6 +55,30 @@
       </q-card-section>
       <q-separator />
     </q-card>
+ -->
+    <q-expansion-item caption="IHR Aggregated Alarms" header-class="IHR_charts-title" default-opened expand-icon-toggle
+      v-model="aggregatedAlarmsExpanded">
+      <template v-slot:header>
+        <div class="graph-header-div">
+          <q-item-section class="graph-header">
+            <q-item-section avatar>
+              <q-icon name="fas fa-plug" color="primary" text-color="white" />
+            </q-item-section>
+
+            <q-item-section>
+              <a id="aggregatedAlarms"></a>
+              <div class="text-primary">
+                {{ $t('charts.aggregatedAlarms.title') }}
+              </div>
+              <div class="text-caption text-grey">IHR Aggregated Alarms</div>
+            </q-item-section>
+          </q-item-section>
+        </div>
+      </template>
+      <aggregated-alarms-controller :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
+        :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony"
+        :networkDelayLoading="loading.networkDelay" />
+    </q-expansion-item>
     <a id="hegemony"></a>
     <div v-show="!this.nbAlarms['hegemony']">
       <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
@@ -118,7 +143,7 @@
             <hegemony-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
               :min-deviation="minDeviationNetworkDelay" :filter="hegemonyFilter"
               @filteredRows="newFilteredRows('hegemony', $event)" @loading="hegemonyLoading"
-              ref="ihrChartHegemonyAlarms" />
+              @hegemony-alarms-data-loaded="hegemonyAlarms = $event" ref="ihrChartHegemonyAlarms" />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -179,7 +204,7 @@
             <network-delay-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
               :min-deviation="minDeviationNetworkDelay" :filter="ndelayFilter"
               @filteredRows="newFilteredRows('networkDelay', $event)" @loading="networkDelayLoading"
-              ref="ihrChartNetworkDelay" />
+              @network-delay-alarms-data-loaded="networkDelayAlarms = $event" ref="ihrChartNetworkDelay" />
           </q-card-section>
         </q-card>
       </q-expansion-item>
@@ -318,7 +343,7 @@
         </q-card-section>
       </q-card>
     </q-expansion-item>
-    <!-- </div> -->
+
   </div>
 </template>
 
@@ -327,6 +352,7 @@ import reportMixin from '@/views/mixin/reportMixin'
 import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from './charts/global/DiscoChart'
 import NetworkDelayAlarmsChart from './charts/global/NetworkDelayAlarmsChart'
 import HegemonyAlarmsChart from './charts/global/HegemonyAlarmsChart'
+import AggregatedAlarmsController from './charts/global/AggregatedAlarmsController'
 import DelayChart, {
   DEFAULT_MIN_NPROBES,
   DEFAULT_MIN_DEVIATION,
@@ -372,6 +398,7 @@ export default {
     NetworkDelayAlarmsChart,
     HegemonyAlarmsChart,
     DiscoChart,
+    AggregatedAlarmsController,
     DelayChart,
     DateTimePicker,
   },
@@ -389,6 +416,7 @@ export default {
       ndelayExpanded: true,
       linkExpanded: true,
       discoExpanded: true,
+      aggregatedAlarmsExpanded: true,
       presetAsnLists: PRESETS_ASN_LISTS,
       levelOptions: LEVEL_OPTIONS,
       levelColors: LEVEL_COLOR,
@@ -421,6 +449,8 @@ export default {
         linkDelay: true,
         disco: true,
       },
+      hegemonyAlarms: [],
+      networkDelayAlarms: [],
     }
   },
   mounted() {
@@ -507,6 +537,8 @@ export default {
       html2pdf(element, opt)
       // console.log('button is clicked')
     },
+
+
   },
   computed: {
     title() {
@@ -517,6 +549,9 @@ export default {
           return this.$t('globalReport.title.personal')
       }
       return this.$t('globalReport.title.global')
+    },
+    aggregatedAlarmsKey() {
+      return `${JSON.stringify(this.loading.hegemony)}-${JSON.stringify(this.loading.networkDelay)}`
     },
   },
   watch: {
@@ -570,17 +605,10 @@ export default {
 .IHR_charts-body
   border-radius 20px
   background: white;
-  border-left 1px solid #F9F8F8
-  border-right 1px solid #F9F8F8
-  border-bottom 1px solid #F9F8F8
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 .IHR_charts-title
   width 100%
   margin-top 10px
-  border-top 1px solid #F9F8F8
-  border-left 1px solid #F9F8F8
-  border-right 1px solid #F9F8F8
-  border-bottom 1px solid #F9F8F8
 .graph-header
   display flex
   justify-content flex-start

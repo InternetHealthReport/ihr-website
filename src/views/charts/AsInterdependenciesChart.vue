@@ -91,6 +91,8 @@ import ripeApi from '@/plugins/RipeApi'
 const DEFAULT_TRACE = [
   {
     // First trace is used for the hegemony cone
+    mode: 'lines',
+    type: 'scatter',
     x: [],
     y: [],
     yaxis: 'y2',
@@ -144,6 +146,7 @@ export default {
       hegemonyConeFilter: null,
       traces: DEFAULT_TRACE,
       layout: AS_INTERDEPENDENCIES_LAYOUT,
+      loadingNeighbours: true,
       neighbours: [],
     }
   },
@@ -152,6 +155,7 @@ export default {
   },
   mounted() {
     this.tableFromQuery()
+    this.getNeighboursData()
   },
   methods: {
     updateAxesLabel() {
@@ -185,10 +189,21 @@ export default {
       this.queryHegemonyConeAPI()
 
       this.neighbours = []
+    },
+    getNeighboursData() {
       ripeApi.asnNeighbours(this.asNumber).then(res => {
         res.data.neighbours.forEach(neighbour => {
           this.neighbours.push(neighbour.asn)
         })
+        this.loadingNeighbours = false
+        console.log('asnNeighbours data loaded')
+        let intervalEnd = this.details.date
+        let intervalStart = new Date(intervalEnd.getTime() - 15 * 60000)
+
+        let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd)
+        let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber)
+        this.updateTable('dependency', 'asn', dependencyFilter, intervalStart, intervalEnd)
+        this.updateTable('dependent', 'originasn', dependentFilter, intervalStart, intervalEnd)
       })
     },
     plotClick(clickData) {
@@ -220,15 +235,24 @@ export default {
       this.details.activeTab = table
       let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd)
       let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber)
-      this.updateTable('dependency', 'asn', dependencyFilter, intervalStart, intervalEnd)
-      this.updateTable('dependent', 'originasn', dependentFilter, intervalStart, intervalEnd)
-    },
-    updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
-      this.details.tablesData[tableType] = {
+
+      this.details.tablesData['dependency'] = {
         data: [],
         loading: true,
-        filter: filter,
+        filter: dependencyFilter,
       }
+      this.details.tablesData['dependent'] = {
+        data: [],
+        loading: true,
+        filter: dependentFilter,
+      }
+      this.details.tableVisible = true
+      if (!this.loadingNeighbours) {
+        this.updateTable('dependency', 'asn', dependencyFilter, intervalStart, intervalEnd)
+        this.updateTable('dependent', 'originasn', dependentFilter, intervalStart, intervalEnd)
+      }
+    },
+    updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
 
       this.$ihr_api.hegemony(
         filter,
@@ -264,7 +288,7 @@ export default {
             results.results = res
           }
 
-          this.details.tableVisible = true
+
           this.details.tablesData[tableType] = {
             data: results.results,
             loading: false,
@@ -312,42 +336,45 @@ export default {
       let anotherAsn
       let minX, maxX
       //console.log(data);
-      if (data.length==0){
+      if (data.length == 0) {
         this.traces = extend(true, [], DEFAULT_TRACE)
-        this.layout.annotations = [{
-          x: 0.45,
-          y: 0.23,
-          xref: 'paper',
-          yref: 'paper',
-          text: 'Network is unreachable',
-          showarrow: false,
-          font: {
-            size: 22
-          }
-        }]
-        return
-      }
-      else{
-        var noDependency = false;
-        data.forEach(elem =>{
-          if(elem.originasn == 0){
-            noDependency = true;
-          }
-        })
-        if(noDependency){
-          this.layout.annotations = [{
+        this.layout.annotations = [
+          {
             x: 0.45,
             y: 0.23,
             xref: 'paper',
             yref: 'paper',
-            text: 'No dependency',
+            text: 'Network is unreachable',
             showarrow: false,
             font: {
-              size: 22
-            }
-          }]
+              size: 22,
+            },
+          },
+        ]
+        return
+      } else {
+        var noDependency = false
+        data.forEach(elem => {
+          if (elem.originasn == 0) {
+            noDependency = true
+          }
+        })
+        if (noDependency) {
+          this.layout.annotations = [
+            {
+              x: 0.45,
+              y: 0.23,
+              xref: 'paper',
+              yref: 'paper',
+              text: 'No dependency',
+              showarrow: false,
+              font: {
+                size: 22,
+              },
+            },
+          ]
         }
-      }  
+      }
 
       data.forEach(elem => {
         if (elem.asn == this.asNumber) return
@@ -356,6 +383,8 @@ export default {
         if (anotherAsn === undefined) anotherAsn = elem.asn
         if (trace === undefined) {
           trace = {
+            mode: 'lines',
+            type: 'scatter',
             x: [],
             y: [],
             name: this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) + ' ' + elem.asn_name.split(' ')[0],
@@ -369,7 +398,6 @@ export default {
               '%{yaxis.title.text}: <b>%{y:.2f}%</b>' +
               '<extra></extra>',
             connectgaps: false,
-            mode: 'lines',
           }
 
           traces[elem.asn] = trace
@@ -534,9 +562,9 @@ export default {
       //console.log(this.traces.length)
       //console.log(traces)
 
-      if(this.traces.length > 12){
+      if (this.traces.length > 12) {
         this.layout.showlegend = false
-      }else{
+      } else {
         this.layout.showlegend = true
       }
     },

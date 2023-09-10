@@ -1,6 +1,6 @@
 <template>
   <div class="IHR_disco-chart">
-    <reactive-chart :layout="layout" :traces="traces" :ref="myId" :no-data="noData" />
+    <reactive-chart :layout="layout" :traces="traces" :ref="myId" :no-data="noData" :yMax="yMax" />
   </div>
 </template>
 
@@ -19,6 +19,10 @@ export default {
     loading: {
       type: Boolean,
       default: true,
+    },
+    yMax: {
+      type: Number,
+      default: 1,
     },
   },
   data() {
