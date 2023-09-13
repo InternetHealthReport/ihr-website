@@ -6,6 +6,7 @@
         "general": "General",
         "reports": "Reports",
         "analysisModules": "Analysis Modules",
+        "tools": "Tools",
         "dataAccess": "Data Access"
       },
       "sections": {
@@ -81,7 +82,7 @@
               "header": "RIPE NCC",
               "body": "IHR is built on top of large datasets and <a href='https://www.ripe.net/' target='_blank'>RIPE NCC</a> is our main provider. Data from RIPE's <a href='https://www.ripe.net/analyse/internet-measurements/routing-information-service-ris' target='_blank'>Routing Information Service (RIS)</a> and <a href='https://atlas.ripe.net/' target='_blank'>Atlas measurement platform</a> is crucial for us. IHR has also been partly founded by the <a href='https://www.ripe.net/support/cpf/funding-recipients-2018' target='_blank'>RIPE NCC Community Projects Fund</a>."
             },
-           
+
             {
               "header": "Route Views",
               "body": "The University of Oregon <a href='http://www.routeviews.org/routeviews/' target='_blank'>Route Views Project</a> is another key source of data for IHR, in particular for computing AS dependency."
@@ -233,6 +234,16 @@
             {
               "header": "References",
               "body": "<ul> <li>Research report:  A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>Disco: Fast, Good, and Cheap Outage Detection</a>. TMA 2017.  </li><li>Source code: <a href='https://github.com/InternetHealthReport/disco'> https://github.com/InternetHealthReport/disco</a> </li></ul>"
+            }
+          ]
+        },
+        "internetYellowPages": {
+          "title": "Internet Yellow Pages",
+          "summary": "Internet Yellow Pages (IYP) is a knowledge graph for internet resources. The entities like Autonomous Systems (ASes), Internet Exchange Points (IXPs), and Prefixes can be visualized through IYP. For example, an Autonomous System (AS) will connect with other Autonomous Systems (ASes) to exchage network traffic. Those kind of relationships can be visualized through IYP. I have given a simple example. IYP is capable to do more than this. Let's see the capabilities of IYP at the time of writing this.",
+          "description": [
+            {
+              "header": "Autonomous System (AS)",
+              "body": ""
             }
           ]
         },

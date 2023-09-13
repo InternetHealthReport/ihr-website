@@ -170,7 +170,7 @@ export default {
     async getData() {
       const queries = [this.getDomains(), this.getDependencies(), this.getPartOfPrefixes()]
       let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-      console.log(res)
+      // console.log(res)
       this.domains = res.domains
       this.dependencies = res.dependencies
       this.part = res.part
@@ -206,7 +206,7 @@ export default {
         tags: 'tags',
       }
       const prefix = this.getPrefix()
-      console.log(prefix)
+      // console.log(prefix)
       return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'domains' }
     },
     getDependencies() {
@@ -266,7 +266,7 @@ export default {
       if (this.count[query.data] > 1) {
         return
       }
-      console.log(`${this.count[query.data]} time`)
+      // console.log(`${this.count[query.data]} time`)
       this.loadingStatus[query.data] = true
       const results = await this.$iyp_api.run(query.cypherQuery, query.params)
       const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)
@@ -280,7 +280,7 @@ export default {
     '$route.params': {
       handler: async function (params) {
         console.log('Prefix Changed')
-        console.log(params.host)
+        // console.log(params.host)
         if (params.host != this.host || params.prefixLength != this.prefixLength) {
           this.host = this.$route.params.host
           this.prefixLength = this.$route.params.prefix_length

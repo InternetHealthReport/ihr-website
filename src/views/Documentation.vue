@@ -146,6 +146,23 @@
       </div>
       <div>
         <div class="text-weight-light">
+          {{ $t('documentationPage.sectionsTitle.tools') }}
+        </div>
+        <ul>
+          <li>
+            <router-link
+              :to="{
+                name: 'documentation',
+                hash: '#' + replaceSpaces($t(`documentationPage.sections.tools.title`)),
+              }"
+              class="IHR_delikify"
+              >{{ $t('documentationPage.sections.internetYellowPages.title') }}</router-link
+            >
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-weight-light">
           {{ $t('documentationPage.sectionsTitle.dataAccess') }}
         </div>
         <ul>
@@ -218,14 +235,14 @@ export default {
     },
   },
   emits: {
-    'sidebar-action': function(sideBarAction) {
+    'sidebar-action': function (sideBarAction) {
       if (sideBarAction !== null) {
-        return true;
+        return true
       } else {
-        console.warn('Sidebar Action is missing!');
-        return false;
+        console.warn('Sidebar Action is missing!')
+        return false
       }
-    }
+    },
   },
   mounted() {
     this.$emit('sidebar-action', true)
@@ -304,8 +321,8 @@ export default {
         border-bottom 1px solid $accent
 
       .router-link-active,
-      .router-link-exact-active 
-        border-bottom 1px solid red        
+      .router-link-exact-active
+        border-bottom 1px solid red
 
       & ul
         margin 5px
@@ -325,5 +342,4 @@ export default {
 
 pre
   overflow-x scroll
-
 </style>
