@@ -6,7 +6,7 @@
         <Overview :country-code="cc" :title="setPageTitle" />
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.ases.title)"
           :label="$t('iyp.country.ases.title')"
           caption="Autonomous Systems (ASes)"
           header-class="IHR_charts-title"
@@ -24,7 +24,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.ixps.title)"
           :label="$t('iyp.country.ixps.title')"
           caption="Internet Exchange Points (IXPs)"
           header-class="IHR_charts-title"
@@ -94,6 +94,8 @@ export default {
         ases: 0,
         ixps: 0,
       },
+      expansionItems: expansionItems,
+      expanded: [],
     }
   },
   created() {
@@ -119,7 +121,6 @@ export default {
       const query = `MATCH (c:Country {country_code: $cc})<-[:COUNTRY {reference_name: 'nro.delegated_stats'}]-(a:AS)
          OPTIONAL MATCH (a)-[:NAME]->(n:Name)
          RETURN c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
-         LIMIT 100
         `
       const mapping = {
         cc: 'cc',
@@ -140,11 +141,12 @@ export default {
     setPageTitle(title) {
       this.pageTitle = `${title} (${this.cc})`
     },
-    async handleClick(e) {
-      console.log(e)
-      console.log(e.srcElement.innerText)
-      const clickedItem = e.srcElement.innerText
+    async handleClick(key) {
+      if (!this.expanded.includes(key)) {
+        this.expanded.push(key)
+      }
 
+      const clickedItem = key
       let query = {}
       if (clickedItem === expansionItems.ases.title || clickedItem === expansionItems.ases.subTitle) {
         query = this.getASes()
@@ -166,6 +168,25 @@ export default {
 
       this.cypherQueries[query.data] = query.cypherQuery
       this.loadingStatus[query.data] = false
+    },
+  },
+  watch: {
+    '$route.params.cc': {
+      handler: async function (cc) {
+        console.log('Country Changed')
+        if (cc != this.cc) {
+          this.cc = cc
+
+          // reset count to zero
+          let items = Object.keys(this.count)
+          items.forEach(item => (this.count[item] = 0))
+
+          this.expanded.forEach(async key => {
+            await this.handleClick(key)
+          })
+        }
+      },
+      deep: true,
     },
   },
 }

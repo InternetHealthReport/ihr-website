@@ -6,7 +6,7 @@
         <Overview :id="id" :title="setTitle" />
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.members.title)"
           :label="$t('iyp.ixp.members.title')"
           caption="Member Autonomous Systems (ASes)"
           header-class="IHR_charts-title"
@@ -27,7 +27,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.facilities.title)"
           :label="$t('iyp.ixp.facilities.title')"
           caption="Facilities"
           header-class="IHR_charts-title"
@@ -48,7 +48,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="this.handleClick"
+          @click="handleClick(expansionItems.peeringLANs.title)"
           :label="$t('iyp.ixp.peeringLANs.title')"
           caption="Peering LANs of an IXP"
           header-class="IHR_charts-title"
@@ -144,6 +144,8 @@ export default {
         facilities: 0,
         peeringLANs: 0,
       },
+      expansionItems: expansionItems,
+      expanded: [],
     }
   },
   created() {
@@ -214,10 +216,12 @@ export default {
     setTitle(title) {
       this.pageTitle = title
     },
-    async handleClick(e) {
-      console.log(e.srcElement.innerText)
-      const clickedItem = e.srcElement.innerText
+    async handleClick(key) {
+      if (!this.expanded.includes(key)) {
+        this.expanded.push(key)
+      }
 
+      const clickedItem = key
       let query = {}
       if (clickedItem === expansionItems.members.title || clickedItem === expansionItems.members.subTitle) {
         query = this.getMembers()
@@ -241,6 +245,25 @@ export default {
 
       this.cypherQueries[query.data] = query.cypherQuery
       this.loadingStatus[query.data] = false
+    },
+  },
+  watch: {
+    '$route.params.id': {
+      handler: async function (id) {
+        console.log('IXP Changed')
+        if (parseInt(id) != this.id) {
+          this.id = parseInt(id)
+
+          // reset count to zero
+          let items = Object.keys(this.count)
+          items.forEach(item => (this.count[item] = 0))
+
+          this.expanded.forEach(async key => {
+            await this.handleClick(key)
+          })
+        }
+      },
+      deep: true,
     },
   },
 }

@@ -18,7 +18,7 @@
       </q-tabs>
       <q-tab-panels v-model="activeTab" animated>
         <q-tab-panel name="chart">
-          <div class="row justify-start items-center" id="chartContainer">
+          <div class="row justify-center items-center" id="chartContainer">
             <slot></slot>
           </div>
         </q-tab-panel>
@@ -34,7 +34,7 @@
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td
-                  class="cursor-pointer"
+                  class="cursor-pointer underline"
                   v-for="column in columns"
                   :props="props"
                   :key="column.name"
@@ -146,4 +146,8 @@ export default {
 <style lang="stylus">
 @import "~@/styles/quasar.variables.styl";
 @import "~@/styles/charts/common.styl";
+
+.underline:hover {
+  text-decoration: underline;
+}
 </style>

@@ -25,7 +25,6 @@ export default {
     return {
       localChartData: [],
       chartWidth: 0,
-      layout: {},
     }
   },
   mounted() {
@@ -33,16 +32,11 @@ export default {
       this.localChartData = this.chartData
       this.renderChart()
     }
-    console.log(this.$refs.chart.offsetWidth)
     this.chartWidth = this.$refs.chart.offsetWidth
-    this.layout = { ...this.chartLayout }
   },
   methods: {
     renderChart() {
-      console.log(this.localChartData)
-
       const formattedData = this.formatChartData(this.localChartData)
-      console.log(formattedData)
       let data = [
         {
           type: 'treemap',
@@ -56,18 +50,18 @@ export default {
         data[0].values = formattedData[0].values
       }
 
-      //   const layout = {
-      //     ...this.chartLayout,
-      //   }
-
-      if (formattedData[0].labels.length > 100) {
-        this.layout.width = '1000'
-        this.layout.height = '750'
-      } else {
-        this.layout.width = '700'
+      const layout = {
+        ...this.chartLayout,
       }
 
-      Plotly.newPlot(this.$refs.chart, data, this.layout)
+      // if (formattedData[0].labels.length > 100) {
+      //   layout.width = '1000'
+      //   layout.height = '750'
+      // } else {
+      //   layout.width = '700'
+      // }
+
+      Plotly.newPlot(this.$refs.chart, data, layout, { responsive: true })
     },
     formatChartData(arrayOfObjects) {
       if (!arrayOfObjects || arrayOfObjects.length === 0) {
@@ -90,7 +84,6 @@ export default {
           map[key].push({ child: configKey === 'cc' ? item.asn.low : item.domainName, value: configKey === 'cc' ? item.hegemonyScore : '' })
         }
       })
-      console.log(map)
 
       let labels = []
       let parents = []
@@ -144,16 +137,16 @@ export default {
       return [{ labels, parents, values }]
     },
   },
-  chartData: {
-    handler() {
-      console.log('Yep, watching!')
-
-      if (this.chartData && this.chartData.length > 0) {
-        this.localChartData = this.chartData
-        this.renderChart()
-      }
+  watch: {
+    chartData: {
+      handler() {
+        if (this.chartData && this.chartData.length > 0) {
+          this.localChartData = this.chartData
+          this.renderChart()
+        }
+      },
+      deep: true,
     },
-    deep: true,
   },
 }
 </script>
