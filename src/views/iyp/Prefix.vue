@@ -213,8 +213,9 @@ export default {
       const query = `
       MATCH (p:Prefix {prefix: $prefix})-[:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name) 
       OPTIONAL MATCH (a)-[:COUNTRY]-(c:Country) 
-      RETURN c.country_code AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name
+      RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name
       `
+
       const mapping = {
         cc: 'cc',
         asn: 'asn',
@@ -234,8 +235,9 @@ export default {
       OPTIONAL MATCH (x)-[:CATEGORIZED]->(t:Tag)
       OPTIONAL MATCH (x)-[:COUNTRY]->(c:Country)
       OPTIONAL MATCH (x)<-[:ORIGINATE]-(a:AS)
-      RETURN c.country_code as cc, x.prefix as prefix, collect(a.asn) as origin_asn, collect(DISTINCT t.label) as tags
+      RETURN c.country_code as cc, x.prefix as prefix, collect(DISTINCT a.asn) as origin_asn, collect(DISTINCT t.label) as tags
       `
+
       const mapping = {
         cc: 'cc',
         prefix: 'prefix',
