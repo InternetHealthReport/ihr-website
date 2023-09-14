@@ -1,11 +1,14 @@
 <template>
-  <div ref="chart"></div>
+  <ReactiveChart :layout="actualLayout" :traces="actualData" />
 </template>
 
 <script>
-import Plotly from 'plotly.js-dist'
+import ReactiveChart from '@/components/ReactiveChart'
 
 export default {
+  components: {
+    ReactiveChart,
+  },
   props: {
     chartData: {
       type: Array,
@@ -24,7 +27,8 @@ export default {
   data() {
     return {
       localChartData: [],
-      chartWidth: 0,
+      actualData: [],
+      actualLayout: {},
     }
   },
   mounted() {
@@ -32,7 +36,6 @@ export default {
       this.localChartData = this.chartData
       this.renderChart()
     }
-    this.chartWidth = this.$refs.chart.offsetWidth
   },
   methods: {
     renderChart() {
@@ -54,14 +57,15 @@ export default {
         ...this.chartLayout,
       }
 
+      this.actualData = data
+      this.actualLayout = layout
+
       // if (formattedData[0].labels.length > 100) {
       //   layout.width = '1000'
       //   layout.height = '750'
       // } else {
       //   layout.width = '700'
       // }
-
-      Plotly.newPlot(this.$refs.chart, data, layout, { responsive: true })
     },
     formatChartData(arrayOfObjects) {
       if (!arrayOfObjects || arrayOfObjects.length === 0) {

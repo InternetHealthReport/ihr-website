@@ -170,7 +170,7 @@ export default {
     async getData() {
       const queries = [this.getDomains(), this.getDependencies(), this.getPartOfPrefixes()]
       let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-      console.log(res)
+      // console.log(res)
       this.domains = res.domains
       this.dependencies = res.dependencies
       this.part = res.part
@@ -206,15 +206,16 @@ export default {
         tags: 'tags',
       }
       const prefix = this.getPrefix()
-      console.log(prefix)
+      // console.log(prefix)
       return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'domains' }
     },
     getDependencies() {
       const query = `
       MATCH (p:Prefix {prefix: $prefix})-[:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name) 
       OPTIONAL MATCH (a)-[:COUNTRY]-(c:Country) 
-      RETURN c.country_code AS cc, a.asn AS asn, head(collect(DISTINCT(n.name))) AS name
+      RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name
       `
+
       const mapping = {
         cc: 'cc',
         asn: 'asn',
@@ -234,8 +235,9 @@ export default {
       OPTIONAL MATCH (x)-[:CATEGORIZED]->(t:Tag)
       OPTIONAL MATCH (x)-[:COUNTRY]->(c:Country)
       OPTIONAL MATCH (x)<-[:ORIGINATE]-(a:AS)
-      RETURN c.country_code as cc, x.prefix as prefix, collect(a.asn) as origin_asn, collect(DISTINCT t.label) as tags
+      RETURN c.country_code as cc, x.prefix as prefix, collect(DISTINCT a.asn) as origin_asn, collect(DISTINCT t.label) as tags
       `
+
       const mapping = {
         cc: 'cc',
         prefix: 'prefix',
@@ -266,7 +268,7 @@ export default {
       if (this.count[query.data] > 1) {
         return
       }
-      console.log(`${this.count[query.data]} time`)
+      // console.log(`${this.count[query.data]} time`)
       this.loadingStatus[query.data] = true
       const results = await this.$iyp_api.run(query.cypherQuery, query.params)
       const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)
@@ -280,7 +282,7 @@ export default {
     '$route.params': {
       handler: async function (params) {
         console.log('Prefix Changed')
-        console.log(params.host)
+        // console.log(params.host)
         if (params.host != this.host || params.prefixLength != this.prefixLength) {
           this.host = this.$route.params.host
           this.prefixLength = this.$route.params.prefix_length

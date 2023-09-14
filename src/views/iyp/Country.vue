@@ -160,7 +160,7 @@ export default {
       if (this.count[query.data] > 1) {
         return
       }
-      console.log(`${this.count[query.data]} time`)
+      // console.log(`${this.count[query.data]} time`)
       this.loadingStatus[query.data] = true
       const results = await this.$iyp_api.run(query.cypherQuery, query.params)
       const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)

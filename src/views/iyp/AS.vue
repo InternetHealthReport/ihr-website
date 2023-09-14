@@ -410,6 +410,7 @@ export default {
   async mounted() {},
   computed: {},
   methods: {
+    // Deprecated
     // async getPeers() {
     //   const query =
     //     'MATCH (a:AS {asn: $asn})-[:PEERS_WITH]->(peer:AS)-[:NAME]->(n:Name) MATCH (peer)-[:COUNTRY]->(c) WITH c.country_code AS cc, peer.asn AS peer, collect(DISTINCT(n.name)) AS name RETURN cc, peer, name LIMIT 10'
@@ -697,7 +698,7 @@ export default {
       this.loadingStatus[query.data] = true
       const results = await this.$iyp_api.run(query.cypherQuery, query.params)
       const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)
-      console.log(formattedRes)
+      // console.log(formattedRes)
       this[query.data] = formattedRes
 
       this.cypherQueries[query.data] = query.cypherQuery

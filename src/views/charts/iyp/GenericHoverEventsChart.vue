@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <div ref="myDiv"></div>
-    <!-- <div ref="hoverInfo"></div> -->
-  </div>
+  <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" />
 </template>
 
 <script>
-import Plotly from 'plotly.js-dist'
+import ReactiveChart from '@/components/ReactiveChart'
 
 export default {
+  components: {
+    ReactiveChart,
+  },
   props: {
     chartData: {
       type: Array,
@@ -22,6 +22,8 @@ export default {
   data() {
     return {
       localChartData: [],
+      actualChartData: [],
+      actualChartLayout: {},
     }
   },
   mounted() {
@@ -32,9 +34,6 @@ export default {
   },
   methods: {
     renderChart() {
-      let myPlot = this.$refs.myDiv
-      // let hoverInfo = this.$refs.hoverInfo
-
       let data = this.formatChartData(this.localChartData)
       let layout = {
         xaxis: {
@@ -54,7 +53,8 @@ export default {
         ...this.chartLayout,
       }
 
-      Plotly.newPlot(myPlot, data, layout)
+      this.actualChartData = data
+      this.actualChartLayout = layout
 
       // Reference: https://plotly.com/javascript/hover-events/
       // myPlot
@@ -113,8 +113,6 @@ export default {
   watch: {
     chartData: {
       handler() {
-        console.log('Yep, watching!')
-
         if (this.chartData && this.chartData.length > 0) {
           this.localChartData = this.chartData
           this.renderChart()
