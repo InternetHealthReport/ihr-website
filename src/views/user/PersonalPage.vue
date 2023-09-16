@@ -166,7 +166,7 @@
               />
               <div class="IHR_info-level shadow-1">{{ explaination }}</div>
               <div class="q-gutter-sm" v-show="monitoring.query.modified">
-                <q-btn color="positive" @click="saveMonitoring">{{
+                <q-btn color="positive" @click="saveFrequency">{{
                   $t("personalPage.confirm")
                 }}</q-btn>
                 <q-btn color="negative" @click="monitoring.query.restore()">{{
@@ -180,9 +180,13 @@
             <p>Please note that add to slack and add to discord buttons will add the notification bot to the channel 
               you choose<br/> so when there is any alert, it will be sent to the channel </p>
             <div>
-              <button @click="SaveEmailNotify()">
+              <button v-if="!emailChannel" @click="SaveEmailNotify()">
                 <i class="fa fa-envelope"></i>
                 Notify using email
+              </button>
+              <button v-if="emailChannel" @click="RemoveEmailNotify()">
+                <i class="fa fa-exclamation-triangle" style="color: red;" aria-hidden="true"></i>
+                Stop notifiying email
               </button>
             </div>
             <div>
@@ -295,6 +299,7 @@ export default {
     }
 
     return {
+      emailChannel: false,
       toSave: false,
       saved: {
         email: "original",
@@ -308,6 +313,7 @@ export default {
         content: "email@polpo.it",
         readonly: true
       },
+      tags: [],
       monitoring: {
         modified: false,
         query: new MonitoringUserQuery(),
@@ -357,6 +363,30 @@ export default {
         console.log(error);
       }
     );
+
+    this.$ihr_api.getChannel(
+      res => {
+          console.log(res)
+          if (res.hasOwnProperty('data')) {
+              this.tags = res.data.channel
+              this.monitoring.query.set(res.data.channel);
+          }
+      },
+      error => {
+          console.log(error)
+      });
+      
+    this.$ihr_api.userChannel(
+      data =>{
+        this.monitoring.globalLevel = data.frequency === "low" ? 0 :
+        data.frequency === "medium" ? 5 : 10
+        if(data.code != 404)
+          this.emailChannel = true
+      },
+      error =>{
+        console.log(error)
+      }
+    )
   },
   beforeDestroy() {
     //invalidate everything to be safe
@@ -428,6 +458,19 @@ export default {
       this.$ihr_api.userEmail(
         (_, response) => {
               alert("Email saved successfully");
+              location.reload()
+          },
+        err => {
+          console.error(err);
+          alert("Error saving email");
+        }
+      );
+    },
+    RemoveEmailNotify(){
+      this.$ihr_api.removeUserEmail(
+        (_, response) => {
+              alert("Email removed successfully");
+              location.reload()
           },
         err => {
           console.error(err);
@@ -447,13 +490,26 @@ export default {
       return col.format(col.field(props.row));
     },
     saveMonitoring() {
-      if (this.monitoring.query.verifyModified())
-        this.$ihr_api.userAddMonitoring(
+        this.$ihr_api.userFrequency(
           this.monitoring.query,
           (_, response) => {
             this.monitoring.query.set(
               JSON.parse(response.config.data).monitoredasn
             );
+          },
+          err => {
+            console.error(err);
+          }
+        );
+    },
+    saveFrequency(){
+      console.log(this.monitoring.globalLevel);
+      let frequency = this.monitoring.globalLevel === 0 ? "low" : this.monitoring.globalLevel === 5 ? "medium" : "high" 
+      this.$ihr_api.userFrequency(
+        frequency,
+          (_, response) => {
+            alert(`All channels' frequencies have been changed to ${frequency}`)
+            window.location.reload();
           },
           err => {
             console.error(err);
