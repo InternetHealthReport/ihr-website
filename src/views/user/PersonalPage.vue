@@ -197,7 +197,7 @@
             </div>
             <div>
               <button class="slack">
-                <a href="https://slack.com/oauth/v2/authorize?client_id=5613925479254.5613934881478&scope=channels:join,chat:write,chat:write.public,incoming-webhook&user_scope=">
+                <a href="https://slack.com/oauth/v2/authorize?client_id=38504846805.5809714672006&scope=channels:join,chat:write,incoming-webhook&user_scope=">
                   <img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" 
                   srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
               </button>
