@@ -21,6 +21,8 @@ import Documentation from '@/views/Documentation'
 import Bgplay from '@/components/ripe/Bgplay'
 import PageNotFound from '@/views/PageNotFound'
 import Register from '@/views/user/Register'
+import DiscordRedirect from '@/views/user/DiscordRedirect'
+import SlackRedirect from '@/views/user/SlackRedirect'
 
 Vue.use(Router)
 
@@ -205,6 +207,26 @@ export default new Router({
         default: PersonalPage,
       },
       meta: { title: 'Personnal Page - IHR' },
+    },
+    {
+      name: 'discord_redirect',
+      path: `${routerBase}discord_redirect`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: DiscordRedirect,
+      },
+      meta: { title: 'Discord Redirect Page -IHR' },
+    },
+    {
+      name: 'slack_redirect',
+      path: `${routerBase}slack_redirect`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: SlackRedirect,
+      },
+      meta: { title: 'Slack Redirect Page - IHR' },
     },
     {
       name: 'documentation',

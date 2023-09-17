@@ -436,7 +436,78 @@ const IhrApi = {
               errorCallback
             )
         },
-
+        userDiscord(code,successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
+            this._generic(
+              'user/discordchannel',
+              'post',
+              {code},
+              result => {
+                if (successCallback instanceof Function) successCallback(result)
+              },
+              errorCallback
+            )
+        },
+        userSlack(code,successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
+            this._generic(
+              'user/slackchannel',
+              'post',
+              {code},
+              result => {
+                if (successCallback instanceof Function) successCallback(result)
+              },
+              errorCallback
+            )
+        },
+        userEmail(successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
+            this._generic(
+              'user/emailchannel',
+              'post',
+              {},
+              result => {
+                if (successCallback instanceof Function) successCallback(result)
+              },
+              errorCallback
+            )
+        },
+        removeUserEmail(successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
+            this._generic(
+              'user/removeemailchannel',
+              'post',
+              {},
+              result => {
+                if (successCallback instanceof Function) successCallback(result)
+              },
+              errorCallback
+            )
+        },
+        userFrequency(frequency,successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
+            this._generic(
+              'user/savefrequency',
+              'post',
+              {frequency},
+              result => {
+                if (successCallback instanceof Function) successCallback(result)
+              },
+              errorCallback
+            )
+        },
+        userChannel(successCallback, errorCallback) {
+          this._check_authorization(errorCallback) &&
+            this._generic(
+              'user/channel',
+              'post',
+              {},
+              result => {
+                if (successCallback instanceof Function) successCallback(result)
+              },
+              errorCallback
+            )
+        },
         userResetPassword(email, password, token, successCallback, errorCallback) {
           this._generic(
             'user/reset_password/',
