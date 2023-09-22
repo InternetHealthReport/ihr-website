@@ -60,6 +60,7 @@ export default {
       this.actualData = data
       this.actualLayout = layout
 
+      // To enlarge the chart if length of the data increases
       // if (formattedData[0].labels.length > 100) {
       //   layout.width = '1000'
       //   layout.height = '750'
