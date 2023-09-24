@@ -85,9 +85,6 @@ export default {
   mounted() {
     var graphDiv = this.$refs[this.myId]
 
-    console.log(this.layout)
-    console.log(this.layoutLocal)
-
     if (!this.notFromIypViews) {
       this.layoutLocal = {
         ...this.layoutLocal,

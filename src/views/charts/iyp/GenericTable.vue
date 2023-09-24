@@ -110,8 +110,6 @@ export default {
       }
     },
     routeToEntity(entity, data) {
-      console.log(entity)
-      console.log(data)
       if (entity == 'ASN') {
         this.routeToASN(data.asn)
       } else if (entity == 'Prefix') {
