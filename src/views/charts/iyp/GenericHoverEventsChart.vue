@@ -1,5 +1,10 @@
 <template>
-  <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" />
+  <ReactiveChart
+    :layout="actualChartLayout"
+    :traces="actualChartData"
+    :chart-title="actualChartLayout && actualChartLayout.title"
+    :not-from-iyp-views="false"
+  />
 </template>
 
 <script>

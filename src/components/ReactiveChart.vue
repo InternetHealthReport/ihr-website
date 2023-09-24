@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 v-if="chartTitle">{{ chartTitle }}</h1>
+    <h1 v-if="chartTitle && notFromIypViews">{{ chartTitle }}</h1>
     <div :ref="myId"></div>
     <div v-show="noData" class="IHR_no-data">
       <div class="bg-white">{{ noData }}</div>
@@ -40,25 +40,30 @@ export default {
       required: false,
       default: 0,
     },
+    notFromIypViews: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   emits: {
-    'plotly-click': function(clickData) {
+    'plotly-click': function (clickData) {
       if (clickData !== null) {
-        return true;
+        return true
       } else {
-        console.warn('Click Data is missing!');
-        return false;
+        console.warn('Click Data is missing!')
+        return false
       }
     },
-    'loaded': function() {
-      return true;
-    }
+    loaded: function () {
+      return true
+    },
   },
   data() {
     return {
       created: false,
       myId: `ihrReactiveChart${this._uid}`,
-      layoutLocal: this.layout,
+      layoutLocal: {},
     }
   },
   created() {
@@ -79,6 +84,18 @@ export default {
   },
   mounted() {
     var graphDiv = this.$refs[this.myId]
+
+    console.log(this.layout)
+    console.log(this.layoutLocal)
+
+    if (!this.notFromIypViews) {
+      this.layoutLocal = {
+        ...this.layoutLocal,
+        ...this.layout,
+      }
+      // this.layoutLocal.title = this.layout.title
+    }
+
     Plotly.plot(graphDiv, this.traces, this.layoutLocal, {
       responsive: true,
       displayModeBar: 'hover',
@@ -115,6 +132,13 @@ export default {
     },
     layout: {
       handler: function () {
+        if (!this.notFromIypViews) {
+          this.layoutLocal = {
+            ...this.layoutLocal,
+            ...this.layout,
+          }
+          // this.layoutLocal.title = this.layout.title
+        }
         this.react()
       },
       deep: true,

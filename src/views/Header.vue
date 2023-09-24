@@ -112,7 +112,7 @@ const simple_menu = [
       {
         entryName: 'header.iyp',
         routeName: 'iyp',
-        summary: 'A knowledge graph for Internet resources',
+        summary: 'A Data Visualization Tool for the Internet Yellow Pages (IYP)',
       },
       {
         entryName: 'header.metis',
