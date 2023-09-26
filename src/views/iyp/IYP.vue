@@ -2,7 +2,10 @@
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div>
       <div>
-        <h1 class="text-center q-pa-xl">Internet Yellow Pages</h1>
+        <div class="text-center q-pa-xl">
+          <h1 class="text-h1">IYP Views</h1>
+          <div class="text-subtitle1">A Data Visualization Tool for the Internet Yellow Pages (IYP)</div>
+        </div>
         <div class="row justify-center">
           <div class="col-8">
             <!-- <NetworkSearchBar

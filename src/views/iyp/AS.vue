@@ -178,12 +178,14 @@
               :cypher-query="cypherQueries.dependents"
               :slot-length="1"
             >
-              <GenericTreemapChart
-                v-if="dependents.length > 0"
-                :chart-data="dependents"
-                :chart-layout="{ title: 'Dependents' }"
-                :config="{ key: 'cc', root: this.asn, values: true }"
-              />
+              <div class="col-6">
+                <GenericTreemapChart
+                  v-if="dependents.length > 0"
+                  :chart-data="dependents"
+                  :chart-layout="{ title: 'Dependents' }"
+                  :config="{ key: 'cc', root: this.asn, values: true }"
+                />
+              </div>
             </GenericTable>
           </q-card>
         </q-expansion-item>

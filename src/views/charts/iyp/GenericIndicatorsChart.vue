@@ -1,5 +1,10 @@
 <template>
-  <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" />
+  <ReactiveChart
+    :layout="actualChartLayout"
+    :traces="actualChartData"
+    :chart-title="actualChartLayout && actualChartLayout.title"
+    :not-from-iyp-views="false"
+  />
 </template>
 
 <script>
@@ -35,10 +40,16 @@ export default {
   methods: {
     renderChart() {
       let data = this.formatChartData(this.localChartData)
+
+      // ReactiveChart component will take care of width, height, and margin
+      // let layout = {
+      //   width: this.localChartData.length == 1 ? 400 : 600,
+      //   height: this.localChartData.length == 1 ? 150 : 400,
+      //   margin: this.localChartData.length == 1 ? { t: 25, b: 0, l: 30, r: 0 } : { t: 25, r: 25, l: 25, b: 25 },
+      // }
+
       let layout = {
-        width: this.localChartData.length == 1 ? 400 : 600,
-        height: this.localChartData.length == 1 ? 150 : 400,
-        margin: this.localChartData.length == 1 ? { t: 25, b: 0, l: 30, r: 0 } : { t: 25, r: 25, l: 25, b: 25 },
+        ...this.chartLayout,
       }
 
       this.actualChartData = data

@@ -34,7 +34,7 @@
             <template v-slot:body="props">
               <q-tr :props="props">
                 <q-td
-                  class="cursor-pointer underline"
+                  :class="toUnderline(column.name)"
                   v-for="column in columns"
                   :props="props"
                   :key="column.name"
@@ -55,6 +55,8 @@
 </template>
 
 <script>
+const colToUnderline = ['ASN', 'Country', 'IXP', 'Prefix']
+
 export default {
   props: {
     columns: {
@@ -79,6 +81,8 @@ export default {
     return {
       activeTab: 'chart',
       filter: '',
+      colToUnderline,
+      underline: false,
     }
   },
   mounted() {
@@ -86,7 +90,25 @@ export default {
       this.activeTab = 'data'
     }
   },
+  // computed: {
+  //   toUnderline(name) {
+  //     if (colToUnderline.includes(name)) {
+  //       return {
+  //         underline: true,
+  //         'cursor-pointer': true,
+  //       }
+  //     }
+  //   },
+  // },
   methods: {
+    toUnderline(name) {
+      if (colToUnderline.includes(name)) {
+        return {
+          underline: true,
+          'cursor-pointer': true,
+        }
+      }
+    },
     routeToEntity(entity, data) {
       if (entity == 'ASN') {
         this.routeToASN(data.asn)

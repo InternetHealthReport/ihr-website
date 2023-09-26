@@ -1,5 +1,10 @@
 <template>
-  <ReactiveChart :layout="actualLayout" :traces="actualData" />
+  <ReactiveChart
+    :layout="actualLayout"
+    :traces="actualData"
+    :chart-title="actualLayout && actualLayout.title"
+    :not-from-iyp-views="false"
+  />
 </template>
 
 <script>
@@ -60,6 +65,8 @@ export default {
       this.actualData = data
       this.actualLayout = layout
 
+      // ReactiveChart component will take care of width and height
+      // To enlarge the chart if length of the data increases
       // if (formattedData[0].labels.length > 100) {
       //   layout.width = '1000'
       //   layout.height = '750'

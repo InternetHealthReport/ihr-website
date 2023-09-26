@@ -69,12 +69,43 @@ export default {
       pageTitle: null,
       asesColumns: [
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        {
+          name: 'ASN',
+          label: 'ASN',
+          align: 'left',
+          field: row => row.asn,
+          format: val => `AS${val}`,
+          sortable: true,
+          sort: (a, b) => parseInt(b, 10) - parseInt(a, 10),
+        },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       ixpsColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'Name', label: 'Name', align: 'left', field: row => row.ixp, format: val => `${val}`, sortable: true },
+        {
+          name: 'CC',
+          label: 'CC',
+          align: 'left',
+          field: row => row.cc,
+          format: val => `${val}`,
+          sortable: true,
+        },
+        {
+          name: 'IXP',
+          label: 'IXP (PeeringDB IXID)',
+          align: 'left',
+          field: row => row.id,
+          format: val => `${val}`,
+          sortable: true,
+          sort: (a, b) => parseInt(b, 10) - parseInt(a, 10),
+        },
+        {
+          name: 'Name',
+          label: 'Name',
+          align: 'left',
+          field: row => row.ixp,
+          format: val => `${val}`,
+          sortable: true,
+        },
       ],
       // ases stands for autonomous systems
       ases: [],
@@ -130,11 +161,14 @@ export default {
       return { cypherQuery: query, params: { cc: this.cc }, mapping, data: 'ases' }
     },
     getIXPs() {
-      const query =
-        'MATCH (a:Country {country_code: $cc})<-[:COUNTRY {reference_name: $ref}]-(b:IXP) RETURN a.country_code AS cc, b.name as ixp'
+      const query = `
+      MATCH (a:Country {country_code: $cc})<-[:COUNTRY {reference_name: $ref}]-(b:IXP)
+      MATCH (b)-[:EXTERNAL_ID]-(c:PeeringdbIXID)
+      RETURN a.country_code AS cc, b.name as ixp, c.id as id`
       const mapping = {
         cc: 'cc',
         ixp: 'ixp',
+        id: 'id',
       }
       return { cypherQuery: query, params: { cc: this.cc, ref: 'peeringdb.ix' }, mapping, data: 'ixps' }
     },

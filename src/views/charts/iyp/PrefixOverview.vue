@@ -100,7 +100,6 @@ export default {
 
       this.loadingStatus = true
       let res = await this.$iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-      console.log(res)
       this.firstPart = res.firstPart[0]
       this.secondPart = res.secondPart
       this.loadingStatus = false

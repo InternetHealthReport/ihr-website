@@ -1,5 +1,10 @@
 <template>
-  <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" />
+  <ReactiveChart
+    :layout="actualChartLayout"
+    :traces="actualChartData"
+    :chart-title="actualChartLayout && actualChartLayout.title"
+    :not-from-iyp-views="false"
+  />
 </template>
 
 <script>
@@ -46,14 +51,20 @@ export default {
         },
       ]
 
+      // ReactiveChart component will take care of width and height
+      // const layout = {
+      //   height: 400,
+      //   width: 400,
+      //   ...this.chartLayout,
+      // }
+
       const layout = {
-        height: 400,
-        width: 400,
         ...this.chartLayout,
       }
 
       this.actualChartData = data
       this.actualChartLayout = layout
+      // console.log(this.actualChartLayout)
     },
     formatChartData(arrayOfObjects) {
       if (!arrayOfObjects || arrayOfObjects.length === 0) {
