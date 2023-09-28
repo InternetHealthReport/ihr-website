@@ -11,10 +11,14 @@
       <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
       <q-list v-if="showGraphs">
         <div>
-          <div v-if="this.$route.params.asn.includes('IXP')">
+          <!-- <div v-if="this.$route.params.asn.includes('IXP')">
             <IXPOverview :id="asNumber" />
           </div>
           <div v-else>
+            <ASOverview :as-number="asNumber" :external="true" />
+          </div> -->
+
+          <div v-if="this.$route.params.asn.includes('AS')">
             <ASOverview :as-number="asNumber" :external="true" />
           </div>
         </div>
