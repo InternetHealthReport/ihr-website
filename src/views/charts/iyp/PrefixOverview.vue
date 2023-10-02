@@ -8,30 +8,33 @@
       <div class="q-pl-md">
         <div class="row q-gutter-md q-mt-md justify-center">
           <div class="col-8">
-            <div class="row q-gutter-md">
+            <div class="row justify-evenly">
               <div class="col-12 col-md-auto">
-                <h3>Prefix Info</h3>
-                <div>
-                  <p>Prefix: {{ firstPart.prefix }}</p>
-                  <p v-if="firstPart.description">Desc: {{ firstPart.description }}</p>
-                  <p>Originating ASN: {{ firstPart.asn }}</p>
-                  <p>Originating AS Name: {{ firstPart.name }}</p>
-                  <p v-if="firstPart.cc">Country of origin: {{ firstPart.cc }}</p>
+                <h3>Summary</h3>
+                <div class="q-ml-sm">
+                  <p v-if="firstPart.country">Registered in {{ firstPart.country }}</p>
+                  <p v-if="firstPart.description">Description: {{ firstPart.description }}</p>
+                  <p>Originated by: </p>
+                  <div class="column">
+                    <p v-for="item in firstPart.asn" target="_blank" rel="noreferrer">
+                    AS{{ item[0] }} {{item[1]}}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div class="col-12 col-md-auto">
                 <h3>Top 5 Domains</h3>
-                <div class="column">
-                  <a :href="handleDomainName(item.domainName)" v-for="item in secondPart" target="_blank" rel="noreferrer">{{
-                    handleDomainName(item.domainName)
+                <div  class="q-ml-sm column">
+                  <a :href="item.domainName" v-for="item in secondPart" target="_blank" rel="noreferrer">{{
+                    item.domainName
                   }}</a>
                 </div>
               </div>
               <div class="col-12 col-md-2">
-                <h3>Reference</h3>
-                <div class="column">
+                <h3>External Links</h3>
+                <div  class="q-ml-sm column">
                   <a :href="handleReference(key)" v-for="(value, key) in references" target="_blank" rel="noreferrer">{{
-                    handleReference(key)
+                    key
                   }}</a>
                 </div>
               </div>
@@ -59,9 +62,9 @@
 import { QChip } from 'quasar'
 
 const references = {
-  bgp: 'https://bgp.he.net/net',
-  bgpTools: 'https://bgp.tools/prefix',
-  ripeStat: 'https://stat.ripe.net/app/launchpad',
+  'bgp.he.net': 'https://bgp.he.net/net',
+  'bgp.tools': 'https://bgp.tools/prefix',
+  'stat.ripe.net': 'https://stat.ripe.net/app/launchpad',
 }
 
 export default {
@@ -106,17 +109,16 @@ export default {
     },
     getOverview() {
       const queryOne = `MATCH (p:Prefix {prefix: $prefix})<-[o:ORIGINATE]-(a:AS)
-         OPTIONAL MATCH (a)-[:NAME]->(n:Name)
-         OPTIONAL MATCH(p)-[:COUNTRY]->(c:Country)
+         OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(n:Name)
+         OPTIONAL MATCH(p)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
          OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-         RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, head(collect(DISTINCT(a.asn))) AS asn, head(collect(DISTINCT(n.name))) AS name, head(collect(DISTINCT(c.country_code))) AS cc, collect(DISTINCT(t.label)) AS tags
+         RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, collect(DISTINCT([toString(a.asn), n.name])) AS asn, c.name AS country, collect(DISTINCT(t.label)) AS tags
         `
       const mappingOne = {
         prefix: 'prefix',
         description: 'descr',
         asn: 'asn',
-        name: 'name',
-        cc: 'cc',
+        country: 'country',
         tags: 'tags',
       }
 
@@ -141,17 +143,14 @@ export default {
     getPrefix() {
       return `${this.host}/${this.prefixLength}`
     },
-    handleDomainName(name) {
-      return 'https://' + name
-    },
     handleReference(key) {
       let externalLink = ''
-      if (key === 'bgp') {
-        externalLink = `${references.bgp}/${this.host}/${this.prefixLength}`
-      } else if (key === 'bgpTools') {
-        externalLink = `${references.bgpTools}/${this.host}/${this.prefixLength}`
-      } else if (key === 'ripeStat') {
-        externalLink = `${references.ripeStat}/${this.host}/${this.prefixLength}`
+      if (key === 'bgp.he.net') {
+        externalLink = `${references[key]}/${this.host}/${this.prefixLength}`
+      } else if (key === 'bgp.tools') {
+        externalLink = `${references[key]}/${this.host}/${this.prefixLength}`
+      } else if (key === 'stat.ripe.net') {
+        externalLink = `${references[key]}/${this.host}/${this.prefixLength}`
       } else {
         console.log('none')
         return

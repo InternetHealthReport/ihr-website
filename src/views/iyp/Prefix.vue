@@ -117,7 +117,7 @@ export default {
       host: null,
       prefixLength: null,
       domainsColumns: [
-        { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
+        { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.rank), format: val => val, sortable: true },
         { name: 'Domain', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
@@ -211,8 +211,8 @@ export default {
     },
     getDependencies() {
       const query = `
-      MATCH (p:Prefix {prefix: $prefix})-[:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name) 
-      OPTIONAL MATCH (a)-[:COUNTRY]-(c:Country) 
+      MATCH (p:Prefix {prefix: $prefix})-[:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name)
+      OPTIONAL MATCH (a)-[:COUNTRY]-(c:Country)
       RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name
       `
 

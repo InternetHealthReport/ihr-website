@@ -270,10 +270,11 @@
     },
     "as": {
       "peers": {
-        "title": "Peer ASes"
+        "title": "Connected ASes",
+        "caption": "BGP data"
       },
       "ipPrefix": {
-        "title": "IP Prefix"
+        "title": "Originated Prefixes"
       },
       "ixp": {
         "title": "IXPs"
@@ -285,16 +286,16 @@
         "title": "Popular Domains"
       },
       "facilities": {
-        "title": "Facilities"
+        "title": "Co-located ASes"
       },
       "siblings": {
         "title": "Sibling ASes"
       },
       "dependents": {
-        "title": "Dependent ASes"
+        "title": "'Downstream' ASes"
       },
       "dependings": {
-        "title": "Depending ASes"
+        "title": "'Upstream' ASes"
       }
     },
     "country": {

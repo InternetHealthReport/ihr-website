@@ -13,7 +13,7 @@
         <q-expansion-item
           @click="handleClick(expansionItems.peers.title)"
           :label="$t('iyp.as.peers.title')"
-          caption="AS Peers"
+          :caption="$t('iyp.as.peers.caption')"
           header-class="IHR_charts-title"
           v-model="show.peers"
         >
@@ -30,7 +30,7 @@
               <GenericTreemapChart
                 v-if="peers.length > 0"
                 :chart-data="peers"
-                :chart-layout="{ title: 'Peer ASes' }"
+                :chart-layout="{ title: 'Connected ASes' }"
                 :config="{ key: 'cc', root: this.asn, values: false }"
               />
             </GenericTable>
@@ -164,8 +164,8 @@
 
         <q-expansion-item
           @click="handleClick(expansionItems.dependents.title)"
-          :label="$t('iyp.as.dependents.title')"
-          caption="AS Dependents"
+          label='"Downstream" ASes'
+          :caption="'ASes depending on AS'+this.asn"
           header-class="IHR_charts-title"
           v-model="show.dependents"
         >
@@ -192,8 +192,8 @@
 
         <q-expansion-item
           @click="handleClick(expansionItems.dependings.title)"
-          :label="$t('iyp.as.dependings.title')"
-          caption="AS Dependings"
+          label='"Upstream" ASes'
+          :caption="'AS'+this.asn+' depends on these peer & upstream ASes'"
           header-class="IHR_charts-title"
           v-model="show.dependings"
         >
@@ -295,9 +295,10 @@ export default {
       ],
       ipPrefixColumns: [
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
-        { name: 'AF', label: 'IP version', align: 'left', field: row => row.af, format: val => `${val}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
+        { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
         { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
+        { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
       ],
       ixpsColumns: [
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
@@ -535,7 +536,6 @@ export default {
          OPTIONAL MATCH (peer)-[:NAME]->(n:Name)
          OPTIONAL MATCH (peer)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
          RETURN c.country_code AS cc, peer.asn AS peer, head(collect(DISTINCT(n.name))) AS name
-         ORDER BY peer
         `
       const mapping = {
         cc: 'cc',
@@ -545,17 +545,17 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'peers' }
     },
     getIpPrefix() {
-      const query = `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)
-         OPTIONAL MATCH (p)-[:COUNTRY]->(c:Country)
+      const query = `MATCH (:AS {asn: $asn})-[o:ORIGINATE]->(p:Prefix)
+         OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
          OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-         RETURN c.country_code AS cc, p.prefix as prefix, p.af as af, collect(DISTINCT(t.label)) AS tags
-         ORDER BY prefix
+         RETURN c.country_code AS cc, p.prefix as prefix, collect(DISTINCT(t.label)) AS tags, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility
         `
       const mapping = {
         cc: 'cc',
-        af: ['af', 'low'],
         prefix: 'prefix',
         tags: 'tags',
+        descr: 'descr',
+        visibility: 'visibility'
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'ipPrefixes' }
     },

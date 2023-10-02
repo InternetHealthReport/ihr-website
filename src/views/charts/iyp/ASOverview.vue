@@ -8,21 +8,22 @@
       <div class="q-pl-md">
         <div class="row q-gutter-md q-mt-md justify-center">
           <div class="col-8">
-            <div class="row q-gutter-md">
+            <div class="row justify-between">
               <div class="col-12 col-md-auto">
-                <h3>AS Info</h3>
-                <div>
+                <h3>Summary</h3>
+                <div class="q-ml-sm">
+                  <p>Registered in {{ firstPart.country }}</p>
+                  <p>Located in {{ firstPart.nb_country }} countries</p>
+                  <p>{{ firstPart.prefixes }} Originated Prefixes</p>
+                  <p>{{ secondPart.peers }} Connected ASes</p>
                   <p>
                     Website: <a :href="firstPart.website" target="_blank" rel="noopener noreferrer">{{ firstPart.website }}</a>
                   </p>
-                  <p>Registered in {{ firstPart.country }}</p>
-                  <p>{{ firstPart.prefixes }} Originated Prefixes</p>
-                  <p>{{ secondPart.peers }} Peer ASes</p>
                 </div>
               </div>
               <div v-if="this.secondPart.rank <= 10" class="col-12 col-md-auto">
                 <h3>Ranking</h3>
-                <div>
+                <div class="q-ml-sm">
                   <div>{{ this.secondPart.rankingName }}</div>
                   <div class="text-h2 text-center">{{ this.secondPart.rank }}</div>
                 </div>
@@ -34,20 +35,20 @@
               </div>
               <div class="col-12 col-md-2">
                 <h3>Top 5 Domains</h3>
-                <div class="column">
+                <div class="column q-ml-sm">
                   <div v-if="this.thirdPart.length > 0" class="column">
-                    <a :href="handleDomainName(item.domainName)" v-for="item in thirdPart" target="_blank" rel="noreferrer">{{
-                      handleDomainName(item.domainName)
+                    <a :href="item.domainName" v-for="item in thirdPart" target="_blank" rel="noreferrer">{{
+                      item.domainName
                     }}</a>
                   </div>
                   <p v-else>No results found.</p>
                 </div>
               </div>
               <div class="col-12 col-md-2">
-                <h3>Reference</h3>
-                <div class="column">
+                <h3>External Links</h3>
+                <div class="column q-ml-sm">
                   <a :href="handleReference(key)" v-for="(value, key) in references" target="_blank" rel="noreferrer">{{
-                    handleReference(key)
+                    key
                   }}</a>
                 </div>
               </div>
@@ -56,7 +57,7 @@
             <div class="row">
               <div>
                 <h3>Tags</h3>
-                <q-chip v-for="tag in firstPart.tags" dense size="md" color="gray" text-color="black"> {{ tag }}</q-chip>
+                <q-chip v-for="tag in firstPart.tags" dense size="md" color="info" text-color="white"> {{ tag }}</q-chip>
               </div>
             </div>
 
@@ -80,11 +81,11 @@ import { QChip } from 'quasar'
 import GenericIndicatorsChart from '@/views/charts/iyp/GenericIndicatorsChart'
 
 const references = {
-  bgp: 'https://bgp.he.net',
-  bgpTools: 'https://bgp.tools/as',
-  peeringDB: 'https://www.peeringdb.com/net',
-  cloudflareRadar: 'https://radar.cloudflare.com',
-  ripeStat: 'https://stat.ripe.net/app/launchpad',
+  'bgp.he.net': 'https://bgp.he.net',
+  'bgp.tools': 'https://bgp.tools/as',
+  'peeringdb.com': 'https://www.peeringdb.com/net',
+  'radar.cloudflare.com': 'https://radar.cloudflare.com',
+  'stat.ripe.net': 'https://stat.ripe.net/app/launchpad',
 }
 
 export default {
@@ -162,10 +163,11 @@ export default {
       const queryOne = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:NAME]->(n:Name)
          OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)
+         OPTIONAL MATCH (a)-[:LOCATED_IN]->(:Facility)-[:COUNTRY]-(fac_country:Country)
          OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
          OPTIONAL MATCH (a)-[:ORIGINATE]->(p:Prefix)
          MATCH (a)-[:CATEGORIZED]->(t:Tag)
-         RETURN u.url AS website, c.country_code AS cc, c.name AS country, COUNT(DISTINCT p.prefix) AS prefixes, head(collect(DISTINCT(n.name))) AS name, collect(DISTINCT(t.label)) as tags
+         RETURN u.url AS website, c.country_code AS cc, c.name AS country, COUNT(DISTINCT p.prefix) AS prefixes, head(collect(DISTINCT(n.name))) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT fac_country) as nb_country
         `
       const queryTwo = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:PEERS_WITH]-(b:AS)
@@ -184,6 +186,7 @@ export default {
         website: 'website',
         cc: 'cc',
         country: 'country',
+        nb_country: 'nb_country',
         prefixes: 'prefixes',
         name: 'name',
         tags: 'tags',
@@ -212,23 +215,20 @@ export default {
       })
       return arr
     },
-    handleDomainName(name) {
-      return 'https://' + name
-    },
     handleReference(key) {
       let externalLink = ''
       let asn = this.asNumber
 
-      if (key === 'bgp') {
-        externalLink = `${references.bgp}/AS${asn}`
-      } else if (key === 'bgpTools') {
-        externalLink = `${references.bgpTools}/${asn}`
-      } else if (key === 'peeringDB') {
-        externalLink = `${references.peeringDB}/${this.secondPart.peeringdbId}`
-      } else if (key === 'cloudflareRadar') {
-        externalLink = `${references.cloudflareRadar}/as${asn}`
-      } else if (key === 'ripeStat') {
-        externalLink = `${references.ripeStat}/${asn}`
+      if (key === 'bgp.he.net') {
+        externalLink = `${references[key]}/AS${asn}`
+      } else if (key === 'bgp.tools') {
+        externalLink = `${references[key]}/${asn}`
+      } else if (key === 'peeringdb.com') {
+        externalLink = `${references[key]}/${this.secondPart.peeringdbId}`
+      } else if (key === 'radar.cloudflare.com') {
+        externalLink = `${references[key]}/as${asn}`
+      } else if (key === 'stat.ripe.net') {
+        externalLink = `${references[key]}/${asn}`
       } else {
         console.log('none')
         return
