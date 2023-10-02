@@ -274,7 +274,8 @@
         "caption": "BGP data"
       },
       "ipPrefix": {
-        "title": "Originated Prefixes"
+        "title": "Originated Prefixes",
+        "caption": "BGP data"
       },
       "ixp": {
         "title": "IXPs"
