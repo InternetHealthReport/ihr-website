@@ -18,8 +18,8 @@
       </q-tabs>
       <q-tab-panels v-model="activeTab" animated>
         <q-tab-panel name="chart">
-          <div class="row justify-center items-center" id="chartContainer">
-            <slot></slot>
+          <div id="chartContainer">
+              <slot></slot>
           </div>
         </q-tab-panel>
         <q-tab-panel name="data">

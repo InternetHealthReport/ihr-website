@@ -26,12 +26,11 @@
               :cypher-query="cypherQueries.peers"
               :slot-length="1"
             >
-              <GenericPieChart v-if="peers.length > 0" :chart-data="peers" :chart-layout="{ title: 'Country' }" />
               <GenericTreemapChart
                 v-if="peers.length > 0"
                 :chart-data="peers"
-                :chart-layout="{ title: 'Connected ASes' }"
-                :config="{ key: 'cc', root: this.asn, values: false }"
+                :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
+                :config="{ key: 'cc', key1: 'asn', root: '', values: false }"
               />
             </GenericTable>
           </q-card>
@@ -53,8 +52,14 @@
               :cypher-query="cypherQueries.ipPrefixes"
               :slot-length="2"
             >
-              <GenericPieChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Country' }" />
-              <GenericBarChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Tags' }" />
+              <div class="row justify-evenly">
+                <div class="col-4">
+                  <GenericPieChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Geo-location (Maxmind)' }" />
+                </div>
+                <div class="col-6">
+                  <GenericBarChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Tags' }" />
+                </div>
+              </div>
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -75,7 +80,8 @@
               :cypher-query="cypherQueries.ixps"
               :slot-length="2"
             >
-              <GenericPieChart v-if="ixps.length > 0" :chart-data="ixps" :chart-layout="{ title: 'Country' }" />
+              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ key: 'cc', key1: 'name',  keyValue: '', root: '', values: false }"
+              />
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -117,10 +123,16 @@
               :cypher-query="cypherQueries.popularDomains"
               :slot-length="1"
             >
-              <GenericHoverEventsChart
+         <!--      <GenericHoverEventsChart
                 v-if="popularDomains.length > 0"
                 :chart-data="popularDomains"
                 :chart-layout="{ title: 'Popular Domains' }"
+                /> -->
+              <GenericTreemapChart
+                v-if="popularDomains.length > 0"
+                :chart-data="popularDomains"
+                :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
+                :config="{ key: 'tld', key1: 'domainName', keyValue: 'inv_rank', root: '', values: false }"
               />
             </GenericTable>
           </q-card>
@@ -183,7 +195,7 @@
                   v-if="dependents.length > 0"
                   :chart-data="dependents"
                   :chart-layout="{ title: 'Dependents' }"
-                  :config="{ key: 'cc', root: this.asn, values: true }"
+                  :config="{ key: 'cc', key1: 'asn', keyValue: 'hegemonyScore', root: this.asn, values: true }"
                 />
               </div>
             </GenericTable>
@@ -210,7 +222,7 @@
                 v-if="dependings.length > 0"
                 :chart-data="dependings"
                 :chart-layout="{ title: 'Dependings' }"
-                :config="{ key: 'cc', root: this.asn, values: true }"
+                :config="{ key: 'cc', key1: 'asn', keyValue: 'hegemonyScore', root: this.asn, values: true }"
               />
             </GenericTable>
           </q-card>
@@ -294,10 +306,11 @@ export default {
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       ipPrefixColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Geoloc', label: 'Geoloc', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'RIR', label: 'RIR', align: 'left', field: row => row.rir? row.rir : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
         { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
         { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
-        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
         { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
       ],
       ixpsColumns: [
@@ -341,7 +354,7 @@ export default {
           format: val => `${val}`,
           sortable: true,
         },
-        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
       ],
       dependingsColumns: [
         { name: 'Depending AS', label: 'Depending AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
@@ -547,11 +560,14 @@ export default {
     getIpPrefix() {
       const query = `MATCH (:AS {asn: $asn})-[o:ORIGINATE]->(p:Prefix)
          OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
+         OPTIONAL MATCH (p)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
          OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-         RETURN c.country_code AS cc, p.prefix as prefix, collect(DISTINCT(t.label)) AS tags, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility
+         RETURN c.country_code AS cc, COALESCE(creg.registry, '-') AS rir, creg_country.country_code AS rir_country, p.prefix as prefix, collect(DISTINCT(t.label)) AS tags, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility
         `
       const mapping = {
         cc: 'cc',
+        rir: 'rir',
+        rir_country: 'rir_country',
         prefix: 'prefix',
         tags: 'tags',
         descr: 'descr',
@@ -568,6 +584,7 @@ export default {
       const mapping = {
         cc: 'cc',
         name: 'ixp',
+        asn: 'ixp',
         id: 'id',
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'ixps' }
@@ -583,12 +600,14 @@ export default {
     getPopularDomains() {
       const query = `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
          WHERE rr.rank < 100000 and rr.reference_name = $rankingName
-         RETURN DISTINCT d.name AS domainName, rr.rank AS rank, rn.name AS rankingName
+         RETURN DISTINCT d.name AS domainName, rr.rank AS rank, rn.name AS rankingName, split(d.name, '.')[-1] AS tld, 1/toFloat(rr.rank) AS inv_rank
          ORDER BY rank
         `
       const mapping = {
         domainName: 'domainName',
+        tld: 'tld',
         rank: 'rank',
+        inv_rank: 'inv_rank',
         rankingName: 'rankingName',
       }
       return { cypherQuery: query, params: { asn: this.asn, rankingName: 'tranco.top1M' }, mapping, data: 'popularDomains' }

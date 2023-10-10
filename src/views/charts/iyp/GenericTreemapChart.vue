@@ -54,10 +54,6 @@ export default {
         },
       ]
 
-      if (this.config.key === 'cc' && this.config.values) {
-        data[0].values = formattedData[0].values
-      }
-
       const layout = {
         ...this.chartLayout,
       }
@@ -82,17 +78,12 @@ export default {
       const map = {}
       let configKey = this.config.key
       arrayOfObjects.forEach(item => {
-        let key = ''
-        if (configKey == 'cc') {
-          key = item.cc
-        } else if (configKey == 'domainName') {
-          key = item.domainName.split('.').pop()
-        }
+        let key = item[configKey]
 
         if (!map[key]) {
-          map[key] = [{ child: configKey === 'cc' ? item.asn.low : item.domainName, value: configKey === 'cc' ? item.hegemonyScore : '' }]
+          map[key] = [{ child: item[this.config.key1], value: this.config.keyValue ? item[this.config.keyValue] : 1 }]
         } else {
-          map[key].push({ child: configKey === 'cc' ? item.asn.low : item.domainName, value: configKey === 'cc' ? item.hegemonyScore : '' })
+          map[key].push({ child: item[this.config.key1], value: this.config.keyValue ? item[this.config.keyValue] : 1 })
         }
       })
 
@@ -107,7 +98,6 @@ export default {
       let keys = Object.keys(map)
 
       // calculating root sum
-      if (configKey == 'cc' && this.config.values) {
         let rootSum = 0
         keys.forEach(key => {
           let sum = 0
@@ -117,7 +107,6 @@ export default {
           rootSum += sum
         })
         values.push(rootSum)
-      }
 
       // calculating sum for one level deeper
       keys.forEach(key => {

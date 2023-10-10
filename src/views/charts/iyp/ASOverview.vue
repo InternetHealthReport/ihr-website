@@ -13,7 +13,7 @@
                 <h3>Summary</h3>
                 <div class="q-ml-sm">
                   <p>Registered in {{ firstPart.country }}</p>
-                  <p>Located in {{ firstPart.nb_country }} countries</p>
+                  <p>Member of {{ firstPart.nb_ixp }} IXPs in {{ firstPart.nb_country}} countries</p>
                   <p>{{ firstPart.prefixes }} Originated Prefixes</p>
                   <p>{{ secondPart.peers }} Connected ASes</p>
                   <p>
@@ -54,7 +54,7 @@
               </div>
             </div>
 
-            <div class="row">
+            <div class="row q-pt-md">
               <div>
                 <h3>Tags</h3>
                 <q-chip v-for="tag in firstPart.tags" dense size="md" color="info" text-color="white"> {{ tag }}</q-chip>
@@ -161,13 +161,14 @@ export default {
       //   this.loadingStatus = false
       // }
       const queryOne = `MATCH (a:AS {asn: $asn})
+         OPTIONAL MATCH (a)-[:ORIGINATE]->(p:Prefix)
+         WITH COUNT(DISTINCT p.prefix) AS prefixes, a
          OPTIONAL MATCH (a)-[:NAME]->(n:Name)
          OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)
-         OPTIONAL MATCH (a)-[:LOCATED_IN]->(:Facility)-[:COUNTRY]-(fac_country:Country)
+         OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
          OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
-         OPTIONAL MATCH (a)-[:ORIGINATE]->(p:Prefix)
-         MATCH (a)-[:CATEGORIZED]->(t:Tag)
-         RETURN u.url AS website, c.country_code AS cc, c.name AS country, COUNT(DISTINCT p.prefix) AS prefixes, head(collect(DISTINCT(n.name))) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT fac_country) as nb_country
+         OPTIONAL MATCH (a)-[:CATEGORIZED]->(t:Tag)
+         RETURN u.url AS website, c.country_code AS cc, c.name AS country, prefixes, head(collect(DISTINCT(n.name))) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country
         `
       const queryTwo = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:PEERS_WITH]-(b:AS)
@@ -187,6 +188,7 @@ export default {
         cc: 'cc',
         country: 'country',
         nb_country: 'nb_country',
+        nb_ixp: 'nb_ixp',
         prefixes: 'prefixes',
         name: 'name',
         tags: 'tags',

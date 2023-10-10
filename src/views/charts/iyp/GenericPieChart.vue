@@ -59,6 +59,7 @@ export default {
       // }
 
       const layout = {
+        'max-width': 400,
         ...this.chartLayout,
       }
 
