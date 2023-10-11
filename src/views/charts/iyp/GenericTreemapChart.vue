@@ -45,12 +45,19 @@ export default {
   methods: {
     renderChart() {
       const formattedData = this.formatChartData(this.localChartData)
+      let textinfo =  this.config.textinfo ? this.config.textinfo : "label"
+      let hovertemplate = this.config.hovertemplate ? this.config.hovertemplate : "%{label}<br>%{value}<extra></extra>"
+
       let data = [
         {
           type: 'treemap',
           labels: formattedData[0].labels,
           parents: formattedData[0].parents,
+          values: formattedData[0].values,
+          customdata: formattedData[0].extras,
           branchvalues: 'total',
+          textinfo: textinfo,
+          hovertemplate: hovertemplate
         },
       ]
 
@@ -75,52 +82,61 @@ export default {
         return []
       }
 
+      let handler = {
+        get: function(target, name) {
+          return target.hasOwnProperty(name) ? target[name] : '';
+        }
+      };
+
+      let emptyObj = new Proxy({}, handler);
+
       const map = {}
       let configKey = this.config.key
       arrayOfObjects.forEach(item => {
         let key = item[configKey]
 
         if (!map[key]) {
-          map[key] = [{ child: item[this.config.key1], value: this.config.keyValue ? item[this.config.keyValue] : 1 }]
+          map[key] = [{ child: item[this.config.key1], value: this.config.keyValue ? Number(item[this.config.keyValue]) : 1, extra: item }]
         } else {
-          map[key].push({ child: item[this.config.key1], value: this.config.keyValue ? item[this.config.keyValue] : 1 })
+          map[key].push({ child: item[this.config.key1], value: this.config.keyValue ? Number(item[this.config.keyValue]) : 1, extra: item })
         }
       })
 
       let labels = []
       let parents = []
       let values = []
+      let extras = []
 
       let root = this.config.root
       labels.push(root)
       parents.push('')
+      extras.push( emptyObj )
 
       let keys = Object.keys(map)
 
       // calculating root sum
-        let rootSum = 0
-        keys.forEach(key => {
-          let sum = 0
-          map[key].forEach(item => {
-            sum += item.value
-          })
-          rootSum += sum
+      let rootSum = 0
+      keys.forEach(key => {
+        let sum = 0
+        map[key].forEach(item => {
+          sum += item.value
         })
-        values.push(rootSum)
+        rootSum += sum
+      })
+      values.push(rootSum)
 
       // calculating sum for one level deeper
       keys.forEach(key => {
         labels.push(key)
         parents.push(root)
+        extras.push( emptyObj )
 
-        if (configKey == 'cc' && this.config.values) {
           let sum = 0
           map[key].forEach(item => {
             sum += item.value
           })
 
           values.push(sum)
-        }
       })
 
       // Generating labels, parents, and values
@@ -128,13 +144,17 @@ export default {
         value.forEach(item => {
           labels.push(item.child)
           parents.push(key)
-          if (configKey == 'cc' && this.config.values) {
-            values.push(item.value)
-          }
+          values.push(item.value)
+          extras.push(item.extra)
         })
       }
 
-      return [{ labels, parents, values }]
+      console.log(labels)
+      console.log(parents)
+      console.log(values)
+      console.log(extras)
+
+      return [{ labels, parents, values, extras }]
     },
   },
   watch: {

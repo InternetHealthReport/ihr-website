@@ -30,7 +30,7 @@
                 v-if="peers.length > 0"
                 :chart-data="peers"
                 :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
-                :config="{ key: 'cc', key1: 'asn', root: '', values: false }"
+                :config="{ key: 'cc', key1: 'asn', root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.name}<extra></extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -132,7 +132,7 @@
                 v-if="popularDomains.length > 0"
                 :chart-data="popularDomains"
                 :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
-                :config="{ key: 'tld', key1: 'domainName', keyValue: 'inv_rank', root: '', values: false }"
+                :config="{ key: 'tld', key1: 'domainName', keyValue: 'inv_rank', root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<extra></extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -195,7 +195,7 @@
                   v-if="dependents.length > 0"
                   :chart-data="dependents"
                   :chart-layout="{ title: 'Dependents' }"
-                  :config="{ key: 'cc', key1: 'asn', keyValue: 'hegemonyScore', root: this.asn, values: true }"
+                  :config="{ key: 'cc', key1: 'asn', keyValue: 'hegemony_score', root: this.asn, textinfo: 'label', hovertemplate: '<b>AS%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score}%<extra></extra>' }"
                 />
               </div>
             </GenericTable>
@@ -222,7 +222,7 @@
                 v-if="dependings.length > 0"
                 :chart-data="dependings"
                 :chart-layout="{ title: 'Dependings' }"
-                :config="{ key: 'cc', key1: 'asn', keyValue: 'hegemonyScore', root: this.asn, values: true }"
+                :config="{ key: 'cc', key1: 'asn', keyValue: 'hegemony_score', root: this.asn, values: true }"
               />
             </GenericTable>
           </q-card>
@@ -338,34 +338,34 @@ export default {
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       siblingsColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       dependentsColumns: [
+        { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'Dependent AS', label: 'Dependent AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         {
           name: 'Hegemony Score',
           label: 'Hegemony Score',
           align: 'left',
-          field: row => row.hegemonyScore,
-          format: val => `${val}`,
+          field: row => row.hegemony_score,
+          format: val => `${Number(val).toFixed(2)}%`,
           sortable: true,
         },
         { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
       ],
       dependingsColumns: [
+        { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'Depending AS', label: 'Depending AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         {
           name: 'Hegemony Score',
           label: 'Hegemony Score',
           align: 'left',
-          field: row => row.hegemonyScore,
-          format: val => `${val}`,
+          field: row => row.hegemony_score,
+          format: val => `${Number(val).toFixed(2)}%`,
           sortable: true,
         },
       ],
@@ -649,13 +649,13 @@ export default {
             OPTIONAL MATCH (b)-[:NAME]->(n:Name)
             OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
             OPTIONAL MATCH (b)-[:CATEGORIZED]->(t:Tag)
-            RETURN DISTINCT b.asn AS dependent, head(collect(n.name)) AS name, c.country_code AS cc, d.hege AS hegemony_score, collect(DISTINCT t.label) AS tags
+            RETURN DISTINCT b.asn AS dependent, head(collect(n.name)) AS name, c.country_code AS cc, 100*d.hege AS hegemony_score, collect(DISTINCT t.label) AS tags
             `
       const mapping = {
         asn: 'dependent',
         name: 'name',
         cc: 'cc',
-        hegemonyScore: 'hegemony_score',
+        hegemony_score: 'hegemony_score',
         tags: 'tags',
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependents' }
@@ -665,14 +665,14 @@ export default {
             WHERE a.asn <> b.asn
             OPTIONAL MATCH (b)-[:NAME]->(n:Name)
             OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
-            RETURN DISTINCT b.asn AS dependency, head(collect(n.name)) AS name, c.country_code AS country, d.hege AS hegemony_score
+            RETURN DISTINCT b.asn AS dependency, head(collect(n.name)) AS name, c.country_code AS country, 100*d.hege AS hegemony_score
             ORDER BY country
             `
       const mapping = {
         asn: 'dependency',
         name: 'name',
         cc: 'country',
-        hegemonyScore: 'hegemony_score',
+        hegemony_score: 'hegemony_score',
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependings' }
     },
