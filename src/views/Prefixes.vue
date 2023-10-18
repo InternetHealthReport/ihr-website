@@ -1,6 +1,6 @@
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <div v-if="prefix">
+    <div v-if="host && prefixLength">
       <div>
         <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
         <h3 class="text-center">
@@ -142,12 +142,16 @@ export default {
     NetworkSearchBar,
   },
   data() {
-    let prefix = this.$route.params.prefix
-    //let prefixLength = this.$route.params.prefix_length
+    // let prefix = this.$route.params.prefix
+    let host = this.$route.params.host
+    let prefixLength = this.$route.params.prefix_length
+    let prefix = host && prefixLength ? this.getPrefix(host, prefixLength) : false
     let addressFamily = this.$route.query.af
     return {
       addressFamily: addressFamily == undefined ? 4 : addressFamily,
       loadingStatus: LOADING_STATUS.LOADING,
+      host: host,
+      prefixLength: prefixLength,
       prefix: prefix,
       charRefs: CHART_REFS,
       show: {
@@ -184,6 +188,9 @@ export default {
         })
 
         this.prefix = results.results[0].prefix
+        const [host, prefixLength] = this.prefix.split('/')
+        this.host = host
+        this.prefixLength = prefixLength
         this.loadingStatus = LOADING_STATUS.LOADED
         this.fetch = true
       })
@@ -204,6 +211,9 @@ export default {
         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
       }
       html2pdf(element, opt)
+    },
+    getPrefix(host, prefixLength) {
+      return `${host}/${prefixLength}`
     },
   },
   mounted() {
@@ -254,13 +264,22 @@ export default {
     addressFamily() {
       this.pushRoute()
     },
-    '$route.params.prefix': {
-      handler: function(prefix) {
-        if (this.$route.params.prefix != this.prefix) {
-          this.loadingStatus = LOADING_STATUS.LOADING
-          this.prefix = this.$route.params.prefix
-          this.netName()
+    '$route.params': {
+      handler: function (params) {
+        // if (this.$route.params.prefix != this.prefix) {
+        //   this.loadingStatus = LOADING_STATUS.LOADING
+        //   this.prefix = this.$route.params.prefix
+        //   this.netName()
+        // }
+        this.loadingStatus = LOADING_STATUS.LOADING
+        if (params.host != this.host) {
+          this.host = params.host
         }
+        if (params.prefix_length != this.prefixLength) {
+          this.prefixLength = params.prefix_length
+        }
+        this.prefix = this.getPrefix(this.host, this.prefixLength)
+        this.netName()
       },
       deep: true,
     },

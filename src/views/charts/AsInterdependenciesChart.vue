@@ -559,8 +559,8 @@ export default {
         }
       }
 
-      //console.log(this.traces.length)
-      //console.log(traces)
+      // console.log(this.traces)
+      // console.log(traces)
 
       if (this.traces.length > 12) {
         this.layout.showlegend = false

@@ -71,7 +71,7 @@ import PrefixDependenciesTable from './tables/PrefixDependenciesTable'
 import { PREFIX_DEPENDENCIES_LAYOUT } from './layouts'
 import i18n from '@/locales/i18n'
 import { HegemonyPrefixQuery, AS_FAMILY } from '@/plugins/IhrApi'
-import ripeApi from '@/plugins/RipeApi'
+// import ripeApi from '@/plugins/RipeApi'
 
 const DEFAULT_TRACE = [
   {
@@ -134,6 +134,7 @@ export default {
   },
   mounted() {
     this.tableFromQuery()
+    console.log(this.prefix)
   },
   methods: {
     updateAxesLabel() {
@@ -157,11 +158,13 @@ export default {
       this.queryHegemonyAPI()
       this.neighbours = []
 
-      ripeApi.asnNeighbours(this.asNumber).then(res => {
-        res.data.neighbours.forEach(neighbour => {
-          this.neighbours.push(neighbour.asn)
-        })
-      })
+      console.log(this.traces)
+
+      // ripeApi.asnNeighbours(this.prefix).then(res => {
+      //   res.data.neighbours.forEach(neighbour => {
+      //     this.neighbours.push(neighbour.asn)
+      //   })
+      // })
     },
     plotClick(clickData) {
       var table = 'dependency'
@@ -292,6 +295,8 @@ export default {
           this.traces.push(trace)
         }
 
+        console.log(traces)
+
         if (!minX) {
           minX = Date.parse(elem.timebin).getTime()
           maxX = Date.parse(elem.timebin).getTime()
@@ -303,9 +308,6 @@ export default {
         // Add null if there is missing data
         let prevDate = Date.parse(trace.x.slice(-1)[0])
         let currDate = Date.parse(elem.timebin)
-
-        // let prevDateSeconds = prevDate && prevDate.getTime()
-        // console.log(prevDate, prevDateSeconds, prevDate)
 
         if (prevDate && currDate.getTime() > prevDate.getTime() + timeResolution + 1) {
           if (anotherAsn === elem.asn) {
@@ -323,8 +325,6 @@ export default {
       })
       this.noData |= Object.keys(traces).length == 0
       this.layout.datarevision = new Date().getTime()
-
-      // console.log('md', missingDataList)
 
       let shapeList = []
 
@@ -373,11 +373,8 @@ export default {
 
       this.layout['shapes'] = shapeList
 
-      // console.log('maxX', new Date(maxX).toISOString())
-      // console.log(new Date(maxX).toISOString())
       let maxXIso = new Date(maxX).toISOString().split('.')[0] + 'Z'
       let minXIso = new Date(minX).toISOString().split('.')[0] + 'Z'
-      // console.log(minXIso, maxXIso)
 
       for (let i = 1; i < this.traces.length; i++) {
         if (this.traces[i].mode && this.traces[i].mode === 'text') continue
@@ -388,11 +385,12 @@ export default {
         let lastDateMilliSeconds = Date.parse(lastDate).getTime()
         let firstDateMilliSeconds = Date.parse(firstDate).getTime()
 
+        console.log(lastDate !== maxXIso)
         if (lastDate !== maxXIso) {
           let noOfPointsToAdd
           let interval = maxX - Date.parse(currentTrace.x.slice(-1)[0]).getTime()
           noOfPointsToAdd = interval / timeResolution
-          // console.log('pts', interval / timeResolution)
+
           for (let j = 1; j <= noOfPointsToAdd; j++) {
             lastDateMilliSeconds += timeResolution
             let skip = false
@@ -411,9 +409,9 @@ export default {
             this.traces[i].x.push(d)
             this.traces[i].y.push(0)
           }
-          // console.log('lin traces', this.traces[i])
         }
 
+        console.log(firstDate !== minXIso)
         if (firstDate !== minXIso) {
           console.log('front defect', firstDate, this.traces[i], minXIso)
           let noOfPointsToAdd
@@ -442,7 +440,6 @@ export default {
             tempY.push(0)
           }
           tempX.reverse()
-          // console.log('tempx tempy', tempX, tempY)
           this.traces[i].x = tempX.concat(this.traces[i].x)
           this.traces[i].y = tempY.concat(this.traces[i].y)
         }
@@ -495,10 +492,10 @@ export default {
   },
   watch: {
     addressFamily() {
-      this.debouncedApiCall()
+      this.apiCall()
     },
     prefix() {
-      this.debouncedApiCall()
+      this.apiCall()
       this.details.tableVisible = false
     },
     'details.activeTab'(newValue) {

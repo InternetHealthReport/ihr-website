@@ -85,20 +85,16 @@ export default {
   },
   methods: {
     search(value, update) {
-      console.log('triggered!')
       const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
       const prefixMatch = prefixRegex.exec(value)
-      console.log(prefixMatch)
       this.loading = true
       this.options = []
       if (prefixMatch) {
         this.prefixQuery.prefix(value)
-        console.log(this.prefixQuery)
         this.$ihr_api.hegemony_prefix(
           this.prefixQuery,
           result => {
             result.results.some(element => {
-              console.log(element)
               this.options.push({
                 value: element.prefix,
                 name: element.prefix,
@@ -150,9 +146,10 @@ export default {
       }
     },
     gotoPrefix(code) {
+      const [host, prefixLength] = code.split('/')
       this.$router.push({
         name: 'prefixes',
-        params: { prefix: code },
+        params: { host: host, prefix_length: prefixLength },
       })
     },
     gotoASN(number) {

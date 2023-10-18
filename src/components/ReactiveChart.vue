@@ -48,17 +48,17 @@ export default {
     }
   },
   emits: {
-    'plotly-click': function(clickData) {
+    'plotly-click': function (clickData) {
       if (clickData !== null) {
-        return true;
+        return true
       } else {
-        console.warn('Click Data is missing!');
-        return false;
+        console.warn('Click Data is missing!')
+        return false
       }
     },
-    'loaded': function() {
-      return true;
-    }
+    loaded: function () {
+      return true
+    },
   },
   data() {
     return {
