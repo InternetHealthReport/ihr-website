@@ -25,9 +25,9 @@ This project and everyone participating in it is governed by the [IHR Code of Co
 
 ## Step 2: Git Set Up & Download
 # Clone the repo
-$ git clone https://github.com/<User-Name>/<Repo-Name>.git
+$ git clone git@github.com:<User-Name>/<Repo-Name>.git
 # Add upstream remote
-$ git remote add upstream https://github.com/InternetHealthReport/ihr-website.git
+$ git remote add upstream git@github.com:InternetHealthReport/ihr-website.git 
 # Fetch and merge with upstream/master
 $ git fetch upstream
 $ git merge upstream/master
