@@ -62,7 +62,7 @@
     "babel-plugin-transform-imports": "1.5.0",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "cache-loader": "^4.1.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.52.0",
     "eslint-plugin-vue": "^8.5.0",
     "husky": "^8.0.0",
     "joi": "^17.10.1",
