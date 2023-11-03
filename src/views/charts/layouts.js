@@ -5,7 +5,7 @@ const COMMON_FEATURE = {
   margin: { t: 10, b: 10, l: 80, r: 80 },
 }
 
-const COMMON_WITH_LEGEND = {
+export const COMMON_WITH_LEGEND = {
   ...COMMON_FEATURE,
   showlegend: true,
   legend: {
@@ -100,6 +100,49 @@ var RIR_COUNTRY_SUNBURST_LAYOUT = {
   margin: { l: 5, r: 5, b: 5, t: 5 },
 }
 
+var IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  title: '',
+  xaxis: { title: 'Time (UTC)', autorange: true },
+  yaxis: { ticksuffix: '%', autoragne: true },
+  margin: { t: 10, b: 70, l: 80, r: 80 },
+
+}
+
+var AGGREGATED_ALARMS_WORLDMAP_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  margin: { t: 80, b: 10, l: 80, r: 80 },
+  geo: {
+    showframe: false,
+    showcoastlines: false,
+    showland: true,
+    landcolor: 'rgb(215, 215, 215)',
+    countrycolor: 'rgb(235, 235, 235)',
+    showcountries: true,
+  },
+  height: 400
+}
+
+var AGGREGATED_ALARMS_TIMESERIES_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  margin: { t: 50, b: 65, l: 40, r: 0 },
+  xaxis: { title: 'Time (UTC)', autorange: true },
+  hovermode: 'closest',
+  showlegend: true,
+  legend: {
+    x: 1,
+    xanchor: 'top',
+    y: 1
+  },
+  height: 400
+}
+
+var AGGREGATED_ALARMS_TREEMAP_LAYOUT = {
+  ...COMMON_WITH_LEGEND,
+  margin: { t: 50, b: 0, l: 0, r: 0 },
+  height: 400,
+}
+
 export {
   COMMON_FEATURE,
   HEGEMONY_ALARMS_LAYOUT,
@@ -110,4 +153,8 @@ export {
   DELAY_CHART_LAYOUT,
   NET_DELAY_LAYOUT,
   RIR_COUNTRY_SUNBURST_LAYOUT,
+  IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT,
+  AGGREGATED_ALARMS_WORLDMAP_LAYOUT,
+  AGGREGATED_ALARMS_TIMESERIES_LAYOUT,
+  AGGREGATED_ALARMS_TREEMAP_LAYOUT,
 }

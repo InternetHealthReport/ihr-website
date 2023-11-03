@@ -103,7 +103,6 @@ export default {
   },
   data() {
     let filter = new DiscoEventQuery().streamName(this.streamName).timeInterval(this.startTime, this.endTime).orderedByTime()
-
     return {
       dataEvents: [],
       details: {
@@ -151,6 +150,7 @@ export default {
           this.dataEvents = result.results
           this.fetchDiscoData(result.results)
           this.loading = false
+          this.$emit('disco-alarms-data-loaded', result.results)
         },
         error => {
           console.error(error) //FIXME do a correct alert

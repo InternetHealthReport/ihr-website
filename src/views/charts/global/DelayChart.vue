@@ -99,7 +99,6 @@ export default {
       this.$ihr_api.delay_alarms(
         this.delayAlarmsFilter,
         result => {
-          // console.log('queryDelayAlarmsAPI', result)
           let data = []
           let asn_list = []
           result.results.forEach(alarm => {
@@ -113,7 +112,7 @@ export default {
           this.loading = false
         },
         error => {
-          console.error(error) //FIXME do a correct alert
+          console.error(error)
         }
       )
     },

@@ -261,9 +261,3 @@ export function getCountryISO2FromISO3(countryIsoCode3) {
     key => countryISOMapping[key] === countryIsoCode3
   )
 }
-
-export function getCountryNameFromIsoCode3(countryIsoCode3) {
-  const countryIsoCode2 = getCountryISO2FromISO3(countryIsoCode3)
-  const countryName = getCountryName(countryIsoCode2)
-  return countryName
-}

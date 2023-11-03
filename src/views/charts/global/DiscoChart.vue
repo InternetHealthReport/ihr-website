@@ -85,6 +85,7 @@ export default {
           this.dataEvents = events
           this.mapData = events
           this.loading = false
+          this.$emit('disco-alarms-data-loaded', result.results)
         },
         error => {
           console.error(error) //FIXME do a correct alert

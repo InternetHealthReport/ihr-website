@@ -1,7 +1,7 @@
 <template>
   <div class="IHR_disco-chart">
     <reactive-chart :layout="chart.layout" :traces="chart.traces" :ref="chart.uuid" :no-data="noData"
-      @plotly-click="plotlyClickedDataHandler" />
+      @plotly-click="onCountryClicked" />
   </div>
 </template>
 
@@ -41,8 +41,9 @@ export default {
     }
   },
   methods: {
-    plotlyClickedDataHandler(newPlotlyClickedData) {
-      this.$emit('plotly-click', newPlotlyClickedData)
+    onCountryClicked(newPlotlyClickedData) {
+      const country = newPlotlyClickedData.text
+      this.$emit('worldmap-country-clicked', country)
     }
   }
 }

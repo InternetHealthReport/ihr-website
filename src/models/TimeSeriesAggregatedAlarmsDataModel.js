@@ -1,21 +1,26 @@
 import * as AggregatedAlarmUtils from './AggregatedAlarmsUtils'
 
-export function etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap) {
-  const groupByKey = countryName ? 'asn' : 'country_name'
-  const legendName = countryName ? 'asn_name' : 'country_name'
+export function etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap, legend, isASGranularity) {
+  const asGranularity = switchASGranularity(countryName, isASGranularity)
   const alarmsFilteredByCountryOptional = countryName ? filterAlarmsByCountry(alarms, countryName) : alarms
-  const alarmsGroupedByKey = groupAlarmsByKey(alarmsFilteredByCountryOptional, groupByKey, aggregatedAttrsZipped);
+  const alarmsGroupedByKey = groupAlarmsByKey(alarmsFilteredByCountryOptional, asGranularity.key, aggregatedAttrsZipped);
   aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped)
   addAllAlarmCountsRecord(alarmsGroupedByKey, aggregatedAttrsZipped)
   addAlarmCountsAcrossAllTimebins(alarmsGroupedByKey, aggregatedAttrsZipped)
   sortAlarmsByCountry(alarmsGroupedByKey)
   const hoverData = getHoverZippedData(alarmsGroupedByKey, aggregatedAttrsZipped)
-  const timeSeriesTraces = getTimeSeriesTraces(alarmsGroupedByKey, hoverData, legendName, aggregatedAttrsZipped, alarmTypeTitlesMap)
+  const timeSeriesTraces = getTimeSeriesTraces(alarmsGroupedByKey, hoverData, asGranularity.legend, aggregatedAttrsZipped, alarmTypeTitlesMap, legend)
   return timeSeriesTraces
 }
 
+function switchASGranularity(country, isASGranularity) {
+  return country || isASGranularity
+    ? { key: 'asn', legend: 'asn_name_truncated' }
+    : { key: 'asn_country', legend: 'asn_country' }
+}
+
 function filterAlarmsByCountry(alarms, countryName) {
-  const alarmsFilteredByCountry = alarms.filter(item => item.country_name === countryName && item.asn_name);
+  const alarmsFilteredByCountry = alarms.filter(item => item.asn_country === countryName && item.asn_name_truncated);
   return alarmsFilteredByCountry
 }
 
@@ -24,7 +29,8 @@ function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped) {
     const existingEntry = result.find((entry) => entry[key] === obj[key]);
 
     if (existingEntry) {
-      for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
+      for (const [alarmCountType, alarmTimebinType, _, [__, ___]] of aggregatedAttrsZipped) {
+        if ((!existingEntry[alarmTimebinType] && !existingEntry[alarmCountType]) || (!obj[alarmCountType] && !obj[alarmTimebinType])) continue
         existingEntry[alarmTimebinType] = existingEntry[alarmTimebinType].concat(obj[alarmTimebinType]);
         existingEntry[alarmCountType] = existingEntry[alarmCountType].concat(obj[alarmCountType]);
       }
@@ -32,9 +38,9 @@ function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped) {
       let alarmEntry = {
         [key]: obj[key],
         ...obj,
-        country_iso_code2: obj.country_iso_code2,
-        country_iso_code3: obj.country_iso_code3,
-        country_name: obj.country_name,
+        asn_country_iso_code2: obj.asn_country_iso_code2,
+        asn_country_iso_code3: obj.asn_country_iso_code3,
+        asn_country: obj.asn_country,
       };
 
       result.push(alarmEntry);
@@ -47,8 +53,9 @@ function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped) {
 
 function aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped) {
   for (let i = 0; i < alarmsGroupedByKey.length; i++) {
-    for (const [alarmCountTypeSelected, alarmTimebinTypeSelected, _] of aggregatedAttrsZipped) {
+    for (const [alarmCountTypeSelected, alarmTimebinTypeSelected, _, [__, ___]] of aggregatedAttrsZipped) {
       const alarm = alarmsGroupedByKey[i]
+      if (!alarm[alarmCountTypeSelected] && !alarm[alarmTimebinTypeSelected]) continue
       const timebins = alarm[alarmTimebinTypeSelected];
       const duplicatesCount = AggregatedAlarmUtils.countItemOccurrences(timebins)
       const uniqueSortedTimebins = Array.from(new Set(timebins.sort()));
@@ -65,13 +72,14 @@ function aggregateAlarmCountsByTime(alarmsGroupedByKey, aggregatedAttrsZipped) {
 function addAllAlarmCountsRecord(alarms, aggregatedAttrsZipped) {
 
   let totalAlarmCountsRecord = {
-    country_iso_code2: 'All',
-    country_iso_code3: 'All',
-    country_name: 'All',
-    asn_name: 'All'
+    asn_country_iso_code2: 'All',
+    asn_country_iso_code3: 'All',
+    asn_country: 'All',
+    asn_name: 'All',
+    asn_name_truncated: 'All',
   }
 
-  for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
+  for (const [alarmCountType, alarmTimebinType, _, [__, ___]] of aggregatedAttrsZipped) {
     totalAlarmCountsRecord[alarmCountType] = []
     totalAlarmCountsRecord[alarmTimebinType] = []
   }
@@ -92,7 +100,8 @@ function addAllAlarmCountsRecord(alarms, aggregatedAttrsZipped) {
 function addAlarmCountsAcrossAllTimebins(alarmsAggregated, aggregatedAttrsZipped) {
   alarmsAggregated.forEach(alarmAggregated => {
     let allTimebins = []
-    for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
+    for (const [_, alarmTimebinType, __, [___, ____]] of aggregatedAttrsZipped) {
+      if (!alarmAggregated[alarmTimebinType]) continue
       allTimebins = allTimebins.concat(...alarmAggregated[alarmTimebinType])
     }
     const uniqueSortedTimebins = Array.from(new Set(allTimebins.sort()))
@@ -109,7 +118,7 @@ function addAlarmCountsAcrossAllTimebins(alarmsAggregated, aggregatedAttrsZipped
 }
 
 function addAlarmCountsAttrsAcrossTimebinsTypes(alarmAggregated, aggregatedAttrsZipped) {
-  for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
+  for (const [alarmCountType, _, __, [___, ____]] of aggregatedAttrsZipped) {
     alarmAggregated[`${alarmCountType}_across_timebins`] = Array(alarmAggregated.timebins.length).fill(0);
   }
 }
@@ -117,8 +126,9 @@ function addAlarmCountsAttrsAcrossTimebinsTypes(alarmAggregated, aggregatedAttrs
 function addAlarmCountsValuesAcrossTimebinsTypes(alarmAggregated, aggregatedAttrsZipped) {
   for (let i = 0; i < alarmAggregated.timebins.length; i++) {
     const timebin = alarmAggregated.timebins[i];
-    for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
-      const alarmTimebinIndicies = AggregatedAlarmUtils.findIndicesOfValue(alarmAggregated[alarmTimebinType], timebin)
+    for (const [alarmCountType, alarmTimebinType, _, [__, ___]] of aggregatedAttrsZipped) {
+      if (!alarmAggregated[alarmCountType] && !alarmAggregated[alarmTimebinType]) continue
+      const alarmTimebinIndicies = AggregatedAlarmUtils.findAllIndices(alarmAggregated[alarmTimebinType], timebin)
       for (const alarmTimebinIndex of alarmTimebinIndicies) {
         alarmAggregated[`${alarmCountType}_across_timebins`][i] += (alarmAggregated[alarmCountType][alarmTimebinIndex] || 0);
       }
@@ -133,7 +143,7 @@ function addTotalAlarmCountsAttrAcrossAllTimebins(alarmAggregated) {
 
 function addTotalAlarmCountsValuesAcrossAllTimebins(alarmAggregated, aggregatedAttrsZipped) {
   for (let i = 0; i < alarmAggregated.total_alarm_counts_across_all_timebins.length; i++) {
-    for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
+    for (const [alarmCountType, _, __, [___, ____]] of aggregatedAttrsZipped) {
       alarmAggregated.total_alarm_counts_across_all_timebins[i] += alarmAggregated[`${alarmCountType}_across_timebins`][i];
     }
   }
@@ -141,12 +151,12 @@ function addTotalAlarmCountsValuesAcrossAllTimebins(alarmAggregated, aggregatedA
 
 function sortAlarmsByCountry(alarmsByCountryData) {
   alarmsByCountryData.sort((a, b) => {
-    if (a.country_name.toLowerCase() === 'all') {
+    if (a.asn_country.toLowerCase() === 'all') {
       return -1
-    } else if (b.country_name.toLowerCase() === 'all') {
+    } else if (b.asn_country.toLowerCase() === 'all') {
       return 1
     } else {
-      return a.country_name.toLowerCase().localeCompare(b.country_name.toLowerCase())
+      return a.asn_country.toLowerCase().localeCompare(b.asn_country.toLowerCase())
     }
   });
 }
@@ -160,7 +170,7 @@ function getHoverZippedData(data, aggregatedAttrsZipped) {
 
     for (let j = 0; j < timebins.length; j++) {
       let customHoverDataElement = {}
-      for (const [alarmCountType, alarmTimebinType, _] of aggregatedAttrsZipped) {
+      for (const [alarmCountType, _, __, [___, ____]] of aggregatedAttrsZipped) {
         customHoverDataElement[alarmCountType] = data[i][`${alarmCountType}_across_timebins`][j] || 0
       }
       row.push(customHoverDataElement);
@@ -172,7 +182,7 @@ function getHoverZippedData(data, aggregatedAttrsZipped) {
   return result
 }
 
-function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZipped, alarmTypeTitlesMap) {
+function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZipped, alarmTypeTitlesMap, legend) {
   if (!alarms.length || !hoverData.length || !legendName || !aggregatedAttrsZipped.length) {
     return []
   }
@@ -180,7 +190,7 @@ function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZippe
   for (let i = 0; i < alarms.length; i++) {
     if (alarms[i].timebins.length && alarms[i].total_alarm_counts_across_all_timebins.length) {
       const trace = {
-        x: alarms[i].timebins,
+        x: alarms[i].timebins.map((unixTimebin) => new Date(unixTimebin * 1000).toISOString()),
         y: alarms[i].total_alarm_counts_across_all_timebins,
         type: 'scatter',
         mode: 'lines',
@@ -196,23 +206,72 @@ function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZippe
           bgcolor: 'white',
         },
       }
-      trace.hovertemplate = getHoverTemplate(aggregatedAttrsZipped, alarmTypeTitlesMap)
-      if (i !== 0) {
-        trace.visible = 'legendonly'
-        trace.hoverinfo = 'none'
+      trace.hovertemplate = getHoverTemplate(alarms[i],aggregatedAttrsZipped, alarmTypeTitlesMap)
+      if (!legend) {
+        trace.visible = i === 0 ? true : 'legendonly'
+      } else {
+        trace.visible = trace.name === legend ? true : 'legendonly'
       }
       traces.push(trace)
     }
   }
+  positionCustomLegend(legend, traces)
   return traces
 }
 
-function getHoverTemplate(aggregatedAttrsZipped, alarmTypeTitlesMap) {
-  let hoverTemplate = '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p}</b><br>' + 'Total Number of Alarms: %{y}<br>'
-  for (const [alarmCountType, alarmTimebinsType, _] of aggregatedAttrsZipped) {
-    const alarmType = alarmCountType.split('_alarm_counts')[0]
+function positionCustomLegend(legend, traces) {
+  if (legend) {
+    const index = traces.findIndex((trace) => trace.name === legend)
+    if (index !== -1) {
+      const trace = traces[index]
+      traces.splice(index, 1);
+      traces.splice(1, 0, trace);
+    }
+  }
+}
+
+function getHoverTemplate(alarm, aggregatedAttrsZipped, alarmTypeTitlesMap) {
+  let hoverTemplate = '<b>%{x|%Y-%m-%d} at %{x|%I:%M %p} (UTC)</b><br>' + 'Total Number of Alarms: %{y}<br>'
+  for (const [alarmCountType, _, __, [___, ____]] of aggregatedAttrsZipped) {
+    const alarmType = alarmCountType.split('_count')[0]
     const alarmCountTypeTitledCase = `${alarmTypeTitlesMap[alarmType]} Alarm Counts`
     hoverTemplate += `${alarmCountTypeTitledCase}: %{customdata.${alarmCountType}}<br>`
   }
   return hoverTemplate
+}
+
+export function getChartTitle(timeSeriesTraces = null, countryName = null, startEndDateTime = null, legend = null, isASGranularity = false) {
+  let chartTitle = 'Alarms over Time'
+  if (!timeSeriesTraces || !timeSeriesTraces.length) {
+    return chartTitle
+  } else {
+    const { startDateFormatted, endDateFormatted } = startEndDateTime
+    let totalAlarmCounts;
+    if ((countryName && legend || legend && !countryName) && !isASGranularity) {
+      const traceSelectedLegend = timeSeriesTraces.findIndex((trace) => trace.name === legend)
+      if (traceSelectedLegend !== -1) {
+        totalAlarmCounts = timeSeriesTraces[traceSelectedLegend].y.reduce((acc, curr) => acc + curr, 0)
+        chartTitle = `${legend}: ${totalAlarmCounts} Alarms | ${startDateFormatted} - ${endDateFormatted}`
+      }
+    } else if (countryName || isASGranularity) {
+      totalAlarmCounts = timeSeriesTraces.slice(1).flatMap((trace) => trace.y).reduce((acc, curr) => acc + curr, 0)
+      const legendNameVal = (countryName && legend || legend && !countryName) ? legend : countryName  ? countryName : 'All'
+      chartTitle = `${legendNameVal}: ${totalAlarmCounts} Alarms | ${startDateFormatted} - ${endDateFormatted}`
+    } else {
+      totalAlarmCounts = timeSeriesTraces.slice(1).flatMap((trace) => trace.y).reduce((acc, curr) => acc + curr, 0)
+      chartTitle = `${totalAlarmCounts} Alarms | ${startDateFormatted} - ${endDateFormatted}`
+    }
+    return chartTitle
+  }
+}
+
+export function formatDate(inputDate) {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  const dateParts = inputDate.split('-');
+  const year = dateParts[0];
+  const month = months[parseInt(dateParts[1]) - 1];
+  const day = dateParts[2];
+
+  return `${month} ${day}, ${year}`;
 }

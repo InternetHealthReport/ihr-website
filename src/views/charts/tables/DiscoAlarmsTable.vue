@@ -1,17 +1,7 @@
 <template>
-  <q-table
-    table-class="myClass"
-    :data="rows"
-    :columns="columns"
-    :pagination.sync="pagination"
-    :loading="loading"
-    :filter="filterTable"
-    :filter-method="filterFct"
-    flat
-    row-key="id"
-    :expanded.sync="expandedRow"
-    loading-label="Fetching the latest network disconnections..."
-  >
+  <q-table table-class="myClass" :data="rows" :columns="columns" :pagination.sync="pagination" :loading="loading"
+    :filter="filterTable" :filter-method="filterFct" flat row-key="id" :expanded.sync="expandedRow"
+    loading-label="Fetching the latest network disconnections...">
     <template v-slot:body="props">
       <q-tr :props="props">
         <q-td auto-width>
@@ -19,15 +9,12 @@
         </q-td>
         <q-td key="location" align>
           <div v-if="props.row.streamtype == 'asn'">
-            <a
-              @click="
-                thisWindow({
-                  name: 'networks',
-                  params: { asn: 'AS' + props.row.streamname },
-                })
-              "
-              href="javascript:void(0)"
-            >
+            <a @click="
+              thisWindow({
+                name: 'networks',
+                params: { asn: 'AS' + props.row.streamname },
+              })
+              " href="javascript:void(0)">
               AS{{ props.row.streamname }}
             </a>
           </div>
@@ -44,12 +31,9 @@
         <q-td colspan="100%" class="IHR_nohover" bordered>
           <div class="text-h3 text-center">Pings from disconnected probes</div>
           <div v-if="props.expand" class="IHR_side_borders">
-            <latencymon
-              :start-time="dateHourShift(props.row.starttime, -Math.max(props.row.duration, 120) / 60)"
+            <latencymon :start-time="dateHourShift(props.row.starttime, -Math.max(props.row.duration, 120) / 60)"
               :stop-time="dateHourShift(props.row.endtime, Math.max(props.row.duration, 120) / 60)"
-              :msm-prb-ids="msmPrbIds(props.row.discoprobes)"
-              style="max-width: 93%; margin: 0 auto"
-            />
+              :msm-prb-ids="msmPrbIds(props.row.discoprobes)" style="max-width: 93%; margin: 0 auto" />
           </div>
         </q-td>
       </q-tr>
@@ -172,6 +156,7 @@ export default {
       })
       return { 1030: probeIds, 1001: probeIds, 1591146: probeIds }
     },
+
   },
 }
 </script>

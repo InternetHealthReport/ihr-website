@@ -5,7 +5,8 @@ export default {
   props: {
     data: {
       type: Array,
-      required: true,
+      required: false,
+      default: () => []
     },
     loading: {
       type: Boolean,
@@ -17,7 +18,7 @@ export default {
     },
   },
   emits: {
-    'filteredRows': function(filteredSearchRowValues) {
+    'filteredRows': function (filteredSearchRowValues) {
       if (filteredSearchRowValues !== null) {
         return true;
       } else {

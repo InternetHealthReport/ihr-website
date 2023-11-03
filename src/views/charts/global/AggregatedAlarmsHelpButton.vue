@@ -1,6 +1,6 @@
 <template>
     <div class="help">
-        <button class="help__button" @click="toggleHelpModal(dataSource, alarmType, alarmsMetadata.data_sources)">?</button>
+        <button class="help__button" @click="toggleHelpModal(dataSource, alarmType, dataSources)">?</button>
         <div class="help__modal" v-show="showHelpModal">
             <div class="help__modal-content">
                 <div class="help__title">{{ title }}</div>
@@ -11,8 +11,6 @@
 </template>
 
 <script>
-import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
-
 export default {
   props: {
     dataSource: {
@@ -23,50 +21,46 @@ export default {
       type: String,
       required: false
     },
-    alarmsMetadata: {
-      type: Object,
-      required: true
-    },
-    dataSourceAlarmTypes: {
+    dataSources: {
       type: Object,
       required: true
     },
   },
   data(){
     return {
-      alarmsMetadataCopied: AggregatedAlarmsUtils.deepCopy(this.alarmsMetadata)
+      dataSourcesCopied: this.dataSources
     }
   },
   computed: {
     showHelpModal() {
       if (this.alarmType) {
-        return this.alarmsMetadataCopied.data_sources[this.dataSource].alarm_types[this.alarmType].showHelpModal;
+        return this.dataSourcesCopied[this.dataSource].alarm_types[this.alarmType].metadata.showHelpModal;
       } else {
-        return this.alarmsMetadataCopied.data_sources[this.dataSource].showHelpModal;
+        return this.dataSourcesCopied[this.dataSource].metadata.showHelpModal;
       }
     },
     title() {
-      return this.alarmType ? this.alarmsMetadataCopied.data_sources[this.dataSource].alarm_types[this.alarmType].title : this.alarmsMetadataCopied.data_sources[this.dataSource].title;
+      return this.alarmType ? this.dataSourcesCopied[this.dataSource].alarm_types[this.alarmType].metadata.title : this.dataSourcesCopied[this.dataSource].metadata.title;
     },
     description() {
-      return this.alarmType ? this.alarmsMetadataCopied.data_sources[this.dataSource].alarm_types[this.alarmType].description : this.alarmsMetadataCopied.data_sources[this.dataSource].description;
+      return this.alarmType ? this.dataSourcesCopied[this.dataSource].alarm_types[this.alarmType].metadata.description : this.dataSourcesCopied[this.dataSource].metadata.description;
     },
   },
   methods: {
-    toggleHelpModal(dataSource, alarmType, alarmDataSourcesMetadata) {
-      this.unToggleActiveHelpModals(dataSource, alarmType, alarmDataSourcesMetadata)
+    toggleHelpModal(dataSource, alarmType, dataSources) {
+      this.unToggleActiveHelpModals(dataSource, alarmType, dataSources)
       this.toggleHelpModalHelper(dataSource, alarmType)
     },
 
-    unToggleActiveHelpModals(dataSourceSelected, alarmTypeSelected, dataSourcesAlarmsMetadata) {
-      for (const dataSourceKey in dataSourcesAlarmsMetadata) {
-        if (dataSourceSelected !== dataSourceKey) {
-          dataSourcesAlarmsMetadata[dataSourceKey].showHelpModal = false
+    unToggleActiveHelpModals(dataSourceSelected, alarmTypeSelected, dataSources) {
+      for (const dataSource in dataSources) {
+        if (dataSourceSelected !== dataSource) {
+          dataSources[dataSource].metadata.showHelpModal = false
         }
-        const alarmTypes = dataSourcesAlarmsMetadata[dataSourceKey].alarm_types
+        const alarmTypes = dataSources[dataSource].alarm_types
         for (const alarmType in alarmTypes) {
           if (alarmTypeSelected !== alarmType) {
-            alarmTypes[alarmType].showHelpModal = false
+            alarmTypes[alarmType].metadata.showHelpModal = false
           }
         }
       }
@@ -74,9 +68,9 @@ export default {
 
     toggleHelpModalHelper(dataSource, alarmType) {
       if (alarmType) {
-        this.alarmsMetadataCopied.data_sources[dataSource].alarm_types[alarmType].showHelpModal = !this.alarmsMetadataCopied.data_sources[dataSource].alarm_types[alarmType].showHelpModal
+        this.dataSourcesCopied[dataSource].alarm_types[alarmType].metadata.showHelpModal = !this.dataSourcesCopied[dataSource].alarm_types[alarmType].metadata.showHelpModal
       } else {
-        this.alarmsMetadataCopied.data_sources[dataSource].showHelpModal = !this.alarmsMetadataCopied.data_sources[dataSource].showHelpModal;
+        this.dataSourcesCopied[dataSource].metadata.showHelpModal = !this.dataSourcesCopied[dataSource].metadata.showHelpModal;
       }
     },
   },

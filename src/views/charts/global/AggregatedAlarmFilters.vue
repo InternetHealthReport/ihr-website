@@ -1,10 +1,11 @@
 <template>
   <div class="container">
-    <aggregated-alarms-custom-table :data-source-alarm-types="dataSourceAlarmTypes" :alarms-metadata="alarmsMetadata"
-      :loadingVal="loadingVal" @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler" />
+    <aggregated-alarms-custom-filter-table v-if="!isRowFilter" :data-sources="dataSources" :loadingVal="loadingVal"
+      :initial-group-by-keys="initialGroupByKeys" @filter-alarms-by-alarm-types="onFilterAlarmsByAlarmTypes"
+      @group-alarms-by-keys="onGroupAlarmsByKeys" />
     <div class="flex-container">
       <div class="datetime-filter">
-        <h3 class="filter__category-title">Date Time Filter:</h3>
+        <h3 class="filter__category-title">Time Filter (UTC)</h3>
         <div class="datetime-picker">
           <label for="start-datetime">Start DateTime:</label>
           <input type="datetime-local" id="start-datetime" v-model="startDateTime" :min="minStartDateTime"
@@ -16,11 +17,12 @@
             :max="maxEndDateTime" :disabled="loadingVal">
         </div>
         <button @click="filterAlarmsByTime(startDateTime, endDateTime)" id="apply-btn" type="button"
-          :disabled="loadingVal">Apply</button>
-        <button @click="resetTime" id="reset-time-btn" type="button" :disabled="loadingVal">Reset Time</button>
+          :disabled="applyTimeFiltersButtonDisabled">Apply</button>
+        <button @click="resetTime" id="reset-time-btn" type="button" :disabled="restTimeFiltersButtonDisabled">Reset
+          Time</button>
       </div>
-      <div class="severity-filter">
-        <h3 class="filter__category-title">Severity Levels:</h3>
+      <div class="filters">
+        <h3 class="filter__category-title">Severity Levels</h3>
         <label>
           <input type="checkbox" v-model="severities.low" :disabled="loadingVal"> Low
         </label>
@@ -31,10 +33,14 @@
           <input type="checkbox" v-model="severities.high" :disabled="loadingVal"> High
         </label>
       </div>
-      <div class="reset-granularity">
-        <h3 class="filter__category-title">Reset Granularity:</h3>
-        <button @click="resetGranularity" id="reset-granularity-btn" type="button" :disabled="loadingVal">Reset
-          Granularity</button>
+      <div class="filters">
+        <h3 class="filter__category-title">IP Address Families</h3>
+        <label>
+          <input type="checkbox" v-model="ipAddressFamilies['4']" :disabled="loadingVal"> IPv4
+        </label>
+        <label>
+          <input type="checkbox" v-model="ipAddressFamilies['6']" :disabled="loadingVal"> IPv6
+        </label>
       </div>
 
     </div>
@@ -43,104 +49,35 @@
 
 <script>
 import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
-import AggregatedAlarmsCustomTable from './AggregatedAlarmsCustomTable'
+import AggregatedAlarmsCustomFilterTable from './AggregatedAlarmsCustomFilterTable'
 export default {
   components: {
-    AggregatedAlarmsCustomTable
+    AggregatedAlarmsCustomFilterTable
   },
   props: {
-    startTime: {
-      type: Date,
-      required: true,
+    isRowFilter: {
+      type: Boolean,
+      required: false,
+      default: () => false
     },
-    endTime: {
-      type: Date,
-      required: true,
-    },
-    alarmsMetadata: {
+    timeFilters: {
       type: Object,
       required: true,
     },
+    dataSources: {
+      type: Object,
+      required: false,
+    },
     loadingVal: {
       type: Boolean,
-      required: true
-    }
-  },
-  created() {
-    if (!this.loadingVal) {
-      this.$emit('filter-alarms-by-severities', this.severitiesSelectedList)
-    }
+      required: false,
+    },
+    initialGroupByKeys: {
+      type: Object,
+      required: false
+    },
   },
   computed: {
-    dataSourceAlarmTypes() {
-      const dataSources = this.alarmsMetadata.data_sources
-
-      const dataSourceAlarmTypes = {}
-      for (const dataSourceKey in dataSources) {
-        const dataSourceLabel = AggregatedAlarmsUtils.titleCase(dataSourceKey)
-        const dataSourceDescriptionTitled = AggregatedAlarmsUtils.titleCase(dataSources[dataSourceKey].description)
-        dataSourceAlarmTypes[dataSourceKey] = {
-          alarm_types: {},
-          value: {
-            value: dataSourceKey,
-            label: dataSourceLabel,
-            content: { title: dataSourceLabel, description: dataSourceDescriptionTitled }
-          }
-        }
-
-        const alarmTypesMetaData = dataSources[dataSourceKey].alarm_types
-        for (const alarmTypeKey in alarmTypesMetaData) {
-          const alarmTypeLabel = AggregatedAlarmsUtils.titleCase(alarmTypeKey)
-          const alarmTypeDescriptionTitled = AggregatedAlarmsUtils.titleCase(alarmTypesMetaData[alarmTypeKey].description)
-          dataSourceAlarmTypes[dataSourceKey]['alarm_types'][alarmTypeKey] = {
-            value: alarmTypeKey,
-            label: alarmTypeLabel,
-            content: { title: alarmTypeLabel, description: alarmTypeDescriptionTitled },
-          }
-        }
-      }
-
-      return dataSourceAlarmTypes
-    },
-    alarmTypes() {
-      const dataSources = this.alarmsMetadata.data_sources
-
-      const alarmTypes = []
-      for (const dataSourceKey in dataSources) {
-
-        const alarmTypesMetaData = dataSources[dataSourceKey].alarm_types
-
-        for (const alarmTypeKey in alarmTypesMetaData) {
-          const alarmTypeLabel = AggregatedAlarmsUtils.titleCase(alarmTypeKey)
-          const alarmTypeDescriptionTitled = AggregatedAlarmsUtils.titleCase(alarmTypesMetaData[alarmTypeKey].description)
-
-          alarmTypes.push({
-            value: alarmTypeKey,
-            label: alarmTypeLabel,
-            showModal: false,
-            content: { title: alarmTypeLabel, description: alarmTypeDescriptionTitled },
-          });
-        }
-      }
-      return alarmTypes;
-    },
-    dataSources() {
-      const dataSources = this.alarmsMetadata.data_sources
-
-      const dataSourcesResult = []
-      for (const dataSourceKey in dataSources) {
-        const dataSourceLabel = AggregatedAlarmsUtils.titleCase(dataSourceKey)
-        const dataSourceDescriptionTitled = AggregatedAlarmsUtils.titleCase(dataSources[dataSourceKey].description)
-
-        dataSourcesResult.push({
-          value: dataSourceKey,
-          label: dataSourceLabel,
-          showModal: false,
-          content: { title: dataSourceLabel, description: dataSourceDescriptionTitled },
-        });
-      }
-      return dataSourcesResult;
-    },
     severitiesSelectedList() {
       const severitiesSelectedList = []
       for (const [severityType, isSelected] of Object.entries(this.severities)) {
@@ -149,6 +86,44 @@ export default {
         }
       }
       return severitiesSelectedList
+    },
+    ipAddressFamilySelectedList() {
+      const ipAddressFamilySelectedList = []
+      for (const [ipAddressFamily, isSelected] of Object.entries(this.ipAddressFamilies)) {
+        if (isSelected) {
+          ipAddressFamilySelectedList.push(Number(ipAddressFamily))
+        }
+      }
+      return ipAddressFamilySelectedList
+    },
+    minStartDateTime() {
+      const startUnixTime = this.timeFiltersCopied.startUnixTime
+      const startTimeObj = new Date(startUnixTime * 1000)
+      const startTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(startTimeObj)
+      return startTimeFormatted
+    },
+    maxEndDateTime() {
+      const endUnixTime = this.timeFiltersCopied.endUnixTime
+      const endTimeObj = new Date(endUnixTime * 1000)
+      const endTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(endTimeObj)
+      return endTimeFormatted
+    },
+    restTimeFiltersButtonDisabled() {
+      const { startUnixTime, endUnixTime } = this.timeFilters
+      if ((this.timeFiltersCopied.startUnixTime == startUnixTime && this.timeFiltersCopied.endUnixTime == endUnixTime) || this.loadingVal) {
+        return true
+      } else {
+        return false
+      }
+    },
+    applyTimeFiltersButtonDisabled() {
+      const startDateTimeCopied = AggregatedAlarmsUtils.formatUTCTime(new Date(this.timeFiltersCopied.startUnixTime * 1000))
+      const endDateTimeCopied = AggregatedAlarmsUtils.formatUTCTime(new Date(this.timeFiltersCopied.endUnixTime * 1000))
+      if ((this.startDateTime == startDateTimeCopied && this.endDateTime == endDateTimeCopied) || this.loadingVal) {
+        return true
+      } else {
+        return false
+      }
     }
   },
   watch: {
@@ -158,75 +133,68 @@ export default {
       },
       deep: true
     },
-
-    startTime: {
-      handler: function (newStartTime) {
-        this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(newStartTime)
-      },
-      deep: true
+    ipAddressFamilySelectedList: {
+      handler: function (newIpAddressFamilySelectedList) {
+        this.$emit('filter-alarms-by-ip-address-family', newIpAddressFamilySelectedList)
+      }
     },
-    endTime: {
-      handler: function (newEndTime) {
-        this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(newEndTime)
+    timeFilters: {
+      handler: function (newTimeFilters) {
+        const { startUnixTime, endUnixTime } = newTimeFilters
+        this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(new Date(startUnixTime * 1000))
+        this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(new Date(endUnixTime * 1000))
       },
-      deep: true
+      deep: true,
+      immediate: true
     },
-    startDateTime: {
-      handler: function (newStartDateTime) {
-        this.startAndEndDateTimeRangesHandler(newStartDateTime, this.endDateTime)
-      },
-      deep: true
-    },
-    endDateTime: {
-      handler: function (newEndDateTime) {
-        this.startAndEndDateTimeRangesHandler(this.startDateTime, newEndDateTime)
-      },
-      deep: true
-    },
-
   },
   data() {
     return {
       alarmTypesCategoryTitle: 'Alarm Types:',
       dataSourcesCategoryTitle: 'Data Sources:',
-      severities: { low: true, medium: true, high: true },
       maxAlarmTypesLength: 0,
-      startDateTime: AggregatedAlarmsUtils.formatUTCTime(this.startTime),
-      endDateTime: AggregatedAlarmsUtils.formatUTCTime(this.endTime),
-      minStartDateTime: AggregatedAlarmsUtils.formatUTCTime(this.startTime),
-      maxEndDateTime: AggregatedAlarmsUtils.formatUTCTime(this.endTime),
+      startDateTime: null,
+      endDateTime: null,
+      timeFiltersCopied: this.timeFilters,
+      severities: { low: true, medium: true, high: true },
+      ipAddressFamilies: { 4: true, 6: true }
     };
   },
   methods: {
+    onGroupAlarmsByKeys(keys) {
+      this.$emit('group-alarms-by-keys', keys)
+    },
+    isStartTimeTheMax(startDateTime, endDateTime) {
+      const startDateUTCTime = startDateTime + ':00Z'
+      const endDateUTCTime = endDateTime + ':00Z'
+      if (Date.parse(startDateUTCTime) > Date.parse(endDateUTCTime)) {
+        return true
+      } else {
+        return false
+      }
+    },
+    filterAlarmsByTime(startDateTime, endDateTime) {
+      const isStartTimeTheMax = this.startAndEndDateTimeRangesHandler(startDateTime, endDateTime)
+      if (!isStartTimeTheMax) {
+        const dateTimeFilter = { startDateTime: `${startDateTime}:00Z`, endDateTime: `${endDateTime}:00Z` };
+        this.$emit('filter-alarms-by-time', dateTimeFilter);
+      }
+    },
     startAndEndDateTimeRangesHandler(startDateTime, endDateTime) {
       const isStartTimeTheMax = this.isStartTimeTheMax(startDateTime, endDateTime)
       if (isStartTimeTheMax) {
         const alertMessage = 'Start Date cannot be greater than End Date'
         alert(alertMessage);
-        this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(this.startTime)
-        this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(this.endTime)
-      }
-    },
-
-    isStartTimeTheMax(startDateTime, endDateTime) {
-      const startDateUTCTime = startDateTime + ':00Z'
-      const endDateUTCTime = endDateTime + ':00Z'
-      const compareStartAndEndDateTime = AggregatedAlarmsUtils.compareUtcStrings(startDateUTCTime, endDateUTCTime)
-      if (compareStartAndEndDateTime === 1) {
+        this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(new Date(this.timeFilters.startUnixTime * 1000))
+        this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(new Date(this.timeFilters.endUnixTime * 1000))
         return true
+      } else {
+        return false
       }
-      return false
     },
-    filterAlarmsByTime(startDateTime, endDateTime) {
-      const startDateUTCTime = `${startDateTime}:00Z`
-      const endDateUTCTime = `${endDateTime}:00Z`
-      const dateTimeFilter = { startDateTime: startDateUTCTime, endDateTime: endDateUTCTime };
-      this.$emit('filter-alarms-by-time', dateTimeFilter);
-    },
-
     resetTime() {
-      this.startDateTime = AggregatedAlarmsUtils.formatUTCTime(this.startTime)
-      this.endDateTime = AggregatedAlarmsUtils.formatUTCTime(this.endTime)
+      this.startDateTime = this.minStartDateTime
+      this.endDateTime = this.maxEndDateTime
       this.filterAlarmsByTime(this.startDateTime, this.endDateTime)
       this.$emit('reset-time');
     },
@@ -235,7 +203,7 @@ export default {
       this.$emit('reset-granularity');
     },
 
-    filterAlarmsByAlarmTypesHandler(newSelectedAlarmTypes) {
+    onFilterAlarmsByAlarmTypes(newSelectedAlarmTypes) {
       this.$emit('filter-alarms-by-alarm-types', newSelectedAlarmTypes)
     }
   },
@@ -253,14 +221,12 @@ export default {
   display: flex;
 }
 
-.reset-granularity,
-.severity-filter {
+.filters {
   flex: 1;
   text-align: center;
-
 }
 
-.severity-filter label {
+.filters label {
   margin-right: 10px;
 }
 
@@ -274,8 +240,7 @@ export default {
 
 .type-filters,
 .datetime-filter,
-.data-sources,
-.reset-granularity {
+.data-sources {
   color: #283237;
 }
 

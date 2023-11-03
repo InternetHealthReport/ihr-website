@@ -338,8 +338,8 @@ describe('formatUTCTime', () => {
 
   it('formats UTC time correctly with timezone', () => {
     const date = new Date(Date.UTC(2023, 7, 9, 10, 30));
-    const formatted = AggregatedAlarmsUtils.formatUTCTime(date, 'Z');
-    expect(formatted).toBe('2023-08-09T10:30:Z');
+    const formatted = AggregatedAlarmsUtils.formatUTCTime(date, ':00Z');
+    expect(formatted).toBe('2023-08-09T10:30:00Z');
   });
 
   it('handles single-digit month and day', () => {
@@ -356,61 +356,13 @@ describe('formatUTCTime', () => {
 
   it('handles timezone offset', () => {
     const date = new Date(Date.UTC(2023, 7, 9, 10, 30));
-    const formatted = AggregatedAlarmsUtils.formatUTCTime(date, '+02:00');
+    const formatted = AggregatedAlarmsUtils.formatUTCTime(date, ':+02:00');
     expect(formatted).toBe('2023-08-09T10:30:+02:00');
   });
 
   it('returns empty string for invalid date', () => {
     const formatted = AggregatedAlarmsUtils.formatUTCTime(new Date('invalid date'));
     expect(formatted).toBe('');
-  });
-});
-
-
-describe('compareUtcStrings', () => {
-  it('should return 0 for equal dates', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2023-08-09T12:00:00Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(0);
-  });
-
-  it('should return -1 when the first date is earlier', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2023-08-09T10:00:00Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(-1);
-  });
-
-  it('should return 1 when the first date is later', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2023-08-09T14:00:00Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(1);
-  });
-
-  it('should handle different years', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2024-08-09T12:00:00Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(1);
-  });
-
-  it('should handle different months', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2023-09-09T12:00:00Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(1);
-  });
-
-  it('should handle different days', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2023-08-10T12:00:00Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(1);
-  });
-
-  it('should handle different hours', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2023-08-09T13:00:00Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(1);
-  });
-
-  it('should handle different minutes', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2023-08-09T12:01:00Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(1);
-  });
-
-  it('should handle different seconds', () => {
-    const result = AggregatedAlarmsUtils.compareUtcStrings('2023-08-09T12:00:01Z', '2023-08-09T12:00:00Z');
-    expect(result).toBe(1);
   });
 });
 
@@ -484,21 +436,22 @@ describe('transposeArrays', () => {
 describe('zipAggregatedAttrs', () => {
   it('should correctly zip aggregated attributes', () => {
     const aggregatedAttrsDict = {
-      'counts': {
-        'hegemony_alarm_counts': [],
-        'network_delay_alarm_counts': [],
-        'ihr_outages_alarm_counts': []
-      },
-      'timebins': {
-        'hegemony_alarm_timebins': [],
-        'network_delay_alarm_timebins': [],
-        'ihr_outages_alarm_timebins': []
-      },
-      'severities': {
-        'hegemony_alarm_severities': [],
-        'network_delay_alarm_severities': [],
-        'ihr_outages_alarm_severities': []
-      }
+      'counts': [
+        'hegemony_alarm_counts',
+        'network_delay_alarm_counts',
+        'ihr_outages_alarm_counts'
+
+      ],
+      'timebins': [
+        'hegemony_alarm_timebins',
+        'network_delay_alarm_timebins',
+        'ihr_outages_alarm_timebins'
+      ],
+      'severities': [
+        'hegemony_alarm_severities',
+        'network_delay_alarm_severities',
+        'ihr_outages_alarm_severities'
+      ]
     }
 
     const zippedData = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsDict);
@@ -523,88 +476,8 @@ describe('zipAggregatedAttrs', () => {
 
   it('should return an empty array when provided an empty dictionary', () => {
     const aggregatedAttrsDict = {};
-
     const zippedData = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsDict);
-    expect(zippedData).toEqual([]);
-  });
-
-  it('should correctly handle dictionaries with varying lengths of arrays', () => {
-    const aggregatedAttrsDict = {
-      'counts': {
-        'alarm_counts_1': [1, 2, 3],
-        'alarm_counts_2': [4, 5, 6, 7],
-      },
-      'timebins': {
-        'alarm_timebins_1': ['t1', 't2', 't3'],
-        'alarm_timebins_2': ['t4', 't5', 't6', 't7'],
-      },
-      'severities': {
-        'alarm_severities_1': ['low', 'medium', 'high'],
-        'alarm_severities_2': ['medium', 'high', 'low', 'low'],
-      }
-    };
-
-    const zippedData = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsDict);
-    expect(zippedData).toEqual([
-      ['alarm_counts_1', 'alarm_timebins_1', 'alarm_severities_1'],
-      ['alarm_counts_2', 'alarm_timebins_2', 'alarm_severities_2'],
-    ]);
-  });
-});
-
-describe('getUniqueValuesFromDictKeyValues', () => {
-  const testData = [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
-    { id: 3, name: 'Alice' },
-    { id: 4, name: 'Charlie' },
-  ];
-
-  it('should return unique values based on the specified property', () => {
-    const result = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(testData, 'name');
-    expect(result).toEqual(['Alice', 'Bob', 'Charlie']);
-  });
-
-  it('should handle empty input array', () => {
-    const result = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues([], 'name');
-    expect(result).toEqual([]);
-  });
-
-  it('should handle empty property value in all items', () => {
-    const result = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(testData, 'nonExistentProperty');
-    expect(result).toEqual([]);
-  });
-
-  it('should handle non-existent property in some items', () => {
-    const result = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(testData, 'id');
-    expect(result).toEqual([1, 2, 3, 4]);
-  });
-
-  it('should handle numeric values', () => {
-    const numericData = [
-      { value: 42 },
-      { value: 15 },
-      { value: 42 },
-      { value: 7 },
-    ];
-    const result = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(numericData, 'value');
-    expect(result).toEqual([42, 15, 7]);
-  });
-
-  it('should handle case-sensitive property values', () => {
-    const caseSensitiveData = [
-      { name: 'Alice' },
-      { name: 'alice' },
-      { name: 'ALICE' },
-    ];
-    const result = AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(caseSensitiveData, 'name');
-    expect(result).toEqual(['Alice', 'alice', 'ALICE']);
-  });
-
-  it('should not modify the original data array', () => {
-    const originalData = [...testData];
-    AggregatedAlarmsUtils.getUniqueValuesFromDictKeyValues(testData, 'name');
-    expect(testData).toEqual(originalData);
+    expect(zippedData).toHaveLength(0);
   });
 });
 
@@ -684,34 +557,191 @@ describe('countItemOccurrences', () => {
   });
 });
 
-describe('findIndicesOfValue', () => {
+describe('findAllIndices', () => {
   it('should return an empty array if the input array is empty', () => {
-    const result = AggregatedAlarmsUtils.findIndicesOfValue([], 42);
-    expect(result).toEqual([]);
+    const result = AggregatedAlarmsUtils.findAllIndices([], 42);
+    expect(result).toHaveLength(0);
   });
 
   it('should return an empty array if the value is not found in the array', () => {
-    const result = AggregatedAlarmsUtils.findIndicesOfValue([1, 2, 3, 4], 5);
-    expect(result).toEqual([]);
+    const result = AggregatedAlarmsUtils.findAllIndices([1, 2, 3, 4], 5);
+    expect(result).toHaveLength(0);
   });
 
   it('should return an array containing the correct index when the value appears once', () => {
-    const result = AggregatedAlarmsUtils.findIndicesOfValue([10, 20, 30, 40], 20);
+    const result = AggregatedAlarmsUtils.findAllIndices([10, 20, 30, 40], 20);
     expect(result).toEqual([1]);
   });
 
   it('should return an array containing the correct indices when the value appears multiple times', () => {
-    const result = AggregatedAlarmsUtils.findIndicesOfValue([10, 20, 20, 40, 20], 20);
+    const result = AggregatedAlarmsUtils.findAllIndices([10, 20, 20, 40, 20], 20);
     expect(result).toEqual([1, 2, 4]);
   });
 
   it('should return an array containing the correct indices when the value appears at the beginning and end', () => {
-    const result = AggregatedAlarmsUtils.findIndicesOfValue([20, 30, 40, 20], 20);
+    const result = AggregatedAlarmsUtils.findAllIndices([20, 30, 40, 20], 20);
     expect(result).toEqual([0, 3]);
   });
 
   it('should return an array containing the correct index when the value appears at the end', () => {
-    const result = AggregatedAlarmsUtils.findIndicesOfValue([1, 2, 3, 4, 5, 4], 4);
+    const result = AggregatedAlarmsUtils.findAllIndices([1, 2, 3, 4, 5, 4], 4);
     expect(result).toEqual([3, 5]);
+  });
+});
+
+describe('getIPAddressFamily', () => {
+  it('should correctly detect IPv6 address', () => {
+    const result = AggregatedAlarmsUtils.getIPAddressFamily('2001:0db8:85a3:0000:0000:8a2e:0370:7334');
+    expect(result).toBe(6);
+  });
+
+  it('should correctly detect IPv4 address', () => {
+    const result = AggregatedAlarmsUtils.getIPAddressFamily('192.168.0.1');
+    expect(result).toBe(4);
+  });
+
+  it('should return null for non-IP string', () => {
+    const result = AggregatedAlarmsUtils.getIPAddressFamily('not-an-ip');
+    expect(result).toBeNull();
+  });
+
+  it('should return null for empty string', () => {
+    const result = AggregatedAlarmsUtils.getIPAddressFamily('');
+    expect(result).toBeNull();
+  });
+
+  it('should correctly detect IPv6 address with mixed IPv4 part', () => {
+    const result = AggregatedAlarmsUtils.getIPAddressFamily('::192.168.0.1');
+    expect(result).toBe(6);
+  });
+
+  it('should correctly detect IPv4-like string', () => {
+    const result = AggregatedAlarmsUtils.getIPAddressFamily('10.10');
+    expect(result).toBe(4);
+  });
+
+  it('should correctly detect IPv6-like string', () => {
+    const result = AggregatedAlarmsUtils.getIPAddressFamily('2001:0db8:85a3:::8a2e');
+    expect(result).toBe(6);
+  });
+});
+
+describe('getMedianValue', () => {
+  it('returns null for an empty input array', () => {
+    const result = AggregatedAlarmsUtils.getMedianValue([]);
+    expect(result).toBeNull();
+  });
+
+  it('returns the correct median for an odd-length input array', () => {
+    const input = [1, 3, 2, 4, 5];
+    const result = AggregatedAlarmsUtils.getMedianValue(input);
+    expect(result).toBe(3);
+  });
+
+  it('returns the correct median for an even-length input array', () => {
+    const input = [1, 3, 2, 4];
+    const result = AggregatedAlarmsUtils.getMedianValue(input);
+    expect(result).toBe(2.5);
+  });
+
+  it('ignores null values and calculates the median', () => {
+    const input = [1, null, 2, 4, 5];
+    const result = AggregatedAlarmsUtils.getMedianValue(input);
+    expect(result).toBe(3);
+  });
+
+  it('handles negative numbers and returns the correct median', () => {
+    const input = [-3, -2, -1, 0, 1, 2, 3];
+    const result = AggregatedAlarmsUtils.getMedianValue(input);
+    expect(result).toBe(0);
+  });
+
+  it('handles a large array and calculates the median', () => {
+    const input = Array.from({ length: 1000 }, (_, index) => index);
+    const result = AggregatedAlarmsUtils.getMedianValue(input);
+    expect(result).toBe(499.5);
+  });
+
+  it('rounds the median value to two decimal places', () => {
+    const input = [1, 2, 3, 4];
+    const result = AggregatedAlarmsUtils.getMedianValue(input);
+    expect(result).toBe(2.5);
+  });
+});
+
+describe('getAverageValue', () => {
+  it('should calculate the average of valid values correctly', () => {
+    const values = [1, 2, 3, 4, 5];
+    const result = AggregatedAlarmsUtils.getAverageValue(values);
+    expect(result).toBe(3.00);
+  });
+
+  it('should handle null and empty values correctly', () => {
+    const values = [1, null, '', 2, 3, 4, 5];
+    const result = AggregatedAlarmsUtils.getAverageValue(values);
+    expect(result).toBe(3.00);
+  });
+
+  it('should handle non-numeric values correctly', () => {
+    const values = [1, 'abc', 2, 3, 'xyz', 4, 5];
+    const result = AggregatedAlarmsUtils.getAverageValue(values);
+    expect(result).toBe(3.00);
+  });
+
+  it('should return null for an empty array', () => {
+    const values = [];
+    const result = AggregatedAlarmsUtils.getAverageValue(values);
+    expect(result).toBeNull();
+  });
+
+  it('should return null when all values are null or empty', () => {
+    const values = [null, '', null, ''];
+    const result = AggregatedAlarmsUtils.getAverageValue(values);
+    expect(result).toBeNull();
+  });
+
+  it('should return null when all values are non-numeric', () => {
+    const values = ['abc', 'xyz'];
+    const result = AggregatedAlarmsUtils.getAverageValue(values);
+    expect(result).toBeNull();
+  });
+
+  it('should handle a single valid value correctly', () => {
+    const values = [42];
+    const result = AggregatedAlarmsUtils.getAverageValue(values);
+    expect(result).toBe(42.00);
+  });
+
+  it('should round the average to 2 decimal places', () => {
+    const values = [1.333, 2.666, 3.999];
+    const result = AggregatedAlarmsUtils.getAverageValue(values);
+    expect(result).toBe(2.67);
+  });
+});
+
+describe('getPercentageValue', () => {
+  it('should return null if secondValue is 0', () => {
+    const result = AggregatedAlarmsUtils.getPercentageValue(42, 0);
+    expect(result).toBeNull();
+  });
+
+  it('should return null if both values are NaN', () => {
+    const result = AggregatedAlarmsUtils.getPercentageValue(NaN, NaN);
+    expect(result).toBeNull();
+  });
+
+  it('should calculate the percentage value correctly', () => {
+    const result = AggregatedAlarmsUtils.getPercentageValue(25, 50);
+    expect(result).toBe(50);
+  });
+
+  it('should round the percentage value to 2 decimal places', () => {
+    const result = AggregatedAlarmsUtils.getPercentageValue(1, 3);
+    expect(result).toBeCloseTo(33.33, 2);
+  });
+
+  it('should return null if firstValue is 0 and secondValue is 0', () => {
+    const result = AggregatedAlarmsUtils.getPercentageValue(0, 0);
+    expect(result).toBeNull();
   });
 });
