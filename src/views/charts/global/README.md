@@ -1,5 +1,4 @@
 # Table of Contents
-- [Table of Contents](#table-of-contents)
 - [How to Add Alarm Type](#how-to-add-alarm-type)
   - [Step 1: Choose Your Data Source](#step-1-choose-your-data-source)
   - [Step2: Dataset Requirements](#step2-dataset-requirements)
