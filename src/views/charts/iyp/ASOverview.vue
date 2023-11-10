@@ -13,7 +13,7 @@
                 <h3>Summary</h3>
                 <div class="q-ml-sm">
                   <p>Registered in {{ firstPart.country }}</p>
-                  <p>Member of {{ firstPart.nb_ixp }} IXPs in {{ firstPart.nb_country}} countries</p>
+                  <p>Member of {{ firstPart.nb_ixp }} IXPs in {{ firstPart.nb_country}}</p>
                   <p>{{ firstPart.prefixes }} Originated Prefixes</p>
                   <p>{{ secondPart.peers }} Connected ASes</p>
                   <p>
@@ -37,7 +37,7 @@
                 <h3>Top 5 Domains</h3>
                 <div class="column q-ml-sm">
                   <div v-if="this.thirdPart.length > 0" class="column">
-                    <a :href="item.domainName" v-for="item in thirdPart" target="_blank" rel="noreferrer">{{
+                    <a :href="item.domainName" v-for="item in thirdPart" :key="item.domainName" target="_blank" rel="noreferrer">{{
                       item.domainName
                     }}</a>
                   </div>
@@ -47,17 +47,17 @@
               <div class="col-12 col-md-2">
                 <h3>External Links</h3>
                 <div class="column q-ml-sm">
-                  <a :href="handleReference(key)" v-for="(value, key) in references" target="_blank" rel="noreferrer">{{
+                  <a :href="handleReference(key)" v-for="(value, key) in references" :key="key" target="_blank" rel="noreferrer">{{
                     key
                   }}</a>
                 </div>
               </div>
             </div>
 
-            <div class="row q-pt-md">
+            <div class="row">
               <div>
                 <h3>Tags</h3>
-                <q-chip v-for="tag in firstPart.tags" dense size="md" color="info" text-color="white"> {{ tag }}</q-chip>
+                <q-chip v-for="tag in firstPart.tags" :key="tag" dense size="md" color="info" text-color="white"> {{ tag }}</q-chip>
               </div>
             </div>
 
@@ -78,7 +78,6 @@
 // import { ASOverviewQuery } from '../../../plugins/query/IypQuery'
 
 import { QChip } from 'quasar'
-import GenericIndicatorsChart from '@/views/charts/iyp/GenericIndicatorsChart'
 
 const references = {
   'bgp.he.net': 'https://bgp.he.net',
@@ -91,7 +90,6 @@ const references = {
 export default {
   components: {
     QChip,
-    GenericIndicatorsChart,
   },
   props: {
     asNumber: {
@@ -163,12 +161,15 @@ export default {
       const queryOne = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:ORIGINATE]->(p:Prefix)
          WITH COUNT(DISTINCT p.prefix) AS prefixes, a
+         OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+         OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+         OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
          OPTIONAL MATCH (a)-[:NAME]->(n:Name)
          OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)
          OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
          OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
          OPTIONAL MATCH (a)-[:CATEGORIZED]->(t:Tag)
-         RETURN u.url AS website, c.country_code AS cc, c.name AS country, prefixes, head(collect(DISTINCT(n.name))) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country
+         RETURN u.url AS website, c.country_code AS cc, c.name AS country, prefixes, COALESCE(pdbn.name, btn.name, ripen.name) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country
         `
       const queryTwo = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:PEERS_WITH]-(b:AS)
@@ -238,7 +239,7 @@ export default {
       return externalLink
     },
     handleRoutingFromNetworksToIYP(e) {
-      console.log('Routing to IYP')
+      console.log('Routing to IYP', e)
       this.$router.push({
         name: 'iyp_asn',
         params: { asn: this.asNumber },

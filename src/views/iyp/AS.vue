@@ -53,6 +53,14 @@
               :slot-length="2"
             >
               <div class="row justify-evenly">
+               <div class="col-8">
+                <GenericTreemapChart
+                  v-if="ipPrefixes.length > 0"
+                  :chart-data="ipPrefixes"
+                  :chart-layout="{ title: `Prefixes originated by AS${this.asn}` }"
+                  :config="{ key: 'rir', key1: 'prefix', root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.descr}<extra></extra>' }"
+                 />
+                </div>
                 <div class="col-4">
                   <GenericPieChart v-if="ipPrefixes.length > 0" :chart-data="ipPrefixes" :chart-layout="{ title: 'Geo-location (Maxmind)' }" />
                 </div>
@@ -285,10 +293,8 @@ export default {
   components: {
     Overview,
     GenericTable,
-    QChip,
     GenericPieChart,
     GenericBarChart,
-    GenericHoverEventsChart,
     GenericIndicatorsChart,
     GenericTreemapChart,
   },
@@ -562,7 +568,8 @@ export default {
          OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
          OPTIONAL MATCH (p)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
          OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-         RETURN c.country_code AS cc, COALESCE(creg.registry, '-') AS rir, creg_country.country_code AS rir_country, p.prefix as prefix, collect(DISTINCT(t.label)) AS tags, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility
+         OPTIONAL MATCH (p)-[:PART_OF]->(:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(:OpaqueID)
+         RETURN c.country_code AS cc, toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, creg_country.country_code AS rir_country, p.prefix as prefix, collect(DISTINCT(t.label)) AS tags, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility
         `
       const mapping = {
         cc: 'cc',
