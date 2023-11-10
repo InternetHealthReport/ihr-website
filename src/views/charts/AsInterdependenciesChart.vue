@@ -91,6 +91,8 @@ import ripeApi from '@/plugins/RipeApi'
 const DEFAULT_TRACE = [
   {
     // First trace is used for the hegemony cone
+    mode: 'lines',
+    type: 'scatter',
     x: [],
     y: [],
     yaxis: 'y2',
@@ -251,7 +253,7 @@ export default {
       }
     },
     updateTable(tableType, hegemonyComparator, filter, intervalStart, intervalEnd) {
-      
+
       this.$ihr_api.hegemony(
         filter,
         results => {
@@ -286,7 +288,7 @@ export default {
             results.results = res
           }
 
-          
+
           this.details.tablesData[tableType] = {
             data: results.results,
             loading: false,
@@ -381,6 +383,8 @@ export default {
         if (anotherAsn === undefined) anotherAsn = elem.asn
         if (trace === undefined) {
           trace = {
+            mode: 'lines',
+            type: 'scatter',
             x: [],
             y: [],
             name: this.$options.filters.ihr_NumberToAsOrIxp(elem.asn) + ' ' + elem.asn_name.split(' ')[0],
@@ -394,7 +398,6 @@ export default {
               '%{yaxis.title.text}: <b>%{y:.2f}%</b>' +
               '<extra></extra>',
             connectgaps: false,
-            mode: 'lines',
           }
 
           traces[elem.asn] = trace

@@ -11,12 +11,13 @@
         </q-item>
         <network-search-bar class="col-4" />
         <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md">
-          <q-btn-group flat :key="item.entryName" v-for="item in simple_menu">
+          <q-btn-group flat :key="item.entryName" v-for="(item,index) in simple_menu">
             <q-btn flat v-if="item.options == null" :label="$t(item.entryName)" :to="{ name: item.routeName }" />
-            <q-btn-dropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
-              <q-list class="rounded-borders text-white bg-primary" bordered separator padding>
+            <q-btn-dropdown @mouseover.native="toggleValue(index,1,true)" @mouseout.native="toggleValue(index,1,false)" v-model="item.menu" flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
+              <q-list @mouseover.native="toggleValue(index,2,true)" @mouseout.native="toggleValue(index,2,false)" class="rounded-borders text-white bg-primary" bordered separator padding>
                 <q-item
                   clickable
+                  @click="closeMenu"
                   v-close-popup
                   :key="option.entryName"
                   v-for="option in item.options"
@@ -68,6 +69,7 @@
 
 <script>
 import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
+import { debounce } from 'quasar'
 
 const simple_menu = [
   {
@@ -77,6 +79,9 @@ const simple_menu = [
   {
     entryName: 'header.reports',
     routeName: 'global_report',
+    menuOver:false,
+    listOver:false,
+    menu:false,
     options: [
       {
         entryName: 'header.globalReport',
@@ -108,6 +113,9 @@ const simple_menu = [
   {
     entryName: 'header.tools',
     routeName: 'global_report',
+    menuOver:false,
+    listOver:false,
+    menu:false,
     options: [
       {
         entryName: 'header.iyp',
@@ -154,6 +162,7 @@ export default {
     document.title = 'Internet Health Report'
   },
   methods: {
+    debounceFunc: debounce(function() { this.checkMenu() }, 200),
     expandSidebar() {
       this.sidebarOpened = !this.sidebarOpened
     },
@@ -172,7 +181,44 @@ export default {
     logout() {
       this.$ihr_api.userLogout()
     },
+    toggleValue(_index,_type,_value){
+      if(_type==1){
+        this.simple_menu[_index].menuOver=_value
+      }
+      else if(_type==2){
+        this.simple_menu[_index].listOver=_value
+      }
+    },
+    closeMenu() {
+      for(const x in this.simple_menu){
+        if(this.simple_menu[x].menu!=undefined){
+          this.simple_menu[x].menuOver=false
+          this.simple_menu[x].listOver=false
+          this.simple_menu[x].menu=false
+        }
+      }
+    },
+    checkMenu () {
+      for(const x in this.simple_menu){
+        if(this.simple_menu[x].menu!=undefined){
+          if(this.simple_menu[x].menuOver || this.simple_menu[x].listOver){
+            this.simple_menu[x].menu=true
+          }
+          else{
+            this.simple_menu[x].menu=false
+          }
+        }
+      }
+    }
   },
+  watch: {
+    simple_menu : {
+      deep: true,
+      handler(newVal, oldVal) {
+        this.debounceFunc();
+      },
+    },
+  }
 }
 </script>
 <style lang="stylus">

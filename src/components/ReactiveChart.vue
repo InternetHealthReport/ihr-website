@@ -9,12 +9,6 @@
 </template>
 <script>
 import Plotly from 'plotly.js-dist'
-/*
-emitted events
-  plotly-click: propagation of plotly onclick
-
-  loading: emited (with false) when the plot has been rendered (for 2 way binding)
-*/
 
 export default {
   props: {
@@ -39,12 +33,24 @@ export default {
       type: Number,
       required: false,
       default: 0,
+    }
+  },
+  emits: {
+    'plotly-click': function (plotlyClickedData) {
+      if (plotlyClickedData) {
+        return true;
+      } else {
+        return false;
+      }
     },
-    notFromIypViews: {
+    'notFromIypViews': {
       type: Boolean,
       required: false,
       default: true,
     },
+    'loaded': function () {
+      return false
+    }
   },
   emits: {
     'plotly-click': function (clickData) {
@@ -69,8 +75,8 @@ export default {
   created() {
     this.layoutLocal['images'] = [
       {
-        x: 1,
-        y: 1.05,
+        x: 0.98,
+        y: 0.92,
         sizex: 0.1,
         sizey: 0.1,
         source: require('@/assets/imgs/ihr_logo.png'),
@@ -102,8 +108,19 @@ export default {
       Plotly.relayout(graphDiv, { showlegend: false })
     }
 
-    graphDiv.on('plotly_click', eventData => {
-      this.$emit('plotly-click', eventData)
+    graphDiv.on('plotly_relayout', (event) => {
+      const start = event['xaxis.range[0]'];
+      const end = event['xaxis.range[1]'];
+      if (start && end) {
+        const dateTimeFilter = { startDateTime: start, endDateTime: end };
+        this.$emit('filter-alarms-by-time', dateTimeFilter)
+      }
+    })
+
+    graphDiv.on('plotly_click', (eventData) => {
+      if (eventData) {
+        this.$emit('plotly-click', eventData)
+      }
     })
 
     this.created = true

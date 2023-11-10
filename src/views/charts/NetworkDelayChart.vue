@@ -14,10 +14,10 @@
         </div>
         <div class="q-pa-sm"
         >
-          <location-search-bar 
-          @select="addEndLocation" 
-          :hint="$t('searchBar.locationDestination')" 
-          :label="$t('searchBar.locationHint')" 
+          <location-search-bar
+          @select="addEndLocation"
+          :hint="$t('searchBar.locationDestination')"
+          :label="$t('searchBar.locationHint')"
           :selected="startPointNameStr"
           style="width: 65%;margin: auto;margin-bottom: -6px;"
           />
@@ -349,7 +349,7 @@ export default {
           trace = {
             x: [],
             y: [],
-            mode: 'lines+markers',
+            mode: 'lines',
             type: 'scatter',
             //name: `${elem.startpoint_type} ${elem.startpoint_name} ipv${elem.startpoint_af} => ${elem.endpoint_type} ${elem.endpoint_name} ipv${elem.endpoint_af}`
             name: `${startname} to ${endname}`,
