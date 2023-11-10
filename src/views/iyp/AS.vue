@@ -30,7 +30,7 @@
                 v-if="peers.length > 0"
                 :chart-data="peers"
                 :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
-                :config="{ key: 'cc', key1: 'asn', root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.name}<extra></extra>' }"
+                :config="{ keys: ['cc', 'asn'], root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.name}<extra></extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -58,7 +58,7 @@
                   v-if="ipPrefixes.length > 0"
                   :chart-data="ipPrefixes"
                   :chart-layout="{ title: `Prefixes originated by AS${this.asn}` }"
-                  :config="{ key: 'rir', key1: 'prefix', root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.descr}<extra></extra>' }"
+                  :config="{ keys: ['rir', 'cc', 'prefix'], root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.descr}<extra></extra>' }"
                  />
                 </div>
                 <div class="col-4">
@@ -88,7 +88,7 @@
               :cypher-query="cypherQueries.ixps"
               :slot-length="2"
             >
-              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ key: 'cc', key1: 'name',  keyValue: '', root: '', values: false }"
+              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ keys: ['cc', 'name'],  keyValue: '', root: '', values: false }"
               />
             </GenericTable>
           </q-card>
@@ -140,7 +140,7 @@
                 v-if="popularDomains.length > 0"
                 :chart-data="popularDomains"
                 :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
-                :config="{ key: 'tld', key1: 'domainName', keyValue: 'inv_rank', root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<extra></extra>' }"
+                :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<extra></extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -203,7 +203,7 @@
                   v-if="dependents.length > 0"
                   :chart-data="dependents"
                   :chart-layout="{ title: 'Dependents' }"
-                  :config="{ key: 'cc', key1: 'asn', keyValue: 'hegemony_score', root: this.asn, textinfo: 'label', hovertemplate: '<b>AS%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score}%<extra></extra>' }"
+                  :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.asn, textinfo: 'label', hovertemplate: '<b>AS%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score}%<extra></extra>' }"
                 />
               </div>
             </GenericTable>
@@ -230,7 +230,7 @@
                 v-if="dependings.length > 0"
                 :chart-data="dependings"
                 :chart-layout="{ title: 'Dependings' }"
-                :config="{ key: 'cc', key1: 'asn', keyValue: 'hegemony_score', root: this.asn, values: true }"
+                :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.asn, values: true }"
               />
             </GenericTable>
           </q-card>
