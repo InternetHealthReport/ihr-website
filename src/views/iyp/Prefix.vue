@@ -21,13 +21,11 @@
               :cypher-query="cypherQueries.domains"
               :slot-length="3"
             >
-              <GenericPieChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Country' }" />
-              <GenericBarChart v-if="domains.length > 0" :chart-data="domains" :chart-layout="{ title: 'Tags' }" />
               <GenericTreemapChart
                 v-if="domains.length > 0"
                 :chart-data="domains"
                 :chart-layout="{ title: 'Domain Names' }"
-                :config="{ key: 'domainName', root: this.getPrefix(), values: false }"
+                :config="{ keys: ['tld', 'domainName', 'ip'], keyValue: 'inv_rank', root: this.getPrefix(), hovertemplate: '<b>%{customdata.domainName}<br>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<br>%{customdata.tags}<extra></extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -81,11 +79,9 @@
 </template>
 
 <script>
-import { QChip } from 'quasar'
 import Overview from '@/views/charts/iyp/PrefixOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
 import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
-import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
 import GenericTreemapChart from '@/views/charts/iyp/GenericTreemapChart'
 
 const expansionItems = {
@@ -107,9 +103,7 @@ export default {
   components: {
     Overview,
     GenericTable,
-    QChip,
     GenericPieChart,
-    GenericBarChart,
     GenericTreemapChart,
   },
   data() {
@@ -117,9 +111,9 @@ export default {
       host: null,
       prefixLength: null,
       domainsColumns: [
-        { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.rank), format: val => val, sortable: true },
+        { name: 'Tranco Rank', label: 'Tranco Rank', align: 'left', field: row => Number(row.rank), format: val => val, sortable: true },
+        { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
         { name: 'Domain', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
         { name: 'Tags', label: 'Domain Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
@@ -193,17 +187,19 @@ export default {
       // `
       const query = `
       MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(d:DomainName)
-      OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-      OPTIONAL MATCH (p)-[:COUNTRY]->(c:Country)
-      OPTIONAL MATCH (d)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
-      RETURN c.country_code as cc, i.ip AS ip, d.name as domain, collect(DISTINCT t.label) as tags, ra.rank AS rank
+      OPTIONAL MATCH (d)-[:CATEGORIZED]->(t:Tag)
+      OPTIONAL MATCH (d)-[ra:RANK]->(rn:Ranking {name: 'Tranco top 1M'})
+      RETURN COLLECT(DISTINCT i.ip) AS ip, d.name as domain, collect(DISTINCT t.label) as tags, ra.rank AS rank, split(d.name, '.')[-1] AS tld, 1/toFloat(ra.rank) AS inv_rank, rn.name as rankingName
+
       `
       const mapping = {
         rank: 'rank',
-        cc: 'cc',
         ip: 'ip',
         domainName: 'domain',
         tags: 'tags',
+        inv_rank: 'inv_rank',
+        rankingName: 'rankingName',
+        tld: 'tld'
       }
       const prefix = this.getPrefix()
       // console.log(prefix)
@@ -232,6 +228,7 @@ export default {
       // `
       const query = `
       MATCH (p:Prefix {prefix: $prefix})-[:PART_OF*]->(x:Prefix)
+      WHERE x.prefix <> '0.0.0.0/0' AND x.prefix <> '::/0'
       OPTIONAL MATCH (x)-[:CATEGORIZED]->(t:Tag)
       OPTIONAL MATCH (x)-[:COUNTRY]->(c:Country)
       OPTIONAL MATCH (x)<-[:ORIGINATE]-(a:AS)

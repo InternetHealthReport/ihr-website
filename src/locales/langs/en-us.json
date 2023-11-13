@@ -274,32 +274,38 @@
     "as": {
       "peers": {
         "title": "Connected ASes",
-        "caption": "BGP data"
+        "caption": "ASes directly connected to AS"
       },
       "ipPrefix": {
         "title": "Originated Prefixes",
-        "caption": "BGP data"
+        "caption": "Prefixes orginated by AS"
       },
       "ixp": {
-        "title": "IXPs"
+        "title": "IXPs",
+        "caption": "Internet Exchange Points for AS"
       },
       "rankings": {
-        "title": "Rankings"
+        "title": "Rankings",
+        "caption": "Top ranks for AS"
       },
       "popularDomains": {
-        "title": "Popular Domains"
+        "title": "Popular Domains",
+        "caption": "Popular domain names hosted by AS"
       },
       "facilities": {
-        "title": "Co-located ASes"
+        "title": "Co-located ASes",
+        "caption": "ASes present at the same colocation facilities as AS"
       },
       "siblings": {
-        "title": "Sibling ASes"
+        "title": "Sibling ASes",
+        "caption": "Other ASes managed by the same organization"
       },
-      "dependents": {
-        "title": "'Downstream' ASes"
+      "downstreams": {
+        "title": "''Downstream'' ASes",
+        "caption": "ASes depending on AS"
       },
-      "dependings": {
-        "title": "'Upstream' ASes"
+      "upstreams": {
+        "title": "''Upstream'' ASes"
       }
     },
     "country": {

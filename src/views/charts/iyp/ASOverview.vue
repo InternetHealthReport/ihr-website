@@ -13,7 +13,7 @@
                 <h3>Summary</h3>
                 <div class="q-ml-sm">
                   <p>Registered in {{ firstPart.country }}</p>
-                  <p>Member of {{ firstPart.nb_ixp }} IXPs in {{ firstPart.nb_country}}</p>
+                  <p>Member of {{ firstPart.nb_ixp }} IXPs in {{ firstPart.nb_country}} Countries</p>
                   <p>{{ firstPart.prefixes }} Originated Prefixes</p>
                   <p>{{ secondPart.peers }} Connected ASes</p>
                   <p>
@@ -27,11 +27,6 @@
                   <div>{{ this.secondPart.rankingName }}</div>
                   <div class="text-h2 text-center">{{ this.secondPart.rank }}</div>
                 </div>
-                <!-- <GenericIndicatorsChart
-                  v-if="Object.keys(secondPart).length > 0"
-                  :chart-data="formatRank(this.secondPart.rank, this.secondPart.rankingName)"
-                  :chart-layout="{ title: 'Rankings' }"
-                /> -->
               </div>
               <div class="col-12 col-md-2">
                 <h3>Top 5 Domains</h3>
