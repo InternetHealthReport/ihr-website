@@ -69,14 +69,6 @@ export default {
       this.actualData = data
       this.actualLayout = layout
 
-      // ReactiveChart component will take care of width and height
-      // To enlarge the chart if length of the data increases
-      // if (formattedData[0].labels.length > 100) {
-      //   layout.width = '1000'
-      //   layout.height = '750'
-      // } else {
-      //   layout.width = '700'
-      // }
     },
     formatChartData(arrayOfObjects) {
       if (!arrayOfObjects || arrayOfObjects.length === 0) {
@@ -96,6 +88,10 @@ export default {
       let parents = []
       let values = []
       let extras = []
+      let parent_extra = {}
+      let total = {child: 0, value: 0}
+      let leafs = {}
+      let ex_leaf_item = ''
 
       let root = this.config.root
       ids.push(root)
@@ -103,6 +99,7 @@ export default {
       parents.push('')
       extras.push( emptyObj )
       values.push(0)
+      parent_extra[root] = {'__sum_value': 0, '__sum_child': 0}
 
       const map = {}
 
@@ -113,6 +110,7 @@ export default {
 
         let currentID = root
         let parentID =  ''
+        let item_value = this.config.keyValue ? Number(item[this.config.keyValue]) : 1
 
         keys.forEach( key => {
           parentID = currentID
@@ -127,18 +125,54 @@ export default {
             parents.push(parentID)
 
             if(key==lastKey){
-
               extras.push(item)
-              values.push(this.config.keyValue ? Number(item[this.config.keyValue]) : 1)
+              values.push(item_value)
+              ex_leaf_item = item
+
+              // Maintain stats to calculate percentage per nodes
+              leafs[item[key]] = true
+              total.child += 1
+              total.value += item_value
+              item['__sum_child'] = 1
+              item['__sum_value'] = item_value
 
             }
             else{
-              extras.push( emptyObj )
+              // Maintain stats to calculate percentage per nodes
+              parent_extra[currentID] = {'__sum_value': item_value, '__sum_child': 1}
+              extras.push( parent_extra[currentID] )
               values.push(0)
+            }
+          }
+          else{
+            if(key!=lastKey){
+              // Maintain stats to calculate percentage per nodes
+              parent_extra[currentID].__sum_value += item_value
+              parent_extra[currentID].__sum_child += 1
             }
           }
         })
       })
+
+      // Update the total for all customdata and compute percentages
+      for(let i=0; i < extras.length; i++){
+        let item = extras[i]
+
+        item['__percent'] = 100*item['__sum_value']/total.value
+        item['__total_child'] = total.child
+        item['__total_value'] = total.value
+
+        if( !leafs[labels[i]]  & labels[i]!=root ){
+          if(this.config.show_percent){
+            labels[i] = labels[i]+' ('+item['__percent'].toFixed(1)+'%)'
+          }
+
+          // Default customdata to empty strings to avoid displaying hovertemplate syntax
+          Object.getOwnPropertyNames(ex_leaf_item).forEach( prop => {
+            if( !item[prop]) item[prop] = ''
+          })
+        }
+      }
 
       return [{ ids, labels, parents, values, extras }]
     },
