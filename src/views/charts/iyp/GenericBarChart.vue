@@ -23,6 +23,10 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    config: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -70,11 +74,15 @@ export default {
       }
       const map = {}
       arrayOfObjects.forEach(item => {
-        item.tags.forEach(tag => {
-          if (!map[tag]) {
-            map[tag] = 1
+        let keys = item[this.config.key]
+        if( !Array.isArray(keys) ) keys = [keys]
+
+        keys.forEach(  key => {
+          let value = this.config.value? item[this.config.value]: 1
+          if (!map[String(key)]) {
+            map[String(key)] = value
           } else {
-            map[tag]++
+            map[String(key)] += value
           }
         })
       })
