@@ -171,7 +171,7 @@ You can confirm this integration through data visualization, and I've verified i
 To add a data source effectively, it's important to understand the process of adding an alarm type and how it integrates with other data sources, such as `IHR`, `GRIP`, and `IODA`. Please refer to the sections above for detailed instructions on adding alarm types and the broader integration process.
 
 # How to Change the Selected Alarm Types by Default
-To modify the default selection of alarm types, simply locate and update the `is_default_selected` attribute within the `AggregatedAlarmsMetadata.js` file.
+To modify the default selection of alarm types for the data visualizations, simply locate and update the `is_default_selected` attribute within the `AggregatedAlarmsMetadata.js` file. To modify the initial selected alarm type in the table data visualization, simply update `INITIAL_TABLE_ALARM_TYPE_SELECTED` variable in `AggregatedAlarmsController.js` file make sure it matches with the alarm type in `AggregatedAlarmsMetadata.js`.
 
 # How to Change the Default Group By Keys
 To adjust the default group by keys, you can easily do so by modifying the `default_key` attribute in the `AggregatedAlarmsMetadata.js` file to match one of the values listed in the `group_by_key_options` attribute.

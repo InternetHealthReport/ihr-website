@@ -150,7 +150,6 @@ export default {
           this.dataEvents = result.results
           this.fetchDiscoData(result.results)
           this.loading = false
-          this.$emit('disco-alarms-data-loaded', result.results)
         },
         error => {
           console.error(error) //FIXME do a correct alert

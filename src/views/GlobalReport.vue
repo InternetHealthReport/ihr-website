@@ -3,11 +3,6 @@
     <div class="q-mb-xs">
       <div class="text-center">
         <div class="text-h1">{{ title }}</div>
-        <div class="text-h3">
-          {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-          <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime
-            class="IHR_subtitle_calendar" />
-        </div>
       </div>
     </div>
     <q-expansion-item caption="IHR Aggregated Alarms" header-class="IHR_charts-title" default-opened expand-icon-toggle
@@ -18,7 +13,6 @@
             <q-item-section avatar>
               <q-icon name="fas fa-plug" color="primary" text-color="white" />
             </q-item-section>
-
             <q-item-section>
               <a id="aggregatedAlarms"></a>
               <div class="text-primary">
@@ -29,130 +23,15 @@
           </q-item-section>
         </div>
       </template>
-      <aggregated-alarms-controller :startTime="startTime" :endTime="endTime" :networkDiscoAlarms="discoAlarms" :networkDiscoAlarmsLoading="loading.disco" />
+      <aggregated-alarms-controller :startTime="startTime" :endTime="endTime" />
     </q-expansion-item>
-    <a id="linkDelay"></a>
-    <div v-show="!this.nbAlarms['linkDelay']">
-      <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <q-item-section class="graph-header">
-              <q-item-section avatar>
-                <q-icon name="fas fa-exchange-alt" color="primary" text-color="white" />
-              </q-item-section>
-
-              <q-item-section>
-                <div class="text-primary text-grey">
-                  {{ $t('charts.delayAndForwarding.title') }}
-                </div>
-                <div class="text-caption text-grey">Traceroute data</div>
-              </q-item-section>
-            </q-item-section>
-            <q-item-section class="filter-div">
-              <div class="text" v-if="linkExpanded">
-                <q-input debounce="300" v-model="linkFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <q-icon name="fas fa-filter" />
-                  </template>
-                </q-input>
-              </div>
-            </q-item-section>
-          </div>
-        </template>
-      </q-expansion-item>
-    </div>
-    <div v-show="this.nbAlarms['linkDelay']">
-      <q-expansion-item header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <q-item-section class="graph-header">
-              <q-item-section avatar>
-                <q-icon name="fas fa-exchange-alt" color="primary" text-color="white" />
-              </q-item-section>
-
-              <q-item-section>
-                <div class="text-primary">
-                  {{ $t('charts.delayAndForwarding.title') }}
-                </div>
-                <div class="text-caption text-grey">Traceroute data</div>
-              </q-item-section>
-            </q-item-section>
-            <q-item-section class="filter-div">
-              <div class="text" v-if="linkExpanded">
-                <q-input debounce="300" v-model="linkFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <q-icon name="fas fa-filter" />
-                  </template>
-                </q-input>
-              </div>
-            </q-item-section>
-          </div>
-        </template>
-        <q-card class="IHR_charts-body">
-          <q-card-section>
-            <delay-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-nprobes="minNprobes"
-              :min-deviation="minDeviation" :min-diffmedian="minDiffmedian" :max-diffmedian="maxDiffmedian"
-              :filter="linkFilter" @filteredRows="newFilteredRows('linkDelay', $event)" @loading="linkDelayLoading"
-              :selected-asn="asnList" ref="ihrChartDelay" @prefix-details="showDetails($event)" />
-          </q-card-section>
-        </q-card>
-      </q-expansion-item>
-    </div>
-    <a id="disco"></a>
-    <q-expansion-item caption="RIPE Atlas log" header-class="IHR_charts-title" default-opened expand-icon-toggle
-      v-model="discoExpanded">
-      <template v-slot:header>
-        <div class="graph-header-div">
-          <q-item-section class="graph-header">
-            <q-item-section avatar>
-              <q-icon name="fas fa-plug" color="primary" text-color="white" />
-            </q-item-section>
-
-            <q-item-section>
-              <div class="text-primary">
-                {{ $t('charts.disconnections.title') }}
-              </div>
-              <div class="text-caption text-grey">RIPE Atlas log</div>
-            </q-item-section>
-          </q-item-section>
-          <q-item-section class="filter-div">
-            <div class="text" v-if="discoExpanded">
-              <q-input debounce="300" v-model="discoFilter" placeholder="Filter">
-                <template v-slot:append>
-                  <q-icon name="fas fa-filter" />
-                </template>
-              </q-input>
-            </div>
-          </q-item-section>
-        </div>
-      </template>
-
-      <q-card class="IHR_charts-body">
-        <q-card-section>
-          <disco-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
-            :geoprobes.sync="geoProbes" :filter="discoFilter" @filteredRows="newFilteredRows('disco', $event)"
-            @loading="discoLoading" @disco-alarms-data-loaded="discoAlarms = $event" :selected-asn="asnList" ref="ihrChartDisco" />
-        </q-card-section>
-      </q-card>
-    </q-expansion-item>
-
   </div>
 </template>
 
 <script>
 import reportMixin from '@/views/mixin/reportMixin'
-import DiscoChart, { DEFAULT_DISCO_AVG_LEVEL } from './charts/global/DiscoChart'
 import AggregatedAlarmsController from './charts/global/AggregatedAlarmsController'
-import DelayChart, {
-  DEFAULT_MIN_NPROBES,
-  DEFAULT_MIN_DEVIATION,
-  DEFAULT_MIN_DIFFMEDIAN,
-  DEFAULT_MAX_DIFFMEDIAN,
-} from './charts/global/DelayChart'
-import DateTimePicker from '@/components/DateTimePicker'
 import html2pdf from 'html2pdf.js'
-
-const CHART_REFS = ['ihrChartNetworkDelay', 'ihrChartDelay', 'ihrChartMap', 'ihrChartDisco']
 
 const REPORT_TYPE = {
   GLOBAL: 0,
@@ -166,122 +45,34 @@ const PARAMETERS_LEVEL = {
   HIGH: 2,
 }
 
-const LEVEL_OPTIONS = Object.keys(PARAMETERS_LEVEL).map(key => {
-  return { label: key, value: PARAMETERS_LEVEL[key] }
-})
-const LEVEL_COLOR = ['warning', 'positive', 'negative']
-
-//TODO use presets with some sense
-const PRAMETERS_PRESETS = {
-  DISCO_AVG_LEVEL: [7, DEFAULT_DISCO_AVG_LEVEL, 10],
-  MIN_NPROBES: [5, DEFAULT_MIN_NPROBES, 12],
-  MIN_DEVIATION: [100, DEFAULT_MIN_DEVIATION, 120],
-  MIN_DIFFMEDIAN: [10, DEFAULT_MIN_DIFFMEDIAN, 20],
-  MAX_DIFFMEDIAN: [150, DEFAULT_MAX_DIFFMEDIAN, 300],
-}
-
-const PRESETS_ASN_LISTS = []
-
 export default {
   mixins: [reportMixin],
   components: {
-    DiscoChart,
     AggregatedAlarmsController,
-    DelayChart,
-    DateTimePicker,
   },
   data() {
     let filterLevel = Number(this.$route.query.filter_level)
     filterLevel = filterLevel ? filterLevel : PARAMETERS_LEVEL.MEDIUM
-
     return {
-      globalFilter: '',
-      linkFilter: '',
-      discoFilter: '',
-      hegemonyExpanded: true,
-      ndelayExpanded: true,
-      linkExpanded: true,
-      discoExpanded: true,
-      aggregatedAlarmsExpanded: true,
-      presetAsnLists: PRESETS_ASN_LISTS,
-      levelOptions: LEVEL_OPTIONS,
-      levelColors: LEVEL_COLOR,
       filterLevel: filterLevel,
-      minAvgLevel: PRAMETERS_PRESETS.DISCO_AVG_LEVEL[filterLevel],
-      minNprobes: PRAMETERS_PRESETS.MIN_NPROBES[filterLevel],
-      minDeviation: PRAMETERS_PRESETS.MIN_DEVIATION[filterLevel],
-      minDeviationNetworkDelay: 20,
-      minDiffmedian: PRAMETERS_PRESETS.MIN_DIFFMEDIAN[filterLevel],
-      maxDiffmedian: PRAMETERS_PRESETS.MAX_DIFFMEDIAN[filterLevel],
-      charRefs: CHART_REFS,
-      asnList: [],
+      aggregatedAlarmsExpanded: true,
       asnListState: REPORT_TYPE.GLOBAL,
-      geoProbes: [],
-      nbAlarms: {
-        linkDelay: 0,
-        disco: 0,
-      },
-      loading: {
-        linkDelay: true,
-        disco: true,
-      },
-      discoAlarms: []
+      defaultTimeRange: 1
     }
   },
   mounted() {
     this.fetch = true
   },
   methods: {
-    linkDelayLoading(val) {
-      this.$nextTick(function () {
-        this.loading.linkDelay = val
-      })
-    },
-    discoLoading(val) {
-      this.$nextTick(function () {
-        this.loading.disco = val
-      })
-    },
     pushRoute() {
       this.$router.replace({
         query: {
           filter_level: this.filterLevel,
-          last: this.interval.dayDiff(),
-          date: this.$options.filters.ihrUtcString(this.interval.end, false),
+          last: this.intervalCurrent.dayDiff(),
+          date: this.$options.filters.ihrUtcString(this.intervalCurrent.end, false),
         },
         hash: this.$route.hash,
       })
-
-      this.minAvgLevel = PRAMETERS_PRESETS.DISCO_AVG_LEVEL[this.filterLevel]
-      this.minNprobes = PRAMETERS_PRESETS.MIN_NPROBES[this.filterLevel]
-      this.minDeviation = PRAMETERS_PRESETS.MIN_DEVIATION[this.filterLevel]
-      this.minDiffmedian = PRAMETERS_PRESETS.MIN_DIFFMEDIAN[this.filterLevel]
-      this.maxDiffmedian = PRAMETERS_PRESETS.MAX_DIFFMEDIAN[this.filterLevel]
-    },
-    fetchList() {
-      this.$ihr_api.userShow(
-        results => {
-          let asnList = []
-          results.monitoredasn.forEach(monitored => {
-            asnList.push(monitored.asnumber)
-          })
-          this.asnList = asnList
-          this.asnListState = REPORT_TYPE.PERSONAL
-        },
-        error => {
-          console.error(error) //FIXME correct error handling
-        }
-      )
-    },
-    newFilteredRows(graphType, val) {
-      let search = val[0]
-      let rows = val[1]
-      if (this.globalFilter == search) {
-        this.$nextTick(function () {
-          this.nbAlarms[graphType] = rows.length
-
-        })
-      }
     },
     generateReport() {
       let element = this.$refs['ihrAsAndIxpContainer']
@@ -293,7 +84,7 @@ export default {
         jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
       }
       html2pdf(element, opt)
-    },
+    }
   },
   computed: {
     title() {
@@ -305,18 +96,7 @@ export default {
       }
       return this.$t('globalReport.title.global')
     }
-  },
-  watch: {
-    filterLevel(newValue, oldValue) {
-      if (newValue != oldValue) {
-        this.pushRoute()
-      }
-    },
-    globalFilter(newValue) {
-      this.linkFilter = newValue
-      this.discoFilter = newValue
-    }
-  },
+  }
 }
 </script>
 

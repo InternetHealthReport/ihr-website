@@ -433,7 +433,6 @@ export default {
         data.forEach(elem => {
           const elemTime = Date.parse(elem.timebin).getTime()
           if (elemTime > intervalStartTime && elemTime < intervalEndTime) {
-            console.log(elem)
             skip = true
           }
         })

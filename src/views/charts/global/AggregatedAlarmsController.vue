@@ -63,7 +63,7 @@ import WorldMapAggregatedAlarms from './WorldMapAggregatedAlarms'
 import TimeSeriesAggregatedAlarms from './TimeSeriesAggregatedAlarms'
 import TreeMapAggregatedAlarms from './TreeMapAggregatedAlarms'
 import AggregatedAlarmsTableHelper from '../tables/AggregatedAlarmsTableHelper.vue'
-import { Query, HegemonyAlarmsQuery, NetworkDelayAlarmsQuery } from '@/plugins/IhrApi'
+import { Query, HegemonyAlarmsQuery, NetworkDelayAlarmsQuery, DiscoEventQuery } from '@/plugins/IhrApi'
 
 const INITIAL_TABLE_ALARM_TYPE_SELECTED = 'hegemony'
 
@@ -95,12 +95,12 @@ export default {
           extract: this.extractNetworkDelayAlarms
         },
         network_disconnection: {
-          data: null
+          data: null,
+          extract: this.extractNetworkDisconnectionAlarms
         }
       },
     }
   },
-
   props: {
     startTime: {
       type: Date,
@@ -109,15 +109,7 @@ export default {
     endTime: {
       type: Date,
       required: true,
-    },
-    networkDiscoAlarms: {
-      type: Array,
-      required: true
-    },
-    networkDiscoAlarmsLoading: {
-      type: Boolean,
-      required: true
-    },
+    }
   },
   created() {
     const selectedGroupByKeysResult = {}
@@ -247,28 +239,22 @@ export default {
         .timeInterval(this.startTime, this.endTime)
       return [networkDelayAlarmsFilter]
     },
+    networkDisconnectionAlarmsFilters(){
+      const networkDisconnectionAlarmsFilter = new DiscoEventQuery()
+        .streamName(this.streamName)
+        .timeInterval(this.startTime, this.endTime)
+        .orderedByTime();
+      return [networkDisconnectionAlarmsFilter]
+    },
     ihrAlarmsJoined() {
       const ihrAlarmsJoinedResult = Object.keys(this.ihrAlarms).flatMap((alarmType) => this.ihrAlarms[alarmType].data ? this.ihrAlarms[alarmType].data : [])
       return ihrAlarmsJoinedResult
-    },
-    networkDiscoAlarmsState() {
-      return [this.networkDiscoAlarmsLoading, this.networkDiscoAlarms]
     },
     aggregatedAttrsIhrAlarmsLoading() {
       return [this.ihrAlarmsLoading, this.aggregatedAttrsSelected]
     }
   },
   watch: {
-    networkDiscoAlarmsState: {
-      handler: function (newNetworkDiscoAlarmsState) {
-        const [isNetworkDiscoAlarmsLoading, networkDiscoAlarms] = newNetworkDiscoAlarmsState
-        if (!isNetworkDiscoAlarmsLoading && networkDiscoAlarms !== null) {
-          networkDiscoAlarms.forEach((alarm) => alarm.event_type = 'network_disconnection')
-          this.ihrAlarms.network_disconnection.data = networkDiscoAlarms
-        }
-      },
-      deep: true
-    },
     alarms: {
       handler: function (newAlarms) {
         this.updateDataVizsWithFilters(...this.getRefDatavizs, newAlarms, this.aggregatedAttrsZipped, this.aggregatedAttrsCountsSelected, this.countryClicked, this.alarmTypeTitlesMap, this.legendSelected.legend, this.severitiesSelectedList, this.ipAddressFamilySelectedList, this.timeFiltersCurrent, false, true, true)
@@ -349,6 +335,25 @@ export default {
       }
       alarms.forEach((alarm) => alarm.event_type = 'network_delay')
       this.ihrAlarms.network_delay.data = alarms
+    },
+    async extractNetworkDisconnectionAlarms(){
+      if (this.ihrAlarms.network_disconnection.data !== null) return
+      const alarms = []
+      for (const networkDisconnectionFilter of this.networkDisconnectionAlarmsFilters) {
+        await new Promise((resolve, reject) => {
+          this.$ihr_api.disco_events(
+            networkDisconnectionFilter,
+            result => {
+              alarms.push(...result.results)
+              resolve()
+            }, error => {
+              reject(error)
+            }
+          )
+        })
+      }
+      alarms.forEach((alarm) => alarm.event_type = 'network_disconnection')
+      this.ihrAlarms.network_disconnection.data = alarms
     },
     etlAggregatedAlarmsDataModel(dataSourcesSelected, dataSourcesColumns, alarmTypesFilter, groupByKeys, ihrAlarms, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime) {
       this.etlAlarmsLoadingVal = true
