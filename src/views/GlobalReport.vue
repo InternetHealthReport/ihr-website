@@ -3,6 +3,11 @@
     <div class="q-mb-xs">
       <div class="text-center">
         <div class="text-h1">{{ title }}</div>
+        <div class="text-h3">
+          {{ intervalCurrent.dayDiff() }}-day report ending on {{ reportDateFmt }}
+          <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime
+            class="IHR_subtitle_calendar" />
+        </div>
       </div>
     </div>
     <q-expansion-item caption="IHR Aggregated Alarms" header-class="IHR_charts-title" default-opened expand-icon-toggle
@@ -23,13 +28,14 @@
           </q-item-section>
         </div>
       </template>
-      <aggregated-alarms-controller :startTime="startTime" :endTime="endTime" />
+      <aggregated-alarms-controller :key="$route.fullPath" :startTime="startTime" :endTime="endTime" />
     </q-expansion-item>
   </div>
 </template>
 
 <script>
 import reportMixin from '@/views/mixin/reportMixin'
+import DateTimePicker from '@/components/DateTimePicker'
 import AggregatedAlarmsController from './charts/global/AggregatedAlarmsController'
 import html2pdf from 'html2pdf.js'
 
@@ -49,6 +55,7 @@ export default {
   mixins: [reportMixin],
   components: {
     AggregatedAlarmsController,
+    DateTimePicker
   },
   data() {
     let filterLevel = Number(this.$route.query.filter_level)
@@ -65,14 +72,15 @@ export default {
   },
   methods: {
     pushRoute() {
-      this.$router.replace({
-        query: {
-          filter_level: this.filterLevel,
-          last: this.intervalCurrent.dayDiff(),
-          date: this.$options.filters.ihrUtcString(this.intervalCurrent.end, false),
-        },
-        hash: this.$route.hash,
-      })
+      const currentQuery = {
+        filter_level: String(this.filterLevel),
+        last: String(this.intervalCurrent.dayDiff()),
+        date: this.$options.filters.ihrUtcString(this.intervalCurrent.end, false),
+      };
+      if (JSON.stringify(currentQuery) !== JSON.stringify(this.$route.query)) {
+        const newRoute = { query: currentQuery, hash: this.$route.hash }
+        this.$router.replace(newRoute);
+      }
     },
     generateReport() {
       let element = this.$refs['ihrAsAndIxpContainer']
@@ -95,6 +103,13 @@ export default {
           return this.$t('globalReport.title.personal')
       }
       return this.$t('globalReport.title.global')
+    }
+  },
+  watch: {
+    filterLevel(newValue, oldValue) {
+      if (newValue != oldValue) {
+        this.pushRoute()
+      }
     }
   }
 }

@@ -102,9 +102,9 @@ export default {
     }
   },
   watch: {
-    intervalCurrent(){
+    intervalUpdated(){
       this.pushRoute()
-    }
+    },
   },
 }
 </script>
