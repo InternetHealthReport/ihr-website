@@ -239,7 +239,7 @@ export default {
         .timeInterval(this.startTime, this.endTime)
       return [networkDelayAlarmsFilter]
     },
-    networkDisconnectionAlarmsFilters(){
+    networkDisconnectionAlarmsFilters() {
       const networkDisconnectionAlarmsFilter = new DiscoEventQuery()
         .streamName(this.streamName)
         .timeInterval(this.startTime, this.endTime)
@@ -301,8 +301,9 @@ export default {
     async extractHegemonyAlarms() {
       if (this.ihrAlarms.hegemony.data !== null) return
       const alarms = []
+      const promises = []
       for (const hegemonyAlarmsFilter of this.hegemonyAlarmsFilters) {
-        await new Promise((resolve, reject) => {
+        const newHegemonyAlarmsPromise = new Promise((resolve, reject) => {
           this.$ihr_api.hegemony_alarms(
             hegemonyAlarmsFilter,
             result => {
@@ -313,15 +314,19 @@ export default {
             }
           )
         })
+        promises.push(newHegemonyAlarmsPromise)
       }
-      alarms.forEach((alarm) => alarm.event_type = 'hegemony')
-      this.ihrAlarms.hegemony.data = alarms
+      Promise.all(promises).then(() => {
+        alarms.forEach((alarm) => alarm.event_type = 'hegemony')
+        this.ihrAlarms.hegemony.data = alarms
+      })
     },
     async extractNetworkDelayAlarms() {
       if (this.ihrAlarms.network_delay.data !== null) return
       const alarms = []
+      const promises = []
       for (const networkDelayFilter of this.networkDelayAlarmsFilters) {
-        await new Promise((resolve, reject) => {
+        const newNetworkDelayAlarmsPromise = new Promise((resolve, reject) => {
           this.$ihr_api.network_delay_alarms(
             networkDelayFilter,
             result => {
@@ -331,16 +336,20 @@ export default {
               reject(error)
             }
           )
-        })
+        });
+        promises.push(newNetworkDelayAlarmsPromise)
       }
-      alarms.forEach((alarm) => alarm.event_type = 'network_delay')
-      this.ihrAlarms.network_delay.data = alarms
+      Promise.all(promises).then(() => {
+        alarms.forEach((alarm) => alarm.event_type = 'network_delay')
+        this.ihrAlarms.network_delay.data = alarms
+      })
     },
-    async extractNetworkDisconnectionAlarms(){
+    async extractNetworkDisconnectionAlarms() {
       if (this.ihrAlarms.network_disconnection.data !== null) return
       const alarms = []
+      const promises = []
       for (const networkDisconnectionFilter of this.networkDisconnectionAlarmsFilters) {
-        await new Promise((resolve, reject) => {
+        const newNetworkDisconnectionAlarmsPromise = new Promise((resolve, reject) => {
           this.$ihr_api.disco_events(
             networkDisconnectionFilter,
             result => {
@@ -351,9 +360,12 @@ export default {
             }
           )
         })
+        promises.push(newNetworkDisconnectionAlarmsPromise)
       }
-      alarms.forEach((alarm) => alarm.event_type = 'network_disconnection')
-      this.ihrAlarms.network_disconnection.data = alarms
+      Promise.all(promises).then(() => {
+        alarms.forEach((alarm) => alarm.event_type = 'network_disconnection')
+        this.ihrAlarms.network_disconnection.data = alarms
+      })
     },
     etlAggregatedAlarmsDataModel(dataSourcesSelected, dataSourcesColumns, alarmTypesFilter, groupByKeys, ihrAlarms, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime) {
       this.etlAlarmsLoadingVal = true
