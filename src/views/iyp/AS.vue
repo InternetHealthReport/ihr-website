@@ -6,32 +6,6 @@
         <Overview :as-number="this.asn" :title="setPageTitle" :peeringdbId="setPeeringdbId" />
 
         <q-expansion-item
-          @click="handleClick('peers')"
-          :label="$t('iyp.as.peers.title')"
-          :caption="$t('iyp.as.peers.caption')+this.asn"
-          header-class="IHR_charts-title"
-          v-model="show.peers"
-        >
-          <q-separator />
-          <q-card v-if="peers" class="IHR_charts-body">
-            <GenericTable
-              :data="peers"
-              :columns="peerColumns"
-              :loading-status="this.loadingStatus.peers"
-              :cypher-query="cypherQueries.peers"
-              :slot-length="1"
-            >
-              <GenericTreemapChart
-                v-if="peers.length > 0"
-                :chart-data="peers"
-                :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
-                :config="{ keys: ['cc', 'asn'], root: this.asn, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.__percent:.1f}%</extra>' }"
-              />
-            </GenericTable>
-          </q-card>
-        </q-expansion-item>
-
-        <q-expansion-item
           @click="handleClick('ipPrefixes')"
           :label="$t('iyp.as.ipPrefix.title')"
           :caption="$t('iyp.as.ipPrefix.caption')+this.asn"
@@ -68,44 +42,82 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick('ixps')"
-          :label="$t('iyp.as.ixp.title')"
-          :caption="$t('iyp.as.ixp.caption')+this.asn"
+          @click="handleClick('peers')"
+          :label="$t('iyp.as.peers.title')"
+          :caption="$t('iyp.as.peers.caption')+this.asn"
           header-class="IHR_charts-title"
-          v-model="show.ixps"
+          v-model="show.peers"
         >
           <q-separator />
-          <q-card class="IHR_charts-body">
+          <q-card v-if="peers" class="IHR_charts-body">
             <GenericTable
-              :data="ixps"
-              :columns="ixpsColumns"
-              :loading-status="this.loadingStatus.ixps"
-              :cypher-query="cypherQueries.ixps"
-              :slot-length="2"
+              :data="peers"
+              :columns="peerColumns"
+              :loading-status="this.loadingStatus.peers"
+              :cypher-query="cypherQueries.peers"
+              :slot-length="1"
             >
-              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ keys: ['cc', 'name'],  keyValue: '', root: '', show_percent: true }"
+              <GenericTreemapChart
+                v-if="peers.length > 0"
+                :chart-data="peers"
+                :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
+                :config="{ keys: ['cc', 'asn'], root: this.asn, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.__percent:.1f}%</extra>' }"
               />
             </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick('rankings')"
-          :label="$t('iyp.as.rankings.title')"
-          :caption="$t('iyp.as.rankings.caption')+this.asn"
+          @click="handleClick('upstreams')"
+          :label="$t('iyp.as.upstreams.title')"
+          :caption="'AS'+this.asn+' depends on these peer & upstream ASes'"
           header-class="IHR_charts-title"
-          v-model="show.rankings"
+          v-model="show.dependings"
         >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable
-              :data="rankings"
-              :columns="rankingsColumns"
-              :loading-status="this.loadingStatus.rankings"
-              :cypher-query="cypherQueries.rankings"
+              :data="dependings"
+              :columns="dependingsColumns"
+              :loading-status="this.loadingStatus.dependings"
+              :cypher-query="cypherQueries.dependings"
               :slot-length="1"
             >
-              <GenericIndicatorsChart v-if="rankings.length > 0" :chart-data="rankings" :chart-layout="{ title: 'Rankings' }" />
+            <GenericBarChart v-if="dependings.length > 0" :chart-data="dependings" :config="{key:'name', value:'hegemony_score'}"/>
+             <!--  <GenericTreemapChart
+                v-if="dependings.length > 0"
+                :chart-data="dependings"
+                :chart-layout="{ title: 'Dependings' }"
+                :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.asn, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
+                /> -->
+            </GenericTable>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="handleClick('downstreams')"
+          :label="$t('iyp.as.downstreams.title')"
+          :caption="$t('iyp.as.downstreams.caption')+this.asn"
+          header-class="IHR_charts-title"
+          v-model="show.dependents"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="dependents"
+              :columns="dependentsColumns"
+              :loading-status="this.loadingStatus.dependents"
+              :cypher-query="cypherQueries.dependents"
+              :slot-length="1"
+            >
+              <div class="col-6">
+                <GenericTreemapChart
+                  v-if="dependents.length > 0"
+                  :chart-data="dependents"
+                  :chart-layout="{ title: '' }"
+                  :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.asn, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
+                />
+              </div>
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -141,20 +153,23 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick('facilities')"
-          :label="$t('iyp.as.facilities.title')"
-          :caption="$t('iyp.as.facilities.caption')+this.asn"
+          @click="handleClick('rankings')"
+          :label="$t('iyp.as.rankings.title')"
+          :caption="$t('iyp.as.rankings.caption')+this.asn"
           header-class="IHR_charts-title"
-          v-model="show.facilities"
+          v-model="show.rankings"
         >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable
-              :data="facilities"
-              :columns="facilitiesColumns"
-              :loading-status="this.loadingStatus.facilities"
-              :cypher-query="cypherQueries.facilities"
-            />
+              :data="rankings"
+              :columns="rankingsColumns"
+              :loading-status="this.loadingStatus.rankings"
+              :cypher-query="cypherQueries.rankings"
+              :slot-length="1"
+            >
+              <GenericIndicatorsChart v-if="rankings.length > 0" :chart-data="rankings" :chart-layout="{ title: 'Rankings' }" />
+            </GenericTable>
           </q-card>
         </q-expansion-item>
 
@@ -177,59 +192,45 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick('downstreams')"
-          :label="$t('iyp.as.downstreams.title')"
-          :caption="$t('iyp.as.downstreams.caption')+this.asn"
+          @click="handleClick('ixps')"
+          :label="$t('iyp.as.ixp.title')"
+          :caption="$t('iyp.as.ixp.caption')+this.asn"
           header-class="IHR_charts-title"
-          v-model="show.dependents"
+          v-model="show.ixps"
         >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable
-              :data="dependents"
-              :columns="dependentsColumns"
-              :loading-status="this.loadingStatus.dependents"
-              :cypher-query="cypherQueries.dependents"
-              :slot-length="1"
+              :data="ixps"
+              :columns="ixpsColumns"
+              :loading-status="this.loadingStatus.ixps"
+              :cypher-query="cypherQueries.ixps"
+              :slot-length="2"
             >
-              <div class="col-6">
-                <GenericTreemapChart
-                  v-if="dependents.length > 0"
-                  :chart-data="dependents"
-                  :chart-layout="{ title: '' }"
-                  :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.asn, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
-                />
-              </div>
+              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ keys: ['cc', 'name'],  keyValue: '', root: '', show_percent: true }"
+              />
             </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick('upstreams')"
-          :label="$t('iyp.as.upstreams.title')"
-          :caption="'AS'+this.asn+' depends on these peer & upstream ASes'"
+          @click="handleClick('facilities')"
+          :label="$t('iyp.as.facilities.title')"
+          :caption="$t('iyp.as.facilities.caption')+this.asn"
           header-class="IHR_charts-title"
-          v-model="show.dependings"
+          v-model="show.facilities"
         >
           <q-separator />
           <q-card class="IHR_charts-body">
             <GenericTable
-              :data="dependings"
-              :columns="dependingsColumns"
-              :loading-status="this.loadingStatus.dependings"
-              :cypher-query="cypherQueries.dependings"
-              :slot-length="1"
-            >
-            <GenericBarChart v-if="dependings.length > 0" :chart-data="dependings" :config="{key:'name', value:'hegemony_score'}"/>
-             <!--  <GenericTreemapChart
-                v-if="dependings.length > 0"
-                :chart-data="dependings"
-                :chart-layout="{ title: 'Dependings' }"
-                :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.asn, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
-                /> -->
-            </GenericTable>
+              :data="facilities"
+              :columns="facilitiesColumns"
+              :loading-status="this.loadingStatus.facilities"
+              :cypher-query="cypherQueries.facilities"
+            />
           </q-card>
         </q-expansion-item>
+
       </q-list>
     </div>
   </div>
