@@ -12,9 +12,9 @@
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
                 <div class="q-ml-sm">
-                  <p>Registered in {{ firstPart.country }}</p>
+                  <p>Registered in <router-link :to="{ name: 'iyp_country', params: {cc: firstPart.cc } }"> {{ firstPart.country }} </router-link></p>
                   <p>Member of {{ firstPart.nb_ixp }} IXPs in {{ firstPart.nb_country}} Countries</p>
-                  <p>{{ firstPart.prefixes }} Originated Prefixes</p>
+                  <p>{{ firstPart.prefixes_v4 }} IPv4 and {{ firstPart.prefixes_v6 }} IPv6 Originated Prefixes</p>
                   <p>{{ secondPart.peers }} Connected ASes</p>
                   <p>
                     Website: <a :href="firstPart.website" target="_blank" rel="noopener noreferrer">{{ firstPart.website }}</a>
@@ -52,7 +52,9 @@
             <div class="row">
               <div>
                 <h3>Tags</h3>
-                <q-chip v-for="tag in firstPart.tags" :key="tag" dense size="md" color="info" text-color="white"> {{ tag }}</q-chip>
+                <router-link v-for="tag in firstPart.tags" :key="tag" :to="{ name: 'iyp_tag', params: {tag: tag}}">
+                  <q-chip dense size="md" color="info" text-color="white">{{ tag }}</q-chip>
+                </router-link>
               </div>
             </div>
 
@@ -154,8 +156,10 @@ export default {
       //   this.loadingStatus = false
       // }
       const queryOne = `MATCH (a:AS {asn: $asn})
-         OPTIONAL MATCH (a)-[:ORIGINATE]->(p:Prefix)
-         WITH COUNT(DISTINCT p.prefix) AS prefixes, a
+         OPTIONAL MATCH (a)-[:ORIGINATE]->(p4:Prefix {af:4})
+         WITH COALESCE(COUNT(DISTINCT p4.prefix), 0) AS prefixes_v4, a
+         OPTIONAL MATCH (a)-[:ORIGINATE]->(p6:Prefix {af:6})
+         WITH COALESCE(COUNT(DISTINCT p6.prefix), 0) AS prefixes_v6, prefixes_v4, a
          OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
          OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
          OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
@@ -164,7 +168,7 @@ export default {
          OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
          OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
          OPTIONAL MATCH (a)-[:CATEGORIZED]->(t:Tag)
-         RETURN u.url AS website, c.country_code AS cc, c.name AS country, prefixes, COALESCE(pdbn.name, btn.name, ripen.name) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country
+         RETURN u.url AS website, c.country_code AS cc, c.name AS country, prefixes_v4, prefixes_v6, COALESCE(pdbn.name, btn.name, ripen.name) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country
         `
       const queryTwo = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:PEERS_WITH]-(b:AS)
@@ -185,7 +189,8 @@ export default {
         country: 'country',
         nb_country: 'nb_country',
         nb_ixp: 'nb_ixp',
-        prefixes: 'prefixes',
+        prefixes_v4: 'prefixes_v4',
+        prefixes_v6: 'prefixes_v6',
         name: 'name',
         tags: 'tags',
       }

@@ -110,14 +110,14 @@ export default {
       }
     },
     routeToEntity(entity, data) {
-      if (entity == 'ASN') {
+      if (entity == 'ASN' | entity == 'AS' | entity == 'Origin AS') {
         this.routeToASN(data.asn)
       } else if (entity == 'Prefix') {
         const [host, prefixLength] = data.prefix.split('/')
         this.routeToPrefix(host, prefixLength)
       } else if (entity == 'IXP') {
         this.routeToIXP(data.id)
-      } else if (entity == 'CC') {
+      } else if (entity == 'CC' | entity == 'Country' |  entity == 'Reg. Country' | entity == 'Geoloc. Country') {
         this.routeToCountry(data.cc)
       }
     },
