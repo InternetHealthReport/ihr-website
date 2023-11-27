@@ -12,20 +12,25 @@
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
                 <div class="q-ml-sm">
-                  <p v-if="firstPart.country">Registered in {{ firstPart.country }}</p>
-                  <p v-if="firstPart.description">Description: {{ firstPart.description }}</p>
-                  <p>Originated by: </p>
-                  <div class="column">
-                    <p v-for="item in firstPart.asn" target="_blank" rel="noreferrer">
-                    AS{{ item[0] }} {{item[1]}}
-                    </p>
+                  <!-- <p v-if="firstPart.description">Description: <b>{{ firstPart.description }}</b> </p> -->
+                  <p v-if="firstPart.country">Registered in <router-link :to="{ name: 'iyp_country', params: {cc:firstPart.cc } }">{{ firstPart.country }}</router-link> ({{ firstPart.rir.toUpperCase() }})</p>
+                  <div v-if="firstPart.asn[0][0]">
+                    <p>Originated by:</p>
+                      <div v-for="item in firstPart.asn" :key='item[0]' target="_blank">
+                        <router-link :to="{ name:'iyp_asn', params:{ asn:item[0] } }">
+                        AS{{ item[0] }} {{ item[1] }}
+                        </router-link>
+                      </div>
+                  </div>
+                  <div v-else>
+                    <p>Prefix Not Announced on BGP</p>
                   </div>
                 </div>
               </div>
               <div class="col-12 col-md-auto">
                 <h3>Top 5 Domains</h3>
                 <div  class="q-ml-sm column">
-                  <a :href="item.domainName" v-for="item in secondPart" target="_blank" rel="noreferrer">{{
+                  <a :href="item.domainName" v-for="item in secondPart" :key='item.domainName' target="_blank" rel="noreferrer">{{
                     item.domainName
                   }}</a>
                 </div>
@@ -33,7 +38,7 @@
               <div class="col-12 col-md-2">
                 <h3>External Links</h3>
                 <div  class="q-ml-sm column">
-                  <a :href="handleReference(key)" v-for="(value, key) in references" target="_blank" rel="noreferrer">{{
+                  <a :href="handleReference(key)" v-for="(value, key) in references" :key="value" target="_blank" rel="noreferrer">{{
                     key
                   }}</a>
                 </div>
@@ -42,7 +47,9 @@
             <div class="row">
               <div class="q-mt-md">
                 <h3>Tags</h3>
-                <q-chip v-for="tag in firstPart.tags" dense size="md" color="gray" text-color="black"> {{ tag }}</q-chip>
+                <router-link v-for="tag in firstPart.tags" :key="tag" :to="{ name: 'iyp_tag', params: {tag: tag}}">
+                  <q-chip dense size="md" color="info" text-color="white">{{ tag }}</q-chip>
+                </router-link>
               </div>
             </div>
 
@@ -85,10 +92,14 @@ export default {
       required: false,
       default: false,
     },
+    title: {
+      type: Function,
+      required: false,
+    },
   },
   data() {
     return {
-      firstPart: {},
+      firstPart: {asn:[[false]]},
       secondPart: {},
       loadingStatus: false,
       references: references,
@@ -106,29 +117,42 @@ export default {
       this.firstPart = res.firstPart[0]
       this.secondPart = res.secondPart
       this.loadingStatus = false
+
+      if (this.title !== undefined) {
+        if (this.firstPart.description){
+          this.title('- '+this.firstPart.description)
+        }
+        else{
+          this.title('')
+        }
+      }
     },
     getOverview() {
-      const queryOne = `MATCH (p:Prefix {prefix: $prefix})<-[o:ORIGINATE]-(a:AS)
-         OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(n:Name)
-         OPTIONAL MATCH(p)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+      const queryOne = `MATCH (p:Prefix {prefix: $prefix})
+         OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
+         OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+         OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+         OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+         OPTIONAL MATCH(p)-[deleg:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
          OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-         RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, collect(DISTINCT([toString(a.asn), n.name])) AS asn, c.name AS country, collect(DISTINCT(t.label)) AS tags
+         RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, collect(DISTINCT([toString(a.asn), COALESCE(pdbn.name, btn.name, ripen.name)])) AS asn, c.name AS country, collect(DISTINCT(t.label)) AS tags, deleg.registry AS rir, c.country_code AS cc
         `
       const mappingOne = {
         prefix: 'prefix',
         description: 'descr',
         asn: 'asn',
         country: 'country',
+        cc: 'cc',
         tags: 'tags',
+        rir: 'rir',
       }
 
       const queryTwo = `
-      MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(d:DomainName)
+      MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)
       OPTIONAL MATCH (d)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
-      RETURN  DISTINCT i.ip AS ip, d.name as domain, ra.rank AS rank ORDER BY rank LIMIT 5
+      RETURN  DISTINCT d.name as domain, ra.rank AS rank ORDER BY rank LIMIT 5
       `
       const mappingTwo = {
-        ip: 'ip',
         domainName: 'domain',
         rank: 'rank',
       }
@@ -158,13 +182,26 @@ export default {
       return externalLink
     },
     handleRoutingFromNetworksToIYP() {
-      console.log('Routing to IYP')
       this.$router.push({
         name: 'iyp_prefix',
         params: { host: this.host, prefix_length: this.prefixLength },
       })
     },
   },
+  watch: {
+    async host(newValue, oldValue) {
+      if(!this.loadingStatus){
+        this.loadingStatus = true
+        await this.fetchData()
+      }
+    },
+    async prefixLength(newValue, oldValue) {
+      if(!this.loadingStatus){
+        this.loadingStatus = true
+        await this.fetchData()
+      }
+    }
+  }
 }
 </script>
 

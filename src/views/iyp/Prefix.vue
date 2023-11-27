@@ -1,14 +1,14 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">{{ getPrefix() }}</h1>
+    <h1 class="text-center">{{ pageTitle }}</h1>
     <div>
       <q-list>
-        <Overview :host="host" :prefixLength="prefixLength" />
+        <Overview :host="host" :prefixLength="prefixLength" :title="setPageTitle" />
 
         <q-expansion-item
-          @click="handleClick(expansionItems.domains.title)"
-          :label="$t('iyp.prefix.domains.title')"
-          caption="Corresponding Domain Names"
+          @click="handleClick('domains')"
+          :label="$t('iyp.prefix.popularDomains.title')"
+          :caption="$t('iyp.prefix.popularDomains.caption')+this.getPrefix()"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -24,7 +24,6 @@
               <GenericTreemapChart
                 v-if="domains.length > 0"
                 :chart-data="domains"
-                :chart-layout="{ title: 'Domain Names' }"
                 :config="{ keys: ['tld', 'domainName', 'ip'], keyValue: 'inv_rank', root: this.getPrefix(), hovertemplate: '<b>%{customdata.domainName}<br>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<br>%{customdata.tags}<extra></extra>' }"
               />
             </GenericTable>
@@ -32,9 +31,34 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick(expansionItems.dependencies.title)"
-          :label="$t('iyp.prefix.dependencies.title')"
-          caption="List of Dependencies"
+          @click="handleClick('nameservers')"
+          :label="$t('iyp.prefix.nameservers.title')"
+          :caption="$t('iyp.prefix.nameservers.caption')+this.getPrefix()"
+          header-class="IHR_charts-title"
+        >
+          <q-separator />
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="nameservers"
+              :columns="nameserversColumns"
+              :loading-status="this.loadingStatus.nameservers"
+              :cypher-query="cypherQueries.nameservers"
+              :slot-length="3"
+            >
+              <GenericTreemapChart
+                v-if="nameservers.length > 0"
+                :chart-data="nameservers"
+                :config="{ keys: ['tld', 'nameserver', 'ip'], root: this.getPrefix(), hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_domains} popular domains<extra></extra>' }"
+              />
+            </GenericTable>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="handleClick('upstreams')"
+          :label="$t('iyp.prefix.upstreams.title')"
+          :caption="this.getPrefix()+' depends on these ASes'"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -47,29 +71,69 @@
               :cypher-query="cypherQueries.dependencies"
               :slot-length="1"
             >
-              <GenericPieChart v-if="dependencies.length > 0" :chart-data="dependencies" :chart-layout="{ title: 'Tags' }" />
+            <GenericBarChart v-if="dependencies.length > 0" :chart-data="dependencies"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}' :config="{key:'asn', value:'hegemony_score' , xlabel_prefix:'AS'}"/>
             </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick(expansionItems.prefixes.title)"
-          :label="$t('iyp.prefix.prefixes.title')"
-          caption="Covering Prefixes"
+          @click="handleClick('roas')"
+          :label="$t('iyp.prefix.roas.title')"
+          :caption="$t('iyp.prefix.roas.caption')+this.getPrefix()"
           header-class="IHR_charts-title"
         >
           <q-separator />
 
           <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
             <GenericTable
-              :data="part"
-              :columns="partColumns"
-              :loading-status="this.loadingStatus.part"
-              :cypher-query="cypherQueries.part"
-              :slot-length="2"
+              :data="roas"
+              :columns="roasColumns"
+              :loading-status="this.loadingStatus.roas"
+              :cypher-query="cypherQueries.roas"
+              :slot-length="0"
             >
-              <GenericPieChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Country' }" />
-              <!-- <GenericBarChart v-if="part.length > 0" :chart-data="part" :chart-layout="{ title: 'Tags' }" /> -->
+           <!--  <GenericBarChart v-if="roas.length > 0" :chart-data="roas"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"},
+             range: [0,100],}}' :config="{key:'asn', value:'hegemony_score' , xlabel_prefix:'AS'}"/> -->
+            </GenericTable>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="handleClick('lessSpecific')"
+          :label="$t('iyp.prefix.lessSpecific.title')"
+          :caption="$t('iyp.prefix.lessSpecific.caption')+this.getPrefix()"
+          header-class="IHR_charts-title"
+        >
+          <q-separator />
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="lessSpecific"
+              :columns="lessSpecificColumns"
+              :loading-status="this.loadingStatus.lessSpecific"
+              :cypher-query="cypherQueries.lessSpecific"
+            >
+            <!-- <GenericPieChart v-if="lessSpecific.length > 0" :chart-data="lessSpecific" :chart-layout="{ title: 'Country' }" /> -->
+            </GenericTable>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="handleClick('moreSpecific')"
+          :label="$t('iyp.prefix.moreSpecific.title')"
+          :caption="$t('iyp.prefix.moreSpecific.caption')+this.getPrefix()"
+          header-class="IHR_charts-title"
+        >
+          <q-separator />
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="moreSpecific"
+              :columns="moreSpecificColumns"
+              :loading-status="this.loadingStatus.moreSpecific"
+              :cypher-query="cypherQueries.moreSpecific"
+            >
+            <!-- <GenericPieChart v-if="lessSpecific.length > 0" :chart-data="lessSpecific" :chart-layout="{ title: 'Country' }" /> -->
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -81,75 +145,100 @@
 <script>
 import Overview from '@/views/charts/iyp/PrefixOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
-import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
+import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
 import GenericTreemapChart from '@/views/charts/iyp/GenericTreemapChart'
 
-const expansionItems = {
-  domains: {
-    title: 'Domain Names',
-    subTitle: 'Corresponding Domain Names',
-  },
-  dependencies: {
-    title: 'Dependencies',
-    subTitle: 'List Of Dependencies',
-  },
-  prefixes: {
-    title: 'Covering Prefixes',
-    subTitle: 'Covering Prefixes',
-  },
-}
 
 export default {
   components: {
     Overview,
     GenericTable,
-    GenericPieChart,
+    GenericBarChart,
     GenericTreemapChart,
   },
   data() {
     return {
       host: null,
       prefixLength: null,
+      pageTitle: 'Prefix - Loading..',
       domainsColumns: [
-        { name: 'Tranco Rank', label: 'Tranco Rank', align: 'left', field: row => Number(row.rank), format: val => val, sortable: true },
+        { name: 'Tranco Rank', label: 'Tranco Rank', align: 'left', field: row => row.rank?Number(row.rank): 1000001, format: val => val!=1000001? val: '-', sortable: true, sortOrder: 'ad' },
         { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
         { name: 'Domain', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
+        { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val.join(', ')}`, sortable: true },
+        { name: 'Tags', label: 'Domain Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
+      ],
+      nameserversColumns: [
+        { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
+        { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.nameserver, format: val => `${val}`, sortable: true },
+        { name: 'Domain', label: 'Nb. Popular Domain Names', align: 'left', field: row => row.nb_domains, format: val => `${val}`, sortable: true },
         { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
-        { name: 'Tags', label: 'Domain Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
       ],
       dependenciesColumns: [
         { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS ${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
-      partColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
-        { name: 'Origin ASN', label: 'Origin ASN', align: 'left', field: row => row.origin, format: val => `${val}`, sortable: true },
-        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
+      roasColumns: [
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'Prefix Length', label: 'Prefix Length', align: 'left', field: row => row.maxLength, format: val => `${val}`, sortable: true },
+        { name: 'NotBefore', label: 'NotBefore', align: 'left', field: row => row.notBefore, format: val => `${val}`, sortable: true },
+        { name: 'NotAfter', label: 'NotAfter', align: 'left', field: row => row.notAfter, format: val => `${val}`, sortable: true },
+        { name: 'URL', label: 'URL', align: 'right', field: row => row.uri, format: val => `${val}`, sortable: true },
+      ],
+      lessSpecificColumns: [
+        { name: 'RIR', label: 'RIR', align: 'left', field: row => row.rir? row.rir : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
+        { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.rir_country, format: val => `${String(val).toUpperCase()}`, sortable: true },
+        { name: 'Geoloc. Country', label: 'Geoloc', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.origin, format: val => `AS${val}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
+        { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
+        { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
+      ],
+      moreSpecificColumns: [
+        { name: 'RIR', label: 'RIR', align: 'left', field: row => row.rir? row.rir : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
+        { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.rir_country, format: val => `${String(val).toUpperCase()}`, sortable: true },
+        { name: 'Geoloc. Country', label: 'Geoloc', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.origin, format: val => `AS${val}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
+        { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
+        { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
       ],
       domains: [],
+      nameservers: [],
       dependencies: [],
-      part: [],
+      roas: [],
+      lessSpecific: [],
+      moreSpecific: [],
       cypherQueries: {},
       tableVisible: true,
       show: {
         overview: true,
         domains: false,
+        nameservers: false,
         dependencies: false,
-        part: false,
+        roas: false,
+        lessSpecific: false,
+        moreSpecific: false,
       },
       loadingStatus: {
         domains: false,
+        nameservers: false,
         dependencies: false,
-        part: false,
+        roas: false,
+        lessSpecific: false,
+        moreSpecific: false,
       },
       count: {
         domains: 0,
+        nameservers: 0,
         dependencies: 0,
-        part: 0,
+        roas: 0,
+        lessSpecific: 0,
+        moreSpecific: 0,
       },
-      expansionItems: expansionItems,
       expanded: [],
     }
   },
@@ -159,32 +248,13 @@ export default {
   },
   async mounted() {},
   methods: {
-    // getData will run multiple queries in parallel
-    // This method is not in use
-    async getData() {
-      const queries = [this.getDomains(), this.getDependencies(), this.getPartOfPrefixes()]
-      let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-      // console.log(res)
-      this.domains = res.domains
-      this.dependencies = res.dependencies
-      this.part = res.part
-      let queriesObj = {}
-      queries.forEach(query => {
-        queriesObj[query.data] = query.cypherQuery
-      })
-      this.cypherQueries = queriesObj
+    setPageTitle(title) {
+      this.pageTitle = `${this.getPrefix()} ${title}`
     },
     getPrefix() {
       return `${this.host}/${this.prefixLength}`
     },
     getDomains() {
-      // '203.13.32.0/24'
-      // const query = `
-      // MATCH (p:Prefix {prefix: $prefix})-[:PART_OF]-(i:IP)-[:RESOLVES_TO]-(d:DomainName)
-      // MATCH (p)-[:CATEGORIZED]-(t:Tag)
-      // OPTIONAL MATCH (p)-[:COUNTRY]-(c:Country)
-      // RETURN c.country_code as cc, i.ip AS ip, d.name as domain, collect(DISTINCT(t.label)) as tags
-      // `
       const query = `
       MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(d:DomainName)
       OPTIONAL MATCH (d)-[:CATEGORIZED]->(t:Tag)
@@ -205,44 +275,106 @@ export default {
       // console.log(prefix)
       return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'domains' }
     },
+    getNameservers() {
+      const query = `
+      MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(n:AuthoritativeNameServer)
+      OPTIONAL MATCH (n)<-[:MANAGED_BY]-(d:DomainName)
+      RETURN COLLECT(DISTINCT i.ip) AS ip, n.name as nameserver, split(n.name, '.')[-1] AS tld, COUNT(DISTINCT d.name) AS nb_domains
+
+      `
+      const mapping = {
+        ip: 'ip',
+        tld: 'tld',
+        nb_domains: 'nb_domains',
+        nameserver: 'nameserver'
+      }
+      const prefix = this.getPrefix()
+      // console.log(prefix)
+      return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'nameservers' }
+    },
     getDependencies() {
       const query = `
-      MATCH (p:Prefix {prefix: $prefix})-[:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name)
+      MATCH (p:Prefix {prefix: $prefix})-[dep:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name)
       OPTIONAL MATCH (a)-[:COUNTRY]-(c:Country)
-      RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name
+      RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name, 100*dep.hege AS hege
       `
 
       const mapping = {
         cc: 'cc',
         asn: 'asn',
         name: 'name',
+        hegemony_score: 'hege'
       }
       const prefix = this.getPrefix()
       return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'dependencies' }
     },
-    getPartOfPrefixes() {
-      // const query = `
-      // MATCH (p:Prefix {prefix: $prefix})-[:PART_OF*]->(x:Prefix)-[:CATEGORIZED]-(t:Tag)
-      // OPTIONAL MATCH (x)-[:COUNTRY]-(c:Country)
-      // RETURN c.country_code as cc, x.prefix as prefix, collect(DISTINCT(t.label)) as tags
-      // `
+    getRoas() {
+      const query = `
+      MATCH (p:Prefix {prefix: $prefix})-[roa:ROUTE_ORIGIN_AUTHORIZATION]-(a:AS)
+      RETURN a.asn AS asn, roa.maxLength AS maxLength, roa.notBefore AS notBefore, roa.notAfter AS notAfter, roa.uri AS uri
+      `
+
+      const mapping = {
+        asn: 'asn',
+        maxLength: 'maxLength',
+        notBefore: 'notBefore',
+        notAfter: 'notAfter',
+        uri: 'uri',
+      }
+      const prefix = this.getPrefix()
+      return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'roas' }
+    },
+    getLessSpecific() {
       const query = `
       MATCH (p:Prefix {prefix: $prefix})-[:PART_OF*]->(x:Prefix)
       WHERE x.prefix <> '0.0.0.0/0' AND x.prefix <> '::/0'
+      OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
       OPTIONAL MATCH (x)-[:CATEGORIZED]->(t:Tag)
-      OPTIONAL MATCH (x)-[:COUNTRY]->(c:Country)
-      OPTIONAL MATCH (x)<-[:ORIGINATE]-(a:AS)
-      RETURN c.country_code as cc, x.prefix as prefix, collect(DISTINCT a.asn) as origin_asn, collect(DISTINCT t.label) as tags
+      OPTIONAL MATCH (p)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
+      OPTIONAL MATCH (p)-[:PART_OF]->(cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(:OpaqueID)
+      OPTIONAL MATCH (cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(cover_creg_country:Country)
+      OPTIONAL MATCH (x)<-[o:ORIGINATE]-(a:AS)
+      RETURN c.country_code AS cc, x.prefix as prefix, collect(DISTINCT a.asn) as origin_asn, collect(DISTINCT t.label) as tags,  toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, cover_creg_country.country_code, '-')) AS rir_country, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility
       `
 
       const mapping = {
         cc: 'cc',
+        rir: 'rir',
+        rir_country: 'rir_country',
         prefix: 'prefix',
         origin: 'origin_asn',
         tags: 'tags',
+        descr: 'descr',
+        visibility: 'visibility'
       }
       const prefix = this.getPrefix()
-      return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'part' }
+      return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'lessSpecific' }
+    },
+    getMoreSpecific() {
+      const query = `
+      MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF*]-(x:Prefix)
+      WHERE x.prefix <> '0.0.0.0/0' AND x.prefix <> '::/0'
+      OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
+      OPTIONAL MATCH (x)-[:CATEGORIZED]->(t:Tag)
+      OPTIONAL MATCH (p)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
+      OPTIONAL MATCH (p)-[:PART_OF]->(cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(:OpaqueID)
+      OPTIONAL MATCH (cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(cover_creg_country:Country)
+      OPTIONAL MATCH (x)<-[o:ORIGINATE]-(a:AS)
+      RETURN c.country_code AS cc, x.prefix as prefix, collect(DISTINCT a.asn) as origin_asn, collect(DISTINCT t.label) as tags,  toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, cover_creg_country.country_code, '-')) AS rir_country, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility
+      `
+
+      const mapping = {
+        cc: 'cc',
+        rir: 'rir',
+        rir_country: 'rir_country',
+        prefix: 'prefix',
+        origin: 'origin_asn',
+        tags: 'tags',
+        descr: 'descr',
+        visibility: 'visibility'
+      }
+      const prefix = this.getPrefix()
+      return { cypherQuery: query, params: { prefix: prefix }, mapping, data: 'moreSpecific' }
     },
     async handleClick(key) {
       if (!this.expanded.includes(key)) {
@@ -251,12 +383,18 @@ export default {
 
       const clickedItem = key
       let query = {}
-      if (clickedItem === expansionItems.domains.title || clickedItem === expansionItems.domains.subTitle) {
+      if (clickedItem === 'domains') {
         query = this.getDomains()
-      } else if (clickedItem === expansionItems.dependencies.title || clickedItem === expansionItems.dependencies.subTitle) {
+      } else if (clickedItem === 'nameservers') {
+        query = this.getNameservers()
+      } else if (clickedItem === 'upstreams') {
         query = this.getDependencies()
-      } else if (clickedItem === expansionItems.prefixes.title || clickedItem === expansionItems.prefixes.subTitle) {
-        query = this.getPartOfPrefixes()
+      } else if (clickedItem === 'roas') {
+        query = this.getRoas()
+      } else if (clickedItem === 'lessSpecific') {
+        query = this.getLessSpecific()
+      } else if (clickedItem === 'moreSpecific') {
+        query = this.getMoreSpecific()
       } else {
         return
       }
@@ -278,8 +416,6 @@ export default {
   watch: {
     '$route.params': {
       handler: async function (params) {
-        console.log('Prefix Changed')
-        // console.log(params.host)
         if (params.host != this.host || params.prefixLength != this.prefixLength) {
           this.host = this.$route.params.host
           this.prefixLength = this.$route.params.prefix_length
