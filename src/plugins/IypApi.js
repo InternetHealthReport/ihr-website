@@ -5,7 +5,7 @@ const IypApi = {
     let driver
 
     let init = async () => {
-      await connect('neo4j', 'iyp.iijlab.net', '7687')
+      await connect('neo4j+s', 'iyp-bolt.iijlab.net', '443')
     }
 
     let connect = async (protocol, host, port) => {

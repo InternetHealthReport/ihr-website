@@ -33,7 +33,7 @@
                   v-if="ipPrefixes.length > 0"
                   :chart-data="ipPrefixes"
                   :chart-layout="{ title: 'Breakdown per RIR and geo-location (Maxmind)' }"
-                  :config="{ keys: ['rir', 'cc', 'prefix'], root: this.asn, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.__percent:.1f}%</extra>' }"
+                  :config="{ keys: ['rir', 'cc', 'prefix'], root: 'AS'+this.asn, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.__percent:.1f}%</extra>' }"
                  />
                 </div>
               </div>
@@ -60,8 +60,7 @@
               <GenericTreemapChart
                 v-if="peers.length > 0"
                 :chart-data="peers"
-                :chart-layout="{ title: `ASes directly connected to AS${this.asn}` }"
-                :config="{ keys: ['cc', 'asn'], root: this.asn, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.__percent:.1f}%</extra>' }"
+                :config="{ keys: ['cc', 'asn'], root: 'AS'+this.asn, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.__percent:.1f}%</extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -83,7 +82,7 @@
               :cypher-query="cypherQueries.dependings"
               :slot-length="1"
             >
-            <GenericBarChart v-if="dependings.length > 0" :chart-data="dependings" :config="{key:'name', value:'hegemony_score'}"/>
+            <GenericBarChart v-if="dependings.length > 0" :chart-data="dependings" :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}' :config="{key:'asn', value:'hegemony_score' , xlabel_prefix:'AS'}"/>
              <!--  <GenericTreemapChart
                 v-if="dependings.length > 0"
                 :chart-data="dependings"
@@ -115,7 +114,7 @@
                   v-if="dependents.length > 0"
                   :chart-data="dependents"
                   :chart-layout="{ title: '' }"
-                  :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.asn, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
+                  :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: 'AS'+this.asn, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
                 />
               </div>
             </GenericTable>
@@ -146,7 +145,7 @@
               <GenericTreemapChart
                 v-if="popularDomains.length > 0"
                 :chart-data="popularDomains"
-                :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<extra></extra>' }"
+                :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: 'AS'+this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<extra></extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -168,10 +167,33 @@
               :cypher-query="cypherQueries.rankings"
               :slot-length="1"
             >
-              <GenericIndicatorsChart v-if="rankings.length > 0" :chart-data="rankings" :chart-layout="{ title: 'Rankings' }" />
+              <GenericIndicatorsChart v-if="rankings.length > 0" :chart-data="rankings" />
             </GenericTable>
           </q-card>
         </q-expansion-item>
+
+        <q-expansion-item
+          @click="handleClick('roas')"
+          :label="$t('iyp.as.roas.title')"
+          :caption="$t('iyp.as.roas.caption')+this.asn"
+          header-class="IHR_charts-title"
+        >
+          <q-separator />
+
+          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+            <GenericTable
+              :data="roas"
+              :columns="roasColumns"
+              :loading-status="this.loadingStatus.roas"
+              :cypher-query="cypherQueries.roas"
+              :slot-length="0"
+            >
+           <!--  <GenericBarChart v-if="roas.length > 0" :chart-data="roas"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"},
+             range: [0,100],}}' :config="{key:'asn', value:'hegemony_score' , xlabel_prefix:'AS'}"/> -->
+            </GenericTable>
+          </q-card>
+        </q-expansion-item>
+
 
         <q-expansion-item
           @click="handleClick('siblings')"
@@ -207,7 +229,7 @@
               :cypher-query="cypherQueries.ixps"
               :slot-length="2"
             >
-              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ keys: ['cc', 'name'],  keyValue: '', root: '', show_percent: true }"
+              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ keys: ['cc', 'name'],  keyValue: '', root: 'AS'+this.asn, show_percent: true }"
               />
             </GenericTable>
           </q-card>
@@ -262,22 +284,30 @@ export default {
       tableVisible: true,
       statsDisable: false,
       peerColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
+        { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       ipPrefixColumns: [
         { name: 'RIR', label: 'RIR', align: 'left', field: row => row.rir? row.rir : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
         { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.rir_country, format: val => `${String(val).toUpperCase()}`, sortable: true },
-        { name: 'Geoloc. Country', label: 'Geoloc', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Geoloc. Country', label: 'Geoloc. Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
         { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
         { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
         { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
       ],
       ixpsColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'IXP', label: 'IXP Name', align: 'left', field: row => row.name, format: val => `${val}` },
+      ],
+      roasColumns: [
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+        { name: 'Prefix Length', label: 'Prefix Length', align: 'left', field: row => row.maxLength, format: val => `${val}`, sortable: true },
+        { name: 'NotBefore', label: 'NotBefore', align: 'left', field: row => row.notBefore, format: val => `${val}`, sortable: true },
+        { name: 'NotAfter', label: 'NotAfter', align: 'left', field: row => row.notAfter, format: val => `${val}`, sortable: true },
+        { name: 'URL', label: 'URL', align: 'left', field: row => row.uri, format: val => `${val}`, sortable: true },
+        { name: 'Origin in BGP', label: 'Origin in BGP', align: 'left', field: row => row.bgp, format: val => val.length?`AS${val}`:'-', sortable: true },
       ],
       rankingsColumns: [
         { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
@@ -306,7 +336,7 @@ export default {
       ],
       dependentsColumns: [
         { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'Dependent AS', label: 'Dependent AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
         {
           name: 'Hegemony Score',
@@ -320,7 +350,7 @@ export default {
       ],
       dependingsColumns: [
         { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'Depending AS', label: 'Depending AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
         {
           name: 'Hegemony Score',
@@ -334,6 +364,7 @@ export default {
       ipPrefixes: [],
       peers: [],
       ixps: [],
+      roas: [],
       rankings: [],
       popularDomains: [],
       facilities: [],
@@ -345,6 +376,7 @@ export default {
         peers: false,
         ipPrefixes: false,
         ixps: false,
+        roas: false,
         rankings: false,
         popularDomains: false,
         facilities: false,
@@ -357,6 +389,7 @@ export default {
         peers: false,
         ipPrefixes: false,
         ixps: false,
+        roas: false,
         rankings: false,
         popularDomains: false,
         facilities: false,
@@ -368,6 +401,7 @@ export default {
         peers: 0,
         ipPrefixes: 0,
         ixps: 0,
+        roas: 0,
         rankings: 0,
         popularDomains: 0,
         facilities: 0,
@@ -387,23 +421,6 @@ export default {
   async mounted() {},
   computed: {},
   methods: {
-    async getData() {
-      const queries = [this.getPeers(), this.getIxps(), this.getRankings(), this.getPopularDomains(), this.getFacilities()]
-      let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-
-      this.peers = res.peers
-      this.ixps = res.ixps
-      this.rankings = res.rankings
-      this.popularDomains = res.popularDomains
-      this.facilities = res.facilities
-
-      let queriesObj = {}
-      queries.forEach(query => {
-        queriesObj[query.data] = query.cypherQuery
-      })
-      this.cypherQueries = queriesObj
-      this.loadingStatus.peers = false
-    },
     getPeers() {
       const query = `MATCH (a:AS {asn: $asn})-[:PEERS_WITH]-(peer:AS)
          OPTIONAL MATCH (peer)-[:NAME]->(n:Name)
@@ -451,6 +468,23 @@ export default {
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'ixps' }
     },
+    getRoas() {
+      const query = `
+      MATCH (a:AS {asn: $asn})-[roa:ROUTE_ORIGIN_AUTHORIZATION]-(p:Prefix)
+      OPTIONAL MATCH (b:AS)-[:ORIGINATE]->(p)
+      RETURN p.prefix AS prefix, roa.maxLength AS maxLength, roa.notBefore AS notBefore, roa.notAfter AS notAfter, roa.uri AS uri, COLLECT(DISTINCT b.asn) AS bgp
+      `
+
+      const mapping = {
+        prefix: 'prefix',
+        maxLength: 'maxLength',
+        notBefore: 'notBefore',
+        notAfter: 'notAfter',
+        uri: 'uri',
+        bgp: 'bgp'
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'roas' }
+    },
     getRankings() {
       const query = 'MATCH (:AS {asn: $asn})-[r:RANK]->(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank'
       const mapping = {
@@ -496,8 +530,12 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'facilities' }
     },
     getSiblings() {
-      const query =
-        'MATCH (a:AS {asn: $asn})-[:SIBLING_OF]-(sibling:AS)-[:NAME]->(n:Name) MATCH (sibling)-[:COUNTRY]->(c) RETURN c.country_code AS cc, sibling.asn AS asn, head(collect(DISTINCT(n.name))) as name'
+      const query =  `MATCH (a:AS {asn: $asn})-[:SIBLING_OF]-(sibling:AS)
+        OPTIONAL MATCH (sibling)-[:COUNTRY]->(c)
+        OPTIONAL MATCH (sibling)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+        OPTIONAL MATCH (sibling)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+        OPTIONAL MATCH (sibling)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+        RETURN DISTINCT sibling.asn AS asn, c.country_code AS cc, COALESCE(pdbn.name, btn.name, ripen.name) AS name`
       const mapping = {
         cc: 'cc',
         asn: 'asn',
@@ -561,6 +599,8 @@ export default {
         query = this.getPeers()
       } else if (clickedItem === 'ixps') {
         query = this.getIxps()
+      } else if (clickedItem === 'roas') {
+        query = this.getRoas()
       } else if (clickedItem === 'rankings') {
         query = this.getRankings()
       } else if (clickedItem === 'popularDomains') {

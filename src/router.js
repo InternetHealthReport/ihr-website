@@ -24,6 +24,7 @@ import AS from '@/views/iyp/AS'
 import IYP from '@/views/iyp/IYP'
 import Country from '@/views/iyp/Country'
 import IXP from '@/views/iyp/IXP'
+import Tag from '@/views/iyp/Tag'
 import Prefix from '@/views/iyp/Prefix'
 
 Vue.use(Router)
@@ -288,6 +289,16 @@ export default new Router({
         default: Country,
       },
       meta: { title: 'IYP Country - IHR' },
+    },
+    {
+      name: 'iyp_tag',
+      path: `${routerBase}iyp/tag/:tag`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: Tag,
+      },
+      meta: { title: 'IYP Tag - IHR' },
     },
     {
       name: 'iyp_ixp',

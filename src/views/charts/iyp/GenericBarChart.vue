@@ -54,35 +54,29 @@ export default {
         },
       ]
 
-      // ReactiveChart component will take care of width and height
-      // const layout = {
-      //   height: 400,
-      //   width: 400,
-      //   ...this.chartLayout,
-      // }
-
       const layout = {
         ...this.chartLayout,
       }
 
-      this.actualChartData = data
       this.actualChartLayout = layout
+      this.actualChartData = data
     },
     formatChartData(arrayOfObjects) {
       if (!arrayOfObjects || arrayOfObjects.length === 0) {
         return []
       }
       const map = {}
+      let prefix = this.config.xlabel_prefix ? this.config.xlabel_prefix : ''
       arrayOfObjects.forEach(item => {
         let keys = item[this.config.key]
         if( !Array.isArray(keys) ) keys = [keys]
 
         keys.forEach(  key => {
           let value = this.config.value? item[this.config.value]: 1
-          if (!map[String(key)]) {
-            map[String(key)] = value
+          if (!map[prefix+String(key)]) {
+            map[prefix+String(key)] = value
           } else {
-            map[String(key)] += value
+            map[prefix+String(key)] += value
           }
         })
       })

@@ -296,6 +296,10 @@
         "title": "Co-located ASes",
         "caption": "ASes present at the same colocation facilities as AS"
       },
+      "roas": {
+        "title": "RPKI Route Origin Authorization",
+        "caption": "ROAs registered for "
+      },
       "siblings": {
         "title": "Sibling ASes",
         "caption": "Other ASes managed by the same organization"
@@ -330,15 +334,40 @@
         "title": "Peering LANs"
       }
     },
-    "prefix": {
-      "domains": {
-        "title": "Domain Names"
-      },
-      "dependencies": {
-        "title": "Dependencies"
-      },
+    "tag": {
       "prefixes": {
-        "title": "Covering Prefixes"
+        "title": "Prefixes"
+      },
+      "ases": {
+        "title": "Autonomous Systems"
+      },
+      "domains": {
+        "title": "Popular Domain Names"
+      }
+    },
+    "prefix": {
+      "popularDomains": {
+        "title": "Popular Domains",
+        "caption": "Popular domain names resolving to IPs in "
+      },
+      "nameservers": {
+        "title": "Authoritative Nameservers",
+        "caption": "DNS Authoritative Nameservers resolving to IPs in "
+      },
+      "upstreams": {
+        "title": "''Upstream'' ASes"
+      },
+      "roas": {
+        "title": "RPKI Route Origin Authorization",
+        "caption": "RPKI ROAs for "
+      },
+      "lessSpecific": {
+        "title": "Less Specific Prefixes",
+        "caption": "Prefixes covering "
+      },
+      "moreSpecific": {
+        "title": "More Specific Prefixes",
+        "caption": "Prefixes covered by "
       }
     }
   },
