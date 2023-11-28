@@ -1,85 +1,146 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterView } from 'vue-router'
+import { QLayout, QPageContainer, QIcon } from 'quasar'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+
+const text = ref('')
+const scrollPosition = ref(0)
+
+const showScrollTopButton = () => {
+  return scrollPosition > 0
+}
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
+const updateScrollPosition = () => {
+  scrollPosition = window.scrollY
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', updateScrollPosition)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', updateScrollPosition)
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <QLayout view="hHh LpR fff" id="app" >
+    <RouterView name="header" />
+    <QPageContainer>
+      <RouterView />
+      <div id="IHR_last-element">&nbsp;</div>
+    </QPageContainer>
+    <RouterView name="footer" />
+    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
+  </QLayout>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<style lang="stylus">
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+menu-delinkify(val)
+  font-size 12pt
+  color white
+  text-decoration none
+  text-transform capitalize
+  if val
+    font-weight 700
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
+.IHR_
+  &menu-entries
+    a, button
+      menu-delinkify 1
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
+    button
+      box-shadow none
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
+  &footer
+    & a
+      color white
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
+    ~/fsection
+      padding-top 5pt
+      border-left solid gray 1px
 
-nav a:first-of-type {
-  border: 0;
-}
+      &first-child
+        border-left none
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
+    ~/copyright
+      & > div
+        margin 7pt 0pt
 
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+    ~/external-links
+      font-size 3.0em
+      text-decoration none
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+      & a
+        color white
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+    ~/sitemap
+      font-size 12pt
+      font-weight 300
+      text-align center
 
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
+      & > span
+        padding-left 20pt
+        text-align left
+        & a
+            menu-delinkify 0
+        & > ul
+          margin-top 2pt
+          & > li
+            list-style-type: none;
+            text-align left
+            & > strong
+                text-transform capitalize
+
+  &scroll-btn
+    position fixed
+    bottom 20px
+    right 20px
+    z-index 2000
+    cursor pointer
+    transition all 0.6s
+    border-radius 50%
+    color white
+    padding 0.7rem 0.8rem
+    border 1px solid white
+    opacity 0.8
+    &:hover
+      transform scale(1.1)
+
+#IHR_
+  &home-button
+    padding 0px 13px 0px 2px
+
+  &signin-button
+    margin 2pt 0pt 3pt 0pt
+
+  &sigin-title
+    font-weight 500
+    font-size 15pt
+    margin 3pt auto 2pt auto
+    &:first-letter
+      text-transform capitalize
+
+  &local-selector
+    margin-left 7pt
+
+  &forgotten-password
+    white-space nowrap
+
+  &user-menu
+    padding 3pt
+    font-size 12pt
+    & *:first-letter
+      text-transform capitalize
+
+  &last-element
+    height 50px;
 </style>
