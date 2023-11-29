@@ -1,7 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Header from '../views/Header.vue'
-import Footer from '../views/Footer.vue'
+import { RouterView, createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import Documentation from '../views/Documentation.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -9,40 +8,31 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_URL),
   routes: [
     {
-      path: '/:locale?',
+      path: '/:locale/',
       // redirect: '/en/',
       meta: { title: 'Internet Health Report' },
+      component: RouterView,
       beforeEnter: Tr.routeMiddleware,
       children: [
         {
           path: '',
           name: 'home',
-          components: {
-            header: Header,
-            footer: Footer,
-            default: Home
-          }
+          component: Home
         },
         {
           path: 'global-report',
           name: 'global-report',
-          components: {
-            default: Home
-          }
+          component: Home
         },
         {
           path: 'networks',
           name: 'networks',
-          components: {
-            default: Home
-          }
+          component: Home
         },
         {
           path: 'documentation',
           name: 'documentation',
-          components: {
-            default: Home
-          }
+          component: Documentation
         }
       ]
     }

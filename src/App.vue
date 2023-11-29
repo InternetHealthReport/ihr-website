@@ -2,6 +2,8 @@
 import { RouterView } from 'vue-router'
 import { QLayout, QPageContainer, QIcon } from 'quasar'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import Header from './components/Header.vue';
+import Footer from './components/Footer.vue'
 
 const text = ref('')
 let scrollPosition = ref(0)
@@ -32,12 +34,14 @@ onBeforeUnmount(() => {
 
 <template>
   <QLayout view="hHh LpR fff" id="app" >
-    <RouterView name="header" />
+    <!-- <RouterView name="header" /> -->
+    <Header></Header>
     <QPageContainer>
       <RouterView />
       <div id="IHR_last-element">&nbsp;</div>
     </QPageContainer>
-    <RouterView name="footer" />
+    <!-- <RouterView name="footer" /> -->
+    <Footer></Footer>
     <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
   </QLayout>
 </template>
