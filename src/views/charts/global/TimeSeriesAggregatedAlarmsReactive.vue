@@ -1,7 +1,7 @@
 <template>
     <div class="IHR_disco-chart">
         <reactive-chart :layout="chart.layout" :traces="chart.traces" :ref="chart.uuid" :no-data="noData"
-            @filter-alarms-by-time="filterAlarmsByTimeHandler" />
+            @plotly-time-filter="onFilterAlarmsByTime" @plotly-legend-click="onTimeseriesLegendClicked" />
     </div>
 </template>
   
@@ -32,12 +32,14 @@ export default {
     }
   },
   methods: {
-    filterAlarmsByTimeHandler(newPlotlyDateTimeFilter) {
+    onFilterAlarmsByTime(newPlotlyDateTimeFilter) {
       this.$emit('filter-alarms-by-time', newPlotlyDateTimeFilter)
+    },
+    onTimeseriesLegendClicked(legend) {
+      this.$emit('timeseries-legend-clicked',legend)
     }
   }
 }
 </script>
   
 <style></style>
-  

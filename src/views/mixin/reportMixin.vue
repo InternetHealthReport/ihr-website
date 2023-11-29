@@ -30,17 +30,8 @@ export default {
     },
   },
   data() {
-    let interval
-    try {
-      interval = this.getDateInterval(this.$route.query.date + 'T00:00+00:00', this.$route.query.last)
-    } catch (e) {
-      if (!(e instanceof RangeError)) {
-        // console.log('Range Error')
-      }
-      interval = this.getDateInterval(new Date(), 3) // fallback to last few days
-    }
     return {
-      interval: interval,
+      intervalUpdated: null,
       fetch: false,
     }
   },
@@ -49,7 +40,7 @@ export default {
   },
   methods: {
     setReportDate(event) {
-      this.interval = this.getDateInterval(event, 3)
+      this.intervalUpdated = this.getDateInterval(event, this.defaultTimeRangeVal);
     },
     resizeCharts() {
       setTimeout(() => {
@@ -86,17 +77,32 @@ export default {
         day: '2-digit',
         timeZone: 'UTC',
       }
-      return this.interval.end.toLocaleDateString(undefined, options)
+      return this.intervalCurrent.end.toLocaleDateString(undefined, options)
     },
     startTime() {
-      return this.interval.begin
+      return this.intervalCurrent.begin
     },
     endTime() {
-      return this.interval.end
+      return this.intervalCurrent.end
     },
+    intervalCurrent() {
+      return this.intervalUpdated ? this.intervalUpdated : this.interval
+    },
+    interval() {
+      let intervalVal = null;
+      try {
+        intervalVal = this.getDateInterval(this.$route.query.date + 'T00:00+00:00', this.$route.query.last)
+      } catch (e) {
+        intervalVal = this.getDateInterval(new Date(), this.defaultTimeRangeVal)
+      }
+      return intervalVal
+    },
+    defaultTimeRangeVal(){
+      return this.defaultTimeRange ? this.defaultTimeRange : 3
+    }
   },
   watch: {
-    interval() {
+    intervalUpdated(){
       this.pushRoute()
     },
   },

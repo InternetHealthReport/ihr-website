@@ -1,7 +1,8 @@
 <template>
-    <div class="IHR_disco-chart">
-        <reactive-chart :layout="chart.layout" :traces="chart.traces" :ref="chart.uuid" :no-data="noData" />
-    </div>
+  <div class="IHR_disco-chart">
+    <reactive-chart :layout="chart.layout" :traces="chart.traces" :ref="chart.uuid" :no-data="noData"
+      @plotly-click="onTreemapNodeClicked" />
+  </div>
 </template>
   
 <script>
@@ -20,6 +21,11 @@ export default {
     }
 
   },
+  data() {
+    return {
+      clickProcessing: false
+    }
+  },
   computed: {
     noData() {
       if (!this.loading && !this.chart.traces.length) {
@@ -31,6 +37,18 @@ export default {
       }
     }
   },
+  methods: {
+    onTreemapNodeClicked(treemapPointClicked) {
+      if (this.clickProcessing) return;
+      if (treemapPointClicked.pointNumber !== undefined && treemapPointClicked.parent == '') {
+        this.clickProcessing = true;
+        this.$emit('treemap-node-clicked', treemapPointClicked.label)
+        setTimeout(() => {
+          this.clickProcessing = false;
+        }, 900);
+      }
+    }
+  }
 }
 </script>
   

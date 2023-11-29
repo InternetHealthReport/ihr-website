@@ -203,8 +203,8 @@ export default {
         //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
         query: Object.assign({}, this.$route.query, {
           af: this.family,
-          last: this.interval.dayDiff(),
-          date: this.$options.filters.ihrUtcString(this.interval.end, false),
+          last: this.intervalCurrent.dayDiff(),
+          date: this.$options.filters.ihrUtcString(this.intervalCurrent.end, false),
         }),
       })
       this.loadingStatus = LOADING_STATUS.LOADED
