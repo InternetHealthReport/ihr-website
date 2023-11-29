@@ -10,15 +10,15 @@ const SECTIONS = [
         sectionsBody: [
             {
                 name: 'about',
-                numberOfDescriptions: 4
+                numberOfDescriptions: 4,
             },
             {
                 name: 'faq',
-                numberOfDescriptions: 6
+                numberOfDescriptions: 6,
             },
             {
                 name: 'ack',
-                numberOfDescriptions: 8
+                numberOfDescriptions: 8,
             }
         ]
     },
@@ -27,15 +27,15 @@ const SECTIONS = [
         sectionsBody: [
             {
                 name: 'globalreport',
-                numberOfDescriptions: 0
+                numberOfDescriptions: 0,
             },
             {
                 name: 'networkreport',
-                numberOfDescriptions: 0
+                numberOfDescriptions: 0,
             },
             {
                 name: 'countryreport',
-                numberOfDescriptions: 0
+                numberOfDescriptions: 0,
             }
         ]
     },
@@ -44,27 +44,27 @@ const SECTIONS = [
         sectionsBody: [
             {
                 name: 'asdependency',
-                numberOfDescriptions: 4
+                numberOfDescriptions: 4,
             },
             {
                 name: 'countryasdependency',
-                numberOfDescriptions: 3
+                numberOfDescriptions: 3,
             },
             {
                 name: 'prefixasdependency',
-                numberOfDescriptions: 4
+                numberOfDescriptions: 4,
             },
             {
                 name: 'netdelay',
-                numberOfDescriptions: 2
+                numberOfDescriptions: 2,
             },
             {
                 name: 'delayforward',
-                numberOfDescriptions: 4
+                numberOfDescriptions: 4,
             },
             {
                 name: 'disco',
-                numberOfDescriptions: 3
+                numberOfDescriptions: 3,
             }
         ]
     },
@@ -73,19 +73,19 @@ const SECTIONS = [
         sectionsBody: [
             {
                 name: 'api',
-                numberOfDescriptions: 4
+                numberOfDescriptions: 4,
             },
             {
                 name: 'pythonlibrary',
-                numberOfDescriptions: 5
+                numberOfDescriptions: 5,
             },
             {
                 name: 'dumps',
-                numberOfDescriptions: 0
+                numberOfDescriptions: 0,
             },
             {
                 name: 'datapolicy',
-                numberOfDescriptions: 0
+                numberOfDescriptions: 0,
             }
         ]
     }
@@ -113,8 +113,22 @@ const replaceImgURL = (url) => {
     return `${window.location.origin}/src/${url}`
 }
 
+const activateSelection = (sec) => {
+  if(sectionActive.value !== '') {
+    sectionActiveStatus.value[sectionActive.value] = false
+  }
+  sectionActiveStatus.value[sec] = true
+  sectionActive.value = sec
+}
+
 const sections = ref(SECTIONS)
 const showSidebar = ref(true)
+const sectionActiveStatus = ref(Object.assign({}, ...SECTIONS.map(valA => valA.sectionsBody.map(valB => {
+  const obj = {}
+  obj[valB.name] = false
+  return obj
+})).flat()))
+const sectionActive = ref('')
 </script>
 
 <template>
@@ -133,6 +147,8 @@ const showSidebar = ref(true)
                 hash: '#' + replaceSpaces($t(`documentationPage.sections.${secB}.title`)),
               })"
               class="IHR_delikify"
+              v-bind:class="{'router-link-inactived': !sectionActiveStatus[secB], 'router-link-actived': sectionActiveStatus[secB]}"
+              v-on:click ="activateSelection(secB)"
               >{{ $t(`documentationPage.sections.${secB}.title`) }}</RouterLink>
           </li>
         </ul>
@@ -218,11 +234,7 @@ const showSidebar = ref(true)
         border-bottom 1px solid $primary
 
       & a:active
-        border-bottom 1px solid $accent
-
-      .router-link-active,
-      .router-link-exact-active 
-        border-bottom 1px solid red        
+        border-bottom 1px solid $accent     
 
       & ul
         margin 5px
@@ -242,5 +254,15 @@ const showSidebar = ref(true)
 
 pre
   overflow-x scroll
+
+.router-link-inactived
+  border-bottom 0
+
+.router-link-actived
+  border-bottom 1px solid red
+
+.router-link-inactived:hover,
+.router-link-actived:hover
+  border-bottom 1px solid $primary
 
 </style>
