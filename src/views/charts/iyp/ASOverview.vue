@@ -71,8 +71,6 @@
 </template>
 
 <script>
-// Depreceated
-// import { ASOverviewQuery } from '../../../plugins/query/IypQuery'
 
 import { QChip } from 'quasar'
 
@@ -144,17 +142,6 @@ export default {
       this.loadingStatus = false
     },
     getOverview(asn) {
-      // Depreceated
-      // let query = new ASOverviewQuery(asn)
-      // try {
-      //   let asOverview = await this.$iyp_api.getASOverview(query)
-      //   this.overview = asOverview
-      //   this.title(this.overview.name)
-      //   this.loadingStatus = false
-      // } catch (e) {
-      //   console.error(e)
-      //   this.loadingStatus = false
-      // }
       const queryOne = `MATCH (a:AS {asn: $asn})
          OPTIONAL MATCH (a)-[:ORIGINATE]->(p4:Prefix {af:4})
          WITH COALESCE(COUNT(DISTINCT p4.prefix), 0) AS prefixes_v4, a

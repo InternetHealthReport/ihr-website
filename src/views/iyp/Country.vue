@@ -1,14 +1,14 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1>{{ this.pageTitle }}</h1>
+    <h1 class="text-center">{{ this.pageTitle }}</h1>
     <div>
       <q-list>
         <Overview :country-code="cc" :title="setPageTitle" />
 
         <q-expansion-item
-          @click="handleClick(expansionItems.ases.title)"
+          @click="handleClick('ases')"
           :label="$t('iyp.country.ases.title')"
-          caption="Autonomous Systems (ASes)"
+          :caption="$t('iyp.country.ases.title')+this.pageTitle"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -24,7 +24,7 @@
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick(expansionItems.ixps.title)"
+          @click="handleClick('ixps')"
           :label="$t('iyp.country.ixps.title')"
           caption="Internet Exchange Points (IXPs)"
           header-class="IHR_charts-title"
@@ -46,17 +46,6 @@
 <script>
 import Overview from '@/views/charts/iyp/CountryOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
-
-const expansionItems = {
-  ases: {
-    title: 'ASes',
-    subTitle: 'Autonomous Systems (ASes',
-  },
-  ixps: {
-    title: 'IXPs',
-    subTitle: 'Internet Exchange Points (IXPs)',
-  },
-}
 
 export default {
   components: {
@@ -125,7 +114,6 @@ export default {
         ases: 0,
         ixps: 0,
       },
-      expansionItems: expansionItems,
       expanded: [],
     }
   },
@@ -150,8 +138,10 @@ export default {
     // ases stands for autonomous systems
     getASes() {
       const query = `MATCH (c:Country {country_code: $cc})<-[:COUNTRY {reference_name: 'nro.delegated_stats'}]-(a:AS)
-         OPTIONAL MATCH (a)-[:NAME]->(n:Name)
-         RETURN c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
+         OPTIONAL MATCH (sibling)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+         OPTIONAL MATCH (sibling)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+         OPTIONAL MATCH (sibling)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+         RETURN c.country_code AS cc, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name
         `
       const mapping = {
         cc: 'cc',
@@ -173,7 +163,7 @@ export default {
       return { cypherQuery: query, params: { cc: this.cc, ref: 'peeringdb.ix' }, mapping, data: 'ixps' }
     },
     setPageTitle(title) {
-      this.pageTitle = `${title} (${this.cc})`
+      this.pageTitle = title
     },
     async handleClick(key) {
       if (!this.expanded.includes(key)) {
@@ -182,9 +172,9 @@ export default {
 
       const clickedItem = key
       let query = {}
-      if (clickedItem === expansionItems.ases.title || clickedItem === expansionItems.ases.subTitle) {
+      if (clickedItem === 'ases') {
         query = this.getASes()
-      } else if (clickedItem === expansionItems.ixps.title || clickedItem === expansionItems.ixps.subTitle) {
+      } else if (clickedItem == 'ixps') {
         query = this.getIXPs()
       } else {
         return

@@ -314,7 +314,8 @@
     },
     "country": {
       "ases": {
-        "title": "ASes"
+        "title": "Autonomous Systems",
+        "caption": "ASes registered with organization in "
       },
       "ixps": {
         "title": "IXPs"
@@ -336,13 +337,16 @@
     },
     "tag": {
       "prefixes": {
-        "title": "Prefixes"
+        "title": "Prefixes",
+        "caption": "IP Prefixes classified as "
       },
       "ases": {
-        "title": "Autonomous Systems"
+        "title": "Autonomous Systems",
+        "caption": "ASes classified as "
       },
       "domains": {
-        "title": "Popular Domain Names"
+        "title": "Popular Domain Names",
+        "caption": "Popular domain names classified as "
       }
     },
     "prefix": {

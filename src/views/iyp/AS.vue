@@ -316,21 +316,15 @@ export default {
       popularDomainsColumns: [
         { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
         { name: 'Domain Name', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
-        {
-          name: 'Ranking Name',
-          label: 'Ranking Name',
-          align: 'left',
-          field: row => row.rankingName,
-          format: val => `${val}`,
-          sortable: true,
-        },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val.join(', ')}`, sortable: true },
+        { name: 'Ranking Name', label: 'Ranking Name', align: 'left', field: row => row.rankingName, format: val => `${val}`, sortable: true, },
       ],
       facilitiesColumns: [
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Facilities', label: 'Facilities', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
       siblingsColumns: [
-        { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Country', label: 'Reg. Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
       ],
@@ -338,14 +332,7 @@ export default {
         { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-        {
-          name: 'Hegemony Score',
-          label: 'Hegemony Score',
-          align: 'left',
-          field: row => row.hegemony_score,
-          format: val => `${Number(val).toFixed(2)}%`,
-          sortable: true,
-        },
+        { name: 'Hegemony Score', label: 'Hegemony Score', align: 'left', field: row => row.hegemony_score, format: val => `${Number(val).toFixed(2)}%`, sortable: true, },
         { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
       ],
       dependingsColumns: [
@@ -494,9 +481,9 @@ export default {
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'rankings' }
     },
     getPopularDomains() {
-      const query = `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
+      const query = `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
          WHERE rr.rank < 100000 and rr.reference_name = $rankingName
-         RETURN DISTINCT d.name AS domainName, rr.rank AS rank, rn.name AS rankingName, split(d.name, '.')[-1] AS tld, 1/toFloat(rr.rank) AS inv_rank
+         RETURN DISTINCT d.name AS domainName, rr.rank AS rank, rn.name AS rankingName, split(d.name, '.')[-1] AS tld, 1/toFloat(rr.rank) AS inv_rank, COLLECT(DISTINCT p.prefix) AS prefix
          ORDER BY rank
         `
       const mapping = {
@@ -505,7 +492,9 @@ export default {
         rank: 'rank',
         inv_rank: 'inv_rank',
         rankingName: 'rankingName',
+        prefix: 'prefix'
       }
+
       return { cypherQuery: query, params: { asn: this.asn, rankingName: 'tranco.top1M' }, mapping, data: 'popularDomains' }
     },
     getTags() {
@@ -531,7 +520,7 @@ export default {
     },
     getSiblings() {
       const query =  `MATCH (a:AS {asn: $asn})-[:SIBLING_OF]-(sibling:AS)
-        OPTIONAL MATCH (sibling)-[:COUNTRY]->(c)
+        OPTIONAL MATCH (sibling)-[:COUNTRY {reference_org:'NRO'}]->(c)
         OPTIONAL MATCH (sibling)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
         OPTIONAL MATCH (sibling)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
         OPTIONAL MATCH (sibling)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)

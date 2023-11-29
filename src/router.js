@@ -25,6 +25,7 @@ import IYP from '@/views/iyp/IYP'
 import Country from '@/views/iyp/Country'
 import IXP from '@/views/iyp/IXP'
 import Tag from '@/views/iyp/Tag'
+import DomainName from '@/views/iyp/DomainName'
 import Prefix from '@/views/iyp/Prefix'
 
 Vue.use(Router)
@@ -319,6 +320,16 @@ export default new Router({
         default: Prefix,
       },
       meta: { title: 'IYP Prefix - IHR' },
+    },
+    {
+      name: 'iyp_domainname',
+      path: `${routerBase}iyp/domainname/:domain`,
+      components: {
+        header: Header,
+        footer: Footer,
+        default: DomainName,
+      },
+      meta: { title: 'IYP Domain Name - IHR' },
     }
   ],
 })

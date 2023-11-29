@@ -55,7 +55,7 @@
 </template>
 
 <script>
-const colToUnderline = ['ASN', 'Country', 'IXP', 'Prefix']
+const colToUnderline = ['ASN', 'AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC']
 
 export default {
   props: {
@@ -111,20 +111,24 @@ export default {
     },
     routeToEntity(entity, data) {
       if (entity == 'ASN' | entity == 'AS' | entity == 'Origin AS') {
-        this.routeToASN(data.asn)
+        let asn= Array.isArray(data.asn)?data.asn[0]:data.asn
+        this.routeToASN(asn)
       } else if (entity == 'Prefix') {
-        const [host, prefixLength] = data.prefix.split('/')
+        let prefix= Array.isArray(data.prefix)?data.prefix[0]:data.prefix
+        const [host, prefixLength] = prefix.split('/')
         this.routeToPrefix(host, prefixLength)
       } else if (entity == 'IXP') {
-        this.routeToIXP(data.id)
+        let ixpid= Array.isArray(data.id)?data.id[0]:data.id
+        this.routeToIXP(ixpid)
       } else if (entity == 'CC' | entity == 'Country' |  entity == 'Reg. Country' | entity == 'Geoloc. Country') {
-        this.routeToCountry(data.cc)
+        let cc= Array.isArray(data.cc)?data.cc[0]:data.cc
+        this.routeToCountry(cc)
       }
     },
     routeToASN(asn) {
       this.$router.push({
         name: 'iyp_asn',
-        params: { asn: asn.low },
+        params: { asn: asn },
       })
     },
     routeToPrefix(host, prefixLength) {

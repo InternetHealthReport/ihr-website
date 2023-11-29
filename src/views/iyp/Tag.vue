@@ -8,7 +8,7 @@
           v-if='show.domains'
           @click="handleClick('domains')"
           :label="nodes[0].nb_domains+' '+$t('iyp.tag.popularDomains.title')"
-          :caption="'Popular domain names classified as '+this.tag"
+          :caption="$t('iyp.tag.popularDomains.caption')+this.tag"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -29,7 +29,7 @@
           v-if='show.ases'
           @click="handleClick('ases')"
           :label="nodes[0].nb_ases+' '+$t('iyp.tag.ases.title')"
-          :caption="'ASes classified as '+this.tag"
+          :caption="$t('iyp.tag.ases.caption')+this.tag"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -56,7 +56,7 @@
             v-if='show.prefixes'
           @click="handleClick('prefixes')"
           :label="nodes[0].nb_prefixes+' '+$t('iyp.tag.prefixes.title')"
-          :caption="$t('iyp.prefix.prefixes.caption')"
+          :caption="$t('iyp.tag.prefixes.caption')+this.tag"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -72,8 +72,8 @@
                 <GenericTreemapChart
                   v-if="prefixes.length > 0 & prefixes.length < 5000"
                   :chart-data="prefixes"
-                  :chart-layout="{ title: 'Breakdown per origin AS' }"
-                  :config="{ keys: ['origin_asn', 'prefix'], root: this.tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.__percent:.1f}%</extra>' }"
+                  :chart-layout="{ title: 'Breakdown per origin AS and registered country code' }"
+                  :config="{ keys: ['as_cc', 'asn', 'prefix'], root: this.tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.__percent:.1f}%</extra>' }"
                  />
             </GenericTable>
           </q-card>
@@ -115,7 +115,8 @@ export default {
       prefixesColumns: [
         { name: 'Classified by', label: 'Classified by', align: 'left', field: row => [row.classifier_org, row.classifier_name], format: val => `${val[0]} (${val[1]})`, sortable: true },
         { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
-        { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.origin_asn, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'Origin AS', align: 'left', field: row => row.asn, format: val => `AS${val.join(', AS')}`, sortable: true },
+        { name: 'Reg. Country', label: 'AS Reg. Country ', align: 'left', field: row => row.as_cc, format: val => `${String(val).toUpperCase()}`, sortable: true },
         { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
         { name: 'Geoloc. Country', label: 'Geoloc', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
@@ -213,15 +214,17 @@ export default {
       const query = `
       MATCH (t:Tag {label: $tag})<-[cat:CATEGORIZED]-(p:Prefix)
       OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
+      OPTIONAL MATCH (a)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
       OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
       OPTIONAL MATCH (p)-[:CATEGORIZED]->(to:Tag) WHERE t <> to
-      RETURN p.prefix as prefix, collect(DISTINCT to.label) as other_tags, c.country_code AS cc, collect(DISTINCT a.asn) as origin_asn, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name, cat.reference_url AS classifier_url
+      RETURN p.prefix as prefix, collect(DISTINCT to.label) as other_tags, c.country_code AS cc, creg_country.country_code as as_cc, collect(DISTINCT a.asn) as asn, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name, cat.reference_url AS classifier_url
       `
 
       const mapping = {
         prefix: 'prefix',
         cc: 'cc',
-        origin_asn: 'origin_asn',
+        as_cc: 'as_cc',
+        asn: 'asn',
         descr: 'descr',
         other_tags: 'other_tags',
         visibility: 'visibility',
