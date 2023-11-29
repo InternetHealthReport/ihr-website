@@ -4,7 +4,7 @@ import { QLayout, QPageContainer, QIcon } from 'quasar'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const text = ref('')
-const scrollPosition = ref(0)
+let scrollPosition = ref(0)
 
 const showScrollTopButton = () => {
   return scrollPosition > 0
@@ -43,7 +43,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="stylus">
-
 menu-delinkify(val)
   font-size 12pt
   color white

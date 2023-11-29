@@ -1,21 +1,50 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Header from '../views/Header.vue'
+import Footer from '../views/Footer.vue'
+import Home from '../views/Home.vue'
+import Tr from '@/i18n/translation'
+
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.VITE_BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      path: '/:locale?',
+      // redirect: '/en/',
+      meta: { title: 'Internet Health Report' },
+      beforeEnter: Tr.routeMiddleware,
+      children: [
+        {
+          path: '',
+          name: 'home',
+          components: {
+            header: Header,
+            footer: Footer,
+            default: Home
+          }
+        },
+        {
+          path: 'global-report',
+          name: 'global-report',
+          components: {
+            default: Home
+          }
+        },
+        {
+          path: 'networks',
+          name: 'networks',
+          components: {
+            default: Home
+          }
+        },
+        {
+          path: 'documentation',
+          name: 'documentation',
+          components: {
+            default: Home
+          }
+        }
+      ]
     }
   ]
 })
