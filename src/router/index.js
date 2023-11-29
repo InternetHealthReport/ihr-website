@@ -6,6 +6,18 @@ import Tr from '@/i18n/translation'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    if(savedPosition) {
+      return savedPosition
+    } else if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth',
+      }
+    } else {
+      return { top: 0 }
+    }
+  },
   routes: [
     {
       path: '/:locale/',
