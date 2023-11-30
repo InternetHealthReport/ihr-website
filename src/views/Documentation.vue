@@ -129,6 +129,9 @@ const sectionActiveStatus = ref(Object.assign({}, ...SECTIONS.map(valA => valA.s
   return obj
 })).flat()))
 const sectionActive = ref('')
+const bodyHTHMTags = ref([
+'<b>', '</b>', '<br>', '<ul>', '</ul>', '<li>', '</li>', '<a', '</a>', '<div', '</div>', '<i>', '</i>', '<pre', '</pre>', '<code>', '</code>'
+])
 </script>
 
 <template>
@@ -144,12 +147,12 @@ const sectionActive = ref('')
             <RouterLink
               :to="Tr.i18nRoute({
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.${secB}.title`)),
+                hash: '#' + replaceSpaces($t(`documentationPage.sections.${secB}.title`, bodyHTHMTags)),
               })"
               class="IHR_delikify"
               v-bind:class="{'router-link-inactived': !sectionActiveStatus[secB], 'router-link-actived': sectionActiveStatus[secB]}"
               v-on:click ="activateSelection(secB)"
-              >{{ $t(`documentationPage.sections.${secB}.title`) }}</RouterLink>
+              >{{ $t(`documentationPage.sections.${secB}.title`, bodyHTHMTags) }}</RouterLink>
           </li>
         </ul>
       </div>
@@ -158,13 +161,13 @@ const sectionActive = ref('')
     <div id="IHR_documentation-page">
       <div v-for="(mainSec, mainIdx) in sections" v-bind:key="mainIdx">
         <div v-for="(bodySec, bodyIdx) in mainSec.sectionsBody" v-bind:key="bodyIdx" class="IHR_documentation-page">
-          <div class="IHR_anchor" :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"></div>
-          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)"></h1>
-          <p class="text-left text-body1" v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"></p>
+          <div class="IHR_anchor" :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`, bodyHTHMTags))"></div>
+          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`, bodyHTHMTags)"></h1>
+          <p class="text-left text-body1" v-html="$t(`documentationPage.sections.${bodySec.name}.summary`, bodyHTHMTags)"></p>
           <div v-for="idx in bodySec.numberOfDescriptions" v-bind:key="idx">
-            <h2 v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"></h2>
+            <h2 v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`, bodyHTHMTags)"></h2>
             <img v-if="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`) !== ''" :src="replaceImgURL($t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`))" :style="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.style`)" />
-            <p class="text-left text-body1" v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"></p>
+            <p class="text-left text-body1" v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`, bodyHTHMTags)"></p>
           </div>
         </div>
       </div>
