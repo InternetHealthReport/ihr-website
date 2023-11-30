@@ -20,8 +20,7 @@ const router = createRouter({
   },
   routes: [
     {
-      path: '/:locale/',
-      // redirect: '/en/',
+      path: '/:locale?',
       meta: { title: 'Internet Health Report' },
       component: RouterView,
       beforeEnter: Tr.routeMiddleware,
