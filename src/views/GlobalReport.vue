@@ -4,7 +4,7 @@
       <div class="text-center">
         <div class="text-h1">{{ title }}</div>
         <div class="text-h3">
-          {{ intervalCurrent.dayDiff() }}-day report ending on {{ reportDateFmt }}
+          {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
           <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime
             class="IHR_subtitle_calendar" />
         </div>
@@ -74,8 +74,8 @@ export default {
     pushRoute() {
       const currentQuery = {
         filter_level: String(this.filterLevel),
-        last: String(this.intervalCurrent.dayDiff()),
-        date: this.$options.filters.ihrUtcString(this.intervalCurrent.end, false),
+        last: String(this.interval.dayDiff()),
+        date: this.$options.filters.ihrUtcString(this.interval.end, false),
       };
       if (JSON.stringify(currentQuery) !== JSON.stringify(this.$route.query)) {
         const newRoute = { query: currentQuery, hash: this.$route.hash }

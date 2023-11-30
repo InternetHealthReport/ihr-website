@@ -29,9 +29,18 @@ export default {
       default: false,
     },
   },
+  created() {
+    let interval = null;
+    try {
+      interval = this.getDateInterval(this.$route.query.date + 'T00:00+00:00', this.$route.query.last)
+    } catch (e) {
+      interval = this.getDateInterval(new Date(), this.defaultTimeRangeVal)
+    }
+    this.$set(this, 'interval', interval);
+  },
   data() {
     return {
-      intervalUpdated: null,
+      interval: null,
       fetch: false,
     }
   },
@@ -40,7 +49,7 @@ export default {
   },
   methods: {
     setReportDate(event) {
-      this.intervalUpdated = this.getDateInterval(event, this.defaultTimeRangeVal);
+      this.interval = this.getDateInterval(event, this.defaultTimeRangeVal);
     },
     resizeCharts() {
       setTimeout(() => {
@@ -77,32 +86,20 @@ export default {
         day: '2-digit',
         timeZone: 'UTC',
       }
-      return this.intervalCurrent.end.toLocaleDateString(undefined, options)
+      return this.interval.end.toLocaleDateString(undefined, options)
     },
     startTime() {
-      return this.intervalCurrent.begin
+      return this.interval.begin
     },
     endTime() {
-      return this.intervalCurrent.end
+      return this.interval.end
     },
-    intervalCurrent() {
-      return this.intervalUpdated ? this.intervalUpdated : this.interval
-    },
-    interval() {
-      let intervalVal = null;
-      try {
-        intervalVal = this.getDateInterval(this.$route.query.date + 'T00:00+00:00', this.$route.query.last)
-      } catch (e) {
-        intervalVal = this.getDateInterval(new Date(), this.defaultTimeRangeVal)
-      }
-      return intervalVal
-    },
-    defaultTimeRangeVal(){
+    defaultTimeRangeVal() {
       return this.defaultTimeRange ? this.defaultTimeRange : 3
     }
   },
   watch: {
-    intervalUpdated(){
+    interval() {
       this.pushRoute()
     },
   },

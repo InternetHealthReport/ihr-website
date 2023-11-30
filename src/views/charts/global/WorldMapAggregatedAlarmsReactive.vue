@@ -41,8 +41,8 @@ export default {
     }
   },
   methods: {
-    onCountryClicked(newPlotlyClickedData) {
-      const country = newPlotlyClickedData.text
+    onCountryClicked(clickedData) {
+      const country = clickedData.points[0].text
       this.$emit('worldmap-country-clicked', country)
     }
   }
