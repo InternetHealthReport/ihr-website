@@ -85,27 +85,6 @@ const debounceFunc = () => {
   debounce(() => {checkMenu()}, 200)
 }
 
-const expandSidebar = () => {
-  sidebarOpened = !sidebarOpened
-}
-
-const login = (email, password) => {
-  if(this.$ihrStyle.validateEmail(email) && this.$ihrStyle.validatePassword(password)) {
-    this.$ihr_api.userLogin(
-      email,
-      password,
-      () => {},
-      () => {
-        loginError = true
-      }
-    )
-  }
-}
-
-const logout = () => {
-  this.$ihr_api.userLogout()
-}
-
 const toggleValue = (_index,_type,_value) => {
     if(_type==1){
       simpleMenu.value[_index].menuOver=_value

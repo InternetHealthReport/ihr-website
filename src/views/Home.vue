@@ -155,7 +155,7 @@ const organizations = ref(ORGANIZATIONS)
       </h2>
 
       <div class="row wrap justify-center">
-        <div class="col-xl" v-for="(org, index) in organizations" :key="index">
+        <div v-for="(org, index) in organizations" :key="index">
           <a :href="$t(`homePage.ack.organizations.${org.name}.url`)" target="_blank">
           <div class="IHR_ack-logo">
             <span></span>
