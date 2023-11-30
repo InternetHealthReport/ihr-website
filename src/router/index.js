@@ -1,6 +1,8 @@
 import { RouterView, createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Documentation from '../views/Documentation.vue'
+import Contact from '../views/Contact.vue'
+import Api from '../views/Api.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -48,7 +50,7 @@ const router = createRouter({
         {
           path: 'contact',
           name: 'contact',
-          component: Home
+          component: Contact
         },
         {
           path: 'countries',
@@ -64,6 +66,11 @@ const router = createRouter({
           path: 'covid19',
           name: 'covid19',
           component: Home
+        },
+        {
+          path: 'api',
+          name: 'api',
+          component: Api
         }
       ]
     }
