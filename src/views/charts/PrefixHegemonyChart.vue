@@ -219,7 +219,7 @@ export default {
     const toObserve = new IntersectionObserver(entries =>{
       const [entry] = entries
       const isVisible = entry.intersectionRatio === 1
-      if(!isVisible){
+      if(!isVisible && this.$refs.selectValidity){
         this.$refs.selectValidity.hidePopup()
       }
     })

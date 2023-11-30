@@ -288,8 +288,8 @@ export default {
         //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
         query: Object.assign({}, this.$route.query, {
           af: this.family,
-          last: this.intervalCurrent.dayDiff(),
-          date: this.$options.filters.ihrUtcString(this.intervalCurrent.end, false),
+          last: this.interval.dayDiff(),
+          date: this.$options.filters.ihrUtcString(this.interval.end, false),
         }),
       })
     },
@@ -310,7 +310,7 @@ export default {
           this.show.hegemony = results.results[0].hegemony
         })
 
-        this.asName = results.results[0].name
+        if (results.results[0].name && results.results[0].name.length !== 0) this.asName = results.results[0].name;
         this.loadingStatus = LOADING_STATUS.LOADED
         this.fetch = true
       })
