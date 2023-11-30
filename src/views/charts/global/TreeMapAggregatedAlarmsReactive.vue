@@ -38,8 +38,9 @@ export default {
     }
   },
   methods: {
-    onTreemapNodeClicked(treemapPointClicked) {
+    onTreemapNodeClicked(clickedData) {
       if (this.clickProcessing) return;
+      const treemapPointClicked = clickedData.points[0];
       if (treemapPointClicked.pointNumber !== undefined && treemapPointClicked.parent == '') {
         this.clickProcessing = true;
         this.$emit('treemap-node-clicked', treemapPointClicked.label)

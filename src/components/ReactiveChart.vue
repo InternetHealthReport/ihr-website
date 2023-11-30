@@ -94,8 +94,7 @@ export default {
 
     graphDiv.on('plotly_click', (eventData) => {
       if (eventData && eventData.points ) {
-        const point = eventData.points[0]
-        this.$emit('plotly-click', point)
+        this.$emit('plotly-click', eventData)
       }
     })
 
