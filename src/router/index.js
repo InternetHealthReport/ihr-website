@@ -44,6 +44,26 @@ const router = createRouter({
           path: 'documentation',
           name: 'documentation',
           component: Documentation
+        },
+        {
+          path: 'contact',
+          name: 'contact',
+          component: Home
+        },
+        {
+          path: 'countries',
+          name: 'countries',
+          component: Home
+        },
+        {
+          path: 'rov',
+          name: 'rov',
+          component: Home
+        },
+        {
+          path: 'covid19',
+          name: 'covid19',
+          component: Home
         }
       ]
     }

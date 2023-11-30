@@ -34,13 +34,11 @@ onBeforeUnmount(() => {
 
 <template>
   <QLayout view="hHh LpR fff" id="app" >
-    <!-- <RouterView name="header" /> -->
     <Header></Header>
     <QPageContainer>
       <RouterView />
       <div id="IHR_last-element">&nbsp;</div>
     </QPageContainer>
-    <!-- <RouterView name="footer" /> -->
     <Footer></Footer>
     <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
   </QLayout>
@@ -66,10 +64,6 @@ menu-delinkify(val)
   &footer
     & a
       color white
-
-    ~/fsection
-      padding-top 5pt
-      border-left solid gray 1px
 
       &first-child
         border-left none

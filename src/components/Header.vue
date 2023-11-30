@@ -140,55 +140,25 @@ watch(simpleMenu, (newVal, oldVal) => { debounceFunc() })
 </script>
 
 <template>
-    <QHeader elevated primary>
-      <QToolbar class="q-py-sm q-px-lg row">
-        <div class="col-12 row no-wrap items-center">
-          <QItem id="IHR_home-button">
-            <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-              <QBtn round dense flat :ripple="false" no-caps size="22px">
-                <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px" />
-              </QBtn>
-            </RouterLink>
-          </QItem>
-          <!--TODO: <network-search-bar class="col-4" /> --> 
-          <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md">
-            <QBtnGroup flat :key="item.entryName" v-for="(item,index) in simpleMenu">
-              <QBtn flat v-if="item.options == null" :label="$t(item.entryName)" :to="Tr.i18nRoute({ name: item.routeName })" />
-              <QBtnDropdown @mouseover.native="toggleValue(index,1,true)" @mouseout.native="toggleValue(index,1,false)" v-model="item.menu" flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
-                <QList @mouseover.native="toggleValue(index,2,true)" @mouseout.native="toggleValue(index,2,false)" class="rounded-borders text-white bg-primary" bordered separator padding>
-                  <QItem
-                    clickable
-                    @click="closeMenu"
-                    v-close-popup
-                    :key="option.entryName"
-                    v-for="option in item.options"
-                    :to="Tr.i18nRoute({ name: option.routeName })"
-                    active-class="text-grey"
-                  >
-                    <QItemSection>
-                      <QItemLabel class="text-bold">{{ $t(option.entryName) }}</QItemLabel>
-                      <QItemLabel class="text-grey" caption lines="2">{{ $t(option.summary) }}</QItemLabel>
-                    </QItemSection>
-                  </QItem>
-                </QList>
-              </QBtnDropdown>
-            </QBtnGroup>
-          </div>
-          <div class="lt-md">
-            <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"></q-btn>
-          </div>
-        </div>
-        <!--Log in /Log out stuff here-->
-      </QToolbar>
-      <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
-        <QList>
-          <!-- <QItemLabel header>Essential Links</QItemLabel> -->
-          <QItem flat :key="item.entryName" v-for="item in simpleMenu">
+  <QHeader elevated primary>
+    <QToolbar class="q-py-sm q-px-lg row">
+      <div class="col-12 row no-wrap items-center">
+        <QItem id="IHR_home-button">
+          <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
+            <QBtn round dense flat :ripple="false" no-caps size="22px">
+              <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px" />
+            </QBtn>
+          </RouterLink>
+        </QItem>
+        <!--TODO: <network-search-bar class="col-4" /> --> 
+        <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md">
+          <QBtnGroup flat :key="item.entryName" v-for="(item,index) in simpleMenu">
             <QBtn flat v-if="item.options == null" :label="$t(item.entryName)" :to="Tr.i18nRoute({ name: item.routeName })" />
-            <QBtnDropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
-              <QList class="rounded-borders text-white bg-primary" bordered separator padding>
+            <QBtnDropdown @mouseover.native="toggleValue(index,1,true)" @mouseout.native="toggleValue(index,1,false)" v-model="item.menu" flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
+              <QList @mouseover.native="toggleValue(index,2,true)" @mouseout.native="toggleValue(index,2,false)" class="rounded-borders text-white bg-primary" bordered separator padding>
                 <QItem
                   clickable
+                  @click="closeMenu"
                   v-close-popup
                   :key="option.entryName"
                   v-for="option in item.options"
@@ -202,11 +172,41 @@ watch(simpleMenu, (newVal, oldVal) => { debounceFunc() })
                 </QItem>
               </QList>
             </QBtnDropdown>
-          </QItem>
-        </QList>
-      </QDrawer>
-    </QHeader>
-  </template>
+          </QBtnGroup>
+        </div>
+        <div class="lt-md">
+          <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"></q-btn>
+        </div>
+      </div>
+      <!--Log in /Log out stuff here-->
+    </QToolbar>
+    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
+      <QList>
+        <!-- <QItemLabel header>Essential Links</QItemLabel> -->
+        <QItem flat :key="item.entryName" v-for="item in simpleMenu">
+          <QBtn flat v-if="item.options == null" :label="$t(item.entryName)" :to="Tr.i18nRoute({ name: item.routeName })" />
+          <QBtnDropdown flat :label="$t(item.entryName)" v-else menu-anchor="bottom left" menu-self="top left">
+            <QList class="rounded-borders text-white bg-primary" bordered separator padding>
+              <QItem
+                clickable
+                v-close-popup
+                :key="option.entryName"
+                v-for="option in item.options"
+                :to="Tr.i18nRoute({ name: option.routeName })"
+                active-class="text-grey"
+              >
+                <QItemSection>
+                  <QItemLabel class="text-bold">{{ $t(option.entryName) }}</QItemLabel>
+                  <QItemLabel class="text-grey" caption lines="2">{{ $t(option.summary) }}</QItemLabel>
+                </QItemSection>
+              </QItem>
+            </QList>
+          </QBtnDropdown>
+        </QItem>
+      </QList>
+    </QDrawer>
+  </QHeader>
+</template>
 
 <style lang="stylus">
 menu-delinkify(val)
