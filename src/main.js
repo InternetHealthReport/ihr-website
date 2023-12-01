@@ -9,6 +9,7 @@ import '@quasar/extras/material-icons/material-icons.css'
 import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 import 'quasar/src/css/index.sass'
 import i18n from './i18n'
+import { IhrApi } from '@/plugins/IhrApi'
 
 const app = createApp(App)
 
@@ -17,5 +18,6 @@ app.use(Quasar, {
     plugins: {},
 })
 app.use(i18n)
+app.use(IhrApi)
 
 app.mount('#app')

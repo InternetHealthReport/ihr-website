@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { QCard, QCardSection, QAvatar, QIcon } from 'quasar'
-import { ref } from 'vue';
+import { ref } from 'vue'
 import Tr from '@/i18n/translation'
 
 const GRAPHS_TYPES = [
@@ -125,7 +125,7 @@ const organizations = ref(ORGANIZATIONS)
       </QCard>
     </div>
 
-    <div class="IHR_section">
+    <!-- <div class="IHR_section">
       <QCard class="IHR_tweets-types">
         <QCardSection class="bg-white text-primary q-pa-sm">
           <div class="text-h2">
@@ -134,19 +134,10 @@ const organizations = ref(ORGANIZATIONS)
           </div>
         </QCardSection>
         <QCardSection class="q-pa-xs">
-          <!-- <Timeline
-            id="ihr_alerts"
-            sourceType="profile"
-            :options="{
-              chrome: 'noheader',
-              tweetLimit: '3',
-            }"
-          >
-            <div class="spinner"></div>
-          </Timeline> -->
+
         </QCardSection>
       </QCard>
-    </div>
+    </div> -->
 
     <div class="IHR_section">
       <h2 class="text-h2">

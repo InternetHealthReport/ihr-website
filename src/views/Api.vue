@@ -1,6 +1,7 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted } from 'vue'
 import SwaggerUI from 'swagger-ui'
+import 'swagger-ui/dist/swagger-ui.css'
 
 onMounted(() => {
   SwaggerUI({
@@ -24,12 +25,4 @@ onMounted(() => {
 </template>
 
 <style lang="stylus" scoped>
-.IHR_section_api
-  width 85%
-
-.opblock.opblock-get
-  background red
-  padding-top 100px
-  color $primary
-
 </style>

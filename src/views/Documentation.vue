@@ -179,6 +179,7 @@ const sectionActive = ref('')
     width 100%
     max-width 1200px
     padding 0 1rem
+    overflow-x scroll
 
 .IHR_
   &documentation-page
@@ -251,9 +252,6 @@ const sectionActive = ref('')
   position relative
   top -100px
   visibility hidden
-
-pre
-  overflow-x scroll
 
 .router-link-inactived
   border-bottom 0

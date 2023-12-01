@@ -19,8 +19,8 @@ import Tr from '@/i18n/translation'
           </div>
           <div class="IHR_external-links ">
             <div class="row nowrap justify-evenly ">
-              <a href="https://twitter.com/ihr_alerts" class="" target="_blank">
-                <QIcon name="fab fa-twitter-square" class="inline-block" />
+              <a href="https://x.com/ihr_alerts" class="" target="_blank">
+                <QIcon name="fab fa-square-x-twitter" class="inline-block" />
               </a>
               <a href="https://github.com/InternetHealthReport" class="" target="_blank">
                 <QIcon name="fab fa-github-square" class="inline-block" />
