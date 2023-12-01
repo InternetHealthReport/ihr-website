@@ -1,9 +1,10 @@
 import * as GripApiPlugin from '../plugins/GripApi';
 import * as IodaApiPlugin from '../plugins/IodaApi';
+import * as AsNamesPlugin from '../plugins/AsNames';
 import * as AggregatedAlarmsUtils from './AggregatedAlarmsUtils'
-import * as NetworkIhr from './NetworkIhr'
 import { getCountryISOCode3 } from '../plugins/countryISOCode3'
 import getCountryName from '../plugins/countryName'
+
 
 const dataSourcesTransformers = {
   ihr: {
@@ -13,273 +14,347 @@ const dataSourcesTransformers = {
     transformFunc: transformGripAlarms,
   },
   ioda: {
-    transformFunc: transformIodaAlarms,
+    transformFunc: transformIodaAlarms
   }
 }
 
-export function etl(dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
+let asNamesCountryMappingsResult = {}
+
+export function etl(dataSourcesSelected, dataSources, alarmTypesSelected, groupByKeys, ihrAlarms, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime) {
+  dataSourcesTransformers.ioda.ipAddressFamilies = iodaIPAddressFamilies
   return new Promise((resolve, reject) => {
-    extractAlarms(dataSourcesSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime).then((extractedAlarms) => {
-      transformAlarms(extractedAlarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected).then((alarms) => {
-        resolve(alarms)
-      }).catch((error) => reject(error))
-    }).catch((error) => reject(error))
+    extractAlarms(dataSourcesSelected, alarmTypesSelected, ihrAlarms, externalAlarms, startUnixTime, endUnixTime)
+      .then((extractedAlarms) => transformAlarms(extractedAlarms, dataSourcesSelected, dataSources, alarmTypesSelected, groupByKeys))
+      .then((alarms) => resolve(alarms))
+      .catch((error) => reject(error));
   })
 }
 
-function extractAlarms(dataSourcesSelected, hegemonyAlarms, networkDelayAlarms, thirdPartyAlarmsStates, startTime, endTime) {
+function extractAlarms(dataSourcesSelected, alarmTypesSelected, ihrAlarms, externalAlarms, startUnixTime, endUnixTime) {
   const request = () => {
-    return new Promise((resolve, reject) => {
-      let extractedAlarms = { ihr: {} }
+    return new Promise((resolve, _) => {
+      let extractedAlarms = { ihr: ihrAlarms }
 
-      if (dataSourcesSelected.ihr) {
-        extractedAlarms.ihr.hegemony = hegemonyAlarms
-        extractedAlarms.ihr.network_delay = networkDelayAlarms
-      } else {
-        extractedAlarms.ihr.hegemony = []
-        extractedAlarms.ihr.network_delay = []
-      }
-
-      const gripAlarmsPromise = dataSourcesSelected.grip
-        ? GripApiPlugin.getGripAlarms(thirdPartyAlarmsStates.grip, startTime, endTime)
-        : Promise.resolve([]);
-
-      const iodaAlarmsPromise = dataSourcesSelected.ioda
-        ? IodaApiPlugin.getIodaAlarms(thirdPartyAlarmsStates.ioda, startTime, endTime)
-        : Promise.resolve([]);
+      let gripAlarmsPromise = dataSourcesSelected.grip && !externalAlarms.grip ? GripApiPlugin.getGripAlarms(new Date(startUnixTime * 1000), new Date(endUnixTime * 1000)) : Promise.resolve([])
+      let iodaAlarmsPromise = dataSourcesSelected.ioda && !externalAlarms.ioda ? iodaAlarmsPromise = IodaApiPlugin.getIodaAlarms(new Date(startUnixTime * 1000), new Date(endUnixTime * 1000)) : Promise.resolve([])
 
       Promise.all([gripAlarmsPromise, iodaAlarmsPromise]).then(([gripAlarms, iodaAlarms]) => {
-        extractedAlarms.grip = gripAlarms;
-        extractedAlarms.ioda = iodaAlarms;
-        return resolve(extractedAlarms)
-      }).catch((error) => {
-        console.error(error)
-        return resolve(extractedAlarms)
+        if (dataSourcesSelected.grip) {
+          externalAlarms.grip = externalAlarms.grip ? externalAlarms.grip : gripAlarms
+          extractedAlarms.grip = externalAlarms.grip;
+        }
+        if (dataSourcesSelected.ioda) {
+          externalAlarms.ioda = externalAlarms.ioda ? externalAlarms.ioda : iodaAlarms
+          extractedAlarms.ioda = externalAlarms.ioda;
+        }
+        resolve(extractedAlarms)
       })
-
     });
   }
 
   return request();
 }
 
-function transformAlarms(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
+function transformAlarms(alarms, dataSourcesSelected, dataSources, alarmTypesSelected, groupByKeys) {
   const request = () => {
     return new Promise((resolve, reject) => {
-      const transformedAlarms = dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected)
-      transformAlarmsHelper(transformedAlarms).then((alarms) => {
-        return resolve(alarms)
-      }).catch(error => {
-        reject(error)
-      })
+      const transformedAlarms = dynamicAlarmsTransformation(alarms, dataSourcesSelected, dataSources, alarmTypesSelected, groupByKeys)
+      addASNameAndCountryInfo(transformedAlarms)
+        .then((alarmsWithASNamesAndCountryInfo) => {
+          const alarmsList = Object.values(alarmsWithASNamesAndCountryInfo)
+          const alarmsWithCountries = Object.values(alarmsList).filter(alarm => alarm.asn_country_iso_code3)
+          alarmsWithCountries.forEach((alarm) => {
+            alarm.asn_name_truncated = truncateASName(String(alarm.asn_name), alarm.asn)
+          })
+          resolve(alarmsWithCountries)
+        })
+        .catch(error => reject(error))
     })
   }
   return request()
 }
 
-function dynamicAlarmsTransformation(alarms, dataSourcesMetadata, dataSourcesSelected, aggregatedAttrsSelected) {
+function dynamicAlarmsTransformation(alarms, dataSourcesSelected, dataSources, alarmTypesSelected, groupByKeys) {
   let alarmsTransformed = {}
   for (const dataSource in dataSourcesSelected) {
     const isDataSourceSelected = dataSourcesSelected[dataSource]
     if (isDataSourceSelected) {
-      const { transformFunc } = dataSourcesTransformers[dataSource];
-      const alarmTypesDataSource = Object.keys(dataSourcesMetadata[dataSource].alarm_types)
-      const aggregatedAttrsDataSource = AggregatedAlarmsUtils.filterDictByPrefixes(aggregatedAttrsSelected, alarmTypesDataSource)
-      const alarmsDataSourceTransformed = transformFunc(alarms[dataSource], aggregatedAttrsDataSource);
-      const listOfTransformedAlarmsDict = Object.values(alarmsTransformed)[0];
-      const alarmsTransformedAggregatedAttrs = AggregatedAlarmsUtils.getKeysWithEmptyListsEndsWithSuffixes(listOfTransformedAlarmsDict, ['_alarm_counts', '_alarm_timebins', '_alarm_severities']);
-      alarmsTransformed = fullOuterJoinAlarms(alarmsTransformed, alarmsDataSourceTransformed, alarmsTransformedAggregatedAttrs, aggregatedAttrsDataSource);
+      const { transformFunc, ipAddressFamilies } = dataSourcesTransformers[dataSource];
+      const dataSourceAlarmsTransformed = transformFunc(alarms[dataSource], dataSources[dataSource].alarm_types, alarmTypesSelected, groupByKeys, ipAddressFamilies);
+      const dataSourceColumns = AggregatedAlarmsUtils.normalizeColumns(AggregatedAlarmsUtils.filterDictByPrefixes(Object.values(dataSourceAlarmsTransformed)[0], Object.keys(dataSources[dataSource].alarm_types)))
+      const alarmsTransformedColumns = AggregatedAlarmsUtils.normalizeColumns(AggregatedAlarmsUtils.filterDictByPrefixes(Object.values(alarmsTransformed)[0], Object.keys(dataSources).flatMap((dataSource) => Object.keys(dataSources[dataSource].alarm_types))))
+      alarmsTransformed = fullOuterJoinAlarms(alarmsTransformed, dataSourceAlarmsTransformed, alarmsTransformedColumns, dataSourceColumns);
     }
   }
   return alarmsTransformed
 }
 
-function transformIHRAlarms(ihrAlarmsSegregated, ihrAggregatedAttrs) {
-  const { hegemony: hegemonyAlarms, network_delay: networkDelayAlarms } = ihrAlarmsSegregated
-  const networkDelayAlarmsASFiltered = filterAndMapASNetworkDelayAlarms(networkDelayAlarms)
-  const hegemonyAlarmsTransformed = transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms)
-  addEventType(hegemonyAlarmsTransformed, 'hegemony')
-  addEventType(networkDelayAlarmsASFiltered, 'network_delay')
-  const ihrAlarms = [...hegemonyAlarmsTransformed, ...networkDelayAlarmsASFiltered]
-  transformAlarmsSeverities(ihrAlarms, ihrSeverityMapper)
-  const ihrAlarmsAggregated = aggregateAlarms(ihrAlarms, ihrAggregatedAttrs)
+function transformIHRAlarms(ihrAlarms, ihrDataSource, alarmTypesSelected, groupByKeys) {
+  const hegemonyAlarms = ihrAlarms.filter((alarm) => alarm.event_type === 'hegemony')
+  const networkDelayAlarms = ihrAlarms.filter((alarm) => alarm.event_type === 'network_delay')
+  const networkDisconnectionAlarms = ihrAlarms.filter((alarm) => alarm.event_type === 'network_disconnection')
+  const ihrColumnsJoined = AggregatedAlarmsUtils.flattenDictionary(Object.keys(ihrDataSource).map((alarmType) => (alarmTypesSelected[alarmType] ? ihrDataSource[alarmType].columns : {})))
+  const ihrGroupByKeys = AggregatedAlarmsUtils.flattenDictionary(Object.keys(ihrDataSource).map((alarmType) => (alarmTypesSelected[alarmType] ? { [alarmType]: groupByKeys[alarmType] } : {})))
+  const hegemonyAlarmsTransformed = alarmTypesSelected.hegemony ? transformHegemonyAlarms(hegemonyAlarms, ihrDataSource.hegemony.columns) : []
+  const networkDelayAlarmsTransformed = alarmTypesSelected.network_delay ? transformNetworkDelayAlarms(networkDelayAlarms, ihrDataSource.network_delay.columns) : []
+  const networkDisconnectionAlarmsTransformed = alarmTypesSelected.network_disconnection ? transformNetworkDisconnectionAlarms(networkDisconnectionAlarms, ihrDataSource.network_disconnection.columns) : []
+  const ihrAlarmsJoined = [...hegemonyAlarmsTransformed, ...networkDelayAlarmsTransformed, ...networkDisconnectionAlarmsTransformed]
+  const ihrAlarmsAggregated = aggregateAlarms(ihrAlarmsJoined, ihrColumnsJoined, ihrGroupByKeys)
   return ihrAlarmsAggregated
 }
 
-function transformGripAlarms(gripAlarms, gripAggregatedAttrs) {
-  const gripAlarmsTransformed = filterGripAlarms(gripAlarms);
-  transformAlarmsSeverities(gripAlarmsTransformed, gripSeverityMapper)
-  const gripAlarmsAggregated = aggregateAlarms(gripAlarmsTransformed, gripAggregatedAttrs);
-  return gripAlarmsAggregated;
+
+function transformGripAlarms(gripAlarms, gripDataSource, alarmTypesSelected, groupByKeys) {
+  const gripColumnsJoined = AggregatedAlarmsUtils.flattenDictionary(Object.keys(gripDataSource).map((alarmType) => (alarmTypesSelected[alarmType] ? gripDataSource[alarmType].columns : {})))
+  const gripGroupByKeys = AggregatedAlarmsUtils.flattenDictionary(Object.keys(gripDataSource).map((alarmType) => (alarmTypesSelected[alarmType] ? { [alarmType]: groupByKeys[alarmType] } : {})))
+  const gripAlarmsTransformed = []
+  for (const alarm of gripAlarms) {
+    const gripAlarmsTransformedList = transformGripAlarmsHelper(alarm, gripDataSource, alarmTypesSelected)
+    if (gripAlarmsTransformedList) {
+      gripAlarmsTransformed.push(...gripAlarmsTransformedList)
+    }
+  }
+  const gripAlarmsAggregated = aggregateAlarms(gripAlarmsTransformed, gripColumnsJoined, gripGroupByKeys);
+  return gripAlarmsAggregated
 }
 
-function transformIodaAlarms(iodaAlarms, iodaAggregatedAttrs) {
-  const iodaAlarmsTransformed = filterIodaAlarms(iodaAlarms);
-  transformAlarmsSeverities(iodaAlarmsTransformed, iodaSeverityMapper)
-  const iodaAlarmsAggregated = aggregateAlarms(iodaAlarmsTransformed, iodaAggregatedAttrs);
+function transformIodaAlarms(iodaAlarms, iodaDataSource, alarmTypesSelected, groupByKeys, iodaIPAddressFamilies) {
+  const iodaColumnsJoined = AggregatedAlarmsUtils.flattenDictionary(Object.keys(iodaDataSource).map((alarmType) => (alarmTypesSelected[alarmType] ? iodaDataSource[alarmType].columns : {})))
+  const iodaGroupByKeys = AggregatedAlarmsUtils.flattenDictionary(Object.keys(iodaDataSource).map((alarmType) => (alarmTypesSelected[alarmType] ? { [alarmType]: groupByKeys[alarmType] } : {})))
+  const iodaAlarmsNonEmpty = iodaAlarms.filter((alarm) => !AggregatedAlarmsUtils.isDictEmpty(alarm) && alarm.entity.type == 'asn')
+  const iodaAlarmsTransformed = []
+  for (const alarm of iodaAlarmsNonEmpty) {
+    const iodaAlarmTransformed = transformIodaAlarm(alarm, iodaDataSource, alarmTypesSelected, iodaIPAddressFamilies)
+    if (iodaAlarmTransformed) {
+      iodaAlarmsTransformed.push(iodaAlarmTransformed)
+    }
+  }
+  const iodaAlarmsAggregated = aggregateAlarms(iodaAlarmsTransformed, iodaColumnsJoined, iodaGroupByKeys);
   return iodaAlarmsAggregated;
 }
 
-function filterAndMapASNetworkDelayAlarms(networkDelayAlarms) {
-  const networkDelayAlarmsCopied = AggregatedAlarmsUtils.deepCopy(networkDelayAlarms)
-  const filteredASNetworkDelayAlarms = networkDelayAlarmsCopied
-    .filter(alarm => alarm.startpoint_type === 'AS')
-    .map(alarm => ({ ...alarm, asn: alarm.startpoint_name, asn_name: alarm.startpoint_name }));
-  return filteredASNetworkDelayAlarms
+function transformHegemonyAlarms(hegemonyAlarms, hegemonyColumns) {
+  const hegemonyAlarmsTransformed = []
+
+  const hegemonyAlarmsValid = hegemonyAlarms.filter((alarm) => alarm.originasn != '0' && alarm.asn != '0')
+  for (const alarm of hegemonyAlarmsValid) {
+    const hegemonyAlarmTransformed = transformHegemonyAlarm(alarm, hegemonyColumns)
+    hegemonyAlarmsTransformed.push(hegemonyAlarmTransformed)
+  }
+
+  return hegemonyAlarmsTransformed
 }
 
-function filterGripAlarms(gripAlarms) {
-  const gripAlarmsTransformed = gripAlarms.reduce((acc, curr) => {
-    const trustWorthy = curr.summary.tr_worthy;
+function transformHegemonyAlarm(alarm, hegemonyColumns) {
+  const eventType = 'hegemony'
+  const alarmEntryTransformed = { event_type: eventType }
+  const hegemonyAlarm = {
+    severity: ihrSeverityMapper(alarm.deviation), deviation: alarm.deviation, timebin: Date.parse(alarm.timebin) / 1000,
+    origin_asn: alarm.originasn, origin_asn_af: alarm.af, asn: alarm.asn, asn_af: alarm.af, count: 1
+  }
+  postAlarmTransformerHelper(hegemonyColumns, eventType, hegemonyAlarm, alarmEntryTransformed)
+  return alarmEntryTransformed
+}
 
-    if (trustWorthy === true) {
-      for (let index = 0; index < curr.summary.victims.length; index++) {
-        const victim = curr.summary.victims[index]
-        const asnInfo = curr.asinfo ? curr.asinfo[victim] : null
-        const asnName = asnInfo && asnInfo.asrank && asnInfo.asrank.asnName ? asnInfo.asrank.asnName.trim() : victim
-        const countryIsoCode2 = asnInfo && asnInfo.asrank && asnInfo.asrank.organization && asnInfo.asrank.organization.country
-                    && asnInfo.asrank.organization.country.iso ? asnInfo.asrank.organization.country.iso : null
-        const eventType = curr.event_type
+function transformNetworkDelayAlarms(networkDelayAlarms, networkDelayColumns) {
+  const networkDelayAlarmsTransformed = []
 
-        let severityValue;
-        if (curr.summary.inference_result.inferences[index]) {
-          severityValue = curr.summary.inference_result.inferences[index].suspicion_level
-        } else {
-          severityValue = curr.summary.inference_result.primary_inference.suspicion_level
+  const netDelayAlarmsValid = networkDelayAlarms.filter((alarm) => alarm.startpoint_type === 'AS' && alarm.endpoint_type === 'AS' && alarm.startpoint_name != '0' && alarm.endpoint_name != '0')
+  for (const alarm of netDelayAlarmsValid) {
+    const networkDelayAlarmTransformed = transformNetworkDelayAlarm(alarm, networkDelayColumns)
+    networkDelayAlarmsTransformed.push(networkDelayAlarmTransformed)
+  }
+  return networkDelayAlarmsTransformed
+}
+
+function transformNetworkDelayAlarm(alarm, networkDelayColumns) {
+  const eventType = 'network_delay'
+  const alarmEntryTransformed = { event_type: eventType }
+  const networkDelayAlarm = {
+    severity: ihrSeverityMapper(alarm.deviation), deviation: alarm.deviation, timebin: Date.parse(alarm.timebin) / 1000, startpoint: alarm.startpoint_name,
+    startpoint_name: alarm.startpoint_name, startpoint_type: alarm.startpoint_type, startpoint_af: alarm.startpoint_af, endpoint: alarm.endpoint_name,
+    endpoint_name: alarm.endpoint_name, endpoint_type: alarm.endpoint_type, endpoint_af: alarm.endpoint_af, count: 1
+  }
+  postAlarmTransformerHelper(networkDelayColumns, eventType, networkDelayAlarm, alarmEntryTransformed)
+  return alarmEntryTransformed
+}
+
+function transformNetworkDisconnectionAlarms(networkDisconnectionAlarms, networkDisconnectionColumns) {
+  const networkDisconnectionAlarmsTransformed = []
+
+  const networkDisconnectionAlarmsValid = networkDisconnectionAlarms.filter((alarm) => alarm.streamtype == 'asn')
+
+  for (const alarm of networkDisconnectionAlarmsValid) {
+    const networkDisconnectionAlarmTransformed = transformNetworkDisconnectionAlarm(alarm, networkDisconnectionColumns)
+    networkDisconnectionAlarmsTransformed.push(networkDisconnectionAlarmTransformed)
+  }
+  return networkDisconnectionAlarmsTransformed
+}
+
+function transformNetworkDisconnectionAlarm(alarm, networkDisconnectionColumns) {
+  const eventType = 'network_disconnection'
+  const alarmEntryTransformed = { event_type: eventType }
+  const probePrefixes = alarm.discoprobes.flatMap((probe) => [probe.prefixv4, probe.prefixv6]).flatMap((prefix) => prefix).filter((prefix) => prefix)
+  const ipAddressFamilies = probePrefixes.map((prefix) => AggregatedAlarmsUtils.getIPAddressFamily(prefix)).join(', ')
+  const networkDisconnectionAlarm = {
+    start_timebin: Date.parse(alarm.starttime) / 1000, end_timebin: Date.parse(alarm.endtime) / 1000, timebin: Date.parse(alarm.starttime) / 1000,
+    severity: ihrSeverityMapper(alarm.avglevel), stream_prob_id: alarm.discoprobes.map((discoprob) => discoprob.probe_id).join(', '),
+    deviation: alarm.avglevel, stream_type: alarm.streamtype, stream: alarm.streamname, stream_total_probes: alarm.totalprobes,
+    stream_id: alarm.id, stream_af: ipAddressFamilies, stream_disconnected_prefix: probePrefixes.join(', '), count: 1
+  }
+  networkDisconnectionAlarm.duration = networkDisconnectionAlarm.start_timebin !== networkDisconnectionAlarm.end_timebin
+    ? AggregatedAlarmsUtils.roundToDecimalPlaces((networkDisconnectionAlarm.end_timebin - networkDisconnectionAlarm.start_timebin) / 60, 2)
+    : null
+  postAlarmTransformerHelper(networkDisconnectionColumns, eventType, networkDisconnectionAlarm, alarmEntryTransformed)
+  return alarmEntryTransformed
+}
+
+function transformGripAlarmsHelper(alarm, gripDataSource, alarmTypesSelected) {
+  const eventType = alarm.event_type
+  if (!gripDataSource[eventType]) {
+    console.warn(`🚨 Hey there! It looks like we've come across a new grip alarm type called ${eventType}.
+    We haven't seen this one before! 😱 Please help us out by reporting it to us.
+    Your input is invaluable in making our system even better! 🙌`);
+    return null
+  }
+
+  if (!alarmTypesSelected[eventType]) return null
+
+  const alarmsTransformed = []
+
+  const isAlarmTrustworthy = alarm.summary.tr_worthy;
+
+  if (isAlarmTrustworthy) {
+    const asnAttackers = alarm.summary.attackers
+    for (let index = 0; index < asnAttackers.length; index++) {
+      const asnAttacker = asnAttackers[index]
+      const asnVictims = alarm.summary.victims
+      for (let victimIndex = 0; victimIndex < asnVictims.length; victimIndex++) {
+        const alarmEntryTransformed = { event_type: eventType }
+        const asnVictim = asnVictims[victimIndex]
+        const suspicion_level = alarm.summary.inference_result.primary_inference.suspicion_level
+        const trustworthy_tags = alarm.tr_metrics.tr_worthy_tags.flatMap((tag) => tag).join(', ')
+        const ipAddressFamilies = alarm.summary.prefixes.map((prefix) => AggregatedAlarmsUtils.getIPAddressFamily(prefix)).filter((af) => af).join(', ')
+        const gripAlarm = {
+          asn_attacker: asnAttacker, asn_attacker_af: ipAddressFamilies,
+          asn_attacker_newcomer: alarm.summary.newcomers.includes(asnAttacker), asn_attacker_attacking_prefix: alarm.summary.prefixes.join(', '),
+          asn_attacker_trustworthy: isAlarmTrustworthy, asn_attacker_trustworthy_tag: trustworthy_tags,
+          asn_victim: asnVictim, asn_victim_af: ipAddressFamilies, asn_victim_newcomer: alarm.summary.newcomers.includes(asnVictim),
+          asn_victim_trustworthy: isAlarmTrustworthy, asn_victim_trustworthy_tag: trustworthy_tags,
+          timebin: alarm.last_modified_ts, deviation: suspicion_level, severity: gripSeverityMapper(suspicion_level),
+          duration: alarm.duration ? AggregatedAlarmsUtils.roundToDecimalPlaces(alarm.duration / 60, 2) : null, count: 1,
         }
 
-        const eventLocalDateTime = new Date(curr.last_modified_ts * 1000)
-        const eventUTCDateTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(eventLocalDateTime, '00Z')
+        const gripAlarmTypeColumns = gripDataSource[eventType].columns
+        postAlarmTransformerHelper(gripAlarmTypeColumns, eventType, gripAlarm, alarmEntryTransformed)
+        alarmsTransformed.push(alarmEntryTransformed);
+      }
+    }
+    return alarmsTransformed
+  }
+  return null;
+}
 
-        let bgpAlertAlarm = {
-          asn_name: asnName,
-          asn: victim,
-          country_iso_code2: countryIsoCode2,
-          timebin: eventUTCDateTimeFormatted,
-          event_type: eventType,
-          severity: severityValue
-        };
+function transformIodaAlarm(alarm, iodaDataSource, alarmTypesSelected, iodaIPAddressFamilies) {
+  const eventType = alarm.datasource.replace('-', '_')
+  if (!iodaDataSource[eventType]) {
+    console.warn(`🚨 Hey there! It looks like we've come across a new ioda alarm type called ${alarm.datasource}.
+    We haven't seen this one before! 😱 Please help us out by reporting it to us.
+    Your input is invaluable in making our system even better! 🙌`);
+    return null
+  }
 
-        acc.push(bgpAlertAlarm);
+  if (!alarmTypesSelected[eventType]) return null
+
+  const alarmEntryTransformed = { event_type: eventType }
+  const alarmTypeIPAddrssFamilies = iodaIPAddressFamilies[eventType].filter((af) => af).join(', ')
+  const iodaAlarm = {
+    count: 1, event_type: eventType, entity_alarm_type: alarm.datasource, entity: alarm.entity.code, entity_type: alarm.entity.type,
+    entity_ip_count: alarm.entity.attrs.ip_count, entity_af: alarmTypeIPAddrssFamilies, timebin: alarm.time, condition: alarm.condition, value: alarm.value,
+    historical_value: alarm.historyValue, severity: iodaSeverityMapper(alarm.level)
+  };
+  const iodaAlarmTypeColumns = iodaDataSource[eventType].columns
+  postAlarmTransformerHelper(iodaAlarmTypeColumns, eventType, iodaAlarm, alarmEntryTransformed)
+  return alarmEntryTransformed
+}
+
+function postAlarmTransformerHelper(columns, eventType, alarm, alarmEntryTransformed) {
+  for (const column in columns) {
+    const originalColumn = column.split(`${eventType}_`)[1]
+    const alarmColumnValue = alarm[originalColumn]
+    if (alarmColumnValue !== undefined && alarmColumnValue !== null) {
+      alarmEntryTransformed[column] = alarmColumnValue !== '' && !isNaN(alarmColumnValue) && typeof (alarmColumnValue) != 'boolean' ? Number(alarmColumnValue) : alarmColumnValue
+    } else {
+      alarmEntryTransformed[column] = null
+    }
+  }
+}
+
+function gripSeverityMapper(suspicionLevel) {
+  const suspicionLevelVal = AggregatedAlarmsUtils.roundToDecimalPlaces(suspicionLevel, 0)
+  let severityLabel;
+  if (suspicionLevelVal >= 80 && suspicionLevelVal <= 100) {
+    severityLabel = 'high'
+  } else if (suspicionLevelVal >= 21 && suspicionLevelVal <= 79) {
+    severityLabel = 'medium'
+  } else if (suspicionLevelVal >= 0 && suspicionLevelVal <= 20) {
+    severityLabel = 'low'
+  }
+
+  return severityLabel
+}
+
+function iodaSeverityMapper(severity) {
+  let severityLabel;
+  if (severity === 'critical') {
+    severityLabel = 'high'
+  } else if (severity === 'normal') {
+    severityLabel = 'medium'
+  } else {
+    severityLabel = 'low'
+  }
+  return severityLabel
+}
+
+function ihrSeverityMapper(deviation) {
+  const deviationVal = AggregatedAlarmsUtils.roundToDecimalPlaces(deviation, 0)
+  let severityLabel;
+  if ((deviationVal >= 0 && deviationVal <= 30) || (deviationVal <= 0 && deviationVal >= -30)) {
+    severityLabel = 'low'
+  } else if ((deviationVal >= 31 && deviationVal <= 50) || (deviationVal <= -31 && deviationVal >= -50)) {
+    severityLabel = 'medium'
+  } else if (deviationVal >= 51 || deviationVal <= -51) {
+    severityLabel = 'high'
+  }
+  return severityLabel
+}
+
+export function aggregateAlarms(alarms, columns, keys) {
+  const aggregatedAlarms = alarms.reduce((acc, curr) => {
+    const eventType = curr.event_type
+    const key = `${eventType}_${keys[eventType]}`
+    const keyValue = Number(curr[key])
+    let { [key]: asn, [`${key}_name`]: asn_name, [`${key}_country`]: asn_country, [`${key}_country_iso_code2`]: asn_country_iso_code2, [`${key}_country_iso_code3`]: asn_country_iso_code3 } = curr
+    asn = Number(asn)
+    if (!acc[keyValue]) {
+      acc[keyValue] = {
+        asn,
+        asn_name,
+        asn_country,
+        asn_country_iso_code2,
+        asn_country_iso_code3,
+        ...AggregatedAlarmsUtils.deepCopy(columns)
+      }
+      for (const [alarmType, key] of Object.entries(keys)) {
+        acc[keyValue][`${alarmType}_key`] = key
       }
     }
 
-    return acc;
-  }, []);
-  return gripAlarmsTransformed;
-}
-
-function filterIodaAlarms(iodaAlarms) {
-  const iodaAlarmsNonEmpty = iodaAlarms.filter((alarm) => Object.keys(alarm).length)
-  const iodaAlarmsTransformed = iodaAlarmsNonEmpty.reduce((acc, curr) => {
-    const asnName = extractASNameBetweeParenthese(curr.entity.name, curr.entity)
-    const asnNumber = curr.entity.code
-    const eventType = curr.datasource.replace('-', '_')
-    const iodaSeverityLevel = curr.level
-    const eventLocalDateTime = new Date(curr.time * 1000)
-    const eventUTCDateTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(eventLocalDateTime, '00Z')
-
-    const iodaAlarm = {
-      asn_name: asnName,
-      asn: asnNumber,
-      country_iso_code2: null,
-      timebin: eventUTCDateTimeFormatted,
-      event_type: eventType,
-      severity: iodaSeverityLevel,
-    };
-    acc.push(iodaAlarm);
-    return acc;
-  }, []);
-  return iodaAlarmsTransformed;
-}
-
-function extractASNameBetweeParenthese(asNameWithParenthese) {
-  let asNameExtracted = ''
-  const regex = /\(([^)]+)\)/;
-  const match = asNameWithParenthese.match(regex);
-  if (match && match.length > 1) {
-    asNameExtracted = match[1];
-  }
-  return asNameExtracted
-}
-
-function addEventType(alarms, eventTypeName) {
-  for (const alarm of alarms) {
-    alarm.event_type = eventTypeName
-  }
-}
-
-function transformAlarmsSeverities(alarms, alarmSeverityMapper) {
-  for (const alarm of alarms) {
-    alarm.severity = alarmSeverityMapper(alarm)
-  }
-}
-
-function gripSeverityMapper(alarm) {
-  const severityValue = alarm.severity
-  let severityLabel;
-  if (severityValue >= 80 && severityValue <= 100) {
-    severityLabel = 'high'
-  } else if (severityValue >= 21 && severityValue <= 79) {
-    severityLabel = 'medium'
-  } else if (severityValue >= 0 && severityValue <= 20) {
-    severityLabel = 'low'
-  }
-
-  return severityLabel
-}
-
-function iodaSeverityMapper(alarm) {
-  const severityValue = alarm.severity
-  let severityLabel;
-  if (severityValue === 'critical') {
-    severityLabel = 'high'
-  } else if (severityValue === 'normal') {
-    severityLabel = 'medium'
-  } else {
-    severityLabel = 'low'
-  }
-  return severityLabel
-}
-
-function ihrSeverityMapper(alarm) {
-  const severityValue = alarm.deviation
-  let severityLabel;
-  if (severityValue >= 20 && severityValue <= 30) {
-    severityLabel = 'low'
-  } else if (severityValue >= 31 && severityValue <= 50) {
-    severityLabel = 'medium'
-  } else if (severityValue >= 51) {
-    severityLabel = 'high'
-  } else {
-    severityLabel = 'low'
-  }
-  return severityLabel
-}
-
-function transformHegemonyASNameAndCountryIsoCode2(hegemonyAlarms) {
-  const hegemonyAlarmsUpdatedWithASNameAndIsoCode2 = AggregatedAlarmsUtils.deepCopy(hegemonyAlarms)
-  for (const alarm of hegemonyAlarmsUpdatedWithASNameAndIsoCode2) {
-    updateASNameAndCountryIsoCode2(alarm, alarm.originasn_name, alarm.originasn)
-  }
-  return hegemonyAlarmsUpdatedWithASNameAndIsoCode2
-}
-
-function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
-  const aggregatedAlarms = alarmsTransformed.reduce((acc, curr) => {
-
-    const { asn, asn_name, country_iso_code2, timebin, severity, event_type } = curr;
-
-    if (!acc[asn]) {
-      acc[asn] = {
-        asn_name,
-        asn,
-        country_iso_code2,
-        ...AggregatedAlarmsUtils.deepCopy(aggregatedAttrs)
-      };
+    for (const column in columns) {
+      if (column.startsWith(eventType) && curr[column] !== undefined) {
+        acc[keyValue][column].push(curr[column])
+      }
     }
-
-    updateAlarmAggregatedAttrs(acc[asn], timebin, severity, event_type);
 
     return acc;
   }, {});
@@ -287,22 +362,7 @@ function aggregateAlarms(alarmsTransformed, aggregatedAttrs) {
   return aggregatedAlarms;
 }
 
-function updateAlarmAggregatedAttrs(alarm, timebin, severity, eventType) {
-  const alarmCountsAttr = `${eventType}_alarm_counts`
-  const alarmTimebinsAttr = `${eventType}_alarm_timebins`
-  const alarmSeveritiesAttr = `${eventType}_alarm_severities`
-  if (alarm[alarmCountsAttr]) {
-    alarm[alarmCountsAttr].push(1);
-  }
-  if (alarm[alarmTimebinsAttr]) {
-    alarm[alarmTimebinsAttr].push(timebin);
-  }
-  if (alarm[alarmSeveritiesAttr]) {
-    alarm[alarmSeveritiesAttr].push(severity)
-  }
-}
-
-function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAggregatedAttrs2) {
+function fullOuterJoinAlarms(alarms1, alarms2, columns1, columns2) {
   const fullOuterJoin = (alarmsInput) => {
     const mergedResult = {};
     for (const asnNumber in alarmsInput) {
@@ -312,14 +372,14 @@ function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAgg
     return mergedResult
   }
 
-  const updateMergedAlarms = (mergedAlarms, alarmsInput, alarmAggregatedAttrsASNotFound) => {
+  const updateMergedAlarms = (mergedAlarms, alarmsInput, columns2) => {
     for (const asnNumber in alarmsInput) {
       const alarmAggregated = alarmsInput[asnNumber];
       if (mergedAlarms[asnNumber]) {
         Object.assign(mergedAlarms[asnNumber], alarmAggregated);
       } else {
-        const alarmAggregatedAttrsASNotFoundCopied = AggregatedAlarmsUtils.deepCopy(alarmAggregatedAttrsASNotFound);
-        mergedAlarms[asnNumber] = { ...alarmAggregated, ...alarmAggregatedAttrsASNotFoundCopied }
+        const columns2Copied = AggregatedAlarmsUtils.deepCopy(columns2);
+        mergedAlarms[asnNumber] = { ...alarmAggregated, ...columns2Copied }
       }
     }
   }
@@ -327,218 +387,109 @@ function fullOuterJoinAlarms(alarms1, alarms2, alarmsAggregatedAttrs1, alarmsAgg
   let mergedAlarms = {}
 
   const mergedAlarms1 = fullOuterJoin(alarms1);
-  updateMergedAlarms(mergedAlarms, mergedAlarms1, alarmsAggregatedAttrs2);
+  updateMergedAlarms(mergedAlarms, mergedAlarms1, columns2);
 
   const mergedAlarms2 = fullOuterJoin(alarms2);
-  updateMergedAlarms(mergedAlarms, mergedAlarms2, alarmsAggregatedAttrs1);
+  updateMergedAlarms(mergedAlarms, mergedAlarms2, columns1);
   return mergedAlarms;
 }
 
+export function truncateASName(asn_name, asn, asNameTruncateLength = 10) {
+  const asNameTruncated = AggregatedAlarmsUtils.truncateString(asn_name, asNameTruncateLength) + ` (AS${asn})`
+  return asNameTruncated
+}
 
-function transformAlarmsHelper(alarms) {
-  const request = () => {
-    return new Promise((resolve, reject) => {
-      addASNameAndCountryIsoCode2(alarms).then((alarmsWithCountryIsoCodes2) => {
-        addCountryIsoCode3AndCountryName(alarmsWithCountryIsoCodes2)
-        const alarmsList = convertAlarmsDictToList(alarmsWithCountryIsoCodes2)
-        const filteredAlarms = filterAlarmsByCountryIsoCode3(alarmsList)
-        normalizeASNames(filteredAlarms)
-        resolve(filteredAlarms)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
+function addASNameAndCountryInfo(alarms) {
+  const request = () => new Promise((resolve, reject) => {
+    if (!AggregatedAlarmsUtils.isDictEmpty(asNamesCountryMappingsResult)) {
+      addASNameAndCountryInfoHelper(alarms, asNamesCountryMappingsResult)
+      resolve(alarms)
+    } else {
+      AsNamesPlugin.getASNamesCountryMappings()
+        .then((asNamesCountryMappings) => {
+          asNamesCountryMappingsResult = asNamesCountryMappings
+          addASNameAndCountryInfoHelper(alarms, asNamesCountryMappings)
+          return resolve(alarms)
+        })
+        .catch((error) => reject(error))
+    }
+  })
   return request()
 }
 
-function normalizeASNames(alarms) {
-  alarms.forEach((alarm) => {
-    const asNameTruncated = AggregatedAlarmsUtils.truncateString(alarm.asn_name, 20);
-    alarm.asn_name = `${asNameTruncated} (AS${alarm.asn})`
-  })
-}
-function addASNameAndCountryIsoCode2(alarms) {
-  const asnNumbers = [];
-
-  for (let asnNumber in alarms) {
-    const alarm = alarms[asnNumber]
-    const containsCountryIsoCode2 = alarm.country_iso_code2
-    if (!containsCountryIsoCode2 || !isNaN(alarm.asn_name)) {
-      asnNumbers.push(asnNumber)
-    }
-  }
-
-  const needToGetASNamesAndIsoCodes = asnNumbers.length > 0;
-  if (needToGetASNamesAndIsoCodes) {
-    const alarmsWithCountryIsoCodes2Promise = getASNamesAndIsoCodes(alarms, asnNumbers)
-    return alarmsWithCountryIsoCodes2Promise
-  } else {
-    return Promise.resolve(alarms)
-  }
-}
-
-function addCountryIsoCode3AndCountryName(alarms) {
-  for (let asnNumber in alarms) {
-    const countryCode2 = alarms[asnNumber].country_iso_code2
-    Object.assign(alarms[asnNumber], getCountryIsoCode3AndName(countryCode2))
-  }
-}
-
-function convertAlarmsDictToList(alarms) {
-  for (const asnNumber in alarms) {
-    alarms[asnNumber].asn = asnNumber;
-  }
-  const alarmsArray = Object.values(alarms)
-  return alarmsArray
-}
-
-function filterAlarmsByCountryIsoCode3(alarmsList) {
-  return Object.values(alarmsList).filter(alarm => alarm.country_iso_code3)
-}
-
-function getASNamesAndIsoCodes(alarms, asnNumbers) {
-  return new Promise((resolve, reject) => {
-    const asnNumbersCommaSeparated = asnNumbers.join(',');
-    getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeparated)
-      .then(asnNamesAndIsoCodes2 => {
-        for (const asnNameAndIsoCode2 of asnNamesAndIsoCodes2) {
-          const { asn_number: asNumber, asn_name: asName, country_iso_code2: countryIsoCode2 } = asnNameAndIsoCode2;
-          alarms[asNumber].country_iso_code2 = countryIsoCode2;
-          alarms[asNumber].asn_name = asName
-        }
-        return resolve(alarms);
-      })
-      .catch(error => {
-        console.error('Error retrieving ASN name and country ISO code:', error);
-        return reject(error);
-      });
-  });
-}
-
-function getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeperated, maxRetries = 5, delay = 500) {
-  let retries = 0;
-
-  const request = () => {
-    return new Promise((resolve, reject) => {
-      getASNameAndCountryIsoCode2(asnNumbersCommaSeperated)
-        .then(asnNamesAndIsoCodes2 => resolve(asnNamesAndIsoCodes2))
-        .catch(error => {
-          console.error(error)
-          if (retries < maxRetries) {
-            retryRequest(asnNumbersCommaSeperated, resolve, reject)
-          } else {
-            console.error(`Maximum retries reached for ASN ${asnNumbersCommaSeperated}`)
-            reject(error);
-          }
-        });
-    });
-  };
-
-  const retryRequest = (asnNumber, resolve, reject) => {
-    retries++;
-    console.log(`Retrying request for ASN ${asnNumber} (Attempt ${retries + 1})...`);
-    setTimeout(() => {
-      request().then(resolve).catch(reject);
-    }, delay);
-  };
-
-  return request();
-}
-
-function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
-  const asnNamesAndIsoCodes2 = []
-
-  const request = () => {
-    return new Promise((resolve, reject) => {
-      NetworkIhr.getNetworkInfo(asnNumbersCommaSeperated).then((networks) => {
-        networks.forEach(network => {
-          for (let asnNumber of asnNumbersCommaSeperated.split(',')) {
-            if (network.number == asnNumber) {
-              const countryIsoCode2 = normalizeCountryIsoCode2(network.name)
-              const asnName = normalizeASName(network.name)
-              asnNamesAndIsoCodes2.push({
-                asn_number: asnNumber,
-                asn_name: asnName,
-                country_iso_code2: countryIsoCode2,
-              })
+function addASNameAndCountryInfoHelper(alarms, asNamesCountryMappings) {
+  for (const asn in alarms) {
+    const alarm = alarms[asn]
+    for (const key in alarm) {
+      if (key.endsWith('_name')) {
+        const asnKey = key.split('_name')[0]
+        const asn_name_key = `${asnKey}_name`
+        const asn_country_key = `${asnKey}_country`
+        const asn_country_iso_code2_key = `${asnKey}_country_iso_code2`
+        const asn_country_iso_code3_key = `${asnKey}_country_iso_code3`
+        const asns = alarm[asnKey]
+        if (Array.isArray(asns)) {
+          for (let i = 0; i < asns.length; i++) {
+            const asn = asns[i]
+            if (asNamesCountryMappings[asn]) {
+              const { country_iso_code2, asn_name } = asNamesCountryMappings[asn]
+              const { country_iso_code3, country } = getCountryIsoCode3AndName(country_iso_code2)
+              alarm[asn_name_key][i] = asn_name
+              alarm[asn_country_key][i] = country
+              alarm[asn_country_iso_code2_key][i] = country_iso_code2
+              alarm[asn_country_iso_code3_key][i] = country_iso_code3
+            } else {
+              console.warn(`Hey there! It seems like the Autonomous System Number (ASN) ${asn} is not in our asn country mapping file yet.
+              🌍 You can help us by adding it and contributing to our data quality!
+              💪 Thank you for making our system even better! 🙏`);
             }
           }
-          return resolve(asnNamesAndIsoCodes2)
-        })
-      }).catch((error) => reject(error))
-    })
+        } else {
+          if (asNamesCountryMappings[asns]) {
+            const { country_iso_code2, asn_name } = asNamesCountryMappings[asns]
+            const { country_iso_code3, country } = getCountryIsoCode3AndName(country_iso_code2)
+            alarm[asn_name_key] = asn_name
+            alarm[asn_country_key] = country
+            alarm[asn_country_iso_code2_key] = country_iso_code2
+            alarm[asn_country_iso_code3_key] = country_iso_code3
+          }
+        }
+      }
+    }
   }
-
-  return request();
 }
-
-function updateASNameAndCountryIsoCode2(alarm, asName, asNumber) {
-  alarm.country_iso_code2 = normalizeCountryIsoCode2(asName);
-  alarm.asn_name = normalizeASName(asName);
-  alarm.asn = asNumber
-}
-
-function normalizeCountryIsoCode2(asnName) {
-  return asnName.split(',').splice(-1)[0].trim()
-}
-
-function normalizeASName(asnName) {
-  return asnName.split(',').splice(0, asnName.split(',').length - 1).join(',').trim()
-}
-
 function getCountryIsoCode3AndName(countryIsoCode2) {
   const country_iso_code3 = getCountryISOCode3(countryIsoCode2)
-  const country_name = getCountryName(countryIsoCode2)
-  return { country_iso_code3, country_name }
+  const country = getCountryName(countryIsoCode2)
+  return { country_iso_code3, country }
 }
 
-export function filterAlarmsByTime(alarms, startDateTime, endDateTime, aggregatedAttrsZipped) {
-  if (!aggregatedAttrsZipped.length) {
-    return alarms
+export function filterAlarmsByTime(alarms, startUnixTime, endUnixTime, aggregatedAttrsZipped) {
+  if (!alarms.length || !aggregatedAttrsZipped.length) {
+    return []
   }
   const filteredAlarms = alarms.map((alarm) => {
-    const filteredAlarm = filterAlarmByTime(alarm, startDateTime, endDateTime, aggregatedAttrsZipped);
+    const filteredAlarm = filterAlarmByTime(alarm, startUnixTime, endUnixTime, aggregatedAttrsZipped);
     return filteredAlarm;
   }).filter((alarm) => alarm !== null);
   return filteredAlarms;
 }
 
-function filterAlarmByTime(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
-  const isAlarmInTimebinRangeResult = isAlarmInTimebinRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped);
-
-  if (isAlarmInTimebinRangeResult === null) {
-    return null;
-  }
-
-  const filteredAlarm = { ...alarm };
-  for (const [alarmCountType, alarmTimebinType, alarmSeverityType] of aggregatedAttrsZipped) {
-    filteredAlarm[alarmTimebinType] = isAlarmInTimebinRangeResult[alarmTimebinType];
-    filteredAlarm[alarmSeverityType] = isAlarmInTimebinRangeResult[alarmSeverityType]
-    filteredAlarm[alarmCountType] = Array(filteredAlarm[alarmTimebinType].length).fill(1);
-  }
-
-  return filteredAlarm;
-}
-
-function isAlarmInTimebinRange(alarm, startDateTime, endDateTime, aggregatedAttrsZipped) {
-  let areAllTimebinTypesEmpty = true;
-
+function filterAlarmByTime(alarm, startUnixTime, endUnixTime, aggregatedAttrsZipped) {
+  let areAllTimebinTypesEmpty = true
   const filteredAlarm = {};
-  for (const [alarmCountType, alarmTimebinType, alarmSeverityType] of aggregatedAttrsZipped) {
-    filteredAlarm[alarmTimebinType] = []
-    filteredAlarm[alarmSeverityType] = []
+  for (const [_, alarmTimebinType, __, [___, ____]] of aggregatedAttrsZipped) {
+    if (!alarm[alarmTimebinType]) continue
+    const timeInRangeIndices = []
+    const alarmType = alarmTimebinType.split('_timebin')[0]
     for (let i = 0; i < alarm[alarmTimebinType].length; i++) {
-      const timebinStartDateTimeComp = AggregatedAlarmsUtils.compareUtcStrings(alarm[alarmTimebinType][i], startDateTime);
-      const timebinEndDateTimeComp = AggregatedAlarmsUtils.compareUtcStrings(alarm[alarmTimebinType][i], endDateTime);
-      if (timebinStartDateTimeComp >= 0 && timebinEndDateTimeComp <= 0) {
-        filteredAlarm[alarmTimebinType].push(alarm[alarmTimebinType][i])
-        filteredAlarm[alarmSeverityType].push(alarm[alarmSeverityType][i])
+      if (alarm[alarmTimebinType][i] >= startUnixTime && alarm[alarmTimebinType][i] <= endUnixTime) {
+        initFilteredAlarm(filteredAlarm, alarm, alarmType, i)
+        timeInRangeIndices.push(i)
       }
     }
-    areAllTimebinTypesEmpty = areAllTimebinTypesEmpty && filteredAlarm[alarmTimebinType].length === 0;
+    areAllTimebinTypesEmpty = areAllTimebinTypesEmpty && timeInRangeIndices.length === 0;
   }
-
   if (areAllTimebinTypesEmpty) {
     return null
   } else {
@@ -547,10 +498,9 @@ function isAlarmInTimebinRange(alarm, startDateTime, endDateTime, aggregatedAttr
 }
 
 export function filterAlarmsBySeverity(alarms, severitiesSelected, aggregatedAttrsZipped) {
-  if (!severitiesSelected.length || !aggregatedAttrsZipped.length) {
-    return alarms
+  if (!alarms.length || !severitiesSelected.length || !aggregatedAttrsZipped.length) {
+    return []
   }
-
   const filteredAlarms = alarms.map((alarm) => {
     const filteredAlarm = filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped);
     return filteredAlarm
@@ -559,41 +509,71 @@ export function filterAlarmsBySeverity(alarms, severitiesSelected, aggregatedAtt
 }
 
 function filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped) {
-  const isAlarmInSeveritiesRangeResult = isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped);
-
-  if (isAlarmInSeveritiesRangeResult === null) {
-    return null;
-  }
-
-  const filteredAlarm = { ...alarm };
-  for (const [alarmCountType, alarmTimebinType, alarmSeverityType] of aggregatedAttrsZipped) {
-    filteredAlarm[alarmSeverityType] = isAlarmInSeveritiesRangeResult[alarmSeverityType]
-    filteredAlarm[alarmTimebinType] = isAlarmInSeveritiesRangeResult[alarmTimebinType]
-    filteredAlarm[alarmCountType] = Array(filteredAlarm[alarmSeverityType].length).fill(1);
-  }
-
-  return filteredAlarm;
-}
-
-function isAlarmInSeveritiesRange(alarm, severitiesSelected, aggregatedAttrsZipped) {
   let areAllSeveritiesEmpty = true;
-
   const filteredAlarm = {};
-  for (const [alarmCountType, alarmTimebinType, alarmSeverityType] of aggregatedAttrsZipped) {
-    filteredAlarm[alarmTimebinType] = []
-    filteredAlarm[alarmSeverityType] = []
+  for (const [_, __, alarmSeverityType, [___, ____]] of aggregatedAttrsZipped) {
+    if (!alarm[alarmSeverityType]) continue
+    const severityInRangeIndices = []
+    const alarmType = alarmSeverityType.split('_severity')[0]
     for (let i = 0; i < alarm[alarmSeverityType].length; i++) {
       if (severitiesSelected.includes(alarm[alarmSeverityType][i])) {
-        filteredAlarm[alarmSeverityType].push(alarm[alarmSeverityType][i])
-        filteredAlarm[alarmTimebinType].push(alarm[alarmTimebinType][i])
+        initFilteredAlarm(filteredAlarm, alarm, alarmType, i)
+        severityInRangeIndices.push(i)
       }
     }
-    areAllSeveritiesEmpty = areAllSeveritiesEmpty && filteredAlarm[alarmSeverityType].length === 0
+    areAllSeveritiesEmpty = areAllSeveritiesEmpty && severityInRangeIndices.length === 0;
   }
-
   if (areAllSeveritiesEmpty) {
     return null
   } else {
     return filteredAlarm
+  }
+}
+
+export function filterAlarmsByIpAddressFamily(alarms, ipAddressFamiliesSelected, aggregatedAttrsZipped) {
+  if (!alarms.length || !ipAddressFamiliesSelected.length || !aggregatedAttrsZipped.length) {
+    return []
+  }
+  const ipAddressFamiliesString = ipAddressFamiliesSelected.map((af) => String(af))
+  const filteredAlarms = alarms.map((alarm) => {
+    const filteredAlarm = filterAlarmByIpAddressFamily(alarm, ipAddressFamiliesString, aggregatedAttrsZipped);
+    return filteredAlarm
+  }).filter((alarm) => alarm !== null)
+  return filteredAlarms
+}
+
+function filterAlarmByIpAddressFamily(alarm, ipAddressFamiliesSelected, aggregatedAttrsZipped) {
+  let areAllIpAddressFamiliesEmpty = true;
+  const filteredAlarm = {};
+  for (const [alarmCountType, __, ___, [alarmIpAddressFamily1, alarmIpAddressFamily2]] of aggregatedAttrsZipped) {
+    if (!alarm[alarmIpAddressFamily1]) continue
+    const ipAddressFamilyInRangeIndices = []
+    const alarmType = alarmCountType.split('_count')[0]
+    for (let i = 0; i < alarm[alarmIpAddressFamily1].length; i++) {
+      const isSelectedIpAddressFamiliesInRange = alarmIpAddressFamily2
+        ? ipAddressFamiliesSelected.some((af) => String(alarm[alarmIpAddressFamily1][i]).includes(af) && String(alarm[alarmIpAddressFamily2][i]).includes(af))
+        : ipAddressFamiliesSelected.some((af) => String(alarm[alarmIpAddressFamily1][i]).includes(af))
+      if (isSelectedIpAddressFamiliesInRange) {
+        initFilteredAlarm(filteredAlarm, alarm, alarmType, i)
+        ipAddressFamilyInRangeIndices.push(i)
+      }
+    }
+    areAllIpAddressFamiliesEmpty = areAllIpAddressFamiliesEmpty && ipAddressFamilyInRangeIndices.length === 0;
+  }
+  if (areAllIpAddressFamiliesEmpty) {
+    return null
+  } else {
+    return filteredAlarm
+  }
+}
+
+function initFilteredAlarm(filteredAlarm, alarm, alarmType, index) {
+  for (const key in alarm) {
+    if (!key.startsWith('asn') && !key.startsWith(alarmType)) continue
+    if (Array.isArray(alarm[key])) {
+      !filteredAlarm[key] ? filteredAlarm[key] = [alarm[key][index]] : filteredAlarm[key].push(alarm[key][index])
+    } else {
+      filteredAlarm[key] = alarm[key]
+    }
   }
 }

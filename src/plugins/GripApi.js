@@ -1,23 +1,15 @@
 import * as AggregatedAlarmsUtils from '../models/AggregatedAlarmsUtils'
 import axios from 'axios'
 
-export function getGripAlarms(gripAlarmsState, startTime, endTime, timezone = '', minSuspicionLevel = 80, maxSuspicionLevel = 100, eventType = 'all', onePage = false) {
+export function getGripAlarms(startTime, endTime, timezone = '', minSuspicionLevel = 80, maxSuspicionLevel = 100, eventType = 'all', onePage = false) {
   const request = () => {
-    return new Promise((resolve, reject) => {
-      if (gripAlarmsState.data) {
-        return resolve(gripAlarmsState.data)
-      }
-      if (!gripAlarmsState.data && !gripAlarmsState.downloading) {
-        gripAlarmsState.downloading = true
-        getGripAlarmsHelper(startTime, endTime, timezone, minSuspicionLevel, maxSuspicionLevel, eventType, onePage).then((gripAlarms) => {
-          gripAlarmsState.downloading = false
-          gripAlarmsState.data = gripAlarms
-          return resolve(gripAlarmsState.data)
+    return new Promise((resolve, _) => {
+      getGripAlarmsHelper(startTime, endTime, timezone, minSuspicionLevel, maxSuspicionLevel, eventType, onePage)
+        .then((gripAlarmsData) => resolve(gripAlarmsData))
+        .catch(error => {
+          console.error(error)
+          resolve([])
         })
-          .catch(error => {
-            return reject(error)
-          })
-      }
     })
   }
   return request()
@@ -43,10 +35,7 @@ function getGripAlarmsHelper(startTime, endTime, timezone = '', minSuspicionLeve
   const request = () => {
     return axios.get(API_URL, { params })
       .then((handleResponse))
-      .catch((error) => {
-        console.error(error)
-        return []
-      });
+      .catch((error) => Promise.reject(error));
   };
 
   const handleResponse = (response) => {
@@ -59,11 +48,8 @@ function getGripAlarmsHelper(startTime, endTime, timezone = '', minSuspicionLeve
     const getPageDataPromises = createGetPageDataPromises(totalRecords, bgpAlertsData, params);
 
     return Promise.all(getPageDataPromises)
-      .then(() => {
-        return bgpAlertsData
-      }).catch(error => {
-        reject(error)
-      });
+      .then(() => bgpAlertsData)
+      .catch(error => Promise.reject(error));
   };
 
   const createGetPageDataPromises = (totalRecords, bgpAlertsData, params) => {
@@ -77,7 +63,6 @@ function getGripAlarmsHelper(startTime, endTime, timezone = '', minSuspicionLeve
           return delay(0.5);
         })
         .catch(_ => {
-          console.log('Error getting page data, retrying...');
           return delay(1000);
         });
 

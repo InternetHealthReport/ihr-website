@@ -310,7 +310,7 @@ export default {
           this.show.hegemony = results.results[0].hegemony
         })
 
-        this.asName = results.results[0].name
+        if (results.results[0].name && results.results[0].name.length !== 0) this.asName = results.results[0].name;
         this.loadingStatus = LOADING_STATUS.LOADED
         this.fetch = true
       })

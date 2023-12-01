@@ -189,7 +189,7 @@ export default {
     group: {
       type: String,
       default: '',
-    },
+    }
   },
   emits: {
     'prefix-details': function(event) {
@@ -464,7 +464,7 @@ export default {
       this.$nextTick(function () {
         this.loading = true
       })
-    },
+    }
   },
 }
 </script>
