@@ -109,51 +109,16 @@ export function formatUTCTime(date, timezone = '') {
     const hours = String(date.getUTCHours()).padStart(2, '0');
     const minutes = String(date.getUTCMinutes()).padStart(2, '0');
     let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
-    formattedDate = timezone.length ? `${formattedDate}:${timezone}` : formattedDate
+    formattedDate = timezone.length ? `${formattedDate}${timezone}` : formattedDate
     return formattedDate;
   }
-}
-
-export function compareUtcStrings(utcString1, utcString2) {
-  const date1 = new Date(utcString1);
-  const date2 = new Date(utcString2);
-
-  const year1 = date1.getUTCFullYear();
-  const month1 = date1.getUTCMonth();
-  const day1 = date1.getUTCDate();
-  const hour1 = date1.getUTCHours();
-  const minute1 = date1.getUTCMinutes();
-  const second1 = date1.getUTCSeconds();
-
-  const year2 = date2.getUTCFullYear();
-  const month2 = date2.getUTCMonth();
-  const day2 = date2.getUTCDate();
-  const hour2 = date2.getUTCHours();
-  const minute2 = date2.getUTCMinutes();
-  const second2 = date2.getUTCSeconds();
-
-  if (year1 > year2) return 1;
-  if (year1 < year2) return -1;
-  if (month1 > month2) return 1;
-  if (month1 < month2) return -1;
-  if (day1 > day2) return 1;
-  if (day1 < day2) return -1;
-  if (hour1 > hour2) return 1;
-  if (hour1 < hour2) return -1;
-  if (minute1 > minute2) return 1;
-  if (minute1 < minute2) return -1;
-  if (second1 > second2) return 1;
-  if (second1 < second2) return -1;
-  return 0;
 }
 
 export function zipAggregatedAttrs(aggregatedAttrsDict) {
   const arrays = []
   for (const aggregatedAttrType in aggregatedAttrsDict) {
-    const aggregatedAttrs = Object.keys(aggregatedAttrsDict[aggregatedAttrType])
-    arrays.push(aggregatedAttrs)
+    arrays.push(aggregatedAttrsDict[aggregatedAttrType])
   }
-
   const arraysTransposed = transposeArrays(arrays);
   return arraysTransposed
 }
@@ -167,7 +132,7 @@ export function transposeArrays(arrays) {
   return arraysTransposed
 }
 
-export function getUniqueValuesFromDictKeyValues(data, property) {
+export function getPropertyUniqueValues(data, property) {
   return [...new Set(data.map(item => item[property]))];
 }
 
@@ -191,7 +156,7 @@ export function countItemOccurrences(items) {
   return itemCounts;
 }
 
-export function findIndicesOfValue(array, value) {
+export function findAllIndices(array, value) {
   const indices = [];
 
   for (let i = 0; i < array.length; i++) {
@@ -201,4 +166,75 @@ export function findIndicesOfValue(array, value) {
   }
 
   return indices;
+}
+
+export function resetChartZooming(chart) {
+  Object.assign(chart.layout.xaxis, { autorange: true })
+  Object.assign(chart.layout.yaxis, { autorange: true })
+}
+
+export function normalizeASNames(alarms, asNameTruncateLength = 20) {
+  alarms.forEach((alarm) => {
+    const asNameTruncated = AggregatedAlarmsUtils.truncateString(alarm.asn_name, asNameTruncateLength);
+    alarm.asn_name = `${asNameTruncated} (AS${alarm.asn})`
+  })
+}
+
+export function getIPAddressFamily(ipPrefix) {
+  if (/:/.test(ipPrefix)) {
+    return 6;
+  } else if (/\./.test(ipPrefix)) {
+    return 4;
+  } else {
+    return null
+  }
+}
+
+export function normalizeColumns(dict) {
+  const normalizedColumns = Object.keys(dict).map((element) => {
+    if (Array.isArray(dict[element])) {
+      dict[element] = []
+    }
+    return { [element]: dict[element] }
+  })
+  const columnsFlattened = flattenDictionary(normalizedColumns)
+  return columnsFlattened
+}
+
+export function roundToDecimalPlaces(number, decimalPlaces) {
+  var factor = Math.pow(10, decimalPlaces);
+  return Math.round(number * factor) / factor;
+}
+
+export function getMedianValue(values) {
+  const validValues = values.filter((value) => value !== null && value !== '' && !isNaN(value))
+  if (validValues.length === 0) return null
+  let medianValue;
+  const sortedValues = validValues.slice().sort((a, b) => a - b);
+  const middle = Math.floor(validValues.length / 2);
+  if (validValues.length % 2 === 0) {
+    const mid1 = sortedValues[middle - 1];
+    const mid2 = sortedValues[middle];
+    medianValue = (mid1 + mid2) / 2
+  } else {
+    medianValue = sortedValues[middle];
+  }
+  medianValue = roundToDecimalPlaces(medianValue, 2)
+  return medianValue
+}
+
+
+export function getAverageValue(values) {
+  const validValues = values.filter((value) => value !== null && value !== '' && !isNaN(value))
+  if (validValues.length === 0) return null
+  const sum = validValues.reduce((acc, num) => acc + num, 0);
+  let avgValue = sum / validValues.length;
+  avgValue = roundToDecimalPlaces(avgValue, 2)
+  return avgValue
+}
+
+export function getPercentageValue(firstValue, secondValue) {
+  if (firstValue === null || secondValue === null || firstValue === '' || secondValue === '' || isNaN(firstValue) || isNaN(secondValue) || secondValue === 0 || firstValue === 0 && secondValue === 0) return null
+  const percentageValue = roundToDecimalPlaces((firstValue / secondValue) * 100, 2)
+  return percentageValue
 }

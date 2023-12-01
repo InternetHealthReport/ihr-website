@@ -29,18 +29,18 @@ export default {
       default: false,
     },
   },
-  data() {
-    let interval
+  created() {
+    let interval = null;
     try {
       interval = this.getDateInterval(this.$route.query.date + 'T00:00+00:00', this.$route.query.last)
     } catch (e) {
-      if (!(e instanceof RangeError)) {
-        // console.log('Range Error')
-      }
-      interval = this.getDateInterval(new Date(), 3) // fallback to last few days
+      interval = this.getDateInterval(new Date(), this.defaultTimeRangeVal)
     }
+    this.$set(this, 'interval', interval);
+  },
+  data() {
     return {
-      interval: interval,
+      interval: null,
       fetch: false,
     }
   },
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     setReportDate(event) {
-      this.interval = this.getDateInterval(event, 3)
+      this.interval = this.getDateInterval(event, this.defaultTimeRangeVal);
     },
     resizeCharts() {
       setTimeout(() => {
@@ -94,6 +94,9 @@ export default {
     endTime() {
       return this.interval.end
     },
+    defaultTimeRangeVal() {
+      return this.defaultTimeRange ? this.defaultTimeRange : 3
+    }
   },
   watch: {
     interval() {

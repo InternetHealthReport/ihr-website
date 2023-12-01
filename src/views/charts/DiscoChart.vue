@@ -103,7 +103,6 @@ export default {
   },
   data() {
     let filter = new DiscoEventQuery().streamName(this.streamName).timeInterval(this.startTime, this.endTime).orderedByTime()
-
     return {
       dataEvents: [],
       details: {

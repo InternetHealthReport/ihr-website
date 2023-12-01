@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint --no-fix",
+    "lint": "vue-cli-service lint --fix",
     "lint:fix": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "prepare": "husky install",
@@ -78,6 +78,7 @@
     "vue-cli-plugin-i18n": "^0.6.1",
     "vue-cli-plugin-quasar": "^1.0.0",
     "vue-plugin-load-script": "^2.0.0",
-    "vue-template-compiler": "2.6.11"
+    "vue-template-compiler": "2.6.11",
+    "worker-loader": "^3.0.8"
   }
 }
