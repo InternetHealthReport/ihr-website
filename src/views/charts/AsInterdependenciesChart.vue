@@ -133,6 +133,7 @@ export default {
       details: {
         activeTab: null,
         date: null,
+        networkDelay: null,
         tablesData: {
           dependency: null,
           dependent: null,
@@ -156,6 +157,9 @@ export default {
   mounted() {
     this.tableFromQuery()
     this.getNeighboursData()
+
+    const networkDelay = await this.getNetworkDelay('start_location', 'end_location', this.dateStr);
+    this.networkDelay = networkDelay;
   },
   methods: {
     updateAxesLabel() {
@@ -328,29 +332,85 @@ export default {
         }
       )
     },
-    fetchHegemony(data) {
-      console.log('fetchHegemony')
-      let traces = {}
-      let missingDataList = []
 
-      let anotherAsn
-      let minX, maxX
+// Function to get the last seen date
+async function getLastSeenDate() {
+    const currentDate = new Date();
+    const thirtyDaysAgo = new Date(currentDate);
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    for (let date = new Date(thirtyDaysAgo); date <= currentDate; date.setDate(date.getDate() + 1)) {
+        const formattedDate = date.toISOString().split('T')[0];
+        const networkDelay = await getNetworkDelay('start_location', 'end_location', formattedDate);
+
+        if (networkDelay !== null) {
+            // Return the date when network is reachable
+            return {
+                message: `Network is unreachable. Last seen on ${formattedDate}`,
+                lastSeenDate: formattedDate,
+            };
+        }
+    }
+
+    return 'Network is unreachable for the past 30 days';
+}
+// Function to fetch network delay using the API
+async function getNetworkDelay(startpoint, endpoint, timebin) {
+    try {
+        const response = await fetch(`network_delay_api_endpoint?startpoint_name=${startpoint}&endpoint_name=${endpoint}&timebin=${timebin}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add any necessary headers or authentication tokens
+            },
+        });
+
+        if (!response.ok) {
+            console.error('Error fetching network delay:', response.statusText);
+            return null;
+        }
+
+        const data = await response.json();
+        if (data.results.length > 0) {
+            return data.results[0].median;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error('Error fetching network delay:', error.message);
+        return null;
+    }
+}
+    fetchHegemony(data) {
+      console.log('fetchHegemony');
+      let traces = {}
+      let missingDataList = [];
+
+      let anotherAsn;
+      let minX, maxX;
       //console.log(data);
       if (data.length == 0) {
-        this.traces = extend(true, [], DEFAULT_TRACE)
+
+      const lastSeenDateObject = await getLastSeenDate(); // Implement a function to get the last seen date       let message = '';
+      if (lastSeenDateObject !== null) {
+          message = `Network is unreachable. Last seen on ${lastSeenDateObject.lastSeenDate}`;
+        } else {
+            message = 'Network is unreachable for the past 30 days';
+        }
+        this.traces = [...DEFAULT_TRACE];
         this.layout.annotations = [
           {
             x: 0.45,
             y: 0.23,
             xref: 'paper',
             yref: 'paper',
-            text: 'Network is unreachable',
+            text: message,
             showarrow: false,
             font: {
               size: 22,
             },
           },
-        ]
+        ];
         return
       } else {
         var noDependency = false
@@ -599,8 +659,13 @@ export default {
     },
   },
   computed: {
-    bgplay() {
-      return `/ihr/widget/bgplay?asn=${this.asNumber}&date=${this.dateStr}`
+    networkDelayMessage() {
+       if (this.networkDelay !== null) {
+        return `Network delay is ${this.networkDelay}ms.`;
+      } else {
+        return 'Network is unreachable for the past 30 days.';
+        }
+      },
     },
     dateStr() {
       let year = this.details.date.getUTCFullYear()
