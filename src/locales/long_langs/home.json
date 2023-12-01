@@ -47,44 +47,66 @@
           "name": "IIJ",
           "logo": "iij-logo.jpg",
           "url":"https://www.iij.ad.jp/en/",
-          "description": "For financial support, rack space, etc..."
+          "description": "For financial support, rack space, etc...",
+          "style": {
+            "marginRight": "10px"
+          }
         },
         {
           "name": "RIPE NCC",
           "logo": "ripe-logo.png",
           "url":"https://www.ripe.net/",
-          "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
+          "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS",
+          "style": {
+            "marginRight": "10px"
+          }
+
         },
         {
           "name": "GSOC",
           "logo": "gsoc-logo.png",
           "url":"https://summerofcode.withgoogle.com/",
-          "description": "Google Summer of Code supports new contributors into the development of IHR"
+          "description": "Google Summer of Code supports new contributors into the development of IHR",
+          "style": {
+            "marginRight": "10px"
+          }
         },
 
         {
           "name": "Route Views",
           "logo": "rv-logo.png",
           "url":"https://www.routeviews.org/routeviews/",
-          "description": "For BGP data"
+          "description": "For BGP data",
+          "style": {
+            "marginRight": "10px"
+          }
         },
         {
           "name": "ISOC",
           "logo": "isoc-logo.png",
           "url":"https://www.internetsociety.org/",
-          "description": "For financial support"
+          "description": "For financial support",
+          "style": {
+            "marginRight": "10px"
+          }
         },
         {
           "name": "MANRS",
           "logo": "manrs-logo.jpg",
           "url":"https://www.manrs.org/",
-          "description": "For financial support (MANRS Research Fellowship Program)"
+          "description": "For financial support (MANRS Research Fellowship Program)",
+          "style": {
+            "marginRight": "10px"
+          }
         },
         {
           "name": "EdgeCast",
           "logo": "edgecast-logo.png",
           "url":"https://edg.io/",
-          "description": "For providing IHR website and API on their CDN."
+          "description": "For providing IHR website and API on their CDN.",
+          "style": {
+            "marginRight": "10px"
+          }
         }
       ]
     },
