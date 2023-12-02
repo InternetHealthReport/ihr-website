@@ -5,6 +5,7 @@ import Contact from '../views/Contact.vue'
 import Api from '../views/Api.vue'
 import MetisHome from '../views/MetisHome.vue'
 import MetisSelection from '../views/MetisSelection.vue'
+import MetisDeployment from '../views/MetisDeployment.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -87,7 +88,7 @@ const router = createRouter({
         {
           path: 'metis/deployment',
           name: 'metis-deployment',
-          component: Api
+          component: MetisDeployment
         }
       ]
     }

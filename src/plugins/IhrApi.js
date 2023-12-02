@@ -4,6 +4,7 @@ import {
   QueryBase,
   Query,
   MetisAtlasSelectionQuery,
+  MetisAtlasDeploymentQuery,
  } from './query/IhrQuery'
 
 /// Base url for api
@@ -112,6 +113,15 @@ const IhrApi = {
       )
     }
 
+    const metisAtlasDeployment = (metisAtlasDeploymentQuery, successCallback, errorCallback) => {
+      _generic(
+        MetisAtlasDeploymentQuery.ENTRY_POINT,
+        metisAtlasDeploymentQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
     const ihr_api = {
       getUrl,
       readableType,
@@ -119,6 +129,7 @@ const IhrApi = {
       ihr_AsOrIxpToNumber,
       sortedKeys,
       metisAtlasSelection,
+      metisAtlasDeployment
     }
     app.provide('ihr_api', ihr_api)
   }
@@ -129,5 +140,6 @@ export {
   PROJECT_START_DATE,
   IhrApi,
   Query,
-  MetisAtlasSelectionQuery
+  MetisAtlasSelectionQuery,
+  MetisAtlasDeploymentQuery
 }

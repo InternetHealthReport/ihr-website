@@ -22,6 +22,7 @@ const props = defineProps({
 const traces = ref([])
 const layout = ref({ ...RIR_COUNTRY_SUNBURST_LAYOUT, sunburstcolorway: [] })
 const chartTitle = ref(null)
+const noData = ref('')
 
 const watcher = (newData) => {
   const labels = ['Total']
@@ -62,6 +63,6 @@ onMounted(() => {
 
 <template>
   <div>
-    <ReactiveChart :layout="layout" :traces="traces" :chartTitle="chartTitle" />
+    <ReactiveChart :layout="layout" :traces="traces" :chartTitle="chartTitle" :noData="noData" />
   </div>
 </template>
