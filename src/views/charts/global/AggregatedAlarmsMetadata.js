@@ -176,7 +176,7 @@ export const ALARMS_INFO = {
         metadata: {
           title: 'Network Disconnection',
           table_button_text: 'Network Disconnection Alarms',
-          description: 'Network Disconnection Alarms',
+          description: 'Synchronous disconnection of multiple RIPE Atlas probes in the same region.',
           showHelpModal: false,
           default_key: 'stream',
           group_by_key_options: { location: 'stream' },
