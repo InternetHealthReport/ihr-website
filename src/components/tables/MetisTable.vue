@@ -1,5 +1,5 @@
 <script setup>
-import { QTable, QSpace, QInput, QIcon, QBtn, useQuasar } from 'quasar'
+import { QTable, QSpace, QInput, QIcon, QBtn, useQuasar, exportFile } from 'quasar'
 import { ref } from 'vue'
 import commonTable from '@/plugins/commonTable'
 

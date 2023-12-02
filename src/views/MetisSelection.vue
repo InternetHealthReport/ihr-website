@@ -2,11 +2,12 @@
 import { RouterLink } from 'vue-router'
 import { QInput, QSelect, QBtn, copyToClipboard } from 'quasar'
 import Tr from '@/i18n/translation'
-import MetisTable from '../components/tables/MetisTable.vue'
+import MetisTable from '@/components/tables/MetisTable.vue'
 import { ref, onMounted, inject, nextTick  } from 'vue'
 import rirMapping from '@/assets/rir-country-map.json'
 import getCountryName from '../plugins/countryName'
 import { MetisAtlasSelectionQuery } from '@/plugins/IhrApi'
+import RirCountrySunburstChart from '@/components/charts/RirCountrySunburstChart.vue'
 
 const ATLAS_PROBE = {
   type: 'asn',
@@ -168,7 +169,7 @@ const readRanking = (data) => {
 }
 
 const copyAPI = () => {
-  copyToClipboard(apiJson)
+  copyToClipboard(apiJson.value)
     .then(() => {})
     .catch(() => {
       console.error('Failed to copy API Json to clipboard.')
@@ -221,7 +222,7 @@ const copyAPI = () => {
           </div>
           <div class="col-5 q-px-xl">
             <h2>Country distribution</h2>
-            <!-- <rir-country-sunburst-chart :data="plotData" /> -->
+            <RirCountrySunburstChart :data="plotData" />
           </div>
         </div>
         <div class="row justify-center">

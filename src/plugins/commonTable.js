@@ -1,4 +1,4 @@
-import { toRefs, ref, watch } from "vue"
+import { toRefs, ref, watch } from 'vue'
 import networkName from './networkName'
 
 export default function commonTable(props, ctx) {
@@ -17,7 +17,7 @@ export default function commonTable(props, ctx) {
   }
 
   const filterFct = (rows, terms, cols, cellValue) => {
-    const lowerTerms = terms ? terms.toLowerCase() : ""
+    const lowerTerms = terms ? terms.toLowerCase() : ''
     filteredRows.value = rows.filter((row) =>
       cols.some(
         (col) =>
@@ -35,7 +35,7 @@ export default function commonTable(props, ctx) {
   }
 
   watch(filteredRows, (newValue) => {
-    ctx.emit("filteredRows", [filterTable.value, newValue])
+    ctx.emit('filteredRows', [filterTable.value, newValue])
   })
   watch(filterTable, (newValue) => {
     if (newValue == "") filteredRows.value = rows.value
