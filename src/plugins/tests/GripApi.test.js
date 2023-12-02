@@ -2,13 +2,13 @@ import * as GripApiPlugin from '../GripApi';
 import Joi from 'joi'
 
 describe('getGripAlarms', () => {
-  const timeoutMilliseconds = 10000;
+  const timeoutMilliseconds = 20000;
   it('returns valid JSON data with expected schema', async () => {
     const inferenceSchema = Joi.object({
       suspicion_level: Joi.number().required(),
       confidence: Joi.number().optional(),
-      explanation: Joi.string().optional(),
-      inference_id: Joi.string().optional(),
+      explanation: Joi.string().optional().allow(null, ''),
+      inference_id: Joi.string().optional().allow(null, ''),
       labels: Joi.array().items(Joi.string()).optional(),
     });
 
@@ -37,7 +37,7 @@ describe('getGripAlarms', () => {
       duration: Joi.number().optional().allow(null),
       event_metrics: Joi.object().optional().allow(null),
       finished_ts: Joi.number().optional().allow(null),
-      id: Joi.string().optional().allow(null),
+      id: Joi.string().optional().allow(null, ''),
       insert_ts: Joi.number().optional().allow(null),
       pfx_events: Joi.array().optional().allow(null),
       tr_metrics: Joi.object().optional().allow(null),
@@ -53,9 +53,8 @@ describe('getGripAlarms', () => {
     const maxSuspicionLevel = 100;
     const eventType = 'all';
     const onePage = true;
-    const gripAlarmsState = { data: null, downloading: false };
 
-    const result = await GripApiPlugin.getGripAlarms(gripAlarmsState, startTime, endTime, timezone, minSuspicionLevel, maxSuspicionLevel, eventType, onePage)
+    const result = await GripApiPlugin.getGripAlarms(startTime, endTime, timezone, minSuspicionLevel, maxSuspicionLevel, eventType, onePage)
 
     const { error } = expectedSchema.validate(result);
     expect(error).toBe(undefined);

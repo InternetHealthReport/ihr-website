@@ -11,27 +11,13 @@
             <div class="text-h3">{{ details.date | ihrUtcString }}</div>
           </div>
           <div class="col-auto">
-            <q-btn
-              class="IHR_table-close-button"
-              size="sm"
-              round
-              flat
-              @click="details.tableVisible = false"
-              icon="fa fa-times-circle"
-            ></q-btn>
+            <q-btn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible = false"
+              icon="fa fa-times-circle"></q-btn>
           </div>
         </div>
       </q-card-section>
-      <q-tabs
-        dense
-        v-model="details.activeTab"
-        class="table-card text-grey inset-shadow"
-        indicator-color="secondary"
-        active-color="primary"
-        active-bg-color="white"
-        align="justify"
-        narrow-indicator
-      >
+      <q-tabs dense v-model="details.activeTab" class="table-card text-grey inset-shadow" indicator-color="secondary"
+        active-color="primary" active-bg-color="white" align="justify" narrow-indicator>
         <q-tab name="dependency" :label="$t('charts.asInterdependencies.table.dependencyTitle')" />
         <q-tab name="dependent" :label="$t('charts.asInterdependencies.table.dependentTitle')" />
         <q-tab name="bgpPlay" label="AS Graph" />
@@ -42,7 +28,8 @@
           <as-interdependencies-table :data="networkDependencyData" :loading="details.tablesData.dependency.loading" />
         </q-tab-panel>
         <q-tab-panel name="dependent">
-          <as-interdependencies-table :data="dependentNetworksData" use-origin-asn :loading="details.tablesData.dependent.loading" />
+          <as-interdependencies-table :data="dependentNetworksData" use-origin-asn
+            :loading="details.tablesData.dependent.loading" />
         </q-tab-panel>
         <q-tab-panel name="bgpPlay">
           <div class="bgplay-container">
@@ -125,14 +112,14 @@ export default {
     noTable: {
       type: Boolean,
       default: false,
-    },
+    }
   },
   data() {
     //prevent calls within 500ms and execute only the last one
     return {
       details: {
         activeTab: null,
-        date: null,
+        date: this.endTime,
         tablesData: {
           dependency: null,
           dependent: null,
@@ -196,10 +183,8 @@ export default {
           this.neighbours.push(neighbour.asn)
         })
         this.loadingNeighbours = false
-        console.log('asnNeighbours data loaded')
         let intervalEnd = this.details.date
         let intervalStart = new Date(intervalEnd.getTime() - 15 * 60000)
-
         let dependencyFilter = this.makeHegemonyFilter().timeInterval(intervalStart, intervalEnd)
         let dependentFilter = dependencyFilter.clone().originAs().asNumber(this.asNumber)
         this.updateTable('dependency', 'asn', dependencyFilter, intervalStart, intervalEnd)
@@ -207,6 +192,7 @@ export default {
       })
     },
     plotClick(clickData) {
+      if (this.noTable) return
       var table = 'dependency'
       if (clickData.points[0].data.yaxis == 'y2') {
         table = 'dependent'
@@ -215,6 +201,7 @@ export default {
     },
     tableFromQuery() {
       // if query parameter have click information then show corresponding tables
+      if (this.noTable) return
       let selectedDate = this.$route.query.hege_dt
       let table = this.$route.query.hege_tb
       if (selectedDate != undefined && table != undefined) {
@@ -222,6 +209,7 @@ export default {
       }
     },
     showTable(table, selectedDate) {
+      if (this.noTable) return
       if (selectedDate.length < 14) {
         // at midnight no time is given
         this.details.date = Date.parse(selectedDate + ' 00:00 GMT') //adding timezone to string...
@@ -329,13 +317,11 @@ export default {
       )
     },
     fetchHegemony(data) {
-      console.log('fetchHegemony')
       let traces = {}
       let missingDataList = []
 
       let anotherAsn
       let minX, maxX
-      //console.log(data);
       if (data.length == 0) {
         this.traces = extend(true, [], DEFAULT_TRACE)
         this.layout.annotations = [
@@ -447,7 +433,6 @@ export default {
         data.forEach(elem => {
           const elemTime = Date.parse(elem.timebin).getTime()
           if (elemTime > intervalStartTime && elemTime < intervalEndTime) {
-            console.log(elem)
             skip = true
           }
         })
@@ -485,7 +470,11 @@ export default {
 
       this.layout['shapes'] = shapeList
 
-      // console.log('maxX', new Date(maxX).toISOString())
+      if (!maxX || !minX) {
+        this.clearGraph()
+        this.noData = this.$t('No data to show')
+        return
+      }
       let maxXIso = new Date(maxX).toISOString().split('.')[0] + 'Z'
       let minXIso = new Date(minX).toISOString().split('.')[0] + 'Z'
       // console.log(minXIso, maxXIso)
@@ -569,8 +558,8 @@ export default {
       }
     },
     fetchHegemonyCone(data) {
-      // console.log('fetchHegemonyCone')
       let trace = this.traces[0]
+      if (trace === undefined) return
       data.forEach(resp => {
         let prevDate = Date.parse(trace.x.slice(-1)[0])
         let currDate = Date.parse(resp.timebin)
@@ -659,7 +648,7 @@ export default {
     clear() {
       this.clearGraph()
       this.$nextTick(function () {
-        this.loading = true
+        this.loading = false
       })
     },
   },

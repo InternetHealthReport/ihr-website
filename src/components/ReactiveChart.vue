@@ -3,7 +3,7 @@
     <h1 v-if="chartTitle">{{ chartTitle }}</h1>
     <div :ref="myId"></div>
     <div v-show="noData" class="IHR_no-data">
-      <div class="bg-white">{{ noData }}</div>
+      <div class="bg-white" style="text-align: center;">{{ noData }}</div>
     </div>
   </div>
 </template>
@@ -33,7 +33,8 @@ export default {
       type: Number,
       required: false,
       default: 0,
-    }
+    },
+    treemapNodeClicked: null,
   },
   emits: {
     'plotly-click': function (plotlyClickedData) {
@@ -45,19 +46,6 @@ export default {
     },
     'loaded': function () {
       return false
-    }
-  },
-  emits: {
-    'plotly-click': function(clickData) {
-      if (clickData !== null) {
-        return true;
-      } else {
-        console.warn('Click Data is missing!');
-        return false;
-      }
-    },
-    'loaded': function() {
-      return true;
     }
   },
   data() {
@@ -95,19 +83,35 @@ export default {
     }
 
     graphDiv.on('plotly_relayout', (event) => {
-      const start = event['xaxis.range[0]'];
-      const end = event['xaxis.range[1]'];
-      if (start && end) {
-        const dateTimeFilter = { startDateTime: start, endDateTime: end };
-        this.$emit('filter-alarms-by-time', dateTimeFilter)
+      let startDateTime = event['xaxis.range[0]'];
+      let endDateTime = event['xaxis.range[1]'];
+      if (startDateTime && endDateTime) {
+        startDateTime += 'Z'
+        endDateTime += 'Z'
+        this.$emit('plotly-time-filter', { startDateTime, endDateTime })
       }
     })
 
     graphDiv.on('plotly_click', (eventData) => {
-      if (eventData) {
+      if (eventData && eventData.points ) {
         this.$emit('plotly-click', eventData)
       }
     })
+
+    graphDiv.on('plotly_legendclick', (eventData) => {
+      if (eventData) {
+        const legend = eventData.node.textContent
+        const opacityStyle = eventData.node.getAttribute('style');
+        const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/);
+        if (opacityMatch && legend !== 'All') {
+          const opacity = Number(opacityMatch[1]);
+          const result = { legend, opacity }
+          this.$emit('plotly-legend-click', result);
+        }
+      }
+    })
+
+
 
     this.created = true
   },

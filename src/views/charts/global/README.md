@@ -1,311 +1,208 @@
-# How to customize the text inside Alarms Table (Aggregated Alarms Area)
-If you would like to customize the text inside Alarms Table Area for both Alarm Types and Data Sources, you could only change the content of the attributes `title` and `description`. Refer to the alarms metadata inside [AggregatedAlarmsController.vue](./AggregatedAlarmsController.vue). These attributes are loosely coupled from the actual Data transformation code. Be cautious not to alter any key inside the meatadata, as doing so disrupt the code.
-![alarms-filters-area-ui](../../../assets/documentation/alarms-filters-area-ui.png)
+# Table of Contents
+- [How to Add Alarm Type](#how-to-add-alarm-type)
+  - [Step 1: Choose Your Data Source](#step-1-choose-your-data-source)
+  - [Step2: Dataset Requirements](#step2-dataset-requirements)
+  - [Step3: Adding Alarm Types to the Dashboard](#step3-adding-alarm-types-to-the-dashboard)
+  - [Step4: Adding IHR DNS Anomaly Alarm Type to the Dashboard (Demo)](#step4-adding-ihr-dns-anomaly-alarm-type-to-the-dashboard-demo)
+    - [Step4.1: Metadata](#step41-metadata)
+    - [Step4.2: Extracting the IHR DNS Anomaly Data](#step42-extracting-the-ihr-dns-anomaly-data)
+    - [Step4.3: Integrating DNS Anomaly Alarms with Other IHR Alarms](#step43-integrating-dns-anomaly-alarms-with-other-ihr-alarms)
+    - [Step4.4: Successful Integration of DNS Anomaly Alarms into the Dashboard 🚀](#step44-successful-integration-of-dns-anomaly-alarms-into-the-dashboard-)
+- [How to Add Data Source](#how-to-add-data-source)
+- [How to Change the Selected Alarm Types by Default](#how-to-change-the-selected-alarm-types-by-default)
+- [How to Change the Default Group By Keys](#how-to-change-the-default-group-by-keys)
+- [How to Modify Text Content in the Dashboard](#how-to-modify-text-content-in-the-dashboard)
+  - [How to Modify Text Content in the Filters Area and Data Visualizations (WorldMap, TimeSeries, and TreeMap)](#how-to-modify-text-content-in-the-filters-area-and-data-visualizations-worldmap-timeseries-and-treemap)
+    - [To Change the Data Source Name in the Table Filters Area:](#to-change-the-data-source-name-in-the-table-filters-area)
+    - [To Alter the Alarm Type Name in the Table Filters Area and Data Visualizations:](#to-alter-the-alarm-type-name-in-the-table-filters-area-and-data-visualizations)
+    - [To Adjust Group By Key Names in the Table Filters Area:](#to-adjust-group-by-key-names-in-the-table-filters-area)
+  - [How to Customize Text Content in the Table Data Visualization](#how-to-customize-text-content-in-the-table-data-visualization)
+    - [To Modify the Text of the Button in the Table Data Visualization:](#to-modify-the-text-of-the-button-in-the-table-data-visualization)
+    - [To Revise Table Column Names:](#to-revise-table-column-names)
 
-# How to add Internet Alarms Data Source and Integrate with Aggregated Alarms Data Visualizations
+# How to Add Alarm Type
+## Step 1: Choose Your Data Source
+Before adding a data source to your dashboard, you need to determine where your data will come from. Common data sources include databases, APIs, spreadsheets, and other data storage systems. Once you've selected your data source, make sure you have the necessary access credentials, API keys, or connection details.
+## Step2: Dataset Requirements
+Our dashboard is currently designed to work with specific attributes: Autonomous System, Country, Time, and Severity Granularities. To ensure proper functionality across all data visualizations, your dataset must include the following: autonomous system number, country ISO code 3 (mandatory for the world map), timebin (mandatory for the time series), deviation (mandatory for the treemap), and country ISO code 2 (optional but convenient for inclusion).
+## Step3: Adding Alarm Types to the Dashboard
+To add an alarm type to the dashboard, it's essential to understand the following context: we have approximately 3 data sources and 11 alarm types, with each alarm type considered a data source with its complex schema and time variation. To avoid accidental complexity, we follow the Extract Transform Load (ETL) with Model View Controller (MVC) architecture, allowing each step to evolve independently. Adopting this approach ensures maintainable and testable code over time.
 
-This guide will walk you through the process of creating a fake alarms data source named "outages" and integrating it with Aggregated Alarms Data Visualization.
+If the alarm type you want to add is sourced from IHR, it's advisable to use the IHR API Vue.js client to benefit from caching or debouncing API calls. To do this, place the extraction code in the Aggregated Alarms Controller and handle transformation and loading steps in the Aggregated Alarms Data Model. If the alarm type comes from other data sources, perform all ETL steps in the Aggregated Alarms Data Model.
+![Aggregated Alarms Architecture](../../../assets/documentation/aggregated-alarms-architecture.png)
 
-## Step 1: Alarms Metadata and Data Source Setup
+## Step4: Adding IHR DNS Anomaly Alarm Type to the Dashboard (Demo)
+### Step4.1: Metadata
+When writing your configuration, pay attention to the `columns`, `name`, and `field` values, ensuring they access the same attribute name. Also, distinguish between the key and alternative key to enable proper grouping by different keys. For example, I distinguished the key as `main_stream` and the alternative key as `alternative_stream`. Make sure that attributes related to each key start with the respective prefix, except for `timebin,` `severity`, `deviation`, and `count`, as they are related to the alarm as a whole and not specific to each key. Review other metadata in the file for a better understanding of the pattern.
 
-1. Open the `AggregatedAlarmsController.vue` file.
-2. Add the alarms metadata information for the "outages" data source under the `Alarms info` section:
+Add the following metadata under the `ihr` data source in the `AggregatedAlarmsMetadata.js` file:
 ```javascript
-// Alarms info in AggregatedAlarmsController
-const alarmsInfo = {
-    // Other data sources...
-    outages: {
-        outages_type1_alarm_counts: [],
-        outages_type1_alarm_timebins: [],
-        outages_type1_alarm_severities: [],
-        outages_type2_alarm_counts: [],
-        outages_type2_alarm_timebins: [],
-        outages_type2_alarm_severities: [],
-    }
-};
-```
-3. Add metadata for the "outages" data source and its equivalent alarm types:
-```javascript
-// Alarms info in AggregatedAlarmsController
-const alarmsInfo = {
-    // Other data sources...
-    outages: {
-        alarm_types: {
-            outages_type1: {
-                description: 'Outages Type1 Alarm Type',
-                showHelpModal: false
-            },
-            outages_type2: {
-                description: 'Outages Type2 Alarm Type',
-                showHelpModal: false
-            }
-        },
-        description: 'Outages Data Source',
-        showHelpModal: false
-    }
-};
-```
-4. Create a state to manage downloading and data for the "outages" data source in the `AggregatedAlarmsController`:
-```javascript
-// Alarms info in AggregatedAlarmsController
-const thirdPartyAlarmsStates = {
-    grip: { downloading: false, data: null },
-    ioda: { downloading: false, data: null },
-    outages: { downloading: false, data: null }
-};
-```
-## Step 2: Creating the Outages Plugin for Data Extraction
-1. Create a file named `OutagesAPI.js` in `src/plugins/OutagesApi.js`.
-2. Populate `OutagesAPI.js` with the following content:
-```javascript
-// OutagesAPI.js
-export function getOutagesAlarms(outagesAlarmsState, startTime, endTime) {
-    const request = () => {
-        return new Promise((resolve, reject) => {
-            // Check if data is already available
-            if (outagesAlarmsState.data) {
-                return resolve(outagesAlarmsState.data);
-            }
-            // If data is not available and not downloading, initiate download
-            if (!outagesAlarmsState.data && !outagesAlarmsState.downloading) {
-                outagesAlarmsState.downloading = true;
-                getOutagesAlarmsHelper(startTime, endTime)
-                    .then((outagesAlarms) => {
-                        outagesAlarmsState.downloading = false;
-                        outagesAlarmsState.data = outagesAlarms;
-                        return resolve(outagesAlarmsState.data);
-                    })
-                    .catch(error => {
-                        return reject(error);
-                    });
-            }
-        });
-    };
-    return request();
-}
-
-function getOutagesAlarmsHelper(startTime, endTime, timezone = '00Z', entityType = 'asn') {
-    return Promise.resolve([
-        {
-            "datasource": "outages_type1",
-            "entity": {
-                "code": "26198",
-                "name": "AS26198 (NETRIUM-NETWORKS)",
-                "type": "asn",
-                "attrs": {
-                    "fqid": "asn.26198",
-                    "name": "NETRIUM-NETWORKS",
-                    "org": "3Men@Work Integrated Networks, Inc.",
-                    "ip_count": "27904"
-                }
-            },
-            "time": 1689862800,
-            "level": "critical",
-        },
-        {
-            "datasource": "outages_type1",
-            "entity": {
-                "code": "203217",
-                "name": "AS203217 (HZ)",
-                "type": "asn",
-                "attrs": {
-                    "fqid": "asn.203217",
-                    "name": "HZ",
-                    "org": "Horizon Scope Mobile Telecom WLL",
-                    "ip_count": "6912"
-                }
-            },
-            "time": 1689862800,
-            "level": "normal",
-        },
-        {
-            "datasource": "outages_type2",
-            "entity": {
-                "code": "394700",
-                "name": "AS394700 (THE-SCHOOL-DISTRICT-OF-PALM-BEACH-COUNTY)",
-                "type": "asn",
-                "attrs": {
-                    "fqid": "asn.394700",
-                    "name": "THE-SCHOOL-DISTRICT-OF-PALM-BEACH-COUNTY",
-                    "org": "The School District of Palm Beach County",
-                    "ip_count": "4864"
-                }
-            },
-            "time": 1689862800,
-            "level": "low",
-        },
-    ]);
-}
-```
-## Step 3: Integrating the Outages Plugin
-1. Import the `getOutagesAlarms` function in `AggregatedAlarmsController.vue`:
-```javascript
-// AggregatedAlarmsController.vue
-import { getOutagesAlarms } from "@/plugins/OutagesApi";
-```
-2. Inside the `extractAlarms` function of `AggregatedAlarmsDataModel`, call the `getOutagesAlarms` function:
-```javascript
-// AggregatedAlarmsController.vue
-const outagesAlarmsPromise = dataSourcesSelected.outages
-    ? getOutagesAlarms(thirdPartyAlarmsStates.outages, startTime, endTime)
-    : Promise.resolve([]);
-```
-3. Store the extracted outages alarms after resolving the promises:
-```javascript
-// AggregatedAlarmsController.vue
-Promise.all([..., outagesAlarmsPromise])
-    .then(([..., outagesAlarms]) => {
-        // Storing other data sources sources 
-        extractedAlarms.outages = outagesAlarms;
-        return resolve(extractedAlarms);
-    })
-    .catch((error) => {
-        return reject(error);
-    });
-```
-## Step 4: Data Transformation
-1. Inside `dataSourcesTransformers` in `AggregatedAlarmsController.vue`, add metadata for the outages transformation function:
-```javascript
-// AggregatedAlarmsController.vue
-dataSourcesTransformers: {
-    // Other data sources...
-    outages: {
-        transformFunc: transformOutagesAlarms
-    }
-}
-```
-2. Create the `transformOutagesAlarms` function:
-```javascript
-// AggregatedAlarmsController.vue
-function transformOutagesAlarms(outagesAlarms, outagesAggregatedAttrs) {
-    // Transformation logic for outages alarms
-    const outagesAlarmsTransformed = filterOutagesAlarms(outagesAlarms);
-    const outagesAlarmsSeveritiesTransformed = transformAlarmsSeverities(outagesAlarmsTransformed, outagesSeverityMapper)
-    const outagesAlarmsAggregated = aggregateAlarms(outagesAlarmsSeveritiesTransformed, outagesAggregatedAttrs);
-    return outagesAlarmsAggregated;
-}
-
-
-function filterOutagesAlarms(outagesAlarms) {
-    // Filtering logic for outages alarms
-    const outagesAlarmsNonEmpty = outagesAlarms.filter((alarm) => Object.keys(alarm).length)
-    const outagesAlarmsTransformed = outagesAlarmsNonEmpty.reduce((acc, curr) => {
-        const asnName = curr.entity.attrs.name ? curr.entity.attrs.name : curr.entity.attrs.org
-        const asnNumber = curr.entity.code
-        const eventType = curr.datasource.replace('-', '_')
-        const outagesSeverityLevel = curr.level
-        const eventLocalDateTime = new Date(curr.time * 1000)
-        const eventUTCDateTimeFormatted = formatUTCTime(eventLocalDateTime, '00Z')
-
-        const outagesAlarm = {
-            asn_name: asnName,
-            asn: asnNumber,
-            country_iso_code2: null,
-            timebin: eventUTCDateTimeFormatted,
-            event_type: eventType,
-            severity: outagesSeverityLevel,
-        };
-        acc.push(outagesAlarm);
-        return acc;
-    }, []);
-    return outagesAlarmsTransformed;
-}
-```
-And that's it! You've successfully added the "outages" Internet Alarms Data Source and integrated it with Aggregated Alarms Data Visualization.
-![Outages Demo Data Source Integration](../../../assets/documentation/outages-demo-data-source-integration.png)
-
-# How to add Internet Alarm Type and Integrate with Aggregated Alarms Data Visualizations
-This guide will walk you through the process of creating a fake ihr alarm type named "ihr_outages" and integrating it with Aggregated Alarms Data Visualization.
-
-## Step 1: Alarms Metadata and Alarm Type Setup
-1. Open the `AggregatedAlarmsController.vue` file.
-2. Add the alarms metadata information for the `ihr_outages` alarm type under the `Alarms info` section:
-```javascript
-// Alarms info in AggregatedAlarmsController
-const alarmsInfo = {
-        ihr: {
-            // Other Ihr Alarm Types Metrics
-            ihr_outages_alarm_counts: [],
-            ihr_outages_alarm_timebins: [],
-            ihr_outages_alarm_severities: []
-        },
-}
-```
-3. Add metadata for the `ihr_outages` alarm type:
-```javascript
-// Alarms info in AggregatedAlarmsController
-const alarmsInfo = {
-    ihr: {
-        alarm_types: {
-            // Other Alarm Types metadata
-            ihr_outages: {
-                description: 'IHR Outages Alarm Type',
-                showHelpModal: false
-            }
-        },
-        description: 'IHR Data Source',
-        showHelpModal: false
+dns_anomaly: {
+    columns: {
+        dns_anomaly_main_stream: [],
+        dns_anomaly_main_stream_name: [],
+        dns_anomaly_main_stream_country: [],
+        dns_anomaly_main_stream_country_iso_code2: [],
+        dns_anomaly_main_stream_country_iso_code3: [],
+        dns_anomaly_main_stream_af: [],
+        dns_anomaly_alternative_stream: [],
+        dns_anomaly_alternative_stream_name: [],
+        dns_anomaly_alternative_stream_country: [],
+        dns_anomaly_alternative_stream_country_iso_code2: [],
+        dns_anomaly_alternative_stream_country_iso_code3: [],
+        dns_anomaly_alternative_stream_af: [],
+        dns_anomaly_count: [],
+        dns_anomaly_timebin: [],
+        dns_anomaly_severity: [],
+        dns_anomaly_deviation: []
     },
-};
+    metadata: {
+        title: 'DNS Anomaly',
+        table_button_text: 'DNS Anomaly Alarms',
+        description: 'DNS Anomaly Alarms',
+        showHelpModal: false,
+        default_key: 'main_stream',
+        group_by_key_options: { origin_stream: 'main_stream', stream: 'alternative_stream' },
+        is_default_selected: false,
+        table_columns: [
+            { name: 'overview', label: 'Overview', align: 'center' },
+            { name: 'main_stream', required: true, label: 'Origin Stream', align: 'left', field: row => row.main_stream, format: val => `${val}`, sortable: true },
+            { name: 'main_stream_name', required: true, label: 'Origin Stream Name', align: 'left', field: row => row.main_stream_name, format: val => `${val}`, sortable: false },
+            { name: 'main_stream_af', required: true, label: 'Origin Stream IP Address Family', align: 'left', field: row => row.main_stream_af, format: val => `${val}`, sortable: true },
+            { name: 'main_stream_country', required: true, label: 'Origin Stream Country', align: 'left', field: row => row.main_stream_country, format: val => `${val}`, sortable: true },
+            { name: 'main_stream_country_iso_code3', required: true, label: 'Origin Stream Country Code', align: 'left', field: row => row.main_stream_country_iso_code3, format: val => `${val}`, sortable: true },
+            { name: 'alternative_stream', required: true, label: 'Stream', align: 'left', field: row => row.alternative_stream, format: val => `${val}`, sortable: true },
+            { name: 'alternative_stream_name', required: true, label: 'Stream Name', align: 'left', field: row => row.alternative_stream_name, format: val => `${val}`, sortable: false },
+            { name: 'alternative_stream_af', required: true, label: 'Stream IP Address Family', align: 'left', field: row => row.alternative_stream_af, format: val => `${val}`, sortable: true },
+            { name: 'alternative_stream_country', required: true, label: 'Stream Country', align: 'left', field: row => row.alternative_stream_country, format: val => `${val}`, sortable: false },
+            { name: 'alternative_stream_country_iso_code3', required: true, label: 'Stream Country Code', align: 'left', field: row => row.alternative_stream_country_iso_code3, format: val => `${val}`, sortable: true }
+            ],
+        table_aggregated_columns: [
+            { name: 'total_count', required: true, label: 'Nb. Alarms', align: 'left', field: row => row.total_count, format: val => `${val}`, sortable: true },
+            { name: 'high_severity_count', required: true, label: 'Nb. High Severity Alarms', align: 'left', field: row => row.high_severity_count, format: val => `${val}`, sortable: true },
+            { name: 'medium_severity_count', required: true, label: 'Nb. Medium Severity Alarms', align: 'left', field: row => row.medium_severity_count, format: val => `${val}`, sortable: true },
+            { name: 'low_severity_count', required: true, label: 'Nb. Low Severity Alarms', align: 'left', field: row => row.low_severity_count, format: val => `${val}`, sortable: true },
+            { name: 'deviation_median', required: true, label: 'Median Deviation', align: 'left', field: row => row.deviation_median, format: val => `${val}`, sortable: true },
+            { name: 'deviation_avg', required: true, label: 'Average Deviation', align: 'left', field: row => row.deviation_avg, format: val => `${val}`, sortable: true }
+            ]
+    }
+}
 ```
-## Step 2: Ihr Outages Alarm Type Extraction
-We need to extract Ihr outages alarm type either by dependency injection  by passing it through the parent componenet `AggregatedAlarmsController.vue` inside `GlobalReport.vue` or you could create an alarm type plugin same as before in data source I would make it simple and just create fake data within the `AggregatedAlarmsDataModel.js` file. Paste the following `getIhrOutagesAlarms` function inside `AggregatedAlarmsDataModel.js`:
+### Step4.2: Extracting the IHR DNS Anomaly Data
+The DNS anomaly data we want to extract is sourced from IHR. To gain an understanding of the integration process, I've hardcoded simulated data. In the `AggregatedAlarmsController.js` file, please follow these steps to add the DNS anomaly and its related method. Note that the event type is tagged with the `event_type` attribute.
 ```javascript
-function getIhrOutagesAlarms() {
-    return [
-        {
-            "timebin": "2023-08-07T14:15:00Z",
-            "originasn": 266274,
-            "asn": 262988,
-            "deviation": 26.2362032001593,
-            "af": 4,
-            "asn_name": "Pombonet Telecomunicacoes e Informatica",
-            "country_iso_code2": "BR",
-            "originasn_name": "NETWEST TELECOM, BR"
-        },
-        {
-            "timebin": "2023-08-07T14:15:00Z",
-            "originasn": 266274,
-            "asn": 13786,
-            "deviation": 26.2362032001593,
-            "af": 4,
-            "asn_name": "SEABORN",
-            "country_iso_code2": "US",
-            "originasn_name": "NETWEST TELECOM, BR"
-        },
-        {
-            "timebin": "2023-08-07T14:15:00Z",
-            "originasn": 269566,
-            "asn": 3356,
-            "deviation": 27.2312233357285,
-            "af": 4,
-            "asn_name": "LEVEL3",
-            "country_iso_code2": "US",
-            "originasn_name": "PHI TELECOM LTDA.ME, BR"
-        }
+...
+ihrAlarms: {
+    hegemony: {
+        data: null,
+        extract: this.extractHegemonyAlarms
+    },
+    network_delay: {
+        data: null,
+        extract: this.extractNetworkDelayAlarms
+    },
+    network_disconnection: {
+        data: null
+    },
+    dns_anomaly: {
+        data: null,
+        extract: this.extractDNSAnomalyAlarms // Added here
+    }
+}
+...
+extractDNSAnomalyAlarms() {
+if (this.ihrAlarms.dns_anomaly.data !== null) return
+const staticData =  [{
+    "event_type": "dns_anomaly",
+    "dns_anomaly_main_stream": 27750,
+    "dns_anomaly_main_stream_type": "AS",
+    "dns_anomaly_main_stream_name": 27750,
+    "dns_anomaly_main_stream_country": null,
+    "dns_anomaly_main_stream_country_iso_code2": null,
+    "dns_anomaly_main_stream_country_iso_code3": null,
+    "dns_anomaly_main_stream_af": 4,
+    "dns_anomaly_alternative_stream": 3333,
+    "dns_anomaly_alternative_stream_type": "AS",
+    "dns_anomaly_alternative_stream_name": 3333,
+    "dns_anomaly_alternative_stream_country": null,
+    "dns_anomaly_alternative_stream_country_iso_code2": null,
+    "dns_anomaly_alternative_stream_country_iso_code3": null,
+    "dns_anomaly_alternative_stream_af": 4,
+    "dns_anomaly_count": 1,
+    "dns_anomaly_timebin": 1697845500,
+    "dns_anomaly_severity": "low",
+    "dns_anomaly_deviation": 28.4518378612748
+    },
+    {
+    "event_type": "dns_anomaly",
+    "dns_anomaly_main_stream": 3257,
+    "dns_anomaly_main_stream_type": "AS",
+    "dns_anomaly_main_stream_name": 3257,
+    "dns_anomaly_main_stream_country": null,
+    "dns_anomaly_main_stream_country_iso_code2": null,
+    "dns_anomaly_main_stream_country_iso_code3": null,
+    "dns_anomaly_main_stream_af": 4,
+    "dns_anomaly_alternative_stream": 22646,
+    "dns_anomaly_alternative_stream_type": "AS",
+    "dns_anomaly_alternative_stream_name": 22646,
+    "dns_anomaly_alternative_stream_country": null,
+    "dns_anomaly_alternative_stream_country_iso_code2": null,
+    "dns_anomaly_alternative_stream_country_iso_code3": null,
+    "dns_anomaly_alternative_stream_af": 4,
+    "dns_anomaly_count": 1,
+    "dns_anomaly_timebin": 1697845500,
+    "dns_anomaly_severity": "low",
+    "dns_anomaly_deviation": 27.9531828230822
+    }
     ]
 }
 ```
-## Step 3: Integrating the Ihr Outages Alarm Type Data
-Inside the `extractAlarms` function of `AggregatedAlarmsDataModel`, call the `getIhrOutagesAlarms` function:
+### Step4.3: Integrating DNS Anomaly Alarms with Other IHR Alarms
+In the `AggregatedAlarmsDataModel.js` file, update the `transformIHRAlarms` method to incorporate the DNS anomaly alarms into the aggregation. The following code snippet demonstrates how to join the DNS anomaly alarms with other IHR alarms:
 ```javascript
-// AggregatedAlarmsController.vue
-extractedAlarms.ihr.ihr_outages = alarmTypesFilter.ihr_outages ? getIhrOutagesAlarms() : []
-```
-## Step 4: Data Transformation
-1. extract `ihr_outages` from `extractedAlarms`:
-```javascript
-const { /* other ihr alarm types */, ihr_outages: ihrOutagesAlarms } = ihrAlarmsSegregated
-```
-2. Transform `ihrOutagesAlarms` data if needed
-3. Add `ihr_outages` event type by using the following code:
-```javascript
-const ihrOutagesAlarmsWithEventType = addEventType(ihrOutagesAlarms, 'ihr_outages')
-```
-4. Add `ihrOutagesAlarmsWithEventType` to the ihr joined data:
-```javascript
-const ihrAlarms = [/* other ihr alarm types data */, ...ihrOutagesAlarmsWithEventType]
+const ihrAlarmsJoined = [/*Oher IHR Alarms */, ...dnsAnomalyAlarmsTransformed]
 ```
 
-And that's it! You've successfully added the "ihr_outages" alarm type and integrated it with Aggregated Alarms Data Visualization:
-![Ihr Outages Demo Alarm Type Integration](../../../assets/documentation/ihr-outages-demo-alarm-type-integration.png)
+### Step4.4: Successful Integration of DNS Anomaly Alarms into the Dashboard 🚀
+You can confirm this integration through data visualization, and I've verified it for you. Here's a snapshot of the DNS Anomaly Alarm Type Integration:
+![DNS Anomaly Alarm Type Integration](../../../assets/documentation/dns-anomaly-alarm-type-integration.png)
+
+# How to Add Data Source
+To add a data source effectively, it's important to understand the process of adding an alarm type and how it integrates with other data sources, such as `IHR`, `GRIP`, and `IODA`. Please refer to the sections above for detailed instructions on adding alarm types and the broader integration process.
+
+# How to Change the Selected Alarm Types by Default
+To modify the default selection of alarm types for the data visualizations, simply locate and update the `is_default_selected` attribute within the `AggregatedAlarmsMetadata.js` file. To modify the initial selected alarm type in the table data visualization, simply update `INITIAL_TABLE_ALARM_TYPE_SELECTED` variable in `AggregatedAlarmsController.js` file make sure it matches with the alarm type in `AggregatedAlarmsMetadata.js`.
+
+# How to Change the Default Group By Keys
+To adjust the default group by keys, you can easily do so by modifying the `default_key` attribute in the `AggregatedAlarmsMetadata.js` file to match one of the values listed in the `group_by_key_options` attribute.
+
+# How to Modify Text Content in the Dashboard
+You have the flexibility to customize and alter the text content within the dashboard by making modifications in the `AggregatedAlarmsMetadata.js` file. For more detailed information, please refer to the following sections.
+
+## How to Modify Text Content in the Filters Area and Data Visualizations (WorldMap, TimeSeries, and TreeMap)
+
+### To Change the Data Source Name in the Table Filters Area:
+Please review and update the `title` attribute within the metadata for the specific data source in the `AggregatedAlarmsMetadata.js` file.
+
+### To Alter the Alarm Type Name in the Table Filters Area and Data Visualizations:
+To modify the Alarm Type name displayed in the table filters area and data visualizations, navigate to the `title` attribute of the respective alarm type in the `AggregatedAlarmsMetadata.js` file.
+
+### To Adjust Group By Key Names in the Table Filters Area:
+To change the names of group by keys in the table filters area, refer to the `group_by_key_options` attribute in the `AggregatedAlarmsMetadata.js` file. Modify the key as needed to match the desired UI appearance. For instance, if you want to change "source" to "source_startpoint," you can update it like this:
+From:
+```javascript
+{ source: 'startpoint', destination: 'endpoint' }
+```
+To:
+```javascript
+{ source_startpoint: 'startpoint', destination: 'endpoint' }
+```
+Note: The keys in this context are related to the UI, as they map what appears in the UI to the corresponding dataset elements.
+
+## How to Customize Text Content in the Table Data Visualization
+
+### To Modify the Text of the Button in the Table Data Visualization:
+- To change the text of the button in the table data visualization, adjust the `table_button_text` attribute within the `AggregatedAlarmsMetadata.js` file.
+
+### To Revise Table Column Names:
+- To update the names of table columns, you can modify the `label` attribute within the `table_columns` and `table_aggregated_columns` in the `AggregatedAlarmsMetadata.js` file to reflect the desired column labels.

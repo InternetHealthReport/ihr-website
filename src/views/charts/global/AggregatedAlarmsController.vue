@@ -2,18 +2,19 @@
   <div>
     <q-card class="IHR_charts-body">
       <q-card-section>
-        <aggregated-alarm-filters :start-time="timeFiltersCurrent.startDateTime"
-          :end-time="timeFiltersCurrent.endDateTime" :alarms-metadata="alarmsInfo.metadata" :loadingVal="loadingVal"
-          @filter-alarms-by-time="filterAlarmsByTimeHandler"
-          @filter-alarms-by-alarm-types="filterAlarmsByAlarmTypesHandler"
-          @filter-alarms-by-severities="filterAlarmsBySeveritiesHandler" @reset-time="resetTimeFlagHandler"
-          @reset-granularity="resetGranularityFlagHandler" />
+        <aggregated-alarm-filters :time-filters="timeFiltersCurrent" :data-sources="alarmsInfo" :loadingVal="loadingVal"
+          :initial-group-by-keys="groupByKeys"
+          @filter-alarms-by-ip-address-family="onFilterAlarmsByIpAddressFamily($event, ...getRefDatavizs)"
+          @filter-alarms-by-time="onFilterAlarmsByTime($event, ...getRefDatavizs)"
+          @filter-alarms-by-alarm-types="onFilterAlarmsByAlarmTypes"
+          @filter-alarms-by-severities="onFilterAlarmsBySeverities($event, ...getRefDatavizs)"
+          @reset-time="onResetTime(...getRefDatavizs)" @group-alarms-by-keys="onGroupAlarmsByKeys" />
       </q-card-section>
     </q-card>
 
     <q-card class="IHR_charts-body">
       <q-card-section>
-        <world-map-aggregated-alarms :loadingVal="loadingVal" @country-clicked="countryClickedHandler"
+        <world-map-aggregated-alarms :loadingVal="loadingVal" @worldmap-country-clicked="onCountryClickedHandler"
           ref="worldMapAggregatedAlarms" />
       </q-card-section>
     </q-card>
@@ -22,7 +23,10 @@
       <div class="card-wrapper">
         <q-card class="IHR_charts-body">
           <q-card-section>
-            <time-series-aggregated-alarms :loadingVal="loadingVal" @filter-alarms-by-time="filterAlarmsByTimeHandler"
+            <time-series-aggregated-alarms :loadingVal="loadingVal" :time-filters="timeFiltersCurrent"
+              :country-clicked="countryClicked" @filter-alarms-by-time="onFilterAlarmsByTime($event, ...getRefDatavizs)"
+              @timeseries-legend-clicked="onTimeseriesLegendClicked($event, ...getRefDatavizs)"
+              @reset-time="onResetTime(...getRefDatavizs)" @reset-granularity="onResetGranularity(...getRefDatavizs)"
               ref="timeSeriesAggregatedAlarms" />
           </q-card-section>
         </q-card>
@@ -30,162 +34,73 @@
       <div class="card-wrapper">
         <q-card class="IHR_charts-body">
           <q-card-section>
-            <tree-map-aggregated-alarms :loadingVal="loadingVal" ref="treeMapAggregatedAlarms" />
+            <tree-map-aggregated-alarms :loadingVal="loadingVal" :country-clicked="countryClicked"
+              @treemap-node-clicked="onTreemapNodeClicked($event, ...getRefDatavizs)"
+              @reset-granularity="onResetGranularity(...getRefDatavizs)" ref="treeMapAggregatedAlarms" />
           </q-card-section>
         </q-card>
       </div>
+    </div>
+    <div style="margin: 25px;">
+      <aggregated-alarms-table-helper :countryClicked="countryClicked" :legendSelected="legendSelected.legend"
+        :table-data-initial="tableDataInitial" :severitiesSelectedList="severitiesSelectedList" :loadingVal="loadingVal"
+        :initial-table-alarm-type-selected="initialTableAlarmTypeSelected" :alarms="alarmsTableHelperData"
+        :group-by-keys="groupByKeys" :alarm-type-titles-map="alarmTypeTitlesMap"
+        :aggregated-attrs-selected="aggregatedAttrsSelected" :alarmsInfo="alarmsInfo" :time-filters="timeFiltersCurrent"
+        :selected-alarm-types="alarmTypesFilter" @asn-country-key-clicked="onCountryClickedHandler"
+        @asn-name-key-clicked="onASNameClicked" ref="tableAggregatedAlarmsHelper" />
     </div>
   </div>
 </template>
 
 <script>
+import AggregatedAlarmsMixin from './AggregatedAlarmsMixin.vue'
+import { ALARMS_INFO } from './AggregatedAlarmsMetadata'
 import * as AggregatedAlarmsUtils from '@/models/AggregatedAlarmsUtils'
-import { getCountryNameFromIsoCode3 } from '@/plugins/countryISOCode3'
 import * as AggregatedAlarmsDataModel from '@/models/AggregatedAlarmsDataModel'
 import AggregatedAlarmFilters from './AggregatedAlarmFilters';
 import WorldMapAggregatedAlarms from './WorldMapAggregatedAlarms'
 import TimeSeriesAggregatedAlarms from './TimeSeriesAggregatedAlarms'
 import TreeMapAggregatedAlarms from './TreeMapAggregatedAlarms'
+import AggregatedAlarmsTableHelper from '../tables/AggregatedAlarmsTableHelper.vue'
+import { Query, HegemonyAlarmsQuery, NetworkDelayAlarmsQuery, DiscoEventQuery } from '@/plugins/IhrApi'
 
-
-export const ALARMS_INFO = {
-  data_sources: {
-    ihr: {
-      hegemony_alarm_counts: [],
-      hegemony_alarm_timebins: [],
-      hegemony_alarm_severities: [],
-      network_delay_alarm_counts: [],
-      network_delay_alarm_timebins: [],
-      network_delay_alarm_severities: []
-    },
-    grip: {
-      moas_alarm_counts: [],
-      moas_alarm_timebins: [],
-      moas_alarm_severities: [],
-      submoas_alarm_counts: [],
-      submoas_alarm_timebins: [],
-      submoas_alarm_severities: [],
-      defcon_alarm_counts: [],
-      defcon_alarm_timebins: [],
-      defcon_alarm_severities: [],
-      edges_alarm_counts: [],
-      edges_alarm_timebins: [],
-      edges_alarm_severities: [],
-    },
-    ioda: {
-      ping_slash24_alarm_counts: [],
-      ping_slash24_alarm_timebins: [],
-      ping_slash24_alarm_severities: [],
-      bgp_alarm_counts: [],
-      bgp_alarm_timebins: [],
-      bgp_alarm_severities: [],
-      ucsd_nt_alarm_counts: [],
-      ucsd_nt_alarm_timebins: [],
-      ucsd_nt_alarm_severities: [],
-    }
-  },
-  metadata: {
-    data_sources: {
-      ihr: {
-        alarm_types: {
-          hegemony: {
-            title: 'AS Dependency',
-            description: 'Routing changes found in AS Dependency data (a.k.a. AS Hegemony).',
-            showHelpModal: false
-          },
-          network_delay: {
-            title: 'Network Delay',
-            description: 'Network delay changes observed in traceroute data.',
-            showHelpModal: false
-          }
-        },
-        title: 'IHR',
-        description: 'Alarms reported by IHR.',
-        showHelpModal: false
-      },
-      grip: {
-        alarm_types: {
-          moas: {
-            title: 'MOAS',
-            description: 'Multi Origin-AS. Prefixes concurently announced in BGP by multiple ASes.',
-            showHelpModal: false
-          },
-          submoas: {
-            title: 'Sub-MOAS',
-            description: 'Sub-prefix MOAS. Sup-prefix announced by a different origin AS.',
-            showHelpModal: false
-          },
-          defcon: {
-            title: 'DEFCON',
-            description: 'Hijack using a more specific prefix on an existing AS path.',
-            showHelpModal: false
-          },
-          edges: {
-            title: 'Fake Path',
-            description: 'Hijack using forged AS paths to legitimate origin AS. (a.k.a. Edges)',
-            showHelpModal: false
-          },
-        },
-        title: 'GRIP',
-        description: "BGP hijacks reported by Georgia Tech's GRIP platform.",
-        showHelpModal: false
-      },
-      ioda: {
-        alarm_types: {
-          ping_slash24: {
-            title: 'Ping',
-            description: 'Data plane outages detected in ping data.',
-            showHelpModal: false
-          },
-          bgp: {
-            title: 'BGP',
-            description: 'Routing outages detected in BGP data.',
-            showHelpModal: false
-          },
-          ucsd_nt: {
-            title: 'UCSD Telescope',
-            description: 'Outages detected with the UCSD network telescope.',
-            showHelpModal: false
-          },
-        },
-        title: 'IODA',
-        description: "Internet outages reported by Georgia Tech's IODA platform",
-        showHelpModal: false
-      }
-    }
-  }
-}
+const INITIAL_TABLE_ALARM_TYPE_SELECTED = 'hegemony'
 
 export default {
+  mixins: [AggregatedAlarmsMixin],
   components: {
     AggregatedAlarmFilters,
     WorldMapAggregatedAlarms,
     TimeSeriesAggregatedAlarms,
     TreeMapAggregatedAlarms,
+    AggregatedAlarmsTableHelper
   },
   data() {
     return {
-      alarms: [],
-      alarmsTimeFiltered: null,
-      alarmsSeveritiesFiltered: null,
-      aggregatedAlarmsLoadingVal: false,
-      countryNameClicked: null,
+      alarms: null,
+      alarmsInfo: ALARMS_INFO,
       alarmTypesFilter: {},
-      severitiesSelectedList: [],
-      startDateTimePlotly: null,
-      endDateTimePlotly: null,
-      dateTimeFilter: {
-        startDateTime: null,
-        endDateTime: null
+      groupByKeys: null,
+      initialTableAlarmTypeSelected: INITIAL_TABLE_ALARM_TYPE_SELECTED,
+      etlAlarmsLoadingVal: false,
+      externalAlarms: { grip: null, ioda: null },
+      ihrAlarms: {
+        hegemony: {
+          data: null,
+          extract: this.extractHegemonyAlarms
+        },
+        network_delay: {
+          data: null,
+          extract: this.extractNetworkDelayAlarms
+        },
+        network_disconnection: {
+          data: null,
+          extract: this.extractNetworkDisconnectionAlarms
+        }
       },
-      thirdPartyAlarmsStates: {
-        grip: { downloading: false, data: null },
-        ioda: { downloading: false, data: null }
-      },
-      alarmsInfo: ALARMS_INFO
     }
   },
-
   props: {
     startTime: {
       type: Date,
@@ -194,269 +109,342 @@ export default {
     endTime: {
       type: Date,
       required: true,
-    },
-    hegemonyAlarms: {
-      type: Array,
-      required: true,
-    },
-    networkDelayAlarms: {
-      type: Array,
-      required: true,
-    },
-    hegemonyLoading: {
-      type: Boolean,
-      required: true
-    },
-    networkDelayLoading: {
-      type: Boolean,
-      required: true
     }
-
   },
-
+  created() {
+    const selectedGroupByKeysResult = {}
+    for (const dataSourceKey in this.alarmsInfo) {
+      const alarmTypes = this.alarmsInfo[dataSourceKey].alarm_types
+      for (const alarmTypeKey in alarmTypes) {
+        selectedGroupByKeysResult[alarmTypeKey] = alarmTypes[alarmTypeKey].metadata.default_key
+      }
+    }
+    this.groupByKeys = selectedGroupByKeysResult
+  },
   computed: {
-    loadingVal() {
-      return this.hegemonyLoading || this.networkDelayLoading || this.aggregatedAlarmsLoadingVal
+    selectedIhrAlarmTypes() {
+      const ihrAlarmTypes = Object.keys(this.alarmsInfo.ihr.alarm_types)
+      const selectedIhrAlarmTypesList = Object.keys(this.alarmTypesFilter).filter((alarmTypeFilter) => ihrAlarmTypes.includes(alarmTypeFilter) && this.alarmTypesFilter[alarmTypeFilter])
+      return selectedIhrAlarmTypesList
     },
-    aggregatedAttrsSelected() {
-      const aggregatedAttrsSelected = { counts: {}, timebins: {}, severities: {} }
-
-      const alarmTypesSelected = []
-      for (const [alarmType, isSelected] of Object.entries(this.alarmTypesFilter)) {
-        if (isSelected) {
-          alarmTypesSelected.push(alarmType)
+    loadingVal() {
+      return this.ihrAlarmsLoading || this.etlAlarmsLoadingVal
+    },
+    ihrAlarmsLoading() {
+      return this.selectedIhrAlarmTypes.some((alarmType) => this.ihrAlarms[alarmType].data === null)
+    },
+    alarmsCurrent() {
+      return this.alarmsAppliedFilters ? this.alarmsAppliedFilters : this.alarms
+    },
+    tableDataInitial() {
+      const tableDataInitial = {}
+      for (const data_source in this.alarmsInfo) {
+        const alarmTypes = this.alarmsInfo[data_source].alarm_types
+        for (const alarmType in alarmTypes) {
+          tableDataInitial[alarmType] = {}
+          tableDataInitial[alarmType].table_columns = alarmTypes[alarmType].metadata.table_columns
+          tableDataInitial[alarmType].table_aggregated_columns = alarmTypes[alarmType].metadata.table_aggregated_columns
+          tableDataInitial[alarmType].table_button_text = alarmTypes[alarmType].metadata.table_button_text
         }
       }
-
-      const allAggergatedAttrs = AggregatedAlarmsUtils.flattenDictionary(Object.values(ALARMS_INFO.data_sources))
-      const aggregatedAttrsFiltered = AggregatedAlarmsUtils.filterDictByPrefixes(allAggergatedAttrs, alarmTypesSelected)
-
-      for (const aggregatedAttr in aggregatedAttrsFiltered) {
-        if (aggregatedAttr.endsWith('counts')) {
-          aggregatedAttrsSelected.counts[aggregatedAttr] = []
-        } else if (aggregatedAttr.endsWith('timebins')) {
-          aggregatedAttrsSelected.timebins[aggregatedAttr] = []
-        } else if (aggregatedAttr.endsWith('severities')) {
-          aggregatedAttrsSelected.severities[aggregatedAttr] = []
+      return tableDataInitial
+    },
+    aggregatedAttrsSelected() {
+      const aggregatedAttrsSelected = { counts: [], timebins: [], severities: [], ipAddressFamilies: [] }
+      for (const dataSource in this.alarmsInfo) {
+        const alarmTypes = this.alarmsInfo[dataSource].alarm_types
+        for (const alarmType in alarmTypes) {
+          if (this.alarmTypesFilter[alarmType]) {
+            aggregatedAttrsSelected.counts.push(`${alarmType}_count`)
+            aggregatedAttrsSelected.timebins.push(`${alarmType}_timebin`)
+            aggregatedAttrsSelected.severities.push(`${alarmType}_severity`)
+            aggregatedAttrsSelected.ipAddressFamilies.push(Object.values(alarmTypes[alarmType].metadata.group_by_key_options).map((groupByKey) => `${alarmType}_${groupByKey}_af`))
+          }
         }
       }
       return aggregatedAttrsSelected
     },
     dataSourcesSelected() {
       const dataSourcesSelected = {}
-      const { data_sources: dataSources } = ALARMS_INFO.metadata
-      for (const dataSource in dataSources) {
-        dataSourcesSelected[dataSource] = this.isDataSourceSelected(dataSources[dataSource], this.alarmTypesFilter)
+      for (const dataSource in this.alarmsInfo) {
+        dataSourcesSelected[dataSource] = this.isDataSourceSelected(this.alarmsInfo[dataSource], this.alarmTypesFilter)
       }
       return dataSourcesSelected
     },
     alarmTypeTitlesMap() {
       const alarmTypesToTitles = {}
-      const { data_sources: dataSources } = ALARMS_INFO.metadata
-      for (const dataSource in dataSources) {
-        const dataSourceAlarmTypes = dataSources[dataSource].alarm_types
+      for (const dataSource in this.alarmsInfo) {
+        const dataSourceAlarmTypes = this.alarmsInfo[dataSource].alarm_types
         for (const dataSourceAlarmTypeKey in dataSourceAlarmTypes) {
-          const dataSourceAlarmTypeTitle = dataSourceAlarmTypes[dataSourceAlarmTypeKey].title
+          const dataSourceAlarmTypeTitle = dataSourceAlarmTypes[dataSourceAlarmTypeKey].metadata.title
           alarmTypesToTitles[dataSourceAlarmTypeKey] = dataSourceAlarmTypeTitle
         }
       }
       return alarmTypesToTitles
     },
-    alarmsCurrent() {
-      const currentTimedAlarms = this.alarmsTimeFiltered ? this.alarmsTimeFiltered : this.alarms
-      return currentTimedAlarms
-    },
     timeFiltersCurrent() {
-      const startTime = this.startDateTimePlotly ? new Date(this.startDateTimePlotly) : this.startTime
-      const endTime = this.endDateTimePlotly ? new Date(this.endDateTimePlotly) : this.endTime
-      const dateTimeFilter = { startDateTime: startTime, endDateTime: endTime }
-      return dateTimeFilter
+      let timeFilterCurrent = { startUnixTime: null, endUnixTime: null }
+      const { startUnixTime, endUnixTime } = this.dateTimeFilter
+      if (startUnixTime && endUnixTime) {
+        timeFilterCurrent.startUnixTime = startUnixTime
+        timeFilterCurrent.endUnixTime = endUnixTime
+      } else {
+        timeFilterCurrent.startUnixTime = Math.floor(this.startTime / 1000)
+        timeFilterCurrent.endUnixTime = Math.floor(this.endTime / 1000)
+      }
+      return timeFilterCurrent
     },
+    iodaIPAddressFamilies() {
+      const result = {}
+      const dataSources = this.alarmsInfo
+      for (const dataSource in dataSources) {
+        if (dataSource !== 'ioda') continue;
+        const alarmTypes = dataSources[dataSource].alarm_types
+        for (const alarmType in alarmTypes) {
+          const ipAddressFamilies = alarmTypes[alarmType].metadata.ipAddressFamilies
+          result[alarmType] = Object.entries(ipAddressFamilies).filter((val) => val[1]).map((val) => val[0])
+        }
+      }
+      return result
+    },
+    aggregatedAttrsZipped() {
+      return AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
+    },
+    aggregatedAttrsCountsSelected() {
+      return this.aggregatedAttrsSelected.counts
+    },
+    alarmsTableHelperData() {
+      return this.alarmsCurrent ? this.alarmsCurrent : []
+    },
+    getRefDatavizs() {
+      const worldMapRef = this.$refs.worldMapAggregatedAlarms
+      const treeMapRef = this.$refs.treeMapAggregatedAlarms
+      const timeSeriesRef = this.$refs.timeSeriesAggregatedAlarms
+      const tableRef = this.$refs.tableAggregatedAlarmsHelper
+      return [worldMapRef, treeMapRef, timeSeriesRef, tableRef]
+    },
+    hegemonyAlarmsFilters() {
+      const hegemonyAlarmsFilter1 = new HegemonyAlarmsQuery()
+        .deviation(20, Query.GTE)
+        .timeInterval(this.startTime, this.endTime)
+      const hegemonyAlarmsFilter2 = new HegemonyAlarmsQuery()
+        .deviation(-20, Query.LTE)
+        .timeInterval(this.startTime, this.endTime)
+      return [hegemonyAlarmsFilter1, hegemonyAlarmsFilter2]
+    },
+    networkDelayAlarmsFilters() {
+      const networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery()
+        .deviation(20, Query.GTE)
+        .startPointType('AS')
+        .timeInterval(this.startTime, this.endTime)
+      return [networkDelayAlarmsFilter]
+    },
+    networkDisconnectionAlarmsFilters() {
+      const networkDisconnectionAlarmsFilter = new DiscoEventQuery()
+        .streamName(this.streamName)
+        .timeInterval(this.startTime, this.endTime)
+        .orderedByTime();
+      return [networkDisconnectionAlarmsFilter]
+    },
+    ihrAlarmsJoined() {
+      const ihrAlarmsJoinedResult = Object.keys(this.ihrAlarms).flatMap((alarmType) => this.ihrAlarms[alarmType].data ? this.ihrAlarms[alarmType].data : [])
+      return ihrAlarmsJoinedResult
+    },
+    aggregatedAttrsIhrAlarmsLoading() {
+      return [this.ihrAlarmsLoading, this.aggregatedAttrsSelected]
+    }
   },
   watch: {
     alarms: {
       handler: function (newAlarms) {
+        this.updateDataVizsWithFilters(...this.getRefDatavizs, newAlarms, this.aggregatedAttrsZipped, this.aggregatedAttrsCountsSelected, this.countryClicked, this.alarmTypeTitlesMap, this.legendSelected.legend, this.severitiesSelectedList, this.ipAddressFamilySelectedList, this.timeFiltersCurrent, false, true, true)
+      },
+      deep: true
+    },
+    aggregatedAttrsIhrAlarmsLoading: {
+      handler: function (newAggregatedAttrsIhrAlarmsLoading) {
+        const [ihrAlarmsLoading, newAggregatedAttrsSelected] = newAggregatedAttrsIhrAlarmsLoading
         const anyAlarmTypesSelected = Object.values(this.alarmTypesFilter).includes(true)
-        if (!this.loadingVal && anyAlarmTypesSelected && newAlarms.length) {
-          const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(newAlarms, this.severitiesSelectedList, aggregatedAttrsZipped)
-          this.updateDataVizs(alarmsSeverityFiltered)
-        }
-        if (newAlarms && !newAlarms.length) {
-          this.clearDataVizHandler()
-        }
-      },
-      deep: true
-    },
-    alarmsTimeFiltered: {
-      handler: function (newAlarmsTimeFiltered) {
-        if (!this.loadingVal && newAlarmsTimeFiltered && newAlarmsTimeFiltered.length) {
-          const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(newAlarmsTimeFiltered, this.severitiesSelectedList, aggregatedAttrsZipped)
-          this.updateDataVizs(alarmsSeverityFiltered)
-        }
-        if (newAlarmsTimeFiltered && !newAlarmsTimeFiltered.length) {
-          this.clearDataVizHandler()
-        }
-      },
-      deep: true
-    },
-    alarmsSeveritiesFiltered: {
-      handler: function (newAlarmSeveritiesFiltered) {
-        if (newAlarmSeveritiesFiltered && newAlarmSeveritiesFiltered.length) {
-          this.updateDataVizs(newAlarmSeveritiesFiltered)
-        }
-        if (!newAlarmSeveritiesFiltered.length) {
-          this.clearDataVizHandler()
-        }
-      },
-      deep: true
-    },
-    aggregatedAttrsSelected: {
-      handler: function (newAggregatedAttrsSelected) {
-        if (this.alarmsCurrent.length) {
-          const anyAlarmTypesSelected = Object.values(this.alarmTypesFilter).includes(true)
-          const aggregatedAttrsSelectedFlattened = AggregatedAlarmsUtils.flattenDictionary(this.aggregatedAttrsSelected)
-          const isDataContainsAllSelectedAggregatedAttrs = AggregatedAlarmsUtils.isDictKeysSubset(aggregatedAttrsSelectedFlattened, this.alarmsCurrent[0])
-          if (!this.loadingVal && anyAlarmTypesSelected && isDataContainsAllSelectedAggregatedAttrs) {
-            const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(newAggregatedAttrsSelected)
-            const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelectedList, aggregatedAttrsZipped)
-            this.updateDataVizs(alarmsSeverityFiltered, newAggregatedAttrsSelected)
+        if (!anyAlarmTypesSelected) return this.clearDataVizHandler()
+        if (!ihrAlarmsLoading && !this.etlAlarmsLoadingVal) {
+          const isThereAnyCachedAlarms = this.isThereAnyCachedAlarms(this.alarms, newAggregatedAttrsSelected)
+          if (!this.alarms || !isThereAnyCachedAlarms) {
+            this.etlAggregatedAlarmsDataModel(
+              this.dataSourcesSelected,
+              this.alarmsInfo,
+              this.alarmTypesFilter,
+              this.groupByKeys,
+              this.ihrAlarmsJoined,
+              this.externalAlarms,
+              this.iodaIPAddressFamilies,
+              this.timeFiltersCurrent.startUnixTime,
+              this.timeFiltersCurrent.endUnixTime,
+            )
+          } else {
+            this.updateDataVizsWithFilters(...this.getRefDatavizs, this.alarms, this.aggregatedAttrsZipped, this.aggregatedAttrsCountsSelected, this.countryClicked, this.alarmTypeTitlesMap, this.legendSelected.legend, this.severitiesSelectedList, this.ipAddressFamilySelectedList, this.timeFiltersCurrent, false, true, true)
           }
         }
       },
       deep: true
     },
     alarmTypesFilter: {
-      handler: function (newAlarmTypesFilter) {
-        const anyNewAlarmTypesSelected = Object.values(newAlarmTypesFilter).includes(true)
-        const aggregatedAttrsSelectedFlattened = AggregatedAlarmsUtils.flattenDictionary(this.aggregatedAttrsSelected)
-        const isThereAnyCachedAlarmsResult = this.isThereAnyCachedAlarms(this.alarmsCurrent, aggregatedAttrsSelectedFlattened)
-        if (!this.loadingVal && anyNewAlarmTypesSelected && !isThereAnyCachedAlarmsResult) {
-          this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly = null;
-          this.etlAggregatedAlarmsDataModel(aggregatedAttrsSelectedFlattened)
-        }
-        if (!this.loadingVal && (!anyNewAlarmTypesSelected || !this.alarmsCurrent.length)) {
-          this.clearDataVizHandler()
+      handler: function (_) {
+        for (const ihrAlarmType of this.selectedIhrAlarmTypes) {
+          const ihrAlarmTypeVal = this.ihrAlarms[ihrAlarmType]
+          if (ihrAlarmTypeVal.extract) ihrAlarmTypeVal.extract()
         }
       },
-      deep: true
+      deep: true,
     }
   },
   methods: {
-    etlAggregatedAlarmsDataModel(aggregatedAttrsSelectedFlattend) {
-      this.aggregatedAlarmsLoadingVal = true
-      AggregatedAlarmsDataModel.etl(
-        this.alarmsInfo.metadata.data_sources,
-        this.dataSourcesSelected,
-        aggregatedAttrsSelectedFlattend,
-        this.hegemonyAlarms,
-        this.networkDelayAlarms,
-        this.thirdPartyAlarmsStates,
-        this.timeFiltersCurrent.startDateTime,
-        this.timeFiltersCurrent.endDateTime,
-      ).then((alarms) => {
-        this.alarms = alarms
-        this.aggregatedAlarmsLoadingVal = false
-      }).catch((error) => {
-        console.error(error)
+    async extractHegemonyAlarms() {
+      if (this.ihrAlarms.hegemony.data !== null) return
+      const alarms = []
+      const promises = []
+      for (const hegemonyAlarmsFilter of this.hegemonyAlarmsFilters) {
+        const newHegemonyAlarmsPromise = new Promise((resolve, reject) => {
+          this.$ihr_api.hegemony_alarms(
+            hegemonyAlarmsFilter,
+            result => {
+              alarms.push(...result.results)
+              resolve()
+            }, error => {
+              reject(error)
+            }
+          )
+        })
+        promises.push(newHegemonyAlarmsPromise)
+      }
+      Promise.all(promises).then(() => {
+        alarms.forEach((alarm) => alarm.event_type = 'hegemony')
+        this.ihrAlarms.hegemony.data = alarms
       })
     },
-
-    countryClickedHandler(newCountryIsoCode3Clicked) {
-      if (this.alarmsCurrent.length && newCountryIsoCode3Clicked) {
-        const countryName = newCountryIsoCode3Clicked ? getCountryNameFromIsoCode3(newCountryIsoCode3Clicked) : null
-        const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-        const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelectedList, aggregatedAttrsZipped)
-        this.$refs.timeSeriesAggregatedAlarms.etl(alarmsSeverityFiltered, aggregatedAttrsZipped, countryName, this.alarmTypeTitlesMap)
-        this.$refs.treeMapAggregatedAlarms.etl(alarmsSeverityFiltered, aggregatedAttrsZipped, countryName, this.alarmTypeTitlesMap)
-        this.countryNameClicked = countryName
+    async extractNetworkDelayAlarms() {
+      if (this.ihrAlarms.network_delay.data !== null) return
+      const alarms = []
+      const promises = []
+      for (const networkDelayFilter of this.networkDelayAlarmsFilters) {
+        const newNetworkDelayAlarmsPromise = new Promise((resolve, reject) => {
+          this.$ihr_api.network_delay_alarms(
+            networkDelayFilter,
+            result => {
+              alarms.push(...result.results)
+              resolve()
+            }, error => {
+              reject(error)
+            }
+          )
+        });
+        promises.push(newNetworkDelayAlarmsPromise)
+      }
+      Promise.all(promises).then(() => {
+        alarms.forEach((alarm) => alarm.event_type = 'network_delay')
+        this.ihrAlarms.network_delay.data = alarms
+      })
+    },
+    async extractNetworkDisconnectionAlarms() {
+      if (this.ihrAlarms.network_disconnection.data !== null) return
+      const alarms = []
+      const promises = []
+      for (const networkDisconnectionFilter of this.networkDisconnectionAlarmsFilters) {
+        const newNetworkDisconnectionAlarmsPromise = new Promise((resolve, reject) => {
+          this.$ihr_api.disco_events(
+            networkDisconnectionFilter,
+            result => {
+              alarms.push(...result.results)
+              resolve()
+            }, error => {
+              reject(error)
+            }
+          )
+        })
+        promises.push(newNetworkDisconnectionAlarmsPromise)
+      }
+      Promise.all(promises).then(() => {
+        alarms.forEach((alarm) => alarm.event_type = 'network_disconnection')
+        this.ihrAlarms.network_disconnection.data = alarms
+      })
+    },
+    etlAggregatedAlarmsDataModel(dataSourcesSelected, dataSourcesColumns, alarmTypesFilter, groupByKeys, ihrAlarms, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime) {
+      this.etlAlarmsLoadingVal = true
+      AggregatedAlarmsDataModel.etl(dataSourcesSelected, dataSourcesColumns, alarmTypesFilter, groupByKeys, ihrAlarms, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime)
+        .then((alarms) => {
+          this.alarms = alarms
+          this.etlAlarmsLoadingVal = false
+        }).catch((error) => {
+          console.error(error)
+        })
+    },
+    onGroupAlarmsByKeys(newGroupByKeys) {
+      const anyNewGroupByKeys = JSON.stringify(newGroupByKeys) !== JSON.stringify(this.groupByKeys)
+      if (!this.loadingVal && this.alarms && anyNewGroupByKeys) {
+        this.groupByKeys = AggregatedAlarmsUtils.deepCopy(newGroupByKeys)
+        this.etlAggregatedAlarmsDataModel(
+          this.dataSourcesSelected,
+          this.alarmsInfo,
+          this.alarmTypesFilter,
+          newGroupByKeys,
+          this.ihrAlarmsJoined,
+          this.externalAlarms,
+          this.iodaIPAddressFamilies,
+          this.timeFiltersCurrent.startUnixTime,
+          this.timeFiltersCurrent.endUnixTime,
+        )
       }
     },
-
-    filterAlarmsByTimeHandler(newDateTimeFilter) {
-      if (this.alarmsCurrent.length) {
-        const { startDateTime, endDateTime } = newDateTimeFilter
-        if (startDateTime && endDateTime) {
-          this.startDateTimePlotly = startDateTime
-          this.endDateTimePlotly = endDateTime
-          const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-          const alarmsTimeFiltered = AggregatedAlarmsDataModel.filterAlarmsByTime(this.alarmsCurrent, this.timeFiltersCurrent.startDateTime, this.timeFiltersCurrent.endDateTime, aggregatedAttrsZipped)
-          this.alarmsTimeFiltered = alarmsTimeFiltered
-        }
-      }
+    onCountryClickedHandler(newCountryClicked) {
+      window.scrollTo({ top: 1000, behavior: 'smooth', passive: true });
+      this.onCountryClicked(newCountryClicked, ...this.getRefDatavizs)
     },
-
-    filterAlarmsBySeveritiesHandler(newSeveritiesSelectedList) {
-      this.severitiesSelectedList = newSeveritiesSelectedList
-      if (this.severitiesSelectedList.length) {
-        const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-        this.alarmsSeveritiesFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, newSeveritiesSelectedList, aggregatedAttrsZipped)
-      } else {
-        this.clearDataVizHandler()
-      }
-    },
-
-    resetTimeFlagHandler() {
-      this.alarmsTimeFiltered = this.startDateTimePlotly = this.endDateTimePlotly = null;
-      const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-      const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelectedList, aggregatedAttrsZipped)
-      this.updateDataVizs(alarmsSeverityFiltered)
-    },
-
-    updateDataVizs(alarms, aggregatedAttrsSelected = this.aggregatedAttrsSelected) {
-      const countAggregatedAttrsSelected = Object.keys(aggregatedAttrsSelected.counts)
-      const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsSelected)
-      this.$refs.worldMapAggregatedAlarms.etl(alarms, countAggregatedAttrsSelected, this.alarmTypeTitlesMap)
-      this.$refs.timeSeriesAggregatedAlarms.etl(alarms, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
-      this.$refs.treeMapAggregatedAlarms.etl(alarms, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
-    },
-
-    resetGranularityFlagHandler() {
-      this.countryNameClicked = null
-      const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(this.aggregatedAttrsSelected)
-      const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(this.alarmsCurrent, this.severitiesSelectedList, aggregatedAttrsZipped)
-      this.$refs.timeSeriesAggregatedAlarms.etl(alarmsSeverityFiltered, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
-      this.$refs.treeMapAggregatedAlarms.etl(alarmsSeverityFiltered, aggregatedAttrsZipped, this.countryNameClicked, this.alarmTypeTitlesMap)
-    },
-
-    clearDataVizHandler() {
-      this.$refs.worldMapAggregatedAlarms.clearDataViz()
-      this.$refs.timeSeriesAggregatedAlarms.clearDataViz()
-      this.$refs.treeMapAggregatedAlarms.clearDataViz()
-    },
-
-    filterAlarmsByAlarmTypesHandler(newAlarmTypesFilter) {
+    onFilterAlarmsByAlarmTypes(newAlarmTypesFilter) {
       this.alarmTypesFilter = newAlarmTypesFilter
     },
-
-    isThereAnyCachedAlarms(cachedAlarms, aggregatedAttrsSelected) {
-      if (cachedAlarms.length) {
-        const dataContainsSelectedAlarmAttrs = AggregatedAlarmsUtils.isDictKeysSubset(aggregatedAttrsSelected, cachedAlarms[0])
-        if (dataContainsSelectedAlarmAttrs) {
-          return true
-        }
+    onASNameClicked(newASNKeyClicked) {
+      if (this.legendSelected.legend !== newASNKeyClicked) {
+        this.legendSelected.legend = newASNKeyClicked
+        this.legendSelected.opacity = 1
+      } else {
+        this.legendSelected.legend = null
+        this.legendSelected.opacity = 0.5
       }
-      return false
+      this.updateDataVizs(...this.getRefDatavizs, this.alarmsCurrent, this.aggregatedAttrsZipped, this.aggregatedAttrsCountsSelected, this.countryClicked, this.alarmTypeTitlesMap, this.legendSelected.legend, this.severitiesSelectedList, false, true, true)
     },
-
+    isThereAnyCachedAlarms(cachedAlarms, aggregatedAttrsSelected) {
+      if (cachedAlarms && cachedAlarms.length) {
+        const isAggregatedAttrsSubset = Object.keys(aggregatedAttrsSelected)
+          .flatMap((attr) => aggregatedAttrsSelected[attr])
+          .flatMap((attr) => attr)
+          .every((subsetAttr) => Object.keys(cachedAlarms[0]).includes(subsetAttr))
+        return isAggregatedAttrsSubset
+      } else {
+        return false;
+      }
+    },
     isDataSourceSelected(dataSourceObj, alarmTypesFilter) {
       const alarmTypes = Object.keys(dataSourceObj.alarm_types)
       const isDataSourceSelected = alarmTypes.some((alarmType) => alarmTypesFilter[alarmType] === true)
       return isDataSourceSelected
     },
+    clearDataVizHandler() {
+      this.$refs.worldMapAggregatedAlarms.clearDataViz()
+      this.$refs.treeMapAggregatedAlarms.clearDataViz()
+      this.$refs.timeSeriesAggregatedAlarms.clearDataViz()
+    },
   }
 }
+
+
 </script>
 
 <style lang="stylus" scoped>
 .card-container {
     display: flex;
     justify-content: space-between;
-  }
-
+}
 .card-wrapper {
     flex: 1;
-    margin: 10px; /* Adjust the margin as needed */
+    margin: 10px;
 }
 </style>
