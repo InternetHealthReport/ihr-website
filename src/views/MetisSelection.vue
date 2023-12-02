@@ -103,9 +103,10 @@ const apiCall = () => {
   setFilter()
   ihr_api.metisAtlasSelection(
     apiFilter.value,
-    result => {
+    result => {   
       nextTick(() => {
         readRanking(result.results)
+        fetch.value = true
       })
     },
     error => {
@@ -113,7 +114,6 @@ const apiCall = () => {
       loading.value = false
     }
   )
-  fetch.value = true
   loading.value = false
   apiUrl.value = ihr_api.getUrl(apiFilter.value)
 }
