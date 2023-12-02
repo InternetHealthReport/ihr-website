@@ -1,18 +1,266 @@
 {
+  "genericErrors": {
+    "ups": "ups",
+    "badHappened": "È successo qualcosa di brutto, contatta l'amministratore",
+    "cloudNotLoad": "Impossibile caricare",
+    "invalid": "non valido",
+    "notMatchingPassword": "le passwords non corrispondono"
+  },
   "header": {
     "API": "API",
-    "contacts": "contatti",
-    "countries": "paesi",
-    "documentation": "documentazione",
-    "networks": "reti",
-    "participants": "partecipanti"
+    "reports": "Reports",
+    "tools": "Tools",
+    "metis": "Metis",
+    "globalReport": "Globale",
+    "countryReport": "Paese",
+    "networkReport": "Network",
+    "rovReport": "Convalida dell'origine del percorso",
+    "covid19": "COVID19",
+    "contact": "Contatto",
+    "documentation": "Documentazione",
+    "signUp": "Registrati",
+    "signIn": "Accedi",
+    "signInTitle": "Accedi",
+    "here": "here",
+    "home": "Pagina Principal",
+    "ForgottenPassword": "Hai dimenticato la password?"
   },
-  "home": {
-    "monitoredCountries": "paesi monitorati",
-    "monitoredNetworks": "Reti monitorate"
+  "footer": {
+    "reportPages": {
+      "title": "Rapporti",
+      "network": "network ",
+      "country": "Paese ",
+      "rov": "ROV ",
+      "covid19": "COVID19 ",
+      "global": "globale "
+    },
+    "documentation": {
+      "title": "documentazione",
+      "dataAccess": "Accesso ai dati",
+      "analysisModules": "Moduli di analisi"
+    },
+    "about": {
+      "title": "Di IHR",
+      "datapolicy": "politica dei dati",
+      "contact": "contatto",
+      "acknowledgments": "riconoscimenti"
+    }
   },
   "searchBar": {
-    "placeholder": " o nome",
-    "resultsFound": "risultati trovati"
-  }
+    "placeholder": "Inserisci il nome di un AS, IXP o di un paese",
+    "locationHint": "ASN, nome della città o ID della sonda Atlas",
+    "locationSource": "fonte",
+    "locationDestination": "Destinazione",
+    "noResultFound": "nessun risultato trovato"
+  },
+  "globalReport": {
+    "title": {
+      "global": "Rapporto globale",
+      "personal": "Request personalizzato"
+    },
+    "filters": {
+      "monitoredAsn": "Mostra solo Asn monitorate"
+    }
+  },
+  "Networks": {
+    "headerString": {
+      "loading": "caricamento...",
+      "notFound": "AS non esiste",
+      "expired": "Richiesta scaduta"
+    },
+    "subHeader": {
+      "loading": "attendere prego",
+      "notFound": "La rete interrogata",
+      "expired": "il server è sotto carico, riprova più tardi"
+    }
+  },
+  "charts": {
+    "prefixHegemony": {
+      "title": "Convalida dell'origine del percorso",
+      "table": {
+        "routesTitle": "Percorsi",
+        "originsTitle": "Origine ASes",
+        "transitsTitle": "Principali transiti",
+        "apiTitle": "I dati del prefisso visualizzato sono disponibili al seguente link:"
+      }
+    },
+    "asInterdependencies": {
+      "title": "dipendenza da AS",
+      "defaultTrace": "Numero di persone a carico",
+      "yaxis": "dipendenza",
+      "yaxis2": "Numero di AS<br> dipendente da",
+      "table": {
+        "dependencyTitle": "dipendenza dalla rete",
+        "dependentTitle": "reti dipendenti",
+        "increment": "incremento",
+        "dependencies": "Dipendenza",
+        "dependent": "dependent",
+        "apiTitle": "I dati visualizzati sono disponibili ai seguenti link:"
+      }
+    },
+    "countryHegemony": {
+      "title": "Dipendenza dalla rete",
+      "table": {
+        "dependencyTitle": "Riepilogo",
+        "apiTitle": "I dati sulle dipendenze di rete sono disponibili al seguente collegamento:"
+      }
+    },
+    "hegemonyAlarms": {
+      "title": "dipendenza da AS",
+      "table": {
+        "title": "Allarmi",
+        "dependencies": "Dipendenze anomale"
+      }
+    },
+    "linkDelays": {
+      "title": "ritardo del collegamento",
+      "yaxis": "Livello di modifica del ritardo",
+      "table": {
+        "title": "anomalie di ritardo",
+        "apiTitle": "I dati visualizzati sono disponibili ai seguenti link:"
+      }
+    },
+    "delayAndForwarding": {
+      "title": "ritardo del collegamento e anomalie nell'inoltro",
+      "yaxis": "Livello di modifica del ritardo",
+      "yaxis2": "Livello di anomalia dell'inoltro",
+      "apiTitle": "I dati visualizzati sono disponibili ai seguenti link:",
+      "tables": {
+        "delay": {
+          "title": "delay anomalies",
+          "deviation": "deviazione",
+          "delayChange": "ritardare il cambiamento",
+          "delayAnomalies": "ritardo anomalie on"
+        },
+        "forwarding": {
+          "title": "inoltro anomalie",
+          "reportedIp": "IP segnalato",
+          "usualPrecedingIP": "consueto IP precedente",
+          "correlation": "correlazione",
+          "responsibility": "responsabilità"
+        }
+      }
+    },
+    "disconnections": {
+      "title": "disconnessioni di rete",
+      "table": {
+        "event": "evento",
+        "startTime": "Tempo di disconnessione",
+        "endTime": "Tempo di riconnessione",
+        "level": "livello",
+        "disconnectionProbes": "sonde di eventi di disconnessione",
+        "yaxis": "Livello di disconnessione",
+        "apiTitle": "I dati visualizzati sono disponibili ai seguenti link:"
+      }
+    },
+    "aggregatedAlarms": {
+      "title": "Allarmi aggregati"
+    },
+    "networkDelay": {
+      "title": "ritardo della rete",
+      "yaxis": "RTT mediano (ms)",
+      "table": {
+        "title": "Ritardi stimati",
+        "apiTitle": "Dati visualizzati sono disponibili ai seguenti link:"
+      }
+    },
+    "networkDelayAlarms": {
+      "title": "Ritardo della rete",
+      "yaxis": "Numero di allarmi",
+      "table": {
+        "title": "Ritardo allarmi",
+        "destinations": " Destinazioni",
+        "apiTitle": "Data displayed is available at the following links:"
+      }
+    },
+    "speedtest": {
+      "title": "test di velocità",
+      "yaxis": "Velocità effettiva media (Mbps)",
+      "table": {
+        "title": "Produttività media",
+        "apiTitle": "I dati visualizzati sono disponibili nell'API di MLab:"
+      }
+    }
+  },
+  "sigIn": {
+    "title": "Iscriviti per personalizzare il tuo IHR",
+    "thankYou": "Grazie per esserti iscritto!",
+    "mailWillBeSent": "Verrà inviata una email al tuo indirizzo per confermare il tuo account.",
+    "missingReCaptcha": "Devi fare clic sul pulsante \"non sono un robot\".",
+    "passwordTooWeak": "La tua password è troppo debole. Utilizza almeno 8 caratteri.",
+    "strangeEmail": "La tua email è normale. Se sai cosa stai facendo, invia di nuovo.",
+    "emailSentTo": "È stata inviata un'e-mail a",
+    "pleaseFollowTheLink": "segui le istruzioni nell'e-mail per attivare il tuo account"
+  },
+  "accountActivation": {
+    "title": "pagina di convalida dell'account",
+    "signIntoValidate": "Accedi qui per convalidare",
+    "goAway": "Questa è la pagina per attivare l'account. Visita altre pagine o iscriviti.",
+    "tokenInvalid": "Il tuo token di attivazione sembra non essere valido, segui il collegamento nella tua email. Se lo segui, dovresti contattare l'amministratore",
+    "validationInProgress": "La convalida del tuo account in corso dovrebbe richiedere alcuni secondi",
+    "accountValidate": "Il tuo account è stato convalidato!",
+    "alreadyValidated": "Questo account è già stato convalidato, effettua il login utilizzando il pulsante accedi situato nella barra superiore",
+    "wrongCredential": "credenziale sbagliata, riprova"
+  },
+  "resetPassword": {
+    "title": "Dimenticato la password?",
+    "fillToChange": "compila il modulo per modificare la tua password",
+    "recoverPassword": "recupera la password",
+    "emailSent": "è stata inviata un'e-mail a",
+    "instructionPart1": "",
+    "instructionPart2": " segui le istruzioni nell'e-mail per reimpostare la password",
+    "resetPassword": "Resetta la password",
+    "error403": "questo utente non esiste",
+    "errorInvalidEmail": "Email non valida, controllala!",
+    "errorAreYouRobot": "controlla il pulsante! O sei un robot?",
+    "errorInvalidPassword": "password non valida, utilizza un'opzione più sicura",
+    "errorNotMatchingPassword": "passwords non corrispondono",
+    "youAreLoggedIn": "dopo aver effettuato l'accesso, clicca il pulsante relativo alla tua pagina personale"
+  },
+  "personalPage": {
+    "title": "pagina personale",
+    "definitiveConfirm": "Salvare le modifiche",
+    "changesApplied": "Abbiamo applicato le tue modifiche",
+    "confirmYourEmail": "devi confermare la tua email (seguendo le istruzioni che abbiamo inviato alla tua nuova email) prima di applicare tale modifica",
+    "changesNotApplied": "Qualcosa è andato storto, non è stata apportata alcuna modifica",
+    "goAway": "Devi essere loggato per accedere a questa pagina. effettua il login o visita altre pagine, se sei nuovo iscriviti!",
+    "personaInfo": "Informazione personale",
+    "settings": "Impostazioni",
+    "change": "modifica",
+    "confirm": "Confermare",
+    "removeSelected": "Rimuovi i selezionati",
+    "reset": "ripristina",
+    "save": "Salvare le modifiche",
+    "settingInstruction": "qui puoi gestire le impostazioni per la notifica degli eventi AS.",
+    "noAsnMonitored": "Non hai AS sotto monitoraggio",
+    "notificationLevel": "livello di notifica",
+    "monitoredAs": "AS monitorato",
+    "notifyLevelExplanation": {
+      "low": "riceverai notifiche per tutti i tipi di eventi",
+      "moderate": "riceverai notifica per eventi di media entità ed eventi critici",
+      "high": "riceverai solo la notifica degli eventi critici"
+    },
+    "addAs": "aggiungere un nuovo AS",
+    "error409": "l'utente esiste già"
+  },
+  "forms": {
+    "fancyEmail": "email di fantasia, sei sicuro?",
+    "weakPassword": "Password Debole",
+    "loginUnsuccessful": "accesso non riuscito"
+  },
+  "user": {
+    "signedAs": "firmato come",
+    "profile": "profilo",
+    "settings": "impostazioni",
+    "signOut": "sign out",
+    "logout": "disconnettersi"
+  },
+  "passwordConfirm": "conferma password",
+  "asn": "Numero AS",
+  "prefix": "prefisso",
+  "name": "nome",
+  "close": "vicino",
+  "noDataAvailable": "nessun dato disponibile",
+  "noOutage": "Nessuna disconnessione significativa rilevata",
+  "loading": "Caricamento..."
 }
