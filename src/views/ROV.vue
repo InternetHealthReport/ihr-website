@@ -62,17 +62,18 @@ export default {
   },
   methods: {
     pushRoute() {
-      this.$router.replace({
-        //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
-        query: Object.assign({}, this.$route.query, {
-          af: this.family,
-          last: this.interval.dayDiff(),
-          date: this.$options.filters.ihrUtcString(this.interval.end, false),
-        }),
-      })
-      this.loadingStatus = LOADING_STATUS.LOADED
-      this.fetch = true
+      const currentQuery = {
+        af: String(this.family),
+        last: String(this.interval.dayDiff()),
+        date: this.$options.filters.ihrUtcString(this.interval.end, false),
+      };
+      if ( JSON.stringify(currentQuery) !== JSON.stringify(this.$route.query)) {
+        this.$router.replace({ query: currentQuery, hash: this.$route.hash });
+        this.loadingStatus = LOADING_STATUS.LOADED
+        this.fetch = true
+      }
     },
+    
     displayNetDelay(displayValue) {
       this.show.net_delay = displayValue
       this.$nextTick(function () {
