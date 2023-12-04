@@ -1,96 +1,189 @@
 {
-  "en-us": {
+    "en-us": {
     "globalReport": {
-      "name": "GLOBAL REPORT",
-      "description": [
+        "name": "GLOBAL REPORT",
+        "description": [
         "The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. "
-      ]
+        ]
     },
     "analysisModules": {
-      "title": "Analysis modules",
-      "asInterdependence": {
+        "title": "Analysis modules",
+        "asInterdependence": {
         "title": "AS Dependency",
         "docHash": "#AS_dependency",
         "description": [
-          "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of network connectivity and resiliency. "
+            "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of network connectivity and resiliency. "
         ]
-      },
-      "networkDelay": {
+        },
+        "networkDelay": {
         "title": "Network Delay",
         "docHash": "#Network_delay",
         "description": [
-          " Delay is a key metric when assessing the performance or conditions of a network. The Internet Health Report infers network delays between ASes, cities, and Internet landmarks from traceroute data."
+            " Delay is a key metric when assessing the performance or conditions of a network. The Internet Health Report infers network delays between ASes, cities, and Internet landmarks from traceroute data."
         ]
-      },
-      "delayAndForwarding": {
+        },
+        "delayAndForwarding": {
         "title": "Link Monitoring",
         "docHash": "#Delay_and_forwarding_anomalies",
         "description": [
-          "Network congestion is another key indicator of network conditions. The Internet Health Report pinpoints link congestion and abnormal forwarding patterns using traceroute data."
+            "Network congestion is another key indicator of network conditions. The Internet Health Report pinpoints link congestion and abnormal forwarding patterns using traceroute data."
+          ]
+        },
+        "disco": {
+          "title": "Disconnection",
+          "docHash": "#Network_disconnections",
+          "description": [
+            "The worst-case scenario is the complete disconnection of a network from the Internet. The Internet Health Report infers data plane disruptions by monitoring the connectivity of RIPE Atlas probes."
+          ]
+        }
+      },
+      "ihrTweets": {
+        "title": "IHR Tweets"
+      },
+      "ack": {
+        "title": "Special thanks to",
+        "organizations": [
+          {
+            "name": "IIJ",
+            "logo": "iij-logo.jpg",
+            "url":"https://www.iij.ad.jp/en/",
+            "description": "For financial support, rack space, etc..."
+          },
+          {
+            "name": "RIPE NCC",
+            "logo": "ripe-logo.png",
+            "url":"https://www.ripe.net/",
+            "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
+          },
+          {
+            "name": "GSOC",
+            "logo": "gsoc-logo.png",
+            "url":"https://summerofcode.withgoogle.com/",
+            "description": "Google Summer of Code supports new contributors into the development of IHR"
+          },
+  
+          {
+            "name": "Route Views",
+            "logo": "rv-logo.png",
+            "url":"https://www.routeviews.org/routeviews/",
+            "description": "For BGP data"
+          },
+          {
+            "name": "ISOC",
+            "logo": "isoc-logo.png",
+            "url":"https://www.internetsociety.org/",
+            "description": "For financial support"
+          },
+          {
+            "name": "MANRS",
+            "logo": "manrs-logo.jpg",
+            "url":"https://www.manrs.org/",
+            "description": "For financial support (MANRS Research Fellowship Program)"
+          },
+          {
+            "name": "EdgeCast",
+            "logo": "edgecast-logo.png",
+            "url":"https://edg.io/",
+            "description": "For providing IHR website and API on their CDN."
+          }
         ]
       },
-      "disco": {
-        "title": "Disconnection",
-        "docHash": "#Network_disconnections",
-        "description": [
-          "The worst-case scenario is the complete disconnection of a network from the Internet. The Internet Health Report infers data plane disruptions by monitoring the connectivity of RIPE Atlas probes."
-        ]
-      }
+      "documentation": "documentation",
+      "learnmore": "Learn more on ",
+      "explore": "Explore"
     },
-    "ihrTweets": {
-      "title": "IHR Tweets"
-    },
-    "ack": {
-      "title": "Special thanks to",
-      "organizations": [
-        {
-          "name": "IIJ",
-          "logo": "iij-logo.jpg",
-          "url":"https://www.iij.ad.jp/en/",
-          "description": "For financial support, rack space, etc..."
-        },
-        {
-          "name": "RIPE NCC",
-          "logo": "ripe-logo.png",
-          "url":"https://www.ripe.net/",
-          "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
-        },
-        {
-          "name": "GSOC",
-          "logo": "gsoc-logo.png",
-          "url":"https://summerofcode.withgoogle.com/",
-          "description": "Google Summer of Code supports new contributors into the development of IHR"
-        },
+    "ita": {
+        "globalReport": {
+            "name": "RAPPORTO GLOBALE",
+            "description": [
+              "L'Internet Health Report monitora le condizioni delle reti che compongono Internet. Questo sforzo mira a fornire agli operatori di rete, ai politici e ad altre parti interessate una migliore comprensione dell'infrastruttura di Internet e della sua evoluzione."
+            ]
+          },
+          "analysisModules": {
+            "title": "Moduli di analisi",
+            "asInterdependence": {
+              "title": "Dipendenza da AS",
+              "docHash": "#AS_dependency",
+              "description": [
+                "Le reti connesse a Internet si affidano intrinsecamente ad altre reti per raggiungere il resto del mondo. L’Internet Health Report quantifica l’interdipendenza delle reti utilizzando le informazioni di routing globale (BGP), migliorando così la nostra comprensione della connettività e della resilienza della rete."
+              ]
+            },
+            "networkDelay": {
+              "title": "Ritardo di rete",
+              "docHash": "#Network_delay",
+              "description": [
+                " Il ritardo è una metrica chiave quando si valutano le prestazioni o le condizioni di una rete. L'Internet Health Report deduce i ritardi di rete tra AS, città e punti di riferimento Internet dai dati di traceroute."
+              ]
+            },
+            "delayAndForwarding": {
+              "title": "Monitoraggio dei collegamenti",
+              "docHash": "#Delay_and_forwarding_anomalies",
+              "description": [
+                "La congestione della rete è un altro indicatore chiave delle condizioni della rete. L'Internet Health Report individua la congestione dei collegamenti e i modelli di inoltro anomali utilizzando i dati di traceroute."
+              ]
+            },
+            "disco": {
+              "title": "Disconnessione",
+              "docHash": "#Network_disconnections",
+              "description": [
+                "Lo scenario peggiore è la completa disconnessione di una rete da Internet. L'Internet Health Report deduce interruzioni del piano dati monitorando la connettività delle sonde RIPE Atlas."
+              ]
+            }
+          },
+          "ihrTweets": {
+            "title": "IHR Tweets"
+          },
+          "ack": {
+            "title": "ringraziamenti speciali a",
+            "organizations": [
+            {
+                "name": "IIJ",
+                "logo": "iij-logo.jpg",
+                "url":"https://www.iij.ad.jp/en/",
+                "description": "Per supporto finanziario, spazio rack, ecc..."
+            },
+            {
+                "name": "RIPE NCC",
+                "logo": "ripe-logo.png",
+                "url":"https://www.ripe.net/",
+                "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
+            },
+            {
+                "name": "GSOC",
+                "logo": "gsoc-logo.png",
+                "url":"https://summerofcode.withgoogle.com/",
+                "description": "Google Summer of Code supporta i nuovi contributori nello sviluppo di IHR"
+            },
 
-        {
-          "name": "Route Views",
-          "logo": "rv-logo.png",
-          "url":"https://www.routeviews.org/routeviews/",
-          "description": "For BGP data"
+
+            {
+                "name": "For BGP data",
+                "logo": "rv-logo.png",
+                "url":"https://www.routeviews.org/routeviews/",
+                "description": "Per i dati BGP"
+            },
+            {
+                "name": "ISOC",
+                "logo": "isoc-logo.png",
+                "url":"https://www.internetsociety.org/",
+                "description": "Per il sostegno finanziario"
+            },
+            {
+                "name": "MANRS",
+                "logo": "manrs-logo.jpg",
+                "url":"https://www.manrs.org/",
+                "description": "Per il sostegno finanziario (Programma di borse di ricerca MANRS)"
+            },
+            {
+                "name": "EdgeCast",
+                "logo": "edgecast-logo.png",
+                "url":"https://edg.io/",
+                "description": "Per aver fornito il sito Web e l'API IHR sul proprio CDN."
+            }
+            ]
         },
-        {
-          "name": "ISOC",
-          "logo": "isoc-logo.png",
-          "url":"https://www.internetsociety.org/",
-          "description": "For financial support"
-        },
-        {
-          "name": "MANRS",
-          "logo": "manrs-logo.jpg",
-          "url":"https://www.manrs.org/",
-          "description": "For financial support (MANRS Research Fellowship Program)"
-        },
-        {
-          "name": "EdgeCast",
-          "logo": "edgecast-logo.png",
-          "url":"https://edg.io/",
-          "description": "For providing IHR website and API on their CDN."
-        }
-      ]
-    },
-    "documentation": "documentation",
-    "learnmore": "Learn more on ",
-    "explore": "Explore"
-  },
-  "ita": {}
+        "documentation": "documentazione",
+        "learnmore": "Scopri di più su",
+        "explore": "Esplorare"
+    }
 }
