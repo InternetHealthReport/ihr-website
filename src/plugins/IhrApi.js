@@ -5,6 +5,7 @@ import {
   Query,
   MetisAtlasSelectionQuery,
   MetisAtlasDeploymentQuery,
+  DiscoEventQuery
  } from './query/IhrQuery'
 
 /// Base url for api
@@ -141,5 +142,6 @@ export {
   IhrApi,
   Query,
   MetisAtlasSelectionQuery,
-  MetisAtlasDeploymentQuery
+  MetisAtlasDeploymentQuery,
+  DiscoEventQuery
 }
