@@ -42,7 +42,7 @@ const router = createRouter({
           component: Home
         },
         {
-          path: 'networks',
+          path: 'networks/:asn?',
           name: 'networks',
           component: Home
         },
@@ -57,7 +57,7 @@ const router = createRouter({
           component: Contact
         },
         {
-          path: 'countries',
+          path: 'countries/:cc?',
           name: 'countries',
           component: Home
         },

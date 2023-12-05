@@ -5,7 +5,8 @@ import {
   Query,
   MetisAtlasSelectionQuery,
   MetisAtlasDeploymentQuery,
-  DiscoEventQuery
+  DiscoEventQuery,
+  HegemonyPrefixQuery
  } from './query/IhrQuery'
 
 /// Base url for api
@@ -123,6 +124,15 @@ const IhrApi = {
       )
     }
 
+    const hegemony_prefix = (hegemonyPrefixQuery, successCallback, errorCallback) => {
+      _generic(
+        HegemonyPrefixQuery.ENTRY_POINT,
+        hegemonyPrefixQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
     const ihr_api = {
       getUrl,
       readableType,
@@ -130,7 +140,8 @@ const IhrApi = {
       ihr_AsOrIxpToNumber,
       sortedKeys,
       metisAtlasSelection,
-      metisAtlasDeployment
+      metisAtlasDeployment,
+      hegemony_prefix
     }
     app.provide('ihr_api', ihr_api)
   }
@@ -143,5 +154,6 @@ export {
   Query,
   MetisAtlasSelectionQuery,
   MetisAtlasDeploymentQuery,
-  DiscoEventQuery
+  DiscoEventQuery,
+  HegemonyPrefixQuery
 }

@@ -127,7 +127,7 @@ watch(props.layout, () => {
     react()
   }, {deep: true}
 )
-watch(ref(props.yMax), (newValue) => {
+watch(() => props.yMax, (newValue) => {
   const graphDiv = myId.value
   Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
 })

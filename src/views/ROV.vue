@@ -6,6 +6,7 @@ import { AS_FAMILY } from '@/plugins/IhrApi'
 import { isoCountries } from '@/plugins/countryName'
 import report from '@/plugins/report'
 import DateTimePicker from '@/components/DateTimePicker.vue'
+import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -38,7 +39,7 @@ const show = ref({
 const majorEyeballs = ref([])
 const majorEyeballsThreshold = ref(10)
 
-const { interval, minDate, maxDate, fetch, utcString, reportDateFmt, setReportDate } = report()
+const { interval, minDate, maxDate, fetch, utcString, reportDateFmt, setReportDate, startTime, endTime } = report()
 
 const family = computed(() => {
   return addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
@@ -108,7 +109,7 @@ onMounted(() => {
         <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
       </h3>
     </div>
-    <!-- <prefix-hegemony-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" ref="asInterdependenciesChart" /> -->
+    <PrefixHegemonyChart :start-time="startTime" :end-time="endTime" :fetch="fetch" />
     <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
   </div>
 </template>
