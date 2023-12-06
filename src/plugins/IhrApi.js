@@ -7,7 +7,9 @@ import {
   MetisAtlasDeploymentQuery,
   DiscoEventQuery,
   HegemonyPrefixQuery,
-  NetworkDelayQuery
+  NetworkDelayQuery,
+  NetworkDelayLocation,
+  NetworkQuery
  } from './query/IhrQuery'
 
 /// Base url for api
@@ -143,6 +145,24 @@ const IhrApi = {
       )
     }
 
+    const network = (networkQuery, successCallback, errorCallback) => {
+      _generic(
+        NetworkQuery.ENTRY_POINT,
+        networkQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
+    const network_delay_location = (networkDelayLocation, successCallback, errorCallback) => {
+      _generic(
+        NetworkDelayLocation.ENTRY_POINT,
+        networkDelayLocation,
+        successCallback,
+        errorCallback
+      )
+    }
+
     const ihr_api = {
       getUrl,
       readableType,
@@ -152,7 +172,9 @@ const IhrApi = {
       metisAtlasSelection,
       metisAtlasDeployment,
       hegemony_prefix,
-      network_delay
+      network_delay,
+      network,
+      network_delay_location
     }
     app.provide('ihr_api', ihr_api)
   }
@@ -167,5 +189,7 @@ export {
   MetisAtlasDeploymentQuery,
   DiscoEventQuery,
   HegemonyPrefixQuery,
-  NetworkDelayQuery
+  NetworkDelayQuery,
+  NetworkDelayLocation,
+  NetworkQuery
 }

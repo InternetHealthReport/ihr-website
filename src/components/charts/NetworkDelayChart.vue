@@ -6,6 +6,7 @@ import { NetworkDelayQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { NET_DELAY_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import networkName from '@/plugins/networkName'
 import NetworkDelayTable from '../tables/NetworkDelayTable.vue'
+import LocationSearchBar from '../search/LocationSearchBar.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -295,8 +296,10 @@ const fetchNetworkDelay = (data) => {
   keys.forEach(key => traces.value.push(localTraces[key]))
   // emit max value
   emits('max-value', maxValue)
-  if (keys.length == 0) {
+  if (traces.value.length == 0) {
     noData.value = 'No data available.'
+  } else {
+    noData.value = ''
   }
 
   loading.value = false
@@ -329,27 +332,27 @@ onMounted(() => {
       <div v-if="isCovid">
         <div class="q-pa-sm"
         >
-          <!-- <location-search-bar
+          <LocationSearchBar
             @select="addStartLocation"
             :hint="$t('searchBar.locationSource')"
             :label="$t('searchBar.locationHint')"
             :selected="startPointNameStr"
             style="width: 65%;margin: auto; margin-bottom: -6px;"
-            /> -->
+            />
         </div>
         <div class="q-pa-sm"
         >
-          <!-- <location-search-bar
+          <LocationSearchBar
           @select="addEndLocation"
           :hint="$t('searchBar.locationDestination')"
           :label="$t('searchBar.locationHint')"
           :selected="startPointNameStr"
           style="width: 65%;margin: auto;margin-bottom: -6px;"
-          /> -->
+          />
         </div>
         <div style="display: block;">
       <div class="col-3 q-pa-sm">
-        <QBtn @click="debouncedApiCall" color="secondary" class="q-ml-sm">Add</QBtn>
+        <QBtn @click="apiCall" color="secondary" class="q-ml-sm">Add</QBtn>
         <QBtn @click="clearGraph" class="q-ml-sm">Clear all</QBtn>
       </div>
       </div>
@@ -357,15 +360,15 @@ onMounted(() => {
       <div v-else>
         <div class="row justify-center">
       <div class="col-4 q-pa-sm">
-        <!-- <location-search-bar
+        <LocationSearchBar
           @select="addStartLocation"
           :hint="$t('searchBar.locationSource')"
           :label="$t('searchBar.locationHint')"
           :selected="startPointNameStr"
-        /> -->
+        />
       </div>
       <div class="col-4 q-pa-sm">
-        <!-- <location-search-bar @select="addEndLocation" :hint="$t('searchBar.locationDestination')" :label="$t('searchBar.locationHint')" /> -->
+        <LocationSearchBar @select="addEndLocation" :hint="$t('searchBar.locationDestination')" :label="$t('searchBar.locationHint')" />
       </div>
       <div class="col-3 q-pa-sm">
         <QBtn @click="debouncedApiCall" color="secondary" class="btn">Add</QBtn>
