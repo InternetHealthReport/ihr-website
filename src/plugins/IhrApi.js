@@ -6,7 +6,8 @@ import {
   MetisAtlasSelectionQuery,
   MetisAtlasDeploymentQuery,
   DiscoEventQuery,
-  HegemonyPrefixQuery
+  HegemonyPrefixQuery,
+  NetworkDelayQuery
  } from './query/IhrQuery'
 
 /// Base url for api
@@ -133,6 +134,15 @@ const IhrApi = {
       )
     }
 
+    const network_delay = (networkDelayQuery, successCallback, errorCallback) => {
+      _generic(
+        NetworkDelayQuery.ENTRY_POINT,
+        networkDelayQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
     const ihr_api = {
       getUrl,
       readableType,
@@ -141,7 +151,8 @@ const IhrApi = {
       sortedKeys,
       metisAtlasSelection,
       metisAtlasDeployment,
-      hegemony_prefix
+      hegemony_prefix,
+      network_delay
     }
     app.provide('ihr_api', ihr_api)
   }
@@ -155,5 +166,6 @@ export {
   MetisAtlasSelectionQuery,
   MetisAtlasDeploymentQuery,
   DiscoEventQuery,
-  HegemonyPrefixQuery
+  HegemonyPrefixQuery,
+  NetworkDelayQuery
 }

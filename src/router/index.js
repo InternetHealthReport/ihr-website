@@ -7,6 +7,7 @@ import MetisHome from '../views/MetisHome.vue'
 import MetisSelection from '../views/MetisSelection.vue'
 import MetisDeployment from '../views/MetisDeployment.vue'
 import ROV from '../views/ROV.vue'
+import Corona from '../views/Corona.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -69,7 +70,7 @@ const router = createRouter({
         {
           path: 'covid19',
           name: 'covid19',
-          component: Home
+          component: Corona
         },
         {
           path: 'api',

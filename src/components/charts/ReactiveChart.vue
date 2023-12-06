@@ -60,6 +60,22 @@ layoutLocal.value['images'] = [
   },
 ]
 
+const react = () => {
+  if (!created.value) {
+    console.error('SHOULD NEVER HAPPEN')
+  }
+
+  if (props.traces == undefined) {
+    return
+  }
+  Plotly.react(myId.value, props.traces, layoutLocal.value)
+  // emits('loaded')
+}
+
+const relayout = () => {
+  Plotly.relayout(myId.value, {})
+}
+
 onMounted(() => {
   const graphDiv = myId.value
   Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
@@ -101,36 +117,21 @@ onMounted(() => {
   })
 
   created.value = true
+
+  watch(() => props.traces, () => {
+      react()
+    }, {deep: true}
+  )
+  watch(() => props.layout, () => {
+      react()
+    }, {deep: true}
+  )
+  watch(() => props.yMax, (newValue) => {
+    const graphDiv = myId.value
+    Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+  })
 })
 
-const react = () => {
-  if (!created.value) {
-    console.error('SHOULD NEVER HAPPEN')
-  }
-
-  if (props.traces == undefined) {
-    return
-  }
-  Plotly.react(myId.value, props.traces, layoutLocal.value)
-  // emits('loaded')
-}
-
-const relayout = () => {
-  Plotly.relayout(myId.value, {})
-}
-
-watch(props.traces, () => {
-    react()
-  }, {deep: true}
-)
-watch(props.layout, () => {
-    react()
-  }, {deep: true}
-)
-watch(() => props.yMax, (newValue) => {
-  const graphDiv = myId.value
-  Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-})
 </script>
 
 <template>

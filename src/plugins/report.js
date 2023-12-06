@@ -22,8 +22,7 @@ class DateInterval {
   }
 }
 
-export default function report() {
-  const defaultTimeRange = null
+export default function report(defaultTimeRange=null) {
   const defaultTimeRangeVal = computed(() => {
     return defaultTimeRange ? defaultTimeRange : 3
   })
