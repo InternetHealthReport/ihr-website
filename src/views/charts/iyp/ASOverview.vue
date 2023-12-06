@@ -4,7 +4,6 @@
       <q-spinner color="secondary" size="3em" />
     </div>
     <div class="q-pl-sm q-mt-lg q-mb-lg">
-      <!-- <h2 class="q-mb-sm">Overview</h2> -->
       <div class="q-pl-md">
         <div class="row q-gutter-md q-mt-md justify-center">
           <div class="col-8">
@@ -29,7 +28,7 @@
                 </div>
               </div>
               <div class="col-12 col-md-2">
-                <h3>Top 5 Domains</h3>
+                <h3>Popular Domains</h3>
                 <div class="column q-ml-sm">
                   <div v-if="this.thirdPart.length > 0" class="column">
                     <a :href="item.domainName" v-for="item in thirdPart" :key="item.domainName" target="_blank" rel="noreferrer">{{

@@ -26,7 +26,7 @@
         <q-expansion-item
           @click="handleClick('ixps')"
           :label="$t('iyp.country.ixps.title')"
-          caption="Internet Exchange Points (IXPs)"
+          caption="$t('iyp.country.ixps.caption')+this.pageTitle"
           header-class="IHR_charts-title"
         >
           <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
@@ -35,9 +35,54 @@
               :columns="ixpsColumns"
               :loading-status="this.loadingStatus.ixps"
               :cypher-query="cypherQueries.ixps"
-            />
+              :slot-length=1
+            >
+              <div class="col-6">
+                <GenericTreemapChart
+                  v-if="ixps.length > 0"
+                  :chart-data="ixps"
+                  :chart-layout="{ title: '' }"
+                  :config="{ keys: ['org', 'ixp'], root: this.pageTitle }"
+                />
+              </div>
+            </GenericTable>
           </q-card>
         </q-expansion-item>
+
+        <q-expansion-item
+          @click="handleClick('prefixes')"
+          :label="$t('iyp.country.prefixes.title')"
+          :caption="$t('iyp.country.prefixes.caption')+this.pageTitle"
+          header-class="IHR_charts-title"
+          v-model="show.prefixes"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="prefixes"
+              :columns="prefixColumns"
+              :loading-status="this.loadingStatus.prefixes"
+              :cypher-query="cypherQueries.prefixes"
+              :slot-length="2"
+            >
+              <div class="row justify-evenly">
+                <div class="col-4">
+                  <GenericBarChart v-if="prefixes.length > 0" :chart-data="prefixes" :config="{key:'tags'}" :chart-layout="{ title: 'Tags' }" />
+                </div>
+               <div class="col-8">
+                  <GenericTreemapChart
+                  v-if="aggPrefixes.length > 0"
+                  :chart-data="aggPrefixes"
+                  :chart-layout="{ title: 'Number of prefix per Origin AS' }"
+                  :config="{ keys: ['asn'], keyValue: 'nbPrefixes', root: this.pageTitle, show_percent: true}"
+                  />
+                </div>
+              </div>
+            </GenericTable>
+          </q-card>
+        </q-expansion-item>
+
+
       </q-list>
     </div>
   </div>
@@ -46,11 +91,15 @@
 <script>
 import Overview from '@/views/charts/iyp/CountryOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
+import GenericBarChart from '@/views/charts/iyp/GenericBarChart'
+import GenericTreemapChart from '@/views/charts/iyp/GenericTreemapChart'
 
 export default {
   components: {
     Overview,
     GenericTable,
+    GenericTreemapChart,
+    GenericBarChart
   },
   data() {
     return {
@@ -96,23 +145,38 @@ export default {
           sortable: true,
         },
       ],
+      prefixColumns: [
+        { name: 'RIR', label: 'RIR', align: 'left', field: row => row.rir? row.rir : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
+        { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.rir_country, format: val => `${String(val).toUpperCase()}`, sortable: true },
+        { name: 'Geoloc. Country', label: 'Geoloc. Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'Origin AS', align: 'left', field: row => row.asns, format: val => `${val.join(', ')}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
+        { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
+        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
+        { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
+      ],
       // ases stands for autonomous systems
       ases: [],
       ixps: [],
+      prefixes: [],
+      aggPrefixes: [],
       cypherQueries: {},
       tableVisible: true,
       show: {
         overview: true,
         ases: false,
         ixps: false,
+        prefixes: false,
       },
       loadingStatus: {
         ases: false,
         ixps: false,
+        prefixes: false,
       },
       count: {
         ases: 0,
         ixps: 0,
+        prefixes: 0,
       },
       expanded: [],
     }
@@ -154,13 +218,37 @@ export default {
       const query = `
       MATCH (a:Country {country_code: $cc})<-[:COUNTRY {reference_name: $ref}]-(b:IXP)
       MATCH (b)-[:EXTERNAL_ID]-(c:PeeringdbIXID)
-      RETURN a.country_code AS cc, b.name as ixp, c.id as id`
+      OPTIONAL MATCH (b)-[:MANAGED_BY]-(o:Organization)
+      RETURN a.country_code AS cc, b.name as ixp, c.id as id, o.name as org`
       const mapping = {
         cc: 'cc',
         ixp: 'ixp',
+        org: 'org',
         id: 'id',
       }
       return { cypherQuery: query, params: { cc: this.cc, ref: 'peeringdb.ix' }, mapping, data: 'ixps' }
+    },
+    getIpPrefixes() {
+      const query = `MATCH (:Country {country_code: $cc})-[:COUNTRY]-(p:Prefix)
+         OPTIONAL MATCH (p)<-[o:ORIGINATE {reference_org:'IHR'}]-(a:AS)
+         OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
+         OPTIONAL MATCH (p)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
+         OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
+         OPTIONAL MATCH (p)-[:PART_OF]->(cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(:OpaqueID)
+         OPTIONAL MATCH (cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(cover_creg_country:Country)
+         RETURN c.country_code AS cc, toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, cover_creg_country.country_code, '-')) AS rir_country, p.prefix AS prefix, COLLECT(DISTINCT(t.label)) AS tags, COLLECT(DISTINCT o.descr) AS descr, COLLECT(DISTINCT o.visibility) AS visibility, COLLECT(DISTINCT a.asn) AS asns
+        `
+      const mapping = {
+        cc: 'cc',
+        rir: 'rir',
+        asns: 'asns',
+        rir_country: 'rir_country',
+        prefix: 'prefix',
+        tags: 'tags',
+        descr: 'descr',
+        visibility: 'visibility'
+      }
+      return { cypherQuery: query, params: { cc: this.cc }, mapping, data: 'prefixes' }
     },
     setPageTitle(title) {
       this.pageTitle = title
@@ -176,6 +264,8 @@ export default {
         query = this.getASes()
       } else if (clickedItem == 'ixps') {
         query = this.getIXPs()
+      } else if (clickedItem == 'prefixes') {
+        query = this.getIpPrefixes()
       } else {
         return
       }
@@ -191,8 +281,27 @@ export default {
       this[query.data] = formattedRes
 
       this.cypherQueries[query.data] = query.cypherQuery
+
+      if ( clickedItem == 'prefixes' ){
+        this.aggPrefixes = this.aggregatePrefixes(formattedRes)
+      }
       this.loadingStatus[query.data] = false
     },
+    aggregatePrefixes( prefixData ){
+      var asCount = {}
+
+      prefixData.forEach( item => {
+        item.asns.forEach( asn => {
+          if(!asCount[asn]){
+            asCount[asn] = {nbPrefixes:1, asn: 'AS'+asn}
+          }
+          else{
+            asCount[asn].nbPrefixes += 1
+          }
+        })
+      })
+      return Object.values(asCount)
+    }
   },
   watch: {
     '$route.params.cc': {

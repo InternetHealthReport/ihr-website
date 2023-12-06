@@ -28,7 +28,7 @@
                 </div>
               </div>
               <div class="col-12 col-md-auto">
-                <h3>Top 5 Domains</h3>
+                <h3>Popular Domains</h3>
                 <div  class="q-ml-sm column">
                   <a :href="item.domainName" v-for="item in secondPart" :key='item.domainName' target="_blank" rel="noreferrer">{{
                     item.domainName

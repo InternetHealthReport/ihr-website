@@ -318,7 +318,12 @@
         "caption": "ASes registered with organization in "
       },
       "ixps": {
-        "title": "IXPs"
+        "title": "IXPs",
+        "caption": "Internet Exchange Points located in "
+      },
+      "ipPrefixes": {
+        "title": "Prefixes",
+        "caption": "Prefixes registered and geo-located in "
       }
     },
     "ixp": {
