@@ -1,14 +1,21 @@
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <h1 class="text-center">Tag: {{ tag }}</h1>
+    <div v-if="loadingStatus.nodes" class="IYP_loading-spinner">
+      <q-spinner color="secondary" size="3em" />
+    </div>
+   <div v-else class="row justify-center">
+      <div class='col-4'>
+        <h2 class="text-center">Data Sources: {{ allSources(nodes[0]).join(', ') }}</h2>
+      </div>
+   </div>
     <div>
       <q-list>
-
         <q-expansion-item
           v-if='show.domains'
           @click="handleClick('domains')"
           :label="nodes[0].nb_domains+' '+$t('iyp.tag.popularDomains.title')"
-          :caption="$t('iyp.tag.popularDomains.caption')+this.tag"
+          :caption="$t('iyp.tag.popularDomains.caption')+this.tag+' by '+nodes[0].data_source_domains.join(', ')"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -29,7 +36,7 @@
           v-if='show.ases'
           @click="handleClick('ases')"
           :label="nodes[0].nb_ases+' '+$t('iyp.tag.ases.title')"
-          :caption="$t('iyp.tag.ases.caption')+this.tag"
+          :caption="$t('iyp.tag.ases.caption')+this.tag+' by '+nodes[0].data_source_ases.join(', ')"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -56,7 +63,7 @@
             v-if='show.prefixes'
           @click="handleClick('prefixes')"
           :label="nodes[0].nb_prefixes+' '+$t('iyp.tag.prefixes.title')"
-          :caption="$t('iyp.tag.prefixes.caption')+this.tag"
+          :caption="$t('iyp.tag.prefixes.caption')+this.tag+' by '+nodes[0].data_source_prefixes.join(', ')"
           header-class="IHR_charts-title"
         >
           <q-separator />
@@ -133,6 +140,7 @@ export default {
         prefixes: false,
       },
       loadingStatus: {
+        nodes: true,
         domains: false,
         ases: false,
         prefixes: false,
@@ -155,16 +163,19 @@ export default {
     getNodeCounts(){
       const query = `
       MATCH (t:Tag {label: $tag})
-      OPTIONAL MATCH (t)<-[:CATEGORIZED]-(d:DomainName) WITH t, count(DISTINCT d) as nb_domains
-      OPTIONAL MATCH (t)<-[:CATEGORIZED]-(a:AS) WITH t, nb_domains, count(DISTINCT a) as nb_ases
-      OPTIONAL MATCH (t)<-[:CATEGORIZED]-(p:Prefix) WITH t, nb_domains, nb_ases, count(DISTINCT p) as nb_prefixes
-      RETURN  nb_domains, nb_ases, nb_prefixes
+      OPTIONAL MATCH (t)<-[cat_a:CATEGORIZED]-(a:AS) WITH t, count(DISTINCT a) as nb_ases, COLLECT(DISTINCT cat_a.reference_org) as data_source_ases
+      OPTIONAL MATCH (t)<-[cat_p:CATEGORIZED]-(p:Prefix) WITH t, nb_ases, data_source_ases, count(DISTINCT p) as nb_prefixes, COLLECT(DISTINCT cat_p.reference_org) as data_source_prefixes
+      OPTIONAL MATCH (t)<-[cat_d:CATEGORIZED]-(d:DomainName) WITH t, nb_ases, data_source_ases, nb_prefixes, data_source_prefixes, count(DISTINCT d) as nb_domains, COLLECT(DISTINCT cat_d.reference_org) as data_source_domains
+      RETURN  nb_domains, nb_ases, nb_prefixes, data_source_ases, data_source_domains, data_source_prefixes
       `
 
       const mapping = {
         nb_domains: 'nb_domains',
         nb_ases: 'nb_ases',
         nb_prefixes: 'nb_prefixes',
+        data_source_ases: 'data_source_ases',
+        data_source_prefixes: 'data_source_prefixes',
+        data_source_domains: 'data_source_domains',
       }
       return { cypherQuery: query, params: { tag: this.tag }, mapping, data: 'nodes' }
 
@@ -265,6 +276,11 @@ export default {
       this.cypherQueries[query.data] = query.cypherQuery
       this.loadingStatus[query.data] = false
     },
+    allSources( res ) {
+
+      return [...new Set([...res.data_source_ases, ...res.data_source_domains, ...res.data_source_prefixes])]
+
+    }
   },
   watch: {
     'nodes': {
