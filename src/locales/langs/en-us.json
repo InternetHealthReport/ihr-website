@@ -300,6 +300,10 @@
         "title": "RPKI Route Origin Authorization",
         "caption": "ROAs registered for "
       },
+      "atlas": {
+        "title": "RIPE Atlas",
+        "caption": "RIPE Atlas probes located in "
+      },
       "siblings": {
         "title": "Sibling ASes",
         "caption": "Other ASes managed by the same organization"
@@ -321,9 +325,13 @@
         "title": "IXPs",
         "caption": "Internet Exchange Points located in "
       },
-      "ipPrefixes": {
+      "prefixes": {
         "title": "Prefixes",
         "caption": "Prefixes registered and geo-located in "
+      },
+      "atlas": {
+        "title": "RIPE Atlas",
+        "caption": "RIPE Atlas probes located in "
       }
     },
     "ixp": {

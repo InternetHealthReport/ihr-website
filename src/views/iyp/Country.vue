@@ -82,6 +82,32 @@
           </q-card>
         </q-expansion-item>
 
+        <q-expansion-item
+          @click="handleClick('atlas')"
+          :label="$t('iyp.country.atlas.title')"
+          :caption="$t('iyp.country.atlas.caption')+this.pageTitle"
+          header-class="IHR_charts-title"
+          v-model="show.atlas"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="atlas"
+              :columns="atlasColumns"
+              :loading-status="this.loadingStatus.atlas"
+              :cypher-query="cypherQueries.atlas"
+              :slot-length="1"
+            >
+              <GenericTreemapChart
+                v-if="atlas.length > 0"
+                :chart-data="atlas"
+                :chart-layout="{ title: 'RIPE Atlas probes per AS' }"
+                :config="{ keys: ['af', 'asn', 'status', 'id'],  root: this.pageTitle, show_percent: true}"
+                />
+            </GenericTable>
+          </q-card>
+        </q-expansion-item>
+
 
       </q-list>
     </div>
@@ -155,10 +181,17 @@ export default {
         { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
         { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
       ],
+      atlasColumns: [
+        { name: 'Probe ID', label: 'ID', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
+        { name: 'IP version', label: 'IP version', align: 'left', field: row => row.af, format: val => `${val}`, sortable: true },
+        { name: 'ASN', label: 'AS', align: 'left', field: row => row.asn, format: val => `${val}`, sortable: true },
+        { name: 'Status', label: 'Status', align: 'left', field: row => row.status, format: val => `${val}`, sortable: true },
+      ],
       // ases stands for autonomous systems
       ases: [],
       ixps: [],
       prefixes: [],
+      atlas: [],
       aggPrefixes: [],
       cypherQueries: {},
       tableVisible: true,
@@ -167,16 +200,19 @@ export default {
         ases: false,
         ixps: false,
         prefixes: false,
+        atlas: false,
       },
       loadingStatus: {
         ases: false,
         ixps: false,
         prefixes: false,
+        atlas: false,
       },
       count: {
         ases: 0,
         ixps: 0,
         prefixes: 0,
+        atlas: 0,
       },
       expanded: [],
     }
@@ -250,6 +286,22 @@ export default {
       }
       return { cypherQuery: query, params: { cc: this.cc }, mapping, data: 'prefixes' }
     },
+    getAtlas() {
+      const query = `MATCH (:Country {country_code: $cc})-[:COUNTRY]-(atlas:AtlasProbe)-[loc:LOCATED_IN]-(a:AS)
+        OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+        OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+        OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+        RETURN atlas.id AS id, atlas.status_name AS status, 'IPv'+loc.af AS af, 'AS'+a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS asname
+      `
+      const mapping = {
+        id: 'id',
+        status: 'status',
+        af: 'af',
+        asn: 'asn',
+        asname: 'asname',
+      }
+      return { cypherQuery: query, params: { cc: this.cc }, mapping, data: 'atlas' }
+    },
     setPageTitle(title) {
       this.pageTitle = title
     },
@@ -266,6 +318,8 @@ export default {
         query = this.getIXPs()
       } else if (clickedItem == 'prefixes') {
         query = this.getIpPrefixes()
+      } else if (clickedItem == 'atlas') {
+        query = this.getAtlas()
       } else {
         return
       }

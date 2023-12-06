@@ -33,7 +33,7 @@
                   v-if="ipPrefixes.length > 0"
                   :chart-data="ipPrefixes"
                   :chart-layout="{ title: 'Breakdown per RIR and geo-location (Maxmind)' }"
-                  :config="{ keys: ['rir', 'cc', 'prefix'], root: 'AS'+this.asn, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.__percent:.1f}%</extra>' }"
+                  :config="{ keys: ['rir', 'cc', 'prefix'], root: this.pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.__percent:.1f}%</extra>' }"
                  />
                 </div>
               </div>
@@ -60,7 +60,7 @@
               <GenericTreemapChart
                 v-if="peers.length > 0"
                 :chart-data="peers"
-                :config="{ keys: ['cc', 'asn'], root: 'AS'+this.asn, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.__percent:.1f}%</extra>' }"
+                :config="{ keys: ['cc', 'asn'], root: this.pageTitle, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.__percent:.1f}%</extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -114,7 +114,7 @@
                   v-if="dependents.length > 0"
                   :chart-data="dependents"
                   :chart-layout="{ title: '' }"
-                  :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: 'AS'+this.asn, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
+                  :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
                 />
               </div>
             </GenericTable>
@@ -145,8 +145,34 @@
               <GenericTreemapChart
                 v-if="popularDomains.length > 0"
                 :chart-data="popularDomains"
-                :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: 'AS'+this.asn, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<extra></extra>' }"
+                :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: this.pageTitle, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<extra></extra>' }"
               />
+            </GenericTable>
+          </q-card>
+        </q-expansion-item>
+
+        <q-expansion-item
+          @click="handleClick('atlas')"
+          :label="$t('iyp.as.atlas.title')"
+          :caption="$t('iyp.as.atlas.caption')+this.asn"
+          header-class="IHR_charts-title"
+          v-model="show.atlas"
+        >
+          <q-separator />
+          <q-card class="IHR_charts-body">
+            <GenericTable
+              :data="atlas"
+              :columns="atlasColumns"
+              :loading-status="this.loadingStatus.atlas"
+              :cypher-query="cypherQueries.atlas"
+              :slot-length="1"
+            >
+              <GenericTreemapChart
+                v-if="atlas.length > 0"
+                :chart-data="atlas"
+                :chart-layout="{ title: 'RIPE Atlas probes per prefix' }"
+                :config="{ keys: ['af', 'prefix', 'id'],  root: this.pageTitle, show_percent: true}"
+                />
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -229,7 +255,7 @@
               :cypher-query="cypherQueries.ixps"
               :slot-length="2"
             >
-              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ keys: ['cc', 'name'],  keyValue: '', root: 'AS'+this.asn, show_percent: true }"
+              <GenericTreemapChart v-if="ixps.length > 0" :chart-data="ixps" :config="{ keys: ['cc', 'name'],  keyValue: '', root: this.pageTitle, show_percent: true }"
               />
             </GenericTable>
           </q-card>
@@ -339,19 +365,20 @@ export default {
         { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
         { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
         { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-        {
-          name: 'Hegemony Score',
-          label: 'Hegemony Score',
-          align: 'left',
-          field: row => row.hegemony_score,
-          format: val => `${Number(val).toFixed(2)}%`,
-          sortable: true,
-        },
+        { name: 'Hegemony Score', label: 'Hegemony Score', align: 'left', field: row => row.hegemony_score, format: val => `${Number(val).toFixed(2)}%`, sortable: true, },
+      ],
+      atlasColumns: [
+        { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+        { name: 'Probe ID', label: 'ID', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
+        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+        { name: 'IP version', label: 'IP version', align: 'left', field: row => row.af, format: val => `${val}`, sortable: true },
+        { name: 'Status', label: 'Status', align: 'left', field: row => row.status, format: val => `${val}`, sortable: true },
       ],
       ipPrefixes: [],
       peers: [],
       ixps: [],
       roas: [],
+      atlas: [],
       rankings: [],
       popularDomains: [],
       facilities: [],
@@ -364,6 +391,7 @@ export default {
         ipPrefixes: false,
         ixps: false,
         roas: false,
+        atlas: false,
         rankings: false,
         popularDomains: false,
         facilities: false,
@@ -377,6 +405,7 @@ export default {
         ipPrefixes: false,
         ixps: false,
         roas: false,
+        atlas: false,
         rankings: false,
         popularDomains: false,
         facilities: false,
@@ -389,6 +418,7 @@ export default {
         ipPrefixes: 0,
         ixps: 0,
         roas: 0,
+        atlas: 0,
         rankings: 0,
         popularDomains: 0,
         facilities: 0,
@@ -569,6 +599,34 @@ export default {
       }
       return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'dependings' }
     },
+    getAtlas() {
+      // Query with conditional clause: https://neo4j.com/developer/kb/conditional-cypher-execution/
+      const query = `MATCH (atlas:AtlasProbe)-[loc:LOCATED_IN]->(a:AS {asn: $asn})
+        OPTIONAL MATCH (atlas)-[:COUNTRY]-(cc:Country)
+        CALL{
+          WITH atlas, loc
+          WITH atlas, loc
+          WHERE loc.af = 4
+          RETURN atlas.prefix_v4 AS prefix
+
+          UNION
+          WITH atlas, loc
+          WITH atlas, loc
+          WHERE loc.af = 6
+          RETURN atlas.prefix_v6 AS prefix
+
+        }
+        RETURN atlas.id AS id, atlas.status_name AS status, 'IPv'+loc.af AS af, cc.country_code as cc, prefix
+      `
+      const mapping = {
+        id: 'id',
+        status: 'status',
+        af: 'af',
+        cc: 'cc',
+        prefix: 'prefix'
+      }
+      return { cypherQuery: query, params: { asn: this.asn }, mapping, data: 'atlas' }
+    },
     setPageTitle(title) {
       this.pageTitle = `AS${this.asn} - ${title}`
     },
@@ -590,6 +648,8 @@ export default {
         query = this.getIxps()
       } else if (clickedItem === 'roas') {
         query = this.getRoas()
+      } else if (clickedItem === 'atlas') {
+        query = this.getAtlas()
       } else if (clickedItem === 'rankings') {
         query = this.getRankings()
       } else if (clickedItem === 'popularDomains') {
