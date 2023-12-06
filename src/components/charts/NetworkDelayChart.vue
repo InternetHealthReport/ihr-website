@@ -1,10 +1,11 @@
 <script setup>
 import { QBtn, QCard, QCardSection, QTabs, QTab, QTabPanels, QTabPanel, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
-import { ref, inject, nextTick, computed, watch, onMounted } from 'vue'
+import { ref, inject, nextTick, computed, onMounted } from 'vue'
 import { NetworkDelayQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { NET_DELAY_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import networkName from '@/plugins/networkName'
+import NetworkDelayTable from '../tables/NetworkDelayTable.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -22,6 +23,8 @@ const LINE_COLORS = [
   '#bcbd22', // curry yellow-green
   '#17becf', // blue-teal
 ]
+
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 const props = defineProps({
   startTime: {
@@ -182,17 +185,29 @@ const showTable = (clickData) => {
   if (props.noTable) {
     return
   }
-  const chosenTime = Date.parse(clickData.points[0].x + ' GMT') //adding timezone to string...
+  const chosenTime = new Date(clickData.points[0].x + ' GMT') //adding timezone to string...
   details.value.activeTab = 'delay'
   details.value.filter = apiFilter.value.clone()
 
   details.value.delayData = {
-    dateTime: chosenTime,
+    dateTime: `${MONTHS_SHORT[chosenTime.getUTCMonth()]} ${chosenTime.getUTCDate()}, ${chosenTime.getUTCFullYear()}, ${chosenTime.getUTCHours()}:${chosenTime.getUTCMinutes()} UTC`,
     startTime: new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
     stopTime: new Date(chosenTime.getTime() + DELAY_ALARM_INTERVAL),
     data: [],
     loading: true,
   }
+  ihr_api.network_delay(
+    details.value.filter.timeBin(chosenTime),
+    results => {
+      details.value.delayData.data = results.results
+      details.value.tableVisible = true
+      details.value.delayData.loading = false
+      details.value.filter = apiFilter.value.clone()
+    },
+    error => {
+      console.error(error) //TODO better error handling
+    }
+  )
 }
 
 const notifyDisplay = (displayed) => {
@@ -306,42 +321,6 @@ const startPointNameStr = computed(() => {
 onMounted(() => {
   apiCall()
 })
-// watch(() => props.startTime, () => {
-//   clearGraph()
-//   apiCall()
-// })
-// watch(() => props.startPointNames, () => {
-//   endPointKeysFilter.value = props.endPointNames
-//   startPointKeysFilter.value = props.startPointNames
-
-//   clearGraph()
-
-//   apiCall()
-// })
-// watch(() => props.endPointNames, () => {
-//   endPointKeysFilter = props.endPointNames
-//   startPointKeysFilter = props.startPointNames
-
-//   clearGraph()
-
-//   apiCall()
-// })
-// watch(() => props.startPointName, () => {
-//   //reset filter
-//   startPointNameFilter = props.startPointName
-//   startPointTypeFilter = props.startPointType
-//   endPointKeysFilter = props.endPointNames
-//   startPointKeysFilter = props.startPointNames
-
-//   clearGraph()
-//   apiCall()
-// })
-// watch(() => props.clear, () => {
-//   clearGraph()
-//   nextTick(() => {
-//     loading.value = true
-//   })
-// })
 </script>
 
 <template>
@@ -409,7 +388,7 @@ onMounted(() => {
           <div class="row items-center">
             <div class="col">
               <div class="text-h3">
-                {{ details.delayData.dateTime | ihrUtcString }}
+                {{ details.delayData.dateTime }}
               </div>
             </div>
             <div class="col-auto">
@@ -439,14 +418,14 @@ onMounted(() => {
         </QTabs>
         <QTabPanels v-model="details.activeTab" animated>
           <QTabPanel name="delay">
-            <!-- <network-delay-table
+            <NetworkDelayTable
               :start-time="startTime"
               :stop-time="endTime"
               :data="details.delayData.data"
               :loading="details.delayData.loading"
               show-start
-              @prefix-details="$emit('prefix-details', $event)"
-            /> -->
+              @prefix-details="emits('prefix-details', $event)"
+            />
           </QTabPanel>
           <QTabPanel name="api" class="IHR_api-table">
             <table>
