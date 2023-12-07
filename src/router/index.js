@@ -8,6 +8,7 @@ import MetisSelection from '../views/MetisSelection.vue'
 import MetisDeployment from '../views/MetisDeployment.vue'
 import ROV from '../views/ROV.vue'
 import Corona from '../views/Corona.vue'
+import Networks from '../views/Networks.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -45,7 +46,7 @@ const router = createRouter({
         {
           path: 'networks/:asn?',
           name: 'networks',
-          component: Home
+          component: Networks
         },
         {
           path: 'documentation',
