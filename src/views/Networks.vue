@@ -4,10 +4,11 @@ import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import report from '@/plugins/report'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, inject, computed, watch, nextTick, onMounted, watchEffect } from 'vue'
+import { ref, inject, computed, watch, nextTick } from 'vue'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import i18n from '@/i18n'
+import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
 
 const { t } = i18n.global
 
@@ -24,7 +25,7 @@ const LOADING_STATUS = {
 const route = useRoute()
 const router = useRouter()
 
-const { interval, utcString, fetch } = report()
+const { interval, utcString, fetch, reportDateFmt } = report()
 
 const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 const loadingStatus = ref(LOADING_STATUS.LOADING)
@@ -270,12 +271,12 @@ watch(() => route.params.asn, (asn) => {
         <h1 class="text-center q-pa-xl">Network Report</h1>
         <div class="row justify-center">
           <div class="col-8">
-            <!-- <network-search-bar
+            <NetworkSearchBar
               bg="white"
               label="grey-8"
               input="black"
               labelTxt="Enter an ASN, IXP ID, or network name (at least 3 characters)"
-            /> -->
+            />
           </div>
         </div>
       </div>
