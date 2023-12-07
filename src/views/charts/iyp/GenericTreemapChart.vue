@@ -110,18 +110,18 @@ export default {
 
         let currentID = root
         let parentID =  ''
-        let item_value = this.config.keyValue ? Number(item[this.config.keyValue]) : 1
+        let item_value = this.config.keyValue ? Number(item.get(this.config.keyValue)) : 1
 
         keys.forEach( key => {
           parentID = currentID
-          currentID += item[key]
+          currentID += item.get(key)
 
           // First time we see this key, add to the treemap
           if (!map[currentID]) {
             map[currentID] = true
 
             ids.push(currentID)
-            labels.push(item[key])
+            labels.push(item.get(key))
             parents.push(parentID)
 
             if(key==lastKey){
@@ -130,7 +130,7 @@ export default {
               ex_leaf_item = item
 
               // Maintain stats to calculate percentage per nodes
-              leafs[item[key]] = true
+              leafs[item.get(key)] = true
               total.child += 1
               total.value += item_value
               item['__sum_child'] = 1
@@ -169,7 +169,7 @@ export default {
 
           // Default customdata to empty strings to avoid displaying hovertemplate syntax
           Object.getOwnPropertyNames(ex_leaf_item).forEach( prop => {
-            if( !item[prop]) item[prop] = ''
+            if( !item[prop]) item[prop] = '';
           })
         }
       }

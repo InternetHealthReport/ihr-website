@@ -111,17 +111,17 @@ export default {
     },
     routeToEntity(entity, data) {
       if (entity == 'ASN' | entity == 'AS' | entity == 'Origin AS') {
-        let asn= Array.isArray(data.asn)?data.asn[0]:data.asn
+        let asn= Array.isArray(data.get('asn'))?data.get('asn')[0]:data.get('asn')
         this.routeToASN(asn)
       } else if (entity == 'Prefix') {
-        let prefix= Array.isArray(data.prefix)?data.prefix[0]:data.prefix
+        let prefix= Array.isArray(data.get('prefix'))?data.get('prefix')[0]:data.get('prefix')
         const [host, prefixLength] = prefix.split('/')
         this.routeToPrefix(host, prefixLength)
       } else if (entity == 'IXP') {
-        let ixpid= Array.isArray(data.id)?data.id[0]:data.id
+        let ixpid= Array.isArray(data.get('id'))?data.get('id')[0]:data.get('id')
         this.routeToIXP(ixpid)
       } else if (entity == 'CC' | entity == 'Country' |  entity == 'Reg. Country' | entity == 'Geoloc. Country') {
-        let cc= Array.isArray(data.cc)?data.cc[0]:data.cc
+        let cc= Array.isArray(data.get('cc'))?data.get('cc')[0]:data.get('cc')
         this.routeToCountry(cc)
       }
     },
@@ -144,6 +144,7 @@ export default {
       })
     },
     routeToCountry(cc) {
+      console.log(cc)
       this.$router.push({
         name: 'iyp_country',
         params: { cc: cc },

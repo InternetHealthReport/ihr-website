@@ -322,11 +322,11 @@
         "caption": "ASes registered with organization in "
       },
       "ixps": {
-        "title": "IXPs",
+        "title": "Internet Exchange Points",
         "caption": "Internet Exchange Points located in "
       },
       "prefixes": {
-        "title": "Prefixes",
+        "title": "IP Prefixes",
         "caption": "Prefixes registered and geo-located in "
       },
       "atlas": {
