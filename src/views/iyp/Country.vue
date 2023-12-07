@@ -73,7 +73,7 @@
                   <GenericTreemapChart
                   v-if="aggPrefixes.length > 0"
                   :chart-data="aggPrefixes"
-                  :chart-layout="{ title: 'Number of prefix per Origin AS' }"
+                  :chart-layout="{ title: 'Number of prefixes per Origin AS' }"
                   :config="{ keys: ['asn'], keyValue: 'nbPrefixes', root: this.pageTitle, show_percent: true}"
                   />
                 </div>
