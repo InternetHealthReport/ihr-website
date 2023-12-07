@@ -30,7 +30,7 @@ const during_end = ref(null)
 const after_start = ref(null)
 const after_end = ref(null)
 
-const { startTime, endTime } = report(6)
+const { startTime, endTime } = report(7)
 
 onMounted(() => {
   const selectedCountry = route.query.country

@@ -1,7 +1,7 @@
 <script setup>
 import { QBtn, QCard, QCardSection, QTabs, QTab, QTabPanels, QTabPanel, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
-import { ref, inject, nextTick, computed, onMounted } from 'vue'
+import { ref, inject, nextTick, computed, onMounted, watch } from 'vue'
 import { NetworkDelayQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { NET_DELAY_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import networkName from '@/plugins/networkName'
@@ -321,6 +321,11 @@ const startPointNameStr = computed(() => {
   }
 })
 
+watch(() => props.endTime, () => {
+  clearGraph()
+  apiCall()
+})
+
 onMounted(() => {
   apiCall()
 })
@@ -371,7 +376,7 @@ onMounted(() => {
         <LocationSearchBar @select="addEndLocation" :hint="$t('searchBar.locationDestination')" :label="$t('searchBar.locationHint')" />
       </div>
       <div class="col-3 q-pa-sm">
-        <QBtn @click="debouncedApiCall" color="secondary" class="btn">Add</QBtn>
+        <QBtn @click="apiCall" color="secondary" class="btn">Add</QBtn>
         <QBtn @click="clearGraph" class="btn">Clear all</QBtn>
       </div>
       </div>

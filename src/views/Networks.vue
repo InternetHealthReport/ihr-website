@@ -4,11 +4,15 @@ import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import report from '@/plugins/report'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, inject, computed, watch, nextTick } from 'vue'
+import { ref, inject, computed, watch, nextTick, onMounted, onBeforeMount } from 'vue'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import i18n from '@/i18n'
 import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
+import DateTimePicker from '@/components/DateTimePicker.vue'
+import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
+import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
+import AsInterdependenciesChart from '@/components/charts/AsInterdependenciesChart.vue'
 
 const { t } = i18n.global
 
@@ -25,7 +29,9 @@ const LOADING_STATUS = {
 const route = useRoute()
 const router = useRouter()
 
-const { interval, utcString, fetch, reportDateFmt } = report()
+const timeRange = route.query.last ? route.query.last : 3
+
+let { interval, utcString, fetch, reportDateFmt, minDate, maxDate, setReportDate, startTime, endTime } = report(timeRange)
 
 const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 const loadingStatus = ref(LOADING_STATUS.LOADING)
@@ -87,8 +93,8 @@ const pushRoute = () => {
     replace: true,
     query: Object.assign({}, route.query, {
       af: family.value,
-      last: interval.dayDiff(),
-      date: utcString(interval.end)
+      last: interval.value.dayDiff(),
+      date: utcString(interval.value.end).split('T')[0]
     })
   })
 }
@@ -133,8 +139,18 @@ watch(() => route.params.asn, (asn) => {
     loadingStatus.value = LOADING_STATUS.LOADING
     asNumber.value = ihr_api.ihr_AsOrIxpToNumber(asn)
     if (asNumber.value) {
+      pushRoute()
       netName()
     }
+  }
+})
+watch(interval, () => {
+  pushRoute()
+})
+onMounted(() => {
+  if (ihr_api.ihr_AsOrIxpToNumber(route.params.asn)) {
+    pushRoute()
+    netName()
   }
 })
 </script>
@@ -146,12 +162,12 @@ watch(() => route.params.asn, (asn) => {
         <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
         <h3 class="text-center">
           {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-          <!-- <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" /> -->
+          <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
         </h3>
       </div>
       <QList v-if="showGraphs">
         <QExpansionItem
-          :label="t('charts.asInterdependencies.title')"
+          :label="$t('charts.asInterdependencies.title')"
           caption="BGP data"
           header-class="IHR_charts-title"
           icon="fas fa-project-diagram"
@@ -161,20 +177,18 @@ watch(() => route.params.asn, (asn) => {
           <QSeparator />
           <QCard class="IHR_charts-body">
             <QCardSection>
-              <!-- <as-interdependencies-chart
+              <AsInterdependenciesChart
                 :start-time="startTime"
                 :end-time="endTime"
                 :as-number="asNumber"
                 :address-family="family"
                 :fetch="fetch"
-                ref="asInterdependenciesChart"
-              /> -->
+              />
             </QCardSection>
           </QCard>
         </qExpansionItem>
-
         <QExpansionItem
-          :label="t('charts.prefixHegemony.title')"
+          :label="$t('charts.prefixHegemony.title')"
           caption="BGP / IRR / RPKI / delegated"
           header-class="IHR_charts-title"
           icon="fas fa-route"
@@ -184,19 +198,18 @@ watch(() => route.params.asn, (asn) => {
           <QSeparator />
           <QCard class="IHR_charts-body">
             <QCardSection>
-              <!-- <prefix-hegemony-chart
+              <PrefixHegemonyChart
                 :start-time="startTime"
                 :end-time="endTime"
                 :as-number="asNumber"
                 :fetch="fetch"
-                ref="prefixHegemonyChart"
-              /> -->
+              />
             </QCardSection>
           </QCard>
         </QExpansionItem>
 
         <QExpansionItem
-          :label="t('charts.networkDelay.title')"
+          :label="$t('charts.networkDelay.title')"
           caption="Traceroute data"
           header-class="IHR_charts-title"
           icon="fas fa-shipping-fast"
@@ -206,22 +219,21 @@ watch(() => route.params.asn, (asn) => {
           <QSeparator />
           <QCard class="IHR_charts-body">
             <QCardSection>
-              <!-- <network-delay-chart
+              <NetworkDelayChart
                 :start-time="startTime"
                 :end-time="endTime"
                 :startPointName="Math.abs(asNumber).toString()"
-                :startPointType="this.$route.params.asn.substring(0, 2)"
+                :startPointType="route.params.asn.substring(0, 2)"
                 :fetch="fetch"
                 searchBar
-                ref="networkDelayChart"
                 @display="displayNetDelay"
-              /> -->
+              />
             </QCardSection>
           </QCard>
         </QExpansionItem>
 
         <QExpansionItem
-          :label="t('charts.delayAndForwarding.title')"
+          :label="$t('charts.delayAndForwarding.title')"
           caption="Traceroute data"
           header-class="IHR_charts-title"
           icon="fas fa-exchange-alt"
@@ -242,7 +254,7 @@ watch(() => route.params.asn, (asn) => {
           </QCard>
         </QExpansionItem>
         <QExpansionItem
-          :label="t('charts.disconnections.title')"
+          :label="$t('charts.disconnections.title')"
           caption="RIPE Atlas log"
           header-class="IHR_charts-title"
           icon="fas fa-plug"

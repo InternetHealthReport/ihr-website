@@ -469,6 +469,9 @@ watch(() => props.addressFamily, () => {
 watch(() => props.countryCode, () => {
   apiCall()
 })
+watch(() => props.endTime, () => {
+  apiCall()
+})
 watch(() => details.value.activeTab, (newValue) => {
   router.push({
     replace: true,

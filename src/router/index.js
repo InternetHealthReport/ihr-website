@@ -23,6 +23,11 @@ const router = createRouter({
         behavior: 'smooth',
       }
     } else {
+      if (from && Object.keys(to.query).length) {
+        if (to.fullPath.split('?')[0] == from.fullPath.split('?')[0]) {
+          return
+        }
+      }
       return { top: 0 }
     }
   },
