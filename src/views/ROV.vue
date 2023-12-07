@@ -39,7 +39,9 @@ const show = ref({
 const majorEyeballs = ref([])
 const majorEyeballsThreshold = ref(10)
 
-const { interval, minDate, maxDate, fetch, utcString, reportDateFmt, setReportDate, startTime, endTime } = report()
+const timeRange = route.query.last ? route.query.last : 3
+
+let { interval, minDate, maxDate, fetch, utcString, reportDateFmt, setReportDate, startTime, endTime } = report(timeRange)
 
 const family = computed(() => {
   return addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
@@ -83,7 +85,8 @@ const pushRoute = () => {
     query: Object.assign({}, route.query, {
       af: family.value,
       last: interval.value.dayDiff(),
-      date: utcString(interval.value.end).split('T')[0]
+      date: utcString(interval.value.end).split('T')[0],
+      rov_tb: 'routes'
     })
   })
   loadingStatus.value = LOADING_STATUS.LOADED

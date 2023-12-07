@@ -137,7 +137,7 @@ const props = defineProps({
 })
 
 const details = ref({
-  activeTab: null,
+  activeTab: 'routes',
   date: null,
   tablesData: {
     routes: [],
