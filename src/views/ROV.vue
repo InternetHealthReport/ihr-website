@@ -43,6 +43,10 @@ const timeRange = route.query.last ? route.query.last : 3
 
 let { interval, minDate, maxDate, fetch, utcString, reportDateFmt, setReportDate, startTime, endTime } = report(timeRange)
 
+if (route.query.date != utcString(maxDate.value).split('T')[0]) {
+  setReportDate(new Date(route.query.date))
+}
+
 const family = computed(() => {
   return addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
 })

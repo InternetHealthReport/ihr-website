@@ -1,5 +1,5 @@
 <script setup>
-import { QCard, QCardSection, QSpinner } from 'quasar'
+import { QCard, QCardSection, QSpinner, uid } from 'quasar'
 import { ref, onMounted, watch, computed, inject } from 'vue'
 
 const library_delayer = inject('library_delayer')
@@ -19,7 +19,7 @@ const props = defineProps({
   },
 })
 
-const myId = ref('bgplayContainer')
+const myId = ref(`bgplayContainer${uid()}`)
 const bgplay = ref(null)
 const loaded = ref(null)
 

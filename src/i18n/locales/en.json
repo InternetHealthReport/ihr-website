@@ -107,7 +107,7 @@
       }
     },
     "asInterdependencies": {
-      "title": "AS dependency",
+      "title": "AS Dependency",
       "defaultTrace": "Number of dependents",
       "yaxis": "dependency",
       "yaxis2": "Number of ASes<br> dependent on ",
@@ -128,34 +128,34 @@
       }
     },
     "hegemonyAlarms": {
-      "title": "AS dependency",
+      "title": "AS Dependency",
       "table": {
         "title": "Alarms",
         "dependencies": "Anomalous Dependencies"
       }
     },
     "linkDelays": {
-      "title": "link delay",
+      "title": "Link Delay",
       "yaxis": "Delay Change Level",
       "table": {
-        "title": "delay anomalies",
+        "title": "Delay Anomalies",
         "apiTitle": "Displayed data is available at the following links:"
       }
     },
     "delayAndForwarding": {
-      "title": "link delay and forwarding anomalies",
+      "title": "Link Delay And Forwarding Anomalies",
       "yaxis": "Delay Change Level",
       "yaxis2": "Forwarding Anomaly Level",
       "apiTitle": "Displayed data is available at the following links:",
       "tables": {
         "delay": {
-          "title": "delay anomalies",
+          "title": "Delay Anomalies",
           "deviation": "deviation",
           "delayChange": "delay change",
           "delayAnomalies": "delay anomalies on"
         },
         "forwarding": {
-          "title": "forwarding anomalies",
+          "title": "Forwarding Anomalies",
           "reportedIp": "reported IP",
           "usualPrecedingIP": "usual preceding IP",
           "correlation": "correlation",
@@ -164,7 +164,7 @@
       }
     },
     "disconnections": {
-      "title": "network disconnections",
+      "title": "Network Disconnections",
       "table": {
         "event": "event",
         "startTime": "Disconnection time",
@@ -179,7 +179,7 @@
       "title": "Aggregated Alarms"
     },
     "networkDelay": {
-      "title": "network delay",
+      "title": "Network Delay",
       "yaxis": "Median RTT (ms)",
       "table": {
         "title": "Estimated Delays",
@@ -196,7 +196,7 @@
       }
     },
     "speedtest": {
-      "title": "speed test",
+      "title": "Speed Test",
       "yaxis": "Average Throughput (Mbps)",
       "table": {
         "title": "Average throughput",

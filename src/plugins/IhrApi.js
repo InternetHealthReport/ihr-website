@@ -12,7 +12,11 @@ import {
   NetworkQuery,
   CountryQuery,
   HegemonyQuery,
-  HegemonyConeQuery
+  HegemonyConeQuery,
+  ForwardingQuery,
+  DelayQuery,
+  DelayAlarmsQuery,
+  ForwardingAlarmsQuery
  } from './query/IhrQuery'
 
 /// Base url for api
@@ -193,6 +197,42 @@ const IhrApi = {
       )
     }
 
+    const delay_alarms = (delayAlarmsQuery, successCallback, errorCallback) => {
+      _generic(
+        DelayAlarmsQuery.ENTRY_POINT,
+        delayAlarmsQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
+    const forwarding_alarms = (forwardingAlarmsQuery, successCallback, errorCallback) => {
+      _generic(
+        ForwardingAlarmsQuery.ENTRY_POINT,
+        forwardingAlarmsQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
+    const forwarding = (forwardingQuery, successCallback, errorCallback) => {
+      _generic(
+        ForwardingQuery.ENTRY_POINT,
+        forwardingQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
+    const delay = (delayQuery, successCallback, errorCallback) => {
+      _generic(
+        DelayQuery.ENTRY_POINT,
+        delayQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
     const ihr_api = {
       getUrl,
       readableType,
@@ -207,7 +247,11 @@ const IhrApi = {
       network_delay_location,
       country,
       hegemony,
-      hegemony_cone
+      hegemony_cone,
+      delay_alarms,
+      forwarding_alarms,
+      forwarding,
+      delay
     }
     app.provide('ihr_api', ihr_api)
   }
@@ -227,5 +271,9 @@ export {
   NetworkQuery,
   CountryQuery,
   HegemonyQuery,
-  HegemonyConeQuery
+  HegemonyConeQuery,
+  ForwardingQuery,
+  DelayQuery,
+  DelayAlarmsQuery,
+  ForwardingAlarmsQuery
 }

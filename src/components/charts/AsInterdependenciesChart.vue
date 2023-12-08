@@ -81,7 +81,7 @@ const traces = ref(DEFAULT_TRACE)
 const layout = ref(AS_INTERDEPENDENCIES_LAYOUT)
 const loadingNeighbours = ref(true)
 const neighbours = ref([])
-const loading = ref(false)
+const loading = ref(true)
 const noData = ref('')
 
 const route = useRoute()
@@ -438,7 +438,7 @@ const fetchHegemony = (data) => {
 
   if (!maxX || !minX) {
     clearGraph()
-    noData.value = t('No data to show')
+    noData.value = t('No data available for this network')
     return
   }
   let maxXIso = new Date(maxX).toISOString().split('.')[0] + 'Z'

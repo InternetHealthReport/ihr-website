@@ -23,6 +23,11 @@ app.use(IhrApi)
 app.use(LibraryDelayer, {
     libraries: {
         bgplay_api: 'https://cdn.jsdelivr.net/gh/InternetHealthReport/bgplay/widget/bgplayjs-main-widget.js',
+        ripe_widget_api: 'https://stat.ripe.net/widget-api/widget_api.js',
+        latencymon_widget: [
+            'https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/dev/libs/require.min.js',
+            'https://atlas.ripe.net/resource/latencymon/latencymon-widget-main.js'
+        ]
     }
 })
 

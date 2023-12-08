@@ -1,5 +1,5 @@
 <script setup>
-import { QList, QExpansionItem, QSeparator, QCard, QCardSection } from 'quasar'
+import { QList, QExpansionItem, QSeparator, QCard, QCardSection, date } from 'quasar'
 import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import report from '@/plugins/report'
@@ -13,6 +13,7 @@ import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
 import AsInterdependenciesChart from '@/components/charts/AsInterdependenciesChart.vue'
+import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart.vue'
 
 const { t } = i18n.global
 
@@ -32,6 +33,10 @@ const router = useRouter()
 const timeRange = route.query.last ? route.query.last : 3
 
 let { interval, utcString, fetch, reportDateFmt, minDate, maxDate, setReportDate, startTime, endTime } = report(timeRange)
+
+if (route.query.date != utcString(maxDate.value).split('T')[0]) {
+  setReportDate(new Date(route.query.date))
+}
 
 const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 const loadingStatus = ref(LOADING_STATUS.LOADING)
@@ -168,7 +173,7 @@ onMounted(() => {
       <QList v-if="showGraphs">
         <QExpansionItem
           :label="$t('charts.asInterdependencies.title')"
-          caption="BGP data"
+          caption="BGP Data"
           header-class="IHR_charts-title"
           icon="fas fa-project-diagram"
           :disable="show.hegemony_disable"
@@ -207,10 +212,9 @@ onMounted(() => {
             </QCardSection>
           </QCard>
         </QExpansionItem>
-
         <QExpansionItem
           :label="$t('charts.networkDelay.title')"
-          caption="Traceroute data"
+          caption="Traceroute Data"
           header-class="IHR_charts-title"
           icon="fas fa-shipping-fast"
           v-model="show.net_delay"
@@ -234,7 +238,7 @@ onMounted(() => {
 
         <QExpansionItem
           :label="$t('charts.delayAndForwarding.title')"
-          caption="Traceroute data"
+          caption="Traceroute Data"
           header-class="IHR_charts-title"
           icon="fas fa-exchange-alt"
           :disable="show.delayAndForwarding_disable"
@@ -243,19 +247,18 @@ onMounted(() => {
           <QSeparator />
           <QCard class="IHR_charts-body">
             <QCardSection>
-              <!-- <delay-and-forwarding-chart
+              <DelayAndForwardingChart
                 :start-time="startTime"
                 :end-time="endTime"
                 :as-number="asNumber"
                 :fetch="fetch"
-                ref="delayAndForwardingChart"
-              /> -->
+              />
             </QCardSection>
           </QCard>
         </QExpansionItem>
         <QExpansionItem
           :label="$t('charts.disconnections.title')"
-          caption="RIPE Atlas log"
+          caption="RIPE Atlas Log"
           header-class="IHR_charts-title"
           icon="fas fa-plug"
           :disable="show.disco_disable"

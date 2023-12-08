@@ -297,7 +297,7 @@ const fetchNetworkDelay = (data) => {
   // emit max value
   emits('max-value', maxValue)
   if (traces.value.length == 0) {
-    noData.value = 'No data available.'
+    noData.value = 'No data available for this network'
   } else {
     noData.value = ''
   }
