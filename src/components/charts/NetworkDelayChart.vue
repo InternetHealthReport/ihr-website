@@ -469,10 +469,6 @@ onMounted(() => {
   &hidden-bar
     top 60px
     opacity 0
-  &loading-spinner
-    & > *
-      width 25%
-      height 25%
 .btn
     margin-bottom 10pt
     width 80pt

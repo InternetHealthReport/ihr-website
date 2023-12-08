@@ -7,6 +7,7 @@ import i18n from '@/i18n'
 import ripeApi from '@/plugins/RipeApi'
 import { useRoute, useRouter } from 'vue-router'
 import ReactiveChart from './ReactiveChart.vue'
+import AsInterdependenciesTable from '../tables/AsInterdependenciesTable.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -690,10 +691,10 @@ onMounted(() => {
       </QTabs>
       <QTabPanels v-model="details.activeTab" animated>
         <QTabPanel name="dependency">
-          <!-- <as-interdependencies-table :data="networkDependencyData" :loading="details.tablesData.dependency.loading" /> -->
+          <AsInterdependenciesTable :data="networkDependencyData" :loading="details.tablesData.dependency.loading" />
         </QTabPanel>
         <QTabPanel name="dependent">
-          <!-- <as-interdependencies-table :data="dependentNetworksData" use-origin-asn :loading="details.tablesData.dependent.loading" /> -->
+          <AsInterdependenciesTable :data="dependentNetworksData" use-origin-asn :loading="details.tablesData.dependent.loading" />
         </QTabPanel>
         <QTabPanel name="bgpPlay">
           <div class="bgplay-container">
@@ -701,12 +702,12 @@ onMounted(() => {
           </div>
         </QTabPanel>
         <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
-          <h3>{{ t('charts.asInterdependencies.table.apiTitle') }}</h3>
+          <h3>{{ $t('charts.asInterdependencies.table.apiTitle') }}</h3>
           <table>
             <tr>
               <td>
                 <p class="text-subtitle1">
-                  {{ t('charts.asInterdependencies.table.dependencyTitle') }}
+                  {{ $t('charts.asInterdependencies.table.dependencyTitle') }}
                 </p>
               </td>
               <td>
@@ -716,7 +717,7 @@ onMounted(() => {
             <tr>
               <td>
                 <p class="text-subtitle1">
-                  {{ t('charts.asInterdependencies.table.dependentTitle') }}
+                  {{ $t('charts.asInterdependencies.table.dependentTitle') }}
                 </p>
               </td>
               <td>
