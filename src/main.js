@@ -27,6 +27,11 @@ app.use(LibraryDelayer, {
         latencymon_widget: [
             'https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/latencymon/dev/libs/require.min.js',
             'https://atlas.ripe.net/resource/latencymon/latencymon-widget-main.js'
+        ],
+        tracemon_widget: [
+            'https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/tracemon/dev/libs/require.min.js',
+            // 'https://atlas.ripe.net/resource/tracemon/tracemon-widget-main.js',
+            'https://www-static.ripe.net/static/rnd-ui/atlas/static/measurements/widgets/tracemon/tracemon-widget-main.js'
         ]
     }
 })

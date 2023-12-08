@@ -5,6 +5,7 @@ import { ForwardingQuery, DelayQuery, DelayAlarmsQuery, ForwardingAlarmsQuery } 
 import { ref, inject, computed, watch, onMounted } from 'vue'
 import { DELAY_AND_FORWARDING_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import DelayAlarmsTable from '../tables/DelayAlarmsTable.vue'
+import ForwardingAlarmsTable from '../tables/ForwardingAlarmsTable.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -272,11 +273,11 @@ onMounted(() => {
             :stop-time="details.delayData.stopTime"
             :data="details.delayData.data"
             :loading="details.delayData.loading"
-            @prefix-details="$emit('prefix-details', $event)"
+            @prefix-details="emits('prefix-details', $event)"
           />
         </QTabPanel>
         <QTabPanel name="forwarding">
-          <!-- <forwarding-alarms-table :data="details.forwardingData.data" :loading="details.forwardingData.loading" /> -->
+          <ForwardingAlarmsTable :data="details.forwardingData.data" :loading="details.forwardingData.loading" @prefix-details="emits('prefix-details', $event)" />
         </QTabPanel>
         <QTabPanel name="api" class="IHR_api-table">
           <h3>{{ $t('charts.delayAndForwarding.apiTitle') }}</h3>
