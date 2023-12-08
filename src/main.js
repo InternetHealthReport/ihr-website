@@ -10,6 +10,7 @@ import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 import 'quasar/src/css/index.sass'
 import i18n from './i18n'
 import { IhrApi } from '@/plugins/IhrApi'
+import { LibraryDelayer } from '@/plugins/LibraryDelayer'
 
 const app = createApp(App)
 
@@ -19,5 +20,10 @@ app.use(Quasar, {
 })
 app.use(i18n)
 app.use(IhrApi)
+app.use(LibraryDelayer, {
+    libraries: {
+        bgplay_api: 'https://cdn.jsdelivr.net/gh/InternetHealthReport/bgplay/widget/bgplayjs-main-widget.js',
+    }
+})
 
 app.mount('#app')

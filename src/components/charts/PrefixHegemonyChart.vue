@@ -527,18 +527,4 @@ watch(() => details.value.activeTab, (newValue) => {
 </template>
 
 <style lang="stylus">
-.bgplay-container {
-  overflow: hidden;
-  padding-top: 1100px;
-  position: relative;
-}
-
-.bgplay-container iframe {
-   border: 0;
-   height: 100%;
-   left: 0;
-   position: absolute;
-   top: 0;
-   width: 100%;
-}
 </style>

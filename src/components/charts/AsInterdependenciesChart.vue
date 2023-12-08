@@ -8,6 +8,7 @@ import ripeApi from '@/plugins/RipeApi'
 import { useRoute, useRouter } from 'vue-router'
 import ReactiveChart from './ReactiveChart.vue'
 import AsInterdependenciesTable from '../tables/AsInterdependenciesTable.vue'
+import Bgplay from '../ripe/Bgplay.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -698,7 +699,8 @@ onMounted(() => {
         </QTabPanel>
         <QTabPanel name="bgpPlay">
           <div class="bgplay-container">
-            <!-- <iframe frameborder="0" :src="bgplay"></iframe> -->
+            <!-- <iframe frameborder="0" :srcdoc="bgplay"></iframe> -->
+            <Bgplay :as-number="asNumber" :date-time="details.date" />
           </div>
         </QTabPanel>
         <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
@@ -732,18 +734,6 @@ onMounted(() => {
 </template>
 
 <style lang="stylus">
-.bgplay-container {
-  overflow: hidden;
-  padding-top: 1100px;
-  position: relative;
-}
-
-.bgplay-container iframe {
-   border: 0;
-   height: 100%;
-   left: 0;
-   position: absolute;
-   top: 0;
-   width: 100%;
-}
+.bgplay-container
+  overflow: hidden
 </style>
