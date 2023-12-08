@@ -419,11 +419,11 @@ const fetchPrefixHegemony = (data) => {
 
 const dateStr = computed(() => {
   const year = details.value.date.getUTCFullYear()
-  const day = details.value.date.getUTCDate()
-  const month = details.value.date.getUTCMonth() + 1
-  const hours = details.value.date.getUTCHours()
-  const minutes = details.value.date.getUTCMinutes()
-  const seconds = details.value.date.getUTCSeconds()
+  let day = details.value.date.getUTCDate()
+  let month = details.value.date.getUTCMonth() + 1
+  let hours = details.value.date.getUTCHours()
+  let minutes = details.value.date.getUTCMinutes()
+  let seconds = details.value.date.getUTCSeconds()
 
   if (day < 10) {
     day = '0' + day

@@ -699,7 +699,6 @@ onMounted(() => {
         </QTabPanel>
         <QTabPanel name="bgpPlay">
           <div class="bgplay-container">
-            <!-- <iframe frameborder="0" :srcdoc="bgplay"></iframe> -->
             <Bgplay :as-number="asNumber" :date-time="details.date" />
           </div>
         </QTabPanel>
