@@ -5,6 +5,7 @@ import { DISCO_LAYOUT } from '@/plugins/layouts/layoutsChart.js'
 import { DEFAULT_DISCO_AVG_LEVEL, DEFAULT_MIN_DISCO_DURATION } from '@/plugins/disco.js'
 import i18n from '@/i18n'
 import DiscoMap from '../maps/DiscoMap.vue'
+import DiscoAlarmsTable from '../tables/DiscoAlarmsTable.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -40,14 +41,14 @@ const emits = defineEmits({
       return false
     }
   },
-  'filteredRows': (filteredSearchRowValues) => {
-    if (filteredSearchRowValues !== null) {
-      return true
-    } else {
-      console.warn('FilteredSearchRowValues is missing')
-      return false
-    }
-  }
+  // 'filteredRows': (filteredSearchRowValues) => {
+  //   if (filteredSearchRowValues !== null) {
+  //     return true
+  //   } else {
+  //     console.warn('FilteredSearchRowValues is missing')
+  //     return false
+  //   }
+  // }
 })
 
 const mapData = ref([])
@@ -112,10 +113,10 @@ const apiCall = () => {
   )
 }
 
-const filteredRows = () => {
-  mapData.value = data[1]
-  emits('filteredRows', data)
-}
+// const filteredRows = () => {
+//   mapData.value = data[1]
+//   emits('filteredRows', data)
+// }
 
 watch(() => props.minAvgLevel, () => {
   filters.value.forEach(filter => {
@@ -137,15 +138,13 @@ onMounted(() => {
   <div class="IHR_chart">
     <div>
       <DiscoMap :events="mapData" ref="ihrChartMap" :loading="loading" />
-      <!-- <disco-alarms-table
+      <DiscoAlarmsTable
         :start-time="startTime"
         :stop-time="endTime"
         :data="dataEvents"
         :loading="loading"
-        :filter="filterValue"
-        @filteredRows="filteredRows"
-        @prefix-details="$emit('prefix-details', $event)"
-      /> -->
+        @prefix-details="emits('prefix-details', $event)"
+      />
     </div>
   </div>
 </template>
