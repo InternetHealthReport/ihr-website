@@ -4,6 +4,7 @@ import { QHeader, QToolbar, QItem, QBtn, QBtnGroup, QBtnDropdown, QList, QItemSe
 import Tr from '@/i18n/translation'
 import { onMounted, ref, watch } from 'vue'
 import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const  SIMPLE_MENU = [
   {
@@ -19,7 +20,7 @@ const  SIMPLE_MENU = [
     options: [
       {
         entryName: 'header.globalReport.name',
-        routeName: 'global_report',
+        routeName: 'global-report',
         summary: 'header.globalReport.summary',
       },
       {
@@ -153,6 +154,7 @@ watch(simpleMenu, (newVal, oldVal) => { debounceFunc() })
               </QList>
             </QBtnDropdown>
           </QBtnGroup>
+          <LanguageSwitcher />
         </div>
         <div class="lt-md">
           <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"></q-btn>
@@ -183,6 +185,7 @@ watch(simpleMenu, (newVal, oldVal) => { debounceFunc() })
             </QList>
           </QBtnDropdown>
         </QItem>
+        <LanguageSwitcher />
       </QList>
     </QDrawer>
   </QHeader>

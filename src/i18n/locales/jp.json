@@ -1,0 +1,767 @@
+{
+  "locale": {
+    "en": "English",
+    "jp": "日本語"
+  },
+  "genericErrors": {
+    "ups": "ups",
+    "badHappened": "Something bad happened, please contact the administrator",
+    "cloudNotLoad": "Could not load ",
+    "invalid": "invalid",
+    "notMatchingPassword": "passwords do not match"
+  },
+  "header": {
+    "API": "API",
+    "reports": "Reports",
+    "tools": "Tools",
+    "metis": {
+      "name": "Metis",
+      "summary": "Atlas probe selection and deployment"
+    },
+    "globalReport": {
+      "name": "Global",
+      "summary": "Alarms reported across all networks"
+    },
+    "countryReport": {
+      "name": "Country",
+      "summary": "Overview of Internet resources per country"
+    },
+    "networkReport": {
+      "name": "Network",
+      "summary": "Details for a single network (AS or IXP)"
+    },
+    "rovReport": {
+      "name": "Route Origin Validation",
+      "summary": "Route Origin Validation of resources seen on BGP"
+    },
+    "covid19": {
+      "name": "COVID19",
+      "summary": "RTT analysis during national lockdowns"
+    },
+    "contact": "Contact",
+    "documentation": "Documentation",
+    "signUp": "sign up",
+    "signIn": "log in",
+    "signInTitle": "log in",
+    "here": "here",
+    "home": "Home",
+    "ForgottenPassword": "forgot your password?"
+  },
+  "footer": {
+    "reportPages": {
+      "title": "Reports",
+      "network": "network ",
+      "country": "country ",
+      "rov": "ROV ",
+      "covid19": "COVID19 ",
+      "global": "global "
+    },
+    "documentation": {
+      "title": "documentation",
+      "dataAccess": "Data access",
+      "analysisModules": "Analysis modules"
+    },
+    "about": {
+      "title": "about IHR",
+      "datapolicy": "data policy",
+      "contact": "contact",
+      "acknowledgments": "acknowledgments"
+    }
+  },
+  "searchBar": {
+    "placeholder": "Enter an AS, IXP, or country name",
+    "locationHint": "ASN, city name, or Atlas probe ID",
+    "locationSource": "Source",
+    "locationDestination": "Destination",
+    "noResultFound": "no result found"
+  },
+  "globalReport": {
+    "title": {
+      "global": "Global Report",
+      "personal": "personalized report"
+    },
+    "filters": {
+      "monitoredAsn": "Show only monitored Asn"
+    }
+  },
+  "Networks": {
+    "headerString": {
+      "loading": "loading in progress...",
+      "notFound": "AS doesn't exists",
+      "expired": "Request expired"
+    },
+    "subHeader": {
+      "loading": "Please wait",
+      "notFound": "The queried network",
+      "expired": "the server is under load, please try again later"
+    }
+  },
+  "charts": {
+    "prefixHegemony": {
+      "title": "Route Origin Validation",
+      "table": {
+        "routesTitle": "Routes",
+        "originsTitle": "Origin ASes",
+        "transitsTitle": "Main Transits",
+        "apiTitle": "The displayed prefix data is available at the following link:"
+      }
+    },
+    "asInterdependencies": {
+      "title": "AS Dependency",
+      "defaultTrace": "Number of dependents",
+      "yaxis": "dependency",
+      "yaxis2": "Number of ASes<br> dependent on ",
+      "table": {
+        "dependencyTitle": "network dependency",
+        "dependentTitle": "dependent networks",
+        "increment": "increment",
+        "dependencies": "Dependency",
+        "dependent": "dependent",
+        "apiTitle": "Displayed data is available at the following links:"
+      }
+    },
+    "countryHegemony": {
+      "title": "Network Dependency",
+      "table": {
+        "dependencyTitle": "Summary",
+        "apiTitle": "The network dependency data is available at the following link:"
+      }
+    },
+    "hegemonyAlarms": {
+      "title": "AS Dependency",
+      "table": {
+        "title": "Alarms",
+        "dependencies": "Anomalous Dependencies"
+      }
+    },
+    "linkDelays": {
+      "title": "Link Delay",
+      "yaxis": "Delay Change Level",
+      "table": {
+        "title": "Delay Anomalies",
+        "apiTitle": "Displayed data is available at the following links:"
+      }
+    },
+    "delayAndForwarding": {
+      "title": "Link Delay And Forwarding Anomalies",
+      "yaxis": "Delay Change Level",
+      "yaxis2": "Forwarding Anomaly Level",
+      "apiTitle": "Displayed data is available at the following links:",
+      "tables": {
+        "delay": {
+          "title": "Delay Anomalies",
+          "deviation": "deviation",
+          "delayChange": "delay change",
+          "delayAnomalies": "delay anomalies on"
+        },
+        "forwarding": {
+          "title": "Forwarding Anomalies",
+          "reportedIp": "reported IP",
+          "usualPrecedingIP": "usual preceding IP",
+          "correlation": "correlation",
+          "responsibility": "responsibility"
+        }
+      }
+    },
+    "disconnections": {
+      "title": "Network Disconnections",
+      "table": {
+        "event": "event",
+        "startTime": "Disconnection time",
+        "endTime": "Reconnection time",
+        "level": "level",
+        "disconnectionProbes": "disconnection events probes",
+        "yaxis": "Disconnection Level",
+        "apiTitle": "Displayed data is available at the following links:"
+      }
+    },
+    "aggregatedAlarms": {
+      "title": "Aggregated Alarms"
+    },
+    "networkDelay": {
+      "title": "Network Delay",
+      "yaxis": "Median RTT (ms)",
+      "table": {
+        "title": "Estimated Delays",
+        "apiTitle": "Displayed data is available at the following links:"
+      }
+    },
+    "networkDelayAlarms": {
+      "title": "Network Delay",
+      "yaxis": "Number of alarms",
+      "table": {
+        "title": "Delay Alarms",
+        "destinations": " Destinations",
+        "apiTitle": "Displayed data is available at the following links:"
+      }
+    },
+    "speedtest": {
+      "title": "Speed Test",
+      "yaxis": "Average Throughput (Mbps)",
+      "table": {
+        "title": "Average throughput",
+        "apiTitle": "Displayed data is available at MLab's API:"
+      }
+    }
+  },
+  "asn": "AS number",
+  "prefix": "prefix",
+  "name": "name",
+  "close": "close",
+  "noDataAvailable": "no data available",
+  "noOutage": "No significant disconnection detected",
+  "loading": "Loading...",
+  "documentationPage": {
+    "title": "Documentation",
+    "sectionsTitle": {
+      "general": "General",
+      "reports": "Reports",
+      "analysisModules": "Analysis Modules",
+      "dataAccess": "Data Access"
+    },
+    "sections": {
+      "about": {
+        "title": "About Internet Health Report (IHR)",
+        "summary": "The Internet Health Report monitors the conditions of networks that compose the Internet. It aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. Network data is obtained from public large-scale measurement platforms, such as RIPE Atlas, RIS, and Route Views. This data is analyzed with a set of tools pinpointing delay changes, forwarding anomalies, network disconnections and routing changes.  In a general effort towards transparency and reusability, the Internet Health Report data and analysis tools are made publicly available.",
+        "description": {
+          "1": {
+            "header": "Monitored networks",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "For <b>delay changes, forwarding anomalies, network disconnections</b>, the data we analyze is collected with RIPE Atlas. Networks observed in the builtin and anchoring measurements are likely to appear in the delay change and forwarding anomaly reports. And networks hosting at least ten public probes appear in the network disconnection reports. The best way to ensure that your network is monitored is to host an anchor (delay changes, forwarding anomalies) and at least ten probes (network disconnection). <br><br>For <b>routing changes</b>, we use BGP data to monitor the Internet routing infrastructure. If your AS is publicly advertising IP space, then it should be already monitored by our system."
+          },
+          "2": {
+            "header": "What do the graphs mean?",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "Each graph represents a different aspect of the collected network data, ranging from routing changes to delay performance. Each graph is documented at the following links:<ul> <li> <a href='#AS-dependency'>AS dependency</a></li> <li> <a href='#Network-delay'>Network Delay</a> </li> <li> <a href='#Delay-and-forwarding-anomalies'>Link Delay and Forwarding Anomalies</a> </li> <li><a href='#Network-disconnections'> Network Disconnections</a></li></ul> Also most of the graphs are interactive, click on them to get more details and obtain the API link to raw data."
+          },
+          "3": {
+            "header": "Under the hood",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "Our monitoring tools are open source (<a href='https://github.com/InternetHealthReport'>https://github.com/InternetHealthReport</a>) and described in the following articles: <ul> <li>Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush,<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'> Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements.</a> ACM IMC 2017, London, UK (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_imc2017.bib'>bibtex</a>).  </li><li>  Anant Shah, Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>Disco: Fast, Good, and Cheap Outage Detection</a>, TMA 2017  (<a href='https://www.iijlab.net/en/members/romain/pdf/anant_tma2017.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, Proceedings of PAM'18. Berlin, Germany. March 2018  (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.bib'>bibtex</a>).  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17  (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.bib'>bibtex</a>).  </li></ul>"
+          },
+          "4": {
+            "header": "Citation policy",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "If you publish material using data from the Internet Health Report, then help others to obtain the same data sets and replicate your experiments by citing the above papers."
+          }
+        }
+      },
+      "faq": {
+        "title": "Frequently Asked Questions (FAQ)",
+        "summary": "<ul><li><a href='#faq-time-zone'>What is the time zone of displayed data?</a></li><li><a href='#faq-no-results'>Why is there no graph and no API results for certain networks?</a></li><li><a href='#faq-no-ixp'>Why is there no IXP in the AS dependency results?</a></li><li><a href='#faq-ixp-numbers'>What are the numbers assigned to IXPs?</a></li><li><a href='#faq-report-bugs'>How can I report bugs or suggest new features?</a></li><li><a href='#faq-contribution'>How can I contribute to IHR?</a></li></ul>",
+        "description": {
+          "1": {
+            "header": "<div class='IHR_anchor' id='faq-time-zone'></div>What is the time zone of displayed data?",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "All IHR graphs show UTC times. The IHR API also provides UTC times. However, some RIPE widgets might display local times (e.g. BGPlay)."
+          },
+          "2": {
+            "header": "<div class='IHR_anchor' id='faq-no-results'></div>Why is there no graph and no API results for certain networks?",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "Some of the IHR analysis modules analyze data from the RIPE Atlas platform. If a network hosts no Atlas probe or it doesn't appear in Atlas traceroutes, it is probably not appearing in our delay and disconnection results. A network should host at least ten probes to be included in our network disconnection analysis. Hosting an Atlas anchor is a good way to be part of our link delay and forwarding anomalies. Please see the RIPE website for applications to <a href='https://atlas.ripe.net/get-involved/become-a-host/' _target='_blank'> host a probe </a> or <a href='https://atlas.ripe.net/get-involved/become-an-anchor-host/' _target='_blank'> an anchor.</a>"
+          },
+          "3": {
+            "header": "<div class='IHR_anchor' id='faq-no-ixp'></div>Why is there no IXP in the AS dependency results?",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "AS dependency is computed from BGP data and IXPs are usually not visible in BGP paths. Thus, we currently cannot infer dependency to IXPs. This issue could be addressed by analyzing traceroutes instead of BGP's AS paths, which is a direction we are currently exploring."
+          },
+          "4": {
+            "header": "<div class='IHR_anchor' id='faq-ixp-numbers'></div>What are the numbers assigned to IXPs?",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "IHR uses unique identifiers to index results for IXPs. These identifiers are derived from the ones found in CAIDA's IXPs dataset (<a href='https://www.caida.org/data/ixps/' target='_default'>https://www.caida.org/data/ixps/</a>). To differentiate these identifiers with AS numbers, the API gives negative values to IXPs and positive values to ASes.<br>The list of all IXP names and identifiers is available at the following link: <a href='https://ihr.iijlab.net/ihr/api/networks/?number__lte=-1' target='_default'>https://ihr.iijlab.net/ihr/api/networks/?number__lte=-1</a>"
+          },
+          "5": {
+            "header": "<div class='IHR_anchor' id='faq-report-bugs'></div>How can I report bugs or suggest new features?",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "The source code of all IHR tools is hosted on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a>. You can review and submit bug reports for the IHR website <a href='https://github.com/InternetHealthReport/ihr-website/issues' target='_blank'>here</a>. If you don't have a GitHub account <a href='/ihr/en-us/contact'>contact us directly</a>."
+          },
+          "6": {
+            "header": "<div class='IHR_anchor' id='faq-contribution'></div>How can I contribute to IHR?",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "IHR is mainly built and maintained by researchers and students. We need help at all levels for the frontend, backend, documentation, and data collection. Feel free to take a look at IHR projects on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a> or <a href='/ihr/en-us/contact'>contact us</a>. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>The IIJ Research Laboratory summer internship program</a> is also a good way to visit us and work on IHR tools."
+          }
+        }
+      },
+      "ack": {
+        "title": "Acknowledgements",
+        "summary": "We are truly grateful to organizations and people that made IHR possible.",
+        "description": {
+          "1": {
+            "header": "IIJ",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://www.iij.ad.jp/en/' target='_blank'>Internet Initiative Japan (IIJ)</a> is historically Japan's first ISP and the main sponsor of IHR. This includes financial support, hardware, and rack space."
+          },
+          "2": {
+            "header": "IIJ Research Laboratory",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://www.iijlab.net/en/' target='_blank'>IIJ Research Laboratory</a> is the home of IHR. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>The IIJ Research Laboratory summer internship program</a> has enabled invaluable students exchange for implementing and maintaining IHR projects."
+          },
+          "3": {
+            "header": "Google Summer of Code",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://summerofcode.withgoogle.com/' target='_blank'>Google Summer of Code</a>  supports new contributors into the development of IHR."
+          },
+          "4": {
+            "header": "RIPE NCC",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "IHR is built on top of large datasets and <a href='https://www.ripe.net/' target='_blank'>RIPE NCC</a> is our main provider. Data from RIPE's <a href='https://www.ripe.net/analyse/internet-measurements/routing-information-service-ris' target='_blank'>Routing Information Service (RIS)</a> and <a href='https://atlas.ripe.net/' target='_blank'>Atlas measurement platform</a> is crucial for us. IHR has also been partly founded by the <a href='https://www.ripe.net/support/cpf/funding-recipients-2018' target='_blank'>RIPE NCC Community Projects Fund</a>."
+          },
+          "5": {
+            "header": "Route Views",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "The University of Oregon <a href='http://www.routeviews.org/routeviews/' target='_blank'>Route Views Project</a> is another key source of data for IHR, in particular for computing AS dependency."
+          },
+          "6": {
+            "header": "Internet Society",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://www.internetsociety.org/'>Internet Society</a> supported the development of an IHR tool to monitor the AS dependency of countries and increase IHR's computational power."
+          },
+          "7": {
+            "header": "MANRS",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://www.manrs.org/'>Mutually Agreed Norms for Routing Security (MANRS)</a> is a global initiative that supported the development of IHR tools to monitor route origin validation via the <a href='https://www.manrs.org/ambassadors-program/fellows/'>MANRS Fellowship Program</a>."
+          },
+          "8":{
+            "header": "Edgecast",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://www.edgecast.com/'>Edgecast</a> is a Content Delivery Network (CDN) that distributes IHR's website and API worldwide."
+          }
+        }
+      },
+      "globalreport": {
+        "title": "Global report",
+        "summary": "The global report is a summary of alarms detected across all networks monitored by IHR. This report is specifically designed to provide an overview of the overall conditions of the Internet at a particular point in time. Anomalous metrics are visible via the overview switches or by following links to the corresponding network reports. In order to limit the amount of displayed data, the general report shows only the most prominent alarms. Smaller alarms might be visible only on network reports.",
+        "description": {}
+      },
+      "networkreport": {
+        "title": "Network report",
+        "summary": "Network reports provide all information collected by IHR about a selected network (AS or IXP). Network reports are available through the search bar at the top of the IHR webpages or by following links from the global report. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/AS2497' target='_blank'>Internet Initiative Japan (AS2497)</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/AS15169' target='_blank'>Google (AS15169)</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/IXP208' target='_blank'>DE-CIX (IXP208)</a></li></ul>",
+        "description": {}
+      },
+      "countryreport": {
+        "title": "Country Report",
+        "summary": "A country report provides information collected by IHR about a certain country. Country reports are available through the search bar at the top of the IHR webpages. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/US' target='_blank'>United States</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/JP' target='_blank'>Japan</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/NL' target='_blank'>Netherlands</a></li></ul>",
+        "description": {}
+      },
+      "asdependency": {
+        "title": "AS dependency",
+        "summary": " ",
+        "description": {
+          "1": {
+            "header": "What is AS dependency?",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "Networks connected to the Internet rely on other networks (a.k.a ASes) to transmit data. Consequently, the connectivity of a network depends on the connectivity of other networks. AS Hegemony is a metric to evaluate these interdependencies based on BGP data. See our research report for more details: <a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'>https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf</a>"
+          },
+          "2": {
+            "header": "What do the graphs mean?",
+            "img": {
+              "src": "assets/documentation/hegemony_AS2497.png",
+              "style": "max-width:100%"
+            },
+            "body": "Let's take a look at the above example which corresponds to results obtained on March 2nd 2020 for AS2497 (IIJ). <br><br><b>The top plot</b> shows the AS dependencies of AS2497, i.e., the most common transit networks used to reach AS2497. The value (a.k.a AS Hegemony) ranges between 0 and 1. This is an estimate of the ratio of AS paths towards AS2497 that go through a certain AS transit. A value close to 1 means that the reachability of the monitored AS is strongly dependant on that transit AS. In the above example, the plot shows a few weak dependencies to Telia (AS1299), NTT America (AS2914), Level(3) (AS3356), and GTT (AS3257). On that day we estimate around 16% of the paths towards IIJ transit through Telia, 9% through NTT, and 2% through Level(3). <br><br>Stub ASes usually have much higher values, for example the values go up to 1 for  ASes with a single upstream provider (meaning that all the paths cross the upstream provider). You can click on the graph to display dependency details at a particular timestamp and a graphical representation of BGP changes around that time (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated-in-ripestat' target='_blank'>using BGPlay</a>). <br><br><b>The bottom plot</b> shows the number of networks that depend on AS2497. In this case there are more than 370 networks that use IIJ for transit. This is somehow related to <a href='https://api.asrank.caida.org/v2/restful/asns/2497' target='_blank'>IIJ's customer cone</a>. The main difference is that networks using IIJ as a backup transit are not counted here whereas they are counted in its customer cone. You can click on the graph to obtain the complete list of dependent networks."
+          },
+          "3": {
+            "header": "Known issues",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<b>Level shift for an entire day.</b> Sometimes we cannot get as much data as we'd like. If the amount of data is very low, then graphs might show significant level shifts for the entire day."
+          },
+          "4": {
+            "header": "References",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<ul> <li>Research report: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>AS Hegemony: A Robust Metric for AS Centrality</a>, SIGCOMM Posters and Demos '17.  </li><li> Source code: <a href='https://github.com/InternetHealthReport/ashash'> https://github.com/InternetHealthReport/ashash</a> </li></ul>"
+          }
+        }
+      },
+      "countryasdependency": {
+        "title": "Country's network dependency",
+        "summary": "A Country network dependency is computed in two different ways, emphasizing either the distribution of the country's population or the country ASes.",
+        "description": {
+          "1": {
+            "header": "Population coverage",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "The population coverage combines two data sources, the estimated population for each AS and the paths from the Internet to these ASes. The <b>total</b> value represents the percentage of the population that is reached through the corresponding AS. This value is also dissected into two parts: <ul><li> <b>Direct</b> is the percentage of the population directly connected to this AS</li> <li><b>Indirect</b> is the percentage of the population that is reached via this AS but that is not directly connected to it.</li></ul>"
+          },
+          "2": {
+            "header": "AS coverage",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "The AS coverage is the percentage of the country's ASes that are reached via this AS. Large values represent significant transit networks for the monitored country."
+          },
+          "3": {
+            "header": "References",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<ul> <li>Research report: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> The (thin) Bridges of AS Connectivity: Measuring Dependency using AS Hegemony</a>, PAM 2018, Berlin, Germany.  </li><li> R. Fontugne, K. Ermoshina, E. Aben. <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>The Internet in Crimea: a Case Study on Routing Interregnum</a>, Global Internet Symposium 2020. Paris, France. June 2020. </li><li> Source code: <a href='https://github.com/InternetHealthReport/country-as-hegemony'>https://github.com/InternetHealthReport/country-as-hegemony</a> </li></ul>"
+          }
+        }
+      },
+      "prefixasdependency": {
+        "title": "Route Origin Validation",
+        "summary": "For any route seen on BGP (RIS and Route Views) we report its RPKI and IRR status, as well as the status of the prefix and origin ASN in Regional Internet Registries Statistics files. In addition, we also compute the visibility of the prefix, that is the percentage of BGP speakers in RIS and Route Views that advertise the prefix, and the common transit networks found in AS paths.",
+        "description": {
+          "1": {
+            "header": "Status",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "Following mostly the nomenclature given in RFC6811 the statuses for RPKI and IRR are: <ul><li><i><i>NotFound</i></i></li><li><i>Invalid</i></li><li><i>Invalid,more-specific</i></li><li><i>Valid</i></li></ul>The status <i>Invalid,more-specific</i> corresponds to routes that are invalid only because of the maximum prefix length attribute.<br><br>Using RIRs' delegated files the statues for the announced prefix and origin ASN are<ul><li><i>assigned</i></li><li><i>available</i></li><li><i>reserved</i></li><li><i>allocated</i></li><li><i>ianapool</i></li><li><i>NotFound</i></li></ul>Statuses other than <i>assigned</i> usually correspond to bogons.<br><br><b>Visibility</b> corresponds to the percentage of RIS and Route Views peers that observe the route."
+          },
+          "2": {
+            "header": "AS dependency",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "The main transit ASes for each prefix are identified using the AS Hegemony metric. The AS Hegemony value roughly corresponds to the percentage of AS paths that contain the transit AS (except for the API where the AS Hegemony is expressed as a value between zero and one)."
+          },
+          "3": {
+            "header": "Data freshness",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "This dataset is updated daily and reflects routing data has observed at midnight UTC."
+          },
+          "4": {
+            "header": "References",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<ul> <li>MANRS blog article: Romain Fontugne, <a href='https://www.manrs.org/2021/11/the-routing-game-hunting-invalid-routes/'>The Routing Game: Hunting Invalid Routes</a>.</li><li> ROV source code: <a href='https://github.com/InternetHealthReport/route-origin-validator'> https://github.com/InternetHealthReport/route-origin-validator</a></li><li> AS Hegemony source code: <a href='https://github.com/InternetHealthReport/as-hegemony'>https://github.com/InternetHealthReport/as-hegemony</a> </li></ul>"
+          }
+        }
+      },
+      "netdelay": {
+        "title": "Network delay",
+        "summary": "Using traceroute data collected with the RIPE Atlas measurement platform, we compute network delays between pairs of ASes, Atlas probes, and cities (IP addresses are geolocated with <a href='https://ipmap.ripe.net/' target='_blank'>RIPE IPmap</a>).",
+        "description": {
+          "1": {
+            "header": "What does the graph mean?",
+            "img": {
+              "src": "assets/documentation/netdelay_AS24482.png",
+              "style": "max-width:100%"
+            },
+            "body": "By default graphs load network delay from the selected network to a few locations (Tokyo, London, Singapore, Ashburn, K-Root server (AS25152), Google (AS15169)), but you can load more results with the search fields above the graph. The graph shows the estimated median RTT from a network to these locations. To compute these values we do the following: We collect a set of RTT estimates by taking all RTT values in traceroute and computing differential RTTs (i.e. the difference between two RTT values found in a traceroute). Then we store the median value of these RTT estimates as a representative value. The above example depicts the median RTTs from an ISP in Singapore (AS24482) to pre-selected locations. As an example, the values for London represent the median values of all RTTs from IP addresses that map to AS24482 (that could be Atlas probes or router addresses) to IPs in the same traceroutes that map to London.</p> <p>The example above shows two anomalies, the first one on March 16th represents a delay increase only to London, whereas the second one on March 17th impacted all plotted locations."
+          },
+          "2": {
+            "header": "Known issues",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<b>Large ASes.</b> Our methodology to collect and aggregate RTT values is relevant mainly for small ASes and cities. The median RTT from large ASes, e.g. Level(3), is misleading because these networks are spread out around the globe so they mostly have IP addresses far from the destination location. This technique works best with ASes concentrated on a geographical area.<br><br><b>Negative values.</b> Because we are computing differential RTTs we may obtain negative values in some cases."
+          }
+        }
+      },
+      "delayforward": {
+        "title": "Delay and forwarding anomalies",
+        "summary": "Using traceroute data collected with the RIPE Atlas measurement platform, we detect, per link, delay changes and routing changes. The techniques we used are detailed in the following research paper: <a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'>R. Fontugne, E. Aben, C. Pelsser, R. Bush, Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements. ACM IMC 2017, London, UK.</a>",
+        "description": {
+          "1": {
+            "header": "What does the link delay graph mean?",
+            "img": {
+              "src": "assets/documentation/linkdelay_AS7922.png",
+              "style": "max-width:100%"
+            },
+            "body": "<br>Let's take a look at the above example, which corresponds to results obtained on March 4th 2020 for Comcast (AS7922). The top plot (blue line) represents the overall delay changes we observe for AS7922's links. This value is normally close to 0, but features higher values when we observe significant delay changes for IP addresses in that AS. In this example we see that AS7922 exhibits increased delays around midnight on March 4th. By clicking on the peak at 1:30am we obtain the list of IP addresses that are detected by our system (bottom table) and the end-to-end delays for traceroute monitoring reported IP addresses. Here we see that end-to-end delays of traceroutes crossing the first reported links have increased by 60 ~ 90 ms. The red vertical dashed lines also show that packets are dropped at that time."
+          },
+          "2": {
+            "header": "What does the forwarding anomaly graph mean?",
+            "img": {
+              "src": "assets/documentation/forwarding_AS174.png",
+              "style": "max-width:100%"
+            },
+            "body": "For forwarding anomalies let's look at another example, <a href='https://ihr.iijlab.net/ihr/en-us/networks/AS174?af=4&amp;date=2017-11-02&amp;last=3'>AS174 Cogent on November 2017</a>.<br><br><b>The bottom plot</b> represents the forwarding anomalies observed for AS174. Intuitively, this graph represents the presence and absence of IP addresses for AS174 in the monitored traceroutes. If the number of observed IP addresses for AS174 is constant then the forwarding anomaly level is close to 0. If we observe more IP addresses than usual then the forwarding anomaly level takes higher positive values. On the other hand if we observe fewer IP addresses than usual, the forwarding anomaly level takes lower negative values. In this example, IP addresses from AS174 are appearing more than usual due to an internal routing anomaly. You can click on the graphs to obtain the list of reported IP addresses, we used to have a visualization of corresponding traceroutes (TraceMON) but this currently not working."
+          },
+          "3": {
+            "header": "Known issues",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<b>Traceroute limitations.</b> Our analysis of delay and forwarding anomalies relies solely on traceroute results. That implies a few limitations, for example, unexpected results for MPLS tunnels that do not implement RFC4950."
+          },
+          "4": {
+            "header": "References",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<ul> <li>Research report: R. Fontugne, E. Aben, C. Pelsser, R. Bush, <a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'>Pinpointing Delay and Forwarding Anomalies Using Large-Scale Traceroute Measurements</a>. ACM IMC 2017, London, UK. </li><li>Source code: <a href='https://github.com/InternetHealthReport/tartiflette'>https://github.com/InternetHealthReport/tartiflette</a> </li></ul>"
+          }
+        }
+      },
+      "disco": {
+        "title": "Network disconnections",
+        "summary": "To detect significant network disconnections we monitor the status of Atlas probes. We essentially seek synchronized disconnections of probes that are in the same geographical or topological area.  See our research report for more details: <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, Disco: Fast, Good, and Cheap Outage Detection. TMA 2017</a>",
+        "description": {
+          "1": {
+            "header": "What does the graph mean?",
+            "img": {
+              "src": "assets/documentation/disco_AS16322.png",
+              "style": "max-width:100%"
+            },
+            "body": "<br>The above example shows the disconnection of an Iranian network (AS16322) due to an update in an upstream provider on March 3rd 2020. The world map shows the location of disconnected Atlas probes and the below graphs show ping results from these probes. These ping measurements provide us with an internal view of the outage. Here we found that pings toward Google DNS and Atlas controller failed from around 00:45 until 01:35. Pings to the K-root server are, however, carried out as usual. This means that this network could still reach a K-root instance during the outage (probably the one located in Teheran).<br><br>The table reports a deviation score, 11 in this case, and the number of disconnected Atlas probes. Larger deviation values represent stronger evidence of the network disconnection. To avoid too many false positives, only higher values are reported (this threshold is different for the global and network reports). We also only monitor networks and countries that have at least five Atlas probes."
+          },
+          "2": {
+            "header": "Known issues",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<b>Atlas infrastructure.</b> Sudden Atlas controller reboots or outages near Atlas controllers may result in large-scale Atlas probes disconnection thus appear as a large outage for our detector. This usually results in failed pings to the Atlas controllers whereas other pings reach their final destination as usual."
+          },
+          "3": {
+            "header": "References",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<ul> <li>Research report:  A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>Disco: Fast, Good, and Cheap Outage Detection</a>. TMA 2017.  </li><li>Source code: <a href='https://github.com/InternetHealthReport/disco'> https://github.com/InternetHealthReport/disco</a> </li></ul>"
+          }
+        }
+      },
+      "api": {
+        "title": "REST API",
+        "summary": "All results displayed on the Internet Health Report website are available via the IHR REST API. For quick access to plotted data just click on the graph and see the API tab below the graph.",
+        "description": {
+          "1": {
+            "header": "Format",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "Two formats are available, HTML and JSON. The HTML format allows developers to easily play with the API. The JSON format provides a programmatic access to our reports. The results are formatted in HTML if you access the API with your web browser, JSON is used otherwise."
+          },
+          "2": {
+            "header": "Endpoints",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "The API is accessible at <a href='/ihr/api/'>http://ihr.iijlab.net/ihr/api/</a>, there are multiple endpoints available, which are documented in the <a href='/ihr/en-us/api'>API documentation</a>."
+          },
+          "3": {
+            "header": "Filtering",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "You can filter your search by adding parameters in the URL. For example: <ul> <li> <a href='https://ihr.iijlab.net/ihr/api/network_delay/?asn=174'> https://ihr.iijlab.net/ihr/api/network_delay/?asn=174</a> returns delay changes only for AS174.  </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712'> https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712</a> returns network disconnections for AS20712.  </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR'> https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR</a> returns network disconnections in Iran.  </li></ul> You can also filter results using inequalities. Add the suffix '_gte' and '_lte' for 'greater than or equal' and 'less than or equal'. For example, <a href='https://ihr.iijlab.net/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00'> https://ihr.iijlab.net/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00 </a> returns delay change results for AS174 on June 2017."
+          },
+          "4": {
+            "header": "Scripting",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "This is a python example to fetch the latest delay change results for AS174 on June 2017: <pre id='cod'><code>import sys{17}import requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams=&#123;\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'&#125; \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
+          }
+        }
+      },
+      "pythonlibrary": {
+        "title": "Python Library",
+        "summary": "To ease the access to the IHR API we also provide a python library named <strong>abondance</strong>.",
+        "description": {
+          "1": {
+            "header": "Installation",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "Installing the library requires only the standard python package manager, pip. From a terminal type: <pre id='cod'><code>pip install abondance</code></pre>"
+          },
+          "2": {
+            "header": "Example:",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "Here is a simple example to fetch and print AS dependency results for AS2501 on September 15th, 2018. <pre id='cod'><code>from ihr.hegemony import Hegemony\nhege = Hegemony(originasns=[2501], start='2018-09-15 00:00', end='2018-09-15 23:59')\nfor r in hege.get_results():\n    print(r)</code></pre> For more examples visit <a href='https://pypi.org/project/abondance/' target='_blank'>https://pypi.org/project/abondance/</a>"
+          },
+          "3": {
+            "header": "",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": ""
+          },
+          "4": {
+            "header": "",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": ""
+          },
+          "5": {
+            "header": "",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": ""
+          }
+        }
+      },
+      "dumps": {
+        "title": "Daily dumps",
+        "summary": "For users that need faster access to more IHR data, we also provide daily dumps of IHR database. Please refer to <a href='https://ihr-archive.iijlab.net'> https://ihr-archive.iijlab.net</a>",
+        "description": {}
+      },
+      "datapolicy": {
+        "title": "Data policy",
+        "summary": "The goal of IHR is to advance network research and empower the public with useful information about the characteristics of networks that constitute the Internet. IHR data is provided 'as is,' with all faults, defects, bugs, and errors. IHR does not make any warranty as to the accuracy or completeness of the data.<br><br><span>Internet Health Report</span> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Permissions beyond the scope of this license may be available at <a xmlns:cc='http://creativecommons.org/ns#' href='mailto:admin&#64;ihr.live' rel='cc:morePermissions'>admin&#64;ihr.live</a>.",
+        "description": {}
+      }
+    }
+  },
+  "homePage": {
+    "globalReport": {
+      "name": "GLOBAL REPORT",
+      "description": "The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution."
+    },
+    "analysisModules": {
+      "title": "Analysis modules",
+      "asInterdependence": {
+        "title": "AS Dependency",
+        "docHash": "#AS_dependency",
+        "description": "Networks connected to the Internet inherently rely on other networks to reach the rest of the world. The Internet Health Report quantifies the inter-dependency of networks using global routing information (BGP), hence improving our understanding of network connectivity and resiliency."
+      },
+      "networkDelay": {
+        "title": "Network Delay",
+        "docHash": "#Network_delay",
+        "description": "Delay is a key metric when assessing the performance or conditions of a network. The Internet Health Report infers network delays between ASes, cities, and Internet landmarks from traceroute data."
+      },
+      "delayAndForwarding": {
+        "title": "Link Monitoring",
+        "docHash": "#Delay_and_forwarding_anomalies",
+        "description": "Network congestion is another key indicator of network conditions. The Internet Health Report pinpoints link congestion and abnormal forwarding patterns using traceroute data."
+      },
+      "disco": {
+        "title": "Disconnection",
+        "docHash": "#Network_disconnections",
+        "description": "The worst-case scenario is the complete disconnection of a network from the Internet. The Internet Health Report infers data plane disruptions by monitoring the connectivity of RIPE Atlas probes."
+      }
+    },
+    "ihrTweets": {
+      "title": "IHR Tweets"
+    },
+    "ack": {
+      "title": "Special thanks to",
+      "organizations": {
+        "iij": {
+          "name": "IIJ",
+          "url":"https://www.iij.ad.jp/en/",
+          "description": "For financial support, rack space, etc..."
+        },
+        "ripe": {
+          "name": "RIPE NCC",
+          "url":"https://www.ripe.net/",
+          "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
+        },
+        "gsoc": {
+          "name": "GSOC",
+          "url":"https://summerofcode.withgoogle.com/",
+          "description": "Google Summer of Code supports new contributors into the development of IHR"
+        },
+        "routeviews": {
+          "name": "Route Views",
+          "url":"https://www.routeviews.org/routeviews/",
+          "description": "For BGP data"
+        },
+        "isoc": {
+          "name": "ISOC",
+          "url":"https://www.internetsociety.org/",
+          "description": "For financial support"
+        },
+        "manrs": {
+          "name": "MANRS",
+          "url":"https://www.manrs.org/",
+          "description": "For financial support (MANRS Research Fellowship Program)"
+        },
+        "edgecast": {
+          "name": "EdgeCast",
+          "url":"https://edg.io/",
+          "description": "For providing IHR website and API on their CDN."
+        }
+      }
+    },
+    "documentation": "documentation",
+    "learnmore": "Learn more on ",
+    "explore": "Explore"
+  }
+}
