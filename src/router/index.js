@@ -9,6 +9,7 @@ import MetisDeployment from '../views/MetisDeployment.vue'
 import ROV from '../views/ROV.vue'
 import Corona from '../views/Corona.vue'
 import Networks from '../views/Networks.vue'
+import Countries from '../views/Countries.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -66,7 +67,7 @@ const router = createRouter({
         {
           path: 'countries/:cc?',
           name: 'countries',
-          component: Home
+          component: Countries
         },
         {
           path: 'rov',

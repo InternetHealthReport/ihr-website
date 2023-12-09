@@ -133,14 +133,17 @@ const loading = ref(false)
 const noData = ref('')
 
 const setFilter = () => {
-  if (props.startPointName == '') {
+  if (props.startPointName == '' && !props.startPointNames.length) {
+    loading.value = true
+    return false
+  } else if (props.startPointName == '') {
     apiFilter.value = new NetworkDelayQuery()
       .startPointKey(startPointKeysFilter.value)
       .endPointKey(endPointKeysFilter.value)
       .timeInterval(props.startTime, props.endTime)
       .orderByEndPointName()
       .orderedByTime()
-  } else {
+  } else if (!props.startPointNames.length) {
     apiFilter.value = new NetworkDelayQuery()
       .startPointName(startPointNameFilter.value)
       .startPointType(startPointTypeFilter.value)
@@ -149,23 +152,25 @@ const setFilter = () => {
       .orderByEndPointName()
       .orderedByTime()
   }
+  return true
 }
 const apiCall = () => {
-  setFilter()
-  loading.value = true
-  ihr_api.network_delay(
-    apiFilter.value,
-    result => {
-      nextTick(() => {
-        fetchNetworkDelay(result.results)
+  if (setFilter()) {
+    loading.value = true
+    ihr_api.network_delay(
+      apiFilter.value,
+      result => {
+        nextTick(() => {
+          fetchNetworkDelay(result.results)
+          loading.value = false
+        })
+      },
+      error => {
+        console.error(error) //FIXME do a correct alert
         loading.value = false
-      })
-    },
-    error => {
-      console.error(error) //FIXME do a correct alert
-      loading.value = false
-    }
-  )
+      }
+    )
+  }
 }
 
 const addStartLocation = (loc) => {
@@ -325,8 +330,14 @@ watch(() => props.endTime, () => {
   clearGraph()
   apiCall()
 })
+watch(() => props.startPointNames, () => {
+  clearGraph()
+  startPointKeysFilter.value = props.startPointNames
+  apiCall()
+})
 
 onMounted(() => {
+  clearGraph()
   apiCall()
 })
 </script>

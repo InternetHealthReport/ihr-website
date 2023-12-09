@@ -1,19 +1,19 @@
 <script setup>
-import { QList, QExpansionItem, QSeparator, QCard, QCardSection, date } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { QList, QExpansionItem, QSeparator, QCard, QCardSection } from 'quasar'
+import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import report from '@/plugins/report'
+import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, computed, watch, nextTick, onMounted, onBeforeMount } from 'vue'
-import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
-import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import i18n from '@/i18n'
-import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
-import AsInterdependenciesChart from '@/components/charts/AsInterdependenciesChart.vue'
-import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart.vue'
-import DiscoChart from '@/components/charts/DiscoChart.vue'
+import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
+import { isoCountries } from '@/plugins/countryName'
+import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
+import { AS_FAMILY } from '@/plugins/IhrApi'
+import CountryHegemonyChart from '../components/charts/CountryHegemonyChart.vue'
 
 const { t } = i18n.global
 
@@ -40,22 +40,22 @@ if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[
 
 const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 const loadingStatus = ref(LOADING_STATUS.LOADING)
-const asNumber = ref(ihr_api.ihr_AsOrIxpToNumber(route.params.asn))
-const asName = ref(null)
+const countryCode = ref(route.params.cc in isoCountries ? route.params.cc : null)
+const countryName = ref(null)
 const minAvgLevel = ref(DEFAULT_DISCO_AVG_LEVEL)
 const show = ref({
-  rov: true,
-  rov_disable: false,
-  delayAndForwarding: true,
-  delayAndForwarding_disable: false,
+  prefixHegemonyChart: true,
+  prefixHegemonyChart_disable: false,
   disco: true,
   disco_disable: false,
   hegemony: true,
   hegemony_disable: false,
   net_delay: true,
-  net_delay_disable: false,
-  measurementLab: true,
+  net_delay_disable: false
 })
+const majorEyeballs = ref([])
+const majorEyeballsThreshold = ref(10)
+const clear = ref(0)
 
 const family = computed(() => {
   return addressFamily.value == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
@@ -74,7 +74,11 @@ const headerString = computed(() => {
   } else if (loadingStatus.value == LOADING_STATUS.EXPIRED) {
     return t('Networks.headerString.expired')
   } else if (loadingStatus.value == LOADING_STATUS.LOADED) {
-    return asName.value
+    if (countryCode.value in isoCountries) {
+      return isoCountries[countryCode.value]
+    } else {
+      return t('Networks.headerString.notFound')
+    }
   } else {
     return t('genericErrors.ups')
   }
@@ -87,7 +91,7 @@ const subHeader = computed(() => {
   } else if (loadingStatus.value == LOADING_STATUS.EXPIRED) {
     return t('Networks.subHeader.expired')
   } else if (loadingStatus.value == LOADING_STATUS.LOADED) {
-    return route.params.asn
+    return countryCode.value
   } else {
     return t('genericErrors.badHappened')
   }
@@ -99,34 +103,11 @@ const pushRoute = () => {
     query: Object.assign({}, route.query, {
       af: family.value,
       last: interval.value.dayDiff(),
-      date: utcString(interval.value.end).split('T')[0]
-    })
+      date: utcString(interval.value.end).split('T')[0],
+    }),
   })
-}
-
-const netName = () => {
-  const filter = new NetworkQuery().asNumber(asNumber.value)
-  ihr_api.network(filter, results => {
-    if (results.count < 1) {
-      loadingStatus.value = LOADING_STATUS.NOT_FOUND
-      return
-    }
-    // Hide tabs if not necessary
-    nextTick(() => {
-      show.value.delayAndForwarding_disable = !results.results[0].delay_forwarding
-      show.value.delayAndForwarding = results.results[0].delay_forwarding
-      show.value.disco_disable = !results.results[0].disco
-      show.value.disco = results.results[0].disco
-      show.value.hegemony_disable = !results.results[0].hegemony
-      show.value.hegemony = results.results[0].hegemony
-    })
-
-    if (results.results[0].name && results.results[0].name.length !== 0) {
-      asName.value = results.results[0].name
-    }
-    loadingStatus.value = LOADING_STATUS.LOADED
-    fetch.value = true
-  })
+  loadingStatus.value = LOADING_STATUS.LOADED
+  fetch.value = true
 }
 
 const displayNetDelay = (displayValue) => {
@@ -136,16 +117,23 @@ const displayNetDelay = (displayValue) => {
   })
 }
 
+const setMajorEyeballs = (asns) => {
+  majorEyeballs.value = []
+  asns.forEach(elem => {
+    majorEyeballs.value.push('AS4' + elem)
+  })
+}
+
 watch(addressFamily, () => {
   pushRoute()
 })
-watch(() => route.params.asn, (asn) => {
-  if (ihr_api.ihr_AsOrIxpToNumber(asn) != asNumber.value) {
+watch(() => route.params.cc, (cc) => {
+  if (cc != countryCode.value) {
     loadingStatus.value = LOADING_STATUS.LOADING
-    asNumber.value = ihr_api.ihr_AsOrIxpToNumber(asn)
-    if (asNumber.value) {
+    countryCode .value = cc
+    majorEyeballs.value = []
+    if (countryCode.value) {
       pushRoute()
-      netName()
     }
   }
 })
@@ -153,18 +141,17 @@ watch(interval, () => {
   pushRoute()
 })
 onMounted(() => {
-  if (ihr_api.ihr_AsOrIxpToNumber(route.params.asn)) {
+  if (isoCountries[route.params.cc]) {
     pushRoute()
-    netName()
   }
 })
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <div v-if="asNumber">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+    <div v-if="countryCode">
       <div>
-        <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
+        <h1 class="text-center">{{ headerString }}</h1>
         <h3 class="text-center">
           {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
           <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
@@ -172,8 +159,8 @@ onMounted(() => {
       </div>
       <QList v-if="showGraphs">
         <QExpansionItem
-          :label="$t('charts.asInterdependencies.title')"
-          caption="BGP Data"
+          :label="$t('charts.countryHegemony.title')"
+          caption="BGP data / APNIC population estimates"
           header-class="IHR_charts-title"
           icon="fas fa-project-diagram"
           :disable="show.hegemony_disable"
@@ -182,23 +169,26 @@ onMounted(() => {
           <QSeparator />
           <QCard class="IHR_charts-body">
             <QCardSection>
-              <AsInterdependenciesChart
+              <CountryHegemonyChart
                 :start-time="startTime"
                 :end-time="endTime"
-                :as-number="asNumber"
+                :country-code="countryCode"
                 :address-family="family"
                 :fetch="fetch"
+                ref="asInterdependenciesChart"
+                @eyeballs="setMajorEyeballs($event)"
               />
             </QCardSection>
           </QCard>
-        </qExpansionItem>
+        </QExpansionItem>
+
         <QExpansionItem
           :label="$t('charts.prefixHegemony.title')"
           caption="BGP / IRR / RPKI / delegated"
           header-class="IHR_charts-title"
           icon="fas fa-route"
-          :disable="show.rov_disable"
-          v-model="show.rov"
+          :disable="show.prefixHegemonyChart_disable"
+          v-model="show.prefixHegemonyChart"
         >
           <QSeparator />
           <QCard class="IHR_charts-body">
@@ -206,15 +196,17 @@ onMounted(() => {
               <PrefixHegemonyChart
                 :start-time="startTime"
                 :end-time="endTime"
-                :as-number="asNumber"
+                :country-code="countryCode"
+                :address-family="family"
                 :fetch="fetch"
               />
             </QCardSection>
           </QCard>
         </QExpansionItem>
+
         <QExpansionItem
           :label="$t('charts.networkDelay.title')"
-          caption="Traceroute Data"
+          caption="Traceroute data"
           header-class="IHR_charts-title"
           icon="fas fa-shipping-fast"
           v-model="show.net_delay"
@@ -224,73 +216,34 @@ onMounted(() => {
           <QCard class="IHR_charts-body">
             <QCardSection>
               <NetworkDelayChart
+                group="start"
                 :start-time="startTime"
                 :end-time="endTime"
-                :startPointName="Math.abs(asNumber).toString()"
-                :startPointType="route.params.asn.substring(0, 2)"
-                :fetch="fetch"
+                :startPointNames="majorEyeballs"
+                :endPointNames="[
+                  'AS415169',
+                  'CT4Amsterdam, North Holland, NL',
+                  'CT4Singapore, Central Singapore, SG',
+                  'CT4New York City, New York, US',
+                ]"
+                :eyeballThreshold="majorEyeballsThreshold"
+                :fetch="majorEyeballs.length != 0"
+                :clear="clear"
                 searchBar
-                @display="displayNetDelay"
               />
             </QCardSection>
           </QCard>
         </QExpansionItem>
 
-        <QExpansionItem
-          :label="$t('charts.delayAndForwarding.title')"
-          caption="Traceroute Data"
-          header-class="IHR_charts-title"
-          icon="fas fa-exchange-alt"
-          :disable="show.delayAndForwarding_disable"
-          v-model="show.delayAndForwarding"
-        >
-          <QSeparator />
-          <QCard class="IHR_charts-body">
-            <QCardSection>
-              <DelayAndForwardingChart
-                :start-time="startTime"
-                :end-time="endTime"
-                :as-number="asNumber"
-                :fetch="fetch"
-              />
-            </QCardSection>
-          </QCard>
-        </QExpansionItem>
-        <QExpansionItem
-          :label="$t('charts.disconnections.title')"
-          caption="RIPE Atlas Log"
-          header-class="IHR_charts-title"
-          icon="fas fa-plug"
-          :disable="show.disco_disable"
-          v-model="show.disco"
-        >
-          <QSeparator />
-          <QCard class="IHR_charts-body">
-            <QCardSection>
-              <DiscoChart
-                :streamName="asNumber"
-                :start-time="startTime"
-                :end-time="endTime"
-                :fetch="fetch"
-                :minAvgLevel="9"
-              />
-            </QCardSection>
-          </QCard>
-        </QExpansionItem>
         <div class="IHR_last-element">&nbsp;</div>
       </QList>
     </div>
     <div v-else>
       <div>
-        <h1 class="text-center q-pa-xl">Network Report</h1>
+        <h1 class="text-center q-pa-xl">Country Report</h1>
         <div class="row justify-center">
-          <div class="col-8">
-            <NetworkSearchBar
-              bg="white"
-              label="grey-8"
-              input="black"
-              labelTxt="Enter an ASN, IXP ID, or network name (at least 3 characters)"
-            />
+          <div class="col-6">
+            <NetworkSearchBar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true"/>
           </div>
         </div>
       </div>
@@ -304,26 +257,26 @@ onMounted(() => {
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'JP' } })" class="IHR_delikify">Japan</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'FR' } })" class="IHR_delikify">France</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'US' } })" class="IHR_delikify">United States</RouterLink>
               </li>
             </ul>
           </div>
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS7922' } })" class="IHR_delikify">Comcast (AS7922)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'BR' } })" class="IHR_delikify">Brazil</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS25152' } })" class="IHR_delikify">K-Root server (AS25152)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'DE' } })" class="IHR_delikify">Germany</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'IXP208' } })" class="IHR_delikify">DE-CIX (IXP208)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'CN' } })" class="IHR_delikify">China</RouterLink>
               </li>
             </ul>
           </div>
@@ -332,6 +285,7 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
 
 <style lang="stylus">
 .IHR_
