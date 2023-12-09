@@ -267,8 +267,7 @@ export default {
   },
   watch: {
     '$route.params.cc': {
-      handler: async function (cc) {
-        console.log('Country Changed')
+      handler: function (cc) {
         if (cc != this.cc) {
           this.cc = cc
 

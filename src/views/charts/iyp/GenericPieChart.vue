@@ -73,7 +73,7 @@ export default {
       }
       const map = {}
       arrayOfObjects.forEach(item => {
-        const countryCode = item.cc
+        const countryCode = item.get('cc')
         if (!map[countryCode]) {
           map[countryCode] = 1
         } else {

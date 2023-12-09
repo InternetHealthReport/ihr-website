@@ -68,11 +68,11 @@ export default {
       const map = {}
       let prefix = this.config.xlabel_prefix ? this.config.xlabel_prefix : ''
       arrayOfObjects.forEach(item => {
-        let keys = item[this.config.key]
+        let keys = item.get(this.config.key)
         if( !Array.isArray(keys) ) keys = [keys]
 
         keys.forEach(  key => {
-          let value = this.config.value? item[this.config.value]: 1
+          let value = this.config.value? item.get(this.config.value): 1
           if (!map[prefix+String(key)]) {
             map[prefix+String(key)] = value
           } else {

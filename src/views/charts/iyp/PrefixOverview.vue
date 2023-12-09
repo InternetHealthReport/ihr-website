@@ -1,6 +1,6 @@
 <template>
   <div class="IYP_chart">
-    <div v-if="loadingStatus" class="IYP_loading-spinner">
+    <div v-if="loading > 3" class="IYP_loading-spinner">
       <q-spinner color="secondary" size="3em" />
     </div>
     <div class="q-pl-sm q-mt-lg q-mb-lg">
@@ -11,12 +11,11 @@
             <div class="row justify-evenly">
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
-                <div class="q-ml-sm">
-                  <!-- <p v-if="firstPart.description">Description: <b>{{ firstPart.description }}</b> </p> -->
-                  <p v-if="firstPart.country">Registered in <router-link :to="{ name: 'iyp_country', params: {cc:firstPart.cc } }">{{ firstPart.country }}</router-link> ({{ firstPart.rir.toUpperCase() }})</p>
-                  <div v-if="firstPart.asn[0][0]">
+                <div v-if="queries[0].data.length > 0" class="q-ml-sm">
+                  <p v-if="queries[0].data[0].get('country')">Registered in <router-link :to="{ name: 'iyp_country', params: {cc:queries[0].data[0].get('cc') } }">{{ queries[0].data[0].get('country') }}</router-link> ({{ queries[0].data[0].get('rir').toUpperCase() }})</p>
+                  <div v-if="queries[0].data[0].get('asn')[0][0]">
                     <p>Originated by:</p>
-                      <div v-for="item in firstPart.asn" :key='item[0]' target="_blank">
+                      <div v-for="item in queries[0].data[0].get('asn')" :key='item[0]' target="_blank">
                         <router-link :to="{ name:'iyp_asn', params:{ asn:item[0] } }">
                         AS{{ item[0] }} {{ item[1] }}
                         </router-link>
@@ -29,9 +28,9 @@
               </div>
               <div class="col-12 col-md-auto">
                 <h3>Popular Domains</h3>
-                <div  class="q-ml-sm column">
-                  <a :href="item.domainName" v-for="item in secondPart" :key='item.domainName' target="_blank" rel="noreferrer">{{
-                    item.domainName
+                <div  v-if="queries[1].data.length > 0" class="q-ml-sm column">
+                  <a :href="item.domainName" v-for="item in queries[1].data" :key="item.get('domain')" target="_blank" rel="noreferrer">{{
+                    item.get('domain')
                   }}</a>
                 </div>
               </div>
@@ -45,9 +44,9 @@
               </div>
             </div>
             <div class="row">
-              <div class="q-mt-md">
+              <div v-if="queries[0].data.length > 0" class="q-mt-md">
                 <h3>Tags</h3>
-                <router-link v-for="tag in firstPart.tags" :key="tag" :to="{ name: 'iyp_tag', params: {tag: tag}}">
+                <router-link v-for="tag in queries[0].data[0].get('tags')" :key="tag" :to="{ name: 'iyp_tag', params: {tag: tag}}">
                   <q-chip dense size="md" color="info" text-color="white">{{ tag }}</q-chip>
                 </router-link>
               </div>
@@ -99,70 +98,50 @@ export default {
   },
   data() {
     return {
-      firstPart: {asn:[[false]]},
-      secondPart: {},
-      loadingStatus: false,
+      loading: 2,
       references: references,
+      queries: [
+        {
+          data: [],
+          query: `MATCH (p:Prefix {prefix: $prefix})
+            OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
+            OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+            OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+            OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+            OPTIONAL MATCH(p)-[deleg:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+            OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
+            RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, collect(DISTINCT([toString(a.asn), COALESCE(pdbn.name, btn.name, ripen.name)])) AS asn, c.name AS country, collect(DISTINCT(t.label)) AS tags, deleg.registry AS rir, c.country_code AS cc`
+        },
+        {
+          data: [],
+          query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)
+            OPTIONAL MATCH (d)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
+            RETURN  DISTINCT d.name as domain, ra.rank AS rank ORDER BY rank LIMIT 5 `
+        }
+      ],
     }
   },
   mounted() {
     this.fetchData()
   },
   methods: {
-    async fetchData() {
-      const queries = this.getOverview()
+    fetchData() {
 
-      this.loadingStatus = true
-      let res = await this.$iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-      this.firstPart = res.firstPart[0]
-      this.secondPart = res.secondPart
-      this.loadingStatus = false
+      let params = { prefix: this.getPrefix() }
+      let res = this.$iyp_api.runManyInParallel(this.queries, params)
 
-      if (this.title !== undefined) {
-        if (this.firstPart.description){
-          this.title('- '+this.firstPart.description)
+      res[0].then( results => {
+        this.queries[0].data = results.records
+        if (this.title !== undefined) {
+          this.title('- '+this.queries[0].data[0].get('descr'))
         }
-        else{
-          this.title('')
-        }
-      }
-    },
-    getOverview() {
-      const queryOne = `MATCH (p:Prefix {prefix: $prefix})
-         OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
-         OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-         OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
-         OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
-         OPTIONAL MATCH(p)-[deleg:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
-         OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-         RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, collect(DISTINCT([toString(a.asn), COALESCE(pdbn.name, btn.name, ripen.name)])) AS asn, c.name AS country, collect(DISTINCT(t.label)) AS tags, deleg.registry AS rir, c.country_code AS cc
-        `
-      const mappingOne = {
-        prefix: 'prefix',
-        description: 'descr',
-        asn: 'asn',
-        country: 'country',
-        cc: 'cc',
-        tags: 'tags',
-        rir: 'rir',
-      }
+        this.loading -= 1
+      })
 
-      const queryTwo = `
-      MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)
-      OPTIONAL MATCH (d)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
-      RETURN  DISTINCT d.name as domain, ra.rank AS rank ORDER BY rank LIMIT 5
-      `
-      const mappingTwo = {
-        domainName: 'domain',
-        rank: 'rank',
-      }
-
-      const prefix = this.getPrefix()
-
-      return [
-        { cypherQuery: queryOne, params: { prefix: prefix }, mapping: mappingOne, data: 'firstPart' },
-        { cypherQuery: queryTwo, params: { prefix: prefix }, mapping: mappingTwo, data: 'secondPart' },
-      ]
+      res[1].then( results => {
+        this.queries[1].data = results.records
+        this.loading -= 1
+      })
     },
     getPrefix() {
       return `${this.host}/${this.prefixLength}`
@@ -191,14 +170,20 @@ export default {
   watch: {
     async host(newValue, oldValue) {
       if(!this.loadingStatus){
-        this.loadingStatus = true
-        await this.fetchData()
+        this.loading = 3
+        this.queries.forEach( query => {
+          query.data = []
+        })
+        this.fetchData()
       }
     },
     async prefixLength(newValue, oldValue) {
       if(!this.loadingStatus){
-        this.loadingStatus = true
-        await this.fetchData()
+        this.loading = 3
+        this.queries.forEach( query => {
+          query.data = []
+        })
+        this.fetchData()
       }
     }
   }
