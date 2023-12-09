@@ -43,7 +43,7 @@ const timeRange = route.query.last ? route.query.last : 3
 
 let { interval, minDate, maxDate, fetch, utcString, reportDateFmt, setReportDate, startTime, endTime } = report(timeRange)
 
-if (route.query.date != utcString(maxDate.value).split('T')[0]) {
+if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[0]) {
   setReportDate(new Date(route.query.date))
 }
 

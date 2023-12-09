@@ -14,6 +14,7 @@ import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
 import AsInterdependenciesChart from '@/components/charts/AsInterdependenciesChart.vue'
 import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart.vue'
+import DiscoChart from '@/components/charts/DiscoChart.vue'
 
 const { t } = i18n.global
 
@@ -34,7 +35,7 @@ const timeRange = route.query.last ? route.query.last : 3
 
 let { interval, utcString, fetch, reportDateFmt, minDate, maxDate, setReportDate, startTime, endTime } = report(timeRange)
 
-if (route.query.date != utcString(maxDate.value).split('T')[0]) {
+if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[0]) {
   setReportDate(new Date(route.query.date))
 }
 
@@ -267,14 +268,13 @@ onMounted(() => {
           <QSeparator />
           <QCard class="IHR_charts-body">
             <QCardSection>
-              <!-- <disco-chart
+              <DiscoChart
                 :streamName="asNumber"
                 :start-time="startTime"
                 :end-time="endTime"
                 :fetch="fetch"
                 :minAvgLevel="9"
-                ref="ihrChartDisco"
-              /> -->
+              />
             </QCardSection>
           </QCard>
         </QExpansionItem>

@@ -3,6 +3,7 @@ import { QTable, QTr, QTd, QIcon } from 'quasar'
 import { ref, inject } from 'vue'
 import commonTable from '@/plugins/commonTable'
 import { useRoute, useRouter } from 'vue-router'
+import Tr from '@/i18n/translation'
 
 const iht_api = inject('ihr_api')
 
@@ -141,10 +142,10 @@ const OLDrouteToAsn = (asn, row) => {
 
 const routeToAsn = (asn, row) => {
   asn = asn.format(asn.field(row))
-  router.push({
+  router.push(Tr.i18nRoute({
     name: 'networks',
     params: { asn: iht_api.ihr_NumberToAsOrIxp(asn) },
-  })
+  }))
 }
 
 const getCalssByHegemony = (props) => {

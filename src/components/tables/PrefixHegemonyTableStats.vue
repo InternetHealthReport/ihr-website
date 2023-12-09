@@ -99,10 +99,10 @@ const router = useRouter()
 
 const routeToAsn = (asn, row) => {
   asn = asn.field(row)
-  router.push({
+  router.push(Tr.i18nRoute({
     name: 'networks',
     params: { asn: ihr_api.ihr_NumberToAsOrIxp(asn) },
-  })
+  }))
 }
 const getClassByHegemony = (hegemony) => {
   if (hegemony >= 25) {

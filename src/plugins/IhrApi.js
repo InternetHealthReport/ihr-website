@@ -233,6 +233,15 @@ const IhrApi = {
       )
     }
 
+    const disco_events = (discoEventQuery, successCallback, errorCallback) => {
+      _generic(
+        DiscoEventQuery.ENTRY_POINT,
+        discoEventQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
     const ihr_api = {
       getUrl,
       readableType,
@@ -251,7 +260,8 @@ const IhrApi = {
       delay_alarms,
       forwarding_alarms,
       forwarding,
-      delay
+      delay,
+      disco_events
     }
     app.provide('ihr_api', ihr_api)
   }

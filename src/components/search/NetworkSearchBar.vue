@@ -4,6 +4,7 @@ import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
 import { ref, inject, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import i18n from '@/i18n'
+import Tr from '@/i18n/translation'
 
 const { t } = i18n.global
 
@@ -81,17 +82,17 @@ const search = (value, update) => {
 }
 
 const gotoASN = (number) => {
-  router.push({
+  router.push(Tr.i18nRoute({
     name: 'networks',
     params: { asn: ihr_api.ihr_NumberToAsOrIxp(number) }
-  })
+  }))
 }
 
 const gotoCountry = (code) => {
-  router.push({
+  router.push(Tr.i18nRoute({
     name: 'countries',
     params: { cc: code },
-  })
+  }))
 }
 
 const filter = (value, update, abort) => {
