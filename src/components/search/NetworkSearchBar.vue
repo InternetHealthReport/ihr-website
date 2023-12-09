@@ -143,7 +143,6 @@ const placeholder = computed(() => {
       <QItem
         v-else-if="scope.opt.type == 'country'"
         v-bind="scope.itemProps"
-        v-on="scope.itemEvents"
         @click="gotoCountry(scope.opt.value)"
       >
         <QItemSection side color="accent"> Country </QItemSection>

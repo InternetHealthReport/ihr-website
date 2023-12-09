@@ -2,7 +2,8 @@
 import { RouterLink } from 'vue-router'
 import { QHeader, QToolbar, QItem, QBtn, QBtnGroup, QBtnDropdown, QList, QItemSection, QItemLabel, QDrawer, debounce } from 'quasar'
 import Tr from '@/i18n/translation'
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue'
+import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
 
 const  SIMPLE_MENU = [
   {
@@ -129,7 +130,7 @@ watch(simpleMenu, (newVal, oldVal) => { debounceFunc() })
             </QBtn>
           </RouterLink>
         </QItem>
-        <!--TODO: <network-search-bar class="col-4" /> --> 
+        <NetworkSearchBar class="col-4" /> 
         <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md">
           <QBtnGroup flat :key="item.entryName" v-for="(item,index) in simpleMenu">
             <QBtn flat v-if="item.options == null" :label="$t(item.entryName)" :to="Tr.i18nRoute({ name: item.routeName })" />
