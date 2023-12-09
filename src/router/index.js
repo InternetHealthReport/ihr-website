@@ -10,6 +10,7 @@ import ROV from '../views/ROV.vue'
 import Corona from '../views/Corona.vue'
 import Networks from '../views/Networks.vue'
 import Countries from '../views/Countries.vue'
+import PageNotFound from '../views/PageNotFound.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -100,6 +101,11 @@ const router = createRouter({
           component: MetisDeployment
         }
       ]
+    },
+    {
+      path: '/:pathMatch(.*)',
+      name: 'page-not-found',
+      component: PageNotFound
     }
   ]
 })
