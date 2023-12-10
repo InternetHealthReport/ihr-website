@@ -6,64 +6,64 @@
         <Overview :id="id" :title="setTitle" />
 
         <q-expansion-item
-          @click="handleClick(expansionItems.members.title)"
+          @click="loadSection('members')"
           :label="$t('iyp.ixp.members.title')"
           caption="Member Autonomous Systems (ASes)"
           header-class="IHR_charts-title"
         >
           <q-separator />
 
-          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+          <q-card class="q-ma-xl IHR_charts-body">
             <GenericTable
-              :data="members"
-              :columns="membersColumns"
-              :loading-status="this.loadingStatus.members"
-              :cypher-query="cypherQueries.members"
+              :data="sections.members.data"
+              :columns="sections.members.columns"
+              :loading-status="sections.members.loading"
+              :cypher-query="sections.members.query"
               :slot-length="1"
             >
-              <GenericPieChart v-if="members.length > 0" :chart-data="members" :chart-layout="{ title: 'Country' }" />
+              <GenericPieChart v-if="sections.members.data.length > 0" :chart-data="sections.members.data" :chart-layout="{ title: 'Country' }" />
             </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick(expansionItems.facilities.title)"
+          @click="loadSection('facilities')"
           :label="$t('iyp.ixp.facilities.title')"
           caption="Facilities"
           header-class="IHR_charts-title"
         >
           <q-separator />
 
-          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+          <q-card class="q-ma-xl IHR_charts-body">
             <GenericTable
-              :data="facilities"
-              :columns="facilitiesColumns"
-              :loading-status="this.loadingStatus.facilities"
-              :cypher-query="cypherQueries.facilities"
+              :data="sections.facilities.data"
+              :columns="sections.facilities.columns"
+              :loading-status="sections.facilities.loading"
+              :cypher-query="sections.facilities.query"
               :slot-length="1"
             >
-              <GenericPieChart v-if="facilities.length > 0" :chart-data="facilities" :chart-layout="{ title: 'Country' }" />
+              <GenericPieChart v-if="sections.facilities.data.length > 0" :chart-data="sections.facilities.data" :chart-layout="{ title: 'Country' }" />
             </GenericTable>
           </q-card>
         </q-expansion-item>
 
         <q-expansion-item
-          @click="handleClick(expansionItems.peeringLANs.title)"
+          @click="loadSection('peeringLANs')"
           :label="$t('iyp.ixp.peeringLANs.title')"
           caption="Peering LANs of an IXP"
           header-class="IHR_charts-title"
         >
           <q-separator />
 
-          <q-card v-if="tableVisible" class="q-ma-xl IHR_charts-body">
+          <q-card class="q-ma-xl IHR_charts-body">
             <GenericTable
-              :data="peeringLANs"
-              :columns="peeringLANsColumns"
-              :loading-status="this.loadingStatus.peeringLANs"
-              :cypher-query="cypherQueries.peeringLANs"
+              :data="sections.peeringLANs.data"
+              :columns="sections.peeringLANs.columns"
+              :loading-status="sections.peeringLANs.loading"
+              :cypher-query="sections.peeringLANs.query"
               :slot-length="1"
             >
-              <GenericPieChart v-if="peeringLANs.length > 0" :chart-data="peeringLANs" :chart-layout="{ title: 'Country' }" />
+              <GenericPieChart v-if="sections.peeringLANs.data.length > 0" :chart-data="sections.peeringLANs.data" :chart-layout="{ title: 'Country' }" />
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -73,193 +73,103 @@
 </template>
 
 <script>
-import { QChip } from 'quasar'
 import Overview from '@/views/charts/iyp/IXPOverview'
 import GenericTable from '@/views/charts/iyp/GenericTable'
 import GenericPieChart from '@/views/charts/iyp/GenericPieChart'
-
-const expansionItems = {
-  members: {
-    title: 'Members',
-    subTitle: 'Member Autonomous Systems (ASes)',
-  },
-  facilities: {
-    title: 'Co-Location Facilities',
-    subTitle: 'Facilities',
-  },
-  peeringLANs: {
-    title: 'Peering LANs',
-    subTitle: 'Peering LANs Of An IXP',
-  },
-}
 
 export default {
   components: {
     Overview,
     GenericTable,
-    QChip,
     GenericPieChart,
   },
   data() {
     return {
       id: null,
       pageTitle: 'IXP',
-      prefixesColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
-        { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
-      ],
-      membersColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS ${val}`, sortable: true },
-        { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-      ],
-      facilitiesColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'Facility', label: 'Facility', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-      ],
-      peeringLANsColumns: [
-        { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-        { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
-      ],
-      prefixes: [],
-      members: [],
-      facilities: [],
-      peeringLANs: [],
-      cypherQueries: {},
-      tableVisible: true,
-      loadingStatus: {
-        members: false,
-        facilities: false,
-        peeringLANs: false,
-      },
-      show: {
-        overview: true,
-        members: false,
-        facilities: false,
-        peeringLANs: false,
-      },
-      count: {
-        members: 0,
-        facilities: 0,
-        peeringLANs: 0,
-      },
-      expansionItems: expansionItems,
-      expanded: [],
+      sections: {
+
+        members: {
+          data: [],
+          show: false,
+          loading: true,
+          query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MEMBER_OF]-(a:AS)
+            OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+            OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+            OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+            OPTIONAL MATCH (a)-[:COUNTRY {reference_org: 'NRO'}]->(c:Country)
+            RETURN c.country_code AS cc, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name`,
+          columns: [
+            { name: 'CC', label: 'CC', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
+            { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS ${val}`, sortable: true },
+            { name: 'Name', label: 'AS Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+          ]
+        },
+
+        facilities: {
+          data: [],
+          show: false,
+          loading: true,
+          query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility)OPTIONAL MATCH (f)-[:COUNTRY]->(c:Country)
+            RETURN f.name as name, c.country_code AS cc`,
+          columns: [
+            { name: 'CC', label: 'CC', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
+            { name: 'Facility', label: 'Facility', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+          ]
+        },
+
+        peeringLANs: {
+          data: [],
+          show: false,
+          loading: true,
+          query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY]-(s:Prefix)OPTIONAL MATCH (s)-[:COUNTRY]->(c:Country)
+            RETURN s.prefix as prefix, c.country_code as cc`,
+          columns: [
+            { name: 'CC', label: 'CC', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
+            { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.get('prefix'), format: val => `${val}`, sortable: true },
+          ]
+        },
+
+      }
     }
   },
   created() {
     this.id = parseInt(this.$route.params.id)
   },
-  async mounted() {},
   methods: {
-    // getData will run multiple queries in parallel
-    // This method is not in use
-    async getData() {
-      const queries = [this.getMembers(), this.getFacilities(), this.getPeeringLANs()]
-      let res = await this.$iyp_api.runManyAndGetFormattedResponse(queries)
-      // console.log(res)
-      this.members = res.members
-      this.facilities = res.facilities
-      this.peeringLANs = res.peeringLANs
-      let queriesObj = {}
-      queries.forEach(query => {
-        queriesObj[query.data] = query.cypherQuery
-      })
-      this.cypherQueries = queriesObj
-    },
-    getPrefixes() {
-      const query =
-        'MATCH (c:Country {country_code: $cc})-[r]-(a:AS)-[:NAME]-(n:Name) WITH c.country_code AS cc, a.asn AS asn, collect(DISTINCT(n.name)) AS name RETURN cc, asn, name LIMIT 100'
-      const mapping = {
-        cc: 'cc',
-        prefix: 'prefix',
-        tags: 'tags',
-      }
-      return { cypherQuery: query, params: { id: this.id }, mapping, data: 'prefixes' }
-    },
-    getMembers() {
-      const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MEMBER_OF]-(a:AS)
-         OPTIONAL MATCH (a)-[:NAME]->(n:Name)
-         OPTIONAL MATCH (a)-[:COUNTRY {reference_org: $org}]->(c:Country)
-         RETURN c.country_code AS cc, a.asn AS asn, head(collect(n.name)) AS name
-        `
-      const mapping = {
-        cc: 'cc',
-        asn: 'asn',
-        name: 'name',
-      }
-      return { cypherQuery: query, params: { id: this.id, org: 'NRO' }, mapping, data: 'members' }
-    },
-    getFacilities() {
-      const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility)
-         OPTIONAL MATCH (f)-[:COUNTRY]->(c:Country)
-         RETURN f.name as name, c.country_code AS cc
-        `
-      const mapping = {
-        name: 'name',
-        cc: 'cc',
-      }
-      return { cypherQuery: query, params: { id: this.id }, mapping, data: 'facilities' }
-    },
-    getPeeringLANs() {
-      const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY]-(s:Prefix)
-         OPTIONAL MATCH (s)-[:COUNTRY]->(c:Country)
-         RETURN s.prefix as prefix, c.country_code as cc
-        `
-      const mapping = {
-        prefix: 'prefix',
-        cc: 'cc',
-      }
-      return { cypherQuery: query, params: { id: this.id }, mapping, data: 'peeringLANs' }
-    },
     setTitle(title) {
       this.pageTitle = title
     },
-    async handleClick(key) {
-      if (!this.expanded.includes(key)) {
-        this.expanded.push(key)
-      }
+    loadSection(key){
 
-      const clickedItem = key
-      let query = {}
-      if (clickedItem === expansionItems.members.title || clickedItem === expansionItems.members.subTitle) {
-        query = this.getMembers()
-      } else if (clickedItem === expansionItems.facilities.title || clickedItem === expansionItems.facilities.subTitle) {
-        query = this.getFacilities()
-      } else if (clickedItem === expansionItems.peeringLANs.title || clickedItem === expansionItems.peeringLANs.subTitle) {
-        query = this.getPeeringLANs()
-      } else {
+      // Don't do anything if already loaded
+      if(!this.sections[key].loading){
         return
       }
 
-      this.count[query.data] += 1
-      if (this.count[query.data] > 1) {
-        return
-      }
-      // console.log(`${this.count[query.data]} time`)
-      this.loadingStatus[query.data] = true
-      const results = await this.$iyp_api.run(query.cypherQuery, query.params)
-      const formattedRes = this.$iyp_api.formatResponse(results, query.mapping)
-      this[query.data] = formattedRes
-
-      this.cypherQueries[query.data] = query.cypherQuery
-      this.loadingStatus[query.data] = false
+      // Run the cypher query
+      let query_params = { id: this.id }
+      this.$iyp_api.run(this.sections[key].query, query_params).then(
+        results => {
+          this.sections[key].data = results.records
+          this.sections[key].loading = false
+        }
+      )
     },
   },
   watch: {
     '$route.params.id': {
-      handler: async function (id) {
-        console.log('IXP Changed')
+      handler: function (id) {
         if (parseInt(id) != this.id) {
           this.id = parseInt(id)
 
-          // reset count to zero
-          let items = Object.keys(this.count)
-          items.forEach(item => (this.count[item] = 0))
-
-          this.expanded.forEach(async key => {
-            await this.handleClick(key)
+          // re-load opened sections
+          let keys = Object.keys(this.sections)
+          keys.forEach( key => {
+            if( !this.sections[key].loading ){
+              this.sections[key].loading = true
+              this.loadSection(key)
+            }
           })
         }
       },

@@ -549,6 +549,7 @@ export default {
       handler: function (asn) {
         if (parseInt(asn) != this.asn) {
           this.asn = parseInt(asn)
+
           // re-load opened sections
           let keys = Object.keys(this.sections)
           keys.forEach( key => {

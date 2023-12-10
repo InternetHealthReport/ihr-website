@@ -23,7 +23,7 @@
               <div class="col-12 col-md-2">
                 <h3>Reference</h3>
                 <div class="column">
-                  <a :href="handleReference(key)" v-for="(value, key) in references" target="_blank" rel="noreferrer">{{
+                  <a :href="handleReference(key)" v-for="(value, key) in references" :key="key" target="_blank" rel="noreferrer">{{
                     handleReference(key)
                   }}</a>
                 </div>
@@ -73,7 +73,6 @@ export default {
         this.overview = res.overview[0]
         this.loadingStatus = false
       } catch (e) {
-        console.error(e)
         this.loadingStatus = false
         return
       }
