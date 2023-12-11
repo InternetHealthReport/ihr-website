@@ -8,7 +8,7 @@ import { ref, inject, computed, watch, nextTick, onMounted, onBeforeMount } from
 import report from '@/plugins/report'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
-// import DelayChart from '@/components/charts/DelayChart.vue'
+import DelayChart from '@/components/charts/DelayChart.vue'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN } from '@/plugins/delay'
 
 const { t } = i18n.global
@@ -430,7 +430,7 @@ onMounted(() => {
         <QCardSection>
           <DiscoChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
             :geoprobes.sync="geoProbes" :filter="discoFilter" @filteredRows="newFilteredRows('disco', $event)"
-            @loading="discoLoading" :selected-asn="asnList" ref="ihrChartDisco" />
+            @loading="discoLoading" ref="ihrChartDisco" />
         </QCardSection>
       </QCard>
     </QExpansionItem>

@@ -144,7 +144,7 @@ const msmPrbIds = (probes) => {
             </a>
           </div>
           <div v-else>
-            {{ countryName(props.row.streamname) }}
+            {{ getCountryName(props.row.streamname) }}
           </div>
         </QTd>
         <QTd key="starttime"> {{ dateFormatter(props.row.starttime) }} </QTd>

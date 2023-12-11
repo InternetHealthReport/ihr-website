@@ -17,7 +17,7 @@ const props = defineProps({
   },
   streamName: {
     type: Number,
-    default: ''
+    default: -1
   },
   startTime: {
     type: Date,
@@ -62,7 +62,14 @@ const details = ref({
   filter: null,
   loading: true,
 })
-const filters = ref([new DiscoEventQuery().streamName(props.streamName).timeInterval(props.startTime, props.endTime).orderedByTime()])
+
+const filters = ref()
+if (props.streamName === -1) {
+  filters.value = [new DiscoEventQuery().streamName('').timeInterval(props.startTime, props.endTime).orderedByTime()]
+} else {
+  filters.value = [new DiscoEventQuery().streamName(props.streamName).timeInterval(props.startTime, props.endTime).orderedByTime()]
+}
+
 const traces = ref([
   {
     x: [],
@@ -90,7 +97,11 @@ const duration = (start, end, nonzero) => {
 }
 
 const apiCall = () => {
-  filters.value[0].streamName(props.streamName).timeInterval(props.startTime, props.endTime).avgLevel(props.minAvgLevel, DiscoEventQuery.GTE)
+  if (props.streamName == -1) {
+    filters.value[0].streamName('').timeInterval(props.startTime, props.endTime).avgLevel(props.minAvgLevel, DiscoEventQuery.GTE)
+  } else {
+    filters.value[0].streamName(props.streamName).timeInterval(props.startTime, props.endTime).avgLevel(props.minAvgLevel, DiscoEventQuery.GTE)
+  }
   loading.value = true
   ihr_api.disco_events(
     filters.value[0],

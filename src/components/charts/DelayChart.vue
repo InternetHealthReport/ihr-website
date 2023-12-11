@@ -29,9 +29,26 @@ const props = defineProps({
     default: DEFAULT_MAX_DIFFMEDIAN,
     required: true,
   },
+  startTime: {
+    type: Date,
+    required: true,
+  },
+  endTime: {
+    type: Date,
+    required: true,
+  },
+  fetch: {
+    type: Boolean,
+    required: true,
+  },
+  filter: {
+    type: String,
+    default: '',
+  },
+
 })
 
-const emits = defineEmits({
+const emits = defineEmits(['filteredRows', {
 'prefix-details': function(event) {
     if (event !== null) {
       return true
@@ -39,8 +56,8 @@ const emits = defineEmits({
       console.warn('Event is missing!');
       return false
     }
-  }
-})
+  },
+}])
 
 const delayAlarmsFilterLocal = new DelayAlarmsQuery()
   .numberOfProbes(props.minNprobes, DelayQuery.GTE)
@@ -60,7 +77,7 @@ const details = ref({
 const loading = ref(true)
 const delayFilter = ref(null)
 const delayAlarmsFilter = ref(delayAlarmsFilterLocal)
-const filters = ref([delayAlarmsFilter])
+const filters = ref([delayAlarmsFilterLocal])
 const traces = ref([])
 const layout = DELAY_CHART_LAYOUT
 
@@ -132,7 +149,7 @@ watch(() => props.maxDiffmedian, () => {
         :stop-time="endTime"
         :data="details.data"
         :loading="details.loading"
-        :filter="filterValue"
+        :filter="filter"
         @filteredRows="filteredRows"
         show-asn
         @prefix-details="$emit('prefix-details', $event)"
