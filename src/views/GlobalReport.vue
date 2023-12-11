@@ -155,6 +155,10 @@ watch(globalFilter, (newValue) => {
   discoFilter.value = newValue
 })
 
+watch(interval, () => {
+  pushRoute()
+})
+
 onMounted(() => {
   pushRoute()
   fetch.value = true
@@ -424,9 +428,9 @@ onMounted(() => {
 
       <QCard class="IHR_charts-body">
         <QCardSection>
-          <!-- <DiscoChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
+          <DiscoChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
             :geoprobes.sync="geoProbes" :filter="discoFilter" @filteredRows="newFilteredRows('disco', $event)"
-            @loading="discoLoading" :selected-asn="asnList" ref="ihrChartDisco" /> -->
+            @loading="discoLoading" :selected-asn="asnList" ref="ihrChartDisco" />
         </QCardSection>
       </QCard>
     </QExpansionItem>
@@ -477,17 +481,18 @@ onMounted(() => {
   display flex
   justify-content flex-start
   align-items center
-  flex-direction row
+  flex-direction row !important
   width 100%
 .graph-header-div
   display flex
   justify-content space-between
   align-items center
   width 100%
+  font-size 18pt
 .filter-div
-  max-width 300px
+  max-width 300px !important
 .toggle-arrow
-  padding 0px 0px 0px 16px !important
+  padding 0px 0px 0px 16px
 @media screen and (max-width: 650px)
   .graph-header-div
     flex-direction column
