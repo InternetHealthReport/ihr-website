@@ -45,7 +45,6 @@ const props = defineProps({
     type: String,
     default: '',
   },
-
 })
 
 const emits = defineEmits(['filteredRows', {

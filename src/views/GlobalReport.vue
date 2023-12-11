@@ -10,6 +10,7 @@ import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import DelayChart from '@/components/charts/DelayChart.vue'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN } from '@/plugins/delay'
+import NetworkDelayAlarmsChart from '@/components/charts/NetworkDelayAlarmsChart.vue'
 
 const { t } = i18n.global
 
@@ -270,67 +271,37 @@ onMounted(() => {
         </QCard>
       </QExpansionItem>
     </div>
-    <a id="networkDelay"></a>
-    <div v-show="!nbAlarms['networkDelay']">
-      <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <QItemSection class="graph-header">
-              <QItemSection avatar>
-                <QIcon name="fas fa-shipping-fast" color="primary" text-color="white" />
-              </QItemSection>
-              <QItemSection>
-                <div class="text-primary text-grey">{{ $t('charts.networkDelay.title') }}</div>
-                <div class="text-caption text-grey">Traceroute data</div>
-              </QItemSection>
+    <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
+      <template v-slot:header>
+        <div class="graph-header-div">
+          <QItemSection class="graph-header">
+            <QItemSection avatar>
+              <QIcon name="fas fa-shipping-fast" color="primary" text-color="white" />
             </QItemSection>
-            <QItemSection class="filter-div">
-              <div class="text" v-if="ndelayExpanded">
-                <QInput debounce="300" v-model="ndelayFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <QIcon name="fas fa-filter" />
-                  </template>
-                </QInput>
-              </div>
+            <QItemSection>
+              <div class="text-primary">{{ $t('charts.networkDelay.title') }}</div>
+              <div class="text-caption text-grey">Traceroute data</div>
             </QItemSection>
-          </div>
-        </template>
-      </QExpansionItem>
-    </div>
-    <div v-show="nbAlarms['networkDelay']">
-      <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <QItemSection class="graph-header">
-              <QItemSection avatar>
-                <QIcon name="fas fa-shipping-fast" color="primary" text-color="white" />
-              </QItemSection>
-              <QItemSection>
-                <div class="text-primary">{{ $t('charts.networkDelay.title') }}</div>
-                <div class="text-caption text-grey">Traceroute data</div>
-              </QItemSection>
-            </QItemSection>
-            <QItemSection class="filter-div">
-              <div class="text" v-if="ndelayExpanded">
-                <QInput debounce="300" v-model="ndelayFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <QIcon name="fas fa-filter" />
-                  </template>
-                </QInput>
-              </div>
-            </QItemSection>
-          </div>
-        </template>
-        <QCard class="IHR_charts-body">
-          <QCardSection>
-            <!-- <network-delay-alarms-chart :start-time="startTime" :end-time="endTime" :fetch="fetch"
-              :min-deviation="minDeviationNetworkDelay" :filter="ndelayFilter"
-              @filteredRows="newFilteredRows('networkDelay', $event)" @loading="networkDelayLoading"
-              @network-delay-alarms-data-loaded="networkDelayAlarms = $event" ref="ihrChartNetworkDelay" /> -->
-          </QCardSection>
-        </QCard>
-      </QExpansionItem>
-    </div>
+          </QItemSection>
+          <QItemSection class="filter-div">
+            <div class="text" v-if="ndelayExpanded">
+              <QInput debounce="300" v-model="ndelayFilter" placeholder="Filter">
+                <template v-slot:append>
+                  <QIcon name="fas fa-filter" />
+                </template>
+              </QInput>
+            </div>
+          </QItemSection>
+        </div>
+      </template>
+      <QCard class="IHR_charts-body">
+        <QCardSection>
+          <NetworkDelayAlarmsChart :start-time="startTime" :end-time="endTime" :fetch="fetch"
+            :min-deviation="minDeviationNetworkDelay" :filter="ndelayFilter"
+            @loading="networkDelayLoading" @network-delay-alarms-data-loaded="networkDelayAlarms = $event" />
+        </QCardSection>
+      </QCard>
+    </QExpansionItem>
     <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
       <template v-slot:header>
         <div class="graph-header-div">
@@ -361,8 +332,8 @@ onMounted(() => {
         <QCardSection>
           <DelayChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-nprobes="minNprobes"
             :min-deviation="minDeviation" :min-diffmedian="minDiffmedian" :max-diffmedian="maxDiffmedian"
-            :filter="linkFilter" @filteredRows="newFilteredRows('linkDelay', $event)" @loading="linkDelayLoading"
-            :selected-asn="asnList" ref="ihrChartDelay" @prefix-details="showDetails($event)" />
+            :filter="linkFilter" @loading="linkDelayLoading"
+            :selected-asn="asnList" @prefix-details="showDetails($event)" />
         </QCardSection>
       </QCard>
     </QExpansionItem>
@@ -397,8 +368,8 @@ onMounted(() => {
       <QCard class="IHR_charts-body">
         <QCardSection>
           <DiscoChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
-            :geoprobes.sync="geoProbes" :filter="discoFilter" @filteredRows="newFilteredRows('disco', $event)"
-            @loading="discoLoading" ref="ihrChartDisco" />
+            :geoprobes.sync="geoProbes" :filter="discoFilter"
+            @loading="discoLoading" />
         </QCardSection>
       </QCard>
     </QExpansionItem>

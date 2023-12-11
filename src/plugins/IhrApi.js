@@ -17,7 +17,8 @@ import {
   DelayQuery,
   DelayAlarmsQuery,
   ForwardingAlarmsQuery,
-  HegemonyCountryQuery
+  HegemonyCountryQuery,
+  NetworkDelayAlarmsQuery
  } from './query/IhrQuery'
 
 /// Base url for api
@@ -252,6 +253,15 @@ const IhrApi = {
       )
     }
 
+    const network_delay_alarms = (networkDelayAlarmsQuery, successCallback, errorCallback) => {
+      _generic(
+        NetworkDelayAlarmsQuery.ENTRY_POINT,
+        networkDelayAlarmsQuery,
+        successCallback,
+        errorCallback
+      )
+    }
+
     const ihr_api = {
       getUrl,
       readableType,
@@ -272,7 +282,8 @@ const IhrApi = {
       forwarding,
       delay,
       disco_events,
-      hegemony_country
+      hegemony_country,
+      network_delay_alarms
     }
     app.provide('ihr_api', ihr_api)
   }
@@ -297,5 +308,6 @@ export {
   DelayQuery,
   DelayAlarmsQuery,
   ForwardingAlarmsQuery,
-  HegemonyCountryQuery
+  HegemonyCountryQuery,
+  NetworkDelayAlarmsQuery
 }
