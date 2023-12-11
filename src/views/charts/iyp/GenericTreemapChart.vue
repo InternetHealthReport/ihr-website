@@ -77,7 +77,10 @@ export default {
 
       let handler = {
         get: function(target, name) {
-          return target.hasOwnProperty(name) ? target[name] : '';
+          if(target.hasOwnProperty(name)) return target[name]
+          // check if it is an object returned by cypher
+          if(target.keys && target.keys.includes(name)) return target.get(name)
+          return '';
         }
       };
 
@@ -125,7 +128,7 @@ export default {
             parents.push(parentID)
 
             if(key==lastKey){
-              extras.push(item)
+              extras.push(new Proxy(item, handler))
               values.push(item_value)
               ex_leaf_item = item
 
@@ -140,7 +143,7 @@ export default {
             else{
               // Maintain stats to calculate percentage per nodes
               parent_extra[currentID] = {'__sum_value': item_value, '__sum_child': 1}
-              extras.push( parent_extra[currentID] )
+              extras.push(new Proxy(parent_extra[currentID], handler) )
               values.push(0)
             }
           }
