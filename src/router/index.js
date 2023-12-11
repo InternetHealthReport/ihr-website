@@ -11,6 +11,7 @@ import Corona from '../views/Corona.vue'
 import Networks from '../views/Networks.vue'
 import Countries from '../views/Countries.vue'
 import PageNotFound from '../views/PageNotFound.vue'
+import GlobalReport from '../views/GlobalReport.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -48,7 +49,7 @@ const router = createRouter({
         {
           path: 'global-report',
           name: 'global-report',
-          component: Home
+          component: GlobalReport
         },
         {
           path: 'networks/:asn?',

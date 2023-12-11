@@ -1,6 +1,7 @@
 <script setup>
 import Plotly from 'plotly.js-dist'
 import { ref, onMounted, watch } from 'vue'
+import { uid } from 'quasar'
 
 const props = defineProps({
   layout: {
@@ -42,7 +43,7 @@ const emits = defineEmits({
 })
 
 const created = ref(false)
-const myId = ref(null)
+const myId = ref(`ihrReactiveChart${uid()}`)
 const layoutLocal = ref(props.layout)
 
 layoutLocal.value['images'] = [
