@@ -29,10 +29,13 @@ const props = defineProps({
   },
   fetch: {
     type: Boolean
+  },
+  filter: {
+    type: String
   }
 })
 
-const emits = defineEmits({
+const emits = defineEmits(['filteredRows', {
   'prefix-details': (event) => {
     if (event !== null) {
       return true
@@ -49,7 +52,7 @@ const emits = defineEmits({
   //     return false
   //   }
   // }
-})
+}])
 
 const mapData = ref([])
 const dataEvents = ref([])
@@ -155,6 +158,7 @@ onMounted(() => {
         :data="dataEvents"
         :loading="loading"
         @prefix-details="emits('prefix-details', $event)"
+        :filter="filter"
       />
     </div>
   </div>

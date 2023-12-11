@@ -125,7 +125,7 @@ const msmPrbIds = (probes) => {
 
 <template>
   <QTable table-class="myClass" :rows="rows" :columns="columns" :pagination.sync="pagination" :loading="loading"
-    :filter="filterTable" :filter-method="filterFct" flat row-key="id" v-model:expanded="expandedRow"
+    :filter="filterTable" flat row-key="id" v-model:expanded="expandedRow"
     loading-label="Fetching the latest network disconnections...">
     <template v-slot:body="props">
       <QTr :props="props">
