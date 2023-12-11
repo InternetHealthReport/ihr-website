@@ -2,7 +2,7 @@
 import DelayAlarmsTable from '../tables/DelayAlarmsTable.vue'
 import { DelayQuery, DelayAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { DELAY_CHART_LAYOUT } from '@/plugins/layouts/layoutsChart'
-import { ref, computed, watch, inject } from 'vue'
+import { ref, computed, watch, inject, onMounted } from 'vue'
 import { uid } from 'quasar'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN, DEFAULT_AS_FAMILY } from '@/plugins/delay'
 
@@ -139,6 +139,10 @@ watch(() => props.maxDiffmedian, () => {
   })
   apiCall()
 })
+
+onMounted(() => {
+  apiCall()
+})
 </script>
 
 <template>
@@ -150,9 +154,8 @@ watch(() => props.maxDiffmedian, () => {
         :data="details.data"
         :loading="details.loading"
         :filter="filter"
-        @filteredRows="filteredRows"
         show-asn
-        @prefix-details="$emit('prefix-details', $event)"
+        @prefix-details="emits('prefix-details', $event)"
       />
     </div>
   </div>

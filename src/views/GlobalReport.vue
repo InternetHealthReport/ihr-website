@@ -331,73 +331,41 @@ onMounted(() => {
         </QCard>
       </QExpansionItem>
     </div>
-    <a id="linkDelay"></a>
-    <div v-show="!nbAlarms['linkDelay']">
-      <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <QItemSection class="graph-header">
-              <QItemSection avatar>
-                <QIcon name="fas fa-exchange-alt" color="primary" text-color="white" />
-              </QItemSection>
+    <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
+      <template v-slot:header>
+        <div class="graph-header-div">
+          <QItemSection class="graph-header">
+            <QItemSection avatar>
+              <QIcon name="fas fa-exchange-alt" color="primary" text-color="white" />
+            </QItemSection>
 
-              <QItemSection>
-                <div class="text-primary text-grey">
-                  {{ $t('charts.delayAndForwarding.title') }}
-                </div>
-                <div class="text-caption text-grey">Traceroute data</div>
-              </QItemSection>
-            </QItemSection>
-            <QItemSection class="filter-div">
-              <div class="text" v-if="linkExpanded">
-                <QInput debounce="300" v-model="linkFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <QIcon name="fas fa-filter" />
-                  </template>
-                </QInput>
+            <QItemSection>
+              <div class="text-primary">
+                Link Delay Anomalies
               </div>
+              <div class="text-caption text-grey">Traceroute data</div>
             </QItemSection>
-          </div>
-        </template>
-      </QExpansionItem>
-    </div>
-    <div v-show="nbAlarms['linkDelay']">
-      <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <QItemSection class="graph-header">
-              <QItemSection avatar>
-                <QIcon name="fas fa-exchange-alt" color="primary" text-color="white" />
-              </QItemSection>
-
-              <QItemSection>
-                <div class="text-primary">
-                  {{ $t('charts.delayAndForwarding.title') }}
-                </div>
-                <div class="text-caption text-grey">Traceroute data</div>
-              </QItemSection>
-            </QItemSection>
-            <QItemSection class="filter-div">
-              <div class="text" v-if="linkExpanded">
-                <QInput debounce="300" v-model="linkFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <QIcon name="fas fa-filter" />
-                  </template>
-                </QInput>
-              </div>
-            </QItemSection>
-          </div>
-        </template>
-        <QCard class="IHR_charts-body">
-          <QCardSection>
-            <!-- <DelayChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-nprobes="minNprobes"
-              :min-deviation="minDeviation" :min-diffmedian="minDiffmedian" :max-diffmedian="maxDiffmedian"
-              :filter="linkFilter" @filteredRows="newFilteredRows('linkDelay', $event)" @loading="linkDelayLoading"
-              :selected-asn="asnList" ref="ihrChartDelay" @prefix-details="showDetails($event)" /> -->
-          </QCardSection>
-        </QCard>
-      </QExpansionItem>
-    </div>
+          </QItemSection>
+          <QItemSection class="filter-div">
+            <div class="text" v-if="linkExpanded">
+              <QInput debounce="300" v-model="linkFilter" placeholder="Filter">
+                <template v-slot:append>
+                  <QIcon name="fas fa-filter" />
+                </template>
+              </QInput>
+            </div>
+          </QItemSection>
+        </div>
+      </template>
+      <QCard class="IHR_charts-body">
+        <QCardSection>
+          <DelayChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-nprobes="minNprobes"
+            :min-deviation="minDeviation" :min-diffmedian="minDiffmedian" :max-diffmedian="maxDiffmedian"
+            :filter="linkFilter" @filteredRows="newFilteredRows('linkDelay', $event)" @loading="linkDelayLoading"
+            :selected-asn="asnList" ref="ihrChartDelay" @prefix-details="showDetails($event)" />
+        </QCardSection>
+      </QCard>
+    </QExpansionItem>
     <QExpansionItem caption="RIPE Atlas log" header-class="IHR_charts-title" default-opened expand-icon-toggle
       v-model="discoExpanded">
       <template v-slot:header>
