@@ -371,7 +371,7 @@ export default {
             RETURN p.prefix AS prefix, roa.maxLength AS maxLength, roa.notBefore AS notBefore, roa.notAfter AS notAfter, roa.uri AS uri, COLLECT(DISTINCT b.asn) AS bgp`,
           columns: [
             { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.get('prefix'), format: val => `${val}`, sortable: true },
-            { name: 'Prefix Length', label: 'Prefix Length', align: 'left', field: row => row.get('maxLength'), format: val => `${val}`, sortable: true },
+            { name: 'Max. Prefix Length', label: 'Max. Prefix Length', align: 'left', field: row => row.get('maxLength'), format: val => `${val}`, sortable: true },
             { name: 'NotBefore', label: 'NotBefore', align: 'left', field: row => row.get('notBefore'), format: val => `${val}`, sortable: true },
             { name: 'NotAfter', label: 'NotAfter', align: 'left', field: row => row.get('notAfter'), format: val => `${val}`, sortable: true },
             { name: 'URL', label: 'URL', align: 'left', field: row => row.get('uri'), format: val => `${val}`, sortable: true },

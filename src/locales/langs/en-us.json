@@ -298,11 +298,11 @@
       },
       "roas": {
         "title": "RPKI Route Origin Authorization",
-        "caption": "ROAs registered for "
+        "caption": "ROAs registered for AS"
       },
       "atlas": {
         "title": "RIPE Atlas",
-        "caption": "RIPE Atlas probes located in "
+        "caption": "RIPE Atlas probes located in AS"
       },
       "siblings": {
         "title": "Sibling ASes",
