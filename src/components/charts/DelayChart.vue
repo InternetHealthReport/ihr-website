@@ -58,35 +58,20 @@ const emits = defineEmits(['filteredRows', {
   },
 }])
 
-const delayAlarmsFilterLocal = new DelayAlarmsQuery()
-  .numberOfProbes(props.minNprobes, DelayQuery.GTE)
-  .deviation(props.minDeviation, DelayQuery.GTE)
-  .medianDifference(props.minDiffmedian, DelayQuery.GTE)
-  .medianDifference(props.maxDiffmedian, DelayQuery.LTE)
-  .timeInterval(props.startTime, props.endTime)
-  .orderedByTime()
-
-const myId = ref(`ihrDelayChart${uid()}`)
-const details = ref({
-  activeTab: 'delay',
-  data: [],
-  tableVisible: false,
-  loading: true,
-})
+const tableData = ref([])
 const loading = ref(true)
-const delayFilter = ref(null)
-const delayAlarmsFilter = ref(delayAlarmsFilterLocal)
-const filters = ref([delayAlarmsFilterLocal])
-const traces = ref([])
-const layout = DELAY_CHART_LAYOUT
 
 const apiCall = () => {
-  traces.value = []
+  const delayAlarmsFilter = new DelayAlarmsQuery()
+    .numberOfProbes(props.minNprobes, DelayQuery.GTE)
+    .deviation(props.minDeviation, DelayQuery.GTE)
+    .medianDifference(props.minDiffmedian, DelayQuery.GTE)
+    .medianDifference(props.maxDiffmedian, DelayQuery.LTE)
+    .timeInterval(props.startTime, props.endTime)
+    .orderedByTime()
   loading.value = true
-  details.value.tableVisible = true
-  details.value.loading = true
   ihr_api.delay_alarms(
-    delayAlarmsFilter.value,
+    delayAlarmsFilter,
     result => {
       // console.log('queryDelayAlarmsAPI', result)
       let data = []
@@ -97,8 +82,7 @@ const apiCall = () => {
         }) || data.push(alarm)
         asn_list.some(asn => alarm.asn == asn) || asn_list.push(alarm.asn)
       })
-      details.value.data = data
-      details.value.loading = false
+      tableData.value = data
       loading.value = false
     },
     error => {
@@ -107,35 +91,23 @@ const apiCall = () => {
   )
 }
 
-const delayAlarmsUrl = computed(() => {
-  return ihr_api.getUrl(delayAlarmsFilter.value)
-})
-
 watch(() => props.minNprobes, () => {
-  filters.value.forEach(filter => {
-    filter.numberOfProbes(newValue, DelayQuery.GTE)
-  })
   apiCall()
 })
 
 watch(() => props.minDeviation, () => {
-  filters.value.forEach(filter => {
-    filter.deviation(newValue, DelayQuery.GTE)
-  })
   apiCall()
 })
 
 watch(() => props.minDiffmedian, () => {
-  filters.value.forEach(filter => {
-    filter.medianDifference(newValue, DelayQuery.GTE)
-  })
   apiCall()
 })
 
 watch(() => props.maxDiffmedian, () => {
-  filters.value.forEach(filter => {
-    filter.medianDifference(newValue, DelayQuery.LTE)
-  })
+  apiCall()
+})
+
+watch(() => props.endTime, () => {
   apiCall()
 })
 
@@ -150,8 +122,8 @@ onMounted(() => {
       <DelayAlarmsTable
         :start-time="startTime"
         :stop-time="endTime"
-        :data="details.data"
-        :loading="details.loading"
+        :data="tableData"
+        :loading="loading"
         :filter="filter"
         show-asn
         @prefix-details="emits('prefix-details', $event)"

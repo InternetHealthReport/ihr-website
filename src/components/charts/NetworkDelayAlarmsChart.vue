@@ -43,18 +43,7 @@ const emits = defineEmits({
   }
 })
 
-const networkDelayAlarmsFilterLocal = new NetworkDelayAlarmsQuery()
-  .deviation(props.minDeviation, Query.GTE)
-  .startPointType(props.selectedType)
-  .timeInterval(props.startTime, props.endTime)
-  //TODO add IXPs
-
-const table = ref({
-  activeTab: 'alarms',
-  data: [],
-  tableVisible: true,
-  selectedRow: [],
-})
+const tableData = ref([])
 const plot = ref({
   startpoint_name: '',
   startpoint_type: '',
@@ -62,23 +51,19 @@ const plot = ref({
   clear: 1,
 })
 const loading = ref(true)
-const delayFilter = ref(null)
-const networkDelayAlarmsFilter = ref(networkDelayAlarmsFilterLocal)
-const filters = ref([networkDelayAlarmsFilterLocal])
 
 const apiCall = () => {
+  const networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery().deviation(props.minDeviation, Query.GTE).startPointType(props.selectedType).timeInterval(props.startTime, props.endTime)
   loading.value = true
-  table.value.tableVisible = true
   ihr_api.network_delay_alarms(
-    networkDelayAlarmsFilter.value,
+    networkDelayAlarmsFilter,
     result => {
       let data = []
       result.results.forEach(alarm => {
         data.push(alarm)
       })
-      table.value.data = data
+      tableData.value = data
       loading.value = false
-      emits('network-delay-alarms-data-loaded', data)
     },
     error => {
       console.error(error) //FIXME do a correct alert
@@ -87,9 +72,10 @@ const apiCall = () => {
 }
 
 watch(() => props.minDeviation, () => {
-  filters.value.forEach(filter => {
-    filter.deviation(newValue, NetworkDelayAlarmsQuery.GTE)
-  })
+  apiCall()
+})
+
+watch(() => props.endTime, () => {
   apiCall()
 })
 
@@ -104,7 +90,7 @@ onMounted(() => {
       <NetworkDelayAlarmsTable
         :start-time="startTime"
         :stop-time="endTime"
-        :data="table.data"
+        :data="tableData"
         :loading="loading"
         :filter="filter"
       />

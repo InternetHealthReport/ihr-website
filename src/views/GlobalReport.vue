@@ -202,75 +202,41 @@ onMounted(() => {
         :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony"
         :networkDelayLoading="loading.networkDelay" /> -->
     </QExpansionItem>
-    <a id="hegemony"></a>
-    <div v-show="!nbAlarms['hegemony']">
-      <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <QItemSection class="graph-header">
-              <QItemSection avatar>
-                <QIcon name="fas fa-project-diagram" color="primary" text-color="white" />
-              </QItemSection>
-
-              <QItemSection>
-                <div class="text-primary text-grey">
-                  {{ $t('charts.asInterdependencies.title') }}
-                </div>
-                <div class="text-caption text-grey">BGP data</div>
-              </QItemSection>
+    <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
+      <template v-slot:header>
+        <div class="graph-header-div">
+          <QItemSection class="graph-header">
+            <QItemSection avatar>
+              <QIcon name="fas fa-project-diagram" color="primary" text-color="white" />
             </QItemSection>
 
-            <QItemSection class="filter-div">
-              <div class="text" v-if="hegemonyExpanded">
-                <QInput debounce="300" v-model="hegemonyFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <QIcon name="fas fa-filter" />
-                  </template>
-                </QInput>
+            <QItemSection>
+              <div class="text-primary">
+                {{ $t('charts.asInterdependencies.title') }}
               </div>
+              <div class="text-caption text-grey">BGP data</div>
             </QItemSection>
-          </div>
-        </template>
-      </QExpansionItem>
-    </div>
-    <div v-show="nbAlarms['hegemony']">
-      <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
-        <template v-slot:header>
-          <div class="graph-header-div">
-            <QItemSection class="graph-header">
-              <QItemSection avatar>
-                <QIcon name="fas fa-project-diagram" color="primary" text-color="white" />
-              </QItemSection>
+          </QItemSection>
 
-              <QItemSection>
-                <div class="text-primary">
-                  {{ $t('charts.asInterdependencies.title') }}
-                </div>
-                <div class="text-caption text-grey">BGP data</div>
-              </QItemSection>
-            </QItemSection>
-
-            <QItemSection class="filter-div">
-              <div class="text" v-if="hegemonyExpanded">
-                <QInput debounce="300" v-model="hegemonyFilter" placeholder="Filter">
-                  <template v-slot:append>
-                    <QIcon name="fas fa-filter" />
-                  </template>
-                </QInput>
-              </div>
-            </QItemSection>
-          </div>
-        </template>
-        <QCard class="IHR_charts-body">
-          <QCardSection>
-            <!-- <HegemonyAlarmsChart :start-time="startTime" :end-time="endTime" :fetch="fetch"
-              :min-deviation="minDeviationNetworkDelay" :filter="hegemonyFilter"
-              @filteredRows="newFilteredRows('hegemony', $event)" @loading="hegemonyLoading"
-              @hegemony-alarms-data-loaded="hegemonyAlarms = $event" ref="ihrChartHegemonyAlarms" /> -->
-          </QCardSection>
-        </QCard>
-      </QExpansionItem>
-    </div>
+          <QItemSection class="filter-div">
+            <div class="text" v-if="hegemonyExpanded">
+              <QInput debounce="300" v-model="hegemonyFilter" placeholder="Filter">
+                <template v-slot:append>
+                  <QIcon name="fas fa-filter" />
+                </template>
+              </QInput>
+            </div>
+          </QItemSection>
+        </div>
+      </template>
+      <QCard class="IHR_charts-body">
+        <QCardSection>
+          <HegemonyAlarmsChart :start-time="startTime" :end-time="endTime" :fetch="fetch"
+            :min-deviation="minDeviationNetworkDelay" :filter="hegemonyFilter"
+              @loading="hegemonyLoading" @hegemony-alarms-data-loaded="hegemonyAlarms = $event" />
+        </QCardSection>
+      </QCard>
+    </QExpansionItem>
     <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
       <template v-slot:header>
         <div class="graph-header-div">

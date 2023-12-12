@@ -43,35 +43,11 @@ const emits = defineEmits(['filteredRows', {
       console.warn('Event is missing!')
       return false
     }
-  },
-  // 'filteredRows': (filteredSearchRowValues) => {
-  //   if (filteredSearchRowValues !== null) {
-  //     return true
-  //   } else {
-  //     console.warn('FilteredSearchRowValues is missing')
-  //     return false
-  //   }
-  // }
+  }
 }])
 
 const mapData = ref([])
 const dataEvents = ref([])
-const details = ref({
-  activeTab: 'probes',
-  tableVisible: false,
-  data: [],
-  eventid: null,
-  probes: [],
-  filter: null,
-  loading: true,
-})
-
-const filters = ref()
-if (props.streamName === -1) {
-  filters.value = [new DiscoEventQuery().streamName('').timeInterval(props.startTime, props.endTime).orderedByTime()]
-} else {
-  filters.value = [new DiscoEventQuery().streamName(props.streamName).timeInterval(props.startTime, props.endTime).orderedByTime()]
-}
 
 const traces = ref([
   {
@@ -100,14 +76,15 @@ const duration = (start, end, nonzero) => {
 }
 
 const apiCall = () => {
-  if (props.streamName == -1) {
-    filters.value[0].streamName('').timeInterval(props.startTime, props.endTime).avgLevel(props.minAvgLevel, DiscoEventQuery.GTE)
+  let filters = null
+  if (props.streamName === -1) {
+    filters = new DiscoEventQuery().streamName('').timeInterval(props.startTime, props.endTime).orderedByTime()
   } else {
-    filters.value[0].streamName(props.streamName).timeInterval(props.startTime, props.endTime).avgLevel(props.minAvgLevel, DiscoEventQuery.GTE)
+    filters = new DiscoEventQuery().streamName(props.streamName).timeInterval(props.startTime, props.endTime).orderedByTime()
   }
   loading.value = true
   ihr_api.disco_events(
-    filters.value[0],
+    filters,
     result => {
       const events = []
       result.results.forEach(event => {
@@ -127,15 +104,7 @@ const apiCall = () => {
   )
 }
 
-// const filteredRows = () => {
-//   mapData.value = data[1]
-//   emits('filteredRows', data)
-// }
-
 watch(() => props.minAvgLevel, () => {
-  filters.value.forEach(filter => {
-    filter.avgLevel(newValue, DiscoEventQuery.GTE)
-  })
   apiCall()
 })
 
