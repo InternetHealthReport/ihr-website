@@ -35,7 +35,7 @@
           </div>
         </q-card-section>
         <q-card-section class="q-pa-xs">
-          <div class="IHR_description" v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues, ['<div>','</div>'])"></div>
+          <div class="IHR_description_text" v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues, ['<div>','</div>'])"></div>
           <div class="IHR_description IHR_description-link">
             <router-link
               :to="{
@@ -230,9 +230,12 @@ export default {
             text-transform uppercase
 
 
-
 .IHR_
-  &description
+  &description_text
+    height 220px
+.IHR_
+  &description,
+  &description_text
     font-size 18pt
     width 90%
     margin 30pt auto
