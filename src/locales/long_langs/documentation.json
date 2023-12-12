@@ -297,5 +297,304 @@
       }
     }
   },
-  "ita": {}
+
+  "ita": {
+    "documentationPage": {
+      "title": "Documentazione",
+      "sectionsTitle": {
+        "general": "Generale",
+        "reports": "Rapporti",
+        "analysisModules": "Moduli di analisi",
+        "dataAccess": "Accesso ai dati"
+      },
+      "sections": {
+        "about": {
+          "title": "Informazioni sull'Internet Health Report (IHR)",
+          "summary": "L'Internet Health Report monitora le condizioni delle reti che compongono Internet. L'obiettivo è fornire agli operatori di rete, ai politici e ad altre parti interessate una migliore comprensione dell'infrastruttura di Internet e della sua evoluzione. I dati di rete sono ottenuti da piattaforme di misurazione pubbliche su larga scala, come RIPE Atlas, RIS e Route Views. Questi dati vengono analizzati con una serie di strumenti che individuano variazioni di ritardo, anomalie di inoltro, disconnessioni di rete e modifiche di instradamento. In uno sforzo generale verso la trasparenza e la riusabilità, i dati e gli strumenti di analisi di Internet Health Report sono resi pubblici.",
+          "description": [
+            {
+              "header": "Reti monitorate",
+              "body": "Per <b>cambiamenti di ritardo, anomalie di inoltro, disconnessioni di rete</b>, i dati che analizziamo vengono raccolti con RIPE Atlas. È probabile che le reti osservate nelle misurazioni integrate e di ancoraggio vengano visualizzate nei rapporti sulle modifiche del ritardo e sull'inoltro delle anomalie. E le reti che ospitano almeno dieci sonde pubbliche compaiono nei rapporti sulle disconnessioni di rete. Il modo migliore per garantire che la tua rete sia monitorata è ospitare un'ancora (cambiamenti di ritardo, anomalie di inoltro) e almeno dieci sonde (disconnessione di rete). <br><br>Per <b>modifiche al routing</b>, utilizziamo i dati BGP per monitorare l'infrastruttura di routing Internet. Se il tuo AS pubblicizza pubblicamente uno spazio IP, dovrebbe essere già monitorato dal nostro sistema."
+            },
+            {
+              "header": "Cosa significano i grafici?",
+              "body": "Ogni grafico rappresenta un aspetto diverso dei dati di rete raccolti, che vanno dalle modifiche del routing al ritardo nelle prestazioni. Ogni grafico è documentato nei seguenti link:<ul> <li> <a href='#AS_dependency'>Dipendenza AS</a></li> <li> <a href='#Network_delay'>Ritardo di rete</ a> </li> <li> <a href='#Delay_and_forwarding_anomalies'>Ritardo dei collegamenti e anomalie di inoltro</a> </li> <li><a href='#Network_disconnections'>Disconnessioni di rete</a>< /li></ul> Inoltre la maggior parte dei grafici sono interattivi, fai clic su di essi per ottenere maggiori dettagli e ottenere il collegamento API ai dati grezzi."
+            },
+            {
+              "header": "Sotto il cappuccio",
+              "body": "I nostri strumenti di monitoraggio sono open source (<a href='https://github.com/InternetHealthReport'>https://github.com/InternetHealthReport</a>) e descritti nei seguenti articoli: <ul> <li> Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush,<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'> Individuazione dei ritardi e inoltro delle anomalie utilizzando Traceroute su larga scala Misurazioni.</a> ACM IMC 2017, Londra, Regno Unito (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_imc2017.bib'>bibtex</a>). </li><li> Anant Shah, Romain Fontugne, Emile Aben, Cristel Pelsser, Randy Bush, <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41 .pdf'>Disco: rilevamento delle interruzioni rapido, efficace ed economico</a>, TMA 2017 (<a href='https://www.iijlab.net/en/members/romain/pdf/anant_tma2017.bib'> bibtex</a>). </li><li> Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> I (sottili) ponti di AS Connectivity: misurazione della dipendenza utilizzando AS Hegemony</a>, Atti di PAM'18. Berlino, Germania. Marzo 2018 (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.bib'>bibtex</a>). </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>L'egemonia AS: una metrica robusta per AS Centrality</a>, poster e demo SIGCOMM '17 (<a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.bib'>bibtex</a>). </li></ul>"
+            },
+            {
+              "header": "Politica di citazione",
+              "body": "Se pubblichi materiale utilizzando i dati dell'Internet Health Report, aiuta altri a ottenere gli stessi set di dati e a replicare i tuoi esperimenti citando i documenti di cui sopra."
+            }
+          ]
+        },
+        "faq": {
+          "title": "Domande più comuni (FAQ)",
+          "summary": "<ul><li><a href='#faq_time_zone'>Qual è il fuso orario dei dati visualizzati?</a></li><li><a href='#faq_no_results'>Perché non sono presenti grafici e nessun risultato API per determinate reti?</a></li><li><a href='#faq_no_ixp'>Perché non c'è IXP nei risultati delle dipendenze AS?</a></li><li>< a href='#faq_ixp_numbers'>Quali sono i numeri assegnati agli IXP?</a></li><li><a href='#faq_report_bugs'>Come posso segnalare bug o suggerire nuove funzionalità?</a> </li><li><a href='#faq_contribution'></div>Come posso contribuire all'RSI?</a></li></ul>",
+          "description": [
+            {
+              "header": "<ul><li><a href='#faq_time_zone'>Qual è il fuso orario dei dati visualizzati?</a></li><li><a href='#faq_no_results'>Perché non sono presenti grafici e nessun risultato API per determinate reti?</a></li><li><a href='#faq_no_ixp'>Perché non c'è IXP nei risultati delle dipendenze AS?</a></li><li>< a href='#faq_ixp_numbers'>Quali s",
+              "body": "Tutti i grafici IHR mostrano gli orari UTC. L'API IHR fornisce anche orari UTC. Tuttavia, alcuni widget RIPE potrebbero visualizzare l'ora locale (ad esempio BGPlay)."
+            },
+            {
+              "header": "<div class='IHR_anchor' id='faq_no_results'></div>Perché non ci sono grafici e risultati API per alcune reti?",
+              "body": "Alcuni moduli di analisi IHR analizzano i dati dalla piattaforma RIPE Atlas. Se una rete non ospita alcuna sonda Atlas o non appare nei traceroute Atlas, probabilmente non viene visualizzata nei nostri risultati di ritardo e disconnessione. Una rete dovrebbe ospitare almeno dieci sonde per essere inclusa nella nostra analisi di disconnessione della rete. Ospitare un'ancora Atlas è un buon modo per partecipare al ritardo del collegamento e alle anomalie di inoltro. Consulta il sito web RIPE per le domande per <a href='https://atlas.ripe.net/get-involved/become-a-host/' _target='_blank'> ospitare una sonda </a> o <a href='https://atlas.ripe.net/get-involved/become-an-anchor-host/' _target='_blank'> un'ancora.</a>"
+            },
+            {
+              "header": "<div class='IHR_anchor' id='faq_no_ixp'></div>Perché non c'è IXP nei risultati delle dipendenze AS?",
+              "body": "La dipendenza AS viene calcolata dai dati BGP e gli IXP solitamente non sono visibili nei percorsi BGP. Pertanto, al momento non possiamo dedurre la dipendenza dagli IXP. Questo problema potrebbe essere risolto analizzando i traceroute anziché i percorsi AS di BGP, che è una direzione che stiamo attualmente esplorando."
+            },
+            {
+              "header": "<div class='IHR_anchor' id='faq_ixp_numbers'></div>Quali sono i numeri assegnati agli IXP?",
+              "body": "IHR utilizza identificatori univoci per indicizzare i risultati degli IXP. Questi identificatori derivano da quelli trovati nel set di dati IXPs di CAIDA (<a href='https://www.caida.org/data/ixps/' target='_default'>https://www.caida.org/data /ixps/</a>). Per differenziare questi identificatori con i numeri AS, l'API fornisce valori negativi agli IXP e valori positivi agli AS.<br>L'elenco di tutti i nomi e gli identificatori IXP è disponibile al seguente collegamento: <a href='https://ihr. iijlab.net/ihr/api/networks/?number__lte=-1' target='_default'>https://ihr.iijlab.net/ihr/api/networks/?number__lte=-1</a>"
+            },
+            {
+              "header": "<div class='IHR_anchor' id='faq_report_bugs'></div>Come posso segnalare bug o suggerire nuove funzionalità?",
+              "body": "Il codice sorgente di tutti gli strumenti IHR è ospitato su <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a>. Puoi esaminare e inviare segnalazioni di bug per il sito web IHR <a href='https://github.com/InternetHealthReport/ihr-website/issues' target='_blank'>qui</a>. Se non disponi di un account GitHub <a href='/ihr/en-us/contact'>contattaci direttamente</a>."
+            },
+            {
+              "header": "<div class='IHR_anchor' id='faq_contribution'></div>How can I contribute to IHR?",
+              "body": "L'IHR è costruito e gestito principalmente da ricercatori e studenti. Abbiamo bisogno di aiuto a tutti i livelli per il frontend, il backend, la documentazione e la raccolta dati. Sentiti libero di dare un'occhiata ai progetti IHR su <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a> o <a href='/ihr/en-us/ contatto'>contattaci</a>. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>Il programma di tirocinio estivo del IIJ Research Laboratory</a> è anche un buon modo per visitarci e lavorare sugli strumenti del RSI."
+            }
+          ]
+        },
+        "ack": {
+          "title": "ringraziamenti",
+          "summary": "Siamo veramente grati alle organizzazioni e alle persone che hanno reso possibile l’IHR.",
+          "description": [
+            {
+              "header": "IIJ",
+              "body": "<a href='https://www.iij.ad.jp/en/' target='_blank'>Internet Initiative Japan (IIJ)</a> è storicamente il primo ISP del Giappone e lo sponsor principale di IHR. Ciò include supporto finanziario, hardware e spazio su rack."
+            },
+            {
+              "header": "IIJ Laboratorio di ricerca",
+              "body": "<a href='https://www.iijlab.net/en/' target='_blank'>IIJ Research Laboratory è la sede di IHR. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>Il programma di tirocinio estivo del Laboratorio di ricerca IIJ</a> ha consentito un prezioso scambio di studenti per l'implementazione e il mantenimento dell'IHR progetti."
+            },
+            {
+              "header": "Google Summer of Code",
+              "body": "<a href='https://summerofcode.withgoogle.com/' target='_blank'>Google Summer of Code</a> supporta i nuovi contributori allo sviluppo di IHR."
+            },
+            {
+              "header": "RIPE NCC",
+              "body": "IHR si basa su set di dati di grandi dimensioni e <a href='https://www.ripe.net/' target='_blank'>RIPE NCC</a> è il nostro fornitore principale. Dati dal <a href='https://www.ripe.net/analyse/internet-measurements/routing-information-service-ris' target='_blank'>Routing Information Service (RIS)</a> e < una href='https://atlas.ripe.net/' target='_blank'>piattaforma di misurazione Atlas</a> è fondamentale per noi. IHR è stato in parte fondato anche dal <a href='https://www.ripe.net/support/cpf/funding-recipients-2018' target='_blank'>RIPE NCC Fondo per progetti comunitari</a>."
+            },
+          
+            {
+              "header": "Viste del percorso",
+              "body": "Il <a href='http://www.routeviews.org/routeviews/' target='_blank'>Viste del percorso Progetti</a> dell'Università dell'Oregon è un'altra fonte chiave di dati per l'IHR, in particolare per il calcolo della dipendenza dall'AS ."
+            },
+            {
+              "header": "Società di Internet",
+              "body": "<a href='https://www.internetsociety.org/'>Società di Internet</a> ha sostenuto lo sviluppo di uno strumento IHR per monitorare la dipendenza dei paesi dall'AS e aumentare la potenza computazionale dell'IHR."
+            },
+            {
+              "header": "MANRS",
+              "body": "<a href='https://www.manrs.org/'>Mutually Agreed Norms for Routing Security (MANRS)</a> è un'iniziativa globale che ha supportato lo sviluppo di strumenti IHR per monitorare la convalida dell'origine del percorso tramite <a href='https://www.manrs.org/ambassadors-program/fellows/'>Programma di borse di studio MANRS</a>."
+            },
+            {
+              "header": "Edgecast",
+              "body": "<a href='https://www.edgecast.com/'>Edgecast</a> è una Content Delivery Network (CDN)  che distribuisce il sito Web e l'API di IHR in tutto il mondo."
+            }
+          ]
+        },
+        "globalreport": {
+          "title": "Rapporto globale",
+          "summary": "Il rapporto globale è un riepilogo degli allarmi rilevati in tutte le reti monitorate da IHR. Questo rapporto è specificamente progettato per fornire una panoramica delle condizioni generali di Internet in un particolare momento. I parametri anomali sono visibili tramite gli interruttori di panoramica o seguendo i collegamenti ai report di rete corrispondenti. Per limitare la quantità di dati visualizzati, il report generale mostra solo gli allarmi più importanti. Gli allarmi più piccoli potrebbero essere visibili solo nei report di rete.",
+          "description": []
+        },
+        "networkreport": {
+          "title": "Rapporto di rete",
+          "summary": "I rapporti di rete forniscono tutte le informazioni raccolte da IHR su una rete selezionata (AS o IXP). I rapporti di rete sono disponibili tramite la barra di ricerca nella parte superiore delle pagine Web IHR o seguendo i collegamenti dal rapporto globale. Di seguito sono riportati i collegamenti ad alcuni rapporti:<ul><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/AS2497' target='_blank'>Internet Initiative Japan (AS2497 )</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/AS15169' target='_blank'>Google (AS15169)</a ></li><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/IXP208' target='_blank'>DE-CIX (IXP208)</a>< /li></ul>",
+          "description": []
+        },
+        "countryreport": {
+          "title": "Rapporto sul paese",
+          "summary": "Un rapporto nazionale fornisce informazioni raccolte da IHR su un determinato paese. I rapporti sui paesi sono disponibili tramite la barra di ricerca nella parte superiore delle pagine web dell'IHR. Ecco i link ad alcuni rapporti:<ul><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/US' target='_blank'>Stati Uniti</a </li><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/JP' target='_blank'>Giappone</a></li><li ><a href='https://ihr.iijlab.net/ihr/en-us/countries/NL' target='_blank'>Paesi Bassi</a></li></ul>",
+          "description": []
+        },
+        "asdependency": {
+          "title": "dipendenza da AS",
+          "summary": " ",
+          "description": [
+            {
+              "header": "Cos'è la dipendenza da AS?",
+              "body": "Le reti connesse a Internet si affidano ad altre reti (ovvero AS) per trasmettere dati. Di conseguenza, la connettività di una rete dipende dalla connettività di altre reti. AS Hegemony è una metrica per valutare queste interdipendenze sulla base dei dati BGP. Consulta il nostro rapporto di ricerca per maggiori dettagli: <a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'>https://www.iijlab.net/en/members/ romain/pdf/romain_pam2018.pdf</a>"
+            },
+            {
+              "header": "Cosa significano i grafici?",
+              "img": ["assets/documentation/hegemony_AS2497.png", "max-width:100%"],
+              "body": "<p>Diamo un'occhiata all'esempio sopra che corrisponde ai risultati ottenuti il 2 marzo 2020 per AS2497 (IIJ). <p><b>Il grafico in alto</b> mostra le dipendenze AS di AS2497, ovvero le reti di transito più comuni utilizzate per raggiungere AS2497. Il valore (noto anche come AS Hegemony) varia tra 0 e 1. Questa è una stima del rapporto tra i percorsi AS verso AS2497 che attraversano un determinato transito AS. Un valore vicino a 1 significa che la raggiungibilità dell'AS monitorato è fortemente dipendente da quell'AS di transito. Nell'esempio sopra, il grafico mostra alcune dipendenze deboli da Telia (AS1299), NTT America (AS2914), Level(3) (AS3356) e GTT (AS3257). In quel giorno stimiamo che circa il 16% dei percorsi verso IIJ transiti attraverso Telia, il 9% attraverso NTT e il 2% attraverso Level(3).</p> <p>Gli AS Stub di solito hanno valori molto più alti, ad esempio i valori salire a 1 per gli AS con un unico fornitore a monte (il che significa che tutti i percorsi attraversano il fornitore a monte). Puoi fare clic sul grafico per visualizzare i dettagli della dipendenza in un particolare timestamp e una rappresentazione grafica delle modifiche BGP in quel periodo (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated- in-ripestat' target='_blank'>usando BGPlay</a>).</p> <p><b>Il grafico in basso</b> mostra il numero di reti che dipendono da AS2497. In questo caso sono più di 370 le reti che utilizzano IIJ per il transito. Questo è in qualche modo correlato al <a href='https://api.asrank.caida.org/v2/restful/asns/2497' target='_blank'>cono del cliente di IIJ</a>. La differenza principale è che le reti che utilizzano IIJ come transito di backup non vengono conteggiate qui mentre vengono conteggiate nel cono del cliente. Puoi fare clic sul grafico per ottenere l'elenco completo delle reti dipendenti.</p>"
+            },
+            {
+              "header": "Problemi conosciuti",
+              "body": "<b>Spostamento di livello per un'intera giornata.</b> A volte non riusciamo a ottenere tutti i dati che vorremmo. Se la quantità di dati è molto bassa, i grafici potrebbero mostrare spostamenti di livello significativi per l'intera giornata."
+            },
+            {
+              "header": "Riferimenti",
+              "body": "<ul> <li>Rapporto di ricerca: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> Il (sottile) Bridges of AS Connectivity: Measurement Dependency using AS Hegemony</a>, PAM 2018, Berlino, Germania. </li><li> Romain Fontugne, Anant Shah, Emile Aben, <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>L'egemonia AS: una metrica robusta per AS Centrality</a>, poster e demo SIGCOMM '17. </li><li> Codice sorgente: <a href='https://github.com/InternetHealthReport/ashash'> https://github.com/InternetHealthReport/ashash</a> </li></ul >"
+            }
+          ]
+        },
+        "countryasdependency": {
+          "title": "Dipendenza dalla rete del paese",
+          "summary": "La dipendenza da una rete nazionale viene calcolata in due modi diversi, enfatizzando la distribuzione della popolazione del paese o gli AS del paese.",
+          "description": [
+            {
+              "header": "Copertura della popolazione",
+              "body": "La copertura della popolazione combina due fonti di dati, la popolazione stimata per ciascun AS e i percorsi da Internet a questi AS. Il valore <b>totale</b> rappresenta la percentuale della popolazione raggiunta attraverso l'AS corrispondente. Anche questo valore è suddiviso in due parti: <ul><li> <b>Diretto</b> è la percentuale della popolazione direttamente collegata a questo AS</li> <li><b>Indiretto</b> è la percentuale della popolazione che viene raggiunta tramite questo AS ma che non è direttamente collegata ad esso.</li></ul>"
+            },
+            {
+              "header": "copertura AS",
+              "body": "La copertura AS è la percentuale degli ASes del Paese raggiunti tramite questo AS. Valori grandi rappresentano reti di transito significative per il paese monitorato."
+            },
+            {
+              "header": "Riferimenti",
+              "body": "<ul> <li>Rapporto di ricerca: Romain Fontugne, Anant Shah, Emile Aben,<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf'> Il (sottile) Bridges of AS Connectivity: Measurement Dependency using AS Hegemony</a>, PAM 2018, Berlino, Germania. </li><li> R. Fontugne, K. Ermoshina, E. Aben. <a href='https://www.iijlab.net/en/members/romain/pdf/romain_sigcomm2017.pdf'>The Internet in Crimea: un caso di studio sull'interregno di routing</a>, Global Internet Symposium 2020. Parigi , Francia. Giugno 2020. </li><li> Codice sorgente: <a href='https://github.com/InternetHealthReport/country-as-hegemony'> https://github.com/InternetHealthReport/country-as-hegemony </a> </li></ul>"
+            }
+          ]
+        },
+        "prefixasdependency": {
+          "title": "Convalida dell'origine del percorso",
+          "summary": "Per ogni percorso visto su BGP (RIS e Route Views) riportiamo il suo stato RPKI e IRR, nonché lo stato del prefisso e dell'ASN di origine nei file Statistici dei registri Internet regionali. Inoltre, calcoliamo anche la visibilità del prefisso, ovvero la percentuale di parlanti BGP nei RIS e nelle Route Views che pubblicizzano il prefisso, e le reti di transito comuni trovate nei percorsi AS.",
+          "description": [
+            {
+              "header": "stato",
+              "body": "<p>Seguendo principalmente la nomenclatura fornita in RFC6811, gli stati per RPKI e IRR sono: <ul><li><i>Non trovato</i></li><li><i>Non valido</i></li ><li><i>Non valido, più specifico</i></li><li><i>Valido</i></li></ul>Lo stato <i>Non valido, più specifico< /i> corrisponde a percorsi che non sono validi solo a causa dell'attributo di lunghezza massima del prefisso.</p> <p>Utilizzando i file delegati RIR vengono assegnati gli stati per il prefisso annunciato e l'ASN di origine<ul><li><i> </i></li><li><i>disponibile</i></li><li><i>riservato</i></li><li><i>assegnato</i>< /li><li><i>ianapool</i></li><li><i>NotFound</i></li></ul>Stati diversi da <i>assegnato</i> solitamente corrispondono ai bogon.</i></p><p><b>Visibilità</b> corrisponde alla percentuale di peer RIS e Route Views che osservano il percorso.</p>"
+            },
+            {
+              "header": "dipendenza da AS",
+              "body": "I principali AS di transito per ciascun prefisso sono identificati utilizzando la metrica AS Hegemony. Il valore di Egemonia AS corrisponde approssimativamente alla percentuale di percorsi AS che contengono l'AS di transito (ad eccezione dell'API in cui l'Egemonia AS è espressa come un valore compreso tra zero e uno)."
+            },
+            {
+              "header": "Freschezza dei dati",
+              "body": "Questo set di dati viene aggiornato quotidianamente e riflette i dati di routing osservati a mezzanotte UTC."
+            },
+            {
+              "header": "Riferimenti",
+              "body": "<ul> <li>Articolo del blog MANRS: Romain Fontugne, <a href='https://www.manrs.org/2021/11/the-routing-game-hunting-invalid-routes/'>Il gioco del routing: Ricerca di percorsi non validi</a>.</li><li> Codice sorgente ROV: <a href='https://github.com/InternetHealthReport/route-origin-validator'> https://github.com/InternetHealthReport /route-origin-validator</a></li><li> Codice sorgente di AS Hegemony: <a href='https://github.com/InternetHealthReport/as-hegemony'> https://github.com/ InternetHealthReport/as-egemonia</a> </li></ul>"
+            }
+          ]
+        },
+        "netdelay": {
+          "title": "Ritardo della rete",
+          "summary": "Utilizzando i dati traceroute raccolti con la piattaforma di misurazione RIPE Atlas, calcoliamo i ritardi di rete tra coppie di AS, sonde Atlas e città (gli indirizzi IP sono geolocalizzati con <a href='https://ipmap.ripe.net/' target=' _blank'>RIPE IPmap</a>).",
+          "description": [
+            {
+              "header": "Cosa significa il grafico?",
+              "img": ["assets/documentation/netdelay_AS24482.png", "max-width:100%"],
+              "body": "<p>Per impostazione predefinita, i grafici caricano il ritardo della rete dalla rete selezionata ad alcune località (Tokyo, Londra, Singapore, Ashburn, server K-Root (AS25152), Google (AS15169)), ma puoi caricare più risultati con i campi di ricerca sopra il grafico. Il grafico mostra l'RTT medio stimato da una rete a queste località. Per calcolare questi valori facciamo quanto segue: raccogliamo una serie di stime RTT prendendo tutti i valori RTT nel traceroute e calcolando gli RTT differenziali (ovvero la differenza tra due valori RTT trovati in un traceroute). Quindi memorizziamo il valore mediano di queste stime RTT come valore rappresentativo. L'esempio precedente illustra gli RTT medi da un ISP a Singapore (AS24482) verso località preselezionate. Ad esempio, i valori per Londra rappresentano i valori mediani di tutti gli RTT dagli indirizzi IP mappati su AS24482 (che potrebbero essere sonde Atlas o indirizzi router) agli IP negli stessi traceroute mappati a Londra.</p> <p> L'esempio sopra mostra due anomalie, la prima del 16 marzo rappresenta un aumento del ritardo solo verso Londra, mentre la seconda del 17 marzo ha avuto un impatto su tutte le località tracciate.</p>"
+            },
+            {
+              "header": "Problemi conosciuti",
+              "body": "<p><b>Grandi AS.</b> La nostra metodologia per raccogliere e aggregare i valori RTT è rilevante principalmente per i piccoli AS e le città. L’RTT mediano dei grandi AS, ad es. Level(3), è fuorviante perché queste reti sono sparse in tutto il mondo, quindi hanno per lo più indirizzi IP lontani dalla posizione di destinazione. Questa tecnica funziona meglio con AS concentrati su un'area geografica.</p> <p><b>Valori negativi.</b> Poiché stiamo calcolando RTT differenziali, in alcuni casi potremmo ottenere valori negativi.</p>"
+            }
+          ]
+        },
+        "delayforward": {
+          "title": "Ritardi e anomalie nell'inoltro",
+          "summary": "Utilizzando i dati di traceroute raccolti con la piattaforma di misurazione RIPE Atlas, rileviamo, per collegamento, cambiamenti di ritardo e cambiamenti di routing. Le tecniche che abbiamo utilizzato sono dettagliate nel seguente documento di ricerca: <a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf'>R. Fontugne, E. Aben, C. Pelsser, R. Bush, Individuazione del ritardo e inoltro di anomalie utilizzando misurazioni Traceroute su larga scala. ACM IMC 2017, Londra, Regno Unito.</a>",
+          "description": [
+            {
+              "header": "Cosa significa il grafico del ritardo del collegamento?",
+              "img": ["assets/documentation/linkdelay_AS7922.png", "max-width:100%"],
+              "body": "<br>Diamo un'occhiata all'esempio sopra, che corrisponde ai risultati ottenuti il 4 marzo 2020 per Comcast (AS7922). Il grafico superiore (linea blu) rappresenta le modifiche complessive del ritardo che osserviamo per i collegamenti AS7922. Questo valore è normalmente vicino a 0, ma presenta valori più elevati quando osserviamo cambiamenti significativi nel ritardo per gli indirizzi IP in quell'AS. In questo esempio vediamo che AS7922 presenta un aumento dei ritardi intorno alla mezzanotte del 4 marzo. Facendo clic sul picco all'1:30 otteniamo l'elenco degli indirizzi IP rilevati dal nostro sistema (tabella in basso) e i ritardi end-to-end per il monitoraggio del traceroute degli indirizzi IP segnalati. Qui vediamo che i ritardi end-to-end dei traceroute che attraversano i primi collegamenti segnalati sono aumentati di 60 ~ 90 ms. Le linee tratteggiate verticali rosse mostrano anche che i pacchetti vengono scartati in quel momento."
+            },
+            {
+              "header": "Cosa significa il grafico delle anomalie di inoltro?",
+              "img": ["assets/documentation/forwarding_AS174.png", "max-width:100%"],
+              "body": "<p>Per le anomalie di inoltro esaminiamo un altro esempio, <a href='https://ihr.iijlab.net/ihr/en-us/networks/AS174?af=4&amp;date=2017-11-02&amp;last =3'>AS174 Cogent nel novembre 2017</a>.</p> <p><b>Il grafico inferiore</b> rappresenta le anomalie di inoltro osservate per AS174. Intuitivamente, questo grafico rappresenta la presenza e l'assenza di indirizzi IP per AS174 nei traceroute monitorati. Se il numero di indirizzi IP osservati per AS174 è costante, il livello di anomalia di inoltro è vicino a 0. Se osserviamo più indirizzi IP del solito, il livello di anomalia di inoltro assume valori positivi più elevati. D'altra parte, se osserviamo meno indirizzi IP del solito, il livello di anomalia dell'inoltro assume valori negativi inferiori. In questo esempio, gli indirizzi IP di AS174 appaiono più del solito a causa di un'anomalia del routing interno. È possibile fare clic sui grafici per ottenere l'elenco degli indirizzi IP segnalati, in passato avevamo una visualizzazione dei traceroute corrispondenti (TraceMON) ma attualmente non funziona. </p>"
+            },
+            {
+              "header": "Problemi conosciuti",
+              "body": "<b>Limiti di traceroute.</b> La nostra analisi dei ritardi e delle anomalie di inoltro si basa esclusivamente sui risultati di traceroute. Ciò implica alcune limitazioni, ad esempio risultati imprevisti per i tunnel MPLS che non implementano RFC4950."
+            },
+            {
+              "header": "Riferimenti",
+              "body": "<ul> <li>Rapporto di ricerca: R. Fontugne, E. Aben, C. Pelsser, R. Bush, <a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106. pdf'>Individuazione dei ritardi e delle anomalie di inoltro utilizzando misurazioni Traceroute su larga scala</a>. ACM IMC 2017, Londra, Regno Unito. </li><li>Codice sorgente: <a href='https://github.com/InternetHealthReport/tartiflette'> https://github.com/InternetHealthReport/tartiflette</a> </li></ul >"
+            }
+          ]
+        },
+        "disco": {
+          "title": "Disconnessioni di rete",
+          "summary": "Per rilevare disconnessioni di rete significative monitoriamo lo stato delle sonde Atlas. Cerchiamo essenzialmente disconnessioni sincronizzate di sonde che si trovano nella stessa area geografica o topologica. Consulta il nostro rapporto di ricerca per maggiori dettagli: <a href='http://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf'>A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, Disco: rilevamento delle interruzioni veloce, buono ed economico. TMA 2017</a>",
+          "description": [
+            {
+              "header": "Cosa significa il grafico?",
+              "img": ["assets/documentation/disco_AS16322.png", "max-width:100%"],
+              "body": "<p> L'esempio sopra mostra la disconnessione di una rete iraniana (AS16322) a causa di un aggiornamento in un provider upstream il 3 marzo 2020. La mappa del mondo mostra la posizione delle sonde Atlas disconnesse e i grafici seguenti mostrano i risultati del ping di queste sonde. Queste misurazioni del ping ci forniscono una visione interna dell'interruzione. Qui abbiamo scoperto che i ping verso Google DNS e il controller Atlas non sono riusciti dalle 00:45 circa alle 01:35. I ping al server K-root vengono comunque eseguiti normalmente. Ciò significa che questa rete potrebbe ancora raggiungere un'istanza K-root durante l'interruzione (probabilmente quella situata a Teheran).</p> <p>La tabella riporta un punteggio di deviazione, 11 in questo caso, e il numero di Atlas disconnessi sonde. Valori di deviazione più grandi rappresentano una prova più forte della disconnessione della rete. Per evitare troppi falsi positivi, vengono riportati solo i valori più alti (questa soglia è diversa per i report globali e di rete). Inoltre, monitoriamo solo le reti e i paesi che dispongono di almeno cinque sonde Atlas. </p>"
+            },
+            {
+              "header": "Problemi conosciuti",
+              "body": "<p><b>Infrastruttura Atlas.</b> Riavvii improvvisi o interruzioni del controller Atlas in prossimità dei controller Atlas possono provocare la disconnessione su larga scala delle sonde Atlas, quindi appaiono come una grande interruzione per il nostro rilevatore. Ciò di solito si traduce in ping non riusciti ai controller Atlas mentre gli altri ping raggiungono la loro destinazione finale come al solito. "
+            },
+            {
+              "header": "Riferimenti",
+              "body": "<ul> <li>Rapporto di ricerca: A. Shah, R. Fontugne, E. Aben, C. Pelsser, R. Bush, <a href='http://tma.ifip.org/wordpress/wp-content/ uploads/2017/06/tma2017_paper41.pdf'>Disco: rilevamento delle interruzioni rapido, efficace ed economico</a>. TMA 2017. </li><li>Codice sorgente: <a href='https://github.com/InternetHealthReport/disco'> https://github.com/InternetHealthReport/disco</a> </li> </ul>"
+            }
+          ]
+        },
+        "api": {
+          "title": "REST0 API",
+          "summary": "Tutti i risultati visualizzati sul sito Web Internet Health Report sono disponibili tramite l'API REST IHR. Per un accesso rapido ai dati tracciati basta fare clic sul grafico e visualizzare la scheda API sotto il grafico.",
+          "description": [
+            {
+              "header": "Formato",
+              "body": "Sono disponibili due formati, HTML e JSON. Il formato HTML consente agli sviluppatori di giocare facilmente con l'API. Il formato JSON fornisce un accesso programmatico ai nostri report. I risultati sono formattati in HTML se accedi all'API con il tuo browser web, altrimenti viene utilizzato JSON."
+            },
+            {
+              "header": "Punto Finale",
+              "body": "L'API è accessibile all'indirizzo <a href='/ihr/api/'>http://ihr.iijlab.net/ihr/api/</a>, sono disponibili più endpoint, documentati nel <a href ='/ihr/en-us/api'>Documentazione API</a>."
+            },
+            {
+              "header": "Filtraggio",
+              "body": "<p>Puoi filtrare la ricerca aggiungendo parametri nell'URL. Ad esempio: </p><ul> <li> <a href='https://ihr.iijlab.net/ihr/api/network_delay/?asn=174'> https://ihr.iijlab.net/ ihr/api/network_delay/?asn=174 </a> restituisce le modifiche al ritardo solo per AS174. </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712'> https://ihr.iijlab.net/ihr/api/ disco/events/?streamname=20712 </a> restituisce disconnessioni di rete per AS20712. </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR'> https://ihr.iijlab.net/ihr/api/ disco/events/?streamname=IR </a> restituisce disconnessioni di rete in Iran. </li></ul> <p></p> <p>Puoi anche filtrare i risultati utilizzando le disuguaglianze. Aggiungi il suffisso '_gte' e '_lte' per 'maggiore o uguale' e 'minore o uguale'. Ad esempio, <a href='https://ihr.iijlab.net/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00'> https://ihr.iijlab.net/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00 </a> restituisce i risultati della modifica del ritardo per AS174 nel giugno 2017. </p>"
+            },
+            {
+              "header": "Scrittura",
+              "body": "<p>Questo è un esempio Python per recuperare gli ultimi risultati della modifica del ritardo per AS174 a giugno 2017: </p> <pre id='cod'><code>import sys\nimport request\nurl = 'https://ihr .iijlab.net/ihr/api/network_delay/'\nparams={\n 'asn': 174\n 'timebin__gte': '2017-06-01T00:00'\n 'timebin__lte': '2017-07-01T00 :00'} \nresp = request.get(url,params) \nif (resp.ok): \n data = resp.json()\n print(data) \nelse: \n resp.raise_for_status()</ codice></pre>"
+            }
+          ]
+        },
+        "pythonlibrary": {
+          "title": "Libreria Python",
+          "summary": "Per facilitare l'accesso all'API IHR forniamo anche una libreria Python denominata <strong>abondance</strong>.",
+          "description": [
+            {
+              "header": "Installazione",
+              "body": "L'installazione della libreria richiede solo il gestore di pacchetti Python standard, pip. Da un terminale digitare: <pre id='cod'><code>pip install abondance</code></pre>"
+            },
+            {
+              "header": "Esempio:",
+              "body": "Ecco un semplice esempio per recuperare e stampare i risultati delle dipendenze AS per AS2501 il 15 settembre 2018. <pre id='cod'><code>from ihr.hegemony import Hegemony\nhege = Hegemony(originasns=[2501], start= '2018-09-15 00:00', end='2018-09-15 23:59')\nfor r in hege.get_results():\n print(r)</code></pre> Per ulteriori informazioni esempi visita <a href='https://pypi.org/project/abondance/' target='_blank'>https://pypi.org/project/abondance/</a>"
+            },
+            {
+              "header": "",
+              "body": ""
+            },
+            {
+              "header": "",
+              "body": ""
+            },
+            {
+              "header": "",
+              "body": ""
+            }
+          ]
+        },
+        "dumps": {
+          "title": "Discariche giornaliere",
+          "summary": "Per gli utenti che necessitano di un accesso più rapido a più dati IHR, forniamo anche dump giornalieri del database IHR. Fare riferimento a <a href='https://ihr-archive.iijlab.net'> https://ihr-archive.iijlab.net</a>",
+          "description": []
+        },
+        "datapolicy": {
+          "title": "Politica sui dati",
+          "summary": "<p>L'obiettivo di IHR è promuovere la ricerca sulle reti e fornire al pubblico informazioni utili sulle caratteristiche delle reti che costituiscono Internet. I dati IHR vengono forniti 'così come sono', con tutti i difetti, i difetti, i bug e gli errori. IHR non fornisce alcuna garanzia circa l'accuratezza o la completezza dei dati.</p> <p><span xmlns:dct='http://purl.org/dc/terms/' href='http:// purl.org/dc/dcmitype/Dataset' property='dct:title' rel='dct:type'> Internet Health Report</span> è concesso in licenza con <a rel='license' href='http:// creativecommons.org/licenses/by-nc-sa/4.0/'>Licenza internazionale Creative Commons Attribuzione-Non commerciale-Condividi allo stesso modo 4.0</a>. Autorizzazioni che esulano dall'ambito di questa licenza possono essere disponibili all'indirizzo <a xmlns:cc='http://creativecommons.org/ns#' href='admin@ihr.live' rel='cc:morePermissions'>admin@ihr. dal vivo</a>.</p>",
+          "description": []
+        }
+      }
+    }
+  
+  }
 }
