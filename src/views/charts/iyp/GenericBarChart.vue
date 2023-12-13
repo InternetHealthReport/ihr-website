@@ -43,16 +43,50 @@ export default {
   },
   methods: {
     renderChart() {
-      const formattedData = this.formatChartData(this.localChartData)
-      const groupedData = this.groupTopThreeAndExceptAsOthers(formattedData)
 
-      const data = [
-        {
-          x: groupedData.labels,
-          y: groupedData.data,
-          type: 'bar',
-        },
-      ]
+      var data = []
+
+      if( this.config.groupKey ){
+
+        // find all different values for the groupping field
+        var group_values = []
+        this.localChartData.forEach( item => {
+          if(!group_values.includes(item.get(this.config.groupKey))) group_values.push(item.get(this.config.groupKey));
+        })
+
+        console.log( group_values)
+
+        group_values.forEach( group => {
+
+          const filtData = this.localChartData.filter((item) => item.get(this.config.groupKey) == group);
+
+          const formattedData = this.formatChartData(filtData)
+          const groupedData = this.groupTopThreeAndExceptAsOthers(formattedData)
+
+          data.push(
+            {
+              name: group,
+              x: groupedData.labels,
+              y: groupedData.data,
+              type: 'bar',
+            }
+          )
+
+        })
+
+      }
+      else{
+        const formattedData = this.formatChartData(this.localChartData)
+        const groupedData = this.groupTopThreeAndExceptAsOthers(formattedData)
+
+        data.push(
+          {
+            x: groupedData.labels,
+            y: groupedData.data,
+            type: 'bar',
+          }
+        )
+      }
 
       const layout = {
         ...this.chartLayout,

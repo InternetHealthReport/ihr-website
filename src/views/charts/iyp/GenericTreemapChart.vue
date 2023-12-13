@@ -56,7 +56,7 @@ export default {
           parents: formattedData[0].parents,
           values: formattedData[0].values,
           customdata: formattedData[0].extras,
-          branchvalues: 'remainder',
+          branchvalues: 'total',
           textinfo: textinfo,
           hovertemplate: hovertemplate
         },
@@ -161,9 +161,13 @@ export default {
       for(let i=0; i < extras.length; i++){
         let item = extras[i]
 
+        values[i] = item['__sum_value']
+
         item['__percent'] = 100*item['__sum_value']/total.value
         item['__total_child'] = total.child
         item['__total_value'] = total.value
+
+        values[0] = item['__total_value']
 
         if( !leafs[labels[i]]  & labels[i]!=root ){
           if(this.config.show_percent){

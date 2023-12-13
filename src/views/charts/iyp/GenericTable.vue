@@ -23,13 +23,27 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="data">
-          <q-table :data="data" :columns="columns" :filter="filter">
+          <q-table :data="data" :columns="columns" :filter="filter" :pagination="pagination">
+            <template v-slot:header-cell="props">
+              <q-th :props="props">
+                  <q-tooltip v-if='props.col.description' anchor="bottom start" self="bottom start">{{ props.col.description }}</q-tooltip>
+                  {{ props.col.label }}
+              </q-th>
+            </template>
             <template v-slot:top-right>
-              <q-input borderless dense debounce="300" v-model="filter" placeholder="Search">
+              <q-input debounce="300" v-model="filter" placeholder="Search">
                 <template v-slot:append>
                   <q-icon name="search" />
+                <q-tooltip class="bg-accent">Search in the table</q-tooltip>
                 </template>
               </q-input>
+              <q-btn
+                flat rounded
+                icon-right="archive"
+                @click="exportTable"
+                >
+                <q-tooltip class="bg-accent">Download CSV file</q-tooltip>
+              </q-btn>
             </template>
             <template v-slot:body="props">
               <q-tr :props="props">
@@ -55,7 +69,30 @@
 </template>
 
 <script>
+
+import { exportFile } from 'quasar'
+
 const colToUnderline = ['ASN', 'AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC']
+
+function wrapCsvValue (val, formatFn, row) {
+  let formatted = formatFn !== void 0
+    ? formatFn(val, row)
+    : val
+
+  formatted = formatted === void 0 || formatted === null
+    ? ''
+    : String(formatted)
+
+  formatted = formatted.split('"').join('""')
+  /**
+   * Excel accepts \n and \r in strings, but some other CSV parsers do not
+   * Uncomment the next two lines to escape new lines
+   */
+  // .split('\n').join('\\n')
+  // .split('\r').join('\\r')
+
+  return `"${formatted}"`
+}
 
 export default {
   props: {
@@ -75,6 +112,10 @@ export default {
     slotLength: {
       type: Number,
       default: 0,
+    },
+    pagination: {
+      type: Object,
+      default: Object
     },
   },
   data() {
@@ -101,6 +142,32 @@ export default {
   //   },
   // },
   methods: {
+    exportTable () {
+      // naive encoding to csv format
+      const content = [this.columns.map(col => wrapCsvValue(col.label))].concat(
+        this.data.map(row => this.columns.map(col => wrapCsvValue(
+          typeof col.field === 'function'
+            ? col.field(row)
+            : row[ col.field === void 0 ? col.name : col.field ],
+          col.format,
+          row
+        )).join(','))
+      ).join('\r\n')
+
+      const status = exportFile(
+        'table-export.csv',
+        content,
+        'text/csv'
+      )
+
+      if (status !== true) {
+        $q.notify({
+          message: 'Browser denied file download...',
+          color: 'negative',
+          icon: 'warning'
+        })
+      }
+    },
     toUnderline(name) {
       if (colToUnderline.includes(name)) {
         return {
