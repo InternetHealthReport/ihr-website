@@ -3,9 +3,11 @@ import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect, QBtn } from 'qua
 import { ref, computed, inject, onMounted, watch } from 'vue'
 import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
 import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarmsChart.vue'
+import TreeMapAggregatedAlarmsChart from '../charts/TreeMapAggregatedAlarmsChart.vue'
 import { Query, HegemonyAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
 import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
+import { isCountryName } from '@/plugins/countryName'
 
 const ihr_api = inject('ihr_api')
 
@@ -175,6 +177,7 @@ const alarms = ref({
 })
 const aggregatedAttrs = ref({})
 const selectedCountry = ref(null)
+const selectedNetwork = ref(null)
 
 const etlAggregatedAlarmsDataModel = (aggregatedAttrsSelectedFlattend) => {
   aggregatedAlarmsLoadingVal.value = true
@@ -268,7 +271,29 @@ const isLoaded = computed(() => {
 })
 
 const countryClickedHandler = (event) => {
-  selectedCountry.value = event.points[0].text
+  if (event.points) {
+    if (event.points[0].data.type === 'choropleth') {
+      selectedCountry.value = event.points[0].text
+    } else if (event.points[0].data.type === 'treemap') {
+      try {
+        const name = event.points[0].id.split('-')[0]
+        if (isCountryName(name)) {
+          selectedCountry.value = name
+        } else {
+          selectedNetwork.value = event.points[0].id
+        }
+      } catch (error) {
+        resetGranularity()
+      }
+    }
+  } else if (event.node) {
+    const name = event.node.textContent.split('-')[0]
+    if (isCountryName(name)) {
+      selectedCountry.value = name
+    } else {
+      selectedNetwork.value = event.node.textContent
+    }
+  }
 }
 
 const resetGranularity = () => {
@@ -338,14 +363,17 @@ watch(selectedAlarmTypes.value, () => {
             <div class="text-h6 center">{{ selectedCountry ? `Alarms by ASNs over Time for ${selectedCountry}` : 'Alarms for all Countries over Time' }}</div>
           </QCardSection>
           <QCardSection>
-            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" />
+            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
           </QCardSection>
         </QCard>
       </div>
       <div class="card-wrapper">
         <QCard class="IHR_charts-body">
           <QCardSection>
-            <!-- <tree-map-aggregated-alarms :loading="loadingVal" /> -->
+            <div class="text-h6 center">{{ selectedCountry ? `Aggregated Alarms by ASN, Alarm Type, and Severity for ${selectedCountry}` : 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity' }}</div>
+          </QCardSection>
+          <QCardSection>
+            <TreeMapAggregatedAlarmsChart :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
           </QCardSection>
         </QCard>
       </div>

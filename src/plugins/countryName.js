@@ -514,4 +514,8 @@ export default function getCountryName(countryIsoCode2) {
   return isoCountries[countryIsoCode2]
 }
 
-export { isoCountries, countryISOMapping, getCountryName, getCountryISOCode3 }
+function isCountryName(countryName) {
+  return Object.values(isoCountries).includes(countryName)
+}
+
+export { isoCountries, countryISOMapping, getCountryName, getCountryISOCode3, isCountryName }

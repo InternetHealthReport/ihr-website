@@ -1,7 +1,7 @@
 <script setup>
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, computed, watch, onMounted } from 'vue'
-import * as TimeSeriesAggregatedAlarmsDataModel from '@/plugins/models/TimeSeriesAggregatedAlarmsDataModel'
+import * as TreeMapAggregatedAlarmsDataModel from '@/plugins/models/TreeMapAggregatedAlarmsDataModel'
 import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
 
 const props = defineProps({
@@ -26,20 +26,7 @@ const props = defineProps({
 const emits = defineEmits(['country-clicked'])
 
 const layout = ref({
-  // margin: { t: 50, b: 65, l: 40, r: 0 },
-  xaxis: {
-    title: 'Date',
-  },
-  yaxis: {
-    title: 'Number of Alarms',
-  },
-  hovermode: 'closest',
-  showlegend: true,
-  legend: {
-    x: 1,
-    xanchor: 'top',
-    y: 1
-  },
+  margin: { t: 70, b: 0, l: 0, r: 0 },
 })
 const traces = ref([])
 
@@ -55,11 +42,11 @@ const noData = computed(() => {
 
 const init = (alarms, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap) => {
   const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsSelected)
-  const timeSeriesTraces = TimeSeriesAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap)
-  if (!timeSeriesTraces.length) {
+  const treeMapTrace = [TreeMapAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap)]
+  if (!treeMapTrace.length) {
     clearDataViz()
   } else {
-    traces.value = timeSeriesTraces
+    traces.value = treeMapTrace
   }
 }
 
@@ -87,7 +74,7 @@ onMounted(() => {
 <template>
   <div class="IHR_chart">
     <div class="IHR_disco-chart">
-        <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-legend-click="plotlyClickedDataHandler" />
+        <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-click="plotlyClickedDataHandler" />
     </div>
   </div>
 </template>
