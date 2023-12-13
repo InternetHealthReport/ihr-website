@@ -160,7 +160,7 @@ const props = defineProps({
 
 const selectedDataSources = ref({})
 const selectedAlarmTypes = ref({})
-const selectSeveritiesLevels = ref([])
+const selectSeveritiesLevels = ref(SEVERITIED_LEVELS)
 const hegemonyData = ref([])
 const loading = ref(false)
 const aggregatedAlarmsLoadingVal = ref(false)
@@ -234,12 +234,14 @@ const alarmTypeTitlesMap = computed(() => {
 const maxAlarmTypesLength = computed(() => {
   let maxAlarmTypesLength = 0
   for (const dataSourceKey in ALARMS_INFO.metadata.data_sources) {
-    selectedDataSources.value[dataSourceKey] = false
+    selectedDataSources.value[dataSourceKey] = true
     selectedAlarmTypes.value[dataSourceKey] = {}
     const alarmTypes = Object.keys(ALARMS_INFO.metadata.data_sources[dataSourceKey].alarm_types)
     maxAlarmTypesLength = Math.max(maxAlarmTypesLength, alarmTypes.length)
     alarmTypes.forEach(alarm => selectedAlarmTypes.value[dataSourceKey][alarm] = false)
   }
+  selectedAlarmTypes.value['ihr']['hegemony'] = true
+  selectedAlarmTypes.value['ihr']['network_delay'] = true
   return maxAlarmTypesLength
 })
 
@@ -256,10 +258,16 @@ const selectSeveritiesLevelsFilter = () => {
   }
 }
 
+const isLoaded = computed(() => {
+  if (props.hegemonyLoading || props.networkDelayLoading) {
+    return true
+  }
+  return false
+})
+
 watch(selectSeveritiesLevels, () => {
   selectSeveritiesLevelsFilter()
 })
-
 
 watch(selectedAlarmTypes.value, () => {
   Object.keys(selectedAlarmTypes.value).forEach(key => {
@@ -267,15 +275,8 @@ watch(selectedAlarmTypes.value, () => {
   })
   aggregatedAttrsSelected()
   etlAggregatedAlarmsDataModel(aggregatedAttrs.value)
-  // if (!loadingVal.value) {
-  //   etlAggregatedAlarmsDataModel(selectedDataSources.value)
-  // }
 })
 
-onMounted(() => {
-  // console.log(selectedAlarmTypes.value)
-  // selectedAlarmTypes.value.ihr.hegemony = true
-})
 </script>
 
 <template>
@@ -293,14 +294,14 @@ onMounted(() => {
               <tr v-for="(dataSource, indexSource) in ALARMS_INFO.metadata.data_sources" :key="indexSource" class="q-tr--no-hover">
                 <td><QCheckbox v-model="selectedDataSources[indexSource]" disable />{{ dataSource.title }}</td>
                 <td v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types" :key="indexAlarm">
-                  <QCheckbox v-model="selectedAlarmTypes[indexSource][indexAlarm]" />{{ dataAlarm.title }}
+                  <QCheckbox v-model="selectedAlarmTypes[indexSource][indexAlarm]" :disable="isLoaded" />{{ dataAlarm.title }}
                 </td>
                 <td v-for="i in maxAlarmTypesLength - Object.keys(dataSource.alarm_types).length" :key="`empty-cell-${i}`"></td>
               </tr>
             </tbody>
         </QMarkupTable>
         <br />
-        <QSelect outlined multiple v-model="selectSeveritiesLevels" :options="SEVERITIED_LEVELS" label="Severity Levels:" stack-label use-chips/>
+        <QSelect :disable="isLoaded" outlined multiple v-model="selectSeveritiesLevels" :options="SEVERITIED_LEVELS" label="Severity Levels:" stack-label use-chips/>
       </QCardSection>
     </QCard>
 

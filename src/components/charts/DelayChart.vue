@@ -47,7 +47,7 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits(['filteredRows', {
+const emits = defineEmits(['loading', 'filteredRows', {
 'prefix-details': function(event) {
     if (event !== null) {
       return true
@@ -70,6 +70,7 @@ const apiCall = () => {
     .timeInterval(props.startTime, props.endTime)
     .orderedByTime()
   loading.value = true
+  emits('loading', loading.value)
   ihr_api.delay_alarms(
     delayAlarmsFilter,
     result => {
@@ -84,6 +85,7 @@ const apiCall = () => {
       })
       tableData.value = data
       loading.value = false
+      emits('loading', loading.value)
     },
     error => {
       console.error(error) //FIXME do a correct alert

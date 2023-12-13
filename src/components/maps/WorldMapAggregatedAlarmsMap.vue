@@ -1,7 +1,7 @@
 <script setup>
 import { P } from 'plotly.js-dist';
 import ReactiveChart from '../charts/ReactiveChart.vue'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 
 const props = defineProps({
   data: {
@@ -13,6 +13,9 @@ const props = defineProps({
       text: [],
       z: []
     }
+  },
+  loading: {
+    type: Boolean
   }
 })
 
@@ -56,7 +59,6 @@ const traces = ref([
     }
   },
 ])
-const noData = ref('')
 
 const clearDataViz = () => {
   traces.value[0].locations = []
@@ -76,9 +78,19 @@ watch(() => props.data, () => {
   setTraces()
 })
 
+const noData = computed(() => {
+  if (!props.loading && !traces.value[0].locations?.length) {
+    return 'No data to show'
+  } else if (!props.loading) {
+    return false
+  } else {
+    return 'Loading...'
+  }
+})
+
 onMounted(() => {
-  clearDataViz()
-  setTraces()
+  // clearDataViz()
+  // setTraces()
 })
 </script>
 

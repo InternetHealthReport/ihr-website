@@ -32,11 +32,11 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits({
+const emits = defineEmits(['loading', {
   'hegemony-alarms-data-loaded': (data) => {
     return data
   }
-})
+}])
 
 const tableData = ref([])
 const loading = ref(true)
@@ -44,6 +44,7 @@ const loading = ref(true)
 const apiCall = () => {
   const hegemonyAlarmsFilter = new HegemonyAlarmsQuery().deviation(props.minDeviation, Query.GTE).timeInterval(props.startTime, props.endTime)
   loading.value = true
+  emits('loading', loading.value)
   ihr_api.hegemony_alarms(
     hegemonyAlarmsFilter,
     result => {
@@ -53,6 +54,7 @@ const apiCall = () => {
       })
       tableData.value = data
       loading.value = false
+      emits('loading', loading.value)
       emits('hegemony-alarms-data-loaded', data)
     },
     error => {

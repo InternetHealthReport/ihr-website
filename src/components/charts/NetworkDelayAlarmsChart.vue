@@ -37,11 +37,11 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits({
+const emits = defineEmits(['loading', {
   'network-delay-alarms-data-loaded': () => {
     return true
   }
-})
+}])
 
 const tableData = ref([])
 const plot = ref({
@@ -55,6 +55,7 @@ const loading = ref(true)
 const apiCall = () => {
   const networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery().deviation(props.minDeviation, Query.GTE).startPointType(props.selectedType).timeInterval(props.startTime, props.endTime)
   loading.value = true
+  emits('loading', loading.value)
   ihr_api.network_delay_alarms(
     networkDelayAlarmsFilter,
     result => {
@@ -65,6 +66,7 @@ const apiCall = () => {
       tableData.value = data
       loading.value = false
       emits('network-delay-alarms-data-loaded', data)
+      emits('loading', loading.value)
     },
     error => {
       console.error(error) //FIXME do a correct alert

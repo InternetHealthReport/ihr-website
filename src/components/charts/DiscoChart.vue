@@ -35,7 +35,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['filteredRows', {
+const emits = defineEmits(['loading', 'filteredRows', {
   'prefix-details': (event) => {
     if (event !== null) {
       return true
@@ -83,6 +83,7 @@ const apiCall = () => {
     filters = new DiscoEventQuery().streamName(props.streamName).timeInterval(props.startTime, props.endTime).orderedByTime()
   }
   loading.value = true
+  emits('loading', loading.value)
   ihr_api.disco_events(
     filters,
     result => {
@@ -96,6 +97,7 @@ const apiCall = () => {
       dataEvents.value = events
       mapData.value = events
       loading.value = false
+      emits('loading', loading.value)
       // emits('disco-alarms-data-loaded', result.results)
     },
     error => {
