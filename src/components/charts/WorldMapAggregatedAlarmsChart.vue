@@ -20,11 +20,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits({
-  'country-clicked': () => {
-
-  }
-})
+const emits = defineEmits(['country-clicked'])
 
 const worldMapTrace = ref({})
 
@@ -51,6 +47,6 @@ onMounted(() => {
 
 <template>
   <div class="IHR_chart">
-    <WorldMapAggregatedAlarmsMap :data="worldMapTrace" :loading="props.loading" />
+    <WorldMapAggregatedAlarmsMap :data="worldMapTrace" :loading="props.loading" @country-clicked="emits('country-clicked', $event)"/>
   </div>
 </template>

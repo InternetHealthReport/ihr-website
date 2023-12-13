@@ -16,7 +16,7 @@ const props = defineProps({
     type: Object,
   },
   countryName: {
-    type: String,
+    type: String
   },
   alarmTypeTitlesMap: {
     type: Object
@@ -24,8 +24,7 @@ const props = defineProps({
 })
 
 const layout = ref({
-  margin: { t: 50, b: 65, l: 40, r: 0 },
-  title: 'Alarms for all Countries over Time',
+  // margin: { t: 50, b: 65, l: 40, r: 0 },
   xaxis: {
     title: 'Date',
   },
@@ -39,7 +38,6 @@ const layout = ref({
     xanchor: 'top',
     y: 1
   },
-  height: 400
 })
 const traces = ref([])
 
@@ -59,18 +57,19 @@ const init = (alarms, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap) 
   if (!timeSeriesTraces.length) {
     clearDataViz()
   } else {
-    const chartTitle = countryName ? `Alarms by ASNs over Time for ${countryName}` : 'Alarms for all Countries over Time'
     traces.value = timeSeriesTraces
-    layout.value.title = chartTitle
   }
 }
 
 const clearDataViz = () => {
   traces.value = []
-  layout.value.title = 'Alarms for all Countries over Time'
 }
 
 watch(() => props.alarms, () => {
+  init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap)
+})
+
+watch(() => props.countryName, () => {
   init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap)
 })
 

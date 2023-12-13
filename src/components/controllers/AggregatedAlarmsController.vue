@@ -1,5 +1,5 @@
 <script setup>
-import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect } from 'quasar'
+import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect, QBtn } from 'quasar'
 import { ref, computed, inject, onMounted, watch } from 'vue'
 import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
 import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarmsChart.vue'
@@ -174,6 +174,7 @@ const alarms = ref({
   filter: []
 })
 const aggregatedAttrs = ref({})
+const selectedCountry = ref(null)
 
 const etlAggregatedAlarmsDataModel = (aggregatedAttrsSelectedFlattend) => {
   aggregatedAlarmsLoadingVal.value = true
@@ -266,6 +267,14 @@ const isLoaded = computed(() => {
   return false
 })
 
+const countryClickedHandler = (event) => {
+  selectedCountry.value = event.points[0].text
+}
+
+const resetGranularity = () => {
+  selectedCountry.value = null
+}
+
 watch(selectSeveritiesLevels, () => {
   selectSeveritiesLevelsFilter()
 })
@@ -302,11 +311,21 @@ watch(selectedAlarmTypes.value, () => {
             </tbody>
         </QMarkupTable>
         <br />
-        <QSelect :disable="isLoaded" outlined multiple v-model="selectSeveritiesLevels" :options="SEVERITIED_LEVELS" label="Severity Levels:" stack-label use-chips/>
+        <div class="row">
+          <div class="col">
+            <QSelect :disable="isLoaded" outlined multiple v-model="selectSeveritiesLevels" :options="SEVERITIED_LEVELS" label="Severity Levels:" stack-label use-chips/>
+          </div>
+          <div class="col">
+            <QBtn color="primary" class="float-right" @click="resetGranularity()">Reset Granularity</QBtn>
+          </div>
+        </div>
       </QCardSection>
     </QCard>
 
     <QCard class="IHR_charts-body">
+      <QCardSection>
+        <div class="text-h6 center">Aggregated Alarms by Countries</div>
+      </QCardSection>
       <QCardSection>
         <WorldMapAggregatedAlarmsChart :loading="loadingVal" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
       </QCardSection>
@@ -316,7 +335,10 @@ watch(selectedAlarmTypes.value, () => {
       <div class="card-wrapper">
         <QCard class="IHR_charts-body">
           <QCardSection>
-            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :country-name="null" :alarm-type-titles-map="alarmTypeTitlesMap" />
+            <div class="text-h6 center">{{ selectedCountry ? `Alarms by ASNs over Time for ${selectedCountry}` : 'Alarms for all Countries over Time' }}</div>
+          </QCardSection>
+          <QCardSection>
+            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" />
           </QCardSection>
         </QCard>
       </div>

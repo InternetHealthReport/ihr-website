@@ -1,5 +1,5 @@
 <script setup>
-import { P } from 'plotly.js-dist';
+import { COMMON_FEATURE } from '@/plugins/layouts/layoutsChart.js'
 import ReactiveChart from '../charts/ReactiveChart.vue'
 import { ref, onMounted, watch, computed } from 'vue'
 
@@ -19,10 +19,11 @@ const props = defineProps({
   }
 })
 
+const emits = defineEmits(['country-clicked'])
+
 const layout = ref({
+  ...COMMON_FEATURE,
   hovermode: 'closest',
-  margin: { t: 80, b: 10, l: 80, r: 80 },
-  title: 'Aggregated Alarms by Countries',
   geo: {
     showframe: false,
     showcoastlines: false,
@@ -31,7 +32,6 @@ const layout = ref({
     countrycolor: 'rgb(235, 235, 235)',
     showcountries: true,
   },
-  height: 400
 })
 const traces = ref([
   {
@@ -87,6 +87,10 @@ const noData = computed(() => {
     return 'Loading...'
   }
 })
+
+const plotlyClickedDataHandler = (val) => {
+  emits('country-clicked', val)
+}
 
 onMounted(() => {
   // clearDataViz()

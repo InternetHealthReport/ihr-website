@@ -31,10 +31,6 @@ const layout = ref({
     landcolor: 'rgb(215, 215, 215)',
     countrycolor: 'rgb(235, 235, 235)',
     showcountries: true,
-  },
-  margin: {
-    t: 10,
-    b: 10,
   }
 })
 const probes = ref([])
