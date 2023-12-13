@@ -32,11 +32,7 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits(['loading', {
-  'hegemony-alarms-data-loaded': (data) => {
-    return data
-  }
-}])
+const emits = defineEmits(['loading', 'hegemony-alarms-data-loaded'])
 
 const tableData = ref([])
 const loading = ref(true)

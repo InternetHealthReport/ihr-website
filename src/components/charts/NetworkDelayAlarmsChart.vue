@@ -37,11 +37,7 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits(['loading', {
-  'network-delay-alarms-data-loaded': () => {
-    return true
-  }
-}])
+const emits = defineEmits(['loading', 'network-delay-alarms-data-loaded'])
 
 const tableData = ref([])
 const plot = ref({
