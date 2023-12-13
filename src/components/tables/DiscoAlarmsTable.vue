@@ -152,10 +152,10 @@ const msmPrbIds = (probes) => {
         <QTd key="deviation">{{ props.row.avglevel }}</QTd>
         <QTd key="nbdiscoprobes"> {{ props.row.nbdiscoprobes }} </QTd>
       </QTr>
-      <QTr v-show="props.expand" :props="props">
+      <QTr v-if="props.expand" :props="props">
         <QTd colspan="100%" class="IHR_nohover" bordered>
           <div class="text-h3 text-center">Pings from disconnected probes</div>
-          <div v-if="props.expand" class="IHR_side_borders">
+          <div class="IHR_side_borders">
             <Latencymon :start-time="dateHourShift(props.row.starttime, -Math.max(props.row.duration, 120) / 60)"
               :stop-time="dateHourShift(props.row.endtime, Math.max(props.row.duration, 120) / 60)"
               :msm-prb-ids="msmPrbIds(props.row.discoprobes)" style="max-width: 93%; margin: 0 auto" />

@@ -238,10 +238,10 @@ onMounted(() => {
           {{ Math.floor(props.row.nbprobes / props.row.nbalarms) }}
         </QTd>
       </QTr>
-      <QTr v-show="props.expand" :props="props">
+      <QTr v-if="props.expand" :props="props">
         <QTd colspan="100%" class="IHR_nohover" bordered>
           <div class="text-h3 text-center">RTTs of traceroutes crossing reported link</div>
-          <div v-if="props.expand" class="IHR_side_borders">
+          <div class="IHR_side_borders">
             <Latencymon
               :start-time="dateHourShift(props.row.starttime, -6)"
               :stop-time="dateHourShift(props.row.endtime, 6)"

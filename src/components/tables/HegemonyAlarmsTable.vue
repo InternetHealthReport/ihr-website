@@ -208,9 +208,9 @@ onMounted(() => {
         <QTd key="nbalarms">{{ props.row.nbalarms }}</QTd>
         <QTd key="avgdev">{{ (props.row.cumdev / props.row.nbalarms).toFixed(2) }}</QTd>
       </QTr>
-      <QTr v-show="props.expand" :props="props">
+      <QTr v-if="props.expand" :props="props">
         <QTd colspan="100%" class="IHR_nohover" bordered>
-          <div v-if="props.expand" class="IHR_side_borders">
+          <div class="IHR_side_borders">
             <AsInterdependenciesChart :start-time="startTime" :end-time="stopTime" :as-number="props.row.originasn" :fetch="fetch" />
           </div>
         </QTd>

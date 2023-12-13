@@ -124,9 +124,9 @@ const columns = ref([
             {{ props.row.responsibility }}
         </QTd>
       </QTr>
-      <QTr v-show="props.expand" :props="props">
+      <QTr v-if="props.expand" :props="props">
         <QTd colspan="100%" class="IHR_nohover" bordered>
-          <div v-if="props.expand" class="IHR_side_borders">
+          <div class="IHR_side_borders">
             <Tracemon 
               :start-time="dateHourShift(props.row.timebin, -1)"
               :end-time="dateHourShift(props.row.timebin, 1)"

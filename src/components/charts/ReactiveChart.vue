@@ -1,6 +1,6 @@
 <script setup>
 import Plotly from 'plotly.js-dist'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import { uid } from 'quasar'
 
 const props = defineProps({
@@ -84,7 +84,7 @@ const relayout = () => {
   Plotly.relayout(myId.value, {})
 }
 
-onMounted(() => {
+const init = () => {
   const graphDiv = myId.value
   Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
     responsive: true,
@@ -118,14 +118,18 @@ onMounted(() => {
   })
 
   created.value = true
+}
+
+onMounted(() => {
+  init()
 })
 
 watch(() => props.traces, () => {
   react()
-},{deep: true})
-watch(() => props.layout, () => {
-  react()
-},{deep: true})
+}, {deep: true})
+// watch(() => props.layout, () => {
+//   react()
+// })
 watch(() => props.yMax, (newValue) => {
   const graphDiv = myId.value
   Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
