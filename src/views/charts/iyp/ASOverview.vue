@@ -35,7 +35,6 @@
                       item.get('domainName')
                     }}</a>
                   </div>
-                  <p v-else>No results found.</p>
                 </div>
               </div>
               <div class="col-12 col-md-2">

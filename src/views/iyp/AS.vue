@@ -82,7 +82,7 @@
               :cypher-query="sections.upstreams.query"
               :slot-length="1"
             >
-            <GenericBarChart v-if="sections.upstreams.data.length > 0" :chart-data="sections.upstreams.data" :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}' :config="{key:'asn', value:'hegemony_score' , xlabel_prefix:'AS'}"/>
+            <GenericBarChart v-if="sections.upstreams.data.length > 0" :chart-data="sections.upstreams.data" :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}' :config="{key:'asn', groupKey:'af', value:'hegemony_score' , xlabel_prefix:'AS'}"/>
              <!--  <GenericTreemapChart
                 v-if="dependings.length > 0"
                 :chart-data="dependings"
@@ -145,7 +145,7 @@
               <GenericTreemapChart
                 v-if="sections.domains.data.length > 0"
                 :chart-data="sections.domains.data"
-                :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: this.pageTitle, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<extra></extra>' }"
+                :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: this.pageTitle, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: #%{customdata.rank}<extra></extra>' }"
               />
             </GenericTable>
           </q-card>
@@ -171,7 +171,7 @@
                 v-if="sections.atlas.data.length > 0"
                 :chart-data="sections.atlas.data"
                 :chart-layout="{ title: 'RIPE Atlas probes per prefix' }"
-                :config="{ keys: ['af', 'prefix', 'id'],  root: this.pageTitle, show_percent: true}"
+                :config="{ keys: ['af', 'prefix', 'id'],  root: this.pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} probes<extra></extra>' }"
                 />
             </GenericTable>
           </q-card>

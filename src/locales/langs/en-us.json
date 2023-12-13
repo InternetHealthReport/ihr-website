@@ -317,6 +317,10 @@
       }
     },
     "country": {
+      "rankings": {
+        "title": "AS Rankings",
+        "caption": "Top ASes in "
+      },
       "ases": {
         "title": "Autonomous Systems",
         "caption": "ASes registered with organization in "

@@ -71,7 +71,7 @@
               :cypher-query="sections.upstreams.query"
               :slot-length="1"
             >
-            <GenericBarChart v-if="sections.upstreams.data.length > 0" :chart-data="sections.upstreams.data"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}' :config="{key:'asn', value:'hege' , xlabel_prefix:'AS'}"/>
+            <GenericBarChart v-if="sections.upstreams.data.length > 0" :chart-data="sections.upstreams.data"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}' :config="{key:'asn', groupKey: 'af', value:'hege' , xlabel_prefix:'AS'}"/>
             </GenericTable>
           </q-card>
         </q-expansion-item>
@@ -201,10 +201,10 @@ export default {
           show: false,
           loading: true,
           query: `MATCH (p:Prefix {prefix: $prefix})-[dep:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name)
-            OPTIONAL MATCH (a)-[:COUNTRY]-(c:Country)
+            OPTIONAL MATCH (a)-[:COUNTRY {reference_org:'NRO'}]-(c:Country)
             RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name, 100*dep.hege AS hege `,
           columns: [
-            { name: 'CC', label: 'CC', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
+            { name: 'Reg. Country', label: 'Reg. Country', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true, description: 'Country code of the organization for which the ASN is registered for. (Delegated Stat.)' },
             { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
             { name: 'Name', label: 'AS Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
           ]
