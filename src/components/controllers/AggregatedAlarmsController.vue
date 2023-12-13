@@ -168,7 +168,10 @@ const thirdPartyAlarmsStates = ref({
   grip: { downloading: false, data: null },
   ioda: { downloading: false, data: null }
 })
-const alarms = ref([])
+const alarms = ref({
+  raw: [],
+  filter: []
+})
 const aggregatedAttrs = ref({})
 
 const etlAggregatedAlarmsDataModel = (aggregatedAttrsSelectedFlattend) => {
@@ -183,29 +186,13 @@ const etlAggregatedAlarmsDataModel = (aggregatedAttrsSelectedFlattend) => {
     props.startTime,
     props.endTime
   ).then((data) => {
-    alarms.value = data
-    // console.log(data)
+    alarms.value.raw = data
+    selectSeveritiesLevelsFilter()
     aggregatedAlarmsLoadingVal.value = false
   }).catch((error) => {
     console.error(error)
   })
 }
-
-// const isDataSourceSelected = (dataSourceObj, alarmTypesFilter) => {
-//   console.log(dataSourceObj, alarmTypesFilter)
-//   const alarmTypes = Object.keys(dataSourceObj.alarm_types)
-//   const isDataSourceSelected = alarmTypes.some((alarmType) => alarmTypesFilter[alarmType] === true)
-//   return isDataSourceSelected
-// }
-
-// const dataSourcesSelected = computed(() => {
-//   const dataSourcesSelected = {}
-//   const { data_sources: dataSources } = ALARMS_INFO.metadata
-//   for (const dataSource in dataSources) {
-//     dataSourcesSelected[dataSource] = isDataSourceSelected(dataSources[dataSource], selectedAlarmTypes.value)
-//   }
-//   return dataSourcesSelected
-// })
 
 const aggregatedAttrsSelected = () => {
   aggregatedAttrs.value = { counts: {}, timebins: {}, severities: {} }
@@ -260,12 +247,17 @@ const loadingVal = computed(() => {
   return props.hegemonyLoading || props.networkDelayLoading || aggregatedAlarmsLoadingVal.value
 })
 
-watch(alarms, () => {
-  // const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrs.value.counts)
-  // console.log(aggregatedAttrsZipped)
-  // const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(alarms, selectSeveritiesLevels.value, aggregatedAttrsZipped)
+const selectSeveritiesLevelsFilter = () => {
+  if (!selectSeveritiesLevels.value.length) {
+    alarms.value.filter = []
+  } else{
+    const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(alarms.value.raw, selectSeveritiesLevels.value.map(obj => obj.value))
+    alarms.value.filter = alarmsSeverityFiltered
+  }
+}
 
-  // alarms.value = alarmsSeverityFiltered
+watch(selectSeveritiesLevels, () => {
+  selectSeveritiesLevelsFilter()
 })
 
 
@@ -314,7 +306,7 @@ onMounted(() => {
 
     <QCard class="IHR_charts-body">
       <QCardSection>
-        <WorldMapAggregatedAlarmsChart :loading="loadingVal" :alarms="alarms" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+        <WorldMapAggregatedAlarmsChart :loading="loadingVal" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
       </QCardSection>
     </QCard>
 

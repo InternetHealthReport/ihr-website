@@ -41,6 +41,7 @@ const init = (alarms, alarmCountsSelected, alarmTypeTitlesMap) => {
 
 
 watch(() => props.alarms, () => {
+  // console.log(props.alarms)
   init(props.alarms, props.aggregatedAttrsSelected, props.alarmTypeTitlesMap)
 })
 

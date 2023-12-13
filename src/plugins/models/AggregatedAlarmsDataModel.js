@@ -483,14 +483,21 @@ function extractASNameBetweeParenthese(asNameWithParenthese) {
   return asNameExtracted
 }
 
-export function filterAlarmsBySeverity(alarms, severitiesSelected, aggregatedAttrsZipped) {
-  if (!severitiesSelected.length || !aggregatedAttrsZipped.length) {
+export function filterAlarmsBySeverity(alarms, severitiesSelected) {
+  if (!severitiesSelected.length) {
     return alarms
   }
-
   const filteredAlarms = alarms.map((alarm) => {
-    const filteredAlarm = filterAlarmBySeverity(alarm, severitiesSelected, aggregatedAttrsZipped);
-    return filteredAlarm
+    for (const key in alarm) {
+      if (key.endsWith('_severities') && alarm[key].length) {
+         for (let i=0;  i<severitiesSelected.length; i++) {
+          if (alarm[key].includes(severitiesSelected[i])) {
+            return alarm
+          }
+        }
+      }
+    }
+    return null
   }).filter((alarm) => alarm !== null)
   return filteredAlarms
 }

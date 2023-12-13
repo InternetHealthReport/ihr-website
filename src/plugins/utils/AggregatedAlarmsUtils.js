@@ -27,7 +27,6 @@ export function getKeysWithEmptyListsEndsWithSuffixes(obj, suffixes) {
   let keysValuesWithSuffixes = {}
   for (const suffix of suffixes) {
     const keysValuesWithSuffix = getKeysWithEmptyListsEndsWithSuffix(obj, suffix)
-    // console.log(suffix, obj)
     keysValuesWithSuffixes = { ...keysValuesWithSuffixes, ...keysValuesWithSuffix }
   }
   return keysValuesWithSuffixes
