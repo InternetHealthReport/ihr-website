@@ -64,6 +64,7 @@ const apiCall = () => {
       })
       tableData.value = data
       loading.value = false
+      emits('network-delay-alarms-data-loaded', data)
     },
     error => {
       console.error(error) //FIXME do a correct alert

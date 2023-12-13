@@ -1,0 +1,350 @@
+<script setup>
+import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect } from 'quasar'
+import { ref, computed, inject, onMounted, watch } from 'vue'
+import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
+import { Query, HegemonyAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
+import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
+import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
+
+const ihr_api = inject('ihr_api')
+
+const ALARMS_INFO = {
+  data_sources: {
+    ihr: {
+      hegemony_alarm_counts: [],
+      hegemony_alarm_timebins: [],
+      hegemony_alarm_severities: [],
+      network_delay_alarm_counts: [],
+      network_delay_alarm_timebins: [],
+      network_delay_alarm_severities: []
+    },
+    grip: {
+      moas_alarm_counts: [],
+      moas_alarm_timebins: [],
+      moas_alarm_severities: [],
+      submoas_alarm_counts: [],
+      submoas_alarm_timebins: [],
+      submoas_alarm_severities: [],
+      defcon_alarm_counts: [],
+      defcon_alarm_timebins: [],
+      defcon_alarm_severities: [],
+      edges_alarm_counts: [],
+      edges_alarm_timebins: [],
+      edges_alarm_severities: [],
+    },
+    ioda: {
+      ping_slash24_alarm_counts: [],
+      ping_slash24_alarm_timebins: [],
+      ping_slash24_alarm_severities: [],
+      bgp_alarm_counts: [],
+      bgp_alarm_timebins: [],
+      bgp_alarm_severities: [],
+      ucsd_nt_alarm_counts: [],
+      ucsd_nt_alarm_timebins: [],
+      ucsd_nt_alarm_severities: [],
+    }
+  },
+  metadata: {
+    data_sources: {
+      ihr: {
+        alarm_types: {
+          hegemony: {
+            title: 'AS Dependency',
+            description: 'Routing changes found in AS Dependency data (a.k.a. AS Hegemony).',
+            showHelpModal: false
+          },
+          network_delay: {
+            title: 'Network Delay',
+            description: 'Network delay changes observed in traceroute data.',
+            showHelpModal: false
+          }
+        },
+        title: 'IHR',
+        description: 'Alarms reported by IHR.',
+        showHelpModal: false
+      },
+      grip: {
+        alarm_types: {
+          moas: {
+            title: 'MOAS',
+            description: 'Multi Origin-AS. Prefixes concurently announced in BGP by multiple ASes.',
+            showHelpModal: false
+          },
+          submoas: {
+            title: 'Sub-MOAS',
+            description: 'Sub-prefix MOAS. Sup-prefix announced by a different origin AS.',
+            showHelpModal: false
+          },
+          defcon: {
+            title: 'DEFCON',
+            description: 'Hijack using a more specific prefix on an existing AS path.',
+            showHelpModal: false
+          },
+          edges: {
+            title: 'Fake Path',
+            description: 'Hijack using forged AS paths to legitimate origin AS. (a.k.a. Edges)',
+            showHelpModal: false
+          },
+        },
+        title: 'GRIP',
+        description: "BGP hijacks reported by Georgia Tech's GRIP platform.",
+        showHelpModal: false
+      },
+      ioda: {
+        alarm_types: {
+          ping_slash24: {
+            title: 'Ping',
+            description: 'Data plane outages detected in ping data.',
+            showHelpModal: false
+          },
+          bgp: {
+            title: 'BGP',
+            description: 'Routing outages detected in BGP data.',
+            showHelpModal: false
+          },
+          ucsd_nt: {
+            title: 'UCSD Telescope',
+            description: 'Outages detected with the UCSD network telescope.',
+            showHelpModal: false
+          },
+        },
+        title: 'IODA',
+        description: "Internet outages reported by Georgia Tech's IODA platform",
+        showHelpModal: false
+      }
+    }
+  }
+}
+
+const SEVERITIED_LEVELS = [
+  {
+    label: 'Low',
+    value: 'low'
+  },
+  {
+    label: 'Medium',
+    value: 'medium'
+  },
+  {
+    label: 'High',
+    value: 'high'
+  }
+]
+
+const props = defineProps({
+  startTime: {
+    type: Date,
+    required: true,
+  },
+  endTime: {
+    type: Date,
+    required: true,
+  },
+  hegemonyAlarms: {
+    type: Array,
+    required: true,
+  },
+  networkDelayAlarms: {
+    type: Array,
+    required: true,
+  },
+  hegemonyLoading: {
+    type: Boolean,
+    required: true
+  },
+  networkDelayLoading: {
+    type: Boolean,
+    required: true
+  }
+})
+
+const selectedDataSources = ref({})
+const selectedAlarmTypes = ref({})
+const selectSeveritiesLevels = ref([])
+const hegemonyData = ref([])
+const loading = ref(false)
+const aggregatedAlarmsLoadingVal = ref(false)
+const thirdPartyAlarmsStates = ref({
+  grip: { downloading: false, data: null },
+  ioda: { downloading: false, data: null }
+})
+const alarms = ref([])
+const aggregatedAttrs = ref({})
+
+const etlAggregatedAlarmsDataModel = (aggregatedAttrsSelectedFlattend) => {
+  aggregatedAlarmsLoadingVal.value = true
+  AggregatedAlarmsDataModel.etl(
+    ALARMS_INFO.metadata.data_sources,
+    selectedDataSources.value,
+    aggregatedAttrsSelectedFlattend,
+    props.hegemonyAlarms,
+    props.networkDelayAlarms,
+    thirdPartyAlarmsStates.value,
+    props.startTime,
+    props.endTime
+  ).then((data) => {
+    alarms.value = data
+    // console.log(data)
+    aggregatedAlarmsLoadingVal.value = false
+  }).catch((error) => {
+    console.error(error)
+  })
+}
+
+// const isDataSourceSelected = (dataSourceObj, alarmTypesFilter) => {
+//   console.log(dataSourceObj, alarmTypesFilter)
+//   const alarmTypes = Object.keys(dataSourceObj.alarm_types)
+//   const isDataSourceSelected = alarmTypes.some((alarmType) => alarmTypesFilter[alarmType] === true)
+//   return isDataSourceSelected
+// }
+
+// const dataSourcesSelected = computed(() => {
+//   const dataSourcesSelected = {}
+//   const { data_sources: dataSources } = ALARMS_INFO.metadata
+//   for (const dataSource in dataSources) {
+//     dataSourcesSelected[dataSource] = isDataSourceSelected(dataSources[dataSource], selectedAlarmTypes.value)
+//   }
+//   return dataSourcesSelected
+// })
+
+const aggregatedAttrsSelected = () => {
+  aggregatedAttrs.value = { counts: {}, timebins: {}, severities: {} }
+
+  const alarmTypesSelected = []
+  for (const [alarmType, isSelected] of Object.entries(AggregatedAlarmsUtils.flattenDictionary(Object.values(selectedAlarmTypes.value)))) {
+    if (isSelected) {
+      alarmTypesSelected.push(alarmType)
+    }
+  }
+
+  const allAggergatedAttrs = AggregatedAlarmsUtils.flattenDictionary(Object.values(ALARMS_INFO.data_sources))
+  const aggregatedAttrsFiltered = AggregatedAlarmsUtils.filterDictByPrefixes(allAggergatedAttrs, alarmTypesSelected)
+
+  for (const aggregatedAttr in aggregatedAttrsFiltered) {
+    if (aggregatedAttr.endsWith('counts')) {
+      aggregatedAttrs.value.counts[aggregatedAttr] = []
+    } else if (aggregatedAttr.endsWith('timebins')) {
+      aggregatedAttrs.value.timebins[aggregatedAttr] = []
+    } else if (aggregatedAttr.endsWith('severities')) {
+      aggregatedAttrs.value.severities[aggregatedAttr] = []
+    }
+  }
+}
+
+const alarmTypeTitlesMap = computed(() => {
+  const alarmTypesToTitles = {}
+  const { data_sources: dataSources } = ALARMS_INFO.metadata
+  for (const dataSource in dataSources) {
+    const dataSourceAlarmTypes = dataSources[dataSource].alarm_types
+    for (const dataSourceAlarmTypeKey in dataSourceAlarmTypes) {
+      const dataSourceAlarmTypeTitle = dataSourceAlarmTypes[dataSourceAlarmTypeKey].title
+      alarmTypesToTitles[dataSourceAlarmTypeKey] = dataSourceAlarmTypeTitle
+    }
+  }
+  return alarmTypesToTitles
+})
+
+const maxAlarmTypesLength = computed(() => {
+  let maxAlarmTypesLength = 0
+  for (const dataSourceKey in ALARMS_INFO.metadata.data_sources) {
+    selectedDataSources.value[dataSourceKey] = false
+    selectedAlarmTypes.value[dataSourceKey] = {}
+    const alarmTypes = Object.keys(ALARMS_INFO.metadata.data_sources[dataSourceKey].alarm_types)
+    maxAlarmTypesLength = Math.max(maxAlarmTypesLength, alarmTypes.length)
+    alarmTypes.forEach(alarm => selectedAlarmTypes.value[dataSourceKey][alarm] = false)
+  }
+  return maxAlarmTypesLength
+})
+
+const loadingVal = computed(() => {
+  return props.hegemonyLoading || props.networkDelayLoading || aggregatedAlarmsLoadingVal.value
+})
+
+watch(alarms, () => {
+  // const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrs.value.counts)
+  // console.log(aggregatedAttrsZipped)
+  // const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(alarms, selectSeveritiesLevels.value, aggregatedAttrsZipped)
+
+  // alarms.value = alarmsSeverityFiltered
+})
+
+
+watch(selectedAlarmTypes.value, () => {
+  Object.keys(selectedAlarmTypes.value).forEach(key => {
+    selectedDataSources.value[key] = Object.values(selectedAlarmTypes.value[key]).some(Boolean)
+  })
+  aggregatedAttrsSelected()
+  etlAggregatedAlarmsDataModel(aggregatedAttrs.value)
+  // if (!loadingVal.value) {
+  //   etlAggregatedAlarmsDataModel(selectedDataSources.value)
+  // }
+})
+
+onMounted(() => {
+  // console.log(selectedAlarmTypes.value)
+  // selectedAlarmTypes.value.ihr.hegemony = true
+})
+</script>
+
+<template>
+  <div>
+    <QCard class="IHR_charts-body">
+      <QCardSection>
+        <QMarkupTable flat bordered separator="cell">
+            <thead>
+              <tr>
+                <th>Data Source</th>
+                <th :colspan="maxAlarmTypesLength">Alarm Types</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(dataSource, indexSource) in ALARMS_INFO.metadata.data_sources" :key="indexSource" class="q-tr--no-hover">
+                <td><QCheckbox v-model="selectedDataSources[indexSource]" disable />{{ dataSource.title }}</td>
+                <td v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types" :key="indexAlarm">
+                  <QCheckbox v-model="selectedAlarmTypes[indexSource][indexAlarm]" />{{ dataAlarm.title }}
+                </td>
+                <td v-for="i in maxAlarmTypesLength - Object.keys(dataSource.alarm_types).length" :key="`empty-cell-${i}`"></td>
+              </tr>
+            </tbody>
+        </QMarkupTable>
+        <br />
+        <QSelect outlined multiple v-model="selectSeveritiesLevels" :options="SEVERITIED_LEVELS" label="Severity Levels:" stack-label use-chips/>
+      </QCardSection>
+    </QCard>
+
+    <QCard class="IHR_charts-body">
+      <QCardSection>
+        <WorldMapAggregatedAlarmsChart :loading="loadingVal" :alarms="alarms" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+      </QCardSection>
+    </QCard>
+
+    <div class="card-container">
+      <div class="card-wrapper">
+        <QCard class="IHR_charts-body">
+          <QCardSection>
+            <!-- <time-series-aggregated-alarms :loadingVal="loadingVal" @filter-alarms-by-time="filterAlarmsByTimeHandler" /> -->
+          </QCardSection>
+        </QCard>
+      </div>
+      <div class="card-wrapper">
+        <QCard class="IHR_charts-body">
+          <QCardSection>
+            <!-- <tree-map-aggregated-alarms :loadingVal="loadingVal" /> -->
+          </QCardSection>
+        </QCard>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="stylus" scoped>
+.card-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+.card-wrapper {
+    flex: 1;
+    margin: 10px; /* Adjust the margin as needed */
+}
+</style>

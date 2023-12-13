@@ -11,6 +11,8 @@ import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import DelayChart from '@/components/charts/DelayChart.vue'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN } from '@/plugins/delay'
 import NetworkDelayAlarmsChart from '@/components/charts/NetworkDelayAlarmsChart.vue'
+import AggregatedAlarmsController from '@/components/controllers/AggregatedAlarmsController.vue'
+
 
 const { t } = i18n.global
 
@@ -185,7 +187,7 @@ onMounted(() => {
         <div class="graph-header-div">
           <QItemSection class="graph-header">
             <QItemSection avatar>
-              <QIcon name="fas fa-plug" color="primary" text-color="white" />
+              <QIcon name="fas fa-bell" color="primary" text-color="white" />
             </QItemSection>
 
             <QItemSection>
@@ -198,9 +200,9 @@ onMounted(() => {
           </QItemSection>
         </div>
       </template>
-      <!-- <aggregated-alarms-controller :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
+      <AggregatedAlarmsController :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
         :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony"
-        :networkDelayLoading="loading.networkDelay" /> -->
+        :networkDelayLoading="loading.networkDelay" />
     </QExpansionItem>
     <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
       <template v-slot:header>

@@ -118,21 +118,31 @@ onMounted(() => {
   })
 
   created.value = true
-
-  watch(() => props.traces, () => {
-      react()
-    }, {deep: true}
-  )
-  watch(() => props.layout, () => {
-      react()
-    }, {deep: true}
-  )
-  watch(() => props.yMax, (newValue) => {
-    const graphDiv = myId.value
-    Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-  })
+  react()
+  // watch(() => props.traces, () => {
+  //     react()
+  //   }, {deep: true}
+  // )
+  // watch(() => props.layout, () => {
+  //     react()
+  //   }, {deep: true}
+  // )
+  // watch(() => props.yMax, (newValue) => {
+  //   const graphDiv = myId.value
+  //   Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+  // })
 })
 
+watch(() => props.traces, () => {
+  react()
+},{deep: true})
+watch(() => props.layout, () => {
+  react()
+},{deep: true})
+watch(() => props.yMax, (newValue) => {
+  const graphDiv = myId.value
+  Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+})
 </script>
 
 <template>

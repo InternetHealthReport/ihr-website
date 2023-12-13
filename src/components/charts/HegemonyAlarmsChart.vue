@@ -1,7 +1,6 @@
 <script setup>
 import HegemonyAlarmsTable from '../tables/HegemonyAlarmsTable.vue'
 import { Query, HegemonyAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
-import { HEGEMONY_ALARMS_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import { ref, onMounted, computed, watch, inject } from 'vue'
 
 const ihr_api = inject('ihr_api')
@@ -34,14 +33,10 @@ const props = defineProps({
 })
 
 const emits = defineEmits({
-  'hegemony-alarms-data-loaded': () => {
-    return true
+  'hegemony-alarms-data-loaded': (data) => {
+    return data
   }
 })
-
-let hegemonyAlarmsFilterLocal = new HegemonyAlarmsQuery()
-  .deviation(props.minDeviation, Query.GTE)
-  .timeInterval(props.startTime, props.endTime)
 
 const tableData = ref([])
 const loading = ref(true)
