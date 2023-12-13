@@ -118,19 +118,6 @@ onMounted(() => {
   })
 
   created.value = true
-  react()
-  // watch(() => props.traces, () => {
-  //     react()
-  //   }, {deep: true}
-  // )
-  // watch(() => props.layout, () => {
-  //     react()
-  //   }, {deep: true}
-  // )
-  // watch(() => props.yMax, (newValue) => {
-  //   const graphDiv = myId.value
-  //   Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-  // })
 })
 
 watch(() => props.traces, () => {

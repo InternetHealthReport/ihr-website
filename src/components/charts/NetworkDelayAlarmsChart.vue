@@ -2,6 +2,7 @@
 import NetworkDelayAlarmsTable from '../tables/NetworkDelayAlarmsTable.vue'
 import { Query, NetworkDelayAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { ref, computed, watch, onMounted, inject } from 'vue'
+import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 

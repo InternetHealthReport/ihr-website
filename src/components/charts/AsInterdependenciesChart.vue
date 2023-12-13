@@ -9,6 +9,7 @@ import { useRoute, useRouter } from 'vue-router'
 import ReactiveChart from './ReactiveChart.vue'
 import AsInterdependenciesTable from '../tables/AsInterdependenciesTable.vue'
 import Bgplay from '../ripe/Bgplay.vue'
+import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 

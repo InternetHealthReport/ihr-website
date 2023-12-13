@@ -6,6 +6,7 @@ import { ref, inject, computed, watch, onMounted } from 'vue'
 import { DELAY_AND_FORWARDING_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import DelayAlarmsTable from '../tables/DelayAlarmsTable.vue'
 import ForwardingAlarmsTable from '../tables/ForwardingAlarmsTable.vue'
+import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 

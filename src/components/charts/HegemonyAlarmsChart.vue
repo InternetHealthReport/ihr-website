@@ -2,6 +2,7 @@
 import HegemonyAlarmsTable from '../tables/HegemonyAlarmsTable.vue'
 import { Query, HegemonyAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { ref, onMounted, computed, watch, inject } from 'vue'
+import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 

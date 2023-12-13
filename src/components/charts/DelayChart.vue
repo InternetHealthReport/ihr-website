@@ -5,6 +5,7 @@ import { DELAY_CHART_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import { ref, computed, watch, inject, onMounted } from 'vue'
 import { uid } from 'quasar'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN, DEFAULT_AS_FAMILY } from '@/plugins/delay'
+import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 

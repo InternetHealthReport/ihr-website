@@ -26,7 +26,6 @@ const props = defineProps({
 const emits = defineEmits(['country-clicked'])
 
 const layout = ref({
-  // margin: { t: 50, b: 65, l: 40, r: 0 },
   xaxis: {
     title: 'Date',
   },

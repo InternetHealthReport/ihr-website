@@ -6,6 +6,7 @@ import { HegemonyCountryQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { AS_INTERDEPENDENCIES_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import { ref, onBeforeMount, onMounted, computed, watch, inject } from 'vue'
 import i18n from '@/i18n'
+import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 
