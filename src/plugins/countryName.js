@@ -248,6 +248,8 @@ const isoCountries = {
   ZA: 'South Africa',
   ZM: 'Zambia',
   ZW: 'Zimbabwe',
+  ZZ: 'Unknown or unspecified country',
+  EU: 'European Union'
 }
 
 var countryISOMapping = {
@@ -499,7 +501,9 @@ var countryISOMapping = {
   ZM: 'ZMB',
   ZW: 'ZWE',
   XK: 'XKX',
-  SX: 'SXM'
+  SX: 'SXM',
+  ZZ: 'ZZZ',
+  EU: 'EUE'
 }
 
 function getCountryISOCode3(countryIsoCode2) {

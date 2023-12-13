@@ -2,6 +2,7 @@
 import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect } from 'quasar'
 import { ref, computed, inject, onMounted, watch } from 'vue'
 import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
+import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarmsChart.vue'
 import { Query, HegemonyAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
 import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
@@ -315,14 +316,14 @@ watch(selectedAlarmTypes.value, () => {
       <div class="card-wrapper">
         <QCard class="IHR_charts-body">
           <QCardSection>
-            <!-- <time-series-aggregated-alarms :loadingVal="loadingVal" @filter-alarms-by-time="filterAlarmsByTimeHandler" /> -->
+            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :country-name="null" :alarm-type-titles-map="alarmTypeTitlesMap" />
           </QCardSection>
         </QCard>
       </div>
       <div class="card-wrapper">
         <QCard class="IHR_charts-body">
           <QCardSection>
-            <!-- <tree-map-aggregated-alarms :loadingVal="loadingVal" /> -->
+            <!-- <tree-map-aggregated-alarms :loading="loadingVal" /> -->
           </QCardSection>
         </QCard>
       </div>
