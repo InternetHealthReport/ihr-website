@@ -356,8 +356,8 @@ watch(selectedAlarmTypes.value, () => {
       </QCardSection>
     </QCard>
 
-    <div class="card-container">
-      <div class="card-wrapper">
+    <div class="row">
+      <div class="col">
         <QCard class="IHR_charts-body">
           <QCardSection>
             <div class="text-h6 center">{{ selectedCountry ? `Alarms by ASNs over Time for ${selectedCountry}` : 'Alarms for all Countries over Time' }}</div>
@@ -367,7 +367,7 @@ watch(selectedAlarmTypes.value, () => {
           </QCardSection>
         </QCard>
       </div>
-      <div class="card-wrapper">
+      <div class="col">
         <QCard class="IHR_charts-body">
           <QCardSection>
             <div class="text-h6 center">{{ selectedCountry ? `Aggregated Alarms by ASN, Alarm Type, and Severity for ${selectedCountry}` : 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity' }}</div>
@@ -382,13 +382,4 @@ watch(selectedAlarmTypes.value, () => {
 </template>
 
 <style lang="stylus" scoped>
-.card-container {
-    display: flex;
-    justify-content: space-between;
-  }
-
-.card-wrapper {
-    flex: 1;
-    margin: 10px; /* Adjust the margin as needed */
-}
 </style>

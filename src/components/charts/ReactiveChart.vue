@@ -140,7 +140,7 @@ watch(() => props.yMax, (newValue) => {
   <div>
     <h1 v-if="chartTitle">{{ chartTitle }}</h1>
     <div ref="myId"></div>
-    <div v-show="noData" class="IHR_no-data">
+    <div v-if="noData" class="IHR_no-data">
       <div class="bg-white" style="text-align: center;">{{ noData }}</div>
     </div>
   </div>

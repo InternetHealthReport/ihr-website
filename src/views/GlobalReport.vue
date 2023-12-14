@@ -374,6 +374,8 @@ onMounted(() => {
   align-items center;
   flex-direction column;
 .IHR_charts-body
+  margin-top 10pt
+  margin-right 10pt
   border-radius 20px
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
