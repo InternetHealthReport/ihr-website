@@ -36,7 +36,7 @@ const router = createRouter({
   },
   routes: [
     {
-      path: '/:locale?',
+      path: '/ihr/:locale?',
       meta: { title: 'Internet Health Report' },
       component: RouterView,
       beforeEnter: Tr.routeMiddleware,
@@ -104,7 +104,7 @@ const router = createRouter({
       ]
     },
     {
-      path: '/:pathMatch(.*)',
+      path: '/:pathMatch(.*)*',
       name: 'page-not-found',
       component: PageNotFound
     }

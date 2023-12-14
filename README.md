@@ -50,7 +50,7 @@ npm run build
 npm run lint
 ```
 
-## Set up (TODO: update video)
+## Set up
 Check out our installation video [here](https://youtu.be/mdjMdaLdlfY) for a step-by-step guide on how to install and set up our software
 
 
