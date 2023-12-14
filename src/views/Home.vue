@@ -53,7 +53,7 @@
       <q-card class="IHR_tweets-types">
         <q-card-section class="bg-white text-primary q-pa-sm">
           <div class="text-h2">
-            <q-avatar icon="fab fa-twitter"></q-avatar>
+            <img src="https://logos-world.net/wp-content/uploads/2023/08/X-Logo.png" alt="twitter" style="width: 40px">
             {{ $t('ihrTweets.title') }}
           </div>
         </q-card-section>
