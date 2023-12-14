@@ -73,10 +73,7 @@ const  SIMPLE_MENU = [
   },
 ]
 
-const text = ref('')
 const simpleMenu = ref(SIMPLE_MENU)
-const sidebarOpened = ref(false)
-const loginError = ref(false)
 const leftDrawerOpen = ref(false)
 
 onMounted(() => {
@@ -117,7 +114,7 @@ const checkMenu = () => {
     }
 }
 
-watch(simpleMenu, (newVal, oldVal) => { debounceFunc() })
+watch(simpleMenu, () => { debounceFunc() })
 </script>
 
 <template>

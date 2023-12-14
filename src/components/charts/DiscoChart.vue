@@ -3,13 +3,13 @@ import { DiscoEventQuery } from '@/plugins/IhrApi.js'
 import { ref, inject, watch, onMounted } from 'vue'
 import { DISCO_LAYOUT } from '@/plugins/layouts/layoutsChart.js'
 import { DEFAULT_DISCO_AVG_LEVEL, DEFAULT_MIN_DISCO_DURATION } from '@/plugins/disco.js'
-import i18n from '@/i18n'
+import { useI18n } from 'vue-i18n'
 import DiscoMap from '../maps/DiscoMap.vue'
 import DiscoAlarmsTable from '../tables/DiscoAlarmsTable.vue'
 
 const ihr_api = inject('ihr_api')
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 const props = defineProps({
   minAvgLevel: {

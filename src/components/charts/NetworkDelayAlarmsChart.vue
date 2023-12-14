@@ -1,13 +1,12 @@
 <script setup>
 import NetworkDelayAlarmsTable from '../tables/NetworkDelayAlarmsTable.vue'
-import { Query, NetworkDelayAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
-import { ref, computed, watch, onMounted, inject } from 'vue'
+import { Query, NetworkDelayAlarmsQuery } from '@/plugins/IhrApi'
+import { ref, watch, onMounted, inject } from 'vue'
 import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 
 const DEFAULT_MIN_DEVIATION = 10
-const DEFAULT_AS_FAMILY = AS_FAMILY.v4
 
 const props = defineProps({
   minDeviation: {

@@ -1,12 +1,12 @@
 <script setup>
-import { QList, QExpansionItem, QSeparator, QCard, QCardSection, date } from 'quasar'
+import { QList, QExpansionItem, QSeparator, QCard, QCardSection } from 'quasar'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import report from '@/plugins/report'
-import { ref, inject, computed, watch, nextTick, onMounted, onBeforeMount } from 'vue'
+import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
-import i18n from '@/i18n'
+import { useI18n } from 'vue-i18n'
 import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
@@ -15,7 +15,7 @@ import AsInterdependenciesChart from '@/components/charts/AsInterdependenciesCha
 import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart.vue'
 import DiscoChart from '@/components/charts/DiscoChart.vue'
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 const ihr_api = inject('ihr_api')
 

@@ -3,18 +3,14 @@ import { QExpansionItem, QItemSection, QIcon, QInput, QCard, QCardSection } from
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import HegemonyAlarmsChart from '@/components/charts/HegemonyAlarmsChart.vue'
 import DiscoChart from '@/components/charts/DiscoChart.vue'
-import i18n from '@/i18n'
-import { ref, inject, computed, watch, nextTick, onMounted, onBeforeMount } from 'vue'
+import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import report from '@/plugins/report'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import DelayChart from '@/components/charts/DelayChart.vue'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN } from '@/plugins/delay'
 import NetworkDelayAlarmsChart from '@/components/charts/NetworkDelayAlarmsChart.vue'
 import AggregatedAlarmsController from '@/components/controllers/AggregatedAlarmsController.vue'
-
-
-const { t } = i18n.global
 
 const route = useRoute()
 const router = useRouter()

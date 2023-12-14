@@ -1,13 +1,12 @@
 <script setup>
 import HegemonyAlarmsTable from '../tables/HegemonyAlarmsTable.vue'
-import { Query, HegemonyAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
-import { ref, onMounted, computed, watch, inject } from 'vue'
+import { Query, HegemonyAlarmsQuery } from '@/plugins/IhrApi'
+import { ref, onMounted, watch, inject } from 'vue'
 import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 
 const DEFAULT_MIN_DEVIATION = 10
-const DEFAULT_AS_FAMILY = AS_FAMILY.v4
 
 const props = defineProps({
   minDeviation: {

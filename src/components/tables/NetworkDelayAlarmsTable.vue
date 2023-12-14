@@ -4,12 +4,12 @@ import { ref, onMounted, watch, inject } from 'vue'
 import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import commonTable from '@/plugins/commonTable'
-import i18n from '@/i18n'
+import { useI18n } from 'vue-i18n'
 import NetworkDelayChart from '../charts/NetworkDelayChart.vue'
 
 const ihr_api = inject('ihr_api')
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 const MAX_NETDELAY_PLOTS = 12
 

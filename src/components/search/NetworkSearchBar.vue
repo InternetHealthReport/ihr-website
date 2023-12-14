@@ -3,10 +3,10 @@ import { QSelect, QIcon, QSpinner, QItem, QItemSection } from 'quasar'
 import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
 import { ref, inject, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import i18n from '@/i18n'
+import { useI18n } from 'vue-i18n'
 import Tr from '@/i18n/translation'
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 const ihr_api = inject('ihr_api')
 

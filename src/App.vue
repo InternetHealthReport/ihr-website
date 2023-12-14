@@ -5,7 +5,6 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue'
 
-const text = ref('')
 let scrollPosition = ref(0)
 
 const showScrollTopButton = () => {

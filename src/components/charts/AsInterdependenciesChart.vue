@@ -3,7 +3,7 @@ import { QSpinner, QCard, QCardSection, QBtn, QTabs, QTab, QTabPanels, QTabPanel
 import { ref, inject, onBeforeMount, onMounted, computed, watch, nextTick } from 'vue'
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { AS_INTERDEPENDENCIES_LAYOUT } from '@/plugins/layouts/layoutsChart'
-import i18n from '@/i18n'
+import { useI18n } from 'vue-i18n'
 import ripeApi from '@/plugins/RipeApi'
 import { useRoute, useRouter } from 'vue-router'
 import ReactiveChart from './ReactiveChart.vue'
@@ -13,7 +13,7 @@ import '@/styles/chart.sass'
 
 const ihr_api = inject('ihr_api')
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 const DEFAULT_TRACE = [
   {

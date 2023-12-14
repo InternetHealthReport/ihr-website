@@ -3,9 +3,9 @@ import ReactiveChart from '../charts/ReactiveChart.vue'
 import { COMMON_FEATURE } from '@/plugins/layouts/layoutsChart.js'
 import getCountryName from '@/plugins/countryName'
 import { ref, watch, computed } from 'vue'
-import i18n from '@/i18n'
+import { useI18n } from 'vue-i18n'
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 const props = defineProps({
   events: {

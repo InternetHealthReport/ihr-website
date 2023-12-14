@@ -5,7 +5,7 @@ import Tr from '@/i18n/translation'
 import report from '@/plugins/report'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, computed, watch, nextTick, onMounted, onBeforeMount } from 'vue'
-import i18n from '@/i18n'
+import { useI18n } from 'vue-i18n'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
@@ -15,7 +15,7 @@ import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY } from '@/plugins/IhrApi'
 import CountryHegemonyChart from '../components/charts/CountryHegemonyChart.vue'
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 const ihr_api = inject('ihr_api')
 

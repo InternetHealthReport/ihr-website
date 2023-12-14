@@ -5,9 +5,9 @@ import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
 import commonTable from '@/plugins/commonTable'
-import i18n from '@/i18n'
+import { useI18n } from 'vue-i18n'
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 const ihr_api = inject('ihr_api')
 

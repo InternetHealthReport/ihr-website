@@ -4,6 +4,8 @@ import Latencymon from '../ripe/Latencymon.vue'
 import commonTable from '@/plugins/commonTable'
 import { ref } from 'vue'
 import getCountryName from '@/plugins/countryName'
+import { RouterLink } from 'vue-router'
+import Tr from '@/i18n/translation'
 
 const props = defineProps({
   data: {
@@ -134,14 +136,9 @@ const msmPrbIds = (probes) => {
         </QTd>
         <QTd key="location" align>
           <div v-if="props.row.streamtype == 'asn'">
-            <a @click="
-              thisWindow({
-                name: 'networks',
-                params: { asn: 'AS' + props.row.streamname },
-              })
-              " href="javascript:void(0)">
+            <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS' + props.row.streamname } })">
               AS{{ props.row.streamname }}
-            </a>
+            </RouterLink>
           </div>
           <div v-else>
             {{ getCountryName(props.row.streamname) }}

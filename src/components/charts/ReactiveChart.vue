@@ -1,6 +1,6 @@
 <script setup>
 import Plotly from 'plotly.js-dist'
-import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { uid } from 'quasar'
 
 const props = defineProps({
