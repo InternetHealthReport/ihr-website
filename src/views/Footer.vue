@@ -14,7 +14,7 @@
           <div class="IHR_external-links ">
             <div class="row nowrap justify-evenly ">
               <a href="https://twitter.com/ihr_alerts" class="" target="_blank">
-                <q-icon name="fab fa-twitter-square" class="inline-block" />
+                <img src="@/assets/imgs/x_footer.png" alt="" class="inline-block" style="width: 41px;margin-top:12px;">
               </a>
               <a href="https://github.com/InternetHealthReport" class="" target="_blank">
                 <q-icon name="fab fa-github-square" class="inline-block" />
