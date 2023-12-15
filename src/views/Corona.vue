@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="row toolbox">
-        <div class="offset-10">
+        <div>
           <h3>Toolbox</h3>
           <q-toggle v-model="searchBar" label="Add more destination networks" />
         </div>
@@ -213,8 +213,8 @@ export default {
     visibility hidden
 
 .toolbox
-    margin-right 12pt
-    margin-top 15pt
+    padding 16px
+    justify-content: flex-end
 
 p
     font-size 1.2rem
