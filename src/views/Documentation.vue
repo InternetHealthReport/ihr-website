@@ -207,6 +207,15 @@ const sectionActive = ref('')
         overflow-anchor none
         & > a
           overflow-anchor none
+          word-break break-word
+        & > ul
+          & > li
+            & > a
+              word-break break-word
+        & > p
+          & > a
+            word-break break-word
+
 #cod
       background-color: #e7e9eb
       padding:1em
