@@ -1,7 +1,7 @@
 <script setup>
 import { QSelect, QIcon, QSpinner, QItem, QItemSection } from 'quasar'
 import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
-import { ref, inject, computed } from 'vue'
+import { ref, inject, computed, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Tr from '@/i18n/translation'
@@ -109,6 +109,14 @@ const placeholder = computed(() => {
   }
   return props.labelTxt
 })
+
+const displayValue = computed(() => {
+  if (model.value.type === 'asn') {
+    return `AS${model.value.value} - ${model.value.name}`
+  } else if (model.value.type === 'country') {
+    return `${model.value.name}`
+  }
+})
 </script>
 
 <template>
@@ -125,6 +133,7 @@ const placeholder = computed(() => {
     :bg-color="bg"
     :label-color="label"
     :input-class="input"
+    hide-selected
   >
     <template v-slot:append>
       <div v-if="!loading">

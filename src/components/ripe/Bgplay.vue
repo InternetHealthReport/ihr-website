@@ -97,9 +97,4 @@ onMounted(() => {
 </template>
 
 <style lang="stylus">
-.bgplay
-    overflow hidden
-    padding-top 10000px
-    position relative
-
 </style>

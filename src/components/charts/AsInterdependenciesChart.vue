@@ -735,5 +735,7 @@ onMounted(() => {
 
 <style lang="stylus">
 .bgplay-container
-  overflow: hidden
+    overflow hidden
+    padding-top 0px !important
+    position relative
 </style>
