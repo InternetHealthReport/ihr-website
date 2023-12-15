@@ -4,7 +4,7 @@
       <h1 class="text-center">Network Delays During National Lockdowns</h1>
 
       <div class="row justify-center">
-        <div class="col-6 IHR_description q-pa-lg">
+        <div class="IHR_description q-pa-lg">
           <p>
             As part of the
             <a href="https://labs.ripe.net/Members/becha/hackathons-in-the-time-of-corona" targeet="_blank"
