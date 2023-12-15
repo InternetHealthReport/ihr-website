@@ -2,7 +2,7 @@
   <q-footer elevated primary class="IHR_footer text-white text-center ">
     <div class="IHR_footer_contents">
       <div class="IHR_fsection">
-        <div class="" style="width:360px;max-width: 400px;">
+        <div class="" style="max-width: 400px;">
           <div>
             <router-link :to="{ name: 'home' }">
               <q-btn round dense flat :ripple="false" no-caps>
