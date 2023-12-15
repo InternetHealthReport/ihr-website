@@ -6,7 +6,7 @@ export function etl(alarms, alarmCountsSelected, alarmTypeTitlesMap) {
   addTotalAlarmCountsAttr(alarmCountsByCountry, alarmCountsSelected)
   const worldMapData = getWorldMapData(alarmCountsByCountry)
   const hoverData = getHoverZippedData(worldMapData, alarmCountsSelected)
-  const worldMapTrace = getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected, alarmTypeTitlesMap);
+  const worldMapTrace = getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected, alarmTypeTitlesMap)
   return worldMapTrace
 }
 
@@ -14,16 +14,18 @@ function groupAlarmCountsByCountry(alarms, alarmCountsSelected) {
   const alarmsByCountry = alarms.reduce((result, obj) => {
     const existingEntry = result.find(
       entry =>
-        entry.country_iso_code === obj.country_iso_code &&
-        entry.country_name === obj.country_name
+        entry.asn_country_iso_code2 === obj.asn_country_iso_code2 &&
+        entry.asn_country_iso_code3 === obj.asn_country_iso_code3 &&
+        entry.asn_country === obj.asn_country
     );
 
     if (existingEntry) {
       addAlarmCountsAttr(existingEntry, obj, alarmCountsSelected)
     } else {
       let alarmsInitial = {
-        country_iso_code: obj.country_iso_code,
-        country_name: obj.country_name,
+        asn_country_iso_code2: obj.asn_country_iso_code2,
+        asn_country_iso_code3: obj.asn_country_iso_code3,
+        asn_country: obj.asn_country,
         total_alarm_counts: obj.total_alarm_counts
       }
       addAlarmCountsAttr(alarmsInitial, obj, alarmCountsSelected)
@@ -37,7 +39,7 @@ function groupAlarmCountsByCountry(alarms, alarmCountsSelected) {
 
 function addAlarmCountsAttr(accumulator, current, alarmCountsSelected) {
   for (const alarmCountType of alarmCountsSelected) {
-    accumulator[alarmCountType] = (accumulator[alarmCountType] || 0) + (current[alarmCountType] ? current[alarmCountType].length : 0)
+    accumulator[alarmCountType] = (accumulator[alarmCountType] || 0) + (current[alarmCountType] ? current[alarmCountType].length : 0);
   }
 }
 
@@ -84,9 +86,9 @@ function getHoverZippedData(alarmsData, alarmCountsSelected) {
 function getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected, alarmTypeTitlesMap) {
   let trace = {}
   trace.customdata = hoverData
-  trace.locations = worldMapData['country_iso_code'] ? worldMapData['country_iso_code'] : []
+  trace.locations = worldMapData['asn_country_iso_code3'] ? worldMapData['asn_country_iso_code3'] : []
   trace.z = worldMapData['total_alarm_counts'] ? worldMapData['total_alarm_counts'] : []
-  trace.text = worldMapData['country_name'] ? worldMapData['country_name'] : []
+  trace.text = worldMapData['asn_country'] ? worldMapData['asn_country'] : []
   trace.hovertemplate = getHoverTemplate(alarmCountsSelected, alarmTypeTitlesMap)
   trace = trace.z.every((element) => element === 0) ? {} : trace
   return trace
@@ -95,10 +97,19 @@ function getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected, alarmTyp
 function getHoverTemplate(alarmCountsSelected, alarmTypeTitlesMap) {
   let hoverTemplate = '<b>%{text}</b><br>' + 'Total Number of Alarms: %{z}<br>'
   for (const alarmCountType of alarmCountsSelected) {
-    const alarmType = alarmCountType.split('_alarm_counts')[0]
+    const alarmType = alarmCountType.split('_count')[0]
     const alarmCountTypeTitledCase = `${alarmTypeTitlesMap[alarmType]} Alarm Counts`
     hoverTemplate += `${alarmCountTypeTitledCase}: %{customdata.${alarmCountType}}<br>`
   }
   return hoverTemplate
 }
 
+export function getChartTitle(trace=null, alarms=null){
+  if (!trace) {
+    return 'Alarms by Countries'
+  } else {
+    const alarmCounts = trace.z.reduce((acc, curr) => acc + curr, 0)
+    const chartTitle = `${alarmCounts} Alarms | ${trace.locations.length} Countries | ${alarms.length} ASes`
+    return chartTitle
+  }
+}

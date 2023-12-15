@@ -46,6 +46,7 @@ const apiCall = () => {
     result => {
       let data = []
       result.results.forEach(alarm => {
+        alarm['event_type'] = 'hegemony'
         data.push(alarm)
       })
       tableData.value = data

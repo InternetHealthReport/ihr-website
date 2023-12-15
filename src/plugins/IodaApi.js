@@ -1,22 +1,15 @@
+import * as AggregatedAlarmsUtils from './utils/AggregatedAlarmsUtils'
 import axios from 'axios'
 
-export function getIodaAlarms(iodaAlarmsState, startTime, endTime, timezone='00Z', entityType='asn', ignoreMethods = '*.sarima',) {
+export function getIodaAlarms(startTime, endTime, timezone = ':00Z', entityType = 'asn', ignoreMethods = '*.sarima',) {
   const request = () => {
-    return new Promise((resolve, reject) => {
-      if (iodaAlarmsState.data) {
-        return resolve(iodaAlarmsState.data)
-      }
-      if (!iodaAlarmsState.data && !iodaAlarmsState.downloading) {
-        iodaAlarmsState.downloading = true
-        getIodaAlarmsHelper(startTime, endTime, timezone, entityType, ignoreMethods).then((iodaAlarms) => {
-          iodaAlarmsState.downloading = false
-          iodaAlarmsState.data = iodaAlarms
-          return resolve(iodaAlarmsState.data)
+    return new Promise((resolve, _) => {
+      getIodaAlarmsHelper(startTime, endTime, timezone, entityType, ignoreMethods)
+        .then((iodaAlarmsData) => resolve(iodaAlarmsData))
+        .catch(error => {
+          console.error(error)
+          resolve([])
         })
-          .catch(error => {
-            return reject(error)
-          })
-      }
     })
   }
   return request()
@@ -25,8 +18,8 @@ export function getIodaAlarms(iodaAlarmsState, startTime, endTime, timezone='00Z
 function getIodaAlarmsHelper(startTime, endTime, timezone, entityType, ignoreMethods) {
   const API_URL = 'https://ihr.iijlab.net/proxy/ioda/alerts'
 
-  const startUTCTimeFormatted = startTime.toISOString()
-  const endUTCTimeFormatted = endTime.toISOString()
+  const startUTCTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(startTime, timezone)
+  const endUTCTimeFormatted = AggregatedAlarmsUtils.formatUTCTime(endTime, timezone)
 
   const startUnixTime = Date.parse(startUTCTimeFormatted) / 1000;
   const endUnixTime = Date.parse(endUTCTimeFormatted) / 1000;
@@ -39,11 +32,23 @@ function getIodaAlarmsHelper(startTime, endTime, timezone, entityType, ignoreMet
   const request = async () => {
     return axios.get(API_URL, { params })
       .then((response) => response.data.data)
-      .catch((error) => {
-        console.error(error)
-        return []
-      });
+      .catch((error) => Promise.reject(error));
   };
 
   return request();
+}
+
+export function getIodaEntityInfo(entityType, entityValue, startUnixTime, endUnixTime, sourceParams) {
+  const API_URL = `https://api.ioda.inetintel.cc.gatech.edu/v2/signals/raw/${entityType}/${entityValue}?from=${startUnixTime}&until=${endUnixTime}&sourceParams=${sourceParams}`
+  const request = () => {
+    return new Promise((resolve, reject) => {
+      axios.get(API_URL)
+        .then((response) => {
+          const data = response.data.data.length ? response.data.data[0] : []
+          resolve(data)
+        })
+        .catch((error) => reject(error))
+    })
+  }
+  return request()
 }

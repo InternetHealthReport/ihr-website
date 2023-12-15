@@ -29,10 +29,8 @@ const worldMapTrace = ref({})
 // }
 
 const init = (alarms, alarmCountsSelected, alarmTypeTitlesMap) => {
-  worldMapTrace.value = WorldMapAggregatedAlarmsDataModel.etl(alarms, Object.keys(alarmCountsSelected.counts), alarmTypeTitlesMap)
-  if (worldMapTrace.value.locations) {
-    worldMapTrace.value.locations = worldMapTrace.value.locations.map(val => getCountryISOCode3(val))
-  }
+  // console.log(123,alarms)
+  worldMapTrace.value = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected.counts, alarmTypeTitlesMap)
 }
 
 

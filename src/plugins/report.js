@@ -12,7 +12,7 @@ class DateInterval {
   }
 
   createDateAsUTC(date) {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()))
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59))
   }
 
   setHours() {
@@ -73,7 +73,7 @@ export default function report(defaultTimeRange=null) {
   }
 
   const utcString = (date) => {
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds())).toISOString()
+    return date.toISOString()
   }
 
   return {

@@ -1,5 +1,5 @@
 <script setup>
-import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect, QBtn } from 'quasar'
+import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect, QBtn, QTabs, QTab, QSeparator, QTabPanels, QTabPanel } from 'quasar'
 import { ref, computed, inject, onMounted, watch } from 'vue'
 import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
 import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarmsChart.vue'
@@ -8,10 +8,12 @@ import { Query, HegemonyAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
 import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
 import { isCountryName } from '@/plugins/countryName'
+import AggregatedAlarmsTable from '../tables/AggregatedAlarmsTable.vue'
+import { ALARMS_INFO } from '@/plugins/metadata/AggregatedAlarmsMetadata'
 
 const ihr_api = inject('ihr_api')
 
-const ALARMS_INFO = {
+const ALARMS_INFO_2 = {
   data_sources: {
     ihr: {
       hegemony_alarm_counts: [],
@@ -54,12 +56,16 @@ const ALARMS_INFO = {
           hegemony: {
             title: 'AS Dependency',
             description: 'Routing changes found in AS Dependency data (a.k.a. AS Hegemony).',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'origin_asn',
+            group_by_key_options: { originasn: 'origin_asn', dependency: 'asn' }
           },
           network_delay: {
             title: 'Network Delay',
             description: 'Network delay changes observed in traceroute data.',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'startpoint',
+            group_by_key_options: { source: 'startpoint', destination: 'endpoint' }
           }
         },
         title: 'IHR',
@@ -71,22 +77,30 @@ const ALARMS_INFO = {
           moas: {
             title: 'MOAS',
             description: 'Multi Origin-AS. Prefixes concurently announced in BGP by multiple ASes.',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'asn_attacker',
+            group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' }
           },
           submoas: {
             title: 'Sub-MOAS',
             description: 'Sub-prefix MOAS. Sup-prefix announced by a different origin AS.',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'asn_attacker',
+            group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' }
           },
           defcon: {
             title: 'DEFCON',
             description: 'Hijack using a more specific prefix on an existing AS path.',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'asn_attacker',
+            group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' }
           },
           edges: {
             title: 'Fake Path',
             description: 'Hijack using forged AS paths to legitimate origin AS. (a.k.a. Edges)',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'asn_attacker',
+            group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' }
           },
         },
         title: 'GRIP',
@@ -98,17 +112,23 @@ const ALARMS_INFO = {
           ping_slash24: {
             title: 'Ping',
             description: 'Data plane outages detected in ping data.',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'entity',
+            group_by_key_options: { asn: 'entity' }
           },
           bgp: {
             title: 'BGP',
             description: 'Routing outages detected in BGP data.',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'entity',
+            group_by_key_options: { asn: 'entity' }
           },
           ucsd_nt: {
             title: 'UCSD Telescope',
             description: 'Outages detected with the UCSD network telescope.',
-            showHelpModal: false
+            showHelpModal: false,
+            default_key: 'entity',
+            group_by_key_options: { asn: 'entity' }
           },
         },
         title: 'IODA',
@@ -131,6 +151,17 @@ const SEVERITIED_LEVELS = [
   {
     label: 'High',
     value: 'high'
+  }
+]
+
+const IP_ADDRESS_FAMILIES = [
+  {
+    label: 'IPv4',
+    value: 4
+  },
+  {
+    label: 'IPv6',
+    value: 6
   }
 ]
 
@@ -163,13 +194,19 @@ const props = defineProps({
 
 const selectedDataSources = ref({})
 const selectedAlarmTypes = ref({})
+const selectedAlarmTypesOptions = ref({})
 const selectSeveritiesLevels = ref(SEVERITIED_LEVELS)
+const selectIPAddressFamilies = ref(IP_ADDRESS_FAMILIES)
 const hegemonyData = ref([])
 const loading = ref(false)
 const aggregatedAlarmsLoadingVal = ref(false)
+// const thirdPartyAlarmsStates = ref({
+//   grip: { downloading: false, data: null },
+//   ioda: { downloading: false, data: null }
+// })
 const thirdPartyAlarmsStates = ref({
-  grip: { downloading: false, data: null },
-  ioda: { downloading: false, data: null }
+  grip: null,
+  ioda: null
 })
 const alarms = ref({
   raw: [],
@@ -178,54 +215,61 @@ const alarms = ref({
 const aggregatedAttrs = ref({})
 const selectedCountry = ref(null)
 const selectedNetwork = ref(null)
+const aggregatedAlarmsTab = ref('hegemony')
 
 const etlAggregatedAlarmsDataModel = (aggregatedAttrsSelectedFlattend) => {
   aggregatedAlarmsLoadingVal.value = true
   AggregatedAlarmsDataModel.etl(
-    ALARMS_INFO.metadata.data_sources,
     selectedDataSources.value,
-    aggregatedAttrsSelectedFlattend,
-    props.hegemonyAlarms,
-    props.networkDelayAlarms,
+    ALARMS_INFO,
+    AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypes.value),
+    AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions.value),
+    [props.hegemonyAlarms, props.networkDelayAlarms].flat(),
     thirdPartyAlarmsStates.value,
+    iodaIPAddressFamilies.value,
     props.startTime,
     props.endTime
   ).then((data) => {
     alarms.value.raw = data
-    selectSeveritiesLevelsFilter()
+    selectSeveritiesLevelsAndIPAddressFamiliesFilter()
     aggregatedAlarmsLoadingVal.value = false
   }).catch((error) => {
     console.error(error)
   })
 }
 
+const iodaIPAddressFamilies = computed(() => {
+  const result = {}
+  Object.keys(selectedDataSources.value).forEach(dataSource => {
+    if (dataSource === 'ioda') {
+      Object.keys(selectedAlarmTypes.value[dataSource]).forEach(alarmType => {
+        const ipAddressFamilies = ALARMS_INFO[dataSource].alarm_types[alarmType].metadata.ipAddressFamilies
+        result[alarmType] = Object.entries(ipAddressFamilies).filter((val) => val[1]).map((val) => val[0])
+      })
+    }
+  })
+  return result
+})
+
 const aggregatedAttrsSelected = () => {
-  aggregatedAttrs.value = { counts: {}, timebins: {}, severities: {} }
-
-  const alarmTypesSelected = []
-  for (const [alarmType, isSelected] of Object.entries(AggregatedAlarmsUtils.flattenDictionary(Object.values(selectedAlarmTypes.value)))) {
-    if (isSelected) {
-      alarmTypesSelected.push(alarmType)
+  const aggregatedAttrsSelected = { counts: [], timebins: [], severities: [], ipAddressFamilies: [] }
+  for (const dataSource in selectedDataSources.value) {
+    const alarmTypes = selectedAlarmTypes.value[dataSource]
+    for (const alarmType in alarmTypes) {
+      if (selectedAlarmTypes.value[dataSource][alarmType]) {
+        aggregatedAttrsSelected.counts.push(`${alarmType}_count`)
+        aggregatedAttrsSelected.timebins.push(`${alarmType}_timebin`)
+        aggregatedAttrsSelected.severities.push(`${alarmType}_severity`)
+        aggregatedAttrsSelected.ipAddressFamilies.push(Object.values(ALARMS_INFO[dataSource].alarm_types[alarmType].metadata.group_by_key_options).map((groupByKey) => `${alarmType}_${groupByKey}_af`))
+      }
     }
   }
-
-  const allAggergatedAttrs = AggregatedAlarmsUtils.flattenDictionary(Object.values(ALARMS_INFO.data_sources))
-  const aggregatedAttrsFiltered = AggregatedAlarmsUtils.filterDictByPrefixes(allAggergatedAttrs, alarmTypesSelected)
-
-  for (const aggregatedAttr in aggregatedAttrsFiltered) {
-    if (aggregatedAttr.endsWith('counts')) {
-      aggregatedAttrs.value.counts[aggregatedAttr] = []
-    } else if (aggregatedAttr.endsWith('timebins')) {
-      aggregatedAttrs.value.timebins[aggregatedAttr] = []
-    } else if (aggregatedAttr.endsWith('severities')) {
-      aggregatedAttrs.value.severities[aggregatedAttr] = []
-    }
-  }
+  aggregatedAttrs.value = aggregatedAttrsSelected
 }
 
 const alarmTypeTitlesMap = computed(() => {
   const alarmTypesToTitles = {}
-  const { data_sources: dataSources } = ALARMS_INFO.metadata
+  const { data_sources: dataSources } = ALARMS_INFO_2.metadata
   for (const dataSource in dataSources) {
     const dataSourceAlarmTypes = dataSources[dataSource].alarm_types
     for (const dataSourceAlarmTypeKey in dataSourceAlarmTypes) {
@@ -238,12 +282,14 @@ const alarmTypeTitlesMap = computed(() => {
 
 const maxAlarmTypesLength = computed(() => {
   let maxAlarmTypesLength = 0
-  for (const dataSourceKey in ALARMS_INFO.metadata.data_sources) {
+  for (const dataSourceKey in ALARMS_INFO_2.metadata.data_sources) {
     selectedDataSources.value[dataSourceKey] = true
     selectedAlarmTypes.value[dataSourceKey] = {}
-    const alarmTypes = Object.keys(ALARMS_INFO.metadata.data_sources[dataSourceKey].alarm_types)
+    selectedAlarmTypesOptions.value[dataSourceKey] = {}
+    const alarmTypes = Object.keys(ALARMS_INFO_2.metadata.data_sources[dataSourceKey].alarm_types)
     maxAlarmTypesLength = Math.max(maxAlarmTypesLength, alarmTypes.length)
     alarmTypes.forEach(alarm => selectedAlarmTypes.value[dataSourceKey][alarm] = false)
+    alarmTypes.forEach(alarm => selectedAlarmTypesOptions.value[dataSourceKey][alarm] = ALARMS_INFO_2.metadata.data_sources[dataSourceKey].alarm_types[alarm].default_key)
   }
   selectedAlarmTypes.value['ihr']['hegemony'] = true
   selectedAlarmTypes.value['ihr']['network_delay'] = true
@@ -254,12 +300,13 @@ const loadingVal = computed(() => {
   return props.hegemonyLoading || props.networkDelayLoading || aggregatedAlarmsLoadingVal.value
 })
 
-const selectSeveritiesLevelsFilter = () => {
+const selectSeveritiesLevelsAndIPAddressFamiliesFilter = () => {
   if (!selectSeveritiesLevels.value.length) {
     alarms.value.filter = []
   } else{
-    const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(alarms.value.raw, selectSeveritiesLevels.value.map(obj => obj.value))
-    alarms.value.filter = alarmsSeverityFiltered
+    const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(alarms.value.raw, selectSeveritiesLevels.value.map(obj => obj.value), AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrs.value))
+    const ipAddressFamiliesFiltered = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(alarmsSeverityFiltered, selectIPAddressFamilies.value.map(obj => obj.value), AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrs.value))
+    alarms.value.filter = ipAddressFamiliesFiltered
   }
 }
 
@@ -300,11 +347,41 @@ const resetGranularity = () => {
   selectedCountry.value = null
 }
 
+const getDataSourceFromSelectedAlarmType = (val) => {
+  let selectedKey = null
+  Object.keys(selectedAlarmTypes.value).forEach(keyA => {
+    Object.keys(selectedAlarmTypes.value[keyA]).forEach(keyB => {
+      if (keyB === val) {
+        selectedKey = keyA
+        return
+      }
+    })
+    if (selectedKey) {
+      return
+    }
+  })
+  return selectedKey
+}
+
+
+
 watch(selectSeveritiesLevels, () => {
-  selectSeveritiesLevelsFilter()
+  selectSeveritiesLevelsAndIPAddressFamiliesFilter()
+})
+
+watch(selectIPAddressFamilies, () => {
+  selectSeveritiesLevelsAndIPAddressFamiliesFilter()
 })
 
 watch(selectedAlarmTypes.value, () => {
+  Object.keys(selectedAlarmTypes.value).forEach(key => {
+    selectedDataSources.value[key] = Object.values(selectedAlarmTypes.value[key]).some(Boolean)
+  })
+  aggregatedAttrsSelected()
+  etlAggregatedAlarmsDataModel(aggregatedAttrs.value)
+})
+
+watch(selectedAlarmTypesOptions.value, () => {
   Object.keys(selectedAlarmTypes.value).forEach(key => {
     selectedDataSources.value[key] = Object.values(selectedAlarmTypes.value[key]).some(Boolean)
   })
@@ -326,10 +403,11 @@ watch(selectedAlarmTypes.value, () => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(dataSource, indexSource) in ALARMS_INFO.metadata.data_sources" :key="indexSource" class="q-tr--no-hover">
+              <tr v-for="(dataSource, indexSource) in ALARMS_INFO_2.metadata.data_sources" :key="indexSource" class="q-tr--no-hover">
                 <td><QCheckbox v-model="selectedDataSources[indexSource]" disable />{{ dataSource.title }}</td>
                 <td v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types" :key="indexAlarm">
                   <QCheckbox v-model="selectedAlarmTypes[indexSource][indexAlarm]" :disable="isLoaded" />{{ dataAlarm.title }}
+                  <QSelect filled v-model="selectedAlarmTypesOptions[indexSource][indexAlarm]" :options="Object.values(ALARMS_INFO_2.metadata.data_sources[indexSource].alarm_types[indexAlarm].group_by_key_options)" :disable="isLoaded || !selectedAlarmTypes[indexSource][indexAlarm]" />
                 </td>
                 <td v-for="i in maxAlarmTypesLength - Object.keys(dataSource.alarm_types).length" :key="`empty-cell-${i}`"></td>
               </tr>
@@ -339,6 +417,9 @@ watch(selectedAlarmTypes.value, () => {
         <div class="row">
           <div class="col">
             <QSelect :disable="isLoaded" outlined multiple v-model="selectSeveritiesLevels" :options="SEVERITIED_LEVELS" label="Severity Levels:" stack-label use-chips/>
+          </div>
+          <div class="col">
+            <QSelect :disable="isLoaded" outlined multiple v-model="selectIPAddressFamilies" :options="IP_ADDRESS_FAMILIES" label="IP Address Families:" stack-label use-chips/>
           </div>
           <div class="col">
             <QBtn color="primary" class="float-right" @click="resetGranularity()">Reset Granularity</QBtn>
@@ -378,6 +459,18 @@ watch(selectedAlarmTypes.value, () => {
         </QCard>
       </div>
     </div>
+    <QCard>
+      <QTabs v-model="aggregatedAlarmsTab">
+        <QTab v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap" :key="indexAlarmTypeTitlesMap" :label="dataAlarmTypeTitlesMap" :name="indexAlarmTypeTitlesMap" />
+      </QTabs>
+      <QSeparator />
+      <QTabPanels v-model="aggregatedAlarmsTab">
+        <QTabPanel v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap" :key="indexAlarmTypeTitlesMap" :name="indexAlarmTypeTitlesMap">
+          {{ selectedAlarmTypes }}
+          <!-- <AggregatedAlarmsTable :severities-selected-list="selectSeveritiesLevels.map(obj => obj.value)" :selected-table-data-source="getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)" :selected-table-alarm-type="indexAlarmTypeTitlesMap" :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" /> -->
+        </QTabPanel>
+      </QTabPanels>
+    </QCard>
   </div>
 </template>
 

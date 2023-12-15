@@ -57,6 +57,7 @@ const apiCall = () => {
     result => {
       let data = []
       result.results.forEach(alarm => {
+        alarm['event_type'] = 'network_delay'
         data.push(alarm)
       })
       tableData.value = data
