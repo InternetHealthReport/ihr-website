@@ -20,6 +20,9 @@ const props = defineProps({
   },
   alarmTypeTitlesMap: {
     type: Object
+  },
+  networkName: {
+    type: String
   }
 })
 
@@ -40,9 +43,9 @@ const noData = computed(() => {
   }
 })
 
-const init = (alarms, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap) => {
+const init = (alarms, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap, networkName, isASGranularity) => {
   const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsSelected)
-  const treeMapTrace = [TreeMapAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap)]
+  const treeMapTrace = [TreeMapAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap, networkName, isASGranularity)]
   if (!treeMapTrace.length) {
     clearDataViz()
   } else {
@@ -64,6 +67,14 @@ watch(() => props.alarms, () => {
 
 watch(() => props.countryName, () => {
   init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap)
+})
+
+watch(() => props.networkName, () => {
+  if (props.networkName) {
+    init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.networkName, true)
+  } else {
+    init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap)
+  }
 })
 
 onMounted(() => {

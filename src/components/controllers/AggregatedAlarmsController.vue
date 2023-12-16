@@ -13,132 +13,6 @@ import { ALARMS_INFO } from '@/plugins/metadata/AggregatedAlarmsMetadata'
 
 const ihr_api = inject('ihr_api')
 
-const ALARMS_INFO_2 = {
-  data_sources: {
-    ihr: {
-      hegemony_alarm_counts: [],
-      hegemony_alarm_timebins: [],
-      hegemony_alarm_severities: [],
-      network_delay_alarm_counts: [],
-      network_delay_alarm_timebins: [],
-      network_delay_alarm_severities: []
-    },
-    grip: {
-      moas_alarm_counts: [],
-      moas_alarm_timebins: [],
-      moas_alarm_severities: [],
-      submoas_alarm_counts: [],
-      submoas_alarm_timebins: [],
-      submoas_alarm_severities: [],
-      defcon_alarm_counts: [],
-      defcon_alarm_timebins: [],
-      defcon_alarm_severities: [],
-      edges_alarm_counts: [],
-      edges_alarm_timebins: [],
-      edges_alarm_severities: [],
-    },
-    ioda: {
-      ping_slash24_alarm_counts: [],
-      ping_slash24_alarm_timebins: [],
-      ping_slash24_alarm_severities: [],
-      bgp_alarm_counts: [],
-      bgp_alarm_timebins: [],
-      bgp_alarm_severities: [],
-      ucsd_nt_alarm_counts: [],
-      ucsd_nt_alarm_timebins: [],
-      ucsd_nt_alarm_severities: [],
-    }
-  },
-  metadata: {
-    data_sources: {
-      ihr: {
-        alarm_types: {
-          hegemony: {
-            title: 'AS Dependency',
-            description: 'Routing changes found in AS Dependency data (a.k.a. AS Hegemony).',
-            showHelpModal: false,
-            default_key: 'origin_asn',
-            group_by_key_options: { originasn: 'origin_asn', dependency: 'asn' }
-          },
-          network_delay: {
-            title: 'Network Delay',
-            description: 'Network delay changes observed in traceroute data.',
-            showHelpModal: false,
-            default_key: 'startpoint',
-            group_by_key_options: { source: 'startpoint', destination: 'endpoint' }
-          }
-        },
-        title: 'IHR',
-        description: 'Alarms reported by IHR.',
-        showHelpModal: false
-      },
-      grip: {
-        alarm_types: {
-          moas: {
-            title: 'MOAS',
-            description: 'Multi Origin-AS. Prefixes concurently announced in BGP by multiple ASes.',
-            showHelpModal: false,
-            default_key: 'asn_attacker',
-            group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' }
-          },
-          submoas: {
-            title: 'Sub-MOAS',
-            description: 'Sub-prefix MOAS. Sup-prefix announced by a different origin AS.',
-            showHelpModal: false,
-            default_key: 'asn_attacker',
-            group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' }
-          },
-          defcon: {
-            title: 'DEFCON',
-            description: 'Hijack using a more specific prefix on an existing AS path.',
-            showHelpModal: false,
-            default_key: 'asn_attacker',
-            group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' }
-          },
-          edges: {
-            title: 'Fake Path',
-            description: 'Hijack using forged AS paths to legitimate origin AS. (a.k.a. Edges)',
-            showHelpModal: false,
-            default_key: 'asn_attacker',
-            group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' }
-          },
-        },
-        title: 'GRIP',
-        description: "BGP hijacks reported by Georgia Tech's GRIP platform.",
-        showHelpModal: false
-      },
-      ioda: {
-        alarm_types: {
-          ping_slash24: {
-            title: 'Ping',
-            description: 'Data plane outages detected in ping data.',
-            showHelpModal: false,
-            default_key: 'entity',
-            group_by_key_options: { asn: 'entity' }
-          },
-          bgp: {
-            title: 'BGP',
-            description: 'Routing outages detected in BGP data.',
-            showHelpModal: false,
-            default_key: 'entity',
-            group_by_key_options: { asn: 'entity' }
-          },
-          ucsd_nt: {
-            title: 'UCSD Telescope',
-            description: 'Outages detected with the UCSD network telescope.',
-            showHelpModal: false,
-            default_key: 'entity',
-            group_by_key_options: { asn: 'entity' }
-          },
-        },
-        title: 'IODA',
-        description: "Internet outages reported by Georgia Tech's IODA platform",
-        showHelpModal: false
-      }
-    }
-  }
-}
-
 const SEVERITIED_LEVELS = [
   {
     label: 'Low',
@@ -217,7 +91,7 @@ const selectedCountry = ref(null)
 const selectedNetwork = ref(null)
 const aggregatedAlarmsTab = ref('hegemony')
 
-const etlAggregatedAlarmsDataModel = (aggregatedAttrsSelectedFlattend) => {
+const etlAggregatedAlarmsDataModel = () => {
   aggregatedAlarmsLoadingVal.value = true
   AggregatedAlarmsDataModel.etl(
     selectedDataSources.value,
@@ -269,11 +143,10 @@ const aggregatedAttrsSelected = () => {
 
 const alarmTypeTitlesMap = computed(() => {
   const alarmTypesToTitles = {}
-  const { data_sources: dataSources } = ALARMS_INFO_2.metadata
-  for (const dataSource in dataSources) {
-    const dataSourceAlarmTypes = dataSources[dataSource].alarm_types
+  for (const dataSource in ALARMS_INFO) {
+    const dataSourceAlarmTypes = ALARMS_INFO[dataSource].alarm_types
     for (const dataSourceAlarmTypeKey in dataSourceAlarmTypes) {
-      const dataSourceAlarmTypeTitle = dataSourceAlarmTypes[dataSourceAlarmTypeKey].title
+      const dataSourceAlarmTypeTitle = dataSourceAlarmTypes[dataSourceAlarmTypeKey].metadata.title
       alarmTypesToTitles[dataSourceAlarmTypeKey] = dataSourceAlarmTypeTitle
     }
   }
@@ -282,14 +155,14 @@ const alarmTypeTitlesMap = computed(() => {
 
 const maxAlarmTypesLength = computed(() => {
   let maxAlarmTypesLength = 0
-  for (const dataSourceKey in ALARMS_INFO_2.metadata.data_sources) {
+  for (const dataSourceKey in ALARMS_INFO) {
     selectedDataSources.value[dataSourceKey] = true
     selectedAlarmTypes.value[dataSourceKey] = {}
     selectedAlarmTypesOptions.value[dataSourceKey] = {}
-    const alarmTypes = Object.keys(ALARMS_INFO_2.metadata.data_sources[dataSourceKey].alarm_types)
+    const alarmTypes = Object.keys(ALARMS_INFO[dataSourceKey].alarm_types)
     maxAlarmTypesLength = Math.max(maxAlarmTypesLength, alarmTypes.length)
     alarmTypes.forEach(alarm => selectedAlarmTypes.value[dataSourceKey][alarm] = false)
-    alarmTypes.forEach(alarm => selectedAlarmTypesOptions.value[dataSourceKey][alarm] = ALARMS_INFO_2.metadata.data_sources[dataSourceKey].alarm_types[alarm].default_key)
+    alarmTypes.forEach(alarm => selectedAlarmTypesOptions.value[dataSourceKey][alarm] = ALARMS_INFO[dataSourceKey].alarm_types[alarm].metadata.default_key)
   }
   selectedAlarmTypes.value['ihr']['hegemony'] = true
   selectedAlarmTypes.value['ihr']['network_delay'] = true
@@ -340,11 +213,18 @@ const countryClickedHandler = (event) => {
     } else {
       selectedNetwork.value = event.node.textContent
     }
+  } else if (event.type === 'button') {
+    if (isCountryName(event.target)) {
+      selectedCountry.value = event.target
+    } else {
+      selectedNetwork.value = event.target
+    }
   }
 }
 
 const resetGranularity = () => {
   selectedCountry.value = null
+  selectedNetwork.value = null
 }
 
 const getDataSourceFromSelectedAlarmType = (val) => {
@@ -363,8 +243,6 @@ const getDataSourceFromSelectedAlarmType = (val) => {
   return selectedKey
 }
 
-
-
 watch(selectSeveritiesLevels, () => {
   selectSeveritiesLevelsAndIPAddressFamiliesFilter()
 })
@@ -378,7 +256,7 @@ watch(selectedAlarmTypes.value, () => {
     selectedDataSources.value[key] = Object.values(selectedAlarmTypes.value[key]).some(Boolean)
   })
   aggregatedAttrsSelected()
-  etlAggregatedAlarmsDataModel(aggregatedAttrs.value)
+  etlAggregatedAlarmsDataModel()
 })
 
 watch(selectedAlarmTypesOptions.value, () => {
@@ -386,7 +264,7 @@ watch(selectedAlarmTypesOptions.value, () => {
     selectedDataSources.value[key] = Object.values(selectedAlarmTypes.value[key]).some(Boolean)
   })
   aggregatedAttrsSelected()
-  etlAggregatedAlarmsDataModel(aggregatedAttrs.value)
+  etlAggregatedAlarmsDataModel()
 })
 
 </script>
@@ -403,11 +281,11 @@ watch(selectedAlarmTypesOptions.value, () => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(dataSource, indexSource) in ALARMS_INFO_2.metadata.data_sources" :key="indexSource" class="q-tr--no-hover">
-                <td><QCheckbox v-model="selectedDataSources[indexSource]" disable />{{ dataSource.title }}</td>
+              <tr v-for="(dataSource, indexSource) in ALARMS_INFO" :key="indexSource" class="q-tr--no-hover">
+                <td><QCheckbox v-model="selectedDataSources[indexSource]" disable />{{ dataSource.metadata.title }}</td>
                 <td v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types" :key="indexAlarm">
-                  <QCheckbox v-model="selectedAlarmTypes[indexSource][indexAlarm]" :disable="isLoaded" />{{ dataAlarm.title }}
-                  <QSelect filled v-model="selectedAlarmTypesOptions[indexSource][indexAlarm]" :options="Object.values(ALARMS_INFO_2.metadata.data_sources[indexSource].alarm_types[indexAlarm].group_by_key_options)" :disable="isLoaded || !selectedAlarmTypes[indexSource][indexAlarm]" />
+                  <QCheckbox v-model="selectedAlarmTypes[indexSource][indexAlarm]" :disable="isLoaded" />{{ dataAlarm.metadata.title }}
+                  <QSelect filled v-model="selectedAlarmTypesOptions[indexSource][indexAlarm]" :options="Object.values(ALARMS_INFO[indexSource].alarm_types[indexAlarm].metadata.group_by_key_options)" :disable="isLoaded || !selectedAlarmTypes[indexSource][indexAlarm]" />
                 </td>
                 <td v-for="i in maxAlarmTypesLength - Object.keys(dataSource.alarm_types).length" :key="`empty-cell-${i}`"></td>
               </tr>
@@ -444,7 +322,7 @@ watch(selectedAlarmTypesOptions.value, () => {
             <div class="text-h6 center">{{ selectedCountry ? `Alarms by ASNs over Time for ${selectedCountry}` : 'Alarms for all Countries over Time' }}</div>
           </QCardSection>
           <QCardSection>
-            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :network-name="selectedNetwork" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
           </QCardSection>
         </QCard>
       </div>
@@ -454,7 +332,7 @@ watch(selectedAlarmTypesOptions.value, () => {
             <div class="text-h6 center">{{ selectedCountry ? `Aggregated Alarms by ASN, Alarm Type, and Severity for ${selectedCountry}` : 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity' }}</div>
           </QCardSection>
           <QCardSection>
-            <TreeMapAggregatedAlarmsChart :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+            <TreeMapAggregatedAlarmsChart :loading="loadingVal" :network-name="selectedNetwork" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
           </QCardSection>
         </QCard>
       </div>
@@ -466,8 +344,7 @@ watch(selectedAlarmTypesOptions.value, () => {
       <QSeparator />
       <QTabPanels v-model="aggregatedAlarmsTab">
         <QTabPanel v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap" :key="indexAlarmTypeTitlesMap" :name="indexAlarmTypeTitlesMap">
-          {{ selectedAlarmTypes }}
-          <!-- <AggregatedAlarmsTable :severities-selected-list="selectSeveritiesLevels.map(obj => obj.value)" :selected-table-data-source="getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)" :selected-table-alarm-type="indexAlarmTypeTitlesMap" :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" /> -->
+          <AggregatedAlarmsTable :table-key-current="AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions)[indexAlarmTypeTitlesMap]" :severities-selected-list="selectSeveritiesLevels.map(obj => obj.value)" :selected-table-data-source="getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)" :selected-table-alarm-type="indexAlarmTypeTitlesMap" :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
         </QTabPanel>
       </QTabPanels>
     </QCard>

@@ -34,8 +34,14 @@ export default function commonTable(props, ctx) {
     return res
   }
 
+  const setRows = (newData) => {
+    rows.value = newData
+  }
+
   watch(filteredRows, (newValue) => {
-    ctx.emit('filteredRows', [filterTable.value, newValue])
+    if (ctx.emit && ctx.emit.filteredRows) {
+      ctx.emit('filteredRows', [filterTable.value, newValue])
+    }
   })
   watch(filterTable, (newValue) => {
     if (newValue == "") filteredRows.value = rows.value
@@ -57,5 +63,6 @@ export default function commonTable(props, ctx) {
     getCellValue,
     filterFct,
     dateHourShift,
+    setRows
   }
 }

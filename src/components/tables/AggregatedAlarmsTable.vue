@@ -1,103 +1,14 @@
 <script setup>
-import { QTable } from 'quasar'
+import { QTable, QTr, QTd, QToggle, QBtn } from 'quasar'
 import * as TableAggregatedAlarmsDataModel  from '@/plugins/models/TableAggregatedAlarmsDataModel'
 import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, inject } from 'vue'
+import { ALARMS_INFO } from '@/plugins/metadata/AggregatedAlarmsMetadata'
+import commonTable from '@/plugins/commonTable'
+import { RouterLink } from 'vue-router'
+import Tr from '@/i18n/translation'
 
-const COLUMNS_DATA = {
-  hegemony: [
-    { name: 'overview', label: 'Overview', align: 'center' },
-    { name: 'asn_overview', label: 'Neighbor Dependency Overview', align: 'center' },
-    { name: 'origin_asn', required: true, label: 'Origin AS', align: 'left', field: row => row.origin_asn, format: val => `${val}`, sortable: true },
-    { name: 'origin_asn_name', required: true, label: 'Origin AS Name', align: 'left', field: row => row.origin_asn_name, format: val => `${val}`, sortable: false },
-    { name: 'origin_asn_af', required: true, label: 'Origin AS IP Address Family', align: 'left', field: row => row.origin_asn_af, format: val => `${val}`, sortable: true },
-    { name: 'origin_asn_country', required: true, label: 'Origin Country', align: 'left', field: row => row.origin_asn_country, format: val => `${val}`, sortable: true },
-    { name: 'origin_asn_country_iso_code3', required: true, label: 'Origin Country Code', align: 'left', field: row => row.origin_asn_country_iso_code3, format: val => `${val}`, sortable: true },
-    { name: 'asn', required: true, label: 'Anomalous Dependency', align: 'left', field: row => row.asn, format: val => `${val}`, sortable: true },
-    { name: 'asn_name', required: true, label: 'Anomalous Dependency Name', align: 'left', field: row => row.asn_name, format: val => `${val}`, sortable: false },
-    { name: 'asn_af', required: true, label: 'Anomalous Dependency IP Address Family', align: 'left', field: row => row.asn_af, format: val => `${val}`, sortable: true },
-    { name: 'asn_country', required: true, label: 'Anomalous Dependency Country', align: 'left', field: row => row.asn_country, format: val => `${val}`, sortable: true },
-  ],
-  network_delay: [
-    { name: 'overview', label: 'Overview', align: 'center' },
-    { name: 'asn_overview', label: 'Round Trip Time Overview', align: 'center' },
-    { name: 'startpoint', required: true, label: 'Source', align: 'left', field: row => row.startpoint, format: val => `${val}`, sortable: true },
-    { name: 'startpoint_name', required: true, label: 'Source Name', align: 'left', field: row => row.startpoint_name, format: val => `${val}`, sortable: false },
-    { name: 'startpoint_af', required: true, label: 'Source IP Address Family', align: 'left', field: row => row.startpoint_af, format: val => `${val}`, sortable: true },
-    { name: 'startpoint_country', required: true, label: 'Source Country', align: 'left', field: row => row.startpoint_country, format: val => `${val}`, sortable: true },
-    { name: 'startpoint_country_iso_code3', required: true, label: 'Source Country Code', align: 'left', field: row => row.startpoint_country_iso_code3, format: val => `${val}`, sortable: true },
-    { name: 'endpoint', required: true, label: 'Destination', align: 'left', field: row => row.endpoint, format: val => `${val}`, sortable: true },
-    { name: 'endpoint_name', required: true, label: 'Destination Name', align: 'left', field: row => row.endpoint_name, format: val => `${val}`, sortable: false },
-    { name: 'endpoint_af', required: true, label: 'Destination IP Address Family', align: 'left', field: row => row.endpoint_af, format: val => `${val}`, sortable: true },
-    { name: 'endpoint_country', required: true, label: 'Destination Country', align: 'left', field: row => row.endpoint_country, format: val => `${val}`, sortable: false },
-  ],
-  moas: [],
-  submoas: [],
-  defcon: [],
-  edges: [],
-  ping_slash24: [],
-  bgp: [],
-  ucsd_nt: []
-}
-
-const AGGREGATED_COLUMNS_DATA = {
-  hegemony: [
-    { name: 'total_count', required: true, label: 'Nb. Alarms', align: 'left', field: row => row.total_count, format: val => `${val}`, sortable: true },
-    { name: 'high_severity_count', required: true, label: 'Nb. High Severity Alarms', align: 'left', field: row => row.high_severity_count, format: val => `${val}`, sortable: true },
-    { name: 'medium_severity_count', required: true, label: 'Nb. Medium Severity Alarms', align: 'left', field: row => row.medium_severity_count, format: val => `${val}`, sortable: true },
-    { name: 'low_severity_count', required: true, label: 'Nb. Low Severity Alarms', align: 'left', field: row => row.low_severity_count, format: val => `${val}`, sortable: true },
-    { name: 'deviation_median', required: true, label: 'Median Deviation', align: 'left', field: row => row.deviation_median, format: val => `${val}`, sortable: true },
-    { name: 'deviation_avg', required: true, label: 'Average Deviation', align: 'left', field: row => row.deviation_avg, format: val => `${val}`, sortable: true }
-  ],
-  network_delay: [
-    { name: 'stream_disconnected_probe_percentage', required: false, label: 'Disconnected Probe %', align: 'left', field: row => row.stream_disconnected_probe_percentage, format: val => `${val}`, sortable: true },
-    { name: 'total_count', required: true, label: 'Nb. Alarms', align: 'left', field: row => row.total_count, format: val => `${val}`, sortable: true },
-    { name: 'high_severity_count', required: true, label: 'Nb. High Severity Alarms', align: 'left', field: row => row.high_severity_count, format: val => `${val}`, sortable: true },
-    { name: 'medium_severity_count', required: true, label: 'Nb. Medium Severity Alarms', align: 'left', field: row => row.medium_severity_count, format: val => `${val}`, sortable: true },
-    { name: 'low_severity_count', required: true, label: 'Nb. Low Severity Alarms', align: 'left', field: row => row.low_severity_count, format: val => `${val}`, sortable: true },
-    { name: 'deviation_median', required: true, label: 'Median Deviation', align: 'left', field: row => row.deviation_avg, format: val => `${val}`, sortable: true },
-    { name: 'deviation_avg', required: true, label: 'Average Deviation', align: 'left', field: row => row.deviation_avg, format: val => `${val}`, sortable: true },
-    { name: 'duration_median', required: true, label: 'Median Duration (minutes)', align: 'left', field: row => row.duration_median, format: val => `${val}`, sortable: true },
-    { name: 'duration_avg', required: true, label: 'Average Duration (minutes)', align: 'left', field: row => row.duration_avg, format: val => `${val}`, sortable: true },
-  ],
-  moas: [],
-  submoas: [],
-  defcon: [],
-  edges: [],
-  ping_slash24: [],
-  bgp: [],
-  ucsd_nt: []
-}
-
-const METADATA = {
-  hegemony: {
-    default_key: 'origin_asn'
-  },
-  network_delay: {
-    default_key: 'startpoint'
-  },
-  moas: {
-    default_key: 'asn_attacker'
-  },
-  submoas: {
-    default_key: 'asn_attacker'
-  },
-  defcon: {
-    default_key: 'asn_attacker'
-  },
-  edges: {
-    default_key: 'asn_attacker'
-  },
-  ping_slash24: {
-    default_key: 'entity'
-  },
-  bgp: {
-    default_key: 'entity'
-  },
-  ucsd_nt: {
-    default_key: 'entity'
-  }
-}
+const ihr_api = inject('ihr_api')
 
 const props = defineProps({
   loading: {
@@ -124,45 +35,174 @@ const props = defineProps({
   },
   severitiesSelectedList: {
     type: Array
-  }
+  },
+  tableKeyCurrent : {
+    type: String
+  },
+  filter: {
+    type: String,
+    default: '',
+  },
+  data: {
+    type: Array,
+    required: false,
+    default: () => []
+  },
 })
 
-const columns = ref(COLUMNS_DATA[props.selectedTableAlarmType])
-const aggregatedColumns = ref(AGGREGATED_COLUMNS_DATA[props.selectedTableAlarmType])
-const tableKeyCurrent = ref(METADATA[props.selectedTableAlarmType].default_key)
+const emit = defineEmits(['country-clicked', {
+  'filteredRows': (filteredSearchRowValues) => {
+    if(filteredSearchRowValues !== null) {
+      return true
+    } else {
+      console.warn('FilteredSearchRowValues is missing')
+      return false
+    }
+  }
+}])
+
+const { rows, filterFct, filterTable, getCellValue, dateHourShift, setRows } = commonTable(props, { emit })
+
+const columns = ref(ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_columns)
+const aggregatedColumns = ref(ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_aggregated_columns)
+const pagination = ref({
+  sortBy: 'total_count',
+  descending: true,
+  page: 1,
+  rowsPerPage: 10,
+})
+const expandedRow = ref([])
 
 const tableAlternativeKeyCurrent = computed(() => {
   let alternativeKey = null
   for (const column of columns.value) {
-    if (column.name.endsWith('name') && column.name != `${tableKeyCurrent.value}_name`) {
+    if (column.name.endsWith('name') && column.name != `${props.tableKeyCurrent}_name`) {
       alternativeKey = column.name.split('_name')[0]
     }
   }
   return alternativeKey
 })
 
-const init = () => {
-  const [alarmsTableData, tableColumnsToInclude, tableAggregatedColumnsToInclude] = TableAggregatedAlarmsDataModel.etl(props.alarms, props.selectedTableAlarmType, props.selectedTableDataSource, columns.value, aggregatedColumns.value, tableKeyCurrent.value, tableAlternativeKeyCurrent.value, props.severitiesSelectedList)
-  console.log(alarmsTableData)
-  // console.log(tableColumnsToInclude)
-  // console.log(tableAggregatedColumnsToInclude)
+const onASNameKeyClicked = (val) => {
+  emit('country-clicked', { type: 'button', target: val })
 }
 
-onMounted(() => {
+const onASCountryKeyClicked = (val) => {
+  emit('country-clicked', { type: 'button', target: val })
+}
+
+const alternativeASNKeySubtitle = (val, title) => {
+  return `${String(val).replaceAll('<br>', ', ').split(', ').length} ${title}`
+}
+
+const init = () => {
+  const [alarmsTableData, tableColumnsToInclude, tableAggregatedColumnsToInclude] = TableAggregatedAlarmsDataModel.etl(props.alarms, props.selectedTableAlarmType, props.selectedTableDataSource, columns.value, aggregatedColumns.value, props.tableKeyCurrent, tableAlternativeKeyCurrent.value, props.severitiesSelectedList)
+  setRows(Object.values(alarmsTableData))
+  if (tableColumnsToInclude) {
+    columns.value = tableColumnsToInclude
+  }
+  if (tableAggregatedColumnsToInclude) {
+    aggregatedColumns.value = tableAggregatedColumnsToInclude
+  }
+}
+
+watch(() => props.alarms, () => {
   init()
+})
+
+watch(() => props.selectedTableAlarmType, () => {
+  init()
+}, {immediate: true})
+
+onMounted(() => {
+  // init()
 })
 </script>
 
 <template>
   {{ selectedTableAlarmType }}
-  {{ selectedTableDataSource }}
-  <!-- <QTable
-    rows=""
-    columns=""
-    pagination.sync=""
-    loading=""
-    filter=""
+  <QTable
+    table-class="myClass"
+    :rows="rows"
+    :columns="[...columns, ...aggregatedColumns]"
+    :pagination.sync="pagination"
+    :loading="loading"
+    :filter="filterTable"
+    :filter-method="filterFct"
+    flat
+    loading-label="Loading Alarms ..."
+    :row-key="tableKeyCurrent"
+    v-model:expanded="expandedRow"
   >
-
-  </QTable> -->
+    <template v-slot:body="props">
+      <QTr :props="props">
+        <QTd v-for="(column, index) in columns" :key="column.name">
+          <div v-if="column.name.endsWith('overview')" :key="`${tableKeyCurrent}.${column.name}`" :style="{ 'text-align': column.align }">
+            <QToggle v-model="props.expand" />
+          </div>
+          <div v-else-if="column.name === tableKeyCurrent" :style="{ 'text-align': column.align }">
+            <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: ihr_api.ihr_NumberToAsOrIxp(props.row.key_normalized) } })">
+              {{ column.format(props.row[column.name], props.row) }}
+            </RouterLink>
+          </div>
+          <div v-else-if="column.name === `${tableKeyCurrent}_name`" :style="{ 'text-align': column.align }">
+            <a href="javascript:void(0)" @click="onASNameKeyClicked(props.row.key_name_truncated)" flat no-caps>
+              {{ column.format(props.row[column.name], props.row) }}
+            </a>
+          </div>
+          <div v-else-if="column.name === `${tableKeyCurrent}_country`" :style="{ 'text-align': column.align }">
+            <a href="javascript:void(0)" @click="onASCountryKeyClicked(props.row[column.name])" flat no-caps>
+              {{ column.format(props.row[column.name], props.row) }}
+            </a>
+          </div>
+          <div v-else-if="column.name === `${tableKeyCurrent}_country_iso_code3`" :style="{ 'text-align': column.align }">
+            {{ column.format(props.row[column.name], props.row) }}
+          </div>
+          <div v-else-if="column.name === `${tableKeyCurrent}_af`" :style="{ 'text-align': column.align }">
+            {{ column.format(props.row[column.name], props.row) }}
+          </div>
+          <div v-else-if="column.name === tableAlternativeKeyCurrent || column.is_comma_separated" :style="{ 'text-align': column.align }">
+            <div>{{ alternativeASNKeySubtitle(props.row[column.name], column.label) }}</div>
+            <div class="alternative_key_body">{{ props.row[column.name] }}</div>
+          </div>
+          <div v-else :style="{ 'text-align': column.align }">
+            {{ column.format(props.row[column.name], props.row) }}
+          </div>
+        </QTd>
+        <QTd v-for="(aggregatedColumn, index) in aggregatedColumns" :key="aggregatedColumn.name" :style="{ 'text-align': aggregatedColumn.align }">
+          <div>{{ aggregatedColumn.format(props.row[aggregatedColumn.name], props.row) }}</div>
+        </QTd>
+      </QTr>
+    </template>
+  </QTable>
 </template>
+
+<style lang="stylus">
+.alternative_key_body {
+    text-overflow: ellipsis
+    white-space: nowrap
+    font-style: italic
+    color: #555
+}
+.IHR_nohover:first-child {
+    padding-top: 0px;
+    padding-bottom: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    background: #fafafa;
+}
+.IHR_side_borders:first-child {
+    padding-top: 20px;
+    border-style: solid;
+    border-color: #dddddd;
+    border-top-width: 0px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-radius: 5px;
+    background: #ffffff;
+}
+.myClass tbody td {
+    text-align: left;
+}
+</style>

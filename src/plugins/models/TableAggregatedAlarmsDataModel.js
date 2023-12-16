@@ -17,12 +17,7 @@ export function etl(alarms, selectedAlarmType, selectedDataSource, tableColumns,
   )
   const keyWithPrefix = `${selectedAlarmType}_${key}`
 
-  // const alarmsFiltered = alarms.filter((alarm) => alarm[keyWithPrefix] && alarm[keyWithPrefix].length)
-  const alarmsFiltered = alarms.filter((alarm) => {
-    console.log(alarm, keyWithPrefix)
-    alarm[keyWithPrefix] && alarm[keyWithPrefix].length
-  })
-  console.log(alarmsFiltered)
+  const alarmsFiltered = alarms.filter((alarm) => alarm[keyWithPrefix] && alarm[keyWithPrefix].length)
   if (!alarmsFiltered.length) return [alarmsTableData, tableColumns, tableAggregatedColumnsToInclude]
 
   for (const alarmFiltered of alarmsFiltered) {
