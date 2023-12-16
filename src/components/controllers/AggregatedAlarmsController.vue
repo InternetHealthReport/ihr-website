@@ -344,7 +344,7 @@ watch(selectedAlarmTypesOptions.value, () => {
       <QSeparator />
       <QTabPanels v-model="aggregatedAlarmsTab">
         <QTabPanel v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap" :key="indexAlarmTypeTitlesMap" :name="indexAlarmTypeTitlesMap">
-          <AggregatedAlarmsTable :table-key-current="AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions)[indexAlarmTypeTitlesMap]" :severities-selected-list="selectSeveritiesLevels.map(obj => obj.value)" :selected-table-data-source="getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)" :selected-table-alarm-type="indexAlarmTypeTitlesMap" :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+          <AggregatedAlarmsTable :start-time="startTime" :end-time="endTime" :table-key-current="AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions)[indexAlarmTypeTitlesMap]" :severities-selected-list="selectSeveritiesLevels.map(obj => obj.value)" :selected-table-data-source="getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)" :selected-table-alarm-type="indexAlarmTypeTitlesMap" :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
         </QTabPanel>
       </QTabPanels>
     </QCard>

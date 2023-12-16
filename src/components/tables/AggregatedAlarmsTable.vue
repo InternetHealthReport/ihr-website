@@ -1,5 +1,5 @@
 <script setup>
-import { QTable, QTr, QTd, QToggle, QBtn } from 'quasar'
+import { QTable, QTr, QTd, QToggle, QCard, QCardSection } from 'quasar'
 import * as TableAggregatedAlarmsDataModel  from '@/plugins/models/TableAggregatedAlarmsDataModel'
 import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
 import { ref, computed, onMounted, watch, inject } from 'vue'
@@ -7,6 +7,11 @@ import { ALARMS_INFO } from '@/plugins/metadata/AggregatedAlarmsMetadata'
 import commonTable from '@/plugins/commonTable'
 import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
+import AsInterdependenciesChart from '../charts/AsInterdependenciesChart.vue'
+import NetworkDelayChart from '../charts/NetworkDelayChart.vue'
+import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
+import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarmsChart.vue'
+import TreeMapAggregatedAlarmsChart from '../charts/TreeMapAggregatedAlarmsChart.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -48,6 +53,14 @@ const props = defineProps({
     required: false,
     default: () => []
   },
+  startTime: {
+    type: Date,
+    required: true,
+  },
+  endTime: {
+    type: Date,
+    required: true,
+  }
 })
 
 const emit = defineEmits(['country-clicked', {
@@ -72,16 +85,17 @@ const pagination = ref({
   rowsPerPage: 10,
 })
 const expandedRow = ref([])
+const toggle = ref({})
+const alternativeKey = ref(null)
+const alarmsTableDataFromModel = ref(null)
 
-const tableAlternativeKeyCurrent = computed(() => {
-  let alternativeKey = null
+const tableAlternativeKeyCurrent = () => {
   for (const column of columns.value) {
     if (column.name.endsWith('name') && column.name != `${props.tableKeyCurrent}_name`) {
-      alternativeKey = column.name.split('_name')[0]
+      alternativeKey.value = column.name.split('_name')[0]
     }
   }
-  return alternativeKey
-})
+}
 
 const onASNameKeyClicked = (val) => {
   emit('country-clicked', { type: 'button', target: val })
@@ -95,16 +109,66 @@ const alternativeASNKeySubtitle = (val, title) => {
   return `${String(val).replaceAll('<br>', ', ').split(', ').length} ${title}`
 }
 
+const getOverviewIPAddressFamilies = (ipAddressFamily) => {
+  if (String(ipAddressFamily).includes('/')) {
+    return ipAddressFamily.split('/').map((af) => Number(af))
+  }
+  return [Number(ipAddressFamily)]
+}
+
+const getColumnLabel = (columnName) => {
+  const index = columns.value.findIndex((column) => column.name === columnName)
+  if (index !== -1) {
+    return columns.value[index].label
+  }
+  return null
+}
+
+const getAlternativeKeyEndPointNames = (endpoints, ipAddressFamilies, deviations, topN = 35) => {
+  return TableAggregatedAlarmsDataModel.getAlternativeKeyEndPointNames(endpoints, ipAddressFamilies, deviations, topN)
+}
+
+const getAlarmsCurrent = (tableAlarms) => {
+  return TableAggregatedAlarmsDataModel.aggregateAlarmsByAlternativeKey(tableAlarms, props.selectedTableAlarmType, alternativeKey.value, ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].columns)
+}
+
+const initToggle = () => {
+  toggle.value = {}
+  rows.value.forEach(val => {
+    for (const key in val) {
+      toggle.value[`${val.key_normalized}_overview`] = false
+      toggle.value[`${val.key_normalized}_asn_overview`] = false
+    }
+  })
+}
+
 const init = () => {
-  const [alarmsTableData, tableColumnsToInclude, tableAggregatedColumnsToInclude] = TableAggregatedAlarmsDataModel.etl(props.alarms, props.selectedTableAlarmType, props.selectedTableDataSource, columns.value, aggregatedColumns.value, props.tableKeyCurrent, tableAlternativeKeyCurrent.value, props.severitiesSelectedList)
+  tableAlternativeKeyCurrent()
+  const [alarmsTableData, tableColumnsToInclude, tableAggregatedColumnsToInclude] = TableAggregatedAlarmsDataModel.etl(props.alarms, props.selectedTableAlarmType, props.selectedTableDataSource, columns.value, aggregatedColumns.value, props.tableKeyCurrent, alternativeKey.value, props.severitiesSelectedList)
   setRows(Object.values(alarmsTableData))
+  alarmsTableDataFromModel.value = alarmsTableData
   if (tableColumnsToInclude) {
     columns.value = tableColumnsToInclude
   }
   if (tableAggregatedColumnsToInclude) {
     aggregatedColumns.value = tableAggregatedColumnsToInclude
   }
+  initToggle()
 }
+
+const alarmTypeAggregatedAttrsSelected = computed(() => {
+  const result = AggregatedAlarmsUtils.flattenDictionary(Object.keys(props.aggregatedAttrsSelected).map((attr) => ({ [attr]: [] })))
+  for (let i = 0; i < props.aggregatedAttrsSelected.counts.length; i++) {
+    const alarmType = props.aggregatedAttrsSelected.counts[i]
+    if (alarmType.startsWith(props.selectedTableAlarmType)) {
+      for (const aggregatedKey in props.aggregatedAttrsSelected) {
+        result[aggregatedKey] = [props.aggregatedAttrsSelected[aggregatedKey][i]]
+      }
+      break
+    }
+  }
+  return result
+})
 
 watch(() => props.alarms, () => {
   init()
@@ -138,7 +202,7 @@ onMounted(() => {
       <QTr :props="props">
         <QTd v-for="(column, index) in columns" :key="column.name">
           <div v-if="column.name.endsWith('overview')" :key="`${tableKeyCurrent}.${column.name}`" :style="{ 'text-align': column.align }">
-            <QToggle v-model="props.expand" />
+            <QToggle v-model="toggle[`${props.row.key_normalized}_${column.name}`]" />
           </div>
           <div v-else-if="column.name === tableKeyCurrent" :style="{ 'text-align': column.align }">
             <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: ihr_api.ihr_NumberToAsOrIxp(props.row.key_normalized) } })">
@@ -161,7 +225,7 @@ onMounted(() => {
           <div v-else-if="column.name === `${tableKeyCurrent}_af`" :style="{ 'text-align': column.align }">
             {{ column.format(props.row[column.name], props.row) }}
           </div>
-          <div v-else-if="column.name === tableAlternativeKeyCurrent || column.is_comma_separated" :style="{ 'text-align': column.align }">
+          <div v-else-if="column.name === alternativeKey || column.is_comma_separated" :style="{ 'text-align': column.align }">
             <div>{{ alternativeASNKeySubtitle(props.row[column.name], column.label) }}</div>
             <div class="alternative_key_body">{{ props.row[column.name] }}</div>
           </div>
@@ -171,6 +235,49 @@ onMounted(() => {
         </QTd>
         <QTd v-for="(aggregatedColumn, index) in aggregatedColumns" :key="aggregatedColumn.name" :style="{ 'text-align': aggregatedColumn.align }">
           <div>{{ aggregatedColumn.format(props.row[aggregatedColumn.name], props.row) }}</div>
+        </QTd>
+      </QTr>
+      <QTr v-if="toggle[`${props.row.key_normalized}_overview`]" :props="props">
+        <QTd colspan="100%" class="IHR_nohover" bordered>
+          <div class="IHR_side_borders">
+            <div v-if="alternativeKey">
+              <QCard>
+                <QCardSection>
+                  <WorldMapAggregatedAlarmsChart :loading="false" :alarms="getAlarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized])" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" />
+                </QCardSection>
+              </QCard>
+              <QCard>
+                <QCardSection>
+                  <TimeSeriesAggregatedAlarmsChart :loading="false" :alarms="getAlarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized])" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" :is-a-s-granularity="true" />
+                </QCardSection>
+              </QCard>
+              <QCard>
+                <QCardSection>
+                  <TreeMapAggregatedAlarmsChart :loading="false" :alarms="getAlarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized])" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" :is-a-s-granularity="true" />
+                </QCardSection>
+              </QCard>
+            </div>
+          </div>
+        </QTd>
+      </QTr>
+      <QTr v-if="toggle[`${props.row.key_normalized}_asn_overview`]" :props="props">
+        <QTd colspan="100%" class="IHR_nohover" bordered>
+          <div v-if="selectedTableAlarmType == 'hegemony'" v-for="(af) in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])">
+            <div style="text-align: center; font-size: 18px;">
+              {{ `${getColumnLabel('asn_overview')} IPv${af}` }}
+            </div>
+            <AsInterdependenciesChart :as-number="props.row.key_normalized" :no-table="true" :fetch="true" :address-family="af" :start-time="startTime" :end-time="endTime" />
+          </div>
+          <div v-if="selectedTableAlarmType == 'network_delay'" v-for="(af) in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])">
+            <div style="text-align: center; font-size: 18px;">
+              {{ `${getColumnLabel('asn_overview')} IPv${af}` }}
+            </div>
+            <NetworkDelayChart :start-time="startTime" :end-time="endTime" :asFamily="af"
+              :start-point-name="String(props.row.key_normalized)" start-point-type="AS"
+              :end-point-names="getAlternativeKeyEndPointNames(props.row.alternative_key_normalized, props.row.alternative_key_normalized_af, props.row.alternative_key_avg_deviation, 35)"
+              :no-table="true" :fetch="true"
+            />
+          </div>
         </QTd>
       </QTr>
     </template>
