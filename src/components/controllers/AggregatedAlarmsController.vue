@@ -56,11 +56,19 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  networkDisconnectionAlarms: {
+    type: Array,
+    required: true,
+  },
   hegemonyLoading: {
     type: Boolean,
     required: true
   },
   networkDelayLoading: {
+    type: Boolean,
+    required: true
+  },
+  networkDisconnectionLoading: {
     type: Boolean,
     required: true
   }
@@ -95,7 +103,7 @@ const etlAggregatedAlarmsDataModel = () => {
     ALARMS_INFO,
     AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypes.value),
     AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions.value),
-    [props.hegemonyAlarms, props.networkDelayAlarms].flat(),
+    [props.hegemonyAlarms, props.networkDelayAlarms, props.networkDisconnectionAlarms].flat(),
     thirdPartyAlarmsStates.value,
     iodaIPAddressFamilies.value,
     props.startTime,
@@ -163,11 +171,12 @@ const maxAlarmTypesLength = computed(() => {
   }
   selectedAlarmTypes.value['ihr']['hegemony'] = true
   selectedAlarmTypes.value['ihr']['network_delay'] = true
+  selectedAlarmTypes.value['ihr']['network_disconnection'] = true
   return maxAlarmTypesLength
 })
 
 const loadingVal = computed(() => {
-  return props.hegemonyLoading || props.networkDelayLoading || aggregatedAlarmsLoadingVal.value
+  return props.hegemonyLoading || props.networkDelayLoading || props.networkDisconnectionLoading || aggregatedAlarmsLoadingVal.value
 })
 
 const selectSeveritiesLevelsAndIPAddressFamiliesFilter = () => {
@@ -212,7 +221,7 @@ const timeFilter = (obj) => {
 }
 
 const isLoaded = computed(() => {
-  if (props.hegemonyLoading || props.networkDelayLoading) {
+  if (props.hegemonyLoading || props.networkDelayLoading || props.networkDisconnectionLoading) {
     return true
   }
   return false

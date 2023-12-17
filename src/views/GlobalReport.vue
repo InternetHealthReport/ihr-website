@@ -3,7 +3,7 @@ import { QExpansionItem, QItemSection, QIcon, QInput, QCard, QCardSection } from
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import HegemonyAlarmsChart from '@/components/charts/HegemonyAlarmsChart.vue'
 import DiscoChart from '@/components/charts/DiscoChart.vue'
-import { ref, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useRoute, useRouter } from 'vue-router'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
@@ -11,6 +11,9 @@ import DelayChart from '@/components/charts/DelayChart.vue'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN } from '@/plugins/delay'
 import NetworkDelayAlarmsChart from '@/components/charts/NetworkDelayAlarmsChart.vue'
 import AggregatedAlarmsController from '@/components/controllers/AggregatedAlarmsController.vue'
+import { Query, HegemonyAlarmsQuery, NetworkDelayAlarmsQuery, DiscoEventQuery } from '@/plugins/IhrApi'
+
+const ihr_api = inject('ihr_api')
 
 const route = useRoute()
 const router = useRouter()
@@ -84,6 +87,8 @@ const loading = ref({
 })
 const hegemonyAlarms = ref([])
 const networkDelayAlarms = ref([])
+const networkDisconnectionAlarms = ref([])
+const selectedType = ref('AS')
 
 const hegemonyLoading = (val) => {
   nextTick(() => {
@@ -137,9 +142,75 @@ const newFilteredRows = () => {
   }
 }
 
+const hegemonyApiCall = () => {
+  const hegemonyAlarmsFilter = new HegemonyAlarmsQuery().deviation(minDeviationNetworkDelay.value, Query.GTE).timeInterval(startTime.value, endTime.value)
+  hegemonyLoading(true)
+  ihr_api.hegemony_alarms(
+    hegemonyAlarmsFilter,
+    result => {
+      let data = []
+      result.results.forEach(alarm => {
+        alarm['event_type'] = 'hegemony'
+        data.push(alarm)
+      })
+      hegemonyAlarms.value = data
+      hegemonyLoading(false)
+    },
+    error => {
+      console.error(error) //FIXME do a correct alert
+    }
+  )
+}
+
+const networkDelayApiCall = () => {
+  const networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery().deviation(minDeviationNetworkDelay.value, Query.GTE).startPointType(selectedType.value).timeInterval(startTime.value, endTime.value)
+  networkDelayLoading(true)
+  ihr_api.network_delay_alarms(
+    networkDelayAlarmsFilter,
+    result => {
+      let data = []
+      result.results.forEach(alarm => {
+        alarm['event_type'] = 'network_delay'
+        data.push(alarm)
+      })
+      networkDelayAlarms.value = data
+      networkDelayLoading(false)
+    },
+    error => {
+      console.error(error) //FIXME do a correct alert
+    }
+  )
+}
+
+const networkDisconnectionApiCall = () => {
+  const filters = new DiscoEventQuery().streamName('').timeInterval(startTime.value, endTime.value).orderedByTime()
+  discoLoading(true)
+  ihr_api.disco_events(
+    filters,
+    result => {
+      let data = []
+      result.results.forEach(alarm => {
+        alarm['event_type'] = 'network_disconnection'
+        data.push(alarm)
+      })
+      networkDisconnectionAlarms.value = data
+      discoLoading(false)
+    },
+    error => {
+      console.error(error) //FIXME do a correct alert
+    }
+  )
+}
+
 const aggregatedAlarmsKey = computed(() => {
   return `${JSON.stringify(loading.value.hegemony)}-${JSON.stringify(loading.value.networkDelay)}`
 })
+
+const apiCalls = () => {
+  hegemonyApiCall()
+  networkDelayApiCall()
+  networkDisconnectionApiCall()
+}
 
 watch(filterLevel, (newValue, oldValue) => {
   if (newValue != oldValue) {
@@ -156,10 +227,12 @@ watch(globalFilter, (newValue) => {
 
 watch(interval, () => {
   pushRoute()
+  apiCalls()
 })
 
 onMounted(() => {
   pushRoute()
+  apiCalls()
   fetch.value = true
 })
 
@@ -198,9 +271,9 @@ onMounted(() => {
       </template>
       <AggregatedAlarmsController :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
         :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony"
-        :networkDelayLoading="loading.networkDelay" />
+        :networkDelayLoading="loading.networkDelay" :networkDisconnectionAlarms="networkDisconnectionAlarms" :networkDisconnectionLoading="loading.disco" />
     </QExpansionItem>
-    <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
+    <!-- <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
       <template v-slot:header>
         <div class="graph-header-div">
           <QItemSection class="graph-header">
@@ -265,7 +338,7 @@ onMounted(() => {
             @loading="networkDelayLoading" @network-delay-alarms-data-loaded="networkDelayAlarms = $event" />
         </QCardSection>
       </QCard>
-    </QExpansionItem>
+    </QExpansionItem> -->
     <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
       <template v-slot:header>
         <div class="graph-header-div">
@@ -301,7 +374,7 @@ onMounted(() => {
         </QCardSection>
       </QCard>
     </QExpansionItem>
-    <QExpansionItem caption="RIPE Atlas log" header-class="IHR_charts-title" default-opened expand-icon-toggle
+    <!-- <QExpansionItem caption="RIPE Atlas log" header-class="IHR_charts-title" default-opened expand-icon-toggle
       v-model="discoExpanded">
       <template v-slot:header>
         <div class="graph-header-div">
@@ -336,7 +409,7 @@ onMounted(() => {
             @loading="discoLoading" />
         </QCardSection>
       </QCard>
-    </QExpansionItem>
+    </QExpansionItem> -->
 
   </div>
 </template>
