@@ -404,8 +404,6 @@ function addASNameAndCountryInfo(alarms) {
       addASNameAndCountryInfoHelper(alarms, asNamesCountryMappingsResult)
       resolve(alarms)
     } else {
-      // console.log(alarms)
-      // resolve(alarms)
       addASNameAndCountryIsoCode2(alarms).then((alarmsWithCountryIsoCodes2) => {
         asNamesCountryMappingsResult = alarmsWithCountryIsoCodes2
         addASNameAndCountryInfoHelper(alarms, alarmsWithCountryIsoCodes2)
@@ -413,13 +411,6 @@ function addASNameAndCountryInfo(alarms) {
       }).catch(error => {
         reject(error)
       })
-      // AsNamesPlugin.getASNamesCountryMappings()
-      //   .then((asNamesCountryMappings) => {
-      //     asNamesCountryMappingsResult = asNamesCountryMappings
-      //     addASNameAndCountryInfoHelper(alarms, asNamesCountryMappings)
-      //     return resolve(alarms)
-      //   })
-      //   .catch((error) => reject(error))
     }
   })
   return request()

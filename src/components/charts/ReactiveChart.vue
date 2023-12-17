@@ -46,6 +46,13 @@ const emits = defineEmits({
     } else {
       return false
     }
+  },
+  'plotly-time-filter': (plotlyClickedLegend) => {
+    if (plotlyClickedLegend) {
+      return true
+    } else {
+      return false
+    }
   }
 })
 

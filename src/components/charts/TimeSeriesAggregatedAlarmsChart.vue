@@ -30,14 +30,16 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['country-clicked'])
+const emits = defineEmits(['country-clicked', 'select-time'])
 
 const layout = ref({
   xaxis: {
     title: 'Date',
+    autorange: true
   },
   yaxis: {
     title: 'Number of Alarms',
+    autorange: true
   },
   hovermode: 'closest',
   showlegend: true,
@@ -67,6 +69,8 @@ const init = (alarms, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap, 
   } else {
     traces.value = timeSeriesTraces
   }
+  layout.value.xaxis.autorange = true
+  layout.value.yaxis.autorange = true
 }
 
 const clearDataViz = () => {
@@ -75,6 +79,10 @@ const clearDataViz = () => {
 
 const plotlyClickedDataHandler = (val) => {
   emits('country-clicked', val)
+}
+
+const plotlySelectTimeHandler = (obj) => {
+  emits('select-time', obj)
 }
 
 watch(() => props.alarms, () => {
@@ -101,7 +109,7 @@ onMounted(() => {
 <template>
   <div class="IHR_chart">
     <div class="IHR_disco-chart">
-        <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-legend-click="plotlyClickedDataHandler" />
+        <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-legend-click="plotlyClickedDataHandler" @plotly-time-filter="plotlySelectTimeHandler" />
     </div>
   </div>
 </template>

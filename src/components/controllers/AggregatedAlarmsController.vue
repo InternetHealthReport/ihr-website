@@ -84,7 +84,8 @@ const thirdPartyAlarmsStates = ref({
 })
 const alarms = ref({
   raw: [],
-  filter: []
+  filter: [],
+  saved: []
 })
 const aggregatedAttrs = ref({})
 const selectedCountry = ref(null)
@@ -180,7 +181,38 @@ const selectSeveritiesLevelsAndIPAddressFamiliesFilter = () => {
     const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(alarms.value.raw, selectSeveritiesLevels.value.map(obj => obj.value), AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrs.value))
     const ipAddressFamiliesFiltered = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(alarmsSeverityFiltered, selectIPAddressFamilies.value.map(obj => obj.value), AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrs.value))
     alarms.value.filter = ipAddressFamiliesFiltered
+    alarms.value.saved = ipAddressFamiliesFiltered
+    countryFilter()
+    networkFilter()
   }
+}
+
+const countryFilter = () => {
+  if (selectedCountry.value) {
+      const countryFilter = alarms.value.filter.map(obj => {
+        if (obj.asn_country === selectedCountry.value) {
+          return obj
+        }
+      }).filter(obj => obj !== undefined)
+      alarms.value.filter = countryFilter
+    }
+}
+
+const networkFilter = () => {
+  if (selectedNetwork.value) {
+    const networkFilter = alarms.value.filter.map(obj => {
+      if (obj.asn_name_truncated === selectedNetwork.value) {
+        return obj
+      }
+    }).filter(obj => obj !== undefined)
+    alarms.value.filter = networkFilter
+  }
+}
+
+const timeFilter = (obj) => {
+  const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrs.value)
+  const timeFilter = AggregatedAlarmsDataModel.filterAlarmsByTime(alarms.value.filter, new Date(obj.startDateTime).getTime() / 1000, new Date(obj.endDateTime).getTime() / 1000, aggregatedAttrsZipped)
+  alarms.value.filter = timeFilter
 }
 
 const isLoaded = computed(() => {
@@ -194,13 +226,16 @@ const countryClickedHandler = (event) => {
   if (event.points) {
     if (event.points[0].data.type === 'choropleth') {
       selectedCountry.value = event.points[0].text
+      countryFilter()
     } else if (event.points[0].data.type === 'treemap') {
       try {
         const name = event.points[0].id.split('-')[0]
         if (isCountryName(name)) {
           selectedCountry.value = name
+          countryFilter()
         } else {
           selectedNetwork.value = event.points[0].id
+          networkFilter()
         }
       } catch (error) {
         resetGranularity()
@@ -210,14 +245,18 @@ const countryClickedHandler = (event) => {
     const name = event.node.textContent.split('-')[0]
     if (isCountryName(name)) {
       selectedCountry.value = name
+      countryFilter()
     } else {
       selectedNetwork.value = event.node.textContent
+      networkFilter()
     }
   } else if (event.type === 'button') {
     if (isCountryName(event.target)) {
       selectedCountry.value = event.target
+      countryFilter()
     } else {
       selectedNetwork.value = event.target
+      networkFilter()
     }
   }
 }
@@ -225,6 +264,7 @@ const countryClickedHandler = (event) => {
 const resetGranularity = () => {
   selectedCountry.value = null
   selectedNetwork.value = null
+  alarms.value.filter = alarms.value.saved
 }
 
 const getDataSourceFromSelectedAlarmType = (val) => {
@@ -322,7 +362,7 @@ watch(selectedAlarmTypesOptions.value, () => {
             <div class="text-h6 center">{{ selectedCountry ? `Alarms by ASNs over Time for ${selectedCountry}` : 'Alarms for all Countries over Time' }}</div>
           </QCardSection>
           <QCardSection>
-            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :network-name="selectedNetwork" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :network-name="selectedNetwork" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" @select-time="timeFilter" />
           </QCardSection>
         </QCard>
       </div>
