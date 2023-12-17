@@ -74,10 +74,6 @@ const selectIPAddressFamilies = ref(IP_ADDRESS_FAMILIES)
 const hegemonyData = ref([])
 const loading = ref(false)
 const aggregatedAlarmsLoadingVal = ref(false)
-// const thirdPartyAlarmsStates = ref({
-//   grip: { downloading: false, data: null },
-//   ioda: { downloading: false, data: null }
-// })
 const thirdPartyAlarmsStates = ref({
   grip: null,
   ioda: null

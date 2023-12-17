@@ -1,5 +1,5 @@
 <script setup>
-import { QTable, QTr, QTd, QToggle, QCard, QCardSection } from 'quasar'
+import { QTable, QTr, QTd, QToggle, QCard, QCardSection, QSelect, QBtn } from 'quasar'
 import * as TableAggregatedAlarmsDataModel  from '@/plugins/models/TableAggregatedAlarmsDataModel'
 import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
 import { ref, computed, onMounted, watch, inject } from 'vue'
@@ -12,8 +12,36 @@ import NetworkDelayChart from '../charts/NetworkDelayChart.vue'
 import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
 import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarmsChart.vue'
 import TreeMapAggregatedAlarmsChart from '../charts/TreeMapAggregatedAlarmsChart.vue'
+import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
+import { isCountryName } from '@/plugins/countryName'
 
 const ihr_api = inject('ihr_api')
+
+const SEVERITIED_LEVELS = [
+  {
+    label: 'Low',
+    value: 'low'
+  },
+  {
+    label: 'Medium',
+    value: 'medium'
+  },
+  {
+    label: 'High',
+    value: 'high'
+  }
+]
+
+const IP_ADDRESS_FAMILIES = [
+  {
+    label: 'IPv4',
+    value: 4
+  },
+  {
+    label: 'IPv6',
+    value: 6
+  }
+]
 
 const props = defineProps({
   loading: {
@@ -88,6 +116,11 @@ const expandedRow = ref([])
 const toggle = ref({})
 const alternativeKey = ref(null)
 const alarmsTableDataFromModel = ref(null)
+const selectSeveritiesLevels = ref({})
+const selectIPAddressFamilies = ref({})
+const selectedCountry = ref({})
+const selectedNetwork = ref({})
+const selectTime = ref({})
 
 const tableAlternativeKeyCurrent = () => {
   for (const column of columns.value) {
@@ -132,12 +165,78 @@ const getAlarmsCurrent = (tableAlarms) => {
   return TableAggregatedAlarmsDataModel.aggregateAlarmsByAlternativeKey(tableAlarms, props.selectedTableAlarmType, alternativeKey.value, ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].columns)
 }
 
+const selectSeveritiesLevelsAndIPAddressFamiliesFilter = (alarms, key) => {
+  if (!selectSeveritiesLevels.value[key].length) {
+    return alarms
+  } else{
+    const alarmsSeverityFiltered = AggregatedAlarmsDataModel.filterAlarmsBySeverity(alarms, selectSeveritiesLevels.value[key].map(obj => obj.value), AggregatedAlarmsUtils.zipAggregatedAttrs(props.aggregatedAttrsSelected))
+    const ipAddressFamiliesFiltered = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(alarmsSeverityFiltered, selectIPAddressFamilies.value[key].map(obj => obj.value), AggregatedAlarmsUtils.zipAggregatedAttrs(props.aggregatedAttrsSelected))
+    if (selectTime.value[key]) {
+      const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(props.aggregatedAttrsSelected)
+      const timeFilter = AggregatedAlarmsDataModel.filterAlarmsByTime(ipAddressFamiliesFiltered, new Date(selectTime.value[key].startDateTime).getTime() / 1000, new Date(selectTime.value[key].endDateTime).getTime() / 1000, aggregatedAttrsZipped)
+      return timeFilter
+    }
+    return ipAddressFamiliesFiltered
+  }
+}
+
+const alarmsCurrent = (tableAlarms, key) => {
+  const alarms = getAlarmsCurrent(tableAlarms)
+  return selectSeveritiesLevelsAndIPAddressFamiliesFilter(alarms, key)
+}
+
+const countryClickedHandler = (event, key) => {
+  if (event.points) {
+    if (event.points[0].data.type === 'choropleth') {
+      selectedCountry.value[key] = event.points[0].text
+    } else if (event.points[0].data.type === 'treemap') {
+      try {
+        const name = event.points[0].id.split('-')[0]
+        if (isCountryName(name)) {
+          selectedCountry.value[key] = name
+        } else {
+          selectedNetwork.value[key] = event.points[0].id
+        }
+      } catch (error) {
+        resetGranularity(key)
+      }
+    }
+  } else if (event.node) {
+    const name = event.node.textContent.split('-')[0]
+    if (isCountryName(name)) {
+      selectedCountry.value[key] = name
+    } else {
+      selectedNetwork.value[key] = event.node.textContent
+    }
+  }
+}
+
+const timeFilter = (obj, key) => {
+  selectTime.value[key] = obj
+}
+
+const resetGranularity = (key) => {
+  selectedCountry.value[key] = null
+  selectedNetwork.value[key] = null
+  selectTime.value[key] = null
+}
+
 const initToggle = () => {
   toggle.value = {}
+  selectSeveritiesLevels.value = {}
+  selectIPAddressFamilies.value = {}
+  selectedCountry.value = {}
+  selectedNetwork.value = {}
+  selectTime.value = {}
   rows.value.forEach(val => {
     for (const key in val) {
       toggle.value[`${val.key_normalized}_overview`] = false
       toggle.value[`${val.key_normalized}_asn_overview`] = false
+      selectSeveritiesLevels.value[val.key_normalized] = SEVERITIED_LEVELS
+      selectIPAddressFamilies.value[val.key_normalized] = IP_ADDRESS_FAMILIES
+      selectedCountry.value[val.key_normalized] = null
+      selectedNetwork.value[val.key_normalized] = null
+      selectTime.value[val.key_normalized] = null
     }
   })
 }
@@ -227,7 +326,7 @@ onMounted(() => {
           </div>
           <div v-else-if="column.name === alternativeKey || column.is_comma_separated" :style="{ 'text-align': column.align }">
             <div>{{ alternativeASNKeySubtitle(props.row[column.name], column.label) }}</div>
-            <div class="alternative_key_body">{{ props.row[column.name] }}</div>
+            <div class="alternative_key_body" v-html="props.row[column.name]"></div>
           </div>
           <div v-else :style="{ 'text-align': column.align }">
             {{ column.format(props.row[column.name], props.row) }}
@@ -241,19 +340,39 @@ onMounted(() => {
         <QTd colspan="100%" class="IHR_nohover" bordered>
           <div class="IHR_side_borders">
             <div v-if="alternativeKey">
+              <div class="row">
+                <div class="col">
+                  <QSelect outlined multiple v-model="selectSeveritiesLevels[props.row.key_normalized]" :options="SEVERITIED_LEVELS" label="Severity Levels:" stack-label use-chips />
+                </div>
+                <div class="col">
+                  <QSelect outlined multiple v-model="selectIPAddressFamilies[props.row.key_normalized]" :options="IP_ADDRESS_FAMILIES" label="IP Address Families:" stack-label use-chips />
+                </div>
+                <div class="col">
+                  <QBtn color="primary" class="float-right" @click="resetGranularity(props.row.key_normalized)">Reset Granularity</QBtn>
+                </div>
+              </div>
               <QCard>
                 <QCardSection>
-                  <WorldMapAggregatedAlarmsChart :loading="false" :alarms="getAlarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized])" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" />
+                  <div class="text-h6 center">Aggregated Alarms by Countries</div>
+                </QCardSection>
+                <QCardSection>
+                  <WorldMapAggregatedAlarmsChart :loading="false" :alarms="alarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized], props.row.key_normalized)" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler($event, props.row.key_normalized)" />
                 </QCardSection>
               </QCard>
               <QCard>
                 <QCardSection>
-                  <TimeSeriesAggregatedAlarmsChart :loading="false" :alarms="getAlarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized])" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" :is-a-s-granularity="true" />
+                  <div class="text-h6 center">{{ selectedCountry[props.row.key_normalized] ? `Aggregated Alarms by ASN, Alarm Type, and Severity for ${selectedCountry[props.row.key_normalized]}` : 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity' }}</div>
+                </QCardSection>
+                <QCardSection>
+                  <TreeMapAggregatedAlarmsChart :loading="false" :network-name="selectedNetwork[props.row.key_normalized]" :country-name="selectedCountry[props.row.key_normalized]" :alarms="alarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized], props.row.key_normalized)" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler($event, props.row.key_normalized)" />
                 </QCardSection>
               </QCard>
               <QCard>
                 <QCardSection>
-                  <TreeMapAggregatedAlarmsChart :loading="false" :alarms="getAlarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized])" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" :is-a-s-granularity="true" />
+                  <div class="text-h6 center">{{ selectedCountry[props.row.key_normalized] ? `Alarms by ASNs over Time for ${selectedCountry[props.row.key_normalized]}` : 'Alarms for all Countries over Time' }}</div>
+                </QCardSection>
+                <QCardSection>
+                  <TimeSeriesAggregatedAlarmsChart :loading="false" :network-name="selectedNetwork[props.row.key_normalized]" :country-name="selectedCountry[props.row.key_normalized]" :alarms="alarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized], props.row.key_normalized)" :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler($event, props.row.key_normalized)" @select-time="timeFilter($event, props.row.key_normalized)" />
                 </QCardSection>
               </QCard>
             </div>

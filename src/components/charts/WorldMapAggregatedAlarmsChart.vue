@@ -24,12 +24,7 @@ const emits = defineEmits(['country-clicked'])
 
 const worldMapTrace = ref({})
 
-// const plotlyClickedDataHandler = (newPlotlyClickedData) => {
-//   console.log(newPlotlyClickedData)
-// }
-
 const init = (alarms, alarmCountsSelected, alarmTypeTitlesMap) => {
-  // console.log(123,alarms)
   worldMapTrace.value = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected.counts, alarmTypeTitlesMap)
 }
 

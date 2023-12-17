@@ -69,8 +69,10 @@ const init = (alarms, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap, 
   } else {
     traces.value = timeSeriesTraces
   }
-  layout.value.xaxis.autorange = true
-  layout.value.yaxis.autorange = true
+  if (layout.value.xaxis && layout.value.yaxis) {
+    layout.value.xaxis.autorange = true
+    layout.value.yaxis.autorange = true
+  }
 }
 
 const clearDataViz = () => {

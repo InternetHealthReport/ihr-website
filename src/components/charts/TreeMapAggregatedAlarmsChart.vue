@@ -53,7 +53,11 @@ const init = (alarms, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap, 
   if (!treeMapTrace.length) {
     clearDataViz()
   } else {
-    traces.value = treeMapTrace
+    if (!Object.keys(treeMapTrace[0]).length) {
+      clearDataViz()
+    } else {
+      traces.value = treeMapTrace
+    }
   }
 }
 
