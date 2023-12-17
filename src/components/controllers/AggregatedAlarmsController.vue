@@ -256,11 +256,11 @@ const countryClickedHandler = (event) => {
       networkFilter()
     }
   } else if (event.type === 'button') {
-    if (isCountryName(event.target)) {
-      selectedCountry.value = event.target
-      countryFilter()
-    } else {
-      selectedNetwork.value = event.target
+    resetGranularity()
+    selectedCountry.value = event.country
+    countryFilter()
+    if (event.asName) {
+      selectedNetwork.value = event.asName
       networkFilter()
     }
   }

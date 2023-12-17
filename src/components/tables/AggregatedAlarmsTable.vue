@@ -130,12 +130,12 @@ const tableAlternativeKeyCurrent = () => {
   }
 }
 
-const onASNameKeyClicked = (val) => {
-  emit('country-clicked', { type: 'button', target: val })
+const onASNameKeyClicked = (asName, country) => {
+  emit('country-clicked', { type: 'button', asName: asName, country: country })
 }
 
 const onASCountryKeyClicked = (val) => {
-  emit('country-clicked', { type: 'button', target: val })
+  emit('country-clicked', { type: 'button', asName: null, country: val })
 }
 
 const alternativeASNKeySubtitle = (val, title) => {
@@ -309,7 +309,7 @@ onMounted(() => {
             </RouterLink>
           </div>
           <div v-else-if="column.name === `${tableKeyCurrent}_name`" :style="{ 'text-align': column.align }">
-            <a href="javascript:void(0)" @click="onASNameKeyClicked(props.row.key_name_truncated)" flat no-caps>
+            <a href="javascript:void(0)" @click="onASNameKeyClicked(props.row.key_name_truncated, props.row.startpoint_country)" flat no-caps>
               {{ column.format(props.row[column.name], props.row) }}
             </a>
           </div>

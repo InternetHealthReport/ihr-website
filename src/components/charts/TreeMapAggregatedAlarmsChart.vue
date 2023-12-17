@@ -23,10 +23,6 @@ const props = defineProps({
   },
   networkName: {
     type: String
-  },
-  isASGranularity: {
-    type: Boolean,
-    default: () => false
   }
 })
 
@@ -70,23 +66,15 @@ const plotlyClickedDataHandler = (val) => {
 }
 
 watch(() => props.alarms, () => {
-  init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, null, props.isASGranularity)
-})
-
-watch(() => props.countryName, () => {
-  init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, null, props.isASGranularity)
-})
-
-watch(() => props.networkName, () => {
   if (props.networkName) {
     init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.networkName, true)
   } else {
-    init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, null, props.isASGranularity)
+    init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap)
   }
 })
 
 onMounted(() => {
-  init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, null, props.isASGranularity)
+  init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap)
 })
 </script>
 
