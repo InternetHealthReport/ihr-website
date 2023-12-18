@@ -343,7 +343,7 @@ export default {
             { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.get('prefix'), format: val => `${val}`, sortable: true, sortOrder: 'ad' },
             { name: 'Description', label: 'Description', align: 'left', field: row => row.get('descr'), format: val => `${val}`, sortable: true },
             { name: 'Tags', label: 'Tags', align: 'left', field: row => row.get('tags'), format: val => `${val.join(', ')}`, sortable: true },
-            { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.get('visibility'), format: val => `${Number(val).toFixed(2)}%`, sortable: true },
+            { name: 'Visibility', label: 'Visibility', align: 'left', field: row => Number(row.get('visibility')), format: val => `${val.toFixed(2)}%`, sortable: true },
           ]
         },
 

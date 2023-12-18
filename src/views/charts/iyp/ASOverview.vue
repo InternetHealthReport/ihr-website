@@ -31,9 +31,9 @@
                 <h3>Popular Domains</h3>
                 <div class="column q-ml-sm">
                   <div v-if="this.queries[2].data.length > 0" class="column">
-                    <a :href="item.get('domainName')" v-for="item in queries[2].data" :key="item.get('domainName')" target="_blank" rel="noreferrer">{{
-                      item.get('domainName')
-                    }}</a>
+                    <router-link :to="{ name: 'iyp_domainname', params: {domain:item.get('domainName')}}" v-for="item in queries[2].data" :key="item.get('domainName')">
+                      {{ item.get('domainName') }}
+                    </router-link>
                   </div>
                 </div>
               </div>
@@ -139,7 +139,7 @@ export default {
         {
           data: [],
           query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
-      WHERE rr.rank < 100000 and rr.reference_name = "tranco.top1M"
+      WHERE rr.reference_name = "tranco.top1M"
       RETURN DISTINCT d.name AS domainName, rr.rank AS rank
       ORDER BY rank LIMIT 5
       `

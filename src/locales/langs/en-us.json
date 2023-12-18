@@ -366,6 +366,29 @@
         "caption": "Popular domain names classified as "
       }
     },
+    "domainname": {
+      "rankings": {
+        "title": "Rankings",
+        "caption": "Position in different rankings for "
+      },
+      "nameservers": {
+        "title": "Authoritative Nameservers",
+        "caption": "Authoritative Nameservers and corresponding ASes for "
+      },
+      "ips": {
+        "title": "IP addresses & prefixes",
+        "caption": "IP addresses, prefixes, and originating AS for "
+      },
+      "country_query": {
+        "title": "Querying countries",
+        "caption": "Top 100 countries querying for "
+      },
+      "as_query": {
+        "title": "Querying ASes",
+        "caption": "Top 100 ASes querying for "
+      }
+
+    },
     "prefix": {
       "popularDomains": {
         "title": "Popular Domains",

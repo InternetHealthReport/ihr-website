@@ -29,9 +29,9 @@
               <div class="col-12 col-md-auto">
                 <h3>Popular Domains</h3>
                 <div  v-if="queries[1].data.length > 0" class="q-ml-sm column">
-                  <a :href="item.domainName" v-for="item in queries[1].data" :key="item.get('domain')" target="_blank" rel="noreferrer">{{
-                    item.get('domain')
-                  }}</a>
+                  <router-link :to="{ name: 'iyp_domainname', params: {domain:item.get('domain')}}" v-for="item in queries[1].data" :key="item.get('domain')">
+                    {{ item.get('domain') }}
+                  </router-link>
                 </div>
               </div>
               <div class="col-12 col-md-2">

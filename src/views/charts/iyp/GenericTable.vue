@@ -72,7 +72,7 @@
 
 import { exportFile } from 'quasar'
 
-const colToUnderline = ['ASN', 'AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC']
+const colToUnderline = ['ASN', 'AS', 'Origin AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC']
 
 function wrapCsvValue (val, formatFn, row) {
   let formatted = formatFn !== void 0
