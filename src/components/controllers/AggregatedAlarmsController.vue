@@ -368,7 +368,13 @@ watch(selectedAlarmTypesOptions.value, () => {
         <div class="text-h6 center">Aggregated Alarms by Countries</div>
       </QCardSection>
       <QCardSection>
-        <WorldMapAggregatedAlarmsChart :loading="loadingVal" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+        <WorldMapAggregatedAlarmsChart
+          :loading="loadingVal"
+          :alarms="alarms.filter"
+          :aggregated-attrs-selected="aggregatedAttrs"
+          :alarm-type-titles-map="alarmTypeTitlesMap"
+          @country-clicked="countryClickedHandler"
+        />
       </QCardSection>
     </QCard>
 
@@ -379,7 +385,16 @@ watch(selectedAlarmTypesOptions.value, () => {
             <div class="text-h6 center">{{ selectedCountry ? `Alarms by ASNs over Time for ${selectedCountry}` : 'Alarms for all Countries over Time' }}</div>
           </QCardSection>
           <QCardSection>
-            <TimeSeriesAggregatedAlarmsChart :loading="loadingVal" :network-name="selectedNetwork" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" @select-time="timeFilter" />
+            <TimeSeriesAggregatedAlarmsChart
+              :loading="loadingVal"
+              :network-name="selectedNetwork"
+              :country-name="selectedCountry"
+              :alarms="alarms.filter"
+              :aggregated-attrs-selected="aggregatedAttrs"
+              :alarm-type-titles-map="alarmTypeTitlesMap"
+              @country-clicked="countryClickedHandler"
+              @select-time="timeFilter"
+            />
           </QCardSection>
         </QCard>
       </div>
@@ -389,19 +404,40 @@ watch(selectedAlarmTypesOptions.value, () => {
             <div class="text-h6 center">{{ selectedCountry ? `Aggregated Alarms by ASN, Alarm Type, and Severity for ${selectedCountry}` : 'Aggregated Alarms by Country, ASN, Alarm Type, and Severity' }}</div>
           </QCardSection>
           <QCardSection>
-            <TreeMapAggregatedAlarmsChart :loading="loadingVal" :network-name="selectedNetwork" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+            <TreeMapAggregatedAlarmsChart
+              :loading="loadingVal"
+              :network-name="selectedNetwork"
+              :country-name="selectedCountry"
+              :alarms="alarms.filter"
+              :aggregated-attrs-selected="aggregatedAttrs"
+              :alarm-type-titles-map="alarmTypeTitlesMap"
+              @country-clicked="countryClickedHandler"
+            />
           </QCardSection>
         </QCard>
       </div>
     </div>
-    <QCard>
+    <QCard class="IHR_charts-body">
       <QTabs v-model="aggregatedAlarmsTab">
-        <QTab v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap" :key="indexAlarmTypeTitlesMap" :label="dataAlarmTypeTitlesMap" :name="indexAlarmTypeTitlesMap" />
+        <QTab v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap" :key="indexAlarmTypeTitlesMap" :label="dataAlarmTypeTitlesMap" :name="indexAlarmTypeTitlesMap" :disable="isLoaded || !AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypes)[indexAlarmTypeTitlesMap]"  />
       </QTabs>
       <QSeparator />
       <QTabPanels v-model="aggregatedAlarmsTab">
         <QTabPanel v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap" :key="indexAlarmTypeTitlesMap" :name="indexAlarmTypeTitlesMap">
-          <AggregatedAlarmsTable :start-time="startTime" :end-time="endTime" :table-key-current="AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions)[indexAlarmTypeTitlesMap]" :severities-selected-list="selectSeveritiesLevels.map(obj => obj.value)" :selected-table-data-source="getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)" :selected-table-alarm-type="indexAlarmTypeTitlesMap" :loading="loadingVal" :country-name="selectedCountry" :alarms="alarms.filter" :aggregated-attrs-selected="aggregatedAttrs" :alarm-type-titles-map="alarmTypeTitlesMap" @country-clicked="countryClickedHandler" />
+          <AggregatedAlarmsTable
+            :start-time="startTime"
+            :end-time="endTime"
+            :table-key-current="AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions)[indexAlarmTypeTitlesMap]"
+            :severities-selected-list="selectSeveritiesLevels.map(obj => obj.value)"
+            :selected-table-data-source="getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)"
+            :selected-table-alarm-type="indexAlarmTypeTitlesMap"
+            :loading="loadingVal"
+            :country-name="selectedCountry"
+            :alarms="alarms.filter"
+            :aggregated-attrs-selected="aggregatedAttrs"
+            :alarm-type-titles-map="alarmTypeTitlesMap"
+            @country-clicked="countryClickedHandler"
+          />
         </QTabPanel>
       </QTabPanels>
     </QCard>

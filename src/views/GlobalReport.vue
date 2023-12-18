@@ -1,15 +1,12 @@
 <script setup>
 import { QExpansionItem, QItemSection, QIcon, QInput, QCard, QCardSection } from 'quasar'
 import DateTimePicker from '@/components/DateTimePicker.vue'
-import HegemonyAlarmsChart from '@/components/charts/HegemonyAlarmsChart.vue'
-import DiscoChart from '@/components/charts/DiscoChart.vue'
 import { ref, computed, watch, nextTick, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useRoute, useRouter } from 'vue-router'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import DelayChart from '@/components/charts/DelayChart.vue'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN } from '@/plugins/delay'
-import NetworkDelayAlarmsChart from '@/components/charts/NetworkDelayAlarmsChart.vue'
 import AggregatedAlarmsController from '@/components/controllers/AggregatedAlarmsController.vue'
 import { Query, HegemonyAlarmsQuery, NetworkDelayAlarmsQuery, DiscoEventQuery } from '@/plugins/IhrApi'
 
@@ -273,72 +270,6 @@ onMounted(() => {
         :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony"
         :networkDelayLoading="loading.networkDelay" :networkDisconnectionAlarms="networkDisconnectionAlarms" :networkDisconnectionLoading="loading.disco" />
     </QExpansionItem>
-    <!-- <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="hegemonyExpanded">
-      <template v-slot:header>
-        <div class="graph-header-div">
-          <QItemSection class="graph-header">
-            <QItemSection avatar>
-              <QIcon name="fas fa-project-diagram" color="primary" text-color="white" />
-            </QItemSection>
-
-            <QItemSection>
-              <div class="text-primary">
-                {{ $t('charts.asInterdependencies.title') }}
-              </div>
-              <div class="text-caption text-grey">BGP data</div>
-            </QItemSection>
-          </QItemSection>
-
-          <QItemSection class="filter-div">
-            <div class="text" v-if="hegemonyExpanded">
-              <QInput debounce="300" v-model="hegemonyFilter" placeholder="Filter">
-                <template v-slot:append>
-                  <QIcon name="fas fa-filter" />
-                </template>
-              </QInput>
-            </div>
-          </QItemSection>
-        </div>
-      </template>
-      <QCard class="IHR_charts-body">
-        <QCardSection>
-          <HegemonyAlarmsChart :start-time="startTime" :end-time="endTime" :fetch="fetch"
-            :min-deviation="minDeviationNetworkDelay" :filter="hegemonyFilter"
-              @loading="hegemonyLoading" @hegemony-alarms-data-loaded="hegemonyAlarms = $event" />
-        </QCardSection>
-      </QCard>
-    </QExpansionItem>
-    <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="ndelayExpanded">
-      <template v-slot:header>
-        <div class="graph-header-div">
-          <QItemSection class="graph-header">
-            <QItemSection avatar>
-              <QIcon name="fas fa-shipping-fast" color="primary" text-color="white" />
-            </QItemSection>
-            <QItemSection>
-              <div class="text-primary">{{ $t('charts.networkDelay.title') }}</div>
-              <div class="text-caption text-grey">Traceroute data</div>
-            </QItemSection>
-          </QItemSection>
-          <QItemSection class="filter-div">
-            <div class="text" v-if="ndelayExpanded">
-              <QInput debounce="300" v-model="ndelayFilter" placeholder="Filter">
-                <template v-slot:append>
-                  <QIcon name="fas fa-filter" />
-                </template>
-              </QInput>
-            </div>
-          </QItemSection>
-        </div>
-      </template>
-      <QCard class="IHR_charts-body">
-        <QCardSection>
-          <NetworkDelayAlarmsChart :start-time="startTime" :end-time="endTime" :fetch="fetch"
-            :min-deviation="minDeviationNetworkDelay" :filter="ndelayFilter"
-            @loading="networkDelayLoading" @network-delay-alarms-data-loaded="networkDelayAlarms = $event" />
-        </QCardSection>
-      </QCard>
-    </QExpansionItem> -->
     <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
       <template v-slot:header>
         <div class="graph-header-div">
@@ -374,45 +305,6 @@ onMounted(() => {
         </QCardSection>
       </QCard>
     </QExpansionItem>
-
-
-    <!-- <QExpansionItem caption="RIPE Atlas log" header-class="IHR_charts-title" default-opened expand-icon-toggle
-      v-model="discoExpanded">
-      <template v-slot:header>
-        <div class="graph-header-div">
-          <QItemSection class="graph-header">
-            <QItemSection avatar>
-              <QIcon name="fas fa-plug" color="primary" text-color="white" />
-            </QItemSection>
-
-            <QItemSection>
-              <div class="text-primary">
-                {{ $t('charts.disconnections.title') }}
-              </div>
-              <div class="text-caption text-grey">RIPE Atlas log</div>
-            </QItemSection>
-          </QItemSection>
-          <QItemSection class="filter-div">
-            <div class="text" v-if="discoExpanded">
-              <QInput debounce="300" v-model="discoFilter" placeholder="Filter">
-                <template v-slot:append>
-                  <QIcon name="fas fa-filter" />
-                </template>
-              </QInput>
-            </div>
-          </QItemSection>
-        </div>
-      </template>
-
-      <QCard class="IHR_charts-body">
-        <QCardSection>
-          <DiscoChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-avg-level="minAvgLevel"
-            :geoprobes.sync="geoProbes" :filter="discoFilter"
-            @loading="discoLoading" />
-        </QCardSection>
-      </QCard>
-    </QExpansionItem> -->
-
   </div>
 </template>
 
