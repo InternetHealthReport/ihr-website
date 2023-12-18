@@ -1,10 +1,9 @@
 <script setup>
-import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect, QBtn, QTabs, QTab, QSeparator, QTabPanels, QTabPanel } from 'quasar'
-import { ref, computed, inject, onMounted, watch } from 'vue'
+import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect, QBtn, QTabs, QTab, QSeparator, QTabPanels, QTabPanel, QTooltip, QIcon } from 'quasar'
+import { ref, computed, inject, watch } from 'vue'
 import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
 import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarmsChart.vue'
 import TreeMapAggregatedAlarmsChart from '../charts/TreeMapAggregatedAlarmsChart.vue'
-import { Query, HegemonyAlarmsQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
 import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
 import { isCountryName } from '@/plugins/countryName'
@@ -342,6 +341,11 @@ watch(selectedAlarmTypesOptions.value, () => {
                 <td><QCheckbox v-model="selectedDataSources[indexSource]" disable />{{ dataSource.metadata.title }}</td>
                 <td v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types" :key="indexAlarm">
                   <QCheckbox v-model="selectedAlarmTypes[indexSource][indexAlarm]" :disable="isLoaded" />{{ dataAlarm.metadata.title }}
+                  <QIcon name="fas fa-circle-info">
+                    <QTooltip>
+                      {{ ALARMS_INFO[indexSource].alarm_types[indexAlarm].metadata.description }}
+                    </QTooltip>
+                  </QIcon>
                   <QSelect filled v-model="selectedAlarmTypesOptions[indexSource][indexAlarm]" :options="Object.values(ALARMS_INFO[indexSource].alarm_types[indexAlarm].metadata.group_by_key_options)" :disable="isLoaded || !selectedAlarmTypes[indexSource][indexAlarm]" />
                 </td>
                 <td v-for="i in maxAlarmTypesLength - Object.keys(dataSource.alarm_types).length" :key="`empty-cell-${i}`"></td>
