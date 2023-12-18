@@ -29,7 +29,7 @@
                   <GenericTreemapChart
                     v-if="sections.ips.data.length > 0"
                     :chart-data="sections.ips.data"
-                    :config="{ keys: ['asn', 'ip'], root: this.pageTitle, hovertemplate: '<b>%{label}<br>%{value}</b> <br><br><extra></extra>' }"
+                    :config="{ keys: ['asn', 'prefix', 'ip'], root: this.pageTitle, hovertemplate: '<b>%{label}<br>%{value}</b> <br><br><extra></extra>' }"
                   />
                 </div>
               </div>

@@ -90,7 +90,7 @@ export default {
         },
         {
           data: [],
-          query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_org:'NRO'}]-(a:AS)-[rr:RANK]-(:Ranking)-[:COUNTRY]-(c)
+          query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[rr:RANK]-(:Ranking)-[:COUNTRY]-(c)
           WHERE rr.rank < 10
           OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
           OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
@@ -100,7 +100,7 @@ export default {
         },
         {
           data: [],
-          query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_org:'NRO'}]-(a:AS)-[:CATEGORIZED]-(:Tag {label:'Tranco 10k Host'}),
+          query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[:CATEGORIZED]-(:Tag {label:'Tranco 10k Host'}),
   (a)-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)-[:RESOLVES_TO]-(d:DomainName)
           OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
           OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
