@@ -321,7 +321,6 @@ onMounted(() => {
 </script>
 
 <template>
-  {{ selectedTableAlarmType }}
   <QTable
     table-class="myClass"
     :rows="rows"

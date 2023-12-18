@@ -1,5 +1,5 @@
 <script setup>
-import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect, QBtn, QTabs, QTab, QSeparator, QTabPanels, QTabPanel, QTooltip, QIcon } from 'quasar'
+import { QCard, QCardSection, QMarkupTable, QCheckbox, QSelect, QBtn, QTabs, QTab, QSeparator, QTabPanels, QTabPanel, QTooltip, QIcon, QInput } from 'quasar'
 import { ref, computed, inject, watch } from 'vue'
 import WorldMapAggregatedAlarmsChart from '../charts/WorldMapAggregatedAlarmsChart.vue'
 import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarmsChart.vue'
@@ -94,6 +94,7 @@ const aggregatedAttrs = ref({})
 const selectedCountry = ref(null)
 const selectedNetwork = ref(null)
 const aggregatedAlarmsTab = ref('hegemony')
+const filter = ref('')
 
 const etlAggregatedAlarmsDataModel = () => {
   aggregatedAlarmsLoadingVal.value = true
@@ -428,6 +429,11 @@ watch(selectedAlarmTypesOptions.value, () => {
       <QSeparator />
       <QTabPanels v-model="aggregatedAlarmsTab">
         <QTabPanel v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap" :key="indexAlarmTypeTitlesMap" :name="indexAlarmTypeTitlesMap">
+          <QInput debounce="300" v-model="filter" placeholder="Filter">
+            <template v-slot:append>
+              <QIcon name="fas fa-filter" />
+            </template>
+          </QInput>
           <AggregatedAlarmsTable
             :start-time="startTime"
             :end-time="endTime"
@@ -441,6 +447,7 @@ watch(selectedAlarmTypesOptions.value, () => {
             :aggregated-attrs-selected="aggregatedAttrs"
             :alarm-type-titles-map="alarmTypeTitlesMap"
             @country-clicked="countryClickedHandler"
+            :filter="filter"
           />
         </QTabPanel>
       </QTabPanels>
