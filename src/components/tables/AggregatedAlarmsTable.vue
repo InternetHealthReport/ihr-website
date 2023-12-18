@@ -14,6 +14,7 @@ import TimeSeriesAggregatedAlarmsChart from '../charts/TimeSeriesAggregatedAlarm
 import TreeMapAggregatedAlarmsChart from '../charts/TreeMapAggregatedAlarmsChart.vue'
 import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
 import { isCountryName } from '@/plugins/countryName'
+import Latencymon from '../ripe/Latencymon.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -221,6 +222,18 @@ const resetGranularity = (key) => {
   selectTime.value[key] = null
 }
 
+const getMeasurementProbeIds = (probeIds) => {
+  return { 1030: probeIds, 1001: probeIds, 1591146: probeIds }
+}
+
+const getNetworkDisconnectionStartTime = (streamStartTime, streamDurationMinutes, minutesShiftedBefore = 120) => {
+  return dateHourShift(streamStartTime, -Math.max(streamDurationMinutes, minutesShiftedBefore) / 60)
+}
+
+const getNetworkDisconnectionEndTime = (streamEndTime, streamDurationMinutes, minutesShiftedAfter = 120) => {
+  return dateHourShift(streamEndTime, Math.max(streamDurationMinutes, minutesShiftedAfter) / 60)
+}
+
 const initToggle = () => {
   toggle.value = {}
   selectSeveritiesLevels.value = {}
@@ -397,6 +410,12 @@ onMounted(() => {
               :no-table="true" :fetch="true"
             />
           </div>
+          <Latencymon v-if="selectedTableAlarmType == 'network_disconnection'"
+            :start-time="getNetworkDisconnectionStartTime(props.row.stream_start_time, props.row.stream_duration_minutes, 120)"
+            :stop-time="getNetworkDisconnectionEndTime(props.row.stream_end_time, props.row.stream_duration_minutes, 120)"
+            :msm-prb-ids="getMeasurementProbeIds(props.row.stream_disconnected_probe_ids)"
+            style="max-width: 93%; margin: 0 auto"
+          />
         </QTd>
       </QTr>
     </template>

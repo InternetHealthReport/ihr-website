@@ -374,6 +374,8 @@ onMounted(() => {
         </QCardSection>
       </QCard>
     </QExpansionItem>
+
+
     <!-- <QExpansionItem caption="RIPE Atlas log" header-class="IHR_charts-title" default-opened expand-icon-toggle
       v-model="discoExpanded">
       <template v-slot:header>

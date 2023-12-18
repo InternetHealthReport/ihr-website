@@ -288,6 +288,26 @@ const getDataSourceFromSelectedAlarmType = (val) => {
   return selectedKey
 }
 
+const init = () => {
+  Object.keys(selectedAlarmTypes.value).forEach(key => {
+    selectedDataSources.value[key] = Object.values(selectedAlarmTypes.value[key]).some(Boolean)
+  })
+  aggregatedAttrsSelected()
+  etlAggregatedAlarmsDataModel()
+}
+
+watch(() => props.hegemonyAlarms, () => {
+  init()
+})
+
+watch(() => props.networkDelayAlarms, () => {
+  init()
+})
+
+watch(() => props.networkDisconnectionAlarms, () => {
+  init()
+})
+
 watch(selectSeveritiesLevels, () => {
   selectSeveritiesLevelsAndIPAddressFamiliesFilter()
 })
@@ -297,19 +317,11 @@ watch(selectIPAddressFamilies, () => {
 })
 
 watch(selectedAlarmTypes.value, () => {
-  Object.keys(selectedAlarmTypes.value).forEach(key => {
-    selectedDataSources.value[key] = Object.values(selectedAlarmTypes.value[key]).some(Boolean)
-  })
-  aggregatedAttrsSelected()
-  etlAggregatedAlarmsDataModel()
+  init()
 })
 
 watch(selectedAlarmTypesOptions.value, () => {
-  Object.keys(selectedAlarmTypes.value).forEach(key => {
-    selectedDataSources.value[key] = Object.values(selectedAlarmTypes.value[key]).some(Boolean)
-  })
-  aggregatedAttrsSelected()
-  etlAggregatedAlarmsDataModel()
+  init()
 })
 
 </script>
