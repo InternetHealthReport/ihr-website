@@ -15,6 +15,7 @@ import TreeMapAggregatedAlarmsChart from '../charts/TreeMapAggregatedAlarmsChart
 import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
 import { isCountryName } from '@/plugins/countryName'
 import Latencymon from '../ripe/Latencymon.vue'
+import IodaChart from '../charts/IodaChart.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -234,6 +235,29 @@ const getNetworkDisconnectionEndTime = (streamEndTime, streamDurationMinutes, mi
   return dateHourShift(streamEndTime, Math.max(streamDurationMinutes, minutesShiftedAfter) / 60)
 }
 
+const iodaEntityValue = (row, overviewColumn) => {
+  const isCountry = iodaEntityFilteredByCountry(overviewColumn)
+  if (isCountry) {
+    const countryIsoCode2 = alarmsTableDataFromModel.value[row.key_normalized][`${props.tableKeyCurrent}_country_iso_code2`][0]
+    return String(countryIsoCode2)
+  } else {
+    return String(row.key_normalized)
+  }
+}
+
+const iodaEntityFilteredByCountry = (overviewColumn) => {
+  const granularity = overviewColumn.split('_overview')[0]
+  return granularity === 'country' ? true : false
+}
+
+const iodaAlarmTypesUnits = computed(() => {
+  const iodaAlarmTypesUnitsResult = {}
+  for (const iodaAlarmType in ALARMS_INFO.ioda.alarm_types) {
+    iodaAlarmTypesUnitsResult[iodaAlarmType] = ALARMS_INFO.ioda.alarm_types[iodaAlarmType].metadata.unit
+  }
+  return iodaAlarmTypesUnitsResult
+})
+
 const initToggle = () => {
   toggle.value = {}
   selectSeveritiesLevels.value = {}
@@ -245,6 +269,7 @@ const initToggle = () => {
     for (const key in val) {
       toggle.value[`${val.key_normalized}_overview`] = false
       toggle.value[`${val.key_normalized}_asn_overview`] = false
+      toggle.value[`${val.key_normalized}_country_overview`] = false
       selectSeveritiesLevels.value[val.key_normalized] = SEVERITIED_LEVELS
       selectIPAddressFamilies.value[val.key_normalized] = IP_ADDRESS_FAMILIES
       selectedCountry.value[val.key_normalized] = null
@@ -415,6 +440,24 @@ onMounted(() => {
             :stop-time="getNetworkDisconnectionEndTime(props.row.stream_end_time, props.row.stream_duration_minutes, 120)"
             :msm-prb-ids="getMeasurementProbeIds(props.row.stream_disconnected_probe_ids)"
             style="max-width: 93%; margin: 0 auto"
+          />
+          <IodaChart v-if="selectedTableDataSource == 'ioda'"
+            :entity-value="iodaEntityValue(props.row, 'asn_overview')"
+            :filter-by-country="iodaEntityFilteredByCountry('asn_overview')"
+            :start-time="startTime"
+            :end-time="endTime"
+            :ioda-alarm-types-units="iodaAlarmTypesUnits"
+          />
+        </QTd>
+      </QTr>
+      <QTr v-if="toggle[`${props.row.key_normalized}_country_overview`]" :props="props">
+        <QTd colspan="100%" class="IHR_nohover" bordered>
+          <IodaChart v-if="selectedTableDataSource == 'ioda'"
+            :entity-value="iodaEntityValue(props.row, 'country_overview')"
+            :filter-by-country="iodaEntityFilteredByCountry('country_overview')"
+            :start-time="startTime"
+            :end-time="endTime"
+            :ioda-alarm-types-units="iodaAlarmTypesUnits"
           />
         </QTd>
       </QTr>
