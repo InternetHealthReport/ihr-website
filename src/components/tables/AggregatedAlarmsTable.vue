@@ -382,7 +382,7 @@ onMounted(() => {
                 <div class="col">
                   <QSelect outlined multiple v-model="selectSeveritiesLevels[props.row.key_normalized]" :options="SEVERITIED_LEVELS" label="Severity Levels:" stack-label use-chips />
                 </div>
-                <div class="col">
+                <div class="col offset-md-1">
                   <QSelect outlined multiple v-model="selectIPAddressFamilies[props.row.key_normalized]" :options="IP_ADDRESS_FAMILIES" label="IP Address Families:" stack-label use-chips />
                 </div>
                 <div class="col">
