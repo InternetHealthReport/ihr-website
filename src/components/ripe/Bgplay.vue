@@ -1,45 +1,70 @@
-<template>
-  <div>
-    <q-card v-if="loaded === false" negative>
-      <q-card-section> {{ $t('genericErrors.cloudNotLoad') }} BGPlay </q-card-section>
-    </q-card>
-    <div v-if="loaded === null" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
-    </div>
-    <div :id="myId"></div>
-  </div>
-</template>
+<script setup>
+import { QCard, QCardSection, QSpinner, uid } from 'quasar'
+import { ref, onMounted, watch, computed, inject } from 'vue'
 
-<script>
-export default {
-  name: 'BgplayWidget',
-  props: {
-    asNumber: {
-      type: Number,
-      required: true,
-    },
-    dateTime: {
-      type: Date,
-      required: true,
-    },
-    intervalLength: {
-      type: Number,
-      default: 3600, //length of interval in seconds
-    },
+const library_delayer = inject('library_delayer')
+
+const props = defineProps({
+  asNumber: {
+    type: Number,
+    required: true,
   },
-  data() {
-    return {
-      myId: `bgplayContainer${this._uid}`,
-      bgplay: null,
-      loaded: null,
-    }
+  dateTime: {
+    type: Date,
+    required: true,
   },
-  mounted() {
-    this.$libraryDelayer.load('bgplay_api', () => {
-      // console.log('resolved')
-      this.bgplay = BGPlayWidget(
-        'BGPlay', // Version type (classic)
-        this.myId, // DOM element ID to populate
+  intervalLength: {
+    type: Number,
+    default: 3600, //length of interval in seconds
+  },
+})
+
+const myId = ref(`bgplayContainer${uid()}`)
+const bgplay = ref(null)
+const loaded = ref(null)
+
+const asName = computed(() => {
+  return `AS${props.asNumber}`
+})
+
+const startTime = computed(() => {
+  return props.dateTime.getTime() / 1000 - props.intervalLength / 2
+})
+
+const endTime = computed(() => {
+  return props.dateTime.getTime() / 1000 + props.intervalLength / 2
+})
+
+watch(() => props.asNumber, (oldValue, newValue) => {
+  if (oldValue == newValue) {
+    return
+  }
+  bgplay.value.shell.set_params({ resource: asName.value })
+})
+watch(() => props.dateTime, (oldValue, newValue) => {
+  if (oldValue == newValue) {
+    return
+  }
+  bgplay.value.shell.set_params({
+    starttime: startTime.value,
+    endtime: endTime.value,
+  })
+})
+watch(() => props.intervalLength, (oldValue, newValue) => {
+  if (oldValue == newValue) {
+    return
+  }
+  bgplay.value.shell.set_params({
+    starttime: startTime.value,
+    endtime: endTime.value,
+  })
+})
+
+onMounted(() => {
+  library_delayer.load('bgplay_api', () => {
+    bgplay.value = BGPlayWidget(
+        'BGPlay',
+        myId.value,
         {
           width: '100vw',
           height: 800,
@@ -47,55 +72,29 @@ export default {
         {
           unix_timestamps: 'TRUE',
           ignoreReannouncements: 'true',
-          resource: this.asName,
-          starttime: this.startTime,
-          endtime: this.endTime,
+          resource: asName.value,
+          starttime: startTime.value,
+          endtime: endTime.value,
           rrcs: '10',
           type: 'bgp',
         }
       )
-    })
-  },
-  watch: {
-    asNumber(oldValue, newValue) {
-      if (oldValue == newValue) return
-      this.bgplay.shell.set_params({ resource: this.asName })
-    },
-    dateTime(oldValue, newValue) {
-      if (oldValue == newValue) return
-      this.bgplay.shell.set_params({
-        starttime: this.startTime,
-        endtime: this.endTime,
-      })
-    },
-    intervalLength(oldValue, newValue) {
-      if (oldValue == newValue) return
-      this.bgplay.shell.set_params({
-        starttime: this.startTime,
-        endtime: this.endTime,
-      })
-    },
-  },
-  computed: {
-    asName() {
-      return `AS${this.asNumber}`
-    },
-    startTime() {
-      return this.dateTime.getTime() / 1000 - this.intervalLength / 2
-    },
-    endTime() {
-      return this.dateTime.getTime() / 1000 + this.intervalLength / 2
-    },
-  },
-}
+      loaded.value = true
+  })
+})
 </script>
 
+<template>
+  <div>
+    <QCard v-if="loaded === false" negative>
+      <QCardSection> {{ $t('genericErrors.cloudNotLoad') }} BGPlay </QCardSection>
+    </QCard>
+    <div v-if="loaded === null" class="IHR_loading-spinner">
+      <QSpinner color="secondary" size="15em" />
+    </div>
+    <div :id="myId"></div>
+  </div>
+</template>
+
 <style lang="stylus">
-.IHR_
-  &loading-spinner
-    & > *
-      width 25%
-      height 25%
-      display inline-block
-      margin auto
 </style>

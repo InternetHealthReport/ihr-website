@@ -1,252 +1,185 @@
-<i18n src="@/locales/long_langs/documentation.json"></i18n>
+<script setup>
+import { onMounted, ref } from 'vue';
+import { QDrawer } from 'quasar'
+import { RouterLink } from 'vue-router'
+import Tr from '@/i18n/translation'
+
+const SECTIONS = [
+    {
+        sectionsTitle: 'general',
+        sectionsBody: [
+            {
+                name: 'about',
+                numberOfDescriptions: 4,
+            },
+            {
+                name: 'faq',
+                numberOfDescriptions: 6,
+            },
+            {
+                name: 'ack',
+                numberOfDescriptions: 8,
+            }
+        ]
+    },
+    {
+        sectionsTitle: 'reports',
+        sectionsBody: [
+            {
+                name: 'globalreport',
+                numberOfDescriptions: 0,
+            },
+            {
+                name: 'networkreport',
+                numberOfDescriptions: 0,
+            },
+            {
+                name: 'countryreport',
+                numberOfDescriptions: 0,
+            }
+        ]
+    },
+    {
+        sectionsTitle: 'analysisModules',
+        sectionsBody: [
+            {
+                name: 'asdependency',
+                numberOfDescriptions: 4,
+            },
+            {
+                name: 'countryasdependency',
+                numberOfDescriptions: 3,
+            },
+            {
+                name: 'prefixasdependency',
+                numberOfDescriptions: 4,
+            },
+            {
+                name: 'netdelay',
+                numberOfDescriptions: 2,
+            },
+            {
+                name: 'delayforward',
+                numberOfDescriptions: 4,
+            },
+            {
+                name: 'disco',
+                numberOfDescriptions: 3,
+            }
+        ]
+    },
+    {
+        sectionsTitle: 'dataAccess',
+        sectionsBody: [
+            {
+                name: 'api',
+                numberOfDescriptions: 4,
+            },
+            {
+                name: 'pythonlibrary',
+                numberOfDescriptions: 5,
+            },
+            {
+                name: 'dumps',
+                numberOfDescriptions: 0,
+            },
+            {
+                name: 'datapolicy',
+                numberOfDescriptions: 0,
+            }
+        ]
+    }
+]
+
+const emit = defineEmits({
+    'sidebar-action': (sideBarAction) => {
+        if(sideBarAction !== null) {
+            return true
+        } else {
+            return false
+        }
+    }
+})
+
+onMounted(() => {
+    emit('sidebar-action', true)
+})
+
+const replaceSpaces = (text) => {
+    return text.split(' ').join('-').split('(').join('-').split(')').join('-').split("'").join('-')
+}
+
+const replaceImgURL = (url) => {
+    return `${window.location.origin}/src/${url}`
+}
+
+const activateSelection = (sec) => {
+  if(sectionActive.value !== '') {
+    sectionActiveStatus.value[sectionActive.value] = false
+  }
+  sectionActiveStatus.value[sec] = true
+  sectionActive.value = sec
+}
+
+const sections = ref(SECTIONS)
+const showSidebar = ref(true)
+const sectionActiveStatus = ref(Object.assign({}, ...SECTIONS.map(valA => valA.sectionsBody.map(valB => {
+  const obj = {}
+  obj[valB.name] = false
+  return obj
+})).flat()))
+const sectionActive = ref('')
+</script>
+
 <template>
   <div>
-    <q-drawer :value="showSidebar" side="left" bordered content-class="IHR_documentation-page-sidebar">
+    <QDrawer v-model="showSidebar" side="left" bordered class="IHR_documentation-page-sidebar">
       <h3>{{ $t('documentationPage.title') }}</h3>
-      <div>
+      <div v-for="(sec, idx) in sections" v-bind:key="idx">
         <div class="text-weight-light">
-          {{ $t('documentationPage.sectionsTitle.general') }}
+          {{ $t(`documentationPage.sectionsTitle.${sec.sectionsTitle}`) }}
         </div>
-        <ul>
-          <li>
-            <router-link
-              :to="{
+        <ul >
+          <li v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)" v-bind:key="idx">
+            <RouterLink
+              :to="Tr.i18nRoute({
                 name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.about.title`)),
-              }"
+                hash: '#' + replaceSpaces($t(`documentationPage.sections.${secB}.title`)),
+              })"
               class="IHR_delikify"
-              >{{ $t('documentationPage.sections.about.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.faq.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.faq.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.ack.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.ack.title') }}</router-link
-            >
+              v-bind:class="{'router-link-inactived': !sectionActiveStatus[secB], 'router-link-actived': sectionActiveStatus[secB]}"
+              v-on:click ="activateSelection(secB)"
+              >{{ $t(`documentationPage.sections.${secB}.title`) }}</RouterLink>
           </li>
         </ul>
       </div>
-      <div>
-        <div class="text-weight-light">
-          {{ $t('documentationPage.sectionsTitle.reports') }}
-        </div>
-        <ul>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.globalreport.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.globalreport.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.networkreport.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.networkreport.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.countryreport.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.countryreport.title') }}</router-link
-            >
-          </li>
-        </ul>
-      </div>
-      <div>
-        <div class="text-weight-light">
-          {{ $t('documentationPage.sectionsTitle.analysisModules') }}
-        </div>
-        <ul>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.asdependency.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.asdependency.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.countryasdependency.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.countryasdependency.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.prefixasdependency.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.prefixasdependency.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.netdelay.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.netdelay.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.delayforward.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.delayforward.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.disco.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.disco.title') }}</router-link
-            >
-          </li>
-        </ul>
-      </div>
-      <div>
-        <div class="text-weight-light">
-          {{ $t('documentationPage.sectionsTitle.dataAccess') }}
-        </div>
-        <ul>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.api.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.api.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.pythonlibrary.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.pythonlibrary.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.dumps.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.dumps.title') }}</router-link
-            >
-          </li>
-          <li>
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: '#' + replaceSpaces($t(`documentationPage.sections.datapolicy.title`)),
-              }"
-              class="IHR_delikify"
-              >{{ $t('documentationPage.sections.datapolicy.title') }}</router-link
-            >
-          </li>
-        </ul>
-      </div>
-    </q-drawer>
+    </QDrawer>
 
     <div id="IHR_documentation-page">
-      <div v-for="(sec, idx) in $t('documentationPage.sections')" v-bind:key="idx" class="IHR_documentation-page">
-        <div class="IHR_anchor" :id="replaceSpaces(sec.title)"></div>
-        <h1 v-html="sec.title"></h1>
-        <p class="text-left text-body1" v-html="sec.summary"></p>
-        <div v-for="(sub, idx) in sec.description" v-bind:key="idx">
-          <h2 v-html="sub.header"></h2>
-          <img v-if="sub.img" :src="require(`@/${sub.img[0]}`)" :style="sub.img[1]" />
-          <p class="text-left text-body1" v-html="sub.body"></p>
+      <div v-for="(mainSec, mainIdx) in sections" v-bind:key="mainIdx">
+        <div v-for="(bodySec, bodyIdx) in mainSec.sectionsBody" v-bind:key="bodyIdx" class="IHR_documentation-page">
+          <div class="IHR_anchor" :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"></div>
+          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)"></h1>
+          <p class="text-left text-body1" v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"></p>
+          <div v-for="idx in bodySec.numberOfDescriptions" v-bind:key="idx">
+            <h2 v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"></h2>
+            <img v-if="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`) !== ''" :src="replaceImgURL($t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`))" :style="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.style`)" />
+            <p class="text-left text-body1" v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"></p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'DocumentationView',
-  props: {
-    showSidebar: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  emits: {
-    'sidebar-action': function(sideBarAction) {
-      if (sideBarAction !== null) {
-        return true;
-      } else {
-        console.warn('Sidebar Action is missing!');
-        return false;
-      }
-    }
-  },
-  mounted() {
-    this.$emit('sidebar-action', true)
-  },
-  methods: {
-    replaceSpaces(text) {
-      return text.split(' ').join('_').split('(').join('_').split(')').join('_').split("'").join('_')
-    },
-  },
-}
-</script>
-
 <style lang="stylus">
-@import '~quasar-variables';
-
 #IHR_
   &documentation-page
     margin 0pt auto
     width 100%
     max-width 1200px
     padding 0 1rem
+    overflow-x scroll
 
 .IHR_
   &documentation-page
@@ -263,7 +196,8 @@ export default {
     & > div
       & > h2
         margin-top 34pt
-        font-size 18pt
+        margin-bottom 1rem
+        font-size 18pt !important
         font-weight 500
         line-height 1.5rem
         @media screen and (max-width: 600px)
@@ -301,11 +235,7 @@ export default {
         border-bottom 1px solid $primary
 
       & a:active
-        border-bottom 1px solid $accent
-
-      .router-link-active,
-      .router-link-exact-active 
-        border-bottom 1px solid red        
+        border-bottom 1px solid $accent     
 
       & ul
         margin 5px
@@ -323,7 +253,14 @@ export default {
   top -100px
   visibility hidden
 
-pre
-  overflow-x scroll
+.router-link-inactived
+  border-bottom 0
+
+.router-link-actived
+  border-bottom 1px solid red
+
+.router-link-inactived:hover,
+.router-link-actived:hover
+  border-bottom 1px solid $primary
 
 </style>

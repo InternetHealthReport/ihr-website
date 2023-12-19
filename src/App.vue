@@ -1,53 +1,49 @@
-<template>
-  <q-layout view="hHh LpR fff" id="app" class="IHR bg-white">
-    <router-view name="header" />
-    <q-page-container>
-      <router-view />
-      <div id="IHR_last-element">&nbsp;</div>
-    </q-page-container>
-    <router-view name="footer" />
-    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><q-icon
-        name="fas fa-arrow-up"></q-icon></button>
-  </q-layout>
-</template>
-<script>
-// subset of router, see router.js
-export default {
-  name: 'App',
-  components: {},
-  data() {
-    return {
-      text: '',
-      scrollPosition: 0
-    }
-  },
-  computed: {
-    showScrollTopButton() {
-      return this.scrollPosition > 0;
-    }
-  },
-  methods: {
-    scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    },
-    updateScrollPosition() {
-      this.scrollPosition = window.scrollY;
-    }
-  },
-  mounted() {
-    window.addEventListener('scroll', this.updateScrollPosition, { passive: true });
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.updateScrollPosition);
-  }
-}
-</script>
-<style lang="stylus">
-@import '~quasar-variables';
+<script setup>
+import { RouterView } from 'vue-router'
+import { QLayout, QPageContainer, QIcon } from 'quasar'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import Header from './components/Header.vue';
+import Footer from './components/Footer.vue'
 
+let scrollPosition = ref(0)
+
+const showScrollTopButton = () => {
+  return scrollPosition > 0
+}
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
+const updateScrollPosition = () => {
+  scrollPosition = window.scrollY
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', updateScrollPosition)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', updateScrollPosition)
+})
+</script>
+
+<template>
+  <QLayout view="hHh LpR fff" id="app" >
+    <Header></Header>
+    <QPageContainer>
+      <RouterView />
+      <div id="IHR_last-element">&nbsp;</div>
+    </QPageContainer>
+    <Footer></Footer>
+    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
+  </QLayout>
+</template>
+
+<style lang="stylus">
 menu-delinkify(val)
   font-size 12pt
   color white
@@ -67,10 +63,6 @@ menu-delinkify(val)
   &footer
     & a
       color white
-
-    ~/fsection
-      padding-top 5pt
-      border-left solid gray 1px
 
       &first-child
         border-left none

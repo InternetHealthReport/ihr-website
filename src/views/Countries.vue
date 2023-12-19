@@ -1,3 +1,152 @@
+<script setup>
+import { QList, QExpansionItem, QSeparator, QCard, QCardSection } from 'quasar'
+import { RouterLink } from 'vue-router'
+import Tr from '@/i18n/translation'
+import report from '@/plugins/report'
+import { useRoute, useRouter } from 'vue-router'
+import { ref, inject, computed, watch, nextTick, onMounted, onBeforeMount } from 'vue'
+import { useI18n } from 'vue-i18n'
+import DateTimePicker from '@/components/DateTimePicker.vue'
+import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
+import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
+import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
+import { isoCountries } from '@/plugins/countryName'
+import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
+import { AS_FAMILY } from '@/plugins/IhrApi'
+import CountryHegemonyChart from '../components/charts/CountryHegemonyChart.vue'
+
+const { t } = useI18n()
+
+const ihr_api = inject('ihr_api')
+
+const LOADING_STATUS = {
+  ERROR: -3,
+  EXPIRED: -2,
+  NOT_FOUND: -1,
+  LOADING: 0,
+  LOADED: 1,
+}
+
+const route = useRoute()
+const router = useRouter()
+
+const timeRange = route.query.last ? route.query.last : 3
+
+let { interval, utcString, fetch, reportDateFmt, minDate, maxDate, setReportDate, startTime, endTime } = report(timeRange)
+
+if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[0]) {
+  setReportDate(new Date(route.query.date))
+}
+
+const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
+const loadingStatus = ref(LOADING_STATUS.LOADING)
+const countryCode = ref(route.params.cc in isoCountries ? route.params.cc : null)
+const countryName = ref(null)
+const minAvgLevel = ref(DEFAULT_DISCO_AVG_LEVEL)
+const show = ref({
+  prefixHegemonyChart: true,
+  prefixHegemonyChart_disable: false,
+  disco: true,
+  disco_disable: false,
+  hegemony: true,
+  hegemony_disable: false,
+  net_delay: true,
+  net_delay_disable: false
+})
+const majorEyeballs = ref([])
+const majorEyeballsThreshold = ref(10)
+const clear = ref(0)
+
+const family = computed(() => {
+  return addressFamily.value == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
+})
+const addressFamilyText = computed(() => {
+  return addressFamily.value ? 'IPv4' : 'IPv6'
+})
+const showGraphs = computed(() => {
+  return loadingStatus.value == LOADING_STATUS.LOADED
+})
+const headerString = computed(() => {
+  if (loadingStatus.value == LOADING_STATUS.LOADING) {
+    return t('Networks.headerString.loading')
+  } else if (loadingStatus.value == LOADING_STATUS.NOT_FOUND) {
+    return t('Networks.headerString.notFound')
+  } else if (loadingStatus.value == LOADING_STATUS.EXPIRED) {
+    return t('Networks.headerString.expired')
+  } else if (loadingStatus.value == LOADING_STATUS.LOADED) {
+    if (countryCode.value in isoCountries) {
+      return isoCountries[countryCode.value]
+    } else {
+      return t('Networks.headerString.notFound')
+    }
+  } else {
+    return t('genericErrors.ups')
+  }
+})
+const subHeader = computed(() => {
+  if (loadingStatus.value == LOADING_STATUS.LOADING) {
+    return t('Networks.subHeader.loading')
+  } else if (loadingStatus.value == LOADING_STATUS.NOT_FOUND) {
+    return t('Networks.subHeader.notFound')
+  } else if (loadingStatus.value == LOADING_STATUS.EXPIRED) {
+    return t('Networks.subHeader.expired')
+  } else if (loadingStatus.value == LOADING_STATUS.LOADED) {
+    return countryCode.value
+  } else {
+    return t('genericErrors.badHappened')
+  }
+})
+
+const pushRoute = () => {
+  router.push({
+    replace: true,
+    query: Object.assign({}, route.query, {
+      af: family.value,
+      last: interval.value.dayDiff(),
+      date: utcString(interval.value.end).split('T')[0],
+    }),
+  })
+  loadingStatus.value = LOADING_STATUS.LOADED
+  fetch.value = true
+}
+
+const displayNetDelay = (displayValue) => {
+  show.value.net_delay = displayValue
+  nextTick(() => {
+    show.value.net_delay_disable = !displayValue
+  })
+}
+
+const setMajorEyeballs = (asns) => {
+  majorEyeballs.value = []
+  asns.forEach(elem => {
+    majorEyeballs.value.push('AS4' + elem)
+  })
+}
+
+watch(addressFamily, () => {
+  pushRoute()
+})
+watch(() => route.params.cc, (cc) => {
+  if (cc != countryCode.value) {
+    loadingStatus.value = LOADING_STATUS.LOADING
+    countryCode .value = cc
+    majorEyeballs.value = []
+    if (countryCode.value) {
+      pushRoute()
+    }
+  }
+})
+watch(interval, () => {
+  pushRoute()
+})
+onMounted(() => {
+  if (isoCountries[route.params.cc]) {
+    pushRoute()
+  }
+})
+</script>
+
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="countryCode">
@@ -5,12 +154,11 @@
         <h1 class="text-center">{{ headerString }}</h1>
         <h3 class="text-center">
           {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-          <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+          <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
         </h3>
       </div>
-      <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
-      <q-list v-if="showGraphs">
-        <q-expansion-item
+      <QList v-if="showGraphs">
+        <QExpansionItem
           :label="$t('charts.countryHegemony.title')"
           caption="BGP data / APNIC population estimates"
           header-class="IHR_charts-title"
@@ -18,10 +166,10 @@
           :disable="show.hegemony_disable"
           v-model="show.hegemony"
         >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <country-hegemony-chart
+          <QSeparator />
+          <QCard class="IHR_charts-body">
+            <QCardSection>
+              <CountryHegemonyChart
                 :start-time="startTime"
                 :end-time="endTime"
                 :country-code="countryCode"
@@ -30,11 +178,11 @@
                 ref="asInterdependenciesChart"
                 @eyeballs="setMajorEyeballs($event)"
               />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+            </QCardSection>
+          </QCard>
+        </QExpansionItem>
 
-        <q-expansion-item
+        <QExpansionItem
           :label="$t('charts.prefixHegemony.title')"
           caption="BGP / IRR / RPKI / delegated"
           header-class="IHR_charts-title"
@@ -42,22 +190,21 @@
           :disable="show.prefixHegemonyChart_disable"
           v-model="show.prefixHegemonyChart"
         >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <prefix-hegemony-chart
+          <QSeparator />
+          <QCard class="IHR_charts-body">
+            <QCardSection>
+              <PrefixHegemonyChart
                 :start-time="startTime"
                 :end-time="endTime"
                 :country-code="countryCode"
                 :address-family="family"
                 :fetch="fetch"
-                ref="prefixHegemonyChart"
               />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+            </QCardSection>
+          </QCard>
+        </QExpansionItem>
 
-        <q-expansion-item
+        <QExpansionItem
           :label="$t('charts.networkDelay.title')"
           caption="Traceroute data"
           header-class="IHR_charts-title"
@@ -65,10 +212,10 @@
           v-model="show.net_delay"
           :disable="show.net_delay_disable"
         >
-          <q-separator />
-          <q-card class="IHR_charts-body">
-            <q-card-section>
-              <network-delay-chart
+          <QSeparator />
+          <QCard class="IHR_charts-body">
+            <QCardSection>
+              <NetworkDelayChart
                 group="start"
                 :start-time="startTime"
                 :end-time="endTime"
@@ -83,21 +230,20 @@
                 :fetch="majorEyeballs.length != 0"
                 :clear="clear"
                 searchBar
-                ref="networkDelayChart"
               />
-            </q-card-section>
-          </q-card>
-        </q-expansion-item>
+            </QCardSection>
+          </QCard>
+        </QExpansionItem>
 
         <div class="IHR_last-element">&nbsp;</div>
-      </q-list>
+      </QList>
     </div>
     <div v-else>
       <div>
         <h1 class="text-center q-pa-xl">Country Report</h1>
         <div class="row justify-center">
           <div class="col-6">
-            <network-search-bar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true"/>
+            <NetworkSearchBar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true"/>
           </div>
         </div>
       </div>
@@ -111,26 +257,26 @@
           <div class="col-3">
             <ul>
               <li>
-                <router-link :to="{ name: 'countries', params: { cc: 'JP' } }" class="IHR_delikify">Japan</router-link>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'JP' } })" class="IHR_delikify">Japan</RouterLink>
               </li>
               <li>
-                <router-link :to="{ name: 'countries', params: { cc: 'FR' } }" class="IHR_delikify">France</router-link>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'FR' } })" class="IHR_delikify">France</RouterLink>
               </li>
               <li>
-                <router-link :to="{ name: 'countries', params: { cc: 'US' } }" class="IHR_delikify">United States</router-link>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'US' } })" class="IHR_delikify">United States</RouterLink>
               </li>
             </ul>
           </div>
           <div class="col-3">
             <ul>
               <li>
-                <router-link :to="{ name: 'countries', params: { cc: 'BR' } }" class="IHR_delikify">Brazil</router-link>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'BR' } })" class="IHR_delikify">Brazil</RouterLink>
               </li>
               <li>
-                <router-link :to="{ name: 'countries', params: { cc: 'DE' } }" class="IHR_delikify">Germany</router-link>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'DE' } })" class="IHR_delikify">Germany</RouterLink>
               </li>
               <li>
-                <router-link :to="{ name: 'countries', params: { cc: 'CN' } }" class="IHR_delikify">China</router-link>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'CN' } })" class="IHR_delikify">China</RouterLink>
               </li>
             </ul>
           </div>
@@ -140,168 +286,10 @@
   </div>
 </template>
 
-<script>
-import reportMixin from '@/views/mixin/reportMixin'
-import CountryHegemonyChart from '@/views/charts/CountryHegemonyChart'
-import PrefixHegemonyChart from '@/views/charts/PrefixHegemonyChart'
-import { DEFAULT_DISCO_AVG_LEVEL } from '@/views/charts/global/DiscoChart'
-import NetworkDelayChart from '@/views/charts/NetworkDelayChart'
-import { AS_FAMILY } from '@/plugins/IhrApi'
-import DateTimePicker from '@/components/DateTimePicker'
-import NetworkSearchBar from '@/components/search_bar/NetworkSearchBar'
-import { isoCountries } from '@/plugins/countryName'
-import html2pdf from 'html2pdf.js'
-
-const LOADING_STATUS = {
-  ERROR: -3,
-  EXPIRED: -2,
-  NOT_FOUND: -1,
-  LOADING: 0,
-  LOADED: 1,
-}
-
-const CHART_REFS = ['countryHegemonyChart', 'prefixHegemonyChart', 'networkDelayChart', 'delayAndForwardingChart', 'ihrChartDisco']
-
-export default {
-  name: 'CountryReport',
-  mixins: [reportMixin],
-  components: {
-    CountryHegemonyChart,
-    PrefixHegemonyChart,
-    NetworkDelayChart,
-    DateTimePicker,
-    NetworkSearchBar,
-  },
-  data() {
-    let addressFamily = this.$route.query.af
-    let { cc } = this.$route.params
-    return {
-      addressFamily: addressFamily == undefined ? 4 : addressFamily,
-      loadingStatus: LOADING_STATUS.LOADING,
-      countryCode: cc in isoCountries ? cc : null,
-      countryName: null,
-      charRefs: CHART_REFS,
-      minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
-      show: {
-        prefixHegemonyChart: true,
-        prefixHegemonyChart_disable: false,
-        disco: true,
-        disco_disable: false,
-        hegemony: true,
-        hegemony_disable: false,
-        net_delay: true,
-        net_delay_disable: false,
-      },
-      majorEyeballs: [],
-      majorEyeballsThreshold: 10,
-      clear: 0,
-    }
-  },
-  methods: {
-    pushRoute() {
-      this.$router.replace({
-        //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
-        query: Object.assign({}, this.$route.query, {
-          af: this.family,
-          last: this.interval.dayDiff(),
-          date: this.$options.filters.ihrUtcString(this.interval.end, false),
-        }),
-      })
-      this.loadingStatus = LOADING_STATUS.LOADED
-      this.fetch = true
-    },
-    displayNetDelay(displayValue) {
-      this.show.net_delay = displayValue
-      this.$nextTick(function () {
-        this.show.net_delay_disable = !displayValue
-      })
-    },
-    setMajorEyeballs(asns) {
-      var tmp = []
-      this.majorEyeballs = []
-      asns.forEach(elem => {
-        tmp.push('AS4' + elem)
-      })
-      this.majorEyeballs = tmp
-    },
-    generateReport() {
-      let element = this.$refs['ihrAsAndIxpContainer']
-      let opt = {
-        margin: 0,
-        filename: 'Countries.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
-      }
-      html2pdf(element, opt)
-      console.log('button is clicked')
-    },
-  },
-  mounted() {},
-  computed: {
-    family() {
-      return this.addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
-    },
-    addressFamilyText() {
-      return this.addressFamily ? 'IPv4' : 'IPv6'
-    },
-    showGraphs() {
-      return this.loadingStatus == LOADING_STATUS.LOADED
-    },
-    headerString() {
-      switch (this.loadingStatus) {
-        case LOADING_STATUS.LOADING:
-          return this.$t('Networks.headerString.loading')
-        case LOADING_STATUS.NOT_FOUND:
-          return this.$t('Networks.headerString.notFound')
-        case LOADING_STATUS.EXPIRED:
-          return this.$t('Networks.headerString.expired')
-        case LOADING_STATUS.LOADED:
-          if (this.countryCode in isoCountries) {
-            return isoCountries[this.countryCode]
-          } else {
-            return this.$t('Networks.headerString.notFound')
-          }
-
-        default:
-        case LOADING_STATUS.ERROR:
-          return this.$t('genericErrors.ups')
-      }
-    },
-    subHeader() {
-      switch (this.loadingStatus) {
-        case LOADING_STATUS.LOADING:
-          return this.$t('Networks.subHeader.loading')
-        case LOADING_STATUS.NOT_FOUND:
-          return this.$t('Networks.subHeader.notFound')
-        case LOADING_STATUS.EXPIRED:
-          return this.$t('Networks.subHeader.expired')
-        case LOADING_STATUS.LOADED:
-          return this.countryCode
-        default:
-        case LOADING_STATUS.ERROR:
-          return this.$t('genericErrors.badHappened')
-      }
-    },
-  },
-  watch: {
-    addressFamily() {
-      this.pushRoute()
-    },
-    '$route.params.cc': {
-      handler: function (cc) {
-        if (cc != this.countryCode) {
-          this.loadingStatus = LOADING_STATUS.LOADING
-          this.countryCode = cc
-          this.pushRoute()
-        }
-      },
-      deep: true,
-    },
-  },
-}
-</script>
 
 <style lang="stylus">
-@import '../styles/quasar.variables';
+.IHR_
+  &char-container
+    width 90%
+    margin 0 auto
 </style>

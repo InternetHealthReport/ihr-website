@@ -1,124 +1,61 @@
-<i18n src="@/locales/long_langs/home.json"></i18n>
-<template>
-  <div id="IHR_home">
-    <div id="IHR_global-report" class="row">
-      <div class="col">
-        <div>Internet Health Report</div>
-        <router-link id="IHR_global-report-button" :to="{ name: 'global_report' }">
-          {{ $t('globalReport.name') }}
-        </router-link>
-      </div>
-    </div>
+<script setup>
+import { RouterLink } from 'vue-router'
+import { QCard, QCardSection, QAvatar, QIcon } from 'quasar'
+import { ref } from 'vue'
+import Tr from '@/i18n/translation'
 
-    <div
-      class="IHR_description-main"
-      v-html="
-        $interpolateArray($t('globalReport.description'), {
-          ripe: '<a href=\'https://atlas.ripe.net/\' target=\'_blank\'>RIPE Atlas</a>',
-          bgpstream: '<a href=\'https://bgpstream.caida.org/\' target=\'_blank\'>BGPstream</a>',
-          }, ['<div>','</div>'])
-      "
-    ></div>
-    <div class="IHR_description-main">
-      See latest alarms in the
-      <router-link :to="{ name: 'global_report' }">global report</router-link>
-      and network metrics in
-      <router-link :to="{ name: 'networks' }">network reports</router-link>.
-    </div>
-
-    <div class="row wrap justify-center q-gutter-md IHR_description-main">
-      <q-card class="analysis-modules" v-for="graphT in graphTypes" :key="graphT.name">
-        <q-card-section class="bg-primary text-white q-pa-sm">
-          <div>
-            <q-avatar :icon="graphT.icon"></q-avatar>
-            {{ $t(`${graphT.name}.title`) }}
-          </div>
-        </q-card-section>
-        <q-card-section class="q-pa-xs">
-          <div class="IHR_description_text" v-html="$interpolateArray($t(`${graphT.name}.description`), placeholderValues, ['<div>','</div>'])"></div>
-          <div class="IHR_description IHR_description-link">
-            <router-link
-              :to="{
-                name: 'documentation',
-                hash: $t(`${graphT.name}.docHash`),
-              }"
-              >{{ $t('learnmore') }} {{ $t(`${graphT.name}.title`) }}</router-link
-            >
-          </div>
-        </q-card-section>
-      </q-card>
-    </div>
-
-    <div class="IHR_section">
-      <q-card class="IHR_tweets-types">
-        <q-card-section class="bg-white text-primary q-pa-sm">
-          <div class="text-h2">
-            <q-avatar icon="fab fa-twitter"></q-avatar>
-            {{ $t('ihrTweets.title') }}
-          </div>
-        </q-card-section>
-        <q-card-section class="q-pa-xs">
-          <Timeline
-            id="ihr_alerts"
-            sourceType="profile"
-            :options="{
-              chrome: 'noheader',
-              tweetLimit: '3',
-            }"
-          >
-            <div class="spinner"></div>
-          </Timeline>
-        </q-card-section>
-      </q-card>
-    </div>
-
-    <div class="IHR_section">
-      <h2 class="text-h2">
-        <q-icon name="fa fa-heart"></q-icon>
-        {{ $t('ack.title') }}
-      </h2>
-
-      <div class="row wrap justify-center">
-        <div class="col-xl" v-for="org in $t('ack.organizations')" :key="org.name">
-          <a :href="org.url" target="_blank">
-          <div class="IHR_ack-logo">
-            <span></span>
-            <img :src="require(`@/assets/imgs/${org.logo}`)" :alt="org.name" />
-          </div>
-          </a>
-        </div>
-      </div>
-    </div>
-    <!--<q-drawer :value="hideSidebar" side="left" show-if-above bordered>-->
-    <!--<q-scroll-area class="fit">-->
-    <!--</q-scroll-area>-->
-    <!--</q-drawer>-->
-  </div>
-</template>
-
-<script>
-import { Timeline } from 'vue-tweet-embed'
 const GRAPHS_TYPES = [
   {
-    name: 'analysisModules.asInterdependence',
+    name: 'homePage.analysisModules.asInterdependence',
     icon: 'fas fa-project-diagram',
     docsQuery: {},
   },
   {
-    name: 'analysisModules.networkDelay',
+    name: 'homePage.analysisModules.networkDelay',
     icon: 'fas fa-shipping-fast',
     docsQuery: {},
   },
   {
-    name: 'analysisModules.delayAndForwarding',
+    name: 'homePage.analysisModules.delayAndForwarding',
     icon: 'fas fa-exchange-alt',
     docsQuery: {},
   },
   {
-    name: 'analysisModules.disco',
+    name: 'homePage.analysisModules.disco',
     icon: 'fas fa-plug',
     docsQuery: {},
   },
+]
+
+const ORGANIZATIONS = [
+  {
+    name: 'iij',
+    logo: new URL('@/assets/imgs/iij-logo.jpg', import.meta.url).href
+  },
+  {
+    name: 'ripe',
+    logo: new URL('@/assets/imgs/ripe-logo.png', import.meta.url).href
+  },
+  {
+    name: 'gsoc',
+    logo: new URL('@/assets/imgs/gsoc-logo.png', import.meta.url).href
+  },
+  {
+    name: 'routeviews',
+    logo: new URL('@/assets/imgs/rv-logo.png', import.meta.url).href
+  },
+  {
+    name: 'isoc',
+    logo: new URL('@/assets/imgs/isoc-logo.png', import.meta.url).href
+  },
+  {
+    name: 'manrs',
+    logo: new URL('@/assets/imgs/manrs-logo.jpg', import.meta.url).href
+  },
+  {
+    name: 'edgecast',
+    logo: new URL('@/assets/imgs/edgecast-logo.png', import.meta.url).href
+  }
 ]
 
 const PLACEHOLDER_VALUES = {
@@ -135,28 +72,98 @@ const PLACEHOLDER_VALUES = {
   */
 }
 
-export default {
-  name: 'HomeView',
-  components: {
-    Timeline,
-  },
-  props: {
+const props = defineProps({
     showSidebar: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data() {
-    return {
-      graphTypes: GRAPHS_TYPES,
-      placeholderValues: PLACEHOLDER_VALUES,
+        type: Boolean,
+        default: false
     }
-  },
-}
+})
+
+const graphTypes = ref(GRAPHS_TYPES)
+const placeholderValues = ref(PLACEHOLDER_VALUES)
+const organizations = ref(ORGANIZATIONS)
 </script>
 
-<style lang="stylus" scoped>
+<template>
+  <div id="IHR_home">
+    <div id="IHR_global-report" class="row">
+      <div class="col">
+        <div>Internet Health Report</div>
+        <RouterLink id="IHR_global-report-button" :to="Tr.i18nRoute({ name: 'global-report' })">
+          {{ $t('homePage.globalReport.name') }}
+        </RouterLink>
+      </div>
+    </div>
 
+    <div class="IHR_description-main" v-html="$t('homePage.globalReport.description')"></div>
+    <div class="IHR_description-main">
+      See latest alarms in the
+      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">global report</RouterLink>
+      and network metrics in
+      <RouterLink :to="Tr.i18nRoute({ name: 'networks' })">network reports</RouterLink>.
+    </div>
+
+    <div class="row wrap justify-center q-gutter-md IHR_description-main">
+      <QCard class="analysis-modules" v-for="graphT in graphTypes" :key="graphT.name">
+        <QCardSection class="bg-primary text-white q-pa-sm">
+          <div>
+            <QAvatar :icon="graphT.icon"></QAvatar>
+            {{ $t(`${graphT.name}.title`) }}
+          </div>
+        </QCardSection>
+        <QCardSection class="q-pa-xs">
+          <div class="IHR_description" v-html="$t(`${graphT.name}.description`)"></div>
+          <div class="IHR_description IHR_description-link">
+            <RouterLink
+              :to="Tr.i18nRoute({
+                name: 'documentation',
+                hash: $t(`${graphT.name}.docHash`),
+              })"
+              >{{ $t('homePage.learnmore') }} {{ $t(`${graphT.name}.title`) }}</RouterLink>
+          </div>
+        </QCardSection>
+      </QCard>
+    </div>
+
+    <!-- <div class="IHR_section">
+      <QCard class="IHR_tweets-types">
+        <QCardSection class="bg-white text-primary q-pa-sm">
+          <div class="text-h2">
+            <QAvatar icon="fab fa-twitter"></QAvatar>
+            {{ $t('homePage.ihrTweets.title') }}
+          </div>
+        </QCardSection>
+        <QCardSection class="q-pa-xs">
+
+        </QCardSection>
+      </QCard>
+    </div> -->
+
+    <div class="IHR_section">
+      <h2 class="text-h2">
+        <QIcon name="fa fa-heart"></QIcon>
+        {{ $t('homePage.ack.title') }}
+      </h2>
+
+      <div class="row wrap justify-center">
+        <div v-for="(org, index) in organizations" :key="index">
+          <a :href="$t(`homePage.ack.organizations.${org.name}.url`)" target="_blank">
+          <div class="IHR_ack-logo">
+            <span></span>
+            <img :src="org.logo" :alt="$t(`homePage.ack.organizations.${org.name}.name`)" />
+          </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!--<q-drawer :value="hideSidebar" side="left" show-if-above bordered>-->
+    <!--<q-scroll-area class="fit">-->
+    <!--</q-scroll-area>-->
+    <!--</q-drawer>-->
+  </div>
+</template>
+
+<style lang="stylus">
 #IHR_
   &home
     ~/global-report
@@ -164,7 +171,7 @@ export default {
       max-width 100%
       height 450px
       background-color black
-      background-image url('~@/assets/imgs/global-banner.png')
+      background-image url('@/assets/imgs/global-banner.png')
       background-repeat no-repeat
       background-position right top
       background-size contain
@@ -240,6 +247,7 @@ export default {
     width 90%
     margin 30pt auto
     text-align left
+    padding: 0 1rem;
     @media screen and (max-width: 600px)
         font-size 12pt
     #IHR_graphs-types &
@@ -247,7 +255,7 @@ export default {
 
     &-main
       font-size 20pt
-      margin 30pt auto
+      margin 30pt auto !important
       text-align center
       width 85%
       @media screen and (max-width: 600px)
@@ -294,7 +302,7 @@ export default {
 .analysis-modules
     max-width 600px
     text-align left
-    border-radius 15px
+    border-radius 15px !important
 
 @media(max-width 1411px)
   .analysis-modules

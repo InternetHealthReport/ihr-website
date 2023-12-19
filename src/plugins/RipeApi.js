@@ -1,7 +1,3 @@
-/** @file ripe-api.js
- *  @brief Vue-js plugin wrapping RIPE API
- */
-
 import axios from 'axios'
 
 // Base URL for RIPE stat API

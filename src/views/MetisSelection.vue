@@ -1,3 +1,182 @@
+<script setup>
+import { RouterLink } from 'vue-router'
+import { QInput, QSelect, QBtn, copyToClipboard } from 'quasar'
+import Tr from '@/i18n/translation'
+import MetisTable from '@/components/tables/MetisTable.vue'
+import { ref, onMounted, inject, nextTick  } from 'vue'
+import rirMapping from '@/assets/rir-country-map.json'
+import getCountryName from '../plugins/countryName'
+import { MetisAtlasSelectionQuery } from '@/plugins/IhrApi'
+import RirCountrySunburstChart from '@/components/charts/RirCountrySunburstChart.vue'
+
+const ATLAS_PROBE = {
+  type: 'asn',
+  value: 0,
+  requested: 1,
+}
+const SELECTION_ROW = {
+  rank: 0,
+  asn: '0',
+  asn_name: '',
+  cc: '',
+}
+const RIR_MAP = new Map()
+
+const loadRirMap = () => {
+  for(const [rir, cc_list] of Object.entries(rirMapping)) {
+    const cc_set = new Set(cc_list)
+    RIR_MAP.set(rir, cc_set)
+  }
+}
+
+const translateCC = (cc) => {
+  for(const [rir, cc_set] of RIR_MAP) {
+    if (cc_set.has(cc)) {
+      return rir
+    }
+  }
+  return cc
+}
+
+const afoptions = ref([
+  {
+    label: 'IPv4',
+    value: 4,
+  },
+  {
+    label: 'IPv6',
+    value: 6,
+  }
+])
+const metricoptions = ref([
+  {
+    label: 'AS-path length',
+    value: 'as_path_length',
+  },
+  {
+    label: 'RTT',
+    value: 'rtt',
+  },
+  {
+    label: 'IP hops',
+    value: 'ip_hops',
+  }
+])
+const metric = ref({
+  label: 'AS-path length',
+  value: 'as_path_length',
+})
+const nbprobes = ref(10)
+const af = ref({
+  label: 'IPv4',
+  value: 4
+})
+const apiFilter = ref(null)
+const ranking = ref({})
+const tableData = ref([])
+const plotData = ref([])
+const apiJson = ref({})
+const apiUrl = ref('')
+const fetch = ref(false)
+const loading = ref(false)
+
+const ihr_api = inject('ihr_api')
+
+onMounted(() => {
+  loadRirMap()
+})
+
+const pushRoute = () => {}
+
+const setFilter = () => {
+  if (metric.value && nbprobes.value && af.value) {
+    apiFilter.value = new MetisAtlasSelectionQuery()
+      .ranking(nbprobes.value)
+      .addressFamily(af.value.value)
+      .metric(metric.value.value)
+      .orderedByTime()
+  }
+}
+
+const apiCall = () => {
+  fetch.value = false
+  loading.value = true
+  setFilter()
+  ihr_api.metisAtlasSelection(
+    apiFilter.value,
+    result => {   
+      nextTick(() => {
+        readRanking(result.results)
+        fetch.value = true
+      })
+    },
+    error => {
+      console.error(error) //FIXME do a correct alert
+      loading.value = false
+    }
+  )
+  loading.value = false
+  apiUrl.value = ihr_api.getUrl(apiFilter.value)
+}
+
+const readRanking = (data) => {
+  ranking.value = data
+  tableData.value = []
+  plotData.value = []
+  const atlasAsns = []
+  const countryCounts = new Map()
+  const rirCounts = new Map()
+
+  data.forEach(elem => {
+    const asn = { ...ATLAS_PROBE }
+    const row = { ...SELECTION_ROW }
+    asn.value = elem.asn
+    atlasAsns.push(asn)
+    row.rank = elem.rank
+    row.asn = elem.asn
+    // AS Names end with ", XX" where XX is the country code.
+    row.asn_name = elem.asn_name.slice(0, -4)
+    const countryCode = elem.asn_name.slice(-2)
+    let rir = translateCC(countryCode)
+    if (rir === countryCode) {
+      rir = 'Other'
+    }
+    row.cc = countryCode
+    tableData.value.push(row)
+    if (rirCounts.has(rir)) {
+      rirCounts.set(rir, rirCounts.get(rir) + 1)
+    } else {
+      rirCounts.set(rir, 1)
+    }
+    if (countryCounts.has(countryCode)) {
+      countryCounts.set(countryCode, countryCounts.get(countryCode) + 1)
+    } else {
+      countryCounts.set(countryCode, 1)
+    }
+  })
+  for (const [rir, count] of rirCounts) {
+    plotData.value.push([rir, 'Total', count, ''])
+  }
+  for (const [cc, count] of countryCounts) {
+    let rir = translateCC(cc)
+    if (rir === cc) {
+      rir = 'Other'
+    }
+    plotData.value.push([cc, rir, count, getCountryName(cc)])
+  }
+
+  apiJson.value = JSON.stringify({ probes: atlasAsns }, null, 2)
+}
+
+const copyAPI = () => {
+  copyToClipboard(apiJson.value)
+    .then(() => {})
+    .catch(() => {
+      console.error('Failed to copy API Json to clipboard.')
+    })
+}
+</script>
+
 <template>
   <div>
     <h1 class="text-center">Metis: Atlas probe selection</h1>
@@ -23,33 +202,33 @@
         </p>
         <p>
           If you are looking for historical data or want to automate the process, check out the
-          <router-link to="/en-us/api/">Metis section of the IHR API</router-link>.
+          <RouterLink :to="Tr.i18nRoute({ name: 'api' })">Metis section of the IHR API</RouterLink>.
         </p>
       </div>
     </div>
     <div class="row justify-center">
       <div class="col-3">
-        <q-input v-model="nbprobes" label="Number of probes" />
-        <q-select v-model="metric" :options="metricoptions" label="Distance metric" />
-        <q-select v-model="af" :options="afoptions" label="IP version" />
-        <q-btn class="q-mt-sm" @click="apiCall" label="Go"></q-btn>
+        <QInput v-model="nbprobes" label="Number of probes" />
+        <QSelect v-model="metric" :options="metricoptions" label="Distance metric" />
+        <QSelect v-model="af" :options="afoptions" label="IP version" />
+        <QBtn class="q-mt-sm" @click="apiCall" label="Go"></QBtn>
       </div>
     </div>
     <div v-if="fetch">
       <div class="q-pa-md">
         <div class="row justify-evenly">
           <div class="col-6 q-px-md">
-            <metis-table :data="tableData" :loading="loading" />
+            <MetisTable :data="tableData" :loading="loading" />
           </div>
           <div class="col-5 q-px-xl">
             <h2>Country distribution</h2>
-            <rir-country-sunburst-chart :data="plotData" />
+            <RirCountrySunburstChart :data="plotData" />
           </div>
         </div>
         <div class="row justify-center">
           <div class="IHR_block q-px-md">
             <h2>Atlas API specification</h2>
-            <q-btn class="q-mb-sm" color="secondary" @click="copyAPI" label="Copy"></q-btn>
+            <QBtn class="q-mb-sm" color="secondary" @click="copyAPI" label="Copy"></QBtn>
             <textarea class="apiTextarea" readonly v-model="apiJson"></textarea>
           </div>
         </div>
@@ -65,198 +244,7 @@
   </div>
 </template>
 
-<script>
-import MetisTable from './charts/tables/MetisTable'
-import RirCountrySunburstChart from './charts/RirCountrySunburstChart'
-import { MetisAtlasSelectionQuery } from '@/plugins/IhrApi'
-import rirMapping from '@/assets/rir-country-map.json'
-import getCountryName from '../plugins/countryName'
-import { copyToClipboard } from 'quasar'
-
-const ATLAS_PROBE = {
-  type: 'asn',
-  value: 0,
-  requested: 1,
-}
-
-const SELECTION_ROW = {
-  rank: 0,
-  asn: '0',
-  asn_name: '',
-  cc: '',
-}
-
-const RIR_MAP = new Map()
-
-function loadRirMap() {
-  for (const [rir, cc_list] of Object.entries(rirMapping)) {
-    const cc_set = new Set(cc_list)
-    RIR_MAP.set(rir, cc_set)
-  }
-  // console.log(RIR_MAP)
-}
-
-function translateCC(cc) {
-  // console.log(cc)
-  for (const [rir, cc_set] of RIR_MAP) {
-    // console.log(cc_set)
-    if (cc_set.has(cc)) {
-      // console.log(rir)
-      return rir
-    }
-  }
-  return cc
-}
-
-export default {
-  name: 'MetisSelection',
-  components: {
-    MetisTable,
-    RirCountrySunburstChart,
-  },
-  data() {
-    return {
-      afoptions: [
-        {
-          label: 'IPv4',
-          value: 4,
-        },
-        {
-          label: 'IPv6',
-          value: 6,
-        },
-      ],
-      metricoptions: [
-        {
-          label: 'AS-path length',
-          value: 'as_path_length',
-        },
-        {
-          label: 'RTT',
-          value: 'rtt',
-        },
-        {
-          label: 'IP hops',
-          value: 'ip_hops',
-        },
-      ],
-      metric: {
-        label: 'AS-path length',
-        value: 'as_path_length',
-      },
-      nbprobes: 10,
-      af: {
-        label: 'IPv4',
-        value: 4,
-      },
-      apiFilter: null,
-      ranking: {},
-      tableData: [],
-      plotData: [],
-      apiJson: {},
-      apiUrl: '',
-      fetch: false,
-      loading: false,
-    }
-  },
-  mounted() {
-    loadRirMap()
-  },
-  methods: {
-    pushRoute() {},
-    setFilter() {
-      if (this.metric && this.nbprobes && this.af) {
-        this.apiFilter = new MetisAtlasSelectionQuery()
-          .ranking(this.nbprobes)
-          .addressFamily(this.af.value)
-          .metric(this.metric.value)
-          .orderedByTime()
-      }
-    },
-    apiCall() {
-      this.fetch = false
-      this.loading = true
-      this.setFilter()
-      this.$ihr_api.metisAtlasSelection(
-        this.apiFilter,
-        result => {
-          this.$nextTick(function () {
-            this.readRanking(result.results)
-          })
-        },
-        error => {
-          console.error(error) //FIXME do a correct alert
-          this.loading = false
-        }
-      )
-      this.fetch = true
-      this.loading = false
-      this.apiUrl = this.$ihr_api.getUrl(this.apiFilter)
-    },
-    readRanking(data) {
-      this.ranking = data
-      this.tableData = []
-      this.plotData = []
-      var atlasAsns = []
-      var countryCounts = new Map()
-      var rirCounts = new Map()
-
-      data.forEach(elem => {
-        var asn = { ...ATLAS_PROBE }
-        var row = { ...SELECTION_ROW }
-        asn.value = elem.asn
-        atlasAsns.push(asn)
-        row.rank = elem.rank
-        row.asn = elem.asn
-        // AS Names end with ", XX" where XX is the country code.
-        row.asn_name = elem.asn_name.slice(0, -4)
-        const countryCode = elem.asn_name.slice(-2)
-        let rir = translateCC(countryCode)
-        if (rir === countryCode) {
-          rir = 'Other'
-        }
-        row.cc = countryCode
-        this.tableData.push(row)
-        if (rirCounts.has(rir)) {
-          rirCounts.set(rir, rirCounts.get(rir) + 1)
-        } else {
-          rirCounts.set(rir, 1)
-        }
-        if (countryCounts.has(countryCode)) {
-          countryCounts.set(countryCode, countryCounts.get(countryCode) + 1)
-        } else {
-          countryCounts.set(countryCode, 1)
-        }
-      })
-      for (const [rir, count] of rirCounts) {
-        this.plotData.push([rir, 'Total', count, ''])
-      }
-      for (const [cc, count] of countryCounts) {
-        let rir = translateCC(cc)
-        if (rir === cc) {
-          rir = 'Other'
-        }
-        this.plotData.push([cc, rir, count, getCountryName(cc)])
-      }
-
-      this.apiJson = JSON.stringify({ probes: atlasAsns }, null, 2)
-    },
-    copyAPI() {
-      copyToClipboard(this.apiJson)
-        .then(() => {
-          //success
-        })
-        .catch(() => {
-          console.error('Failed to copy API Json to clipboard.')
-        })
-    },
-  },
-}
-</script>
-
 <style lang="stylus">
-@import '../styles/quasar.variables';
-
 .IHR_description
     font-weight 400
     max-width 900px

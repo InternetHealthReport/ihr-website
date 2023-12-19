@@ -8,11 +8,11 @@ The Internet Health Report monitors the conditions of networks that compose the 
 
 #### Install Node JS
 
-Install [Node v16.20.0 (LTS)](https://nodejs.org/en/blog/release/v16.20.0)
+Install [Node v20.10.0 (LTS)](https://nodejs.org/en/blog/release/v20.10.0)
 
 #### Install npm package manager
 
-Install [Npm v8.19.4](https://docs.npmjs.com/cli/v8/configuring-npm)
+Install [Npm v10.2.4](https://docs.npmjs.com/cli/v10/configuring-npm)
 
 #### Cloning and Running the Application in local
 
@@ -35,7 +35,7 @@ npm install
 For compilations and hot-reloads in development
 
 ```bash
-npm run serve
+npm run dev
 ```
 
 #### To compile and minify for production run
@@ -44,27 +44,11 @@ npm run serve
 npm run build
 ```
 
-#### To run your tests
-
-```bash
-npm run test
-```
-
 #### To lints and fixes files
 
 ```bash
 npm run lint
 ```
-
-#### To run your unit tests
-
-```bash
-npm run test:unit
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/) test
 
 ## Set up
 Check out our installation video [here](https://youtu.be/mdjMdaLdlfY) for a step-by-step guide on how to install and set up our software
