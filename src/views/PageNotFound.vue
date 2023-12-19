@@ -1,3 +1,8 @@
+<script setup>
+import Tr from '@/i18n/translation'
+import { QBtn } from 'quasar';
+</script>
+
 <template>
   <div id="page">
     <div class="notfound">
@@ -6,7 +11,7 @@
       </div>
       <h2>What on Internet are you doing here !</h2>
       <p>Well this is sad the page that you were looking for is not here</p>
-      <button class="sec" @click="$router.push('/')">Get Yourself Home</button>
+      <QBtn class="sec" :to="Tr.i18nRoute({ name: 'home' })">Get Yourself Home</QBtn>
     </div>
   </div>
 </template>
@@ -16,7 +21,7 @@
   margin : 0;
   padding: 0;
   position: relative;
-  height: 100vh;
+  height: 60vh;
 }
 
 #page .notfound {
@@ -41,7 +46,7 @@
 
 .notfound .image404 h1 {
   font-family: 'Montserrat', sans-serif;
-  font-size: 170px;
+  font-size: 170px !important;
   font-weight: 700;
   margin: 0px;
   color: #232323;
@@ -74,7 +79,7 @@
   font-weight: 300;
 }
 
-.notfound button {
+.sec {
   font-family: 'Montserrat', sans-serif;
   display: inline-block;
   padding: 12px 30px;

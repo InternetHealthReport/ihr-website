@@ -1,25 +1,12 @@
-<template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <div>
-      <h1 class="text-center"><q-icon name="fas fa-route" />&nbsp; Route Origin Validation</h1>
-      <h3 class="text-center">
-        {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-        <date-time-picker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
-      </h3>
-    </div>
-    <prefix-hegemony-chart :start-time="startTime" :end-time="endTime" :fetch="fetch" ref="asInterdependenciesChart" />
-    <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
-  </div>
-</template>
-
-<script>
-import reportMixin from '@/views/mixin/reportMixin'
-import PrefixHegemonyChart from '@/views/charts/PrefixHegemonyChart'
-import { DEFAULT_DISCO_AVG_LEVEL } from '@/views/charts/global/DiscoChart'
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY } from '@/plugins/IhrApi'
-import DateTimePicker from '@/components/DateTimePicker'
 import { isoCountries } from '@/plugins/countryName'
-import html2pdf from 'html2pdf.js'
+import report from '@/plugins/report'
+import DateTimePicker from '@/components/DateTimePicker.vue'
+import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -31,124 +18,105 @@ const LOADING_STATUS = {
 
 const CHART_REFS = ['countryHegemonyChart', 'prefixHegemonyChart', 'networkDelayChart', 'delayAndForwardingChart', 'ihrChartDisco']
 
-export default {
-  name: 'ROVReport',
-  mixins: [reportMixin],
-  components: {
-    PrefixHegemonyChart,
-    DateTimePicker,
-  },
-  data() {
-    let addressFamily = this.$route.query.af
-    return {
-      asNumber: 2497,
-      addressFamily: addressFamily == undefined ? 4 : addressFamily,
-      loadingStatus: LOADING_STATUS.LOADING,
-      countryCode: this.$route.params.cc,
-      countryName: null,
-      charRefs: CHART_REFS,
-      minAvgLevel: DEFAULT_DISCO_AVG_LEVEL,
-      show: {
-        disco: true,
-        disco_disable: false,
-        hegemony: true,
-        hegemony_disable: false,
-        net_delay: true,
-        net_delay_disable: false,
-      },
-      majorEyeballs: [],
-      majorEyeballsThreshold: 10,
-    }
-  },
-  methods: {
-    pushRoute() {
-      this.$router.replace({
-        //this.$router.replace({ query: Object.assign({}, this.$route.query, { hege_dt: clickData.points[0].x, hege_tb: table }) });
-        query: Object.assign({}, this.$route.query, {
-          af: this.family,
-          last: this.interval.dayDiff(),
-          date: this.$options.filters.ihrUtcString(this.interval.end, false),
-        }),
-      })
-      this.loadingStatus = LOADING_STATUS.LOADED
-      this.fetch = true
-    },
-    displayNetDelay(displayValue) {
-      this.show.net_delay = displayValue
-      this.$nextTick(function () {
-        this.show.net_delay_disable = !displayValue
-      })
-    },
-    setMajorEyeballs(asns) {
-      var tmp = []
-      asns.forEach(elem => {
-        tmp.push('AS4' + elem)
-      })
-      this.majorEyeballs = tmp
-    },
-    generateReport() {
-      let element = this.$refs['ihrAsAndIxpContainer']
-      let opt = {
-        margin: 0,
-        filename: 'ROV.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a3', orientation: 'l' },
-      }
-      html2pdf(element, opt)
-      console.log('button is clicked')
-    },
-  },
-  mounted() {},
-  computed: {
-    family() {
-      return this.addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
-    },
-    addressFamilyText() {
-      return this.addressFamily ? 'IPv4' : 'IPv6'
-    },
-    showGraphs() {
-      return this.loadingStatus == LOADING_STATUS.LOADED
-    },
-    headerString() {
-      switch (this.loadingStatus) {
-        case LOADING_STATUS.LOADING:
-          return this.$t('Networks.headerString.loading')
-        case LOADING_STATUS.NOT_FOUND:
-          return this.$t('Networks.headerString.notFound')
-        case LOADING_STATUS.EXPIRED:
-          return this.$t('Networks.headerString.expired')
-        case LOADING_STATUS.LOADED:
-          return isoCountries[this.countryCode]
-        default:
-        case LOADING_STATUS.ERROR:
-          return this.$t('genericErrors.ups')
-      }
-    },
-    subHeader() {
-      switch (this.loadingStatus) {
-        case LOADING_STATUS.LOADING:
-          return this.$t('Networks.subHeader.loading')
-        case LOADING_STATUS.NOT_FOUND:
-          return this.$t('Networks.subHeader.notFound')
-        case LOADING_STATUS.EXPIRED:
-          return this.$t('Networks.subHeader.expired')
-        case LOADING_STATUS.LOADED:
-          return this.countryCode
-        default:
-        case LOADING_STATUS.ERROR:
-          return this.$t('genericErrors.badHappened')
-      }
-    },
-  },
-  watch: {
-    addressFamily() {
-      this.pushRoute()
-    },
-  },
+const route = useRoute()
+const router = useRouter()
+
+const asNumber = ref(2497)
+const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
+const loadingStatus = ref(LOADING_STATUS.LOADING)
+const countryCode = ref(route.params.cc)
+const countryName = ref(null)
+const charRefs = ref(CHART_REFS)
+const minAvgLevel = ref(DEFAULT_DISCO_AVG_LEVEL)
+const show = ref({
+  disco: true,
+  disco_disable: false,
+  hegemony: true,
+  hegemony_disable: false,
+  net_delay: true,
+  net_delay_disable: false,
+})
+const majorEyeballs = ref([])
+const majorEyeballsThreshold = ref(10)
+
+const timeRange = route.query.last ? route.query.last : 3
+
+let { interval, minDate, maxDate, fetch, utcString, reportDateFmt, setReportDate, startTime, endTime } = report(timeRange)
+
+if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[0]) {
+  setReportDate(new Date(route.query.date))
 }
+
+const family = computed(() => {
+  return addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
+})
+const addressFamilyText = computed(() => {
+  return addressFamily ? 'IPv4' : 'IPv6'
+})
+const showGraphs = computed(() => {
+  return loadingStatus == LOADING_STATUS.LOADED
+})
+const headerString = computed(() => {
+  if (loadingStatus == LOADING_STATUS.LOADING) {
+    return t('Networks.headerString.loading')
+  } else if (loadingStatus == LOADING_STATUS.NOT_FOUND) {
+    return t('Networks.headerString.notFound')
+  } else if (loadingStatus == LOADING_STATUS.EXPIRED) {
+    return t('Networks.headerString.expired')
+  } else if (loadingStatus == LOADING_STATUS.LOADED) {
+    return isoCountries[countryCode]
+  } else {
+    return t('genericErrors.ups')
+  }
+})
+const subHeader = computed(() => {
+  if (loadingStatus == LOADING_STATUS.LOADING) {
+    return t('Networks.subHeader.loading')
+  } else if (loadingStatus == LOADING_STATUS.NOT_FOUND) {
+    return t('Networks.subHeader.notFound')
+  } else if (loadingStatus == LOADING_STATUS.EXPIRED) {
+    return t('Networks.subHeader.expired')
+  } else if (loadingStatus == LOADING_STATUS.LOADED) {
+    return countryCode
+  } else {
+    return t('genericErrors.badHappened')
+  }
+})
+
+const pushRoute = () => {
+  router.push({
+    replace: true,
+    query: Object.assign({}, route.query, {
+      af: family.value,
+      last: interval.value.dayDiff(),
+      date: utcString(interval.value.end).split('T')[0],
+      rov_tb: 'routes'
+    })
+  })
+  loadingStatus.value = LOADING_STATUS.LOADED
+  fetch.value = true
+}
+watch(addressFamily, () => {
+  pushRoute()
+})
+watch(interval, () => {
+  pushRoute()
+})
+onMounted(() => {
+  pushRoute()
+})
 </script>
 
-<style lang="stylus">
-@import '../styles/quasar.variables';
-</style>
+<template>
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+    <div>
+      <h1 class="text-center"><q-icon name="fas fa-route" />&nbsp; Route Origin Validation</h1>
+      <h3 class="text-center">
+        {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
+        <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+      </h3>
+    </div>
+    <PrefixHegemonyChart :start-time="startTime" :end-time="endTime" :fetch="fetch" />
+    <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
+  </div>
+</template>

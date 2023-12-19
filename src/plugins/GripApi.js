@@ -1,4 +1,4 @@
-import * as AggregatedAlarmsUtils from '../models/AggregatedAlarmsUtils'
+import * as AggregatedAlarmsUtils from './utils/AggregatedAlarmsUtils'
 import axios from 'axios'
 
 export function getGripAlarms(startTime, endTime, timezone = '', minSuspicionLevel = 80, maxSuspicionLevel = 100, eventType = 'all', onePage = false) {

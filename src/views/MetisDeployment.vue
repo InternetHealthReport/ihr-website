@@ -1,3 +1,10 @@
+<script setup>
+import { ref } from 'vue'
+import MetisWidget from '@/components/MetisWidget.vue'
+
+const nbprobes = ref('100')
+</script>
+
 <template>
   <div>
     <h1 class="text-center">Metis: Atlas probe deployment recommendations</h1>
@@ -18,48 +25,30 @@
     </div>
     <div class="row justify-center">
       <div class="col-4 q-px-md">
-        <metis-widget widget-title="IPv4 AS-path length" af="4" metric="as_path_length" :nbprobes="nbprobes" />
+        <MetisWidget widget-title="IPv4 AS-path length" af="4" metric="as_path_length" :nbprobes="nbprobes" />
       </div>
       <div class="col-4 q-px-md">
-        <metis-widget widget-title="IPv4 RTT" af="4" metric="rtt" :nbprobes="nbprobes" />
+        <MetisWidget widget-title="IPv4 RTT" af="4" metric="rtt" :nbprobes="nbprobes" />
       </div>
       <div class="col-4 q-px-md">
-        <metis-widget widget-title="IPv4 IP hops" af="4" metric="ip_hops" :nbprobes="nbprobes" />
+        <MetisWidget widget-title="IPv4 IP hops" af="4" metric="ip_hops" :nbprobes="nbprobes" />
       </div>
     </div>
     <div class="row justify-center">
       <div class="col-4 q-px-md">
-        <metis-widget widget-title="IPv6 AS-path length" af="6" metric="as_path_length" :nbprobes="nbprobes" />
+        <MetisWidget widget-title="IPv6 AS-path length" af="6" metric="as_path_length" :nbprobes="nbprobes" />
       </div>
       <div class="col-4 q-px-md">
-        <metis-widget widget-title="IPv6 RTT" af="6" metric="rtt" :nbprobes="nbprobes" />
+        <MetisWidget widget-title="IPv6 RTT" af="6" metric="rtt" :nbprobes="nbprobes" />
       </div>
       <div class="col-4 q-px-md">
-        <metis-widget widget-title="IPv6 IP hops" af="6" metric="ip_hops" :nbprobes="nbprobes" />
+        <MetisWidget widget-title="IPv6 IP hops" af="6" metric="ip_hops" :nbprobes="nbprobes" />
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import MetisWidget from './MetisWidget'
-
-export default {
-  name: 'MetisDeployment',
-  components: {
-    MetisWidget,
-  },
-  data() {
-    return {
-      nbprobes: 100,
-    }
-  },
-}
-</script>
-
 <style lang="stylus">
-@import '../styles/quasar.variables';
-
 .IHR_description
     font-weight 400
     max-width 900px

@@ -1,3 +1,6 @@
+<script setup>
+</script>
+
 <template>
   <div id="IHR_contact-page">
     <div class="IHR_contact-page">
@@ -15,15 +18,7 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  name: 'ContactView',
-  components: {},
-  data() {
-    return {}
-  },
-}
-</script>
+
 
 <style lang="stylus">
 #IHR_

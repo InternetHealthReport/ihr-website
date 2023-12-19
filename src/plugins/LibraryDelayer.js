@@ -57,12 +57,12 @@ function remove_style(all) {
   }
 }
 
-class LibraryDelayer {
+class Library {
   constructor() {
-    if (LibraryDelayer.prototype.documentWriteBackup != undefined) throw SyntaxError('only one instance of FakeDocument is possible!')
+    if (Library.prototype.documentWriteBackup != undefined) throw SyntaxError('only one instance of FakeDocument is possible!')
 
-    LibraryDelayer.prototype.documentWriteBackup = document.write
-    LibraryDelayer.prototype.instance = this
+    Library.prototype.documentWriteBackup = document.write
+    Library.prototype.instance = this
     this.scripts = []
     this.links = []
     this.promises = []
@@ -125,7 +125,7 @@ class LibraryDelayer {
   }
 
   write(str) {
-    LibraryDelayer.prototype.instance.add(str)
+    Library.prototype.instance.add(str)
   }
 
   init() {
@@ -168,58 +168,58 @@ class LibraryDelayer {
   }
 
   restore() {
-    document.write = LibraryDelayer.documentWriteBackup
+    document.write = Library.documentWriteBackup
   }
 }
 
-export default {
-  install(Vue, options) {
-    let libraryDelayer = new Vue({
-      data() {
-        return {
-          libraryDelayer: new LibraryDelayer(),
-          libraryList: options.libraries,
-        }
-      },
-      mounted() {},
-      methods: {
-        load(library, callback) {
-          let scripts = this.libraryList[library]
-          if (scripts !== undefined) {
-            this.libraryDelayer
-              .addScript(scripts)
-              .init()
-              .then(() => {
-                delete this.libraryList[library]
-                callback()
-              })
-          } else {
+const LibraryDelayer = {
+  install: (app, options) => {
+
+    const library = new Library()
+    const libraryList = options.libraries
+
+    const load = (lib, callback) => {
+      let scripts = libraryList[lib]
+      if (scripts !== undefined) {
+        library
+          .addScript(scripts)
+          .init()
+          .then(() => {
+            delete libraryList[lib]
             callback()
-          }
-        },
-        /**
-         * remove all inline style
-         * @param {String} id mandatory, the root from which the removal will begin
-         * @param {String} elements optional, if you want to get rid of all styles use *
-         */
-        getRidOfInlineStyle(id, elements) {
-          if (id == undefined) return
+          })
+      } else {
+        callback()
+      }
+    }
 
-          let set = document.getElementById(id)
-          remove_style(set)
+    const getRidOfInlineStyle = (id, elements) => {
+      if (id == undefined) {
+        return
+      }
 
-          if (elements == undefined) return
+      let set = document.getElementById(id)
+      remove_style(set)
 
-          set = set.getElementsByTagName(elements)
-          remove_style(set)
-        },
-      },
-    })
+      if (elements == undefined) {
+        return
+      }
 
-    Vue.mixin({
-      beforeCreate() {
-        this.$libraryDelayer = libraryDelayer
-      },
-    })
-  },
+      set = set.getElementsByTagName(elements)
+      remove_style(set)
+    }
+
+    const library_delayer = {
+      load,
+      getRidOfInlineStyle
+    }
+
+    app.provide('library_delayer', library_delayer)
+  }
+}
+
+export {
+  remove_style,
+  Library,
+  LibraryDelayer
 }
