@@ -73,4 +73,6 @@
       text-align left
       @media screen and (max-width: 600px)
         font-size 12pt
+      & > a
+        word-break break-word
 </style>
