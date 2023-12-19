@@ -357,7 +357,7 @@
                 "src": "",
                 "style": "L'Università dell'Oregon<a href='http://www.routeviews.org/routeviews/' target='_blank'>Route Views Project</a> è un'altra fonte chiave di dati per IHR, in particolare per il calcolo della dipendenza da AS."
               },
-              "body": "Il <a href='http://www.routeviews.org/routeviews/' target='_blank'>Route Views Project</a> dell'Università dell'Oregon è un'altra fonte chiave di dati per l'IHR, in particolare per il calcolo della dipendenza dall'AS ."
+              "body": "Il <a href='http://www.routeviews.org/routeviews/' target='_blank'>Progetto di visualizzazione del percorso</a> dell'Università dell'Oregon è un'altra fonte chiave di dati per l'IHR, in particolare per il calcolo della dipendenza dall'AS ."
             },
             "6": {
               "header": "Società di Internet",
@@ -365,7 +365,7 @@
                 "src": "",
                 "style": ""
               },
-              "body": ""
+              "body": "<a href='https://www.internetsociety.org/'>Società di Internet</a> ha sostenuto lo sviluppo di uno strumento IHR per monitorare la dipendenza dei paesi dall'AS e aumentare la potenza computazionale dell'IHR."
             },
             "7": {
               "header": "MANRS",
@@ -477,7 +477,7 @@
                 "src": "",
                 "style": ""
               },
-              "body": "Seguendo principalmente la nomenclatura fornita in RFC6811, gli stati per RPKI e IRR sono: <ul><li><i>Non trovato</i></li><li><i>Non valido</i></li ><li><i>Non valido, più specifico</i></li><li><i>Valido</i></li></ul>Lo stato <i>Non valido, più specifico< /i> corrisponde a percorsi che non sono validi solo a causa dell'attributo di lunghezza massima del prefisso.</p> <p>Utilizzando i file delegati RIR vengono assegnati gli stati per il prefisso annunciato e l'ASN di origine<ul><li><i> </i></li><li><i>disponibile</i></li><li><i>riservato</i></li><li><i>assegnato</i>< /li><li><i>ianapool</i></li><li><i>NotFound</i></li></ul>Stati diversi da <i>assegnato</i> solitamente corrispondono ai bogon.</i></p><><b>Visibilità</b> corrisponde alla percentuale di peer RIS e Route Views che osservano il percorso."
+              "body": "Seguendo principalmente la nomenclatura fornita in RFC6811, gli stati per RPKI e IRR sono: <ul><li><i>Non trovato</i></li><li><i>Non valido</i></li ><li><i>Non valido, più specifico</i></li><li><i>Valido</i></li></ul>Lo stato <i>Non valido, più specifico< /i> corrisponde a percorsi che non sono validi solo a causa dell'attributo di lunghezza massima del prefisso.</p> <p>Utilizzando i file delegati RIR vengono assegnati gli stati per il prefisso annunciato e l'ASN di origine<ul><li><i>assegnato</i></li><li><i>disponibile</i></li><li><i>riservato</i></li><li><i>stanziare</i></li><li><i>ianapool</i></li><li><i>NotFound</i></li></ul>Stati diversi da <i>assegnato</i> solitamente corrispondono ai bogon.</i></p><b>Visibilità</b> corrisponde alla percentuale di peer RIS e Route Views che osservano il percorso."
             },
             "2": {
               "header": "dipendenza da AS",
