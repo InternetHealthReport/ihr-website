@@ -8,7 +8,7 @@ import Tr from '@/i18n/translation'
   <QFooter elevated primary class="IHR_footer text-white text-center ">
     <div class="IHR_footer_contents">
       <div class="IHR_fsection">
-        <div class="" style="width:360px;max-width: 400px;">
+        <div class="" style="max-width: 400px;">
           <div>
             <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
               <QBtn round dense flat :ripple="false" no-caps>
