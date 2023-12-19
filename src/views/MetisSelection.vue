@@ -8,7 +8,6 @@ import rirMapping from '@/assets/rir-country-map.json'
 import getCountryName from '../plugins/countryName'
 import { MetisAtlasSelectionQuery } from '@/plugins/IhrApi'
 import RirCountrySunburstChart from '@/components/charts/RirCountrySunburstChart.vue'
-
 const ATLAS_PROBE = {
   type: 'asn',
   value: 0,
@@ -104,7 +103,7 @@ const apiCall = () => {
   setFilter()
   ihr_api.metisAtlasSelection(
     apiFilter.value,
-    result => {   
+    result => {
       nextTick(() => {
         readRanking(result.results)
         fetch.value = true
@@ -179,30 +178,17 @@ const copyAPI = () => {
 
 <template>
   <div>
-    <h1 class="text-center">Metis: Atlas probe selection</h1>
+    <h1 class="text-center">{{ $t('mentis.mentisSelection.title') }}</h1>
     <div class="row justify-center q-pa-md">
       <div class="IHR_description">
         <p>
-          On this page, we provide a simple interface to select a probe set based on the latest topology measurement results. The data is
-          updated every Sunday/Monday night at midnight UTC (e.g., 2022-05-30T00:00) and is based on the last four weeks of measurement
-          data.
+          {{ $t('mentis.mentisSelection.description') }}
+        </p>
+        <p v-html="$t('mentis.mentisSelection.body')">
         </p>
         <p>
-          We actually provide a list of autonomous systems (ASes) instead of probes. This is because the connected probes are constantly
-          changing. In order to avoid querying the Atlas API each time in parallel, we provide the API specification that can be directly
-          used with the
-          <a href="https://atlas.ripe.net/measurements/form/" target="_blank"
-            >template that Atlas provides when creating a new measurement</a
-          >. The specification is a bit bulky, but Atlas currently does not provide a way to enter a <i>list</i> of ASes.
-        </p>
-        <p>
-          Select a number of Atlas probes, a distance metric, and IP version to generate a list of diverse probe ASes. In addition to the
-          API specification, the results can also be downloaded as a CSV file. The corresponding query to the IHR API is also listed at the
-          bottom of the page.
-        </p>
-        <p>
-          If you are looking for historical data or want to automate the process, check out the
-          <RouterLink :to="Tr.i18nRoute({ name: 'api' })">Metis section of the IHR API</RouterLink>.
+          {{ $t('mentis.mentisSelection.historicalData.body') }}
+          <RouterLink :to="Tr.i18nRoute({ name: 'api' })">{{ $t('mentis.mentisSelection.historicalData.apiPage') }}</RouterLink>.
         </p>
       </div>
     </div>
