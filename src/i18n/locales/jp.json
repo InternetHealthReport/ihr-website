@@ -1,7 +1,8 @@
 {
   "locale": {
     "en": "English",
-    "jp": "日本語"
+    "jp": "日本語",
+    "it": "Italian"
   },
   "genericErrors": {
     "ups": "ups",
@@ -763,5 +764,47 @@
     "documentation": "documentation",
     "learnmore": "Learn more on ",
     "explore": "Explore"
+  },
+  "mentis":{
+    "title":"Metis",
+    "description":" <p>Metis is a tool that can help researchers, network administrators, basically everyone working with large-scale measurement platforms, make a diverse selection of vantage points (VPs).</p><p>We developed Metis to solve a problem that we faced while running experiments with RIPE's <a href='https://atlas.ripe.net/' target='_blank'>Atlas</a> measurement platform: How can we be certain that the measurement results are not skewed by the distribution of available VPs?</p><p>Looking at the <a href='https://atlas.ripe.net/results/maps/network-coverage/' target='_blank'>probe map</a> already makes it clear, that simply using all probes will yield unbalanced results. Now, one approach might be to try and somehow adjust the results to account for this imbalance, however, it might be difficult.</p><p>Instead, we propose to limit the selection of VPs before even starting any measurements. The idea is to select a set of diverse , representative VPs from the pool of all available VPs, that will yield results which are less influenced by the VP distribution.</p>",
+    "documentation":"  The approach is described in detail in our paper <a href='https://tma.ifip.org/2022/wp-content/uploads/sites/11/2022/06/tma2022-paper18.pdf'> 'Metis: Better Atlas Vantage Point Selection for Everyone”</a>. We are also working on a high-level explanation for the  ",
+    "body":"Although the approach is applicable to any kind of measurement platform, we currently only provide data for RIPE Atlas.",
+    "AtlasProbe":{
+      "title":"Atlas Probe Selection and Deployment Recommendations",
+      "selection":"The first data set is for anyone who wants to start measurements and needs to select a suitable set of probes:",
+      "selctionBtnLabel":"Atlas probe selection",
+      "deployment":"The second data set shows recommendations on where to deploy new probes to increase the diversity of the probe pool:",
+      "deploymentBtnLabel":"Atlas probe deployment"
+      
+    },
+    "mentisSelection":{
+      "title":"Metis: Atlas probe selection",
+      "description":"On this page, we provide a simple interface to select a probe set based on the latest topology measurement results. The data is updated every Sunday/Monday night at midnight UTC (e.g., 2022-05-30T00:00) and is based on the last four weeks of measurement data.",
+      "body":"<p>We actually provide a list of autonomous systems (ASes) instead of probes. This is because the connected probes are constantly changing. In order to avoid querying the Atlas API each time in parallel, we provide the API specification that can be directly used with the <a href='https://atlas.ripe.net/measurements/form/' target='_blank'>template that Atlas provides when creating a new measurement</a>.The specification is a bit bulky, but Atlas currently does not provide a way to enter a <i>list</i> of ASes.</p> <p>Select a number of Atlas probes, a distance metric, and IP version to generate a list of diverse probe ASes. In addition to the API specification, the results can also be downloaded as a CSV file. The corresponding query to the IHR API is also listed at the bottom of the page.</p>",
+      "historicalData":{
+        "body":"If you are looking for historical data or want to automate the process, check out the",
+        "apiPage":"Metis section of the IHR API"
+      }
+    },
+    "mentisDeployment":{
+      "title":"Metis: Atlas probe deployment recommendations",
+      "description":"This page shows deployment recommendations to increase the diversity of different metrics.",
+      "body":"The sunburst charts each represent the 100 autonomous systems (ASes) that are “farthest away” from existing Atlas probe ASes. The ASes are aggregated by country and Regional Internet Registry (RIR). Hovering over the country code shows the country name and AS count. Clicking on an RIR zooms into the country distribution. To see detailed information about the ASes, click on the 'Show data' button below each chart.",
+      "recommendationsUpdateAndQueries":{
+        "body":" The recommendations are updated every Sunday/Monday night at midnight UTC. For historical queries, or more recommendations, check out the",
+        "apiPage":"Metis section of the IHR API"
+      }
+    }
+  },
+  "contactPage":{
+    "feedback":{
+      "title":"Feedback",
+      "bugReport":" Please submit bug reports and feature requests on Github: <a href='https://github.com/InternetHealthReport/ihr-website/issues' target='_blank'>https://github.com/InternetHealthReport/ihr-website/issues</a>"
+    },
+    "others":{
+      "title":"Others",
+      "questionAndInquiries":"For questions and inquiries, please contact us at: "
+    }
   }
 }
