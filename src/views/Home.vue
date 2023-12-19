@@ -97,10 +97,10 @@ const organizations = ref(ORGANIZATIONS)
 
     <div class="IHR_description-main" v-html="$t('homePage.globalReport.description')"></div>
     <div class="IHR_description-main">
-      See latest alarms in the
-      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">global report</RouterLink>
-      and network metrics in
-      <RouterLink :to="Tr.i18nRoute({ name: 'networks' })">network reports</RouterLink>.
+    {{ $t('homePage.globalReport.latestAlarams') }}
+      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">{{ $t('homePage.globalReport.linkName') }}</RouterLink>
+      {{ $t('homePage.globalReport.networkMetrics') }}
+      <RouterLink :to="Tr.i18nRoute({ name: 'networks' })">{{ $t('homePage.globalReport.networkReportlinkName') }}</RouterLink>.
     </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_description-main">
