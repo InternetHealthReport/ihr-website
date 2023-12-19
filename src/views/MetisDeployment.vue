@@ -7,19 +7,19 @@ const nbprobes = ref('100')
 
 <template>
   <div>
-    <h1 class="text-center">Metis: Atlas probe deployment recommendations</h1>
+    <h1 class="text-center">{{ $t('mentis.mentisDeployment.title') }}</h1>
     <div class="row justify-center">
       <div class="IHR_description">
-        <p>This page shows deployment recommendations to increase the diversity of different metrics.</p>
         <p>
-          The sunburst charts each represent the 100 autonomous systems (ASes) that are “farthest away” from existing Atlas probe ASes. The
-          ASes are aggregated by country and Regional Internet Registry (RIR). Hovering over the country code shows the country name and AS
-          count. Clicking on an RIR zooms into the country distribution. To see detailed information about the ASes, click on the “Show
-          data” button below each chart.
+          {{ $t('mentis.mentisDeployment.description') }}
         </p>
         <p>
-          The recommendations are updated every Sunday/Monday night at midnight UTC. For historical queries, or more recommendations, check
-          out the <router-link to="/en-us/api">Metis section of the IHR API</router-link>.
+          {{ $t('mentis.mentisDeployment.body') }}
+          
+        </p>
+        <p>
+          {{ $t('mentis.mentisDeployment.recommendationsUpdateAndQueries.body') }}
+          <router-link to="/en-us/api">{{ $t('mentis.mentisDeployment.recommendationsUpdateAndQueries.apiPage') }}</router-link>.
         </p>
       </div>
     </div>
