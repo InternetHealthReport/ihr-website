@@ -57,13 +57,19 @@ const search = (value, update) => {
       })
       update()
     })
+    if (options.value.length === 0 && props.noAS) {
+      options.value.push({
+        label: `No results found for "${value}"`,
+        type: 'no-results',
+      })
+    }
   })
   if (!props.noAS) {
     networkQuery.value.mixedContentSearch(value)
     ihr_api.network(
       networkQuery.value,
       result => {
-        const hasResults = result.results.some(element => {
+        result.results.some(element => {
           options.value.push({
             value: element.number,
             name: element.name,
@@ -72,7 +78,7 @@ const search = (value, update) => {
           return options.value.length > MAX_RESULTS
         })
 
-        if (!hasResults) {
+        if (options.value.length === 0) {
           options.value.push({
             label: `No results found for "${value}"`,
             type: 'no-results',
@@ -86,10 +92,6 @@ const search = (value, update) => {
       }
     )
   } else {
-    options.value.push({
-      label: `No results found for "${value}"`,
-      type: 'no-results',
-    })
     loading.value = false
     update()
   }
