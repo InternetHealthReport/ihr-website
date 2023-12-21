@@ -69,7 +69,7 @@
     }
   },
   "searchBar": {
-    "placeholder": "Enter an AS, IXP, or country name",
+    "placeholder": "Enter an AS ID, IXP, network name, prefix or country",
     "locationHint": "ASN, city name, or Atlas probe ID",
     "locationSource": "Source",
     "locationDestination": "Destination",

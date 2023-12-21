@@ -137,7 +137,7 @@ const routeToAsn = (asn, row) => {
   asn = asn.field(row)
   router.push(Tr.i18nRoute({
     name: 'networks',
-    params: { asn: ihr_api.ihr_NumberToAsOrIxp(asn) },
+    params: { id: ihr_api.ihr_NumberToAsOrIxp(asn) },
   }))
 }
 
@@ -247,7 +247,7 @@ const simpleDependenciesFormat = (val) => {
               <QTd :props="props">
                   <RouterLink
                       class="IHR_delikify"
-                      :to="Tr.i18nRoute({ name: 'networks', params: { asn: ihr_api.ihr_NumberToAsOrIxp(props.row.originasn.asn) } })"
+                      :to="Tr.i18nRoute({ name: 'networks', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.originasn.asn) } })"
                   >
                       <span :title="props.row.originasn.name">AS{{ props.row.originasn.asn }}</span>
                   </RouterLink>
@@ -259,7 +259,7 @@ const simpleDependenciesFormat = (val) => {
                   <span v-for="dep in sorted(props.row.dependencies)" :key="dep.prefix" class="comma">
                       <RouterLink
                           class="IHR_delikify"
-                          :to="Tr.i18nRoute({ name: 'networks', params: { asn: ihr_api.ihr_NumberToAsOrIxp(dep.asn) } })"
+                          :to="Tr.i18nRoute({ name: 'networks', params: { id: ihr_api.ihr_NumberToAsOrIxp(dep.asn) } })"
                       >
                           <span
                               v-if="(dep.hege / props.row.maxHege > 0.5) & (dep.asn != props.row.originasn.asn)"

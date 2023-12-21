@@ -341,7 +341,7 @@ onMounted(() => {
             <QToggle v-model="toggle[`${props.row.key_normalized}_${column.name}`]" />
           </div>
           <div v-else-if="column.name === tableKeyCurrent" :style="{ 'text-align': column.align }">
-            <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: ihr_api.ihr_NumberToAsOrIxp(props.row.key_normalized) } })">
+            <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.key_normalized) } })">
               {{ column.format(props.row[column.name], props.row) }}
             </RouterLink>
           </div>

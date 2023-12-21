@@ -7,7 +7,7 @@ import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import { useI18n } from 'vue-i18n'
-import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
+import IhrNetworkSearchBar from '@/components/search/IhrNetworkSearchBar.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
@@ -40,7 +40,7 @@ if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[
 
 const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 const loadingStatus = ref(LOADING_STATUS.LOADING)
-const asNumber = ref(ihr_api.ihr_AsOrIxpToNumber(route.params.asn))
+const asNumber = ref(ihr_api.ihr_AsOrIxpToNumber(route.params.id))
 const asName = ref(null)
 const minAvgLevel = ref(DEFAULT_DISCO_AVG_LEVEL)
 const show = ref({
@@ -87,7 +87,7 @@ const subHeader = computed(() => {
   } else if (loadingStatus.value == LOADING_STATUS.EXPIRED) {
     return t('Networks.subHeader.expired')
   } else if (loadingStatus.value == LOADING_STATUS.LOADED) {
-    return route.params.asn
+    return route.params.id
   } else {
     return t('genericErrors.badHappened')
   }
@@ -139,7 +139,7 @@ const displayNetDelay = (displayValue) => {
 watch(addressFamily, () => {
   pushRoute()
 })
-watch(() => route.params.asn, (asn) => {
+watch(() => route.params.id, (asn) => {
   if (ihr_api.ihr_AsOrIxpToNumber(asn) != asNumber.value) {
     loadingStatus.value = LOADING_STATUS.LOADING
     asNumber.value = ihr_api.ihr_AsOrIxpToNumber(asn)
@@ -153,7 +153,7 @@ watch(interval, () => {
   pushRoute()
 })
 onMounted(() => {
-  if (ihr_api.ihr_AsOrIxpToNumber(route.params.asn)) {
+  if (ihr_api.ihr_AsOrIxpToNumber(route.params.id)) {
     pushRoute()
     netName()
   }
@@ -227,7 +227,7 @@ onMounted(() => {
                 :start-time="startTime"
                 :end-time="endTime"
                 :startPointName="Math.abs(asNumber).toString()"
-                :startPointType="route.params.asn.substring(0, 2)"
+                :startPointType="route.params.id.substring(0, 2)"
                 :fetch="fetch"
                 searchBar
                 @display="displayNetDelay"
@@ -285,7 +285,7 @@ onMounted(() => {
         <h1 class="text-center q-pa-xl">Network Report</h1>
         <div class="row justify-center">
           <div class="col-8">
-            <NetworkSearchBar
+            <IhrNetworkSearchBar
               bg="white"
               label="grey-8"
               input="black"
@@ -304,26 +304,26 @@ onMounted(() => {
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
               </li>
             </ul>
           </div>
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS7922' } })" class="IHR_delikify">Comcast (AS7922)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS7922' } })" class="IHR_delikify">Comcast (AS7922)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS25152' } })" class="IHR_delikify">K-Root server (AS25152)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS25152' } })" class="IHR_delikify">K-Root server (AS25152)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'IXP208' } })" class="IHR_delikify">DE-CIX (IXP208)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'IXP208' } })" class="IHR_delikify">DE-CIX (IXP208)</RouterLink>
               </li>
             </ul>
           </div>

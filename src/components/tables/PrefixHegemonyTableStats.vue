@@ -101,7 +101,7 @@ const routeToAsn = (asn, row) => {
   asn = asn.field(row)
   router.push(Tr.i18nRoute({
     name: 'networks',
-    params: { asn: ihr_api.ihr_NumberToAsOrIxp(asn) },
+    params: { id: ihr_api.ihr_NumberToAsOrIxp(asn) },
   }))
 }
 const getClassByHegemony = (hegemony) => {
@@ -150,7 +150,7 @@ const getClassByHegemony = (hegemony) => {
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
-            :to="Tr.i18nRoute({ name: 'networks', params: { asn: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })"
+            :to="Tr.i18nRoute({ name: 'networks', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })"
           >
             <span :title="props.row.name">AS{{ props.row.asn }}</span>
           </RouterLink>
@@ -161,7 +161,7 @@ const getClassByHegemony = (hegemony) => {
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
-            :to="Tr.i18nRoute({ name: 'networks', params: { asn: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })"
+            :to="Tr.i18nRoute({ name: 'networks', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })"
           >
             <span :title="props.row.name">{{ props.row.name }}</span>
           </RouterLink>

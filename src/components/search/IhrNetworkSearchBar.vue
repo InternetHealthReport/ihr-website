@@ -84,7 +84,7 @@ const search = (value, update) => {
 const gotoASN = (number) => {
   router.push(Tr.i18nRoute({
     name: 'networks',
-    params: { asn: ihr_api.ihr_NumberToAsOrIxp(number) }
+    params: { id: ihr_api.ihr_NumberToAsOrIxp(number) }
   }))
 }
 

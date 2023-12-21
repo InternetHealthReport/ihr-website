@@ -9,7 +9,7 @@ import { useI18n } from 'vue-i18n'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
-import NetworkSearchBar from '@/components/search/NetworkSearchBar.vue'
+import IhrNetworkSearchBar from '@/components/search/IhrNetworkSearchBar.vue'
 import { isoCountries } from '@/plugins/countryName'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY } from '@/plugins/IhrApi'
@@ -243,7 +243,7 @@ onMounted(() => {
         <h1 class="text-center q-pa-xl">Country Report</h1>
         <div class="row justify-center">
           <div class="col-6">
-            <NetworkSearchBar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true"/>
+            <IhrNetworkSearchBar bg="white" label="grey-8" input="black" labelTxt="Enter a country name" :noAS="true"/>
           </div>
         </div>
       </div>
