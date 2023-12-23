@@ -763,5 +763,164 @@
     "documentation": "documentation",
     "learnmore": "Learn more on ",
     "explore": "Explore"
+  },
+  "iyp": {
+    "overview": {
+      "as": {
+        "title": "AS Overview"
+      },
+      "country": {
+        "title": "Country Overview"
+      },
+      "ixp": {
+        "title": "IXP Overview"
+      },
+      "prefix": {
+        "title": "Prefix Overview"
+      }
+    },
+    "as": {
+      "peers": {
+        "title": "Connected ASes",
+        "caption": "ASes directly connected to AS"
+      },
+      "ipPrefix": {
+        "title": "Originated Prefixes",
+        "caption": "Prefixes orginated by AS"
+      },
+      "ixp": {
+        "title": "IXPs",
+        "caption": "Internet Exchange Points for AS"
+      },
+      "rankings": {
+        "title": "Rankings",
+        "caption": "Top ranks for AS"
+      },
+      "popularDomains": {
+        "title": "Popular Domains",
+        "caption": "Popular domain names hosted by AS"
+      },
+      "facilities": {
+        "title": "Co-located ASes",
+        "caption": "ASes present at the same colocation facilities as AS"
+      },
+      "roas": {
+        "title": "RPKI Route Origin Authorization",
+        "caption": "ROAs registered for AS"
+      },
+      "atlas": {
+        "title": "RIPE Atlas",
+        "caption": "RIPE Atlas probes located in AS"
+      },
+      "siblings": {
+        "title": "Sibling ASes",
+        "caption": "Other ASes managed by the same organization"
+      },
+      "downstreams": {
+        "title": "''Downstream'' ASes",
+        "caption": "ASes depending on AS"
+      },
+      "upstreams": {
+        "title": "''Upstream'' ASes"
+      }
+    },
+    "country": {
+      "rankings": {
+        "title": "AS Rankings",
+        "caption": "Top ASes in "
+      },
+      "ases": {
+        "title": "Autonomous Systems",
+        "caption": "ASes registered with organization in "
+      },
+      "ixps": {
+        "title": "Internet Exchange Points",
+        "caption": "Internet Exchange Points located in "
+      },
+      "prefixes": {
+        "title": "IP Prefixes",
+        "caption": "Prefixes registered and geo-located in "
+      },
+      "atlas": {
+        "title": "RIPE Atlas",
+        "caption": "RIPE Atlas probes located in "
+      }
+    },
+    "ixp": {
+      "prefixes": {
+        "title": "Prefixes"
+      },
+      "members": {
+        "title": "Members"
+      },
+      "facilities": {
+        "title": "Co-location Facilities"
+      },
+      "peeringLANs": {
+        "title": "Peering LANs"
+      }
+    },
+    "tag": {
+      "prefixes": {
+        "title": "Prefixes",
+        "caption": "IP Prefixes classified as "
+      },
+      "ases": {
+        "title": "Autonomous Systems",
+        "caption": "ASes classified as "
+      },
+      "domains": {
+        "title": "Popular Domain Names",
+        "caption": "Popular domain names classified as "
+      }
+    },
+    "domainname": {
+      "rankings": {
+        "title": "Rankings",
+        "caption": "Position in different rankings for "
+      },
+      "nameservers": {
+        "title": "Authoritative Nameservers",
+        "caption": "Authoritative Nameservers and corresponding ASes for "
+      },
+      "ips": {
+        "title": "IP addresses & prefixes",
+        "caption": "IP addresses, prefixes, and originating AS for "
+      },
+      "country_query": {
+        "title": "Querying countries",
+        "caption": "Top 100 countries querying for "
+      },
+      "as_query": {
+        "title": "Querying ASes",
+        "caption": "Top 100 ASes querying for "
+      }
+
+    },
+    "prefix": {
+      "popularDomains": {
+        "title": "Popular Domains",
+        "caption": "Popular domain names resolving to IPs in "
+      },
+      "nameservers": {
+        "title": "Authoritative Nameservers",
+        "caption": "DNS Authoritative Nameservers resolving to IPs in "
+      },
+      "upstreams": {
+        "title": "''Upstream'' ASes"
+      },
+      "roas": {
+        "title": "RPKI Route Origin Authorization",
+        "caption": "RPKI ROAs for "
+      },
+      "lessSpecific": {
+        "title": "Less Specific Prefixes",
+        "caption": "Prefixes covering "
+      },
+      "moreSpecific": {
+        "title": "More Specific Prefixes",
+        "caption": "Prefixes covered by "
+      }
+    }
   }
 }

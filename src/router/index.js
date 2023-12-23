@@ -63,6 +63,16 @@ const router = createRouter({
           component: IypNetworks
         },
         {
+          path: 'tags/:tag',
+          name: 'tags',
+          component: Home
+        },
+        {
+          path: 'domains/:domain',
+          name: 'domains',
+          component: Home
+        },
+        {
           path: 'documentation',
           name: 'documentation',
           component: Documentation

@@ -5,6 +5,7 @@ import Tr from '@/i18n/translation'
 import { useI18n } from 'vue-i18n'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import IypSearchBar from '@/components/search/IypSearchBar.vue'
+import AS from '@/components/iyp/AS.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -14,11 +15,14 @@ const route = useRoute()
 const router = useRouter()
 
 const id = ref(route.params.id)
+const asNumber = ref(id.value.includes('AS') ? Number(id.value.replace('AS', '')) : null)
 </script>
 
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <div v-if="id"></div>
+    <div v-if="id">
+      <AS />
+    </div>
     <div v-else>
       <div>
         <h1 class="text-center q-pa-xl">Network Report</h1>

@@ -79,11 +79,30 @@ const IypApi = {
       return searchResults
     }
 
+    const runManyInParallel = (queries, params, options = { defaultAccessMode: neo4j.session.READ }) => {
+      const tx = _getSession(options).beginTransaction()
+
+      let response = []
+      queries.forEach( q => {
+        try {
+          let res = tx.run(q.query, params)
+          response.push(res)
+        } catch (e) {
+          console.error(e)
+        }
+      })
+
+      //tx.close()
+
+      return response
+    }
+
     const iyp_api = {
       run,
       runManyInOneSession,
       formatResponse,
-      searchIYPInOneSession
+      searchIYPInOneSession,
+      runManyInParallel
     }
     app.provide('iyp_api', iyp_api)
   }
