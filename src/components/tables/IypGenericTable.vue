@@ -141,7 +141,7 @@ const routeToCountry = (cc) => {
 
 watch(activeTab, () => {
   if (activeTab.value == 'chart') {
-    console.log(`Current Tab: ${activeTab.value}`)
+    // console.log(`Current Tab: ${activeTab.value}`)
   }
 })
 watch(() => props.slotLength, () => {
@@ -182,7 +182,7 @@ onMounted(() => {
           </div>
         </QTabPanel>
         <QTabPanel name="data">
-          <QTable :rows="data" :columns="columns" :filter="filter" :pagination="pagination">
+          <QTable :rows="data" :columns="columns" :filter="filter" :pagination="pagination" flat>
             <template v-slot:header-cell="props">
               <QTh :props="props">
                   <QTooltip v-if='props.col.description' anchor="bottom start" self="bottom start">{{ props.col.description }}</QTooltip>
