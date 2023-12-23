@@ -294,15 +294,15 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="q-pa-xl">
-        <div class="row justify-center">
+      <div class="q-pa-lg">
+        <div class="row q-pa-lg column items-center">
           <div class="col-6">
             <h3>Examples:</h3>
           </div>
         </div>
         <div class="row justify-center">
-          <div class="col-3">
-            <ul>
+          <div class="row examples">
+            <ul class="ul_styles">
               <li>
                 <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
               </li>
@@ -313,9 +313,7 @@ onMounted(() => {
                 <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
               </li>
             </ul>
-          </div>
-          <div class="col-3">
-            <ul>
+            <ul class="ul_styles">
               <li>
                 <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: 'AS7922' } })" class="IHR_delikify">Comcast (AS7922)</RouterLink>
               </li>
@@ -338,4 +336,13 @@ onMounted(() => {
   &char-container
     width 90%
     margin 0 auto
+.examples
+  column-gap 30px
+@media screen and (max-width: 500px)
+  .examples
+    flex-direction column
+.ul_styles
+  padding 0
+  margin 0
+  list-style-position: inside
 </style>
