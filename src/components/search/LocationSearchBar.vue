@@ -1,7 +1,7 @@
 <script setup>
 import { QSelect, QIcon, QSpinner, QItem, QItemSection } from 'quasar'
 import { NetworkDelayLocation, NetworkQuery } from '@/plugins/IhrApi'
-import { ref, inject, watch } from 'vue'
+import { ref, inject, watch, defineProps, defineEmits } from 'vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -27,21 +27,11 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits({
-  'select': function(location) {
-    if (location !== null) {
-      return true;
-    } else {
-      console.warn('Location is missing!');
-      return false;
-    }
-  }
-})
+const emits = defineEmits(['select'])
 
 const options = ref([])
 const model = ref(props.selected)
 const loading = ref(false)
-const always = ref(false)
 const networkDelayLocation = ref(new NetworkDelayLocation().orderedByName())
 const networkQuery = ref(new NetworkQuery().orderedByNumber())
 
@@ -52,7 +42,7 @@ const search = (value, update) => {
   ihr_api.network(
     networkQuery.value,
     result => {
-      const hasResults = result.results.some(element => {
+       result.results.some(element => {
         const elem = {
           value: element,
           type: element.number < 0 ? 'IX' : 'AS',
@@ -69,11 +59,10 @@ const search = (value, update) => {
         update()
         return options.value.length > MAX_RESULTS
       })
-      if (!hasResults) {
+      if (options.value.length === 0 ) {
         // Add "No results found" option
         options.value.push({
           value: null,
-          type: 'no-results',
           name: `No results found for "${value}"`,
           label: `No results found for "${value}"`,
         });
