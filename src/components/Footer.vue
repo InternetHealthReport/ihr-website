@@ -5,7 +5,7 @@ import Tr from '@/i18n/translation'
 </script>
 
 <template>
-  <QFooter elevated primary class="IHR_footer text-white text-center ">
+  <QFooter elevated primary class="IHR_footer text-white text-center" style="z-index: 999;">
     <div class="IHR_footer_contents">
       <div class="IHR_fsection">
         <div class="" style="width:360px;max-width: 400px;">
