@@ -27,7 +27,7 @@ const sections = ref({
       RETURN c.country_code AS cc, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name`,
     columns: [
       { name: 'CC', label: 'CC', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
-      { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS ${val}`, sortable: true },
+      { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
       { name: 'Name', label: 'AS Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
     ]
   },
@@ -74,6 +74,22 @@ const loadSection = (key) => {
     }
   )
 }
+
+watch(() => route.params.id, () => {
+  const newId = Number(route.params.id.replace('IXP',''))
+  if (newId != id.value) {
+    id.value = newId
+    // re-load opened sections
+    let keys = Object.keys(sections.value)
+    keys.forEach( key => {
+      if( !sections.value[key].loading ){
+        sections.value[key].loading = true
+        sections.value[key].show = false
+        // loadSection(key)
+      }
+    })
+  }
+})
 </script>
 
 <template>

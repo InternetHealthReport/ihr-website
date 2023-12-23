@@ -232,6 +232,22 @@ const loadSection = (key) => {
     }
   )
 }
+
+watch(() => route.params.id, () => {
+  const newAsn = Number(route.params.id.replace('AS',''))
+  if (newAsn != asn.value) {
+    asn.value = newAsn
+    // re-load opened sections
+    let keys = Object.keys(sections.value)
+    keys.forEach( key => {
+      if( !sections.value[key].loading ){
+        sections.value[key].loading = true
+        sections.value[key].show = false
+        // loadSection(key)
+      }
+    })
+  }
+})
 </script>
 
 <template>

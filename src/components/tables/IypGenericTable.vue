@@ -114,7 +114,7 @@ const routeToEntity = (entity, data) => {
 const routeToASN = (asn) => {
   router.push(Tr.i18nRoute({
     name: 'networks',
-    params: { id: asn },
+    params: { id: `AS${asn}` },
   }))
 }
 
@@ -128,7 +128,7 @@ const routeToPrefix = (host, prefixLength) => {
 const routeToIXP = (id) => {
   router.push(Tr.i18nRoute({
     name: 'networks',
-    params: { id: id },
+    params: { id: `IXP${id}` },
   }))
 }
 
