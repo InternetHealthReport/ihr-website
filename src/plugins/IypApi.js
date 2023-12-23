@@ -97,12 +97,37 @@ const IypApi = {
       return response
     }
 
+    const runManyInOneSessionAndReturnAnObject = async (queries, params, options = { defaultAccessMode: neo4j.session.READ }) => {
+      let session = await _getSession(options)
+      let transaction = await session.beginTransaction()
+
+      let response = []
+      queries.forEach(async q => {
+        try {
+          let res = await transaction.run(q.query, q.params)
+          response.push(res)
+        } catch (e) {
+          console.error(e)
+        }
+      })
+
+      await transaction.close()
+
+      let resultToBeReturn = {}
+      for (let i = 0; i < response.length; i++) {
+        let res = formatResponse(response[i], queries[i].mapping)
+        resultToBeReturn[queries[i].data] = res
+      }
+      return resultToBeReturn
+    }
+
     const iyp_api = {
       run,
       runManyInOneSession,
       formatResponse,
       searchIYPInOneSession,
-      runManyInParallel
+      runManyInParallel,
+      runManyInOneSessionAndReturnAnObject
     }
     app.provide('iyp_api', iyp_api)
   }

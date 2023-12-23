@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import IypSearchBar from '@/components/search/IypSearchBar.vue'
 import AS from '@/components/iyp/AS.vue'
+import IXP from '@/components/iyp/IXP.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -14,14 +15,30 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const id = ref(route.params.id)
-const asNumber = ref(id.value.includes('AS') ? Number(id.value.replace('AS', '')) : null)
+const asNumber = ref(null)
+const ixpNumber = ref(null)
+
+const init = () => {
+  if (route.params.id) {
+    asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
+    ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
+  }
+}
+
+watch(() => route.params.id, () => {
+  init()
+})
+
+onMounted(() => {
+  init()
+})
 </script>
 
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <div v-if="id">
-      <AS />
+    <div v-if="route.params.id">
+      <AS v-if="asNumber" />
+      <IXP v-if="ixpNumber" />
     </div>
     <div v-else>
       <div>
