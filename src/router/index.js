@@ -14,6 +14,7 @@ import PageNotFound from '../views/PageNotFound.vue'
 import GlobalReport from '../views/GlobalReport.vue'
 import IypNetworks from '../views/IypNetworks.vue'
 import IypTags from '../views/IypTags.vue'
+import IypDomainName from '../views/IypDomainName.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -71,7 +72,7 @@ const router = createRouter({
         {
           path: 'domains/:domain',
           name: 'domains',
-          component: Home
+          component: IypDomainName
         },
         {
           path: 'documentation',
