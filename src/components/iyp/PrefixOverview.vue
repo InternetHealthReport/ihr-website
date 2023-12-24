@@ -53,7 +53,7 @@ const queries = ref([
     data: [],
     query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)
       OPTIONAL MATCH (d)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
-      RETURN  DISTINCT d.name as domain, ra.rank AS rank ORDER BY rank LIMIT 5 `
+      RETURN  DISTINCT d.name as domain, ra.rank AS rank ORDER BY rank LIMIT 5`
   }
 ])
 

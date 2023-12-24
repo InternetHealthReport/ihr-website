@@ -8,6 +8,7 @@ import IypSearchBar from '@/components/search/IypSearchBar.vue'
 import AS from '@/components/iyp/AS.vue'
 import IXP from '@/components/iyp/IXP.vue'
 import Prefix from '@/components/iyp/Prefix.vue'
+import { P } from 'plotly.js-dist'
 
 const iyp_api = inject('iyp_api')
 
@@ -25,7 +26,7 @@ const init = () => {
   if (route.params.id) {
     asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
     ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
-    prefixHostString.value = route.params.id.split('.').length === 4 ? route.params.id : null
+    prefixHostString.value = route.params.id.includes('.') || route.params.id.includes(':') ? route.params.id : null
   }
   if (route.params.length) {
     prefixLengthNumber.value = !isNaN(route.params.length) ? Number(route.params.length) : null
