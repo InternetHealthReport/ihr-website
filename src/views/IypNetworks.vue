@@ -8,7 +8,6 @@ import IypSearchBar from '@/components/search/IypSearchBar.vue'
 import AS from '@/components/iyp/AS.vue'
 import IXP from '@/components/iyp/IXP.vue'
 import Prefix from '@/components/iyp/Prefix.vue'
-import { P } from 'plotly.js-dist'
 
 const iyp_api = inject('iyp_api')
 

@@ -13,6 +13,7 @@ import Countries from '../views/Countries.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import GlobalReport from '../views/GlobalReport.vue'
 import IypNetworks from '../views/IypNetworks.vue'
+import IypTags from '../views/IypTags.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -65,7 +66,7 @@ const router = createRouter({
         {
           path: 'tags/:tag',
           name: 'tags',
-          component: Home
+          component: IypTags
         },
         {
           path: 'domains/:domain',
