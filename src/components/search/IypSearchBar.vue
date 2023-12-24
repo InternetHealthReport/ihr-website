@@ -4,6 +4,9 @@ import { ref, inject, computed, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Tr from '@/i18n/translation'
+import { NetworkQuery } from '@/plugins/IhrApi'
+
+const ihr_api = inject('ihr_api')
 
 const { t } = useI18n()
 
@@ -185,13 +188,19 @@ const filter = (value, update, abort) => {
 }
 
 const routeToAS = (asn) => {
-  router.push(Tr.i18nRoute({
-    name: 'networks',
-    params: { id: `AS${asn}` },
-  }))
+  // route to old report page
+  getIdForIhrData(asn, asn, 'AS')
+  // route to new iyp page
+  // router.push(Tr.i18nRoute({
+  //   name: 'networks',
+  //   params: { id: `AS${asn}` },
+  // }))
 }
 
 const routeToIXP = (ixp) => {
+  // route to old report page
+  // getIdForIhrData(ixp, ixpName, 'IXP')
+  // route to new iyp page
   router.push(Tr.i18nRoute({
     name: 'networks',
     params: { id: `IXP${ixp}` },
@@ -219,6 +228,32 @@ const placeholder = computed(() => {
   }
   return props.labelTxt
 })
+
+const getIdForIhrData = (id, idName, type) => {
+  const query = new NetworkQuery().orderedByNumber().mixedContentSearch(idName)
+  ihr_api.network(
+    query,
+    result => {
+      result.results.some(element => {
+        if (element.name === idName || element.number === idName) {
+           router.push(Tr.i18nRoute({
+            name: 'networks-ihr',
+            params: { id: `${type}${Math.abs(element.number)}` },
+            query: {iyp_id: `${type}${id}`}
+          }))
+        }
+      })
+    },
+    error => {
+      console.error(error)
+    }
+  )
+  // fallback
+  router.push(Tr.i18nRoute({
+    name: 'networks',
+    params: { id: `${type}${id}` },
+  }))
+}
 </script>
 
 <template>

@@ -1,19 +1,20 @@
 <script setup>
 import { QList, QExpansionItem, QSeparator, QCard, QCardSection } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import report from '@/plugins/report'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY, NetworkQuery } from '@/plugins/IhrApi'
 import { useI18n } from 'vue-i18n'
-import IhrNetworkSearchBar from '@/components/search/IhrNetworkSearchBar.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
 import AsInterdependenciesChart from '@/components/charts/AsInterdependenciesChart.vue'
 import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart.vue'
 import DiscoChart from '@/components/charts/DiscoChart.vue'
+import ASOverview from '@/components/iyp/ASOverview.vue'
+import IXPOverview from '@/components/iyp/IXPOverview.vue'
 
 const { t } = useI18n()
 
@@ -153,183 +154,136 @@ watch(interval, () => {
   pushRoute()
 })
 onMounted(() => {
-  if (ihr_api.ihr_AsOrIxpToNumber(route.params.id)) {
+  if (asNumber.value) {
     pushRoute()
     netName()
+  } else {
+    router.push(Tr.i18nRoute({
+      name: 'networks',
+    }))
   }
 })
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <div v-if="asNumber">
-      <div>
-        <h1 class="text-center">{{ subHeader }} - {{ headerString }}</h1>
-        <h3 class="text-center">
-          {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-          <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
-        </h3>
-      </div>
-      <QList v-if="showGraphs">
-        <QExpansionItem
-          :label="$t('charts.asInterdependencies.title')"
-          caption="BGP Data"
-          header-class="IHR_charts-title"
-          icon="fas fa-project-diagram"
-          :disable="show.hegemony_disable"
-          v-model="show.hegemony"
-        >
-          <QSeparator />
-          <QCard class="IHR_charts-body">
-            <QCardSection>
-              <AsInterdependenciesChart
-                :start-time="startTime"
-                :end-time="endTime"
-                :as-number="asNumber"
-                :address-family="family"
-                :fetch="fetch"
-              />
-            </QCardSection>
-          </QCard>
-        </qExpansionItem>
-        <QExpansionItem
-          :label="$t('charts.prefixHegemony.title')"
-          caption="BGP / IRR / RPKI / delegated"
-          header-class="IHR_charts-title"
-          icon="fas fa-route"
-          :disable="show.rov_disable"
-          v-model="show.rov"
-        >
-          <QSeparator />
-          <QCard class="IHR_charts-body">
-            <QCardSection>
-              <PrefixHegemonyChart
-                :start-time="startTime"
-                :end-time="endTime"
-                :as-number="asNumber"
-                :fetch="fetch"
-              />
-            </QCardSection>
-          </QCard>
-        </QExpansionItem>
-        <QExpansionItem
-          :label="$t('charts.networkDelay.title')"
-          caption="Traceroute Data"
-          header-class="IHR_charts-title"
-          icon="fas fa-shipping-fast"
-          v-model="show.net_delay"
-          :disable="show.net_delay_disable"
-        >
-          <QSeparator />
-          <QCard class="IHR_charts-body">
-            <QCardSection>
-              <NetworkDelayChart
-                :start-time="startTime"
-                :end-time="endTime"
-                :startPointName="Math.abs(asNumber).toString()"
-                :startPointType="route.params.id.substring(0, 2)"
-                :fetch="fetch"
-                searchBar
-                @display="displayNetDelay"
-              />
-            </QCardSection>
-          </QCard>
-        </QExpansionItem>
-
-        <QExpansionItem
-          :label="$t('charts.delayAndForwarding.title')"
-          caption="Traceroute Data"
-          header-class="IHR_charts-title"
-          icon="fas fa-exchange-alt"
-          :disable="show.delayAndForwarding_disable"
-          v-model="show.delayAndForwarding"
-        >
-          <QSeparator />
-          <QCard class="IHR_charts-body">
-            <QCardSection>
-              <DelayAndForwardingChart
-                :start-time="startTime"
-                :end-time="endTime"
-                :as-number="asNumber"
-                :fetch="fetch"
-              />
-            </QCardSection>
-          </QCard>
-        </QExpansionItem>
-        <QExpansionItem
-          :label="$t('charts.disconnections.title')"
-          caption="RIPE Atlas Log"
-          header-class="IHR_charts-title"
-          icon="fas fa-plug"
-          :disable="show.disco_disable"
-          v-model="show.disco"
-        >
-          <QSeparator />
-          <QCard class="IHR_charts-body">
-            <QCardSection>
-              <DiscoChart
-                :streamName="asNumber"
-                :start-time="startTime"
-                :end-time="endTime"
-                :fetch="fetch"
-                :minAvgLevel="9"
-              />
-            </QCardSection>
-          </QCard>
-        </QExpansionItem>
-        <div class="IHR_last-element">&nbsp;</div>
-      </QList>
+  <div v-if="asNumber" id="IHR_as-and-ixp-container" class="IHR_char-container">
+    <div>
+      <ASOverview v-if="route.query.iyp_id.includes('AS')" :as-number="Number(route.query.iyp_id.replace('AS', ''))" :title="() => `${subHeader} - ${headerString}`" />
+      <IXPOverview v-if="route.query.iyp_id.includes('IXP')" :id="Number(route.query.iyp_id.replace('IXP', ''))" :title="() => `${subHeader} - ${headerString}`" />
+      <h3 class="text-center">
+        {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
+        <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+      </h3>
     </div>
-    <div v-else>
-      <div>
-        <h1 class="text-center q-pa-xl">Network Report</h1>
-        <div class="row justify-center">
-          <div class="col-8">
-            <IhrNetworkSearchBar
-              bg="white"
-              label="grey-8"
-              input="black"
-              labelTxt="Enter an ASN, IXP ID, or network name (at least 3 characters)"
+    <QList v-if="showGraphs">
+      <QExpansionItem
+        :label="$t('charts.asInterdependencies.title')"
+        caption="BGP Data"
+        header-class="IHR_charts-title"
+        icon="fas fa-project-diagram"
+        :disable="show.hegemony_disable"
+        v-model="show.hegemony"
+      >
+        <QSeparator />
+        <QCard class="IHR_charts-body">
+          <QCardSection>
+            <AsInterdependenciesChart
+              :start-time="startTime"
+              :end-time="endTime"
+              :as-number="asNumber"
+              :address-family="family"
+              :fetch="fetch"
             />
-          </div>
-        </div>
-      </div>
-      <div class="q-pa-xl">
-        <div class="row justify-center">
-          <div class="col-6">
-            <h3>Examples:</h3>
-          </div>
-        </div>
-        <div class="row justify-center">
-          <div class="col-3">
-            <ul>
-              <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
-              </li>
-              <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
-              </li>
-              <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
-              </li>
-            </ul>
-          </div>
-          <div class="col-3">
-            <ul>
-              <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS7922' } })" class="IHR_delikify">Comcast (AS7922)</RouterLink>
-              </li>
-              <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS25152' } })" class="IHR_delikify">K-Root server (AS25152)</RouterLink>
-              </li>
-              <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'IXP208' } })" class="IHR_delikify">DE-CIX (IXP208)</RouterLink>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+          </QCardSection>
+        </QCard>
+      </qExpansionItem>
+      <QExpansionItem
+        :label="$t('charts.prefixHegemony.title')"
+        caption="BGP / IRR / RPKI / delegated"
+        header-class="IHR_charts-title"
+        icon="fas fa-route"
+        :disable="show.rov_disable"
+        v-model="show.rov"
+      >
+        <QSeparator />
+        <QCard class="IHR_charts-body">
+          <QCardSection>
+            <PrefixHegemonyChart
+              :start-time="startTime"
+              :end-time="endTime"
+              :as-number="asNumber"
+              :fetch="fetch"
+            />
+          </QCardSection>
+        </QCard>
+      </QExpansionItem>
+      <QExpansionItem
+        :label="$t('charts.networkDelay.title')"
+        caption="Traceroute Data"
+        header-class="IHR_charts-title"
+        icon="fas fa-shipping-fast"
+        v-model="show.net_delay"
+        :disable="show.net_delay_disable"
+      >
+        <QSeparator />
+        <QCard class="IHR_charts-body">
+          <QCardSection>
+            <NetworkDelayChart
+              :start-time="startTime"
+              :end-time="endTime"
+              :startPointName="Math.abs(asNumber).toString()"
+              :startPointType="route.params.id.substring(0, 2)"
+              :fetch="fetch"
+              searchBar
+              @display="displayNetDelay"
+            />
+          </QCardSection>
+        </QCard>
+      </QExpansionItem>
+
+      <QExpansionItem
+        :label="$t('charts.delayAndForwarding.title')"
+        caption="Traceroute Data"
+        header-class="IHR_charts-title"
+        icon="fas fa-exchange-alt"
+        :disable="show.delayAndForwarding_disable"
+        v-model="show.delayAndForwarding"
+      >
+        <QSeparator />
+        <QCard class="IHR_charts-body">
+          <QCardSection>
+            <DelayAndForwardingChart
+              :start-time="startTime"
+              :end-time="endTime"
+              :as-number="asNumber"
+              :fetch="fetch"
+            />
+          </QCardSection>
+        </QCard>
+      </QExpansionItem>
+      <QExpansionItem
+        :label="$t('charts.disconnections.title')"
+        caption="RIPE Atlas Log"
+        header-class="IHR_charts-title"
+        icon="fas fa-plug"
+        :disable="show.disco_disable"
+        v-model="show.disco"
+      >
+        <QSeparator />
+        <QCard class="IHR_charts-body">
+          <QCardSection>
+            <DiscoChart
+              :streamName="asNumber"
+              :start-time="startTime"
+              :end-time="endTime"
+              :fetch="fetch"
+              :minAvgLevel="9"
+            />
+          </QCardSection>
+        </QCard>
+      </QExpansionItem>
+      <div class="IHR_last-element">&nbsp;</div>
+    </QList>
   </div>
 </template>
 
