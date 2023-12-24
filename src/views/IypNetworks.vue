@@ -7,6 +7,7 @@ import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import IypSearchBar from '@/components/search/IypSearchBar.vue'
 import AS from '@/components/iyp/AS.vue'
 import IXP from '@/components/iyp/IXP.vue'
+import Prefix from '@/components/iyp/Prefix.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -17,11 +18,17 @@ const router = useRouter()
 
 const asNumber = ref(null)
 const ixpNumber = ref(null)
+const prefixHostString = ref(null)
+const prefixLengthNumber = ref(null)
 
 const init = () => {
   if (route.params.id) {
     asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
     ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
+    prefixHostString.value = route.params.id.split('.').length === 4 ? route.params.id : null
+  }
+  if (route.params.length) {
+    prefixLengthNumber.value = !isNaN(route.params.length) ? Number(route.params.length) : null
   }
 }
 
@@ -39,6 +46,7 @@ onMounted(() => {
     <div v-if="route.params.id">
       <AS v-if="asNumber" />
       <IXP v-if="ixpNumber" />
+      <Prefix v-if="prefixHostString && prefixLengthNumber" />
     </div>
     <div v-else>
       <div>
