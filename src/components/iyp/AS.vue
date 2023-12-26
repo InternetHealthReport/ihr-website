@@ -9,7 +9,7 @@ import IypGenericPieChart from '../charts/IypGenericPieChart.vue'
 import IypGenericBarChart from '../charts/IypGenericBarChart.vue'
 import IypGenericIndicatorsChart from '../charts/IypGenericIndicatorsChart.vue'
 import IypGenericTreemapChart from '../charts/IypGenericTreemapChart.vue'
-import getCountryName from '@/plugins/countryName'
+import { isoCountries } from '@/plugins/countryName'
 
 const iyp_api = inject('iyp_api')
 
@@ -250,9 +250,9 @@ const treemapClicked = (event) => {
             params: { id: host, length: prefixLength },
           }))
         }
-      } else if (getCountryName(network.split(' ')[0]) !== undefined) {
+      } else if (network.split(' ')[0] in isoCountries) {
         router.push(Tr.i18nRoute({
-          name: 'countries',
+          name: 'countries-ihr',
           params: { cc: network.split(' ')[0] },
         }))
       } else if (domainMatch) {

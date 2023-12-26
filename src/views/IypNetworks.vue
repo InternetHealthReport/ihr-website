@@ -1,20 +1,13 @@
 <script setup>
-import { QList, QExpansionItem, QSeparator, QCard, QCardSection } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
-import { useI18n } from 'vue-i18n'
-import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import IypSearchBar from '@/components/search/IypSearchBar.vue'
 import AS from '@/components/iyp/AS.vue'
 import IXP from '@/components/iyp/IXP.vue'
 import Prefix from '@/components/iyp/Prefix.vue'
 
-const iyp_api = inject('iyp_api')
-
-const { t } = useI18n()
-
 const route = useRoute()
-const router = useRouter()
 
 const asNumber = ref(null)
 const ixpNumber = ref(null)
@@ -60,6 +53,7 @@ onMounted(() => {
               label="grey-8"
               input="black"
               labelTxt="Enter an AS ID, IXP or network name (at least 3 characters)"
+              :noCountry="true"
             />
           </div>
         </div>
@@ -74,13 +68,13 @@ onMounted(() => {
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
               </li>
             </ul>
           </div>

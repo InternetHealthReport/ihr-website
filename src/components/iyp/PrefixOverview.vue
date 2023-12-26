@@ -131,7 +131,7 @@ onMounted(() => {
                 <div v-if="queries[0].data.length > 0" class="q-ml-sm">
                   <p v-if="queries[0].data[0].get('country')">
                     Registered in
-                    <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc:queries[0].data[0].get('cc') } })">{{ queries[0].data[0].get('country') }}</RouterLink>
+                    <RouterLink :to="Tr.i18nRoute({ name: 'countries-ihr', params: {cc:queries[0].data[0].get('cc') } })">{{ queries[0].data[0].get('country') }}</RouterLink>
                     ({{ queries[0].data[0].get('rir').toUpperCase() }})
                   </p>
                   <div v-if="queries[0].data[0].get('asn')[0][0]">

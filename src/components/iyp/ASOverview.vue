@@ -161,7 +161,7 @@ onMounted(() => {
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
                 <div v-if="queries[0].data.length > 0" class="q-ml-sm">
-                  <p>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].get('cc') } })"> {{ queries[0].data[0].get('country') }} </RouterLink></p>
+                  <p>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries-ihr', params: {cc: queries[0].data[0].get('cc') } })"> {{ queries[0].data[0].get('country') }} </RouterLink></p>
                   <p>Member of {{ queries[0].data[0].get('nb_ixp') }} IXPs in {{ queries[0].data[0].get('nb_country') }} Countries</p>
                   <p>{{ queries[0].data[0].get('prefixes_v4') }} IPv4 and {{ queries[0].data[0].get('prefixes_v6') }} IPv6 Originated Prefixes</p>
                   <p v-if="queries[1].data.length > 0">{{ queries[1].data[0].get('peers') }} Connected ASes</p>

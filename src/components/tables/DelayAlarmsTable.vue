@@ -208,7 +208,7 @@ onMounted(() => {
           <QToggle v-model="props.expand" />
         </QTd>
         <QTd key="asn" :props="props">
-          <RouterLink v-bind:key="asn" v-for="(asn, index) in props.row.asn" :to="Tr.i18nRoute({ name: 'networks', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })">
+          <RouterLink v-bind:key="asn" v-for="(asn, index) in props.row.asn" :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })">
             {{ index == 1 ? '/' + ihr_api.ihr_NumberToAsOrIxp(props.row.asn) : ihr_api.ihr_NumberToAsOrIxp(props.row.asn) }}
           </RouterLink>
         </QTd>

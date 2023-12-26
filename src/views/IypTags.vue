@@ -5,7 +5,7 @@ import Tr from '@/i18n/translation'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
-import getCountryName from '@/plugins/countryName'
+import { isoCountries } from '@/plugins/countryName'
 
 const iyp_api = inject('iyp_api')
 
@@ -115,9 +115,9 @@ const treemapClicked = (event) => {
             params: { id: host, length: prefixLength },
           }))
         }
-      } else if (getCountryName(network.split(' ')[0]) !== undefined) {
+      } else if (network.split(' ')[0] in isoCountries) {
         router.push(Tr.i18nRoute({
-          name: 'countries',
+          name: 'countries-ihr',
           params: { cc: network.split(' ')[0] },
         }))
       } else if (domainMatch) {

@@ -6,7 +6,7 @@ import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
-import getCountryName from '@/plugins/countryName'
+import { isoCountries } from '@/plugins/countryName'
 
 const iyp_api = inject('iyp_api')
 
@@ -39,13 +39,13 @@ const sections = ref({
     query: `MATCH (:DomainName {name: $domain})-[:MANAGED_BY]-(n:AuthoritativeNameServer)
       OPTIONAL MATCH (n)-[:RESOLVES_TO]->(i:IP)-[:PART_OF]-(p:Prefix)-[:ORIGINATE]-(a:AS)
       OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-      RETURN  DISTINCT i.ip AS ip, n.name as nameserver, 'AS'+a.asn AS asn, p.prefix AS prefix, COLLECT(DISTINCT t.label) AS tags`,
+      RETURN  DISTINCT i.ip AS ip, n.name as nameserver, a.asn AS asn, p.prefix AS prefix, COLLECT(DISTINCT t.label) AS tags`,
     columns: [
       { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.get('nameserver'), format: val => `${val}`, sortable: true },
       { name: 'IP', label: 'IP', align: 'left', field: row => row.get('ip'), format: val => `${val}`, sortable: true },
       { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.get('prefix'), format: val => `${val}`, sortable: true },
       { name: 'Prefix Tags', label: 'Prefix Tags', align: 'left', field: row => row.get('tags'), format: val => `${val}`, sortable: true },
-      { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.get('asn'), format: val => `${val}`, sortable: true },
+      { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
     ]
   },
   ips: {
@@ -58,12 +58,12 @@ const sections = ref({
       OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-      RETURN DISTINCT 'AS'+a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS asname, i.ip as ip, p.prefix AS prefix, COLLECT(DISTINCT t.label) AS tags`,
+      RETURN DISTINCT a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS asname, i.ip as ip, p.prefix AS prefix, COLLECT(DISTINCT t.label) AS tags`,
     columns: [
       { name: 'IP address', label: 'IP address', align: 'left', field: row => row.get('ip'), format: val => `${val}`, sortable: true },
       { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.get('prefix'), format: val => `${val}`, sortable: true },
       { name: 'Prefix Tags', label: 'Prefix Tags', align: 'left', field: row => row.get('tags'), format: val => `${val}`, sortable: true },
-      { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.get('asn'), format: val => `${val}`, sortable: true },
+      { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
       { name: 'Name', label: 'AS Name', align: 'left', field: row => row.get('asname'), format: val => `${val}`, sortable: true },
     ]
   },
@@ -136,9 +136,9 @@ const treemapClicked = (event) => {
             params: { id: host, length: prefixLength },
           }))
         }
-      } else if (getCountryName(network.split(' ')[0]) !== undefined) {
+      } else if (network.split(' ')[0] in isoCountries) {
         router.push(Tr.i18nRoute({
-          name: 'countries',
+          name: 'countries-ihr',
           params: { cc: network.split(' ')[0] },
         }))
       } else if (domainMatch) {

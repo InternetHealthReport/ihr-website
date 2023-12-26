@@ -9,12 +9,13 @@ import MetisDeployment from '../views/MetisDeployment.vue'
 import ROV from '../views/ROV.vue'
 import Corona from '../views/Corona.vue'
 import IhrNetworks from '../views/IhrNetworks.vue'
-import Countries from '../views/Countries.vue'
+import IhrCountries from '../views/IhrCountries.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import GlobalReport from '../views/GlobalReport.vue'
 import IypNetworks from '../views/IypNetworks.vue'
 import IypTags from '../views/IypTags.vue'
 import IypDomainName from '../views/IypDomainName.vue'
+import IypCountries from '../views/IypCountries.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -85,9 +86,14 @@ const router = createRouter({
           component: Contact
         },
         {
+          path: 'countries/ihr/:cc?',
+          name: 'countries-ihr',
+          component: IhrCountries
+        },
+        {
           path: 'countries/:cc?',
           name: 'countries',
-          component: Countries
+          component: IypCountries
         },
         {
           path: 'rov',

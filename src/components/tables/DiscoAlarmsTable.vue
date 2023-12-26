@@ -136,7 +136,7 @@ const msmPrbIds = (probes) => {
         </QTd>
         <QTd key="location" align>
           <div v-if="props.row.streamtype == 'asn'">
-            <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS' + props.row.streamname } })">
+            <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS' + props.row.streamname } })">
               AS{{ props.row.streamname }}
             </RouterLink>
           </div>

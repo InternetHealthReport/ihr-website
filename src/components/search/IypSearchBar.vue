@@ -4,7 +4,8 @@ import { ref, inject, computed, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Tr from '@/i18n/translation'
-import { NetworkQuery } from '@/plugins/IhrApi'
+import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
+import getCountryName from '@/plugins/countryName'
 
 const ihr_api = inject('ihr_api')
 
@@ -189,7 +190,7 @@ const filter = (value, update, abort) => {
 
 const routeToAS = (asn) => {
   // route to old report page
-  getIdForIhrData(asn, asn, 'AS')
+  getIdForIhrData(asn, 'AS', 'networks')
   // route to new iyp page
   // router.push(Tr.i18nRoute({
   //   name: 'networks',
@@ -199,7 +200,7 @@ const routeToAS = (asn) => {
 
 const routeToIXP = (ixp) => {
   // route to old report page
-  // getIdForIhrData(ixp, ixpName, 'IXP')
+  // getIdForIhrData(ixp, 'IXP', 'networks')
   // route to new iyp page
   router.push(Tr.i18nRoute({
     name: 'networks',
@@ -216,10 +217,13 @@ const routeToPrefix = (name) => {
 }
 
 const routeToCountry = (cc) => {
-  router.push(Tr.i18nRoute({
-    name: 'countries',
-    params: { cc: cc },
-  }))
+  // route to old report page
+  getIdForIhrData(cc, null, 'countries')
+  // route to new iyp page
+  // router.push(Tr.i18nRoute({
+  //   name: 'countries',
+  //   params: { cc: cc },
+  // }))
 }
 
 const placeholder = computed(() => {
@@ -229,30 +233,54 @@ const placeholder = computed(() => {
   return props.labelTxt
 })
 
-const getIdForIhrData = (id, idName, type) => {
-  const query = new NetworkQuery().orderedByNumber().mixedContentSearch(idName)
-  ihr_api.network(
-    query,
-    result => {
-      result.results.some(element => {
-        if (element.name === idName || element.number === idName) {
-           router.push(Tr.i18nRoute({
-            name: 'networks-ihr',
-            params: { id: `${type}${Math.abs(element.number)}` },
-            // query: {iyp_id: `${type}${id}`}
-          }))
-        }
-      })
-    },
-    error => {
-      console.error(error)
-    }
-  )
-  // fallback
-  router.push(Tr.i18nRoute({
-    name: 'networks',
-    params: { id: `${type}${id}` },
-  }))
+const getIdForIhrData = (id, type, route) => {
+  if (route === 'networks') {
+    const query = new NetworkQuery().orderedByNumber().mixedContentSearch(id)
+    ihr_api.network(
+      query,
+      result => {
+        result.results.some(element => {
+          if (element.name === id || element.number === id) {
+            router.push(Tr.i18nRoute({
+              name: 'networks-ihr',
+              params: { id: `${type}${Math.abs(element.number)}` },
+            }))
+          }
+        })
+      },
+      error => {
+        console.error(error)
+      }
+    )
+    // fallback
+    router.push(Tr.i18nRoute({
+      name: 'networks',
+      params: { id: `${type}${id}` },
+    }))
+  } else if (route === 'countries') {
+    const query = new CountryQuery().orderedByCode().containsName(getCountryName(id))
+    ihr_api.country(
+      query,
+      result => {
+        result.results.some(element => {
+          if (element.code === id) {
+            router.push(Tr.i18nRoute({
+              name: 'countries-ihr',
+              params: { cc: id },
+            }))
+          }
+        })
+      },
+      error => {
+        console.error(error)
+      }
+    )
+    // fallback
+    router.push(Tr.i18nRoute({
+      name: 'countries',
+      params: { cc: id },
+    }))
+  }
 }
 </script>
 
