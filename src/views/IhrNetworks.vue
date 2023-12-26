@@ -167,9 +167,10 @@ onMounted(() => {
 
 <template>
   <div v-if="asNumber" id="IHR_as-and-ixp-container" class="IHR_char-container">
+    <h1 class="text-center">{{subHeader}} - {{headerString}}</h1>
     <div>
-      <ASOverview v-if="route.query.iyp_id.includes('AS')" :as-number="Number(route.query.iyp_id.replace('AS', ''))" :title="() => `${subHeader} - ${headerString}`" />
-      <IXPOverview v-if="route.query.iyp_id.includes('IXP')" :id="Number(route.query.iyp_id.replace('IXP', ''))" :title="() => `${subHeader} - ${headerString}`" />
+      <ASOverview v-if="route.params.id.includes('AS')" :as-number="Number(route.params.id.replace('AS', ''))" :title="() => `${subHeader} - ${headerString}`" />
+      <IXPOverview v-if="route.params.id.includes('IXP')" :id="Number(route.params.id.replace('IXP', ''))" :title="() => `${subHeader} - ${headerString}`" />
       <h3 class="text-center">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
         <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />

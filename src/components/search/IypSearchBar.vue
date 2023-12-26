@@ -239,7 +239,7 @@ const getIdForIhrData = (id, idName, type) => {
            router.push(Tr.i18nRoute({
             name: 'networks-ihr',
             params: { id: `${type}${Math.abs(element.number)}` },
-            query: {iyp_id: `${type}${id}`}
+            // query: {iyp_id: `${type}${id}`}
           }))
         }
       })

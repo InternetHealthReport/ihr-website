@@ -5,6 +5,7 @@ import Tr from '@/i18n/translation'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
+import getCountryName from '@/plugins/countryName'
 
 const iyp_api = inject('iyp_api')
 
@@ -98,6 +99,43 @@ const loadSection = (key) => {
   )
 }
 
+const treemapClicked = (event) => {
+  if (event.points && event.points.length) {
+    const network = event.points[0].label
+    if (typeof network === 'string') {
+      const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
+      const prefixMatch = prefixRegex.exec(network)
+      const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/
+      const domainMatch = domainRegex.exec(network)
+      if (prefixMatch) {
+        const [host, prefixLength] = network.split('/')
+        if (prefixLength) {
+          router.push(Tr.i18nRoute({
+            name: 'networks',
+            params: { id: host, length: prefixLength },
+          }))
+        }
+      } else if (getCountryName(network.split(' ')[0]) !== undefined) {
+        router.push(Tr.i18nRoute({
+          name: 'countries',
+          params: { cc: network.split(' ')[0] },
+        }))
+      } else if (domainMatch) {
+        router.push(Tr.i18nRoute({
+          name: 'domains',
+          params: { domain: network },
+        }))
+      }
+    } else if (typeof network === 'object') {
+      const asId = `AS${network.low}`
+      router.push(Tr.i18nRoute({
+        name: 'networks-ihr',
+        params: { id: asId },
+      }))
+    }
+  }
+}
+
 watch(() => sections.value.nodes.data, () => {
   sections.value.domains.show = sections.value.nodes.data[0].get('nb_domains') > 0
   sections.value.ases.show = sections.value.nodes.data[0].get('nb_ases') > 0
@@ -180,6 +218,7 @@ onMounted(() => {
                   :chart-data="sections.ases.data"
                   :chart-layout="{ title: 'Breakdown per RIR and registered country' }"
                   :config="{ keys: ['rir', 'cc', 'asn'], root: tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<extra>%{customdata.percent:.1f}%</extra>' }"
+                  @treemap-clicked="treemapClicked($event)"
                  />
             </IypGenericTable>
           </QCard>
@@ -207,6 +246,7 @@ onMounted(() => {
                 :chart-data="sections.prefixes.data"
                 :chart-layout="{ title: 'Breakdown per origin AS and registered country code' }"
                 :config="{ keys: ['as_cc', 'asn', 'prefix'], root: tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
+                @treemap-clicked="treemapClicked($event)"
                 />
             </IypGenericTable>
           </QCard>

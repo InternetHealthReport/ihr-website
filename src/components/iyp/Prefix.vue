@@ -149,6 +149,22 @@ const loadSection = (key) => {
   )
 }
 
+const treemapClicked = (event) => {
+  if (event.points && event.points.length) {
+    const network = event.points[0].label
+    if (typeof network === 'string') {
+      const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/
+      const domainMatch = domainRegex.exec(network)
+      if (domainMatch) {
+        router.push(Tr.i18nRoute({
+          name: 'domains',
+          params: { domain: network },
+        }))
+      }
+    }
+  }
+}
+
 watch(() => route.params, () => {
   if (route.params.id != host.value || Number(route.params.length) != prefixLength.value) {
     host.value = route.params.id
@@ -193,6 +209,7 @@ watch(() => route.params, () => {
                 v-if="sections.domains.data.length > 0"
                 :chart-data="sections.domains.data"
                 :config="{ keys: ['tld', 'domain', 'ip'], keyValue: 'inv_rank', root: getPrefix(), hovertemplate: '<b>%{customdata.get(`domain`)}<br>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<br>%{customdata.tags}<extra></extra>' }"
+                @treemap-clicked="treemapClicked($event)"
               />
             </IypGenericTable>
           </QCard>
@@ -218,6 +235,7 @@ watch(() => route.params, () => {
                 v-if="sections.nameservers.data.length > 0"
                 :chart-data="sections.nameservers.data"
                 :config="{ keys: ['tld', 'nameserver', 'ip'], root: getPrefix(), hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_domains} popular domains<extra></extra>' }"
+                @treemap-clicked="treemapClicked($event)"
               />
             </IypGenericTable>
           </QCard>

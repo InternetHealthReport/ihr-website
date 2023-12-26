@@ -6,6 +6,7 @@ import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
+import getCountryName from '@/plugins/countryName'
 
 const iyp_api = inject('iyp_api')
 
@@ -119,6 +120,42 @@ const loadSection = (key) => {
   )
 }
 
+const treemapClicked = (event) => {
+  if (event.points && event.points.length) {
+    const network = event.points[0].label
+    if (typeof network === 'string') {
+      const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
+      const prefixMatch = prefixRegex.exec(network)
+      const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/
+      const domainMatch = domainRegex.exec(network)
+      if (prefixMatch) {
+        const [host, prefixLength] = network.split('/')
+        if (prefixLength) {
+          router.push(Tr.i18nRoute({
+            name: 'networks',
+            params: { id: host, length: prefixLength },
+          }))
+        }
+      } else if (getCountryName(network.split(' ')[0]) !== undefined) {
+        router.push(Tr.i18nRoute({
+          name: 'countries',
+          params: { cc: network.split(' ')[0] },
+        }))
+      } else if (domainMatch) {
+        router.push(Tr.i18nRoute({
+          name: 'domains',
+          params: { domain: network },
+        }))
+      } else if (network.includes('AS')) {
+        router.push(Tr.i18nRoute({
+          name: 'networks-ihr',
+          params: { id: network },
+        }))
+      }
+    } 
+  }
+}
+
 watch(() => route.params.domain, () => {
   const newDomain = route.params.domain
   if (newDomain != domainName.value) {
@@ -169,6 +206,7 @@ watch(() => route.params.domain, () => {
                     v-if="sections.ips.data.length > 0"
                     :chart-data="sections.ips.data"
                     :config="{ keys: ['asn', 'prefix', 'ip'], root: pageTitle, hovertemplate: '<b>%{label}<br>%{value}</b> <br><br><extra></extra>' }"
+                    @treemap-clicked="treemapClicked($event)"
                   />
                 </div>
               </div>
@@ -201,6 +239,7 @@ watch(() => route.params.domain, () => {
                     v-if="sections.nameservers.data.length > 0"
                     :chart-data="sections.nameservers.data"
                     :config="{ keys: ['asn', 'prefix', 'ip', 'nameserver'], root: pageTitle, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br><extra></extra>' }"
+                    @treemap-clicked="treemapClicked($event)"
                   />
                 </div>
               </div>
@@ -228,7 +267,8 @@ watch(() => route.params.domain, () => {
               <IypGenericTreemapChart
                 v-if="sections.country_query.data.length > 0"
                 :chart-data="sections.country_query.data"
-                :config="{ keys: ['name'], keyValue: 'perc', root: pageTitle, hovertemplate: '<b>%{label}<br>%{value}%</b> <br><br><extra></extra>' }"
+                :config="{ keys: ['cc'], keyValue: 'perc', root: pageTitle, hovertemplate: '<b>%{label}<br>%{value}%</b> <br><br><extra></extra>' }"
+                @treemap-clicked="treemapClicked($event)"
               />
             </IypGenericTable>
           </QCard>
@@ -255,6 +295,7 @@ watch(() => route.params.domain, () => {
                 v-if="sections.as_query.data.length > 0"
                 :chart-data="sections.as_query.data"
                 :config="{ keys: ['name'], keyValue: 'perc', root: pageTitle, hovertemplate: '<b>%{label}<br>%{value}%</b> <br><br><extra></extra>' }"
+                @treemap-clicked="treemapClicked($event)"
               />
             </IypGenericTable>
           </QCard>

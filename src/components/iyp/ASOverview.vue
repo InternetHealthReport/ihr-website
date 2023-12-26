@@ -210,7 +210,7 @@ onMounted(() => {
               <RouterLink v-if="route.path.includes('ihr')" :to="Tr.i18nRoute({ name: 'networks', params: {id: `AS${asNumber}`}})" class="q-mt-lg overview-footer">
                 View more details on IYP for AS{{ asNumber }}
               </RouterLink>
-              <RouterLink v-else :to="Tr.i18nRoute({ name: 'networks-ihr', params: {id: `AS${asNumber}`}, query: {iyp_id: `AS${asNumber}`}})" class="q-mt-lg overview-footer">
+              <RouterLink v-else :to="Tr.i18nRoute({ name: 'networks-ihr', params: {id: `AS${asNumber}`}})" class="q-mt-lg overview-footer">
                 View report for AS{{ asNumber }}
               </RouterLink>
             </div>

@@ -9,6 +9,7 @@ import IypGenericPieChart from '../charts/IypGenericPieChart.vue'
 import IypGenericBarChart from '../charts/IypGenericBarChart.vue'
 import IypGenericIndicatorsChart from '../charts/IypGenericIndicatorsChart.vue'
 import IypGenericTreemapChart from '../charts/IypGenericTreemapChart.vue'
+import getCountryName from '@/plugins/countryName'
 
 const iyp_api = inject('iyp_api')
 
@@ -233,6 +234,43 @@ const loadSection = (key) => {
   )
 }
 
+const treemapClicked = (event) => {
+  if (event.points && event.points.length) {
+    const network = event.points[0].label
+    if (typeof network === 'string') {
+      const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
+      const prefixMatch = prefixRegex.exec(network)
+      const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/
+      const domainMatch = domainRegex.exec(network)
+      if (prefixMatch) {
+        const [host, prefixLength] = network.split('/')
+        if (prefixLength) {
+          router.push(Tr.i18nRoute({
+            name: 'networks',
+            params: { id: host, length: prefixLength },
+          }))
+        }
+      } else if (getCountryName(network.split(' ')[0]) !== undefined) {
+        router.push(Tr.i18nRoute({
+          name: 'countries',
+          params: { cc: network.split(' ')[0] },
+        }))
+      } else if (domainMatch) {
+        router.push(Tr.i18nRoute({
+          name: 'domains',
+          params: { domain: network },
+        }))
+      }
+    } else if (typeof network === 'object') {
+      const asId = `AS${network.low}`
+      router.push(Tr.i18nRoute({
+        name: 'networks-ihr',
+        params: { id: asId },
+      }))
+    }
+  }
+}
+
 watch(() => route.params.id, () => {
   const newAsn = Number(route.params.id.replace('AS',''))
   if (newAsn != asn.value) {
@@ -286,6 +324,7 @@ watch(() => route.params.id, () => {
                   :chart-data="sections.prefixes.data"
                   :chart-layout="{ title: 'Breakdown per RIR and geo-location (Maxmind)' }"
                   :config="{ keys: ['rir', 'cc', 'prefix'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
+                  @treemap-clicked="treemapClicked($event)"
                  />
                 </div>
               </div>
@@ -313,6 +352,7 @@ watch(() => route.params.id, () => {
                 v-if="sections.peers.data.length > 0"
                 :chart-data="sections.peers.data"
                 :config="{ keys: ['cc', 'asn'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.percent:.1f}%</extra>' }"
+                @treemap-clicked="treemapClicked($event)"
               />
             </IypGenericTable>
           </QCard>
@@ -367,6 +407,7 @@ watch(() => route.params.id, () => {
                   :chart-data="sections.downstreams.data"
                   :chart-layout="{ title: '' }"
                   :config="{ keys: ['af', 'cc', 'asn'], keyValue: 'hegemony_score', root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
+                  @treemap-clicked="treemapClicked($event)"
                 />
               </div>
             </IypGenericTable>
@@ -398,6 +439,7 @@ watch(() => route.params.id, () => {
                 v-if="sections.domains.data.length > 0"
                 :chart-data="sections.domains.data"
                 :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: pageTitle, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: #%{customdata.rank}<extra></extra>' }"
+                @treemap-clicked="treemapClicked($event)"
               />
             </IypGenericTable>
           </QCard>
@@ -424,6 +466,7 @@ watch(() => route.params.id, () => {
                 :chart-data="sections.atlas.data"
                 :chart-layout="{ title: 'RIPE Atlas probes per prefix' }"
                 :config="{ keys: ['af', 'prefix', 'id'],  root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} probes<extra></extra>' }"
+                @treemap-clicked="treemapClicked($event)"
                 />
             </IypGenericTable>
           </QCard>
@@ -508,7 +551,10 @@ watch(() => route.params.id, () => {
               :cypher-query="sections.ixps.query"
               :slot-length="2"
             >
-              <IypGenericTreemapChart v-if="sections.ixps.data.length > 0" :chart-data="sections.ixps.data" :config="{ keys: ['cc', 'name'],  keyValue: '', root: pageTitle, show_percent: true }"
+              <IypGenericTreemapChart v-if="sections.ixps.data.length > 0"
+                :chart-data="sections.ixps.data"
+                :config="{ keys: ['cc', 'name'],  keyValue: '', root: pageTitle, show_percent: true }"
+                @treemap-clicked="treemapClicked($event)"
               />
             </IypGenericTable>
           </QCard>

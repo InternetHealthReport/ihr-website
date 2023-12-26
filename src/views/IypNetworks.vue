@@ -25,7 +25,9 @@ const init = () => {
   if (route.params.id) {
     asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
     ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
-    prefixHostString.value = route.params.id.includes('.') || route.params.id.includes(':') ? route.params.id : null
+    const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
+    const prefixMatch = prefixRegex.exec(route.params.id)
+    prefixHostString.value = prefixMatch ? route.params.id : null
   }
   if (route.params.length) {
     prefixLengthNumber.value = !isNaN(route.params.length) ? Number(route.params.length) : null
