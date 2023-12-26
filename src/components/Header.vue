@@ -151,7 +151,7 @@ watch(simpleMenu, () => { debounceFunc() })
               </QList>
             </QBtnDropdown>
           </QBtnGroup>
-          <LanguageSwitcher />
+          <!-- <LanguageSwitcher /> -->
         </div>
         <div class="lt-md">
           <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"></q-btn>
@@ -182,7 +182,7 @@ watch(simpleMenu, () => { debounceFunc() })
             </QList>
           </QBtnDropdown>
         </QItem>
-        <LanguageSwitcher />
+        <!-- <LanguageSwitcher /> -->
       </QList>
     </QDrawer>
   </QHeader>
