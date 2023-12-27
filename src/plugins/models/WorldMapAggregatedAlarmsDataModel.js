@@ -1,5 +1,4 @@
-import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils'
-
+import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils';
 
 export function etl(alarms, alarmCountsSelected, alarmTypeTitlesMap) {
   const alarmCountsByCountry = groupAlarmCountsByCountry(alarms, alarmCountsSelected)

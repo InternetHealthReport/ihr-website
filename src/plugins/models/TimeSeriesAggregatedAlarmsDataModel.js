@@ -1,4 +1,4 @@
-import * as AggregatedAlarmUtils from '../utils/AggregatedAlarmsUtils'
+import * as AggregatedAlarmUtils from '../utils/AggregatedAlarmsUtils';
 
 export function etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap, legend, isASGranularity) {
   const asGranularity = switchASGranularity(countryName, isASGranularity)

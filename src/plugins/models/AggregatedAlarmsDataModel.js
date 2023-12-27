@@ -1,10 +1,8 @@
-import * as GripApiPlugin from '../GripApi'
-import * as IodaApiPlugin from '../IodaApi'
-import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils'
-import { getCountryISOCode3, getCountryName } from '../countryName'
-import * as NetworkIhr from '../NetworkIhr'
-// import getCountryName from '../plugins/countryName'
-
+import * as GripApiPlugin from '../GripApi';
+import * as IodaApiPlugin from '../IodaApi';
+import * as AsNamesPlugin from '../AsNames';
+import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils';
+import { getCountryISOCode3, getCountryName } from '../countryName';
 
 const dataSourcesTransformers = {
   ihr: {
@@ -20,22 +18,23 @@ const dataSourcesTransformers = {
 
 let asNamesCountryMappingsResult = {}
 
-export function etl(dataSourcesSelected, dataSources, alarmTypesSelected, groupByKeys, ihrAlarms, externalAlarms, iodaIPAddressFamilies, startTime, endTime) {
+export function etl(dataSourcesSelected, dataSources, alarmTypesSelected, groupByKeys, ihrAlarms, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime) {
   dataSourcesTransformers.ioda.ipAddressFamilies = iodaIPAddressFamilies
   return new Promise((resolve, reject) => {
-    extractAlarms(dataSourcesSelected, alarmTypesSelected, ihrAlarms, externalAlarms, startTime, endTime)
+    extractAlarms(dataSourcesSelected, alarmTypesSelected, ihrAlarms, externalAlarms, startUnixTime, endUnixTime)
       .then((extractedAlarms) => transformAlarms(extractedAlarms, dataSourcesSelected, dataSources, alarmTypesSelected, groupByKeys))
       .then((alarms) => resolve(alarms))
       .catch((error) => reject(error));
   })
 }
 
-function extractAlarms(dataSourcesSelected, alarmTypesSelected, ihrAlarms, externalAlarms, startTime, endTime) {
+function extractAlarms(dataSourcesSelected, alarmTypesSelected, ihrAlarms, externalAlarms, startUnixTime, endUnixTime) {
   const request = () => {
     return new Promise((resolve, _) => {
       let extractedAlarms = { ihr: ihrAlarms }
-      let gripAlarmsPromise = dataSourcesSelected.grip && !externalAlarms.grip ? GripApiPlugin.getGripAlarms(startTime, endTime) : Promise.resolve([])
-      let iodaAlarmsPromise = dataSourcesSelected.ioda && !externalAlarms.ioda ? IodaApiPlugin.getIodaAlarms(startTime, endTime) : Promise.resolve([])
+
+      let gripAlarmsPromise = dataSourcesSelected.grip && !externalAlarms.grip ? GripApiPlugin.getGripAlarms(new Date(startUnixTime * 1000), new Date(endUnixTime * 1000)) : Promise.resolve([])
+      let iodaAlarmsPromise = dataSourcesSelected.ioda && !externalAlarms.ioda ? IodaApiPlugin.getIodaAlarms(new Date(startUnixTime * 1000), new Date(endUnixTime * 1000)) : Promise.resolve([])
 
       Promise.all([gripAlarmsPromise, iodaAlarmsPromise]).then(([gripAlarms, iodaAlarms]) => {
         if (dataSourcesSelected.grip) {
@@ -78,7 +77,7 @@ function dynamicAlarmsTransformation(alarms, dataSourcesSelected, dataSources, a
   for (const dataSource in dataSourcesSelected) {
     const isDataSourceSelected = dataSourcesSelected[dataSource]
     if (isDataSourceSelected) {
-      const { transformFunc, ipAddressFamilies } = dataSourcesTransformers[dataSource]
+      const { transformFunc, ipAddressFamilies } = dataSourcesTransformers[dataSource];
       const dataSourceAlarmsTransformed = transformFunc(alarms[dataSource], dataSources[dataSource].alarm_types, alarmTypesSelected, groupByKeys, ipAddressFamilies);
       const dataSourceColumns = AggregatedAlarmsUtils.normalizeColumns(AggregatedAlarmsUtils.filterDictByPrefixes(Object.values(dataSourceAlarmsTransformed)[0], Object.keys(dataSources[dataSource].alarm_types)))
       const alarmsTransformedColumns = AggregatedAlarmsUtils.normalizeColumns(AggregatedAlarmsUtils.filterDictByPrefixes(Object.values(alarmsTransformed)[0], Object.keys(dataSources).flatMap((dataSource) => Object.keys(dataSources[dataSource].alarm_types))))
@@ -404,120 +403,16 @@ function addASNameAndCountryInfo(alarms) {
       addASNameAndCountryInfoHelper(alarms, asNamesCountryMappingsResult)
       resolve(alarms)
     } else {
-      addASNameAndCountryIsoCode2(alarms).then((alarmsWithCountryIsoCodes2) => {
-        asNamesCountryMappingsResult = alarmsWithCountryIsoCodes2
-        addASNameAndCountryInfoHelper(alarms, alarmsWithCountryIsoCodes2)
-        return resolve(alarms)
-      }).catch(error => {
-        reject(error)
-      })
+      AsNamesPlugin.getASNamesCountryMappings()
+        .then((asNamesCountryMappings) => {
+          asNamesCountryMappingsResult = asNamesCountryMappings
+          addASNameAndCountryInfoHelper(alarms, asNamesCountryMappings)
+          return resolve(alarms)
+        })
+        .catch((error) => reject(error))
     }
   })
   return request()
-}
-
-function addASNameAndCountryIsoCode2(alarms) {
-  const asnNumbers = [];
-
-  for (let asnNumber in alarms) {
-    const alarm = alarms[asnNumber]
-    const containsCountryIsoCode2 = alarm.country_iso_code2
-    if (!containsCountryIsoCode2 || !isNaN(alarm.asn_name)) {
-      asnNumbers.push(asnNumber)
-    }
-  }
-
-  const needToGetASNamesAndIsoCodes = asnNumbers.length > 0;
-  if (needToGetASNamesAndIsoCodes) {
-    const alarmsWithCountryIsoCodes2Promise = getASNamesAndIsoCodes(alarms, asnNumbers)
-    return alarmsWithCountryIsoCodes2Promise
-  } else {
-    return Promise.resolve(alarms)
-  }
-}
-
-function getASNamesAndIsoCodes(alarms, asnNumbers) {
-  return new Promise((resolve, reject) => {
-    const asnNumbersCommaSeparated = asnNumbers.join(',');
-    getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeparated)
-      .then(asnNamesAndIsoCodes2 => {
-        for (const asnNameAndIsoCode2 of asnNamesAndIsoCodes2) {
-          const { asn_number: asNumber, asn_name: asName, country_iso_code2: countryIsoCode2 } = asnNameAndIsoCode2;
-          alarms[asNumber].country_iso_code2 = countryIsoCode2;
-          alarms[asNumber].asn_name = asName
-        }
-        return resolve(alarms);
-      })
-      .catch(error => {
-        console.error('Error retrieving ASN name and country ISO code:', error);
-        return reject(error);
-      });
-  });
-}
-
-function getASNameAndCountryIsoCode2Proxy(asnNumbersCommaSeperated, maxRetries = 5, delay = 500) {
-  let retries = 0;
-
-  const request = () => {
-    return new Promise((resolve, reject) => {
-      getASNameAndCountryIsoCode2(asnNumbersCommaSeperated)
-        .then(asnNamesAndIsoCodes2 => resolve(asnNamesAndIsoCodes2))
-        .catch(error => {
-          console.error(error)
-          if (retries < maxRetries) {
-            retryRequest(asnNumbersCommaSeperated, resolve, reject)
-          } else {
-            console.error(`Maximum retries reached for ASN ${asnNumbersCommaSeperated}`)
-            reject(error);
-          }
-        });
-    });
-  };
-
-  const retryRequest = (asnNumber, resolve, reject) => {
-    retries++;
-    console.log(`Retrying request for ASN ${asnNumber} (Attempt ${retries + 1})...`);
-    setTimeout(() => {
-      request().then(resolve).catch(reject);
-    }, delay);
-  };
-
-  return request();
-}
-
-function getASNameAndCountryIsoCode2(asnNumbersCommaSeperated) {
-  const asnNamesAndIsoCodes2 = []
-
-  const request = () => {
-    return new Promise((resolve, reject) => {
-      NetworkIhr.getNetworkInfo(asnNumbersCommaSeperated).then((networks) => {
-        networks.forEach(network => {
-          for (let asnNumber of asnNumbersCommaSeperated.split(',')) {
-            if (network.number == asnNumber) {
-              const countryIsoCode2 = normalizeCountryIsoCode2(network.name)
-              const asnName = normalizeASName(network.name)
-              asnNamesAndIsoCodes2.push({
-                asn_number: asnNumber,
-                asn_name: asnName,
-                country_iso_code2: countryIsoCode2,
-              })
-            }
-          }
-          return resolve(asnNamesAndIsoCodes2)
-        })
-      }).catch((error) => reject(error))
-    })
-  }
-
-  return request();
-}
-
-function normalizeCountryIsoCode2(asnName) {
-  return asnName.split(',').splice(-1)[0].trim()
-}
-
-function normalizeASName(asnName) {
-  return asnName.split(',').splice(0, asnName.split(',').length - 1).join(',').trim()
 }
 
 function addASNameAndCountryInfoHelper(alarms, asNamesCountryMappings) {
@@ -542,9 +437,9 @@ function addASNameAndCountryInfoHelper(alarms, asNamesCountryMappings) {
               alarm[asn_country_iso_code2_key][i] = country_iso_code2
               alarm[asn_country_iso_code3_key][i] = country_iso_code3
             } else {
-              // console.warn(`Hey there! It seems like the Autonomous System Number (ASN) ${asn} is not in our asn country mapping file yet.
-              // 🌍 You can help us by adding it and contributing to our data quality!
-              // 💪 Thank you for making our system even better! 🙏`);
+              console.warn(`Hey there! It seems like the Autonomous System Number (ASN) ${asn} is not in our asn country mapping file yet.
+              🌍 You can help us by adding it and contributing to our data quality!
+              💪 Thank you for making our system even better! 🙏`);
             }
           }
         } else {

@@ -1,5 +1,5 @@
-import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils'
-import * as AggregatedAlarmsDataModel from './AggregatedAlarmsDataModel'
+import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils';
+import * as AggregatedAlarmsDataModel from './AggregatedAlarmsDataModel';
 
 const aggregatedFunctions = {
   total_count: getCount,

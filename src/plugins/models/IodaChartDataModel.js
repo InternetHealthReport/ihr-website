@@ -1,4 +1,4 @@
-import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils'
+import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils';
 import * as IodaApiPlugin from '../IodaApi';
 
 export function etl(entityType, entityValue, startDateTime, endDateTime, iodaAlarmTypes, sourceParams) {
