@@ -575,3 +575,24 @@ function initFilteredAlarm(filteredAlarm, alarm, alarmType, index) {
     }
   }
 }
+
+export function filterAlarms(alarms, startDateTime, endDateTime, aggregatedAttrsSelected, selectSeveritiesLevels, selectIPAddressFamilies, countryName='All') {
+  const startUnixTime = new Date(startDateTime).getTime() / 1000
+  const endUnixTime = new Date(endDateTime).getTime() / 1000
+  const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsSelected)
+  const countryFilter = filterAlarmsByCountry(alarms, countryName)
+  const alarmsTimeFiltered = filterAlarmsByTime(countryFilter, startUnixTime, endUnixTime, aggregatedAttrsZipped)
+  const alarmsSeverityFiltered = filterAlarmsBySeverity(alarmsTimeFiltered, selectSeveritiesLevels, aggregatedAttrsZipped)
+  const alarmsIpAddressFamilyFiltered = filterAlarmsByIpAddressFamily(alarmsSeverityFiltered, selectIPAddressFamilies, aggregatedAttrsZipped)
+  return alarmsIpAddressFamilyFiltered
+}
+
+export function filterAlarmsByCountry(alarms, countryName){
+  if (countryName == 'All' || countryName === null) return alarms
+  const countryFilter = alarms.map(obj => {
+    if (obj.asn_country === countryName) {
+      return obj
+    }
+  }).filter(obj => obj !== undefined)
+  return countryFilter
+}

@@ -71,7 +71,6 @@ export const ALARMS_INFO = {
           title: 'AS Dependency',
           table_button_text: 'AS Dependency Alarms',
           description: 'Routing changes found in AS Dependency data (a.k.a. AS Hegemony).',
-          showHelpModal: false,
           default_key: 'origin_asn',
           group_by_key_options: { originasn: 'origin_asn', dependency: 'asn' },
           is_default_selected: true,
@@ -124,7 +123,6 @@ export const ALARMS_INFO = {
           title: 'Network Delay',
           table_button_text: 'Network Delay Alarms',
           description: 'Network delay changes observed in traceroute data.',
-          showHelpModal: false,
           default_key: 'startpoint',
           group_by_key_options: { source: 'startpoint', destination: 'endpoint' },
           is_default_selected: false,
@@ -177,7 +175,6 @@ export const ALARMS_INFO = {
           title: 'Network Disconnection',
           table_button_text: 'Network Disconnection Alarms',
           description: 'Synchronous disconnection of multiple RIPE Atlas probes in the same region.',
-          showHelpModal: false,
           default_key: 'stream',
           group_by_key_options: { location: 'stream' },
           is_default_selected: false,
@@ -210,7 +207,6 @@ export const ALARMS_INFO = {
     metadata: {
       title: 'IHR',
       description: 'Alarms reported by IHR.',
-      showHelpModal: false
     }
   },
   grip: {
@@ -246,7 +242,6 @@ export const ALARMS_INFO = {
           title: 'MOAS',
           table_button_text: 'MOAS Alarms',
           description: 'Multi Origin-AS. Prefixes concurently announced in BGP by multiple ASes.',
-          showHelpModal: false,
           default_key: 'asn_attacker',
           group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' },
           is_default_selected: false,
@@ -285,7 +280,6 @@ export const ALARMS_INFO = {
           title: 'Sub-MOAS',
           table_button_text: 'Sub-MOAS Alarms',
           description: 'Sub-prefix MOAS. Sup-prefix announced by a different origin AS.',
-          showHelpModal: false,
           default_key: 'asn_attacker',
           group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' },
           is_default_selected: false,
@@ -324,7 +318,6 @@ export const ALARMS_INFO = {
           title: 'DEFCON',
           table_button_text: 'DEFCON Alarms',
           description: 'Hijack using a more specific prefix on an existing AS path.',
-          showHelpModal: false,
           default_key: 'asn_attacker',
           group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' },
           is_default_selected: false,
@@ -363,7 +356,6 @@ export const ALARMS_INFO = {
           title: 'Fake Path',
           table_button_text: 'Fake Path Alarms',
           description: 'Hijack using forged AS paths to legitimate origin AS. (a.k.a. Edges)',
-          showHelpModal: false,
           default_key: 'asn_attacker',
           group_by_key_options: { attacker: 'asn_attacker', victim: 'asn_victim' },
           is_default_selected: false,
@@ -375,7 +367,6 @@ export const ALARMS_INFO = {
     metadata: {
       title: 'GRIP',
       description: "BGP hijacks reported by Georgia Tech's GRIP platform.",
-      showHelpModal: false
     }
   },
   ioda: {
@@ -402,7 +393,6 @@ export const ALARMS_INFO = {
           title: 'Ping',
           table_button_text: 'Ping Alarms',
           description: 'Data plane outages detected in ping data for /24 block (a.k.a. Active Probing).',
-          showHelpModal: false,
           default_key: 'entity',
           group_by_key_options: { asn: 'entity' },
           is_default_selected: false,
@@ -447,7 +437,6 @@ export const ALARMS_INFO = {
           title: 'BGP',
           table_button_text: 'BGP Alarms',
           description: 'Routing outages detected in BGP data.',
-          showHelpModal: false,
           default_key: 'entity',
           group_by_key_options: { asn: 'entity' },
           is_default_selected: false,
@@ -492,7 +481,6 @@ export const ALARMS_INFO = {
           title: 'UCSD Telescope',
           table_button_text: 'UCSD Telescope Alarms',
           description: 'Outages detected with the UCSD network telescope.',
-          showHelpModal: false,
           default_key: 'entity',
           group_by_key_options: { asn: 'entity' },
           is_default_selected: false,
@@ -537,7 +525,6 @@ export const ALARMS_INFO = {
           title: 'Merit Telescope',
           table_button_text: 'Merit Telescope Alarms',
           description: 'Outages detected with the Merit network telescope.',
-          showHelpModal: false,
           default_key: 'entity',
           group_by_key_options: { asn: 'entity' },
           is_default_selected: false,
@@ -563,8 +550,7 @@ export const ALARMS_INFO = {
     },
     metadata: {
       title: 'IODA',
-      description: "Internet outages reported by Georgia Tech's IODA platform",
-      showHelpModal: false
+      description: "Internet outages reported by Georgia Tech's IODA platform"
     }
   }
 }

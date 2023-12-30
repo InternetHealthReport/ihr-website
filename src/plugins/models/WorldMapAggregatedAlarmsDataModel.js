@@ -103,12 +103,15 @@ function getHoverTemplate(alarmCountsSelected, alarmTypeTitlesMap) {
   return hoverTemplate
 }
 
-export function getChartTitle(trace=null, alarms=null){
-  if (!trace) {
+export function getChartTitle(trace=null, alarms=null, selectedCountry=null, legend=null){
+  if (!trace || AggregatedAlarmsUtils.isDictEmpty(trace)) {
     return 'Alarms by Countries'
   } else {
+    const selectedCountryVal = selectedCountry || legend
     const alarmCounts = trace.z.reduce((acc, curr) => acc + curr, 0)
-    const chartTitle = `${alarmCounts} Alarms | ${trace.locations.length} Countries | ${alarms.length} ASes`
+    const chartTitle = selectedCountryVal
+    ? `${selectedCountryVal}: ${alarmCounts} Alarms | ${alarms.length} ASes`
+    : `${alarmCounts} Alarms | ${trace.locations.length} Countries | ${alarms.length} ASes`
     return chartTitle
   }
 }

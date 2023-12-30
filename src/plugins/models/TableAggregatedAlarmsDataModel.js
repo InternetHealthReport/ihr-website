@@ -253,7 +253,6 @@ function getSeverityCount(alarm, selectedAlarmType, severityType) {
   return severityCount
 }
 
-
 export function getAlternativeKeyEndPointNames(endpoints, ipAddressFamilies, deviations, topN) {
   const deviationsEndpointIndicesMapping = []
   for (let i = 0; i < deviations.length; i++) {
@@ -290,4 +289,16 @@ export function aggregateAlarmsByAlternativeKey(data, selectedAlarmType, alterna
     alarm.asn_name_truncated = AggregatedAlarmsDataModel.truncateASName(alarm.asn_name, alarm.asn, 10)
   }
   return alarmsAggregated
+}
+
+export function normalizeTableSearchQuery(searchQuery) {
+  if (searchQuery === null) return ''
+  const regex = /\(([^)]+)\)/g;
+  const contentWithParenthesis = regex.exec(searchQuery);
+  let text;
+  while (contentWithParenthesis !== null) {
+    text = contentWithParenthesis[1];
+    break;
+  }
+  return text ? text : searchQuery
 }
