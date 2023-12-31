@@ -120,6 +120,9 @@
         "apiTitle": "Displayed data is available at the following links:"
       }
     },
+    "iodaChart": {
+      "title": "IODA Overview"
+    },
     "countryHegemony": {
       "title": "Network Dependency",
       "table": {
