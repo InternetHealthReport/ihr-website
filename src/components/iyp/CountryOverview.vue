@@ -163,7 +163,7 @@ onMounted(() => {
               </div>
             </div>
             <div class="row">
-              <RouterLink v-if="route.path.includes('ihr')" :to="Tr.i18nRoute({ name: 'countries-ihr', params: {cc: countryCode}})" class="q-mt-lg overview-footer">
+              <RouterLink v-if="route.path.includes('ihr')" :to="Tr.i18nRoute({ name: 'countries', params: {cc: countryCode}})" class="q-mt-lg overview-footer">
                 View more details on IYP for {{ countryCode }}
               </RouterLink>
               <RouterLink v-else :to="Tr.i18nRoute({ name: 'countries-ihr', params: {cc: countryCode}})" class="q-mt-lg overview-footer">
