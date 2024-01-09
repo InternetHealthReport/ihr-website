@@ -1,5 +1,6 @@
-import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils'
+import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils';
 import * as IodaApiPlugin from '../IodaApi';
+import { ALARMS_INFO } from '../metadata/AggregatedAlarmsMetadata'
 
 export function etl(entityType, entityValue, startDateTime, endDateTime, iodaAlarmTypes, sourceParams) {
   return new Promise((resolve, reject) => {
@@ -52,4 +53,12 @@ function transformAlarms(iodaData, iodaAlarmTypes) {
 
   }
   return dataTransformed
+}
+
+export function getIodaAlarmTypesUnits() {
+  const iodaAlarmTypesUnitsResult = { 'gtr': 'Google (Search)' }
+  for (const iodaAlarmType in ALARMS_INFO.ioda.alarm_types) {
+    iodaAlarmTypesUnitsResult[iodaAlarmType] = ALARMS_INFO.ioda.alarm_types[iodaAlarmType].metadata.unit
+  }
+  return iodaAlarmTypesUnitsResult
 }

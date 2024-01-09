@@ -1,6 +1,6 @@
-import * as AggregatedAlarmsDataModel from '../AggregatedAlarmsDataModel'
-import { ALARMS_INFO } from '../../views/charts/global/AggregatedAlarmsMetadata';
-import { ALARMS, IHR_ALARMS_MOCKED } from './data'
+import * as AggregatedAlarmsDataModel from '../models/AggregatedAlarmsDataModel';
+import { ALARMS_INFO } from '../metadata/AggregatedAlarmsMetadata';
+import { ALARMS, IHR_ALARMS_MOCKED } from './resources/data';
 
 const GRIP_ALARMS_MOCKED = [
   {

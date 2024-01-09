@@ -1,4 +1,4 @@
-import * as IodaChartDataModel from '../IodaChartDataModel'
+import * as IodaChartDataModel from '../models/IodaChartDataModel';
 
 const IODA_ENTITY_INFO_MOCKED = [
   {
@@ -768,7 +768,7 @@ const IODA_ENTITY_INFO_MOCKED = [
   }
 ]
 
-jest.mock('../../plugins/IodaApi', () => ({
+jest.mock('../IodaApi', () => ({
   getIodaEntityInfo: jest.fn().mockResolvedValue(IODA_ENTITY_INFO_MOCKED),
 }));
 

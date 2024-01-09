@@ -108,19 +108,28 @@ const init = () => {
     if (startDateTime && endDateTime) {
       startDateTime += 'Z'
       endDateTime += 'Z'
+      startDateTime = new Date(startDateTime)
+      endDateTime = new Date(endDateTime)
       emits('plotly-time-filter', { startDateTime, endDateTime })
     }
   })
 
   graphDiv.on('plotly_click', (eventData) => {
-    if (eventData && eventData.points ) {
+    if (eventData && eventData.points) {
       emits('plotly-click', eventData)
     }
   })
 
   graphDiv.on('plotly_legendclick', (eventData) => {
-    if (eventData && eventData.node) {
-      emits('plotly-legend-click', eventData)
+    if (eventData) {
+      const legend = eventData.node.textContent
+      const opacityStyle = eventData.node.getAttribute('style');
+      const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/);
+      if (opacityMatch && legend !== 'All') {
+        const opacity = Number(opacityMatch[1]);
+        const result = { legend, opacity }
+        emits('plotly-legend-click', result);
+      }
     }
   })
 
@@ -133,7 +142,7 @@ onMounted(() => {
 
 watch(() => props.traces, () => {
   react()
-}, {deep: true})
+}, { deep: true })
 // watch(() => props.layout, () => {
 //   react()
 // })

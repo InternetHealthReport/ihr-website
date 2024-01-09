@@ -1,7 +1,6 @@
-import * as TableAggregatedAlarmsDataModel from '../TableAggregatedAlarmsDataModel'
-import { ALARMS_INFO } from '../../views/charts/global/AggregatedAlarmsMetadata';
-import { ALARMS } from './data';
-
+import * as TableAggregatedAlarmsDataModel from '../models/TableAggregatedAlarmsDataModel'
+import { ALARMS_INFO } from '../metadata/AggregatedAlarmsMetadata';
+import { ALARMS } from './resources/data';
 
 describe('etlTableAggregatedAlarmsDataModel', () => {
   it('should correctly ETL TableAggregatedAlarmsDataModel when all data sources selected', () => {

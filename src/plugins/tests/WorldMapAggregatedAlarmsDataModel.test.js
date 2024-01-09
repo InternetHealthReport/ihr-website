@@ -1,5 +1,5 @@
-import * as WorldMapAggregatedAlarmsDataModel from '../WorldMapAggregatedAlarmsDataModel'
-import { ALARMS, ALARM_TYPES_MAP } from './data';
+import * as WorldMapAggregatedAlarmsDataModel from '../models/WorldMapAggregatedAlarmsDataModel'
+import { ALARMS, ALARM_TYPES_MAP } from './resources/data';
 
 describe('etlWorldMapAggregatedAlarmsDataModel', () => {
   it('should correctly ETL World Map Data Viz when all data sources selected', () => {

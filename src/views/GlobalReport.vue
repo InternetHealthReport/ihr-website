@@ -5,10 +5,10 @@ import { ref, computed, watch, nextTick, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useRoute, useRouter } from 'vue-router'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
-import DelayChart from '@/components/charts/DelayChart.vue'
 import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN } from '@/plugins/delay'
 import AggregatedAlarmsController from '@/components/controllers/AggregatedAlarmsController.vue'
 import { Query, HegemonyAlarmsQuery, NetworkDelayAlarmsQuery, DiscoEventQuery } from '@/plugins/IhrApi'
+import { ALARMS_INFO } from '@/plugins/metadata/AggregatedAlarmsMetadata'
 
 const ihr_api = inject('ihr_api')
 
@@ -29,12 +29,6 @@ const PARAMETERS_LEVEL = {
   HIGH: 2,
 }
 
-const LEVEL_OPTIONS = Object.keys(PARAMETERS_LEVEL).map(key => {
-  return { label: key, value: PARAMETERS_LEVEL[key] }
-})
-const LEVEL_COLOR = ['warning', 'positive', 'negative']
-
-//TODO use presets with some sense
 const PRAMETERS_PRESETS = {
   DISCO_AVG_LEVEL: [7, DEFAULT_DISCO_AVG_LEVEL, 10],
   MIN_NPROBES: [5, DEFAULT_MIN_NPROBES, 12],
@@ -43,24 +37,10 @@ const PRAMETERS_PRESETS = {
   MAX_DIFFMEDIAN: [150, DEFAULT_MAX_DIFFMEDIAN, 300],
 }
 
-const PRESETS_ASN_LISTS = []
-
 let setFilterLevel = Number(route.query.filter_level)
 setFilterLevel = setFilterLevel ? setFilterLevel : PARAMETERS_LEVEL.MEDIUM
 
-const globalFilter = ref('')
-const hegemonyFilter = ref('')
-const ndelayFilter = ref('')
-const linkFilter = ref('')
-const discoFilter = ref('')
-const hegemonyExpanded = ref(true)
-const ndelayExpanded = ref(true)
-const linkExpanded = ref(true)
-const discoExpanded = ref(true)
 const aggregatedAlarmsExpanded = ref(true)
-const presetAsnLists = ref(PRESETS_ASN_LISTS)
-const levelOptions = ref(LEVEL_OPTIONS)
-const levelColors = ref(LEVEL_COLOR)
 const filterLevel = ref(setFilterLevel)
 const minAvgLevel = ref(PRAMETERS_PRESETS.DISCO_AVG_LEVEL[filterLevel])
 const minNprobes = ref(PRAMETERS_PRESETS.MIN_NPROBES[filterLevel])
@@ -68,19 +48,10 @@ const minDeviation = ref(PRAMETERS_PRESETS.MIN_DEVIATION[filterLevel])
 const minDeviationNetworkDelay = ref(20)
 const minDiffmedian = ref(PRAMETERS_PRESETS.MIN_DEVIATION[filterLevel])
 const maxDiffmedian = ref(PRAMETERS_PRESETS.MAX_DIFFMEDIAN[filterLevel])
-const asnList = ref([])
-const geoProbes = ref([])
-const nbAlarms = ref({
-  hegemony: 0,
-  networkDelay: 0,
-  linkDelay: 0,
-  disco: 0,
-})
 const loading = ref({
   hegemony: true,
-  networkDelay: true,
-  linkDelay: true,
-  disco: true,
+  network_delay: true,
+  network_disconnection: true
 })
 const hegemonyAlarms = ref([])
 const networkDelayAlarms = ref([])
@@ -95,19 +66,13 @@ const hegemonyLoading = (val) => {
 
 const networkDelayLoading = (val) => {
   nextTick(() => {
-    loading.value.networkDelay = val
-  })
-}
-
-const linkDelayLoading = (val) => {
-  nextTick(() => {
-    loading.value.linkDelay = val
+    loading.value.network_delay = val
   })
 }
 
 const discoLoading = (val) => {
   nextTick(() => {
-    loading.value.disco = val
+    loading.value.network_disconnection = val
   })
 }
 
@@ -129,78 +94,115 @@ const pushRoute = () => {
   maxDiffmedian.value = PRAMETERS_PRESETS.MAX_DIFFMEDIAN[filterLevel.value]
 }
 
-const newFilteredRows = () => {
-  let search = val[0]
-  let rows = val[1]
-  if (globalFilter.value == search) {
-    nextTick(() => {
-      nbAlarms.value[graphType] = rows.length
-    })
-  }
-}
-
 const hegemonyApiCall = () => {
-  const hegemonyAlarmsFilter = new HegemonyAlarmsQuery().deviation(minDeviationNetworkDelay.value, Query.GTE).timeInterval(startTime.value, endTime.value)
   hegemonyLoading(true)
-  ihr_api.hegemony_alarms(
-    hegemonyAlarmsFilter,
-    result => {
-      let data = []
-      result.results.forEach(alarm => {
-        alarm['event_type'] = 'hegemony'
-        data.push(alarm)
-      })
-      hegemonyAlarms.value = data
-      hegemonyLoading(false)
-    },
-    error => {
-      console.error(error) //FIXME do a correct alert
-    }
-  )
+  const alarms = []
+  const promises = []
+  for (const hegemonyAlarmsFilter of hegemonyAlarmsFilters.value) {
+    const newHegemonyAlarmsPromise = new Promise((resolve, reject) => {
+      ihr_api.hegemony_alarms(
+        hegemonyAlarmsFilter,
+        result => {
+          alarms.push(...result.results)
+          resolve()
+        }, error => {
+          reject(error)
+        }
+      )
+    })
+    promises.push(newHegemonyAlarmsPromise)
+  }
+  Promise.all(promises).then(() => {
+    alarms.forEach((alarm) => alarm.event_type = 'hegemony')
+    hegemonyAlarms.value = alarms
+    hegemonyLoading(false)
+  })
 }
 
 const networkDelayApiCall = () => {
-  const networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery().deviation(minDeviationNetworkDelay.value, Query.GTE).startPointType(selectedType.value).timeInterval(startTime.value, endTime.value)
   networkDelayLoading(true)
-  ihr_api.network_delay_alarms(
-    networkDelayAlarmsFilter,
-    result => {
-      let data = []
-      result.results.forEach(alarm => {
-        alarm['event_type'] = 'network_delay'
-        data.push(alarm)
-      })
-      networkDelayAlarms.value = data
-      networkDelayLoading(false)
-    },
-    error => {
-      console.error(error) //FIXME do a correct alert
-    }
-  )
+  const alarms = []
+  const promises = []
+  for (const networkDelayFilter of networkDelayAlarmsFilters.value) {
+    const newNetworkDelayAlarmsPromise = new Promise((resolve, reject) => {
+      ihr_api.network_delay_alarms(
+        networkDelayFilter,
+        result => {
+          alarms.push(...result.results)
+          resolve()
+        }, error => {
+          reject(error)
+        }
+      )
+    });
+    promises.push(newNetworkDelayAlarmsPromise)
+  }
+  Promise.all(promises).then(() => {
+    alarms.forEach((alarm) => alarm.event_type = 'network_delay')
+    networkDelayAlarms.value = alarms
+    networkDelayLoading(false)
+  })
 }
 
 const networkDisconnectionApiCall = () => {
-  const filters = new DiscoEventQuery().streamName('').timeInterval(startTime.value, endTime.value).orderedByTime()
   discoLoading(true)
-  ihr_api.disco_events(
-    filters,
-    result => {
-      let data = []
-      result.results.forEach(alarm => {
-        alarm['event_type'] = 'network_disconnection'
-        data.push(alarm)
-      })
-      networkDisconnectionAlarms.value = data
-      discoLoading(false)
-    },
-    error => {
-      console.error(error) //FIXME do a correct alert
-    }
-  )
+  const alarms = []
+  const promises = []
+  for (const networkDisconnectionFilter of networkDisconnectionAlarmsFilters.value) {
+    const newNetworkDisconnectionAlarmsPromise = new Promise((resolve, reject) => {
+      ihr_api.disco_events(
+        networkDisconnectionFilter,
+        result => {
+          alarms.push(...result.results)
+          resolve()
+        }, error => {
+          reject(error)
+        }
+      )
+    })
+    promises.push(newNetworkDisconnectionAlarmsPromise)
+  }
+  Promise.all(promises).then(() => {
+    alarms.forEach((alarm) => alarm.event_type = 'network_disconnection')
+    networkDisconnectionAlarms.value = alarms
+    discoLoading(false)
+  })
 }
 
 const aggregatedAlarmsKey = computed(() => {
-  return `${JSON.stringify(loading.value.hegemony)}-${JSON.stringify(loading.value.networkDelay)}`
+  let renderingKey = ''
+  const alarmTypes = Object.keys(ALARMS_INFO['ihr'].alarm_types)
+  alarmTypes.forEach(alarmType => {
+    const isAlarmTypeSelected = ALARMS_INFO['ihr'].alarm_types[alarmType].metadata.is_default_selected
+    renderingKey += `${JSON.stringify({ [alarmType]: (isAlarmTypeSelected && loading.value[alarmType]) })}-`
+  })
+  return renderingKey
+})
+
+const hegemonyAlarmsFilters = computed(() => {
+  const hegemonyAlarmsFilter1 = new HegemonyAlarmsQuery()
+    .deviation(20, Query.GTE)
+    .timeInterval(startTime.value, endTime.value)
+  const hegemonyAlarmsFilter2 = new HegemonyAlarmsQuery()
+    .deviation(-20, Query.LTE)
+    .timeInterval(startTime.value, endTime.value)
+  return [hegemonyAlarmsFilter1, hegemonyAlarmsFilter2]
+})
+
+const networkDelayAlarmsFilters = computed(() => {
+  const networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery()
+    .deviation(20, Query.GTE)
+    .startPointType(selectedType.value)
+    .timeInterval(startTime.value, endTime.value)
+  return [networkDelayAlarmsFilter]
+})
+
+const networkDisconnectionAlarmsFilters = computed(() => {
+  const networkDisconnectionAlarmsFilter = new DiscoEventQuery()
+    .streamName('')
+    .timeInterval(startTime.value, endTime.value)
+    .orderedByTime();
+  return [networkDisconnectionAlarmsFilter]
 })
 
 const apiCalls = () => {
@@ -213,13 +215,6 @@ watch(filterLevel, (newValue, oldValue) => {
   if (newValue != oldValue) {
     pushRoute()
   }
-})
-
-watch(globalFilter, (newValue) => {
-  hegemonyFilter.value = newValue
-  ndelayFilter.value = newValue
-  linkFilter.value = newValue
-  discoFilter.value = newValue
 })
 
 watch(interval, () => {
@@ -268,42 +263,8 @@ onMounted(() => {
       </template>
       <AggregatedAlarmsController :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
         :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony"
-        :networkDelayLoading="loading.networkDelay" :networkDisconnectionAlarms="networkDisconnectionAlarms" :networkDisconnectionLoading="loading.disco" />
-    </QExpansionItem>
-    <QExpansionItem header-class="IHR_charts-title" default-opened expand-icon-toggle v-model="linkExpanded">
-      <template v-slot:header>
-        <div class="graph-header-div">
-          <QItemSection class="graph-header">
-            <QItemSection avatar>
-              <QIcon name="fas fa-exchange-alt" color="primary" text-color="white" />
-            </QItemSection>
-
-            <QItemSection>
-              <div class="text-primary">
-                Link Delay Anomalies
-              </div>
-              <div class="text-caption text-grey">Traceroute data</div>
-            </QItemSection>
-          </QItemSection>
-          <QItemSection class="filter-div">
-            <div class="text" v-if="linkExpanded">
-              <QInput debounce="300" v-model="linkFilter" placeholder="Filter">
-                <template v-slot:append>
-                  <QIcon name="fas fa-filter" />
-                </template>
-              </QInput>
-            </div>
-          </QItemSection>
-        </div>
-      </template>
-      <QCard class="IHR_charts-body">
-        <QCardSection>
-          <DelayChart :start-time="startTime" :end-time="endTime" :fetch="fetch" :min-nprobes="minNprobes"
-            :min-deviation="minDeviation" :min-diffmedian="minDiffmedian" :max-diffmedian="maxDiffmedian"
-            :filter="linkFilter" @loading="linkDelayLoading"
-            :selected-asn="asnList" @prefix-details="showDetails($event)" />
-        </QCardSection>
-      </QCard>
+        :networkDelayLoading="loading.network_delay" :networkDisconnectionAlarms="networkDisconnectionAlarms"
+        :networkDisconnectionLoading="loading.network_disconnection" />
     </QExpansionItem>
   </div>
 </template>

@@ -9,10 +9,6 @@ const props = defineProps({
     type: String,
     required: true
   },
-  iodaAlarmTypesUnits: {
-    type: Object,
-    required: true,
-  },
   filterByCountry: {
     type: Boolean,
     required: true,
@@ -30,10 +26,6 @@ const props = defineProps({
 const layout = ref(IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT)
 const traces = ref([])
 const loading = ref(false)
-const iodaAlarmTypesUnitsVal = ref({
-  ...props.iodaAlarmTypesUnits,
-  'gtr': 'Google (Search)'
-})
 const iodaSourceParams = ref('WEB_SEARCH')
 const noData = ref('')
 
@@ -43,14 +35,15 @@ const entityType = computed(() => {
 
 const apiCall = () => {
   loading.value = true
-  IodaChartDataModel.etl(entityType.value, props.entityValue, props.startTime, props.endTime, iodaAlarmTypesUnitsVal.value, iodaSourceParams.value)
-    .then((res)=> {
+  const iodaAlarmTypesUnits = IodaChartDataModel.getIodaAlarmTypesUnits()
+  IodaChartDataModel.etl(entityType.value, props.entityValue, props.startTime, props.endTime, iodaAlarmTypesUnits, iodaSourceParams.value)
+    .then((res) => {
       traces.value = res
       layout.value.datarevision = new Date().getTime()
       loading.value = false
       noData.value = !res.length ? 'No data to show' : ''
     })
-    .catch((error)=>{
+    .catch((error) => {
       console.error(error)
     })
 }
