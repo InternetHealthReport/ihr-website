@@ -187,7 +187,7 @@ const treemapClicked = (event) => {
         }
       } else if (network.split(' ')[0] in isoCountries) {
         router.push(Tr.i18nRoute({
-          name: 'countries-ihr',
+          name: 'countries',
           params: { cc: network.split(' ')[0] },
         }))
       } else if (domainMatch) {
@@ -197,7 +197,7 @@ const treemapClicked = (event) => {
         }))
       } else if (network.includes('AS')) {
         router.push(Tr.i18nRoute({
-          name: 'networks-ihr',
+          name: 'networks',
           params: { id: network },
         }))
       }

@@ -101,6 +101,14 @@ onMounted(() => {
                 </div>
               </div>
             </div>
+            <!-- <div class="row">
+              <RouterLink v-if="route.path.includes('ihr')" :to="Tr.i18nRoute({ name: 'networks', params: {id: `IXP${asNumber}`}})" class="q-mt-lg overview-footer">
+                View more details on IYP for IXP{{ asNumber }}
+              </RouterLink>
+              <RouterLink v-else :to="Tr.i18nRoute({ name: 'networks-ihr', params: {id: `IXP${asNumber}`}})" class="q-mt-lg overview-footer">
+                View report for IXP{{ asNumber }}
+              </RouterLink>
+            </div> -->
           </div>
         </div>
       </div>
