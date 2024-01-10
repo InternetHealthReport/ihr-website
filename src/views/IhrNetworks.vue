@@ -15,6 +15,7 @@ import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart
 import DiscoChart from '@/components/charts/DiscoChart.vue'
 import ASOverview from '@/components/iyp/ASOverview.vue'
 import IXPOverview from '@/components/iyp/IXPOverview.vue'
+import IodaChart from '@/components/charts/IodaChart.vue'
 
 const { t } = useI18n()
 
@@ -53,6 +54,8 @@ const show = ref({
   disco_disable: false,
   hegemony: true,
   hegemony_disable: false,
+  ioda: true,
+  ioda_disable: false,
   net_delay: true,
   net_delay_disable: false,
   measurementLab: true,
@@ -197,7 +200,16 @@ onMounted(() => {
             />
           </QCardSection>
         </QCard>
-      </qExpansionItem>
+      </QExpansionItem>
+      <QExpansionItem :label="$t('charts.iodaChart.title')" caption="AS Internet Overview" header-class="IHR_charts-title" icon="fas fa-globe" :disable="show.ioda_disable" v-model="show.ioda">
+        <QSeparator />
+        <QCard class="IHR_charts-body">
+          <QCardSection>
+            <IodaChart :entity-value="String(asNumber)" :filter-by-country="false" :start-time="startTime"
+              :end-time="endTime" />
+          </QCardSection>
+        </QCard>
+      </QExpansionItem>
       <QExpansionItem
         :label="$t('charts.prefixHegemony.title')"
         caption="BGP / IRR / RPKI / delegated"

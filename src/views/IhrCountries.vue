@@ -14,6 +14,7 @@ import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
 import { AS_FAMILY } from '@/plugins/IhrApi'
 import CountryHegemonyChart from '../components/charts/CountryHegemonyChart.vue'
 import CountryOverview from '@/components/iyp/CountryOverview.vue'
+import IodaChart from '@/components/charts/IodaChart.vue'
 
 const { t } = useI18n()
 
@@ -50,6 +51,8 @@ const show = ref({
   disco_disable: false,
   hegemony: true,
   hegemony_disable: false,
+  ioda: true,
+  ioda_disable: false,
   net_delay: true,
   net_delay_disable: false
 })
@@ -185,6 +188,16 @@ onMounted(() => {
           </QCardSection>
         </QCard>
       </QExpansionItem>
+
+      <QExpansionItem :label="$t('charts.iodaChart.title')" caption="Country Internet Overview" header-class="IHR_charts-title"
+          icon="fas fa-globe" :disable="show.ioda_disable" v-model="show.ioda">
+          <QSeparator />
+          <QCard class="IHR_charts-body">
+            <QCardSection>
+              <IodaChart :entity-value="countryCode" :filter-by-country="true" :start-time="startTime" :end-time="endTime" />
+            </QCardSection>
+          </QCard>
+        </QExpansionItem>
 
       <QExpansionItem
         :label="$t('charts.prefixHegemony.title')"
