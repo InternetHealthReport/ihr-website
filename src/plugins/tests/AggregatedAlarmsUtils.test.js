@@ -1,4 +1,4 @@
-import * as AggregatedAlarmsUtils from '../AggregatedAlarmsUtils'
+import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils'
 
 describe('truncateString', () => {
   test('should truncate a string if it exceeds the max length', () => {

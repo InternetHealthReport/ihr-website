@@ -1,4 +1,4 @@
-import * as AggregatedAlarmUtils from '../utils/AggregatedAlarmsUtils'
+import * as AggregatedAlarmUtils from '../utils/AggregatedAlarmsUtils';
 
 export function etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap, legend, isASGranularity) {
   const asGranularity = switchASGranularity(countryName, isASGranularity)
@@ -27,12 +27,12 @@ function filterAlarmsByCountry(alarms, countryName) {
 function groupAlarmsByKey(alarms, key, aggregatedAttrsZipped) {
   const alarmsGroupedByKey = alarms.reduce((result, obj) => {
     const existingEntry = result.find((entry) => entry[key] === obj[key]);
-
     if (existingEntry) {
       for (const [alarmCountType, alarmTimebinType, _, [__, ___]] of aggregatedAttrsZipped) {
-        if ((!existingEntry[alarmTimebinType] && !existingEntry[alarmCountType]) || (!obj[alarmCountType] && !obj[alarmTimebinType])) continue
-        existingEntry[alarmTimebinType] = existingEntry[alarmTimebinType].concat(obj[alarmTimebinType]);
-        existingEntry[alarmCountType] = existingEntry[alarmCountType].concat(obj[alarmCountType]);
+        if (obj[alarmTimebinType] && obj[alarmCountType]) {
+          existingEntry[alarmCountType] = existingEntry[alarmCountType] ? existingEntry[alarmCountType].concat(obj[alarmCountType]) : [...obj[alarmCountType]]
+          existingEntry[alarmTimebinType] = existingEntry[alarmTimebinType] ? existingEntry[alarmTimebinType].concat(obj[alarmTimebinType]) : [...obj[alarmTimebinType]]
+        }
       }
     } else {
       let alarmEntry = {
@@ -206,7 +206,7 @@ function getTimeSeriesTraces(alarms, hoverData, legendName, aggregatedAttrsZippe
           bgcolor: 'white',
         },
       }
-      trace.hovertemplate = getHoverTemplate(alarms[i],aggregatedAttrsZipped, alarmTypeTitlesMap)
+      trace.hovertemplate = getHoverTemplate(alarms[i], aggregatedAttrsZipped, alarmTypeTitlesMap)
       if (!legend) {
         trace.visible = i === 0 ? true : 'legendonly'
       } else {
@@ -240,26 +240,27 @@ function getHoverTemplate(alarm, aggregatedAttrsZipped, alarmTypeTitlesMap) {
   return hoverTemplate
 }
 
-export function getChartTitle(timeSeriesTraces = null, countryName = null, startEndDateTime = null, legend = null, isASGranularity = false) {
+export function getChartTitle(timeSeriesTraces = null, countryName = null, startTime = null, endTime = null, legend = null, isASGranularity = false) {
   let chartTitle = 'Alarms over Time'
-  if (!timeSeriesTraces || !timeSeriesTraces.length) {
+  if (!timeSeriesTraces || !timeSeriesTraces.length || !startTime || !endTime) {
     return chartTitle
   } else {
-    const { startDateFormatted, endDateFormatted } = startEndDateTime
+    const startTimeFormatted = formatDate(startTime.toISOString().split('T')[0])
+    const endTimeFormatted = formatDate(endTime.toISOString().split('T')[0])
     let totalAlarmCounts;
     if ((countryName && legend || legend && !countryName) && !isASGranularity) {
       const traceSelectedLegend = timeSeriesTraces.findIndex((trace) => trace.name === legend)
       if (traceSelectedLegend !== -1) {
         totalAlarmCounts = timeSeriesTraces[traceSelectedLegend].y.reduce((acc, curr) => acc + curr, 0)
-        chartTitle = `${legend}: ${totalAlarmCounts} Alarms | ${startDateFormatted} - ${endDateFormatted}`
+        chartTitle = `${legend}: ${totalAlarmCounts} Alarms | ${startTimeFormatted} - ${endTimeFormatted}`
       }
     } else if (countryName || isASGranularity) {
-      totalAlarmCounts = timeSeriesTraces.slice(1).flatMap((trace) => trace.y).reduce((acc, curr) => acc + curr, 0)
-      const legendNameVal = (countryName && legend || legend && !countryName) ? legend : countryName  ? countryName : 'All'
-      chartTitle = `${legendNameVal}: ${totalAlarmCounts} Alarms | ${startDateFormatted} - ${endDateFormatted}`
+      totalAlarmCounts = timeSeriesTraces[0].y.reduce((acc, curr) => acc + curr, 0)
+      const legendNameVal = (countryName && legend || legend && !countryName) ? legend : countryName ? countryName : 'All'
+      chartTitle = `${legendNameVal}: ${totalAlarmCounts} Alarms | ${startTimeFormatted} - ${endTimeFormatted}`
     } else {
-      totalAlarmCounts = timeSeriesTraces.slice(1).flatMap((trace) => trace.y).reduce((acc, curr) => acc + curr, 0)
-      chartTitle = `${totalAlarmCounts} Alarms | ${startDateFormatted} - ${endDateFormatted}`
+      totalAlarmCounts = timeSeriesTraces[0].y.reduce((acc, curr) => acc + curr, 0)
+      chartTitle = `${totalAlarmCounts} Alarms | ${startTimeFormatted} - ${endTimeFormatted}`
     }
     return chartTitle
   }

@@ -1,6 +1,5 @@
-import * as TreeMapAggregatedAlarmsDataModel from '../TreeMapAggregatedAlarmsDataModel'
-import { ALARMS, ALARM_TYPES_MAP } from './data';
-
+import * as TreeMapAggregatedAlarmsDataModel from '../models/TreeMapAggregatedAlarmsDataModel'
+import { ALARMS, ALARM_TYPES_MAP } from './resources/data';
 
 describe('etlTreeMapAggregatedAlarmsDataModel', () => {
 

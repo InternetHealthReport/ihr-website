@@ -120,6 +120,9 @@
         "apiTitle": "Displayed data is available at the following links:"
       }
     },
+    "iodaChart": {
+      "title": "IODA Overview"
+    },
     "countryHegemony": {
       "title": "Network Dependency",
       "table": {
@@ -412,7 +415,7 @@
           "2": {
             "header": "What do the graphs mean?",
             "img": {
-              "src": "assets/documentation/hegemony_AS2497.png",
+              "src": "assets/imgs/hegemony_AS2497.png",
               "style": "max-width:100%"
             },
             "body": "Let's take a look at the above example which corresponds to results obtained on March 2nd 2020 for AS2497 (IIJ). <br><br><b>The top plot</b> shows the AS dependencies of AS2497, i.e., the most common transit networks used to reach AS2497. The value (a.k.a AS Hegemony) ranges between 0 and 1. This is an estimate of the ratio of AS paths towards AS2497 that go through a certain AS transit. A value close to 1 means that the reachability of the monitored AS is strongly dependant on that transit AS. In the above example, the plot shows a few weak dependencies to Telia (AS1299), NTT America (AS2914), Level(3) (AS3356), and GTT (AS3257). On that day we estimate around 16% of the paths towards IIJ transit through Telia, 9% through NTT, and 2% through Level(3). <br><br>Stub ASes usually have much higher values, for example the values go up to 1 for  ASes with a single upstream provider (meaning that all the paths cross the upstream provider). You can click on the graph to display dependency details at a particular timestamp and a graphical representation of BGP changes around that time (<a href='https://labs.ripe.net/Members/vastur/bgplay-v2-integrated-in-ripestat' target='_blank'>using BGPlay</a>). <br><br><b>The bottom plot</b> shows the number of networks that depend on AS2497. In this case there are more than 370 networks that use IIJ for transit. This is somehow related to <a href='https://api.asrank.caida.org/v2/restful/asns/2497' target='_blank'>IIJ's customer cone</a>. The main difference is that networks using IIJ as a backup transit are not counted here whereas they are counted in its customer cone. You can click on the graph to obtain the complete list of dependent networks."
@@ -510,7 +513,7 @@
           "1": {
             "header": "What does the graph mean?",
             "img": {
-              "src": "assets/documentation/netdelay_AS24482.png",
+              "src": "assets/imgs/netdelay_AS24482.png",
               "style": "max-width:100%"
             },
             "body": "By default graphs load network delay from the selected network to a few locations (Tokyo, London, Singapore, Ashburn, K-Root server (AS25152), Google (AS15169)), but you can load more results with the search fields above the graph. The graph shows the estimated median RTT from a network to these locations. To compute these values we do the following: We collect a set of RTT estimates by taking all RTT values in traceroute and computing differential RTTs (i.e. the difference between two RTT values found in a traceroute). Then we store the median value of these RTT estimates as a representative value. The above example depicts the median RTTs from an ISP in Singapore (AS24482) to pre-selected locations. As an example, the values for London represent the median values of all RTTs from IP addresses that map to AS24482 (that could be Atlas probes or router addresses) to IPs in the same traceroutes that map to London.</p> <p>The example above shows two anomalies, the first one on March 16th represents a delay increase only to London, whereas the second one on March 17th impacted all plotted locations."
@@ -532,7 +535,7 @@
           "1": {
             "header": "What does the link delay graph mean?",
             "img": {
-              "src": "assets/documentation/linkdelay_AS7922.png",
+              "src": "assets/imgs/linkdelay_AS7922.png",
               "style": "max-width:100%"
             },
             "body": "<br>Let's take a look at the above example, which corresponds to results obtained on March 4th 2020 for Comcast (AS7922). The top plot (blue line) represents the overall delay changes we observe for AS7922's links. This value is normally close to 0, but features higher values when we observe significant delay changes for IP addresses in that AS. In this example we see that AS7922 exhibits increased delays around midnight on March 4th. By clicking on the peak at 1:30am we obtain the list of IP addresses that are detected by our system (bottom table) and the end-to-end delays for traceroute monitoring reported IP addresses. Here we see that end-to-end delays of traceroutes crossing the first reported links have increased by 60 ~ 90 ms. The red vertical dashed lines also show that packets are dropped at that time."
@@ -540,7 +543,7 @@
           "2": {
             "header": "What does the forwarding anomaly graph mean?",
             "img": {
-              "src": "assets/documentation/forwarding_AS174.png",
+              "src": "assets/imgs/forwarding_AS174.png",
               "style": "max-width:100%"
             },
             "body": "For forwarding anomalies let's look at another example, <a href='https://ihr.iijlab.net/ihr/en-us/networks/AS174?af=4&amp;date=2017-11-02&amp;last=3'>AS174 Cogent on November 2017</a>.<br><br><b>The bottom plot</b> represents the forwarding anomalies observed for AS174. Intuitively, this graph represents the presence and absence of IP addresses for AS174 in the monitored traceroutes. If the number of observed IP addresses for AS174 is constant then the forwarding anomaly level is close to 0. If we observe more IP addresses than usual then the forwarding anomaly level takes higher positive values. On the other hand if we observe fewer IP addresses than usual, the forwarding anomaly level takes lower negative values. In this example, IP addresses from AS174 are appearing more than usual due to an internal routing anomaly. You can click on the graphs to obtain the list of reported IP addresses, we used to have a visualization of corresponding traceroutes (TraceMON) but this currently not working."
@@ -570,7 +573,7 @@
           "1": {
             "header": "What does the graph mean?",
             "img": {
-              "src": "assets/documentation/disco_AS16322.png",
+              "src": "assets/imgs/disco_AS16322.png",
               "style": "max-width:100%"
             },
             "body": "<br>The above example shows the disconnection of an Iranian network (AS16322) due to an update in an upstream provider on March 3rd 2020. The world map shows the location of disconnected Atlas probes and the below graphs show ping results from these probes. These ping measurements provide us with an internal view of the outage. Here we found that pings toward Google DNS and Atlas controller failed from around 00:45 until 01:35. Pings to the K-root server are, however, carried out as usual. This means that this network could still reach a K-root instance during the outage (probably the one located in Teheran).<br><br>The table reports a deviation score, 11 in this case, and the number of disconnected Atlas probes. Larger deviation values represent stronger evidence of the network disconnection. To avoid too many false positives, only higher values are reported (this threshold is different for the global and network reports). We also only monitor networks and countries that have at least five Atlas probes."

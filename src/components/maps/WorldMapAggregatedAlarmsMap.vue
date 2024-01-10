@@ -32,6 +32,7 @@ const layout = ref({
     countrycolor: 'rgb(235, 235, 235)',
     showcountries: true,
   },
+  height: 500
 })
 const traces = ref([
   {
@@ -54,7 +55,7 @@ const traces = ref([
       bgcolor: 'white',
     },
     colorbar: {
-      title: 'Alarm Counts',
+      title: 'Alarm Density',
       len: 0.9,
     }
   },
@@ -89,12 +90,12 @@ const noData = computed(() => {
 })
 
 const plotlyClickedDataHandler = (val) => {
-  emits('country-clicked', val)
+  const country = val.points[0].text
+  emits('country-clicked', country)
 }
 
 onMounted(() => {
-  // clearDataViz()
-  // setTraces()
+  setTraces()
 })
 </script>
 

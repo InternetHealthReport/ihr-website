@@ -1,4 +1,5 @@
 <script setup>
+import { QCardSection } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, computed, watch, onMounted } from 'vue'
 import * as TreeMapAggregatedAlarmsDataModel from '@/plugins/models/TreeMapAggregatedAlarmsDataModel'
@@ -12,6 +13,9 @@ const props = defineProps({
   alarms: {
     type: Array,
   },
+  selectSeveritiesList: {
+    type: Array,
+  },
   aggregatedAttrsSelected: {
     type: Object,
   },
@@ -21,17 +25,25 @@ const props = defineProps({
   alarmTypeTitlesMap: {
     type: Object
   },
-  networkName: {
+  legendSelected: {
     type: String
+  },
+  isASGranularity: {
+    type: Boolean
   }
 })
 
-const emits = defineEmits(['country-clicked'])
+const emits = defineEmits(['treemap-node-clicked'])
 
 const layout = ref({
-  margin: { t: 70, b: 0, l: 0, r: 0 },
+  autosize: true,
+  margin: { t: 10, b: 0, l: 0, r: 0 },
+  height: 500
 })
 const traces = ref([])
+const chartTitle = ref('')
+
+const clickProcessing = ref(false)
 
 const noData = computed(() => {
   if (!props.loading && !traces.value.length) {
@@ -43,45 +55,45 @@ const noData = computed(() => {
   }
 })
 
-const init = (alarms, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap, networkName, isASGranularity) => {
-  const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsSelected)
-  const treeMapTrace = [TreeMapAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap, networkName, isASGranularity)]
-  if (!treeMapTrace.length) {
-    clearDataViz()
-  } else {
-    if (!Object.keys(treeMapTrace[0]).length) {
-      clearDataViz()
-    } else {
-      traces.value = treeMapTrace
-    }
+const init = (alarms, selectSeveritiesList, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap, legendSelected, isASGranularity, render = true) => {
+  if (render) {
+    const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsSelected)
+    const treeMapTrace = TreeMapAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap, legendSelected, isASGranularity)
+    traces.value = !AggregatedAlarmsUtils.isDictEmpty(treeMapTrace) ? [treeMapTrace] : []
   }
+  chartTitle.value = TreeMapAggregatedAlarmsDataModel.getChartTitle(traces.value?.[0], selectSeveritiesList, countryName, legendSelected, isASGranularity)
 }
 
-const clearDataViz = () => {
-  traces.value = []
-}
-
-const plotlyClickedDataHandler = (val) => {
-  emits('country-clicked', val)
+const onTreemapNodeClicked = (clickedData) => {
+  if (clickProcessing.value) return;
+  const treemapPointClicked = clickedData.points[0];
+  if (treemapPointClicked.pointNumber !== undefined && treemapPointClicked.parent == '') {
+    clickProcessing.value = true;
+    emits('treemap-node-clicked', treemapPointClicked.label)
+    setTimeout(() => {
+      clickProcessing.value = false;
+    }, 900);
+  }
 }
 
 watch(() => props.alarms, () => {
-  if (props.networkName) {
-    init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.networkName, true)
-  } else {
-    init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap)
-  }
+  init(props.alarms, props.selectSeveritiesList, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.legendSelected, props.isASGranularity)
 })
 
 onMounted(() => {
-  init(props.alarms, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap)
+  init(props.alarms, props.selectSeveritiesList, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.legendSelected, props.isASGranularity)
 })
+
+defineExpose({ init })
 </script>
 
 <template>
   <div class="IHR_chart">
+    <QCardSection>
+      <div class="text-h6 center">{{ chartTitle }}</div>
+    </QCardSection>
     <div class="IHR_disco-chart">
-        <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-click="plotlyClickedDataHandler" />
+      <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-click="onTreemapNodeClicked" />
     </div>
   </div>
 </template>

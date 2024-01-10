@@ -1,6 +1,5 @@
-import * as TimeSeriesAggregatedAlarmsDataModel from '../TimeSeriesAggregatedAlarmsDataModel'
-import { ALARMS, ALARM_TYPES_MAP } from './data';
-
+import * as TimeSeriesAggregatedAlarmsDataModel from '../models/TimeSeriesAggregatedAlarmsDataModel'
+import { ALARMS, ALARM_TYPES_MAP } from './resources/data';
 
 describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
   it('should correctly ETL TimeSeriesAggregatedAlarmsDataModel when all data sources selected', () => {

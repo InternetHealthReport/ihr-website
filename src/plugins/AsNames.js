@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export function getASNamesCountryMappings(asNamesPath = './data/asnames.txt', content = null) {
+export function getASNamesCountryMappings(asNamesPath = '/data/asnames.txt', content = null) {
   const request = () => {
     return new Promise((resolve, reject) => {
       if (content === null) {

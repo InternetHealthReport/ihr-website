@@ -1,4 +1,4 @@
-Thanks for helping make this application safe for everyone ☺️
+Thanks for helping make this application safe for everyone! ☺️
 
 **Reporting Security Issues**
 
@@ -6,7 +6,7 @@ If you believe you have found a security vulnerability in this repository, pleas
 
 **Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**
 
-Instead, please send an email to  admin@ihr.live
+Instead, please send an email to admin@ihr.live.
 
 Please include as much of the information listed below as you can to help us better understand and resolve the issue:
 
@@ -18,4 +18,4 @@ Please include as much of the information listed below as you can to help us bet
   * Proof-of-concept or exploit code (if possible)
   * Impact of the issue, including how an attacker might exploit the issue
 
-This information will help us triage your report more quickly.
+This information will help us triage your report quicker.
