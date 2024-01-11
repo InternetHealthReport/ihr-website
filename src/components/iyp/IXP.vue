@@ -103,7 +103,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('members')"
           :label="$t('iyp.ixp.members.title')"
           caption="Member Autonomous Systems (ASes)"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -124,7 +124,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('facilities')"
           :label="$t('iyp.ixp.facilities.title')"
           caption="Facilities"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -145,7 +145,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('peeringLANs')"
           :label="$t('iyp.ixp.peeringLANs.title')"
           caption="Peering LANs of an IXP"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 

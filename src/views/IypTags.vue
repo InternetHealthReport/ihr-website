@@ -180,7 +180,7 @@ onMounted(() => {
           @click="loadSection('domains')"
           :label="sections.nodes.data[0].get('nb_domains')+' '+$t('iyp.tag.popularDomains.title')"
           :caption="$t('iyp.tag.popularDomains.caption')+tag+' by '+sections.nodes.data[0].get('data_source_domains').join(', ')"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -201,7 +201,7 @@ onMounted(() => {
           @click="loadSection('ases')"
           :label="sections.nodes.data[0].get('nb_ases')+' '+$t('iyp.tag.ases.title')"
           :caption="$t('iyp.tag.ases.caption')+tag+' by '+sections.nodes.data[0].get('data_source_ases').join(', ')"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -229,7 +229,7 @@ onMounted(() => {
           @click="loadSection('prefixes')"
           :label="sections.nodes.data[0].get('nb_prefixes')+' '+$t('iyp.tag.prefixes.title')"
           :caption="$t('iyp.tag.prefixes.caption')+tag+' by '+sections.nodes.data[0].get('data_source_prefixes').join(', ')"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 

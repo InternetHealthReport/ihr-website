@@ -168,7 +168,7 @@ onMounted(() => {
       <QExpansionItem
         :label="$t('charts.countryHegemony.title')"
         caption="BGP data / APNIC population estimates"
-        header-class="IHR_charts-title"
+        header-class="IHR_chart-title"
         icon="fas fa-project-diagram"
         :disable="show.hegemony_disable"
         v-model="show.hegemony"
@@ -189,7 +189,7 @@ onMounted(() => {
         </QCard>
       </QExpansionItem>
 
-      <QExpansionItem :label="$t('charts.iodaChart.title')" caption="Country Internet Overview" header-class="IHR_charts-title"
+      <QExpansionItem :label="$t('charts.iodaChart.title')" caption="Country Internet Overview" header-class="IHR_chart-title"
           icon="fas fa-globe" :disable="show.ioda_disable" v-model="show.ioda">
           <QSeparator />
           <QCard class="IHR_charts-body">
@@ -202,7 +202,7 @@ onMounted(() => {
       <QExpansionItem
         :label="$t('charts.prefixHegemony.title')"
         caption="BGP / IRR / RPKI / delegated"
-        header-class="IHR_charts-title"
+        header-class="IHR_chart-title"
         icon="fas fa-route"
         :disable="show.prefixHegemonyChart_disable"
         v-model="show.prefixHegemonyChart"
@@ -224,7 +224,7 @@ onMounted(() => {
       <QExpansionItem
         :label="$t('charts.networkDelay.title')"
         caption="Traceroute data"
-        header-class="IHR_charts-title"
+        header-class="IHR_chart-title"
         icon="fas fa-shipping-fast"
         v-model="show.net_delay"
         :disable="show.net_delay_disable"

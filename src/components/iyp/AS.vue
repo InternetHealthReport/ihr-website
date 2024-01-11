@@ -299,7 +299,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('prefixes')"
           :label="$t('iyp.as.ipPrefix.title')"
           :caption="$t('iyp.as.ipPrefix.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.prefixes.show"
         >
           <QSeparator />
@@ -336,7 +336,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('peers')"
           :label="$t('iyp.as.peers.title')"
           :caption="$t('iyp.as.peers.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.peers.show"
         >
           <QSeparator />
@@ -362,7 +362,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('upstreams')"
           :label="$t('iyp.as.upstreams.title')"
           :caption="'AS'+asn+' depends on these peer & upstream ASes'"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.upstreams.show"
         >
           <QSeparator />
@@ -389,7 +389,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('downstreams')"
           :label="$t('iyp.as.downstreams.title')"
           :caption="$t('iyp.as.downstreams.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.downstreams.show"
         >
           <QSeparator />
@@ -418,7 +418,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('domains')"
           :label="$t('iyp.as.popularDomains.title')"
           :caption="$t('iyp.as.popularDomains.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.domains.show"
         >
           <QSeparator />
@@ -449,7 +449,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('atlas')"
           :label="$t('iyp.as.atlas.title')"
           :caption="$t('iyp.as.atlas.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.atlas.show"
         >
           <QSeparator />
@@ -476,7 +476,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('rankings')"
           :label="$t('iyp.as.rankings.title')"
           :caption="$t('iyp.as.rankings.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.rankings.show"
         >
           <QSeparator />
@@ -497,7 +497,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('roas')"
           :label="$t('iyp.as.roas.title')"
           :caption="$t('iyp.as.roas.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.roas.show"
         >
           <QSeparator />
@@ -521,7 +521,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('siblings')"
           :label="$t('iyp.as.siblings.title')"
           :caption="$t('iyp.as.siblings.caption')"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.siblings.show"
         >
           <QSeparator />
@@ -539,7 +539,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('ixps')"
           :label="$t('iyp.as.ixp.title')"
           :caption="$t('iyp.as.ixp.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.ixps.show"
         >
           <QSeparator />
@@ -564,7 +564,7 @@ watch(() => route.params.id, () => {
           @click="loadSection('cofacilities')"
           :label="$t('iyp.as.facilities.title')"
           :caption="$t('iyp.as.facilities.caption')+asn"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.cofacilities.show"
         >
           <QSeparator />

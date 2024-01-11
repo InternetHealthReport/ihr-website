@@ -183,7 +183,7 @@ onMounted(() => {
       <QExpansionItem
         :label="$t('charts.asInterdependencies.title')"
         caption="BGP Data"
-        header-class="IHR_charts-title"
+        header-class="IHR_chart-title"
         icon="fas fa-project-diagram"
         :disable="show.hegemony_disable"
         v-model="show.hegemony"
@@ -201,7 +201,7 @@ onMounted(() => {
           </QCardSection>
         </QCard>
       </QExpansionItem>
-      <QExpansionItem :label="$t('charts.iodaChart.title')" caption="AS Internet Overview" header-class="IHR_charts-title" icon="fas fa-globe" :disable="show.ioda_disable" v-model="show.ioda">
+      <QExpansionItem :label="$t('charts.iodaChart.title')" caption="AS Internet Overview" header-class="IHR_chart-title" icon="fas fa-globe" :disable="show.ioda_disable" v-model="show.ioda">
         <QSeparator />
         <QCard class="IHR_charts-body">
           <QCardSection>
@@ -213,7 +213,7 @@ onMounted(() => {
       <QExpansionItem
         :label="$t('charts.prefixHegemony.title')"
         caption="BGP / IRR / RPKI / delegated"
-        header-class="IHR_charts-title"
+        header-class="IHR_chart-title"
         icon="fas fa-route"
         :disable="show.rov_disable"
         v-model="show.rov"
@@ -233,7 +233,7 @@ onMounted(() => {
       <QExpansionItem
         :label="$t('charts.networkDelay.title')"
         caption="Traceroute Data"
-        header-class="IHR_charts-title"
+        header-class="IHR_chart-title"
         icon="fas fa-shipping-fast"
         v-model="show.net_delay"
         :disable="show.net_delay_disable"
@@ -257,7 +257,7 @@ onMounted(() => {
       <QExpansionItem
         :label="$t('charts.delayAndForwarding.title')"
         caption="Traceroute Data"
-        header-class="IHR_charts-title"
+        header-class="IHR_chart-title"
         icon="fas fa-exchange-alt"
         :disable="show.delayAndForwarding_disable"
         v-model="show.delayAndForwarding"
@@ -277,7 +277,7 @@ onMounted(() => {
       <QExpansionItem
         :label="$t('charts.disconnections.title')"
         caption="RIPE Atlas Log"
-        header-class="IHR_charts-title"
+        header-class="IHR_chart-title"
         icon="fas fa-plug"
         :disable="show.disco_disable"
         v-model="show.disco"

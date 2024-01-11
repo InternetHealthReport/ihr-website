@@ -233,7 +233,7 @@ watch(() => route.params.cc, () => {
           @click="loadSection('rankings')"
           :label="$t('iyp.country.rankings.title')"
           :caption="$t('iyp.country.rankings.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.rankings.show"
         >
           <QSeparator />
@@ -262,7 +262,7 @@ watch(() => route.params.cc, () => {
           @click="loadSection('ases')"
           :label="$t('iyp.country.ases.title')"
           :caption="$t('iyp.country.ases.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.ases.show"
         >
           <QSeparator />
@@ -282,7 +282,7 @@ watch(() => route.params.cc, () => {
           @click="loadSection('ixps')"
           :label="$t('iyp.country.ixps.title')"
           :caption="$t('iyp.country.ixps.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QCard class="q-ma-xl IHR_charts-body">
             <IypGenericTable
@@ -310,7 +310,7 @@ watch(() => route.params.cc, () => {
           @click="loadSection('prefixes')"
           :label="$t('iyp.country.prefixes.title')"
           :caption="$t('iyp.country.prefixes.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.prefixes.show"
         >
           <QSeparator />
@@ -344,7 +344,7 @@ watch(() => route.params.cc, () => {
           @click="loadSection('atlas')"
           :label="$t('iyp.country.atlas.title')"
           :caption="$t('iyp.country.atlas.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.atlas.show"
         >
           <QSeparator />

@@ -185,7 +185,7 @@ watch(() => route.params.domain, () => {
           @click="loadSection('ips')"
           :label="$t('iyp.domainname.ips.title')"
           :caption="$t('iyp.domainname.ips.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -218,7 +218,7 @@ watch(() => route.params.domain, () => {
           @click="loadSection('nameservers')"
           :label="$t('iyp.domainname.nameservers.title')"
           :caption="$t('iyp.domainname.nameservers.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -251,7 +251,7 @@ watch(() => route.params.domain, () => {
           @click="loadSection('country_query')"
           :label="$t('iyp.domainname.country_query.title')"
           :caption="$t('iyp.domainname.country_query.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -278,7 +278,7 @@ watch(() => route.params.domain, () => {
           @click="loadSection('as_query')"
           :label="$t('iyp.domainname.as_query.title')"
           :caption="$t('iyp.domainname.as_query.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -305,7 +305,7 @@ watch(() => route.params.domain, () => {
           @click="loadSection('rankings')"
           :label="$t('iyp.domainname.rankings.title')"
           :caption="$t('iyp.domainname.rankings.caption')+pageTitle"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
           v-model="sections.rankings.show"
         >
           <QSeparator />

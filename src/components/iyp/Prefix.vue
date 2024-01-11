@@ -193,7 +193,7 @@ watch(() => route.params, () => {
           @click="loadSection('domains')"
           :label="$t('iyp.prefix.popularDomains.title')"
           :caption="$t('iyp.prefix.popularDomains.caption')+getPrefix()"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -219,7 +219,7 @@ watch(() => route.params, () => {
           @click="loadSection('nameservers')"
           :label="$t('iyp.prefix.nameservers.title')"
           :caption="$t('iyp.prefix.nameservers.caption')+getPrefix()"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -245,7 +245,7 @@ watch(() => route.params, () => {
           @click="loadSection('upstreams')"
           :label="$t('iyp.prefix.upstreams.title')"
           :caption="getPrefix()+' depends on these ASes'"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -266,7 +266,7 @@ watch(() => route.params, () => {
           @click="loadSection('roas')"
           :label="$t('iyp.prefix.roas.title')"
           :caption="$t('iyp.prefix.roas.caption')+getPrefix()"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -288,7 +288,7 @@ watch(() => route.params, () => {
           @click="loadSection('lessSpecifics')"
           :label="$t('iyp.prefix.lessSpecific.title')"
           :caption="$t('iyp.prefix.lessSpecific.caption')+getPrefix()"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
@@ -308,7 +308,7 @@ watch(() => route.params, () => {
           @click="loadSection('moreSpecifics')"
           :label="$t('iyp.prefix.moreSpecific.title')"
           :caption="$t('iyp.prefix.moreSpecific.caption')+getPrefix()"
-          header-class="IHR_charts-title"
+          header-class="IHR_chart-title"
         >
           <QSeparator />
 
