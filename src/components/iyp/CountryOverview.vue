@@ -122,7 +122,7 @@ onMounted(() => {
     <div class="q-pl-sm q-mt-lg q-mb-lg">
       <div class="q-pl-md">
         <div class="row q-gutter-md q-mt-md justify-center">
-          <div class="col-8">
+          <div class="col-10">
             <div class="row justify-between">
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
