@@ -1,7 +1,7 @@
 <script setup>
 import { QSelect, QIcon, QSpinner, QItem, QItemSection } from 'quasar'
 import { NetworkDelayLocation, NetworkQuery } from '@/plugins/IhrApi'
-import { ref, inject, watch, defineProps, defineEmits } from 'vue'
+import { ref, inject, watch } from 'vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -27,7 +27,16 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits(['select'])
+const emits = defineEmits({
+  'select': function(location) {
+    if (location !== null) {
+      return true;
+    } else {
+      console.warn('Location is missing!');
+      return false;
+    }
+  }
+})
 
 const options = ref([])
 const model = ref(props.selected)
