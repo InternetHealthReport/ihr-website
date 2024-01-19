@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import Tr from '@/i18n/translation'
 import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
 import getCountryName from '@/plugins/countryName'
+import * as ipAddress from 'ip-address'
 
 const ihr_api = inject('ihr_api')
 
@@ -56,18 +57,32 @@ const options = ref([{ name: 'Suggestions' }, { label: 2497, value: 2497, name: 
 const model = ref([])
 const loading = ref(false)
 
+const Address4 = ipAddress.Address4
+const Address6 = ipAddress.Address6
+
 const search = async (value, update) => {
   loading.value = true
   options.value = []
   const asnRegex = /^(as)?(\d+)$/i
   const asnMatch = asnRegex.exec(value)
-  const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
-  const prefixMatch = prefixRegex.exec(value)
+  let prefixMatch
+  try {
+    prefixMatch = (new Address4(value)).isCorrect()
+  } catch (e) {
+    prefixMatch = null
+  }
+  if (!prefixMatch) {
+    try {
+      prefixMatch = (new Address6(value)).isCorrect()
+    } catch (e) {
+      prefixMatch = null
+    }
+  }
   let res
   if (asnMatch) {
     res = await queryAS(asnMatch.input)
   } else if (prefixMatch) {
-    res = await queryPrefixes(prefixMatch.input)
+    res = await queryPrefixes(value)
   } else {
     res = await mixedEntitySearch(value)
     res = optimizeSearchResults(res)

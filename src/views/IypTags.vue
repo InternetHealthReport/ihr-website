@@ -6,6 +6,7 @@ import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 import { isoCountries } from '@/plugins/countryName'
+import * as ipAddress from 'ip-address'
 
 const iyp_api = inject('iyp_api')
 
@@ -79,6 +80,9 @@ const sections = ref({
   }
 })
 
+const Address4 = ipAddress.Address4
+const Address6 = ipAddress.Address6
+
 const allSources = (res) => {
   return [...new Set([...res.get('data_source_ases'), ...res.get('data_source_domains'), ...res.get('data_source_prefixes')])]
 }
@@ -103,8 +107,19 @@ const treemapClicked = (event) => {
   if (event.points && event.points.length) {
     const network = event.points[0].label
     if (typeof network === 'string') {
-      const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
-      const prefixMatch = prefixRegex.exec(network)
+      let prefixMatch
+      try {
+        prefixMatch = (new Address4(network)).isCorrect()
+      } catch (e) {
+        prefixMatch = null
+      }
+      if (!prefixMatch) {
+        try {
+          prefixMatch = (new Address6(network)).isCorrect()
+        } catch (e) {
+          prefixMatch = null
+        }
+      }
       const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+$/
       const domainMatch = domainRegex.exec(network)
       if (prefixMatch) {

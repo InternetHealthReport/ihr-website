@@ -6,6 +6,7 @@ import IypSearchBar from '@/components/search/IypSearchBar.vue'
 import AS from '@/components/iyp/AS.vue'
 import IXP from '@/components/iyp/IXP.vue'
 import Prefix from '@/components/iyp/Prefix.vue'
+import * as ipAddress from 'ip-address'
 
 const route = useRoute()
 
@@ -14,12 +15,26 @@ const ixpNumber = ref(null)
 const prefixHostString = ref(null)
 const prefixLengthNumber = ref(null)
 
+const Address4 = ipAddress.Address4
+const Address6 = ipAddress.Address6
+
 const init = () => {
   if (route.params.id) {
     asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
     ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
-    const prefixRegex = /^(?:(?:\d{1,3}\.){0,3}\d{0,3}(?:\/\d{1,2})?|(?:[0-9a-fA-F]{1,4}:){0,7}[0-9a-fA-F]{0,4}(?:\/\d{1,3})?)$/
-    const prefixMatch = prefixRegex.exec(route.params.id)
+    let prefixMatch
+    try {
+      prefixMatch = (new Address4(route.params.id)).isCorrect()
+    } catch (e) {
+      prefixMatch = null
+    }
+    if (!prefixMatch) {
+      try {
+        prefixMatch = (new Address6(route.params.id)).isCorrect()
+      } catch (e) {
+        prefixMatch = null
+      }
+    }
     prefixHostString.value = prefixMatch ? route.params.id : null
   }
   if (route.params.length) {
