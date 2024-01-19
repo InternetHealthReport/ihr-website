@@ -1,6 +1,6 @@
 # IYP Views
 
-Internet Yellow Pages (IYP) is a knowledge graph (a Neo4j graph database) for Internet resources. You can visualize IYP data on IHR with the IYP Views tool (select tools -> IYP Views in the top menu).
+Internet Yellow Pages (IYP) is a knowledge graph (a Neo4j graph database) for Internet resources. You can visualize IYP data on IHR using the Network and Country page (select reports -> Network or Country in the top menu).
 
 Here's a page specific to an Autonomous System (AS):
 
@@ -8,12 +8,10 @@ Here's a page specific to an Autonomous System (AS):
 
 As you can see on the page, the data is separated into expansion items. Clicking on an expansion item will fetch the data and render the components. You can find the code in the `AS.vue` component. Here's a 10-step process that will take place when an expansion item is clicked:
 
-1. The `handleClick` method will be called in order to fetch the necessary data that is specific to that expansion item through querying the IYP.
+1. The `loadSection` method will be called in order to fetch the necessary data that is specific to that expansion item through querying the IYP.
 2. The queries will be divided into separate methods according to the expansion items.
-3. For example, if we take the `IP Prefix` expansion item, then the method that returns a query will be `getIpPrefix`.
-4. `getIpPrefix` will return an object with params, mapping (used to construct a response object), data key (see point number 8 to understand), and a query.
-5. This object will be passed as an argument to the `run` method from the `IypApi.js` module.
-6. The response returned by the `run` method will be something like this (which is raw from the Neo4j client),
+3. This object will be passed as an argument to the `run` method from the `IypApi.js` module.
+4. The response returned by the `run` method will be something like this (which is raw from the Neo4j client),
 
 ```
 [
