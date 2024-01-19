@@ -323,7 +323,7 @@ watch(() => route.params.id, () => {
               :data="sections.prefixes.data"
               :columns="sections.prefixes.columns"
               :loading-status="sections.prefixes.loading"
-              :cypher-query="sections.prefixes.query"
+              :cypher-query="sections.prefixes.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="1"
             >
               <div class="row justify-evenly">
@@ -360,7 +360,7 @@ watch(() => route.params.id, () => {
               :data="sections.peers.data"
               :columns="sections.peers.columns"
               :loading-status="sections.peers.loading"
-              :cypher-query="sections.peers.query"
+              :cypher-query="sections.peers.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="1"
             >
               <IypGenericTreemapChart
@@ -386,7 +386,7 @@ watch(() => route.params.id, () => {
               :data="sections.upstreams.data"
               :columns="sections.upstreams.columns"
               :loading-status="sections.upstreams.loading"
-              :cypher-query="sections.upstreams.query"
+              :cypher-query="sections.upstreams.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="1"
             >
             <IypGenericBarChart v-if="sections.upstreams.data.length > 0" :chart-data="sections.upstreams.data" :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}' :config="{key:'asn', groupKey:'af', value:'hegemony_score' , xlabel_prefix:'AS'}"/>
@@ -413,7 +413,7 @@ watch(() => route.params.id, () => {
               :data="sections.downstreams.data"
               :columns="sections.downstreams.columns"
               :loading-status="sections.downstreams.loading"
-              :cypher-query="sections.downstreams.query"
+              :cypher-query="sections.downstreams.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="1"
             >
               <div class="col-6">
@@ -442,7 +442,7 @@ watch(() => route.params.id, () => {
               :data="sections.domains.data"
               :columns="sections.domains.columns"
               :loading-status="sections.domains.loading"
-              :cypher-query="sections.domains.query"
+              :cypher-query="sections.domains.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="1"
             >
          <!--      <GenericHoverEventsChart
@@ -473,7 +473,7 @@ watch(() => route.params.id, () => {
               :data="sections.atlas.data"
               :columns="sections.atlas.columns"
               :loading-status="sections.atlas.loading"
-              :cypher-query="sections.atlas.query"
+              :cypher-query="sections.atlas.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="1"
             >
               <IypGenericTreemapChart
@@ -500,7 +500,7 @@ watch(() => route.params.id, () => {
               :data="sections.rankings.data"
               :columns="sections.rankings.columns"
               :loading-status="sections.rankings.loading"
-              :cypher-query="sections.rankings.query"
+              :cypher-query="sections.rankings.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="1"
             >
               <IypGenericIndicatorsChart v-if="sections.rankings.data.length > 0" :chart-data="sections.rankings.data" />
@@ -522,7 +522,7 @@ watch(() => route.params.id, () => {
               :data="sections.roas.data"
               :columns="sections.roas.columns"
               :loading-status="sections.roas.loading"
-              :cypher-query="sections.roas.query"
+              :cypher-query="sections.roas.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="0"
             >
            <!--  <IypGenericBarChart v-if="roas.length > 0" :chart-data="roas"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"},
@@ -545,7 +545,7 @@ watch(() => route.params.id, () => {
               :data="sections.siblings.data"
               :columns="sections.siblings.columns"
               :loading-status="sections.siblings.loading"
-              :cypher-query="sections.siblings.query"
+              :cypher-query="sections.siblings.query.replace(/\$(.*?)}/, `'${asn}'`)"
             />
           </QCard>
         </QExpansionItem>
@@ -563,7 +563,7 @@ watch(() => route.params.id, () => {
               :data="sections.ixps.data"
               :columns="sections.ixps.columns"
               :loading-status="sections.ixps.loading"
-              :cypher-query="sections.ixps.query"
+              :cypher-query="sections.ixps.query.replace(/\$(.*?)}/, `'${asn}'`)"
               :slot-length="2"
             >
               <IypGenericTreemapChart v-if="sections.ixps.data.length > 0"
@@ -588,7 +588,7 @@ watch(() => route.params.id, () => {
               :data="sections.cofacilities.data"
               :columns="sections.cofacilities.columns"
               :loading-status="sections.cofacilities.loading"
-              :cypher-query="sections.cofacilities.query"
+              :cypher-query="sections.cofacilities.query.replace(/\$(.*?)}/, `'${asn}'`)"
             />
           </QCard>
         </QExpansionItem>

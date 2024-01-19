@@ -258,7 +258,7 @@ watch(() => route.params.cc, () => {
               :data="sections.rankings.data"
               :columns="sections.rankings.columns"
               :loading-status="sections.rankings.loading"
-              :cypher-query="sections.rankings.query"
+              :cypher-query="sections.rankings.query.replace(/\$(.*?)}/, `'${cc}'`)"
               :pagination="sections.rankings.pagination"
               :slot-length=1
             >
@@ -287,7 +287,7 @@ watch(() => route.params.cc, () => {
               :data="sections.ases.data"
               :columns="sections.ases.columns"
               :loading-status="sections.ases.loading"
-              :cypher-query="sections.ases.query"
+              :cypher-query="sections.ases.query.replace(/\$(.*?)}/, `'${cc}'`)"
               :pagination="sections.ases.pagination"
             />
           </QCard>
@@ -304,7 +304,7 @@ watch(() => route.params.cc, () => {
               :data="sections.ixps.data"
               :columns="sections.ixps.columns"
               :loading-status="sections.ixps.loading"
-              :cypher-query="sections.ixps.query"
+              :cypher-query="sections.ixps.query.replace(/\$(.*?)}/, `'${cc}'`)"
               :pagination="sections.ixps.pagination"
               :slot-length=1
             >
@@ -334,7 +334,7 @@ watch(() => route.params.cc, () => {
               :data="sections.prefixes.data"
               :columns="sections.prefixes.columns"
               :loading-status="sections.prefixes.loading"
-              :cypher-query="sections.prefixes.query"
+              :cypher-query="sections.prefixes.query.replace(/\$(.*?)}/, `'${cc}'`)"
               :slot-length="2"
             >
               <div class="row justify-evenly">
@@ -368,7 +368,7 @@ watch(() => route.params.cc, () => {
               :data="sections.atlas.data"
               :columns="sections.atlas.columns"
               :loading-status="sections.atlas.loading"
-              :cypher-query="sections.atlas.query"
+              :cypher-query="sections.atlas.query.replace(/\$(.*?)}/, `'${cc}'`)"
               :slot-length="1"
             >
               <IypGenericTreemapChart

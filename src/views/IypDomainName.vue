@@ -209,7 +209,7 @@ watch(() => route.params.domain, () => {
               :data="sections.ips.data"
               :columns="sections.ips.columns"
               :loading-status="sections.ips.loading"
-              :cypher-query="sections.ips.query"
+              :cypher-query="sections.ips.query.replace(/\$(.*?)}/, `'${domainName}'`)"
               :slot-length="1"
             >
               <div class="row justify-evenly">
@@ -242,7 +242,7 @@ watch(() => route.params.domain, () => {
               :data="sections.nameservers.data"
               :columns="sections.nameservers.columns"
               :loading-status="sections.nameservers.loading"
-              :cypher-query="sections.nameservers.query"
+              :cypher-query="sections.nameservers.query.replace(/\$(.*?)}/, `'${domainName}'`)"
               :slot-length="1"
             >
               <div class="row justify-evenly">
@@ -275,7 +275,7 @@ watch(() => route.params.domain, () => {
               :data="sections.country_query.data"
               :columns="sections.country_query.columns"
               :loading-status="sections.country_query.loading"
-              :cypher-query="sections.country_query.query"
+              :cypher-query="sections.country_query.query.replace(/\$(.*?)}/, `'${domainName}'`)"
               :slot-length="1"
               :pagination="sections.as_query.pagination"
             >
@@ -302,7 +302,7 @@ watch(() => route.params.domain, () => {
               :data="sections.as_query.data"
               :columns="sections.as_query.columns"
               :loading-status="sections.as_query.loading"
-              :cypher-query="sections.as_query.query"
+              :cypher-query="sections.as_query.query.replace(/\$(.*?)}/, `'${domainName}'`)"
               :slot-length="1"
               :pagination="sections.as_query.pagination"
             >
@@ -330,7 +330,7 @@ watch(() => route.params.domain, () => {
               :data="sections.rankings.data"
               :columns="sections.rankings.columns"
               :loading-status="sections.rankings.loading"
-              :cypher-query="sections.rankings.query"
+              :cypher-query="sections.rankings.query.replace(/\$(.*?)}/, `'${domainName}'`)"
               :pagination="sections.rankings.pagination"
             >
             </IypGenericTable>

@@ -202,7 +202,7 @@ watch(() => route.params, () => {
               :data="sections.domains.data"
               :columns="sections.domains.columns"
               :loading-status="sections.domains.loading"
-              :cypher-query="sections.domains.query"
+              :cypher-query="sections.domains.query.replace(/\$(.*?)}/, `'${getPrefix()}'`)"
               :slot-length="1"
             >
               <IypGenericTreemapChart
@@ -228,7 +228,7 @@ watch(() => route.params, () => {
               :data="sections.nameservers.data"
               :columns="sections.nameservers.columns"
               :loading-status="sections.nameservers.loading"
-              :cypher-query="sections.nameservers.query"
+              :cypher-query="sections.nameservers.query.replace(/\$(.*?)}/, `'${getPrefix()}'`)"
               :slot-length="1"
             >
               <IypGenericTreemapChart
@@ -254,7 +254,7 @@ watch(() => route.params, () => {
               :data="sections.upstreams.data"
               :columns="sections.upstreams.columns"
               :loading-status="sections.upstreams.loading"
-              :cypher-query="sections.upstreams.query"
+              :cypher-query="sections.upstreams.query.replace(/\$(.*?)}/, `'${getPrefix()}'`)"
               :slot-length="1"
             >
               <IypGenericBarChart v-if="sections.upstreams.data.length > 0" :chart-data="sections.upstreams.data"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}' :config="{key:'asn', groupKey: 'cc', value:'hege' , xlabel_prefix:'AS'}"/>
@@ -275,7 +275,7 @@ watch(() => route.params, () => {
               :data="sections.roas.data"
               :columns="sections.roas.columns"
               :loading-status="sections.roas.loading"
-              :cypher-query="sections.roas.query"
+              :cypher-query="sections.roas.query.replace(/\$(.*?)}/, `'${getPrefix()}'`)"
               :slot-length="0"
             >
            <!--  <IypGenericBarChart v-if="roas.length > 0" :chart-data="roas"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"},
@@ -297,7 +297,7 @@ watch(() => route.params, () => {
               :data="sections.lessSpecifics.data"
               :columns="sections.lessSpecifics.columns"
               :loading-status="sections.lessSpecifics.loading"
-              :cypher-query="sections.lessSpecifics.query"
+              :cypher-query="sections.lessSpecifics.query.replace(/\$(.*?)}/, `'${getPrefix()}'`)"
             >
             <!-- <GenericPieChart v-if="lessSpecific.length > 0" :chart-data="lessSpecific" :chart-layout="{ title: 'Country' }" /> -->
             </IypGenericTable>
@@ -317,7 +317,7 @@ watch(() => route.params, () => {
               :data="sections.moreSpecifics.data"
               :columns="sections.moreSpecifics.columns"
               :loading-status="sections.moreSpecifics.loading"
-              :cypher-query="sections.moreSpecifics.query"
+              :cypher-query="sections.moreSpecifics.query.replace(/\$(.*?)}/, `'${getPrefix()}'`)"
             >
             <!-- <GenericPieChart v-if="lessSpecific.length > 0" :chart-data="lessSpecific" :chart-layout="{ title: 'Country' }" /> -->
             </IypGenericTable>

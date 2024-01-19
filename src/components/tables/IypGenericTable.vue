@@ -221,6 +221,7 @@ onMounted(() => {
         </QTabPanel>
         <QTabPanel name="api" class="text-left q-pa-lg" light>
           <code>{{ cypherQuery }}</code>
+          <div><br>IYP Public Instance Link: <a href="https://iyp.iijlab.net/">https://iyp.iijlab.net/</a></div>
         </QTabPanel>
       </QTabPanels>
     </QCard>

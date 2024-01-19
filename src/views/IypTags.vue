@@ -203,7 +203,7 @@ onMounted(() => {
               :data="sections.domains.data"
               :columns="sections.domains.columns"
               :loading-status="sections.domains.loading"
-              :cypher-query="sections.domains.query"
+              :cypher-query="sections.domains.query.replace(/\$(.*?)}/, `'${tag}'`)"
               :slot-length="0"
             >
             </IypGenericTable>
@@ -224,7 +224,7 @@ onMounted(() => {
               :data="sections.ases.data"
               :columns="sections.ases.columns"
               :loading-status="sections.ases.loading"
-              :cypher-query="sections.ases.query"
+              :cypher-query="sections.ases.query.replace(/\$(.*?)}/, `'${tag}'`)"
               :slot-length="1"
             >
                 <IypGenericTreemapChart
@@ -252,7 +252,7 @@ onMounted(() => {
               :data="sections.prefixes.data"
               :columns="sections.prefixes.columns"
               :loading-status="sections.prefixes.loading"
-              :cypher-query="sections.prefixes.query"
+              :cypher-query="sections.prefixes.query.replace(/\$(.*?)}/, `'${tag}'`)"
               :slot-length="1"
             >
               <IypGenericTreemapChart
