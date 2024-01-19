@@ -151,7 +151,6 @@ watch(() => route.params.tag, () => {
       if( !sections.value[key].loading ){
         sections.value[key].loading = true
         sections.value[key].show = false
-        // loadSection(key)
       }
     })
   }

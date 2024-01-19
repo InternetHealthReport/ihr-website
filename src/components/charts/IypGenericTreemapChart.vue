@@ -86,7 +86,6 @@ const formatChartData = (arrayOfObjects) => {
 
   const map = {}
 
-  //let configKey = this.config.key
   let keys = props.config.keys
   let lastKey = keys[keys.length-1]
   arrayOfObjects.forEach(item => {

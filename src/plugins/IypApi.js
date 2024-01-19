@@ -30,7 +30,6 @@ const IypApi = {
     const runManyInOneSession = async (queries, options = { defaultAccessMode: neo4j.session.READ }) => {
       // This method will execute multiple queries by creating one session which will reduce loading time
       // But the execution is not parallel
-      // console.log('Executing queries in a single session...')
 
       let session = _getSession(options)
       let transaction = await session.beginTransaction()
@@ -70,7 +69,6 @@ const IypApi = {
 
     const searchIYPInOneSession = async (queries) => {
       let response = await runManyInOneSession(queries)
-      // console.log(response)
       let searchResults = []
       for (let i = 0; i < response.length; i++) {
         let res = formatResponse(response[i], queries[i].mapping)
@@ -98,7 +96,7 @@ const IypApi = {
     }
 
     const runManyInOneSessionAndReturnAnObject = async (queries, params, options = { defaultAccessMode: neo4j.session.READ }) => {
-      let session = await _getSession(options)
+      let session = _getSession(options)
       let transaction = await session.beginTransaction()
 
       let response = []

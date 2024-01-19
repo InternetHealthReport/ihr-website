@@ -30,13 +30,6 @@ const renderChart = () => {
     },
   ]
 
-  // ReactiveChart component will take care of width and height
-  // const layout = {
-  //   height: 400,
-  //   width: 400,
-  //   ...this.chartLayout,
-  // }
-
   const layout = {
     'max-width': 400,
     ...props.chartLayout,
@@ -44,7 +37,6 @@ const renderChart = () => {
 
   actualChartData.value = data
   actualChartLayout.value = layout
-  // console.log(this.actualChartLayout)
 }
 
 const formatChartData = (arrayOfObjects) => {

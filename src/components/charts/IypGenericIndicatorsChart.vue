@@ -20,13 +20,6 @@ const actualChartLayout = ref({})
 const renderChart = () => {
   let data = formatChartData(localChartData.value)
 
-  // ReactiveChart component will take care of width, height, and margin
-  // let layout = {
-  //   width: this.localChartData.length == 1 ? 400 : 600,
-  //   height: this.localChartData.length == 1 ? 150 : 400,
-  //   margin: this.localChartData.length == 1 ? { t: 25, b: 0, l: 30, r: 0 } : { t: 25, r: 25, l: 25, b: 25 },
-  // }
-
   let layout = {
     ...props.chartLayout,
   }
