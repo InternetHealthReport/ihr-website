@@ -5,6 +5,7 @@ import Tr from '@/i18n/translation'
 import { ref, watch, computed, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useI18n } from 'vue-i18n'
+import ASOverview from './ASOverview.vue'
 
 const { t } = useI18n()
 
@@ -25,6 +26,7 @@ const loadingStatus = ref(false)
 const asNumber = ref(Number(route.params.id.replace('AS','')))
 const asName = ref(null)
 const menu = ref('overview')
+const peeringdbId = ref(null)
 
 const getInfo = () => {
   const query = `MATCH (a:AS {asn: $asn})
@@ -51,6 +53,10 @@ const fetchData = async () => {
     loadingStatus.value = false
     return
   }
+}
+
+const setPeeringdbId = (id) => {
+  peeringdbId.value = id
 }
 
 onMounted(() => {
@@ -83,7 +89,7 @@ onMounted(() => {
         v-model="menu"
       >
         <QTabPanel name="overview">
-          asd
+          <ASOverview :as-number="asNumber" :peeringdbId="setPeeringdbId" />
         </QTabPanel>
         <QTabPanel name="monitoring">
           123
