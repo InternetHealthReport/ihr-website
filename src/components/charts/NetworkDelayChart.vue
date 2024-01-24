@@ -191,7 +191,7 @@ const showTable = (clickData) => {
   if (props.noTable) {
     return
   }
-  const chosenTime = new Date(clickData.points[0].x + ' GMT') //adding timezone to string...
+  const chosenTime = new Date(clickData.points[0].x) //adding timezone to string...
   details.value.activeTab = 'delay'
   details.value.filter = apiFilter.value.clone()
 

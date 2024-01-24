@@ -6,9 +6,9 @@ import { ref, watch, computed, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useI18n } from 'vue-i18n'
 import ASOverview from './ASOverview.vue'
+import ASMonitoring from './ASMonitoring.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import { AS_FAMILY } from '@/plugins/IhrApi'
-import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const { t } = useI18n()
 
@@ -128,6 +128,7 @@ onMounted(() => {
         <QTab name="dns">DNS</QTab>
         <QTab name="peering">Peering</QTab>
         <QTab name="registration">Registration</QTab>
+        <QTab name="rankings">Rankings</QTab>
         <QTab name="all">All</QTab>
       </QTabs>
       <QSeparator />
@@ -138,14 +139,12 @@ onMounted(() => {
           <ASOverview :as-number="asNumber" :peeringdbId="setPeeringdbId" />
         </QTabPanel>
         <QTabPanel name="monitoring">
-          <div v-for="index in 10" :key="index">
-            <GenericCardController
-              title="test"
-              sub-title="test123"
-            >
-              {{ index }}
-            </GenericCardController>
-          </div>
+          <ASMonitoring
+            :start-time="startTime"
+            :end-time="endTime"
+            :as-number="asNumber"
+            :family="family"
+          />
         </QTabPanel>
         <QTabPanel name="routing">
 
@@ -159,8 +158,16 @@ onMounted(() => {
         <QTabPanel name="registration">
 
         </QTabPanel>
-        <QTabPanel name="all">
+        <QTabPanel name="rankings">
 
+        </QTabPanel>
+        <QTabPanel name="all">
+          <ASMonitoring
+            :start-time="startTime"
+            :end-time="endTime"
+            :as-number="asNumber"
+            :family="family"
+          />
         </QTabPanel>
       </QTabPanels>
     </QCard>
