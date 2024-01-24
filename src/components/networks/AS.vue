@@ -8,6 +8,7 @@ import { useI18n } from 'vue-i18n'
 import ASOverview from './ASOverview.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import { AS_FAMILY } from '@/plugins/IhrApi'
+import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const { t } = useI18n()
 
@@ -137,7 +138,14 @@ onMounted(() => {
           <ASOverview :as-number="asNumber" :peeringdbId="setPeeringdbId" />
         </QTabPanel>
         <QTabPanel name="monitoring">
-          123
+          <div v-for="index in 10" :key="index">
+            <GenericCardController
+              title="test"
+              sub-title="test123"
+            >
+              {{ index }}
+            </GenericCardController>
+          </div>
         </QTabPanel>
         <QTabPanel name="routing">
 
@@ -158,3 +166,8 @@ onMounted(() => {
     </QCard>
   </div>
 </template>
+
+<style lang="stylus">
+.cards
+  display inline-block
+</style>
