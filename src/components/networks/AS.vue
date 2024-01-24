@@ -6,6 +6,8 @@ import { ref, watch, computed, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useI18n } from 'vue-i18n'
 import ASOverview from './ASOverview.vue'
+import DateTimePicker from '@/components/DateTimePicker.vue'
+import { AS_FAMILY } from '@/plugins/IhrApi'
 
 const { t } = useI18n()
 
@@ -27,6 +29,7 @@ const asNumber = ref(Number(route.params.id.replace('AS','')))
 const asName = ref(null)
 const menu = ref('overview')
 const peeringdbId = ref(null)
+const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 
 const getInfo = () => {
   const query = `MATCH (a:AS {asn: $asn})
@@ -59,14 +62,56 @@ const setPeeringdbId = (id) => {
   peeringdbId.value = id
 }
 
+const pushRoute = () => {
+  router.push({
+    replace: true,
+    query: Object.assign({}, route.query, {
+      af: family.value,
+      last: interval.value.dayDiff(),
+      date: utcString(interval.value.end).split('T')[0]
+    })
+  })
+}
+
+const family = computed(() => {
+  return addressFamily.value == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
+})
+
+watch(addressFamily, () => {
+  pushRoute()
+})
+watch(() => route.params.id, (asn) => {
+  const newAsn = Number(asn.replace('AS', ''))
+  if (newAsn != asNumber.value) {
+    asNumber.value = newAsn
+    if (asNumber.value) {
+      pushRoute()
+      fetchData()
+    }
+  }
+})
+watch(interval, () => {
+  pushRoute()
+})
 onMounted(() => {
-  fetchData()
+  if (asNumber.value) {
+    pushRoute()
+    fetchData()
+  } else {
+    router.push(Tr.i18nRoute({
+      name: 'networks',
+    }))
+  }
 })
 </script>
 
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <h1 class="text-center">AS{{asNumber}} - {{asName}}</h1>
+    <h3 class="text-center">
+      {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
+      <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+    </h3>
     <QCard>
       <QTabs
         v-model="menu"
