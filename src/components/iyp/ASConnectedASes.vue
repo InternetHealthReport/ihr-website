@@ -7,8 +7,6 @@ import IypGenericPieChart from '@/components/charts/IypGenericPieChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 import IypGenericIndicatorsChart from '@/components/charts/IypGenericIndicatorsChart.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
-import { isoCountries } from '@/plugins/countryName'
-import * as ipAddress from 'ip-address'
 import treemapClicked from '@/plugins/ASIypGenericTreemapChart.js'
 
 const iyp_api = inject('iyp_api')
