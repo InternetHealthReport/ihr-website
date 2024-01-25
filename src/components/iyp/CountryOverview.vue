@@ -137,7 +137,7 @@ onMounted(() => {
                 <h3>Prominent ISPs</h3>
                 <div class="column q-ml-sm">
                   <div v-if="queries[1].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: `AS${item.get('asn')}`} })" v-for="item in queries[1].data" :key="Number(item.get('asn'))">
+                    <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.get('asn')}`} })" v-for="item in queries[1].data" :key="Number(item.get('asn'))">
                       AS{{ item.get('asn') }} - {{ item.get('as_name') }}
                     </RouterLink>
                   </div>
@@ -147,7 +147,7 @@ onMounted(() => {
                 <h3>Prominent Hosting Providers</h3>
                 <div class="column q-ml-sm">
                   <div v-if="queries[2].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: `AS${item.get('asn')}`} })" v-for="item in queries[2].data" :key="Number(item.get('asn'))">
+                    <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.get('asn')}`} })" v-for="item in queries[2].data" :key="Number(item.get('asn'))">
                       AS{{ item.get('asn') }} - {{ item.get('as_name') }}
                     </RouterLink>
                   </div>

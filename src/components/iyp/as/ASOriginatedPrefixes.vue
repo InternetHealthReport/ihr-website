@@ -1,11 +1,9 @@
 <script setup>
-import { RouterLink, useRoute, useRouter } from 'vue-router'
-import Tr from '@/i18n/translation'
-import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericPieChart from '@/components/charts/IypGenericPieChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
-import IypGenericIndicatorsChart from '@/components/charts/IypGenericIndicatorsChart.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 import treemapClicked from '@/plugins/ASIypGenericTreemapChart.js'
 

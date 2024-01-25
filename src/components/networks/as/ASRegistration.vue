@@ -1,6 +1,5 @@
 <script setup>
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
-import ASConnectedASes from '@/components/iyp/as/ASConnectedASes.vue'
 import ASOriginatedPrefixes from '@/components/iyp/as/ASOriginatedPrefixes.vue'
 import ASSiblingASes from '@/components/iyp/as/ASSiblingASes.vue'
 

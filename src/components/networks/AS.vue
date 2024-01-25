@@ -1,16 +1,18 @@
 <script setup>
 import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, watch, computed, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useI18n } from 'vue-i18n'
-import ASOverview from './ASOverview.vue'
-import ASMonitoring from './ASMonitoring.vue'
-import ASRouting from './ASRouting.vue'
-import ASDNS from './ASDNS.vue'
-import ASPeering from './ASPeering.vue'
-import ASRegistration from './ASRegistration.vue'
+import ASOverview from '@/components/networks/as/ASOverview.vue'
+import ASMonitoring from '@/components/networks/as/ASMonitoring.vue'
+import ASRouting from '@/components/networks/as/ASRouting.vue'
+import ASDNS from '@/components/networks/as/ASDNS.vue'
+import ASPeering from '@/components/networks/as/ASPeering.vue'
+import ASRegistration from '@/components/networks/as/ASRegistration.vue'
+import ASRankings from '@/components/networks/as/ASRankings.vue'
+import ASAll from '@/components/networks/as/ASAll.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import { AS_FAMILY } from '@/plugins/IhrApi'
 
@@ -29,10 +31,12 @@ if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[
   setReportDate(new Date(route.query.date))
 }
 
+const activeMenu = route.query.active ? route.query.active : 'overview'
+
 const loadingStatus = ref(false)
 const asNumber = ref(Number(route.params.id.replace('AS','')))
 const asName = ref(null)
-const menu = ref('overview')
+const menu = ref(activeMenu)
 const peeringdbId = ref(null)
 const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 
@@ -103,6 +107,14 @@ watch(() => route.params.id, (asn) => {
 watch(interval, () => {
   pushRoute()
 })
+watch(menu, () => {
+  router.push({
+    replace: true,
+    query: Object.assign({}, route.query, {
+      active: menu.value
+    })
+  })
+})
 onMounted(() => {
   if (asNumber.value) {
     pushRoute()
@@ -145,7 +157,10 @@ onMounted(() => {
         v-model="menu"
       >
         <QTabPanel name="overview">
-          <ASOverview :as-number="asNumber" :peeringdbId="setPeeringdbId" />
+          <ASOverview
+            :as-number="asNumber"
+            :peeringdbId="setPeeringdbId"
+          />
         </QTabPanel>
         <QTabPanel name="monitoring">
           <ASMonitoring
@@ -153,6 +168,7 @@ onMounted(() => {
             :end-time="endTime"
             :as-number="asNumber"
             :family="family"
+            :page-title="pageTitle"
           />
         </QTabPanel>
         <QTabPanel name="routing">
@@ -180,14 +196,19 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="rankings">
-
+          <ASRankings
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="all">
-          <ASMonitoring
+          <ASAll
             :start-time="startTime"
             :end-time="endTime"
             :as-number="asNumber"
             :family="family"
+            :page-title="pageTitle"
+            :peeringdbId="setPeeringdbId"
           />
         </QTabPanel>
       </QTabPanels>

@@ -8,8 +8,9 @@ import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart
 import DiscoChart from '@/components/charts/DiscoChart.vue'
 import IodaChart from '@/components/charts/IodaChart.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
+import ASRipeAtlas from '@/components/iyp/as/ASRipeAtlas.vue'
 
-const props = defineProps(['startTime', 'endTime', 'asNumber', 'family'])
+const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'pageTitle'])
 
 const route = useRoute()
 
@@ -68,6 +69,17 @@ const fetch = ref(true)
       :startPointType="route.params.id.substring(0, 2)"
       :fetch="fetch"
       searchBar
+    />
+  </GenericCardController>
+
+  <GenericCardController
+    :title="$t('iyp.as.atlas.title')"
+    :sub-title="$t('iyp.as.atlas.caption')+asNumber"
+    class="card"
+  >
+    <ASRipeAtlas
+      :asNumber="asNumber"
+      :page-title="pageTitle"
     />
   </GenericCardController>
 

@@ -163,7 +163,7 @@ const treemapClicked = (event) => {
         }))
       } else if (network.includes('AS')) {
         router.push(Tr.i18nRoute({
-          name: 'networks-ihr',
+          name: 'networks',
           params: { id: network },
         }))
       }

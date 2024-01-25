@@ -1,7 +1,6 @@
 <script setup>
-import { RouterLink, useRoute, useRouter } from 'vue-router'
-import Tr from '@/i18n/translation'
-import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 
 const iyp_api = inject('iyp_api')
@@ -9,7 +8,6 @@ const iyp_api = inject('iyp_api')
 const props = defineProps(['asNumber', 'pageTitle'])
 
 const route = useRoute()
-const router = useRouter()
 
 const asn = ref(props.asNumber)
 const roas = ref({
