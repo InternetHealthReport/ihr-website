@@ -8,6 +8,7 @@ import { useI18n } from 'vue-i18n'
 import ASOverview from './ASOverview.vue'
 import ASMonitoring from './ASMonitoring.vue'
 import ASRouting from './ASRouting.vue'
+import ASDNS from './ASDNS.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import { AS_FAMILY } from '@/plugins/IhrApi'
 
@@ -159,7 +160,10 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="dns">
-
+          <ASDNS
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="peering">
 
