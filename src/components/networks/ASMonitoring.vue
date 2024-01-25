@@ -1,8 +1,6 @@
 <script setup>
-import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
-import Tr from '@/i18n/translation'
-import { ref, watch, computed, onMounted, inject } from 'vue'
+import { useRoute } from 'vue-router'
+import { ref } from 'vue'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import AsInterdependenciesChart from '@/components/charts/AsInterdependenciesChart.vue'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'

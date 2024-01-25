@@ -1,13 +1,10 @@
 <script setup>
 import { QChip, QSpinner } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
 
 const iyp_api = inject('iyp_api')
-
-const route = useRoute()
-const router = useRouter()
 
 const props  = defineProps({
   asNumber: {

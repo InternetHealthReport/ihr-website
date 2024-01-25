@@ -9,6 +9,7 @@ import ASOverview from './ASOverview.vue'
 import ASMonitoring from './ASMonitoring.vue'
 import ASRouting from './ASRouting.vue'
 import ASDNS from './ASDNS.vue'
+import ASPeering from './ASPeering.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import { AS_FAMILY } from '@/plugins/IhrApi'
 
@@ -166,7 +167,10 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="peering">
-
+          <ASPeering
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="registration">
 

@@ -1,28 +1,28 @@
 <script setup>
+import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel } from 'quasar'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+import Tr from '@/i18n/translation'
+import { ref, watch, computed, onMounted, inject } from 'vue'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import ASConnectedASes from '@/components/iyp/as/ASConnectedASes.vue'
-import ASOriginatedPrefixes from '@/components/iyp/as/ASOriginatedPrefixes.vue'
+import ASIXPs from '@/components/iyp/as/ASIXPs.vue'
 import ASRPKIRouteOriginAuthorization from '@/components/iyp/as/ASRPKIRouteOriginAuthorization.vue'
 import ASDownstreamsASes from '@/components/iyp/as/ASDownstreamsASes.vue'
 import ASUpstreamASes from '@/components/iyp/as/ASUpstreamASes.vue'
+import ASCoLocatedASes from '@/components/iyp/as/ASCoLocatedASes.vue'
 
 const props = defineProps(['asNumber', 'pageTitle'])
+
+const iyp_api = inject('iyp_api')
+
+const route = useRoute()
+const router = useRouter()
 </script>
 
 <template>
   <GenericCardController
-    :title="$t('iyp.as.ipPrefix.title')"
-    :sub-title="$t('iyp.as.ipPrefix.caption')+asNumber"
-  >
-    <ASOriginatedPrefixes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
-  </GenericCardController>
-  <GenericCardController
     :title="$t('iyp.as.peers.title')"
     :sub-title="$t('iyp.as.peers.caption')+asNumber"
-    class="card"
   >
     <ASConnectedASes
       :asNumber="asNumber"
@@ -50,11 +50,21 @@ const props = defineProps(['asNumber', 'pageTitle'])
     />
   </GenericCardController>
   <GenericCardController
-    :title="$t('iyp.as.roas.title')"
-    :sub-title="$t('iyp.as.roas.caption')+asNumber"
+    :title="$t('iyp.as.ixp.title')"
+    :sub-title="$t('iyp.as.ixp.caption')+asNumber"
     class="card"
   >
-    <ASRPKIRouteOriginAuthorization
+    <ASIXPs
+      :asNumber="asNumber"
+      :page-title="pageTitle"
+    />
+  </GenericCardController>
+  <GenericCardController
+    :title="$t('iyp.as.facilities.title')"
+    :sub-title="$t('iyp.as.facilities.caption')+asNumber"
+    class="card"
+  >
+    <ASCoLocatedASes
       :asNumber="asNumber"
       :page-title="pageTitle"
     />
