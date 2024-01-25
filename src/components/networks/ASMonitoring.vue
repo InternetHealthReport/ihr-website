@@ -9,13 +9,13 @@ import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
 import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart.vue'
 import DiscoChart from '@/components/charts/DiscoChart.vue'
 import IodaChart from '@/components/charts/IodaChart.vue'
+import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 
 const props = defineProps(['startTime', 'endTime', 'asNumber', 'family'])
 
 const route = useRoute()
 
 const fetch = ref(true)
-
 </script>
 
 <template>
@@ -42,6 +42,19 @@ const fetch = ref(true)
       :filter-by-country="false"
       :start-time="startTime"
       :end-time="endTime"
+    />
+  </GenericCardController>
+
+  <GenericCardController
+    :title="$t('charts.prefixHegemony.title')"
+    sub-title="BGP / IRR / RPKI / delegated"
+    class="card"
+  >
+    <PrefixHegemonyChart
+      :start-time="startTime"
+      :end-time="endTime"
+      :as-number="asNumber"
+      :fetch="fetch"
     />
   </GenericCardController>
 

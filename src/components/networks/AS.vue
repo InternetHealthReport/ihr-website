@@ -7,6 +7,7 @@ import report from '@/plugins/report'
 import { useI18n } from 'vue-i18n'
 import ASOverview from './ASOverview.vue'
 import ASMonitoring from './ASMonitoring.vue'
+import ASRouting from './ASRouting.vue'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import { AS_FAMILY } from '@/plugins/IhrApi'
 
@@ -78,6 +79,10 @@ const family = computed(() => {
   return addressFamily.value == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
 })
 
+const pageTitle = computed(() => {
+  return `AS${asNumber.value} - ${asName.value}`
+})
+
 watch(addressFamily, () => {
   pushRoute()
 })
@@ -87,6 +92,7 @@ watch(() => route.params.id, (asn) => {
     asNumber.value = newAsn
     if (asNumber.value) {
       pushRoute()
+      menu.value = 'overview'
       fetchData()
     }
   }
@@ -108,7 +114,7 @@ onMounted(() => {
 
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">AS{{asNumber}} - {{asName}}</h1>
+    <h1 class="text-center">{{ pageTitle }}</h1>
     <h3 class="text-center">
       {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
       <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
@@ -147,7 +153,10 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="routing">
-
+          <ASRouting
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="dns">
 

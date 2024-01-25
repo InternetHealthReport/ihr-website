@@ -1,5 +1,5 @@
 <script setup>
-import { QSpinner, QCard, QTabs, QTab, QTabPanels, QTabPanel, QTable, QTh, QTooltip, QInput, QBtn, QTr, QTd, QIcon, useQuasar, exportFile } from 'quasar'
+import { QSpinner, QTabs, QTab, QTabPanels, QTabPanel, QTable, QTh, QTooltip, QInput, QBtn, QTr, QTd, QIcon, useQuasar, exportFile } from 'quasar'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
@@ -162,7 +162,7 @@ onMounted(() => {
     <div v-if="loadingStatus" class="IYP_loading-spinner">
       <QSpinner color="secondary" size="3em" />
     </div>
-    <QCard>
+    <div>
       <QTabs
         class="table-card text-grey bg-grey-2"
         v-model="activeTab"
@@ -224,7 +224,7 @@ onMounted(() => {
           <div><br>IYP Public Instance Link: <a href="https://iyp.iijlab.net/">https://iyp.iijlab.net/</a></div>
         </QTabPanel>
       </QTabPanels>
-    </QCard>
+    </div>
   </div>
 </template>
 
