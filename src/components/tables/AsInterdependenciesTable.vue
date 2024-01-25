@@ -143,7 +143,7 @@ const OLDrouteToAsn = (asn, row) => {
 const routeToAsn = (asn, row) => {
   asn = asn.format(asn.field(row))
   router.push(Tr.i18nRoute({
-    name: 'networks-ihr',
+    name: 'networks',
     params: { id: iht_api.ihr_NumberToAsOrIxp(asn) },
   }))
 }

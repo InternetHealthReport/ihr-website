@@ -257,7 +257,7 @@ const getIdForIhrData = (id, type, route) => {
         result.results.some(element => {
           if (element.name === id || element.number === id) {
             router.push(Tr.i18nRoute({
-              name: 'networks-ihr',
+              name: 'networks',
               params: { id: `${type}${Math.abs(element.number)}` },
             }))
           }

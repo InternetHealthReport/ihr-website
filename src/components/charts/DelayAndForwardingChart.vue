@@ -88,7 +88,7 @@ const apiCall = () => {
 }
 
 const showTable = (clickData) => {
-  let chosenTime = new Date(clickData.points[0].x + ' GMT') //adding timezone to string...
+  let chosenTime = new Date(clickData.points[0].x) //adding timezone to string...
 
   if (clickData.points[0].data.yaxis == 'y2') {
     details.value.activeTab = 'forwarding'

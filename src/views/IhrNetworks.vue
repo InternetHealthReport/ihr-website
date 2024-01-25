@@ -13,7 +13,6 @@ import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
 import AsInterdependenciesChart from '@/components/charts/AsInterdependenciesChart.vue'
 import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart.vue'
 import DiscoChart from '@/components/charts/DiscoChart.vue'
-import ASOverview from '@/components/iyp/ASOverview.vue'
 import IXPOverview from '@/components/iyp/IXPOverview.vue'
 import IodaChart from '@/components/charts/IodaChart.vue'
 
@@ -172,7 +171,6 @@ onMounted(() => {
   <div v-if="asNumber" id="IHR_as-and-ixp-container" class="IHR_char-container">
     <h1 class="text-center">{{subHeader}} - {{headerString}}</h1>
     <div>
-      <ASOverview v-if="route.params.id.includes('AS')" :as-number="Number(route.params.id.replace('AS', ''))" :title="() => `${subHeader} - ${headerString}`" />
       <IXPOverview v-if="route.params.id.includes('IXP')" :id="Number(route.params.id.replace('IXP', ''))" :title="() => `${subHeader} - ${headerString}`" />
       <h3 class="text-center">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}

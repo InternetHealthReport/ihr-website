@@ -1,13 +1,10 @@
 <script setup>
 import { QChip, QSpinner } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
 
 const iyp_api = inject('iyp_api')
-
-const route = useRoute()
-const router = useRouter()
 
 const props  = defineProps({
   asNumber: {
@@ -16,10 +13,6 @@ const props  = defineProps({
   },
   asName: {
     type: String,
-    required: false,
-  },
-  title: {
-    type: Function,
     required: false,
   },
   peeringdbId: {
@@ -87,9 +80,6 @@ const fetchData = (asn) => {
 
   res[0].then( results => {
     queries.value[0].data = results.records
-    if (props.title !== undefined) {
-      props.title(queries.value[0].data[0].get('name'))
-    }
     loading.value -= 1
   })
 
@@ -204,15 +194,6 @@ onMounted(() => {
                   <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
                 </RouterLink>
               </div>
-            </div>
-
-            <div class="row">
-              <RouterLink v-if="route.path.includes('ihr')" :to="Tr.i18nRoute({ name: 'networks', params: {id: `AS${asNumber}`}})" class="q-mt-lg overview-footer">
-                View more details on IYP for AS{{ asNumber }}
-              </RouterLink>
-              <RouterLink v-else :to="Tr.i18nRoute({ name: 'networks-ihr', params: {id: `AS${asNumber}`}})" class="q-mt-lg overview-footer">
-                View report for AS{{ asNumber }}
-              </RouterLink>
             </div>
           </div>
         </div>

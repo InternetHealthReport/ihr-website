@@ -90,7 +90,7 @@ const IypApi = {
         }
       })
 
-      //tx.close()
+      tx.close()
 
       return response
     }

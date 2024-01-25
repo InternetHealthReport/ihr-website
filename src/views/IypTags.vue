@@ -144,7 +144,7 @@ const treemapClicked = (event) => {
     } else if (typeof network === 'object') {
       const asId = `AS${network.low}`
       router.push(Tr.i18nRoute({
-        name: 'networks-ihr',
+        name: 'networks',
         params: { id: asId },
       }))
     }

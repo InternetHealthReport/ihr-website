@@ -12,7 +12,7 @@ import IhrNetworks from '../views/IhrNetworks.vue'
 import IhrCountries from '../views/IhrCountries.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import GlobalReport from '../views/GlobalReport.vue'
-import IypNetworks from '../views/IypNetworks.vue'
+import Networks from '../views/Networks.vue'
 import IypTags from '../views/IypTags.vue'
 import IypDomainName from '../views/IypDomainName.vue'
 import IypCountries from '../views/IypCountries.vue'
@@ -63,7 +63,7 @@ const router = createRouter({
         {
           path: 'networks/:id?/:length?',
           name: 'networks',
-          component: IypNetworks
+          component: Networks
         },
         {
           path: 'tags/:tag',
