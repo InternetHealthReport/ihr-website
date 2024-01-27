@@ -11,7 +11,7 @@ const props = defineProps({
       hovertemplate: '',
       locations: [],
       text: [],
-      z: []
+      z: [],
     }
   },
   loading: {
@@ -39,6 +39,8 @@ const traces = ref([
     type: 'choropleth',
     locations: [],
     z: [],
+    zmin: 0,
+    zmax: 0,
     text: [],
     name: '',
     customdata: [],
@@ -60,6 +62,7 @@ const traces = ref([
     }
   },
 ])
+const zmax = ref(null)
 
 const clearDataViz = () => {
   traces.value[0].locations = []
@@ -72,6 +75,18 @@ const setTraces = () => {
   traces.value[0].locations = props.data.locations
   traces.value[0].text = props.data.text
   traces.value[0].z = props.data.z
+  console.log(traces.value[0].customdata)
+  if(traces.value[0].customdata){
+    const max = Math.max(...traces.value[0].customdata.map(o => o.hegemony_count), 0)
+    if(zmax.value == null){
+      zmax.value = max
+      traces.value[0].zmax = max
+    }
+    else {
+      traces.value[0].zmax = zmax.value
+    }
+  }
+  console.log(zmax.value)
 }
 
 watch(() => props.data, () => {
