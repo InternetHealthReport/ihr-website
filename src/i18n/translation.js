@@ -34,10 +34,10 @@ const Trans = {
         }
         const userPreferredLocale = Trans.getUserLocale()
         if (Trans.isLocaleSupported(userPreferredLocale.locale)) {
-            return userPersistedLocale.locale
+            return userPreferredLocale.locale
         }
         if (Trans.isLocaleSupported(userPreferredLocale.localeNoRegion)) {
-            return userPersistedLocale.localeNoRegion
+            return userPreferredLocale.localeNoRegion
         }
         return Trans.defaultLocale
     },
