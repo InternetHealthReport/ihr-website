@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/require-valid-default-prop -->
 <script setup>
 import { COMMON_FEATURE } from '@/plugins/layouts/layoutsChart.js'
 import ReactiveChart from '../charts/ReactiveChart.vue'
@@ -95,7 +96,7 @@ const plotlyClickedDataHandler = (val) => {
 }
 
 onMounted(() => {
-  setTraces()
+  // setTraces()
 })
 </script>
 

@@ -3,28 +3,46 @@ import Plotly from 'plotly.js-dist'
 import { ref, onMounted, watch } from 'vue'
 import { uid } from 'quasar'
 
+const calculateNewColorScale = (clickedCountryIndex) => {
+  const colorScaleLength = 5 
+
+  
+  const newColorScale = Array.from(
+    { length: colorScaleLength },
+    (_, index) => index + clickedCountryIndex
+  )
+
+  return newColorScale
+}
 const props = defineProps({
   layout: {
     type: Object,
-    required: true,
+    required: true
   },
+  data: {
+    type: Object,
+    default: () => ({
+      locations: []
+    })
+  },
+
   traces: {
     type: Array,
-    required: true,
+    required: true
   },
   chartTitle: {
     type: String,
     required: false,
-    default: null,
+    default: null
   },
   noData: {
     required: false,
-    default: false,
+    default: false
   },
   yMax: {
     type: Number,
     required: false,
-    default: 0,
+    default: 0
   },
   treemapNodeClicked: null
 })
@@ -37,7 +55,7 @@ const emits = defineEmits({
       return false
     }
   },
-  'loaded': () => {
+  loaded: () => {
     return false
   },
   'plotly-legend-click': (plotlyClickedLegend) => {
@@ -71,8 +89,8 @@ layoutLocal.value['images'] = [
     xref: 'paper',
     yanchor: 'bottom',
     yref: 'paper',
-    opacity: 0.2,
-  },
+    opacity: 0.2
+  }
 ]
 
 const react = () => {
@@ -93,18 +111,40 @@ const relayout = () => {
 
 const init = () => {
   const graphDiv = myId.value
-  Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
-    responsive: true,
-    displayModeBar: 'hover',
-  })
+  // const modifiedTraces = [...props.traces]
+  // modifiedTraces[0].locations = layoutLocal.value.geo.locations;
+  // modifiedTraces[0].z = layoutLocal.value.geo.z
+  // Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
+  //   responsive: true,
+  //   displayModeBar: 'hover'
+  // })
 
+  // if (document.documentElement.clientWidth < 576) {
+  //   Plotly.relayout(graphDiv, { showlegend: false })
+  // }
+  if (props.data && props.data.locations && props.data.z) {
+    // Make a copy of traces to avoid modifying the original props
+    const modifiedTraces = JSON.parse(JSON.stringify(props.traces))
+
+    // Assign locations and z from props.data
+    modifiedTraces[0].locations = props.data.locations
+    modifiedTraces[0].z = props.data.z
+
+    // Create a new plot
+    Plotly.newPlot(graphDiv, modifiedTraces, layoutLocal.value, {
+      responsive: true,
+      displayModeBar: 'hover'
+    })
+  } else {
+    // Handle the case where props.data is undefined or has missing properties
+    console.error("Error: 'props.data' is undefined or has missing properties.")
+  }
   if (document.documentElement.clientWidth < 576) {
     Plotly.relayout(graphDiv, { showlegend: false })
   }
-
   graphDiv.on('plotly_relayout', (event) => {
-    let startDateTime = event['xaxis.range[0]'];
-    let endDateTime = event['xaxis.range[1]'];
+    let startDateTime = event['xaxis.range[0]']
+    let endDateTime = event['xaxis.range[1]']
     if (startDateTime && endDateTime) {
       startDateTime += 'Z'
       endDateTime += 'Z'
@@ -116,6 +156,9 @@ const init = () => {
 
   graphDiv.on('plotly_click', (eventData) => {
     if (eventData && eventData.points) {
+      const clickedCountryIndex = eventData.points[0].location
+      const newColorScale = calculateNewColorScale(clickedCountryIndex)
+      layoutLocal.value.geo.z[0] = newColorScale
       emits('plotly-click', eventData)
     }
   })
@@ -123,12 +166,12 @@ const init = () => {
   graphDiv.on('plotly_legendclick', (eventData) => {
     if (eventData) {
       const legend = eventData.node.textContent
-      const opacityStyle = eventData.node.getAttribute('style');
-      const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/);
+      const opacityStyle = eventData.node.getAttribute('style')
+      const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/)
       if (opacityMatch && legend !== 'All') {
-        const opacity = Number(opacityMatch[1]);
+        const opacity = Number(opacityMatch[1])
         const result = { legend, opacity }
-        emits('plotly-legend-click', result);
+        emits('plotly-legend-click', result)
       }
     }
   })
@@ -140,16 +183,23 @@ onMounted(() => {
   init()
 })
 
-watch(() => props.traces, () => {
-  react()
-}, { deep: true })
+watch(
+  () => props.traces,
+  () => {
+    react()
+  },
+  { deep: true }
+)
 // watch(() => props.layout, () => {
 //   react()
 // })
-watch(() => props.yMax, (newValue) => {
-  const graphDiv = myId.value
-  Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-})
+watch(
+  () => props.yMax,
+  (newValue) => {
+    const graphDiv = myId.value
+    Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+  }
+)
 </script>
 
 <template>
@@ -157,7 +207,7 @@ watch(() => props.yMax, (newValue) => {
     <h1 v-if="chartTitle">{{ chartTitle }}</h1>
     <div ref="myId"></div>
     <div v-if="noData" class="IHR_no-data">
-      <div class="bg-white" style="text-align: center;">{{ noData }}</div>
+      <div class="bg-white" style="text-align: center">{{ noData }}</div>
     </div>
   </div>
 </template>
