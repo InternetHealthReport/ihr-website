@@ -216,13 +216,14 @@ const routeToAS = (asn) => {
   let oldAsn = paramExists('id')
   if (oldAsn) {
     oldAsn = Number(oldAsn.replace('AS', ''))
-    if (oldAsn != asn) {
-      router.push(Tr.i18nRoute({
-        name: 'networks',
-        params: { id: `AS${asn}` },
-      }))
+    if (oldAsn == asn) {
+      return
     }
   }
+  router.push(Tr.i18nRoute({
+    name: 'networks',
+    params: { id: `AS${asn}` },
+  }))
 }
 
 const routeToIXP = (ixp) => {

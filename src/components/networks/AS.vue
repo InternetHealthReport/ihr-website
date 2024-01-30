@@ -72,14 +72,14 @@ const setPeeringdbId = (id) => {
 }
 
 const pushRoute = () => {
-  router.push({
+  router.push(Tr.i18nRoute({
     replace: true,
     query: Object.assign({}, route.query, {
       af: family.value,
       last: interval.value.dayDiff(),
       date: utcString(interval.value.end).split('T')[0]
     })
-  })
+  }))
 }
 
 const family = computed(() => {
@@ -108,12 +108,15 @@ watch(interval, () => {
   pushRoute()
 })
 watch(menu, () => {
-  router.push({
+  if ('display' in route.query) {
+    delete route.query.display
+  }
+  router.push(Tr.i18nRoute({
     replace: true,
     query: Object.assign({}, route.query, {
       active: menu.value
     })
-  })
+  }))
 })
 onMounted(() => {
   if (asNumber.value) {
@@ -131,10 +134,15 @@ onMounted(() => {
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <h1 class="text-center">{{ pageTitle }}</h1>
     <h3 class="text-center">
-      {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-      <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+      <div v-if="['monitoring', 'custom'].includes(menu)">
+        {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
+        <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+      </div>
+      <div v-else>
+        Weekly report ending on {{ new Date().toLocaleDateString('en-us', {month: 'long', day: 'numeric', year: 'numeric'}) }}
+      </div>
     </h3>
-    <QCard>
+    <QCard flat>
       <QTabs
         v-model="menu"
         dense
@@ -150,7 +158,7 @@ onMounted(() => {
         <QTab name="peering">Peering</QTab>
         <QTab name="registration">Registration</QTab>
         <QTab name="rankings">Rankings</QTab>
-        <QTab name="all">All</QTab>
+        <QTab name="custom">Custom</QTab>
       </QTabs>
       <QSeparator />
       <QTabPanels
@@ -201,7 +209,7 @@ onMounted(() => {
             :page-title="pageTitle"
           />
         </QTabPanel>
-        <QTabPanel name="all">
+        <QTabPanel name="custom">
           <ASAll
             :start-time="startTime"
             :end-time="endTime"
