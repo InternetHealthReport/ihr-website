@@ -10,7 +10,7 @@ import IodaChart from '@/components/charts/IodaChart.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import ASRipeAtlas from '@/components/iyp/as/ASRipeAtlas.vue'
 
-const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'pageTitle'])
+const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'pageTitle', 'interval'])
 
 const route = useRoute()
 
@@ -21,6 +21,7 @@ const fetch = ref(true)
   <GenericCardController
     :title="$t('charts.asInterdependencies.title')"
     sub-title="BGP Data"
+    :report-day="interval.dayDiff()"
   >
     <AsInterdependenciesChart
       :start-time="startTime"
@@ -34,6 +35,7 @@ const fetch = ref(true)
   <GenericCardController
     :title="$t('charts.iodaChart.title')"
     sub-title="AS Internet Overview"
+    :report-day="interval.dayDiff()"
     class="card"
   >
     <IodaChart
@@ -47,6 +49,7 @@ const fetch = ref(true)
   <GenericCardController
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
+    :report-day="interval.dayDiff()"
     class="card"
   >
     <PrefixHegemonyChart
@@ -60,6 +63,7 @@ const fetch = ref(true)
   <GenericCardController
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
+    :report-day="interval.dayDiff()"
     class="card"
   >
     <NetworkDelayChart
@@ -86,6 +90,7 @@ const fetch = ref(true)
   <GenericCardController
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
+    :report-day="interval.dayDiff()"
     class="card"
   >
     <DelayAndForwardingChart
@@ -99,6 +104,7 @@ const fetch = ref(true)
   <GenericCardController
     :title="$t('charts.disconnections.title')"
     sub-title="RIPE Atlas Log"
+    :report-day="interval.dayDiff()"
     class="card"
   >
     <DiscoChart

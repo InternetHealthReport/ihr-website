@@ -24,7 +24,7 @@ import ASCoLocatedASes from '@/components/iyp/as/ASCoLocatedASes.vue'
 import ASSiblingASes from '@/components/iyp/as/ASSiblingASes.vue'
 import ASRankings from '@/components/iyp/as/ASRankings.vue'
 
-const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'peeringdbId', 'pageTitle'])
+const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'peeringdbId', 'pageTitle', 'interval'])
 
 const route = useRoute()
 const router = useRouter()
@@ -108,6 +108,7 @@ onMounted(() => {
   <GenericCardController
     :title="$t('charts.asInterdependencies.title')"
     sub-title="BGP Data"
+    :report-day="interval.dayDiff()"
     class="card"
     v-if="selects[1].value"
   >
@@ -123,6 +124,7 @@ onMounted(() => {
   <GenericCardController
     :title="$t('charts.iodaChart.title')"
     sub-title="AS Internet Overview"
+    :report-day="interval.dayDiff()"
     class="card"
     v-if="selects[2].value"
   >
@@ -137,6 +139,7 @@ onMounted(() => {
   <GenericCardController
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
+    :report-day="interval.dayDiff()"
     class="card"
     v-if="selects[3].value"
   >
@@ -151,6 +154,7 @@ onMounted(() => {
   <GenericCardController
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
+    :report-day="interval.dayDiff()"
     class="card"
     v-if="selects[4].value"
   >
@@ -179,6 +183,7 @@ onMounted(() => {
   <GenericCardController
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
+    :report-day="interval.dayDiff()"
     class="card"
     v-if="selects[6].value"
   >
@@ -193,6 +198,7 @@ onMounted(() => {
   <GenericCardController
     :title="$t('charts.disconnections.title')"
     sub-title="RIPE Atlas Log"
+    :report-day="interval.dayDiff()"
     class="card"
     v-if="selects[7].value"
   >

@@ -177,6 +177,7 @@ onMounted(() => {
             :as-number="asNumber"
             :family="family"
             :page-title="pageTitle"
+            :interval="interval"
           />
         </QTabPanel>
         <QTabPanel name="routing">
@@ -217,6 +218,7 @@ onMounted(() => {
             :family="family"
             :page-title="pageTitle"
             :peeringdbId="setPeeringdbId"
+            :interval="interval"
           />
         </QTabPanel>
       </QTabPanels>

@@ -1,5 +1,5 @@
 <script setup>
-import { QCard, QCardSection, QBar, QBtn, QSpace } from 'quasar'
+import { QCard, QCardSection, QBar, QBtn, QSpace, QTooltip } from 'quasar'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
@@ -10,7 +10,20 @@ const props = defineProps({
   },
   subTitle: {
     type: String
+  },
+  reportDay: {
+    type: Number,
+    default: null
   }
+})
+
+const showReportDayRange = ref(false)
+
+const reportDayText = computed(() => {
+  if (props.reportDay) {
+    return `${props.reportDay}-day report`
+  }
+  return 'Weekly report'
 })
 </script>
 
@@ -22,6 +35,11 @@ const props = defineProps({
         <div class="text-subtitle2">{{ subTitle }}</div>
       </div>
       <QSpace />
+      <QBtn @click="showReportDayRange = !showReportDayRange" dense flat icon="fa-solid fa-calendar">
+        <QTooltip v-model="showReportDayRange" no-parent-event>
+          {{ reportDayText }}
+        </QTooltip>
+      </QBtn>
       <QBtn dense flat icon="fa-solid fa-circle-info"/>
     </QBar>
     <QCardSection>
