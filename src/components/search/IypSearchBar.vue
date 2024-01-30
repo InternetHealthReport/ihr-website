@@ -1,7 +1,7 @@
 <script setup>
 import { QSelect, QIcon, QSpinner, QItem, QItemSection } from 'quasar'
 import { ref, inject, computed, watch, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Tr from '@/i18n/translation'
 import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
@@ -51,6 +51,7 @@ const props = defineProps({
   },
 })
 
+const route = useRoute()
 const router = useRouter()
 
 const options = ref([{ name: 'Suggestions' }, { label: 2497, value: 2497, name: 'IIJ' }])
@@ -203,14 +204,25 @@ const filter = (value, update, abort) => {
   }
 }
 
+const paramExists = (param) => {
+  const params = route.params
+  if (param in params) {
+    return params[param]
+  }
+  return null
+}
+
 const routeToAS = (asn) => {
-  // route to old report page
-  getIdForIhrData(asn, 'AS', 'networks')
-  // route to new iyp page
-  // router.push(Tr.i18nRoute({
-  //   name: 'networks',
-  //   params: { id: `AS${asn}` },
-  // }))
+  let oldAsn = paramExists('id')
+  if (oldAsn) {
+    oldAsn = Number(oldAsn.replace('AS', ''))
+    if (oldAsn != asn) {
+      router.push(Tr.i18nRoute({
+        name: 'networks',
+        params: { id: `AS${asn}` },
+      }))
+    }
+  }
 }
 
 const routeToIXP = (ixp) => {
