@@ -1,0 +1,80 @@
+<script setup>
+import { useRoute, useRouter } from 'vue-router'
+import { ref, inject, watch, onMounted } from 'vue'
+import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
+import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
+
+const iyp_api = inject('iyp_api')
+
+const props = defineProps(['countryCode', 'pageTitle'])
+
+const route = useRoute()
+const router = useRouter()
+
+const cc = ref(props.countryCode)
+const ixps = ref({
+  data: [],
+  show: false,
+  loading: true,
+  query: `MATCH (c:Country {country_code: $cc})<-[:COUNTRY {reference_name: 'peeringdb.ix'}]-(i:IXP)
+    MATCH (i)-[:EXTERNAL_ID]-(p:PeeringdbIXID)
+    OPTIONAL MATCH (i)-[:MANAGED_BY]-(o:Organization)
+    OPTIONAL MATCH (i)-[:MEMBER_OF]-(a:AS)
+    RETURN c.country_code AS cc, i.name AS ixp, p.id AS id, o.name AS org, COUNT(DISTINCT a) AS nb_members`,
+  columns: [
+    { name: 'IXP', label: 'PeeringDB ID', align: 'left', field: row => row.get('id'), format: val => `IXP${val}`, sortable: true, description: 'Identifier used in the PeeringDB database and website.' },
+    { name: 'Name', label: 'Name', align: 'left', field: row => row.get('ixp'), format: val => `${val}`, sortable: true, description: 'Name of the IXP as given by PeeringDB.'  },
+    { name: 'Number of members', label: 'Number of members', align: 'left', field: row => row.get('nb_members'), format: val => `${val}`, sortable: true, description: 'Number of members according to PeeringDB.' },
+  ],
+  pagination: {
+    sortBy: 'Number of members', //string column name
+    descending: true //boolean
+  }
+})
+
+const load = () => {
+  ixps.value.loading = true
+  // Run the cypher query
+  let query_params = { cc: cc.value }
+  iyp_api.run(ixps.value.query, query_params).then(
+    results => {
+      ixps.value.data = results.records
+      ixps.value.loading = false
+    }
+  )
+}
+
+watch(() => route.params.cc, () => {
+  const newCc = route.params.cc
+  if (newCc != cc.value) {
+    cc.value = newCc
+    load()
+  }
+})
+
+onMounted(() => {
+  load()
+})
+</script>
+
+<template>
+  <IypGenericTable
+    :data="ixps.data"
+    :columns="ixps.columns"
+    :loading-status="ixps.loading"
+    :cypher-query="ixps.query.replace(/\$(.*?)}/, `'${cc}'`)"
+    :pagination="ixps.pagination"
+    :slot-length=1
+  >
+    <div class="col-6">
+      <IypGenericTreemapChart
+        v-if="ixps.data.length > 0"
+        :chart-data="ixps.data"
+        :chart-layout="{ title: 'IXPs in '+pageTitle+' weighted by their number of members' }"
+        :config="{ keys: ['org', 'ixp'], keyValue: 'nb_members', root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} members<extra></extra>' }"
+        @treemap-clicked="treemapClicked($event)"
+      />
+    </div>
+  </IypGenericTable>
+</template>

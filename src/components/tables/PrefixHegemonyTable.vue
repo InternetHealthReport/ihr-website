@@ -230,7 +230,7 @@ const simpleDependenciesFormat = (val) => {
 
           <template v-slot:body-cell-country="props">
               <QTd :props="props">
-                  <RouterLink class="IHR_delikify" :to="Tr.i18nRoute({ name: 'countries-ihr', params: { cc: props.row.country } })">
+                  <RouterLink class="IHR_delikify" :to="Tr.i18nRoute({ name: 'countries', params: { cc: props.row.country } })">
                       {{ props.row.country }}
                   </RouterLink>
               </QTd>

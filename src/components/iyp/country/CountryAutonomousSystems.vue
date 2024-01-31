@@ -1,0 +1,70 @@
+<script setup>
+import { useRoute, useRouter } from 'vue-router'
+import { ref, inject, watch, onMounted } from 'vue'
+import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
+import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
+
+const iyp_api = inject('iyp_api')
+
+const props = defineProps(['countryCode', 'pageTitle'])
+
+const route = useRoute()
+const router = useRouter()
+
+const cc = ref(props.countryCode)
+const ases = ref({
+  data: [],
+  show: false,
+  loading: true,
+  query: `MATCH (c:Country {country_code: $cc})<-[:COUNTRY {reference_name: 'nro.delegated_stats'}]-(a:AS)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+    OPTIONAL MATCH (a)-[r:RANK {reference_org:'CAIDA'}]->(:Ranking {name:'CAIDA ASRank'})
+    RETURN c.country_code AS cc, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, r['asnDegree:total'] AS degree`,
+  columns: [
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => Number(row.get('asn')), format: val => `AS${val}`, sortable: true },
+    { name: 'Name', label: 'Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+    { name: 'Connected networks', label: 'Connected networks', align: 'left', field: row => Number(row.get('degree')), format: val => `${val}`, sortable: true },
+  ],
+  pagination: {
+    sortBy: 'Connected networks', //string column name
+    descending: true //boolean
+  }
+})
+
+const load = () => {
+  ases.value.loading = true
+  // Run the cypher query
+  let query_params = { cc: cc.value }
+  iyp_api.run(ases.value.query, query_params).then(
+    results => {
+      ases.value.data = results.records
+      ases.value.loading = false
+    }
+  )
+}
+
+watch(() => route.params.cc, () => {
+  const newCc = route.params.cc
+  if (newCc != cc.value) {
+    cc.value = newCc
+    load()
+  }
+})
+
+onMounted(() => {
+  load()
+})
+</script>
+
+<template>
+  <IypGenericTable
+    :data="ases.data"
+    :columns="ases.columns"
+    :loading-status="ases.loading"
+    :cypher-query="ases.query.replace(/\$(.*?)}/, `'${cc}'`)"
+    :pagination="ases.pagination"
+  />
+</template>

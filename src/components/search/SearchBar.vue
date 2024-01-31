@@ -245,13 +245,16 @@ const routeToPrefix = (name) => {
 }
 
 const routeToCountry = (cc) => {
-  // route to old report page
-  getIdForIhrData(cc, null, 'countries')
-  // route to new iyp page
-  // router.push(Tr.i18nRoute({
-  //   name: 'countries',
-  //   params: { cc: cc },
-  // }))
+  const oldCc = paramExists('cc')
+  if (oldCc) {
+    if (oldCc == cc) {
+      return
+    }
+  }
+  router.push(Tr.i18nRoute({
+    name: 'countries',
+    params: { cc: cc },
+  }))
 }
 
 const placeholder = computed(() => {
@@ -260,56 +263,6 @@ const placeholder = computed(() => {
   }
   return props.labelTxt
 })
-
-const getIdForIhrData = (id, type, route) => {
-  if (route === 'networks') {
-    const query = new NetworkQuery().orderedByNumber().mixedContentSearch(id)
-    ihr_api.network(
-      query,
-      result => {
-        result.results.some(element => {
-          if (element.name === id || element.number === id) {
-            router.push(Tr.i18nRoute({
-              name: 'networks',
-              params: { id: `${type}${Math.abs(element.number)}` },
-            }))
-          }
-        })
-      },
-      error => {
-        console.error(error)
-      }
-    )
-    // fallback
-    router.push(Tr.i18nRoute({
-      name: 'networks',
-      params: { id: `${type}${id}` },
-    }))
-  } else if (route === 'countries') {
-    const query = new CountryQuery().orderedByCode().containsName(getCountryName(id))
-    ihr_api.country(
-      query,
-      result => {
-        result.results.some(element => {
-          if (element.code === id) {
-            router.push(Tr.i18nRoute({
-              name: 'countries-ihr',
-              params: { cc: id },
-            }))
-          }
-        })
-      },
-      error => {
-        console.error(error)
-      }
-    )
-    // fallback
-    router.push(Tr.i18nRoute({
-      name: 'countries',
-      params: { cc: id },
-    }))
-  }
-}
 </script>
 
 <template>

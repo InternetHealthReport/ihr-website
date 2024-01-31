@@ -2,7 +2,7 @@
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, watch, onMounted } from 'vue'
-import IypSearchBar from '@/components/search/IypSearchBar.vue'
+import SearchBar from '@/components/search/SearchBar.vue'
 import AS from '@/components/networks/AS.vue'
 import IXP from '@/components/iyp/IXP.vue'
 import Prefix from '@/components/iyp/Prefix.vue'
@@ -63,7 +63,7 @@ onMounted(() => {
         <h1 class="text-center q-pa-xl">Network Report</h1>
         <div class="row justify-center">
           <div class="col-8">
-            <IypSearchBar
+            <SearchBar
               bg="white"
               label="grey-8"
               input="black"
@@ -89,7 +89,7 @@ onMounted(() => {
                 <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks-ihr', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
               </li>
             </ul>
           </div>

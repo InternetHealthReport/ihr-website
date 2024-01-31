@@ -2,8 +2,8 @@
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, watch, onMounted } from 'vue'
-import IypSearchBar from '@/components/search/IypSearchBar.vue'
-import Country from '@/components/iyp/Country.vue'
+import SearchBar from '@/components/search/SearchBar.vue'
+import Country from '@/components/networks/Country.vue'
 import { isoCountries } from '@/plugins/countryName'
 
 const route = useRoute()
@@ -35,7 +35,7 @@ onMounted(() => {
         <h1 class="text-center q-pa-xl">Country Report</h1>
         <div class="row justify-center">
           <div class="col-6">
-            <IypSearchBar
+            <SearchBar
               bg="white"
               label="grey-8"
               input="black"
@@ -57,26 +57,26 @@ onMounted(() => {
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries-ihr', params: { cc: 'JP' } })" class="IHR_delikify">Japan</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'JP' } })" class="IHR_delikify">Japan</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries-ihr', params: { cc: 'FR' } })" class="IHR_delikify">France</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'FR' } })" class="IHR_delikify">France</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries-ihr', params: { cc: 'US' } })" class="IHR_delikify">United States</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'US' } })" class="IHR_delikify">United States</RouterLink>
               </li>
             </ul>
           </div>
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries-ihr', params: { cc: 'BR' } })" class="IHR_delikify">Brazil</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'BR' } })" class="IHR_delikify">Brazil</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries-ihr', params: { cc: 'DE' } })" class="IHR_delikify">Germany</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'DE' } })" class="IHR_delikify">Germany</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries-ihr', params: { cc: 'CN' } })" class="IHR_delikify">China</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'CN' } })" class="IHR_delikify">China</RouterLink>
               </li>
             </ul>
           </div>
