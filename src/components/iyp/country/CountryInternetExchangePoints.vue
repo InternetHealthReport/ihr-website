@@ -12,7 +12,6 @@ const props = defineProps(['countryCode', 'pageTitle'])
 const route = useRoute()
 const router = useRouter()
 
-const cc = ref(props.countryCode)
 const ixps = ref({
   data: [],
   show: false,
@@ -36,7 +35,7 @@ const ixps = ref({
 const load = () => {
   ixps.value.loading = true
   // Run the cypher query
-  let query_params = { cc: cc.value }
+  let query_params = { cc: props.countryCode }
   iyp_api.run(ixps.value.query, query_params).then(
     results => {
       ixps.value.data = results.records
@@ -45,12 +44,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.cc, () => {
-  const newCc = route.params.cc
-  if (newCc != cc.value) {
-    cc.value = newCc
-    load()
-  }
+watch(() => props.countryCode, () => {
+  load()
 })
 
 onMounted(() => {
@@ -63,7 +58,7 @@ onMounted(() => {
     :data="ixps.data"
     :columns="ixps.columns"
     :loading-status="ixps.loading"
-    :cypher-query="ixps.query.replace(/\$(.*?)}/, `'${cc}'`)"
+    :cypher-query="ixps.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
     :pagination="ixps.pagination"
     :slot-length=1
   >
@@ -73,7 +68,7 @@ onMounted(() => {
         :chart-data="ixps.data"
         :chart-layout="{ title: 'IXPs in '+pageTitle+' weighted by their number of members' }"
         :config="{ keys: ['org', 'ixp'], keyValue: 'nb_members', root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} members<extra></extra>' }"
-        @treemap-clicked="treemapClicked($event)"
+        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
       />
     </div>
   </IypGenericTable>

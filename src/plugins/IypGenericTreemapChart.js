@@ -44,11 +44,13 @@ export default function treemapClicked(event) {
         }))
       }
     } else if (typeof network === 'object') {
-      const asId = `AS${network.low}`
-      event.router.push(Tr.i18nRoute({
-        name: 'networks',
-        params: { id: asId },
-      }))
+      if ('low' in network) {
+        const asId = `AS${network.low}`
+        event.router.push(Tr.i18nRoute({
+          name: 'networks',
+          params: { id: asId },
+        }))
+      }
     }
   }
 }

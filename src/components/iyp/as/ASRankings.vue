@@ -10,7 +10,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 
 const route = useRoute()
 
-const asn = ref(props.asNumber)
 const rankings = ref({
   data: [],
   show: false,
@@ -25,7 +24,7 @@ const rankings = ref({
 const load = () => {
   rankings.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(rankings.value.query, query_params).then(
     results => {
       rankings.value.data = results.records
@@ -34,12 +33,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -52,7 +47,7 @@ onMounted(() => {
     :data="rankings.data"
     :columns="rankings.columns"
     :loading-status="rankings.loading"
-    :cypher-query="rankings.query.replace(/\$(.*?)}/, `${asn}`)"
+    :cypher-query="rankings.query.replace(/\$(.*?)}/, `${asNumber}`)"
     :slot-length="1"
   >
     <IypGenericIndicatorsChart

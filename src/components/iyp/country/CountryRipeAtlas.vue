@@ -34,7 +34,7 @@ const atlas = ref({
 const load = () => {
   atlas.value.loading = true
   // Run the cypher query
-  let query_params = { cc: cc.value }
+  let query_params = { cc: props.countryCode }
   iyp_api.run(atlas.value.query, query_params).then(
     results => {
       atlas.value.data = results.records
@@ -43,12 +43,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.cc, () => {
-  const newCc = route.params.cc
-  if (newCc != cc.value) {
-    cc.value = newCc
-    load()
-  }
+watch(() => props.countryCode, () => {
+  load()
 })
 
 onMounted(() => {
@@ -61,7 +57,7 @@ onMounted(() => {
     :data="atlas.data"
     :columns="atlas.columns"
     :loading-status="atlas.loading"
-    :cypher-query="atlas.query.replace(/\$(.*?)}/, `'${cc}'`)"
+    :cypher-query="atlas.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
     :slot-length="1"
   >
     <IypGenericTreemapChart
@@ -69,7 +65,7 @@ onMounted(() => {
       :chart-data="atlas.data"
       :chart-layout="{ title: 'RIPE Atlas probes per AS' }"
       :config="{ keys: ['af', 'asn', 'status', 'id'],  root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} probes<extra></extra>' }"
-      @treemap-clicked="treemapClicked($event)"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
     />
   </IypGenericTable>
 </template>

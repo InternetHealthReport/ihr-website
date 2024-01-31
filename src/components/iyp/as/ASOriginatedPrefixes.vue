@@ -14,7 +14,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 const route = useRoute()
 const router = useRouter()
 
-const asn = ref(props.asNumber)
 const prefixes = ref({
   data: [],
   show: false,
@@ -40,7 +39,7 @@ const prefixes = ref({
 const load = () => {
   prefixes.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(prefixes.value.query, query_params).then(
     results => {
       prefixes.value.data = results.records
@@ -49,12 +48,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -67,7 +62,7 @@ onMounted(() => {
     :data="prefixes.data"
     :columns="prefixes.columns"
     :loading-status="prefixes.loading"
-    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `${asn}`)"
+    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `${asNumber}`)"
     :slot-length="1"
   >
     <div class="row justify-evenly">

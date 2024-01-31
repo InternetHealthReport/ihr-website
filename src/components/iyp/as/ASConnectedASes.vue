@@ -12,7 +12,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 const route = useRoute()
 const router = useRouter()
 
-const asn = ref(props.asNumber)
 const peers = ref({
   data: [],
   show: false,
@@ -31,7 +30,7 @@ const peers = ref({
 const load = () => {
   peers.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(peers.value.query, query_params).then(
     results => {
       peers.value.data = results.records
@@ -40,12 +39,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -58,7 +53,7 @@ onMounted(() => {
     :data="peers.data"
     :columns="peers.columns"
     :loading-status="peers.loading"
-    :cypher-query="peers.query.replace(/\$(.*?)}/, `${asn}`)"
+    :cypher-query="peers.query.replace(/\$(.*?)}/, `${asNumber}`)"
     :slot-length="1"
   >
     <IypGenericTreemapChart

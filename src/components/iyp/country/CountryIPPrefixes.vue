@@ -42,7 +42,7 @@ const prefixes = ref({
 const load = () => {
   prefixes.value.loading = true
   // Run the cypher query
-  let query_params = { cc: cc.value }
+  let query_params = { cc: props.countryCode }
   iyp_api.run(prefixes.value.query, query_params).then(
     results => {
       prefixes.value.data = results.records
@@ -73,12 +73,8 @@ const aggregatePrefixes = (prefixData) => {
   return Object.values(asCount)
 }
 
-watch(() => route.params.cc, () => {
-  const newCc = route.params.cc
-  if (newCc != cc.value) {
-    cc.value = newCc
-    load()
-  }
+watch(() => props.countryCode, () => {
+  load()
 })
 
 onMounted(() => {
@@ -91,7 +87,7 @@ onMounted(() => {
     :data="prefixes.data"
     :columns="prefixes.columns"
     :loading-status="prefixes.loading"
-    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `'${cc}'`)"
+    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
     :slot-length="2"
   >
     <div class="row justify-evenly">
@@ -109,7 +105,7 @@ onMounted(() => {
           :chart-data="aggPrefixes"
           :chart-layout="{ title: 'Number of prefixes per Origin AS' }"
           :config="{ keys: ['asn'], keyValue: 'nbPrefixes', root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} prefixes<extra></extra>' }"
-          @treemap-clicked="treemapClicked($event)"
+          @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
         />
       </div>
     </div>

@@ -12,7 +12,6 @@ const props = defineProps(['countryCode', 'pageTitle'])
 const route = useRoute()
 const router = useRouter()
 
-const cc = ref(props.countryCode)
 const rankings = ref({
   data: [],
   show: false,
@@ -37,7 +36,7 @@ const rankings = ref({
 const load = () => {
   rankings.value.loading = true
   // Run the cypher query
-  let query_params = { cc: cc.value }
+  let query_params = { cc: props.countryCode }
   iyp_api.run(rankings.value.query, query_params).then(
     results => {
       rankings.value.data = results.records
@@ -46,12 +45,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.cc, () => {
-  const newCc = route.params.cc
-  if (newCc != cc.value) {
-    cc.value = newCc
-    load()
-  }
+watch(() => props.countryCode, () => {
+  load()
 })
 
 onMounted(() => {
@@ -64,7 +59,7 @@ onMounted(() => {
     :data="rankings.data"
     :columns="rankings.columns"
     :loading-status="rankings.loading"
-    :cypher-query="rankings.query.replace(/\$(.*?)}/, `'${cc}'`)"
+    :cypher-query="rankings.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
     :pagination="rankings.pagination"
     :slot-length=1
   >
@@ -73,7 +68,7 @@ onMounted(() => {
       v-if="rankings.data.length > 0"
       :chart-data="rankings.data"
       :config="{ keys: ['asn', 'rank_name'], keyValue: 'inv_rank', root: pageTitle, hovertemplate: '<b>%{customdata.asn} %{customdata.asname}</b> <br><br>%{customdata.rank_name}: #%{customdata.rank}<extra></extra>' }"
-      @treemap-clicked="treemapClicked($event)"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
     />
   </IypGenericTable>
 </template>

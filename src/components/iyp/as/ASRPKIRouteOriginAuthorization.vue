@@ -9,7 +9,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 
 const route = useRoute()
 
-const asn = ref(props.asNumber)
 const roas = ref({
   data: [],
   show: false,
@@ -30,7 +29,7 @@ const roas = ref({
 const load = () => {
   roas.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(roas.value.query, query_params).then(
     results => {
       roas.value.data = results.records
@@ -39,12 +38,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -57,7 +52,7 @@ onMounted(() => {
     :data="roas.data"
     :columns="roas.columns"
     :loading-status="roas.loading"
-    :cypher-query="roas.query.replace(/\$(.*?)}/, `${asn}`)"
+    :cypher-query="roas.query.replace(/\$(.*?)}/, `${asNumber}`)"
     :slot-length="0"
   >
     <!--  <IypGenericBarChart v-if="roas.length > 0" :chart-data="roas"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"},

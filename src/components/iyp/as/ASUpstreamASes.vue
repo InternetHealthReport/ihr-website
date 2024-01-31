@@ -10,7 +10,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 
 const route = useRoute()
 
-const asn = ref(props.asNumber)
 const upstreams = ref({
   data: [],
   show: false,
@@ -34,7 +33,7 @@ const upstreams = ref({
 const load = () => {
   upstreams.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(upstreams.value.query, query_params).then(
     results => {
       upstreams.value.data = results.records
@@ -43,12 +42,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -61,7 +56,7 @@ onMounted(() => {
     :data="upstreams.data"
     :columns="upstreams.columns"
     :loading-status="upstreams.loading"
-    :cypher-query="upstreams.query.replace(/\$(.*?)}/, `'${asn}'`)"
+    :cypher-query="upstreams.query.replace(/\$(.*?)}/, `'${asNumber}'`)"
     :slot-length="1"
   >
     <IypGenericBarChart

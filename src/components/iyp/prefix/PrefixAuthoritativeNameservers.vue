@@ -1,0 +1,66 @@
+<script setup>
+import { useRoute, useRouter } from 'vue-router'
+import { ref, inject, watch, onMounted } from 'vue'
+import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
+import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
+
+const iyp_api = inject('iyp_api')
+
+const props = defineProps(['pageTitle', 'getPrefix'])
+
+const route = useRoute()
+const router = useRouter()
+
+const nameservers = ref({
+  data: [],
+  show: false,
+  loading: true,
+  query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(n:AuthoritativeNameServer)
+    OPTIONAL MATCH (n)<-[:MANAGED_BY]-(d:DomainName)
+    RETURN COLLECT(DISTINCT i.ip) AS ip, n.name as nameserver, split(n.name, '.')[-1] AS tld, COUNT(DISTINCT d.name) AS nb_domains`,
+  columns: [
+    { name: 'TLD', label: 'TLD', align: 'left', field: row => row.get('tld'), format: val => `${val}`, sortable: true },
+    { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.get('nameserver'), format: val => `${val}`, sortable: true },
+    { name: 'Domain', label: 'Nb. Popular Domain Names', align: 'left', field: row => row.get('nb_domains'), format: val => `${val}`, sortable: true },
+    { name: 'IP', label: 'IP', align: 'left', field: row => row.get('ip'), format: val => `${val}`, sortable: true },
+  ]
+})
+
+const load = () => {
+  nameservers.value.loading = true
+  // Run the cypher query
+  let query_params = { prefix: props.getPrefix }
+  iyp_api.run(nameservers.value.query, query_params).then(
+    results => {
+      nameservers.value.data = results.records
+      nameservers.value.loading = false
+    }
+  )
+}
+
+watch(() => props.getPrefix, () => {
+  load()
+})
+
+onMounted(() => {
+  load()
+})
+</script>
+
+<template>
+  <IypGenericTable
+    :data="nameservers.data"
+    :columns="nameservers.columns"
+    :loading-status="nameservers.loading"
+    :cypher-query="nameservers.query.replace(/\$(.*?)}/, `'${getPrefix}'`)"
+    :slot-length="1"
+  >
+    <IypGenericTreemapChart
+      v-if="nameservers.data.length > 0"
+      :chart-data="nameservers.data"
+      :config="{ keys: ['tld', 'nameserver', 'ip'], root: getPrefix, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_domains} popular domains<extra></extra>' }"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+    />
+  </IypGenericTable>
+</template>

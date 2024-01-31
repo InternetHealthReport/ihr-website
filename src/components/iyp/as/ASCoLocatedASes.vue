@@ -2,6 +2,7 @@
 import { useRoute } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import { lo } from 'plotly.js-dist';
 
 const iyp_api = inject('iyp_api')
 
@@ -9,7 +10,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 
 const route = useRoute()
 
-const asn = ref(props.asNumber)
 const cofacilities = ref({
   data: [],
   show: false,
@@ -26,7 +26,7 @@ const cofacilities = ref({
 const load = () => {
   cofacilities.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(cofacilities.value.query, query_params).then(
     results => {
       cofacilities.value.data = results.records
@@ -35,12 +35,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -53,6 +49,6 @@ onMounted(() => {
     :data="cofacilities.data"
     :columns="cofacilities.columns"
     :loading-status="cofacilities.loading"
-    :cypher-query="cofacilities.query.replace(/\$(.*?)}/, `${asn}`)"
+    :cypher-query="cofacilities.query.replace(/\$(.*?)}/, `${asNumber}`)"
   />
 </template>

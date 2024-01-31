@@ -12,7 +12,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 const route = useRoute()
 const router = useRouter()
 
-const asn = ref(props.asNumber)
 const ixps = ref({
   data: [],
   show: false,
@@ -30,7 +29,7 @@ const ixps = ref({
 const load = () => {
   ixps.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(ixps.value.query, query_params).then(
     results => {
       ixps.value.data = results.records
@@ -39,12 +38,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -57,7 +52,7 @@ onMounted(() => {
     :data="ixps.data"
     :columns="ixps.columns"
     :loading-status="ixps.loading"
-    :cypher-query="ixps.query.replace(/\$(.*?)}/, `${asn}`)"
+    :cypher-query="ixps.query.replace(/\$(.*?)}/, `${asNumber}`)"
     :slot-length="2"
   >
     <IypGenericTreemapChart v-if="ixps.data.length > 0"

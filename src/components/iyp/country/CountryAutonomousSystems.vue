@@ -12,7 +12,6 @@ const props = defineProps(['countryCode', 'pageTitle'])
 const route = useRoute()
 const router = useRouter()
 
-const cc = ref(props.countryCode)
 const ases = ref({
   data: [],
   show: false,
@@ -37,7 +36,7 @@ const ases = ref({
 const load = () => {
   ases.value.loading = true
   // Run the cypher query
-  let query_params = { cc: cc.value }
+  let query_params = { cc: props.countryCode }
   iyp_api.run(ases.value.query, query_params).then(
     results => {
       ases.value.data = results.records
@@ -46,12 +45,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.cc, () => {
-  const newCc = route.params.cc
-  if (newCc != cc.value) {
-    cc.value = newCc
-    load()
-  }
+watch(() => props.countryCode, () => {
+  load()
 })
 
 onMounted(() => {
@@ -64,7 +59,7 @@ onMounted(() => {
     :data="ases.data"
     :columns="ases.columns"
     :loading-status="ases.loading"
-    :cypher-query="ases.query.replace(/\$(.*?)}/, `'${cc}'`)"
+    :cypher-query="ases.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
     :pagination="ases.pagination"
   />
 </template>

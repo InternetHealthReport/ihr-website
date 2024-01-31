@@ -12,7 +12,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 const route = useRoute()
 const router = useRouter()
 
-const asn = ref(props.asNumber)
 const atlas = ref({
   data: [],
   show: false,
@@ -45,7 +44,7 @@ const atlas = ref({
 const load = () => {
   atlas.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(atlas.value.query, query_params).then(
     results => {
       atlas.value.data = results.records
@@ -54,12 +53,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -72,7 +67,7 @@ onMounted(() => {
       :data="atlas.data"
       :columns="atlas.columns"
       :loading-status="atlas.loading"
-      :cypher-query="atlas.query.replace(/\$(.*?)}/, `${asn}`)"
+      :cypher-query="atlas.query.replace(/\$(.*?)}/, `${asNumber}`)"
       :slot-length="1"
     >
       <IypGenericTreemapChart

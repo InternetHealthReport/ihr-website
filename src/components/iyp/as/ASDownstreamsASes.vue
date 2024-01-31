@@ -12,7 +12,6 @@ const props = defineProps(['asNumber', 'pageTitle'])
 const route = useRoute()
 const router = useRouter()
 
-const asn = ref(props.asNumber)
 const downstreams = ref({
   data: [],
   show: false,
@@ -38,7 +37,7 @@ const downstreams = ref({
 const load = () => {
   downstreams.value.loading = true
   // Run the cypher query
-  let query_params = { asn: asn.value }
+  let query_params = { asn: props.asNumber }
   iyp_api.run(downstreams.value.query, query_params).then(
     results => {
       downstreams.value.data = results.records
@@ -47,12 +46,8 @@ const load = () => {
   )
 }
 
-watch(() => route.params.id, () => {
-  const newAsn = Number(route.params.id.replace('AS',''))
-  if (newAsn != asn.value) {
-    asn.value = newAsn
-    load()
-  }
+watch(() => props.asNumber, () => {
+  load()
 })
 
 onMounted(() => {
@@ -65,7 +60,7 @@ onMounted(() => {
     :data="downstreams.data"
     :columns="downstreams.columns"
     :loading-status="downstreams.loading"
-    :cypher-query="downstreams.query.replace(/\$(.*?)}/, `${asn}`)"
+    :cypher-query="downstreams.query.replace(/\$(.*?)}/, `${asNumber}`)"
     :slot-length="1"
   >
     <div class="col-6">
