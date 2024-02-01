@@ -237,6 +237,13 @@ const routeToIXP = (ixp) => {
 }
 
 const routeToPrefix = (name) => {
+  const oldPrefix = paramExists('id')
+  const oldLength = paramExists('length')
+  if (oldPrefix && oldLength) {
+    if (`${oldPrefix}/${oldLength}` == name) {
+      return
+    }
+  }
   const [host, prefixLength] = name.split('/')
   router.push(Tr.i18nRoute({
     name: 'networks',

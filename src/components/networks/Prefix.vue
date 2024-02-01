@@ -8,12 +8,7 @@ import { useI18n } from 'vue-i18n'
 import PrefixOverview from '@/components/networks/prefix/PrefixOverview.vue'
 import PrefixRouting from '@/components/networks/prefix/PrefixRouting.vue'
 import PrefixDNS from '@/components/networks/prefix/PrefixDNS.vue'
-import ASPeering from '@/components/networks/as/ASPeering.vue'
-import ASRegistration from '@/components/networks/as/ASRegistration.vue'
-import ASRankings from '@/components/networks/as/ASRankings.vue'
-import ASCustom from '@/components/networks/as/ASCustom.vue'
-import DateTimePicker from '@/components/DateTimePicker.vue'
-import { AS_FAMILY } from '@/plugins/IhrApi'
+import PrefixCustom from '@/components/networks/prefix/PrefixCustom.vue'
 
 const { t } = useI18n()
 
@@ -137,15 +132,12 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="custom">
-          <!-- <ASCustom
-            :start-time="startTime"
-            :end-time="endTime"
-            :as-number="asNumber"
-            :family="family"
+          <PrefixCustom
+            :host="host"
+            :prefix-length="prefixLength"
             :page-title="pageTitle"
-            :peeringdbId="setPeeringdbId"
-            :interval="interval"
-          /> -->
+            :get-prefix="getPrefix()"
+          />
         </QTabPanel>
       </QTabPanels>
     </QCard>
