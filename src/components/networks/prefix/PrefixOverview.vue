@@ -140,7 +140,7 @@ onMounted(() => {
               <div class="col-12 col-md-auto">
                 <h3>Popular Domains</h3>
                 <div  v-if="queries[1].data.length > 0" class="q-ml-sm column">
-                  <RouterLink :to="Tr.i18nRoute({ name: 'domains', params: {domain:item.get('domain')}})" v-for="item in queries[1].data" :key="item.get('domain')">
+                  <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.get('domain')}})" v-for="item in queries[1].data" :key="item.get('domain')">
                     {{ item.get('domain') }}
                   </RouterLink>
                 </div>

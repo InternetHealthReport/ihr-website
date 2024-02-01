@@ -3,20 +3,19 @@ import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, watch, onMounted } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
-import Country from '@/components/networks/Country.vue'
-import { isoCountries } from '@/plugins/countryName'
+import HostName from '@/components/networks/HostName.vue'
 
 const route = useRoute()
 
-const countryString = ref(null)
+const hostName = ref(null)
 
 const init = () => {
-  if (route.params.cc) {
-    countryString.value = route.params.cc in isoCountries ? route.params.cc : null
+  if (route.params.hostName) {
+    hostName.value = route.params.hostName
   }
 }
 
-watch(() => route.params.cc, () => {
+watch(() => route.params.hostName, () => {
   init()
 })
 
@@ -27,23 +26,23 @@ onMounted(() => {
 
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <div v-if="route.params.cc">
-      <Country v-if="countryString" />
+    <div v-if="route.params.hostName">
+      <HostName v-if="hostName" />
     </div>
     <div v-else>
       <div>
-        <h1 class="text-center q-pa-xl">Country Report</h1>
+        <h1 class="text-center q-pa-xl">Host Name Report</h1>
         <div class="row justify-center">
           <div class="col-6">
             <SearchBar
               bg="white"
               label="grey-8"
               input="black"
-              labelTxt="Enter a country name"
+              labelTxt="Enter a host name"
               :noAS="true"
               :noIXP="true"
               :noPrefix="true"
-              :noHostName="true"
+              :noCountry="true"
               :noTag="true"
             />
           </div>
@@ -59,26 +58,26 @@ onMounted(() => {
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'JP' } })" class="IHR_delikify">Japan</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'hotpepper.jp' } })" class="IHR_delikify">hotpepper.jp</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'FR' } })" class="IHR_delikify">France</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: '1024tera.com' } })" class="IHR_delikify">1024tera.com</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'US' } })" class="IHR_delikify">United States</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'jalan.net' } })" class="IHR_delikify">jalan.net</RouterLink>
               </li>
             </ul>
           </div>
           <div class="col-3">
             <ul>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'BR' } })" class="IHR_delikify">Brazil</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'guam.net' } })" class="IHR_delikify">guam.net</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'DE' } })" class="IHR_delikify">Germany</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'saipan.com' } })" class="IHR_delikify">saipan.com</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'CN' } })" class="IHR_delikify">China</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'toyoko-inn.com' } })" class="IHR_delikify">toyoko-inn.com</RouterLink>
               </li>
             </ul>
           </div>

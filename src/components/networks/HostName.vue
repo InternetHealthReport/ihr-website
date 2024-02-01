@@ -5,10 +5,10 @@ import Tr from '@/i18n/translation'
 import { ref, watch, computed, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useI18n } from 'vue-i18n'
-import PrefixOverview from '@/components/networks/prefix/PrefixOverview.vue'
-import PrefixRouting from '@/components/networks/prefix/PrefixRouting.vue'
-import PrefixDNS from '@/components/networks/prefix/PrefixDNS.vue'
-import PrefixCustom from '@/components/networks/prefix/PrefixCustom.vue'
+import HostNameRouting from '@/components/networks/hostName/HostNameRouting.vue'
+import HostNameDNS from '@/components/networks/hostName/HostNameDNS.vue'
+import HostNameRankings from '@/components/networks/hostName/HostNameRankings.vue'
+import HostNameCustom from '@/components/networks/hostName/HostNameCustom.vue'
 
 const { t } = useI18n()
 
@@ -17,22 +17,21 @@ const iyp_api = inject('iyp_api')
 const route = useRoute()
 const router = useRouter()
 
-const activeMenu = route.query.active ? route.query.active : 'overview'
+const activeTab = 'routing'
+const activeMenu = route.query.active ? route.query.active : activeTab
 
 const loadingStatus = ref(false)
-const host = ref(route.params.id)
-const prefixLength = ref(Number(route.params.length))
-const hostName = ref(null)
+const domain = ref(route.params.hostName)
+const domainName = ref(null)
 const menu = ref(activeMenu)
 
 const getInfo = () => {
-  const query = `MATCH (p:Prefix {prefix: $prefix})
-      OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
-      RETURN head(collect(DISTINCT(o.descr))) AS name`
+  const query = `MATCH (d:DomainName {name: $domain})
+      RETURN d.name AS name`
   const mapping = {
     name: 'name',
   }
-  return [{ query: query, params: { prefix: getPrefix() }, mapping, data: 'hostName' }]
+  return [{ query: query, params: { domain: domain.value }, mapping, data: 'hostName' }]
 }
 
 const fetchData = async () => {
@@ -42,7 +41,7 @@ const fetchData = async () => {
 
   try {
     let res = await iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-    hostName.value = res.hostName[0].name
+    domainName.value = res.hostName[0].name
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false
@@ -51,19 +50,19 @@ const fetchData = async () => {
 }
 
 const pageTitle = computed(() => {
-  return `${getPrefix()} - ${hostName.value}`
+  return domainName.value
 })
 
-const getPrefix = () => {
-  return `${host.value}/${prefixLength.value}`
-}
-
-watch(() => route.params, () => {
-  if (route.params.id != host.value || Number(route.params.length) != prefixLength.value) {
-    host.value = route.params.id
-    prefixLength.value = Number(route.params.length)
+watch(() => route.params.hostName, (newDomain) => {
+  if (newDomain != domain.value) {
+    domain.value = newDomain
+    if (domain.value) {
+      pushRoute()
+      menu.value = activeTab
+      fetchData()
+    }
   }
-}, {deep: true})
+})
 watch(menu, () => {
   if ('display' in route.query) {
     delete route.query.display
@@ -76,11 +75,11 @@ watch(menu, () => {
   }))
 })
 onMounted(() => {
-  if (host.value && prefixLength.value) {
+  if (domain.value) {
     fetchData()
   } else {
     router.push(Tr.i18nRoute({
-      name: 'networks',
+      name: 'hostnames',
     }))
   }
 })
@@ -103,9 +102,10 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="overview">Overview</QTab>
+        <!-- <QTab name="overview">Overview</QTab> -->
         <QTab name="routing">Routing</QTab>
         <QTab name="dns">DNS</QTab>
+        <QTab name="rankings">Rankings</QTab>
         <QTab name="custom">Custom</QTab>
       </QTabs>
       <QSeparator />
@@ -113,31 +113,31 @@ onMounted(() => {
         v-model="menu"
         v-if="pageTitle"
       >
-        <QTabPanel name="overview">
-          <PrefixOverview
-            :host="host"
-            :prefix-length="prefixLength"
-            :get-prefix="getPrefix()"
-          />
-        </QTabPanel>
+        <!-- <QTabPanel name="overview">
+          
+        </QTabPanel> -->
         <QTabPanel name="routing">
-          <PrefixRouting
+          <HostNameRouting
             :page-title="pageTitle"
-            :get-prefix="getPrefix()"
+            :host-name="domainName"
           />
         </QTabPanel>
         <QTabPanel name="dns">
-          <PrefixDNS
+          <HostNameDNS
             :page-title="pageTitle"
-            :get-prefix="getPrefix()"
+            :host-name="domainName"
+          />
+        </QTabPanel>
+        <QTabPanel name="rankings">
+          <HostNameRankings
+            :page-title="pageTitle"
+            :host-name="domainName"
           />
         </QTabPanel>
         <QTabPanel name="custom">
-          <PrefixCustom
-            :host="host"
-            :prefix-length="prefixLength"
+          <HostNameCustom
             :page-title="pageTitle"
-            :get-prefix="getPrefix()"
+            :host-name="domainName"
           />
         </QTabPanel>
       </QTabPanels>

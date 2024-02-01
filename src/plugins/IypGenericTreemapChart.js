@@ -39,8 +39,8 @@ export default function treemapClicked(event) {
         }))
       } else if (domainMatch) {
         event.router.push(Tr.i18nRoute({
-          name: 'domains',
-          params: { domain: network },
+          name: 'hostnames',
+          params: { hostName: network },
         }))
       }
     } else if (typeof network === 'object') {

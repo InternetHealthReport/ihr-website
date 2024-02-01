@@ -163,6 +163,7 @@ onMounted(() => {
       <QSeparator />
       <QTabPanels
         v-model="menu"
+        v-if="pageTitle"
       >
         <QTabPanel name="overview">
           <ASOverview

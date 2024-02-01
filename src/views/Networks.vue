@@ -69,6 +69,8 @@ onMounted(() => {
               input="black"
               labelTxt="Enter an AS ID, IXP or network name (at least 3 characters)"
               :noCountry="true"
+              :noHostName="true"
+              :noTag="true"
             />
           </div>
         </div>

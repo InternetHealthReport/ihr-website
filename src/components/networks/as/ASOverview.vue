@@ -168,10 +168,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="col-12 col-md-2">
-                <h3>Popular Domains</h3>
+                <h3>Popular Host Names</h3>
                 <div class="column q-ml-sm">
                   <div v-if="queries[2].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'domains', params: {domain:item.get('domainName')}})" v-for="item in queries[2].data" :key="item.get('domainName')">
+                    <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.get('domainName')}})" v-for="item in queries[2].data" :key="item.get('domainName')">
                       {{ item.get('domainName') }}
                     </RouterLink>
                   </div>

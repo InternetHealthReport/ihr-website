@@ -8,8 +8,6 @@ import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
 import getCountryName from '@/plugins/countryName'
 import * as ipAddress from 'ip-address'
 
-const ihr_api = inject('ihr_api')
-
 const { t } = useI18n()
 
 const iyp_api = inject('iyp_api')
@@ -46,6 +44,14 @@ const props = defineProps({
     default: false,
   },
   noCountry: {
+    type: Boolean,
+    default: false,
+  },
+  noHostName: {
+    type: Boolean,
+    default: false,
+  },
+  noTag: {
     type: Boolean,
     default: false,
   },
@@ -154,6 +160,12 @@ const mixedEntitySearch = async (value) => {
   if (!props.noAS) {
     funcs.push(queryASNames)
   }
+  if (!props.noHostName) {
+    funcs.push(queryHostNames)
+  }
+  if (!props.noTag) {
+    funcs.push(queryTags)
+  }
   if (!funcs.length) {
     return []
   }
@@ -188,6 +200,26 @@ const queryIXPs = (value) => {
     name: 'ixp',
     id: 'id',
     node: 'node',
+  }
+  return { cypherQuery: query, params: { value: value }, mapping }
+}
+
+const queryHostNames = (value) => {
+  const query = 'MATCH (d:DomainName) WHERE toLower(d.name) STARTS WITH $value RETURN d.name as hostName, head(labels(d)) as node LIMIT 10'
+  const mapping = {
+    name: 'hostName',
+    id: 'hostName',
+    node: 'node'
+  }
+  return { cypherQuery: query, params: { value: value }, mapping }
+}
+
+const queryTags = (value) => {
+  const query = 'MATCH (t:Tag) WHERE toLower(t.label) STARTS WITH $value RETURN t.label as label, head(labels(t)) as node LIMIT 10'
+  const mapping = {
+    name: 'label',
+    id: 'label',
+    node: 'node'
   }
   return { cypherQuery: query, params: { value: value }, mapping }
 }
@@ -264,6 +296,32 @@ const routeToCountry = (cc) => {
   }))
 }
 
+const routeToHostName = (hostName) => {
+  const oldhostName = paramExists('hostName')
+  if (oldhostName) {
+    if (oldhostName == hostName) {
+      return
+    }
+  }
+  router.push(Tr.i18nRoute({
+    name: 'hostnames',
+    params: { hostName: hostName },
+  }))
+}
+
+const routeToTag = (tag) => {
+  const oldTag = paramExists('tag')
+  if (oldTag) {
+    if (oldTag == tag) {
+      return
+    }
+  }
+  router.push(Tr.i18nRoute({
+    name: 'tags',
+    params: { tag: tag },
+  }))
+}
+
 const placeholder = computed(() => {
   if (props.labelTxt == null) {
     return `${t('searchBar.placeholder')}`
@@ -312,6 +370,14 @@ const placeholder = computed(() => {
       </QItem>
       <QItem v-if="scope.opt.type == 'Country'" v-bind="scope.itemProps" @click="routeToCountry(scope.opt.value)">
         <QItemSection side color="accent">Country</QItemSection>
+        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+      </QItem>
+      <QItem v-if="scope.opt.type == 'DomainName'" v-bind="scope.itemProps" @click="routeToHostName(scope.opt.value)"> <!-- TODO: change DomainName to HostName after IYP DB update -->
+        <QItemSection side color="accent">Host Name</QItemSection>
+        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+      </QItem>
+      <QItem v-if="scope.opt.type == 'Tag'" v-bind="scope.itemProps" @click="routeToTag(scope.opt.value)">
+        <QItemSection side color="accent">Tag</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
       <QItem v-if="scope.opt.type == 'Fail'" v-bind="scope.itemProps">

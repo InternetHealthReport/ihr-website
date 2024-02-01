@@ -137,8 +137,8 @@ const treemapClicked = (event) => {
         }))
       } else if (domainMatch) {
         router.push(Tr.i18nRoute({
-          name: 'domains',
-          params: { domain: network },
+          name: 'hostnames',
+          params: { hostName: network },
         }))
       }
     } else if (typeof network === 'object') {

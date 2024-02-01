@@ -12,8 +12,8 @@ import IhrNetworks from '../views/IhrNetworks.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import GlobalReport from '../views/GlobalReport.vue'
 import Networks from '../views/Networks.vue'
-import IypTags from '../views/IypTags.vue'
-import IypDomainName from '../views/IypDomainName.vue'
+import Tags from '../views/Tags.vue'
+import HostNames from '../views/HostNames.vue'
 import Countries from '../views/Countries.vue'
 import Tr from '@/i18n/translation'
 
@@ -65,14 +65,14 @@ const router = createRouter({
           component: Networks
         },
         {
-          path: 'tags/:tag',
+          path: 'tags/:tag?',
           name: 'tags',
-          component: IypTags
+          component: Tags
         },
         {
-          path: 'domains/:domain',
-          name: 'domains',
-          component: IypDomainName
+          path: 'hostnames/:hostName?',
+          name: 'hostnames',
+          component: HostNames
         },
         {
           path: 'documentation',
