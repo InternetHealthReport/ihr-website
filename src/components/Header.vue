@@ -34,6 +34,16 @@ const  SIMPLE_MENU = [
         summary: 'header.networkReport.summary',
       },
       {
+        entryName: 'header.hostNameReport.name',
+        routeName: 'hostnames',
+        summary: 'header.hostNameReport.summary',
+      },
+      {
+        entryName: 'header.tagReport.name',
+        routeName: 'tags',
+        summary: 'header.tagReport.summary',
+      },
+      {
         entryName: 'header.rovReport.name',
         routeName: 'rov',
         summary: 'header.rovReport.summary',

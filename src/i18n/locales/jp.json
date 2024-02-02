@@ -30,6 +30,14 @@
       "name": "Network",
       "summary": "Details for a single network (AS or IXP)"
     },
+    "hostNameReport": {
+      "name": "Host Name",
+      "summary": "Details for a host name"
+    },
+    "tagReport": {
+      "name": "Tag",
+      "summary": "Details for a tag"
+    },
     "rovReport": {
       "name": "Route Origin Validation",
       "summary": "Route Origin Validation of resources seen on BGP"
@@ -52,6 +60,8 @@
       "title": "Reports",
       "network": "network ",
       "country": "country ",
+      "hostName": "host name ",
+      "tag": "tag ",
       "rov": "ROV ",
       "covid19": "COVID19 ",
       "global": "global "
@@ -874,7 +884,7 @@
         "caption": "ASes classified as "
       },
       "domains": {
-        "title": "Popular Domain Names",
+        "title": "Popular Host Names",
         "caption": "Popular domain names classified as "
       }
     },

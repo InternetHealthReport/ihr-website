@@ -91,7 +91,7 @@ onMounted(() => {
     <h1 class="text-center">{{ pageTitle }}</h1>
     <h3 class="text-center">
       <div>
-        Weekly report ending on {{ new Date().toLocaleDateString('en-us', {month: 'long', day: 'numeric', year: 'numeric'}) }}
+        Weekly report
       </div>
     </h3>
     <QCard flat>

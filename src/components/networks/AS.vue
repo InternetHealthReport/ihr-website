@@ -139,7 +139,7 @@ onMounted(() => {
         <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
       </div>
       <div v-else>
-        Weekly report ending on {{ new Date().toLocaleDateString('en-us', {month: 'long', day: 'numeric', year: 'numeric'}) }}
+        Weekly report
       </div>
     </h3>
     <QCard flat>

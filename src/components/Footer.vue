@@ -48,6 +48,12 @@ import Tr from '@/i18n/translation'
               <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: null } })">{{ $t('footer.reportPages.network') }}</RouterLink>
             </li>
             <li>
+              <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { id: null } })">{{ $t('footer.reportPages.hostName') }}</RouterLink>
+            </li>
+            <li>
+              <RouterLink :to="Tr.i18nRoute({ name: 'tags', params: { id: null } })">{{ $t('footer.reportPages.tag') }}</RouterLink>
+            </li>
+            <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'rov' })">{{ $t('footer.reportPages.rov') }}</RouterLink>
             </li>
             <li>
