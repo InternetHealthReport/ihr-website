@@ -1,5 +1,5 @@
 <script setup>
-import { QSpinner, QTabs, QTab, QTabPanels, QTabPanel, QTable, QTh, QTooltip, QInput, QBtn, QTr, QTd, QIcon, useQuasar, exportFile, QMarkupTable } from 'quasar'
+import { QSpinner, QTabs, QTab, QTabPanels, QTabPanel, QTable, QTh, QTooltip, QInput, QBtn, QTr, QTd, QIcon, useQuasar, exportFile, QMarkupTable, copyToClipboard } from 'quasar'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
@@ -278,8 +278,13 @@ onMounted(() => {
           </QTable>
         </QTabPanel>
         <QTabPanel name="api" class="text-left q-pa-lg" light>
-          <code>{{ cypherQuery }}</code>
-          <div><br>IYP Public Instance Link: <a href="https://iyp.iijlab.net/">https://iyp.iijlab.net/</a></div>
+          <QBtn dense flat @click="copyToClipboard(cypherQuery)">
+            <code>{{ cypherQuery }}</code>
+            <QTooltip>Click to copy</QTooltip>
+          </QBtn>
+          <div>
+            <br>IYP Public Instance Link: <a href="https://iyp.iijlab.net/">https://iyp.iijlab.net/</a>
+          </div>
         </QTabPanel>
         <QTabPanel name="metadata">
           <QMarkupTable flat bordered v-if="!loadingStatus">
