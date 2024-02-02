@@ -6,11 +6,9 @@ import { useI18n } from 'vue-i18n'
 import Tr from '@/i18n/translation'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import TagOverview from '@/components/networks/tag/TagOverview.vue'
-import HostNameAuthoritativeNameservers from '@/components/iyp/hostName/HostNameAuthoritativeNameservers.vue'
-import HostNameQueryingCountries from '@/components/iyp/hostName/HostNameQueryingCountries.vue'
-import HostNameQueryingASes from '@/components/iyp/hostName/HostNameQueryingASes.vue'
-import HostNameRankings from '@/components/iyp/hostName/HostNameRankings.vue'
-import { roundPositionForSharpStrokeRendering } from 'plotly.js-dist'
+import TagPrefixes from '@/components/iyp/tag/TagPrefixes.vue'
+import TagAutonomousSystems from '@/components/iyp/tag/TagAutonomousSystems.vue'
+import TagPopularHostNames from '@/components/iyp/tag/TagPopularHostNames.vue'
 
 const props = defineProps(['tag'])
 
@@ -24,7 +22,10 @@ const { t } = useI18n()
 const fetch = ref(true)
 const displayWidgets = ref(route.query.display ? JSON.parse(route.query.display) : [])
 const selects = ref([
-  { value: false, label: 'Overview' },
+  { value: false, hasData: true, label: 'Overview' },
+  { value: false, hasData: false, label: t('iyp.tag.popularDomains.title') },
+  { value: false, hasData: false, label: t('iyp.tag.ases.title') },
+  { value: false, hasData: false, label: t('iyp.tag.prefixes.title') },
 ])
 const selectAll = ref(false)
 const selectedWidgets = ref(null)
@@ -43,13 +44,13 @@ const init = () => {
   res[0].then( results => {
     selectedWidgets.value = results.records[0]
     if (selectedWidgets.value.get('nb_domains') > 0) {
-      selects.value.push({ value: false, label: selectedWidgets.value.get('nb_domains')+' '+t('iyp.tag.popularDomains.title') })
+      selects.value[1].hasData = true
     }
     if (selectedWidgets.value.get('nb_ases') > 0) {
-      selects.value.push({ value: false, label: selectedWidgets.value.get('nb_ases')+' '+t('iyp.tag.ases.title') })
+      selects.value[2].hasData = true
     }
     if (selectedWidgets.value.get('nb_prefixes') > 0) {
-      selects.value.push({ value: false, label: selectedWidgets.value.get('nb_prefixes')+' '+t('iyp.tag.prefixes.title') })
+      selects.value[3].hasData = true
     }
   })
 }
@@ -92,7 +93,9 @@ onMounted(() => {
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <QCheckbox v-for="select in selects" :label="select.label" v-model="select.value" />
+      <span v-for="select in selects">
+        <QCheckbox v-if="select.hasData" :label="select.label" v-model="select.value" />
+      </span>
       <QCheckbox label="All" v-model="selectAll" />
     </QCardSection>
   </QCard>
@@ -103,7 +106,36 @@ onMounted(() => {
     v-if="selects[0].value"
   />
   <!-- All -->
-  
+  <GenericCardController
+    :title="selectedWidgets.get('nb_domains')+' '+$t('iyp.tag.domains.title')"
+    :sub-title="$t('iyp.tag.domains.caption')+tag+' by '+selectedWidgets.get('data_source_domains').join(', ')"
+    class="card"
+    v-if="selects[1].value && selects[1].hasData"
+  >
+    <TagPopularHostNames
+      :tag="tag"
+    />
+  </GenericCardController>
+  <GenericCardController
+    :title="selectedWidgets.get('nb_ases')+' '+$t('iyp.tag.ases.title')"
+    :sub-title="$t('iyp.tag.ases.caption')+tag+' by '+selectedWidgets.get('data_source_ases').join(', ')"
+    class="card"
+    v-if="selects[2].value && selects[2].hasData"
+  >
+    <TagAutonomousSystems
+      :tag="tag"
+    />
+  </GenericCardController>
+  <GenericCardController
+    :title="selectedWidgets.get('nb_prefixes')+' '+$t('iyp.tag.prefixes.title')"
+    :sub-title="$t('iyp.tag.prefixes.caption')+tag+' by '+selectedWidgets.get('data_source_prefixes').join(', ')"
+    class="card"
+    v-if="selects[3].value && selects[3].hasData"
+  >
+    <TagPrefixes
+      :tag="tag"
+    />
+  </GenericCardController>
 </template>
 
 <style lang="stylus">

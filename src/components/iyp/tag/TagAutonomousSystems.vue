@@ -1,0 +1,71 @@
+<script setup>
+import { useRoute, useRouter } from 'vue-router'
+import { ref, inject, watch, onMounted } from 'vue'
+import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
+import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
+
+const iyp_api = inject('iyp_api')
+
+const props = defineProps(['tag'])
+
+const route = useRoute()
+const router = useRouter()
+
+const ases = ref({
+  data: [],
+  show: false,
+  loading: true,
+  query: `MATCH (t:Tag {label: $tag})<-[cat:CATEGORIZED]-(a:AS)
+    OPTIONAL MATCH (a)-[:CATEGORIZED]->(to:Tag) WHERE t <> to
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(n:Name)
+    OPTIONAL MATCH (a)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
+    RETURN a.asn as asn, n.name as name, collect(DISTINCT to.label) as other_tags, toUpper(COALESCE(creg.registry,  '-')) AS rir, creg_country.country_code AS cc, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name, cat.reference_url AS classifier_url`,
+  columns: [
+    { name: 'Classified by', label: 'Classified by', align: 'left', field: row => [row.get('classifier_org'), row.get('classifier_name')], format: val => `${val[0]} (${val[1]})`, sortable: true },
+    { name: 'RIR', label: 'RIR', align: 'left', field: row => row.get('rir')? row.get('rir') : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
+    { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.get('cc'), format: val => `${String(val).toUpperCase()}`, sortable: true },
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
+    { name: 'Name', label: 'AS Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+    { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.get('other_tags'), format: val => `${val.join(', ')}`, sortable: true },
+  ]
+})
+
+const load = () => {
+  ases.value.loading = true
+  // Run the cypher query
+  let query_params = { tag: props.tag }
+  iyp_api.run(ases.value.query, query_params).then(
+    results => {
+      ases.value.data = results.records
+      ases.value.loading = false
+    }
+  )
+}
+
+watch(() => props.tag, () => {
+  load()
+})
+
+onMounted(() => {
+  load()
+})
+</script>
+
+<template>
+  <IypGenericTable
+    :data="ases.data"
+    :columns="ases.columns"
+    :loading-status="ases.loading"
+    :cypher-query="ases.query.replace(/\$(.*?)}/, `'${tag}'`)"
+    :slot-length="1"
+  >
+      <IypGenericTreemapChart
+        v-if="ases.data.length > 0 & ases.data.length < 5000"
+        :chart-data="ases.data"
+        :chart-layout="{ title: 'Breakdown per RIR and registered country' }"
+        :config="{ keys: ['rir', 'cc', 'asn'], root: tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<extra>%{customdata.percent:.1f}%</extra>' }"
+        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+        />
+  </IypGenericTable>
+</template>

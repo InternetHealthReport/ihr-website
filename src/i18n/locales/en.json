@@ -874,8 +874,8 @@
         "caption": "ASes classified as "
       },
       "domains": {
-        "title": "Popular Domain Names",
-        "caption": "Popular domain names classified as "
+        "title": "Popular Host Names",
+        "caption": "Popular host names classified as "
       }
     },
     "domainname": {
