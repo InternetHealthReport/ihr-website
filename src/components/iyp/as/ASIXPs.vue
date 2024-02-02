@@ -52,7 +52,7 @@ onMounted(() => {
     :data="ixps.data"
     :columns="ixps.columns"
     :loading-status="ixps.loading"
-    :cypher-query="ixps.query.replace(/\$(.*?)}/, `${asNumber}`)"
+    :cypher-query="ixps.query.replace(/\$(.*?)}/, `${asNumber}}`)"
     :slot-length="2"
   >
     <IypGenericTreemapChart v-if="ixps.data.length > 0"

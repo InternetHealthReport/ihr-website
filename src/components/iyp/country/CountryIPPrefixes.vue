@@ -87,7 +87,7 @@ onMounted(() => {
     :data="prefixes.data"
     :columns="prefixes.columns"
     :loading-status="prefixes.loading"
-    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
+    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `'${countryCode}'}`)"
     :slot-length="2"
   >
     <div class="row justify-evenly">

@@ -52,6 +52,6 @@ onMounted(() => {
     :data="siblings.data"
     :columns="siblings.columns"
     :loading-status="siblings.loading"
-    :cypher-query="siblings.query.replace(/\$(.*?)}/, `${asNumber}`)"
+    :cypher-query="siblings.query.replace(/\$(.*?)}/, `${asNumber}}`)"
   />
 </template>

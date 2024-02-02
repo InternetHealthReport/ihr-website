@@ -62,7 +62,7 @@ onMounted(() => {
     :data="prefixes.data"
     :columns="prefixes.columns"
     :loading-status="prefixes.loading"
-    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `${asNumber}`)"
+    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `${asNumber}}`)"
     :slot-length="1"
   >
     <div class="row justify-evenly">

@@ -60,7 +60,7 @@ onMounted(() => {
     :data="downstreams.data"
     :columns="downstreams.columns"
     :loading-status="downstreams.loading"
-    :cypher-query="downstreams.query.replace(/\$(.*?)}/, `${asNumber}`)"
+    :cypher-query="downstreams.query.replace(/\$(.*?)}/, `${asNumber}}`)"
     :slot-length="1"
   >
     <div class="col-6">

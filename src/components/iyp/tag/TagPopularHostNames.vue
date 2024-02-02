@@ -55,7 +55,7 @@ onMounted(() => {
     :data="domains.data"
     :columns="domains.columns"
     :loading-status="domains.loading"
-    :cypher-query="domains.query.replace(/\$(.*?)}/, `'${tag}'`)"
+    :cypher-query="domains.query.replace(/\$(.*?)}/, `'${tag}'}`)"
     :slot-length="0"
   >
   </IypGenericTable>

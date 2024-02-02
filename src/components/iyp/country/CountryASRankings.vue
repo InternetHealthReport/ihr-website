@@ -59,7 +59,7 @@ onMounted(() => {
     :data="rankings.data"
     :columns="rankings.columns"
     :loading-status="rankings.loading"
-    :cypher-query="rankings.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
+    :cypher-query="rankings.query.replace(/\$(.*?)}/, `'${countryCode}'}`)"
     :pagination="rankings.pagination"
     :slot-length=1
   >

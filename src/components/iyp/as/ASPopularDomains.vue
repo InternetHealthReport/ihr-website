@@ -54,7 +54,7 @@ onMounted(() => {
     :data="domains.data"
     :columns="domains.columns"
     :loading-status="domains.loading"
-    :cypher-query="domains.query.replace(/\$(.*?)}/, `${asNumber}`)"
+    :cypher-query="domains.query.replace(/\$(.*?)}/, `${asNumber}}`)"
     :slot-length="1"
   >
 <!--      <GenericHoverEventsChart

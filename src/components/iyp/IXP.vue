@@ -112,7 +112,7 @@ watch(() => route.params.id, () => {
               :data="sections.members.data"
               :columns="sections.members.columns"
               :loading-status="sections.members.loading"
-              :cypher-query="sections.members.query.replace(/\$(.*?)}/, `'${id}'`)"
+              :cypher-query="sections.members.query.replace(/\$(.*?)}/, `${id}}`)"
               :slot-length="1"
             >
               <IypGenericPieChart v-if="sections.members.data.length > 0" :chart-data="sections.members.data" :chart-layout="{ title: 'Country' }" />
@@ -133,7 +133,7 @@ watch(() => route.params.id, () => {
               :data="sections.facilities.data"
               :columns="sections.facilities.columns"
               :loading-status="sections.facilities.loading"
-              :cypher-query="sections.facilities.query.replace(/\$(.*?)}/, `'${id}'`)"
+              :cypher-query="sections.facilities.query.replace(/\$(.*?)}/, `${id}}`)"
               :slot-length="1"
             >
               <IypGenericPieChart v-if="sections.facilities.data.length > 0" :chart-data="sections.facilities.data" :chart-layout="{ title: 'Country' }" />
@@ -154,7 +154,7 @@ watch(() => route.params.id, () => {
               :data="sections.peeringLANs.data"
               :columns="sections.peeringLANs.columns"
               :loading-status="sections.peeringLANs.loading"
-              :cypher-query="sections.peeringLANs.query.replace(/\$(.*?)}/, `'${id}'`)"
+              :cypher-query="sections.peeringLANs.query.replace(/\$(.*?)}/, `${id}}`)"
               :slot-length="1"
             >
               <IypGenericPieChart v-if="sections.peeringLANs.data.length > 0" :chart-data="sections.peeringLANs.data" :chart-layout="{ title: 'Country' }" />

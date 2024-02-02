@@ -51,7 +51,7 @@ onMounted(() => {
     :data="roas.data"
     :columns="roas.columns"
     :loading-status="roas.loading"
-    :cypher-query="roas.query.replace(/\$(.*?)}/, `'${getPrefix}'`)"
+    :cypher-query="roas.query.replace(/\$(.*?)}/, `'${getPrefix}'}`)"
     :slot-length="0"
   >
   <!--  <IypGenericBarChart v-if="roas.length > 0" :chart-data="roas"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"},

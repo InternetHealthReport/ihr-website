@@ -57,7 +57,7 @@ onMounted(() => {
     :data="atlas.data"
     :columns="atlas.columns"
     :loading-status="atlas.loading"
-    :cypher-query="atlas.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
+    :cypher-query="atlas.query.replace(/\$(.*?)}/, `'${countryCode}'}`)"
     :slot-length="1"
   >
     <IypGenericTreemapChart

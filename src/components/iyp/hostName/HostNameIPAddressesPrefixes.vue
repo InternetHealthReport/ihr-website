@@ -59,7 +59,7 @@ onMounted(() => {
     :data="ips.data"
     :columns="ips.columns"
     :loading-status="ips.loading"
-    :cypher-query="ips.query.replace(/\$(.*?)}/, `'${hostName}'`)"
+    :cypher-query="ips.query.replace(/\$(.*?)}/, `'${hostName}'}`)"
     :slot-length="1"
   >
     <div class="row justify-evenly">

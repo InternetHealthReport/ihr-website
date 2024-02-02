@@ -59,7 +59,7 @@ onMounted(() => {
     :data="ases.data"
     :columns="ases.columns"
     :loading-status="ases.loading"
-    :cypher-query="ases.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
+    :cypher-query="ases.query.replace(/\$(.*?)}/, `'${countryCode}'}`)"
     :pagination="ases.pagination"
   />
 </template>

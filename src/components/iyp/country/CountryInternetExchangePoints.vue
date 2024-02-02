@@ -58,7 +58,7 @@ onMounted(() => {
     :data="ixps.data"
     :columns="ixps.columns"
     :loading-status="ixps.loading"
-    :cypher-query="ixps.query.replace(/\$(.*?)}/, `'${countryCode}'`)"
+    :cypher-query="ixps.query.replace(/\$(.*?)}/, `'${countryCode}'}`)"
     :pagination="ixps.pagination"
     :slot-length=1
   >

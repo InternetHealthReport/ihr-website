@@ -47,7 +47,7 @@ onMounted(() => {
     :data="rankings.data"
     :columns="rankings.columns"
     :loading-status="rankings.loading"
-    :cypher-query="rankings.query.replace(/\$(.*?)}/, `${asNumber}`)"
+    :cypher-query="rankings.query.replace(/\$(.*?)}/, `${asNumber}}`)"
     :slot-length="1"
   >
     <IypGenericIndicatorsChart

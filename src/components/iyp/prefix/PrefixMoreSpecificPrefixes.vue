@@ -61,7 +61,7 @@ onMounted(() => {
     :data="moreSpecifics.data"
     :columns="moreSpecifics.columns"
     :loading-status="moreSpecifics.loading"
-    :cypher-query="moreSpecifics.query.replace(/\$(.*?)}/, `'${getPrefix}'`)"
+    :cypher-query="moreSpecifics.query.replace(/\$(.*?)}/, `'${getPrefix}'}`)"
   >
   <!-- <GenericPieChart v-if="lessSpecific.length > 0" :chart-data="lessSpecific" :chart-layout="{ title: 'Country' }" /> -->
   </IypGenericTable>

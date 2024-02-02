@@ -57,7 +57,7 @@ onMounted(() => {
     :data="ases.data"
     :columns="ases.columns"
     :loading-status="ases.loading"
-    :cypher-query="ases.query.replace(/\$(.*?)}/, `'${tag}'`)"
+    :cypher-query="ases.query.replace(/\$(.*?)}/, `'${tag}'}`)"
     :slot-length="1"
   >
       <IypGenericTreemapChart

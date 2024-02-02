@@ -59,7 +59,7 @@ onMounted(() => {
     :data="prefixes.data"
     :columns="prefixes.columns"
     :loading-status="prefixes.loading"
-    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `'${tag}'`)"
+    :cypher-query="prefixes.query.replace(/\$(.*?)}/, `'${tag}'}`)"
     :slot-length="1"
   >
     <IypGenericTreemapChart

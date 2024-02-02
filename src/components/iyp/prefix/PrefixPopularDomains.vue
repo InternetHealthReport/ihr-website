@@ -56,7 +56,7 @@ onMounted(() => {
     :data="domains.data"
     :columns="domains.columns"
     :loading-status="domains.loading"
-    :cypher-query="domains.query.replace(/\$(.*?)}/, `'${getPrefix}'`)"
+    :cypher-query="domains.query.replace(/\$(.*?)}/, `'${getPrefix}'}`)"
     :slot-length="1"
   >
     <IypGenericTreemapChart

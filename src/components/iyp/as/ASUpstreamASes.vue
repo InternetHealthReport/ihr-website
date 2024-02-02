@@ -56,7 +56,7 @@ onMounted(() => {
     :data="upstreams.data"
     :columns="upstreams.columns"
     :loading-status="upstreams.loading"
-    :cypher-query="upstreams.query.replace(/\$(.*?)}/, `'${asNumber}'`)"
+    :cypher-query="upstreams.query.replace(/\$(.*?)}/, `${asNumber}}`)"
     :slot-length="1"
   >
     <IypGenericBarChart

@@ -59,7 +59,7 @@ onMounted(() => {
     :data="as_query.data"
     :columns="as_query.columns"
     :loading-status="as_query.loading"
-    :cypher-query="as_query.query.replace(/\$(.*?)}/, `'${hostName}'`)"
+    :cypher-query="as_query.query.replace(/\$(.*?)}/, `'${hostName}'}`)"
     :slot-length="1"
     :pagination="as_query.pagination"
   >

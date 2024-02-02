@@ -53,7 +53,7 @@ onMounted(() => {
     :data="peers.data"
     :columns="peers.columns"
     :loading-status="peers.loading"
-    :cypher-query="peers.query.replace(/\$(.*?)}/, `${asNumber}`)"
+    :cypher-query="peers.query.replace(/\$(.*?)}/, `${asNumber}}`)"
     :slot-length="1"
   >
     <IypGenericTreemapChart

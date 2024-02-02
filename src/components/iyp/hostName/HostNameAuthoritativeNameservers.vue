@@ -56,7 +56,7 @@ onMounted(() => {
     :data="nameservers.data"
     :columns="nameservers.columns"
     :loading-status="nameservers.loading"
-    :cypher-query="nameservers.query.replace(/\$(.*?)}/, `'${hostName}'`)"
+    :cypher-query="nameservers.query.replace(/\$(.*?)}/, `'${hostName}'}`)"
     :slot-length="1"
   >
     <div class="row justify-evenly">

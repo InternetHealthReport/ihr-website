@@ -1,8 +1,10 @@
 <script setup>
-import { QSpinner, QTabs, QTab, QTabPanels, QTabPanel, QTable, QTh, QTooltip, QInput, QBtn, QTr, QTd, QIcon, useQuasar, exportFile } from 'quasar'
+import { QSpinner, QTabs, QTab, QTabPanels, QTabPanel, QTable, QTh, QTooltip, QInput, QBtn, QTr, QTd, QIcon, useQuasar, exportFile, QMarkupTable } from 'quasar'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
+
+const iyp_api = inject('iyp_api')
 
 const props = defineProps({
   columns: {
@@ -37,6 +39,8 @@ const activeTab = ref('chart')
 const filter = ref('')
 const colToUnderline = ref(['ASN', 'AS', 'Origin AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC'])
 const underline = ref(false)
+const metadata = ref(null)
+const loadingStatus = ref(true)
 
 const wrapCsvValue = (val, formatFn, row) => {
   let formatted = formatFn !== void 0
@@ -83,6 +87,46 @@ if (status !== true) {
     icon: 'warning'
   })
 }
+}
+
+const getMetadataQuery = () => {
+  let query = props.cypherQuery.replace(/(RETURN|return)(?:.)*/gm, '')
+  query = query.replace(/\[(?:.)*?:/gm, '[:')
+  query = query.split('[:')
+  const queryVars = []
+  for (let i=1; i<query.length; i++) {
+    queryVars.push(`edge${i-1}`)
+    query[i] = `${queryVars[i-1]}:${query[i]}`
+  }
+  query = `${query.join('[')} WITH `
+  const collectList = 'COLLECT(DISTINCT [var0.reference_org, var0.reference_url, var0.reference_time]) AS var1'
+  const listVars = []
+  queryVars.forEach((el, index) => {
+    listVars.push(`list${index}`)
+    query += collectList.replaceAll('var0', el).replace('var1', listVars[index])
+    if (index < queryVars.length - 1) {
+      query += ', '
+    }
+  })
+  query += ` UNWIND ${listVars.join('+')} AS metadata_list RETURN DISTINCT metadata_list`
+  return query
+}
+
+const fetchMetadata = async () => {
+  loadingStatus.value = true
+  try {
+    let res = await iyp_api.runManyInOneSession([{ cypherQuery: getMetadataQuery() }])
+    metadata.value = res[0].records.map(obj => obj._fields.map(val => {
+      if (val.includes(null)) {
+        return
+      }
+      return { reference_org: val[0], reference_time: val[2], reference_url: val[1] }
+    })).flat().filter(obj => obj != null)
+    loadingStatus.value = false
+  } catch (e) {
+    loadingStatus.value = false
+    return
+  }
 }
 
 const toUnderline = (name) => {
@@ -151,6 +195,7 @@ watch(() => props.slotLength, () => {
 })
 
 onMounted(() => {
+  fetchMetadata()
   if (props.slotLength <= 0) {
     activeTab.value = 'data'
   }
@@ -174,6 +219,7 @@ onMounted(() => {
         <QTab name="chart" label="CHART" :disable="slotLength <= 0 ? true : false"></QTab>
         <QTab name="data" label="DATA"></QTab>
         <QTab name="api" label="CYPHER QUERY"></QTab>
+        <QTab name="metadata" label="METADATA"></QTab>
       </QTabs>
       <QTabPanels v-model="activeTab" animated>
         <QTabPanel name="chart">
@@ -222,6 +268,25 @@ onMounted(() => {
         <QTabPanel name="api" class="text-left q-pa-lg" light>
           <code>{{ cypherQuery }}</code>
           <div><br>IYP Public Instance Link: <a href="https://iyp.iijlab.net/">https://iyp.iijlab.net/</a></div>
+        </QTabPanel>
+        <QTabPanel name="metadata">
+          <h3>Data Sources</h3>
+          <QMarkupTable flat bordered v-if="!loadingStatus">
+            <thead>
+              <tr>
+                <th>Reference Organization</th>
+                <th>Reference Time</th>
+                <th>Reference URL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="obj in metadata">
+                <td>{{ obj.reference_org }}</td>
+                <td>{{ obj.reference_time }}</td>
+                <td>{{ obj.reference_url }}</td>
+              </tr>
+            </tbody>
+          </QMarkupTable>
         </QTabPanel>
       </QTabPanels>
     </div>

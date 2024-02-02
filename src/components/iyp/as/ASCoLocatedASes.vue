@@ -49,6 +49,6 @@ onMounted(() => {
     :data="cofacilities.data"
     :columns="cofacilities.columns"
     :loading-status="cofacilities.loading"
-    :cypher-query="cofacilities.query.replace(/\$(.*?)}/, `${asNumber}`)"
+    :cypher-query="cofacilities.query.replace(/\$(.*?)}/, `${asNumber}}`)"
   />
 </template>
