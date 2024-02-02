@@ -39,7 +39,7 @@ const activeTab = ref('chart')
 const filter = ref('')
 const colToUnderline = ref(['ASN', 'AS', 'Origin AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC'])
 const underline = ref(false)
-const metadata = ref(null)
+const metadata = ref({})
 const loadingStatus = ref(true)
 
 const wrapCsvValue = (val, formatFn, row) => {
@@ -116,12 +116,24 @@ const fetchMetadata = async () => {
   loadingStatus.value = true
   try {
     let res = await iyp_api.runManyInOneSession([{ cypherQuery: getMetadataQuery() }])
-    metadata.value = res[0].records.map(obj => obj._fields.map(val => {
+    res[0].records.forEach(obj => obj._fields.forEach(val => {
       if (val.includes(null)) {
         return
       }
-      return { reference_org: val[0], reference_time: val[2], reference_url: val[1] }
-    })).flat().filter(obj => obj != null)
+      let date = val[2]
+      if (typeof(date) == 'string') {
+        date = new Date(date)
+      } else {
+        date = new Date(date.toString())
+      }
+      date = date.toLocaleDateString('en-us', {month: 'long', day: 'numeric', year: 'numeric'})
+      if (val[0] in metadata.value) {
+        metadata.value[val[0]].reference_time.push(date)
+        metadata.value[val[0]].reference_url.push(val[1])
+      } else {
+        metadata.value[val[0]] = { reference_time: [ date ], reference_url: [ val[1] ] }
+      }
+    }))
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false
@@ -270,20 +282,23 @@ onMounted(() => {
           <div><br>IYP Public Instance Link: <a href="https://iyp.iijlab.net/">https://iyp.iijlab.net/</a></div>
         </QTabPanel>
         <QTabPanel name="metadata">
-          <h3>Data Sources</h3>
           <QMarkupTable flat bordered v-if="!loadingStatus">
             <thead>
               <tr>
-                <th>Reference Organization</th>
-                <th>Reference Time</th>
-                <th>Reference URL</th>
+                <th class="text-left">Reference Organization</th>
+                <th class="text-left">Reference Time</th>
+                <th class="text-left">Reference URL</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="obj in metadata">
-                <td>{{ obj.reference_org }}</td>
-                <td>{{ obj.reference_time }}</td>
-                <td>{{ obj.reference_url }}</td>
+              <tr v-for="key in Object.keys(metadata)">
+                <td class="text-left">{{ key }}</td>
+                <td class="text-left">
+                  <div v-for="time in metadata[key].reference_time">{{ time }}</div>
+                </td>
+                <td class="text-left">
+                  <div v-for="url in metadata[key].reference_url"><a :href="url">{{ url }}</a></div>
+                </td>
               </tr>
             </tbody>
           </QMarkupTable>
