@@ -1,6 +1,6 @@
 <script setup>
 import { QChip, QSpinner } from 'quasar'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
 
@@ -25,6 +25,8 @@ const props  = defineProps({
     default: false,
   }
 })
+
+const route = useRoute()
 
 const REFERENCES = {
   'bgp.he.net': 'https://bgp.he.net',
@@ -152,9 +154,9 @@ onMounted(() => {
                 <h3>Summary</h3>
                 <div v-if="queries[0].data.length > 0" class="q-ml-sm">
                   <p>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].get('cc') } })"> {{ queries[0].data[0].get('country') }} </RouterLink></p>
-                  <p>Member of {{ queries[0].data[0].get('nb_ixp') }} IXPs in {{ queries[0].data[0].get('nb_country') }} Countries</p>
-                  <p>{{ queries[0].data[0].get('prefixes_v4') }} IPv4 and {{ queries[0].data[0].get('prefixes_v6') }} IPv6 Originated Prefixes</p>
-                  <p v-if="queries[1].data.length > 0">{{ queries[1].data[0].get('peers') }} Connected ASes</p>
+                  <p>Member of <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([14])}), hash: '#ixps'})">{{ queries[0].data[0].get('nb_ixp') }} IXPs in {{ queries[0].data[0].get('nb_country') }} Countries</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#originated-prefixes'})">{{ queries[0].data[0].get('prefixes_v4') }} IPv4 and {{ queries[0].data[0].get('prefixes_v6') }} IPv6 Originated Prefixes</RouterLink></p>
+                  <p v-if="queries[1].data.length > 0"><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([9])}), hash: '#connected-ases'})">{{ queries[1].data[0].get('peers') }} Connected ASes</RouterLink></p>
                   <p>
                     Website: <a :href="queries[0].data[0].get('website')" target="_blank" rel="noopener noreferrer">{{ queries[0].data[0].get('website')}}</a>
                   </p>

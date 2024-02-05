@@ -97,8 +97,13 @@ watch(() => route.params.cc, (country) => {
 watch(interval, () => {
   pushRoute()
 })
+watch(() => route.query.active, (active) => {
+  if (active != menu.value) {
+    menu.value = active
+  }
+})
 watch(menu, () => {
-  if ('display' in route.query) {
+  if ('display' in route.query && !route.hash.includes('#')) {
     delete route.query.display
   }
   router.push(Tr.i18nRoute({

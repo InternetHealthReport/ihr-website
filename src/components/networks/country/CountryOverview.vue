@@ -1,6 +1,6 @@
 <script setup>
 import { QSpinner } from 'quasar'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
 
@@ -18,6 +18,8 @@ const props = defineProps({
     required: true,
   }
 })
+
+const route = useRoute()
 
 const references = ref(REFERENCES)
 const loading = ref(3)
@@ -117,10 +119,10 @@ onMounted(() => {
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
                 <div v-if="queries[0].data.length > 0" class="q-ml-sm">
-                  <p>{{ queries[0].data[0].get('as_count') }} registered ASes</p>
-                  <p>{{ queries[0].data[0].get('preg_count') }} registered prefixes</p>
-                  <p>{{ queries[0].data[0].get('pgeo_count') }} geolocated prefixes</p>
-                  <p>{{ queries[0].data[0].get('ixp_count') }} Internet Exchange Points</p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([6])}), hash: '#autonomous-systems'})">{{ queries[0].data[0].get('as_count') }} registered ASes</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].get('preg_count') }} registered prefixes</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].get('pgeo_count') }} geolocated prefixes</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#internet-exchange-points'})">{{ queries[0].data[0].get('ixp_count') }} Internet Exchange Points</RouterLink></p>
                 </div>
               </div>
               <div class="col-12 col-md-auto">
