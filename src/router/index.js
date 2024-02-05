@@ -15,6 +15,7 @@ import Networks from '../views/Networks.vue'
 import Tags from '../views/Tags.vue'
 import HostNames from '../views/HostNames.vue'
 import Countries from '../views/Countries.vue'
+import Rankings from '../views/Rankings.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -73,6 +74,11 @@ const router = createRouter({
           path: 'hostnames/:hostName?',
           name: 'hostnames',
           component: HostNames
+        },
+        {
+          path: 'rankings',
+          name: 'rankings',
+          component: Rankings
         },
         {
           path: 'documentation',
