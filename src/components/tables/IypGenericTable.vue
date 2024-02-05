@@ -113,7 +113,6 @@ const getMetadataQuery = () => {
     }
   })
   query += ` UNWIND ${listVars.join('+')} AS metadata_list RETURN DISTINCT metadata_list`
-  console.log(query)
   return query
 }
 
