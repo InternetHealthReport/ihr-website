@@ -91,7 +91,11 @@ if (status !== true) {
 
 const getMetadataQuery = () => {
   let query = props.cypherQuery.replace(/(RETURN|return)(?:.)*/gm, '')
+  query = query.replace(/(CALL|call)(?:.|\n)*}/gm, '')
+  query = query.replace(/(ORDER|order)(?:.|\n)*/gm, '')
+  query = query.replace(/(WHERE|where)(?:.|n)*/gm, '')
   query = query.replace(/\[(?:.)*?:/gm, '[:')
+  query = query.replaceAll('*', '')
   query = query.split('[:')
   const queryVars = []
   for (let i=1; i<query.length; i++) {
@@ -109,6 +113,7 @@ const getMetadataQuery = () => {
     }
   })
   query += ` UNWIND ${listVars.join('+')} AS metadata_list RETURN DISTINCT metadata_list`
+  console.log(query)
   return query
 }
 

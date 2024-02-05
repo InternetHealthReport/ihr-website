@@ -39,7 +39,6 @@ const selects = ref([
   { value: false, label: t('charts.iodaChart.title') },
   { value: false, label: t('charts.prefixHegemony.title') },
   { value: false, label: t('charts.networkDelay.title') },
-  { value: false, label: t('charts.networkDelay.title') },
   { value: false, label: t('iyp.as.atlas.title') },
   { value: false, label: t('charts.delayAndForwarding.title') },
   { value: false, label: t('charts.disconnections.title') },
