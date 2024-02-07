@@ -44,6 +44,7 @@ onMounted(() => {
               :noPrefix="true"
               :noCountry="true"
               :noTag="true"
+              :noRank="true"
             />
           </div>
         </div>

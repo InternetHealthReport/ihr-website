@@ -55,6 +55,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  noRank: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const route = useRoute()
@@ -166,6 +170,9 @@ const mixedEntitySearch = async (value) => {
   if (!props.noTag) {
     funcs.push(queryTags)
   }
+  if (!props.noRank) {
+    funcs.push(queryRanks)
+  }
   if (!funcs.length) {
     return []
   }
@@ -219,6 +226,16 @@ const queryTags = (value) => {
   const mapping = {
     name: 'label',
     id: 'label',
+    node: 'node'
+  }
+  return { cypherQuery: query, params: { value: value }, mapping }
+}
+
+const queryRanks = (value) => {
+  const query = 'MATCH (r:Ranking) WHERE toLower(r.name) STARTS WITH $value RETURN r.name as name, head(labels(r)) as node LIMIT 10'
+  const mapping = {
+    name: 'name',
+    id: 'name',
     node: 'node'
   }
   return { cypherQuery: query, params: { value: value }, mapping }
@@ -322,6 +339,19 @@ const routeToTag = (tag) => {
   }))
 }
 
+const routeToRank = (rank) => {
+  const oldRank = paramExists('rank')
+  if (oldRank) {
+    if (oldRank == rank) {
+      return
+    }
+  }
+  router.push(Tr.i18nRoute({
+    name: 'ranks',
+    params: { rank: rank },
+  }))
+}
+
 const placeholder = computed(() => {
   if (props.labelTxt == null) {
     return `${t('searchBar.placeholder')}`
@@ -378,6 +408,10 @@ const placeholder = computed(() => {
       </QItem>
       <QItem v-if="scope.opt.type == 'Tag'" v-bind="scope.itemProps" @click="routeToTag(scope.opt.value)">
         <QItemSection side color="accent">Tag</QItemSection>
+        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+      </QItem>
+      <QItem v-if="scope.opt.type == 'Ranking'" v-bind="scope.itemProps" @click="routeToRank(scope.opt.value)">
+        <QItemSection side color="accent">Rank</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
       <QItem v-if="scope.opt.type == 'Fail'" v-bind="scope.itemProps">

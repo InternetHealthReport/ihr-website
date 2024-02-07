@@ -43,6 +43,8 @@ onMounted(() => {
               :noIXP="true"
               :noPrefix="true"
               :noCountry="true"
+              :noRank="true"
+              :noHostName="true"
             />
           </div>
         </div>

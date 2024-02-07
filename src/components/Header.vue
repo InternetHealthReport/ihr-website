@@ -44,6 +44,11 @@ const  SIMPLE_MENU = [
         summary: 'header.tagReport.summary',
       },
       {
+        entryName: 'header.rankReport.name',
+        routeName: 'ranks',
+        summary: 'header.rankReport.summary',
+      },
+      {
         entryName: 'header.rovReport.name',
         routeName: 'rov',
         summary: 'header.rovReport.summary',

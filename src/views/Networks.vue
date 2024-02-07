@@ -71,6 +71,7 @@ onMounted(() => {
               :noCountry="true"
               :noHostName="true"
               :noTag="true"
+              :noRank="true"
             />
           </div>
         </div>

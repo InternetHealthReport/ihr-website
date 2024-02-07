@@ -38,6 +38,10 @@
       "name": "Tag",
       "summary": "Details for a tag"
     },
+    "rankReport": {
+      "name": "Rank",
+      "summary": "Details for a rank"
+    },
     "rovReport": {
       "name": "Route Origin Validation",
       "summary": "Route Origin Validation of resources seen on BGP"
@@ -62,6 +66,7 @@
       "country": "country ",
       "hostName": "host name ",
       "tag": "tag ",
+      "rank": "rank ",
       "rov": "ROV ",
       "covid19": "COVID19 ",
       "global": "global "
