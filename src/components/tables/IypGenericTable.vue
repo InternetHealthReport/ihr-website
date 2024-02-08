@@ -282,7 +282,7 @@ onMounted(() => {
           </QTable>
         </QTabPanel>
         <QTabPanel name="api" class="text-left q-pa-lg" light>
-          <QBtn dense flat @click="copyToClipboard(cypherQuery)">
+          <QBtn no-caps dense flat @click="copyToClipboard(cypherQuery)">
             <code>{{ cypherQuery }}</code>
             <QTooltip>Click to copy</QTooltip>
           </QBtn>

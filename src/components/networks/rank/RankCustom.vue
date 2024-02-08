@@ -101,7 +101,7 @@ onMounted(() => {
   </GenericCardController>
   <GenericCardController
     title="Host Name rankings"
-    :sub-title="'Top Host Names in '+pageTitle+' (top 10K)'"
+    :sub-title="'Top Host Names in '+pageTitle+' (limited to 100K)'"
     class="card"
     v-if="selects[1].value"
   >

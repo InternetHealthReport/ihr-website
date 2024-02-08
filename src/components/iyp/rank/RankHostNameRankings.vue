@@ -19,7 +19,7 @@ const rankings = ref({
   query: `MATCH (d:DomainName)-[r:RANK]-(:Ranking {name: $rank})
     RETURN r.rank AS rank, d.name AS name
     ORDER BY rank
-    LIMIT 10000`,
+    LIMIT 100000`,
   columns: [
     { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.get('rank')), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
     { name: 'Host Name', label: 'Host Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true, description: 'Host Name.'    },
