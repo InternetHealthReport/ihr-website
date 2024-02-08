@@ -49,7 +49,7 @@ const getInfo = () => {
   const mapping = {
     name: 'name',
   }
-  return [{ query: query, params: { asn: asNumber.value }, mapping, data: 'asName' }]
+  return [{ statement: query, parameters: { asn: asNumber.value } }]
 }
 
 const fetchData = async () => {
@@ -58,8 +58,8 @@ const fetchData = async () => {
   loadingStatus.value = true
 
   try {
-    let res = await iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-    asName.value = res.asName[0].name
+    let res = await iyp_api.run(queries)
+    asName.value = res[0][0].name
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false

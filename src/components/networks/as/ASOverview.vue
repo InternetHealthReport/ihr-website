@@ -76,25 +76,33 @@ const loading = ref(3)
 const references = ref(REFERENCES)
 const pdbid = ref(null)
 
-const fetchData = (asn) => {
+const fetchData = async (asn) => {
   let params = { asn: asn }
-  let res = iyp_api.runManyInParallel(queries.value, params)
+  let res = await iyp_api.run(queries.value.map(obj => ({statement: obj.query, parameters: params})))
 
-  res[0].then( results => {
-    queries.value[0].data = results.records
-    loading.value -= 1
-  })
+  queries.value[0].data = res[0]
+  loading.value -= 1
+  queries.value[1].data = res[1]
+  pdbid.value = queries.value[1].peeringdbNetId
+  loading.value -= 1
+  queries.value[2].data = res[2]
+  loading.value -= 1
 
-  res[1].then( results => {
-    queries.value[1].data = results.records
-    pdbid.value = queries.value[1].data[0].get('peeringdbNetId')
-    loading.value -= 1
-  })
+  // res[0].then( results => {
+  //   queries.value[0].data = results.records
+  //   loading.value -= 1
+  // })
 
-  res[2].then( results => {
-    queries.value[2].data = results.records
-    loading.value -= 1
-  })
+  // res[1].then( results => {
+  //   queries.value[1].data = results.records
+  //   pdbid.value = queries.value[1].data[0].get('peeringdbNetId')
+  //   loading.value -= 1
+  // })
+
+  // res[2].then( results => {
+  //   queries.value[2].data = results.records
+  //   loading.value -= 1
+  // })
 }
 
 const formatRank = (rank, name) => {
@@ -153,28 +161,28 @@ onMounted(() => {
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
                 <div v-if="queries[0].data.length > 0" class="q-ml-sm">
-                  <p>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].get('cc') } })"> {{ queries[0].data[0].get('country') }} </RouterLink></p>
-                  <p>Member of <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([14])}), hash: '#ixps'})">{{ queries[0].data[0].get('nb_ixp') }} IXPs in {{ queries[0].data[0].get('nb_country') }} Countries</RouterLink></p>
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#originated-prefixes'})">{{ queries[0].data[0].get('prefixes_v4') }} IPv4 and {{ queries[0].data[0].get('prefixes_v6') }} IPv6 Originated Prefixes</RouterLink></p>
-                  <p v-if="queries[1].data.length > 0"><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([9])}), hash: '#connected-ases'})">{{ queries[1].data[0].get('peers') }} Connected ASes</RouterLink></p>
+                  <p>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></p>
+                  <p>Member of <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([14])}), hash: '#ixps'})">{{ queries[0].data[0].nb_ixp }} IXPs in {{ queries[0].data[0].nb_country }} Countries</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#originated-prefixes'})">{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 Originated Prefixes</RouterLink></p>
+                  <p v-if="queries[1].data.length > 0"><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([9])}), hash: '#connected-ases'})">{{ queries[1].data[0].peers }} Connected ASes</RouterLink></p>
                   <p>
-                    Website: <a :href="queries[0].data[0].get('website')" target="_blank" rel="noopener noreferrer">{{ queries[0].data[0].get('website')}}</a>
+                    Website: <a :href="queries[0].data[0].website" target="_blank" rel="noopener noreferrer">{{ queries[0].data[0].website}}</a>
                   </p>
                 </div>
               </div>
               <div v-if="queries[1].data.length > 0" class="col-12 col-md-auto">
                 <h3>Ranking</h3>
                 <div class="q-ml-sm">
-                  <div>{{ queries[1].data[0].get('ranking_name') }}</div>
-                  <div class="text-h2 text-center">{{ queries[1].data[0].get('rank') }}</div>
+                  <div>{{ queries[1].data[0].ranking_name }}</div>
+                  <div class="text-h2 text-center">{{ queries[1].data[0].rank }}</div>
                 </div>
               </div>
               <div class="col-12 col-md-2">
                 <h3>Popular Host Names</h3>
                 <div class="column q-ml-sm">
                   <div v-if="queries[2].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.get('domainName')}})" v-for="item in queries[2].data" :key="item.get('domainName')">
-                      {{ item.get('domainName') }}
+                    <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.domainName}})" v-for="item in queries[2].data" :key="item.domainName">
+                      {{ item.domainName }}
                     </RouterLink>
                   </div>
                 </div>
@@ -192,7 +200,7 @@ onMounted(() => {
             <div class="row">
               <div  v-if="queries[0].data.length > 0" class="q-mt-md">
                 <h3>Tags</h3>
-                <RouterLink v-for="tag in queries[0].data[0].get('tags')" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}})">
+                <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}})">
                   <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
                 </RouterLink>
               </div>
