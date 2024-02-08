@@ -4,9 +4,8 @@ const IYP_API_BASE = 'neo4j+s://iyp-bolt.iijlab.net:443'
 
 const IypApi = {
   install: (app, options) => {
-    const driver = neo4j.driver(IYP_API_BASE)
-
     const _getSession = (options = { defaultAccessMode: neo4j.session.READ }) => {
+      const driver = neo4j.driver(IYP_API_BASE)
       if (!driver) {
         throw new Error('A connection has not been made to Neo4j.')
       }
