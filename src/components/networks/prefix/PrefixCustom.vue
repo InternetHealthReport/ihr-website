@@ -13,7 +13,7 @@ import PrefixMoreSpecificPrefixes from '@/components/iyp/prefix/PrefixMoreSpecif
 import PrefixPopularDomains from '@/components/iyp/prefix/PrefixPopularDomains.vue'
 import PrefixAuthoritativeNameservers from '@/components/iyp/prefix/PrefixAuthoritativeNameservers.vue'
 
-const props = defineProps(['host', 'prefixLength', 'getPrefix', 'pageTitle'])
+const props = defineProps(['host', 'prefixLength', 'getPrefix', 'pageTitle', 'hash'])
 
 const route = useRoute()
 const router = useRouter()
@@ -46,6 +46,14 @@ const pushRoute = () => {
   }))
 }
 
+const hashToDisplay = () => {
+  selects.value.forEach(obj => {
+    if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
+      obj.value = true
+    }
+  })
+}
+
 watch(selects.value, () => {
   pushRoute()
 })
@@ -57,6 +65,8 @@ watch(selectAll, () => {
 onMounted(() => {
   if (displayWidgets.value.length === selects.value.length) {
     selectAll.value = true
+  } else if (props.hash) {
+    hashToDisplay()
   } else {
     displayWidgets.value.forEach(val => selects.value[val].value = true)
   }

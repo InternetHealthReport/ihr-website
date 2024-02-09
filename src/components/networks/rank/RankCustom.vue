@@ -8,7 +8,7 @@ import GenericCardController from '@/components/controllers/GenericCardControlle
 import RankASRankings from '@/components/iyp/rank/RankASRankings.vue'
 import RankHostNameRankings from '@/components/iyp/rank/RankHostNameRankings.vue'
 
-const props = defineProps(['rank', 'pageTitle'])
+const props = defineProps(['rank', 'pageTitle', 'hash'])
 
 const iyp_api = inject('iyp_api')
 
@@ -55,6 +55,14 @@ const pushRoute = () => {
   }))
 }
 
+const hashToDisplay = () => {
+  selects.value.forEach(obj => {
+    if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
+      obj.value = true
+    }
+  })
+}
+
 watch(selects.value, () => {
   pushRoute()
 })
@@ -67,6 +75,8 @@ onMounted(() => {
   init()
   if (displayWidgets.value.length === selects.value.length) {
     selectAll.value = true
+  } else if (props.hash) {
+    hashToDisplay()
   } else {
     displayWidgets.value.forEach(val => selects.value[val].value = true)
   }

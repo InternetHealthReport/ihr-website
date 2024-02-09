@@ -18,6 +18,7 @@ const router = useRouter()
 const activeTab = 'overview'
 const activeMenu = route.query.active ? route.query.active : activeTab
 
+const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
 const tag = ref(route.params.tag)
 const tagName = ref(null)
@@ -113,6 +114,7 @@ onMounted(() => {
         <QTabPanel name="custom">
           <TagCustom
             :tag="tag"
+            :hash="routeHash"
           />
         </QTabPanel>
       </QTabPanels>

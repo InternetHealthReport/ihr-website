@@ -33,6 +33,7 @@ if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[
 
 const activeMenu = route.query.active ? route.query.active : 'overview'
 
+const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
 const asNumber = ref(Number(route.params.id.replace('AS','')))
 const asName = ref(null)
@@ -222,6 +223,7 @@ onMounted(() => {
             :page-title="pageTitle"
             :peeringdbId="setPeeringdbId"
             :interval="interval"
+            :hash="routeHash"
           />
         </QTabPanel>
       </QTabPanels>

@@ -20,7 +20,7 @@ const props = defineProps({
 const route = useRoute()
 
 const showReportDayRange = ref(false)
-const anchorUrl = ref(props.title.toLowerCase().replaceAll(' ', '-'))
+const anchorUrl = ref(props.title.replaceAll(' ', '-'))
 
 const reportDayText = computed(() => {
   if (props.reportDay) {
@@ -30,7 +30,10 @@ const reportDayText = computed(() => {
 })
 
 const getUrlAnchor = () => {
-  return `${window.location.href.replace(/#(?:.)*/gm, '')}#${anchorUrl.value}`
+  let anchor  = `${window.location.href.replace(/#(?:.)*/gm, '')}#${anchorUrl.value}`
+  anchor = anchor.replace(/active=(?:.)*&/gm, 'active=custom&')
+  anchor = anchor.replace(/active=(?:.)*#/gm, 'active=custom#')
+  return anchor
 }
 </script>
 

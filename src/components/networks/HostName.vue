@@ -20,6 +20,7 @@ const router = useRouter()
 const activeTab = 'routing'
 const activeMenu = route.query.active ? route.query.active : activeTab
 
+const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
 const domain = ref(route.params.hostName)
 const domainName = ref(null)
@@ -135,6 +136,7 @@ onMounted(() => {
           <HostNameCustom
             :page-title="pageTitle"
             :host-name="domainName"
+            :hash="routeHash"
           />
         </QTabPanel>
       </QTabPanels>

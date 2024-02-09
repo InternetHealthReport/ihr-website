@@ -17,6 +17,7 @@ const router = useRouter()
 const activeTab = 'custom'
 const activeMenu = route.query.active ? route.query.active : activeTab
 
+const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
 const rank = ref(route.params.rank)
 const rankName = ref(null)
@@ -107,6 +108,7 @@ onMounted(() => {
           <RankCustom
             :rank="rank"
             :page-title="pageTitle"
+            :hash="routeHash"
           />
         </QTabPanel>
       </QTabPanels>

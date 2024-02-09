@@ -31,6 +31,7 @@ if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[
 
 const activeMenu = route.query.active ? route.query.active : 'overview'
 
+const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
 const countryCode = ref(route.params.cc)
 const countryName = ref(null)
@@ -196,6 +197,7 @@ onMounted(() => {
             :family="family"
             :page-title="pageTitle"
             :interval="interval"
+            :hash="routeHash"
           />
         </QTabPanel>
       </QTabPanels>

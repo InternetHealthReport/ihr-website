@@ -16,7 +16,7 @@ import CountryIPPrefixes from '@/components/iyp/country/CountryIPPrefixes.vue'
 import CountryInternetExchangePoints from '@/components/iyp/country/CountryInternetExchangePoints.vue'
 import CountryASRankings from '@/components/iyp/country/CountryASRankings.vue'
 
-const props = defineProps(['startTime', 'endTime', 'countryCode', 'family', 'pageTitle', 'interval'])
+const props = defineProps(['startTime', 'endTime', 'countryCode', 'family', 'pageTitle', 'interval', 'hash'])
 
 const route = useRoute()
 const router = useRouter()
@@ -62,6 +62,14 @@ const pushRoute = () => {
   }))
 }
 
+const hashToDisplay = () => {
+  selects.value.forEach(obj => {
+    if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
+      obj.value = true
+    }
+  })
+}
+
 watch(selects.value, () => {
   pushRoute()
 })
@@ -73,6 +81,8 @@ watch(selectAll, () => {
 onMounted(() => {
   if (displayWidgets.value.length === selects.value.length) {
     selectAll.value = true
+  } else if (props.hash) {
+    hashToDisplay()
   } else {
     displayWidgets.value.forEach(val => selects.value[val].value = true)
   }

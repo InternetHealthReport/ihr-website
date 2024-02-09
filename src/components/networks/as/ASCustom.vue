@@ -23,8 +23,9 @@ import ASIXPs from '@/components/iyp/as/ASIXPs.vue'
 import ASCoLocatedASes from '@/components/iyp/as/ASCoLocatedASes.vue'
 import ASSiblingASes from '@/components/iyp/as/ASSiblingASes.vue'
 import ASRankings from '@/components/iyp/as/ASRankings.vue'
+import { P } from 'plotly.js-dist'
 
-const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'peeringdbId', 'pageTitle', 'interval'])
+const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'peeringdbId', 'pageTitle', 'interval', 'hash'])
 
 const route = useRoute()
 const router = useRouter()
@@ -68,6 +69,14 @@ const pushRoute = () => {
   }))
 }
 
+const hashToDisplay = () => {
+  selects.value.forEach(obj => {
+    if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
+      obj.value = true
+    }
+  })
+}
+
 watch(selects.value, () => {
   pushRoute()
 })
@@ -79,6 +88,8 @@ watch(selectAll, () => {
 onMounted(() => {
   if (displayWidgets.value.length === selects.value.length) {
     selectAll.value = true
+  } else if (props.hash) {
+    hashToDisplay()
   } else {
     displayWidgets.value.forEach(val => selects.value[val].value = true)
   }

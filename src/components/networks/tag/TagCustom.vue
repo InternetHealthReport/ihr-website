@@ -10,7 +10,7 @@ import TagPrefixes from '@/components/iyp/tag/TagPrefixes.vue'
 import TagAutonomousSystems from '@/components/iyp/tag/TagAutonomousSystems.vue'
 import TagPopularHostNames from '@/components/iyp/tag/TagPopularHostNames.vue'
 
-const props = defineProps(['tag'])
+const props = defineProps(['tag', 'hash'])
 
 const iyp_api = inject('iyp_api')
 
@@ -66,6 +66,14 @@ const pushRoute = () => {
   }))
 }
 
+const hashToDisplay = () => {
+  selects.value.forEach(obj => {
+    if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
+      obj.value = true
+    }
+  })
+}
+
 watch(selects.value, () => {
   pushRoute()
 })
@@ -78,6 +86,8 @@ onMounted(() => {
   init()
   if (displayWidgets.value.length === selects.value.length) {
     selectAll.value = true
+  } else if (props.hash) {
+    hashToDisplay()
   } else {
     displayWidgets.value.forEach(val => selects.value[val].value = true)
   }

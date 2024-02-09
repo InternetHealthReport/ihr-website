@@ -19,6 +19,7 @@ const router = useRouter()
 
 const activeMenu = route.query.active ? route.query.active : 'overview'
 
+const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
 const host = ref(route.params.id)
 const prefixLength = ref(Number(route.params.length))
@@ -135,6 +136,7 @@ onMounted(() => {
             :prefix-length="prefixLength"
             :page-title="pageTitle"
             :get-prefix="getPrefix()"
+            :hash="routeHash"
           />
         </QTabPanel>
       </QTabPanels>
