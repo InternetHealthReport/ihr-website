@@ -53,7 +53,6 @@ watch(() => route.params.tag, (newTag) => {
   if (newTag != tag.value) {
     tag.value = newTag
     if (tag.value) {
-      pushRoute()
       menu.value = activeTab
       fetchData()
     }

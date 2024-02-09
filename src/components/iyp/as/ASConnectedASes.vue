@@ -19,10 +19,10 @@ const peers = ref({
   query: `MATCH (a:AS {asn: $asn})-[:PEERS_WITH]-(peer:AS)
     OPTIONAL MATCH (peer)-[:NAME]->(n:Name)
     OPTIONAL MATCH (peer)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
-    RETURN c.country_code AS cc, peer.asn AS asn, head(collect(DISTINCT(n.name))) AS name`,
+    RETURN c.country_code AS cc, 'AS'+peer.asn AS asn, head(collect(DISTINCT(n.name))) AS name`,
   columns: [
     { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `${val}`, sortable: true },
     { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
   ]
 })

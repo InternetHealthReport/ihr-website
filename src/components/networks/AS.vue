@@ -75,7 +75,8 @@ const pushRoute = () => {
     query: Object.assign({}, route.query, {
       af: family.value,
       last: interval.value.dayDiff(),
-      date: utcString(interval.value.end).split('T')[0]
+      date: utcString(interval.value.end).split('T')[0],
+      active: menu.value ? menu.value : activeMenu
     })
   }))
 }
@@ -97,7 +98,6 @@ watch(() => route.params.id, (asn) => {
     asNumber.value = newAsn
     if (asNumber.value) {
       pushRoute()
-      menu.value = 'overview'
       fetchData()
     }
   }
@@ -114,12 +114,7 @@ watch(menu, () => {
   if ('display' in route.query && !route.hash.includes('#')) {
     delete route.query.display
   }
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      active: menu.value
-    })
-  }))
+  pushRoute()
 })
 onMounted(() => {
   if (asNumber.value) {

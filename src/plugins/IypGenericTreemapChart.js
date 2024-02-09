@@ -6,6 +6,7 @@ const Address4 = ipAddress.Address4
 const Address6 = ipAddress.Address6
 
 export default function treemapClicked(event) {
+  // console.log(event)
   if (event.points && event.points.length) {
     const network = event.points[0].label
     if (typeof network === 'string') {
@@ -42,7 +43,7 @@ export default function treemapClicked(event) {
           name: 'hostnames',
           params: { hostName: network },
         }))
-      } else if (network.includes('AS')) {
+      } else if (Number(network.replace('AS', ''))) {
         event.router.push(Tr.i18nRoute({
           name: 'networks',
           params: { id: network },

@@ -52,7 +52,6 @@ watch(() => route.params.rank, (newRank) => {
   if (newRank != rank.value) {
     rank.value = newRank
     if (rank.value) {
-      pushRoute()
       menu.value = activeTab
       fetchData()
     }

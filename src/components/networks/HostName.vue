@@ -55,7 +55,6 @@ watch(() => route.params.hostName, (newDomain) => {
   if (newDomain != domain.value) {
     domain.value = newDomain
     if (domain.value) {
-      pushRoute()
       menu.value = activeTab
       fetchData()
     }
