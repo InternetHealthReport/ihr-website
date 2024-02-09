@@ -28,10 +28,7 @@ const menu = ref(activeMenu)
 const getInfo = () => {
   const query = `MATCH (d:DomainName {name: $domain})
       RETURN d.name AS name`
-  const mapping = {
-    name: 'name',
-  }
-  return [{ query: query, params: { domain: domain.value }, mapping, data: 'hostName' }]
+  return [{ statement: query, parameters: { domain: domain.value } }]
 }
 
 const fetchData = async () => {
@@ -40,8 +37,8 @@ const fetchData = async () => {
   loadingStatus.value = true
 
   try {
-    let res = await iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-    domainName.value = res.hostName[0].name
+    let res = await iyp_api.run(queries)
+    domainName.value = res[0][0].name
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false

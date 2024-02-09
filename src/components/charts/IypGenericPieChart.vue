@@ -45,7 +45,7 @@ const formatChartData = (arrayOfObjects) => {
   }
   const map = {}
   arrayOfObjects.forEach(item => {
-    const countryCode = item.get('cc')
+    const countryCode = item.cc
     if (!map[countryCode]) {
       map[countryCode] = 1
     } else {

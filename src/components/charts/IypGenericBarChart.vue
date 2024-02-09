@@ -28,15 +28,15 @@ const renderChart = () => {
     // find all different values for the groupping field
     let group_values = []
     localChartData.value.forEach( item => {
-      if (!group_values.includes(item.get(props.config.groupKey))) {
-        group_values.push(item.get(props.config.groupKey))
+      if (!group_values.includes(item[props.config.groupKey])) {
+        group_values.push(item[props.config.groupKey])
       }
     })
 
     console.log( group_values)
     
     group_values.forEach(group => {
-      const filtData = localChartData.value.filter((item) => item.get(props.config.groupKey) == group)
+      const filtData = localChartData.value.filter((item) => item[props.config.groupKey] == group)
 
       const formattedData = formatChartData(filtData)
       const groupedData = groupTopThreeAndExceptAsOthers(formattedData)
@@ -80,12 +80,12 @@ const formatChartData = (arrayOfObjects) => {
   const map = {}
   let prefix = props.config.xlabel_prefix ? props.config.xlabel_prefix : ''
   arrayOfObjects.forEach(item => {
-    let keys = item.get(props.config.key)
+    let keys = item[props.config.key]
     if(!Array.isArray(keys)) {
       keys = [keys]
     }
     keys.forEach(key => {
-      let value = props.config.value? item.get(props.config.value): 1
+      let value = props.config.value? item[props.config.value]: 1
       if (!map[prefix+String(key)]) {
         map[prefix+String(key)] = value
       } else {

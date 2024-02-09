@@ -54,19 +54,14 @@ const queries = ref([
   }
 ])
 
-const fetchData = () => {
+const fetchData = async () => {
   let params = { prefix: props.getPrefix }
-  let res = iyp_api.runManyInParallel(queries.value, params)
+  let results = await iyp_api.run(queries.value.map(obj => ({statement: obj.query, parameters: params})))
 
-  res[0].then( results => {
-    queries.value[0].data = results.records
-    loading.value -= 1
-  })
-
-  res[1].then( results => {
-    queries.value[1].data = results.records
-    loading.value -= 1
-  })
+  queries.value[0].data = results[0]
+  loading.value -= 1
+  queries.value[1].data = results[1]
+  loading.value -= 1
 }
 
 const handleReference = (key) => {
@@ -119,14 +114,14 @@ onMounted(() => {
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
                 <div v-if="queries[0].data.length > 0" class="q-ml-sm">
-                  <p v-if="queries[0].data[0].get('country')">
+                  <p v-if="queries[0].data[0].country">
                     Registered in
-                    <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc:queries[0].data[0].get('cc') } })">{{ queries[0].data[0].get('country') }}</RouterLink>
-                    ({{ queries[0].data[0].get('rir').toUpperCase() }})
+                    <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc:queries[0].data[0].cc } })">{{ queries[0].data[0].country }}</RouterLink>
+                    ({{ queries[0].data[0].rir.toUpperCase() }})
                   </p>
-                  <div v-if="queries[0].data[0].get('asn')[0][0]">
+                  <div v-if="queries[0].data[0].asn[0][0]">
                     <p>Originated by:</p>
-                      <div v-for="item in queries[0].data[0].get('asn')" :key='item[0]' target="_blank">
+                      <div v-for="item in queries[0].data[0].asn" :key='item[0]' target="_blank">
                         <RouterLink :to="Tr.i18nRoute({ name:'networks', params:{ id:`AS${item[0]}` } })">
                         AS{{ item[0] }} {{ item[1] }}
                         </RouterLink>
@@ -140,8 +135,8 @@ onMounted(() => {
               <div class="col-12 col-md-auto">
                 <h3>Popular Domains</h3>
                 <div  v-if="queries[1].data.length > 0" class="q-ml-sm column">
-                  <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.get('domain')}})" v-for="item in queries[1].data" :key="item.get('domain')">
-                    {{ item.get('domain') }}
+                  <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.domain}})" v-for="item in queries[1].data" :key="item.domain">
+                    {{ item.domain }}
                   </RouterLink>
                 </div>
               </div>
@@ -157,7 +152,7 @@ onMounted(() => {
             <div class="row">
               <div v-if="queries[0].data.length > 0" class="q-mt-md">
                 <h3>Tags</h3>
-                <RouterLink v-for="tag in queries[0].data[0].get('tags')" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}})">
+                <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}})">
                   <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
                 </RouterLink>
               </div>

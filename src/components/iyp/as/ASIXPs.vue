@@ -20,9 +20,9 @@ const ixps = ref({
     OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
     RETURN c.country_code as cc, i.name as name, p.id as id`,
   columns: [
-    { name: 'Country', label: 'Country', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
-    { name: 'IXP', label: 'IXP Name', align: 'left', field: row => row.get('name'), format: val => `${val}` },
-    { name: 'PeeringDB ID', label: 'PeeringDB ID', align: 'left', field: row => row.get('id'), format: val => `${val}` },
+    { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+    { name: 'IXP', label: 'IXP Name', align: 'left', field: row => row.name, format: val => `${val}` },
+    { name: 'PeeringDB ID', label: 'PeeringDB ID', align: 'left', field: row => row.id, format: val => `${val}` },
   ]
 })
 
@@ -30,9 +30,9 @@ const load = () => {
   ixps.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run(ixps.value.query, query_params).then(
+  iyp_api.run([{statement: ixps.value.query, parameters: query_params}]).then(
     results => {
-      ixps.value.data = results.records
+      ixps.value.data = results[0]
       ixps.value.loading = false
     }
   )

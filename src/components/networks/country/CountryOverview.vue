@@ -56,24 +56,16 @@ const queries = ref([
   }
 ])
 
-const fetchData = (cc) => {
+const fetchData = async (cc) => {
   let params = { cc: cc.toUpperCase() }
-  let res = iyp_api.runManyInParallel(queries.value, params)
+  let results = await iyp_api.run(queries.value.map(obj => ({statement: obj.query, parameters: params})))
 
-  res[0].then( results => {
-    queries.value[0].data = results.records
-    loading.value -= 1
-  })
-
-  res[1].then( results => {
-    queries.value[1].data = results.records
-    loading.value -= 1
-  })
-
-  res[2].then( results => {
-    queries.value[2].data = results.records
-    loading.value -= 1
-  })
+  queries.value[0].data = results[0]
+  loading.value -= 1
+  queries.value[1].data = results[1]
+  loading.value -= 1
+  queries.value[2].data = results[2]
+  loading.value -= 1
 }
 
 const handleReference = (key) => {
@@ -119,18 +111,18 @@ onMounted(() => {
               <div class="col-12 col-md-auto">
                 <h3>Summary</h3>
                 <div v-if="queries[0].data.length > 0" class="q-ml-sm">
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([6])}), hash: '#autonomous-systems'})">{{ queries[0].data[0].get('as_count') }} registered ASes</RouterLink></p>
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].get('preg_count') }} registered prefixes</RouterLink></p>
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].get('pgeo_count') }} geolocated prefixes</RouterLink></p>
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#internet-exchange-points'})">{{ queries[0].data[0].get('ixp_count') }} Internet Exchange Points</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([6])}), hash: '#autonomous-systems'})">{{ queries[0].data[0].as_count }} registered ASes</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].preg_count }} registered prefixes</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].pgeo_count }} geolocated prefixes</RouterLink></p>
+                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#internet-exchange-points'})">{{ queries[0].data[0].ixp_count }} Internet Exchange Points</RouterLink></p>
                 </div>
               </div>
               <div class="col-12 col-md-auto">
                 <h3>Prominent ISPs</h3>
                 <div class="column q-ml-sm">
                   <div v-if="queries[1].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.get('asn')}`} })" v-for="item in queries[1].data" :key="Number(item.get('asn'))">
-                      AS{{ item.get('asn') }} - {{ item.get('as_name') }}
+                    <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.asn}`} })" v-for="item in queries[1].data" :key="Number(item.asn)">
+                      AS{{ item.asn }} - {{ item.as_name }}
                     </RouterLink>
                   </div>
                 </div>
@@ -139,8 +131,8 @@ onMounted(() => {
                 <h3>Prominent Hosting Providers</h3>
                 <div class="column q-ml-sm">
                   <div v-if="queries[2].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.get('asn')}`} })" v-for="item in queries[2].data" :key="Number(item.get('asn'))">
-                      AS{{ item.get('asn') }} - {{ item.get('as_name') }}
+                    <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.asn}`} })" v-for="item in queries[2].data" :key="Number(item.asn)">
+                      AS{{ item.asn }} - {{ item.as_name }}
                     </RouterLink>
                   </div>
                 </div>

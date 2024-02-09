@@ -25,23 +25,21 @@ const selects = ref([
 ])
 const selectAll = ref(false)
 
-const init = () => {
+const init = async () => {
   const queries = [{
     query: `MATCH (n)-[:RANK]-(:Ranking {name: $rank})
       RETURN DISTINCT head(labels(n)) as node`,
   }]
   let params = { rank: props.rank }
-  let res = iyp_api.runManyInParallel(queries, params)
+  let results = await iyp_api.run(queries.map(obj => ({statement: obj.query, parameters: params})))
 
-  res[0].then( results => {
-    const node = results.records[0].get('node')
-    if ('AS' == node) {
-      selects.value[0].hasData = true
-    }
-    if ('DomainName' == node) {
-      selects.value[1].hasData = true
-    }
-  })
+  const node = results[0][0].node
+  if ('AS' == node) {
+    selects.value[0].hasData = true
+  }
+  if ('DomainName' == node) {
+    selects.value[1].hasData = true
+  }
 }
 
 const pushRoute = () => {

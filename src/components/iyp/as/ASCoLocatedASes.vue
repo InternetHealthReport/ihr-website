@@ -2,7 +2,6 @@
 import { useRoute } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
-import { lo } from 'plotly.js-dist';
 
 const iyp_api = inject('iyp_api')
 
@@ -18,8 +17,8 @@ const cofacilities = ref({
     MATCH (n)-[:PEERS_WITH]-(p)
     RETURN p.asn as asn, collect(DISTINCT f.name) as name`,
   columns: [
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
-    { name: 'Facilities', label: 'Facilities', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+    { name: 'Facilities', label: 'Facilities', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
   ]
 })
 
@@ -27,9 +26,9 @@ const load = () => {
   cofacilities.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run(cofacilities.value.query, query_params).then(
+  iyp_api.run([{statement: cofacilities.value.query, parameters: query_params}]).then(
     results => {
-      cofacilities.value.data = results.records
+      cofacilities.value.data = results[0]
       cofacilities.value.loading = false
     }
   )

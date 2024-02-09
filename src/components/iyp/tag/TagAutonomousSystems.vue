@@ -22,12 +22,12 @@ const ases = ref({
     OPTIONAL MATCH (a)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
     RETURN a.asn as asn, n.name as name, collect(DISTINCT to.label) as other_tags, toUpper(COALESCE(creg.registry,  '-')) AS rir, creg_country.country_code AS cc, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name, cat.reference_url AS classifier_url`,
   columns: [
-    { name: 'Classified by', label: 'Classified by', align: 'left', field: row => [row.get('classifier_org'), row.get('classifier_name')], format: val => `${val[0]} (${val[1]})`, sortable: true },
-    { name: 'RIR', label: 'RIR', align: 'left', field: row => row.get('rir')? row.get('rir') : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
-    { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.get('cc'), format: val => `${String(val).toUpperCase()}`, sortable: true },
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
-    { name: 'Name', label: 'AS Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
-    { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.get('other_tags'), format: val => `${val.join(', ')}`, sortable: true },
+    { name: 'Classified by', label: 'Classified by', align: 'left', field: row => [row.classifier_org, row.classifier_name], format: val => `${val[0]} (${val[1]})`, sortable: true },
+    { name: 'RIR', label: 'RIR', align: 'left', field: row => row.rir? row.rir : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
+    { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.cc, format: val => `${String(val).toUpperCase()}`, sortable: true },
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+    { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+    { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })
 
@@ -35,9 +35,9 @@ const load = () => {
   ases.value.loading = true
   // Run the cypher query
   let query_params = { tag: props.tag }
-  iyp_api.run(ases.value.query, query_params).then(
+  iyp_api.run([{statement: ases.value.query, parameters: query_params}]).then(
     results => {
-      ases.value.data = results.records
+      ases.value.data = results[0]
       ases.value.loading = false
     }
   )

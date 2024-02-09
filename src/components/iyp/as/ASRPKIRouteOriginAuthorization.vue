@@ -17,12 +17,12 @@ const roas = ref({
     OPTIONAL MATCH (b:AS)-[:ORIGINATE]->(p)
     RETURN p.prefix AS prefix, roa.maxLength AS maxLength, roa.notBefore AS notBefore, roa.notAfter AS notAfter, roa.uri AS uri, COLLECT(DISTINCT b.asn) AS bgp`,
   columns: [
-    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.get('prefix'), format: val => `${val}`, sortable: true },
-    { name: 'Max. Prefix Length', label: 'Max. Prefix Length', align: 'left', field: row => row.get('maxLength'), format: val => `${val}`, sortable: true },
-    { name: 'NotBefore', label: 'NotBefore', align: 'left', field: row => row.get('notBefore'), format: val => `${val}`, sortable: true },
-    { name: 'NotAfter', label: 'NotAfter', align: 'left', field: row => row.get('notAfter'), format: val => `${val}`, sortable: true },
-    { name: 'URL', label: 'URL', align: 'left', field: row => row.get('uri'), format: val => `${val}`, sortable: true },
-    { name: 'Origin in BGP', label: 'Origin in BGP', align: 'left', field: row => row.get('bgp'), format: val => val.length?`AS${val}`:'-', sortable: true },
+    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+    { name: 'Max. Prefix Length', label: 'Max. Prefix Length', align: 'left', field: row => row.maxLength, format: val => `${val}`, sortable: true },
+    { name: 'NotBefore', label: 'NotBefore', align: 'left', field: row => row.notBefore, format: val => `${val}`, sortable: true },
+    { name: 'NotAfter', label: 'NotAfter', align: 'left', field: row => row.notAfter, format: val => `${val}`, sortable: true },
+    { name: 'URL', label: 'URL', align: 'left', field: row => row.uri, format: val => `${val}`, sortable: true },
+    { name: 'Origin in BGP', label: 'Origin in BGP', align: 'left', field: row => row.bgp, format: val => val.length?`AS${val}`:'-', sortable: true },
   ]
 })
 
@@ -30,9 +30,9 @@ const load = () => {
   roas.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run(roas.value.query, query_params).then(
+  iyp_api.run([{statement: roas.value.query, parameters: query_params}]).then(
     results => {
-      roas.value.data = results.records
+      roas.value.data = results[0]
       roas.value.loading = false
     }
   )

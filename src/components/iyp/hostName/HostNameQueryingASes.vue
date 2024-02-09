@@ -23,9 +23,9 @@ const as_query = ref({
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
     RETURN  a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, q.value AS perc`,
   columns: [
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `${val}`, sortable: true },
-    { name: 'AS Name', label: 'AS Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
-    { name: 'Percentage of DNS queries', label: 'Percentage of DNS queries', align: 'left', field: row => Number(row.get('perc')), format: val => `${val.toFixed(2)}`, sortable: true, description: 'Percentage of DNS queries received by Cloudflare\'s open resolver in the country. (Cloudflare Radar)' },
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `${val}`, sortable: true },
+    { name: 'AS Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+    { name: 'Percentage of DNS queries', label: 'Percentage of DNS queries', align: 'left', field: row => Number(row.perc), format: val => `${val.toFixed(2)}`, sortable: true, description: 'Percentage of DNS queries received by Cloudflare\'s open resolver in the country. (Cloudflare Radar)' },
   ],
   pagination: {
     sortBy: 'Percentage of DNS queries', //string column name
@@ -37,9 +37,9 @@ const load = () => {
   as_query.value.loading = true
   // Run the cypher query
   let query_params = { domain: props.hostName }
-  iyp_api.run(as_query.value.query, query_params).then(
+  iyp_api.run([{statement: as_query.value.query, parameters: query_params}]).then(
     results => {
-      as_query.value.data = results.records
+      as_query.value.data = results[0]
       as_query.value.loading = false
     }
   )

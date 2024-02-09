@@ -16,8 +16,8 @@ const rankings = ref({
   loading: true,
   query: 'MATCH (:AS {asn: $asn})-[r:RANK]->(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank',
   columns: [
-    { name: 'Rank', label: 'Rank', align: 'left', field: row => row.get('rank'), format: val => `${val}`, sortable: true },
-    { name: 'Name', label: 'Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+    { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
+    { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
   ]
 })
 
@@ -25,9 +25,9 @@ const load = () => {
   rankings.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run(rankings.value.query, query_params).then(
+  iyp_api.run([{statement: rankings.value.query, parameters: query_params}]).then(
     results => {
-      rankings.value.data = results.records
+      rankings.value.data = results[0]
       rankings.value.loading = false
     }
   )

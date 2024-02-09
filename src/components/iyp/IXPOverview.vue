@@ -28,8 +28,8 @@ const fetchData = async () => {
   loadingStatus.value = true
 
   try {
-    let res = await iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-    overview.value = res.overview[0]
+    let res = await iyp_api.run(queries)
+    overview.value = res[0][0]
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false
@@ -48,13 +48,7 @@ const getOverview = () => {
       OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
       RETURN i.name as name, o.name as organization, c.name AS country, u.url as website
     `
-  const mapping = {
-    name: 'name',
-    country: 'country',
-    organization: 'organization',
-    website: 'website',
-  }
-  return [{ query: query, params: { id: props.id }, mapping, data: 'overview' }]
+  return [{ statement: query, parameters: { id: props.id } }]
 }
 
 const handleReference = (key) => {

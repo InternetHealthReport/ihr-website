@@ -20,10 +20,10 @@ const nameservers = ref({
     OPTIONAL MATCH (n)<-[:MANAGED_BY]-(d:DomainName)
     RETURN COLLECT(DISTINCT i.ip) AS ip, n.name as nameserver, split(n.name, '.')[-1] AS tld, COUNT(DISTINCT d.name) AS nb_domains`,
   columns: [
-    { name: 'TLD', label: 'TLD', align: 'left', field: row => row.get('tld'), format: val => `${val}`, sortable: true },
-    { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.get('nameserver'), format: val => `${val}`, sortable: true },
-    { name: 'Domain', label: 'Nb. Popular Domain Names', align: 'left', field: row => row.get('nb_domains'), format: val => `${val}`, sortable: true },
-    { name: 'IP', label: 'IP', align: 'left', field: row => row.get('ip'), format: val => `${val}`, sortable: true },
+    { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
+    { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.nameserver, format: val => `${val}`, sortable: true },
+    { name: 'Domain', label: 'Nb. Popular Domain Names', align: 'left', field: row => row.nb_domains, format: val => `${val}`, sortable: true },
+    { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
   ]
 })
 
@@ -31,9 +31,9 @@ const load = () => {
   nameservers.value.loading = true
   // Run the cypher query
   let query_params = { prefix: props.getPrefix }
-  iyp_api.run(nameservers.value.query, query_params).then(
+  iyp_api.run([{statement: nameservers.value.query, parameters: query_params}]).then(
     results => {
-      nameservers.value.data = results.records
+      nameservers.value.data = results[0]
       nameservers.value.loading = false
     }
   )

@@ -28,14 +28,14 @@ const prefixes = ref({
     OPTIONAL MATCH (cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(cover_creg_country:Country)
     RETURN c.country_code AS cc, toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, cover_creg_country.country_code, '-')) AS rir_country, p.prefix AS prefix, COLLECT(DISTINCT(t.label)) AS tags, COLLECT(DISTINCT o.descr) AS descr, COLLECT(DISTINCT o.visibility) AS visibility, COLLECT(DISTINCT a.asn) AS asn `,
   columns: [
-    { name: 'RIR', label: 'RIR', align: 'left', field: row => row.get('rir')? row.get('rir') : '', format: val => `${String(val).toUpperCase()}`, sortable: true, description: 'Regional Internet Registry where the prefix is allocated to (Delegated Stats).'  },
-    { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.get('rir_country'), format: val => `${String(val).toUpperCase()}`, sortable: true,  description: 'Registered country code of the organization to which the prefix is allocated. (Delegated Stats)'  },
-    { name: 'Geoloc. Country', label: 'Geoloc. Country', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true,  description: 'Geo-location of the prefix according to Maxmind. (Maxmind)'  },
-    { name: 'ASN', label: 'Origin AS', align: 'left', field: row => row.get('asn'), format: val => `${val.join(', ')}`, sortable: true },
-    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.get('prefix'), format: val => `${val}`, sortable: true, sortOrder: 'ad', description: 'Autonomous System originating the prefix in BGP. (RIPE RIS, Routeviews)' },
-    { name: 'Description', label: 'Description', align: 'left', field: row => row.get('descr'), format: val => `${val}`, sortable: true, description: 'Description of the prefix given in IRR. (IRR)' },
-    { name: 'Tags', label: 'Tags', align: 'left', field: row => row.get('tags'), format: val => `${val.join(', ')}`, sortable: true, description: 'Tags assigned by various projects. See the corresponding tag page for more details.' },
-    { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.get('visibility'), format: val => `${Number(val).toFixed(2)}%`, sortable: true, description: 'Percentage of RIPE RIS and Routeviews peers seeing this prefix/AS pair. (IHR)' },
+    { name: 'RIR', label: 'RIR', align: 'left', field: row => row.rir? row.rir : '', format: val => `${String(val).toUpperCase()}`, sortable: true, description: 'Regional Internet Registry where the prefix is allocated to (Delegated Stats).'  },
+    { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.rir_country, format: val => `${String(val).toUpperCase()}`, sortable: true,  description: 'Registered country code of the organization to which the prefix is allocated. (Delegated Stats)'  },
+    { name: 'Geoloc. Country', label: 'Geoloc. Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true,  description: 'Geo-location of the prefix according to Maxmind. (Maxmind)'  },
+    { name: 'ASN', label: 'Origin AS', align: 'left', field: row => row.asn, format: val => `${val.join(', ')}`, sortable: true },
+    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad', description: 'Autonomous System originating the prefix in BGP. (RIPE RIS, Routeviews)' },
+    { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true, description: 'Description of the prefix given in IRR. (IRR)' },
+    { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true, description: 'Tags assigned by various projects. See the corresponding tag page for more details.' },
+    { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true, description: 'Percentage of RIPE RIS and Routeviews peers seeing this prefix/AS pair. (IHR)' },
   ]
 })
 
@@ -43,9 +43,9 @@ const load = () => {
   prefixes.value.loading = true
   // Run the cypher query
   let query_params = { cc: props.countryCode }
-  iyp_api.run(prefixes.value.query, query_params).then(
+  iyp_api.run([{statement: prefixes.value.query, parameters: query_params}]).then(
     results => {
-      prefixes.value.data = results.records
+      prefixes.value.data = results[0]
       aggPrefixes.value = aggregatePrefixes(prefixes.value.data)
       prefixes.value.loading = false
     }
@@ -55,7 +55,7 @@ const load = () => {
 const aggregatePrefixes = (prefixData) => {
   const asCount = {}
   prefixData.forEach( item => {
-    item.get('asn').forEach( asn => {
+    item.asn.forEach( asn => {
       if(!asCount[asn]){
         asCount[asn] = {
           nbPrefixes:1,

@@ -32,18 +32,16 @@ const queries = ref([
   }
 ])
 
-const fetchData = (tag) => {
+const fetchData = async (tag) => {
   let params = { tag: tag }
-  let res = iyp_api.runManyInParallel(queries.value, params)
-
-  res[0].then( results => {
-    queries.value[0].data = results.records
-    loading.value -= 1
-  })
+  let results = await iyp_api.run(queries.value.map(obj => ({statement: obj.query, parameters: params})))
+  
+  queries.value[0].data = results[0]
+  loading.value -= 1
 }
 
 const allSources = (res) => {
-  return [...new Set([...res.get('data_source_ases'), ...res.get('data_source_domains'), ...res.get('data_source_prefixes')])]
+  return [...new Set([...res.data_source_ases, ...res.data_source_domains, ...res.data_source_prefixes])]
 }
 
 watch(() => props.tag, () => {

@@ -40,10 +40,7 @@ const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 const getInfo = () => {
   const query = `MATCH (c:Country {country_code: $cc})
     RETURN c.name AS name`
-  const mapping = {
-    name: 'name',
-  }
-  return [{ query: query, params: { cc: countryCode.value }, mapping, data: 'countryName' }]
+  return [{ statement: query, parameters: { cc: countryCode.value } }]
 }
 
 const fetchData = async () => {
@@ -52,8 +49,8 @@ const fetchData = async () => {
   loadingStatus.value = true
 
   try {
-    let res = await iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-    countryName.value = res.countryName[0].name
+    let res = await iyp_api.run(queries)
+    countryName.value = res[0][0].name
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false

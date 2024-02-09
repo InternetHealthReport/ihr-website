@@ -39,40 +39,39 @@ const formatChartData = (arrayOfObjects) => {
       {
         type: 'indicator',
         mode: 'number',
-        value: arrayOfObjects[0].get('rank'),
+        value: arrayOfObjects[0].rank,
         title: {
-          text: `<span style='font-size:1rem'>${arrayOfObjects[0].get('name')}</span>`,
+          text: `<span style='font-size:1rem'>${arrayOfObjects[0].name}</span>`,
         },
         domain: { x: [0, 0.5], y: [0.5, 1] },
       },
     ]
   } else {
-    console.log(arrayOfObjects[0])
     data = [
       {
         type: 'indicator',
         mode: 'number',
-        value: arrayOfObjects[0].get('rank').low,
+        value: arrayOfObjects[0].rank,
         title: {
-          text: arrayOfObjects[0].get('name'),
+          text: arrayOfObjects[0].name,
         },
         domain: { x: [0, 0.5], y: [0.5, 1] },
       },
       {
         type: 'indicator',
         mode: 'number',
-        value: arrayOfObjects[1].get('rank').low,
+        value: arrayOfObjects[1].rank,
         title: {
-          text: arrayOfObjects[1].get('name'),
+          text: arrayOfObjects[1].name,
         },
         domain: { x: [0.6, 1], y: [0, 1] },
       },
       {
         type: 'indicator',
         mode: 'number',
-        value: arrayOfObjects[2].get('rank').low,
+        value: arrayOfObjects[2].rank,
         title: {
-          text: arrayOfObjects[2].get('name'),
+          text: arrayOfObjects[2].name,
         },
         domain: { x: [0, 0.5], y: [0, 0.5] },
       },

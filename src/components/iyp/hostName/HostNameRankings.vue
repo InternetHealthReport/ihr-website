@@ -20,8 +20,8 @@ const rankings = ref({
   query: `MATCH (:DomainName {name: $domain})-[rr:RANK]-(r:Ranking)
     RETURN r.name AS rank_name, rr.rank AS rank, 1/(1+toFloat(rr.rank)) AS inv_rank`,
   columns: [
-    { name: 'Ranking Name', label: 'Ranking Name', align: 'left', field: row => row.get('rank_name'), format: val => `${val}`, sortable: true, description: 'Name of the ranking. Different rankings have different meanings, please see the page corresponding to each ranking for more details.'  },
-    { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.get('rank')), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
+    { name: 'Ranking Name', label: 'Ranking Name', align: 'left', field: row => row.rank_name, format: val => `${val}`, sortable: true, description: 'Name of the ranking. Different rankings have different meanings, please see the page corresponding to each ranking for more details.'  },
+    { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.rank), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
   ],
   pagination: {
     sortBy: 'Rank', //string column name
@@ -33,9 +33,9 @@ const load = () => {
   rankings.value.loading = true
   // Run the cypher query
   let query_params = { domain: props.hostName }
-  iyp_api.run(rankings.value.query, query_params).then(
+  iyp_api.run([{statement: rankings.value.query, parameters: query_params}]).then(
     results => {
-      rankings.value.data = results.records
+      rankings.value.data = results[0]
       rankings.value.loading = false
     }
   )

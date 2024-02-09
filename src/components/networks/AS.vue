@@ -46,9 +46,6 @@ const getInfo = () => {
       OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       RETURN COALESCE(pdbn.name, btn.name, ripen.name) AS name`
-  const mapping = {
-    name: 'name',
-  }
   return [{ statement: query, parameters: { asn: asNumber.value } }]
 }
 

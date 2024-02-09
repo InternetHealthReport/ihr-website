@@ -119,25 +119,26 @@ const getMetadataQuery = () => {
 const fetchMetadata = async () => {
   loadingStatus.value = true
   try {
-    let res = await iyp_api.runManyInOneSession([{ cypherQuery: getMetadataQuery() }])
-    res[0].records.forEach(obj => obj._fields.forEach(val => {
-      if (val.includes(null)) {
+    let res = await iyp_api.run([{ statement: getMetadataQuery() }])
+    res[0].forEach(obj => {
+      const list = obj.metadata_list
+      if (list.includes(null)) {
         return
       }
-      let date = val[2]
+      let date = list[2]
       if (typeof(date) == 'string') {
         date = new Date(date)
       } else {
         date = new Date(date.toString())
       }
       date = date.toLocaleDateString('en-us', {month: 'long', day: 'numeric', year: 'numeric'})
-      if (val[0] in metadata.value) {
-        metadata.value[val[0]].reference_time.push(date)
-        metadata.value[val[0]].reference_url.push(val[1])
+      if (list[0] in metadata.value) {
+        metadata.value[list[0]].reference_time.push(date)
+        metadata.value[list[0]].reference_url.push(list[1])
       } else {
-        metadata.value[val[0]] = { reference_time: [ date ], reference_url: [ val[1] ] }
+        metadata.value[list[0]] = { reference_time: [ date ], reference_url: [ list[1] ] }
       }
-    }))
+    })
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false

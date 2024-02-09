@@ -59,7 +59,7 @@ const formatChartData = (arrayOfObjects) => {
     get: function(target, name) {
       if(target.hasOwnProperty(name)) return target[name]
       // check if it is an object returned by cypher
-      if(target.keys && target.keys.includes(name)) return target.get(name)
+      if(target.keys && target.keys.includes(name)) return target[name]
       return '';
     }
   };
@@ -92,18 +92,18 @@ const formatChartData = (arrayOfObjects) => {
 
     let currentID = root
     let parentID =  ''
-    let item_value = props.config.keyValue ? Number(item.get(props.config.keyValue)) : 1
+    let item_value = props.config.keyValue ? Number(item[props.config.keyValue]) : 1
 
     keys.forEach( key => {
       parentID = currentID
-      currentID += item.get(key)
+      currentID += item[key]
 
       // First time we see this key, add to the treemap
       if (!map[currentID]) {
         map[currentID] = true
 
         ids.push(currentID)
-        labels.push(item.get(key))
+        labels.push(item[key])
         parents.push(parentID)
 
         if(key==lastKey){
@@ -112,7 +112,7 @@ const formatChartData = (arrayOfObjects) => {
           ex_leaf_item = item
 
           // Maintain stats to calculate percentage per nodes
-          leafs[item.get(key)] = true
+          leafs[item[key]] = true
           total.child += 1
           total.value += item_value
           item['__sum_child'] = 1

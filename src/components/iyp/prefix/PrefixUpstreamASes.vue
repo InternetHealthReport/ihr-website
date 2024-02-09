@@ -18,9 +18,9 @@ const upstreams = ref({
     OPTIONAL MATCH (a)-[:COUNTRY {reference_org:'NRO'}]-(c:Country)
     RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name, 100*dep.hege AS hege `,
   columns: [
-    { name: 'Reg. Country', label: 'Reg. Country', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true, description: 'Country code of the organization for which the ASN is registered for. (Delegated Stat.)' },
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
-    { name: 'Name', label: 'AS Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+    { name: 'Reg. Country', label: 'Reg. Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true, description: 'Country code of the organization for which the ASN is registered for. (Delegated Stat.)' },
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+    { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
   ]
 })
 
@@ -28,9 +28,9 @@ const load = () => {
   upstreams.value.loading = true
   // Run the cypher query
   let query_params = { prefix: props.getPrefix }
-  iyp_api.run(upstreams.value.query, query_params).then(
+  iyp_api.run([{statement: upstreams.value.query, parameters: query_params}]).then(
     results => {
-      upstreams.value.data = results.records
+      upstreams.value.data = results[0]
       upstreams.value.loading = false
     }
   )

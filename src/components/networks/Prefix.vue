@@ -29,10 +29,7 @@ const getInfo = () => {
   const query = `MATCH (p:Prefix {prefix: $prefix})
       OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
       RETURN head(collect(DISTINCT(o.descr))) AS name`
-  const mapping = {
-    name: 'name',
-  }
-  return [{ query: query, params: { prefix: getPrefix() }, mapping, data: 'hostName' }]
+  return [{ statement: query, parameters: { prefix: getPrefix() } }]
 }
 
 const fetchData = async () => {
@@ -41,8 +38,8 @@ const fetchData = async () => {
   loadingStatus.value = true
 
   try {
-    let res = await iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-    hostName.value = res.hostName[0].name
+    let res = await iyp_api.run(queries)
+    hostName.value = res[0][0].name
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false

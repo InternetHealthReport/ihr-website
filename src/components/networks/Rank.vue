@@ -25,10 +25,7 @@ const menu = ref(activeMenu)
 const getInfo = () => {
   const query = `MATCH (r:Ranking {name: $rank})
       RETURN r.name AS name`
-  const mapping = {
-    name: 'name',
-  }
-  return [{ query: query, params: { rank: rank.value }, mapping, data: 'rankName' }]
+  return [{ statement: query, parameters: { rank: rank.value } }]
 }
 
 const fetchData = async () => {
@@ -37,8 +34,8 @@ const fetchData = async () => {
   loadingStatus.value = true
 
   try {
-    let res = await iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-    rankName.value = res.rankName[0].name
+    let res = await iyp_api.run(queries)
+    rankName.value = res[0][0].name
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false

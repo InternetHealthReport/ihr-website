@@ -26,10 +26,7 @@ const menu = ref(activeMenu)
 const getInfo = () => {
   const query = `MATCH (t:Tag {label: $tag})
       RETURN t.label AS label`
-  const mapping = {
-    label: 'label',
-  }
-  return [{ query: query, params: { tag: tag.value }, mapping, data: 'tagName' }]
+  return [{ statement: query, parameters: { tag: tag.value } }]
 }
 
 const fetchData = async () => {
@@ -38,8 +35,8 @@ const fetchData = async () => {
   loadingStatus.value = true
 
   try {
-    let res = await iyp_api.runManyInOneSessionAndReturnAnObject(queries)
-    tagName.value = res.tagName[0].label
+    let res = await iyp_api.run(queries)
+    tagName.value = res[0][0].label
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false

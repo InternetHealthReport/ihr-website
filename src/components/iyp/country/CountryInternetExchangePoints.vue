@@ -22,9 +22,9 @@ const ixps = ref({
     OPTIONAL MATCH (i)-[:MEMBER_OF]-(a:AS)
     RETURN c.country_code AS cc, i.name AS ixp, p.id AS id, o.name AS org, COUNT(DISTINCT a) AS nb_members`,
   columns: [
-    { name: 'IXP', label: 'PeeringDB ID', align: 'left', field: row => row.get('id'), format: val => `IXP${val}`, sortable: true, description: 'Identifier used in the PeeringDB database and website.' },
-    { name: 'Name', label: 'Name', align: 'left', field: row => row.get('ixp'), format: val => `${val}`, sortable: true, description: 'Name of the IXP as given by PeeringDB.'  },
-    { name: 'Number of members', label: 'Number of members', align: 'left', field: row => row.get('nb_members'), format: val => `${val}`, sortable: true, description: 'Number of members according to PeeringDB.' },
+    { name: 'IXP', label: 'PeeringDB ID', align: 'left', field: row => row.id, format: val => `IXP${val}`, sortable: true, description: 'Identifier used in the PeeringDB database and website.' },
+    { name: 'Name', label: 'Name', align: 'left', field: row => row.ixp, format: val => `${val}`, sortable: true, description: 'Name of the IXP as given by PeeringDB.'  },
+    { name: 'Number of members', label: 'Number of members', align: 'left', field: row => row.nb_members, format: val => `${val}`, sortable: true, description: 'Number of members according to PeeringDB.' },
   ],
   pagination: {
     sortBy: 'Number of members', //string column name
@@ -36,9 +36,9 @@ const load = () => {
   ixps.value.loading = true
   // Run the cypher query
   let query_params = { cc: props.countryCode }
-  iyp_api.run(ixps.value.query, query_params).then(
+  iyp_api.run([{statement: ixps.value.query, parameters: query_params}]).then(
     results => {
-      ixps.value.data = results.records
+      ixps.value.data = results[0]
       ixps.value.loading = false
     }
   )

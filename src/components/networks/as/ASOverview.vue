@@ -87,22 +87,6 @@ const fetchData = async (asn) => {
   loading.value -= 1
   queries.value[2].data = res[2]
   loading.value -= 1
-
-  // res[0].then( results => {
-  //   queries.value[0].data = results.records
-  //   loading.value -= 1
-  // })
-
-  // res[1].then( results => {
-  //   queries.value[1].data = results.records
-  //   pdbid.value = queries.value[1].data[0].get('peeringdbNetId')
-  //   loading.value -= 1
-  // })
-
-  // res[2].then( results => {
-  //   queries.value[2].data = results.records
-  //   loading.value -= 1
-  // })
 }
 
 const formatRank = (rank, name) => {

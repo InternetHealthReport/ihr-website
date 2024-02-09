@@ -107,15 +107,39 @@ const search = async (value, update) => {
     update()
   } else {
     res.forEach(element => {
+      // console.log(element)
       let value
-      if (element.id) {
+      let name
+      if (element.node === 'AS') {
+        if (element.asn) {
+          value = element.asn
+          name = element.name
+        } else {
+          value = element.id
+          name = element.as
+        }
+      } else if (element.node === 'Prefix') {
+        value = element.prefix
+        name = element.prefix
+      } else if (element.node === 'IXP') {
         value = element.id
-      } else {
+        name = element.ixp
+      } else if (element.node === 'Country') {
+        value = element.cc
+        name = element.name
+      } else if (element.node === 'Tag') {
+        value = element.label
+        name = element.label
+      } else if (element.node === 'DomainName') {
+        value = element.hostName
+        name = element.hostName
+      } else if (element.node === 'Ranking') {
         value = element.name
+        name = element.name
       }
       options.value.push({
-        value: value.low ? value.low : value,
-        name: element.name,
+        value: value,
+        name: name,
         type: element.node,
       })
       update()
@@ -129,14 +153,8 @@ const queryAS = async (asn) => {
     return []
   }
   const query = 'MATCH (a:AS) WHERE toString(a.asn) STARTS WITH $asn MATCH (a)-[:NAME]-(n:Name) RETURN a.asn as asn, head(collect(DISTINCT(n.name))) as name, head(labels(a)) AS node LIMIT 10'
-  const mapping = {
-    id: 'asn',
-    name: 'name',
-    node: 'node',
-  }
-  const res = await iyp_api.run(query, { asn: asn })
-  const formattedRes = iyp_api.formatResponse(res, mapping)
-  return formattedRes
+  const res = await iyp_api.run([{statement: query, parameters: { asn: asn }}])
+  return res[0]
 }
 
 const queryPrefixes = async (value) => {
@@ -144,13 +162,8 @@ const queryPrefixes = async (value) => {
     return []
   }
   const query = 'MATCH (p:Prefix) WHERE p.prefix STARTS WITH $value RETURN p.prefix as prefix, head(labels(p)) AS node LIMIT 10'
-  const mapping = {
-    name: 'prefix',
-    node: 'node',
-  }
-  const res = await iyp_api.run(query, { value: value })
-  const formattedRes = iyp_api.formatResponse(res, mapping)
-  return formattedRes
+  const res = await iyp_api.run([{statement: query, parameters: { value: value }}])
+  return res[0]
 }
 
 const mixedEntitySearch = async (value) => {
@@ -178,71 +191,45 @@ const mixedEntitySearch = async (value) => {
   }
   const searchTerm = value.toLowerCase()
   const queries = funcs.map(func => func(searchTerm))
-  return await iyp_api.searchIYPInOneSession(queries)
+  return await iyp_api.run(queries)
 }
 
 const queryASNames = (value) => {
   const query = 'MATCH (n:Name)-[:NAME]-(a:AS) WHERE toLower(n.name) STARTS WITH $value MATCH (n)-[:NAME]-(a:AS) RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 10'
-  const mapping = {
-    name: 'as',
-    id: 'id',
-    node: 'node',
-  }
-  return { cypherQuery: query, params: { value: value }, mapping }
+  return { statement: query, parameters: { value: value } }
 }
 
 const queryCountries = (value) => {
   const query = 'MATCH (c:Country) WHERE toLower(c.name) STARTS WITH $value RETURN c.country_code AS cc, c.name AS name, head(labels(c)) as node LIMIT 10'
-  const mapping = {
-    name: 'name',
-    id: 'cc',
-    node: 'node',
-  }
-  return { cypherQuery: query, params: { value: value }, mapping }
+  return { statement: query, parameters: { value: value } }
 }
 
 const queryIXPs = (value) => {
   const query = 'MATCH (i:IXP)-[:EXTERNAL_ID]-(p:PeeringdbIXID) WHERE toLower(i.name) STARTS WITH $value RETURN i.name as ixp, p.id as id, head(labels(i)) AS node LIMIT 10'
-  const mapping = {
-    name: 'ixp',
-    id: 'id',
-    node: 'node',
-  }
-  return { cypherQuery: query, params: { value: value }, mapping }
+  return { statement: query, parameters: { value: value } }
 }
 
 const queryHostNames = (value) => {
   const query = 'MATCH (d:DomainName) WHERE toLower(d.name) STARTS WITH $value RETURN d.name as hostName, head(labels(d)) as node LIMIT 10'
-  const mapping = {
-    name: 'hostName',
-    id: 'hostName',
-    node: 'node'
-  }
-  return { cypherQuery: query, params: { value: value }, mapping }
+  return { statement: query, parameters: { value: value } }
 }
 
 const queryTags = (value) => {
   const query = 'MATCH (t:Tag) WHERE toLower(t.label) STARTS WITH $value RETURN t.label as label, head(labels(t)) as node LIMIT 10'
-  const mapping = {
-    name: 'label',
-    id: 'label',
-    node: 'node'
-  }
-  return { cypherQuery: query, params: { value: value }, mapping }
+  return { statement: query, parameters: { value: value } }
 }
 
 const queryRanks = (value) => {
   const query = 'MATCH (r:Ranking) WHERE toLower(r.name) STARTS WITH $value RETURN r.name as name, head(labels(r)) as node LIMIT 10'
-  const mapping = {
-    name: 'name',
-    id: 'name',
-    node: 'node'
-  }
-  return { cypherQuery: query, params: { value: value }, mapping }
+  return { statement: query, parameters: { value: value } }
 }
 
 const optimizeSearchResults = (res) => {
-  return res.sort((a, b) => a.name.length - b.name.length)
+  return res.flat().sort((a, b) => {
+    if (a.as && b.as) {
+      return a.as.length - b.as.length
+    }
+  }).reverse()
 }
 
 const filter = (value, update, abort) => {

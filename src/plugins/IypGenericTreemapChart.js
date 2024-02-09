@@ -42,6 +42,11 @@ export default function treemapClicked(event) {
           name: 'hostnames',
           params: { hostName: network },
         }))
+      } else if (network.includes('AS')) {
+        event.router.push(Tr.i18nRoute({
+          name: 'networks',
+          params: { id: network },
+        }))
       }
     } else if (typeof network === 'object') {
       if ('low' in network) {

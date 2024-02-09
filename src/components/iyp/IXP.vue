@@ -26,9 +26,9 @@ const sections = ref({
       OPTIONAL MATCH (a)-[:COUNTRY {reference_org: 'NRO'}]->(c:Country)
       RETURN c.country_code AS cc, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name`,
     columns: [
-      { name: 'CC', label: 'CC', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
-      { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
-      { name: 'Name', label: 'AS Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+      { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+      { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+      { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
     ]
   },
   facilities: {
@@ -38,8 +38,8 @@ const sections = ref({
     query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility)OPTIONAL MATCH (f)-[:COUNTRY]->(c:Country)
       RETURN f.name as name, c.country_code AS cc`,
     columns: [
-      { name: 'CC', label: 'CC', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
-      { name: 'Facility', label: 'Facility', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+      { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+      { name: 'Facility', label: 'Facility', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
     ]
   },
   peeringLANs: {
@@ -49,8 +49,8 @@ const sections = ref({
     query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY]-(s:Prefix)OPTIONAL MATCH (s)-[:COUNTRY]->(c:Country)
       RETURN s.prefix as prefix, c.country_code as cc`,
     columns: [
-      { name: 'CC', label: 'CC', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
-      { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.get('prefix'), format: val => `${val}`, sortable: true },
+      { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+      { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
     ]
   }
 })
@@ -67,9 +67,9 @@ const loadSection = (key) => {
 
   // Run the cypher query
   let query_params = { id: id.value }
-  iyp_api.run(sections.value[key].query, query_params).then(
+  iyp_api.run([{statement: sections.value[key].query, parameters: query_params}]).then(
     results => {
-      sections.value[key].data = results.records
+      sections.value[key].data = results[0]
       sections.value[key].loading = false
     }
   )

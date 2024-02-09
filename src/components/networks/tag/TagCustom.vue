@@ -30,7 +30,7 @@ const selects = ref([
 const selectAll = ref(false)
 const selectedWidgets = ref(null)
 
-const init = () => {
+const init = async () => {
   const queries = [{
     query: `MATCH (t:Tag {label: $tag})
       OPTIONAL MATCH (t)<-[cat_a:CATEGORIZED]-(a:AS) WITH t, count(DISTINCT a) as nb_ases, COLLECT(DISTINCT cat_a.reference_org) as data_source_ases
@@ -39,20 +39,18 @@ const init = () => {
       RETURN  nb_domains, nb_ases, nb_prefixes, data_source_ases, data_source_domains, data_source_prefixes`,
   }]
   let params = { tag: props.tag }
-  let res = iyp_api.runManyInParallel(queries, params)
+  let results = await iyp_api.run(queries.map(obj => ({statement: obj.query, parameters: params})))
 
-  res[0].then( results => {
-    selectedWidgets.value = results.records[0]
-    if (selectedWidgets.value.get('nb_domains') > 0) {
-      selects.value[1].hasData = true
-    }
-    if (selectedWidgets.value.get('nb_ases') > 0) {
-      selects.value[2].hasData = true
-    }
-    if (selectedWidgets.value.get('nb_prefixes') > 0) {
-      selects.value[3].hasData = true
-    }
-  })
+  selectedWidgets.value = results[0][0]
+  if (selectedWidgets.value.nb_domains > 0) {
+    selects.value[1].hasData = true
+  }
+  if (selectedWidgets.value.nb_ases > 0) {
+    selects.value[2].hasData = true
+  }
+  if (selectedWidgets.value.nb_prefixes > 0) {
+    selects.value[3].hasData = true
+  }
 }
 
 const pushRoute = () => {
@@ -107,8 +105,8 @@ onMounted(() => {
   />
   <!-- All -->
   <GenericCardController
-    :title="selectedWidgets.get('nb_domains')+' '+$t('iyp.tag.domains.title')"
-    :sub-title="$t('iyp.tag.domains.caption')+tag+' by '+selectedWidgets.get('data_source_domains').join(', ')"
+    :title="selectedWidgets.nb_domains+' '+$t('iyp.tag.domains.title')"
+    :sub-title="$t('iyp.tag.domains.caption')+tag+' by '+selectedWidgets.data_source_domains.join(', ')"
     class="card"
     v-if="selects[1].value && selects[1].hasData"
   >
@@ -117,8 +115,8 @@ onMounted(() => {
     />
   </GenericCardController>
   <GenericCardController
-    :title="selectedWidgets.get('nb_ases')+' '+$t('iyp.tag.ases.title')"
-    :sub-title="$t('iyp.tag.ases.caption')+tag+' by '+selectedWidgets.get('data_source_ases').join(', ')"
+    :title="selectedWidgets.nb_ases+' '+$t('iyp.tag.ases.title')"
+    :sub-title="$t('iyp.tag.ases.caption')+tag+' by '+selectedWidgets.data_source_ases.join(', ')"
     class="card"
     v-if="selects[2].value && selects[2].hasData"
   >
@@ -127,8 +125,8 @@ onMounted(() => {
     />
   </GenericCardController>
   <GenericCardController
-    :title="selectedWidgets.get('nb_prefixes')+' '+$t('iyp.tag.prefixes.title')"
-    :sub-title="$t('iyp.tag.prefixes.caption')+tag+' by '+selectedWidgets.get('data_source_prefixes').join(', ')"
+    :title="selectedWidgets.nb_prefixes+' '+$t('iyp.tag.prefixes.title')"
+    :sub-title="$t('iyp.tag.prefixes.caption')+tag+' by '+selectedWidgets.data_source_prefixes.join(', ')"
     class="card"
     v-if="selects[3].value && selects[3].hasData"
   >

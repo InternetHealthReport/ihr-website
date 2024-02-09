@@ -23,9 +23,9 @@ const rankings = ref({
     RETURN r.rank AS rank, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS asname
     ORDER BY rank`,
   columns: [
-    { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.get('rank')), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
-    { name: 'ASN', label: 'AS', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true, description: 'Autonomous System.'    },
-    { name: 'AS Name', label: 'Status', align: 'left', field: row => row.get('asname'), format: val => `${val}`, sortable: true, description: 'Name of the Autonomous System. (PeeringDB, BGP.Tools, RIPE NCC)'  },
+    { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.rank), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
+    { name: 'ASN', label: 'AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true, description: 'Autonomous System.'    },
+    { name: 'AS Name', label: 'Status', align: 'left', field: row => row.asname, format: val => `${val}`, sortable: true, description: 'Name of the Autonomous System. (PeeringDB, BGP.Tools, RIPE NCC)'  },
   ],
   pagination: {
     sortBy: 'Rank', //string column name
@@ -37,9 +37,9 @@ const load = () => {
   rankings.value.loading = true
   // Run the cypher query
   let query_params = { rank: props.rank }
-  iyp_api.run(rankings.value.query, query_params).then(
+  iyp_api.run([{statement: rankings.value.query, parameters: query_params}]).then(
     results => {
-      rankings.value.data = results.records
+      rankings.value.data = results[0]
       rankings.value.loading = false
     }
   )

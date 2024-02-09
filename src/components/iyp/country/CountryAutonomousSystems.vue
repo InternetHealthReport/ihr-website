@@ -23,9 +23,9 @@ const ases = ref({
     OPTIONAL MATCH (a)-[r:RANK {reference_org:'CAIDA'}]->(:Ranking {name:'CAIDA ASRank'})
     RETURN c.country_code AS cc, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, r['asnDegree:total'] AS degree`,
   columns: [
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => Number(row.get('asn')), format: val => `AS${val}`, sortable: true },
-    { name: 'Name', label: 'Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
-    { name: 'Connected networks', label: 'Connected networks', align: 'left', field: row => Number(row.get('degree')), format: val => `${val}`, sortable: true },
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => Number(row.asn), format: val => `AS${val}`, sortable: true },
+    { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+    { name: 'Connected networks', label: 'Connected networks', align: 'left', field: row => Number(row.degree), format: val => `${val}`, sortable: true },
   ],
   pagination: {
     sortBy: 'Connected networks', //string column name
@@ -37,9 +37,9 @@ const load = () => {
   ases.value.loading = true
   // Run the cypher query
   let query_params = { cc: props.countryCode }
-  iyp_api.run(ases.value.query, query_params).then(
+  iyp_api.run([{statement: ases.value.query, parameters: query_params}]).then(
     results => {
-      ases.value.data = results.records
+      ases.value.data = results[0]
       ases.value.loading = false
     }
   )

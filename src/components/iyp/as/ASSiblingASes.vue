@@ -20,9 +20,9 @@ const siblings = ref({
     OPTIONAL MATCH (sibling)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
     RETURN DISTINCT sibling.asn AS asn, c.country_code AS cc, COALESCE(pdbn.name, btn.name, ripen.name) AS name`,
   columns: [
-    { name: 'Country', label: 'Reg. Country', align: 'left', field: row => row.get('cc'), format: val => `${val}`, sortable: true },
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.get('asn'), format: val => `AS${val}`, sortable: true },
-    { name: 'Name', label: 'Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true },
+    { name: 'Country', label: 'Reg. Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
+    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+    { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
   ]
 })
 
@@ -30,9 +30,9 @@ const load = () => {
   siblings.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run(siblings.value.query, query_params).then(
+  iyp_api.run([{statement: siblings.value.query, parameters: query_params}]).then(
     results => {
-      siblings.value.data = results.records
+      siblings.value.data = results[0]
       siblings.value.loading = false
     }
   )

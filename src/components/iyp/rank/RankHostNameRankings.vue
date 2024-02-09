@@ -2,8 +2,6 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
-import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
-import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
 
 const iyp_api = inject('iyp_api')
 
@@ -21,8 +19,8 @@ const rankings = ref({
     ORDER BY rank
     LIMIT 100000`,
   columns: [
-    { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.get('rank')), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
-    { name: 'Host Name', label: 'Host Name', align: 'left', field: row => row.get('name'), format: val => `${val}`, sortable: true, description: 'Host Name.'    },
+    { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.rank), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
+    { name: 'Host Name', label: 'Host Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true, description: 'Host Name.'    },
   ],
   pagination: {
     sortBy: 'Rank', //string column name
@@ -34,8 +32,8 @@ const load = () => {
   rankings.value.loading = true
   // Run the cypher query
   let query_params = { rank: props.rank }
-  iyp_api.run(rankings.value.query, query_params).then(results => {
-    rankings.value.data = results.records
+  iyp_api.run([{statement: rankings.value.query, parameters: query_params}]).then(results => {
+    rankings.value.data = results[0]
     rankings.value.loading = false
   })
 }
