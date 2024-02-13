@@ -4,7 +4,7 @@ import Tr from '@/i18n/translation'
 import { ref, watch, onMounted } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
 import AS from '@/components/networks/AS.vue'
-import IXP from '@/components/iyp/IXP.vue'
+import IXP from '@/components/networks/IXP.vue'
 import Prefix from '@/components/networks/Prefix.vue'
 import * as ipAddress from 'ip-address'
 

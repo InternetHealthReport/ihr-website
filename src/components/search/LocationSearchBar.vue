@@ -25,6 +25,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  readonly: {
+    type: Boolean,
+    default: false
+  },
+  peeringdbId: {
+    type: Number,
+    default: 0
+  }
 })
 
 const emits = defineEmits({
@@ -39,7 +47,7 @@ const emits = defineEmits({
 })
 
 const options = ref([])
-const model = ref(props.selected)
+const model = ref(!props.readonly?props.selected:`IXP${props.peeringdbId}`)
 const loading = ref(false)
 const always = ref(false)
 const networkDelayLocation = ref(new NetworkDelayLocation().orderedByName())
@@ -112,7 +120,9 @@ const filter = (value, update, abort) => {
 }
 
 watch(() => props.selected, (newValue) => {
-  model.value = newValue
+  if (!props.readonly) {
+    model.value = newValue
+  }
 })
 </script>
 
@@ -131,10 +141,11 @@ watch(() => props.selected, (newValue) => {
     input-debounce="1000"
     class="IHR_search-bar"
     :hint="hint"
+    :readonly="readonly"
   >
     <template v-slot:append>
       <div v-if="!loading">
-        <QIcon name="fas fa-search" style="font-size: 0.82em; margin-right: 4px" />
+        <QIcon name="fas fa-search" style="font-size: 0.82em; margin-right: 4px" v-if="!readonly" />
       </div>
       <div v-else>
         <QSpinner color="primary" size="0.82em" />

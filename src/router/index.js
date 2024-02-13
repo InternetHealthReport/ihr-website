@@ -8,7 +8,6 @@ import MetisSelection from '../views/MetisSelection.vue'
 import MetisDeployment from '../views/MetisDeployment.vue'
 import ROV from '../views/ROV.vue'
 import Corona from '../views/Corona.vue'
-import IhrNetworks from '../views/IhrNetworks.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import GlobalReport from '../views/GlobalReport.vue'
 import Networks from '../views/Networks.vue'
@@ -54,11 +53,6 @@ const router = createRouter({
           path: 'global-report',
           name: 'global-report',
           component: GlobalReport
-        },
-        {
-          path: 'networks/ihr/:id?',
-          name: 'networks-ihr',
-          component: IhrNetworks
         },
         {
           path: 'networks/:id?/:length?',

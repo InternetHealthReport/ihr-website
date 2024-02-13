@@ -1,23 +1,33 @@
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { QChip, QSpinner } from 'quasar'
+import { RouterLink, useRoute } from 'vue-router'
+import Tr from '@/i18n/translation'
+import { ref, inject, watch, onMounted } from 'vue'
 
 const iyp_api = inject('iyp_api')
+
+const props  = defineProps({
+  ixpNumber: {
+    type: Number,
+    required: true,
+  },
+})
+
+const route = useRoute()
 
 const REFERENCES = {
   peeringDB: 'https://www.peeringdb.com/ix',
 }
 
-const props = defineProps({
-  id: {
-    type: Number,
-    required: true,
-  },
-  title: {
-    type: Function,
-    required: false,
-  }
-})
-
+const getOverview = () => {
+  const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(i:IXP)
+      OPTIONAL MATCH (i)-[:MANAGED_BY]->(o:Organization)
+      OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
+      OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
+      RETURN i.name as name, o.name as organization, c.name AS country, u.url as website
+    `
+  return [{ statement: query, parameters: { id: props.ixpNumber } }]
+}
 const overview = ref({})
 const loadingStatus = ref(false)
 const references = ref(REFERENCES)
@@ -41,23 +51,17 @@ const fetchData = async () => {
   }
 }
 
-const getOverview = () => {
-  const query = `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(i:IXP)
-      OPTIONAL MATCH (i)-[:MANAGED_BY]->(o:Organization)
-      OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
-      OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
-      RETURN i.name as name, o.name as organization, c.name AS country, u.url as website
-    `
-  return [{ statement: query, parameters: { id: props.id } }]
-}
-
 const handleReference = (key) => {
   let externalLink = ''
   if (key === 'peeringDB') {
-    externalLink = `${references.value.peeringDB}/${props.id}`
+    externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
   }
   return externalLink
 }
+
+watch(() => props.ixpNumber, () => {
+  fetchData()
+})
 
 onMounted(() => {
   fetchData()
@@ -67,7 +71,7 @@ onMounted(() => {
 <template>
   <div class="IYP_chart">
     <div v-if="loadingStatus" class="IYP_loading-spinner">
-      <q-spinner color="secondary" size="3em" />
+      <QSpinner color="secondary" size="3em" />
     </div>
     <div class="q-pl-sm q-mt-lg q-mb-lg">
       <!-- <h2 class="q-mb-sm">Overview</h2> -->
@@ -95,14 +99,6 @@ onMounted(() => {
                 </div>
               </div>
             </div>
-            <!-- <div class="row">
-              <RouterLink v-if="route.path.includes('ihr')" :to="Tr.i18nRoute({ name: 'networks', params: {id: `IXP${asNumber}`}})" class="q-mt-lg overview-footer">
-                View more details on IYP for IXP{{ asNumber }}
-              </RouterLink>
-              <RouterLink v-else :to="Tr.i18nRoute({ name: 'networks-ihr', params: {id: `IXP${asNumber}`}})" class="q-mt-lg overview-footer">
-                View report for IXP{{ asNumber }}
-              </RouterLink>
-            </div> -->
           </div>
         </div>
       </div>
@@ -114,5 +110,15 @@ onMounted(() => {
 p {
   font-size: 1rem;
   margin-bottom: 0;
+}
+h3 {
+  font-size: 1rem;
+  line-height: 1.5
+}
+.overview-footer {
+  text-decoration: underline;
+  cursor: pointer;
+  width: 100%;
+  text-align: right;
 }
 </style>
