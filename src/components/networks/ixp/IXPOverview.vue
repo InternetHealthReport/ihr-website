@@ -24,7 +24,7 @@ const getOverview = () => {
       OPTIONAL MATCH (i)-[:MANAGED_BY]->(o:Organization)
       OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
       OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
-      RETURN i.name as name, o.name as organization, c.name AS country, u.url as website
+      RETURN i.name as name, o.name as organization, c.name AS country, c.country_code AS cc, u.url as website
     `
   return [{ statement: query, parameters: { id: props.ixpNumber } }]
 }
@@ -83,8 +83,8 @@ onMounted(() => {
                 <h3>IXP Info</h3>
                 <div>
                   <p>IXP Name: {{ overview.name }}</p>
-                  <p>Country of origin: {{ overview.country }}</p>
-                  <p>organization: {{ overview.organization }}</p>
+                  <p>Country of origin: <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></p>
+                  <p>Organization: {{ overview.organization }}</p>
                   <p>
                     Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
                   </p>

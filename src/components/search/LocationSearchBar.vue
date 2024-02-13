@@ -31,7 +31,7 @@ const props = defineProps({
   },
   peeringdbId: {
     type: Number,
-    default: 0
+    default: -1
   }
 })
 
@@ -47,7 +47,18 @@ const emits = defineEmits({
 })
 
 const options = ref([])
-const model = ref(!props.readonly?props.selected:`IXP${props.peeringdbId}`)
+let modelInit
+if (!props.readonly) {
+  modelInit = props.selected
+} else {
+  console.log(props.selected)
+  if (props.peeringdbId !== -1) {
+    modelInit = `IXP${props.peeringdbId}`
+  } else {
+    modelInit = props.selected
+  }
+}
+const model = ref(modelInit)
 const loading = ref(false)
 const always = ref(false)
 const networkDelayLocation = ref(new NetworkDelayLocation().orderedByName())

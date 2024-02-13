@@ -72,6 +72,7 @@ const fetch = ref(true)
       :startPointName="Math.abs(asNumber).toString()"
       :startPointType="route.params.id.substring(0, 2)"
       :fetch="fetch"
+      :readonlySourceSearch="true"
       searchBar
     />
   </GenericCardController>

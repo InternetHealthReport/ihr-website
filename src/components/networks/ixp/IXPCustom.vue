@@ -120,6 +120,7 @@ onMounted(() => {
       :startPointType="route.params.id.substring(0, 2)"
       :fetch="fetch"
       searchBar
+      :readonlySourceSearch="true"
       :peeringdbId="peeringdbId"
     />
   </GenericCardController>

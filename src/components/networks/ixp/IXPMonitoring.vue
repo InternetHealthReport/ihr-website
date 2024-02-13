@@ -43,6 +43,7 @@ const fetch = ref(true)
       :fetch="fetch"
       searchBar
       :peeringdbId="peeringdbId"
+      :readonlySourceSearch="true"
     />
   </GenericCardController>
 

@@ -85,7 +85,15 @@ const props = defineProps({
   },
   peeringdbId: {
     type: Number
-  }
+  },
+  readonlySourceSearch: {
+    type: Boolean,
+    default: false
+  },
+  readonlyDestinationSearch: {
+    type: Boolean,
+    default: false
+  },
 })
 
 const emits = defineEmits({
@@ -389,7 +397,7 @@ onMounted(() => {
           :hint="$t('searchBar.locationSource')"
           :label="$t('searchBar.locationHint')"
           :selected="startPointNameStr"
-          :readonly="true"
+          :readonly="readonlySourceSearch"
           :peeringdbId="peeringdbId"
         />
       </div>
@@ -397,6 +405,7 @@ onMounted(() => {
         <LocationSearchBar
           @select="addEndLocation"
           :hint="$t('searchBar.locationDestination')"
+          :readonly="readonlyDestinationSearch"
           :label="$t('searchBar.locationHint')"
         />
       </div>
