@@ -51,7 +51,6 @@ let modelInit
 if (!props.readonly) {
   modelInit = props.selected
 } else {
-  console.log(props.selected)
   if (props.peeringdbId !== -1) {
     modelInit = `IXP${props.peeringdbId}`
   } else {

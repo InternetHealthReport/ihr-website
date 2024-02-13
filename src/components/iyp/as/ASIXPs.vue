@@ -18,7 +18,7 @@ const ixps = ref({
   loading: true,
   query: `MATCH (a:AS {asn: $asn})-[:MEMBER_OF]->(i:IXP)-[:EXTERNAL_ID]->(p:PeeringdbIXID)
     OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
-    RETURN c.country_code as cc, i.name as name, p.id as id`,
+    RETURN DISTINCT c.country_code as cc, i.name as name, p.id as id`,
   columns: [
     { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
     { name: 'IXP', label: 'IXP Name', align: 'left', field: row => row.name, format: val => `${val}` },

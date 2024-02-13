@@ -51,7 +51,7 @@ const getUrlAnchor = () => {
             {{ reportDayText }}
           </QTooltip>
         </QBtn>
-        <QBtn @click="copyToClipboard(getUrlAnchor())" dense flat icon="fa-solid fa-anchor">
+        <QBtn @click="copyToClipboard(getUrlAnchor())" dense flat icon="fa-solid fa-link">
           <QTooltip>
             Copy widget's URL
           </QTooltip>

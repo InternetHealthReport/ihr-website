@@ -16,13 +16,13 @@ const domains = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
-    WHERE rr.rank < 100000 and rn.name = 'Tranco top 1M'
-    RETURN DISTINCT d.name AS domainName, rr.rank AS rank, rn.name AS rankingName, split(d.name, '.')[-1] AS tld, 1/toFloat(rr.rank) AS inv_rank, COLLECT(DISTINCT p.prefix) AS prefix
+  query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:HostName)-[rr:RANK]->(rn:Ranking)
+    WHERE rr.rank < 100000 and rn.name = 'Cisco Umbrella Top 1 million'
+    RETURN DISTINCT d.name AS hostName, rr.rank AS rank, rn.name AS rankingName, split(d.name, '.')[-1] AS tld, 1/toFloat(rr.rank) AS inv_rank, COLLECT(DISTINCT p.prefix) AS prefix
     ORDER BY rank`,
   columns: [
     { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
-    { name: 'Domain Name', label: 'Domain Name', align: 'left', field: row => row.domainName, format: val => `${val}`, sortable: true },
+    { name: 'Host Name', label: 'Host Name', align: 'left', field: row => row.hostName, format: val => `${val}`, sortable: true },
     { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val.join(', ')}`, sortable: true },
     { name: 'Ranking Name', label: 'Ranking Name', align: 'left', field: row => row.rankingName, format: val => `${val}`, sortable: true, },
   ]
@@ -65,7 +65,7 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="domains.data.length > 0"
       :chart-data="domains.data"
-      :config="{ keys: ['tld', 'domainName'], keyValue: 'inv_rank', root: pageTitle, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: #%{customdata.rank}<extra></extra>' }"
+      :config="{ keys: ['tld', 'hostName'], keyValue: 'inv_rank', root: pageTitle, textinfo: 'label', hovertemplate: '<b>%{label}</b> <br><br>%{customdata.rankingName}: #%{customdata.rank}<extra></extra>' }"
       @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
     />
   </IypGenericTable>

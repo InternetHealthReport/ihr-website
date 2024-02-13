@@ -68,7 +68,11 @@ watch(selects.value, () => {
 })
 
 watch(selectAll, () => {
-  selects.value.forEach(obj => obj.value = selectAll.value)
+  selects.value.forEach(obj => {
+    if (obj.hasData) {
+      obj.value = selectAll.value
+    }
+  })
 })
 
 onMounted(() => {
