@@ -130,7 +130,7 @@ const search = async (value, update) => {
       } else if (element.node === 'Tag') {
         value = element.label
         name = element.label
-      } else if (element.node === 'DomainName') {
+      } else if (element.node === 'HostName') {
         value = element.hostName
         name = element.hostName
       } else if (element.node === 'Ranking') {
@@ -210,7 +210,7 @@ const queryIXPs = (value) => {
 }
 
 const queryHostNames = (value) => {
-  const query = 'MATCH (d:DomainName) WHERE toLower(d.name) STARTS WITH $value RETURN d.name as hostName, head(labels(d)) as node LIMIT 10'
+  const query = 'MATCH (h:HostName) WHERE toLower(h.name) STARTS WITH $value RETURN h.name as hostName, head(labels(h)) as node LIMIT 10'
   return { statement: query, parameters: { value: value } }
 }
 
@@ -263,9 +263,13 @@ const routeToAS = (asn) => {
 }
 
 const routeToIXP = (ixp) => {
-  // route to old report page
-  // getIdForIhrData(ixp, 'IXP', 'networks')
-  // route to new iyp page
+  let oldIxp = paramExists('id')
+  if (oldIxp) {
+    oldIxp = Number(oldIxp.replace('IXP', ''))
+    if (oldIxp == ixp) {
+      return
+    }
+  }
   router.push(Tr.i18nRoute({
     name: 'networks',
     params: { id: `IXP${ixp}` },
@@ -389,7 +393,7 @@ const placeholder = computed(() => {
         <QItemSection side color="accent">Country</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'DomainName'" v-bind="scope.itemProps" @click="routeToHostName(scope.opt.value)"> <!-- TODO: change DomainName to HostName after IYP DB update -->
+      <QItem v-if="scope.opt.type == 'HostName'" v-bind="scope.itemProps" @click="routeToHostName(scope.opt.value)">
         <QItemSection side color="accent">Host Name</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>

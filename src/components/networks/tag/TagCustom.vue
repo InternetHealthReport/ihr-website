@@ -23,7 +23,7 @@ const fetch = ref(true)
 const displayWidgets = ref(route.query.display ? JSON.parse(route.query.display) : [])
 const selects = ref([
   { value: false, hasData: true, label: 'Overview' },
-  { value: false, hasData: false, label: t('iyp.tag.popularDomains.title') },
+  { value: false, hasData: false, label: t('iyp.tag.domains.title') },
   { value: false, hasData: false, label: t('iyp.tag.ases.title') },
   { value: false, hasData: false, label: t('iyp.tag.prefixes.title') },
 ])
@@ -35,7 +35,7 @@ const init = async () => {
     query: `MATCH (t:Tag {label: $tag})
       OPTIONAL MATCH (t)<-[cat_a:CATEGORIZED]-(a:AS) WITH t, count(DISTINCT a) as nb_ases, COLLECT(DISTINCT cat_a.reference_org) as data_source_ases
       OPTIONAL MATCH (t)<-[cat_p:CATEGORIZED]-(p:Prefix) WITH t, nb_ases, data_source_ases, count(DISTINCT p) as nb_prefixes, COLLECT(DISTINCT cat_p.reference_org) as data_source_prefixes
-      OPTIONAL MATCH (t)<-[cat_d:CATEGORIZED]-(d:DomainName) WITH t, nb_ases, data_source_ases, nb_prefixes, data_source_prefixes, count(DISTINCT d) as nb_domains, COLLECT(DISTINCT cat_d.reference_org) as data_source_domains
+      OPTIONAL MATCH (t)<-[cat_d:CATEGORIZED]-(:URL)-[:PART_OF]-(d:HostName) WITH t, nb_ases, data_source_ases, nb_prefixes, data_source_prefixes, count(DISTINCT d) as nb_domains, COLLECT(DISTINCT cat_d.reference_org) as data_source_domains
       RETURN  nb_domains, nb_ases, nb_prefixes, data_source_ases, data_source_domains, data_source_prefixes`,
   }]
   let params = { tag: props.tag }

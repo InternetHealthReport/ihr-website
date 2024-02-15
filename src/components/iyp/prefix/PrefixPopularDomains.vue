@@ -16,17 +16,16 @@ const domains = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(d:DomainName)
-    OPTIONAL MATCH (d)-[:CATEGORIZED]->(t:Tag)
-    OPTIONAL MATCH (d)-[ra:RANK]->(rn:Ranking {name: 'Tranco top 1M'})
-    RETURN COLLECT(DISTINCT i.ip) AS ip, d.name as domain, collect(DISTINCT t.label) as tags, ra.rank AS rank, split(d.name, '.')[-1] AS tld, 1/toFloat(ra.rank) AS inv_rank, rn.name as rankingName`
+  query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(d:DomainName)-[ra:RANK]->(rn:Ranking {name: 'Tranco top 1M'})
+    OPTIONAL MATCH (h)<-[:PART_OF]-(p)-[:CATEGORIZED]->(t:Tag)
+    RETURN COLLECT(DISTINCT i.ip) AS ip, h.name as hostname, collect(DISTINCT t.label) as tags, ra.rank AS rank, split(h.name, '.')[-1] AS tld, 1/toFloat(ra.rank) AS inv_rank, rn.name as rankingName`
   ,
   columns: [
     { name: 'Tranco Rank', label: 'Tranco Rank', align: 'left', field: row => row.rank?Number(row.rank): 1000001, format: val => val!=1000001? val: '-', sortable: true, sortOrder: 'ad' },
     { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
-    { name: 'Domain', label: 'Domain Name', align: 'left', field: row => row.domain, format: val => `${val}`, sortable: true },
+    { name: 'Host', label: 'Host Name', align: 'left', field: row => row.hostname, format: val => `${val}`, sortable: true },
     { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val.join(', ')}`, sortable: true },
-    { name: 'Tags', label: 'Domain Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
+    { name: 'Tags', label: 'Host Name Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })
 
@@ -62,7 +61,7 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="domains.data.length > 0"
       :chart-data="domains.data"
-      :config="{ keys: ['tld', 'domain', 'ip'], keyValue: 'inv_rank', root: getPrefix, hovertemplate: '<b>%{customdata.domain}<br>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<br>%{customdata.tags}<extra></extra>' }"
+      :config="{ keys: ['tld', 'hostname', 'ip'], keyValue: 'inv_rank', root: getPrefix, hovertemplate: '<b>%{customdata.domain}<br>%{label}</b> <br><br>%{customdata.rankingName}: %{customdata.rank}<br>%{customdata.tags}<extra></extra>' }"
       @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
     />
   </IypGenericTable>

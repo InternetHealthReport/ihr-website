@@ -17,7 +17,7 @@ const nameservers = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:DomainName {name: $domain})-[:MANAGED_BY]-(n:AuthoritativeNameServer)
+  query: `MATCH (:HostName {name: $hostname})-[:PART_OF]-(:DomainName)-[:MANAGED_BY]-(n:AuthoritativeNameServer)
     OPTIONAL MATCH (n)-[:RESOLVES_TO]->(i:IP)-[:PART_OF]-(p:Prefix)-[:ORIGINATE]-(a:AS)
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
     RETURN  DISTINCT i.ip AS ip, n.name as nameserver, a.asn AS asn, p.prefix AS prefix, COLLECT(DISTINCT t.label) AS tags`,
@@ -33,7 +33,7 @@ const nameservers = ref({
 const load = () => {
   nameservers.value.loading = true
   // Run the cypher query
-  let query_params = { domain: props.hostName }
+  let query_params = { hostname: props.hostName }
   iyp_api.run([{statement: nameservers.value.query, parameters: query_params}]).then(
     results => {
       nameservers.value.data = results[0]

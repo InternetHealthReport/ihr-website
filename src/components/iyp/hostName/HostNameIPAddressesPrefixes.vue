@@ -17,7 +17,7 @@ const ips = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:DomainName {name: $domain})-[:RESOLVES_TO]-(i:IP)
+  query: `MATCH (:HostName {name: $hostname})-[:RESOLVES_TO]-(i:IP)
     OPTIONAL MATCH (i)-[:PART_OF]-(p:Prefix)-[:ORIGINATE]-(a:AS)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
@@ -36,7 +36,7 @@ const ips = ref({
 const load = () => {
   ips.value.loading = true
   // Run the cypher query
-  let query_params = { domain: props.hostName }
+  let query_params = { hostname: props.hostName }
   iyp_api.run([{statement: ips.value.query, parameters: query_params}]).then(
     results => {
       ips.value.data = results[0]

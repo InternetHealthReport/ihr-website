@@ -16,9 +16,9 @@ const domains = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:HostName)-[rr:RANK]->(rn:Ranking)
-    WHERE rr.rank < 100000 and rn.name = 'Cisco Umbrella Top 1 million'
-    RETURN DISTINCT d.name AS hostName, rr.rank AS rank, rn.name AS rankingName, split(d.name, '.')[-1] AS tld, 1/toFloat(rr.rank) AS inv_rank, COLLECT(DISTINCT p.prefix) AS prefix
+  query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(:DomainName)-[rr:RANK]->(rn:Ranking)
+    WHERE rr.rank < 100000 and rn.name = 'Tranco top 1M'
+    RETURN DISTINCT h.name AS hostName, rr.rank AS rank, rn.name AS rankingName, split(h.name, '.')[-1] AS tld, 1/toFloat(rr.rank) AS inv_rank, COLLECT(DISTINCT p.prefix) AS prefix
     ORDER BY rank`,
   columns: [
     { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },

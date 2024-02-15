@@ -27,9 +27,9 @@ const domainName = ref(null)
 const menu = ref(activeMenu)
 
 const getInfo = () => {
-  const query = `MATCH (d:DomainName {name: $domain})
+  const query = `MATCH (d:HostName {name: $hostname})
       RETURN d.name AS name`
-  return [{ statement: query, parameters: { domain: domain.value } }]
+  return [{ statement: query, parameters: { hostname: domain.value } }]
 }
 
 const fetchData = async () => {

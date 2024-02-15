@@ -48,9 +48,9 @@ const queries = ref([
   },
   {
     data: [],
-    query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(d:DomainName)
-      OPTIONAL MATCH (d)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
-      RETURN  DISTINCT d.name as domain, ra.rank AS rank ORDER BY rank LIMIT 5`
+    query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)
+      OPTIONAL MATCH (h)-[:PART_OF]-(:DomainName)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
+      RETURN  DISTINCT h.name as hostname, ra.rank AS rank ORDER BY rank LIMIT 5`
   }
 ])
 
@@ -133,10 +133,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="col-12 col-md-auto">
-                <h3>Popular Domains</h3>
+                <h3>Popular Host Names</h3>
                 <div  v-if="queries[1].data.length > 0" class="q-ml-sm column">
-                  <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.domain}})" v-for="item in queries[1].data" :key="item.domain">
-                    {{ item.domain }}
+                  <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.hostname}})" v-for="item in queries[1].data" :key="item.hostname">
+                    {{ item.hostname }}
                   </RouterLink>
                 </div>
               </div>

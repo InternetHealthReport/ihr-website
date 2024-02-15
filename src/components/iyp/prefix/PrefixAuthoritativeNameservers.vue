@@ -17,12 +17,12 @@ const nameservers = ref({
   show: false,
   loading: true,
   query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(n:AuthoritativeNameServer)
-    OPTIONAL MATCH (n)<-[:MANAGED_BY]-(d:DomainName)
-    RETURN COLLECT(DISTINCT i.ip) AS ip, n.name as nameserver, split(n.name, '.')[-1] AS tld, COUNT(DISTINCT d.name) AS nb_domains`,
+    OPTIONAL MATCH (n)<-[:MANAGED_BY]-(:DomainName)-[:PART_OF]-(d:HostName)
+    RETURN COLLECT(DISTINCT i.ip) AS ip, n.name as nameserver, split(n.name, '.')[-1] AS tld, COUNT(DISTINCT d.name) AS nb_hostnames`,
   columns: [
     { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
     { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.nameserver, format: val => `${val}`, sortable: true },
-    { name: 'Domain', label: 'Nb. Popular Domain Names', align: 'left', field: row => row.nb_domains, format: val => `${val}`, sortable: true },
+    { name: 'Host Name', label: 'Nb. Popular Host Names', align: 'left', field: row => row.nb_hostnames, format: val => `${val}`, sortable: true },
     { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
   ]
 })
@@ -33,6 +33,7 @@ const load = () => {
   let query_params = { prefix: props.getPrefix }
   iyp_api.run([{statement: nameservers.value.query, parameters: query_params}]).then(
     results => {
+      results[0].forEach(obj => obj.tld == '' ? obj.tld='.' : obj.tld=obj.tld)
       nameservers.value.data = results[0]
       nameservers.value.loading = false
     }
@@ -59,7 +60,7 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="nameservers.data.length > 0"
       :chart-data="nameservers.data"
-      :config="{ keys: ['tld', 'nameserver', 'ip'], root: getPrefix, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_domains} popular domains<extra></extra>' }"
+      :config="{ keys: ['tld', 'nameserver', 'ip'], root: getPrefix, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_hostnames} popular host names<extra></extra>' }"
       @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
     />
   </IypGenericTable>

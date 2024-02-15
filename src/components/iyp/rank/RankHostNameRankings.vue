@@ -14,8 +14,8 @@ const rankings = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (d:DomainName)-[r:RANK]-(:Ranking {name: $rank})
-    RETURN r.rank AS rank, d.name AS name
+  query: `MATCH (h:HostName)-[:PART_OF]-(:DomainName)-[r:RANK]-(:Ranking {name: $rank})
+    RETURN DISTINCT r.rank AS rank, h.name AS name
     ORDER BY rank
     LIMIT 100000`,
   columns: [

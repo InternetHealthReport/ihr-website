@@ -31,7 +31,7 @@ const queries = ref([
       OPTIONAL MATCH (c)<-[:COUNTRY {reference_name: "peeringdb.ix"}]-(i:IXP) WITH c, as_count, COUNT(DISTINCT i) as ixp_count
       OPTIONAL MATCH (c)<-[:COUNTRY {reference_name: "nro.delegated_stats"}]-(pd:Prefix) WITH c, as_count, ixp_count, COUNT(DISTINCT pd) as preg_count
       OPTIONAL MATCH (c)<-[:COUNTRY {reference_name: "ihr.rov"}]-(pg:Prefix) WITH c, as_count, ixp_count, preg_count, COUNT(DISTINCT pg) as pgeo_count
-      RETURN c.name AS country_name, as_count, ixp_count, preg_count, pgeo_count `
+      RETURN c.name AS country_name, as_count, ixp_count, preg_count, pgeo_count`
 
   },
   {
@@ -47,12 +47,12 @@ const queries = ref([
   {
     data: [],
     query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[:CATEGORIZED]-(:Tag {label:'Tranco 10k Host'}),
-      (a)-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)-[:RESOLVES_TO]-(d:DomainName)
+      (a)-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
-      RETURN a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS as_name, COUNT(DISTINCT d) AS nb_domains
-      ORDER BY nb_domains DESC LIMIT 5`
+      RETURN a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS as_name, COUNT(DISTINCT h) AS nb_hostnames
+      ORDER BY nb_hostnames DESC LIMIT 5`
   }
 ])
 

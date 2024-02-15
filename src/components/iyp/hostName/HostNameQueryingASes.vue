@@ -17,11 +17,11 @@ const as_query = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:DomainName {name: $domain})-[q:QUERIED_FROM]->(a:AS)
+  query: `MATCH (:HostName {name: $hostname})-[:PART_OF]-(:DomainName)-[q:QUERIED_FROM]->(a:AS)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
-    RETURN  a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, q.value AS perc`,
+    RETURN DISTINCT a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, q.value AS perc`,
   columns: [
     { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `${val}`, sortable: true },
     { name: 'AS Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
@@ -36,7 +36,7 @@ const as_query = ref({
 const load = () => {
   as_query.value.loading = true
   // Run the cypher query
-  let query_params = { domain: props.hostName }
+  let query_params = { hostname: props.hostName }
   iyp_api.run([{statement: as_query.value.query, parameters: query_params}]).then(
     results => {
       as_query.value.data = results[0]

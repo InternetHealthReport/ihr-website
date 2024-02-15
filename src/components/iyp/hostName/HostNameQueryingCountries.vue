@@ -17,8 +17,8 @@ const country_query = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:DomainName {name: $domain})-[q:QUERIED_FROM]->(c:Country)
-    RETURN  c.country_code AS cc, c.name AS name, q.value AS perc`,
+  query: `MATCH (:HostName {name: $hostname})-[:PART_OF]-(:DomainName)-[q:QUERIED_FROM]->(c:Country)
+    RETURN DISTINCT c.country_code AS cc, c.name AS name, q.value AS perc`,
   columns: [
     { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
     { name: 'Country', label: 'Country', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
@@ -33,7 +33,7 @@ const country_query = ref({
 const load = () => {
   country_query.value.loading = true
   // Run the cypher query
-  let query_params = { domain: props.hostName }
+  let query_params = { hostname: props.hostName }
   iyp_api.run([{statement: country_query.value.query, parameters: query_params}]).then(
     results => {
       country_query.value.data = results[0]
