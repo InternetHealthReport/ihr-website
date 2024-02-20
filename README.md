@@ -50,6 +50,30 @@ npm run build
 npm run lint
 ```
 
+## Deploy with Docker
+
+To deploy the project with Docker, follow these steps:
+
+#### Clone the project in localhost
+
+```bash
+git clone https://github.com/InternetHealthReport/ihr-website.git
+cd ihr-website
+```
+
+#### Build the Docker Image
+
+```bash
+docker build -t ihr-website .
+```
+
+#### Run the Docker Container
+
+```bash
+docker run --name ihr-website -d -p <host-port>:80 -t ihr-website
+```
+
+Replace `<host-port>` with the port on your host machine where you want to expose the application.
 
 ## Ways to contribute
 
