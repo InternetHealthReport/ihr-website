@@ -15,7 +15,7 @@ const iyp_api = inject('iyp_api')
 const route = useRoute()
 const router = useRouter()
 
-const activeTab = 'overview'
+const activeTab = 'custom'
 const activeMenu = route.query.active ? route.query.active : activeTab
 
 const routeHash = ref(route.hash)
@@ -97,7 +97,7 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="overview">Overview</QTab>
+        <!-- <QTab name="overview">Overview</QTab> -->
         <QTab name="custom">Custom</QTab>
       </QTabs>
       <QSeparator />
@@ -105,11 +105,11 @@ onMounted(() => {
         v-model="menu"
         v-if="pageTitle"
       >
-        <QTabPanel name="overview">
+        <!-- <QTabPanel name="overview">
           <TagOverview
             :tag="tag"
           />
-        </QTabPanel>
+        </QTabPanel> -->
         <QTabPanel name="custom">
           <TagCustom
             :tag="tag"

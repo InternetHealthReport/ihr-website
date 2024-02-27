@@ -22,7 +22,7 @@ const { t } = useI18n()
 const fetch = ref(true)
 const displayWidgets = ref(route.query.display ? JSON.parse(route.query.display) : [])
 const selects = ref([
-  { value: false, hasData: true, label: 'Overview' },
+  // { value: false, hasData: true, label: 'Overview' },
   { value: false, hasData: false, label: t('iyp.tag.domains.title') },
   { value: false, hasData: false, label: t('iyp.tag.ases.title') },
   { value: false, hasData: false, label: t('iyp.tag.prefixes.title') },
@@ -43,13 +43,13 @@ const init = async () => {
 
   selectedWidgets.value = results[0][0]
   if (selectedWidgets.value.nb_domains > 0) {
-    selects.value[1].hasData = true
+    selects.value[0].hasData = true
   }
   if (selectedWidgets.value.nb_ases > 0) {
-    selects.value[2].hasData = true
+    selects.value[1].hasData = true
   }
   if (selectedWidgets.value.nb_prefixes > 0) {
-    selects.value[3].hasData = true
+    selects.value[2].hasData = true
   }
 }
 
@@ -112,17 +112,17 @@ onMounted(() => {
     </QCardSection>
   </QCard>
   <!-- Overview -->
-  <TagOverview
+  <!-- <TagOverview
     :tag="tag"
     class="card"
     v-if="selects[0].value"
-  />
+  /> -->
   <!-- All -->
   <GenericCardController
     :title="selectedWidgets.nb_domains+' '+$t('iyp.tag.domains.title')"
     :sub-title="$t('iyp.tag.domains.caption')+tag+' by '+selectedWidgets.data_source_domains.join(', ')"
     class="card"
-    v-if="selects[1].value && selects[1].hasData"
+    v-if="selects[0].value && selects[0].hasData"
   >
     <TagPopularHostNames
       :tag="tag"
@@ -132,7 +132,7 @@ onMounted(() => {
     :title="selectedWidgets.nb_ases+' '+$t('iyp.tag.ases.title')"
     :sub-title="$t('iyp.tag.ases.caption')+tag+' by '+selectedWidgets.data_source_ases.join(', ')"
     class="card"
-    v-if="selects[2].value && selects[2].hasData"
+    v-if="selects[1].value && selects[1].hasData"
   >
     <TagAutonomousSystems
       :tag="tag"
@@ -142,7 +142,7 @@ onMounted(() => {
     :title="selectedWidgets.nb_prefixes+' '+$t('iyp.tag.prefixes.title')"
     :sub-title="$t('iyp.tag.prefixes.caption')+tag+' by '+selectedWidgets.data_source_prefixes.join(', ')"
     class="card"
-    v-if="selects[3].value && selects[3].hasData"
+    v-if="selects[2].value && selects[2].hasData"
   >
     <TagPrefixes
       :tag="tag"

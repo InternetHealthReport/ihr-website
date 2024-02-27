@@ -46,11 +46,11 @@ const getUrlAnchor = () => {
           <div class="text-subtitle2">{{ subTitle }}</div>
         </div>
         <QSpace />
-        <QBtn @click="showReportDayRange = !showReportDayRange" dense flat icon="fa-solid fa-calendar">
+        <!-- <QBtn @click="showReportDayRange = !showReportDayRange" dense flat icon="fa-solid fa-calendar">
           <QTooltip v-model="showReportDayRange" no-parent-event>
             {{ reportDayText }}
           </QTooltip>
-        </QBtn>
+        </QBtn> -->
         <QBtn @click="copyToClipboard(getUrlAnchor())" dense flat icon="fa-solid fa-link">
           <QTooltip>
             Copy widget's URL
