@@ -1,7 +1,7 @@
 <p align="center"><img src="https://avatars.githubusercontent.com/u/40665700?s=200&v=4" height="100"></p>
 <h1 align="center">IHR Website</h1>
 <p align="center">
-The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. To understand further click <a href="https://ihr.iijlab.net">here</a>
+The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. To understand further click <a href="https://ihr.iijlab.net">here</a>.
 </p>
 
 ## Prerequisites to run
