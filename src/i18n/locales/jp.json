@@ -390,7 +390,7 @@
             },
             "body": "<a href='https://www.manrs.org/'>Mutually Agreed Norms for Routing Security (MANRS)</a> is a global initiative that supported the development of IHR tools to monitor route origin validation via the <a href='https://www.manrs.org/ambassadors-program/fellows/'>MANRS Fellowship Program</a>."
           },
-          "8":{
+          "8": {
             "header": "Edgecast",
             "img": {
               "src": "",
@@ -645,7 +645,7 @@
               "src": "",
               "style": ""
             },
-            "body": "This is a python example to fetch the latest delay change results for AS174 on June 2017: <pre id='cod'><code>import sys{17}import requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams=&#123;\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'&#125; \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
+            "body": "This is a python example to fetch the latest delay change results for AS174 on June 2017: <pre id='cod' style='overflow:auto; white-space: pre-wrap;'><code>import sys{17}import requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams=&#123;\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'&#125; \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
           }
         }
       },
@@ -659,7 +659,7 @@
               "src": "",
               "style": ""
             },
-            "body": "Installing the library requires only the standard python package manager, pip. From a terminal type: <pre id='cod'><code>pip install abondance</code></pre>"
+            "body": "Installing the library requires only the standard python package manager, pip. From a terminal type: <pre id='cod' style='overflow:auto'><code>pip install abondance</code></pre>"
           },
           "2": {
             "header": "Example:",
@@ -743,37 +743,37 @@
       "organizations": {
         "iij": {
           "name": "IIJ",
-          "url":"https://www.iij.ad.jp/en/",
+          "url": "https://www.iij.ad.jp/en/",
           "description": "For financial support, rack space, etc..."
         },
         "ripe": {
           "name": "RIPE NCC",
-          "url":"https://www.ripe.net/",
+          "url": "https://www.ripe.net/",
           "description": "For financial support (RIPE NCC Community Fund), data from Atlas and RIS"
         },
         "gsoc": {
           "name": "GSOC",
-          "url":"https://summerofcode.withgoogle.com/",
+          "url": "https://summerofcode.withgoogle.com/",
           "description": "Google Summer of Code supports new contributors into the development of IHR"
         },
         "routeviews": {
           "name": "Route Views",
-          "url":"https://www.routeviews.org/routeviews/",
+          "url": "https://www.routeviews.org/routeviews/",
           "description": "For BGP data"
         },
         "isoc": {
           "name": "ISOC",
-          "url":"https://www.internetsociety.org/",
+          "url": "https://www.internetsociety.org/",
           "description": "For financial support"
         },
         "manrs": {
           "name": "MANRS",
-          "url":"https://www.manrs.org/",
+          "url": "https://www.manrs.org/",
           "description": "For financial support (MANRS Research Fellowship Program)"
         },
         "edgecast": {
           "name": "EdgeCast",
-          "url":"https://edg.io/",
+          "url": "https://edg.io/",
           "description": "For providing IHR website and API on their CDN."
         }
       }

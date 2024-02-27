@@ -91,7 +91,7 @@ watch(selected, (newValue) => {
       <h1 class="text-center">Network Delays During National Lockdowns</h1>
 
       <div class="row justify-center">
-        <div class="col-6 IHR_description q-pa-lg">
+        <div class="IHR_description q-pa-lg">
           <p>
             As part of the
             <a href="https://labs.ripe.net/Members/becha/hackathons-in-the-time-of-corona" targeet="_blank"
@@ -120,7 +120,7 @@ watch(selected, (newValue) => {
         </div>
       </div>
       <div class="row toolbox">
-        <div class="offset-10">
+        <div>
           <h3>Toolbox</h3>
           <QToggle v-model="searchBar" label="Add more destination networks" />
         </div>
@@ -195,8 +195,8 @@ watch(selected, (newValue) => {
     visibility hidden
 
 .toolbox
-    margin-right 12pt
-    margin-top 15pt
+    padding 16px
+    justify-content: flex-end
 
 p
     font-size 1.2rem
