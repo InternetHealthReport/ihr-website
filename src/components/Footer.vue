@@ -6,7 +6,7 @@ import { version } from '../../package.json'
 </script>
 
 <template>
-  <QFooter elevated primary class="IHR_footer text-white text-center ">
+  <QFooter elevated primary class="IHR_footer text-white text-center" style="z-index: 999;">
     <div class="IHR_footer_contents">
       <div class="IHR_fsection">
         <div class="" style="max-width: 400px;">
