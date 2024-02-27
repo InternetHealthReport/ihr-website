@@ -1,31 +1,49 @@
-<template>
-  <q-layout view="hHh LpR fff" id="app" class="IHR_minimum-width bg-white">
-    <router-view name="header" />
-    <q-page-container class="IHR_minimum-width">
-      <router-view />
-      <div id="IHR_last-element">&nbsp;</div>
-    </q-page-container>
-    <router-view name="footer" />
-  </q-layout>
-</template>
-<script>
-import languages from "quasar/lang/index.json";
-import routerBase from "@/router";
+<script setup>
+import { RouterView } from 'vue-router'
+import { QLayout, QPageContainer, QIcon } from 'quasar'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
+import Header from './components/Header.vue';
+import Footer from './components/Footer.vue'
 
-// subset of router, see router.js
-export default {
-  name: "Default",
-  components: {},
-  data() {
-    return {
-      text: ""
-    };
-  }
-};
+let scrollPosition = ref(0)
+
+const showScrollTopButton = () => {
+  return scrollPosition > 0
+}
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
+const updateScrollPosition = () => {
+  scrollPosition = window.scrollY
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', updateScrollPosition)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', updateScrollPosition)
+})
 </script>
-<style lang="stylus">
-@import '~quasar-variables';
 
+<template>
+  <QLayout view="hHh LpR fff" id="app" >
+    <Header></Header>
+    <QPageContainer>
+      <RouterView />
+      <div id="IHR_last-element">&nbsp;</div>
+    </QPageContainer>
+    <Footer></Footer>
+    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
+  </QLayout>
+</template>
+
+<style lang="stylus">
 menu-delinkify(val)
   font-size 12pt
   color white
@@ -35,9 +53,6 @@ menu-delinkify(val)
     font-weight 700
 
 .IHR_
-  &minimum-width
-    min-width 800px !important
-
   &menu-entries
     a, button
       menu-delinkify 1
@@ -48,10 +63,6 @@ menu-delinkify(val)
   &footer
     & a
       color white
-
-    ~/fsection
-      padding-top 5pt
-      border-left solid gray 1px
 
       &first-child
         border-left none
@@ -84,6 +95,21 @@ menu-delinkify(val)
             text-align left
             & > strong
                 text-transform capitalize
+
+  &scroll-btn
+    position fixed
+    bottom 20px
+    right 20px
+    z-index 2000
+    cursor pointer
+    transition all 0.6s
+    border-radius 50%
+    color white
+    padding 0.7rem 0.8rem
+    border 1px solid white
+    opacity 0.8
+    &:hover
+      transform scale(1.1)
 
 #IHR_
   &home-button

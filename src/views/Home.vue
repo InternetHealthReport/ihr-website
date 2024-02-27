@@ -1,109 +1,158 @@
-<i18n src="@/locales/long_langs/home.json"></i18n>
+<script setup>
+import { RouterLink } from 'vue-router'
+import { QCard, QCardSection, QAvatar, QIcon } from 'quasar'
+import { ref } from 'vue'
+import Tr from '@/i18n/translation'
+
+const GRAPHS_TYPES = [
+  {
+    name: 'homePage.analysisModules.asInterdependence',
+    icon: 'fas fa-project-diagram',
+    docsQuery: {},
+  },
+  {
+    name: 'homePage.analysisModules.networkDelay',
+    icon: 'fas fa-shipping-fast',
+    docsQuery: {},
+  },
+  {
+    name: 'homePage.analysisModules.delayAndForwarding',
+    icon: 'fas fa-exchange-alt',
+    docsQuery: {},
+  },
+  {
+    name: 'homePage.analysisModules.disco',
+    icon: 'fas fa-plug',
+    docsQuery: {},
+  },
+]
+
+const ORGANIZATIONS = [
+  {
+    name: 'iij',
+    logo: new URL('@/assets/imgs/iij-logo.jpg', import.meta.url).href
+  },
+  {
+    name: 'ripe',
+    logo: new URL('@/assets/imgs/ripe-logo.png', import.meta.url).href
+  },
+  {
+    name: 'gsoc',
+    logo: new URL('@/assets/imgs/gsoc-logo.png', import.meta.url).href
+  },
+  {
+    name: 'routeviews',
+    logo: new URL('@/assets/imgs/rv-logo.png', import.meta.url).href
+  },
+  {
+    name: 'isoc',
+    logo: new URL('@/assets/imgs/isoc-logo.png', import.meta.url).href
+  },
+  {
+    name: 'manrs',
+    logo: new URL('@/assets/imgs/manrs-logo.jpg', import.meta.url).href
+  },
+  {
+    name: 'edgecast',
+    logo: new URL('@/assets/imgs/edgecast-logo.png', import.meta.url).href
+  }
+]
+
+const PLACEHOLDER_VALUES = {
+  asPaper: "<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
+  close: '</a>',
+  /*
+  ripe: "<a href='https://atlas.ripe.net/' target='_blank'>RIPE Atlas</a>",
+  bgpstream:
+    "<a href='https://bgpstream.caida.org/' target='_blank'>BGPstream</a>",
+  delayAndForwardingPaper:
+    "<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf' target='_blank'>",
+  discoPaper:
+    "<a href='https://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf' target='_blank'>"
+  */
+}
+
+const props = defineProps({
+    showSidebar: {
+        type: Boolean,
+        default: false
+    }
+})
+
+const graphTypes = ref(GRAPHS_TYPES)
+const placeholderValues = ref(PLACEHOLDER_VALUES)
+const organizations = ref(ORGANIZATIONS)
+</script>
+
 <template>
   <div id="IHR_home">
-    <router-link :to="{ name: 'global_report' }" class="IHR_delikify">
-      <div id="IHR_global-report" class="row">
-        <div class="col-6">
-          <div>Internet Health Report</div>
-          <div id="IHR_global-report-button">{{ $t("globalReport.name") }}</div>
-        </div>
-        <div class="col-6"></div>
+    <div id="IHR_global-report" class="row">
+      <div class="col">
+        <div>Internet Health Report</div>
+        <RouterLink id="IHR_global-report-button" :to="Tr.i18nRoute({ name: 'global-report' })">
+          {{ $t('homePage.globalReport.name') }}
+        </RouterLink>
       </div>
-    </router-link>
-    <div
-      class="IHR_description-main"
-      v-html="
-        $interpolateArray($t('globalReport.description'), {
-          ripe:
-            '<a href=\'https://atlas.ripe.net/\' target=\'_blank\'>RIPE Atlas</a>',
-          bgpstream:
-            '<a href=\'https://bgpstream.caida.org/\' target=\'_blank\'>BGPstream</a>'
-        })
-      "
-    ></div>
-    <div class="IHR_description-main"> 
-    See latest alarms in the 
-    <router-link :to="{ name: 'global_report' }">global report</router-link>
-    and network metrics in 
-    <router-link :to="{ name: 'networks' }">network reports</router-link>.
+    </div>
+
+    <div class="IHR_description-main" v-html="$t('homePage.globalReport.description')"></div>
+    <div class="IHR_description-main">
+      See latest alarms in the
+      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">global report</RouterLink>
+      and network metrics in
+      <RouterLink :to="Tr.i18nRoute({ name: 'networks' })">network reports</RouterLink>.
     </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_description-main">
-      <q-card
-        class="analysis-modules"
-        v-for="graphT in graphTypes"
-        :key="graphT.name"
-      >
-        <q-card-section class="bg-primary text-white q-pa-sm">
-          <div class="text-h2">
-            <q-avatar :icon="graphT.icon"></q-avatar>
+      <QCard class="analysis-modules" v-for="graphT in graphTypes" :key="graphT.name">
+        <QCardSection class="bg-primary text-white q-pa-sm">
+          <div>
+            <QAvatar :icon="graphT.icon"></QAvatar>
             {{ $t(`${graphT.name}.title`) }}
           </div>
-        </q-card-section>
-        <q-card-section class="q-pa-xs">
-          <div
-            class="IHR_description"
-            v-html="
-              $interpolateArray(
-                $t(`${graphT.name}.description`),
-                placeholderValues
-              )
-            "
-          ></div>
+        </QCardSection>
+        <QCardSection class="q-pa-xs">
+          <div class="IHR_description" v-html="$t(`${graphT.name}.description`)"></div>
           <div class="IHR_description IHR_description-link">
-            <router-link
-              :to="{
+            <RouterLink
+              :to="Tr.i18nRoute({
                 name: 'documentation',
-                hash: $t(`${graphT.name}.docHash`)
-              }"
-              >{{ $t("learnmore") }}
-              {{ $t(`${graphT.name}.title`) }}</router-link
-            >
+                hash: $t(`${graphT.name}.docHash`),
+              })"
+              >{{ $t('homePage.learnmore') }} {{ $t(`${graphT.name}.title`) }}</RouterLink>
           </div>
-        </q-card-section>
-      </q-card>
+        </QCardSection>
+      </QCard>
     </div>
 
-    <div class="IHR_section">
-      <q-card class="IHR_tweets-types">
-        <q-card-section class="bg-white text-primary q-pa-sm">
+    <!-- <div class="IHR_section">
+      <QCard class="IHR_tweets-types">
+        <QCardSection class="bg-white text-primary q-pa-sm">
           <div class="text-h2">
-            <q-avatar icon="fab fa-twitter"></q-avatar>
-            {{ $t("ihrTweets.title") }}
+            <QAvatar icon="fab fa-twitter"></QAvatar>
+            {{ $t('homePage.ihrTweets.title') }}
           </div>
-        </q-card-section>
-        <q-card-section class="q-pa-xs">
-          <Timeline
-            id="ihr_alerts"
-            sourceType="profile"
-            :options="{
-              chrome: 'noheader',
-              tweetLimit: '3',
-              showReplies: true
-            }"
-          >
-            <div class="spinner"></div>
-          </Timeline>
-        </q-card-section>
-      </q-card>
-    </div>
+        </QCardSection>
+        <QCardSection class="q-pa-xs">
+
+        </QCardSection>
+      </QCard>
+    </div> -->
 
     <div class="IHR_section">
-      <h2>
-        <q-icon name="fa fa-heart"></q-icon>
-        {{ $t("ack.title") }}
+      <h2 class="text-h2">
+        <QIcon name="fa fa-heart"></QIcon>
+        {{ $t('homePage.ack.title') }}
       </h2>
 
-      <div class="row wrap justify-around">
-        <div
-          class="col-xs-3 col-xl-3 column"
-          v-for="org in $t('ack.organizations')"
-          :key="org.name"
-        >
+      <div class="row wrap justify-center">
+        <div v-for="(org, index) in organizations" :key="index">
+          <a :href="$t(`homePage.ack.organizations.${org.name}.url`)" target="_blank">
           <div class="IHR_ack-logo">
             <span></span>
-            <img :src="require(`@/assets/imgs/${org.logo}`)" :alt="org.name" />
+            <img :src="org.logo" :alt="$t(`homePage.ack.organizations.${org.name}.name`)" />
           </div>
+          </a>
         </div>
       </div>
     </div>
@@ -114,77 +163,22 @@
   </div>
 </template>
 
-<script>
-import { Timeline } from "vue-tweet-embed";
-const GRAPHS_TYPES = [
-  {
-    name: "analysisModules.asInterdependence",
-    icon: "fas fa-project-diagram",
-    docsQuery: {}
-  },
-  {
-    name: "analysisModules.networkDelay",
-    icon: "fas fa-shipping-fast",
-    docsQuery: {}
-  },
-  {
-    name: "analysisModules.delayAndForwarding",
-    icon: "fas fa-exchange-alt",
-    docsQuery: {}
-  },
-  {
-    name: "analysisModules.disco",
-    icon: "fas fa-plug",
-    docsQuery: {}
-  }
-];
-
-const PLACEHOLDER_VALUES = {
-  asPaper:
-    "<a href='https://www.iij-ii.co.jp/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
-  close: "</a>"
-  /*
-  ripe: "<a href='https://atlas.ripe.net/' target='_blank'>RIPE Atlas</a>",
-  bgpstream:
-    "<a href='https://bgpstream.caida.org/' target='_blank'>BGPstream</a>",
-  delayAndForwardingPaper:
-    "<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf' target='_blank'>",
-  discoPaper:
-    "<a href='https://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf' target='_blank'>"
-  */
-};
-
-export default {
-  components: {
-    Timeline
-  },
-  props: {
-    showSidebar: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data() {
-    return {
-      graphTypes: GRAPHS_TYPES,
-      placeholderValues: PLACEHOLDER_VALUES
-    };
-  }
-};
-</script>
-
-<style lang="stylus" scoped>
+<style lang="stylus">
 #IHR_
   &home
     ~/global-report
       margin-bottom 60pt
-      width 100%
+      max-width 100%
       height 450px
       background-color black
-      background-image url('~@/assets/imgs/global-banner.png')
+      background-image url('@/assets/imgs/global-banner.png')
       background-repeat no-repeat
       background-position right top
       background-size contain
+      @media screen and (max-width: 1024px) {
+        background-position center center
+        background-size cover
+      }
 
       &-button
         margin-top 40px
@@ -192,7 +186,16 @@ export default {
         text-align center
         font-weight 500
         transition all 0.6s
-        width 300pt
+        max-width 300pt
+        display block
+        color white
+        font-size 2rem
+        text-decoration none
+        @media screen and (max-width: 600px)
+          font-size 1.5rem
+          margin-left auto
+          margin-right auto
+          max-width 200pt
 
         &:hover
           background-color white
@@ -210,7 +213,11 @@ export default {
           padding-left 60pt
           display inline-block
           text-shadow 0 0 8px #000000;
-
+          @media screen and (max-width: 600px)
+            padding-top 100pt
+            padding-left 0
+            text-align center
+            font-size 2rem
 
     ~/graphs-types
       width 100%
@@ -223,43 +230,57 @@ export default {
         > h2
           font-weight 400
           margin-bottom 4pt
+          font-size 28pt
+          @media screen and (max-width: 600px)
+            font-size 22pt
           &:first-letter
             text-transform uppercase
 
 
-
 .IHR_
-  &description
+  &description_text
+    height 220px
+.IHR_
+  &description,
+  &description_text
     font-size 18pt
     width 90%
     margin 30pt auto
     text-align left
+    padding: 0 1rem;
+    @media screen and (max-width: 600px)
+        font-size 12pt
     #IHR_graphs-types &
       text-align justify
 
     &-main
       font-size 20pt
-      margin 30pt auto
+      margin 30pt auto !important
       text-align center
       width 85%
+      @media screen and (max-width: 600px)
+        font-size 14pt
 
     &-link
       position relative
       text-align right
 
   &section
-    margin 40pt auto 40px auto
+    margin 60pt auto 40px auto
     width 85%
     font-size 18pt
     text-align center
-
+    & > h2
+      font-size 32pt
+      @media screen and (max-width: 600px)
+        font-size 22pt
 
   ~/ack-logo
       margin-left auto
       margin-right auto
       text-align center
-      height 250px
-      width 300px
+      height 200px
+      width 400px
 
       & > span
         display inline-block
@@ -273,17 +294,31 @@ export default {
         width auto
         height auto
 
+      & > img:hover {
+        transform: scale(1.1);
+      }  
+        
+
 .analysis-modules
     max-width 600px
     text-align left
+    border-radius 15px !important
+
+@media(max-width 1411px)
+  .analysis-modules
+    margin-left 0
+
+@media(max-width 1450px)
+  .IHR_tweets-types
+        max-width 600px !important
+
 
 .IHR_tweets-types
       margin-left auto
       margin-right auto
-      width 70%
       max-width 800px
-      min-width 600px
       text-align center
+      border-radius 15px
 
       & > div
         background-color white

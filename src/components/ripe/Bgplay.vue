@@ -1,114 +1,100 @@
+<script setup>
+import { QCard, QCardSection, QSpinner, uid } from 'quasar'
+import { ref, onMounted, watch, computed, inject } from 'vue'
+
+const library_delayer = inject('library_delayer')
+
+const props = defineProps({
+  asNumber: {
+    type: Number,
+    required: true,
+  },
+  dateTime: {
+    type: Date,
+    required: true,
+  },
+  intervalLength: {
+    type: Number,
+    default: 3600, //length of interval in seconds
+  },
+})
+
+const myId = ref(`bgplayContainer${uid()}`)
+const bgplay = ref(null)
+const loaded = ref(null)
+
+const asName = computed(() => {
+  return `AS${props.asNumber}`
+})
+
+const startTime = computed(() => {
+  return props.dateTime.getTime() / 1000 - props.intervalLength / 2
+})
+
+const endTime = computed(() => {
+  return props.dateTime.getTime() / 1000 + props.intervalLength / 2
+})
+
+watch(() => props.asNumber, (oldValue, newValue) => {
+  if (oldValue == newValue) {
+    return
+  }
+  bgplay.value.shell.set_params({ resource: asName.value })
+})
+watch(() => props.dateTime, (oldValue, newValue) => {
+  if (oldValue == newValue) {
+    return
+  }
+  bgplay.value.shell.set_params({
+    starttime: startTime.value,
+    endtime: endTime.value,
+  })
+})
+watch(() => props.intervalLength, (oldValue, newValue) => {
+  if (oldValue == newValue) {
+    return
+  }
+  bgplay.value.shell.set_params({
+    starttime: startTime.value,
+    endtime: endTime.value,
+  })
+})
+
+onMounted(() => {
+  library_delayer.load('bgplay_api', () => {
+    bgplay.value = BGPlayWidget(
+        'BGPlay',
+        myId.value,
+        {
+          width: '100vw',
+          height: 800,
+        },
+        {
+          unix_timestamps: 'TRUE',
+          ignoreReannouncements: 'true',
+          resource: asName.value,
+          starttime: startTime.value,
+          endtime: endTime.value,
+          rrcs: '10',
+          type: 'bgp',
+        }
+      )
+      loaded.value = true
+  })
+})
+</script>
+
 <template>
   <div>
-    <q-card v-if="loaded === false" negative>
-      <q-card-section>
-        {{ $t("genericErrors.cloudNotLoad") }} BGPlay
-      </q-card-section>
-    </q-card>
+    <QCard v-if="loaded === false" negative>
+      <QCardSection> {{ $t('genericErrors.cloudNotLoad') }} BGPlay </QCardSection>
+    </QCard>
     <div v-if="loaded === null" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
+      <QSpinner color="secondary" size="15em" />
     </div>
     <div :id="myId"></div>
   </div>
 </template>
 
-<script>
-import { setTimeout } from "timers";
-export default {
-  props: {
-    asNumber: {
-      type: Number,
-      required: true
-    },
-    dateTime: {
-      type: Date,
-      required: true
-    },
-    intervalLength: {
-      type: Number,
-      default: 3600 //length of interval in seconds
-    }
-  },
-  data() {
-    return {
-      myId: `bgplayContainer${this._uid}`,
-      bgplay: null,
-      loaded: null
-    };
-  },
-  mounted() {
-    this.$libraryDelayer.load("ripe_widget_api", () => {
-      console.log("resolved");
-      this.bgplay = ripestat.init(
-        "bgplay",
-        {
-          unix_timestamps: "TRUE",
-          ignoreReannouncements: "true",
-          resource: this.asName,
-          starttime: this.startTime,
-          endtime: this.endTime,
-          rrcs: "10",
-          type: "bgp"
-        },
-        this.myId,
-        {
-          size: "fit",
-          show_controls: "no",
-          disable: ["footer-buttons", "container"]
-        },
-        () => {
-          this.loaded = true;
-          setTimeout(() => {
-            var elemt = document.getElementById(this.myId);
-            elemt.style.width = "100%";
-          }, 150);
-        }
-      );
-    });
-  },
-  watch: {
-    asNumber(oldValue, newValue) {
-      if (oldValue == newValue) return;
-      this.bgplay.update({ resource: this.asName });
-      this.bgplay.reload();
-    },
-    dateTime(oldValue, newValue) {
-      if (oldValue == newValue) return;
-      this.bgplay.update({
-        starttime: this.startTime,
-        endtime: this.endTime
-      });
-      this.bgplay.reload();
-    },
-    intervalLength(oldValue, newValue) {
-      if (oldValue == newValue) return;
-      this.bgplay.update({
-        starttime: this.startTime,
-        endtime: this.endTime
-      });
-      this.bgplay.reload();
-    }
-  },
-  computed: {
-    asName() {
-      return `AS${this.asNumber}`;
-    },
-    startTime() {
-      return this.dateTime.getTime() / 1000 - this.intervalLength / 2;
-    },
-    endTime() {
-      return this.dateTime.getTime() / 1000 + this.intervalLength / 2;
-    }
-  }
-};
-</script>
-
 <style lang="stylus">
-.IHR_
-  &loading-spinner
-    & > *
-      width 25%
-      height 25%
-      display inline-block
-      margin auto
 </style>

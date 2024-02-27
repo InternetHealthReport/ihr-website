@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "master"
+    schedule:
+      interval: "weekly"
+      open-pull-requests-limit: 20
+    versioning-strategy: "increase"
+    pull-request-branch-name:
+      separator: "-"
+    labels:
+      - "Dependabot"
+    commit-message:
+      prefix: "update"
+      
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]

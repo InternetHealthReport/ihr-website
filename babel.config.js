@@ -1,20 +1,12 @@
-let config = {
-  presets: ["@vue/app"],
-  plugins: [
-    [
-      "transform-imports",
-      {
-        quasar: {
-          transform: "quasar/dist/babel-transforms/imports.js",
-          preventFullImport: true
-        }
-      }
-    ]
-  ]
+module.exports = {
+    presets: [
+        [
+            '@babel/preset-env',
+            {
+                targets: {
+                    node: 'current',
+                },
+            },
+        ]
+    ],
 };
-
-if (process.env.NODE_ENV === "production") {
-  config.plugins.push(["transform-remove-console"]);
-}
-
-module.exports = config;
