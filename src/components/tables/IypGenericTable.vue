@@ -103,7 +103,7 @@ const getMetadataQuery = () => {
     query[i] = `${queryVars[i-1]}:${query[i]}`
   }
   query = `${query.join('[')} WITH `
-  const collectList = 'COLLECT(DISTINCT [var0.reference_org, var0.reference_url, var0.reference_time]) AS var1'
+  const collectList = 'COLLECT(DISTINCT [var0.reference_org, var0.reference_url_data, var0.reference_url_info, var0.reference_time_fetch, var0.reference_time_modification]) AS var1'
   const listVars = []
   queryVars.forEach((el, index) => {
     listVars.push(`list${index}`)
@@ -116,27 +116,41 @@ const getMetadataQuery = () => {
   return query
 }
 
+const parseDate = (date) => {
+  let date_obj
+  if (date === null) {
+    return '-'
+  } else if (typeof(date) == 'string') {
+    date_obj = new Date(date)
+  } else {
+    date_obj = new Date(date.toString())
+  }
+  return date_obj.toLocaleDateString('en-us', {month: 'long', day: 'numeric', year: 'numeric'})
+}
+
 const fetchMetadata = async () => {
   loadingStatus.value = true
   try {
     let res = await iyp_api.run([{ statement: getMetadataQuery() }])
     res[0].forEach(obj => {
       const list = obj.metadata_list
-      if (list.includes(null)) {
+      if (list[0] === null ) {
         return
       }
-      let date = list[2]
-      if (typeof(date) == 'string') {
-        date = new Date(date)
-      } else {
-        date = new Date(date.toString())
-      }
-      date = date.toLocaleDateString('en-us', {month: 'long', day: 'numeric', year: 'numeric'})
+      const date_fetch = parseDate(list[3])
+      const date_modification = parseDate(list[4])
       if (list[0] in metadata.value) {
-        metadata.value[list[0]].reference_time.push(date)
-        metadata.value[list[0]].reference_url.push(list[1])
+        metadata.value[list[0]].reference_time_fetch.push(date_fetch)
+        metadata.value[list[0]].reference_time_modification.push(date_modification)
+        metadata.value[list[0]].reference_url_data.push(list[1])
+        metadata.value[list[0]].reference_url_info.push(list[2])
       } else {
-        metadata.value[list[0]] = { reference_time: [ date ], reference_url: [ list[1] ] }
+        metadata.value[list[0]] = { 
+          reference_time_fetch: [ date_fetch ],
+          reference_time_modification: [ date_modification ],
+          reference_url_data: [ list[1] ],
+          reference_url_info: [ list[2] ],
+         }
       }
     })
     loadingStatus.value = false
@@ -296,18 +310,24 @@ onMounted(() => {
             <thead>
               <tr>
                 <th class="text-left">Reference Organization</th>
-                <th class="text-left">Reference Time</th>
+                <th class="text-left">Reference Time Fetch</th>
+                <th class="text-left">Reference Time Modification</th>
                 <th class="text-left">Reference URL</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="key in Object.keys(metadata)">
-                <td class="text-left">{{ key }}</td>
                 <td class="text-left">
-                  <div v-for="time in metadata[key].reference_time">{{ time }}</div>
+                  <a :href="metadata[key].reference_url_info">{{ key }}</a>
                 </td>
                 <td class="text-left">
-                  <div v-for="url in metadata[key].reference_url"><a :href="url">{{ url }}</a></div>
+                  <div v-for="time in metadata[key].reference_time_fetch">{{ time }}</div>
+                </td>
+                <td class="text-left">
+                  <div v-for="time in metadata[key].reference_time_modification">{{ time }}</div>
+                </td>
+                <td class="text-left">
+                  <div v-for="url in metadata[key].reference_url_data"><a :href="url">{{ url }}</a></div>
                 </td>
               </tr>
             </tbody>
