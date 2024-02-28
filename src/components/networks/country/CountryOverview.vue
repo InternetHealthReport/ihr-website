@@ -47,13 +47,14 @@ const queries = ref([
   },
   {
     data: [],
-    query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[:CATEGORIZED]-(:Tag {label:'Tranco 10k Host'}),
-      (a)-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)
+    query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[ca:CATEGORIZED]-(:Tag {label:'Tranco 10k Host'}),
+      (a)-[:ORIGINATE]-(:Prefix)-[:PART_OF]-(:IP)-[re:RESOLVES_TO {reference_name:'openintel.tranco1m'}]-(d:HostName)
+      USING INDEX re:RESOLVES_TO(reference_name)
+      WITH a, COUNT(DISTINCT d) AS nb_domains ORDER BY nb_domains DESC LIMIT 5
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
-      RETURN a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS as_name, COUNT(DISTINCT h) AS nb_hostnames
-      ORDER BY nb_hostnames DESC LIMIT 5`
+      RETURN a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS as_name, nb_domains`
   }
 ])
 
@@ -117,10 +118,10 @@ onMounted(() => {
         <tr>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([6])}), hash: '#autonomous-systems'})">{{ queries[0].data[0].as_count }} registered ASes</RouterLink></div>
-              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].preg_count }} registered prefixes</RouterLink></div>
-              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].pgeo_count }} geolocated prefixes</RouterLink></div>
-              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#internet-exchange-points'})">{{ queries[0].data[0].ixp_count }} Internet Exchange Points</RouterLink></div>
+              <div>{{ queries[0].data[0].as_count }} registered ASes</div>
+              <div>{{ queries[0].data[0].preg_count }} registered prefixes</div>
+              <div>{{ queries[0].data[0].pgeo_count }} geolocated prefixes</div>
+              <div>{{ queries[0].data[0].ixp_count }} Internet Exchange Points</div>
             </div>
           </td>
           <td class="text-left">
