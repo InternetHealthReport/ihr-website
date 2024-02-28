@@ -1,8 +1,9 @@
 <script setup>
-import { QChip, QSpinner } from 'quasar'
+import { QChip, QSpinner, QMarkupTable } from 'quasar'
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
+import '@/styles/chart.sass'
 
 const iyp_api = inject('iyp_api')
 
@@ -69,40 +70,41 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="IYP_chart">
-    <div v-if="loadingStatus" class="IYP_loading-spinner">
-      <QSpinner color="secondary" size="3em" />
-    </div>
-    <div class="q-pl-sm q-mt-lg q-mb-lg">
-      <!-- <h2 class="q-mb-sm">Overview</h2> -->
-      <div class="q-pl-md">
-        <div class="row q-gutter-md q-mt-md justify-center">
-          <div class="col-10">
-            <div class="row q-gutter-md">
-              <div class="col-12 col-md-auto">
-                <h3>IXP Info</h3>
-                <div>
-                  <p>IXP Name: {{ overview.name }}</p>
-                  <p>Country of origin: <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></p>
-                  <p>Organization: {{ overview.organization }}</p>
-                  <p>
-                    Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
-                  </p>
-                </div>
-              </div>
-              <div class="col-12 col-md-2">
-                <h3>Reference</h3>
-                <div class="column">
-                  <a :href="handleReference(key)" v-for="(value, key) in references" :key="key" target="_blank" rel="noreferrer">
-                    {{ handleReference(key) }}
-                  </a>
-                </div>
+  <div>
+    <QMarkupTable separator="horizontal">
+      <div v-if="loadingStatus" class="IHR_loading-spinner">
+        <QSpinner color="secondary" size="15em"/>
+      </div>
+      <thead>
+        <tr>
+          <th class="text-left">Summary</th>
+          <th class="text-left">External Links</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-left">
+            <div v-if="overview.name">
+              <div>IXP Name: {{ overview.name }}</div>
+              <div>Country of origin: <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></div>
+              <div>Organization: {{ overview.organization }}</div>
+              <div>
+                Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </td>
+          <td class="text-left">
+            <div v-if="overview.name">
+              <div v-for="(value, key) in references" :key="key">
+                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+                  {{ key }}
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </QMarkupTable>
   </div>
 </template>
 

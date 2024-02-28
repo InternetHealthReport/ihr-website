@@ -3,6 +3,7 @@ import { QSpinner, QTabs, QTab, QTabPanels, QTabPanel, QTable, QTh, QTooltip, QI
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
+import '@/styles/chart.sass'
 
 const iyp_api = inject('iyp_api')
 
@@ -37,7 +38,7 @@ const router = useRouter()
 
 const activeTab = ref('chart')
 const filter = ref('')
-const colToUnderline = ref(['ASN', 'AS', 'Origin AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC'])
+const colToUnderline = ref(['ASN', 'AS', 'Origin AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC', 'Host Name'])
 const underline = ref(false)
 const metadata = ref({})
 const loadingStatus = ref(true)
@@ -183,6 +184,9 @@ const routeToEntity = (entity, data) => {
   } else if (entity == 'CC' | entity == 'Country' |  entity == 'Reg. Country' | entity == 'Geoloc. Country') {
     let cc= Array.isArray(data.cc)?data.cc[0]:data.cc
     routeToCountry(cc)
+  } else if (entity == 'Host Name') {
+    let hostName = Array.isArray(data.hostName)?data.hostName[0]:data.hostName
+    routeToHostName(hostName)
   }
 }
 
@@ -214,6 +218,13 @@ const routeToCountry = (cc) => {
   }))
 }
 
+const routeToHostName = (hostName) => {
+  router.push(Tr.i18nRoute({
+    name: 'hostnames',
+    params: { hostName: hostName },
+  }))
+}
+
 watch(activeTab, () => {
   if (activeTab.value == 'chart') {
     // console.log(`Current Tab: ${activeTab.value}`)
@@ -221,6 +232,11 @@ watch(activeTab, () => {
 })
 watch(() => props.slotLength, () => {
   if (props.slotLength <= 0) {
+    activeTab.value = 'data'
+  }
+})
+watch(() => props.data, () => {
+  if (!props.data.length) {
     activeTab.value = 'data'
   }
 })
@@ -234,9 +250,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="IYP_chart">
-    <div v-if="loadingStatus" class="IYP_loading-spinner">
-      <QSpinner color="secondary" size="3em" />
+  <div>
+    <div v-if="loadingStatus" class="IHR_loading-spinner" style="z-index: 1000;">
+      <QSpinner color="secondary" size="15em" />
     </div>
     <div>
       <QTabs
@@ -309,10 +325,10 @@ onMounted(() => {
           <QMarkupTable flat bordered v-if="!loadingStatus">
             <thead>
               <tr>
-                <th class="text-left">Reference Organization</th>
-                <th class="text-left">Reference Time Fetch</th>
-                <th class="text-left">Reference Time Modification</th>
-                <th class="text-left">Reference URL</th>
+                <th class="text-left">Data Source</th>
+                <th class="text-left">Fetched Time</th>
+                <th class="text-left">Modification Time</th>
+                <th class="text-left">URL</th>
               </tr>
             </thead>
             <tbody>

@@ -1,8 +1,9 @@
 <script setup>
-import { QSpinner } from 'quasar'
+import { QSpinner, QMarkupTable } from 'quasar'
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
+import '@/styles/chart.sass'
 
 const iyp_api = inject('iyp_api')
 
@@ -99,57 +100,59 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="IYP_chart">
-    <div v-if="loading > 0" class="IYP_loading-spinner">
-      <QSpinner color="secondary" size="3em" />
-    </div>
-    <div class="q-pl-sm q-mt-lg q-mb-lg">
-      <div class="q-pl-md">
-        <div class="row q-gutter-md q-mt-md justify-center">
-          <div class="col-10">
-            <div class="row justify-between">
-              <div class="col-12 col-md-auto">
-                <h3>Summary</h3>
-                <div v-if="queries[0].data.length > 0" class="q-ml-sm">
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([6])}), hash: '#autonomous-systems'})">{{ queries[0].data[0].as_count }} registered ASes</RouterLink></p>
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].preg_count }} registered prefixes</RouterLink></p>
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].pgeo_count }} geolocated prefixes</RouterLink></p>
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#internet-exchange-points'})">{{ queries[0].data[0].ixp_count }} Internet Exchange Points</RouterLink></p>
-                </div>
-              </div>
-              <div class="col-12 col-md-auto">
-                <h3>Prominent ISPs</h3>
-                <div class="column q-ml-sm">
-                  <div v-if="queries[1].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.asn}`} })" v-for="item in queries[1].data" :key="Number(item.asn)">
-                      AS{{ item.asn }} - {{ item.as_name }}
-                    </RouterLink>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-md-auto">
-                <h3>Prominent Hosting Providers</h3>
-                <div class="column q-ml-sm">
-                  <div v-if="queries[2].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.asn}`} })" v-for="item in queries[2].data" :key="Number(item.asn)">
-                      AS{{ item.asn }} - {{ item.as_name }}
-                    </RouterLink>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-md-2">
-                <h3>External Links</h3>
-                <div class="column q-ml-sm">
-                  <a :href="handleReference(key)" v-for="(value, key) in references" :key="String(key)" target="_blank" rel="noreferrer">
-                    {{ key }}
-                  </a>
-                </div>
+  <div>
+    <QMarkupTable separator="horizontal">
+      <div v-if="loading > 0" class="IHR_loading-spinner">
+        <QSpinner color="secondary" size="15em"/>
+      </div>
+      <thead>
+        <tr>
+          <th class="text-left">Summary</th>
+          <th class="text-left">Prominent ISPs</th>
+          <th class="text-left">Prominent Hosting Providers</th>
+          <th class="text-left">External Links</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-left">
+            <div v-if="queries[0].data.length > 0">
+              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([6])}), hash: '#autonomous-systems'})">{{ queries[0].data[0].as_count }} registered ASes</RouterLink></div>
+              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].preg_count }} registered prefixes</RouterLink></div>
+              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([7])}), hash: '#ip-prefixes'})">{{ queries[0].data[0].pgeo_count }} geolocated prefixes</RouterLink></div>
+              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#internet-exchange-points'})">{{ queries[0].data[0].ixp_count }} Internet Exchange Points</RouterLink></div>
+            </div>
+          </td>
+          <td class="text-left">
+            <div v-if="queries[1].data.length > 0">
+              <div v-for="item in queries[1].data" :key="Number(item.asn)">
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.asn}`} })">
+                  AS{{ item.asn }} - {{ item.as_name }}
+                </RouterLink>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </td>
+          <td class="text-left">
+            <div v-if="queries[2].data.length > 0">
+              <div v-for="item in queries[2].data" :key="Number(item.asn)">
+                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.asn}`} })">
+                  AS{{ item.asn }} - {{ item.as_name }}
+                </RouterLink>
+              </div>
+            </div>
+          </td>
+          <td class="text-left">
+            <div v-if="queries[0].data.length > 0">
+              <div v-for="(value, key) in references" :key="key">
+                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+                  {{ key }}
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </QMarkupTable>
   </div>
 </template>
 

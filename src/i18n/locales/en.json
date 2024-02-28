@@ -1,7 +1,7 @@
 {
   "locale": {
     "en": "English",
-    "jp": "Japanese"
+    "jp": "日本語"
   },
   "genericErrors": {
     "ups": "ups",
@@ -818,6 +818,14 @@
         "title": "Popular Domains",
         "caption": "Popular domain names hosted by AS"
       },
+      "popularHostNames": {
+        "title": "Popular Host Names",
+        "caption": "Host names for popular domain names hosted by AS"
+      },
+      "authoritativeNameservers": {
+        "title": "Authoritative Nameservers",
+        "caption": "Authoritative Nameservers hosted by AS"
+      },
       "facilities": {
         "title": "Co-located ASes",
         "caption": "ASes present at the same colocation facilities as AS"
@@ -920,6 +928,10 @@
       "popularDomains": {
         "title": "Popular Domains",
         "caption": "Popular domain names resolving to IPs in "
+      },
+      "popularHostNames": {
+        "title": "Popular Host Names",
+        "caption": "Host names for popular domain names resolving to IPs in "
       },
       "nameservers": {
         "title": "Authoritative Nameservers",

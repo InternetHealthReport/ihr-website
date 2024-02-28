@@ -19,11 +19,12 @@ import ASDownstreamsASes from '@/components/iyp/as/ASDownstreamsASes.vue'
 import ASUpstreamASes from '@/components/iyp/as/ASUpstreamASes.vue'
 import ASRipeAtlas from '@/components/iyp/as/ASRipeAtlas.vue'
 import ASPopularDomains from '@/components/iyp/as/ASPopularDomains.vue'
+import ASPopularHostNames from '@/components/iyp/as/ASPopularHostNames.vue'
 import ASIXPs from '@/components/iyp/as/ASIXPs.vue'
 import ASCoLocatedASes from '@/components/iyp/as/ASCoLocatedASes.vue'
 import ASSiblingASes from '@/components/iyp/as/ASSiblingASes.vue'
 import ASRankings from '@/components/iyp/as/ASRankings.vue'
-import { P } from 'plotly.js-dist'
+import ASAuthoritativeNameservers from '@/components/iyp/as/ASAuthoritativeNameservers.vue'
 
 const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'peeringdbId', 'pageTitle', 'interval', 'hash'])
 
@@ -41,7 +42,7 @@ const selects = ref([
   { value: false, label: t('charts.prefixHegemony.title') },
   { value: false, label: t('charts.networkDelay.title') },
   { value: false, label: t('iyp.as.atlas.title') },
-  { value: false, label: t('charts.delayAndForwarding.title') },
+  // { value: false, label: t('charts.delayAndForwarding.title') },
   { value: false, label: t('charts.disconnections.title') },
   { value: false, label: t('iyp.as.ipPrefix.title') },
   { value: false, label: t('iyp.as.peers.title') },
@@ -49,6 +50,8 @@ const selects = ref([
   { value: false, label: t('iyp.as.downstreams.title') },
   { value: false, label: t('iyp.as.roas.title') },
   { value: false, label: t('iyp.as.popularDomains.title') },
+  { value: false, label: t('iyp.as.popularHostNames.title') },
+  { value: false, label: t('iyp.as.authoritativeNameservers.title') },
   { value: false, label: t('iyp.as.ixp.title') },
   { value: false, label: t('iyp.as.facilities.title') },
   { value: false, label: t('iyp.as.siblings.title') },
@@ -191,7 +194,7 @@ onMounted(() => {
     />
   </GenericCardController>
 
-  <GenericCardController
+  <!-- <GenericCardController
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
@@ -204,14 +207,14 @@ onMounted(() => {
       :as-number="asNumber"
       :fetch="fetch"
     />
-  </GenericCardController>
+  </GenericCardController> -->
 
   <GenericCardController
     :title="$t('charts.disconnections.title')"
     sub-title="RIPE Atlas Log"
     :report-day="interval.dayDiff()"
     class="card"
-    v-if="selects[7].value"
+    v-if="selects[6].value"
   >
     <DiscoChart
       :streamName="asNumber"
@@ -226,7 +229,7 @@ onMounted(() => {
     :title="$t('iyp.as.ipPrefix.title')"
     :sub-title="$t('iyp.as.ipPrefix.caption')+asNumber"
     class="card"
-    v-if="selects[8].value"
+    v-if="selects[7].value"
   >
     <ASOriginatedPrefixes
       :asNumber="asNumber"
@@ -237,7 +240,7 @@ onMounted(() => {
     :title="$t('iyp.as.peers.title')"
     :sub-title="$t('iyp.as.peers.caption')+asNumber"
     class="card"
-    v-if="selects[9].value"
+    v-if="selects[8].value"
   >
     <ASConnectedASes
       :asNumber="asNumber"
@@ -248,7 +251,7 @@ onMounted(() => {
     :title="$t('iyp.as.upstreams.title')"
     :sub-title="$t('iyp.as.upstreams.caption')+asNumber"
     class="card"
-    v-if="selects[10].value"
+    v-if="selects[9].value"
   >
     <ASUpstreamASes
       :asNumber="asNumber"
@@ -259,7 +262,7 @@ onMounted(() => {
     :title="$t('iyp.as.downstreams.title')"
     :sub-title="$t('iyp.as.downstreams.caption')+asNumber"
     class="card"
-    v-if="selects[11].value"
+    v-if="selects[10].value"
   >
     <ASDownstreamsASes
       :asNumber="asNumber"
@@ -270,7 +273,7 @@ onMounted(() => {
     :title="$t('iyp.as.roas.title')"
     :sub-title="$t('iyp.as.roas.caption')+asNumber"
     class="card"
-    v-if="selects[12].value"
+    v-if="selects[11].value"
   >
     <ASRPKIRouteOriginAuthorization
       :asNumber="asNumber"
@@ -282,9 +285,31 @@ onMounted(() => {
     :title="$t('iyp.as.popularDomains.title')"
     :sub-title="$t('iyp.as.popularDomains.caption')+asNumber"
     class="card"
-    v-if="selects[13].value"
+    v-if="selects[12].value"
   >
     <ASPopularDomains
+      :asNumber="asNumber"
+      :page-title="pageTitle"
+    />
+  </GenericCardController>
+  <GenericCardController
+    :title="$t('iyp.as.popularHostNames.title')"
+    :sub-title="$t('iyp.as.popularHostNames.caption')+asNumber"
+    class="card"
+    v-if="selects[13].value"
+  >
+    <ASPopularHostNames
+      :asNumber="asNumber"
+      :page-title="pageTitle"
+    />
+  </GenericCardController>
+  <GenericCardController
+    :title="$t('iyp.as.authoritativeNameservers.title')"
+    :sub-title="$t('iyp.as.authoritativeNameservers.caption')+asNumber"
+    class="card"
+    v-if="selects[14].value"
+  >
+    <ASAuthoritativeNameservers
       :asNumber="asNumber"
       :page-title="pageTitle"
     />
@@ -294,7 +319,7 @@ onMounted(() => {
     :title="$t('iyp.as.ixp.title')"
     :sub-title="$t('iyp.as.ixp.caption')+asNumber"
     class="card"
-    v-if="selects[14].value"
+    v-if="selects[15].value"
   >
     <ASIXPs
       :asNumber="asNumber"
@@ -305,7 +330,7 @@ onMounted(() => {
     :title="$t('iyp.as.facilities.title')"
     :sub-title="$t('iyp.as.facilities.caption')+asNumber"
     class="card"
-    v-if="selects[15].value"
+    v-if="selects[16].value"
   >
     <ASCoLocatedASes
       :asNumber="asNumber"
@@ -317,7 +342,7 @@ onMounted(() => {
     :title="$t('iyp.as.siblings.title')"
     :sub-title="$t('iyp.as.siblings.caption')"
     class="card"
-    v-if="selects[16].value"
+    v-if="selects[17].value"
   >
     <ASSiblingASes
       :asNumber="asNumber"
@@ -329,7 +354,7 @@ onMounted(() => {
     :title="$t('iyp.as.rankings.title')"
     :sub-title="$t('iyp.as.rankings.caption')+asNumber"
     class="card"
-    v-if="selects[17].value"
+    v-if="selects[18].value"
   >
     <ASRankings
       :asNumber="asNumber"

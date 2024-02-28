@@ -88,7 +88,7 @@ const fetch = ref(true)
     />
   </GenericCardController>
 
-  <GenericCardController
+  <!-- <GenericCardController
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
@@ -100,7 +100,7 @@ const fetch = ref(true)
       :as-number="asNumber"
       :fetch="fetch"
     />
-  </GenericCardController>
+  </GenericCardController> -->
 
   <GenericCardController
     :title="$t('charts.disconnections.title')"

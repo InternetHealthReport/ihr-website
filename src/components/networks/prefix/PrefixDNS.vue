@@ -2,6 +2,7 @@
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import PrefixPopularDomains from '@/components/iyp/prefix/PrefixPopularDomains.vue'
 import PrefixAuthoritativeNameservers from '@/components/iyp/prefix/PrefixAuthoritativeNameservers.vue'
+import PrefixPopularHostNames from '@/components/iyp/prefix/PrefixPopularHostNames.vue'
 
 const props = defineProps(['getPrefix', 'pageTitle'])
 </script>
@@ -12,6 +13,16 @@ const props = defineProps(['getPrefix', 'pageTitle'])
     :sub-title="$t('iyp.prefix.popularDomains.caption')+getPrefix"
   >
     <PrefixPopularDomains
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
+  </GenericCardController>
+  <GenericCardController
+    :title="$t('iyp.prefix.popularHostNames.title')"
+    :sub-title="$t('iyp.prefix.popularHostNames.caption')+getPrefix"
+    class="card"
+  >
+    <PrefixPopularHostNames
       :page-title="pageTitle"
       :get-prefix="getPrefix"
     />

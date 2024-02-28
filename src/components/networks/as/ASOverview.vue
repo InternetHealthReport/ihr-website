@@ -1,8 +1,9 @@
 <script setup>
-import { QChip, QSpinner } from 'quasar'
+import { QChip, QSpinner, QMarkupTable } from 'quasar'
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
+import '@/styles/chart.sass'
 
 const iyp_api = inject('iyp_api')
 
@@ -65,8 +66,8 @@ const queries = ref([
   },
   {
     data: [],
-    query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(:DomainName)-[rr:RANK]->(rn:Ranking)
-      WHERE rr.reference_name = "tranco.top1M"
+    query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
+      WHERE rr.reference_name = "tranco.top1m" AND h.name = d.name
       RETURN DISTINCT h.name AS hostname, rr.rank AS rank
       ORDER BY rank LIMIT 5`
   }
@@ -132,66 +133,83 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="IYP_chart">
-    <div v-if="loading > 0" class="IYP_loading-spinner">
-      <QSpinner color="secondary" size="3em" />
-    </div>
-    <div class="q-pl-sm q-mt-lg q-mb-lg">
-      <div class="q-pl-md">
-        <div class="row q-gutter-md q-mt-md justify-center">
-          <div class="col-10">
-            <div class="row justify-between">
-              <div class="col-12 col-md-auto">
-                <h3>Summary</h3>
-                <div v-if="queries[0].data.length > 0" class="q-ml-sm">
-                  <p>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></p>
-                  <p>Member of <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([14])}), hash: '#ixps'})">{{ queries[0].data[0].nb_ixp }} IXPs in {{ queries[0].data[0].nb_country }} Countries</RouterLink></p>
-                  <p><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#originated-prefixes'})">{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 Originated Prefixes</RouterLink></p>
-                  <p v-if="queries[1].data.length > 0"><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([9])}), hash: '#connected-ases'})">{{ queries[1].data[0].peers }} Connected ASes</RouterLink></p>
-                  <p>
-                    Website: <a :href="queries[0].data[0].website" target="_blank" rel="noopener noreferrer">{{ queries[0].data[0].website}}</a>
-                  </p>
-                </div>
-              </div>
-              <div v-if="queries[1].data.length > 0" class="col-12 col-md-auto">
-                <h3>Ranking</h3>
-                <div class="q-ml-sm">
-                  <div>{{ queries[1].data[0].ranking_name }}</div>
-                  <div class="text-h2 text-center">{{ queries[1].data[0].rank }}</div>
-                </div>
-              </div>
-              <div class="col-12 col-md-2">
-                <h3>Popular Host Names</h3>
-                <div class="column q-ml-sm">
-                  <div v-if="queries[2].data.length > 0" class="column">
-                    <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.hostname}})" v-for="item in queries[2].data" :key="item.hostname">
-                      {{ item.hostname }}
-                    </RouterLink>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12 col-md-2">
-                <h3>External Links</h3>
-                <div class="column q-ml-sm">
-                  <a :href="handleReference(key)" v-for="(value, key) in references" :key="key" target="_blank" rel="noreferrer">
-                    {{ key }}
-                  </a>
-                </div>
+  <div>
+    <QMarkupTable separator="horizontal">
+      <div v-if="loading > 0" class="IHR_loading-spinner">
+        <QSpinner color="secondary" size="15em"/>
+      </div>
+      <thead>
+        <tr>
+          <th class="text-left">Summary</th>
+          <th class="text-left">Top Rank</th>
+          <th class="text-left">Popular Host Names</th>
+          <th class="text-left">External Links</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-left">
+            <div v-if="queries[0].data.length > 0">
+              <div>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></div>
+              <div>Member of <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([14])}), hash: '#ixps'})">{{ queries[0].data[0].nb_ixp }} IXPs in {{ queries[0].data[0].nb_country }} Countries</RouterLink></div>
+              <div><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([8])}), hash: '#originated-prefixes'})">{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 Originated Prefixes</RouterLink></div>
+              <div v-if="queries[1].data.length > 0"><RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom', display: JSON.stringify([9])}), hash: '#connected-ases'})">{{ queries[1].data[0].peers }} Connected ASes</RouterLink></div>
+              <div>
+                Website: <a :href="queries[0].data[0].website" target="_blank" rel="noopener noreferrer">{{ queries[0].data[0].website}}</a>
               </div>
             </div>
-
-            <div class="row">
-              <div  v-if="queries[0].data.length > 0" class="q-mt-md">
-                <h3>Tags</h3>
-                <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}})">
-                  <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
+          </td>
+          <td class="text-left">
+            <div v-if="queries[1].data.length > 0">
+              <div v-if="queries[1].data[0].rank">
+                <div>{{ queries[1].data[0].ranking_name }}</div>
+                <h2 class="text-center">{{ queries[1].data[0].rank }}</h2>
+              </div>
+              <div v-else>
+                Unranked in Tranco Top 1M list
+              </div>
+            </div>
+          </td>
+          <td class="text-left">
+            <div v-if="queries[2].data.length > 0">
+              <div v-for="item in queries[2].data" :key="item.hostname">
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.hostname}})">
+                  {{ item.hostname }}
                 </RouterLink>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </td>
+          <td class="text-left">
+            <div v-if="queries[0].data.length > 0">
+              <div v-for="(value, key) in references" :key="key">
+                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+                  {{ key }}
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </QMarkupTable>
+    <br />
+    <QMarkupTable>
+      <thead>
+        <tr>
+          <th class="text-left" :colspan="5">Tags</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td :colspan="5">
+            <div  v-if="queries[0].data.length > 0" class="row">
+              <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}, hash: '#Autonomous-Systems'})">
+                <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
+              </RouterLink>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </QMarkupTable>
   </div>
 </template>
 

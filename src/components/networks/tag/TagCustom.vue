@@ -119,7 +119,7 @@ onMounted(() => {
   /> -->
   <!-- All -->
   <GenericCardController
-    :title="selectedWidgets.nb_domains+' '+$t('iyp.tag.domains.title')"
+    :title="$t('iyp.tag.domains.title')"
     :sub-title="$t('iyp.tag.domains.caption')+tag+' by '+selectedWidgets.data_source_domains.join(', ')"
     class="card"
     v-if="selects[0].value && selects[0].hasData"
@@ -129,7 +129,7 @@ onMounted(() => {
     />
   </GenericCardController>
   <GenericCardController
-    :title="selectedWidgets.nb_ases+' '+$t('iyp.tag.ases.title')"
+    :title="$t('iyp.tag.ases.title')"
     :sub-title="$t('iyp.tag.ases.caption')+tag+' by '+selectedWidgets.data_source_ases.join(', ')"
     class="card"
     v-if="selects[1].value && selects[1].hasData"
@@ -139,7 +139,7 @@ onMounted(() => {
     />
   </GenericCardController>
   <GenericCardController
-    :title="selectedWidgets.nb_prefixes+' '+$t('iyp.tag.prefixes.title')"
+    :title="$t('iyp.tag.prefixes.title')"
     :sub-title="$t('iyp.tag.prefixes.caption')+tag+' by '+selectedWidgets.data_source_prefixes.join(', ')"
     class="card"
     v-if="selects[2].value && selects[2].hasData"

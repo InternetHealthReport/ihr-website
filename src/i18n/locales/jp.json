@@ -645,7 +645,7 @@
               "src": "",
               "style": ""
             },
-            "body": "This is a python example to fetch the latest delay change results for AS174 on June 2017: <pre id='cod' style='overflow:auto; white-space: pre-wrap;'><code>import sys{17}import requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams=&#123;\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'&#125; \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
+            "body": "This is a python example to fetch the latest delay change results for AS174 on June 2017: <pre id='cod' style='overflow:auto'><code>import sys{17}import requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams=&#123;\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'&#125; \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
           }
         }
       },
@@ -659,7 +659,7 @@
               "src": "",
               "style": ""
             },
-            "body": "Installing the library requires only the standard python package manager, pip. From a terminal type: <pre id='cod' style='overflow:auto'><code>pip install abondance</code></pre>"
+            "body": "Installing the library requires only the standard python package manager, pip. From a terminal type: <pre id='cod'><code>pip install abondance</code></pre>"
           },
           "2": {
             "header": "Example:",
@@ -667,7 +667,7 @@
               "src": "",
               "style": ""
             },
-            "body": "Here is a simple example to fetch and print AS dependency results for AS2501 on September 15th, 2018. <pre id='cod'><code>from ihr.hegemony import Hegemony\nhege = Hegemony(originasns=[2501], start='2018-09-15 00:00', end='2018-09-15 23:59')\nfor r in hege.get_results():\n    print(r)</code></pre> For more examples visit <a href='https://pypi.org/project/abondance/' target='_blank'>https://pypi.org/project/abondance/</a>"
+            "body": "Here is a simple example to fetch and print AS dependency results for AS2501 on September 15th, 2018. <pre id='cod' style='overflow:auto'><code>from ihr.hegemony import Hegemony\nhege = Hegemony(originasns=[2501], start='2018-09-15 00:00', end='2018-09-15 23:59')\nfor r in hege.get_results():\n    print(r)</code></pre> For more examples visit <a href='https://pypi.org/project/abondance/' target='_blank'>https://pypi.org/project/abondance/</a>"
           },
           "3": {
             "header": "",
@@ -818,6 +818,14 @@
         "title": "Popular Domains",
         "caption": "Popular domain names hosted by AS"
       },
+      "popularHostNames": {
+        "title": "Popular Host Names",
+        "caption": "Host names for popular domain names hosted by AS"
+      },
+      "authoritativeNameservers": {
+        "title": "Authoritative Nameservers",
+        "caption": "Authoritative Nameservers hosted by AS"
+      },
       "facilities": {
         "title": "Co-located ASes",
         "caption": "ASes present at the same colocation facilities as AS"
@@ -890,7 +898,7 @@
       },
       "domains": {
         "title": "Popular Host Names",
-        "caption": "Popular domain names classified as "
+        "caption": "Popular host names classified as "
       }
     },
     "domainname": {
@@ -920,6 +928,10 @@
       "popularDomains": {
         "title": "Popular Domains",
         "caption": "Popular domain names resolving to IPs in "
+      },
+      "popularHostNames": {
+        "title": "Popular Host Names",
+        "caption": "Host names for popular domain names resolving to IPs in "
       },
       "nameservers": {
         "title": "Authoritative Nameservers",

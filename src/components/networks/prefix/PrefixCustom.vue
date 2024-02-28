@@ -12,6 +12,7 @@ import PrefixLessSpecificPrefixes from '@/components/iyp/prefix/PrefixLessSpecif
 import PrefixMoreSpecificPrefixes from '@/components/iyp/prefix/PrefixMoreSpecificPrefixes.vue'
 import PrefixPopularDomains from '@/components/iyp/prefix/PrefixPopularDomains.vue'
 import PrefixAuthoritativeNameservers from '@/components/iyp/prefix/PrefixAuthoritativeNameservers.vue'
+import PrefixPopularHostNames from '@/components/iyp/prefix/PrefixPopularHostNames.vue'
 
 const props = defineProps(['host', 'prefixLength', 'getPrefix', 'pageTitle', 'hash'])
 
@@ -29,6 +30,7 @@ const selects = ref([
   { value: false, label: t('iyp.prefix.lessSpecific.title') },
   { value: false, label: t('iyp.prefix.moreSpecific.title') },
   { value: false, label: t('iyp.prefix.popularDomains.title') },
+  { value: false, label: t('iyp.prefix.popularHostNames.title') },
   { value: false, label: t('iyp.prefix.nameservers.title') },
 ])
 const selectAll = ref(false)
@@ -150,10 +152,21 @@ onMounted(() => {
     />
   </GenericCardController>
   <GenericCardController
+    :title="$t('iyp.prefix.popularHostNames.title')"
+    :sub-title="$t('iyp.prefix.popularHostNames.caption')+getPrefix"
+    class="card"
+    v-if="selects[6].value"
+  >
+    <PrefixPopularHostNames
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
+  </GenericCardController>
+  <GenericCardController
     :title="$t('iyp.prefix.nameservers.title')"
     :sub-title="$t('iyp.prefix.nameservers.caption')+getPrefix"
     class="card"
-    v-if="selects[6].value"
+    v-if="selects[7].value"
   >
     <PrefixAuthoritativeNameservers
       :page-title="pageTitle"
