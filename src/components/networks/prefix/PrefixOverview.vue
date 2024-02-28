@@ -110,6 +110,7 @@ onMounted(() => {
       <thead>
         <tr>
           <th class="text-left">Summary</th>
+          <th class="text-left">Originated By</th>
           <th class="text-left">Popular Host Names</th>
           <th class="text-left">External Links</th>
         </tr>
@@ -123,15 +124,16 @@ onMounted(() => {
                 <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc:queries[0].data[0].cc } })">{{ queries[0].data[0].country }}</RouterLink>
                 ({{ queries[0].data[0].rir.toUpperCase() }})
               </div>
+            </div>
+          </td>
+          <td>
+            <div v-if="queries[0].data.length > 0">
               <div v-if="queries[0].data[0].asn[0][0]">
-                <div>Originated by:</div>
-                <ul>
-                  <li v-for="item in queries[0].data[0].asn" :key='item[0]' target="_blank">
-                    <RouterLink :to="Tr.i18nRoute({ name:'networks', params:{ id:`AS${item[0]}` } })">
+                <div v-for="item in queries[0].data[0].asn" :key='item[0]'>
+                  <RouterLink :to="Tr.i18nRoute({ name:'networks', params:{ id:`AS${item[0]}` } })">
                     AS{{ item[0] }} {{ item[1] }}
-                    </RouterLink>
-                  </li>
-                </ul>
+                  </RouterLink>
+                </div>
               </div>
               <div v-else>
                 <p>Prefix Not Announced on BGP</p>
