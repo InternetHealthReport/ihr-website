@@ -31,14 +31,14 @@ onMounted(() => {
     </div>
     <div v-else>
       <div>
-        <h1 class="text-center q-pa-xl">Host Name Report</h1>
+        <h1 class="text-center q-pa-xl">Hostname Report</h1>
         <div class="row justify-center">
           <div class="col-6">
             <SearchBar
               bg="white"
               label="grey-8"
               input="black"
-              labelTxt="Enter a host name"
+              labelTxt="Enter a Hostname"
               :noAS="true"
               :noIXP="true"
               :noPrefix="true"
@@ -52,7 +52,7 @@ onMounted(() => {
       <div class="q-pa-lg">
         <div class="row q-pa-lg column items-center">
           <div class="col-6">
-            <h3>Examples:</h3>
+            <h3>Examples</h3>
           </div>
         </div>
         <div class="row justify-center">

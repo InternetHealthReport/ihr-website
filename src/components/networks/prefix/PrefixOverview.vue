@@ -111,7 +111,7 @@ onMounted(() => {
         <tr>
           <th class="text-left">Summary</th>
           <th class="text-left">Originated By</th>
-          <th class="text-left">Popular Host Names</th>
+          <th class="text-left">Popular Hostnames</th>
           <th class="text-left">External Links</th>
         </tr>
       </thead>

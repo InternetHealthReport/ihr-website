@@ -23,7 +23,7 @@ const domains = ref({
   columns: [
     { name: 'Tranco Rank', label: 'Tranco Rank', align: 'left', field: row => row.rank?Number(row.rank): 1000001, format: val => val!=1000001? val: '-', sortable: true, sortOrder: 'ad' },
     { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
-    { name: 'Host Name', label: 'Host Name', align: 'left', field: row => row.hostName, format: val => `${val}`, sortable: true },
+    { name: 'Hostname', label: 'Hostname', align: 'left', field: row => row.hostName, format: val => `${val}`, sortable: true },
     { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })

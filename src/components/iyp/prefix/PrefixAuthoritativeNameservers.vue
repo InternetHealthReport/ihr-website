@@ -22,7 +22,7 @@ const nameservers = ref({
   columns: [
     { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
     { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.nameserver, format: val => `${val}`, sortable: true },
-    { name: 'Host Name', label: 'Nb. Popular Host Names', align: 'left', field: row => row.nb_hostnames, format: val => `${val}`, sortable: true },
+    { name: 'Hostname', label: 'Nb. Popular Hostnames', align: 'left', field: row => row.nb_hostnames, format: val => `${val}`, sortable: true },
     { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
   ]
 })
@@ -60,7 +60,7 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="nameservers.data.length > 0"
       :chart-data="nameservers.data"
-      :config="{ keys: ['tld', 'nameserver', 'ip'], root: getPrefix, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_hostnames} popular host names<extra></extra>' }"
+      :config="{ keys: ['tld', 'nameserver', 'ip'], root: getPrefix, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_hostnames} popular Hostnames<extra></extra>' }"
       @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
     />
   </IypGenericTable>

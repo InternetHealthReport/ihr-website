@@ -38,7 +38,7 @@ const router = useRouter()
 
 const activeTab = ref('chart')
 const filter = ref('')
-const colToUnderline = ref(['ASN', 'AS', 'Origin AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC', 'Host Name'])
+const colToUnderline = ref(['ASN', 'AS', 'Origin AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC', 'Hostname'])
 const underline = ref(false)
 const metadata = ref({})
 const loadingStatus = ref(true)
@@ -184,7 +184,7 @@ const routeToEntity = (entity, data) => {
   } else if (entity == 'CC' | entity == 'Country' |  entity == 'Reg. Country' | entity == 'Geoloc. Country') {
     let cc= Array.isArray(data.cc)?data.cc[0]:data.cc
     routeToCountry(cc)
-  } else if (entity == 'Host Name') {
+  } else if (entity == 'Hostname') {
     let hostName = Array.isArray(data.hostName)?data.hostName[0]:data.hostName
     routeToHostName(hostName)
   }

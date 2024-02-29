@@ -31,8 +31,8 @@
       "summary": "Details for a single network (AS or IXP)"
     },
     "hostNameReport": {
-      "name": "Host Name",
-      "summary": "Details for a host name"
+      "name": "Hostname",
+      "summary": "Details for a Hostname"
     },
     "tagReport": {
       "name": "Tag",
@@ -64,7 +64,7 @@
       "title": "Reports",
       "network": "network ",
       "country": "country ",
-      "hostName": "host name ",
+      "hostName": "Hostname ",
       "tag": "tag ",
       "rank": "rank ",
       "rov": "ROV ",
@@ -819,8 +819,8 @@
         "caption": "Popular domain names hosted by AS"
       },
       "popularHostNames": {
-        "title": "Popular Host Names",
-        "caption": "Host names for popular domain names hosted by AS"
+        "title": "Popular Hostnames",
+        "caption": "Hostnames for popular domain names hosted by AS"
       },
       "authoritativeNameservers": {
         "title": "Authoritative Nameservers",
@@ -897,8 +897,8 @@
         "caption": "ASes classified as "
       },
       "domains": {
-        "title": "Popular Host Names",
-        "caption": "Popular host names classified as "
+        "title": "Popular Hostnames",
+        "caption": "Popular Hostnames classified as "
       }
     },
     "domainname": {
@@ -930,8 +930,8 @@
         "caption": "Popular domain names resolving to IPs in "
       },
       "popularHostNames": {
-        "title": "Popular Host Names",
-        "caption": "Host names for popular domain names resolving to IPs in "
+        "title": "Popular Hostnames",
+        "caption": "Hostnames for popular domain names resolving to IPs in "
       },
       "nameservers": {
         "title": "Authoritative Nameservers",

@@ -24,7 +24,7 @@ const domains = ref({
     { name: 'Classified by', label: 'Classified by', align: 'left', field: row => [row.classifier_org, row.classifier_name], format: val => `${val[0]} (${val[1]})`, sortable: true },
     { name: 'Tranco Rank', label: 'Tranco Rank', align: 'left', field: row => row.rank?Number(row.rank): 1000001, format: val => val!=1000001? val: '-', sortable: true, sortOrder: 'ad' },
     { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
-    { name: 'Host', label: 'Host Name', align: 'left', field: row => row.hostname, format: val => `${val}`, sortable: true },
+    { name: 'Host', label: 'Hostname', align: 'left', field: row => row.hostname, format: val => `${val}`, sortable: true },
     { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })

@@ -21,7 +21,7 @@ const fetch = ref(true)
 const displayWidgets = ref(route.query.display ? JSON.parse(route.query.display) : [])
 const selects = ref([
   { value: false, hasData: false, label: 'AS' },
-  { value: false, hasData: false, label: 'Host Name' },
+  { value: false, hasData: false, label: 'Hostname' },
 ])
 const selectAll = ref(false)
 
@@ -112,8 +112,8 @@ onMounted(() => {
     />
   </GenericCardController>
   <GenericCardController
-    title="Host Name rankings"
-    :sub-title="'Top Host Names in '+pageTitle+' (limited to 100K)'"
+    title="Hostname rankings"
+    :sub-title="'Top Hostnames in '+pageTitle+' (limited to 100K)'"
     class="card"
     v-if="selects[1].value"
   >

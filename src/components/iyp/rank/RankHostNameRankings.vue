@@ -20,7 +20,7 @@ const rankings = ref({
     LIMIT 100000`,
   columns: [
     { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.rank), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
-    { name: 'Host Name', label: 'Host Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true, description: 'Host Name.'    },
+    { name: 'Hostname', label: 'Hostname', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true, description: 'Hostname.'    },
   ],
   pagination: {
     sortBy: 'Rank', //string column name

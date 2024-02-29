@@ -394,7 +394,7 @@ const placeholder = computed(() => {
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
       <QItem v-if="scope.opt.type == 'HostName'" v-bind="scope.itemProps" @click="routeToHostName(scope.opt.value)">
-        <QItemSection side color="accent">Host Name</QItemSection>
+        <QItemSection side color="accent">Hostname</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
       <QItem v-if="scope.opt.type == 'Tag'" v-bind="scope.itemProps" @click="routeToTag(scope.opt.value)">

@@ -22,7 +22,7 @@ const domains = ref({
     ORDER BY rank`,
   columns: [
     { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
-    { name: 'Host Name', label: 'Host Name', align: 'left', field: row => row.hostName, format: val => `${val}`, sortable: true },
+    { name: 'Hostname', label: 'Hostname', align: 'left', field: row => row.hostName, format: val => `${val}`, sortable: true },
     { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val.join(', ')}`, sortable: true },
     { name: 'Ranking Name', label: 'Ranking Name', align: 'left', field: row => row.rankingName, format: val => `${val}`, sortable: true, },
   ]

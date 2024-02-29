@@ -61,6 +61,7 @@ const queries = ref([
       OPTIONAL MATCH (a)-[:PEERS_WITH]-(b:AS)
       OPTIONAL MATCH (a)-[:EXTERNAL_ID]->(p:PeeringdbNetID)
       OPTIONAL MATCH (a)-[r:RANK]->(s:Ranking)
+      WHERE r.rank < 10
       RETURN COUNT(DISTINCT b.asn) AS peers, p.id AS peeringdbNetId, r.rank AS rank, s.name AS ranking_name ORDER BY rank LIMIT 1`
   },
   {
@@ -140,8 +141,8 @@ onMounted(() => {
       <thead>
         <tr>
           <th class="text-left">Summary</th>
-          <th class="text-left">Top Rank</th>
-          <th class="text-left">Popular Host Names</th>
+          <th class="text-left" v-if="queries[1].data.length > 0 & (queries[1].data[0]?(queries[1].data[0].rank?true:false):false)">Top Rank</th>
+          <th class="text-left">Popular Hostnames</th>
           <th class="text-left">External Links</th>
         </tr>
       </thead>
@@ -158,16 +159,8 @@ onMounted(() => {
               </div>
             </div>
           </td>
-          <td class="text-left">
-            <div v-if="queries[1].data.length > 0">
-              <div v-if="queries[1].data[0].rank">
-                <div>{{ queries[1].data[0].ranking_name }}</div>
-                <h2 class="text-center">{{ queries[1].data[0].rank }}</h2>
-              </div>
-              <div v-else>
-                Unranked in Tranco Top 1M list
-              </div>
-            </div>
+          <td class="text-left" v-if="queries[1].data.length > 0 & (queries[1].data[0]?(queries[1].data[0].rank?true:false):false)">
+            <div>#{{ queries[1].data[0].rank }} in {{ queries[1].data[0].ranking_name }}</div>
           </td>
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">

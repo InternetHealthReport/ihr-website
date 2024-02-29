@@ -53,7 +53,7 @@ onMounted(() => {
       <div class="q-pa-lg">
         <div class="row q-pa-lg column items-center">
           <div class="col-6">
-            <h3>Examples:</h3>
+            <h3>Examples</h3>
           </div>
         </div>
         <div class="row justify-center">
