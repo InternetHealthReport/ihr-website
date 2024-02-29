@@ -62,7 +62,7 @@ onMounted(() => {
       <div>
         <h1 class="text-center q-pa-xl">Network Report</h1>
         <div class="row justify-center">
-          <div class="col-8">
+          <div class="col-6">
             <SearchBar
               bg="white"
               label="grey-8"
