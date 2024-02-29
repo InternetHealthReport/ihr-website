@@ -20,6 +20,7 @@ const ases = ref({
     OPTIONAL MATCH (a)-[:CATEGORIZED]->(to:Tag) WHERE t <> to
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(n:Name)
     OPTIONAL MATCH (a)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
+    WHERE creg_country.country_code <> ''
     RETURN a.asn as asn, n.name as name, collect(DISTINCT to.label) as other_tags, toUpper(COALESCE(creg.registry,  '-')) AS rir, creg_country.country_code AS cc, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name`,
   columns: [
     { name: 'Classified by', label: 'Classified by', align: 'left', field: row => [row.classifier_org, row.classifier_name], format: val => `${val[0]} (${val[1]})`, sortable: true },
@@ -30,6 +31,7 @@ const ases = ref({
     { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })
+const asesViz = ref([])
 
 const load = () => {
   ases.value.loading = true
@@ -38,6 +40,13 @@ const load = () => {
   iyp_api.run([{statement: ases.value.query, parameters: query_params}]).then(
     results => {
       ases.value.data = results[0]
+      const as = new Set()
+      results[0].forEach(el => {
+        if (!as.has(el.asn)) {
+          as.add(el.asn)
+          asesViz.value.push(el)
+        }
+      })
       ases.value.loading = false
     }
   )
@@ -61,8 +70,8 @@ onMounted(() => {
     :slot-length="1"
   >
       <IypGenericTreemapChart
-        v-if="ases.data.length > 0"
-        :chart-data="ases.data"
+        v-if="ases.data.length>0 & asesViz.length>0"
+        :chart-data="asesViz"
         :chart-layout="{ title: 'Breakdown per RIR and registered country' }"
         :config="{ keys: ['rir', 'cc', 'asn'], root: tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<extra>%{customdata.percent:.1f}%</extra>' }"
         @treemap-clicked="treemapClicked({...$event, ...{router: router}})"

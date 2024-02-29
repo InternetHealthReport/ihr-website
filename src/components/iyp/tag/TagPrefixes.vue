@@ -32,6 +32,7 @@ const prefixes = ref({
     { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })
+const prefixesViz = ref([])
 
 const load = () => {
   prefixes.value.loading = true
@@ -40,6 +41,13 @@ const load = () => {
   iyp_api.run([{statement: prefixes.value.query, parameters: query_params}]).then(
     results => {
       prefixes.value.data = results[0]
+      const prefix = new Set()
+      results[0].forEach(el => {
+        if (!prefix.has(el.asn)) {
+          prefix.add(el.asn)
+          prefixesViz.value.push(el)
+        }
+      })
       prefixes.value.loading = false
     }
   )
@@ -63,8 +71,8 @@ onMounted(() => {
     :slot-length="1"
   >
     <IypGenericTreemapChart
-      v-if="prefixes.data.length > 0 & prefixes.data.length < 5000"
-      :chart-data="prefixes.data"
+      v-if="prefixes.data.length > 0 & prefixesViz.length > 0"
+      :chart-data="prefixesViz"
       :chart-layout="{ title: 'Breakdown per origin AS and registered country code' }"
       :config="{ keys: ['as_cc', 'asn', 'prefix'], root: tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
       @treemap-clicked="treemapClicked({...$event, ...{router: router}})"

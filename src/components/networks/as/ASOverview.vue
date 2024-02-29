@@ -61,7 +61,6 @@ const queries = ref([
       OPTIONAL MATCH (a)-[:PEERS_WITH]-(b:AS)
       OPTIONAL MATCH (a)-[:EXTERNAL_ID]->(p:PeeringdbNetID)
       OPTIONAL MATCH (a)-[r:RANK]->(s:Ranking)
-      WHERE r.rank < 10
       RETURN COUNT(DISTINCT b.asn) AS peers, p.id AS peeringdbNetId, r.rank AS rank, s.name AS ranking_name ORDER BY rank LIMIT 1`
   },
   {
