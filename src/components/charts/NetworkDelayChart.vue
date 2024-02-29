@@ -290,7 +290,7 @@ const fetchNetworkDelay = (data) => {
     let currDate = new Date(elem.timebin).getTime()
     if (currDate > prevDate + timeResolution + 1) {
       trace.y.push(null)
-      trace.x.push(elem.timbin)
+      trace.x.push(elem.timebin)
     }
 
     trace.y.push(elem.median)

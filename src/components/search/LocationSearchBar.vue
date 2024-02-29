@@ -41,7 +41,6 @@ const emits = defineEmits({
 const options = ref([])
 const model = ref(props.selected)
 const loading = ref(false)
-const always = ref(false)
 const networkDelayLocation = ref(new NetworkDelayLocation().orderedByName())
 const networkQuery = ref(new NetworkQuery().orderedByNumber())
 
@@ -52,7 +51,7 @@ const search = (value, update) => {
   ihr_api.network(
     networkQuery.value,
     result => {
-      result.results.some(element => {
+       result.results.some(element => {
         const elem = {
           value: element,
           type: element.number < 0 ? 'IX' : 'AS',
@@ -69,6 +68,15 @@ const search = (value, update) => {
         update()
         return options.value.length > MAX_RESULTS
       })
+      if (options.value.length === 0 ) {
+        // Add "No results found" option
+        options.value.push({
+          value: null,
+          name: `No results found for "${value}"`,
+          label: `No results found for "${value}"`,
+        });
+        update()
+      }
     },
     error => {
       console.error(error)

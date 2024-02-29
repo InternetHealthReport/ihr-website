@@ -57,6 +57,12 @@ const search = (value, update) => {
       })
       update()
     })
+    if (options.value.length === 0 && props.noAS) {
+      options.value.push({
+        label: `No results found for "${value}"`,
+        type: 'no-results',
+      })
+    }
   })
   if (!props.noAS) {
     networkQuery.value.mixedContentSearch(value)
@@ -69,15 +75,25 @@ const search = (value, update) => {
             name: element.name,
             type: 'asn',
           })
-          update()
           return options.value.length > MAX_RESULTS
         })
+
+        if (options.value.length === 0) {
+          options.value.push({
+            label: `No results found for "${value}"`,
+            type: 'no-results',
+          })
+        }
         loading.value = false
+        update()
       },
       error => {
         console.error(error)
       }
     )
+  } else {
+    loading.value = false
+    update()
   }
 }
 
@@ -145,18 +161,27 @@ const displayValue = computed(() => {
     </template>
     <template v-slot:loading> </template>
     <template v-slot:option="scope">
-      <QItem v-if="scope.opt.type == 'asn'" v-bind="scope.itemProps" @click="gotoASN(scope.opt.value)">
-        <QItemSection side color="accent">{{ ihr_api.ihr_NumberToAsOrIxp(scope.opt.value) }}</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
-      </QItem>
-      <QItem
-        v-else-if="scope.opt.type == 'country'"
-        v-bind="scope.itemProps"
-        @click="gotoCountry(scope.opt.value)"
-      >
-        <QItemSection side color="accent"> Country </QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
-      </QItem>
+      <div v-if="scope.opt.type === 'asn'">
+        <QItem v-if="scope.opt.type == 'asn'" v-bind="scope.itemProps" @click="gotoASN(scope.opt.value)">
+          <QItemSection side color="accent">{{ ihr_api.ihr_NumberToAsOrIxp(scope.opt.value) }}</QItemSection>
+          <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        </QItem>
+      </div>
+      <div v-else-if="scope.opt.type === 'country'">
+        <QItem
+          v-if="scope.opt.type == 'country'"
+          v-bind="scope.itemProps"
+          @click="gotoCountry(scope.opt.value)"
+        >
+          <QItemSection side color="accent"> Country </QItemSection>
+          <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        </QItem>
+      </div>
+      <div v-else-if="scope.opt.type === 'no-results'">
+        <QItem v-bind="scope.itemProps">
+          <QItemSection side color="accent">{{ scope.opt.label }}</QItemSection>
+        </QItem>
+      </div>
     </template>
   </QSelect>
 </template>
