@@ -1,7 +1,7 @@
 <p align="center"><img src="https://avatars.githubusercontent.com/u/40665700?s=200&v=4" height="100"></p>
 <h1 align="center">IHR Website</h1>
 <p align="center">
-The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. To understand further click <a href="https://ihr.iijlab.net">here</a>
+The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution. To understand further click <a href="https://ihr.iijlab.net">here</a>.
 </p>
 
 ## Prerequisites to run
@@ -50,9 +50,30 @@ npm run build
 npm run lint
 ```
 
-## Set up
-Check out our installation video [here](https://youtu.be/mdjMdaLdlfY) for a step-by-step guide on how to install and set up our software
+## Deploy with Docker
 
+To deploy the project with Docker, follow these steps:
+
+#### Clone the project in localhost
+
+```bash
+git clone https://github.com/InternetHealthReport/ihr-website.git
+cd ihr-website
+```
+
+#### Build the Docker Image
+
+```bash
+docker build -t ihr-website .
+```
+
+#### Run the Docker Container
+
+```bash
+docker run --name ihr-website -d -p <host-port>:80 -t ihr-website
+```
+
+Replace `<host-port>` with the port on your host machine where you want to expose the application.
 
 ## Ways to contribute
 

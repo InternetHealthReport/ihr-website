@@ -242,7 +242,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <QExpansionItem caption="IHR Aggregated Alarms" header-class="IHR_charts-title" default-opened expand-icon-toggle
+    <QExpansionItem caption="IHR Aggregated Alarms" header-class="IHR_chart-title" default-opened expand-icon-toggle
       v-model="aggregatedAlarmsExpanded">
       <template v-slot:header>
         <div class="graph-header-div">
@@ -307,9 +307,6 @@ onMounted(() => {
   border-radius 20px
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-.IHR_charts-title
-  width 100%
-  margin-top 10px
 .graph-header
   display flex
   justify-content flex-start

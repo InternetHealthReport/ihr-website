@@ -8,10 +8,13 @@ import MetisSelection from '../views/MetisSelection.vue'
 import MetisDeployment from '../views/MetisDeployment.vue'
 import ROV from '../views/ROV.vue'
 import Corona from '../views/Corona.vue'
-import Networks from '../views/Networks.vue'
-import Countries from '../views/Countries.vue'
 import PageNotFound from '../views/PageNotFound.vue'
 import GlobalReport from '../views/GlobalReport.vue'
+import Networks from '../views/Networks.vue'
+import Tags from '../views/Tags.vue'
+import HostNames from '../views/HostNames.vue'
+import Countries from '../views/Countries.vue'
+import Ranks from '../views/Ranks.vue'
 import Tr from '@/i18n/translation'
 
 
@@ -52,9 +55,24 @@ const router = createRouter({
           component: GlobalReport
         },
         {
-          path: 'networks/:asn?',
+          path: 'networks/:id?/:length?',
           name: 'networks',
           component: Networks
+        },
+        {
+          path: 'tags/:tag?',
+          name: 'tags',
+          component: Tags
+        },
+        {
+          path: 'hostnames/:hostName?',
+          name: 'hostnames',
+          component: HostNames
+        },
+        {
+          path: 'ranks/:rank?',
+          name: 'ranks',
+          component: Ranks
         },
         {
           path: 'documentation',
