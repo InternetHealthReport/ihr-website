@@ -110,7 +110,7 @@
 
     .loading .imageLoading h1 {
       font-family: 'Montserrat', sans-serif;
-      font-size: 100px !important;
+      font-size: 90px;
       font-weight: 700;
       margin: 0px;
       color: #232323;
@@ -118,8 +118,8 @@
 
     .loading .imageLoading h1>span {
       display: inline-block;
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
       background-image: url('https://avatars1.githubusercontent.com/u/40665700?s=200&v=4');
       background-size: cover;
       -webkit-transform: scale(1.4);
@@ -129,31 +129,49 @@
       margin: 0px 15px 0px 15px;
     }
 
-    @media screen and (max-width: 320px) {
+    @media screen and (max-width: 820px) {
       .loading .imageLoading {
         height: 85px;
       }
       .loading .imageLoading h1 {
-        font-size: 66px;
+        font-size: 50px;
       }
       .loading .imageLoading h1>span {
         width: 40px;
         height: 40px;
+      margin: 0px 10px 0px 10px;
       }
     }
 
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 580px) {
       .loading .imageLoading {
         height: 115px;
       }
       .loading .imageLoading h1 {
-        font-size: 86px;
+        font-size: 37px;
       }
       .loading .imageLoading h1>span {
-        width: 60px;
-        height: 60px;
+        width: 20px;
+        height: 20px;
+        margin: 0px 8px 0px 8px;
       }
     }
+
+    @media screen and (max-width: 375px) {
+      .loading .imageLoading {
+        height: 115px;
+      }
+      .loading .imageLoading h1 {
+        font-size: 28px;
+      }
+      .loading .imageLoading h1>span {
+        width: 18px;
+        height: 18px;
+        margin: 0px 8px 0px 8px;
+      }
+    }
+
+
     </style>
   </body>
 </html>
