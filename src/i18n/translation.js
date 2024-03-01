@@ -34,10 +34,10 @@ const Trans = {
         }
         const userPreferredLocale = Trans.getUserLocale()
         if (Trans.isLocaleSupported(userPreferredLocale.locale)) {
-            return userPersistedLocale.locale
+            return userPreferredLocale.locale
         }
         if (Trans.isLocaleSupported(userPreferredLocale.localeNoRegion)) {
-            return userPersistedLocale.localeNoRegion
+            return userPreferredLocale.localeNoRegion
         }
         return Trans.defaultLocale
     },
@@ -51,7 +51,13 @@ const Trans = {
     },
 
     async routeMiddleware(to, _from, next) {
-        const paramLocale = to.params.locale
+        let paramLocale = to.params.locale
+        if (paramLocale.includes('-')) {
+            paramLocale = paramLocale.split('-')[0]
+            if (to.name === 'networks' || to.name === 'countries') {
+                to.query['active'] = 'monitoring'
+            }
+        }
         if(!Trans.isLocaleSupported(paramLocale)) {
             return next(Trans.guessDefaultLocale())
         }

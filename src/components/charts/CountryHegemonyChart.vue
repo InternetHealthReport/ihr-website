@@ -260,7 +260,7 @@ onMounted(() => {
     <div v-if="loading" class="IHR_loading-spinner">
       <QSpinner color="secondary" size="15em" />
     </div>
-    <QCard v-if="details.tableVisible" class="q-ma-xl">
+    <QCard v-if="details.tableVisible" flat>
       <QTabs
         v-model="details.activeTab"
         class="table-card text-grey bg-grey-2"

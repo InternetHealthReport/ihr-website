@@ -32,94 +32,128 @@
   <body>
     <div id="app">
       <div id="loading-wrapper">
-        <div id="loading-content">
-          <img
-            class="blink-image"
-            src="https://avatars1.githubusercontent.com/u/40665700?s=200&v=4"
-          />
+        <div class="blink-image">
+          <div class="loading">
+            <div class="imageLoading">
+              <h1>L<span> </span>ading...</h1>
+            </div>
+          </div>
         </div>
-        <div id="loading-text">Loading...</div>
       </div>
     </div>
     <script type="module" src="/src/main.js"></script>
     <style>
-      #loading-wrapper {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        text-align: center;
-      }
+     #loading-wrapper {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+      
+    }
 
-      #loading-text {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        width: 150px;
-        height: 30px;
-        text-align: center;
-        font-size: 20px;
-        margin: 20px 0 0 -75px;
+    /* Firefox old*/
+    @-moz-keyframes blink {
+      0% {
+        opacity: 1;
       }
+      50% {
+        opacity: 0.1;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
 
-      #loading-content {
-        text-align: center;
-        margin: -50px 0 0 -75px;
+    @-webkit-keyframes blink {
+      0% {
+        opacity: 1;
       }
+      50% {
+        opacity: 0.1;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    /* IE */
+    @-ms-keyframes blink {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.1;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    /* Opera and prob css3 final iteration */
+    @keyframes blink {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.1;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    .blink-image {
+      -moz-animation: blink normal 2s infinite ease-in-out; /* Firefox */
+      -webkit-animation: blink normal 2s infinite ease-in-out; /* Webkit */
+      -ms-animation: blink normal 2s infinite ease-in-out; /* IE */
+      animation: blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
+    }
 
-      /* Firefox old*/
-      @-moz-keyframes blink {
-        0% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.1;
-        }
-        100% {
-          opacity: 1;
-        }
-      }
+    .loading .imageLoading h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 100px !important;
+      font-weight: 700;
+      margin: 0px;
+      color: #232323;
+    }
 
-      @-webkit-keyframes blink {
-        0% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.1;
-        }
-        100% {
-          opacity: 1;
-        }
+    .loading .imageLoading h1>span {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      background-image: url('https://avatars1.githubusercontent.com/u/40665700?s=200&v=4');
+      background-size: cover;
+      -webkit-transform: scale(1.4);
+          -ms-transform: scale(1.4);
+              transform: scale(1.4);
+      z-index: -1;
+      margin: 0px 15px 0px 15px;
+    }
+
+    @media screen and (max-width: 320px) {
+      .loading .imageLoading {
+        height: 85px;
       }
-      /* IE */
-      @-ms-keyframes blink {
-        0% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.1;
-        }
-        100% {
-          opacity: 1;
-        }
+      .loading .imageLoading h1 {
+        font-size: 66px;
       }
-      /* Opera and prob css3 final iteration */
-      @keyframes blink {
-        0% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.1;
-        }
-        100% {
-          opacity: 1;
-        }
+      .loading .imageLoading h1>span {
+        width: 40px;
+        height: 40px;
       }
-      .blink-image {
-        -moz-animation: blink normal 2s infinite ease-in-out; /* Firefox */
-        -webkit-animation: blink normal 2s infinite ease-in-out; /* Webkit */
-        -ms-animation: blink normal 2s infinite ease-in-out; /* IE */
-        animation: blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
-        width: 100px;
-        height: 100px;
+    }
+
+    @media screen and (max-width: 767px) {
+      .loading .imageLoading {
+        height: 115px;
       }
+      .loading .imageLoading h1 {
+        font-size: 86px;
+      }
+      .loading .imageLoading h1>span {
+        width: 60px;
+        height: 60px;
+      }
+    }
     </style>
   </body>
 </html>

@@ -82,7 +82,18 @@ const props = defineProps({
   },
   fetch: {
     type: Boolean
-  }
+  },
+  peeringdbId: {
+    type: Number
+  },
+  readonlySourceSearch: {
+    type: Boolean,
+    default: false
+  },
+  readonlyDestinationSearch: {
+    type: Boolean,
+    default: false
+  },
 })
 
 const emits = defineEmits({
@@ -191,7 +202,7 @@ const showTable = (clickData) => {
   if (props.noTable) {
     return
   }
-  const chosenTime = new Date(clickData.points[0].x + ' GMT') //adding timezone to string...
+  const chosenTime = new Date(clickData.points[0].x) //adding timezone to string...
   details.value.activeTab = 'delay'
   details.value.filter = apiFilter.value.clone()
 
@@ -335,6 +346,11 @@ watch(() => props.startPointNames, () => {
   startPointKeysFilter.value = props.startPointNames
   apiCall()
 })
+watch(() => props.startPointName, () => {
+  clearGraph()
+  startPointNameFilter.value = props.startPointName
+  apiCall()
+})
 
 onMounted(() => {
   clearGraph()
@@ -381,10 +397,17 @@ onMounted(() => {
           :hint="$t('searchBar.locationSource')"
           :label="$t('searchBar.locationHint')"
           :selected="startPointNameStr"
+          :readonly="readonlySourceSearch"
+          :peeringdbId="peeringdbId"
         />
       </div>
       <div class="col-4 q-pa-sm">
-        <LocationSearchBar @select="addEndLocation" :hint="$t('searchBar.locationDestination')" :label="$t('searchBar.locationHint')" />
+        <LocationSearchBar
+          @select="addEndLocation"
+          :hint="$t('searchBar.locationDestination')"
+          :readonly="readonlyDestinationSearch"
+          :label="$t('searchBar.locationHint')"
+        />
       </div>
       <div class="col-3 q-pa-sm">
         <QBtn @click="apiCall" color="secondary" class="btn">Add</QBtn>

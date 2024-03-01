@@ -3,6 +3,7 @@ import { IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT } from '@/plugins/layouts/
 import { ref, onMounted, computed } from 'vue'
 import ReactiveChart from './ReactiveChart.vue'
 import * as IodaChartDataModel from '@/plugins/models/IodaChartDataModel'
+import { watch } from 'vue';
 
 const props = defineProps({
   entityValue: {
@@ -47,6 +48,10 @@ const apiCall = () => {
       console.error(error)
     })
 }
+
+watch(() => props.endTime, () => {
+  apiCall()
+})
 
 onMounted(() => {
   apiCall()

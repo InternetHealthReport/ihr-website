@@ -11,6 +11,7 @@ import 'quasar/src/css/index.sass'
 import i18n from './i18n'
 import { IhrApi } from '@/plugins/IhrApi'
 import { LibraryDelayer } from '@/plugins/LibraryDelayer'
+import { IypApi } from '@/plugins/IypApi'
 
 const app = createApp(App)
 
@@ -35,5 +36,6 @@ app.use(LibraryDelayer, {
         ]
     }
 })
+app.use(IypApi)
 
 app.mount('#app')

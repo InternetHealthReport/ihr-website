@@ -24,7 +24,8 @@ export function parseAsNamesCountryMappings(content) {
   if (content === '') return {}
   const lines = content.split('\n');
   const parsedData = {};
-  for (const line of lines) {
+  for (let line of lines) {
+    line = line.replace(/(\r\n|\n|\r)/gm, '')
     if (line === '') continue
     const match = line.match(/^(\d+)\s(.*),\s([A-Z]{2})$/);
     if (match) {

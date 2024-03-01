@@ -1,7 +1,8 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QFooter, QBtn, QIcon } from 'quasar'
+import { QFooter, QBtn, QIcon, QBadge } from 'quasar'
 import Tr from '@/i18n/translation'
+import { version } from '../../package.json'
 </script>
 
 <template>
@@ -10,11 +11,18 @@ import Tr from '@/i18n/translation'
       <div class="IHR_fsection">
         <div class="" style="max-width: 400px;">
           <div>
-            <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-              <QBtn round dense flat :ripple="false" no-caps>
+            <QBtn round dense flat :ripple="false" no-caps>
+              <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
                 <img src="@/assets/imgs/ihr_logo.svg" class="ihr-logo" />
-              </QBtn>
-            </RouterLink>
+              </RouterLink>
+              <a
+                :href="`https://github.com/InternetHealthReport/ihr-website/releases/tag/v${version}`"
+                class=""
+                target="_blank"
+              >
+                <QBadge color="red" floating>v{{ version }}</QBadge>
+              </a>
+            </QBtn>
             <div class="text-weight-bold text-h5 q-mt-sm">Internet Health Report</div>
           </div>
           <div class="IHR_external-links ">
@@ -45,7 +53,16 @@ import Tr from '@/i18n/translation'
               <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: null } })">{{ $t('footer.reportPages.country') }}</RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { asn: null } })">{{ $t('footer.reportPages.network') }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: null } })">{{ $t('footer.reportPages.network') }}</RouterLink>
+            </li>
+            <li>
+              <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { id: null } })">{{ $t('footer.reportPages.hostName') }}</RouterLink>
+            </li>
+            <li>
+              <RouterLink :to="Tr.i18nRoute({ name: 'tags', params: { id: null } })">{{ $t('footer.reportPages.tag') }}</RouterLink>
+            </li>
+            <li>
+              <RouterLink :to="Tr.i18nRoute({ name: 'ranks', params: { rank: null } })">{{ $t('footer.reportPages.rank') }}</RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'rov' })">{{ $t('footer.reportPages.rov') }}</RouterLink>

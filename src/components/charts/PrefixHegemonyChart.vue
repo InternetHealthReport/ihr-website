@@ -487,14 +487,15 @@ watch(() => details.value.activeTab, (newValue) => {
         <QSelect v-model="selection" :options="selectionOptions"></QSelect>
       </div>
     </div>
-    <QCard v-if="details.tableVisible" class="q-ma-xl">
+    <br />
+    <QCard v-if="details.tableVisible" :flat="route.name == 'rov'?false:true">
       <QTabs
-          v-model="details.activeTab"
-          class="table-card text-grey bg-grey-2"
-          indicator-color="secondary"
-          active-color="primary"
-          align="justify"
-          narrow-indicator
+        v-model="details.activeTab"
+        class="table-card text-grey bg-grey-2"
+        indicator-color="secondary"
+        active-color="primary"
+        align="justify"
+        narrow-indicator
       >
         <QTab name="routes" :label="$t('charts.prefixHegemony.table.routesTitle')" />
         <QTab name="origins" :disable="statsDisable" :label="$t('charts.prefixHegemony.table.originsTitle')" />
