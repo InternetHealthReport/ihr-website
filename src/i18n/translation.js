@@ -83,7 +83,9 @@ const Trans = {
         await Trans.loadLocaleMessages(newLocale)
         Trans.currentLocale = newLocale
         document.querySelector("html").setAttribute("lang", newLocale)
-        localStorage.setItem("user-locale", newLocale)
+        if (localStorage.getItem('cookie_preference') === 'true') {
+          localStorage.setItem('user-locale', newLocale)
+        }
     },
 
     async loadLocaleMessages(locale) {
