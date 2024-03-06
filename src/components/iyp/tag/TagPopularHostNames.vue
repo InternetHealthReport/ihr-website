@@ -16,7 +16,7 @@ const domains = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (t:Tag {label: $tag})<-[cat:CATEGORIZED]-(:URL)-[:PART_OF]-(h:HostName)-[:PART_OF]-(d:DomainName)
+  query: `MATCH (t:Tag {label: $tag})<-[cat:CATEGORIZED]-(:URL)-[:PART_OF]-(h:HostName & !AuthoritativeNameServer)-[:PART_OF]-(d:DomainName)
     OPTIONAL MATCH (d)-[ra:RANK]->(rn:Ranking {name: 'Tranco top 1M'})
     OPTIONAL MATCH (h)-[:PART_OF]-(:URL)-[:CATEGORIZED]->(to:Tag) WHERE t <> to
     RETURN h.name AS hostname, collect(DISTINCT to.label) AS other_tags, ra.rank AS rank, split(d.name, '.')[-1] AS tld, rn.name AS rankingName, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name, cat.reference_url AS classifier_url`,
