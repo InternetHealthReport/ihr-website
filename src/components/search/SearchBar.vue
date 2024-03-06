@@ -379,8 +379,8 @@ const placeholder = computed(() => {
     hide-selected
   >
     <template v-slot:append>
-      <div v-if="props.noAS" @click="showMap">
-        <QIcon :color="label" type="button" name="fas fa-location q-pa-sm" width="0.82em" />
+      <div v-if="!props.noCountry" @click="showMap">
+        <QIcon :color="label" type="button" name="fas fa-map q-pa-sm" width="0.82em" />
         <QDialog v-model="showMapDialog">
       <WorldMap @country-selected="handleCountryClicked" />
     </QDialog>

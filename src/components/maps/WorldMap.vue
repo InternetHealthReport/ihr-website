@@ -1,9 +1,7 @@
-
 <script setup>
-import { ref, onMounted, inject, getCurrentInstance } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import ReactiveChart from '@/components/charts/ReactiveChart.vue'
 import { CountryQuery } from '@/plugins/IhrApi'
-const {emit} = getCurrentInstance()
 
 const ihr_api = inject('ihr_api')
 const countryQuery = ref(new CountryQuery().orderedByCode())
@@ -11,6 +9,9 @@ const countryQuery = ref(new CountryQuery().orderedByCode())
 const countryNames = ref([])
 const countryCodes = ref([])
 const loading = ref(false)
+
+const emit = defineEmits(['country-selected'])
+
 const layout = {
   title: 'Select a country',
   geo: {
@@ -55,7 +56,9 @@ const fetchData = async () => {
   }
 }
 
-onMounted(fetchData)
+onMounted(()=>{
+    fetchData()
+})
 
 const onCountryClick = (eventData) => {
   if (eventData && eventData.points && eventData.points[0]) {
