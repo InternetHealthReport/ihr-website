@@ -143,7 +143,7 @@ watch(simpleMenu, () => { debounceFunc() })
             </QBtn>
           </RouterLink>
         </QItem>
-        <SearchBar class="col-4" :noCountry="true" /> 
+        <SearchBar class="col-4" /> 
         <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md">
           <QBtnGroup flat :key="item.entryName" v-for="(item,index) in simpleMenu">
             <QBtn flat v-if="item.options == null" :label="$t(item.entryName)" :to="Tr.i18nRoute({ name: item.routeName })" />
