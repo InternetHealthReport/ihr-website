@@ -1,5 +1,5 @@
 <script setup>
-import { QSelect, QIcon, QSpinner, QItem, QItemSection } from 'quasar'
+import { QSelect, QIcon, QSpinner, QItem, QItemSection, QDialog } from 'quasar'
 import { ref, inject, computed, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -7,6 +7,7 @@ import Tr from '@/i18n/translation'
 import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
 import getCountryName from '@/plugins/countryName'
 import * as ipAddress from 'ip-address'
+import WorldMap from '../maps/WorldMap.vue'
 
 const { t } = useI18n()
 
@@ -304,6 +305,10 @@ const routeToCountry = (cc) => {
   }))
 }
 
+const handleCountryClicked = (cc) => {
+  routeToCountry(cc) ;
+}
+
 const routeToHostName = (hostName) => {
   const oldhostName = paramExists('hostName')
   if (oldhostName) {
@@ -343,6 +348,12 @@ const routeToRank = (rank) => {
   }))
 }
 
+const showMapDialog = ref(false)
+
+const showMap = () => {
+  showMapDialog.value = true
+}
+
 const placeholder = computed(() => {
   if (props.labelTxt == null) {
     return `${t('searchBar.placeholder')}`
@@ -368,11 +379,19 @@ const placeholder = computed(() => {
     hide-selected
   >
     <template v-slot:append>
-      <div v-if="!loading">
-        <QIcon :color="label" name="fas fa-search q-mb-xs" width="0.82em" />
+      <div v-if="!props.noCountry" @click="showMap">
+        <QIcon :color="label" type="button" name="fas fa-map q-pa-sm" width="0.82em" />
+        <QDialog v-model="showMapDialog">
+      <WorldMap @country-selected="handleCountryClicked" />
+    </QDialog>
       </div>
-      <div v-else>
-        <QSpinner :color="label" size="0.82em" />
+      <div>
+        <div v-if="!loading">
+          <QIcon :color="label" name="fas fa-search q-mb-xs" width="0.82em" />
+        </div>
+        <div v-else>
+          <QSpinner :color="label" size="0.82em" />
+        </div>
       </div>
     </template>
     <template v-slot:loading> </template>
