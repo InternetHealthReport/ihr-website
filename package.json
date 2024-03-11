@@ -1,6 +1,6 @@
 {
   "name": "ihr",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -27,7 +27,7 @@
     "@babel/preset-env": "^7.23.6",
     "@quasar/vite-plugin": "^1.6.0",
     "@rushstack/eslint-patch": "^1.3.3",
-    "@vitejs/plugin-vue": "^4.4.0",
+    "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-prettier": "^9.0.0",
     "eslint": "^8.49.0",
     "eslint-plugin-vue": "^9.17.0",

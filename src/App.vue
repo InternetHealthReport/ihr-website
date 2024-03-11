@@ -4,6 +4,7 @@ import { QLayout, QPageContainer, QIcon } from 'quasar'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue'
+import CookieBanner from './components/CookieBanner.vue'
 
 let scrollPosition = ref(0)
 
@@ -41,6 +42,7 @@ onBeforeUnmount(() => {
     <Footer></Footer>
     <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
   </QLayout>
+  <CookieBanner/>
 </template>
 
 <style lang="stylus">

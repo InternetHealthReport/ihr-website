@@ -334,7 +334,8 @@ onMounted(() => {
             <tbody>
               <tr v-for="key in Object.keys(metadata)">
                 <td class="text-left">
-                  <a :href="metadata[key].reference_url_info">{{ key }}</a>
+                  <a :href="metadata[key].reference_url_info[0]" v-if="metadata[key].reference_url_info[0]">{{ key }}</a>
+                  <span v-else>{{ key }}</span>
                 </td>
                 <td class="text-left">
                   <div v-for="time in metadata[key].reference_time_fetch">{{ time }}</div>
