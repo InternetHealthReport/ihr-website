@@ -1,6 +1,8 @@
 const cache = async (key, fetcher, options) => {
 	if (!options) {
 		options = defaultOptions
+	} else {
+		options = Object.assign(defaultOptions, options)
 	}
 	let item = getItem(key)
 	if (item) {

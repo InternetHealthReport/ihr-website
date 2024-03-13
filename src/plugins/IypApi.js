@@ -14,12 +14,13 @@ const IypApi = {
     })
 
     const run = async (queries) => {
+      const storageAllowed = JSON.parse(localStorage.getItem('storage-allowed'))
       let response = await cache(JSON.stringify(queries), () => {
         return axios_base.post('', {
           statements: queries
         })
       }, {
-        storageAllowed: JSON.parse(localStorage.getItem('storage-allowed'))
+        storageAllowed: storageAllowed ? storageAllowed : false
       })
       const rows = response.data.results
       const res = []
