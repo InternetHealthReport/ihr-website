@@ -11,16 +11,16 @@ const cache = async (key, fetcher, options) => {
 			...options,
 			data: item
 		}
-		localStorage.setItem(JSON.stringify(key), JSON.stringify(sessionObj))
+		localStorage.setItem(key, JSON.stringify(sessionObj))
 	}
 	return item
 }
 
 const getItem = (key) => {
-	let item = localStorage.getItem(JSON.stringify(key))
+	let item = localStorage.getItem(key)
 	if (item) {
 		if (JSON.parse(item).expiresAt < new Date().getTime()) {
-			localStorage.removeItem(JSON.stringify(key))
+			localStorage.removeItem(key)
 			item = null
 		}
 	}

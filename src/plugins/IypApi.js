@@ -14,7 +14,7 @@ const IypApi = {
     })
 
     const run = async (queries) => {
-      let response = await cache(queries, () => {
+      let response = await cache(JSON.stringify(queries), () => {
         return axios_base.post('', {
           statements: queries
         })
