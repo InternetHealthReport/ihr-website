@@ -1,4 +1,5 @@
 import axios from 'axios'
+import cache from './cache.js'
 
 /// Base url for api
 const IYP_API_BASE = 'https://iyp.iijlab.net/iyp/db/neo4j/tx/'
@@ -13,8 +14,10 @@ const IypApi = {
     })
 
     const run = async (queries) => {
-      let response = await axios_base.post('', {
-        statements: queries
+      let response = await cache(queries, () => {
+        return axios_base.post('', {
+          statements: queries
+        })
       })
       const rows = response.data.results
       const res = []
