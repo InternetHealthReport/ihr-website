@@ -1,8 +1,29 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { QCard, QCardSection, QAvatar, QIcon } from 'quasar'
-import { ref } from 'vue'
+import { ref, onMounted, inject } from 'vue'
+import ripeApi from '@/plugins/RipeApi'
 import Tr from '@/i18n/translation'
+
+const iyp_api = inject('iyp_api')
+
+const as_info_query = ref({
+  data: [],
+  show: false,
+  loading: true,
+  query: `MATCH (a:AS {asn: $asn})
+      OPTIONAL MATCH (a)-[:ORIGINATE]->(p4:Prefix {af:4})
+      WITH COALESCE(COUNT(DISTINCT p4.prefix), 0) AS prefixes_v4, a
+      OPTIONAL MATCH (a)-[:ORIGINATE]->(p6:Prefix {af:6})
+      WITH COALESCE(COUNT(DISTINCT p6.prefix), 0) AS prefixes_v6, prefixes_v4, a
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+      OPTIONAL MATCH (a)-[:NAME]->(n:Name)
+      OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
+      OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+      RETURN c.country_code AS cc, c.name AS country, prefixes_v4, prefixes_v6, COALESCE(pdbn.name, btn.name, ripen.name) AS name, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country `,
+})
 
 const GRAPHS_TYPES = [
   {
@@ -79,20 +100,157 @@ const props = defineProps({
     }
 })
 
+const getUserInfo = async() => {
+  const userIP = await ripeApi.userIP()
+  const userASN = await ripeApi.userASN(userIP.data.ip)
+  userInfo.value.IP = userIP.data.ip
+  userInfo.value.AS = userASN.data.asns[0]
+  userInfo.value.PREFIX = userASN.data.prefix
+
+  as_info_query.value.loading = true
+  let query_params = { asn: Number(userASN.data.asns[0]) }
+  iyp_api.run([{statement: as_info_query.value.query, parameters: query_params}]).then(
+    results => {
+      userInfo.value.AS_NAME = results[0][0].name
+      userInfo.value.COUNTRY = results[0][0].country
+      userInfo.value.CC = results[0][0].cc
+      as_info_query.value.loading = false
+      console.log(userInfo.value)
+    }
+  )
+
+}
+
 const graphTypes = ref(GRAPHS_TYPES)
 const placeholderValues = ref(PLACEHOLDER_VALUES)
 const organizations = ref(ORGANIZATIONS)
+const userInfo = ref({})
+
+onMounted(() => {
+  if(!userInfo.IP){
+    getUserInfo()
+  }
+})
+
 </script>
 
 <template>
   <div id="IHR_home">
+
     <div id="IHR_global-report" class="row">
+      
       <div class="col">
         <div>Internet Health Report</div>
         <RouterLink id="IHR_global-report-button" :to="Tr.i18nRoute({ name: 'global-report' })">
           {{ $t('homePage.globalReport.name') }}
         </RouterLink>
       </div>
+
+      <div class="row justify-end IHR_description-main userInfoCard">
+        <QCard class="user-modules">
+          <QCardSection class="bg-primary text-white q-pa-sm">
+            <div>
+              <QAvatar :icon="graphTypes[graphTypes.length - 1].icon"></QAvatar>
+              Your Connection Information
+            </div>
+          </QCardSection>
+          <QCardSection class="q-pa-xs" >
+            <div class="IHR_description" v-if="!as_info_query.loading" >
+            
+              <p class="userInfo" >
+              IP :  {{userInfo.IP}}
+              </p>
+
+              <p class="userInfo" >
+              AS : 
+              <RouterLink :to="`networks/AS${userInfo.AS}`">
+              AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
+              </RouterLink>
+              </p>
+
+              <p class="userInfo" >
+              PREFIX : 
+              <RouterLink :to="`networks/${userInfo.PREFIX}`">
+              {{userInfo.PREFIX}}
+              </RouterLink>
+              </p>
+
+              <p class="userInfo" >
+              COUNTRY : 
+              <RouterLink :to="`countries/${userInfo.CC}`">
+              {{userInfo.COUNTRY}}
+              </RouterLink>
+              </p>
+
+            </div>
+            <div v-else id="loading-wrapper">
+              <div class="blink-image">
+                <div class="loading">
+                  <div class="imageLoading">
+                    <h1>L<span> </span>ading...</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </QCardSection>
+        </QCard>
+      </div>
+
+    </div>
+
+    <div class="row wrap justify-center q-gutter-md IHR_description-main">
+
+      <QCard class="user-modules userInfoCardMobile">
+        <QCardSection class="bg-primary text-white q-pa-sm">
+          <div>
+            <QAvatar :icon="graphTypes[graphTypes.length - 1].icon"></QAvatar>
+            Your Connection Information
+          </div>
+        </QCardSection>
+        <QCardSection class="q-pa-xs">
+          <div class="IHR_description" v-if="!as_info_query.loading" >
+          
+            <p class="userInfo" >
+            IP :  {{userInfo.IP}}
+            </p>
+
+            <p class="userInfo" >
+            AS : 
+            <RouterLink :to="`networks/AS${userInfo.AS}`">
+            AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
+            </RouterLink>
+            </p>
+
+            <p class="userInfo" >
+            PREFIX : 
+            <RouterLink :to="`networks/${userInfo.PREFIX}`">
+            {{userInfo.PREFIX}}
+            </RouterLink>
+            </p>
+
+            <p class="userInfo" >
+            COUNTRY : 
+            <RouterLink :to="`countries/${userInfo.CC}`">
+            {{userInfo.COUNTRY}}
+            </RouterLink>
+            </p>
+
+          </div>
+          <div v-else id="loading-wrapper">
+            <div class="blink-image">
+              <div class="loading">
+                <div class="imageLoading">
+                  <h1>L<span> </span>ading...</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="IHR_description IHR_description-link">
+          </div>
+        </QCardSection>
+      </QCard>
+
     </div>
 
     <div class="IHR_description-main" v-html="$t('homePage.globalReport.description')"></div>
@@ -211,7 +369,8 @@ const organizations = ref(ORGANIZATIONS)
           text-align left
           padding-top 60pt
           padding-left 60pt
-          display inline-block
+          display flex
+          flex-direction column
           text-shadow 0 0 8px #000000;
           @media screen and (max-width: 600px)
             padding-top 100pt
@@ -257,7 +416,7 @@ const organizations = ref(ORGANIZATIONS)
       font-size 20pt
       margin 30pt auto !important
       text-align center
-      width 85%
+      width 50%
       @media screen and (max-width: 600px)
         font-size 14pt
 
@@ -304,6 +463,24 @@ const organizations = ref(ORGANIZATIONS)
     text-align left
     border-radius 15px !important
 
+.user-modules
+  min-width 500px
+  min-height 300px
+  text-align left
+  border-radius 15px !important
+  max-height 500px
+  margin auto
+
+.userInfo
+  font-size 19px
+  font-weight 550
+
+.userInfoCard 
+  margin-top 0px !important
+
+#loading-wrapper
+  margin-top 110px !important
+
 @media(max-width 1411px)
   .analysis-modules
     margin-left 0
@@ -312,6 +489,16 @@ const organizations = ref(ORGANIZATIONS)
   .IHR_tweets-types
         max-width 600px !important
 
+@media(max-width 1023px)
+  .userInfoCard
+    display none !important
+
+  .user-modules
+    min-width 0px
+
+@media(min-width 1024px)
+  .userInfoCardMobile
+    display none !important
 
 .IHR_tweets-types
       margin-left auto
