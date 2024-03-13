@@ -9,7 +9,7 @@ const onAcceptClick = () => {
   banner.value = false
 }
 const onDeclineClick = () => {
-  banner.value = true
+  banner.value = false
 }
 onMounted(() => {
   const preferenceValue = localStorage.getItem('storage-allowed')
