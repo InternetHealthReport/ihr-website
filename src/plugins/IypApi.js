@@ -18,6 +18,8 @@ const IypApi = {
         return axios_base.post('', {
           statements: queries
         })
+      }, {
+        storageAllowed: JSON.parse(localStorage.getItem('storage-allowed'))
       })
       const rows = response.data.results
       const res = []

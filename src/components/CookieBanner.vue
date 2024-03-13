@@ -11,14 +11,14 @@ const closeDialog = () => {
   dialog.value = false
 }
 const onAcceptClick = () => {
-  localStorage.setItem('cookie-preference', true)
+  localStorage.setItem('storage-allowed', true)
   closeDialog()
 }
 const onDeclineClick = () => {
   closeDialog()
 }
 onMounted(() => {
-  const preferenceValue = localStorage.getItem('cookie-preference')
+  const preferenceValue = localStorage.getItem('storage-allowed')
   if (preferenceValue === null || preferenceValue === undefined || preferenceValue !== 'true') {
     openDialog()
   }

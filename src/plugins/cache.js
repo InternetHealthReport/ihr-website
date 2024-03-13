@@ -11,7 +11,9 @@ const cache = async (key, fetcher, options) => {
 			...options,
 			data: item
 		}
-		localStorage.setItem(key, JSON.stringify(sessionObj))
+		if (options.storageAllowed){
+			localStorage.setItem(key, JSON.stringify(sessionObj))
+		}
 	}
 	return item
 }
@@ -34,7 +36,8 @@ const setDefaultExpireDate = () => {
 }
 
 const defaultOptions = {
-	expiresAt: setDefaultExpireDate()
+	expiresAt: setDefaultExpireDate(),
+	storageAllowed: true
 }
 
 export default cache
