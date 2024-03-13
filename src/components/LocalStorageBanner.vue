@@ -2,31 +2,27 @@
 import { ref, onMounted } from 'vue'
 import { QCard, QCardSection, QCardActions, QBtn } from 'quasar'
 
-const dialog = ref(false)
+const banner = ref(true)
 
-const openDialog = () => {
-  dialog.value = true
-}
-const closeDialog = () => {
-  dialog.value = false
-}
 const onAcceptClick = () => {
   localStorage.setItem('storage-allowed', true)
-  closeDialog()
+  banner.value = false
 }
 const onDeclineClick = () => {
-  closeDialog()
+  banner.value = true
 }
 onMounted(() => {
-  const preferenceValue = JSON.parse(localStorage.getItem('storage-allowed'))
-  if (preferenceValue === null || preferenceValue === undefined || preferenceValue !== true) {
-    openDialog()
+  const preferenceValue = localStorage.getItem('storage-allowed')
+  if (preferenceValue === null || JSON.parse(preferenceValue) === false) {
+    banner.value = true
+  } else {
+    banner.value = false
   }
 })
 </script>
 
 <template>
-  <QCard class="fixed-bottom">
+  <QCard v-if="banner" dark class="fixed-bottom" wrap-text>
     <QCardSection class="text">
       We use local storage to enhance your experience on our website.
       By clicking &#39;Accept&#39;, you agree to allow us to store and access data on your device.
@@ -47,7 +43,8 @@ onMounted(() => {
   bottom: 10px !important;
   left: auto !important;
   z-index: 10000;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   background-color: #263238 !important;
 }
 .text {
