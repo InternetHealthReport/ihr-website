@@ -8,8 +8,6 @@ import Tr from '@/i18n/translation'
 const iyp_api = inject('iyp_api')
 
 const as_info_query = ref({
-  data: [],
-  show: false,
   loading: true,
   query: `MATCH (a:AS {asn: $asn})
       OPTIONAL MATCH (a)-[:ORIGINATE]->(p4:Prefix {af:4})
@@ -115,7 +113,6 @@ const getUserInfo = async() => {
       userInfo.value.COUNTRY = results[0][0].country
       userInfo.value.CC = results[0][0].cc
       as_info_query.value.loading = false
-      console.log(userInfo.value)
     }
   )
 
@@ -127,9 +124,7 @@ const organizations = ref(ORGANIZATIONS)
 const userInfo = ref({})
 
 onMounted(() => {
-  if(!userInfo.IP){
     getUserInfo()
-  }
 })
 
 </script>
