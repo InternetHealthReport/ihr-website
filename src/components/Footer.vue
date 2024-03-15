@@ -33,9 +33,9 @@ import { version } from '../../package.json'
               <a href="https://github.com/InternetHealthReport" class="" target="_blank">
                 <QIcon name="fab fa-github-square" class="inline-block" />
               </a>
-              <RouterLink :to="Tr.i18nRoute({ name: 'contact' })" class="" target="_blank">
+              <a href="mailto:admin@ihr.live" class="" target="_blank">
                 <QIcon name="fas fa-envelope-square" class="inline-block" />
-              </RouterLink>
+              </a>
             </div>
           </div>
         </div>

@@ -72,6 +72,11 @@ const  SIMPLE_MENU = [
         routeName: 'metis',
         summary: 'header.metis.summary',
       },
+      {
+        entryName: 'header.observable.name',
+        routeName: 'observable',
+        summary: 'header.observable.summary',
+      },
     ],
   },
   {
