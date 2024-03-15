@@ -151,7 +151,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
               <div>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></div>
-              <div>Member of{{ queries[0].data[0].nb_ixp }} IXPs in {{ queries[0].data[0].nb_country }} Countries</div>
+              <div>Member of {{ queries[0].data[0].nb_ixp }} IXPs in {{ queries[0].data[0].nb_country }} Countries</div>
               <div>{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 Originated Prefixes</div>
               <div v-if="queries[1].data.length > 0">{{ queries[1].data[0].peers }} Connected ASes</div>
               <div>
