@@ -207,7 +207,7 @@ const showTable = (clickData) => {
   details.value.filter = apiFilter.value.clone()
 
   details.value.delayData = {
-    dateTime: `${MONTHS_SHORT[chosenTime.getUTCMonth()]} ${chosenTime.getUTCDate()}, ${chosenTime.getUTCFullYear()}, ${chosenTime.getUTCHours()}:${chosenTime.getUTCMinutes()} UTC`,
+    dateTime: `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${chosenTime.getHours()}:${chosenTime.getMinutes()}`,
     startTime: new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
     stopTime: new Date(chosenTime.getTime() + DELAY_ALARM_INTERVAL),
     data: [],

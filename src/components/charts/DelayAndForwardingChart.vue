@@ -195,8 +195,8 @@ const fetchForwarding = (data) => {
   fetchData(traces.value[1], data)
 }
 
-const getUTCFormat = (chosenTime) => {
-  return `${MONTHS_SHORT[chosenTime.getUTCMonth()]} ${chosenTime.getUTCDate()}, ${chosenTime.getUTCFullYear()}, ${chosenTime.getUTCHours()}:${chosenTime.getUTCMinutes()} UTC`
+const getDateFormat = (chosenTime) => {
+  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${chosenTime.getHours()}:${chosenTime.getMinutes()}`
 }
 
 const delayUrl = computed(() => {
@@ -235,7 +235,7 @@ onMounted(() => {
         <div class="row items-center">
           <div class="col">
             <div class="text-h3">
-              {{ getUTCFormat(details.delayData.dateTime) }}
+              {{ getDateFormat(details.delayData.dateTime) }}
             </div>
           </div>
           <div class="col-auto">

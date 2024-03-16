@@ -562,8 +562,8 @@ const clearGraph = () => {
   layout.value.datarevision = new Date().getTime()
 }
 
-const getUTCFormat = (chosenTime) => {
-  return `${MONTHS_SHORT[chosenTime.getUTCMonth()]} ${chosenTime.getUTCDate()}, ${chosenTime.getUTCFullYear()}, ${chosenTime.getUTCHours()}:${chosenTime.getUTCMinutes()} UTC`
+const getDateFormat = (chosenTime) => {
+  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${chosenTime.getHours()}:${chosenTime.getMinutes()}`
 }
 
 const bgplay = computed(() => {
@@ -677,7 +677,7 @@ onMounted(() => {
       <QCardSection class="q-pa-xs">
         <div class="row items-center">
           <div class="col">
-            <div class="text-h3">{{ getUTCFormat(details.date) }}</div>
+            <div class="text-h3">{{ getDateFormat(details.date) }}</div>
           </div>
           <div class="col-auto">
             <QBtn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible = false" icon="fa fa-times-circle"></QBtn>

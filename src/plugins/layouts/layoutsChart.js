@@ -105,9 +105,9 @@ var RIR_COUNTRY_SUNBURST_LAYOUT = {
 var IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   title: '',
-  xaxis: { title: 'Time (UTC)', autorange: true },
+  xaxis: { title: '', autorange: true },
   yaxis: { ticksuffix: '%', autoragne: true },
-  margin: { t: 10, b: 70, l: 80, r: 80 },
+  margin: { t: 10, b: 40, l: 80, r: 80 },
 
 }
 
