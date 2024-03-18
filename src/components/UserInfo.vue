@@ -42,13 +42,7 @@ const getUserInfo = async() => {
 
 }
 
-
-const props = defineProps({
-    icons: Array
-})
-
 const userInfo = ref({})
-
 
 onMounted(() => {
     getUserInfo()
@@ -60,53 +54,57 @@ onMounted(() => {
 
     <div class="userInfoCard">
 
+        <div class="line"></div>
+
         <QCard class="userInfoCard_modules">
-            <QCardSection class="bg-primary text-white q-pa-sm">
-            <div class="userInfoCard_title">
-                <QAvatar size="md" :icon="props.icons[props.icons.length - 1].icon"></QAvatar>
-                Your Connection
-            </div>
-            </QCardSection>
-            <QCardSection class="q-pa-xs" >
-            <div class="userInfoCard_userInfo" v-if="!as_info_query.loading" >
             
-                <p>
-                IP :  {{userInfo.IP}}
-                </p>
+            <QCardSection class="q-pa-xs userInfoCard_title">
+                YOUR CONNECTION
+            </QCardSection>
 
-                <p>
-                AS : 
-                <RouterLink :to="`networks/AS${userInfo.AS}`">
-                AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
-                </RouterLink>
-                </p>
+            <QCardSection class="q-pa-xs" >
 
-                <p>
-                PREFIX : 
-                <RouterLink :to="`networks/${userInfo.PREFIX}`">
-                {{userInfo.PREFIX}}
-                </RouterLink>
-                </p>
+                <div class="userInfoCard_userInfo" v-if="!as_info_query.loading" >
+                
+                    <p>
+                    IP :  {{userInfo.IP}}
+                    </p>
 
-                <p>
-                COUNTRY : 
-                <RouterLink :to="`countries/${userInfo.CC}`">
-                {{userInfo.COUNTRY}}
-                </RouterLink>
-                </p>
+                    <p class="xyz">
+                    AS : 
+                    <RouterLink class="link" :to="`networks/AS${userInfo.AS}`">
+                    AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
+                    </RouterLink>
+                    </p>
 
-            </div>
-            <div v-else id="loading-wrapper">
-                <div class="blink-image">
-                <div class="loading">
-                    <div class="imageLoading">
-                    <h1>L<span> </span>ading...</h1>
+                    <p>
+                    PREFIX : 
+                    <RouterLink class="link" :to="`networks/${userInfo.PREFIX}`">
+                    {{userInfo.PREFIX}}
+                    </RouterLink>
+                    </p>
+
+                    <p>
+                    COUNTRY : 
+                    <RouterLink class="link" :to="`countries/${userInfo.CC}`">
+                    {{userInfo.COUNTRY}}
+                    </RouterLink>
+                    </p>
+
+                </div>
+
+                <div v-else id="loading-wrapper">
+                    <div class="blink-image">
+                        <div class="loading">
+                            <div class="imageLoading">
+                                <h1>L<span class="image"> </span>ading...</h1>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                </div>
-            </div>
 
             </QCardSection>
+            
         </QCard>
 
     </div>
@@ -116,31 +114,54 @@ onMounted(() => {
 <style lang="stylus">
 
 .userInfoCard_
+  background: rgba(0,0,0,0);
+  border white solid 4px
 
   &modules
-    margin-top 30px
-    min-width 360px
-    max-width 360px
+    margin-top 13px
+    min-width 300pt
+    max-width 300pt
     min-height 220px
-    border-radius 15px !important
-    text-shadow: none !important
+    background: rgba(0,0,0,0) !important
+    border white solid 4px
+    border-radius 0px !important
 
   &userInfo
-    font-weight 550
-    margin-top 7px
-    margin-left 15px
-    color black !important
+    margin-top 8px
+    margin-left 85px
+    transition all 0.6s
+    font-weight 600
 
   &title
-    margin-left 4px
-    font-size 22px
+    text-align center
+    font-size 23px 
+    font-weight 750
+    border-bottom white solid 3px
 
 #loading-wrapper
-  margin-top 80px !important
-  margin-left 40px !important
+  margin-top 60px !important
+  margin-left 95px !important
 
 .imageLoading
   min-width 350px !important
+
+  h1 
+    color white !important
+    font-size 35px !important
+ 
+.image
+    width: 22px !important
+    height: 22px !important
+
+.line
+  margin-top 13px
+  min-height 3px
+  max-width 300pt
+  background: white
+
+.link
+    color white !important
+    text-decoration none!important
 
 @media(max-width 600px)
   .userInfoCard

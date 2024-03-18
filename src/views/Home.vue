@@ -85,7 +85,6 @@ const props = defineProps({
 const graphTypes = ref(GRAPHS_TYPES)
 const placeholderValues = ref(PLACEHOLDER_VALUES)
 const organizations = ref(ORGANIZATIONS)
-const userInfo = ref({})
 
 </script>
 
@@ -100,8 +99,7 @@ const userInfo = ref({})
         <RouterLink id="IHR_global-report-button" :to="Tr.i18nRoute({ name: 'global-report' })">
           {{ $t('homePage.globalReport.name') }}
         </RouterLink>
-
-        <UserInfo :icons=graphTypes />
+        <UserInfo />
 
       </div>
 
