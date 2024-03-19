@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QCard, QCardSection, QAvatar} from 'quasar'
+import {QMarkupTable, QSpinner} from 'quasar'
 import { ref, onMounted, inject } from 'vue'
 import ripeApi from '@/plugins/RipeApi'
 
@@ -54,81 +54,76 @@ onMounted(() => {
 
     <div class="userInfoCard">
 
-        <div class="line"></div>
+        <div class="q-pa-xs userInfoCard_title">
+            YOUR CONNECTION
+        </div>
 
-        <QCard class="userInfoCard_modules">
-            
-            <QCardSection class="q-pa-xs userInfoCard_title">
-                YOUR CONNECTION
-            </QCardSection>
+          <div v-if="!as_info_query.loading" >
 
-            <QCardSection class="q-pa-xs" >
+            <QMarkupTable class="userInfoCard_modules" >
 
-                <div class="userInfoCard_userInfo" v-if="!as_info_query.loading" >
+              <tbody class="userInfoCard_userInfo">
+
+                  <tr>
+                    <td >IP</td>
+                    <td>{{userInfo.IP}}</td>
+                  </tr>
+
+                  <tr>
+                    <td>AS</td>
+                    <td>
+                      <RouterLink class="link" :to="`networks/AS${userInfo.AS}`">
+                      AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
+                      </RouterLink>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>PREFIX</td>
+                    <td><RouterLink class="link" :to="`networks/${userInfo.PREFIX}`">
+                      {{userInfo.PREFIX}}
+                      </RouterLink>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>COUNTRY</td>
+                    <td><RouterLink class="link" :to="`countries/${userInfo.CC}`">
+                      {{userInfo.COUNTRY}}
+                      </RouterLink>
+                    </td>
+                  </tr>
                 
-                    <p>
-                    IP :  {{userInfo.IP}}
-                    </p>
+              </tbody>
+          
+            </QMarkupTable>
+        
+          </div>
 
-                    <p class="xyz">
-                    AS : 
-                    <RouterLink class="link" :to="`networks/AS${userInfo.AS}`">
-                    AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
-                    </RouterLink>
-                    </p>
-
-                    <p>
-                    PREFIX : 
-                    <RouterLink class="link" :to="`networks/${userInfo.PREFIX}`">
-                    {{userInfo.PREFIX}}
-                    </RouterLink>
-                    </p>
-
-                    <p>
-                    COUNTRY : 
-                    <RouterLink class="link" :to="`countries/${userInfo.CC}`">
-                    {{userInfo.COUNTRY}}
-                    </RouterLink>
-                    </p>
-
-                </div>
-
-                <div v-else id="loading-wrapper">
-                    <div class="blink-image">
-                        <div class="loading">
-                            <div class="imageLoading">
-                                <h1>L<span class="image"> </span>ading...</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </QCardSection>
-            
-        </QCard>
+          <div v-else class="loading-spinner">
+            <QSpinner color="secondary" size="1em" />
+          </div>
 
     </div>
-  
+
 </template>
 
 <style lang="stylus">
 
-.userInfoCard_
-  background: rgba(0,0,0,0);
+.userInfoCard 
+  margin-top 15px
+  min-width 300pt
+  max-width 300pt
+  min-height 220px
+  max-height 220px
   border white solid 4px
 
+.userInfoCard_
   &modules
-    margin-top 13px
-    min-width 300pt
-    max-width 300pt
-    min-height 220px
     background: rgba(0,0,0,0) !important
-    border white solid 4px
-    border-radius 0px !important
+    margin-left 40px
 
   &userInfo
-    margin-top 8px
-    margin-left 85px
     transition all 0.6s
     font-weight 600
 
@@ -138,34 +133,46 @@ onMounted(() => {
     font-weight 750
     border-bottom white solid 3px
 
-#loading-wrapper
-  margin-top 60px !important
-  margin-left 95px !important
-
-.imageLoading
-  min-width 350px !important
-
-  h1 
-    color white !important
-    font-size 35px !important
- 
-.image
-    width: 22px !important
-    height: 22px !important
-
-.line
-  margin-top 13px
-  min-height 3px
-  max-width 300pt
-  background: white
-
 .link
     color white !important
     text-decoration none!important
+    
+.q-table tbody td
+  height 40px !important
+  color white !important
+  font-size 14px !important
+
+.loading-spinner
+  margin-top 30px
+  text-align center
 
 @media(max-width 600px)
   .userInfoCard
-    display none !important
+      margin auto
+      margin-top 8px
+      min-width 200pt
+      max-width 200pt
+      min-height 200px
+      max-height 200px
 
+  .userInfoCard_
+    &modules
+      margin-left 0px
+
+    &title
+      font-size 19px 
+
+  .q-table tbody td
+    font-size 10px !important
+    height 35px !important
+
+@media(max-width 315px)
+  .q-table tbody td
+      font-size px !important
+      height 15px !important
+
+  .userInfoCard
+      min-height 170px
+      max-height 170px
 
 </style>

@@ -5,7 +5,6 @@ import { ref, onMounted} from 'vue'
 import UserInfo from '@/components/UserInfo.vue'
 import Tr from '@/i18n/translation'
 
-
 const GRAPHS_TYPES = [
   {
     name: 'homePage.analysisModules.asInterdependence',
@@ -81,28 +80,23 @@ const props = defineProps({
     }
 })
 
-
 const graphTypes = ref(GRAPHS_TYPES)
 const placeholderValues = ref(PLACEHOLDER_VALUES)
 const organizations = ref(ORGANIZATIONS)
-
 </script>
 
 <template>
   <div id="IHR_home">
 
     <div id="IHR_global-report" class="row">
-      
-      <div class="flex-row">
-    
+      <div class="col">
         <div>Internet Health Report</div>
         <RouterLink id="IHR_global-report-button" :to="Tr.i18nRoute({ name: 'global-report' })">
           {{ $t('homePage.globalReport.name') }}
         </RouterLink>
+        <div class="line"></div>
         <UserInfo />
-
       </div>
-
     </div>
 
     <div class="IHR_description-main" v-html="$t('homePage.globalReport.description')"></div>
@@ -179,7 +173,7 @@ const organizations = ref(ORGANIZATIONS)
     ~/global-report
       margin-bottom 60pt
       max-width 100%
-      height 480px
+      height 450px
       background-color black
       background-image url('@/assets/imgs/global-banner.png')
       background-repeat no-repeat
@@ -219,15 +213,13 @@ const organizations = ref(ORGANIZATIONS)
           color white
           font-size 50px
           text-align left
-          padding-top 35pt
+          padding-top 25pt
           padding-left 60pt
-          display flex
-          flex-direction column
+          display inline-block
           text-shadow 0 0 8px #000000;
           @media screen and (max-width: 600px)
-            padding-top 100pt
+            padding-top 70pt
             padding-left 0
-            margin auto
             text-align center
             font-size 2rem
 
@@ -269,7 +261,7 @@ const organizations = ref(ORGANIZATIONS)
       font-size 20pt
       margin 30pt auto !important
       text-align center
-      width 50%
+      width 85%
       @media screen and (max-width: 600px)
         font-size 14pt
 
@@ -315,6 +307,17 @@ const organizations = ref(ORGANIZATIONS)
     max-width 600px
     text-align left
     border-radius 15px !important
+
+.line
+  margin-top 15px
+  min-height 3px
+  max-width 300pt
+  background: white
+  @media screen and (max-width: 600px)
+    margin auto
+    margin-top 8px
+    max-width 200pt
+    
 
 @media(max-width 1411px)
   .analysis-modules
