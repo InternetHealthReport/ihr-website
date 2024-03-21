@@ -2,6 +2,13 @@
 import { ref, onMounted } from 'vue'
 import { QCard, QCardSection, QCardActions, QBtn } from 'quasar'
 
+const props = defineProps({
+  disable: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const banner = ref(true)
 
 const onAcceptClick = () => {
@@ -12,11 +19,15 @@ const onDeclineClick = () => {
   banner.value = false
 }
 onMounted(() => {
-  const preferenceValue = localStorage.getItem('storage-allowed')
-  if (preferenceValue === null || JSON.parse(preferenceValue) === false) {
-    banner.value = true
+  if (!props.disable) {
+    const preferenceValue = localStorage.getItem('storage-allowed')
+    if (preferenceValue === null || JSON.parse(preferenceValue) === false) {
+      banner.value = true
+    } else {
+      banner.value = false
+    }
   } else {
-    banner.value = false
+    onAcceptClick()
   }
 })
 </script>

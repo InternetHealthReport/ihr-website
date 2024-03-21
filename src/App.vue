@@ -42,7 +42,7 @@ onBeforeUnmount(() => {
     <Footer></Footer>
     <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
   </QLayout>
-  <LocalStorageBanner />
+  <LocalStorageBanner :disable="true" />
 </template>
 
 <style lang="stylus">

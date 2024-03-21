@@ -60,14 +60,20 @@ const queries = ref([
 
 const fetchData = async (cc) => {
   let params = { cc: cc.toUpperCase() }
-  let results = await iyp_api.run(queries.value.map(obj => ({statement: obj.query, parameters: params})))
+  iyp_api.run([{statement: queries.value[0].query, parameters: params}]).then((results) => {
+    queries.value[0].data = results[0]
+    loading.value -= 1
+  })
 
-  queries.value[0].data = results[0]
-  loading.value -= 1
-  queries.value[1].data = results[1]
-  loading.value -= 1
-  queries.value[2].data = results[2]
-  loading.value -= 1
+  iyp_api.run([{statement: queries.value[1].query, parameters: params}]).then((results) => {
+    queries.value[1].data = results[0]
+    loading.value -= 1
+  })
+
+  iyp_api.run([{statement: queries.value[2].query, parameters: params}]).then((results) => {
+    queries.value[2].data = results[0]
+    loading.value -= 1
+  })
 }
 
 const handleReference = (key) => {
@@ -118,10 +124,10 @@ onMounted(() => {
         <tr>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div>{{ queries[0].data[0].as_count }} registered ASes</div>
-              <div>{{ queries[0].data[0].preg_count }} registered prefixes</div>
-              <div>{{ queries[0].data[0].pgeo_count }} geolocated prefixes</div>
-              <div>{{ queries[0].data[0].ixp_count }} Internet Exchange Points</div>
+              <div>{{ queries[0].data[0].as_count }} registered <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Autonomous-Systems'})">ASes</RouterLink></div>
+              <div>{{ queries[0].data[0].preg_count }} registered <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#IP-Prefixes'})">prefixes</RouterLink></div>
+              <div>{{ queries[0].data[0].pgeo_count }} geolocated <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#IP-Prefixes'})">prefixes</RouterLink></div>
+              <div>{{ queries[0].data[0].ixp_count }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Internet-Exchange-Points'})">Internet Exchange Points</RouterLink></div>
             </div>
           </td>
           <td class="text-left">
