@@ -33,8 +33,7 @@ const getItem = (key) => {
 
 const setDefaultExpireDate = () => {
 	const expireAt = new Date()
-	expireAt.setDate(expireAt.getDate() + 1)
-	return expireAt.getTime()
+	return (new Date(expireAt.getFullYear(), expireAt.getMonth(), expireAt.getDate(), 23, 59, 59)).getTime()
 }
 
 const defaultOptions = {
