@@ -57,12 +57,15 @@ const queries = ref([
 
 const fetchData = async () => {
   let params = { prefix: props.getPrefix }
-  let results = await iyp_api.run(queries.value.map(obj => ({statement: obj.query, parameters: params})))
+  iyp_api.run([{statement: queries.value[0].query, parameters: params}]).then((results) => {
+    queries.value[0].data = results[0]
+    loading.value -= 1
+  })
 
-  queries.value[0].data = results[0]
-  loading.value -= 1
-  queries.value[1].data = results[1]
-  loading.value -= 1
+  iyp_api.run([{statement: queries.value[1].query, parameters: params}]).then((results) => {
+    queries.value[1].data = results[0]
+    loading.value -= 1
+  })
 }
 
 const handleReference = (key) => {

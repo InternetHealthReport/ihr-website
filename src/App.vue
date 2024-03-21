@@ -37,12 +37,12 @@ onBeforeUnmount(() => {
     <Header></Header>
     <QPageContainer>
       <RouterView />
-      <div id="IHR_last-element">&nbsp;</div>
+      <!-- <div id="IHR_last-element">&nbsp;</div> -->
     </QPageContainer>
     <Footer></Footer>
     <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
   </QLayout>
-  <LocalStorageBanner />
+  <LocalStorageBanner :disable="true" />
 </template>
 
 <style lang="stylus">
