@@ -188,7 +188,6 @@ const organizations = ref(ORGANIZATIONS)
         border white solid 4px
         text-align center
         font-weight 500
-        transition all 0.6s
         max-width 300pt
         display block
         color white

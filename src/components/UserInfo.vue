@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import {QMarkupTable, QSpinner} from 'quasar'
+import {QMarkupTable, QSpinner, QCard, QCardSection} from 'quasar'
 import { ref, onMounted, inject } from 'vue'
 import ripeApi from '@/plugins/RipeApi'
 
@@ -52,26 +52,26 @@ onMounted(() => {
 
 <template>
 
-    <div class="userInfoCard">
+    <QCard class="userInfoCard">
 
-        <div class="q-pa-xs userInfoCard_title">
+        <QCardSection class="q-pa-xs userInfoCard_title">
             YOUR CONNECTION
-        </div>
+        </QCardSection>
 
-          <div v-if="!as_info_query.loading" >
+          <QCard class="userInfoCard_secondCard" v-if="!as_info_query.loading" >
 
             <QMarkupTable class="userInfoCard_modules" >
 
               <tbody class="userInfoCard_userInfo">
 
                   <tr>
-                    <td >IP</td>
-                    <td>{{userInfo.IP}}</td>
+                    <td class="userInfoCard_tableText">IP</td>
+                    <td class="userInfoCard_tableText">{{userInfo.IP}}</td>
                   </tr>
 
                   <tr>
-                    <td>AS</td>
-                    <td>
+                    <td class="userInfoCard_tableText">AS</td>
+                    <td class="userInfoCard_tableText">
                       <RouterLink class="link" :to="`networks/AS${userInfo.AS}`">
                       AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
                       </RouterLink>
@@ -79,16 +79,16 @@ onMounted(() => {
                   </tr>
 
                   <tr>
-                    <td>PREFIX</td>
-                    <td><RouterLink class="link" :to="`networks/${userInfo.PREFIX}`">
+                    <td class="userInfoCard_tableText">PREFIX</td>
+                    <td class="userInfoCard_tableText"><RouterLink class="link" :to="`networks/${userInfo.PREFIX}`">
                       {{userInfo.PREFIX}}
                       </RouterLink>
                     </td>
                   </tr>
 
                   <tr>
-                    <td>COUNTRY</td>
-                    <td><RouterLink class="link" :to="`countries/${userInfo.CC}`">
+                    <td class="userInfoCard_tableText">COUNTRY</td>
+                    <td class="userInfoCard_tableText"><RouterLink class="link" :to="`countries/${userInfo.CC}`">
                       {{userInfo.COUNTRY}}
                       </RouterLink>
                     </td>
@@ -98,13 +98,13 @@ onMounted(() => {
           
             </QMarkupTable>
         
-          </div>
+          </QCard>
 
           <div v-else class="loading-spinner">
             <QSpinner color="secondary" size="1em" />
           </div>
 
-    </div>
+    </QCard>
 
 </template>
 
@@ -117,11 +117,12 @@ onMounted(() => {
   min-height 220px
   max-height 220px
   border white solid 4px
+  background: rgba(0,0,0,0) !important
 
 .userInfoCard_
   &modules
+  &secondCard
     background: rgba(0,0,0,0) !important
-    margin-left 40px
 
   &userInfo
     transition all 0.6s
@@ -133,14 +134,14 @@ onMounted(() => {
     font-weight 750
     border-bottom white solid 3px
 
+  &tableText
+    color white 
+    height 40px !important
+    font-size 14px !important
+
 .link
     color white !important
-    text-decoration none!important
     
-.q-table tbody td
-  height 40px !important
-  color white !important
-  font-size 14px !important
 
 .loading-spinner
   margin-top 30px
@@ -156,23 +157,23 @@ onMounted(() => {
       max-height 200px
 
   .userInfoCard_
-    &modules
-      margin-left 0px
-
     &title
-      font-size 19px 
+      font-size 17px 
 
-  .q-table tbody td
-    font-size 10px !important
-    height 35px !important
+    &tableText
+      font-size 12px !important
 
-@media(max-width 315px)
-  .q-table tbody td
-      font-size px !important
-      height 15px !important
-
+@media(max-width 320px)
   .userInfoCard
       min-height 170px
       max-height 170px
+
+  .userInfoCard_
+    &title
+      font-size 14px 
+
+    &tableText
+      font-size 10px !important
+      height: 30px !important
 
 </style>
