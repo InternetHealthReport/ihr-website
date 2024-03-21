@@ -78,15 +78,21 @@ const pdbid = ref(null)
 
 const fetchData = async (asn) => {
   let params = { asn: asn }
-  let res = await iyp_api.run(queries.value.map(obj => ({statement: obj.query, parameters: params})))
+  iyp_api.run([{statement: queries.value[0].query, parameters: params}]).then((res) => {
+    queries.value[0].data = res[0]
+    loading.value -= 1
+  })
 
-  queries.value[0].data = res[0]
-  loading.value -= 1
-  queries.value[1].data = res[1]
-  pdbid.value = queries.value[1].peeringdbNetId
-  loading.value -= 1
-  queries.value[2].data = res[2]
-  loading.value -= 1
+  iyp_api.run([{statement: queries.value[1].query, parameters: params}]).then((res) => {
+    queries.value[1].data = res[0]
+    pdbid.value = queries.value[1].peeringdbNetId
+    loading.value -= 1
+  })
+
+  iyp_api.run([{statement: queries.value[2].query, parameters: params}]).then((res) => {
+    queries.value[2].data = res[0]
+    loading.value -= 1
+  })
 }
 
 const formatRank = (rank, name) => {
@@ -151,9 +157,9 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
               <div>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></div>
-              <div>Member of{{ queries[0].data[0].nb_ixp }} IXPs in {{ queries[0].data[0].nb_country }} Countries</div>
-              <div>{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 Originated Prefixes</div>
-              <div v-if="queries[1].data.length > 0">{{ queries[1].data[0].peers }} Connected ASes</div>
+              <div>Member of {{ queries[0].data[0].nb_ixp }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#IXPs'})">IXPs</RouterLink> in {{ queries[0].data[0].nb_country }} Countries</div>
+              <div>{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Originated-Prefixes'})">Originated Prefixes</RouterLink></div>
+              <div v-if="queries[1].data.length > 0">{{ queries[1].data[0].peers }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Connected-ASes'})">Connected ASes</RouterLink></div>
               <div>
                 Website: <a :href="queries[0].data[0].website" target="_blank" rel="noopener noreferrer">{{ queries[0].data[0].website}}</a>
               </div>

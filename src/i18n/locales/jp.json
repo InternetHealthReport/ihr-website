@@ -18,6 +18,10 @@
       "name": "Metis",
       "summary": "Atlas probe selection and deployment"
     },
+    "observable": {
+      "name": "Observable",
+      "summary": "Community Observable notebook showcase"
+    },
     "globalReport": {
       "name": "Global",
       "summary": "Alarms reported across all networks"

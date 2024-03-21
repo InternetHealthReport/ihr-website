@@ -72,6 +72,11 @@ const  SIMPLE_MENU = [
         routeName: 'metis',
         summary: 'header.metis.summary',
       },
+      {
+        entryName: 'header.observable.name',
+        routeName: 'observable',
+        summary: 'header.observable.summary',
+      },
     ],
   },
   {
@@ -143,7 +148,7 @@ watch(simpleMenu, () => { debounceFunc() })
             </QBtn>
           </RouterLink>
         </QItem>
-        <SearchBar class="col-4" /> 
+        <SearchBar class="IHR_search-box col-4" /> 
         <div class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md">
           <QBtnGroup flat :key="item.entryName" v-for="(item,index) in simpleMenu">
             <QBtn flat v-if="item.options == null" :label="$t(item.entryName)" :to="Tr.i18nRoute({ name: item.routeName })" />
@@ -262,4 +267,9 @@ menu-delinkify(val)
 @media screen and (max-width: 1024px)
   .col-12.row.no-wrap.items-center
     justify-content space-around
+
+@media screen and (max-width: 1024px)
+  .IHR_
+    &search-box.col-4
+      flex-grow 1
 </style>

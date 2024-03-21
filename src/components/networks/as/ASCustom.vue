@@ -72,9 +72,9 @@ const pushRoute = () => {
   }))
 }
 
-const hashToDisplay = () => {
+const hashToDisplay = (hash) => {
   selects.value.forEach(obj => {
-    if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
+    if (obj.label === hash.replace('#', '').replaceAll('-', ' ')) {
       obj.value = true
     }
   })
@@ -92,7 +92,9 @@ onMounted(() => {
   if (displayWidgets.value.length === selects.value.length) {
     selectAll.value = true
   } else if (props.hash) {
-    hashToDisplay()
+    hashToDisplay(props.hash)
+  } else if (route.hash) {
+    hashToDisplay(route.hash)
   } else {
     displayWidgets.value.forEach(val => selects.value[val].value = true)
   }

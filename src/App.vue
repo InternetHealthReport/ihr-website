@@ -4,7 +4,7 @@ import { QLayout, QPageContainer, QIcon } from 'quasar'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import Header from './components/Header.vue';
 import Footer from './components/Footer.vue'
-import CookieBanner from './components/CookieBanner.vue'
+import LocalStorageBanner from './components/LocalStorageBanner.vue'
 
 let scrollPosition = ref(0)
 
@@ -37,12 +37,12 @@ onBeforeUnmount(() => {
     <Header></Header>
     <QPageContainer>
       <RouterView />
-      <div id="IHR_last-element">&nbsp;</div>
+      <!-- <div id="IHR_last-element">&nbsp;</div> -->
     </QPageContainer>
     <Footer></Footer>
     <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
   </QLayout>
-  <CookieBanner/>
+  <LocalStorageBanner :disable="true" />
 </template>
 
 <style lang="stylus">

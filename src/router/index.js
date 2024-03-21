@@ -16,6 +16,7 @@ import HostNames from '../views/HostNames.vue'
 import Countries from '../views/Countries.vue'
 import Ranks from '../views/Ranks.vue'
 import Tr from '@/i18n/translation'
+import Observable from '../views/Observable.vue'
 
 
 const router = createRouter({
@@ -118,6 +119,11 @@ const router = createRouter({
           path: 'metis/deployment',
           name: 'metis-deployment',
           component: MetisDeployment
+        },
+        {
+          path: 'observable',
+          name: 'observable',
+          component: Observable
         }
       ]
     },
