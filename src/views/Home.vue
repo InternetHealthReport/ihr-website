@@ -1,7 +1,8 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { QCard, QCardSection, QAvatar, QIcon } from 'quasar'
-import { ref } from 'vue'
+import { ref, onMounted} from 'vue'
+import UserInfo from '@/components/UserInfo.vue'
 import Tr from '@/i18n/translation'
 
 const GRAPHS_TYPES = [
@@ -92,6 +93,8 @@ const organizations = ref(ORGANIZATIONS)
         <RouterLink id="IHR_global-report-button" :to="Tr.i18nRoute({ name: 'global-report' })">
           {{ $t('homePage.globalReport.name') }}
         </RouterLink>
+        <div class="line"></div>
+        <UserInfo />
       </div>
     </div>
 
@@ -181,11 +184,10 @@ const organizations = ref(ORGANIZATIONS)
       }
 
       &-button
-        margin-top 40px
+        margin-top 20px
         border white solid 4px
         text-align center
         font-weight 500
-        transition all 0.6s
         max-width 300pt
         display block
         color white
@@ -209,12 +211,12 @@ const organizations = ref(ORGANIZATIONS)
           color white
           font-size 50px
           text-align left
-          padding-top 60pt
+          padding-top 25pt
           padding-left 60pt
           display inline-block
           text-shadow 0 0 8px #000000;
           @media screen and (max-width: 600px)
-            padding-top 100pt
+            padding-top 70pt
             padding-left 0
             text-align center
             font-size 2rem
@@ -304,6 +306,17 @@ const organizations = ref(ORGANIZATIONS)
     text-align left
     border-radius 15px !important
 
+.line
+  margin-top 15px
+  min-height 3px
+  max-width 300pt
+  background: white
+  @media screen and (max-width: 600px)
+    margin auto
+    margin-top 8px
+    max-width 200pt
+    
+
 @media(max-width 1411px)
   .analysis-modules
     margin-left 0
@@ -311,7 +324,6 @@ const organizations = ref(ORGANIZATIONS)
 @media(max-width 1450px)
   .IHR_tweets-types
         max-width 600px !important
-
 
 .IHR_tweets-types
       margin-left auto
