@@ -1,9 +1,9 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QCard, QCardSection, QAvatar, QIcon } from 'quasar'
-import { ref, onMounted} from 'vue'
-import UserInfo from '@/components/UserInfo.vue'
+import { QCard, QCardSection, QAvatar, QIcon, QBtn } from 'quasar'
+import { ref } from 'vue'
 import Tr from '@/i18n/translation'
+import UserInfo from '@/components/UserInfo.vue'
 
 const GRAPHS_TYPES = [
   {
@@ -87,14 +87,18 @@ const organizations = ref(ORGANIZATIONS)
 
 <template>
   <div id="IHR_home">
-    <div id="IHR_global-report" class="row">
+    <div id="IHR_actions" class="row">
       <div class="col">
         <div>Internet Health Report</div>
-        <RouterLink id="IHR_global-report-button" :to="Tr.i18nRoute({ name: 'global-report' })">
-          {{ $t('homePage.globalReport.name') }}
-        </RouterLink>
-        <div class="line"></div>
-        <UserInfo />
+        <div class="IHR_actions-area">
+          <QBtn outline style="width: inherit; font-size: large;" :to="Tr.i18nRoute({ name: 'global-report' })">{{ $t('homePage.globalReport.name') }}</QBtn>
+          <div style="display: flex;">
+            <div class="line"></div>
+            <div class="text-body1">&nbsp;OR&nbsp;</div>
+            <div class="line"></div>
+          </div>
+          <UserInfo />
+        </div>
       </div>
     </div>
 
@@ -167,9 +171,15 @@ const organizations = ref(ORGANIZATIONS)
 </template>
 
 <style lang="stylus">
+.line
+  width  100%
+  border-bottom 1px solid white
+  margin-top 10px
+  margin-bottom 10px
+
 #IHR_
   &home
-    ~/global-report
+    ~/actions
       margin-bottom 60pt
       max-width 100%
       height 450px
@@ -183,27 +193,6 @@ const organizations = ref(ORGANIZATIONS)
         background-size cover
       }
 
-      &-button
-        margin-top 20px
-        border white solid 4px
-        text-align center
-        font-weight 500
-        max-width 300pt
-        display block
-        color white
-        font-size 2rem
-        text-decoration none
-        @media screen and (max-width: 600px)
-          font-size 1.5rem
-          margin-left auto
-          margin-right auto
-          max-width 200pt
-
-        &:hover
-          background-color white
-          color black
-          text-shadow 0 0 3px #FFFFFF
-
       & > div
         height 100%
 
@@ -211,12 +200,12 @@ const organizations = ref(ORGANIZATIONS)
           color white
           font-size 50px
           text-align left
-          padding-top 25pt
+          padding-top 40pt
           padding-left 60pt
           display inline-block
           text-shadow 0 0 8px #000000;
           @media screen and (max-width: 600px)
-            padding-top 70pt
+            padding-top 30pt
             padding-left 0
             text-align center
             font-size 2rem
@@ -238,6 +227,9 @@ const organizations = ref(ORGANIZATIONS)
           &:first-letter
             text-transform uppercase
 
+.IHR_actions-area
+  width 100%
+  max-width 330px
 
 .IHR_
   &description_text
@@ -306,38 +298,9 @@ const organizations = ref(ORGANIZATIONS)
     text-align left
     border-radius 15px !important
 
-.line
-  margin-top 15px
-  min-height 3px
-  max-width 300pt
-  background: white
-  @media screen and (max-width: 600px)
-    margin auto
-    margin-top 8px
-    max-width 200pt
-    
-
 @media(max-width 1411px)
   .analysis-modules
     margin-left 0
 
-@media(max-width 1450px)
-  .IHR_tweets-types
-        max-width 600px !important
 
-.IHR_tweets-types
-      margin-left auto
-      margin-right auto
-      max-width 800px
-      text-align center
-      border-radius 15px
-
-      & > div
-        background-color white
-
-        > h2
-          font-weight 400
-          margin-bottom 4pt
-          &:first-letter
-            text-transform uppercase
 </style>
