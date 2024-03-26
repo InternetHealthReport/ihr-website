@@ -85,7 +85,7 @@ const fetchData = async (asn) => {
 
   iyp_api.run([{statement: queries.value[1].query, parameters: params}]).then((res) => {
     queries.value[1].data = res[0]
-    pdbid.value = queries.value[1].peeringdbNetId
+    pdbid.value = queries.value[1].data[0].peeringdbNetId
     loading.value -= 1
   })
 
