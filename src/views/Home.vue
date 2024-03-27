@@ -92,11 +92,12 @@ const organizations = ref(ORGANIZATIONS)
         <div>Internet Health Report</div>
         <div class="IHR_actions-area">
           <QBtn outline style="width: inherit; font-size: large;" :to="Tr.i18nRoute({ name: 'global-report' })">{{ $t('homePage.globalReport.name') }}</QBtn>
-          <div style="display: flex;">
+          <div class="line"></div>
+          <!-- <div style="display: flex;">
             <div class="line"></div>
             <div class="text-body1">&nbsp;OR&nbsp;</div>
             <div class="line"></div>
-          </div>
+          </div> -->
           <UserInfo />
         </div>
       </div>
