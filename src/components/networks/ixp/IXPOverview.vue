@@ -54,8 +54,8 @@ const fetchData = async () => {
 
 const handleReference = (key) => {
   let externalLink = ''
-  if (key === 'peeringDB') {
-    if(props.ixpNumber) externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
+  if (key === 'peeringDB' && props.ixpNumber) {
+  externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
   }
   return externalLink
 }

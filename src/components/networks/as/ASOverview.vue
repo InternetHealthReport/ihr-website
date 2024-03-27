@@ -112,8 +112,8 @@ const handleReference = (key) => {
     externalLink = `${references.value[key]}/AS${asn}`
   } else if (key === 'bgp.tools') {
     externalLink = `${references.value[key]}/${asn}`
-  } else if (key === 'peeringdb.com') {
-    if(pdbid.value) externalLink = `${references.value[key]}/${pdbid.value}`
+  } else if (key === 'peeringdb.com' && pdbid.value) {
+    externalLink = `${references.value[key]}/${pdbid.value}`
   } else if (key === 'radar.cloudflare.com') {
     externalLink = `${references.value[key]}/AS${asn}`
   } else if (key === 'stat.ripe.net') {
