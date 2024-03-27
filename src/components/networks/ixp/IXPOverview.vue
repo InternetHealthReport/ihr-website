@@ -55,7 +55,7 @@ const fetchData = async () => {
 const handleReference = (key) => {
   let externalLink = ''
   if (key === 'peeringDB') {
-    externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
+    if(props.ixpNumber) externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
   }
   return externalLink
 }
@@ -96,7 +96,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="overview.name">
               <div v-for="(value, key) in references" :key="key">
-                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+                <a v-if="handleReference(key)" :href="handleReference(key)" target="_blank" rel="noreferrer">
                   {{ key }}
                 </a>
               </div>
