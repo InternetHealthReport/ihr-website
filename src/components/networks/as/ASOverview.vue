@@ -113,7 +113,7 @@ const handleReference = (key) => {
   } else if (key === 'bgp.tools') {
     externalLink = `${references.value[key]}/${asn}`
   } else if (key === 'peeringdb.com') {
-    externalLink = `${references.value[key]}/${pdbid.value}`
+    if(pdbid.value) externalLink = `${references.value[key]}/${pdbid.value}`
   } else if (key === 'radar.cloudflare.com') {
     externalLink = `${references.value[key]}/AS${asn}`
   } else if (key === 'stat.ripe.net') {
@@ -180,7 +180,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
               <div v-for="(value, key) in references" :key="key">
-                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+                <a v-if="handleReference(key)" :href="handleReference(key)" target="_blank" rel="noreferrer">
                   {{ key }}
                 </a>
               </div>
