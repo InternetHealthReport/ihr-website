@@ -52,7 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <QMarkupTable class="card" dense bordered>
+  <QMarkupTable class="user-info-card" dense bordered>
     <thead>
       <th :colspan="2" align="center" style="border-bottom: 1px solid white;">
         <td style="font-size: large;">YOUR CONNECTION</td>
@@ -60,28 +60,28 @@ onMounted(() => {
     </thead>
     <tbody v-if="!as_info_query.loading">
       <tr>
-        <td align="right" class="text">IP:</td>
-        <td align="left" class="text">{{userInfo.IP}}</td>
+        <td align="right" class="user-info-text">IP:</td>
+        <td align="left" class="user-info-text">{{userInfo.IP}}</td>
       </tr>
       <tr>
-        <td align="right" class="text">AS:</td>
-        <td align="left" class="text">
-          <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${userInfo.AS}` } })" class="link">
+        <td align="right" class="user-info-text">AS:</td>
+        <td align="left" class="user-info-text">
+          <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${userInfo.AS}` } })" class="user-info-link">
           AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
           </RouterLink>
         </td>
       </tr>
       <tr>
-        <td align="right" class="text">PREFIX:</td>
-        <td align="left" class="text"><RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] } })" class="link">
+        <td align="right" class="user-info-text">PREFIX:</td>
+        <td align="left" class="user-info-text"><RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] } })" class="user-info-link">
           {{userInfo.PREFIX}}
           </RouterLink>
         </td>
       </tr>
       <tr>
-        <td align="right" class="text">COUNTRY:</td>
-        <td align="left" class="text">
-          <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: userInfo.CC } })" class="link">
+        <td align="right" class="user-info-text">COUNTRY:</td>
+        <td align="left" class="user-info-text">
+          <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: userInfo.CC } })" class="user-info-link">
             {{userInfo.COUNTRY}}
           </RouterLink>
         </td>
@@ -94,17 +94,17 @@ onMounted(() => {
 </template>
 
 <style lang="stylus">
-.card
+.user-info-card
   width inherit
   background-color rgba(0,0,0,0) !important
   border-color white !important
   color white !important
 
-.text
+.user-info-text
   font-size 14px !important
   font-weight 500 !important
 
-.link
+.user-info-link
   color white !important
 
 .loading-spinner
