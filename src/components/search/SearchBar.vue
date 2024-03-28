@@ -1,5 +1,5 @@
 <script setup>
-import { QSelect, QIcon, QSpinner, QItem, QItemSection, QDialog } from 'quasar'
+import { QSelect, QBtn, QSpinner, QItem, QItemSection, QDialog } from 'quasar'
 import { ref, inject, computed, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -380,14 +380,14 @@ const placeholder = computed(() => {
   >
     <template v-slot:append>
       <div v-if="!props.noCountry" @click="showMap">
-        <QIcon :color="label" type="button" name="fas fa-map q-pa-sm" width="0.82em" />
+        <QBtn :color="label" icon="fas fa-map" flat dense />
         <QDialog v-model="showMapDialog">
-      <WorldMap @country-selected="handleCountryClicked" />
-    </QDialog>
+          <WorldMap @country-selected="handleCountryClicked" />
+        </QDialog>
       </div>
       <div>
         <div v-if="!loading">
-          <QIcon :color="label" name="fas fa-search q-mb-xs" width="0.82em" />
+          <QBtn :color="label" icon="fas fa-search" flat dense />
         </div>
         <div v-else>
           <QSpinner :color="label" size="0.82em" />

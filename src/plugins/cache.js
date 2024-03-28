@@ -8,13 +8,17 @@ const cache = async (key, fetcher, options) => {
 	if (item) {
 		item = JSON.parse(item).data
 	} else {
-		item =  await fetcher()
-		const sessionObj = {
-			...options,
-			data: item
-		}
-		if (options.storageAllowed){
-			localStorage.setItem(key, JSON.stringify(sessionObj))
+		try {
+			item =  await fetcher()
+			const sessionObj = {
+				...options,
+				data: item
+			}
+			if (options.storageAllowed){
+				localStorage.setItem(key, JSON.stringify(sessionObj))
+			}
+		} catch (e) {
+
 		}
 	}
 	return item
