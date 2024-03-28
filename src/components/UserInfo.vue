@@ -52,7 +52,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <QMarkupTable class="card" dense bordered>
+  <QMarkupTable class="user-card" dense bordered>
     <thead>
       <th :colspan="2" align="center" style="border-bottom: 1px solid white;">
         <td style="font-size: large;">YOUR CONNECTION</td>
@@ -94,7 +94,7 @@ onMounted(() => {
 </template>
 
 <style lang="stylus">
-.card
+.user-card
   width inherit
   background-color rgba(0,0,0,0) !important
   border-color white !important
