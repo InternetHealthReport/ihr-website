@@ -28,7 +28,7 @@ const ases = ref({
     { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.cc, format: val => `${String(val).toUpperCase()}`, sortable: true },
     { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
     { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-    { name: 'tag', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
+    { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })
 const asesViz = ref([])

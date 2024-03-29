@@ -129,6 +129,24 @@ const router = createRouter({
           path: 'observable',
           name: 'observable',
           component: Observable
+        },
+        {
+          path: 'networks/:id?',
+          redirect: {
+            name: 'network',
+            query: {
+              active: 'monitoring'
+            }
+          }
+        },
+        {
+          path: 'countries/:cc?',
+          redirect: {
+            name: 'country',
+            query: {
+              active: 'monitoring'
+            }
+          }
         }
       ]
     },
