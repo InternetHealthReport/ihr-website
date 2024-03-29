@@ -89,24 +89,24 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'IXP1997' } })" class="IHR_delikify">Equinix London (IXP1997)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP1997' } })" class="IHR_delikify">Equinix London (IXP1997)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'IXP26' } })" class="IHR_delikify">AMS-IX (IXP26)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP26' } })" class="IHR_delikify">AMS-IX (IXP26)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'IXP2588' } })" class="IHR_delikify">DE-CIX Chennai (IXP2588)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP2588' } })" class="IHR_delikify">DE-CIX Chennai (IXP2588)</RouterLink>
               </li>
             </ul>
           </div>

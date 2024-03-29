@@ -50,19 +50,19 @@ import { version } from '../../package.json'
               <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">{{ $t('footer.reportPages.global') }}</RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: null } })">{{ $t('footer.reportPages.country') }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: null } })">{{ $t('footer.reportPages.country') }}</RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: null } })">{{ $t('footer.reportPages.network') }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: null } })">{{ $t('footer.reportPages.network') }}</RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { id: null } })">{{ $t('footer.reportPages.hostName') }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { id: null } })">{{ $t('footer.reportPages.hostName') }}</RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'tags', params: { id: null } })">{{ $t('footer.reportPages.tag') }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { id: null } })">{{ $t('footer.reportPages.tag') }}</RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'ranks', params: { rank: null } })">{{ $t('footer.reportPages.rank') }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: null } })">{{ $t('footer.reportPages.rank') }}</RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'rov' })">{{ $t('footer.reportPages.rov') }}</RouterLink>

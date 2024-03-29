@@ -156,7 +156,7 @@ onMounted(() => {
         <tr>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></div>
+              <div>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'country', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></div>
               <div>Member of {{ queries[0].data[0].nb_ixp }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#IXPs'})">IXPs</RouterLink> in {{ queries[0].data[0].nb_country }} Countries</div>
               <div>{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Originated-Prefixes'})">Originated Prefixes</RouterLink></div>
               <div v-if="queries[1].data.length > 0">{{ queries[1].data[0].peers }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Connected-ASes'})">Connected ASes</RouterLink></div>
@@ -171,7 +171,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
               <div v-for="item in queries[2].data" :key="item.hostname">
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.hostname}})">
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: {hostName:item.hostname}})">
                   {{ item.hostname }}
                 </RouterLink>
               </div>
@@ -200,7 +200,7 @@ onMounted(() => {
         <tr>
           <td :colspan="5">
             <div  v-if="queries[0].data.length > 0" class="row">
-              <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}, hash: '#Autonomous-Systems'})">
+              <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tag', params: {tag: tag}, hash: '#Autonomous-Systems'})">
                 <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
               </RouterLink>
             </div>

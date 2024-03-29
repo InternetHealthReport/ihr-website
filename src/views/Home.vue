@@ -103,7 +103,7 @@ const organizations = ref(ORGANIZATIONS)
       See latest alarms in the
       <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">global report</RouterLink>
       and network metrics in
-      <RouterLink :to="Tr.i18nRoute({ name: 'networks' })">network reports</RouterLink>.
+      <RouterLink :to="Tr.i18nRoute({ name: 'network' })">network reports</RouterLink>.
     </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_description-main">

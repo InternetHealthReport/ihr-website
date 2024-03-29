@@ -124,7 +124,7 @@ onMounted(() => {
             <div v-if="queries[0].data.length > 0">
               <div v-if="queries[0].data[0].country">
                 Registered in
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc:queries[0].data[0].cc } })">{{ queries[0].data[0].country }}</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: {cc:queries[0].data[0].cc } })">{{ queries[0].data[0].country }}</RouterLink>
                 ({{ queries[0].data[0].rir.toUpperCase() }})
               </div>
             </div>
@@ -133,7 +133,7 @@ onMounted(() => {
             <div v-if="queries[0].data.length > 0">
               <div v-if="queries[0].data[0].asn[0][0]">
                 <div v-for="item in queries[0].data[0].asn" :key='item[0]'>
-                  <RouterLink :to="Tr.i18nRoute({ name:'networks', params:{ id:`AS${item[0]}` } })">
+                  <RouterLink :to="Tr.i18nRoute({ name:'network', params:{ id:`AS${item[0]}` } })">
                     AS{{ item[0] }} {{ item[1] }}
                   </RouterLink>
                 </div>
@@ -146,7 +146,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[1].data.length > 0">
               <div v-for="item in queries[1].data" :key="item.hostname">
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.hostname}})">
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: {hostName:item.hostname}})">
                     {{ item.hostname }}
                   </RouterLink>
               </div>
@@ -175,7 +175,7 @@ onMounted(() => {
         <tr>
           <td :colspan="5">
             <div  v-if="queries[0].data.length > 0" class="row">
-              <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}, hash: '#Prefixes'})">
+              <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tag', params: {tag: tag}, hash: '#Prefixes'})">
                 <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
               </RouterLink>
             </div>

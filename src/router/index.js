@@ -56,28 +56,28 @@ const router = createRouter({
           component: GlobalReport
         },
         {
-          path: 'networks/:id?',
-          name: 'networks',
+          path: 'network/:id?',
+          name: 'network',
           component: Networks
         },
         {
-          path: 'prefixes/:ip?/:length?',
-          name: 'prefixes',
+          path: 'prefix/:ip?/:length?',
+          name: 'prefix',
           component: Networks
         },
         {
-          path: 'tags/:tag?',
-          name: 'tags',
+          path: 'tag/:tag?',
+          name: 'tag',
           component: Tags
         },
         {
-          path: 'hostnames/:hostName?',
-          name: 'hostnames',
+          path: '/:hostName?',
+          name: 'hostname',
           component: HostNames
         },
         {
-          path: 'ranks/:rank?',
-          name: 'ranks',
+          path: 'rank/:rank?',
+          name: 'rank',
           component: Ranks
         },
         {
@@ -91,8 +91,8 @@ const router = createRouter({
           component: Contact
         },
         {
-          path: 'countries/:cc?',
-          name: 'countries',
+          path: 'country/:cc?',
+          name: 'country',
           component: Countries
         },
         {

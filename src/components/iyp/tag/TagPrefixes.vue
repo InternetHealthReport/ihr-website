@@ -29,7 +29,7 @@ const prefixes = ref({
     { name: 'Reg. Country', label: 'AS Reg. Country ', align: 'left', field: row => row.as_cc, format: val => `${String(val).toUpperCase()}`, sortable: true },
     { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
     { name: 'Geoloc. Country', label: 'Geoloc', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-    { name: 'Tags', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
+    { name: 'tag', label: 'Other Tags', align: 'left', field: row => row.other_tags, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })
 const prefixesViz = ref([])

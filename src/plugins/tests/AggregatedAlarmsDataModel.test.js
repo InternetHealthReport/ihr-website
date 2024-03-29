@@ -62,7 +62,7 @@ const GRIP_ALARMS_MOCKED = [
       'newcomers': [
         '272907'
       ],
-      'prefixes': [
+      'prefix': [
         '38.255.24.0/22',
         '38.0.0.0/8'
       ],
@@ -202,7 +202,7 @@ const GRIP_ALARMS_MOCKED = [
       'newcomers': [
         '2386'
       ],
-      'prefixes': [
+      'prefix': [
         '170.190.40.0/24',
         '170.190.41.0/24',
         '170.190.40.0/22',

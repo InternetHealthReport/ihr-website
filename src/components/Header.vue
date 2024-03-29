@@ -25,27 +25,27 @@ const  SIMPLE_MENU = [
       },
       {
         entryName: 'header.countryReport.name',
-        routeName: 'countries',
+        routeName: 'country',
         summary: 'header.countryReport.summary',
       },
       {
         entryName: 'header.networkReport.name',
-        routeName: 'networks',
+        routeName: 'network',
         summary: 'header.networkReport.summary',
       },
       {
         entryName: 'header.hostNameReport.name',
-        routeName: 'hostnames',
+        routeName: 'hostname',
         summary: 'header.hostNameReport.summary',
       },
       {
         entryName: 'header.tagReport.name',
-        routeName: 'tags',
+        routeName: 'tag',
         summary: 'header.tagReport.summary',
       },
       {
         entryName: 'header.rankReport.name',
-        routeName: 'ranks',
+        routeName: 'rank',
         summary: 'header.rankReport.summary',
       },
       {

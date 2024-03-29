@@ -34,7 +34,7 @@ const prefixes = ref({
     { name: 'ASN', label: 'Origin AS', align: 'left', field: row => row.asn, format: val => `${val.join(', ')}`, sortable: true },
     { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad', description: 'Autonomous System originating the prefix in BGP. (RIPE RIS, Routeviews)' },
     { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true, description: 'Description of the prefix given in IRR. (IRR)' },
-    { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true, description: 'Tags assigned by various projects. See the corresponding tag page for more details.' },
+    { name: 'tag', label: 'tag', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true, description: 'Tags assigned by various projects. See the corresponding tag page for more details.' },
     { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true, description: 'Percentage of RIPE RIS and Routeviews peers seeing this prefix/AS pair. (IHR)' },
   ]
 })
@@ -95,8 +95,8 @@ onMounted(() => {
         <IypGenericBarChart
           v-if="prefixes.data.length > 0"
           :chart-data="prefixes.data"
-          :config="{key:'tags'}"
-          :chart-layout="{ title: 'Tags' }"
+          :config="{key:'tag'}"
+          :chart-layout="{ title: 'tag' }"
         />
       </div>
       <div class="col-8">

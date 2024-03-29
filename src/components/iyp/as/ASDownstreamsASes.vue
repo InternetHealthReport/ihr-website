@@ -30,7 +30,7 @@ const downstreams = ref({
     { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
     { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
     { name: 'Hegemony Score', label: 'Hegemony Score', align: 'left', field: row => row.hegemony_score, format: val => `${Number(val).toFixed(2)}%`, sortable: true, },
-    { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
+    { name: 'tag', label: 'tag', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
   ]
 })
 

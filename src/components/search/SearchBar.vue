@@ -318,7 +318,7 @@ const routeToAS = (asn) => {
     }
   }
   router.push(Tr.i18nRoute({
-    name: 'networks',
+    name: 'network',
     params: { id: `AS${asn}` },
   }))
 }
@@ -332,7 +332,7 @@ const routeToIXP = (ixp) => {
     }
   }
   router.push(Tr.i18nRoute({
-    name: 'networks',
+    name: 'network',
     params: { id: `IXP${ixp}` },
   }))
 }
@@ -347,7 +347,7 @@ const routeToPrefix = (name) => {
   }
   const [host, prefixLength] = name.split('/')
   router.push(Tr.i18nRoute({
-    name: 'prefixes',
+    name: 'prefix',
     params: { ip: host, length: prefixLength },
   }))
 }
@@ -360,7 +360,7 @@ const routeToCountry = (cc) => {
     }
   }
   router.push(Tr.i18nRoute({
-    name: 'countries',
+    name: 'country',
     params: { cc: cc },
   }))
 }
@@ -377,7 +377,7 @@ const routeToHostName = (hostName) => {
     }
   }
   router.push(Tr.i18nRoute({
-    name: 'hostnames',
+    name: 'hostname',
     params: { hostName: hostName },
   }))
 }
@@ -390,7 +390,7 @@ const routeToTag = (tag) => {
     }
   }
   router.push(Tr.i18nRoute({
-    name: 'tags',
+    name: 'tag',
     params: { tag: tag },
   }))
 }
@@ -403,7 +403,7 @@ const routeToRank = (rank) => {
     }
   }
   router.push(Tr.i18nRoute({
-    name: 'ranks',
+    name: 'rank',
     params: { rank: rank },
   }))
 }

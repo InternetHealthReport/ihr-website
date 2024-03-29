@@ -59,24 +59,24 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'ranks', params: { rank: 'APNIC eyeball estimates (JP)' } })" class="IHR_delikify">APNIC eyeball estimates (JP)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'APNIC eyeball estimates (JP)' } })" class="IHR_delikify">APNIC eyeball estimates (JP)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'ranks', params: { rank: 'IHR country ranking: Total AS (JP)' } })" class="IHR_delikify">IHR country ranking: Total AS (JP)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'IHR country ranking: Total AS (JP)' } })" class="IHR_delikify">IHR country ranking: Total AS (JP)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'ranks', params: { rank: 'IHR country ranking: Total eyeball (JP)' } })" class="IHR_delikify">IHR country ranking: Total eyeball (JP)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'IHR country ranking: Total eyeball (JP)' } })" class="IHR_delikify">IHR country ranking: Total eyeball (JP)</RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'ranks', params: { rank: 'CAIDA ASRank' } })" class="IHR_delikify">CAIDA ASRank</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'CAIDA ASRank' } })" class="IHR_delikify">CAIDA ASRank</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'ranks', params: { rank: 'Tranco top 1M' } })" class="IHR_delikify">Tranco top 1M</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'Tranco top 1M' } })" class="IHR_delikify">Tranco top 1M</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'ranks', params: { rank: 'Cisco Umbrella Top 1 million' } })" class="IHR_delikify">Cisco Umbrella Top 1 million</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'Cisco Umbrella Top 1 million' } })" class="IHR_delikify">Cisco Umbrella Top 1 million</RouterLink>
               </li>
             </ul>
           </div>

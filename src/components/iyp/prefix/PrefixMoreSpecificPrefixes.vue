@@ -30,7 +30,7 @@ const moreSpecifics = ref({
     { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
     { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
     { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
-    { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
+    { name: 'tag', label: 'tag', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
     { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
   ]
 })

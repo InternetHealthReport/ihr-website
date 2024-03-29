@@ -66,14 +66,14 @@ onMounted(() => {
       <tr>
         <td align="right" class="user-info-text">AS:</td>
         <td align="left" class="user-info-text">
-          <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${userInfo.AS}` } })" class="user-info-link">
+          <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${userInfo.AS}` } })" class="user-info-link">
           AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
           </RouterLink>
         </td>
       </tr>
       <tr>
         <td align="right" class="user-info-text">PREFIX:</td>
-        <td align="left" class="user-info-text"><RouterLink :to="Tr.i18nRoute({ name: 'prefixes', params: { ip: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] } })" class="user-info-link">
+        <td align="left" class="user-info-text"><RouterLink :to="Tr.i18nRoute({ name: 'prefix', params: { ip: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] } })" class="user-info-link">
           {{userInfo.PREFIX}}
           </RouterLink>
         </td>
@@ -81,7 +81,7 @@ onMounted(() => {
       <tr>
         <td align="right" class="user-info-text">COUNTRY:</td>
         <td align="left" class="user-info-text">
-          <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: userInfo.CC } })" class="user-info-link">
+          <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: userInfo.CC } })" class="user-info-link">
             {{userInfo.COUNTRY}}
           </RouterLink>
         </td>

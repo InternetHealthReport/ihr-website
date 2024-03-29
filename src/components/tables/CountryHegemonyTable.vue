@@ -104,7 +104,7 @@ const columns = ref([
 const routeToAsn = (asn, row) => {
   asn = asn.field(row)
   router.push(Tr.i18nRoute({
-    name: 'networks',
+    name: 'network',
     params: { id: iht_api.ihr_NumberToAsOrIxp(asn) },
   }))
 }
