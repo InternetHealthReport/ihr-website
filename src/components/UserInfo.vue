@@ -73,7 +73,7 @@ onMounted(() => {
       </tr>
       <tr>
         <td align="right" class="user-info-text">PREFIX:</td>
-        <td align="left" class="user-info-text"><RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] } })" class="user-info-link">
+        <td align="left" class="user-info-text"><RouterLink :to="Tr.i18nRoute({ name: 'prefixes', params: { ip: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] } })" class="user-info-link">
           {{userInfo.PREFIX}}
           </RouterLink>
         </td>

@@ -22,27 +22,30 @@ const init = () => {
   if (route.params.id) {
     asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
     ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
+  } else if (route.params.ip && route.params.length) {
     let prefixMatch
     try {
-      prefixMatch = (new Address4(route.params.id)).isCorrect()
+      prefixMatch = (new Address4(route.params.ip)).isCorrect()
     } catch (e) {
       prefixMatch = null
     }
     if (!prefixMatch) {
       try {
-        prefixMatch = (new Address6(route.params.id)).isCorrect()
+        prefixMatch = (new Address6(route.params.ip)).isCorrect()
       } catch (e) {
         prefixMatch = null
       }
     }
-    prefixHostString.value = prefixMatch ? route.params.id : null
-  }
-  if (route.params.length) {
+    prefixHostString.value = prefixMatch ? route.params.ip : null
     prefixLengthNumber.value = !isNaN(route.params.length) ? Number(route.params.length) : null
   }
 }
 
 watch(() => route.params.id, () => {
+  init()
+})
+
+watch(() => route.params.ip, () => {
   init()
 })
 
@@ -53,7 +56,7 @@ onMounted(() => {
 
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <div v-if="route.params.id">
+    <div v-if="route.params.id || route.params.ip">
       <AS v-if="asNumber" />
       <IXP v-if="ixpNumber" />
       <Prefix v-if="prefixHostString && prefixLengthNumber" />

@@ -347,8 +347,8 @@ const routeToPrefix = (name) => {
   }
   const [host, prefixLength] = name.split('/')
   router.push(Tr.i18nRoute({
-    name: 'networks',
-    params: { id: host, length: prefixLength },
+    name: 'prefixes',
+    params: { ip: host, length: prefixLength },
   }))
 }
 

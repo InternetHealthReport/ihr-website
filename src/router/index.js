@@ -56,8 +56,13 @@ const router = createRouter({
           component: GlobalReport
         },
         {
-          path: 'networks/:id?/:length?',
+          path: 'networks/:id?',
           name: 'networks',
+          component: Networks
+        },
+        {
+          path: 'prefixes/:ip?/:length?',
+          name: 'prefixes',
           component: Networks
         },
         {

@@ -21,7 +21,7 @@ const activeMenu = route.query.active ? route.query.active : 'overview'
 
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const host = ref(route.params.id)
+const host = ref(route.params.ip)
 const prefixLength = ref(Number(route.params.length))
 const hostName = ref(null)
 const menu = ref(activeMenu)
@@ -57,8 +57,8 @@ const getPrefix = () => {
 }
 
 watch(() => route.params, () => {
-  if (route.params.id != host.value || Number(route.params.length) != prefixLength.value) {
-    host.value = route.params.id
+  if (route.params.ip != host.value || Number(route.params.length) != prefixLength.value) {
+    host.value = route.params.ip
     prefixLength.value = Number(route.params.length)
   }
 }, {deep: true})
@@ -78,7 +78,7 @@ onMounted(() => {
     fetchData()
   } else {
     router.push(Tr.i18nRoute({
-      name: 'networks',
+      name: 'prefixes',
     }))
   }
 })

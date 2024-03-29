@@ -199,8 +199,8 @@ const routeToASN = (asn) => {
 
 const routeToPrefix = (host, prefixLength) => {
   router.push(Tr.i18nRoute({
-    name: 'networks',
-    params: { id: host, length: prefixLength },
+    name: 'prefixes',
+    params: { ip: host, length: prefixLength },
   }))
 }
 

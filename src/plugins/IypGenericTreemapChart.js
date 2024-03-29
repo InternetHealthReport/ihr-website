@@ -29,8 +29,8 @@ export default function treemapClicked(event) {
         const [host, prefixLength] = network.split('/')
         if (prefixLength) {
           event.router.push(Tr.i18nRoute({
-            name: 'networks',
-            params: { id: host, length: prefixLength },
+            name: 'prefixes',
+            params: { ip: host, length: prefixLength },
           }))
         }
       } else if (network.split(' ')[0] in isoCountries) {
