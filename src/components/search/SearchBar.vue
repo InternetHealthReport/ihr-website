@@ -1,11 +1,9 @@
 <script setup>
 import { QSelect, QBtn, QSpinner, QItem, QItemSection, QDialog } from 'quasar'
-import { ref, inject, computed, watch, nextTick } from 'vue'
+import { ref, inject, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Tr from '@/i18n/translation'
-import { NetworkQuery, CountryQuery } from '@/plugins/IhrApi'
-import getCountryName from '@/plugins/countryName'
 import * as ipAddress from 'ip-address'
 import WorldMap from '../maps/WorldMap.vue'
 
@@ -68,6 +66,7 @@ const router = useRouter()
 const options = ref([{ name: 'Suggestions' }, { label: 2497, value: 2497, name: 'IIJ' }])
 const model = ref([])
 const loading = ref(false)
+const activateSearch = ref(true)
 
 const Address4 = ipAddress.Address4
 const Address6 = ipAddress.Address6
@@ -120,12 +119,15 @@ const search = async (value, update) => {
 
 const noResults = (res, update) => {
   if (!res.length && !loadingQueryAS && !loadingQueryPrefixes && !loadingQueryIXPs && !loadingQueryCountries && !loadingQueryASNames && !loadingQueryHostNames && !loadingQueryTags && !loadingQueryRanks) {
-    options.value.push({
+    const optRes = optimizeSearchResults([{
       value: 'No results found',
       name: 'No results found',
       type: 'Fail',
-    })
-    update()
+    }])
+    if (optRes) {
+      options.value.push(optRes[0])
+      update()
+    }
     loading.value = false
   }
 }
@@ -242,7 +244,7 @@ const mixedEntitySearch = async (value, update) => {
 }
 
 const queryASNames = async (value) => {
-  const query = 'MATCH (n:Name)-[:NAME]-(a:AS) WHERE toLower(n.name) STARTS WITH $value MATCH (n)-[:NAME]-(a:AS) RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 10'
+  const query = 'MATCH (n:Name)-[:NAME]-(a:AS) WHERE toLower(n.name) CONTAINS $value MATCH (n)-[:NAME]-(a:AS) RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
@@ -278,6 +280,11 @@ const queryRanks = async (value) => {
 }
 
 const optimizeSearchResults = (res) => {
+  if (!res || !res.length) {
+    return []
+  } else if (res[0].type === 'Fail' && options.value.length > 1) {
+    return null
+  }
   return res.flat().sort((a, b) => {
     if (a.as && b.as) {
       return a.as.length - b.as.length
@@ -286,6 +293,7 @@ const optimizeSearchResults = (res) => {
 }
 
 const filter = (value, update, abort) => {
+  activateSearch.value = true
   if (value.length < MIN_CHARACTERS) {
     abort()
   } else {
@@ -412,6 +420,10 @@ const placeholder = computed(() => {
   }
   return props.labelTxt
 })
+
+watch(() => route.path, () => {
+  activateSearch.value = false
+})
 </script>
 
 <template>
@@ -438,7 +450,7 @@ const placeholder = computed(() => {
         </QDialog>
       </div>
       <div>
-        <div v-if="!loading">
+        <div v-if="!loadingQueryAS && !loadingQueryPrefixes && !loadingQueryIXPs && !loadingQueryCountries && !loadingQueryASNames && !loadingQueryHostNames && !loadingQueryTags && !loadingQueryRanks">
           <QBtn :color="label" icon="fas fa-search" flat dense />
         </div>
         <div v-else>
@@ -448,35 +460,35 @@ const placeholder = computed(() => {
     </template>
     <template v-slot:loading> </template>
     <template v-slot:option="scope">
-      <QItem v-if="scope.opt.type == 'AS'" v-bind="scope.itemProps" @click="routeToAS(scope.opt.value)">
+      <QItem v-if="scope.opt.type == 'AS' && activateSearch" v-bind="scope.itemProps" @click="routeToAS(scope.opt.value)">
         <QItemSection side color="accent">AS{{ scope.opt.value }}</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Prefix'" v-bind="scope.itemProps" @click="routeToPrefix(scope.opt.value)">
+      <QItem v-if="scope.opt.type == 'Prefix' && activateSearch" v-bind="scope.itemProps" @click="routeToPrefix(scope.opt.value)">
         <QItemSection side color="accent">Prefix</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'IXP'" v-bind="scope.itemProps" @click="routeToIXP(scope.opt.value)">
+      <QItem v-if="scope.opt.type == 'IXP' && activateSearch" v-bind="scope.itemProps" @click="routeToIXP(scope.opt.value)">
         <QItemSection side color="accent">IXP{{ scope.opt.value }}</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Country'" v-bind="scope.itemProps" @click="routeToCountry(scope.opt.value)">
+      <QItem v-if="scope.opt.type == 'Country' && activateSearch" v-bind="scope.itemProps" @click="routeToCountry(scope.opt.value)">
         <QItemSection side color="accent">Country</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'HostName'" v-bind="scope.itemProps" @click="routeToHostName(scope.opt.value)">
+      <QItem v-if="scope.opt.type == 'HostName' && activateSearch" v-bind="scope.itemProps" @click="routeToHostName(scope.opt.value)">
         <QItemSection side color="accent">Hostname</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Tag'" v-bind="scope.itemProps" @click="routeToTag(scope.opt.value)">
-        <QItemSection side color="accent">Tag</QItemSection>
+      <QItem v-if="scope.opt.type == 'Tag' && activateSearch" v-bind="scope.itemProps" @click="routeToTag(scope.opt.value)">
+        <QItemSection side color="accent" && activateSearch>Tag</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Ranking'" v-bind="scope.itemProps" @click="routeToRank(scope.opt.value)">
+      <QItem v-if="scope.opt.type == 'Ranking' && activateSearch" v-bind="scope.itemProps" @click="routeToRank(scope.opt.value)">
         <QItemSection side color="accent">Rank</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Fail'" v-bind="scope.itemProps">
+      <QItem v-if="scope.opt.type == 'Fail' && activateSearch" v-bind="scope.itemProps">
         <!-- <QItemSection side color="accent">Country</QItemSection> -->
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
