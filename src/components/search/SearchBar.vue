@@ -72,6 +72,15 @@ const loading = ref(false)
 const Address4 = ipAddress.Address4
 const Address6 = ipAddress.Address6
 
+let loadingQueryAS = false
+let loadingQueryPrefixes = false
+let loadingQueryIXPs =false
+let loadingQueryCountries = false
+let loadingQueryASNames = false
+let loadingQueryHostNames = false
+let loadingQueryTags = false
+let loadingQueryRanks = false
+
 const search = async (value, update) => {
   loading.value = true
   options.value = []
@@ -90,63 +99,76 @@ const search = async (value, update) => {
       prefixMatch = null
     }
   }
-  let res
   if (asnMatch) {
-    res = await queryAS(asnMatch.input)
+    loadingQueryAS = true
+    queryAS(asnMatch.input).then(res => {
+      searchResponse(res, update)
+      loadingQueryAS = false
+      noResults(res, update)
+    })
   } else if (prefixMatch) {
-    res = await queryPrefixes(value)
+    loadingQueryPrefixes = true
+    queryPrefixes(value).then(res => {
+      searchResponse(res, update)
+      loadingQueryPrefixes = false
+      noResults(res, update)
+    })
   } else {
-    res = await mixedEntitySearch(value)
-    res = optimizeSearchResults(res)
+    mixedEntitySearch(value, update)
   }
-  if (!res.length) {
+}
+
+const noResults = (res, update) => {
+  if (!res.length && !loadingQueryAS && !loadingQueryPrefixes && !loadingQueryIXPs && !loadingQueryCountries && !loadingQueryASNames && !loadingQueryHostNames && !loadingQueryTags && !loadingQueryRanks) {
     options.value.push({
       value: 'No results found',
       name: 'No results found',
       type: 'Fail',
     })
     update()
-  } else {
-    res.forEach(element => {
-      // console.log(element)
-      let value
-      let name
-      if (element.node === 'AS') {
-        if (element.asn) {
-          value = element.asn
-          name = element.name
-        } else {
-          value = element.id
-          name = element.as
-        }
-      } else if (element.node === 'Prefix') {
-        value = element.prefix
-        name = element.prefix
-      } else if (element.node === 'IXP') {
-        value = element.id
-        name = element.ixp
-      } else if (element.node === 'Country') {
-        value = element.cc
-        name = element.name
-      } else if (element.node === 'Tag') {
-        value = element.label
-        name = element.label
-      } else if (element.node === 'HostName') {
-        value = element.hostName
-        name = element.hostName
-      } else if (element.node === 'Ranking') {
-        value = element.name
-        name = element.name
-      }
-      options.value.push({
-        value: value,
-        name: name,
-        type: element.node,
-      })
-      update()
-    })
+    loading.value = false
   }
-  loading.value = false
+}
+
+const searchResponse = (res, update) => {
+  res.forEach(element => {
+    let value
+    let name
+    if (element.node === 'AS') {
+      if (element.asn) {
+        value = element.asn
+        name = element.name
+      } else {
+        value = element.id
+        name = element.as
+      }
+    } else if (element.node === 'Prefix') {
+      value = element.prefix
+      name = element.prefix
+    } else if (element.node === 'IXP') {
+      value = element.id
+      name = element.ixp
+    } else if (element.node === 'Country') {
+      value = element.cc
+      name = element.name
+    } else if (element.node === 'Tag') {
+      value = element.label
+      name = element.label
+    } else if (element.node === 'HostName') {
+      value = element.hostName
+      name = element.hostName
+    } else if (element.node === 'Ranking') {
+      value = element.name
+      name = element.name
+    }
+    options.value.push({
+      value: value,
+      name: name,
+      type: element.node,
+    })
+    update()
+    loading.value = false
+  })
 }
 
 const queryAS = async (asn) => {
@@ -167,62 +189,92 @@ const queryPrefixes = async (value) => {
   return res[0]
 }
 
-const mixedEntitySearch = async (value) => {
-  const funcs = []
+const mixedEntitySearch = async (value, update) => {
+  const searchTerm = value.toLowerCase()
   if (!props.noIXP) {
-    funcs.push(queryIXPs)
+    loadingQueryIXPs = true
+    queryIXPs(searchTerm).then(res => {
+      searchResponse(optimizeSearchResults(res), update)
+      loadingQueryIXPs = false
+      noResults(res, update)
+    })
   }
   if (!props.noCountry) {
-    funcs.push(queryCountries)
+    loadingQueryCountries = true
+    queryCountries(searchTerm).then(res => {
+      searchResponse(optimizeSearchResults(res), update)
+      loadingQueryCountries = false
+      noResults(res, update)
+    })
   }
   if (!props.noAS) {
-    funcs.push(queryASNames)
+    loadingQueryASNames = true
+    queryASNames(searchTerm).then(res => {
+      searchResponse(optimizeSearchResults(res), update)
+      loadingQueryASNames = false
+      noResults(res, update)
+    })
   }
   if (!props.noHostName) {
-    funcs.push(queryHostNames)
+    loadingQueryHostNames = true
+    queryHostNames(searchTerm).then(res => {
+      searchResponse(optimizeSearchResults(res), update)
+      loadingQueryHostNames = false
+      noResults(res, update)
+    })
   }
   if (!props.noTag) {
-    funcs.push(queryTags)
+    loadingQueryTags = true
+    queryTags(searchTerm).then(res => {
+      searchResponse(optimizeSearchResults(res), update)
+      loadingQueryTags = false
+      noResults(res, update)
+    })
   }
   if (!props.noRank) {
-    funcs.push(queryRanks)
+    loadingQueryRanks = true
+    queryRanks(searchTerm).then(res => {
+      searchResponse(optimizeSearchResults(res), update)
+      loadingQueryRanks = false
+      noResults(res, update)
+    })
   }
-  if (!funcs.length) {
-    return []
-  }
-  const searchTerm = value.toLowerCase()
-  const queries = funcs.map(func => func(searchTerm))
-  return await iyp_api.run(queries)
 }
 
-const queryASNames = (value) => {
+const queryASNames = async (value) => {
   const query = 'MATCH (n:Name)-[:NAME]-(a:AS) WHERE toLower(n.name) STARTS WITH $value MATCH (n)-[:NAME]-(a:AS) RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 10'
-  return { statement: query, parameters: { value: value } }
+  const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
+  return res[0]
 }
 
-const queryCountries = (value) => {
+const queryCountries = async (value) => {
   const query = 'MATCH (c:Country) WHERE toLower(c.name) STARTS WITH $value RETURN c.country_code AS cc, c.name AS name, head(labels(c)) as node LIMIT 10'
-  return { statement: query, parameters: { value: value } }
+  const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
+  return res[0]
 }
 
-const queryIXPs = (value) => {
+const queryIXPs = async (value) => {
   const query = 'MATCH (i:IXP)-[:EXTERNAL_ID]-(p:PeeringdbIXID) WHERE toLower(i.name) STARTS WITH $value RETURN i.name as ixp, p.id as id, head(labels(i)) AS node LIMIT 10'
-  return { statement: query, parameters: { value: value } }
+  const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
+  return res[0]
 }
 
-const queryHostNames = (value) => {
+const queryHostNames = async (value) => {
   const query = 'MATCH (h:HostName) WHERE toLower(h.name) STARTS WITH $value RETURN h.name as hostName, head(labels(h)) as node LIMIT 10'
-  return { statement: query, parameters: { value: value } }
+  const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
+  return res[0]
 }
 
-const queryTags = (value) => {
+const queryTags = async (value) => {
   const query = 'MATCH (t:Tag) WHERE toLower(t.label) STARTS WITH $value RETURN t.label as label, head(labels(t)) as node LIMIT 10'
-  return { statement: query, parameters: { value: value } }
+  const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
+  return res[0]
 }
 
-const queryRanks = (value) => {
+const queryRanks = async (value) => {
   const query = 'MATCH (r:Ranking) WHERE toLower(r.name) STARTS WITH $value RETURN r.name as name, head(labels(r)) as node LIMIT 10'
-  return { statement: query, parameters: { value: value } }
+  const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
+  return res[0]
 }
 
 const optimizeSearchResults = (res) => {
