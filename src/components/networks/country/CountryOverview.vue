@@ -133,7 +133,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[1].data.length > 0">
               <div v-for="item in queries[1].data" :key="Number(item.asn)">
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.asn}`} })">
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}`} })">
                   AS{{ item.asn }} - {{ item.as_name }}
                 </RouterLink>
               </div>
@@ -142,7 +142,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
               <div v-for="item in queries[2].data" :key="Number(item.asn)">
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: `AS${item.asn}`} })">
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}`} })">
                   AS{{ item.asn }} - {{ item.as_name }}
                 </RouterLink>
               </div>

@@ -70,7 +70,7 @@ onMounted(() => {
         <IypGenericPieChart v-if="prefixes.data.length > 0" :chart-data="prefixes.data" :chart-layout="{ title: 'Geo-location (Maxmind)' }" />
       </div>
       <div class="col-6">
-        <IypGenericBarChart v-if="prefixes.data.length > 0" :chart-data="prefixes.data" :config="{key:'tags'}" :chart-layout="{ title: 'Tags' }" />
+        <IypGenericBarChart v-if="prefixes.data.length > 0" :chart-data="prefixes.data" :config="{key:'tag'}" :chart-layout="{ title: 'tag' }" />
       </div>
       <div class="col-10">
       <IypGenericTreemapChart

@@ -86,7 +86,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="overview.name">
               <div>IXP Name: {{ overview.name }}</div>
-              <div>Country of origin: <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></div>
+              <div>Country of origin: <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></div>
               <div>Organization: {{ overview.organization }}</div>
               <div>
                 Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>

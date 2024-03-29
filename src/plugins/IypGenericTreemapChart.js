@@ -29,23 +29,23 @@ export default function treemapClicked(event) {
         const [host, prefixLength] = network.split('/')
         if (prefixLength) {
           event.router.push(Tr.i18nRoute({
-            name: 'networks',
-            params: { id: host, length: prefixLength },
+            name: 'prefix',
+            params: { ip: host, length: prefixLength },
           }))
         }
       } else if (network.split(' ')[0] in isoCountries) {
         event.router.push(Tr.i18nRoute({
-          name: 'countries',
+          name: 'country',
           params: { cc: network.split(' ')[0] },
         }))
       } else if (domainMatch) {
         event.router.push(Tr.i18nRoute({
-          name: 'hostnames',
+          name: 'hostname',
           params: { hostName: network },
         }))
       } else if (Number(network.replace('AS', ''))) {
         event.router.push(Tr.i18nRoute({
-          name: 'networks',
+          name: 'network',
           params: { id: network },
         }))
       }
@@ -53,7 +53,7 @@ export default function treemapClicked(event) {
       if ('low' in network) {
         const asId = `AS${network.low}`
         event.router.push(Tr.i18nRoute({
-          name: 'networks',
+          name: 'network',
           params: { id: asId },
         }))
       }

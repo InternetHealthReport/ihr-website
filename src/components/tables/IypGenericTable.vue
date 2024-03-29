@@ -192,35 +192,35 @@ const routeToEntity = (entity, data) => {
 
 const routeToASN = (asn) => {
   router.push(Tr.i18nRoute({
-    name: 'networks',
+    name: 'network',
     params: { id: `AS${asn}` },
   }))
 }
 
 const routeToPrefix = (host, prefixLength) => {
   router.push(Tr.i18nRoute({
-    name: 'networks',
-    params: { id: host, length: prefixLength },
+    name: 'prefix',
+    params: { ip: host, length: prefixLength },
   }))
 }
 
 const routeToIXP = (id) => {
   router.push(Tr.i18nRoute({
-    name: 'networks',
+    name: 'network',
     params: { id: `IXP${id}` },
   }))
 }
 
 const routeToCountry = (cc) => {
   router.push(Tr.i18nRoute({
-    name: 'countries',
+    name: 'country',
     params: { cc: cc },
   }))
 }
 
 const routeToHostName = (hostName) => {
   router.push(Tr.i18nRoute({
-    name: 'hostnames',
+    name: 'hostname',
     params: { hostName: hostName },
   }))
 }

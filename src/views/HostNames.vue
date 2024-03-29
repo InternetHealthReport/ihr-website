@@ -59,24 +59,24 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'hotpepper.jp' } })" class="IHR_delikify">hotpepper.jp</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'hotpepper.jp' } })" class="IHR_delikify">hotpepper.jp</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: '1024tera.com' } })" class="IHR_delikify">1024tera.com</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: '1024tera.com' } })" class="IHR_delikify">1024tera.com</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'jalan.net' } })" class="IHR_delikify">jalan.net</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'jalan.net' } })" class="IHR_delikify">jalan.net</RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'guam.net' } })" class="IHR_delikify">guam.net</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'guam.net' } })" class="IHR_delikify">guam.net</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'saipan.com' } })" class="IHR_delikify">saipan.com</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'saipan.com' } })" class="IHR_delikify">saipan.com</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: { hostName: 'toyoko-inn.com' } })" class="IHR_delikify">toyoko-inn.com</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'toyoko-inn.com' } })" class="IHR_delikify">toyoko-inn.com</RouterLink>
               </li>
             </ul>
           </div>

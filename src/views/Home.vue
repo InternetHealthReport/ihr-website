@@ -92,11 +92,7 @@ const organizations = ref(ORGANIZATIONS)
         <div>Internet Health Report</div>
         <div class="IHR_actions-area">
           <QBtn outline style="width: inherit; font-size: large;" :to="Tr.i18nRoute({ name: 'global-report' })">{{ $t('homePage.globalReport.name') }}</QBtn>
-          <div style="display: flex;">
-            <div class="line"></div>
-            <div class="text-body1">&nbsp;OR&nbsp;</div>
-            <div class="line"></div>
-          </div>
+          <div class="ihr-home-line"></div>
           <UserInfo />
         </div>
       </div>
@@ -107,7 +103,7 @@ const organizations = ref(ORGANIZATIONS)
       See latest alarms in the
       <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">global report</RouterLink>
       and network metrics in
-      <RouterLink :to="Tr.i18nRoute({ name: 'networks' })">network reports</RouterLink>.
+      <RouterLink :to="Tr.i18nRoute({ name: 'network' })">network reports</RouterLink>.
     </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_description-main">
@@ -171,10 +167,9 @@ const organizations = ref(ORGANIZATIONS)
 </template>
 
 <style lang="stylus">
-.line
+.ihr-home-line
   width  100%
   border-bottom 1px solid white
-  margin-top 10px
   margin-bottom 10px
 
 #IHR_
@@ -182,7 +177,7 @@ const organizations = ref(ORGANIZATIONS)
     ~/actions
       margin-bottom 60pt
       max-width 100%
-      height 450px
+      height 440px
       background-color black
       background-image url('@/assets/imgs/global-banner.png')
       background-repeat no-repeat
