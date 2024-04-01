@@ -22,7 +22,7 @@ const activeMenu = route.query.active ? route.query.active : activeTab
 
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const domain = ref(route.params.hostName)
+const domain = ref(route.params.hostname)
 const domainName = ref(null)
 const menu = ref(activeMenu)
 
@@ -51,7 +51,7 @@ const pageTitle = computed(() => {
   return domainName.value
 })
 
-watch(() => route.params.hostName, (newDomain) => {
+watch(() => route.params.hostname, (newDomain) => {
   if (newDomain != domain.value) {
     domain.value = newDomain
     if (domain.value) {

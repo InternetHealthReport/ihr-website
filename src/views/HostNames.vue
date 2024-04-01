@@ -10,12 +10,12 @@ const route = useRoute()
 const hostName = ref(null)
 
 const init = () => {
-  if (route.params.hostName) {
-    hostName.value = route.params.hostName
+  if (route.params.hostname) {
+    hostName.value = route.params.hostname
   }
 }
 
-watch(() => route.params.hostName, () => {
+watch(() => route.params.hostname, () => {
   init()
 })
 
@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <div v-if="route.params.hostName">
+    <div v-if="route.params.hostname">
       <HostName v-if="hostName" />
     </div>
     <div v-else>
@@ -59,24 +59,24 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'hotpepper.jp' } })" class="IHR_delikify">hotpepper.jp</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: 'hotpepper.jp' } })" class="IHR_delikify">hotpepper.jp</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: '1024tera.com' } })" class="IHR_delikify">1024tera.com</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: '1024tera.com' } })" class="IHR_delikify">1024tera.com</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'jalan.net' } })" class="IHR_delikify">jalan.net</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: 'jalan.net' } })" class="IHR_delikify">jalan.net</RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'guam.net' } })" class="IHR_delikify">guam.net</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: 'guam.net' } })" class="IHR_delikify">guam.net</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'saipan.com' } })" class="IHR_delikify">saipan.com</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: 'saipan.com' } })" class="IHR_delikify">saipan.com</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostName: 'toyoko-inn.com' } })" class="IHR_delikify">toyoko-inn.com</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: 'toyoko-inn.com' } })" class="IHR_delikify">toyoko-inn.com</RouterLink>
               </li>
             </ul>
           </div>

@@ -67,7 +67,7 @@ onMounted(() => {
         <IypGenericBarChart
           v-if="ips.data.length > 0"
           :chart-data="ips.data"
-          :config="{key:'tag'}"
+          :config="{key:'tags'}"
           :chart-layout="{ title: 'Prefix Tags' }"
         />
       </div>

@@ -22,6 +22,8 @@ const init = () => {
   if (route.params.id) {
     asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
     ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
+    prefixHostString.value = null
+    prefixLengthNumber.value = null
   } else if (route.params.ip && route.params.length) {
     let prefixMatch
     try {
@@ -38,6 +40,8 @@ const init = () => {
     }
     prefixHostString.value = prefixMatch ? route.params.ip : null
     prefixLengthNumber.value = !isNaN(route.params.length) ? Number(route.params.length) : null
+    asNumber.value = null
+    ixpNumber.value = null
   }
 }
 
