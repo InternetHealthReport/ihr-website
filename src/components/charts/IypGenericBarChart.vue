@@ -33,7 +33,7 @@ const renderChart = () => {
       }
     })
 
-    console.log( group_values)
+    console.log(group_values)
     
     group_values.forEach(group => {
       const filtData = localChartData.value.filter((item) => item[props.config.groupKey] == group)
