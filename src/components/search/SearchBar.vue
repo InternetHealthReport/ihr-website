@@ -378,7 +378,7 @@ const routeToHostName = (hostName) => {
   }
   router.push(Tr.i18nRoute({
     name: 'hostname',
-    params: { hostName: hostName },
+    params: { hostname: hostName },
   }))
 }
 

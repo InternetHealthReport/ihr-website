@@ -171,7 +171,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
               <div v-for="item in queries[2].data" :key="item.hostname">
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: {hostName:item.hostname}})">
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: {hostname:item.hostname}})">
                   {{ item.hostname }}
                 </RouterLink>
               </div>

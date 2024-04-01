@@ -71,7 +71,7 @@ const router = createRouter({
           component: Tags
         },
         {
-          path: '/:hostName?',
+          path: 'hostname/:hostname?',
           name: 'hostname',
           component: HostNames
         },

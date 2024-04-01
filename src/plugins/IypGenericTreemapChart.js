@@ -41,7 +41,7 @@ export default function treemapClicked(event) {
       } else if (domainMatch) {
         event.router.push(Tr.i18nRoute({
           name: 'hostname',
-          params: { hostName: network },
+          params: { hostname: network },
         }))
       } else if (Number(network.replace('AS', ''))) {
         event.router.push(Tr.i18nRoute({
