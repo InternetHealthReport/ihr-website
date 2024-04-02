@@ -98,6 +98,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.prefix.upstreams.title')"
     :sub-title="getPrefix+' depends on these ASes'"
+    :info-title="$t('iyp.prefix.upstreams.info.title')"
+    :info-description="$t('iyp.prefix.upstreams.info.description')"
     class="card"
     v-if="selects[1].value"
   >
@@ -109,6 +111,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.prefix.roas.title')"
     :sub-title="$t('iyp.prefix.roas.caption')+getPrefix"
+    :info-title="$t('iyp.prefix.roas.info.title')"
+    :info-description="$t('iyp.prefix.roas.info.description')"
     class="card"
     v-if="selects[2].value"
   >
@@ -120,6 +124,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.prefix.lessSpecific.title')"
     :sub-title="$t('iyp.prefix.lessSpecific.caption')+getPrefix"
+    :info-title="$t('iyp.prefix.lessSpecific.info.title')"
+    :info-description="$t('iyp.prefix.lessSpecific.info.description')"
     class="card"
     v-if="selects[3].value"
   >
@@ -131,6 +137,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.prefix.moreSpecific.title')"
     :sub-title="$t('iyp.prefix.moreSpecific.caption')+getPrefix"
+    :info-title="$t('iyp.prefix.moreSpecific.info.title')"
+    :info-description="$t('iyp.prefix.moreSpecific.info.description')"
     class="card"
     v-if="selects[4].value"
   >
@@ -143,6 +151,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.prefix.popularDomains.title')"
     :sub-title="$t('iyp.prefix.popularDomains.caption')+getPrefix"
+    :info-title="$t('iyp.prefix.popularDomains.info.title')"
+    :info-description="$t('iyp.prefix.popularDomains.info.description')"
     class="card"
     v-if="selects[5].value"
   >
@@ -154,6 +164,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.prefix.popularHostNames.title')"
     :sub-title="$t('iyp.prefix.popularHostNames.caption')+getPrefix"
+    :info-title="$t('iyp.prefix.popularHostNames.info.title')"
+    :info-description="$t('iyp.prefix.popularHostNames.info.description')"
     class="card"
     v-if="selects[6].value"
   >
@@ -165,6 +177,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.prefix.nameservers.title')"
     :sub-title="$t('iyp.prefix.nameservers.caption')+getPrefix"
+    :info-title="$t('iyp.prefix.nameservers.info.title')"
+    :info-description="$t('iyp.prefix.nameservers.info.description')"
     class="card"
     v-if="selects[7].value"
   >

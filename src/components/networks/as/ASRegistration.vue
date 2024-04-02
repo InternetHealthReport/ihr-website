@@ -10,6 +10,8 @@ const props = defineProps(['asNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.as.ipPrefix.title')"
     :sub-title="$t('iyp.as.ipPrefix.caption')+asNumber"
+    :info-title="$t('iyp.as.ipPrefix.info.title')"
+    :info-description="$t('iyp.as.ipPrefix.info.description')"
   >
     <ASOriginatedPrefixes
       :asNumber="asNumber"
@@ -19,6 +21,8 @@ const props = defineProps(['asNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.as.siblings.title')"
     :sub-title="$t('iyp.as.siblings.caption')"
+    :info-title="$t('iyp.as.siblings.info.title')"
+    :info-description="$t('iyp.as.siblings.info.description')"
     class="card"
   >
     <ASSiblingASes

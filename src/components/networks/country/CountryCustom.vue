@@ -113,6 +113,8 @@ onMounted(() => {
     :title="$t('charts.countryHegemony.title')"
     sub-title="BGP data / APNIC population estimates"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.countryHegemony.info.title')"
+    :info-description="$t('charts.countryHegemony.info.description')"
     class="card"
     v-if="selects[1].value"
   >
@@ -131,6 +133,8 @@ onMounted(() => {
     :title="$t('charts.iodaChart.title')"
     sub-title="Country Internet Overview"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.iodaChart.info.title')"
+    :info-description="$t('charts.iodaChart.info.description')"
     class="card"
     v-if="selects[2].value"
   >
@@ -146,6 +150,8 @@ onMounted(() => {
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.prefixHegemony.info.title')"
+    :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
     v-if="selects[3].value"
   >
@@ -162,6 +168,8 @@ onMounted(() => {
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.networkDelay.info.title')"
+    :info-description="$t('charts.networkDelay.info.description')"
     class="card"
     v-if="selects[4].value"
   >
@@ -186,6 +194,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.country.atlas.title')"
     :sub-title="$t('iyp.country.atlas.caption')+pageTitle"
+    :info-title="$t('iyp.country.atlas.info.title')"
+    :info-description="$t('iyp.country.atlas.info.description')"
     class="card"
     v-if="selects[5].value"
   >
@@ -198,6 +208,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.country.ases.title')"
     :sub-title="$t('iyp.country.ases.caption')+pageTitle"
+    :info-title="$t('iyp.country.ases.info.title')"
+    :info-description="$t('iyp.country.ases.info.description')"
     class="card"
     v-if="selects[6].value"
   >
@@ -209,6 +221,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.country.prefixes.title')"
     :sub-title="$t('iyp.country.prefixes.caption')+pageTitle"
+    :info-title="$t('iyp.country.prefixes.info.title')"
+    :info-description="$t('iyp.country.prefixes.info.description')"
     class="card"
     v-if="selects[7].value"
   >
@@ -221,6 +235,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.country.ixps.title')"
     :sub-title="$t('iyp.country.ixps.caption')+pageTitle"
+    :info-title="$t('iyp.country.ixps.info.title')"
+    :info-description="$t('iyp.country.ixps.info.description')"
     class="card"
     v-if="selects[8].value"
   >
@@ -233,6 +249,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.country.rankings.title')"
     :sub-title="$t('iyp.country.rankings.caption')+pageTitle"
+    :info-title="$t('iyp.country.rankings.info.title')"
+    :info-description="$t('iyp.country.rankings.info.description')"
     class="card"
     v-if="selects[9].value && pageTitle"
   >

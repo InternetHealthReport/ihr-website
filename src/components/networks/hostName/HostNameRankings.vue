@@ -9,6 +9,8 @@ const props = defineProps(['pageTitle', 'hostName'])
   <GenericCardController
     :title="$t('iyp.domainname.rankings.title')"
     :sub-title="$t('iyp.domainname.rankings.caption')+pageTitle"
+    :info-title="$t('iyp.domainname.rankings.info.title')"
+    :info-description="$t('iyp.domainname.rankings.info.description')"
   >
     <HostNameRankings
       :page-title="pageTitle"

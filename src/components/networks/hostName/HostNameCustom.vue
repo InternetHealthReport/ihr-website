@@ -84,6 +84,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.domainname.ips.title')"
     :sub-title="$t('iyp.domainname.ips.caption')+pageTitle"
+    :info-title="$t('iyp.domainname.ips.info.title')"
+    :info-description="$t('iyp.domainname.ips.info.description')"
     class="card"
     v-if="selects[0].value"
   >
@@ -96,6 +98,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.domainname.nameservers.title')"
     :sub-title="$t('iyp.domainname.nameservers.caption')+pageTitle"
+    :info-title="$t('iyp.domainname.nameservers.info.title')"
+    :info-description="$t('iyp.domainname.nameservers.info.description')"
     class="card"
     v-if="selects[1].value"
   >
@@ -107,6 +111,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.domainname.country_query.title')"
     :sub-title="$t('iyp.domainname.country_query.caption')+pageTitle"
+    :info-title="$t('iyp.domainname.country_query.info.title')"
+    :info-description="$t('iyp.domainname.country_query.info.description')"
     class="card"
     v-if="selects[2].value"
   >
@@ -118,6 +124,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.domainname.as_query.title')"
     :sub-title="$t('iyp.domainname.as_query.caption')+pageTitle"
+    :info-title="$t('iyp.domainname.as_query.info.title')"
+    :info-description="$t('iyp.domainname.as_query.info.description')"
     class="card"
     v-if="selects[3].value"
   >
@@ -130,6 +138,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.domainname.rankings.title')"
     :sub-title="$t('iyp.domainname.rankings.caption')+pageTitle"
+    :info-title="$t('iyp.domainname.rankings.info.title')"
+    :info-description="$t('iyp.domainname.rankings.info.description')"
     class="card"
     v-if="selects[4].value"
   >

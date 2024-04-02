@@ -22,6 +22,8 @@ const fetch = ref(true)
     :title="$t('charts.asInterdependencies.title')"
     sub-title="BGP Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.asInterdependencies.info.title')"
+    :info-description="$t('charts.asInterdependencies.info.description')"
   >
     <AsInterdependenciesChart
       :start-time="startTime"
@@ -36,6 +38,8 @@ const fetch = ref(true)
     :title="$t('charts.iodaChart.title')"
     sub-title="AS Internet Overview"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.iodaChart.info.title')"
+    :info-description="$t('charts.iodaChart.info.description')"
     class="card"
   >
     <IodaChart
@@ -50,6 +54,8 @@ const fetch = ref(true)
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.prefixHegemony.info.title')"
+    :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
   >
     <PrefixHegemonyChart
@@ -64,6 +70,8 @@ const fetch = ref(true)
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.networkDelay.info.title')"
+    :info-description="$t('charts.networkDelay.info.description')"
     class="card"
   >
     <NetworkDelayChart
@@ -80,6 +88,8 @@ const fetch = ref(true)
   <GenericCardController
     :title="$t('iyp.as.atlas.title')"
     :sub-title="$t('iyp.as.atlas.caption')+asNumber"
+    :info-title="$t('iyp.as.atlas.info.title')"
+    :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
   >
     <ASRipeAtlas
@@ -92,6 +102,8 @@ const fetch = ref(true)
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.delayAndForwarding.info.title')"
+    :info-description="$t('charts.delayAndForwarding.info.description')"
     class="card"
   >
     <DelayAndForwardingChart
@@ -106,6 +118,8 @@ const fetch = ref(true)
     :title="$t('charts.disconnections.title')"
     sub-title="RIPE Atlas Log"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.disconnections.info.title')"
+    :info-description="$t('charts.disconnections.info.description')"
     class="card"
   >
     <DiscoChart
