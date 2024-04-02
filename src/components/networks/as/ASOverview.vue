@@ -50,7 +50,8 @@ const queries = ref([
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       OPTIONAL MATCH (a)-[:NAME]->(n:Name)
       OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)
-      OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
+      OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:EXTERNAL_ID]-(:PeeringdbIXID)
+      OPTIONAL MATCH (ixp)-[:COUNTRY]-(ixp_country:Country)
       OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
       OPTIONAL MATCH (a)-[:CATEGORIZED]->(t:Tag)
       RETURN u.url AS website, c.country_code AS cc, c.name AS country, prefixes_v4, prefixes_v6, COALESCE(pdbn.name, btn.name, ripen.name) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country `
