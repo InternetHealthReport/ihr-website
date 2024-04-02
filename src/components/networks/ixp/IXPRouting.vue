@@ -9,6 +9,8 @@ const props = defineProps(['ixpNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.ixp.members.title')"
     sub-title="Member Autonomous Systems (ASes)"
+    :info-title="$t('iyp.ixp.members.info.title')"
+    :info-description="$t('iyp.ixp.members.info.description')"
   >
     <IXPMembers
       :ixpNumber="ixpNumber"

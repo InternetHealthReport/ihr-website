@@ -124,6 +124,8 @@ onMounted(() => {
     :title="$t('charts.asInterdependencies.title')"
     sub-title="BGP Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.asInterdependencies.info.title')"
+    :info-description="$t('charts.asInterdependencies.info.description')"
     class="card"
     v-if="selects[1].value"
   >
@@ -140,6 +142,8 @@ onMounted(() => {
     :title="$t('charts.iodaChart.title')"
     sub-title="AS Internet Overview"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.iodaChart.info.title')"
+    :info-description="$t('charts.iodaChart.info.description')"
     class="card"
     v-if="selects[2].value"
   >
@@ -155,6 +159,8 @@ onMounted(() => {
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.prefixHegemony.info.title')"
+    :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
     v-if="selects[3].value"
   >
@@ -170,6 +176,8 @@ onMounted(() => {
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.networkDelay.info.title')"
+    :info-description="$t('charts.networkDelay.info.description')"
     class="card"
     v-if="selects[4].value"
   >
@@ -187,6 +195,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.atlas.title')"
     :sub-title="$t('iyp.as.atlas.caption')+asNumber"
+    :info-title="$t('iyp.as.atlas.info.title')"
+    :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
     v-if="selects[5].value"
   >
@@ -200,6 +210,8 @@ onMounted(() => {
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.delayAndForwarding.info.title')"
+    :info-description="$t('charts.delayAndForwarding.info.description')"
     class="card"
     v-if="selects[6].value"
   >
@@ -215,6 +227,8 @@ onMounted(() => {
     :title="$t('charts.disconnections.title')"
     sub-title="RIPE Atlas Log"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.disconnections.info.title')"
+    :info-description="$t('charts.disconnections.info.description')"
     class="card"
     v-if="selects[6].value"
   >
@@ -230,6 +244,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.ipPrefix.title')"
     :sub-title="$t('iyp.as.ipPrefix.caption')+asNumber"
+    :info-title="$t('iyp.as.ipPrefix.info.title')"
+    :info-description="$t('iyp.as.ipPrefix.info.description')"
     class="card"
     v-if="selects[7].value"
   >
@@ -241,6 +257,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.peers.title')"
     :sub-title="$t('iyp.as.peers.caption')+asNumber"
+    :info-title="$t('iyp.as.peers.info.title')"
+    :info-description="$t('iyp.as.peers.info.description')"
     class="card"
     v-if="selects[8].value"
   >
@@ -252,6 +270,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.upstreams.title')"
     :sub-title="$t('iyp.as.upstreams.caption')+asNumber"
+    :info-title="$t('iyp.as.upstreams.info.title')"
+    :info-description="$t('iyp.as.upstreams.info.description')"
     class="card"
     v-if="selects[9].value"
   >
@@ -263,6 +283,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.downstreams.title')"
     :sub-title="$t('iyp.as.downstreams.caption')+asNumber"
+    :info-title="$t('iyp.as.downstreams.info.title')"
+    :info-description="$t('iyp.as.downstreams.info.description')"
     class="card"
     v-if="selects[10].value"
   >
@@ -274,6 +296,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.roas.title')"
     :sub-title="$t('iyp.as.roas.caption')+asNumber"
+    :info-title="$t('iyp.as.roas.info.title')"
+    :info-description="$t('iyp.as.roas.info.description')"
     class="card"
     v-if="selects[11].value"
   >
@@ -286,6 +310,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.popularDomains.title')"
     :sub-title="$t('iyp.as.popularDomains.caption')+asNumber"
+    :info-title="$t('iyp.as.popularDomains.info.title')"
+    :info-description="$t('iyp.as.popularDomains.info.description')"
     class="card"
     v-if="selects[12].value"
   >
@@ -297,6 +323,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.popularHostNames.title')"
     :sub-title="$t('iyp.as.popularHostNames.caption')+asNumber"
+    :info-title="$t('iyp.as.popularHostNames.info.title')"
+    :info-description="$t('iyp.as.popularHostNames.info.description')"
     class="card"
     v-if="selects[13].value"
   >
@@ -308,6 +336,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.authoritativeNameservers.title')"
     :sub-title="$t('iyp.as.authoritativeNameservers.caption')+asNumber"
+    :info-title="$t('iyp.as.authoritativeNameservers.info.title')"
+    :info-description="$t('iyp.as.authoritativeNameservers.info.description')"
     class="card"
     v-if="selects[14].value"
   >
@@ -320,6 +350,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.ixp.title')"
     :sub-title="$t('iyp.as.ixp.caption')+asNumber"
+    :info-title="$t('iyp.as.ixp.info.title')"
+    :info-description="$t('iyp.as.ixp.info.description')"
     class="card"
     v-if="selects[15].value"
   >
@@ -331,6 +363,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.facilities.title')"
     :sub-title="$t('iyp.as.facilities.caption')+asNumber"
+    :info-title="$t('iyp.as.facilities.info.title')"
+    :info-description="$t('iyp.as.facilities.info.description')"
     class="card"
     v-if="selects[16].value"
   >
@@ -343,6 +377,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.siblings.title')"
     :sub-title="$t('iyp.as.siblings.caption')"
+    :info-title="$t('iyp.as.siblings.info.title')"
+    :info-description="$t('iyp.as.siblings.info.description')"
     class="card"
     v-if="selects[17].value"
   >
@@ -355,6 +391,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.as.rankings.title')"
     :sub-title="$t('iyp.as.rankings.caption')+asNumber"
+    :info-title="$t('iyp.as.rankings.info.title')"
+    :info-description="$t('iyp.as.rankings.info.description')"
     class="card"
     v-if="selects[18].value"
   >

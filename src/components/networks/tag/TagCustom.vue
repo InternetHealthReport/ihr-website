@@ -121,6 +121,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.tag.domains.title')"
     :sub-title="$t('iyp.tag.domains.caption')+tag+' by '+selectedWidgets.data_source_domains.join(', ')"
+    :info-title="$t('iyp.tag.domains.info.title')"
+    :info-description="$t('iyp.tag.domains.info.description')"
     class="card"
     v-if="selects[0].value && selects[0].hasData"
   >
@@ -131,6 +133,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.tag.ases.title')"
     :sub-title="$t('iyp.tag.ases.caption')+tag+' by '+selectedWidgets.data_source_ases.join(', ')"
+    :info-title="$t('iyp.tag.ases.info.title')"
+    :info-description="$t('iyp.tag.ases.info.description')"
     class="card"
     v-if="selects[1].value && selects[1].hasData"
   >
@@ -141,6 +145,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.tag.prefixes.title')"
     :sub-title="$t('iyp.tag.prefixes.caption')+tag+' by '+selectedWidgets.data_source_prefixes.join(', ')"
+    :info-title="$t('iyp.tag.prefixes.info.title')"
+    :info-description="$t('iyp.tag.prefixes.info.description')"
     class="card"
     v-if="selects[2].value && selects[2].hasData"
   >

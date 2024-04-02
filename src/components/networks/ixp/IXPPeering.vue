@@ -10,6 +10,8 @@ const props = defineProps(['ixpNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.ixp.facilities.title')"
     sub-title="Facilities"
+    :info-title="$t('iyp.ixp.facilities.info.title')"
+    :info-description="$t('iyp.ixp.facilities.info.description')"
   >
     <IXPCoLocationFacilities
       :ixpNumber="ixpNumber"
@@ -19,6 +21,8 @@ const props = defineProps(['ixpNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.ixp.peeringLANs.title')"
     sub-title="Peering LANs of an IXP"
+    :info-title="$t('iyp.ixp.peeringLANs.info.title')"
+    :info-description="$t('iyp.ixp.peeringLANs.info.description')"
     class="card"
   >
     <IXPPeeringLANs

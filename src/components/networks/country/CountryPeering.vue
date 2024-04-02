@@ -9,6 +9,8 @@ const props = defineProps(['countryCode', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.country.ixps.title')"
     :sub-title="$t('iyp.country.ixps.caption')+pageTitle"
+    :info-title="$t('iyp.country.ixps.info.title')"
+    :info-description="$t('iyp.country.ixps.info.description')"
   >
     <CountryInternetExchangePoints
       :country-code="countryCode"
