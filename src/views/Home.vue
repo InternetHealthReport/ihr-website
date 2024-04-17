@@ -1,8 +1,9 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QCard, QCardSection, QAvatar, QIcon } from 'quasar'
+import { QCard, QCardSection, QAvatar, QIcon, QBtn } from 'quasar'
 import { ref } from 'vue'
 import Tr from '@/i18n/translation'
+import UserInfo from '@/components/UserInfo.vue'
 
 const GRAPHS_TYPES = [
   {
@@ -86,12 +87,14 @@ const organizations = ref(ORGANIZATIONS)
 
 <template>
   <div id="IHR_home">
-    <div id="IHR_global-report" class="row">
+    <div id="IHR_actions" class="row">
       <div class="col">
         <div>Internet Health Report</div>
-        <RouterLink id="IHR_global-report-button" :to="Tr.i18nRoute({ name: 'global-report' })">
-          {{ $t('homePage.globalReport.name') }}
-        </RouterLink>
+        <div class="IHR_actions-area">
+          <QBtn outline style="width: inherit; font-size: large;" :to="Tr.i18nRoute({ name: 'global-report' })">{{ $t('homePage.globalReport.name') }}</QBtn>
+          <div class="ihr-home-line"></div>
+          <UserInfo />
+        </div>
       </div>
     </div>
 
@@ -100,7 +103,7 @@ const organizations = ref(ORGANIZATIONS)
       See latest alarms in the
       <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">global report</RouterLink>
       and network metrics in
-      <RouterLink :to="Tr.i18nRoute({ name: 'networks' })">network reports</RouterLink>.
+      <RouterLink :to="Tr.i18nRoute({ name: 'network' })">network reports</RouterLink>.
     </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_description-main">
@@ -164,12 +167,17 @@ const organizations = ref(ORGANIZATIONS)
 </template>
 
 <style lang="stylus">
+.ihr-home-line
+  width  100%
+  border-bottom 1px solid white
+  margin-bottom 10px
+
 #IHR_
   &home
-    ~/global-report
+    ~/actions
       margin-bottom 60pt
       max-width 100%
-      height 450px
+      height 440px
       background-color black
       background-image url('@/assets/imgs/global-banner.png')
       background-repeat no-repeat
@@ -180,28 +188,6 @@ const organizations = ref(ORGANIZATIONS)
         background-size cover
       }
 
-      &-button
-        margin-top 40px
-        border white solid 4px
-        text-align center
-        font-weight 500
-        transition all 0.6s
-        max-width 300pt
-        display block
-        color white
-        font-size 2rem
-        text-decoration none
-        @media screen and (max-width: 600px)
-          font-size 1.5rem
-          margin-left auto
-          margin-right auto
-          max-width 200pt
-
-        &:hover
-          background-color white
-          color black
-          text-shadow 0 0 3px #FFFFFF
-
       & > div
         height 100%
 
@@ -209,12 +195,12 @@ const organizations = ref(ORGANIZATIONS)
           color white
           font-size 50px
           text-align left
-          padding-top 60pt
+          padding-top 40pt
           padding-left 60pt
           display inline-block
           text-shadow 0 0 8px #000000;
           @media screen and (max-width: 600px)
-            padding-top 100pt
+            padding-top 30pt
             padding-left 0
             text-align center
             font-size 2rem
@@ -236,6 +222,9 @@ const organizations = ref(ORGANIZATIONS)
           &:first-letter
             text-transform uppercase
 
+.IHR_actions-area
+  width 100%
+  max-width 330px
 
 .IHR_
   &description_text
@@ -308,24 +297,5 @@ const organizations = ref(ORGANIZATIONS)
   .analysis-modules
     margin-left 0
 
-@media(max-width 1450px)
-  .IHR_tweets-types
-        max-width 600px !important
 
-
-.IHR_tweets-types
-      margin-left auto
-      margin-right auto
-      max-width 800px
-      text-align center
-      border-radius 15px
-
-      & > div
-        background-color white
-
-        > h2
-          font-weight 400
-          margin-bottom 4pt
-          &:first-letter
-            text-transform uppercase
 </style>

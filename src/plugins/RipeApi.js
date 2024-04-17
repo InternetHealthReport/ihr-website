@@ -12,9 +12,23 @@ export default {
         resource: asn,
       },
     }
-    // console.log(ripe_axios)
     return ripe_axios.get('asn-neighbours/data.json', queryarg).then(response => {
       return response.data
     })
   },
+  userIP() {
+    return ripe_axios.get('whats-my-ip/data.json').then(response => {
+      return response.data
+    })
+  },
+  userASN(ip) {
+    let queryarg = {
+      params: {
+        resource: ip,
+      },
+    }
+    return ripe_axios.get('network-info/data.json', queryarg).then(response => {
+      return response.data
+    })
+  }
 }

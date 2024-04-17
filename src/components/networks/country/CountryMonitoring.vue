@@ -30,6 +30,8 @@ const setMajorEyeballs = (asns) => {
     :title="$t('charts.countryHegemony.title')"
     sub-title="BGP data / APNIC population estimates"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.countryHegemony.info.title')"
+    :info-description="$t('charts.countryHegemony.info.description')"
   >
     <CountryHegemonyChart
       :start-time="startTime"
@@ -46,6 +48,8 @@ const setMajorEyeballs = (asns) => {
     :title="$t('charts.iodaChart.title')"
     sub-title="Country Internet Overview"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.iodaChart.info.title')"
+    :info-description="$t('charts.iodaChart.info.description')"
     class="card"
   >
     <IodaChart
@@ -60,6 +64,8 @@ const setMajorEyeballs = (asns) => {
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.prefixHegemony.info.title')"
+    :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
   >
     <PrefixHegemonyChart
@@ -75,6 +81,8 @@ const setMajorEyeballs = (asns) => {
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.networkDelay.info.title')"
+    :info-description="$t('charts.networkDelay.info.description')"
     class="card"
   >
     <NetworkDelayChart
@@ -98,6 +106,8 @@ const setMajorEyeballs = (asns) => {
   <GenericCardController
     :title="$t('iyp.country.atlas.title')"
     :sub-title="$t('iyp.country.atlas.caption')+pageTitle"
+    :info-title="$t('iyp.country.atlas.info.title')"
+    :info-description="$t('iyp.country.atlas.info.description')"
     class="card"
   >
     <CountryRipeAtlas

@@ -54,8 +54,8 @@ const fetchData = async () => {
 
 const handleReference = (key) => {
   let externalLink = ''
-  if (key === 'peeringDB') {
-    externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
+  if (key === 'peeringDB' && props.ixpNumber) {
+  externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
   }
   return externalLink
 }
@@ -86,7 +86,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="overview.name">
               <div>IXP Name: {{ overview.name }}</div>
-              <div>Country of origin: <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></div>
+              <div>Country of origin: <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></div>
               <div>Organization: {{ overview.organization }}</div>
               <div>
                 Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
@@ -96,7 +96,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="overview.name">
               <div v-for="(value, key) in references" :key="key">
-                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+                <a v-if="handleReference(key)" :href="handleReference(key)" target="_blank" rel="noreferrer">
                   {{ key }}
                 </a>
               </div>

@@ -200,7 +200,7 @@ onMounted(() => {
           <QToggle v-model="props.expand" />
         </QTd>
         <QTd key="asNumber" align>
-          <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: {asn: ihr_api.ihr_NumberToAsOrIxp(props.row.asNumber)} })">
+          <RouterLink :to="Tr.i18nRoute({ name: 'network', params: {asn: ihr_api.ihr_NumberToAsOrIxp(props.row.asNumber)} })">
             {{ ihr_api.ihr_NumberToAsOrIxp(props.row.asNumber) }}
           </RouterLink>
         </QTd>

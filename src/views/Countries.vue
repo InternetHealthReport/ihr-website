@@ -60,24 +60,24 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'JP' } })" class="IHR_delikify">Japan</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: 'JP' } })" class="IHR_delikify">Japan</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'FR' } })" class="IHR_delikify">France</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: 'FR' } })" class="IHR_delikify">France</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'US' } })" class="IHR_delikify">United States</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: 'US' } })" class="IHR_delikify">United States</RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'BR' } })" class="IHR_delikify">Brazil</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: 'BR' } })" class="IHR_delikify">Brazil</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'DE' } })" class="IHR_delikify">Germany</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: 'DE' } })" class="IHR_delikify">Germany</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: { cc: 'CN' } })" class="IHR_delikify">China</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: 'CN' } })" class="IHR_delikify">China</RouterLink>
               </li>
             </ul>
           </div>

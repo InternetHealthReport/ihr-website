@@ -18,6 +18,8 @@ const fetch = ref(true)
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.prefixHegemony.info.title')"
+    :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
     v-if="caidaId"
   >
@@ -33,6 +35,8 @@ const fetch = ref(true)
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.networkDelay.info.title')"
+    :info-description="$t('charts.networkDelay.info.description')"
     class="card"
   >
     <NetworkDelayChart
@@ -51,6 +55,8 @@ const fetch = ref(true)
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.delayAndForwarding.info.title')"
+    :info-description="$t('charts.delayAndForwarding.info.description')"
     class="card"
   >
     <DelayAndForwardingChart

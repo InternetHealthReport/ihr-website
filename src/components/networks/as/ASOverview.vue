@@ -50,7 +50,8 @@ const queries = ref([
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       OPTIONAL MATCH (a)-[:NAME]->(n:Name)
       OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)
-      OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
+      OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:EXTERNAL_ID]-(:PeeringdbIXID)
+      OPTIONAL MATCH (ixp)-[:COUNTRY]-(ixp_country:Country)
       OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
       OPTIONAL MATCH (a)-[:CATEGORIZED]->(t:Tag)
       RETURN u.url AS website, c.country_code AS cc, c.name AS country, prefixes_v4, prefixes_v6, COALESCE(pdbn.name, btn.name, ripen.name) AS name, collect(DISTINCT(t.label)) as tags, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country `
@@ -85,7 +86,7 @@ const fetchData = async (asn) => {
 
   iyp_api.run([{statement: queries.value[1].query, parameters: params}]).then((res) => {
     queries.value[1].data = res[0]
-    pdbid.value = queries.value[1].peeringdbNetId
+    pdbid.value = queries.value[1].data[0].peeringdbNetId
     loading.value -= 1
   })
 
@@ -112,7 +113,7 @@ const handleReference = (key) => {
     externalLink = `${references.value[key]}/AS${asn}`
   } else if (key === 'bgp.tools') {
     externalLink = `${references.value[key]}/${asn}`
-  } else if (key === 'peeringdb.com') {
+  } else if (key === 'peeringdb.com' && pdbid.value) {
     externalLink = `${references.value[key]}/${pdbid.value}`
   } else if (key === 'radar.cloudflare.com') {
     externalLink = `${references.value[key]}/AS${asn}`
@@ -156,7 +157,7 @@ onMounted(() => {
         <tr>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'countries', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></div>
+              <div>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'country', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></div>
               <div>Member of {{ queries[0].data[0].nb_ixp }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#IXPs'})">IXPs</RouterLink> in {{ queries[0].data[0].nb_country }} Countries</div>
               <div>{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Originated-Prefixes'})">Originated Prefixes</RouterLink></div>
               <div v-if="queries[1].data.length > 0">{{ queries[1].data[0].peers }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Connected-ASes'})">Connected ASes</RouterLink></div>
@@ -171,7 +172,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
               <div v-for="item in queries[2].data" :key="item.hostname">
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostnames', params: {hostName:item.hostname}})">
+                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: {hostname:item.hostname}})">
                   {{ item.hostname }}
                 </RouterLink>
               </div>
@@ -180,7 +181,7 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
               <div v-for="(value, key) in references" :key="key">
-                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+                <a v-if="handleReference(key)" :href="handleReference(key)" target="_blank" rel="noreferrer">
                   {{ key }}
                 </a>
               </div>
@@ -200,7 +201,7 @@ onMounted(() => {
         <tr>
           <td :colspan="5">
             <div  v-if="queries[0].data.length > 0" class="row">
-              <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tags', params: {tag: tag}, hash: '#Autonomous-Systems'})">
+              <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tag', params: {tag: tag}, hash: '#Autonomous-Systems'})">
                 <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
               </RouterLink>
             </div>

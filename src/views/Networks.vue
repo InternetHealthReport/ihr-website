@@ -22,27 +22,34 @@ const init = () => {
   if (route.params.id) {
     asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
     ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
+    prefixHostString.value = null
+    prefixLengthNumber.value = null
+  } else if (route.params.ip && route.params.length) {
     let prefixMatch
     try {
-      prefixMatch = (new Address4(route.params.id)).isCorrect()
+      prefixMatch = (new Address4(route.params.ip)).isCorrect()
     } catch (e) {
       prefixMatch = null
     }
     if (!prefixMatch) {
       try {
-        prefixMatch = (new Address6(route.params.id)).isCorrect()
+        prefixMatch = (new Address6(route.params.ip)).isCorrect()
       } catch (e) {
         prefixMatch = null
       }
     }
-    prefixHostString.value = prefixMatch ? route.params.id : null
-  }
-  if (route.params.length) {
+    prefixHostString.value = prefixMatch ? route.params.ip : null
     prefixLengthNumber.value = !isNaN(route.params.length) ? Number(route.params.length) : null
+    asNumber.value = null
+    ixpNumber.value = null
   }
 }
 
 watch(() => route.params.id, () => {
+  init()
+})
+
+watch(() => route.params.ip, () => {
   init()
 })
 
@@ -53,7 +60,7 @@ onMounted(() => {
 
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
-    <div v-if="route.params.id">
+    <div v-if="route.params.id || route.params.ip">
       <AS v-if="asNumber" />
       <IXP v-if="ixpNumber" />
       <Prefix v-if="prefixHostString && prefixLengthNumber" />
@@ -86,24 +93,24 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'IXP1997' } })" class="IHR_delikify">Equinix London (IXP1997)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP1997' } })" class="IHR_delikify">Equinix London (IXP1997)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'IXP26' } })" class="IHR_delikify">AMS-IX (IXP26)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP26' } })" class="IHR_delikify">AMS-IX (IXP26)</RouterLink>
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'networks', params: { id: 'IXP2588' } })" class="IHR_delikify">DE-CIX Chennai (IXP2588)</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP2588' } })" class="IHR_delikify">DE-CIX Chennai (IXP2588)</RouterLink>
               </li>
             </ul>
           </div>

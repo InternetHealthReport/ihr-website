@@ -95,6 +95,8 @@ onMounted(() => {
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.prefixHegemony.info.title')"
+    :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
     v-if="selects[1].value && caidaId"
   >
@@ -110,6 +112,8 @@ onMounted(() => {
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.networkDelay.info.title')"
+    :info-description="$t('charts.networkDelay.info.description')"
     class="card"
     v-if="selects[2].value"
   >
@@ -129,6 +133,8 @@ onMounted(() => {
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
+    :info-title="$t('charts.delayAndForwarding.info.title')"
+    :info-description="$t('charts.delayAndForwarding.info.description')"
     class="card"
     v-if="selects[3].value"
   >
@@ -143,6 +149,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.ixp.members.title')"
     sub-title="Member Autonomous Systems (ASes)"
+    :info-title="$t('iyp.ixp.members.info.title')"
+    :info-description="$t('iyp.ixp.members.info.description')"
     class="card"
     v-if="selects[4].value"
   >
@@ -155,6 +163,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.ixp.facilities.title')"
     sub-title="Facilities"
+    :info-title="$t('iyp.ixp.facilities.info.title')"
+    :info-description="$t('iyp.ixp.facilities.info.description')"
     class="card"
     v-if="selects[5].value"
   >
@@ -166,6 +176,8 @@ onMounted(() => {
   <GenericCardController
     :title="$t('iyp.ixp.peeringLANs.title')"
     sub-title="Peering LANs of an IXP"
+    :info-title="$t('iyp.ixp.peeringLANs.info.title')"
+    :info-description="$t('iyp.ixp.peeringLANs.info.description')"
     class="card"
     v-if="selects[6].value"
   >

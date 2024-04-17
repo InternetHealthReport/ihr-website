@@ -11,6 +11,8 @@ const props = defineProps(['asNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.as.popularDomains.title')"
     :sub-title="$t('iyp.as.popularDomains.caption')+asNumber"
+    :info-title="$t('iyp.as.popularDomains.info.title')"
+    :info-description="$t('iyp.as.popularDomains.info.description')"
   >
     <ASPopularDomains
       :asNumber="asNumber"
@@ -20,6 +22,8 @@ const props = defineProps(['asNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.as.popularHostNames.title')"
     :sub-title="$t('iyp.as.popularHostNames.caption')+asNumber"
+    :info-title="$t('iyp.as.popularHostNames.info.title')"
+    :info-description="$t('iyp.as.popularHostNames.info.description')"
     class="card"
   >
     <ASPopularHostNames
@@ -30,6 +34,8 @@ const props = defineProps(['asNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.as.authoritativeNameservers.title')"
     :sub-title="$t('iyp.as.authoritativeNameservers.caption')+asNumber"
+    :info-title="$t('iyp.as.authoritativeNameservers.info.title')"
+    :info-description="$t('iyp.as.authoritativeNameservers.info.description')"
     class="card"
   >
     <ASAuthoritativeNameservers

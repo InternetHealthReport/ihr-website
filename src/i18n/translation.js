@@ -54,9 +54,6 @@ const Trans = {
         let paramLocale = to.params.locale
         if (paramLocale.includes('-')) {
             paramLocale = paramLocale.split('-')[0]
-            if (to.name === 'networks' || to.name === 'countries') {
-                to.query['active'] = 'monitoring'
-            }
         }
         if(!Trans.isLocaleSupported(paramLocale)) {
             return next(Trans.guessDefaultLocale())

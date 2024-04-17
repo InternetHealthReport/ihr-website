@@ -74,7 +74,7 @@ onMounted(() => {
     fetchData()
   } else {
     router.push(Tr.i18nRoute({
-      name: 'tags',
+      name: 'tag',
     }))
   }
 })

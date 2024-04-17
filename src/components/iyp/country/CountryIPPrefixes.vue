@@ -96,7 +96,7 @@ onMounted(() => {
           v-if="prefixes.data.length > 0"
           :chart-data="prefixes.data"
           :config="{key:'tags'}"
-          :chart-layout="{ title: 'Tags' }"
+          :chart-layout="{ title: 'tag' }"
         />
       </div>
       <div class="col-8">
