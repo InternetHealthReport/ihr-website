@@ -11,8 +11,8 @@ export function etl(entityType, entityValue, startDateTime, endDateTime, iodaAla
 }
 
 function extractAlarms(entityType, entityValue, startDateTime, endDateTime, sourceParams) {
-  const startUnixTime = Math.floor(new Date(startDateTime.getUTCFullYear(), startDateTime.getUTCMonth(), startDateTime.getUTCDate(), startDateTime.getUTCHours(), startDateTime.getUTCMinutes(), startDateTime.getUTCSeconds()).getTime() / 1000)
-  const endUnixTime = Math.floor(new Date(endDateTime.getUTCFullYear(), endDateTime.getUTCMonth(), endDateTime.getUTCDate(), endDateTime.getUTCHours(), endDateTime.getUTCMinutes(), endDateTime.getUTCSeconds()).getTime() / 1000)
+  const startUnixTime = Math.floor(Date.UTC(startDateTime.getUTCFullYear(), startDateTime.getUTCMonth(), startDateTime.getUTCDate(), startDateTime.getUTCHours(), startDateTime.getUTCMinutes(), startDateTime.getUTCSeconds()) / 1000)
+  const endUnixTime = Math.floor(Date.UTC(endDateTime.getUTCFullYear(), endDateTime.getUTCMonth(), endDateTime.getUTCDate(), endDateTime.getUTCHours(), endDateTime.getUTCMinutes(), endDateTime.getUTCSeconds()) / 1000)
   const request = IodaApiPlugin.getIodaEntityInfo(entityType, entityValue, startUnixTime, endUnixTime, sourceParams)
     .then((data) => data)
     .catch((error) => Promise.reject(error))
@@ -35,7 +35,7 @@ function transformAlarms(iodaData, iodaAlarmTypes) {
     while (fromUnixTime <= untilUnixTime) {
       if (iodaAlarmTypeData.values[index] !== null) {
         const dateTimeObj = new Date(fromUnixTime * 1000)
-        datesTransformed.push(`${dateTimeObj.getFullYear()}-${("0" + (dateTimeObj.getMonth() + 1)).slice(-2)}-${("0" + dateTimeObj.getDate()).slice(-2)}T${("0" + dateTimeObj.getHours()).slice(-2)}:${("0" + dateTimeObj.getMinutes()).slice(-2)}:${("0" + dateTimeObj.getSeconds()).slice(-2)}.000Z`)
+        datesTransformed.push(`${dateTimeObj.getUTCFullYear()}-${("0" + (dateTimeObj.getUTCMonth() + 1)).slice(-2)}-${("0" + dateTimeObj.getUTCDate()).slice(-2)}T${("0" + dateTimeObj.getUTCHours()).slice(-2)}:${("0" + dateTimeObj.getUTCMinutes()).slice(-2)}:${("0" + dateTimeObj.getUTCSeconds()).slice(-2)}.000Z`)
       }
       fromUnixTime += nativeStep
       index += 1

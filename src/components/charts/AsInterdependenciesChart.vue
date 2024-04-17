@@ -563,7 +563,7 @@ const clearGraph = () => {
 }
 
 const getDateFormat = (chosenTime) => {
-  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${chosenTime.getHours()}:${chosenTime.getMinutes()}`
+  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${("0" + chosenTime.getHours()).slice(-2)}:${("0" + chosenTime.getMinutes()).slice(-2)}`
 }
 
 const bgplay = computed(() => {
