@@ -106,7 +106,7 @@ var IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   title: '',
   xaxis: { title: '', autorange: true },
-  yaxis: { ticksuffix: '%', autoragne: true },
+  yaxis: { ticksuffix: '%', range: [0, 100] },
   margin: { t: 10, b: 40, l: 80, r: 80 },
 
 }
