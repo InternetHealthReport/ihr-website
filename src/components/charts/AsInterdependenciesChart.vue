@@ -422,7 +422,9 @@ const fetchHegemony = (data) => {
           '<extra></extra>',
         connectgaps: false,
       }
-
+      if (elem.hege === 1) {
+        trace.name = trace.name + ' (direct)'
+      }
       tracesLocal[elem.asn] = trace
       traces.value.push(trace)
     }
