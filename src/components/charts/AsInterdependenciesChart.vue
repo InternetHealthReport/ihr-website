@@ -77,6 +77,7 @@ const details = ref({
 const loadingHegemony = ref(true)
 const loadingHegemonyCone = ref(true)
 const hegemonyFilter = ref(null)
+const hegemonyTier1Filter = ref(null)
 const hegemonyConeFilter = ref(null)
 const traces = ref(DEFAULT_TRACE)
 const layout = ref(AS_INTERDEPENDENCIES_LAYOUT)
@@ -84,6 +85,7 @@ const loadingNeighbours = ref(true)
 const neighbours = ref([])
 const loading = ref(true)
 const noData = ref('')
+const noDataError = ref(true)
 
 const route = useRoute()
 const router = useRouter()
@@ -101,6 +103,15 @@ const makeHegemonyFilter = () => {
     .orderedByTime()
 }
 
+const makeHegemonyTier1Filter = () => {
+    return new HegemonyQuery()
+    .originAs(0)
+    .asNumber([174,1299])
+    .addressFamily(props.addressFamily)
+    .timeInterval(props.startTime, props.endTime)
+    .orderedByTime()
+}
+
 const makeHegemonyConeFilter = () => {
   return new HegemonyConeQuery()
     .asNumber(props.asNumber)
@@ -109,17 +120,19 @@ const makeHegemonyConeFilter = () => {
     .orderedByTime()
 }
 
-const apiCall = () => {
+const apiCall = async() => {
   if (props.asNumber == 0) {
     return
   }
   updateAxesLabel()
   hegemonyFilter.value = makeHegemonyFilter()
+  hegemonyTier1Filter.value = makeHegemonyTier1Filter()
   hegemonyConeFilter.value = makeHegemonyConeFilter()
   traces.value = extend(true, [], DEFAULT_TRACE)
   loading.value = true
   loadingHegemony.value = true
   loadingHegemonyCone.value = true
+  await queryHegemonyTier1API()
   queryHegemonyAPI()
   queryHegemonyConeAPI()
 
@@ -262,6 +275,26 @@ const queryHegemonyAPI = () => {
   )
 }
 
+const queryHegemonyTier1API = async() => {
+
+try {
+    const result = await new Promise((resolve, reject) => {
+      ihr_api.hegemony(
+        hegemonyTier1Filter.value,
+        result => {
+          resolve(result);
+        },
+        error => {
+          reject(error);
+        }
+      );
+    });
+    if(result.results.length > 0) noDataError.value = false
+  } catch (error) {
+    console.error(error); //FIXME do a correct alert
+  }
+}
+
 const queryHegemonyConeAPI = () => {
   loadingHegemonyCone.value = true
   ihr_api.hegemony_cone(
@@ -283,15 +316,26 @@ const fetchHegemony = (data) => {
 
   let anotherAsn
   let minX, maxX
-  if (data.length == 0) {
+  if (noDataError.value){
     traces.value = extend(true, [], DEFAULT_TRACE)
     layout.value.annotations = [
       {
-        x: 0.45,
-        y: 0.23,
+        x: 0.5,
+        y: 0.25,
         xref: 'paper',
         yref: 'paper',
-        text: 'Network is unreachable',
+        text: 'No Data Available',
+        showarrow: false,
+        font: {
+          size: 22,
+        },
+      },
+      {
+        x: 0.5,
+        y: 0.75,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'No Data Available',
         showarrow: false,
         font: {
           size: 22,
@@ -299,7 +343,35 @@ const fetchHegemony = (data) => {
       },
     ]
     return
-  } else {
+  }
+  else if (data.length == 0) {
+    traces.value = extend(true, [], DEFAULT_TRACE)
+    layout.value.annotations = [
+      {
+        x: 0.5,
+        y: 0.25,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'Network is Unreachable',
+        showarrow: false,
+        font: {
+          size: 22,
+        },
+      },
+      {
+        x: 0.5,
+        y: 0.75,
+        xref: 'paper',
+        yref: 'paper',
+        text: 'Network is Unreachable',
+        showarrow: false,
+        font: {
+          size: 22,
+        },
+      },
+    ]
+    return
+  } else if (data.length > 0) {
     let noDependency = false
     data.forEach(elem => {
       if (elem.originasn == 0) {
@@ -350,7 +422,9 @@ const fetchHegemony = (data) => {
           '<extra></extra>',
         connectgaps: false,
       }
-
+      if (elem.hege === 1) {
+        trace.name = trace.name + ' (direct)'
+      }
       tracesLocal[elem.asn] = trace
       traces.value.push(trace)
     }
