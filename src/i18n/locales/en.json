@@ -118,6 +118,10 @@
   "charts": {
     "prefixHegemony": {
       "title": "Route Origin Validation",
+        "info": {
+            "title": "Route Origin Validation",
+            "description": "By default this widget shows prefixes that are RPKI invalid and that are either propagated or originated by the selected AS. The dropdown menu permits to display:<ul><li><b>Originated prefix</b>: All the prefixes originated by the selected AS.</li><li><b>RPKI invalid (origin & transit)</b>: RPKI invalid prefixes originated or propagated by the selected AS.</li> <li><b>IRR invalid (origin & transit)</b>: IRR invalid prefixes originated or propagated by the selected AS.</li> <li><b>Bogon prefix (origin & transit)</b>: Bogon prefixes originated or propagated by the selected AS.</li> <li><b>Bogon ASN</b>: Bogon ASN propagated by the selected AS.</li></ul>See also the corresponding <a href='/ihr/en/documentation#Route-Origin-Validation'>documentation page</a>."
+            },
       "table": {
         "routesTitle": "Routes",
         "originsTitle": "Origin ASes",
@@ -127,6 +131,10 @@
     },
     "asInterdependencies": {
       "title": "AS Dependency",
+      "info": {
+          "title": "AS Dependency",
+          "description": "<p>AS Dependency (a.k.a. AS Hegemony) is a metric to evaluate the interdependencies between ASes. This metric is computed from BGP data. </p><p><b>Top plot</b></p><p>You can view this as the upstream providers of the selected network. Values close to 100% mean that most BGP paths to the selected AS are going via that AS.</p><p> ASes that are directly connected to the selected AS have the '(direct)' tag attached to their name.</p> <p><b>Bottom plot</b></p><p>ASes that depend on the selected AS. This is equivalent to the customer cone of an AS. Click on the graph to see the details.</p><p>For more details <a href='/ihr/en/documentation#AS-dependency'>see the documentation</a>.</p>"
+      },
       "defaultTrace": "Number of dependents",
       "yaxis": "dependency",
       "yaxis2": "Number of ASes<br> dependent on ",
@@ -140,10 +148,19 @@
       }
     },
     "iodaChart": {
-      "title": "IODA Overview"
+      "title": "IODA",
+        "info": {
+            "title": "IODA",
+            "description": "IODA (Internet Outage Detection and Analysis) is an operational prototype system that monitors the internet, in near-realtime, to identify macroscopic Internet outages affecting the edge of the network, i.e. significantly impacting an AS or a large fraction of a country. <br><br>IODA is maintained by the <a target='_default' href='https://inetintel.notion.site/Internet-Intelligence-Research-Lab-d186184563d345bab51901129d812ed6'>Internet Intelligence Lab at Georgia Tech</a>, for more details see <a target='_default' href='https://ioda.inetintel.cc.gatech.edu/'>IODA's website</a>."
+            }
+
     },
     "countryHegemony": {
       "title": "Network Dependency",
+        "info": {
+            "title": "Network Dependency",
+            "description": "<p>A Country network dependency is computed in two different ways, emphasizing either the distribution of the country's population or the country ASes.</p><p><b>Population coverage</b></p><p>The population coverage combines two data sources, the estimated population for each AS and the paths from the Internet to these ASes. The <b>total</b> value represents the percentage of the population that is reached through the corresponding AS. This value is also dissected into two parts: <ul><li> <b>Direct</b> is the percentage of the population directly connected to this AS</li> <li><b>Indirect</b> is the percentage of the population that is reached via this AS but that is not directly connected to it.</li></ul></p><p><b>AS coverage</b></p><p>The AS coverage is the percentage of the country's ASes that are reached via this AS. Large values represent significant transit networks for the monitored country.</p><p>See the <a href='/ihr/en/documentation#Country-s-network-dependency'>documentation for more details</a>.</p>"
+            },
       "table": {
         "dependencyTitle": "Summary",
         "apiTitle": "The network dependency data is available at the following link:"
@@ -187,6 +204,10 @@
     },
     "disconnections": {
       "title": "Network Disconnections",
+        "info": {
+            "title": "Network Disconnections",
+            "description": "<p>Network disconnections found by monitoring the status of RIPE Atlas probes. This widget reports synchronized disconnections of probes that are in the same geographical or topological area. The scope of this outage detector is limited to ASes and regions where RIPE Atlas has multiple probes.</p><p>See the <a href='/ihr/en/documentation#Network-disconnections'>documentation for more details</a>.</p>"
+            },
       "table": {
         "event": "event",
         "startTime": "Disconnection time",
@@ -202,6 +223,10 @@
     },
     "networkDelay": {
       "title": "Network Delay",
+        "info": {
+            "title": "Network Delay",
+            "description": "<p>Network delays between pairs of ASes, Atlas probes, and cities (IP addresses are geolocated with RIPE IPmap) computed using traceroute data collected with the RIPE Atlas measurement platform.</p><p>See <a href='/ihr/en/documentation#Network-delay'>documentation for more details</a>.</p>"
+            },
       "yaxis": "Median RTT (ms)",
       "table": {
         "title": "Estimated Delays",
@@ -807,7 +832,7 @@
         "caption": "ASes directly connected to AS",
         "info": {
             "title": "Connected ASes",
-            "description": "ASes that are seen adjacent to the selected AS in BGP data. The data is collected by RIPE RIS and Routeviews so the scope is limited by the number of ASes peering with RIS and Routeviews. Also as BGP path can be manipulated (e.g. in the case of a BGP hijack) fake connections may be reported.<br>The countries correspond to the country code registered for the ASes in the RIRs delegated stats. These ASes may be operating in other regions."
+            "description": "ASes seen adjacent to the selected AS in BGP data. The data is collected by RIPE RIS and Routeviews so the scope is limited by the number of ASes peering with RIS and Routeviews. Since BGP path can be manipulated (e.g. in the case of a BGP hijack) fake connections may be reported.<br>The country codes correspond to the country codes registered for the ASes in the RIRs delegated stats. These ASes may be operating in other regions."
             }
       },
       "ipPrefix": {
@@ -815,74 +840,140 @@
         "caption": "Prefixes orginated by AS",
         "info": {
             "title": "Originated Prefixes",
-            "description": "Prefixes announced in BGP by the selected AS. Prefixes that are The countries correspond to the country code registered for the prefixes in the RIRs delegated stats. These ASes may be operating in other regions."
+            "description": "Prefixes announced in BGP by the selected AS. The geo-located country codes are from Maxmind, and the registered country codes correspond to the country codes registered in the RIRs delegated stats. The selected AS may be operating in other regions."
             }
       },
       "ixp": {
         "title": "IXPs",
-        "caption": "Internet Exchange Points for AS"
+        "caption": "Internet Exchange Points for AS",
+        "info": {
+            "title": "IXPs",
+            "description": "IXP membership for the selected AS. Data is from PeeringDB and CAIDA (includes PCH and HE data). Due to the lack of unique identifiers for IXPs, the same IXP may appear twice if it appears in different datasets with different names."
+            }
       },
       "rankings": {
         "title": "Rankings",
-        "caption": "Top ranks for AS"
+        "caption": "Top ranks for AS",
+        "info": {
+            "title": "Rankings",
+            "description": "Rankings for the selected AS. The chart shows only the top three. <br><br>For the IHR country ranking:<ul><li>'Total AS' is based on the number of downstream ASes in a country.</li><li>'Total eyeball' is based on the country population covered by the selected AS and its downstream ASes.</li></ul>"
+            }
+
       },
       "popularDomains": {
         "title": "Popular Domains",
-        "caption": "Popular domain names hosted by AS"
+        "caption": "Popular domain names hosted by AS",
+        "info": {
+            "title": "Popular Domains",
+            "description": "<p>Most popular DNS zones corresponding to hostnames that have IP addresses in prefixes originated by the selected AS.</p>"
+            }
+
       },
       "popularHostNames": {
         "title": "Popular Hostnames",
-        "caption": "Hostnames for popular domain names hosted by AS"
+        "caption": "Hostnames for popular domain names hosted by AS",
+        "info": {
+            "title": "Popular Hostnames",
+            "description": "<p>Most popular hostnames that have IP addresses in prefixes originated by the selected AS.</p>"
+            }
       },
       "authoritativeNameservers": {
         "title": "Authoritative Nameservers",
-        "caption": "Authoritative Nameservers hosted by AS"
+        "caption": "Authoritative Nameservers hosted by AS",
+        "info": {
+            "title": "Authoritative Nameservers",
+            "description": "<p>DNS authoritative nameservers hosted in IP prefixes originated by the selected AS.</p>"
+            }
       },
       "facilities": {
         "title": "Co-located ASes",
-        "caption": "ASes present at the same colocation facilities as AS"
+        "caption": "ASes present at the same colocation facilities as AS",
+        "info": {
+            "title": "Co-located ASes",
+            "description": "<p>ASes that are in the same co-location facilities as the selected AS.</p><p>Use the search box to see only results for a specific AS or co-location facility.</p>"
+            }
       },
       "roas": {
         "title": "RPKI Route Origin Authorization",
-        "caption": "ROAs registered for AS"
-      },
-      "atlas": {
-        "title": "RIPE Atlas",
-        "caption": "RIPE Atlas probes located in AS"
+        "caption": "ROAs registered for AS",
+        "info": {
+            "title": "RPKI Route Origin Authorization",
+            "description": "<p>Route Origin Authorization (ROA) objects registered for the selected AS in RPKI. It doesn't mean that the AS has been assigned the prefixes, but that it is allowed to originate the prefix in BGP.</p>"
+        }
       },
       "siblings": {
         "title": "Sibling ASes",
-        "caption": "Other ASes managed by the same organization"
+        "caption": "Other ASes managed by the same organization",
+        "info": {
+            "title": "Sibling ASes",
+            "description": "<p>ASes that are likely to be managed by the same organization.</p>"
+            }
       },
       "downstreams": {
         "title": "''Downstream'' ASes",
-        "caption": "ASes depending on AS"
+        "caption": "ASes depending on AS",
+        "info": {
+            "title": "''Downstream'' ASes",
+            "description": "<p>ASes that are usually seen downstream of the selected network in BGP data. This is equivalent to the customer cone of the selected AS. Values close to 100% mean that the selected AS is seen in all, or at least most, of the AS paths to that AS.</p><p>See also <a href='/ihr/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
+        }
       },
       "upstreams": {
         "title": "''Upstream'' ASes",
-        "caption": "ASes depending on AS"
+        "caption": "ASes depending on AS",
+        "info": {
+            "title": "''Upstream'' ASes",
+            "description": "<p>ASes that are usually seen upstream of the selected network in BGP data. Values close to 100% mean that the AS is seen in all, or at least most, of the AS paths to the selected AS.</p><p>See also <a href='/ihr/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
+        }
+      },
+      "atlas": {
+        "title": "RIPE Atlas",
+        "caption": "RIPE Atlas probes located in ",
+        "info": {
+            "title": "RIPE Atlas probes",
+            "description": "<p><a href='https://atlas.ripe.net/'>RIPE Atlas</a> probes that are connected, disconnected, or abandoned, for the selected country.</p>"
+        }
       }
     },
     "country": {
       "rankings": {
         "title": "AS Rankings",
-        "caption": "Top ASes in "
+        "caption": "Top ASes in ",
+        "info": {
+            "title": "AS Rankings",
+            "description": "<p>Rankings for all ASes registered in the selected country.</p>"
+        }
       },
       "ases": {
         "title": "Autonomous Systems",
-        "caption": "ASes registered with organization in "
+        "caption": "ASes registered with organization in ",
+        "info": {
+            "title": "Autonomous Systems",
+            "description": "<p>Autonomous Systems (AS) registered in the selected country as reported by RIRs delegated stats. These ASes can be operating in other countries.</p>"
+        }
       },
       "ixps": {
         "title": "Internet Exchange Points",
-        "caption": "Internet Exchange Points located in "
+        "caption": "Internet Exchange Points located in ",
+        "info": {
+            "title": "Internet Exchange Points (IXPs)",
+            "description": "<p>Internet Exchange Points (IXPs) operating in the selected country.</p>"
+        }
       },
       "prefixes": {
         "title": "IP Prefixes",
-        "caption": "Prefixes registered and geo-located in "
+        "caption": "Prefixes registered and geo-located in ",
+        "info": {
+            "title": "IP Prefixes",
+            "description": "<p>IP prefixes geo-located by Maxmind or registered with RIRs in the selected country.</p>"
+        }
       },
       "atlas": {
         "title": "RIPE Atlas",
-        "caption": "RIPE Atlas probes located in "
+        "caption": "RIPE Atlas probes located in ",
+        "info": {
+            "title": "RIPE Atlas probes",
+            "description": "<p><a href='https://atlas.ripe.net/'>RIPE Atlas</a> probes that are connected, disconnected, or abandoned, for the selected country.</p>"
+        }
       }
     },
     "ixp": {
