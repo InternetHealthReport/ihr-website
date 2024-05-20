@@ -79,10 +79,9 @@ const getUrlAnchor = () => {
     <QDialog v-model="infoDialog">
       <QCard style="width: 1000px; height: auto;">
         <QCardSection>
-          <div class="text-h6">{{ infoTitle }}</div>
+          <div class="text-h6" v-html="infoTitle"></div>
         </QCardSection>
-        <QCardSection class="q-pt-none">
-          {{ infoDescription }}
+        <QCardSection class="q-pt-none" v-html="infoDescription">
         </QCardSection>
         <QCardActions align="right">
           <QBtn flat label="Close" color="primary" v-close-popup/>

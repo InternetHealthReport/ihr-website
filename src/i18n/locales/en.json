@@ -804,11 +804,19 @@
     "as": {
       "peers": {
         "title": "Connected ASes",
-        "caption": "ASes directly connected to AS"
+        "caption": "ASes directly connected to AS",
+        "info": {
+            "title": "Connected ASes",
+            "description": "ASes that are seen adjacent to the selected AS in BGP data. The data is collected by RIPE RIS and Routeviews so the scope is limited by the number of ASes peering with RIS and Routeviews. Also as BGP path can be manipulated (e.g. in the case of a BGP hijack) fake connections may be reported.<br>The countries correspond to the country code registered for the ASes in the RIRs delegated stats. These ASes may be operating in other regions."
+            }
       },
       "ipPrefix": {
         "title": "Originated Prefixes",
-        "caption": "Prefixes orginated by AS"
+        "caption": "Prefixes orginated by AS",
+        "info": {
+            "title": "Originated Prefixes",
+            "description": "Prefixes announced in BGP by the selected AS. Prefixes that are The countries correspond to the country code registered for the prefixes in the RIRs delegated stats. These ASes may be operating in other regions."
+            }
       },
       "ixp": {
         "title": "IXPs",
