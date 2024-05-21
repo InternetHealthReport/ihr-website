@@ -1030,30 +1030,61 @@
     "prefix": {
       "popularDomains": {
         "title": "Popular Domains",
-        "caption": "Popular domain names resolving to IPs in "
+        "caption": "Popular domain names resolving to IPs in ",
+        "info": {
+            "title": "Popular Domains",
+            "description": "<p>Most popular DNS zones corresponding to hostnames that have IP addresses in the selected prefix.</p>"
+            }
+
       },
       "popularHostNames": {
         "title": "Popular Hostnames",
-        "caption": "Hostnames for popular domain names resolving to IPs in "
+        "caption": "Hostnames for popular domain names resolving to IPs in ",
+        "info": {
+            "title": "Popular Hostnames",
+            "description": "<p>Most popular hostnames that have IP addresses in the selected prefix.</p>"
+            }
+
       },
       "nameservers": {
         "title": "Authoritative Nameservers",
-        "caption": "DNS Authoritative Nameservers resolving to IPs in "
+        "caption": "DNS Authoritative Nameservers resolving to IPs in ",
+        "info": {
+            "title": "Authoritative Nameservers",
+            "description": "<p>DNS authoritative nameservers hosted in the selected prefix.</p>"
+            }
+
       },
       "upstreams": {
-        "title": "''Upstream'' ASes"
+        "title": "''Upstream'' ASes",
+        "info": {
+            "title": "''Upstream'' ASes",
+            "description": "<p>ASes that are usually seen upstream of the selected prefix in BGP data. Values close to 100% mean that the AS is seen in all, or at least most, of the AS paths to the selected prefix.</p><p>See also <a href='/ihr/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
+        }
       },
       "roas": {
         "title": "RPKI Route Origin Authorization",
-        "caption": "RPKI ROAs for "
+        "caption": "RPKI ROAs for ",
+        "info": {
+            "title": "RPKI Route Origin Authorization",
+            "description": "<p>Route Origin Authorization (ROA) objects registered for the selected prefix in RPKI.</p>"
+        }
       },
       "lessSpecific": {
         "title": "Less Specific Prefixes",
-        "caption": "Prefixes covering "
+        "caption": "Prefixes covering ",
+        "info": {
+            "title": "Less Specific Prefixes",
+            "description": "<p>Less specific prefixes covering the selected prefix.</p>"
+        }
       },
       "moreSpecific": {
         "title": "More Specific Prefixes",
-        "caption": "Prefixes covered by "
+        "caption": "Prefixes covered by ",
+        "info": {
+            "title": "More Specific Prefixes",
+            "description": "<p>More specific prefixes covered by the selected prefix.</p>"
+        }
       }
     }
   }
