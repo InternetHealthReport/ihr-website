@@ -101,8 +101,10 @@ onMounted(() => {
     </QCardSection>
   </QCard>
   <GenericCardController
-    title="AS rankings"
-    :sub-title="'Top ASes in '+pageTitle"
+    :title="$t('iyp.rank.topAs.title')"
+    :sub-title="$t('iyp.rank.topAs.caption')+pageTitle"
+    :info-title="$t('iyp.rank.topAs.info.title')"
+    :info-description="$t('iyp.rank.topAs.info.description')"
     class="card"
     v-if="selects[0].value"
   >
@@ -112,8 +114,10 @@ onMounted(() => {
     />
   </GenericCardController>
   <GenericCardController
-    title="Hostname rankings"
-    :sub-title="'Top Hostnames in '+pageTitle+' (limited to 100K)'"
+    :title="$t('iyp.rank.topHostnames.title')"
+    :sub-title="$t('iyp.rank.topHostnames.caption')+pageTitle+' (limited to 100K)'"
+    :info-title="$t('iyp.rank.topHostnames.info.title')"
+    :info-description="$t('iyp.rank.topHostnames.info.description')"
     class="card"
     v-if="selects[1].value"
   >
