@@ -225,7 +225,7 @@
       "title": "Network Delay",
         "info": {
             "title": "Network Delay",
-            "description": "<p>Network delays between pairs of ASes, Atlas probes, and cities (IP addresses are geolocated with RIPE IPmap) computed using traceroute data collected with the RIPE Atlas measurement platform.</p><p>See <a href='/ihr/en/documentation#Network-delay'>documentation for more details</a>.</p>"
+            "description": "<p>Network delays between ASes, IXPs, Atlas probes, and cities (IP addresses are geolocated with RIPE IPmap) computed using traceroute data collected with the RIPE Atlas measurement platform.</p><p>See <a href='/ihr/en/documentation#Network-delay'>documentation for more details</a>.</p>"
             },
       "yaxis": "Median RTT (ms)",
       "table": {
@@ -981,13 +981,25 @@
         "title": "Prefixes"
       },
       "members": {
-        "title": "Members"
+        "title": "Members",
+        "info": {
+            "title": "Members",
+            "description": "<p>ASes peering at the selected IXP.</p>"
+        }
       },
       "facilities": {
-        "title": "Facilities"
+        "title": "Facilities",
+        "info": {
+            "title": "Facilities",
+            "description": "<p>Co-location facilities where the selected IXP is present.</p>"
+        }
       },
       "peeringLANs": {
-        "title": "Peering LANs"
+        "title": "Peering LANs",
+        "info": {
+            "title": "Peering LANs",
+            "description": "<p>Prefixes used for the IXP peering LAN.</p>"
+        }
       },
       "roas": {
         "title": "RPKI Route Origin Authorization",

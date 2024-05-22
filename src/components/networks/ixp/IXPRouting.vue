@@ -9,8 +9,8 @@ const props = defineProps(['ixpNumber', 'pageTitle'])
   <GenericCardController
     :title="$t('iyp.ixp.roas.title')"
     sub-title="RPKI and BGP data for peering LAN"
-    :info-title="$t('iyp.ixp.roa.info.title')"
-    :info-description="$t('iyp.ixp.roa.info.description')"
+    :info-title="$t('iyp.ixp.roas.info.title')"
+    :info-description="$t('iyp.ixp.roas.info.description')"
   >
     <IXPRPKIRouteOriginAuthorization
       :ixpNumber="ixpNumber"

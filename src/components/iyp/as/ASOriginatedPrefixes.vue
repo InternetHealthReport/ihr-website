@@ -67,10 +67,17 @@ onMounted(() => {
   >
     <div class="row justify-evenly">
       <div class="col-4">
-        <IypGenericPieChart v-if="prefixes.data.length > 0" :chart-data="prefixes.data" :chart-layout="{ title: 'Geo-location (Maxmind)' }" />
+        <IypGenericPieChart 
+            v-if="prefixes.data.length > 0" 
+            :chart-data="prefixes.data"
+            :chart-layout="{ title: 'Geo-location (Maxmind)' }" />
       </div>
       <div class="col-6">
-        <IypGenericBarChart v-if="prefixes.data.length > 0" :chart-data="prefixes.data" :config="{key:'tags'}" :chart-layout="{ title: 'tag' }" />
+        <IypGenericBarChart 
+            v-if="prefixes.data.length > 0" 
+            :chart-data="prefixes.data" 
+            :config="{key:'tags'}" 
+            :chart-layout="{ title: 'Prefix tags' }" />
       </div>
       <div class="col-10">
       <IypGenericTreemapChart
@@ -78,7 +85,6 @@ onMounted(() => {
         :chart-data="prefixes.data"
         :chart-layout="{ title: 'Breakdown per RIR and geo-location (Maxmind)' }"
         :config="{ keys: ['rir', 'cc', 'prefix'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
-        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
         />
       </div>
     </div>
