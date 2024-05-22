@@ -17,7 +17,7 @@ const props  = defineProps({
 const route = useRoute()
 
 const REFERENCES = {
-  peeringDB: 'https://www.peeringdb.com/ix',
+  'peeringdb.com': 'https://www.peeringdb.com/ix',
 }
 
 const getOverview = () => {
@@ -25,9 +25,12 @@ const getOverview = () => {
       OPTIONAL MATCH (i)-[:MANAGED_BY]->(o:Organization)
       OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
       OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
-      OPTIONAL MATCH (i)<-[:MEMBER_OF]-(a:AS)
+      OPTIONAL MATCH (i)<-[p:MANAGED_BY]-(plan:Prefix)
+      WHERE p.reference_org <> 'CAIDA'
+      OPTIONAL MATCH (i)<-[m:MEMBER_OF]-(a:AS)
+      WHERE m.reference_org <> 'CAIDA'
       OPTIONAL MATCH (i)-[:LOCATED_IN]->(f:Facility)
-      RETURN i.name as name, o.name as organization, c.name AS country, c.country_code AS cc, u.url as website, count(distinct a) as nb_as, count(distinct f) as nb_fac
+      RETURN i.name as name, o.name as organization, c.name AS country, c.country_code AS cc, u.url as website, count(distinct a) as nb_as, count(distinct f) as nb_fac, COLLECT(distinct plan) as peer_lan
     `
   return [{ statement: query, parameters: { id: props.ixpNumber } }]
 }
@@ -56,7 +59,7 @@ const fetchData = async () => {
 
 const handleReference = (key) => {
   let externalLink = ''
-  if (key === 'peeringDB' && props.ixpNumber) {
+  if (key === 'peeringdb.com' && props.ixpNumber) {
   externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
   }
   return externalLink
@@ -81,6 +84,7 @@ onMounted(() => {
         <tr>
           <th class="text-left">Summary</th>
           <th class="text-left">Stats</th>
+          <th class="text-left">Peering LAN</th>
           <th class="text-left">External Links</th>
         </tr>
       </thead>
@@ -97,8 +101,15 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="overview.name">
-              <div>Nb. ASes: {{ overview.nb_as }}</div>
-              <div>Nb. Co-location: {{ overview.nb_fac }}</div>
+              <div>Nb. peers: {{ overview.nb_as }}</div>
+              <div>Nb. facilities: {{ overview.nb_fac }}</div>
+            </div>
+          </td>
+          <td class="text-left">
+            <div v-for="item in overview.peer_lan" :key="item.prefix">
+                <RouterLink :to="Tr.i18nRoute({ name: 'prefix', params: {ip:item.network, length:item.prefixlen}})">
+                  {{ item.prefix }}
+                </RouterLink>
             </div>
           </td>
           <td class="text-left">

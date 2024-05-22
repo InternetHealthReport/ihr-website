@@ -984,10 +984,18 @@
         "title": "Members"
       },
       "facilities": {
-        "title": "Co-location Facilities"
+        "title": "Facilities"
       },
       "peeringLANs": {
         "title": "Peering LANs"
+      },
+      "roas": {
+        "title": "RPKI Route Origin Authorization",
+        "caption": "ROAs registered for peering LAN",
+        "info": {
+            "title": "RPKI Route Origin Authorization",
+            "description": "<p>Route Origin Authorization (ROA) objects registered for the IXPs peering LANs in RPKI. In addition, the last column of the table shows ASes that originate peering LAN in BGP.</p>"
+        }
       }
     },
     "tag": {
