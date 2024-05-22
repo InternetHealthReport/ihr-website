@@ -1,18 +1,18 @@
 <script setup>
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
-import IXPMembers from '@/components/iyp/ixp/IXPMembers.vue'
+import IXPRPKIRouteOriginAuthorization from '@/components/iyp/ixp/IXPRPKIRouteOriginAuthorization.vue'
 
 const props = defineProps(['ixpNumber', 'pageTitle'])
 </script>
 
 <template>
   <GenericCardController
-    :title="$t('iyp.ixp.members.title')"
-    sub-title="Member Autonomous Systems (ASes)"
-    :info-title="$t('iyp.ixp.members.info.title')"
-    :info-description="$t('iyp.ixp.members.info.description')"
+    :title="$t('iyp.ixp.roas.title')"
+    sub-title="RPKI and BGP data for peering LAN"
+    :info-title="$t('iyp.ixp.roas.info.title')"
+    :info-description="$t('iyp.ixp.roas.info.description')"
   >
-    <IXPMembers
+    <IXPRPKIRouteOriginAuthorization
       :ixpNumber="ixpNumber"
       :page-title="pageTitle"
     />

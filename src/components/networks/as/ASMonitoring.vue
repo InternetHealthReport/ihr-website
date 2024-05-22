@@ -36,7 +36,7 @@ const fetch = ref(true)
 
   <GenericCardController
     :title="$t('charts.iodaChart.title')"
-    sub-title="AS Internet Overview"
+    sub-title="Reachability data from Georgia Tech's Internet Intelligence Lab"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.iodaChart.info.title')"
     :info-description="$t('charts.iodaChart.info.description')"

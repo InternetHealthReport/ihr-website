@@ -2,7 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
-import IypGenericPieChart from '@/components/charts/IypGenericPieChart.vue'
+import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -15,7 +15,7 @@ const facilities = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility)OPTIONAL MATCH (f)-[:COUNTRY]->(c:Country)
+  query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility) OPTIONAL MATCH (f)-[:COUNTRY]->(c:Country)
     RETURN f.name as name, c.country_code AS cc`,
   columns: [
     { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
@@ -52,10 +52,11 @@ onMounted(() => {
     :cypher-query="facilities.query.replace(/\$(.*?)}/, `${ixpNumber}}`)"
     :slot-length="1"
   >
-    <IypGenericPieChart
+    <IypGenericTreemapChart
       v-if="facilities.data.length > 0"
       :chart-data="facilities.data"
-      :chart-layout="{ title: 'Country' }"
+      :chart-layout="{ title: '' }"
+      :config="{ keys: ['cc', 'name'], root: pageTitle}"
     />
   </IypGenericTable>
 </template>
