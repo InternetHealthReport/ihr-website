@@ -1106,6 +1106,16 @@
             "description": "<p>More specific prefixes covered by the selected prefix.</p>"
         }
       }
+    },
+    "rank": {
+      "topAs": {
+        "title": "AS rankings",
+        "caption": "Top ASes in "
+      },
+      "topHostnames": {
+        "title": "Hostname rankings",
+        "caption": "Top Hostnames in "
+      }
     }
   }
 }
