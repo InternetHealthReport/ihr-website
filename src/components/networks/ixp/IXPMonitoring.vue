@@ -15,23 +15,6 @@ const fetch = ref(true)
 
 <template>
   <GenericCardController
-    :title="$t('charts.prefixHegemony.title')"
-    sub-title="BGP / IRR / RPKI / delegated"
-    :report-day="interval.dayDiff()"
-    :info-title="$t('charts.prefixHegemony.info.title')"
-    :info-description="$t('charts.prefixHegemony.info.description')"
-    class="card"
-    v-if="caidaId"
-  >
-    <PrefixHegemonyChart
-      :start-time="startTime"
-      :end-time="endTime"
-      :as-number="caidaId"
-      :fetch="fetch"
-    />
-  </GenericCardController>
-
-  <GenericCardController
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
@@ -48,22 +31,6 @@ const fetch = ref(true)
       searchBar
       :peeringdbId="peeringdbId"
       :readonlySourceSearch="true"
-    />
-  </GenericCardController>
-
-  <GenericCardController
-    :title="$t('charts.delayAndForwarding.title')"
-    sub-title="Traceroute Data"
-    :report-day="interval.dayDiff()"
-    :info-title="$t('charts.delayAndForwarding.info.title')"
-    :info-description="$t('charts.delayAndForwarding.info.description')"
-    class="card"
-  >
-    <DelayAndForwardingChart
-      :start-time="startTime"
-      :end-time="endTime"
-      :as-number="caidaId ? caidaId : 0"
-      :fetch="fetch"
     />
   </GenericCardController>
 </template>
