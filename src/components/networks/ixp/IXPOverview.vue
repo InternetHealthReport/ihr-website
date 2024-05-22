@@ -25,7 +25,9 @@ const getOverview = () => {
       OPTIONAL MATCH (i)-[:MANAGED_BY]->(o:Organization)
       OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
       OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
-      RETURN i.name as name, o.name as organization, c.name AS country, c.country_code AS cc, u.url as website
+      OPTIONAL MATCH (i)<-[:MEMBER_OF]-(a:AS)
+      OPTIONAL MATCH (i)-[:LOCATED_IN]->(f:Facility)
+      RETURN i.name as name, o.name as organization, c.name AS country, c.country_code AS cc, u.url as website, count(distinct a) as nb_as, count(distinct f) as nb_fac
     `
   return [{ statement: query, parameters: { id: props.ixpNumber } }]
 }
@@ -78,6 +80,7 @@ onMounted(() => {
       <thead>
         <tr>
           <th class="text-left">Summary</th>
+          <th class="text-left">Stats</th>
           <th class="text-left">External Links</th>
         </tr>
       </thead>
@@ -85,12 +88,17 @@ onMounted(() => {
         <tr>
           <td class="text-left">
             <div v-if="overview.name">
-              <div>IXP Name: {{ overview.name }}</div>
-              <div>Country of origin: <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></div>
+              <div>Country: <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></div>
               <div>Organization: {{ overview.organization }}</div>
               <div>
                 Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
               </div>
+            </div>
+          </td>
+          <td class="text-left">
+            <div v-if="overview.name">
+              <div>Nb. ASes: {{ overview.nb_as }}</div>
+              <div>Nb. Co-location: {{ overview.nb_fac }}</div>
             </div>
           </td>
           <td class="text-left">
