@@ -102,7 +102,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard flat bordered v-if="route.path.split('/')[2]!=='embedded'">
     <QCardSection>
       <div class="text-h6">Select widgets</div>
     </QCardSection>
@@ -185,7 +185,7 @@ onMounted(() => {
       :start-time="startTime"
       :end-time="endTime"
       :startPointName="Math.abs(asNumber).toString()"
-      :startPointType="route.params.id.substring(0, 2)"
+      :startPointType="'AS'"
       :fetch="fetch"
       :readonlySourceSearch="true"
       searchBar

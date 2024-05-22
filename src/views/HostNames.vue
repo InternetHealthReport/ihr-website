@@ -27,7 +27,7 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="route.params.hostname">
-      <HostName v-if="hostName" />
+      <HostName v-if="hostName" :domain="hostName" />
     </div>
     <div v-else>
       <div>

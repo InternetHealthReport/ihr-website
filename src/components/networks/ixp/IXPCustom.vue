@@ -74,7 +74,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard flat bordered v-if="route.path.split('/')[2]!=='embedded'">
     <QCardSection>
       <div class="text-h6">Select widgets</div>
     </QCardSection>
@@ -121,7 +121,7 @@ onMounted(() => {
       :start-time="startTime"
       :end-time="endTime"
       :startPointName="Math.abs(caidaId).toString()"
-      :startPointType="route.params.id.substring(0, 2)"
+      :startPointType="'IXP'"
       :fetch="fetch"
       searchBar
       :readonlySourceSearch="true"

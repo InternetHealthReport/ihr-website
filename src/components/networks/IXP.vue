@@ -17,6 +17,15 @@ const { t } = useI18n()
 
 const iyp_api = inject('iyp_api')
 
+const props  = defineProps({
+  ixpNumber: {
+    type: Number,
+    required: true,
+  }
+})
+
+const emits = defineEmits(['set-embedded-page-title'])
+
 const route = useRoute()
 const router = useRouter()
 
@@ -32,7 +41,6 @@ const activeMenu = route.query.active ? route.query.active : 'overview'
 
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const ixpNumber = ref(Number(route.params.id.replace('IXP','')))
 const ixpName = ref(null)
 const menu = ref(activeMenu)
 const caidaId = ref(null)
@@ -42,7 +50,7 @@ const getInfo = () => {
   const query = `MATCH (:PeeringdbIXID {id: $ixp})<-[:EXTERNAL_ID]-(i:IXP)
     OPTIONAL MATCH (i)-[:EXTERNAL_ID]-(c:CaidaIXID)
     RETURN i.name AS name, c.id AS caida_id`
-  return [{ statement: query, parameters: { ixp: ixpNumber.value } }]
+  return [{ statement: query, parameters: { ixp: props.ixpNumber } }]
 }
 
 const fetchData = async () => {
@@ -78,22 +86,24 @@ const family = computed(() => {
 })
 
 const pageTitle = computed(() => {
-  return `IXP${ixpNumber.value} - ${ixpName.value}`
+  const title = `IXP${props.ixpNumber} - ${ixpName.value}`
+  emits('set-embedded-page-title', title)
+  return title
 })
 
 watch(addressFamily, () => {
   pushRoute()
 })
-watch(() => route.params.id, (ixp) => {
-  const newIXP = Number(ixp.replace('IXP', ''))
-  if (newIXP != ixpNumber.value) {
-    ixpNumber.value = newIXP
-    if (ixpNumber.value) {
-      pushRoute()
-      fetchData()
-    }
-  }
-})
+// watch(() => route.params.id, (ixp) => {
+//   const newIXP = Number(ixp.replace('IXP', ''))
+//   if (newIXP != props.ixpNumber) {
+//     props.ixpNumber = newIXP
+//     if (props.ixpNumber) {
+//       pushRoute()
+//       fetchData()
+//     }
+//   }
+// })
 watch(interval, () => {
   pushRoute()
 })
@@ -109,7 +119,7 @@ watch(menu, () => {
   pushRoute()
 })
 onMounted(() => {
-  if (ixpNumber.value) {
+  if (props.ixpNumber) {
     pushRoute()
     fetchData()
   } else {
@@ -121,80 +131,94 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">{{ pageTitle }}</h1>
-    <h3 class="text-center">
-      <div v-if="['monitoring', 'custom'].includes(menu)">
-        {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-        <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
-      </div>
-      <div v-else>
-        Weekly report
-      </div>
-    </h3>
-    <QCard flat>
-      <QTabs
-        v-model="menu"
-        dense
-        indicator-color="secondary"
-        active-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <QTab name="overview">Overview</QTab>
-        <QTab name="monitoring">Monitoring</QTab>
-        <QTab name="routing">Routing</QTab>
-        <QTab name="peering">Peering</QTab>
-        <QTab name="custom">Custom</QTab>
-      </QTabs>
-      <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
-        <QTabPanel name="overview">
-          <IXPOverview
-            :ixp-number="ixpNumber"
-          />
-        </QTabPanel>
-        <QTabPanel name="monitoring">
-          <IXPMonitoring
-            :start-time="startTime"
-            :end-time="endTime"
-            :caida-id="caidaId"
-            :family="family"
-            :page-title="pageTitle"
-            :interval="interval"
-            :peeringdb-id="ixpNumber"
-          />
-        </QTabPanel>
-        <QTabPanel name="routing">
-          <IXPRouting
-            :ixp-number="ixpNumber"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="peering">
-          <IXPPeering
-            :ixp-number="ixpNumber"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="custom">
-          <IXPCustom
-            :start-time="startTime"
-            :end-time="endTime"
-            :caida-id="caidaId"
-            :family="family"
-            :page-title="pageTitle"
-            :peeringdbId="ixpNumber"
-            :interval="interval"
-            :hash="routeHash"
-          />
-        </QTabPanel>
-      </QTabPanels>
-    </QCard>
-  </div>
+  <template v-if="route.path.split('/')[2]==='embedded'">
+    <IXPCustom
+      :start-time="startTime"
+      :end-time="endTime"
+      :caida-id="caidaId"
+      :family="family"
+      :page-title="pageTitle"
+      :peeringdbId="ixpNumber"
+      :interval="interval"
+      :hash="routeHash"
+    />
+  </template>
+  <template v-else>
+    <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+      <h1 class="text-center">{{ pageTitle }}</h1>
+      <h3 class="text-center">
+        <div v-if="['monitoring', 'custom'].includes(menu)">
+          {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
+          <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+        </div>
+        <div v-else>
+          Weekly report
+        </div>
+      </h3>
+      <QCard flat>
+        <QTabs
+          v-model="menu"
+          dense
+          indicator-color="secondary"
+          active-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <QTab name="overview">Overview</QTab>
+          <QTab name="monitoring">Monitoring</QTab>
+          <QTab name="routing">Routing</QTab>
+          <QTab name="peering">Peering</QTab>
+          <QTab name="custom">Custom</QTab>
+        </QTabs>
+        <QSeparator />
+        <QTabPanels
+          v-model="menu"
+          v-if="pageTitle"
+        >
+          <QTabPanel name="overview">
+            <IXPOverview
+              :ixp-number="ixpNumber"
+            />
+          </QTabPanel>
+          <QTabPanel name="monitoring">
+            <IXPMonitoring
+              :start-time="startTime"
+              :end-time="endTime"
+              :caida-id="caidaId"
+              :family="family"
+              :page-title="pageTitle"
+              :interval="interval"
+              :peeringdb-id="ixpNumber"
+            />
+          </QTabPanel>
+          <QTabPanel name="routing">
+            <IXPRouting
+              :ixp-number="ixpNumber"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="peering">
+            <IXPPeering
+              :ixp-number="ixpNumber"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="custom">
+            <IXPCustom
+              :start-time="startTime"
+              :end-time="endTime"
+              :caida-id="caidaId"
+              :family="family"
+              :page-title="pageTitle"
+              :peeringdbId="ixpNumber"
+              :interval="interval"
+              :hash="routeHash"
+            />
+          </QTabPanel>
+        </QTabPanels>
+      </QCard>
+    </div>
+  </template>
 </template>
 
 <style lang="stylus">

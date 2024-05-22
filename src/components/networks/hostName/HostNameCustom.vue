@@ -70,7 +70,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard flat bordered v-if="route.path.split('/')[2]!=='embedded'">
     <QCardSection>
       <div class="text-h6">Select widgets</div>
     </QCardSection>

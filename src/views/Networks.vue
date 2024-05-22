@@ -46,10 +46,15 @@ const init = () => {
 }
 
 watch(() => route.params.id, () => {
+  console.log(route.params.id)
   init()
 })
 
 watch(() => route.params.ip, () => {
+  init()
+})
+
+watch(() => route.params.length, () => {
   init()
 })
 
@@ -61,9 +66,9 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <div v-if="route.params.id || route.params.ip">
-      <AS v-if="asNumber" />
-      <IXP v-if="ixpNumber" />
-      <Prefix v-if="prefixHostString && prefixLengthNumber" />
+      <AS v-if="asNumber" :asNumber="asNumber" />
+      <IXP v-if="ixpNumber" :ixpNumber="ixpNumber" />
+      <Prefix v-if="prefixHostString && prefixLengthNumber" :host="prefixHostString" :prefixLength="prefixLengthNumber" />
     </div>
     <div v-else>
       <div>

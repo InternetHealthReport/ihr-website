@@ -18,6 +18,15 @@ const { t } = useI18n()
 
 const iyp_api = inject('iyp_api')
 
+const props  = defineProps({
+  countryCode: {
+    type: String,
+    required: true,
+  }
+})
+
+const emits = defineEmits(['set-embedded-page-title'])
+
 const route = useRoute()
 const router = useRouter()
 
@@ -33,7 +42,6 @@ const activeMenu = route.query.active ? route.query.active : 'overview'
 
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const countryCode = ref(route.params.cc)
 const countryName = ref(null)
 const menu = ref(activeMenu)
 const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
@@ -41,7 +49,7 @@ const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 const getInfo = () => {
   const query = `MATCH (c:Country {country_code: $cc})
     RETURN c.name AS name`
-  return [{ statement: query, parameters: { cc: countryCode.value } }]
+  return [{ statement: query, parameters: { cc: props.countryCode } }]
 }
 
 const fetchData = async () => {
@@ -76,22 +84,23 @@ const family = computed(() => {
 })
 
 const pageTitle = computed(() => {
+  emits('set-embedded-page-title', countryName.value)
   return countryName.value
 })
 
 watch(addressFamily, () => {
   pushRoute()
 })
-watch(() => route.params.cc, (country) => {
-  const newCountry = country
-  if (newCountry != countryCode.value) {
-    countryCode.value = newCountry
-    if (countryCode.value) {
-      pushRoute()
-      fetchData()
-    }
-  }
-})
+// watch(() => route.params.cc, (country) => {
+//   const newCountry = country
+//   if (newCountry != props.countryCode) {
+//     props.countryCode = newCountry
+//     if (props.countryCode) {
+//       pushRoute()
+//       fetchData()
+//     }
+//   }
+// })
 watch(interval, () => {
   pushRoute()
 })
@@ -107,7 +116,7 @@ watch(menu, () => {
   pushRoute()
 })
 onMounted(() => {
-  if (countryCode.value) {
+  if (props.countryCode) {
     pushRoute()
     fetchData()
   } else {
@@ -119,85 +128,98 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">{{ pageTitle }}</h1>
-    <h3 class="text-center">
-      <div v-if="['monitoring', 'custom'].includes(menu)">
-        {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-        <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
-      </div>
-      <div v-else>
-        Weekly report
-      </div>
-    </h3>
-    <QCard flat>
-      <QTabs
-        v-model="menu"
-        dense
-        indicator-color="secondary"
-        active-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <QTab name="overview">Overview</QTab>
-        <QTab name="monitoring">Monitoring</QTab>
-        <QTab name="routing">Routing</QTab>
-        <QTab name="peering">Peering</QTab>
-        <QTab name="rankings">Rankings</QTab>
-        <QTab name="custom">Custom</QTab>
-      </QTabs>
-      <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
-        <QTabPanel name="overview">
-          <CountryOverview
-            :country-code="countryCode"
-          />
-        </QTabPanel>
-        <QTabPanel name="monitoring">
-          <CountryMonitoring
-            :start-time="startTime"
-            :end-time="endTime"
-            :country-code="countryCode"
-            :family="family"
-            :page-title="pageTitle"
-            :interval="interval"
-          />
-        </QTabPanel>
-        <QTabPanel name="routing">
-          <CountryRouting
-            :country-code="countryCode"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="peering">
-          <CountryPeering
-            :country-code="countryCode"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="rankings">
-          <CountryRankings
-            :country-code="countryCode"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="custom">
-          <CountryCustom
-            :start-time="startTime"
-            :end-time="endTime"
-            :country-code="countryCode"
-            :family="family"
-            :page-title="pageTitle"
-            :interval="interval"
-            :hash="routeHash"
-          />
-        </QTabPanel>
-      </QTabPanels>
-    </QCard>
-  </div>
+  <template v-if="route.path.split('/')[2]==='embedded'">
+    <CountryCustom
+      :start-time="startTime"
+      :end-time="endTime"
+      :country-code="countryCode"
+      :family="family"
+      :page-title="pageTitle"
+      :interval="interval"
+      :hash="routeHash"
+    />
+  </template>
+  <template v-else>
+    <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+      <h1 class="text-center">{{ pageTitle }}</h1>
+      <h3 class="text-center">
+        <div v-if="['monitoring', 'custom'].includes(menu)">
+          {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
+          <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+        </div>
+        <div v-else>
+          Weekly report
+        </div>
+      </h3>
+      <QCard flat>
+        <QTabs
+          v-model="menu"
+          dense
+          indicator-color="secondary"
+          active-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <QTab name="overview">Overview</QTab>
+          <QTab name="monitoring">Monitoring</QTab>
+          <QTab name="routing">Routing</QTab>
+          <QTab name="peering">Peering</QTab>
+          <QTab name="rankings">Rankings</QTab>
+          <QTab name="custom">Custom</QTab>
+        </QTabs>
+        <QSeparator />
+        <QTabPanels
+          v-model="menu"
+          v-if="pageTitle"
+        >
+          <QTabPanel name="overview">
+            <CountryOverview
+              :country-code="countryCode"
+            />
+          </QTabPanel>
+          <QTabPanel name="monitoring">
+            <CountryMonitoring
+              :start-time="startTime"
+              :end-time="endTime"
+              :country-code="countryCode"
+              :family="family"
+              :page-title="pageTitle"
+              :interval="interval"
+            />
+          </QTabPanel>
+          <QTabPanel name="routing">
+            <CountryRouting
+              :country-code="countryCode"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="peering">
+            <CountryPeering
+              :country-code="countryCode"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="rankings">
+            <CountryRankings
+              :country-code="countryCode"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="custom">
+            <CountryCustom
+              :start-time="startTime"
+              :end-time="endTime"
+              :country-code="countryCode"
+              :family="family"
+              :page-title="pageTitle"
+              :interval="interval"
+              :hash="routeHash"
+            />
+          </QTabPanel>
+        </QTabPanels>
+      </QCard>
+    </div>
+  </template>
 </template>
 
 <style lang="stylus">

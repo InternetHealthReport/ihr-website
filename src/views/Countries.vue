@@ -28,7 +28,7 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="route.params.cc">
-      <Country v-if="countryString" />
+      <Country v-if="countryString" :countryCode="countryString" />
     </div>
     <div v-else>
       <div>

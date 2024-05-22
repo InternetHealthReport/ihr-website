@@ -43,7 +43,7 @@ const fetch = ref(true)
       :start-time="startTime"
       :end-time="endTime"
       :startPointName="Math.abs(caidaId).toString()"
-      :startPointType="route.params.id.substring(0, 2)"
+      :startPointType="'IXP'"
       :fetch="fetch"
       searchBar
       :peeringdbId="peeringdbId"
