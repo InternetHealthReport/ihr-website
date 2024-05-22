@@ -104,7 +104,7 @@ onMounted(() => {
 <template>
   <QCard flat bordered>
     <QCardSection>
-      <div class="text-h6">Select widgets</div>
+      <div class="text-h6">Select widgets to show</div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
@@ -140,7 +140,7 @@ onMounted(() => {
 
   <GenericCardController
     :title="$t('charts.iodaChart.title')"
-    sub-title="AS Internet Overview"
+    sub-title="Reachability data from Georgia Tech's Internet Intelligence Lab"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.iodaChart.info.title')"
     :info-description="$t('charts.iodaChart.info.description')"

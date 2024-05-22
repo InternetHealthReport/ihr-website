@@ -78,7 +78,7 @@ onMounted(() => {
 <template>
   <QCard flat bordered>
     <QCardSection>
-      <div class="text-h6">Select widgets</div>
+      <div class="text-h6">Select widgets to show</div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>

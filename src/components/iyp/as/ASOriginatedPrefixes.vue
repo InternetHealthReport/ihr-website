@@ -22,7 +22,7 @@ const prefixes = ref({
     OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
     OPTIONAL MATCH (p)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-    OPTIONAL MATCH (p)-[:PART_OF]->(cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(:OpaqueID)
+    OPTIONAL MATCH (p)-[:PART_OF*1..3]->(cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(:OpaqueID)
     OPTIONAL MATCH (cover:Prefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(cover_creg_country:Country)
     RETURN c.country_code AS cc, toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, cover_creg_country.country_code, '-')) AS rir_country, p.prefix as prefix, collect(DISTINCT(t.label)) AS tags, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility`,
   columns: [
@@ -67,10 +67,17 @@ onMounted(() => {
   >
     <div class="row justify-evenly">
       <div class="col-4">
-        <IypGenericPieChart v-if="prefixes.data.length > 0" :chart-data="prefixes.data" :chart-layout="{ title: 'Geo-location (Maxmind)' }" />
+        <IypGenericPieChart 
+            v-if="prefixes.data.length > 0" 
+            :chart-data="prefixes.data"
+            :chart-layout="{ title: 'Geo-location (Maxmind)' }" />
       </div>
       <div class="col-6">
-        <IypGenericBarChart v-if="prefixes.data.length > 0" :chart-data="prefixes.data" :config="{key:'tags'}" :chart-layout="{ title: 'tag' }" />
+        <IypGenericBarChart 
+            v-if="prefixes.data.length > 0" 
+            :chart-data="prefixes.data" 
+            :config="{key:'tags'}" 
+            :chart-layout="{ title: 'Prefix tags' }" />
       </div>
       <div class="col-10">
       <IypGenericTreemapChart
@@ -78,7 +85,6 @@ onMounted(() => {
         :chart-data="prefixes.data"
         :chart-layout="{ title: 'Breakdown per RIR and geo-location (Maxmind)' }"
         :config="{ keys: ['rir', 'cc', 'prefix'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
-        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
         />
       </div>
     </div>

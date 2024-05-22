@@ -2,7 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
-import IypGenericPieChart from '@/components/charts/IypGenericPieChart.vue'
+import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -15,11 +15,12 @@ const peeringLANs = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY]-(s:Prefix)OPTIONAL MATCH (s)-[:COUNTRY]->(c:Country)
-    RETURN s.prefix as prefix, c.country_code as cc`,
+    query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY {reference_org: 'PeeringDB'}]-(s:Prefix)
+    OPTIONAL MATCH (s)-[:ORIGINATE]-(a:AS)
+    RETURN s.prefix as prefix, s.af as af, COLLECT(DISTINCT a.asn) as orig`,
   columns: [
-    { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
     { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+    { name: 'Origin AS', label: 'Origin AS in BGP', align: 'left', field: row => row.orig, format: val => `${val}`, sortable: true },
   ]
 })
 
@@ -52,10 +53,11 @@ onMounted(() => {
     :cypher-query="peeringLANs.query.replace(/\$(.*?)}/, `${ixpNumber}}`)"
     :slot-length="1"
   >
-    <IypGenericPieChart
+    <IypGenericTreemapChart
       v-if="peeringLANs.data.length > 0"
       :chart-data="peeringLANs.data"
-      :chart-layout="{ title: 'Country' }"
+      :chart-layout="{ title: '' }"
+      :config="{ keys: ['af', 'prefix'], root: pageTitle}"
     />
   </IypGenericTable>
 </template>
