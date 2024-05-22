@@ -27,7 +27,7 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="route.params.rank">
-      <Rank v-if="rankName" />
+      <Rank v-if="rankName" :rank="rankName" />
     </div>
     <div v-else>
       <div>

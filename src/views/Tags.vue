@@ -27,7 +27,7 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="route.params.tag">
-      <Tag v-if="tagName" />
+      <Tag v-if="tagName" :tag="tagName" />
     </div>
     <div v-else>
       <div>

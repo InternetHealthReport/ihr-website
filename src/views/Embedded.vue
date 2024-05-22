@@ -10,6 +10,7 @@ import { isoCountries } from '@/plugins/countryName'
 import Country from '@/components/networks/Country.vue'
 import HostName from '@/components/networks/HostName.vue'
 import Rank from '@/components/networks/Rank.vue'
+import Tag from '@/components/networks/Tag.vue'
 
 const route = useRoute()
 
@@ -26,6 +27,7 @@ const prefixLengthNumber = ref(null)
 const countryString = ref(null)
 const hostName = ref(null)
 const rankName = ref(null)
+const tagName = ref(null)
 
 const Address4 = ipAddress.Address4
 const Address6 = ipAddress.Address6
@@ -79,6 +81,11 @@ const rank = () => {
   }
 }
 
+const tag = () => {
+  if (param1) {
+    tagName.value = param1
+  }
+}
 
 onMounted(() => {
 	if (report === 'network' || report === 'prefix') {
@@ -89,6 +96,8 @@ onMounted(() => {
 		hostname()
 	} else if (report === 'rank') {
 		rank()
+	} else if (report === 'tag') {
+		tag()
 	}
   console.log(report, param1, param2)
 })
@@ -103,6 +112,7 @@ onMounted(() => {
 		<Country v-if="countryString" :countryCode="countryString" @set-embedded-page-title="setPageTitle" />
 		<HostName v-if="hostName" :domain="hostName" @set-embedded-page-title="setPageTitle" />
 		<Rank v-if="rankName" :rank="rankName" @set-embedded-page-title="setPageTitle" />
+		<Tag v-if="tagName" :tag="tagName" @set-embedded-page-title="setPageTitle" />
 	</div>
 	<div class="row embedded-credit">
 		<div style="text-align: center;">{{ pageTitle }}</div>

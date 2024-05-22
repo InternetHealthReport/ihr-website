@@ -956,6 +956,16 @@
         "title": "More Specific Prefixes",
         "caption": "Prefixes covered by "
       }
+    },
+    "rank": {
+      "topAs": {
+        "title": "AS rankings",
+        "caption": "Top ASes in "
+      },
+      "topHostnames": {
+        "title": "Hostname rankings",
+        "caption": "Top Hostnames in "
+      }
     }
   }
 }
