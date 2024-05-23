@@ -1,4 +1,4 @@
-import { toRefs, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { PROJECT_START_DATE } from './IhrApi'
 
 class DateInterval {
@@ -27,9 +27,9 @@ export default function report(defaultTimeRange=null) {
     return defaultTimeRange ? defaultTimeRange : 3
   })
 
-  const getDateInterval = (endTimestamp, nDays) => {
-    const end = new Date(endTimestamp)
-    const begin = new Date(end)
+  const getDateInterval = (dateObj, nDays) => {
+    const end = new Date(dateObj)
+    const begin = new Date(end.getTime())
     begin.setUTCDate(begin.getUTCDate() - nDays)
     if (isNaN(begin.getTime()) || isNaN(end.getTime()))
       throw RangeError("invalid start or end")

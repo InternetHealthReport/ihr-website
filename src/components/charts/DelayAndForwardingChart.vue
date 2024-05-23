@@ -88,7 +88,7 @@ const apiCall = () => {
 }
 
 const showTable = (clickData) => {
-  let chosenTime = new Date(clickData.points[0].x) //adding timezone to string...
+  let chosenTime = new Date(clickData.points[0].x + ' GMT') //adding timezone to string...
 
   if (clickData.points[0].data.yaxis == 'y2') {
     details.value.activeTab = 'forwarding'
@@ -196,7 +196,7 @@ const fetchForwarding = (data) => {
 }
 
 const getDateFormat = (chosenTime) => {
-  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${chosenTime.getHours()}:${chosenTime.getMinutes()}`
+  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${("0" + chosenTime.getUTCHours()).slice(-2)}:${("0" + chosenTime.getUTCMinutes()).slice(-2)}`
 }
 
 const delayUrl = computed(() => {
