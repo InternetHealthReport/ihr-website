@@ -54,6 +54,18 @@
       "name": "COVID19",
       "summary": "RTT analysis during national lockdowns"
     },
+    "gsoc24TracerouteVisualization": {
+      "name": "[GSoC24] Traceroute visualization",
+      "summary": "The GSoC24 Traceroute visualization project"
+    },
+    "gsoc24RealTimeBgpMonitor": {
+      "name": "[GSoC24] Real-time BGP monitor",
+      "summary": "The GSoC24 Real-time BGP monitor project"
+    },
+    "gsoc24NetworkTopologyOverview": {
+      "name": "[GSoC24] Network topology overview",
+      "summary": "The GSoC24 Network topology overview project"
+    },
     "contact": "Contact",
     "documentation": "Documentation",
     "signUp": "sign up",
