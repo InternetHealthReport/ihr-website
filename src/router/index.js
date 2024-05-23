@@ -132,19 +132,25 @@ const router = createRouter({
         },
         {
           path: 'networks/:id?',
-          redirect: {
-            name: 'network',
-            query: {
-              active: 'monitoring'
+          redirect: to => {
+            return {
+              name: 'network',
+              query: {
+                ...to.query,
+                active: 'monitoring'
+              }
             }
           }
         },
         {
           path: 'countries/:cc?',
-          redirect: {
-            name: 'country',
-            query: {
-              active: 'monitoring'
+          redirect: to => {
+            return {
+              name: 'country',
+              query: {
+                ...to.query,
+                active: 'monitoring'
+              }
             }
           }
         }
