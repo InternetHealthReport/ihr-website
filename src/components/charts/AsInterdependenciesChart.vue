@@ -181,11 +181,11 @@ const showTable = (table, selectedDate) => {
   if (props.noTable) {
     return
   }
-  if (selectedDate.length < 14) {
+  if (selectedDate.length < 16) {
     // at midnight no time is given
-    details.value.date = new Date(selectedDate + ' 00:00') //adding timezone to string...
+    details.value.date = new Date(selectedDate + ' 00:00 GMT') //adding timezone to string...
   } else {
-    details.value.date = new Date(selectedDate) //adding timezone to string...
+    details.value.date = new Date(selectedDate + ' GMT') //adding timezone to string...
   }
 
   const intervalEnd = details.value.date
@@ -637,7 +637,7 @@ const clearGraph = () => {
 }
 
 const getDateFormat = (chosenTime) => {
-  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${("0" + chosenTime.getHours()).slice(-2)}:${("0" + chosenTime.getMinutes()).slice(-2)}`
+  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${("0" + chosenTime.getUTCHours()).slice(-2)}:${("0" + chosenTime.getUTCMinutes()).slice(-2)}`
 }
 
 const bgplay = computed(() => {
