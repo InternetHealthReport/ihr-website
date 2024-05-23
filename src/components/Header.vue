@@ -77,6 +77,21 @@ const  SIMPLE_MENU = [
         routeName: 'observable',
         summary: 'header.observable.summary',
       },
+      {
+        entryName: 'header.gsoc24TracerouteVisualization.name',
+        routeName: 'gsoc24-traceroute-visualization',
+        summary: 'header.gsoc24TracerouteVisualization.summary',
+      },
+      {
+        entryName: 'header.gsoc24RealTimeBgpMonitor.name',
+        routeName: 'gsoc24-real-time-bgp-monitor',
+        summary: 'header.gsoc24RealTimeBgpMonitor.summary',
+      },
+      {
+        entryName: 'header.gsoc24NetworkTopologyOverview.name',
+        routeName: 'gsoc24-network-topology-overview',
+        summary: 'header.gsoc24NetworkTopologyOverview.summary',
+      },
     ],
   },
   {
