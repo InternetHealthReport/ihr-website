@@ -202,12 +202,12 @@ const showTable = (clickData) => {
   if (props.noTable) {
     return
   }
-  const chosenTime = new Date(clickData.points[0].x) //adding timezone to string...
+  const chosenTime = new Date(clickData.points[0].x + ' GMT') //adding timezone to string...
   details.value.activeTab = 'delay'
   details.value.filter = apiFilter.value.clone()
 
   details.value.delayData = {
-    dateTime: `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${chosenTime.getHours()}:${chosenTime.getMinutes()}`,
+    dateTime: `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${("0" + chosenTime.getUTCHours()).slice(-2)}:${("0" + chosenTime.getUTCMinutes()).slice(-2)}`,
     startTime: new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
     stopTime: new Date(chosenTime.getTime() + DELAY_ALARM_INTERVAL),
     data: [],
