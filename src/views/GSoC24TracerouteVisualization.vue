@@ -1,4 +1,5 @@
 <script setup>
+import { QInput, QIcon, QBtn } from 'quasar'
 import { ref, onMounted, inject, watch } from 'vue';
 import { VNetworkGraph } from 'v-network-graph';
 import * as vNG from "v-network-graph";
@@ -177,23 +178,35 @@ watch(measurementID, (newVal, oldVal) => {
 </script>
 
 <template>
-	<div>
+	<div class="mainContainer">
 		<h1>Traceroute Visualization</h1>
-		<input v-model="measurementID" placeholder="Enter Measurement ID">
-		<button @click="loadMeasurement" :disabled="isLoading">Load Data</button>
+		<QInput debounce="300" v-model="measurementID" placeholder="Enter Measurement ID">
+			<template v-slot:prepend>
+				<QIcon name="web" />
+			</template>
+			<QBtn round dense flat :ripple="false" no-caps size="22px">
+				<QIcon name="search" />
+            </QBtn>
+		</QInput>
 		<div class="graphContainer">
 			<VNetworkGraph :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs" v-if="!isLoading" />
 		</div>
-		<p v-if="isLoading">Loading...</p>
+		<QSpinner v-if="isLoading" color="primary" size="0.82em" />
 	</div>
 </template>
 
 <style scoped>
+.mainContainer {
+	padding: 2em;
+}
+
 .graphContainer {
+	border-radius: 5px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 70vh;
+	height: 65vh;
 	width: 100%;
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
 }
 </style>
