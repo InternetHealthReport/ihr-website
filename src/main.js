@@ -12,6 +12,7 @@ import i18n from './i18n'
 import { IhrApi } from '@/plugins/IhrApi'
 import { LibraryDelayer } from '@/plugins/LibraryDelayer'
 import { IypApi } from '@/plugins/IypApi'
+import { AtlasApi } from '@/plugins/RipeAtlasApi'
 
 const app = createApp(App)
 
@@ -37,5 +38,6 @@ app.use(LibraryDelayer, {
     }
 })
 app.use(IypApi)
+app.use(AtlasApi)
 
 app.mount('#app')
