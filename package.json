@@ -19,6 +19,7 @@
     "plotly.js-dist": "^2.27.1",
     "quasar": "^2.14.0",
     "swagger-ui": "^5.10.3",
+    "v-network-graph": "^0.9.15",
     "vue": "^3.3.4",
     "vue-i18n": "^9.8.0",
     "vue-router": "^4.2.5"
