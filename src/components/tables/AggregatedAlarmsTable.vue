@@ -103,7 +103,7 @@ const emit = defineEmits(['country-clicked', 'asn-name-key-clicked', {
   }
 }])
 
-const { rows, filterFct, filterTable, getCellValue, dateHourShift, setRows } = commonTable(props, { emit })
+const { rows, dateHourShift, setRows } = commonTable(props, { emit })
 
 const columns = ref(ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_columns)
 const aggregatedColumns = ref(ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_aggregated_columns)
@@ -349,7 +349,7 @@ watch(() => props.selectedTableAlarmType, () => {
 
 <template>
   <QTable table-class="myClass" :rows="rows" :columns="[...columns, ...aggregatedColumns]" :pagination.sync="pagination"
-    :loading="loading" :filter="filter" :filter-method="filterFct" flat loading-label="Loading Alarms ..."
+    :loading="loading" :filter="filter" flat loading-label="Loading Alarms ..."
     :row-key="tableKeyCurrent" v-model:expanded="expandedRow">
     <template v-slot:body="props">
       <QTr :props="props">
