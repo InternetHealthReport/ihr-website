@@ -7,6 +7,8 @@ const isPlaying = ref(false)
 const rrcList = ref([])
 const disableButton = ref(false)
 const socket = ref(null)
+const rawMessages = ref([])
+const filteredMessages = ref([])
 
 const params = ref({
   peer: '',
@@ -62,7 +64,8 @@ const connectWebSocket = () => {
   socket.value.onmessage = (event) => {
     const res = JSON.parse(event.data)
     if (res.type === 'ris_message') {
-      console.log(res.data)
+      rawMessages.value.push(res.data)
+      handleFilterMessages(res.data)
     } else if (res.type === 'ris_rrc_list') {
       rrcList.value = res.data
     } else if (res.type === 'ris_error') {
@@ -70,6 +73,15 @@ const connectWebSocket = () => {
     }
   }
 }
+
+const handleFilterMessages = (data) => {
+  const uniquePeerMessages = filteredMessages.value.filter((message) => message.peer !== data.peer)
+  filteredMessages.value = [...uniquePeerMessages, data]
+}
+
+watch(filteredMessages, () => {
+  console.log(JSON.parse(JSON.stringify(filteredMessages.value)))
+})
 
 const toggleConnection = () => {
   isPlaying.value = !isPlaying.value
