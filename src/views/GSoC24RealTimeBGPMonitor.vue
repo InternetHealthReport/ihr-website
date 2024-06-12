@@ -9,6 +9,8 @@ const disableButton = ref(false)
 const socket = ref(null)
 const rawMessages = ref([])
 const filteredMessages = ref([])
+const nodes = ref([])
+const links = ref([])
 
 const params = ref({
   peer: '',
@@ -79,9 +81,42 @@ const handleFilterMessages = (data) => {
   filteredMessages.value = [...uniquePeerMessages, data]
 }
 
-watch(filteredMessages, () => {
-  console.log(JSON.parse(JSON.stringify(filteredMessages.value)))
-})
+const generateGraphData = () => {
+  const tempLinks = [];
+  const tempNodes = [];
+  filteredMessages.value.forEach((message) => {
+    if (message.path?.length > 0) {
+      const path = message.path.slice(-(maxHops.value + 1));
+      path.forEach((n, i) => {
+        if (!tempNodes.some((node) => node.id === n)) {
+          tempNodes.push({id: n, name: n});
+        }
+        if (i < path.length - 1) {
+          const source = path[i];
+          const target = path[i + 1];
+          if (
+            !tempLinks.some(
+              (link) =>
+                (link.source === source && link.target === target) ||
+                (link.source === target && link.target === source)
+            )
+          ) {
+            tempLinks.push({ source: source, target: target, value: 1 });
+          }
+        }
+      });
+    }
+  });
+  nodes.value = tempNodes;
+  links.value = tempLinks;
+};
+
+watch([filteredMessages, maxHops], () => {
+  generateGraphData();
+  console.log("Message Paths",JSON.parse(JSON.stringify(filteredMessages.value)))
+  console.log("Nodes",JSON.parse(JSON.stringify(nodes.value)));
+  console.log("Links",JSON.parse(JSON.stringify(links.value)));
+});
 
 const toggleConnection = () => {
   isPlaying.value = !isPlaying.value
