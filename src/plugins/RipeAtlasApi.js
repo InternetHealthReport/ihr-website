@@ -17,8 +17,9 @@ const AtlasApi = {
 			return response.data;
 		};
 
-		const getMeasurementDataById = async (measurementId) => {
-			let response = await axios_base.get(`measurements/${measurementId}/results`);
+		const getMeasurementData = async (measurementId, params = {}) => {
+			const queryString = new URLSearchParams(params).toString();
+			let response = await axios_base.get(`measurements/${measurementId}/results?${queryString}`);
 			return response.data;
 		};
 
@@ -29,7 +30,7 @@ const AtlasApi = {
 
 		const atlas_api = {
 			getMeasurementById,
-			getMeasurementDataById,
+			getMeasurementData,
 			getProbeById
 		};
 
