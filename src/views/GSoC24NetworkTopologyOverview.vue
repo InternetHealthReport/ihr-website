@@ -1,7 +1,7 @@
 <script setup>
 import { QBtn, QSelect, QInput, QSpinner } from 'quasar'
-import { ref, inject, reactive, onMounted } from 'vue' 
-import { VNetworkGraph } from 'v-network-graph';
+import { ref, inject, reactive, onMounted, computed, watch } from 'vue' 
+import { VNetworkGraph, VEdgeLabel } from 'v-network-graph';
 import * as vNG from "v-network-graph"
 import dagre from "dagre/dist/dagre.min.js"
 
@@ -9,19 +9,38 @@ const iyp_api = inject('iyp_api')
 
 const ipOptions = ref(['IPv4', 'IPv6'])
 const ipModel = ref('IPv4')
-const asn = ref('2501')
+const ASN = ref('2501')
 const allNodes = ref([])
 const allEdges = ref({})
 const layouts = reactive({nodes: {}})
-const graph = ref(null);
+const graph = ref()
+const targetNodeId = ref("")
+const tooltipOpacity = ref(0)
+const tooltipPos = ref({ left: "0px", top: "0px" })
+const targetEdgeId = ref("")
+const tooltipType = ref("")
+const tooltip = ref()
+const asnInfo = ref({})
+
 const as_topology_query = ref({
 	loading: true,
-	query:`MATCH (a:AS {asn: $asn})-[h:DEPENDS_ON {af:$af}]->(d:AS)
+	query1:`MATCH (a:AS {asn: $asn})-[h:DEPENDS_ON {af:$af}]->(d:AS)
 		WITH a, COLLECT(DISTINCT d) AS dependencies
 		UNWIND dependencies as d
 		MATCH p = allShortestPaths((a)-[:PEERS_WITH*]-(d))
 		WHERE a.asn <> d.asn AND all(r IN relationships(p) WHERE r.af = $af) AND all(n IN nodes(p) WHERE n IN dependencies)
 		RETURN p`,
+  query2:`MATCH  (a:AS {asn:$asn})-[d:DEPENDS_ON {af: $af}]-> (b:AS)
+          RETURN b.asn AS ASN,d.hege*100 AS HEGE`,
+  query3:`MATCH (a:AS)
+        WHERE a.asn in $asns
+        OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+        OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+        OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+        OPTIONAL MATCH (a)-[:NAME]->(n:Name)
+        OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
+        OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+        RETURN a.asn AS ASN ,c.country_code AS CC, c.name AS Country, COALESCE(pdbn.name, btn.name, ripen.name) AS Name, count(DISTINCT ixp) as nb_ixp`,
 })
 
 const nodeSize = 35
@@ -31,8 +50,8 @@ const configs = vNG.defineConfigs({
 	scalingObjects:"true",
 	grid: {
 		visible: true,
-		interval: 10,
-		thickIncrements: 5,
+		interval: 100,
+		thickIncrements: 8,
 		line: {
 			color: "#e0e0e0",
 			width: 1,
@@ -41,23 +60,27 @@ const configs = vNG.defineConfigs({
 		thick: {
 			color: "#cccccc",
 			width: 1,
-			dasharray: 0,
+			dasharray: 1,
 		},
 	},
   },
   node: {
-    normal: { radius: nodeSize / 2 },
-    label: { direction: "north" , directionAutoAdjustment:true },
+    normal: { radius: nodeSize / 2, color: node => node.color},
+    label: { directionAutoAdjustment:true },
+    hover: {color: node => node.color}
   },
   edge: {
     normal: {
-      color: "#aaa",
-      width: 3,
+      color: edge => edge.color,
+      width: 2.5,
+    },
+    hover:{
+      color: "red",
     },
     margin: 4,
     marker: {
       target: {
-        type: "angle",
+        type: "arrow",
         width: 4,
         height: 4,
       },
@@ -65,7 +88,24 @@ const configs = vNG.defineConfigs({
   },
 })
 
-function layout(direction) {
+const targetNodePos = computed(() => {
+	const nodePos = layouts.nodes[targetNodeId.value]
+	return nodePos || { x: 0, y: 0 }
+})
+
+const edgeCenterPos = computed(() => {
+  const edge = allEdges.value[targetEdgeId.value]
+  if (!edge) return { x: 0, y: 0 }
+
+  const sourceNode = allEdges.value[targetEdgeId.value].source
+  const targetNode = allEdges.value[targetEdgeId.value].target
+  return {
+    x: (layouts.nodes[sourceNode].x + layouts.nodes[targetNode].x) / 2,
+    y: (layouts.nodes[sourceNode].y + layouts.nodes[targetNode].y) / 2,
+  }
+})
+
+const layout = (direction) => {
   if (Object.keys(allNodes.value).length <= 1 || Object.keys(allEdges.value).length == 0) {
     return
   }
@@ -96,13 +136,48 @@ function layout(direction) {
   })
 }
 
+const calculateNodeColor = (percentage) => {
+    const darkBlue = { r: 0, g: 0, b: 139 }; // Dark blue
+    const lightBlue = { r: 240, g: 248, b: 255 }; // Alice blue (nearly invisible light blue)
+
+    const red = Math.round(lightBlue.r + (darkBlue.r - lightBlue.r) * (percentage / 100));
+    const green = Math.round(lightBlue.g + (darkBlue.g - lightBlue.g) * (percentage / 100));
+    const blue = Math.round(lightBlue.b + (darkBlue.b - lightBlue.b) * (percentage / 100));
+
+    const toHex = (value) => value.toString(16).padStart(2, '0');
+    return `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
+}
+
+const calculateEdgeColor = (percentage) => {
+    const darkGrey = { r: 169, g: 169, b: 169 }; // Dark grey
+    const lightGrey = { r: 245, g: 245, b: 245 }; // Light grey (nearly invisible)
+
+    const red = Math.round(lightGrey.r + (darkGrey.r - lightGrey.r) * (percentage / 100));
+    const green = Math.round(lightGrey.g + (darkGrey.g - lightGrey.g) * (percentage / 100));
+    const blue = Math.round(lightGrey.b + (darkGrey.b - lightGrey.b) * (percentage / 100));
+
+    const toHex = (value) => value.toString(16).padStart(2, '0');
+    return `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
+}
+
 const searchASN = async() => {
 	as_topology_query.value.loading = true;
-	let query_params = { asn: Number(asn.value), af: Number(ipModel.value[ipModel.value.length-1]) }
-	const response = await iyp_api.run([{statement: as_topology_query.value.query, parameters: query_params}])
-	sortASNodes(response)
+  const query_params = { asn: Number(ASN.value), af: Number(ipModel.value[ipModel.value.length-1]) }
+	const response = await iyp_api.run([
+    {statement: as_topology_query.value.query1, parameters: query_params},
+    {statement: as_topology_query.value.query2, parameters: query_params},
+  ])
+  response[1].forEach(item => {
+      asnInfo.value[item.ASN] = { HEGE: item.HEGE}
+  })
+  const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(asnInfo.value).map(Number) }}])
+  asnInfoResponse[0].forEach(item => {
+    asnInfo.value[item.ASN]['Country'] = item.Country
+    asnInfo.value[item.ASN]['Name'] = item.Name
+  })
+  sortASNodes(response)
 	sortASRelations(response)
-	layout('TB')
+	layout('BT')
 	as_topology_query.value.loading = false;
 }
 
@@ -139,7 +214,7 @@ const sortASNodes = (data) => {
 
     const sortedUniqueNodes = {};
     Array.from(uniqueNodes).forEach(asn => {
-        sortedUniqueNodes[asn] = { name: `AS${asn}` };
+        sortedUniqueNodes[asn] = { name: `AS${asn}` , tooltip: { visible: false , left:0, top:0 }, color: ASN.value == asn ? 'red' : calculateNodeColor(asnInfo.value[asn]?.HEGE) };
     });
 
 	allNodes.value = sortedUniqueNodes;
@@ -166,7 +241,9 @@ const sortASRelations = (data) => {
                             uniquePairsSet.add(pairString)
                             formattedData[`edge${edgeCounter}`] = {
                                 "source": asn1,
-                                "target": asn2
+                                "target": asn2,
+                                "color": calculateEdgeColor(asnInfo.value[asn2]?.HEGE),
+                                "label": asnInfo.value[asn2]?.HEGE
                             };
                             edgeCounter++
                         }
@@ -180,6 +257,56 @@ const sortASRelations = (data) => {
     
 }
 
+const eventHandlers = {
+  "node:pointerover": ({ node }) => {
+    tooltipType.value = "node"
+    targetNodeId.value = node ?? ""
+    tooltipOpacity.value = 1
+  },
+  "node:pointerout": () => {
+    tooltipType.value = ""
+    tooltipOpacity.value = 0
+  },
+  "edge:pointerover": ({ edge }) => {
+    tooltipType.value = "edge"
+    targetEdgeId.value = edge ?? ""
+    tooltipOpacity.value = 1
+  },
+  "edge:pointerout": () => {
+    tooltipType.value = ""
+    tooltipOpacity.value = 0
+  },
+  "node:click": ({ node }) => {
+    tooltipType.value = ""
+    tooltipOpacity.value = 0
+    ASN.value = node
+    searchASN()
+  }
+}
+
+watch(
+  () => [targetNodePos.value, tooltipOpacity.value, edgeCenterPos.value, targetEdgeId.value],
+  () => {
+    if (!graph.value || !tooltip.value) return
+
+    let domPoint = { x: 0, y: 0 };
+    if (tooltipType.value == "node") {
+      domPoint = graph.value.translateFromSvgToDomCoordinates(targetNodePos.value);
+      tooltipPos.value = {
+        left: domPoint.x - tooltip.value.offsetWidth / 2 + "px",
+        top: domPoint.y - nodeSize - tooltip.value.offsetHeight - 10 + "px",
+      }
+    } else if (tooltipType.value == "edge") {
+      domPoint = graph.value.translateFromSvgToDomCoordinates(edgeCenterPos.value);
+      tooltipPos.value = {
+        left: domPoint.x - tooltip.value.offsetWidth / 2 + "px",
+        top: domPoint.y - 2 - tooltip.value.offsetHeight - 10 + "px",
+      }
+    }
+  },
+  { deep: true }
+);
+
 onMounted(() => {
   searchASN()
 })
@@ -190,10 +317,10 @@ onMounted(() => {
 
 	<div>
 	
-		<h1 class="text-center ">Network Topology Overview</h1>
+		<h1 class="text-center">Network Topology Overview</h1>
 
 		<div class="justify-center q-pa-md flex pb-0">
-			<QInput style="max-width: 120px"  outlined v-model="asn" placeholder="ASN" :dense="true" />
+			<QInput style="max-width: 120px"  outlined v-model="ASN" placeholder="ASN" :dense="true" />
 			<QSelect
         	style="min-width: 100px; margin-left: 22px;"
 			filled
@@ -205,16 +332,43 @@ onMounted(() => {
 			<QBtn style="margin-left:22px" color="secondary" label="Search"  @click="searchASN"/>
 		</div>
 
-        <div class="graphContainer" v-if="!as_topology_query.loading && Object.keys(allNodes).length>0">
-            <VNetworkGraph 
-			:nodes="allNodes"
-			:edges="allEdges"
-			:layouts="layouts"
-			:configs="configs"
-			/>
+    <div class="graphContainer" v-if="!as_topology_query.loading && Object.keys(allNodes).length>0">
+          
+      <VNetworkGraph 
+        ref="graph"
+        :nodes="allNodes"
+        :edges="allEdges"
+        :layouts="layouts"
+        :configs="configs"
+        :event-handlers="eventHandlers"
+      />
+
+      <div class="scaleContainer">
+        <div class="scaleLabel">100%</div>
+        <div class="scale">
+          <div v-for="percentage in [100, 90, 80, 70, 60, 50, 40 , 30 , 20 , 10 , 0]" :key="percentage" class="scaleColor" :style="{backgroundColor: calculateNodeColor(percentage)}"></div>
+        </div>
+        <div class="scaleLabel">0%</div>
+      </div>
+
+      <div ref="tooltip" >
+       
+        <div v-if="tooltipType=='node'" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
+          <div>{{ asnInfo[targetNodeId]?.Name }}</div>
+          <div>{{ asnInfo[targetNodeId]?.Country }}</div>
         </div>
 
+        <div v-if="tooltipType=='edge'" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
+          <div> Hegemony : {{ (allEdges[targetEdgeId].label).toFixed(2) }}%</div>
+        </div>
+      
+      </div>
+
+    </div>
+
 		<QSpinner v-if="as_topology_query.loading" color="secondary" size="5em" class="spinner" />
+
+		<h5 v-if="!as_topology_query.loading && Object.keys(allNodes).length==0" class="text-center"> No data found</h5>
 
 	</div>
 
@@ -223,21 +377,63 @@ onMounted(() => {
 <style scoped>
 
 .graphContainer {
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 65vh;
-    width: 80%;
-	margin:auto;
-	margin-bottom: 40px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 65vh;
+  width: 80%;
+  margin:auto;
+  margin-bottom: 40px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
+  position: relative;
 }
 
 .spinner {
 	display:flex;
 	margin:auto;
 	margin-top:25px;
+}
+
+.tooltip {
+  opacity: 0;
+  position: absolute;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  font-size: 12px;
+  background-color: #fff0bd;
+  border: 1px solid #ffb950;
+  box-shadow: 2px 2px 2px #aaa;
+  transition: opacity 0.2s linear;
+  pointer-events: none;
+  padding: 5px 10px; 
+}
+
+.scaleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px auto;
+  padding: 5px 10px;
+}
+
+.scaleLabel {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.scale {
+  display: flex;
+  flex-direction: column;
+  height: 55vh;
+  width: 20px;
+  border: 1px solid #ccc;
+}
+
+.scaleColor {
+  flex: 1;
+  width: 100%;
 }
 
 </style>
