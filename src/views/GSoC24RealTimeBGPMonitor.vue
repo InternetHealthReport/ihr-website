@@ -1,6 +1,7 @@
 <script setup>
 import { QBtn, QSelect, QInput, QSlider } from 'quasar'
 import { onMounted, ref, watch } from 'vue'
+import Plotly from "plotly.js-dist";
 
 const maxHops = ref('3')
 const isPlaying = ref(false)
@@ -11,6 +12,7 @@ const rawMessages = ref([])
 const filteredMessages = ref([])
 const nodes = ref([])
 const links = ref([])
+const sankeyChart = ref(null);
 
 const params = ref({
   peer: '',
@@ -113,9 +115,9 @@ const generateGraphData = () => {
 
 watch([filteredMessages, maxHops], () => {
   generateGraphData();
-  console.log("Message Paths",JSON.parse(JSON.stringify(filteredMessages.value)))
-  console.log("Nodes",JSON.parse(JSON.stringify(nodes.value)));
-  console.log("Links",JSON.parse(JSON.stringify(links.value)));
+  //console.log("Message Paths",JSON.parse(JSON.stringify(filteredMessages.value)))
+  //console.log("Nodes",JSON.parse(JSON.stringify(nodes.value)))
+  //console.log("Links",JSON.parse(JSON.stringify(links.value)))
 });
 
 const toggleConnection = () => {
@@ -135,6 +137,63 @@ watch(rrcList, () => {
 onMounted(() => {
   connectWebSocket()
 })
+
+const layout = ref({
+  title: "AS Paths Sankey Diagram",
+  font: {
+    size: 12,
+  },
+});
+
+const config = ref({responsive: true})
+
+const plotSankey = () => {
+  const nodeIds = nodes.value.map((node) => node.id);
+  const nodeNames = nodes.value.map((node) => node.name);
+
+  const linkSources = links.value.map((link) =>
+    nodeIds.indexOf(link.source) !== -1
+      ? nodeIds.indexOf(link.source)
+      : undefined
+  );
+  const linkTargets = links.value.map((link) =>
+    nodeIds.indexOf(link.target) !== -1
+      ? nodeIds.indexOf(link.target)
+      : undefined
+  );
+  const linkValues = links.value.map((link) => link.value);
+
+  const data = {
+    type: "sankey",
+    node: {
+      pad: 15,
+      thickness: 20,
+      line: {
+        color: "black",
+        width: 0.5,
+      },
+      label: nodeNames,
+    },
+    link: {
+      source: linkSources,
+      target: linkTargets,
+      value: linkValues,
+    },
+  };
+  Plotly.newPlot(sankeyChart.value, [data], layout.value,config.value);
+};
+
+onMounted(() => {
+  const data = {
+    type: "sankey",
+  };
+  Plotly.newPlot(sankeyChart.value, [data], layout.value, config.value);
+});
+
+watch([nodes,links], () => {
+  plotSankey();
+});
+
 </script>
 
 <template>
@@ -179,6 +238,7 @@ onMounted(() => {
         <QBtn color="secondary" label=">" />
       </div>
     </div>
+    <div class="sankeyChart" ref="sankeyChart"></div>
   </div>
 </template>
 
@@ -188,5 +248,12 @@ onMounted(() => {
 }
 .replayControls{
 	gap: 20px;
+}
+.sankeyChart{
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  font-weight: 500;
+  left 0%
+  height 100vh
+  width 100%
 }
 </style>
