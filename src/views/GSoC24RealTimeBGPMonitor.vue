@@ -1,9 +1,9 @@
 <script setup>
 import { QBtn, QSelect, QInput, QSlider } from 'quasar'
 import { onMounted, ref, watch } from 'vue'
-import Plotly from "plotly.js-dist";
+import Plotly from 'plotly.js-dist'
 
-const maxHops = ref('3')
+const maxHops = ref(3)
 const isPlaying = ref(false)
 const rrcList = ref([])
 const disableButton = ref(false)
@@ -12,7 +12,7 @@ const rawMessages = ref([])
 const filteredMessages = ref([])
 const nodes = ref([])
 const links = ref([])
-const sankeyChart = ref(null);
+const sankeyChart = ref(null)
 
 const params = ref({
   peer: '',
@@ -84,18 +84,18 @@ const handleFilterMessages = (data) => {
 }
 
 const generateGraphData = () => {
-  const tempLinks = [];
-  const tempNodes = [];
+  const tempLinks = []
+  const tempNodes = []
   filteredMessages.value.forEach((message) => {
     if (message.path?.length > 0) {
-      const path = message.path.slice(-(maxHops.value + 1));
+      const path = message.path.slice(-(maxHops.value + 1))
       path.forEach((n, i) => {
         if (!tempNodes.some((node) => node.id === n)) {
-          tempNodes.push({id: n, name: n});
+          tempNodes.push({ id: n, name: n })
         }
         if (i < path.length - 1) {
-          const source = path[i];
-          const target = path[i + 1];
+          const source = path[i]
+          const target = path[i + 1]
           if (
             !tempLinks.some(
               (link) =>
@@ -103,28 +103,33 @@ const generateGraphData = () => {
                 (link.source === target && link.target === source)
             )
           ) {
-            tempLinks.push({ source: source, target: target, value: 1 });
+            tempLinks.push({ source: source, target: target, value: 1 })
           }
         }
-      });
+      })
     }
-  });
-  nodes.value = tempNodes;
-  links.value = tempLinks;
-};
+  })
+  nodes.value = tempNodes
+  links.value = tempLinks
+}
 
 watch([filteredMessages, maxHops], () => {
-  generateGraphData();
+  generateGraphData()
   //console.log("Message Paths",JSON.parse(JSON.stringify(filteredMessages.value)))
   //console.log("Nodes",JSON.parse(JSON.stringify(nodes.value)))
   //console.log("Links",JSON.parse(JSON.stringify(links.value)))
-});
+})
 
 const toggleConnection = () => {
   isPlaying.value = !isPlaying.value
 }
 
+const addPassiveEventListener = (target, event, handler) => {
+  target.addEventListener(event, handler, { passive: true })
+}
+
 watch(isPlaying, () => {
+  addPassiveEventListener(window, 'touchstart', () => {})
   toggleRisProtocol()
 })
 
@@ -139,69 +144,64 @@ onMounted(() => {
 })
 
 const layout = ref({
-  title: "AS Paths Sankey Diagram",
+  title: 'AS Paths Sankey Diagram',
   font: {
-    size: 12,
-  },
-});
+    size: 12
+  }
+})
 
-const config = ref({responsive: true})
+const config = ref({ responsive: true })
 
 const plotSankey = () => {
-  const nodeIds = nodes.value.map((node) => node.id);
-  const nodeNames = nodes.value.map((node) => node.name);
+  const nodeIds = nodes.value.map((node) => node.id)
+  const nodeNames = nodes.value.map((node) => node.name)
 
   const linkSources = links.value.map((link) =>
-    nodeIds.indexOf(link.source) !== -1
-      ? nodeIds.indexOf(link.source)
-      : undefined
-  );
+    nodeIds.indexOf(link.source) !== -1 ? nodeIds.indexOf(link.source) : undefined
+  )
   const linkTargets = links.value.map((link) =>
-    nodeIds.indexOf(link.target) !== -1
-      ? nodeIds.indexOf(link.target)
-      : undefined
-  );
-  const linkValues = links.value.map((link) => link.value);
+    nodeIds.indexOf(link.target) !== -1 ? nodeIds.indexOf(link.target) : undefined
+  )
+  const linkValues = links.value.map((link) => link.value)
 
   const data = {
-    type: "sankey",
+    type: 'sankey',
     node: {
       pad: 15,
       thickness: 20,
       line: {
-        color: "black",
-        width: 0.5,
+        color: 'black',
+        width: 0.5
       },
-      label: nodeNames,
+      label: nodeNames
     },
     link: {
       source: linkSources,
       target: linkTargets,
-      value: linkValues,
-    },
-  };
-  Plotly.newPlot(sankeyChart.value, [data], layout.value,config.value);
-};
+      value: linkValues
+    }
+  }
+  Plotly.newPlot(sankeyChart.value, [data], layout.value, config.value)
+}
 
 onMounted(() => {
   const data = {
-    type: "sankey",
-  };
-  Plotly.newPlot(sankeyChart.value, [data], layout.value, config.value);
-});
+    type: 'sankey'
+  }
+  Plotly.newPlot(sankeyChart.value, [data], layout.value, config.value)
+})
 
-watch([nodes,links], () => {
-  plotSankey();
-});
-
+watch([nodes, links], () => {
+  plotSankey()
+})
 </script>
 
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <h1 class="text-center q-pa-xl">Real-Time BGP Monitor</h1>
     <div class="controls justify-center q-pa-md flex">
-      <QInput outlined v-model="ph" placeholder="Prefix" :dense="true" color="accent" />
-      <QInput outlined v-model="ph" placeholder="ASN" :dense="true" color="accent" />
+      <QInput outlined placeholder="Prefix" :dense="true" color="accent" />
+      <QInput outlined placeholder="ASN" :dense="true" color="accent" />
       <QSelect
         style="min-width: 100px"
         filled
