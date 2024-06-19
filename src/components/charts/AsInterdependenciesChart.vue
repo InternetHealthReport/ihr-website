@@ -105,8 +105,8 @@ const makeHegemonyFilter = () => {
 
 const makeHegemonyTier1Filter = () => {
     return new HegemonyQuery()
-    .originAs(0)
-    .asNumber([174,1299])
+    .originAs(1299)
+    .asNumber(1299)
     .addressFamily(props.addressFamily)
     .timeInterval(props.startTime, props.endTime)
     .orderedByTime()
@@ -126,8 +126,8 @@ const apiCall = async() => {
   }
   updateAxesLabel()
   hegemonyFilter.value = makeHegemonyFilter()
-  hegemonyTier1Filter.value = makeHegemonyTier1Filter()
   hegemonyConeFilter.value = makeHegemonyConeFilter()
+  hegemonyTier1Filter.value = makeHegemonyTier1Filter()
   traces.value = extend(true, [], DEFAULT_TRACE)
   loading.value = true
   loadingHegemony.value = true
