@@ -30,5 +30,15 @@ export default {
     return ripe_axios.get('network-info/data.json', queryarg).then(response => {
       return response.data
     })
+  },
+  prefixOverview(ip) {
+    let queryarg = {
+      params: {
+        resource: ip,
+      },
+    }
+    return ripe_axios.get('prefix-overview/data.json', queryarg).then(response => {
+      return response.data
+    })
   }
 }

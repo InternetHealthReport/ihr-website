@@ -1,9 +1,10 @@
 <script setup>
-import { QInput, QIcon, QBtn, QSpinner, QRange, QCheckbox } from "quasar";
+import { QInput, QIcon, QBtn, QSpinner, QRange, QCheckbox, QTable, QTd, QTr } from "quasar";
 import { ref, inject, computed, watchEffect, watch } from "vue";
 import { VNetworkGraph } from "v-network-graph";
 import * as vNG from "v-network-graph";
 import dagre from "dagre";
+import RipeApi from "../plugins/RipeApi";
 
 const atlas_api = inject("atlas_api");
 const isLoading = ref(false);
@@ -26,8 +27,14 @@ const highlightedEdges = ref({});
 const selectedProbes = ref([]);
 const allProbes = ref([]);
 
+const probeDetailsMap = ref({});
+const selectAllProbes = ref(true);
+
+const selectedNode = ref(null);
+
 const configs = vNG.defineConfigs({
     node: {
+        selectable: true,
         normal: {
             radius: nodeSize / 2,
             color: (node) => {
@@ -87,6 +94,13 @@ function isPrivateIP(ip) {
     return isPrivateIPv4 || isPrivateIPv6;
 }
 
+const calculateMedian = (values) => {
+    if (!values || !values.length) return null;
+    const sorted = [...values].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+};
+
 const processData = (tracerouteData, loadProbes = false) => {
     const g = new dagre.graphlib.Graph();
     g.setGraph({ rankdir: "LR", nodesep: 290, edgesep: 150, ranksep: 1000 });
@@ -114,6 +128,7 @@ const processData = (tracerouteData, loadProbes = false) => {
                 allProbes.value.push(probeData.prb_id.toString());
                 selectedProbes.value.push(probeData.prb_id.toString());
             }
+            atlas_api.getProbeById(probeData.prb_id.toString()).then(data => probeDetailsMap.value[probeData.prb_id.toString()] = data);
         }
 
         probeData.result.forEach((hopData, hopIndex) => {
@@ -131,9 +146,28 @@ const processData = (tracerouteData, loadProbes = false) => {
                     consecutiveStarCount = 0;
                 }
 
-                if (!g.hasNode(currentIp)) {
-                    g.setNode(currentIp, { label: currentIp.replace(/-\d+-\d+-\d+$/, ""), width: nodeSize, height: nodeSize, isNonResponsive });
+                if (isPrivateIP(currentIp)) {
+                    isNonResponsive = false;
+                    consecutiveStarCount = 0;
                 }
+
+                const nodeInfo = g.node(currentIp) || {};
+                const newNodeInfo = {
+                    label: currentIp.replace(/-\d+-\d+-\d+$/, ""),
+                    width: nodeSize,
+                    height: nodeSize,
+                    isNonResponsive,
+                    hops: nodeInfo.hops || []
+                };
+
+                newNodeInfo.hops.push({
+                    from: result.from,
+                    rtt: result.rtt,
+                    size: result.size,
+                    ttl: result.ttl,
+                });
+
+                g.setNode(currentIp, newNodeInfo);
 
                 if (lastNodeId && currentIp && lastNodeId !== currentIp && !g.hasEdge(currentIp, lastNodeId)) {
                     if (!g.hasEdge(lastNodeId, currentIp)) {
@@ -185,6 +219,7 @@ const processData = (tracerouteData, loadProbes = false) => {
 
 const graph = ref();
 const tooltip = ref();
+const tooltipData = ref({});
 
 const targetNodeId = ref("");
 const tooltipOpacity = ref(0);
@@ -212,13 +247,36 @@ watch(
 
 const eventHandlers = {
     "node:pointerover": ({ node }) => {
-        targetNodeId.value = node;
-        tooltipOpacity.value = 1;
-        highlightPath(node);
     },
     "node:pointerout": () => {
-        tooltipOpacity.value = 0;
+    },
+    "view:click": () => {
         clearHighlight();
+        tooltipOpacity.value = 0;
+    },
+    "node:pointerdown": async ({ node }) => {
+        clearHighlight();
+        highlightPath(node);
+        
+        selectedNode.value = node;
+        targetNodeId.value = node;
+        tooltipOpacity.value = 1;
+        
+        const nodeInfo = nodes.value[node];
+        let nodeMetaData;
+        if (!node.includes("*")) {
+            nodeMetaData = await RipeApi.prefixOverview(node);            
+        }
+        const rttValues = nodeInfo.hops?.map(hop => hop.rtt);
+        const sizeValues = nodeInfo.hops?.map(hop => hop.size);
+        const ttlValues = nodeInfo.hops?.map(hop => hop.ttl);
+        tooltipData.value = {
+            label: nodeInfo.label,
+            medianRtt: calculateMedian(rttValues),
+            medianSize: calculateMedian(sizeValues),
+            medianTtl: calculateMedian(ttlValues),
+            ...nodeMetaData
+        };
     },
 };
 
@@ -347,7 +405,33 @@ watchEffect(() => {
         loadMeasurementData();
     }
 });
+
+const paginatedProbes = computed(() => {
+    return allProbes.value.map(probe => ({
+        probe,
+        ...probeDetailsMap.value[probe]
+    }));
+});
+
+const columns = [
+    { name: "probe", align: "left", label: "Probe", field: "probe" },
+    { name: "ipv4", align: "left", label: "IPv4 Address", field: "ipv4" },
+    { name: "ipv6", align: "left", label: "IPv6 Address", field: "ipv6" },
+    { name: "country_code", align: "left", label: "Country Code", field: "country_code" },
+    { name: "asn_v4", align: "left", label: "ASN4", field: "asn_v4" },
+    { name: "asn_v6", align: "left", label: "ASN6", field: "asn_v6" }
+];
+
+const toggleSelectAll = (value) => {
+    if (value) {
+        selectedProbes.value = allProbes.value;
+    } else {
+        selectedProbes.value = [];
+    }
+};
+
 </script>
+
 
 <template>
     <div class="main-container">
@@ -364,8 +448,16 @@ watchEffect(() => {
             <QSpinner v-if="isLoading" color="primary" />
             <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
                 :event-handlers="eventHandlers" v-if="!isLoading" zoom-level="0" />
-            <div ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
-                <div>{{ nodes[targetNodeId.value]?.name ?? "" }}</div>
+            <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
+                <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available"}}</div>
+                <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
+                <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
+                <div><strong>Node:</strong> {{ tooltipData.label }}</div>
+                <div><strong>AS:</strong> {{ tooltipData?.data?.asns[0]?.asn ? tooltipData.data.asns[0].asn + ` (${tooltipData.data.asns[0].holder})`: "Not available"}}</div>
+                <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
+                <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available"}}</div>
+                <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
+                <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
             </div>
         </div>
         <h3>Time range</h3>
@@ -376,11 +468,32 @@ watchEffect(() => {
         </div>
         <div class="probe-selection">
             <h3>Select probes</h3>
-            <div class="checkbox-grid">
-                <div v-for="probe in allProbes" :key="probe">
-                    <QCheckbox v-model="selectedProbes" :val="probe" :label="probe" />
-                </div>
-            </div>
+            <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
+                <template v-slot:header="props">
+                    <QTr :props="props">
+                        <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
+                            <template v-if="col.name === 'probe'">
+                                <QCheckbox v-model="selectAllProbes" @update:model-value="toggleSelectAll" />
+                            </template>
+                            <template v-else>
+                                {{ col.label }}
+                            </template>
+                        </QTd>
+                    </QTr>
+                </template>
+                <template v-slot:body="props">
+                    <QTr :props="props">
+                        <QTd>
+                            <QCheckbox v-model="selectedProbes" :val="props.row.probe" :label="props.row.probe" />
+                        </QTd>
+                        <QTd>{{ props.row.address_v4 }}</QTd>
+                        <QTd>{{ props.row.address_v6 }}</QTd>
+                        <QTd>{{ props.row.country_code }}</QTd>
+                        <QTd>{{ props.row.asn_v4 }}</QTd>
+                        <QTd>{{ props.row.asn_v6 }}</QTd>
+                    </QTr>
+                </template>
+            </QTable>
         </div>
     </div>
 </template>
@@ -417,8 +530,7 @@ watchEffect(() => {
     left: 0;
     opacity: 0;
     position: absolute;
-    width: 80px;
-    height: 36px;
+    width: 30em;
     display: grid;
     place-content: center;
     text-align: center;
@@ -432,7 +544,7 @@ watchEffect(() => {
 
 .time-range {
     padding: 2em;
-    width: 97vw;
+    width: 95vw;
     margin: 0 auto;
 }
 </style>
