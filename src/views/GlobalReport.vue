@@ -9,6 +9,7 @@ import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEF
 import AggregatedAlarmsController from '@/components/controllers/AggregatedAlarmsController.vue'
 import { Query, HegemonyAlarmsQuery, NetworkDelayAlarmsQuery, DiscoEventQuery } from '@/plugins/IhrApi'
 import { ALARMS_INFO } from '@/plugins/metadata/AggregatedAlarmsMetadata'
+import Feedback from '@/components/Feedback.vue'
 
 const ihr_api = inject('ihr_api')
 
@@ -267,6 +268,7 @@ onMounted(() => {
         :networkDisconnectionLoading="loading.network_disconnection" />
     </QExpansionItem>
   </div>
+  <Feedback />
 </template>
 
 

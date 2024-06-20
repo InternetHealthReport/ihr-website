@@ -224,7 +224,8 @@ const organizations = ref(ORGANIZATIONS)
 
 .IHR_actions-area
   width 100%
-  max-width 330px
+  min-width 330px
+  max-width fit-content
 
 .IHR_
   &description_text

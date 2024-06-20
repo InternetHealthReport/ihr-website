@@ -7,6 +7,7 @@ import { isoCountries } from '@/plugins/countryName'
 import report from '@/plugins/report'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
+import Feedback from '@/components/Feedback.vue'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -119,4 +120,5 @@ onMounted(() => {
     <PrefixHegemonyChart :start-time="startTime" :end-time="endTime" :fetch="fetch" />
     <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
   </div>
+  <Feedback />
 </template>
