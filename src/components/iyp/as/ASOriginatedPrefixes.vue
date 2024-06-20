@@ -5,7 +5,6 @@ import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericPieChart from '@/components/charts/IypGenericPieChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
-import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
 
 const iyp_api = inject('iyp_api')
 
@@ -73,11 +72,12 @@ onMounted(() => {
             :chart-layout="{ title: 'Geo-location (Maxmind)' }" />
       </div>
       <div class="col-6">
-        <IypGenericBarChart 
-            v-if="prefixes.data.length > 0" 
-            :chart-data="prefixes.data" 
-            :config="{key:'tags'}" 
-            :chart-layout="{ title: 'Prefix tags' }" />
+        <IypGenericBarChart
+          v-if="prefixes.data.length > 0"
+          :chart-data="prefixes.data"
+          :config="{ key: 'tags' }"
+          :chart-layout="{yaxis: { title: { text: 'Number of prefixes' } }, title: 'Prefix tags',  }"
+        />
       </div>
       <div class="col-10">
       <IypGenericTreemapChart

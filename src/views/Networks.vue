@@ -7,6 +7,7 @@ import AS from '@/components/networks/AS.vue'
 import IXP from '@/components/networks/IXP.vue'
 import Prefix from '@/components/networks/Prefix.vue'
 import * as ipAddress from 'ip-address'
+import Feedback from '@/components/Feedback.vue'
 
 const route = useRoute()
 
@@ -118,6 +119,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <Feedback />
 </template>
 
 <style lang="stylus">

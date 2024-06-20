@@ -4,6 +4,7 @@ import Tr from '@/i18n/translation'
 import { ref, watch, onMounted } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
 import HostName from '@/components/networks/HostName.vue'
+import Feedback from '@/components/Feedback.vue'
 
 const route = useRoute()
 
@@ -84,6 +85,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <Feedback />
 </template>
 
 <style lang="stylus">

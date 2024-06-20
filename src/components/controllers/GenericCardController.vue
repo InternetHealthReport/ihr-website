@@ -1,8 +1,7 @@
 <script setup>
 import { QCard, QCardSection, QCardActions, QBar, QBtn, QSpace, QTooltip, copyToClipboard, QDialog } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
-import Tr from '@/i18n/translation'
-import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   title: {
@@ -27,16 +26,8 @@ const props = defineProps({
 
 const route = useRoute()
 
-const showReportDayRange = ref(false)
 const anchorUrl = ref(props.title.replaceAll(' ', '-'))
 const infoDialog = ref(false)
-
-const reportDayText = computed(() => {
-  if (props.reportDay) {
-    return `${props.reportDay}-day report`
-  }
-  return 'Weekly report'
-})
 
 const getInfo = () => {
   infoDialog.value = true
@@ -60,11 +51,6 @@ const getUrlAnchor = () => {
           <div class="text-subtitle2">{{ subTitle }}</div>
         </div>
         <QSpace />
-        <!-- <QBtn @click="showReportDayRange = !showReportDayRange" dense flat icon="fa-solid fa-calendar">
-          <QTooltip v-model="showReportDayRange" no-parent-event>
-            {{ reportDayText }}
-          </QTooltip>
-        </QBtn> -->
         <QBtn @click="copyToClipboard(getUrlAnchor())" dense flat icon="fa-solid fa-link">
           <QTooltip>
             Copy widget's URL

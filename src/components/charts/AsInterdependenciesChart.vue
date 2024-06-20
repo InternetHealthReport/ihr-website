@@ -105,8 +105,8 @@ const makeHegemonyFilter = () => {
 
 const makeHegemonyTier1Filter = () => {
     return new HegemonyQuery()
-    .originAs(0)
-    .asNumber([174,1299])
+    .originAs(1299)
+    .asNumber(1299)
     .addressFamily(props.addressFamily)
     .timeInterval(props.startTime, props.endTime)
     .orderedByTime()
@@ -126,8 +126,8 @@ const apiCall = async() => {
   }
   updateAxesLabel()
   hegemonyFilter.value = makeHegemonyFilter()
-  hegemonyTier1Filter.value = makeHegemonyTier1Filter()
   hegemonyConeFilter.value = makeHegemonyConeFilter()
+  hegemonyTier1Filter.value = makeHegemonyTier1Filter()
   traces.value = extend(true, [], DEFAULT_TRACE)
   loading.value = true
   loadingHegemony.value = true
@@ -181,6 +181,7 @@ const showTable = (table, selectedDate) => {
   if (props.noTable) {
     return
   }
+  getNeighboursData()
   if (selectedDate.length < 16) {
     // at midnight no time is given
     details.value.date = new Date(selectedDate + ' 00:00 GMT') //adding timezone to string...
@@ -728,7 +729,6 @@ watch(() => props.clear, () => {
 watch(() => props.endTime, () => {
   apiCall()
   tableFromQuery()
-  getNeighboursData()
 })
 
 onBeforeMount(() => {
@@ -737,7 +737,6 @@ onBeforeMount(() => {
 onMounted(() => {
   apiCall()
   tableFromQuery()
-  getNeighboursData()
 })
 </script>
 
