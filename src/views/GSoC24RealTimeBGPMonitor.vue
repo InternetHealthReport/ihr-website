@@ -17,7 +17,7 @@ const sankeyChart = ref(null)
 const params = ref({
   peer: '',
   path: '',
-  prefix: ['170.238.225.0/24'],
+  prefix: ['170.238.225.0/24'], //2600:40fc:1004::/48
   type: 'UPDATE',
   require: '',
   moreSpecific: true,
@@ -84,33 +84,37 @@ const handleFilterMessages = (data) => {
 }
 
 const generateGraphData = () => {
-  const tempLinks = []
-  const tempNodes = []
+  const nodeSet = new Set()
+  const linkSet = new Set()
+  const sourceArray = []
+  const targetArray = []
+  const valueArray = []
+
   filteredMessages.value.forEach((message) => {
-    if (message.path?.length > 0) {
-      const path = message.path.slice(-(maxHops.value + 1))
-      path.forEach((n, i) => {
-        if (!tempNodes.some((node) => node.id === n)) {
-          tempNodes.push({ id: n, name: n })
+    if (!message.path && message.path.length === 0) return
+    const path = message.path.slice(-(maxHops.value + 1))
+    path.forEach((n, i) => {
+      nodeSet.add(n)
+      if (i < path.length - 1) {
+        const source = path[i]
+        const target = path[i + 1]
+        const link = [source, target].sort().join('-')
+        if (!linkSet.has(link) && source !== target) {
+          linkSet.add(link)
+          sourceArray.push(source)
+          targetArray.push(target)
+          valueArray.push(1)
         }
-        if (i < path.length - 1) {
-          const source = path[i]
-          const target = path[i + 1]
-          if (
-            !tempLinks.some(
-              (link) =>
-                (link.source === source && link.target === target) ||
-                (link.source === target && link.target === source)
-            )
-          ) {
-            tempLinks.push({ source: source, target: target, value: 1 })
-          }
-        }
-      })
-    }
+      }
+    })
   })
-  nodes.value = tempNodes
-  links.value = tempLinks
+
+  nodes.value = Array.from(nodeSet)
+  links.value = {
+    source: sourceArray.map((node) => nodes.value.indexOf(node)),
+    target: targetArray.map((node) => nodes.value.indexOf(node)),
+    value: valueArray
+  }
 }
 
 watch([filteredMessages, maxHops], () => {
@@ -124,12 +128,7 @@ const toggleConnection = () => {
   isPlaying.value = !isPlaying.value
 }
 
-const addPassiveEventListener = (target, event, handler) => {
-  target.addEventListener(event, handler, { passive: true })
-}
-
 watch(isPlaying, () => {
-  addPassiveEventListener(window, 'touchstart', () => {})
   toggleRisProtocol()
 })
 
@@ -153,17 +152,6 @@ const layout = ref({
 const config = ref({ responsive: true })
 
 const plotSankey = () => {
-  const nodeIds = nodes.value.map((node) => node.id)
-  const nodeNames = nodes.value.map((node) => node.name)
-
-  const linkSources = links.value.map((link) =>
-    nodeIds.indexOf(link.source) !== -1 ? nodeIds.indexOf(link.source) : undefined
-  )
-  const linkTargets = links.value.map((link) =>
-    nodeIds.indexOf(link.target) !== -1 ? nodeIds.indexOf(link.target) : undefined
-  )
-  const linkValues = links.value.map((link) => link.value)
-
   const data = {
     type: 'sankey',
     node: {
@@ -173,24 +161,16 @@ const plotSankey = () => {
         color: 'black',
         width: 0.5
       },
-      label: nodeNames
+      label: nodes.value
     },
-    link: {
-      source: linkSources,
-      target: linkTargets,
-      value: linkValues
-    }
+    link: links.value
   }
   Plotly.newPlot(sankeyChart.value, [data], layout.value, config.value)
 }
 
 onMounted(() => {
-  const data = {
-    type: 'sankey'
-  }
-  Plotly.newPlot(sankeyChart.value, [data], layout.value, config.value)
+  plotSankey()
 })
-
 watch([nodes, links], () => {
   plotSankey()
 })
