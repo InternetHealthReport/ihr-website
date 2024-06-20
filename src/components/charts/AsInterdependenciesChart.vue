@@ -181,6 +181,7 @@ const showTable = (table, selectedDate) => {
   if (props.noTable) {
     return
   }
+  getNeighboursData()
   if (selectedDate.length < 16) {
     // at midnight no time is given
     details.value.date = new Date(selectedDate + ' 00:00 GMT') //adding timezone to string...
@@ -728,7 +729,6 @@ watch(() => props.clear, () => {
 watch(() => props.endTime, () => {
   apiCall()
   tableFromQuery()
-  getNeighboursData()
 })
 
 onBeforeMount(() => {
@@ -737,7 +737,6 @@ onBeforeMount(() => {
 onMounted(() => {
   apiCall()
   tableFromQuery()
-  getNeighboursData()
 })
 </script>
 
