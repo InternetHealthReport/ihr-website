@@ -41,7 +41,7 @@ const filter = ref('')
 const colToUnderline = ref(['ASN', 'AS', 'Origin AS', 'Country', 'IXP', 'Prefix','Reg. Country', 'Geoloc. Country', 'Country', 'CC', 'Hostname'])
 const underline = ref(false)
 const metadata = ref({})
-const loadingStatus = ref(true)
+const loadingStatusMetadata = ref(false)
 
 const wrapCsvValue = (val, formatFn, row) => {
   let formatted = formatFn !== void 0
@@ -96,21 +96,23 @@ const getMetadataQuery = () => {
   query = query.replace(/(ORDER|order)(?:.|\n)*/gm, '')
   query = query.replace(/(WHERE|where)(?:.|n)*/gm, '')
   query = query.replace(/\[(?:.)*?:/gm, '[:')
-  query = query.replaceAll('*', '')
+  query = query.replace(/\*(?!\d)/gm, '')
   query = query.split('[:')
   const queryVars = []
   for (let i=1; i<query.length; i++) {
     queryVars.push(`edge${i-1}`)
     query[i] = `${queryVars[i-1]}:${query[i]}`
   }
-  query = `${query.join('[')} WITH `
-  const collectList = 'COLLECT(DISTINCT [var0.reference_org, var0.reference_url_data, var0.reference_url_info, var0.reference_time_fetch, var0.reference_time_modification]) AS var1'
+  query = `${query.join('[')} `
+  const collectList = `WITH *, CASE WHEN var0 IS :: LIST<RELATIONSHIP> THEN var0 ELSE [var0] END AS var
+    WITH *, head(var) AS var0
+    WITH *, COLLECT(DISTINCT [var0.reference_org, var0.reference_url_data, var0.reference_url_info, var0.reference_time_fetch, var0.reference_time_modification]) AS var1`
   const listVars = []
   queryVars.forEach((el, index) => {
     listVars.push(`list${index}`)
     query += collectList.replaceAll('var0', el).replace('var1', listVars[index])
     if (index < queryVars.length - 1) {
-      query += ', '
+      query += ' '
     }
   })
   query += ` UNWIND ${listVars.join('+')} AS metadata_list RETURN DISTINCT metadata_list`
@@ -130,7 +132,7 @@ const parseDate = (date) => {
 }
 
 const fetchMetadata = async () => {
-  loadingStatus.value = true
+  loadingStatusMetadata.value = true
   try {
     let res = await iyp_api.run([{ statement: getMetadataQuery() }])
     res[0].forEach(obj => {
@@ -154,9 +156,9 @@ const fetchMetadata = async () => {
          }
       }
     })
-    loadingStatus.value = false
+    loadingStatusMetadata.value = false
   } catch (e) {
-    loadingStatus.value = false
+    loadingStatusMetadata.value = false
     return
   }
 }
@@ -225,6 +227,12 @@ const routeToHostName = (hostName) => {
   }))
 }
 
+const transition = (newVal, oldVal) => {
+  if (newVal === 'metadata') {
+    fetchMetadata()
+  }
+}
+
 watch(activeTab, () => {
   if (activeTab.value == 'chart') {
     // console.log(`Current Tab: ${activeTab.value}`)
@@ -242,7 +250,6 @@ watch(() => props.data, () => {
 })
 
 onMounted(() => {
-  fetchMetadata()
   if (props.slotLength <= 0) {
     activeTab.value = 'data'
   }
@@ -251,7 +258,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div v-if="loadingStatus" class="IHR_loading-spinner" style="z-index: 1000;">
+    <div v-if="loadingStatus || loadingStatusMetadata" class="IHR_loading-spinner" style="z-index: 1000;">
       <QSpinner color="secondary" size="15em" />
     </div>
     <div>
@@ -268,7 +275,7 @@ onMounted(() => {
         <QTab name="api" label="CYPHER QUERY"></QTab>
         <QTab name="metadata" label="METADATA"></QTab>
       </QTabs>
-      <QTabPanels v-model="activeTab" animated>
+      <QTabPanels v-model="activeTab" animated @transition="transition">
         <QTabPanel name="chart">
           <div id="chartContainer">
               <slot></slot>

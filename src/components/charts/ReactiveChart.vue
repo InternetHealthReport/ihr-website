@@ -145,6 +145,9 @@ watch(() => props.traces, () => {
 }, { deep: true })
 watch(() => props.layout, () => {
   layoutLocal.value = Object.assign(layoutLocal.value, props.layout)
+  if (layoutLocal.value['title'] !== undefined) {
+    delete layoutLocal.value['title']
+  }
 })
 watch(() => props.yMax, (newValue) => {
   const graphDiv = myId.value
