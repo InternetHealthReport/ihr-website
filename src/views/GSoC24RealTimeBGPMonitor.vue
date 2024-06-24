@@ -1,6 +1,6 @@
 <script setup>
-import { QBtn, QSelect, QInput, QSlider } from 'quasar'
-import { onMounted, ref, watch } from 'vue'
+import { QBtn, QSelect, QInput, QSlider, QTable, QIcon } from 'quasar'
+import { computed, onMounted, ref, watch } from 'vue'
 import Plotly from 'plotly.js-dist'
 
 const maxHops = ref(3)
@@ -13,11 +13,13 @@ const filteredMessages = ref([])
 const nodes = ref([])
 const links = ref([])
 const sankeyChart = ref(null)
+const search = ref('')
+const selectedPeers = ref([])
 
 const params = ref({
   peer: '',
   path: '',
-  prefix: ['170.238.225.0/24'], //2600:40fc:1004::/48
+  prefix: '', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: true,
@@ -79,8 +81,19 @@ const connectWebSocket = () => {
 }
 
 const handleFilterMessages = (data) => {
-  const uniquePeerMessages = filteredMessages.value.filter((message) => message.peer !== data.peer)
-  filteredMessages.value = [...uniquePeerMessages, data]
+  const index = filteredMessages.value.findIndex((message) => message.peer === data.peer)
+  if (index !== -1) {
+    filteredMessages.value[index] = data
+  } else {
+    filteredMessages.value = [...filteredMessages.value, data]
+    if (filteredMessages.value.length > 5) return
+    selectedPeers.value = [
+      ...selectedPeers.value,
+      {
+        peer: data.peer
+      }
+    ]
+  }
 }
 
 const generateGraphData = () => {
@@ -90,7 +103,12 @@ const generateGraphData = () => {
   const targetArray = []
   const valueArray = []
 
-  filteredMessages.value.forEach((message) => {
+  const peers = selectedPeers.value.map((message) => message.peer)
+  const filteredSelectedMessages = filteredMessages.value.filter((message) =>
+    peers.includes(message.peer)
+  )
+
+  filteredSelectedMessages.forEach((message) => {
     if (!message.path && message.path.length === 0) return
     const path = message.path.slice(-(maxHops.value + 1))
     path.forEach((n, i) => {
@@ -117,12 +135,16 @@ const generateGraphData = () => {
   }
 }
 
-watch([filteredMessages, maxHops], () => {
-  generateGraphData()
-  //console.log("Message Paths",JSON.parse(JSON.stringify(filteredMessages.value)))
-  //console.log("Nodes",JSON.parse(JSON.stringify(nodes.value)))
-  //console.log("Links",JSON.parse(JSON.stringify(links.value)))
-})
+watch(
+  [filteredMessages, maxHops, selectedPeers],
+  () => {
+    generateGraphData()
+    //console.log("Message Paths",JSON.parse(JSON.stringify(filteredMessages.value)))
+    //console.log("Nodes",JSON.parse(JSON.stringify(nodes.value)))
+    //console.log("Links",JSON.parse(JSON.stringify(links.value)))
+  },
+  { deep: true }
+)
 
 const toggleConnection = () => {
   isPlaying.value = !isPlaying.value
@@ -174,13 +196,50 @@ onMounted(() => {
 watch([nodes, links], () => {
   plotSankey()
 })
+
+const columns = [
+  {
+    name: 'peer_asn',
+    required: true,
+    label: 'Peer ASN',
+    align: 'left',
+    field: 'peer_asn'
+  },
+  {
+    name: 'peer',
+    align: 'left',
+    label: 'Peer',
+    field: 'peer'
+  },
+  {
+    name: 'path',
+    label: 'AS Path',
+    field: 'path',
+    align: 'left'
+  },
+  {
+    name: 'timestamp',
+    label: 'Timestamp',
+    field: 'timestamp',
+    align: 'left'
+  }
+]
+
+const rows = computed(() =>
+  filteredMessages.value.map((message) => ({
+    peer_asn: message.peer_asn,
+    peer: message.peer,
+    path: message.path.length > 0 ? message.path.join(', ') : 'Null',
+    timestamp: new Date(message.timestamp * 1000).toUTCString()
+  }))
+)
 </script>
 
 <template>
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <h1 class="text-center q-pa-xl">Real-Time BGP Monitor</h1>
     <div class="controls justify-center q-pa-md flex">
-      <QInput outlined placeholder="Prefix" :dense="true" color="accent" />
+      <QInput outlined placeholder="Prefix" :dense="true" color="accent" v-model="params.prefix" />
       <QInput outlined placeholder="ASN" :dense="true" color="accent" />
       <QSelect
         style="min-width: 100px"
@@ -218,7 +277,28 @@ watch([nodes, links], () => {
         <QBtn color="secondary" label=">" />
       </div>
     </div>
-    <div class="sankeyChart" ref="sankeyChart"></div>
+    <div class="q-mb-lg">
+      <QTable
+        flat
+        bordered
+        title="RIS Live Messages"
+        :rows="rows"
+        :columns="columns"
+        :filter="search"
+        row-key="peer"
+        selection="multiple"
+        v-model:selected="selectedPeers"
+      >
+        <template v-slot:top-right>
+          <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
+            <template v-slot:append>
+              <QIcon name="search" />
+            </template>
+          </QInput>
+        </template>
+      </QTable>
+    </div>
+    <div class="sankeyChart q-mb-lg" ref="sankeyChart"></div>
   </div>
 </template>
 
