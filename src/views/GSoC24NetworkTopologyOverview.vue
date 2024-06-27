@@ -15,10 +15,9 @@ const allEdges = ref({})
 const layouts = reactive({nodes: {}})
 const graph = ref()
 const targetNodeId = ref("")
-const tooltipOpacity = ref(0)
+const tooltipClickOpacity = ref(0)
+const tooltipHoverOpacity = ref(0)
 const tooltipPos = ref({ left: "0px", top: "0px" })
-const targetEdgeId = ref("")
-const tooltipType = ref("")
 const tooltip = ref()
 const asnInfo = ref({})
 
@@ -47,9 +46,9 @@ const nodeSize = 35
 const configs = vNG.defineConfigs({
   view: {
     autoPanAndZoomOnLoad: "fit-center", 
-	scalingObjects:"true",
+	  scalingObjects:"true",
 	grid: {
-		visible: true,
+		visible: false,
 		interval: 100,
 		thickIncrements: 8,
 		line: {
@@ -91,18 +90,6 @@ const configs = vNG.defineConfigs({
 const targetNodePos = computed(() => {
 	const nodePos = layouts.nodes[targetNodeId.value]
 	return nodePos || { x: 0, y: 0 }
-})
-
-const edgeCenterPos = computed(() => {
-  const edge = allEdges.value[targetEdgeId.value]
-  if (!edge) return { x: 0, y: 0 }
-
-  const sourceNode = allEdges.value[targetEdgeId.value].source
-  const targetNode = allEdges.value[targetEdgeId.value].target
-  return {
-    x: (layouts.nodes[sourceNode].x + layouts.nodes[targetNode].x) / 2,
-    y: (layouts.nodes[sourceNode].y + layouts.nodes[targetNode].y) / 2,
-  }
 })
 
 const layout = (direction) => {
@@ -243,7 +230,6 @@ const sortASRelations = (data) => {
                                 "source": asn1,
                                 "target": asn2,
                                 "color": calculateEdgeColor(asnInfo.value[asn2]?.HEGE),
-                                "label": asnInfo.value[asn2]?.HEGE
                             };
                             edgeCounter++
                         }
@@ -259,50 +245,38 @@ const sortASRelations = (data) => {
 
 const eventHandlers = {
   "node:pointerover": ({ node }) => {
-    tooltipType.value = "node"
-    targetNodeId.value = node ?? ""
-    tooltipOpacity.value = 1
+    targetNodeId.value = node 
+    if(!tooltipClickOpacity.value) tooltipHoverOpacity.value = 1
   },
   "node:pointerout": () => {
-    tooltipType.value = ""
-    tooltipOpacity.value = 0
+    if(tooltipClickOpacity.value) tooltipClickOpacity.value = 0
+    tooltipHoverOpacity.value = 0
   },
-  "edge:pointerover": ({ edge }) => {
-    tooltipType.value = "edge"
-    targetEdgeId.value = edge ?? ""
-    tooltipOpacity.value = 1
-  },
-  "edge:pointerout": () => {
-    tooltipType.value = ""
-    tooltipOpacity.value = 0
-  },
-  "node:click": ({ node }) => {
-    tooltipType.value = ""
-    tooltipOpacity.value = 0
-    ASN.value = node
-    searchASN()
+  "node:click": ({ node , event}) => {
+    if (event.detail === 1){
+      targetNodeId.value = node 
+      !tooltipClickOpacity.value ? tooltipHoverOpacity.value = 0 : tooltipHoverOpacity.value = 1
+      tooltipClickOpacity.value = Number(!tooltipClickOpacity.value)
+    }else {
+      tooltipHoverOpacity.value = 0
+      tooltipClickOpacity.value = 0 
+      ASN.value = node
+      searchASN()
+    }
   }
 }
 
 watch(
-  () => [targetNodePos.value, tooltipOpacity.value, edgeCenterPos.value, targetEdgeId.value],
+  () => [targetNodePos.value, tooltipClickOpacity.value, tooltipHoverOpacity.value],
   () => {
     if (!graph.value || !tooltip.value) return
 
     let domPoint = { x: 0, y: 0 };
-    if (tooltipType.value == "node") {
       domPoint = graph.value.translateFromSvgToDomCoordinates(targetNodePos.value);
       tooltipPos.value = {
         left: domPoint.x - tooltip.value.offsetWidth / 2 + "px",
-        top: domPoint.y - nodeSize - tooltip.value.offsetHeight - 10 + "px",
+        top: domPoint.y - nodeSize - tooltip.value.offsetHeight - 30 + "px",
       }
-    } else if (tooltipType.value == "edge") {
-      domPoint = graph.value.translateFromSvgToDomCoordinates(edgeCenterPos.value);
-      tooltipPos.value = {
-        left: domPoint.x - tooltip.value.offsetWidth / 2 + "px",
-        top: domPoint.y - 2 - tooltip.value.offsetHeight - 10 + "px",
-      }
-    }
   },
   { deep: true }
 );
@@ -353,15 +327,16 @@ onMounted(() => {
 
       <div ref="tooltip" >
        
-        <div v-if="tooltipType=='node'" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
+        <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipClickOpacity }">
           <div>{{ asnInfo[targetNodeId]?.Name }}</div>
           <div>{{ asnInfo[targetNodeId]?.Country }}</div>
+          <div v-if="targetNodeId!=ASN" > Hegemony : {{ asnInfo[targetNodeId]?.HEGE.toFixed(2)  }}%</div>
         </div>
 
-        <div v-if="tooltipType=='edge'" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
-          <div> Hegemony : {{ (allEdges[targetEdgeId].label).toFixed(2) }}%</div>
+        <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipHoverOpacity }">
+          <div>{{ asnInfo[targetNodeId]?.Name }}</div>
         </div>
-      
+
       </div>
 
     </div>
