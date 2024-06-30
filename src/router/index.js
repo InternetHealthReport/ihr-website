@@ -17,6 +17,7 @@ import Countries from '../views/Countries.vue'
 import Ranks from '../views/Ranks.vue'
 import Tr from '@/i18n/translation'
 import Observable from '../views/Observable.vue'
+import App from '../App.vue'
 
 
 const router = createRouter({
@@ -153,6 +154,16 @@ const router = createRouter({
               }
             }
           }
+        },
+        {
+          path: 'embedded/:report?/:param1?/:param2?',
+          name: 'embedded',
+          component: App
+        },
+        {
+          path: 'embedded-full/:report?/:param1?/:param2?',
+          name: 'embedded-full',
+          component: App
         }
       ]
     },

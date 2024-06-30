@@ -14,6 +14,15 @@ const { t } = useI18n()
 
 const iyp_api = inject('iyp_api')
 
+const props  = defineProps({
+  domain: {
+    type: String,
+    required: true,
+  }
+})
+
+const emits = defineEmits(['set-embedded-page-title'])
+
 const route = useRoute()
 const router = useRouter()
 
@@ -22,14 +31,13 @@ const activeMenu = route.query.active ? route.query.active : activeTab
 
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const domain = ref(route.params.hostname)
 const domainName = ref(null)
 const menu = ref(activeMenu)
 
 const getInfo = () => {
   const query = `MATCH (d:HostName {name: $hostname})
       RETURN d.name AS name`
-  return [{ statement: query, parameters: { hostname: domain.value } }]
+  return [{ statement: query, parameters: { hostname: props.domain } }]
 }
 
 const fetchData = async () => {
@@ -48,18 +56,19 @@ const fetchData = async () => {
 }
 
 const pageTitle = computed(() => {
+  emits('set-embedded-page-title', domainName.value)
   return domainName.value
 })
 
-watch(() => route.params.hostname, (newDomain) => {
-  if (newDomain != domain.value) {
-    domain.value = newDomain
-    if (domain.value) {
-      menu.value = activeTab
-      fetchData()
-    }
-  }
-})
+// watch(() => route.params.hostname, (newDomain) => {
+//   if (newDomain != props.domain) {
+//     props.domain = newDomain
+//     if (props.domain) {
+//       menu.value = activeTab
+//       fetchData()
+//     }
+//   }
+// })
 watch(menu, () => {
   if ('display' in route.query) {
     delete route.query.display
@@ -72,7 +81,7 @@ watch(menu, () => {
   }))
 })
 onMounted(() => {
-  if (domain.value) {
+  if (props.domain) {
     fetchData()
   } else {
     router.push(Tr.i18nRoute({
@@ -83,64 +92,73 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">{{ pageTitle }}</h1>
-    <h3 class="text-center">
-      <div>
-        Weekly report
-      </div>
-    </h3>
-    <QCard flat>
-      <QTabs
-        v-model="menu"
-        dense
-        indicator-color="secondary"
-        active-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <!-- <QTab name="overview">Overview</QTab> -->
-        <QTab name="routing">Routing</QTab>
-        <QTab name="dns">DNS</QTab>
-        <QTab name="rankings">Rankings</QTab>
-        <QTab name="custom">Custom</QTab>
-      </QTabs>
-      <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
-        <!-- <QTabPanel name="overview">
-          
-        </QTabPanel> -->
-        <QTabPanel name="routing">
-          <HostNameRouting
-            :page-title="pageTitle"
-            :host-name="domainName"
-          />
-        </QTabPanel>
-        <QTabPanel name="dns">
-          <HostNameDNS
-            :page-title="pageTitle"
-            :host-name="domainName"
-          />
-        </QTabPanel>
-        <QTabPanel name="rankings">
-          <HostNameRankings
-            :page-title="pageTitle"
-            :host-name="domainName"
-          />
-        </QTabPanel>
-        <QTabPanel name="custom">
-          <HostNameCustom
-            :page-title="pageTitle"
-            :host-name="domainName"
-            :hash="routeHash"
-          />
-        </QTabPanel>
-      </QTabPanels>
-    </QCard>
-  </div>
+  <template v-if="route.path.split('/')[2]==='embedded'">
+    <HostNameCustom
+      :page-title="pageTitle"
+      :host-name="domainName"
+      :hash="routeHash"
+    />
+  </template>
+  <template v-else>
+    <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+      <h1 class="text-center">{{ pageTitle }}</h1>
+      <h3 class="text-center">
+        <div>
+          Weekly report
+        </div>
+      </h3>
+      <QCard flat>
+        <QTabs
+          v-model="menu"
+          dense
+          indicator-color="secondary"
+          active-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <!-- <QTab name="overview">Overview</QTab> -->
+          <QTab name="routing">Routing</QTab>
+          <QTab name="dns">DNS</QTab>
+          <QTab name="rankings">Rankings</QTab>
+          <QTab name="custom">Custom</QTab>
+        </QTabs>
+        <QSeparator />
+        <QTabPanels
+          v-model="menu"
+          v-if="pageTitle"
+        >
+          <!-- <QTabPanel name="overview">
+            
+          </QTabPanel> -->
+          <QTabPanel name="routing">
+            <HostNameRouting
+              :page-title="pageTitle"
+              :host-name="domainName"
+            />
+          </QTabPanel>
+          <QTabPanel name="dns">
+            <HostNameDNS
+              :page-title="pageTitle"
+              :host-name="domainName"
+            />
+          </QTabPanel>
+          <QTabPanel name="rankings">
+            <HostNameRankings
+              :page-title="pageTitle"
+              :host-name="domainName"
+            />
+          </QTabPanel>
+          <QTabPanel name="custom">
+            <HostNameCustom
+              :page-title="pageTitle"
+              :host-name="domainName"
+              :hash="routeHash"
+            />
+          </QTabPanel>
+        </QTabPanels>
+      </QCard>
+    </div>
+  </template>
 </template>
 
 <style lang="stylus">

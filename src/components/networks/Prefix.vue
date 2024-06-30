@@ -14,15 +14,25 @@ const { t } = useI18n()
 
 const iyp_api = inject('iyp_api')
 
+const props  = defineProps({
+  host: {
+    type: String,
+    required: true,
+  },
+  prefixLength: {
+    type: Number,
+    required: true,
+  }
+})
+
+const emits = defineEmits(['set-embedded-page-title'])
+
 const route = useRoute()
 const router = useRouter()
 
 const activeMenu = route.query.active ? route.query.active : 'overview'
-
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const host = ref(route.params.ip)
-const prefixLength = ref(Number(route.params.length))
 const hostName = ref(null)
 const menu = ref(activeMenu)
 
@@ -53,15 +63,17 @@ const pageTitle = computed(() => {
 })
 
 const getPrefix = () => {
-  return `${host.value}/${prefixLength.value}`
+  const title = `${props.host}/${props.prefixLength}`
+  emits('set-embedded-page-title', title)
+  return title
 }
 
-watch(() => route.params, () => {
-  if (route.params.ip != host.value || Number(route.params.length) != prefixLength.value) {
-    host.value = route.params.ip
-    prefixLength.value = Number(route.params.length)
-  }
-}, {deep: true})
+// watch(() => route.params, () => {
+//   if (route.params.ip != props.host || Number(route.params.length) != props.prefixLength) {
+//     props.host = route.params.ip
+//     props.prefixLength = Number(route.params.length)
+//   }
+// }, {deep: true})
 watch(menu, () => {
   if ('display' in route.query) {
     delete route.query.display
@@ -74,7 +86,7 @@ watch(menu, () => {
   }))
 })
 onMounted(() => {
-  if (host.value && prefixLength.value) {
+  if (props.host && props.prefixLength) {
     fetchData()
   } else {
     router.push(Tr.i18nRoute({
@@ -85,63 +97,74 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">{{ pageTitle }}</h1>
-    <h3 class="text-center">
-      <div>
-        Weekly report
-      </div>
-    </h3>
-    <QCard flat>
-      <QTabs
-        v-model="menu"
-        dense
-        indicator-color="secondary"
-        active-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <QTab name="overview">Overview</QTab>
-        <QTab name="routing">Routing</QTab>
-        <QTab name="dns">DNS</QTab>
-        <QTab name="custom">Custom</QTab>
-      </QTabs>
-      <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
-        <QTabPanel name="overview">
-          <PrefixOverview
-            :host="host"
-            :prefix-length="prefixLength"
-            :get-prefix="getPrefix()"
-          />
-        </QTabPanel>
-        <QTabPanel name="routing">
-          <PrefixRouting
-            :page-title="pageTitle"
-            :get-prefix="getPrefix()"
-          />
-        </QTabPanel>
-        <QTabPanel name="dns">
-          <PrefixDNS
-            :page-title="pageTitle"
-            :get-prefix="getPrefix()"
-          />
-        </QTabPanel>
-        <QTabPanel name="custom">
-          <PrefixCustom
-            :host="host"
-            :prefix-length="prefixLength"
-            :page-title="pageTitle"
-            :get-prefix="getPrefix()"
-            :hash="routeHash"
-          />
-        </QTabPanel>
-      </QTabPanels>
-    </QCard>
-  </div>
+  <template v-if="route.path.split('/')[2]==='embedded'">
+    <PrefixCustom
+      :host="host"
+      :prefix-length="prefixLength"
+      :page-title="pageTitle"
+      :get-prefix="getPrefix()"
+      :hash="routeHash"
+    />
+  </template>
+  <template v-else>
+    <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+      <h1 class="text-center">{{ pageTitle }}</h1>
+      <h3 class="text-center">
+        <div>
+          Weekly report
+        </div>
+      </h3>
+      <QCard flat>
+        <QTabs
+          v-model="menu"
+          dense
+          indicator-color="secondary"
+          active-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <QTab name="overview">Overview</QTab>
+          <QTab name="routing">Routing</QTab>
+          <QTab name="dns">DNS</QTab>
+          <QTab name="custom">Custom</QTab>
+        </QTabs>
+        <QSeparator />
+        <QTabPanels
+          v-model="menu"
+          v-if="pageTitle"
+        >
+          <QTabPanel name="overview">
+            <PrefixOverview
+              :host="host"
+              :prefix-length="prefixLength"
+              :get-prefix="getPrefix()"
+            />
+          </QTabPanel>
+          <QTabPanel name="routing">
+            <PrefixRouting
+              :page-title="pageTitle"
+              :get-prefix="getPrefix()"
+            />
+          </QTabPanel>
+          <QTabPanel name="dns">
+            <PrefixDNS
+              :page-title="pageTitle"
+              :get-prefix="getPrefix()"
+            />
+          </QTabPanel>
+          <QTabPanel name="custom">
+            <PrefixCustom
+              :host="host"
+              :prefix-length="prefixLength"
+              :page-title="pageTitle"
+              :get-prefix="getPrefix()"
+              :hash="routeHash"
+            />
+          </QTabPanel>
+        </QTabPanels>
+      </QCard>
+    </div>
+  </template>
 </template>
 
 <style lang="stylus">

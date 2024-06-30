@@ -1116,6 +1116,16 @@
         "title": "Hostname rankings",
         "caption": "Top Hostnames in "
       }
+    },
+    "rank": {
+      "topAs": {
+        "title": "AS rankings",
+        "caption": "Top ASes in "
+      },
+      "topHostnames": {
+        "title": "Hostname rankings",
+        "caption": "Top Hostnames in "
+      }
     }
   }
 }

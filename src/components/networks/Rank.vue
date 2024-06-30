@@ -11,6 +11,15 @@ const { t } = useI18n()
 
 const iyp_api = inject('iyp_api')
 
+const props  = defineProps({
+  rank: {
+    type: String,
+    required: true,
+  }
+})
+
+const emits = defineEmits(['set-embedded-page-title'])
+
 const route = useRoute()
 const router = useRouter()
 
@@ -19,14 +28,13 @@ const activeMenu = route.query.active ? route.query.active : activeTab
 
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const rank = ref(route.params.rank)
 const rankName = ref(null)
 const menu = ref(activeMenu)
 
 const getInfo = () => {
   const query = `MATCH (r:Ranking {name: $rank})
       RETURN r.name AS name`
-  return [{ statement: query, parameters: { rank: rank.value } }]
+  return [{ statement: query, parameters: { rank: props.rank } }]
 }
 
 const fetchData = async () => {
@@ -45,18 +53,19 @@ const fetchData = async () => {
 }
 
 const pageTitle = computed(() => {
+  emits('set-embedded-page-title', rankName.value)
   return rankName.value
 })
 
-watch(() => route.params.rank, (newRank) => {
-  if (newRank != rank.value) {
-    rank.value = newRank
-    if (rank.value) {
-      menu.value = activeTab
-      fetchData()
-    }
-  }
-})
+// watch(() => route.params.rank, (newRank) => {
+//   if (newRank != props.rank) {
+//     props.rank = newRank
+//     if (props.rank) {
+//       menu.value = activeTab
+//       fetchData()
+//     }
+//   }
+// })
 watch(menu, () => {
   if ('display' in route.query) {
     delete route.query.display
@@ -69,7 +78,7 @@ watch(menu, () => {
   }))
 })
 onMounted(() => {
-  if (rank.value) {
+  if (props.rank) {
     fetchData()
   } else {
     router.push(Tr.i18nRoute({
@@ -80,39 +89,48 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">{{ pageTitle }}</h1>
-    <h3 class="text-center">
-      <div>
-        Weekly report
-      </div>
-    </h3>
-    <QCard flat>
-      <QTabs
-        v-model="menu"
-        dense
-        indicator-color="secondary"
-        active-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <QTab name="custom">Custom</QTab>
-      </QTabs>
-      <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
-        <QTabPanel name="custom">
-          <RankCustom
-            :rank="rank"
-            :page-title="pageTitle"
-            :hash="routeHash"
-          />
-        </QTabPanel>
-      </QTabPanels>
-    </QCard>
-  </div>
+  <template v-if="route.path.split('/')[2]==='embedded'">
+    <RankCustom
+      :rank="rank"
+      :page-title="pageTitle"
+      :hash="routeHash"
+    />
+  </template>
+  <template v-else>
+    <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+      <h1 class="text-center">{{ pageTitle }}</h1>
+      <h3 class="text-center">
+        <div>
+          Weekly report
+        </div>
+      </h3>
+      <QCard flat>
+        <QTabs
+          v-model="menu"
+          dense
+          indicator-color="secondary"
+          active-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <QTab name="custom">Custom</QTab>
+        </QTabs>
+        <QSeparator />
+        <QTabPanels
+          v-model="menu"
+          v-if="pageTitle"
+        >
+          <QTabPanel name="custom">
+            <RankCustom
+              :rank="rank"
+              :page-title="pageTitle"
+              :hash="routeHash"
+            />
+          </QTabPanel>
+        </QTabPanels>
+      </QCard>
+    </div>
+  </template>
 </template>
 
 <style lang="stylus">

@@ -78,7 +78,7 @@ const fetch = ref(true)
       :start-time="startTime"
       :end-time="endTime"
       :startPointName="Math.abs(asNumber).toString()"
-      :startPointType="route.params.id.substring(0, 2)"
+      :startPointType="'AS'"
       :fetch="fetch"
       :readonlySourceSearch="true"
       searchBar

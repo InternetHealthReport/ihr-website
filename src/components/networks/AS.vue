@@ -20,6 +20,15 @@ const { t } = useI18n()
 
 const iyp_api = inject('iyp_api')
 
+const props  = defineProps({
+  asNumber: {
+    type: Number,
+    required: true,
+  }
+})
+
+const emits = defineEmits(['set-embedded-page-title'])
+
 const route = useRoute()
 const router = useRouter()
 
@@ -35,7 +44,6 @@ const activeMenu = route.query.active ? route.query.active : 'overview'
 
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const asNumber = ref(Number(route.params.id.replace('AS','')))
 const asName = ref(null)
 const menu = ref(activeMenu)
 const peeringdbId = ref(null)
@@ -47,7 +55,7 @@ const getInfo = () => {
       OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       RETURN COALESCE(pdbn.name, btn.name, ripen.name) AS name`
-  return [{ statement: query, parameters: { asn: asNumber.value } }]
+  return [{ statement: query, parameters: { asn: props.asNumber } }]
 }
 
 const fetchData = async () => {
@@ -86,22 +94,24 @@ const family = computed(() => {
 })
 
 const pageTitle = computed(() => {
-  return `AS${asNumber.value} - ${asName.value}`
+  const title = `AS${props.asNumber} - ${asName.value}`
+  emits('set-embedded-page-title', title)
+  return title
 })
 
 watch(addressFamily, () => {
   pushRoute()
 })
-watch(() => route.params.id, (asn) => {
-  const newAsn = Number(asn.replace('AS', ''))
-  if (newAsn != asNumber.value) {
-    asNumber.value = newAsn
-    if (asNumber.value) {
-      pushRoute()
-      fetchData()
-    }
-  }
-})
+// watch(() => route.params.id, (asn) => {
+//   const newAsn = Number(asn.replace('AS', ''))
+//   if (newAsn != props.asNumber) {
+//     props.asNumber = newAsn
+//     if (props.asNumber) {
+//       pushRoute()
+//       fetchData()
+//     }
+//   }
+// })
 watch(interval, () => {
   pushRoute()
 })
@@ -117,7 +127,7 @@ watch(menu, () => {
   pushRoute()
 })
 onMounted(() => {
-  if (asNumber.value) {
+  if (props.asNumber) {
     pushRoute()
     fetchData()
   } else {
@@ -129,101 +139,115 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">{{ pageTitle }}</h1>
-    <h3 class="text-center">
-      <div v-if="['monitoring', 'custom'].includes(menu)">
-        {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-        <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
-      </div>
-      <div v-else>
-        Weekly report
-      </div>
-    </h3>
-    <QCard flat>
-      <QTabs
-        v-model="menu"
-        dense
-        indicator-color="secondary"
-        active-color="primary"
-        align="justify"
-        narrow-indicator
-      >
-        <QTab name="overview">Overview</QTab>
-        <QTab name="monitoring">Monitoring</QTab>
-        <QTab name="routing">Routing</QTab>
-        <QTab name="dns">DNS</QTab>
-        <QTab name="peering">Peering</QTab>
-        <QTab name="registration">Registration</QTab>
-        <QTab name="rankings">Rankings</QTab>
-        <QTab name="custom">Custom</QTab>
-      </QTabs>
-      <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
-        <QTabPanel name="overview">
-          <ASOverview
-            :as-number="asNumber"
-            :peeringdbId="setPeeringdbId"
-          />
-        </QTabPanel>
-        <QTabPanel name="monitoring">
-          <ASMonitoring
-            :start-time="startTime"
-            :end-time="endTime"
-            :as-number="asNumber"
-            :family="family"
-            :page-title="pageTitle"
-            :interval="interval"
-          />
-        </QTabPanel>
-        <QTabPanel name="routing">
-          <ASRouting
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="dns">
-          <ASDNS
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="peering">
-          <ASPeering
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="registration">
-          <ASRegistration
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="rankings">
-          <ASRankings
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
-        </QTabPanel>
-        <QTabPanel name="custom">
-          <ASCustom
-            :start-time="startTime"
-            :end-time="endTime"
-            :as-number="asNumber"
-            :family="family"
-            :page-title="pageTitle"
-            :peeringdbId="setPeeringdbId"
-            :interval="interval"
-            :hash="routeHash"
-          />
-        </QTabPanel>
-      </QTabPanels>
-    </QCard>
-  </div>
+  <template v-if="route.path.split('/')[2]==='embedded'">
+    <ASCustom
+      :start-time="startTime"
+      :end-time="endTime"
+      :as-number="asNumber"
+      :family="family"
+      :page-title="pageTitle"
+      :peeringdbId="setPeeringdbId"
+      :interval="interval"
+      :hash="routeHash"
+    />
+  </template>
+  <template v-else>
+    <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+      <h1 class="text-center">{{ pageTitle }}</h1>
+      <h3 class="text-center">
+        <div v-if="['monitoring', 'custom'].includes(menu)">
+          {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
+          <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+        </div>
+        <div v-else>
+          Weekly report
+        </div>
+      </h3>
+      <QCard flat>
+        <QTabs
+          v-model="menu"
+          dense
+          indicator-color="secondary"
+          active-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <QTab name="overview">Overview</QTab>
+          <QTab name="monitoring">Monitoring</QTab>
+          <QTab name="routing">Routing</QTab>
+          <QTab name="dns">DNS</QTab>
+          <QTab name="peering">Peering</QTab>
+          <QTab name="registration">Registration</QTab>
+          <QTab name="rankings">Rankings</QTab>
+          <QTab name="custom">Custom</QTab>
+        </QTabs>
+        <QSeparator />
+        <QTabPanels
+          v-model="menu"
+          v-if="pageTitle"
+        >
+          <QTabPanel name="overview">
+            <ASOverview
+              :as-number="asNumber"
+              :peeringdbId="setPeeringdbId"
+            />
+          </QTabPanel>
+          <QTabPanel name="monitoring">
+            <ASMonitoring
+              :start-time="startTime"
+              :end-time="endTime"
+              :as-number="asNumber"
+              :family="family"
+              :page-title="pageTitle"
+              :interval="interval"
+            />
+          </QTabPanel>
+          <QTabPanel name="routing">
+            <ASRouting
+              :as-number="asNumber"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="dns">
+            <ASDNS
+              :as-number="asNumber"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="peering">
+            <ASPeering
+              :as-number="asNumber"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="registration">
+            <ASRegistration
+              :as-number="asNumber"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="rankings">
+            <ASRankings
+              :as-number="asNumber"
+              :page-title="pageTitle"
+            />
+          </QTabPanel>
+          <QTabPanel name="custom">
+            <ASCustom
+              :start-time="startTime"
+              :end-time="endTime"
+              :as-number="asNumber"
+              :family="family"
+              :page-title="pageTitle"
+              :peeringdbId="setPeeringdbId"
+              :interval="interval"
+              :hash="routeHash"
+            />
+          </QTabPanel>
+        </QTabPanels>
+      </QCard>
+    </div>
+  </template>
 </template>
 
 <style lang="stylus">
