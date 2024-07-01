@@ -30,7 +30,8 @@ const as_topology_query = ref({
 		WHERE a.asn <> d.asn AND all(r IN relationships(p) WHERE r.af = $af) AND all(n IN nodes(p) WHERE n IN dependencies)
 		RETURN p`,
   query2:`MATCH  (a:AS {asn:$asn})-[d:DEPENDS_ON {af: $af}]-> (b:AS)
-          RETURN b.asn AS ASN,d.hege*100 AS HEGE`,
+          OPTIONAL MATCH (b)-[rr:RANK]-(:Ranking {name:"CAIDA ASRank"})
+          RETURN b.asn AS ASN,d.hege*100 AS HEGE, rr['cone:numberAsns'] AS CONES`,
   query3:`MATCH (a:AS)
         WHERE a.asn in $asns
         OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
@@ -42,7 +43,8 @@ const as_topology_query = ref({
         RETURN a.asn AS ASN ,c.country_code AS CC, c.name AS Country, COALESCE(pdbn.name, btn.name, ripen.name) AS Name, count(DISTINCT ixp) as nb_ixp`,
 })
 
-const nodeSize = 35
+const MAX_NODE_SIZE = 35
+
 const configs = vNG.defineConfigs({
   view: {
     autoPanAndZoomOnLoad: "fit-center", 
@@ -64,7 +66,7 @@ const configs = vNG.defineConfigs({
 	},
   },
   node: {
-    normal: { radius: nodeSize / 2, color: node => node.color},
+    normal: { radius: node =>  node.size / 2, color: node => node.color},
     label: { directionAutoAdjustment:true },
     hover: {color: node => node.color}
   },
@@ -100,14 +102,14 @@ const layout = (direction) => {
   const g = new dagre.graphlib.Graph()
   g.setGraph({
     rankdir: direction,
-    nodesep: nodeSize * 2,
-    edgesep: nodeSize,
-    ranksep: nodeSize * 2,
+    nodesep: MAX_NODE_SIZE  * 2,
+    edgesep: MAX_NODE_SIZE,
+    ranksep: MAX_NODE_SIZE * 2,
   })
   g.setDefaultEdgeLabel(() => ({}))
 
   Object.entries(allNodes.value).forEach(([nodeId, node]) => {
-    g.setNode(nodeId, { label: node.name, width: nodeSize, height: nodeSize })
+    g.setNode(nodeId, { label: node.name, width: MAX_NODE_SIZE, height: MAX_NODE_SIZE })
   })
 
   Object.values(allEdges.value).forEach(edge => {
@@ -155,7 +157,7 @@ const searchASN = async() => {
     {statement: as_topology_query.value.query2, parameters: query_params},
   ])
   response[1].forEach(item => {
-      asnInfo.value[item.ASN] = { HEGE: item.HEGE}
+      asnInfo.value[item.ASN] = { HEGE: item.HEGE , CONES: item.CONES}
   })
   const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(asnInfo.value).map(Number) }}])
   asnInfoResponse[0].forEach(item => {
@@ -201,7 +203,7 @@ const sortASNodes = (data) => {
 
     const sortedUniqueNodes = {};
     Array.from(uniqueNodes).forEach(asn => {
-        sortedUniqueNodes[asn] = { name: `AS${asn}` , tooltip: { visible: false , left:0, top:0 }, color: ASN.value == asn ? 'red' : calculateNodeColor(asnInfo.value[asn]?.HEGE) };
+        sortedUniqueNodes[asn] = { name: `AS${asn}` , tooltip: { visible: false , left:0, top:0 }, color: ASN.value == asn ? 'red' : calculateNodeColor(asnInfo.value[asn]?.HEGE), size: ASN.value == asn ? MAX_NODE_SIZE :  calculateNodeSize(asnInfo.value[asn]?.CONES) };
     });
 
 	allNodes.value = sortedUniqueNodes;
@@ -243,6 +245,10 @@ const sortASRelations = (data) => {
     
 }
 
+const calculateNodeSize = (value) => {
+  return 10+1.3*Math.log2(value);
+}
+
 const eventHandlers = {
   "node:pointerover": ({ node }) => {
     targetNodeId.value = node 
@@ -275,7 +281,7 @@ watch(
       domPoint = graph.value.translateFromSvgToDomCoordinates(targetNodePos.value);
       tooltipPos.value = {
         left: domPoint.x - tooltip.value.offsetWidth / 2 + "px",
-        top: domPoint.y - nodeSize - tooltip.value.offsetHeight - 30 + "px",
+        top: domPoint.y - MAX_NODE_SIZE - tooltip.value.offsetHeight - 30 + "px",
       }
   },
   { deep: true }
@@ -330,6 +336,7 @@ onMounted(() => {
         <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipClickOpacity }">
           <div>{{ asnInfo[targetNodeId]?.Name }}</div>
           <div>{{ asnInfo[targetNodeId]?.Country }}</div>
+          <div>CONES : {{ asnInfo[targetNodeId]?.CONES }}</div>
           <div v-if="targetNodeId!=ASN" > Hegemony : {{ asnInfo[targetNodeId]?.HEGE.toFixed(2)  }}%</div>
         </div>
 
