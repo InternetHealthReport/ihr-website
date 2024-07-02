@@ -60,7 +60,7 @@ onMounted(() => {
       v-if="peers.data.length > 0"
       :chart-data="peers.data"
       :config="{ keys: ['cc', 'asn'], root: props.pageTitle, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.percent:.1f}%</extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'asn'}})"
     />
   </IypGenericTable>
 </template>
