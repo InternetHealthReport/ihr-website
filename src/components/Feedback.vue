@@ -11,7 +11,7 @@ const showFeedbackDialog = ref(false)
 		@click="showFeedbackDialog = true"
 		no-caps
 		unelevated
-		label="Give Feedback"
+		label="Feedback"
 		dense
 	/>
 	<QDialog v-model="showFeedbackDialog">
