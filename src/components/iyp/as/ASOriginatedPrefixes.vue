@@ -5,6 +5,7 @@ import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericPieChart from '@/components/charts/IypGenericPieChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
+import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
 
 const iyp_api = inject('iyp_api')
 
@@ -84,7 +85,8 @@ onMounted(() => {
         v-if="prefixes.data.length > 0"
         :chart-data="prefixes.data"
         :chart-layout="{ title: 'Breakdown per RIR and geo-location (Maxmind)' }"
-        :config="{ keys: ['rir', 'cc', 'prefix'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
+        :config="{ keys: ['rir', 'cc', 'prefix', 'asn'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
+        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
         />
       </div>
     </div>
