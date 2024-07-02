@@ -69,7 +69,7 @@ onMounted(() => {
         :chart-data="downstreams.data"
         :chart-layout="{ title: '' }"
         :config="{ keys: ['af', 'cc', 'asn'], keyValue: 'hegemony_score', root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
-        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+        @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'asn'}})"
       />
     </div>
   </IypGenericTable>

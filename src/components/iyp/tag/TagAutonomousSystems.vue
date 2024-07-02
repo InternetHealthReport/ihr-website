@@ -74,7 +74,7 @@ onMounted(() => {
         :chart-data="asesViz"
         :chart-layout="{ title: 'Breakdown per RIR and registered country' }"
         :config="{ keys: ['rir', 'cc', 'asn'], root: tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<extra>%{customdata.percent:.1f}%</extra>' }"
-        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+        @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'asn'}})"
         />
   </IypGenericTable>
 </template>

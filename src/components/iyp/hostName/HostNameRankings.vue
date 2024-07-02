@@ -4,7 +4,6 @@ import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
-import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
 
 const iyp_api = inject('iyp_api')
 
