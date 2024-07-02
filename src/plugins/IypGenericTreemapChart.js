@@ -6,8 +6,6 @@ const Address4 = ipAddress.Address4
 const Address6 = ipAddress.Address6
 
 function isLeafNode(nodeLabel, data) {
-  console.log(nodeLabel, data.parents)
-  // return false
   for (let i=0; i<data.labels.length; i++) {
     if (data.parents[i].includes(nodeLabel)) {
       return false
@@ -19,7 +17,6 @@ function isLeafNode(nodeLabel, data) {
 export default function treemapClicked(event) {
   if (event.points && event.points.length) {
     const network = event.points[0].label
-    console.log(network)
     if (typeof network === 'string') {
       let prefixMatch
       try {
