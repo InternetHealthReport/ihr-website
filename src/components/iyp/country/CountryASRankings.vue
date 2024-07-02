@@ -67,7 +67,7 @@ onMounted(() => {
       v-if="rankings.data.length > 0"
       :chart-data="rankings.data"
       :config="{ keys: ['asn', 'rank_name'], keyValue: 'inv_rank', root: pageTitle, hovertemplate: '<b>%{customdata.asn} %{customdata.asname}</b> <br><br>%{customdata.rank_name}: #%{customdata.rank}<extra></extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'rankName'}})"
     />
   </IypGenericTable>
 </template>

@@ -85,8 +85,8 @@ onMounted(() => {
         v-if="prefixes.data.length > 0"
         :chart-data="prefixes.data"
         :chart-layout="{ title: 'Breakdown per RIR and geo-location (Maxmind)' }"
-        :config="{ keys: ['rir', 'cc', 'prefix', 'asn'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
-        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+        :config="{ keys: ['rir', 'cc', 'prefix'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
+        @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'prefix'}})"
         />
       </div>
     </div>

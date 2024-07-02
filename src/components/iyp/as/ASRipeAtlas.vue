@@ -75,7 +75,7 @@ onMounted(() => {
         :chart-data="atlas.data"
         :chart-layout="{ title: 'RIPE Atlas probes per prefix' }"
         :config="{ keys: ['af', 'prefix', 'id'],  root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} probes<extra></extra>' }"
-        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+        @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'atlasId'}})"
         />
     </IypGenericTable>
 </template>

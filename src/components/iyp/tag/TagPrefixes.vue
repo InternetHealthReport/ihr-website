@@ -75,7 +75,7 @@ onMounted(() => {
       :chart-data="prefixesViz"
       :chart-layout="{ title: 'Breakdown per origin AS and registered country code' }"
       :config="{ keys: ['as_cc', 'asn', 'prefix'], root: tag, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.descr}<extra>%{customdata.percent:.1f}%</extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'prefix'}})"
       />
   </IypGenericTable>
 </template>

@@ -58,7 +58,7 @@ onMounted(() => {
     <IypGenericTreemapChart v-if="ixps.data.length > 0"
       :chart-data="ixps.data"
       :config="{ keys: ['cc', 'name'],  keyValue: '', root: pageTitle, show_percent: true }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'ixpName'}})"
     />
   </IypGenericTable>
 </template>
