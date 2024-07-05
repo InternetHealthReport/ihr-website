@@ -1,7 +1,8 @@
 <script setup>
-import { QBtn, QSelect, QInput, QSlider, QTable, QIcon } from 'quasar'
+import { QBtn, QSelect, QInput, QSlider, QTable, QIcon, QTd } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
 import Plotly from 'plotly.js-dist'
+import axios from 'axios'
 
 const maxHops = ref(3)
 const isPlaying = ref(false)
@@ -15,11 +16,12 @@ const links = ref([])
 const sankeyChart = ref(null)
 const search = ref('')
 const selectedPeers = ref([])
+const communities = ref([])
 
 const params = ref({
   peer: '',
   path: '',
-  prefix: '', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
+  prefix: '2600:40fc:1004::/48', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: true,
@@ -80,7 +82,21 @@ const connectWebSocket = () => {
   }
 }
 
+/*const findCommunityDescription = (code) => {
+  const community = communities.value.find((c) => c.code === code)
+  return community ? community.description : 'Null'
+}*/
+
 const handleFilterMessages = (data) => {
+  // Add descriptions to community codes
+  if (data.community && Array.isArray(data.community)) {
+    data.community = data.community.map(([comm_1, comm_2]) => {
+      const community = `${comm_1}:${comm_2}`
+      const description = findCommunityDescription(community)
+      return { community: community, description: description }
+    })
+  }
+
   const index = filteredMessages.value.findIndex((message) => message.peer === data.peer)
   if (index !== -1) {
     filteredMessages.value[index] = data
@@ -160,10 +176,6 @@ watch(rrcList, () => {
   }
 })
 
-onMounted(() => {
-  connectWebSocket()
-})
-
 const layout = ref({
   title: 'AS Paths Sankey Diagram',
   font: {
@@ -190,9 +202,6 @@ const plotSankey = () => {
   Plotly.newPlot(sankeyChart.value, [data], layout.value, config.value)
 }
 
-onMounted(() => {
-  plotSankey()
-})
 watch([nodes, links], () => {
   plotSankey()
 })
@@ -222,6 +231,12 @@ const columns = [
     label: 'Timestamp',
     field: 'timestamp',
     align: 'left'
+  },
+  {
+    name: 'community',
+    label: 'Community',
+    field: 'community',
+    align: 'left'
   }
 ]
 
@@ -229,10 +244,93 @@ const rows = computed(() =>
   filteredMessages.value.map((message) => ({
     peer_asn: message.peer_asn,
     peer: message.peer,
-    path: message.path.length > 0 ? message.path.join(', ') : 'Null',
-    timestamp: new Date(message.timestamp * 1000).toUTCString()
+    path: message.path?.length > 0 ? JSON.stringify(message.path) : 'Null',
+    timestamp: new Date(message.timestamp * 1000).toUTCString(),
+    community:
+      message.community?.length > 0
+        ? message.community.map((c) => `${c.community}, ${c.description}`).join('\n')
+        : 'Null'
   }))
 )
+
+const fetchGithubFiles = async () => {
+  const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
+  try {
+    const response = await axios.get(repoUrl)
+    const files = response.data
+    const txtFiles = files.filter(
+      (file) => file.name.startsWith('as') && file.name.endsWith('.txt')
+    )
+    const fetchFilePromises = txtFiles.map((file) => axios.get(file.download_url))
+    const fileContents = await Promise.all(fetchFilePromises)
+    const processedCommunities = fileContents.flatMap((content) => {
+      const lines = content.data.trim().split('\n')
+      return lines
+        .filter((line) => line.trim() !== '' && !line.startsWith('#'))
+        .map((line) => {
+          const [community, description] = line.split(',')
+          if (community && description) {
+            return { community: community.trim(), description: description.trim() }
+          }
+          return null // Return null for improperly formatted lines
+        })
+        .filter((entry) => entry !== null) // Filter out null entries
+    })
+    communities.value = processedCommunities
+  } catch (error) {
+    console.error('Error fetching the GitHUb files: ', error)
+  }
+}
+
+const matchPattern = (community, communityToFind) => {
+  if (community.split(':').length !== 2 || communityToFind.split(':').length !== 2) return false
+  // Exact Match
+  if (community === communityToFind) return true
+
+  const [pattern_1, pattern_2] = community.split(':')
+  const [comm_1, comm_2] = communityToFind.split(':')
+
+  // Range Match
+  if (pattern_2.includes('-')) {
+    const [start, end] = pattern_2.split('-').map(Number)
+    const commNumber = Number(comm_2)
+    if (pattern_1 === comm_1 && commNumber >= start && commNumber <= end) {
+      console.log('Range', community, communityToFind)
+      return true
+    }
+  }
+
+  // Single Digit Wildcard Match
+  if (pattern_2.includes('x')) {
+    const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
+    if (pattern_1 === comm_1 && regex.test(comm_2)) {
+      console.log('Wildcard', community, communityToFind)
+      return true
+    }
+  }
+
+  // Any Number Match
+  if (pattern_2.includes('nnn')) {
+    const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
+    if (pattern_1 === comm_1 && regex.test(comm_2)) {
+      console.log('Any', community, communityToFind)
+      return true
+    }
+  }
+
+  return false
+}
+
+const findCommunityDescription = (communityToFind) => {
+  const community = communities.value.find((c) => matchPattern(c.community, communityToFind))
+  return community ? community.description : 'Null'
+}
+
+onMounted(() => {
+  connectWebSocket()
+  plotSankey()
+  fetchGithubFiles()
+})
 </script>
 
 <template>
@@ -295,6 +393,11 @@ const rows = computed(() =>
               <QIcon name="search" />
             </template>
           </QInput>
+        </template>
+        <template v-slot:body-cell-community="props">
+          <QTd :props="props">
+            <pre>{{ props.row.community }}</pre>
+          </QTd>
         </template>
       </QTable>
     </div>
