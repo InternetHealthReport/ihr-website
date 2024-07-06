@@ -1,6 +1,7 @@
 <script setup>
 import { QBtn, QSelect, QInput, QSlider, QTable, QIcon, QTd } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Plotly from 'plotly.js-dist'
 import axios from 'axios'
 
@@ -21,7 +22,7 @@ const communities = ref([])
 const params = ref({
   peer: '',
   path: '',
-  prefix: '2600:40fc:1004::/48', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
+  prefix: '', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: true,
@@ -32,6 +33,43 @@ const params = ref({
     acknowledge: false
   }
 })
+
+const route = useRoute()
+const router = useRouter()
+
+const initRoute = () => {
+  const query = { ...route.query }
+  if (route.query.prefix) {
+    params.value.prefix = route.query.prefix
+  } else {
+    query.prefix = params.value.prefix
+  }
+  if (route.query.maxHops) {
+    maxHops.value = parseInt(route.query.maxHops)
+  } else {
+    query.maxHops = maxHops.value
+  }
+  if (route.query.rrc) {
+    params.value.host = route.query.rrc
+  } else {
+    query.rrc = params.value.host
+  }
+  router.push({ query })
+}
+
+watch(
+  [params, maxHops],
+  () => {
+    const query = {
+      ...route.query,
+      prefix: params.value.prefix,
+      maxHops: maxHops.value,
+      rrc: params.value.host
+    }
+    router.push({ query })
+  },
+  { deep: true }
+)
 
 const sendSocketType = (protocol, paramData) => {
   socket.value.send(
@@ -75,7 +113,7 @@ const connectWebSocket = () => {
       rawMessages.value.push(res.data)
       handleFilterMessages(res.data)
     } else if (res.type === 'ris_rrc_list') {
-      rrcList.value = res.data
+      handleRRC(res.data)
     } else if (res.type === 'ris_error') {
       console.log('Ris Live Error:', res.data.message)
     }
@@ -170,11 +208,16 @@ watch(isPlaying, () => {
   toggleRisProtocol()
 })
 
-watch(rrcList, () => {
-  if (rrcList.value.length > 0) {
-    params.value.host = rrcList.value[0]
+const handleRRC = (data) => {
+  if (data?.length > 0) {
+    if (route.query.rrc) {
+      params.value.host = route.query.rrc
+    } else {
+      params.value.host = data[0]
+    }
+    rrcList.value = data.sort()
   }
-})
+}
 
 const layout = ref({
   title: 'AS Paths Sankey Diagram',
@@ -295,7 +338,7 @@ const matchPattern = (community, communityToFind) => {
     const [start, end] = pattern_2.split('-').map(Number)
     const commNumber = Number(comm_2)
     if (pattern_1 === comm_1 && commNumber >= start && commNumber <= end) {
-      console.log('Range', community, communityToFind)
+      //console.log('Range', community, communityToFind)
       return true
     }
   }
@@ -304,7 +347,7 @@ const matchPattern = (community, communityToFind) => {
   if (pattern_2.includes('x')) {
     const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
     if (pattern_1 === comm_1 && regex.test(comm_2)) {
-      console.log('Wildcard', community, communityToFind)
+      //console.log('Wildcard', community, communityToFind)
       return true
     }
   }
@@ -313,7 +356,7 @@ const matchPattern = (community, communityToFind) => {
   if (pattern_2.includes('nnn')) {
     const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
     if (pattern_1 === comm_1 && regex.test(comm_2)) {
-      console.log('Any', community, communityToFind)
+      //console.log('Any', community, communityToFind)
       return true
     }
   }
@@ -330,6 +373,7 @@ onMounted(() => {
   connectWebSocket()
   plotSankey()
   fetchGithubFiles()
+  initRoute()
 })
 </script>
 
