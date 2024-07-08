@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import MetisWidget from '@/components/MetisWidget.vue'
+import Tr from '@/i18n/translation'
 
 const nbprobes = ref('100')
 </script>
