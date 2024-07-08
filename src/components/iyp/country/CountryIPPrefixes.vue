@@ -105,7 +105,7 @@ onMounted(() => {
           :chart-data="aggPrefixes"
           :chart-layout="{ title: 'Number of prefixes per Origin AS' }"
           :config="{ keys: ['asn'], keyValue: 'nbPrefixes', root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} prefixes<extra></extra>' }"
-          @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+          @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'asn'}})"
         />
       </div>
     </div>

@@ -66,8 +66,8 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="as_query.data.length > 0"
       :chart-data="as_query.data"
-      :config="{ keys: ['name'], keyValue: 'perc', root: pageTitle, hovertemplate: '<b>%{label}<br>%{value}%</b> <br><br><extra></extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+      :config="{ keys: ['asn'], keyValue: 'perc', root: pageTitle, hovertemplate: '<b>%{customdata.name}<br>%{value}%</b> <br><br><extra></extra>' }"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'asn'}})"
     />
   </IypGenericTable>
 </template>

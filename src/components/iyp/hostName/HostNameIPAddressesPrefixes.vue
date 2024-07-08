@@ -76,7 +76,7 @@ onMounted(() => {
           v-if="ips.data.length > 0"
           :chart-data="ips.data"
           :config="{ keys: ['asn', 'prefix', 'ip'], root: pageTitle, hovertemplate: '<b>%{label}<br>%{value}</b> <br><br><extra></extra>' }"
-          @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+          @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'ip'}})"
         />
       </div>
     </div>
