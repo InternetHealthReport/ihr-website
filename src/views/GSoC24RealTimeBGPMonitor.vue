@@ -22,7 +22,7 @@ const communities = ref([])
 const params = ref({
   peer: '',
   path: '',
-  prefix: '', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
+  prefix: '2600:40fc:1004::/48', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: true,
@@ -110,8 +110,7 @@ const connectWebSocket = () => {
   socket.value.onmessage = (event) => {
     const res = JSON.parse(event.data)
     if (res.type === 'ris_message') {
-      rawMessages.value.push(res.data)
-      handleFilterMessages(res.data)
+      handleMessages(res.data)
     } else if (res.type === 'ris_rrc_list') {
       handleRRC(res.data)
     } else if (res.type === 'ris_error') {
@@ -120,33 +119,35 @@ const connectWebSocket = () => {
   }
 }
 
-/*const findCommunityDescription = (code) => {
-  const community = communities.value.find((c) => c.code === code)
-  return community ? community.description : 'Null'
-}*/
-
-const handleFilterMessages = (data) => {
-  // Add descriptions to community codes
+const handleMessages = (data) => {
   if (data.community && Array.isArray(data.community)) {
+    // Add descriptions to community data
     data.community = data.community.map(([comm_1, comm_2]) => {
       const community = `${comm_1}:${comm_2}`
       const description = findCommunityDescription(community)
-      return { community: community, description: description }
+      return { community: community, comm_1: comm_1, description: description }
     })
   }
+  data.timestamp = Math.floor(data.timestamp)
+  rawMessages.value.push(data)
+  handleFilterMessages(data)
+}
 
+let messageCount = 0
+const handleFilterMessages = (data) => {
   const index = filteredMessages.value.findIndex((message) => message.peer === data.peer)
   if (index !== -1) {
     filteredMessages.value[index] = data
   } else {
     filteredMessages.value = [...filteredMessages.value, data]
-    if (filteredMessages.value.length > 5) return
+    if (messageCount >= 5) return
     selectedPeers.value = [
       ...selectedPeers.value,
       {
         peer: data.peer
       }
     ]
+    messageCount++
   }
 }
 
@@ -291,7 +292,9 @@ const rows = computed(() =>
     timestamp: new Date(message.timestamp * 1000).toUTCString(),
     community:
       message.community?.length > 0
-        ? message.community.map((c) => `${c.community}, ${c.description}`).join('\n')
+        ? message.community
+            .map((c) => `${c.community}, ${'AS' + c.comm_1}-${c.description}`)
+            .join('\n')
         : 'Null'
   }))
 )
