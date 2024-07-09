@@ -73,7 +73,7 @@ onMounted(() => {
           v-if="nameservers.data.length > 0"
           :chart-data="nameservers.data"
           :config="{ keys: ['asn', 'prefix', 'ip', 'nameserver'], root: pageTitle, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br><extra></extra>' }"
-          @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+          @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'nameserver'}})"
         />
       </div>
     </div>

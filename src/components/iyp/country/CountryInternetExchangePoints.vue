@@ -68,7 +68,7 @@ onMounted(() => {
         :chart-data="ixps.data"
         :chart-layout="{ title: 'IXPs in '+pageTitle+' weighted by their number of members' }"
         :config="{ keys: ['org', 'ixp'], keyValue: 'nb_members', root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} members<extra></extra>' }"
-        @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+        @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'ixpName'}})"
       />
     </div>
   </IypGenericTable>

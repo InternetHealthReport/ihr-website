@@ -64,7 +64,7 @@ onMounted(() => {
       v-if="country_query.data.length > 0"
       :chart-data="country_query.data"
       :config="{ keys: ['cc'], keyValue: 'perc', root: pageTitle, hovertemplate: '<b>%{label}<br>%{value}%</b> <br><br><extra></extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'country'}})"
     />
   </IypGenericTable>
 </template>

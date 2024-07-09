@@ -61,7 +61,7 @@ onMounted(() => {
       v-if="nameservers.data.length > 0"
       :chart-data="nameservers.data"
       :config="{ keys: ['tld', 'nameserver', 'ip'], root: getPrefix, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_hostnames} popular Hostnames<extra></extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router}})"
+      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'ip'}})"
     />
   </IypGenericTable>
 </template>
