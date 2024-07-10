@@ -12,15 +12,23 @@ const disableButton = ref(false)
 const socket = ref(null)
 const rawMessages = ref([])
 const filteredMessages = ref([])
+const uniquePeerMessages = new Map()
 const nodes = ref([])
 const links = ref([])
 const sankeyChart = ref(null)
 const search = ref('')
 const selectedPeers = ref([])
+const defaultSelectedPeerCount = ref(5)
 const communities = ref([])
 const disableTimeRange = ref(false)
-const minTime = ref(Infinity)
-const maxTime = ref(-Infinity)
+const timeRange = ref({
+  min: Infinity,
+  max: -Infinity
+})
+const selectedTimeRange = ref({
+  min: 0,
+  max: 0
+})
 
 const params = ref({
   peer: '',
@@ -140,6 +148,14 @@ const handleMessages = (data) => {
   }
   data.timestamp = Math.floor(data.timestamp)
 
+  if (
+    defaultSelectedPeerCount.value > 0 &&
+    !selectedPeers.value.some((peer) => peer.peer === data.peer)
+  ) {
+    selectedPeers.value.push({ peer: data.peer })
+    defaultSelectedPeerCount.value--
+  }
+
   updateTimeRange(data.timestamp)
   rawMessages.value.push(data)
   if (!disableTimeRange.value) {
@@ -147,22 +163,22 @@ const handleMessages = (data) => {
   }
 }
 
-let messageCount = 0
 const handleFilterMessages = (data) => {
-  const index = filteredMessages.value.findIndex((message) => message.peer === data.peer)
-  if (index !== -1) {
-    filteredMessages.value[index] = data
+  if (data) {
+    uniquePeerMessages.set(data.peer, data)
   } else {
-    filteredMessages.value = [...filteredMessages.value, data]
-    if (messageCount >= 5) return
-    selectedPeers.value = [
-      ...selectedPeers.value,
-      {
-        peer: data.peer
-      }
-    ]
-    messageCount++
+    filteredMessages.value = []
+    uniquePeerMessages.clear()
+    const filteredRawMessages = rawMessages.value.filter(
+      (message) =>
+        message.timestamp >= selectedTimeRange.value.min &&
+        message.timestamp <= selectedTimeRange.value.max
+    )
+    filteredRawMessages.forEach((message) => {
+      uniquePeerMessages.set(message.peer, message)
+    })
   }
+  filteredMessages.value = Array.from(uniquePeerMessages.values())
 }
 
 const generateGraphData = () => {
@@ -393,42 +409,24 @@ onMounted(() => {
   initRoute()
 })
 
-const timeRange = ref({
-  min: 0,
-  max: 0
-})
-
 const updateTimeRange = (timestamp) => {
   if (timestamp) {
-    if (timestamp > maxTime.value) maxTime.value = timestamp
-    if (timestamp < minTime.value) minTime.value = timestamp
+    if (timestamp > timeRange.value.max) timeRange.value.max = timestamp
+    if (timestamp < timeRange.value.min) timeRange.value.min = timestamp
   }
   if (!disableTimeRange.value) {
-    timeRange.value.min = minTime.value
-    timeRange.value.max = maxTime.value
+    selectedTimeRange.value.min = timeRange.value.min
+    selectedTimeRange.value.max = timeRange.value.max
   }
 }
 
-const filterTimeRangeMessages = () => {
-  filteredMessages.value = []
-  const filteredRawMessages = rawMessages.value.filter(
-    (message) =>
-      message.timestamp >= timeRange.value.min && message.timestamp <= timeRange.value.max
-  )
-  const uniquePeerMessages = new Map()
-  filteredRawMessages.forEach((message) => {
-    uniquePeerMessages.set(message.peer, message)
-  })
-  filteredMessages.value = Array.from(uniquePeerMessages.values())
-}
-
-watch(timeRange, () => {
-  filterTimeRangeMessages()
+watch(selectedTimeRange, () => {
+  handleFilterMessages()
 })
 
 watch(disableTimeRange, () => {
   updateTimeRange()
-  filterTimeRangeMessages()
+  handleFilterMessages()
 })
 </script>
 
@@ -504,12 +502,12 @@ watch(disableTimeRange, () => {
     <div class="timeRange">
       <QCheckbox v-model="disableTimeRange" label="Time Range" />
       <QRange
-        v-model="timeRange"
-        :min="minTime"
-        :max="maxTime"
+        v-model="selectedTimeRange"
+        :min="timeRange.min"
+        :max="timeRange.max"
         :disable="!disableTimeRange"
-        :left-label-value="'Timestamp: ' + new Date(timeRange.min * 1000).toUTCString()"
-        :right-label-value="'Timestamp: ' + new Date(timeRange.max * 1000).toUTCString()"
+        :left-label-value="'Timestamp: ' + new Date(selectedTimeRange.min * 1000).toUTCString()"
+        :right-label-value="'Timestamp: ' + new Date(selectedTimeRange.max * 1000).toUTCString()"
         label-always
         color="accent"
       />
