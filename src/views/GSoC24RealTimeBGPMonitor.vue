@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QSelect, QInput, QSlider, QTable, QIcon, QTd } from 'quasar'
+import { QBtn, QSelect, QInput, QSlider, QRange, QTable, QIcon, QTd, QCheckbox, uid } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Plotly from 'plotly.js-dist'
@@ -18,6 +18,9 @@ const sankeyChart = ref(null)
 const search = ref('')
 const selectedPeers = ref([])
 const communities = ref([])
+const disableTimeRange = ref(false)
+const minTime = ref(Infinity)
+const maxTime = ref(-Infinity)
 
 const params = ref({
   peer: '',
@@ -93,7 +96,7 @@ const toggleRisProtocol = () => {
 }
 
 const connectWebSocket = () => {
-  socket.value = new WebSocket('wss://ris-live.ripe.net/v1/ws/?client=ihr')
+  socket.value = new WebSocket(`wss://ris-live.ripe.net/v1/ws/?client=ihr_${uid()}`)
   if (socket.value.readyState === WebSocket.CONNECTING) {
     disableButton.value = true
   }
@@ -103,9 +106,16 @@ const connectWebSocket = () => {
   }
   socket.value.onclose = () => {
     socket.value = null
+    if (isPlaying.value) {
+      isPlaying.value = false
+    }
   }
   socket.value.onerror = (error) => {
     console.log('WebSocket Error:', error)
+    disableButton.value = false
+    if (isPlaying.value) {
+      isPlaying.value = false
+    }
   }
   socket.value.onmessage = (event) => {
     const res = JSON.parse(event.data)
@@ -129,8 +139,12 @@ const handleMessages = (data) => {
     })
   }
   data.timestamp = Math.floor(data.timestamp)
+
+  updateTimeRange(data.timestamp)
   rawMessages.value.push(data)
-  handleFilterMessages(data)
+  if (!disableTimeRange.value) {
+    handleFilterMessages(data)
+  }
 }
 
 let messageCount = 0
@@ -378,6 +392,44 @@ onMounted(() => {
   fetchGithubFiles()
   initRoute()
 })
+
+const timeRange = ref({
+  min: 0,
+  max: 0
+})
+
+const updateTimeRange = (timestamp) => {
+  if (timestamp) {
+    if (timestamp > maxTime.value) maxTime.value = timestamp
+    if (timestamp < minTime.value) minTime.value = timestamp
+  }
+  if (!disableTimeRange.value) {
+    timeRange.value.min = minTime.value
+    timeRange.value.max = maxTime.value
+  }
+}
+
+const filterTimeRangeMessages = () => {
+  filteredMessages.value = []
+  const filteredRawMessages = rawMessages.value.filter(
+    (message) =>
+      message.timestamp >= timeRange.value.min && message.timestamp <= timeRange.value.max
+  )
+  const uniquePeerMessages = new Map()
+  filteredRawMessages.forEach((message) => {
+    uniquePeerMessages.set(message.peer, message)
+  })
+  filteredMessages.value = Array.from(uniquePeerMessages.values())
+}
+
+watch(timeRange, () => {
+  filterTimeRangeMessages()
+})
+
+watch(disableTimeRange, () => {
+  updateTimeRange()
+  filterTimeRangeMessages()
+})
 </script>
 
 <template>
@@ -449,6 +501,19 @@ onMounted(() => {
       </QTable>
     </div>
     <div class="sankeyChart q-mb-lg" ref="sankeyChart"></div>
+    <div class="timeRange">
+      <QCheckbox v-model="disableTimeRange" label="Time Range" />
+      <QRange
+        v-model="timeRange"
+        :min="minTime"
+        :max="maxTime"
+        :disable="!disableTimeRange"
+        :left-label-value="'Timestamp: ' + new Date(timeRange.min * 1000).toUTCString()"
+        :right-label-value="'Timestamp: ' + new Date(timeRange.max * 1000).toUTCString()"
+        label-always
+        color="accent"
+      />
+    </div>
   </div>
 </template>
 
@@ -465,5 +530,15 @@ onMounted(() => {
   left 0%
   height 100vh
   width 100%
+}
+.timeRange {
+  display: flex
+  flex-direction: column
+  gap: 20px
+  justify-content: center
+  align-items: center
+  width: 100%
+  overflow: hidden
+  padding: 20px
 }
 </style>
