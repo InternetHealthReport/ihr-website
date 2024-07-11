@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QSelect, QInput, QSlider, QRange, QTable, QIcon, QTd, QCheckbox, uid } from 'quasar'
+import { QBtn, QSelect, QInput, QSlider, QTable, QIcon, QTd, QCheckbox, uid } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Plotly from 'plotly.js-dist'
@@ -20,15 +20,12 @@ const search = ref('')
 const selectedPeers = ref([])
 const defaultSelectedPeerCount = ref(5)
 const communities = ref([])
-const disableTimeRange = ref(false)
-const timeRange = ref({
+const disableTimestampSlider = ref(false)
+const timestampSlider = ref({
   min: Infinity,
   max: -Infinity
 })
-const selectedTimeRange = ref({
-  min: 0,
-  max: 0
-})
+const selectedMaxTimestamp = ref(0)
 
 const params = ref({
   peer: '',
@@ -158,7 +155,7 @@ const handleMessages = (data) => {
 
   updateTimeRange(data.timestamp)
   rawMessages.value.push(data)
-  if (!disableTimeRange.value) {
+  if (!disableTimestampSlider.value) {
     handleFilterMessages(data)
   }
 }
@@ -170,9 +167,7 @@ const handleFilterMessages = (data) => {
     filteredMessages.value = []
     uniquePeerMessages.clear()
     const filteredRawMessages = rawMessages.value.filter(
-      (message) =>
-        message.timestamp >= selectedTimeRange.value.min &&
-        message.timestamp <= selectedTimeRange.value.max
+      (message) => message.timestamp <= selectedMaxTimestamp.value
     )
     filteredRawMessages.forEach((message) => {
       uniquePeerMessages.set(message.peer, message)
@@ -411,20 +406,19 @@ onMounted(() => {
 
 const updateTimeRange = (timestamp) => {
   if (timestamp) {
-    if (timestamp > timeRange.value.max) timeRange.value.max = timestamp
-    if (timestamp < timeRange.value.min) timeRange.value.min = timestamp
+    if (timestamp > timestampSlider.value.max) timestampSlider.value.max = timestamp
+    if (timestamp < timestampSlider.value.min) timestampSlider.value.min = timestamp
   }
-  if (!disableTimeRange.value) {
-    selectedTimeRange.value.min = timeRange.value.min
-    selectedTimeRange.value.max = timeRange.value.max
+  if (!disableTimestampSlider.value) {
+    selectedMaxTimestamp.value = timestampSlider.value.max
   }
 }
 
-watch(selectedTimeRange, () => {
+watch(selectedMaxTimestamp, () => {
   handleFilterMessages()
 })
 
-watch(disableTimeRange, () => {
+watch(disableTimestampSlider, () => {
   updateTimeRange()
   handleFilterMessages()
 })
@@ -499,18 +493,35 @@ watch(disableTimeRange, () => {
       </QTable>
     </div>
     <div class="sankeyChart q-mb-lg" ref="sankeyChart"></div>
-    <div class="timeRange">
-      <QCheckbox v-model="disableTimeRange" label="Time Range" />
-      <QRange
-        v-model="selectedTimeRange"
-        :min="timeRange.min"
-        :max="timeRange.max"
-        :disable="!disableTimeRange"
-        :left-label-value="'Timestamp: ' + new Date(selectedTimeRange.min * 1000).toUTCString()"
-        :right-label-value="'Timestamp: ' + new Date(selectedTimeRange.max * 1000).toUTCString()"
+    <div class="timetampSlider">
+      <QCheckbox v-model="disableTimestampSlider" label="Select Timestamp" />
+      <QSlider
+        v-model="selectedMaxTimestamp"
+        :min="timestampSlider.min === Infinity ? 0 : timestampSlider.min"
+        :max="timestampSlider.max === -Infinity ? 0 : timestampSlider.max"
+        :disable="!disableTimestampSlider"
         label-always
+        :label-value="'Timestamp: ' + new Date(selectedMaxTimestamp * 1000).toUTCString()"
         color="accent"
       />
+      <div class="timestampInfo">
+        <span
+          >Min Timestamp:
+          {{
+            timestampSlider.min === Infinity
+              ? 'No Data'
+              : new Date(timestampSlider.min * 1000).toUTCString()
+          }}</span
+        >
+        <span
+          >Max Timestamp:
+          {{
+            timestampSlider.max === -Infinity
+              ? 'No Data'
+              : new Date(timestampSlider.max * 1000).toUTCString()
+          }}</span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -529,7 +540,7 @@ watch(disableTimeRange, () => {
   height 100vh
   width 100%
 }
-.timeRange {
+.timetampSlider {
   display: flex
   flex-direction: column
   gap: 20px
@@ -538,5 +549,11 @@ watch(disableTimeRange, () => {
   width: 100%
   overflow: hidden
   padding: 20px
+}
+.timestampInfo{
+  width 100%
+  display: flex
+  align-items: center
+  justify-content: space-between
 }
 </style>
