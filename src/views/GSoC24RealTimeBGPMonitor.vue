@@ -62,7 +62,7 @@ const initRoute = () => {
   } else {
     query.rrc = params.value.host
   }
-  router.push({ query })
+  router.replace({ query })
 }
 
 watch(
@@ -74,10 +74,36 @@ watch(
       maxHops: maxHops.value,
       rrc: params.value.host
     }
-    router.push({ query })
+    router.replace({ query })
   },
   { deep: true }
 )
+
+watch(
+  params,
+  () => {
+    resetData()
+  },
+  { deep: true }
+)
+
+const resetData = () => {
+  isPlaying.value = false
+  rawMessages.value = []
+  filteredMessages.value = []
+  uniquePeerMessages.clear()
+  nodes.value = []
+  links.value = []
+  search.value = ''
+  selectedPeers.value = []
+  defaultSelectedPeerCount.value = 5
+  disableTimestampSlider.value = false
+  timestampSlider.value = {
+    min: Infinity,
+    max: -Infinity
+  }
+  selectedMaxTimestamp.value = 0
+}
 
 const sendSocketType = (protocol, paramData) => {
   socket.value.send(
@@ -314,7 +340,7 @@ const rows = computed(() =>
     peer_asn: message.peer_asn,
     peer: message.peer,
     path: message.path?.length > 0 ? JSON.stringify(message.path) : 'Null',
-    timestamp: new Date(message.timestamp * 1000).toUTCString(),
+    timestamp: timestampToUTC(message.timestamp),
     community:
       message.community?.length > 0
         ? message.community
@@ -404,6 +430,10 @@ onMounted(() => {
   initRoute()
 })
 
+const timestampToUTC = (timestamp) => {
+  return new Date(timestamp * 1000).toUTCString()
+}
+
 const updateTimeRange = (timestamp) => {
   if (timestamp) {
     if (timestamp > timestampSlider.value.max) timestampSlider.value.max = timestamp
@@ -428,8 +458,15 @@ watch(disableTimestampSlider, () => {
   <div id="IHR_as-and-ixp-container" class="IHR_char-container">
     <h1 class="text-center q-pa-xl">Real-Time BGP Monitor</h1>
     <div class="controls justify-center q-pa-md flex">
-      <QInput outlined placeholder="Prefix" :dense="true" color="accent" v-model="params.prefix" />
-      <QInput outlined placeholder="ASN" :dense="true" color="accent" />
+      <QInput
+        outlined
+        placeholder="Prefix"
+        :dense="true"
+        color="accent"
+        v-model="params.prefix"
+        :disable="isPlaying"
+      />
+      <QInput outlined placeholder="ASN" :dense="true" color="accent" :disable="isPlaying" />
       <QSelect
         style="min-width: 100px"
         filled
@@ -438,6 +475,7 @@ watch(disableTimestampSlider, () => {
         label="RRC"
         :dense="true"
         color="accent"
+        :disable="isPlaying"
       />
       <QSlider
         style="max-width: 250px"
@@ -465,6 +503,7 @@ watch(disableTimestampSlider, () => {
         <QBtn color="secondary" label="Replay" />
         <QBtn color="secondary" label=">" />
       </div>
+      <QBtn @click="resetData" color="secondary" :label="'Reset'" :disable="isPlaying" />
     </div>
     <div class="q-mb-lg">
       <QTable
@@ -501,24 +540,20 @@ watch(disableTimestampSlider, () => {
         :max="timestampSlider.max === -Infinity ? 0 : timestampSlider.max"
         :disable="!disableTimestampSlider"
         label-always
-        :label-value="'Timestamp: ' + new Date(selectedMaxTimestamp * 1000).toUTCString()"
+        :label-value="'Timestamp: ' + timestampToUTC(selectedMaxTimestamp)"
         color="accent"
       />
       <div class="timestampInfo">
         <span
           >Min Timestamp:
           {{
-            timestampSlider.min === Infinity
-              ? 'No Data'
-              : new Date(timestampSlider.min * 1000).toUTCString()
+            timestampSlider.min === Infinity ? 'No Data' : timestampToUTC(timestampSlider.min)
           }}</span
         >
         <span
           >Max Timestamp:
           {{
-            timestampSlider.max === -Infinity
-              ? 'No Data'
-              : new Date(timestampSlider.max * 1000).toUTCString()
+            timestampSlider.max === -Infinity ? 'No Data' : timestampToUTC(timestampSlider.max)
           }}</span
         >
       </div>
