@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QSelect, QInput, QSpinner } from 'quasar'
+import { QBtn, QSelect, QInput, QSpinner, QIcon } from 'quasar'
 import { ref, inject, reactive, onMounted, computed, watch } from 'vue' 
 import { VNetworkGraph, VEdgeLabel } from 'v-network-graph';
 import * as vNG from "v-network-graph"
@@ -203,7 +203,7 @@ const sortASNodes = (data) => {
 
     const sortedUniqueNodes = {};
     Array.from(uniqueNodes).forEach(asn => {
-        sortedUniqueNodes[asn] = { name: `AS${asn}` , tooltip: { visible: false , left:0, top:0 }, color: ASN.value == asn ? 'red' : calculateNodeColor(asnInfo.value[asn]?.HEGE), size: ASN.value == asn ? MAX_NODE_SIZE :  calculateNodeSize(asnInfo.value[asn]?.CONES) };
+        sortedUniqueNodes[asn] = { name: `AS${asn}` , tooltip: { visible: false , left:0, top:0 }, color: ASN.value == asn ? 'red' : calculateNodeColor(asnInfo.value[asn]?.HEGE), size:calculateNodeSize(asnInfo.value[asn]?.CONES) };
     });
 
 	allNodes.value = sortedUniqueNodes;
@@ -313,7 +313,13 @@ onMounted(() => {
 		</div>
 
     <div class="graphContainer" v-if="!as_topology_query.loading && Object.keys(allNodes).length>0">
-          
+
+      <div class="controlPanel">
+        <QBtn class="controlPanelButton" @click="graph?.zoomIn()"><QIcon name="zoom_in"></QIcon></QBtn>
+        <QBtn class="controlPanelButton" @click="graph?.zoomOut()"><QIcon name="zoom_out"></QIcon></QBtn>
+        <QBtn class="controlPanelButton" @click="graph?.fitToContents()">Fit Screen</QBtn>
+      </div>
+              
       <VNetworkGraph 
         ref="graph"
         :nodes="allNodes"
@@ -330,6 +336,8 @@ onMounted(() => {
         </div>
         <div class="scaleLabel">0%</div>
       </div>
+
+      <div class="hegemonyLabel">Hegemony</div>
 
       <div ref="tooltip" >
        
@@ -416,6 +424,28 @@ onMounted(() => {
 .scaleColor {
   flex: 1;
   width: 100%;
+}
+
+.hegemonyLabel {
+  transform: rotate(-90deg);
+  font-size: 17px;
+  font-weight: bold;
+  margin-left: -3.3%;
+  margin-right: -1.5%;
+}
+
+.controlPanel {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  top: 15px;
+  left: 70%;
+  z-index: 1;
+}
+
+.controlPanelButton {
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 </style>
