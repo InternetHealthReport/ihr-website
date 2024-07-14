@@ -26,6 +26,7 @@ const timestampSlider = ref({
   max: -Infinity
 })
 const selectedMaxTimestamp = ref(0)
+const usedMessagesCount = ref(0)
 
 const params = ref({
   peer: '',
@@ -103,6 +104,7 @@ const resetData = () => {
     max: -Infinity
   }
   selectedMaxTimestamp.value = 0
+  usedMessagesCount.value=0
 }
 
 const sendSocketType = (protocol, paramData) => {
@@ -189,12 +191,17 @@ const handleMessages = (data) => {
 const handleFilterMessages = (data) => {
   if (data) {
     uniquePeerMessages.set(data.peer, data)
+    usedMessagesCount.value = rawMessages.value.length
+
   } else {
     filteredMessages.value = []
     uniquePeerMessages.clear()
     const filteredRawMessages = rawMessages.value.filter(
       (message) => message.timestamp <= selectedMaxTimestamp.value
     )
+
+    usedMessagesCount.value = filteredRawMessages.length
+
     filteredRawMessages.forEach((message) => {
       uniquePeerMessages.set(message.peer, message)
     })
@@ -445,7 +452,9 @@ const updateTimeRange = (timestamp) => {
 }
 
 watch(selectedMaxTimestamp, () => {
-  handleFilterMessages()
+  if (disableTimestampSlider.value) {
+    handleFilterMessages()
+  }
 })
 
 watch(disableTimestampSlider, () => {
@@ -491,19 +500,25 @@ watch(disableTimestampSlider, () => {
         marker-labels
       />
     </div>
-    <div class="controls justify-center q-pa-md flex">
-      <QBtn
-        @click="toggleConnection"
-        color="secondary"
-        :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
-        :disable="disableButton"
-      />
-      <div class="replayControls flex">
-        <QBtn color="secondary" label="<" />
-        <QBtn color="secondary" label="Replay" />
-        <QBtn color="secondary" label=">" />
+    <div class="controlsContainer">
+      <div class="controls justify-center q-pa-md flex">
+        <QBtn
+          @click="toggleConnection"
+          color="secondary"
+          :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
+          :disable="disableButton"
+        />
+        <div class="replayControls flex">
+          <QBtn color="secondary" label="<" />
+          <QBtn color="secondary" label="Replay" />
+          <QBtn color="secondary" label=">" />
+        </div>
+        <QBtn @click="resetData" color="secondary" :label="'Reset'" :disable="isPlaying" />
       </div>
-      <QBtn @click="resetData" color="secondary" :label="'Reset'" :disable="isPlaying" />
+      <div class="stats">
+        <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
+        <span>Total messages received: {{ rawMessages.length }}</span>
+      </div>
     </div>
     <div class="q-mb-lg">
       <QTable
@@ -533,7 +548,10 @@ watch(disableTimestampSlider, () => {
     </div>
     <div class="sankeyChart q-mb-lg" ref="sankeyChart"></div>
     <div class="timetampSlider">
-      <QCheckbox v-model="disableTimestampSlider" label="Select Timestamp" />
+      <div class="timeStampControls">
+        <QCheckbox v-model="disableTimestampSlider" label="Select Timestamp" />
+        <span>Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span>
+      </div>
       <QSlider
         v-model="selectedMaxTimestamp"
         :min="timestampSlider.min === Infinity ? 0 : timestampSlider.min"
@@ -590,5 +608,21 @@ watch(disableTimestampSlider, () => {
   display: flex
   align-items: center
   justify-content: space-between
+}
+.timeStampControls{
+  display: flex
+  align-items: center
+  justify-content: center
+  gap:50px
+}
+.controlsContainer{
+  display: flex
+  align-items: center
+  justify-content: center
+  gap:50px
+}
+.stats{
+  display: flex
+  flex-direction: column
 }
 </style>
