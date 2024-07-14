@@ -104,7 +104,7 @@ const resetData = () => {
     max: -Infinity
   }
   selectedMaxTimestamp.value = 0
-  usedMessagesCount.value=0
+  usedMessagesCount.value = 0
 }
 
 const sendSocketType = (protocol, paramData) => {
@@ -192,7 +192,6 @@ const handleFilterMessages = (data) => {
   if (data) {
     uniquePeerMessages.set(data.peer, data)
     usedMessagesCount.value = rawMessages.value.length
-
   } else {
     filteredMessages.value = []
     uniquePeerMessages.clear()
@@ -546,7 +545,14 @@ watch(disableTimestampSlider, () => {
         </template>
       </QTable>
     </div>
-    <div class="sankeyChart q-mb-lg" ref="sankeyChart"></div>
+    <div class="chartContainer q-mb-lg">
+      <div class="sankeyChart" ref="sankeyChart"></div>
+      <div v-if="rawMessages.length === 0" class="noData">
+        <h1>No data available</h1>
+        <h3>Try Changing the Input Parameters or you can wait</h3>
+        <h6>Note: Some prefixes become active after some time.</h6>
+      </div>
+    </div>
     <div class="timetampSlider">
       <div class="timeStampControls">
         <QCheckbox v-model="disableTimestampSlider" label="Select Timestamp" />
@@ -586,11 +592,14 @@ watch(disableTimestampSlider, () => {
 .replayControls{
 	gap: 20px;
 }
-.sankeyChart{
+.chartContainer{
+  position: relative
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  font-weight: 500;
-  left 0%
   height 100vh
+  width 100%
+}
+.sankeyChart{
+  height 100%
   width 100%
 }
 .timetampSlider {
@@ -624,5 +633,15 @@ watch(disableTimestampSlider, () => {
 .stats{
   display: flex
   flex-direction: column
+}
+.noData{
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  display:flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
 }
 </style>
