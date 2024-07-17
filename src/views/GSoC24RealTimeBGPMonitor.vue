@@ -27,6 +27,8 @@ const timestampSlider = ref({
 })
 const selectedMaxTimestamp = ref(0)
 const usedMessagesCount = ref(0)
+const lineChart = ref(null)
+const messageCounts = ref({})
 
 const params = ref({
   peer: '',
@@ -105,6 +107,10 @@ const resetData = () => {
   }
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
+  messageCounts.value = {}
+  chartData.value.x = []
+  chartData.value.y = []
+  removeVerticalLine()
 }
 
 const sendSocketType = (protocol, paramData) => {
@@ -186,6 +192,7 @@ const handleMessages = (data) => {
   if (!disableTimestampSlider.value) {
     handleFilterMessages(data)
   }
+  generateLineChartData(data)
 }
 
 const handleFilterMessages = (data) => {
@@ -434,6 +441,7 @@ onMounted(() => {
   plotSankey()
   fetchGithubFiles()
   initRoute()
+  initMessagesRecivedLineChart()
 })
 
 const timestampToUTC = (timestamp) => {
@@ -453,13 +461,111 @@ const updateTimeRange = (timestamp) => {
 watch(selectedMaxTimestamp, () => {
   if (disableTimestampSlider.value) {
     handleFilterMessages()
+    addVerticalLine(selectedMaxTimestamp.value)
   }
 })
 
 watch(disableTimestampSlider, () => {
   updateTimeRange()
   handleFilterMessages()
+  if (disableTimestampSlider.value) {
+    addVerticalLine(selectedMaxTimestamp.value)
+  } else {
+    removeVerticalLine()
+  }
 })
+
+const chartData = ref({
+  x: [],
+  y: [],
+  type: 'line',
+  line: { shape: 'linear' },
+  marker: { size: 8 }
+})
+
+const chartLayout = ref({
+  title: 'Messages Received Over Time',
+  xaxis: { title: 'Timestamp' },
+  yaxis: { title: 'New Messages', rangemode: 'tozero' },
+  shapes: []
+})
+
+const generateLineChartData = (data) => {
+  // Round the new data's timestamp to the nearest second
+  const timestamp = Math.floor(data.timestamp)
+  // Incrementally update the message count for this timestamp
+  if (!messageCounts.value[timestamp]) {
+    messageCounts.value[timestamp] = 0
+  }
+  messageCounts.value[timestamp]++
+  // Extract the keys (timestamps) and values (counts) from the map
+  const timestamps = Object.keys(messageCounts.value)
+    .map(Number)
+    .sort((a, b) => a - b)
+  // Generate a complete list of timestamps from the minimum to the maximum
+  const minTimestamp = timestamps[0]
+  const maxTimestamp = timestamps[timestamps.length - 1]
+  const completeTimestamps = []
+  for (let t = minTimestamp; t <= maxTimestamp; t++) {
+    completeTimestamps.push(t)
+  }
+  const dates = completeTimestamps.map((timestamp) => new Date(timestamp * 1000).toISOString())
+  const counts = completeTimestamps.map((timestamp) => messageCounts.value[timestamp] || 0)
+  chartData.value.x = dates
+  chartData.value.y = counts
+}
+
+const updateMessagesRecivedLineChart = () => {
+  Plotly.update(lineChart.value, [chartData.value], chartLayout.value, config.value)
+}
+
+watch(
+  chartData,
+  () => {
+    updateMessagesRecivedLineChart()
+  },
+  { deep: true }
+)
+
+const initMessagesRecivedLineChart = () => {
+  Plotly.newPlot(lineChart.value, [chartData.value], chartLayout.value, config.value)
+  lineChart.value.on('plotly_click', handlePlotlyClick)
+}
+
+const addVerticalLine = (timestamp) => {
+  const x = new Date(timestamp * 1000).toISOString()
+  const shape = {
+    type: 'line',
+    x0: x,
+    x1: x,
+    y0: 0,
+    y1: 1,
+    xref: 'x',
+    yref: 'paper',
+    line: {
+      color: 'red',
+      width: 2,
+      dash: 'dashdot'
+    }
+  }
+  chartLayout.value.shapes = [shape]
+  updateMessagesRecivedLineChart()
+}
+
+const removeVerticalLine = () => {
+  chartLayout.value.shapes = []
+  updateMessagesRecivedLineChart()
+}
+
+const handlePlotlyClick = (event) => {
+  const point = event.points[0]
+  if (point) {
+    const timestamp = Math.floor(new Date(point.x + 'Z').getTime() / 1000)
+    disableTimestampSlider.value = true
+    selectedMaxTimestamp.value = timestamp
+    addVerticalLine(timestamp)
+  }
+}
 </script>
 
 <template>
@@ -582,6 +688,14 @@ watch(disableTimestampSlider, () => {
         >
       </div>
     </div>
+    <div class="chartContainer q-mb-lg">
+      <div ref="lineChart"></div>
+      <div v-if="rawMessages.length === 0" class="noData">
+        <h1>No data available</h1>
+        <h3>Try Changing the Input Parameters or you can wait</h3>
+        <h6>Note: Some prefixes become active after some time.</h6>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -595,11 +709,10 @@ watch(disableTimestampSlider, () => {
 .chartContainer{
   position: relative
   box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  height 100vh
   width 100%
 }
 .sankeyChart{
-  height 100%
+  height 100vh
   width 100%
 }
 .timetampSlider {
