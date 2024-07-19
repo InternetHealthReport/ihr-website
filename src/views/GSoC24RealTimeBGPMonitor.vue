@@ -636,38 +636,6 @@ const handlePlotlyClick = (event) => {
       </div>
     </div>
     <GenericCardController
-      :title="$t('charts.bgpMessagesTable.title')"
-      :sub-title="$t('charts.bgpMessagesTable.subTitle')"
-      :info-title="$t('charts.bgpMessagesTable.info.title')"
-      :info-description="$t('charts.bgpMessagesTable.info.description')"
-      class="card"
-    >
-      <div class="tableContainer">
-        <QTable
-          flat
-          :rows="rows"
-          :columns="columns"
-          :filter="search"
-          row-key="peer"
-          selection="multiple"
-          v-model:selected="selectedPeers"
-        >
-          <template v-slot:top-right>
-            <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
-              <template v-slot:append>
-                <QIcon name="search" />
-              </template>
-            </QInput>
-          </template>
-          <template v-slot:body-cell-community="props">
-            <QTd :props="props">
-              <pre>{{ props.row.community }}</pre>
-            </QTd>
-          </template>
-        </QTable>
-      </div>
-    </GenericCardController>
-    <GenericCardController
       :title="$t('charts.bgpAsPaths.title')"
       :sub-title="$t('charts.bgpAsPaths.subTitle')"
       :info-title="$t('charts.bgpAsPaths.info.title')"
@@ -675,6 +643,20 @@ const handlePlotlyClick = (event) => {
       class="card"
     >
       <div class="sankeyChart" ref="sankeyChart"></div>
+      <div v-if="rawMessages.length === 0" class="noData">
+        <h1>No data available</h1>
+        <h3>Try Changing the Input Parameters or you can wait</h3>
+        <h6>Note: Some prefixes become active after some time.</h6>
+      </div>
+    </GenericCardController>
+    <GenericCardController
+      :title="$t('charts.bgpMessagesCount.title')"
+      :sub-title="$t('charts.bgpMessagesCount.subTitle')"
+      :info-title="$t('charts.bgpMessagesCount.info.title')"
+      :info-description="$t('charts.bgpMessagesCount.info.description')"
+      class="card"
+    >
+      <div ref="lineChart"></div>
       <div v-if="rawMessages.length === 0" class="noData">
         <h1>No data available</h1>
         <h3>Try Changing the Input Parameters or you can wait</h3>
@@ -711,17 +693,35 @@ const handlePlotlyClick = (event) => {
       </div>
     </div>
     <GenericCardController
-      :title="$t('charts.bgpMessagesCount.title')"
-      :sub-title="$t('charts.bgpMessagesCount.subTitle')"
-      :info-title="$t('charts.bgpMessagesCount.info.title')"
-      :info-description="$t('charts.bgpMessagesCount.info.description')"
+      :title="$t('charts.bgpMessagesTable.title')"
+      :sub-title="$t('charts.bgpMessagesTable.subTitle')"
+      :info-title="$t('charts.bgpMessagesTable.info.title')"
+      :info-description="$t('charts.bgpMessagesTable.info.description')"
       class="card"
     >
-      <div ref="lineChart"></div>
-      <div v-if="rawMessages.length === 0" class="noData">
-        <h1>No data available</h1>
-        <h3>Try Changing the Input Parameters or you can wait</h3>
-        <h6>Note: Some prefixes become active after some time.</h6>
+      <div class="tableContainer">
+        <QTable
+          flat
+          :rows="rows"
+          :columns="columns"
+          :filter="search"
+          row-key="peer"
+          selection="multiple"
+          v-model:selected="selectedPeers"
+        >
+          <template v-slot:top-right>
+            <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
+              <template v-slot:append>
+                <QIcon name="search" />
+              </template>
+            </QInput>
+          </template>
+          <template v-slot:body-cell-community="props">
+            <QTd :props="props">
+              <pre>{{ props.row.community }}</pre>
+            </QTd>
+          </template>
+        </QTable>
       </div>
     </GenericCardController>
   </div>
