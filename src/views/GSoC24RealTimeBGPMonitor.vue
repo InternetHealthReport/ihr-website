@@ -215,6 +215,14 @@ const handleFilterMessages = (data) => {
   filteredMessages.value = Array.from(uniquePeerMessages.values())
 }
 
+const isBgpMessageTypeAnnounce = (data) => {
+  if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
+    return true
+  } else if (data.withdrawals.includes(params.value.prefix)) {
+    return false
+  }
+}
+
 const generateGraphData = () => {
   const nodeSet = new Set()
   const linkSet = new Set()
@@ -228,7 +236,7 @@ const generateGraphData = () => {
   )
 
   filteredSelectedMessages.forEach((message) => {
-    if (!message.path && message.path.length === 0) return
+    if (!message.path || message.path.length === 0 || !isBgpMessageTypeAnnounce(message)) return
     const path = message.path.slice(-(maxHops.value + 1))
     path.forEach((n, i) => {
       nodeSet.add(n)
@@ -335,6 +343,12 @@ const columns = [
     align: 'left'
   },
   {
+    name: 'type',
+    label: 'Type',
+    field: 'type',
+    align: 'left'
+  },
+  {
     name: 'timestamp',
     label: 'Timestamp',
     field: 'timestamp',
@@ -353,6 +367,7 @@ const rows = computed(() =>
     peer_asn: message.peer_asn,
     peer: message.peer,
     path: message.path?.length > 0 ? JSON.stringify(message.path) : 'Null',
+    type: isBgpMessageTypeAnnounce(message) ? 'Announce' : 'Withdraw',
     timestamp: timestampToUTC(message.timestamp),
     community:
       message.community?.length > 0
