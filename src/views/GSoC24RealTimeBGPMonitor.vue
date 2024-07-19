@@ -4,6 +4,10 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Plotly from 'plotly.js-dist'
 import axios from 'axios'
+import GenericCardController from '@/components/controllers/GenericCardController.vue'
+import i18n from '@/i18n'
+
+const { t } = i18n.global
 
 const maxHops = ref(3)
 const isPlaying = ref(false)
@@ -33,7 +37,7 @@ const messageCounts = ref({})
 const params = ref({
   peer: '',
   path: '',
-  prefix: '2600:40fc:1004::/48', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
+  prefix: '170.238.225.0/24', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: true,
@@ -293,7 +297,6 @@ const handleRRC = (data) => {
 }
 
 const layout = ref({
-  title: 'AS Paths Sankey Diagram',
   font: {
     size: 12
   }
@@ -499,9 +502,7 @@ const chartData = ref({
 })
 
 const chartLayout = ref({
-  title: 'Messages Received Over Time',
-  xaxis: { title: 'Timestamp' },
-  yaxis: { title: 'New Messages', rangemode: 'tozero' },
+  yaxis: { title: t('charts.bgpMessagesCount.yaxis'), rangemode: 'tozero' },
   shapes: []
 })
 
@@ -634,40 +635,52 @@ const handlePlotlyClick = (event) => {
         <span>Total messages received: {{ rawMessages.length }}</span>
       </div>
     </div>
-    <div class="q-mb-lg">
-      <QTable
-        flat
-        bordered
-        title="RIS Live Messages"
-        :rows="rows"
-        :columns="columns"
-        :filter="search"
-        row-key="peer"
-        selection="multiple"
-        v-model:selected="selectedPeers"
-      >
-        <template v-slot:top-right>
-          <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
-            <template v-slot:append>
-              <QIcon name="search" />
-            </template>
-          </QInput>
-        </template>
-        <template v-slot:body-cell-community="props">
-          <QTd :props="props">
-            <pre>{{ props.row.community }}</pre>
-          </QTd>
-        </template>
-      </QTable>
-    </div>
-    <div class="chartContainer q-mb-lg">
+    <GenericCardController
+      :title="$t('charts.bgpMessagesTable.title')"
+      :sub-title="$t('charts.bgpMessagesTable.subTitle')"
+      :info-title="$t('charts.bgpMessagesTable.info.title')"
+      :info-description="$t('charts.bgpMessagesTable.info.description')"
+      class="card"
+    >
+      <div class="tableContainer">
+        <QTable
+          flat
+          :rows="rows"
+          :columns="columns"
+          :filter="search"
+          row-key="peer"
+          selection="multiple"
+          v-model:selected="selectedPeers"
+        >
+          <template v-slot:top-right>
+            <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
+              <template v-slot:append>
+                <QIcon name="search" />
+              </template>
+            </QInput>
+          </template>
+          <template v-slot:body-cell-community="props">
+            <QTd :props="props">
+              <pre>{{ props.row.community }}</pre>
+            </QTd>
+          </template>
+        </QTable>
+      </div>
+    </GenericCardController>
+    <GenericCardController
+      :title="$t('charts.bgpAsPaths.title')"
+      :sub-title="$t('charts.bgpAsPaths.subTitle')"
+      :info-title="$t('charts.bgpAsPaths.info.title')"
+      :info-description="$t('charts.bgpAsPaths.info.description')"
+      class="card"
+    >
       <div class="sankeyChart" ref="sankeyChart"></div>
       <div v-if="rawMessages.length === 0" class="noData">
         <h1>No data available</h1>
         <h3>Try Changing the Input Parameters or you can wait</h3>
         <h6>Note: Some prefixes become active after some time.</h6>
       </div>
-    </div>
+    </GenericCardController>
     <div class="timetampSlider">
       <div class="timeStampControls">
         <QCheckbox v-model="disableTimestampSlider" label="Select Timestamp" />
@@ -697,14 +710,20 @@ const handlePlotlyClick = (event) => {
         >
       </div>
     </div>
-    <div class="chartContainer q-mb-lg">
+    <GenericCardController
+      :title="$t('charts.bgpMessagesCount.title')"
+      :sub-title="$t('charts.bgpMessagesCount.subTitle')"
+      :info-title="$t('charts.bgpMessagesCount.info.title')"
+      :info-description="$t('charts.bgpMessagesCount.info.description')"
+      class="card"
+    >
       <div ref="lineChart"></div>
       <div v-if="rawMessages.length === 0" class="noData">
         <h1>No data available</h1>
         <h3>Try Changing the Input Parameters or you can wait</h3>
         <h6>Note: Some prefixes become active after some time.</h6>
       </div>
-    </div>
+    </GenericCardController>
   </div>
 </template>
 
@@ -762,5 +781,9 @@ const handlePlotlyClick = (event) => {
   flex-direction: column
   align-items: center
   justify-content: center
+}
+.tableContainer{
+  height: 100vh
+  overflow-y: scroll
 }
 </style>

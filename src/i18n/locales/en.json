@@ -261,6 +261,31 @@
         "title": "Average throughput",
         "apiTitle": "Displayed data is available at MLab's API:"
       }
+    },
+    "bgpAsPaths": {
+      "title": "BGP Announcements",
+      "subTitle": "AS Paths",
+      "info": {
+        "title": "BGP Announcements",
+        "description": "BGP Announcements (AS Paths) Sankey Chart"
+      }
+    },
+    "bgpMessagesCount": {
+      "title": "BGP Messages Received Over Time",
+      "subTitle": "Number of Messages",
+      "yaxis": "Number of Messages",
+      "info": {
+        "title": "BGP Messages Received Over Time",
+        "description": "Number of messages Received Over Time Line Chart"
+      }
+    },
+    "bgpMessagesTable": {
+      "title": "RIS Live BGP messages",
+      "subTitle": "RIS Live",
+      "info": {
+        "title": "RIS Live BGP messages",
+        "description": "Messages received from Ris Live, displaying only unique peer messages"
+      }
     }
   },
   "asn": "AS number",
