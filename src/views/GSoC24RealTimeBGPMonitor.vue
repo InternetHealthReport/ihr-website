@@ -595,7 +595,6 @@ const handlePlotlyClick = (event) => {
         v-model="params.prefix"
         :disable="isPlaying"
       />
-      <QInput outlined placeholder="ASN" :dense="true" color="accent" :disable="isPlaying" />
       <QSelect
         style="min-width: 100px"
         filled
@@ -624,16 +623,11 @@ const handlePlotlyClick = (event) => {
       <div class="controls justify-center q-pa-md flex">
         <QBtn
           @click="toggleConnection"
-          color="secondary"
+          :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
           :disable="disableButton"
         />
-        <div class="replayControls flex">
-          <QBtn color="secondary" label="<" />
-          <QBtn color="secondary" label="Replay" />
-          <QBtn color="secondary" label=">" />
-        </div>
-        <QBtn @click="resetData" color="secondary" :label="'Reset'" :disable="isPlaying" />
+        <QBtn @click="resetData" color="negative" :label="'Reset'" :disable="isPlaying" />
       </div>
       <div class="stats">
         <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
@@ -717,9 +711,6 @@ const handlePlotlyClick = (event) => {
 <style lang="stylus" scoped>
 .controls{
 	gap: 30px;
-}
-.replayControls{
-	gap: 20px;
 }
 .chartContainer{
   position: relative
