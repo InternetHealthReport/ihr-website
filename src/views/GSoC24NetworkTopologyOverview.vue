@@ -9,7 +9,7 @@ const iyp_api = inject('iyp_api')
 
 const ipOptions = ref(['IPv4', 'IPv6'])
 const ipModel = ref('IPv4')
-const ASN = ref('2501')
+const ASN = ref('')
 const allNodes = ref([])
 const allEdges = ref({})
 const layouts = reactive({nodes: {}})
@@ -19,10 +19,12 @@ const tooltipClickOpacity = ref(0)
 const tooltipHoverOpacity = ref(0)
 const tooltipPos = ref({ left: "0px", top: "0px" })
 const tooltip = ref()
-const asnInfo = ref({})
+const nodeInfo = ref({})
+const loading = ref(true)
+const isPrefix = ref(false)
+const searchInput = ref('130.69.0.0/16')
 
 const as_topology_query = ref({
-	loading: true,
 	query1:`MATCH (a:AS {asn: $asn})-[h:DEPENDS_ON {af:$af}]->(d:AS)
 		WITH a, COLLECT(DISTINCT d) AS dependencies
 		UNWIND dependencies as d
@@ -41,6 +43,19 @@ const as_topology_query = ref({
         OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
         OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
         RETURN a.asn AS ASN ,c.country_code AS CC, c.name AS Country, COALESCE(pdbn.name, btn.name, ripen.name) AS Name, count(DISTINCT ixp) as nb_ixp`,
+})
+
+const prefix_topology_query = ref({
+	query1:`MATCH (a:AS)-[o:ORIGINATE]-(pfx:Prefix {prefix: $prefix})-[h:DEPENDS_ON {af:$af}]->(d:AS)
+          WITH a, COLLECT(DISTINCT d) AS dependencies, pfx, o
+          UNWIND dependencies AS d
+          MATCH p = allShortestPaths((a)-[:PEERS_WITH*]-(d))
+          WHERE a.asn <> d.asn AND all(r IN relationships(p) WHERE r.af = $af) AND all(n IN nodes(p) WHERE n IN dependencies)
+          RETURN p, a, pfx, o`,
+  query2:`MATCH (p:Prefix {prefix: $prefix})
+          OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
+          OPTIONAL MATCH(p)-[deleg:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+          RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS Name, c.name AS Country`
 })
 
 const MAX_NODE_SIZE = 35
@@ -66,7 +81,7 @@ const configs = vNG.defineConfigs({
 	},
   },
   node: {
-    normal: { radius: node =>  node.size / 2, color: node => node.color},
+    normal: { type: node => node.type, radius: node =>  node.size / 2, color: node => node.color},
     label: { directionAutoAdjustment:true },
     hover: {color: node => node.color}
   },
@@ -74,6 +89,7 @@ const configs = vNG.defineConfigs({
     normal: {
       color: edge => edge.color,
       width: 2.5,
+      dasharray: edge => (edge.dashed ? "4" : "0")
     },
     hover:{
       color: "red",
@@ -93,6 +109,19 @@ const targetNodePos = computed(() => {
 	const nodePos = layouts.nodes[targetNodeId.value]
 	return nodePos || { x: 0, y: 0 }
 })
+
+const search = async() => {
+
+  if(searchInput.value.includes('.')){
+    isPrefix.value = true
+    await searchPrefix()
+  }else{
+    isPrefix.value = false
+    ASN.value = searchInput.value
+    await searchASN()
+  }
+
+}
 
 const layout = (direction) => {
   if (Object.keys(allNodes.value).length <= 1 || Object.keys(allEdges.value).length == 0) {
@@ -150,27 +179,59 @@ const calculateEdgeColor = (percentage) => {
 }
 
 const searchASN = async() => {
-	as_topology_query.value.loading = true;
-  const query_params = { asn: Number(ASN.value), af: Number(ipModel.value[ipModel.value.length-1]) }
+	loading.value = true;
+  const query_params = { asn: Number(searchInput.value), af: Number(ipModel.value[ipModel.value.length-1]) }
 	const response = await iyp_api.run([
     {statement: as_topology_query.value.query1, parameters: query_params},
     {statement: as_topology_query.value.query2, parameters: query_params},
   ])
   response[1].forEach(item => {
-      asnInfo.value[item.ASN] = { HEGE: item.HEGE , CONES: item.CONES}
+      nodeInfo.value[item.ASN] = { HEGE: item.HEGE , CONES: item.CONES}
   })
-  const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(asnInfo.value).map(Number) }}])
+  const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(nodeInfo.value).map(Number) }}])
   asnInfoResponse[0].forEach(item => {
-    asnInfo.value[item.ASN]['Country'] = item.Country
-    asnInfo.value[item.ASN]['Name'] = item.Name
+    nodeInfo.value[item.ASN]['Country'] = item.Country
+    nodeInfo.value[item.ASN]['Name'] = item.Name
   })
-  sortASNodes(response)
-	sortASRelations(response)
+  sortNodes(response)
+	sortRelations(response)
 	layout('BT')
-	as_topology_query.value.loading = false;
+	loading.value = false;
 }
 
-const sortASNodes = (data) => {
+const searchPrefix = async() => {
+	loading.value = true
+  const query_params = { prefix: searchInput.value, af: Number(ipModel.value[ipModel.value.length-1]) }
+	const response = await iyp_api.run([
+    {statement: prefix_topology_query.value.query1, parameters: query_params},
+  ])
+  if(response[0].length > 0) ASN.value = response[0][0].a.asn
+  delete query_params.prefix
+  query_params.asn = Number(ASN.value)
+  const hegeInfoResponse = await iyp_api.run([
+    {statement: as_topology_query.value.query2, parameters: query_params},
+  ])
+  hegeInfoResponse[0].forEach(item => {
+      nodeInfo.value[item.ASN] = { HEGE: item.HEGE , CONES: item.CONES}
+  })
+  const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(nodeInfo.value).map(Number) }}])
+  asnInfoResponse[0].forEach(item => {
+    nodeInfo.value[item.ASN]['Country'] = item.Country
+    nodeInfo.value[item.ASN]['Name'] = item.Name
+  })
+  const prefixInfoResponse = await iyp_api.run([{statement: prefix_topology_query.value.query2, parameters: { prefix: searchInput.value }}])
+  prefixInfoResponse[0].forEach(item => {
+    nodeInfo.value[item.prefix] = {}
+    nodeInfo.value[item.prefix]['Country'] = item.Country
+    nodeInfo.value[item.prefix]['Name'] = item.Name
+  })
+  sortNodes(response)
+  sortRelations(response)
+	layout('BT')
+  loading.value = false
+}
+
+const sortNodes = (data) => {
     const hopLevels = {};
 
     data.forEach(subArray => {
@@ -203,16 +264,26 @@ const sortASNodes = (data) => {
 
     const sortedUniqueNodes = {};
     Array.from(uniqueNodes).forEach(asn => {
-        sortedUniqueNodes[asn] = { name: `AS${asn}` , tooltip: { visible: false , left:0, top:0 }, color: ASN.value == asn ? 'red' : calculateNodeColor(asnInfo.value[asn]?.HEGE), size:calculateNodeSize(asnInfo.value[asn]?.CONES) };
+        sortedUniqueNodes[asn] = { name: `AS${asn}` , tooltip: { visible: false , left:0, top:0 }, color: ASN.value == asn ? 'red' : calculateNodeColor(nodeInfo.value[asn]?.HEGE), size:calculateNodeSize(nodeInfo.value[asn]?.CONES), type: 'circle' };
     });
+    if(isPrefix.value && Object.keys(sortedUniqueNodes).length > 0) sortedUniqueNodes[searchInput.value] = { name: `${searchInput.value}` , tooltip: { visible: false , left:0, top:0 }, color: 'red', size:MAX_NODE_SIZE, type: 'rect' }
 
-	allNodes.value = sortedUniqueNodes;
+	  allNodes.value = sortedUniqueNodes;
 }
 
-const sortASRelations = (data) => {
+const sortRelations = (data) => {
     const formattedData = {}
     const uniquePairsSet = new Set()
     let edgeCounter = 1
+
+    if(isPrefix.value) {
+      formattedData[`edge0`] = {
+      "source": searchInput.value,
+      "target": ASN.value,
+      "color": calculateEdgeColor(nodeInfo.value[ASN.value]?.HEGE),
+      dashed: true
+      };
+    }
 
     data.forEach(subArray => {
         subArray.forEach(entry => {
@@ -231,7 +302,7 @@ const sortASRelations = (data) => {
                             formattedData[`edge${edgeCounter}`] = {
                                 "source": asn1,
                                 "target": asn2,
-                                "color": calculateEdgeColor(asnInfo.value[asn2]?.HEGE),
+                                "color": calculateEdgeColor(nodeInfo.value[asn2]?.HEGE),
                             };
                             edgeCounter++
                         }
@@ -266,8 +337,8 @@ const eventHandlers = {
     }else {
       tooltipHoverOpacity.value = 0
       tooltipClickOpacity.value = 0 
-      ASN.value = node
-      searchASN()
+      searchInput.value = node
+      search()
     }
   }
 }
@@ -288,7 +359,7 @@ watch(
 );
 
 onMounted(() => {
-  searchASN()
+  search()
 })
 
 </script>
@@ -300,7 +371,7 @@ onMounted(() => {
 		<h1 class="text-center">Network Topology Overview</h1>
 
 		<div class="justify-center q-pa-md flex pb-0">
-			<QInput style="max-width: 120px"  outlined v-model="ASN" placeholder="ASN" :dense="true" />
+			<QInput style="max-width: 145px"  outlined v-model="searchInput" placeholder="ASN" :dense="true" />
 			<QSelect
         	style="min-width: 100px; margin-left: 22px;"
 			filled
@@ -309,10 +380,10 @@ onMounted(() => {
 			label="IP"
 			:dense="true"
       		/>
-			<QBtn style="margin-left:22px" color="secondary" label="Search"  @click="searchASN"/>
+			<QBtn style="margin-left:22px" color="secondary" label="Search"  @click="search"/>
 		</div>
 
-    <div class="graphContainer" v-if="!as_topology_query.loading && Object.keys(allNodes).length>0">
+    <div class="graphContainer" v-if="!loading && Object.keys(allNodes).length>0">
 
       <div class="controlPanel">
         <QBtn class="controlPanelButton" @click="graph?.zoomIn()"><QIcon name="zoom_in"></QIcon></QBtn>
@@ -329,6 +400,8 @@ onMounted(() => {
         :event-handlers="eventHandlers"
       />
 
+      <div class="hegemonyLabel">Hegemony</div>
+
       <div class="scaleContainer">
         <div class="scaleLabel">100%</div>
         <div class="scale">
@@ -337,28 +410,26 @@ onMounted(() => {
         <div class="scaleLabel">0%</div>
       </div>
 
-      <div class="hegemonyLabel">Hegemony</div>
-
       <div ref="tooltip" >
        
         <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipClickOpacity }">
-          <div>{{ asnInfo[targetNodeId]?.Name }}</div>
-          <div>{{ asnInfo[targetNodeId]?.Country }}</div>
-          <div>CONES : {{ asnInfo[targetNodeId]?.CONES }}</div>
-          <div v-if="targetNodeId!=ASN" > Hegemony : {{ asnInfo[targetNodeId]?.HEGE.toFixed(2)  }}%</div>
+          <div>{{ nodeInfo[targetNodeId]?.Name }}</div>
+          <div>{{ nodeInfo[targetNodeId]?.Country }}</div>
+          <div v-if="!targetNodeId.includes('.')">Customer Cones : {{ nodeInfo[targetNodeId]?.CONES }}</div>
+          <div v-if="targetNodeId!=ASN && !targetNodeId.includes('.')" > Hegemony : {{ nodeInfo[targetNodeId]?.HEGE.toFixed(2)  }}%</div>
         </div>
 
         <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipHoverOpacity }">
-          <div>{{ asnInfo[targetNodeId]?.Name }}</div>
+          <div>{{ nodeInfo[targetNodeId]?.Name }}</div>
         </div>
 
       </div>
 
     </div>
 
-		<QSpinner v-if="as_topology_query.loading" color="secondary" size="5em" class="spinner" />
+		<QSpinner v-if="loading" color="secondary" size="5em" class="spinner" />
 
-		<h5 v-if="!as_topology_query.loading && Object.keys(allNodes).length==0" class="text-center"> No data found</h5>
+		<h5 v-if="!loading && Object.keys(allNodes).length==0" class="text-center"> No data found</h5>
 
 	</div>
 
@@ -430,8 +501,8 @@ onMounted(() => {
   transform: rotate(-90deg);
   font-size: 17px;
   font-weight: bold;
-  margin-left: -3.3%;
-  margin-right: -1.5%;
+  margin-left: -9.3%;
+  margin-right: -4.8%;
 }
 
 .controlPanel {
@@ -439,7 +510,7 @@ onMounted(() => {
   gap: 10px;
   position: absolute;
   top: 15px;
-  left: 70%;
+  right: 8%;
   z-index: 1;
 }
 
