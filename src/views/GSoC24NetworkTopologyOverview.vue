@@ -21,7 +21,6 @@ const tooltipPos = ref({ left: "0px", top: "0px" })
 const tooltip = ref()
 const nodeInfo = ref({})
 const loading = ref(true)
-const isPrefix = ref(false)
 const searchInput = ref('130.69.0.0/16')
 
 const as_topology_query = ref({
@@ -59,6 +58,7 @@ const prefix_topology_query = ref({
 })
 
 const MAX_NODE_SIZE = 35
+const layoutType = 'BT'
 
 const configs = vNG.defineConfigs({
   view: {
@@ -97,7 +97,7 @@ const configs = vNG.defineConfigs({
     margin: 4,
     marker: {
       target: {
-        type: "arrow",
+        type: edge => edge[0].marker,
         width: 4,
         height: 4,
       },
@@ -110,16 +110,71 @@ const targetNodePos = computed(() => {
 	return nodePos || { x: 0, y: 0 }
 })
 
+const isPrefix = (input) => {
+
+  if(input.includes('.')){
+    return true
+  }else{
+    return false
+  }
+
+}
+
 const search = async() => {
 
-  if(searchInput.value.includes('.')){
-    isPrefix.value = true
-    await searchPrefix()
+	loading.value = true;
+  let response;
+
+  if(isPrefix(searchInput.value)){
+
+    const query_params = { prefix: searchInput.value, af: Number(ipModel.value[ipModel.value.length-1]) }
+    response = await iyp_api.run([
+      {statement: prefix_topology_query.value.query1, parameters: query_params},
+    ])
+    if(response[0].length > 0) ASN.value = response[0][0].a.asn
+    delete query_params.prefix
+    query_params.asn = Number(ASN.value)
+    const hegeInfoResponse = await iyp_api.run([
+      {statement: as_topology_query.value.query2, parameters: query_params},
+    ])
+    hegeInfoResponse[0].forEach(item => {
+        nodeInfo.value[item.ASN] = { HEGE: item.HEGE , CONES: item.CONES}
+    })
+    const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(nodeInfo.value).map(Number) }}])
+    asnInfoResponse[0].forEach(item => {
+      nodeInfo.value[item.ASN]['Country'] = item.Country
+      nodeInfo.value[item.ASN]['Name'] = item.Name
+    })
+    const prefixInfoResponse = await iyp_api.run([{statement: prefix_topology_query.value.query2, parameters: { prefix: searchInput.value }}])
+    prefixInfoResponse[0].forEach(item => {
+      nodeInfo.value[item.prefix] = {}
+      nodeInfo.value[item.prefix]['Country'] = item.Country
+      nodeInfo.value[item.prefix]['Name'] = item.Name
+    })
+
   }else{
-    isPrefix.value = false
+
     ASN.value = searchInput.value
-    await searchASN()
+    const query_params = { asn: Number(searchInput.value), af: Number(ipModel.value[ipModel.value.length-1]) }
+    response = await iyp_api.run([
+      {statement: as_topology_query.value.query1, parameters: query_params},
+      {statement: as_topology_query.value.query2, parameters: query_params},
+    ])
+    response[1].forEach(item => {
+        nodeInfo.value[item.ASN] = { HEGE: item.HEGE , CONES: item.CONES}
+    })
+    const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(nodeInfo.value).map(Number) }}])
+    asnInfoResponse[0].forEach(item => {
+      nodeInfo.value[item.ASN]['Country'] = item.Country
+      nodeInfo.value[item.ASN]['Name'] = item.Name
+    })
+
   }
+
+  sortNodes(response)
+	sortRelations(response)
+	layout(layoutType)
+	loading.value = false;
 
 }
 
@@ -178,59 +233,6 @@ const calculateEdgeColor = (percentage) => {
     return `#${toHex(red)}${toHex(green)}${toHex(blue)}`;
 }
 
-const searchASN = async() => {
-	loading.value = true;
-  const query_params = { asn: Number(searchInput.value), af: Number(ipModel.value[ipModel.value.length-1]) }
-	const response = await iyp_api.run([
-    {statement: as_topology_query.value.query1, parameters: query_params},
-    {statement: as_topology_query.value.query2, parameters: query_params},
-  ])
-  response[1].forEach(item => {
-      nodeInfo.value[item.ASN] = { HEGE: item.HEGE , CONES: item.CONES}
-  })
-  const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(nodeInfo.value).map(Number) }}])
-  asnInfoResponse[0].forEach(item => {
-    nodeInfo.value[item.ASN]['Country'] = item.Country
-    nodeInfo.value[item.ASN]['Name'] = item.Name
-  })
-  sortNodes(response)
-	sortRelations(response)
-	layout('BT')
-	loading.value = false;
-}
-
-const searchPrefix = async() => {
-	loading.value = true
-  const query_params = { prefix: searchInput.value, af: Number(ipModel.value[ipModel.value.length-1]) }
-	const response = await iyp_api.run([
-    {statement: prefix_topology_query.value.query1, parameters: query_params},
-  ])
-  if(response[0].length > 0) ASN.value = response[0][0].a.asn
-  delete query_params.prefix
-  query_params.asn = Number(ASN.value)
-  const hegeInfoResponse = await iyp_api.run([
-    {statement: as_topology_query.value.query2, parameters: query_params},
-  ])
-  hegeInfoResponse[0].forEach(item => {
-      nodeInfo.value[item.ASN] = { HEGE: item.HEGE , CONES: item.CONES}
-  })
-  const asnInfoResponse = await iyp_api.run([{statement: as_topology_query.value.query3, parameters: { asns: Object.keys(nodeInfo.value).map(Number) }}])
-  asnInfoResponse[0].forEach(item => {
-    nodeInfo.value[item.ASN]['Country'] = item.Country
-    nodeInfo.value[item.ASN]['Name'] = item.Name
-  })
-  const prefixInfoResponse = await iyp_api.run([{statement: prefix_topology_query.value.query2, parameters: { prefix: searchInput.value }}])
-  prefixInfoResponse[0].forEach(item => {
-    nodeInfo.value[item.prefix] = {}
-    nodeInfo.value[item.prefix]['Country'] = item.Country
-    nodeInfo.value[item.prefix]['Name'] = item.Name
-  })
-  sortNodes(response)
-  sortRelations(response)
-	layout('BT')
-  loading.value = false
-}
-
 const sortNodes = (data) => {
     const hopLevels = {};
 
@@ -266,7 +268,7 @@ const sortNodes = (data) => {
     Array.from(uniqueNodes).forEach(asn => {
         sortedUniqueNodes[asn] = { name: `AS${asn}` , tooltip: { visible: false , left:0, top:0 }, color: ASN.value == asn ? 'red' : calculateNodeColor(nodeInfo.value[asn]?.HEGE), size:calculateNodeSize(nodeInfo.value[asn]?.CONES), type: 'circle' };
     });
-    if(isPrefix.value && Object.keys(sortedUniqueNodes).length > 0) sortedUniqueNodes[searchInput.value] = { name: `${searchInput.value}` , tooltip: { visible: false , left:0, top:0 }, color: 'red', size:MAX_NODE_SIZE, type: 'rect' }
+    if(isPrefix(searchInput.value) && Object.keys(sortedUniqueNodes).length > 0) sortedUniqueNodes[searchInput.value] = { name: `${searchInput.value}` , tooltip: { visible: false , left:0, top:0 }, color: 'red', size:MAX_NODE_SIZE, type: 'rect' }
 
 	  allNodes.value = sortedUniqueNodes;
 }
@@ -276,12 +278,13 @@ const sortRelations = (data) => {
     const uniquePairsSet = new Set()
     let edgeCounter = 1
 
-    if(isPrefix.value) {
+    if(isPrefix(searchInput.value)) {
       formattedData[`edge0`] = {
       "source": searchInput.value,
       "target": ASN.value,
       "color": calculateEdgeColor(nodeInfo.value[ASN.value]?.HEGE),
-      dashed: true
+      "dashed": true,
+      "marker": "none"
       };
     }
 
@@ -303,6 +306,7 @@ const sortRelations = (data) => {
                                 "source": asn1,
                                 "target": asn2,
                                 "color": calculateEdgeColor(nodeInfo.value[asn2]?.HEGE),
+                                "marker": "arrow"
                             };
                             edgeCounter++
                         }
@@ -415,8 +419,8 @@ onMounted(() => {
         <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipClickOpacity }">
           <div>{{ nodeInfo[targetNodeId]?.Name }}</div>
           <div>{{ nodeInfo[targetNodeId]?.Country }}</div>
-          <div v-if="!targetNodeId.includes('.')">Customer Cones : {{ nodeInfo[targetNodeId]?.CONES }}</div>
-          <div v-if="targetNodeId!=ASN && !targetNodeId.includes('.')" > Hegemony : {{ nodeInfo[targetNodeId]?.HEGE.toFixed(2)  }}%</div>
+          <div v-if="!isPrefix(targetNodeId)">Customer Cones : {{ nodeInfo[targetNodeId]?.CONES }}</div>
+          <div v-if="targetNodeId!=ASN && !isPrefix(targetNodeId)" > Hegemony : {{ nodeInfo[targetNodeId]?.HEGE.toFixed(2)  }}%</div>
         </div>
 
         <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipHoverOpacity }">
