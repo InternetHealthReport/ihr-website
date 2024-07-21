@@ -6,6 +6,7 @@ import Plotly from 'plotly.js-dist'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import i18n from '@/i18n'
+import { getASNamesCountryMappings } from '../plugins/AsNames'
 
 const { t } = i18n.global
 
@@ -17,7 +18,7 @@ const socket = ref(null)
 const rawMessages = ref([])
 const filteredMessages = ref([])
 const uniquePeerMessages = new Map()
-const nodes = ref([])
+const nodes = new Map()
 const links = ref([])
 const sankeyChart = ref(null)
 const search = ref('')
@@ -33,6 +34,7 @@ const selectedMaxTimestamp = ref(0)
 const usedMessagesCount = ref(0)
 const lineChart = ref(null)
 const messageCounts = ref({})
+const asNames = ref({})
 
 const params = ref({
   peer: '',
@@ -99,7 +101,7 @@ const resetData = () => {
   rawMessages.value = []
   filteredMessages.value = []
   uniquePeerMessages.clear()
-  nodes.value = []
+  nodes.clear()
   links.value = []
   search.value = ''
   selectedPeers.value = []
@@ -181,6 +183,10 @@ const handleMessages = (data) => {
       return { community: community, comm_1: comm_1, description: description }
     })
   }
+  if (data.path && Array.isArray(data.path)) {
+    // Creating new property and adding AS, AS names and country codes to the "as_info"
+    data.as_info = data.path.map((asn) => getASInfo(asn))
+  }
   data.timestamp = Math.floor(data.timestamp)
 
   if (
@@ -228,7 +234,7 @@ const isBgpMessageTypeAnnounce = (data) => {
 }
 
 const generateGraphData = () => {
-  const nodeSet = new Set()
+  nodes.clear()
   const linkSet = new Set()
   const sourceArray = []
   const targetArray = []
@@ -243,7 +249,9 @@ const generateGraphData = () => {
     if (!message.path || message.path.length === 0 || !isBgpMessageTypeAnnounce(message)) return
     const path = message.path.slice(-(maxHops.value + 1))
     path.forEach((n, i) => {
-      nodeSet.add(n)
+      if (!nodes.has(n)) {
+        nodes.set(n, [n, message.as_info[i].asn_name, message.as_info[i].country_iso_code2])
+      }
       if (i < path.length - 1) {
         const source = path[i]
         const target = path[i + 1]
@@ -258,10 +266,10 @@ const generateGraphData = () => {
     })
   })
 
-  nodes.value = Array.from(nodeSet)
+  const nodesArray = Array.from(nodes.keys())
   links.value = {
-    source: sourceArray.map((node) => nodes.value.indexOf(node)),
-    target: targetArray.map((node) => nodes.value.indexOf(node)),
+    source: sourceArray.map((node) => nodesArray.indexOf(node)),
+    target: targetArray.map((node) => nodesArray.indexOf(node)),
     value: valueArray
   }
 }
@@ -305,6 +313,8 @@ const layout = ref({
 const config = ref({ responsive: true })
 
 const plotSankey = () => {
+  const hovertemplate =
+    '<b>AS:</b>%{customdata[0]}<br><b>Name:</b>%{customdata[1]}<br><b>Country:</b>%{customdata[2]}<extra></extra>'
   const data = {
     type: 'sankey',
     node: {
@@ -314,14 +324,16 @@ const plotSankey = () => {
         color: 'black',
         width: 0.5
       },
-      label: nodes.value
+      label: Array.from(nodes.keys()),
+      customdata: Array.from(nodes.values()),
+      hovertemplate: hovertemplate
     },
     link: links.value
   }
   Plotly.newPlot(sankeyChart.value, [data], layout.value, config.value)
 }
 
-watch([nodes, links], () => {
+watch(links, () => {
   plotSankey()
 })
 
@@ -343,6 +355,12 @@ const columns = [
     name: 'path',
     label: 'AS Path',
     field: 'path',
+    align: 'left'
+  },
+  {
+    name: 'as_info',
+    label: 'AS Info',
+    field: 'as_info',
     align: 'left'
   },
   {
@@ -370,6 +388,12 @@ const rows = computed(() =>
     peer_asn: message.peer_asn,
     peer: message.peer,
     path: message.path?.length > 0 ? message.path : null,
+    as_info:
+      message.as_info?.length > 0
+        ? message.as_info
+            .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
+            .join('\n')
+        : 'Null',
     type: isBgpMessageTypeAnnounce(message) ? 'Announce' : 'Withdraw',
     timestamp: timestampToUTC(message.timestamp),
     community:
@@ -458,6 +482,7 @@ onMounted(() => {
   connectWebSocket()
   plotSankey()
   fetchGithubFiles()
+  fetchAllASInfo()
   initRoute()
   initMessagesRecivedLineChart()
 })
@@ -580,6 +605,22 @@ const handlePlotlyClick = (event) => {
     disableTimestampSlider.value = true
     selectedMaxTimestamp.value = timestamp
     addVerticalLine(timestamp)
+  }
+}
+
+const fetchAllASInfo = async () => {
+  try {
+    const data = await getASNamesCountryMappings()
+    asNames.value = data
+  } catch (error) {
+    console.error('Error fetching AS Info:', error)
+  }
+}
+const getASInfo = (asn) => {
+  if (asNames.value[asn]) {
+    return { asn: asn, ...asNames.value[asn] }
+  } else {
+    return { asn: asn, asn_name: 'Unknown', cc: 'ZZ' }
   }
 }
 </script>
@@ -742,6 +783,11 @@ const handlePlotlyClick = (event) => {
                 </template>
                 <template v-else> Null </template>
               </span>
+            </QTd>
+          </template>
+          <template v-slot:body-cell-as_info="props">
+            <QTd :props="props">
+              <pre>{{ props.row.as_info }}</pre>
             </QTd>
           </template>
           <template v-slot:body-cell-community="props">
