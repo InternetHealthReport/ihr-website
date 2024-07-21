@@ -1,7 +1,7 @@
 <script setup>
 import { QBtn, QSelect, QInput, QSlider, QTable, QIcon, QTd, QCheckbox, uid } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Plotly from 'plotly.js-dist'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
@@ -369,7 +369,7 @@ const rows = computed(() =>
   filteredMessages.value.map((message) => ({
     peer_asn: message.peer_asn,
     peer: message.peer,
-    path: message.path?.length > 0 ? JSON.stringify(message.path) : 'Null',
+    path: message.path?.length > 0 ? message.path : null,
     type: isBgpMessageTypeAnnounce(message) ? 'Announce' : 'Withdraw',
     timestamp: timestampToUTC(message.timestamp),
     community:
@@ -716,6 +716,34 @@ const handlePlotlyClick = (event) => {
               </template>
             </QInput>
           </template>
+          <template v-slot:body-cell-peer_asn="props">
+            <QTd :props="props">
+              <RouterLink
+                :to="{ name: 'network', params: { id: `AS${props.row.peer_asn}` } }"
+                target="_blank"
+              >
+                {{ props.row.peer_asn }}
+              </RouterLink>
+            </QTd>
+          </template>
+          <template v-slot:body-cell-path="props">
+            <QTd :props="props">
+              <span class="asn-list">
+                <template v-if="props.row.path">
+                  <span v-for="(asn, index) in props.row.path" :key="index">
+                    <RouterLink
+                      :to="{ name: 'network', params: { id: `AS${asn}` } }"
+                      target="_blank"
+                    >
+                      {{ asn }}
+                    </RouterLink>
+                    <span v-if="index < props.row.path.length - 1">&nbsp;</span>
+                  </span>
+                </template>
+                <template v-else> Null </template>
+              </span>
+            </QTd>
+          </template>
           <template v-slot:body-cell-community="props">
             <QTd :props="props">
               <pre>{{ props.row.community }}</pre>
@@ -785,5 +813,12 @@ const handlePlotlyClick = (event) => {
 .tableContainer{
   height: 100vh
   overflow-y: scroll
+}
+.asn-list {
+  display: inline-flex;
+  flex-wrap: nowrap;
+}
+.asn-list > span {
+  display: inline;
 }
 </style>
