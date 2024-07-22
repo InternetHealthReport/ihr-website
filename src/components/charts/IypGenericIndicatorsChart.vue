@@ -46,6 +46,27 @@ const formatChartData = (arrayOfObjects) => {
         domain: { x: [0, 0.5], y: [0.5, 1] },
       },
     ]
+  } else if (arrayOfObjects.length === 2) {
+    data = [
+      {
+        type: 'indicator',
+        mode: 'number',
+        value: arrayOfObjects[0].rank,
+        title: {
+          text: arrayOfObjects[0].name,
+        },
+        domain: { x: [0, 0.5], y: [0.5, 1] },
+      },
+      {
+        type: 'indicator',
+        mode: 'number',
+        value: arrayOfObjects[1].rank,
+        title: {
+          text: arrayOfObjects[1].name,
+        },
+        domain: { x: [0.6, 1], y: [0, 1] },
+      },
+    ]
   } else {
     data = [
       {
