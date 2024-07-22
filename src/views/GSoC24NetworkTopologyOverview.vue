@@ -7,8 +7,23 @@ import dagre from "dagre/dist/dagre.min.js"
 
 const iyp_api = inject('iyp_api')
 
+const props  = defineProps({
+  searchInput: {
+    type: String,
+    default:'130.69.0.0/16'
+  },
+  af: {
+    type: String,
+    default:'IPv4'
+  },
+  isComponent: {
+    type: Boolean,
+    default: false,
+  }
+})
+
 const ipOptions = ref(['IPv4', 'IPv6'])
-const ipModel = ref('IPv4')
+const ipModel = ref('')
 const ASN = ref('')
 const allNodes = ref([])
 const allEdges = ref({})
@@ -21,7 +36,7 @@ const tooltipPos = ref({ left: "0px", top: "0px" })
 const tooltip = ref()
 const nodeInfo = ref({})
 const loading = ref(true)
-const searchInput = ref('130.69.0.0/16')
+const searchInput = ref('')
 
 const as_topology_query = ref({
 	query1:`MATCH (a:AS {asn: $asn})-[h:DEPENDS_ON {af:$af}]->(d:AS)
@@ -62,7 +77,7 @@ const layoutType = 'BT'
 
 const configs = vNG.defineConfigs({
   view: {
-    autoPanAndZoomOnLoad: "fit-center", 
+    autoPanAndZoomOnLoad: "fit-content", 
 	  scalingObjects:"true",
 	grid: {
 		visible: false,
@@ -109,6 +124,11 @@ const targetNodePos = computed(() => {
 	const nodePos = layouts.nodes[targetNodeId.value]
 	return nodePos || { x: 0, y: 0 }
 })
+
+const init = () => {
+  searchInput.value = props.searchInput
+  ipModel.value = props.af
+}
 
 const isPrefix = (input) => {
 
@@ -363,6 +383,7 @@ watch(
 );
 
 onMounted(() => {
+  init()
   search()
 })
 
@@ -371,28 +392,32 @@ onMounted(() => {
 <template>
 
 	<div>
-	
-		<h1 class="text-center">Network Topology Overview</h1>
 
-		<div class="justify-center q-pa-md flex pb-0">
-			<QInput style="max-width: 145px"  outlined v-model="searchInput" placeholder="ASN" :dense="true" />
-			<QSelect
-        	style="min-width: 100px; margin-left: 22px;"
-			filled
-			v-model="ipModel"
-			:options="ipOptions"
-			label="IP"
-			:dense="true"
-      		/>
-			<QBtn style="margin-left:22px" color="secondary" label="Search"  @click="search"/>
-		</div>
+    <div v-if="!props.isComponent">
+	
+      <h1 class="text-center">Network Topology Overview</h1>
+
+      <div class="justify-center flex pb-0">
+        <QInput style="max-width: 145px"  outlined v-model="searchInput" placeholder="ASN" :dense="true" />
+        <QSelect
+            style="min-width: 100px; margin-left: 22px;"
+        filled
+        v-model="ipModel"
+        :options="ipOptions"
+        label="IP"
+        :dense="true"
+            />
+        <QBtn style="margin-left:22px" color="secondary" label="Search"  @click="search"/>
+      </div>
+
+    </div>
 
     <div class="graphContainer" v-if="!loading && Object.keys(allNodes).length>0">
 
       <div class="controlPanel">
         <QBtn class="controlPanelButton" @click="graph?.zoomIn()"><QIcon name="zoom_in"></QIcon></QBtn>
         <QBtn class="controlPanelButton" @click="graph?.zoomOut()"><QIcon name="zoom_out"></QIcon></QBtn>
-        <QBtn class="controlPanelButton" @click="graph?.fitToContents()">Fit Screen</QBtn>
+        <QBtn class="controlPanelButton" @click="search()">Fit Screen</QBtn>
       </div>
               
       <VNetworkGraph 
@@ -450,6 +475,7 @@ onMounted(() => {
   width: 80%;
   margin:auto;
   margin-bottom: 40px;
+  margin-top: 20px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
   position: relative;
 }
@@ -513,7 +539,7 @@ onMounted(() => {
   display: flex;
   gap: 10px;
   position: absolute;
-  top: 15px;
+  top: 10px;
   right: 8%;
   z-index: 1;
 }
