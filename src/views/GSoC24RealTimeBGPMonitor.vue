@@ -7,6 +7,8 @@ import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import i18n from '@/i18n'
 import { getASNamesCountryMappings } from '../plugins/AsNames'
+import report from '@/plugins/report'
+let { utcString } = report()
 
 const { t } = i18n.global
 
@@ -187,7 +189,8 @@ const handleMessages = (data) => {
     // Creating new property and adding AS, AS names and country codes to the "as_info"
     data.as_info = data.path.map((asn) => getASInfo(asn))
   }
-  data.timestamp = Math.floor(data.timestamp)
+  // Creating new property to store the floor timestamp
+  data.floor_timestamp = Math.floor(data.timestamp)
 
   if (
     defaultSelectedPeerCount.value > 0 &&
@@ -197,12 +200,12 @@ const handleMessages = (data) => {
     defaultSelectedPeerCount.value--
   }
 
-  updateTimeRange(data.timestamp)
+  updateTimeRange(data.floor_timestamp)
   rawMessages.value.push(data)
   if (!disableTimestampSlider.value) {
     handleFilterMessages(data)
   }
-  generateLineChartData(data)
+  generateLineChartData(data.floor_timestamp)
 }
 
 const handleFilterMessages = (data) => {
@@ -213,7 +216,7 @@ const handleFilterMessages = (data) => {
     filteredMessages.value = []
     uniquePeerMessages.clear()
     const filteredRawMessages = rawMessages.value.filter(
-      (message) => message.timestamp <= selectedMaxTimestamp.value
+      (message) => message.floor_timestamp <= selectedMaxTimestamp.value
     )
 
     usedMessagesCount.value = filteredRawMessages.length
@@ -395,7 +398,7 @@ const rows = computed(() =>
             .join('\n')
         : 'Null',
     type: isBgpMessageTypeAnnounce(message) ? 'Announce' : 'Withdraw',
-    timestamp: timestampToUTC(message.timestamp),
+    timestamp: timestampToUTC(message.floor_timestamp),
     community:
       message.community?.length > 0
         ? message.community
@@ -488,7 +491,7 @@ onMounted(() => {
 })
 
 const timestampToUTC = (timestamp) => {
-  return new Date(timestamp * 1000).toUTCString()
+  return utcString(new Date(timestamp * 1000))
 }
 
 const updateTimeRange = (timestamp) => {
@@ -531,9 +534,7 @@ const chartLayout = ref({
   shapes: []
 })
 
-const generateLineChartData = (data) => {
-  // Round the new data's timestamp to the nearest second
-  const timestamp = Math.floor(data.timestamp)
+const generateLineChartData = (timestamp) => {
   // Incrementally update the message count for this timestamp
   if (!messageCounts.value[timestamp]) {
     messageCounts.value[timestamp] = 0
