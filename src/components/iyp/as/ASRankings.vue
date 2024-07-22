@@ -12,7 +12,7 @@ const route = useRoute()
 
 const rankings = ref({
   data: [],
-  show: false,
+  show: true,
   loading: true,
   query: 'MATCH (:AS {asn: $asn})-[r:RANK]->(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank',
   columns: [
@@ -29,6 +29,20 @@ const load = () => {
     results => {
       rankings.value.data = results[0]
       rankings.value.loading = false
+      results[0].sort((a, b) => a.rank - b.rank)
+      if (results[0].length == 1) {
+        if (results[0][0].rank > 100) {
+          rankings.value.show = false
+        }
+      } else if (results[0].length == 2) {
+        if (results[0][0].rank > 100 && results[0][1].rank > 100) {
+          rankings.value.show = false
+        }
+      } else {
+        if (results[0][0].rank > 100 && results[0][1].rank > 100 && results[0][2].rank > 100) {
+          rankings.value.show = false
+        }
+      }
     }
   )
 }
@@ -48,10 +62,10 @@ onMounted(() => {
     :columns="rankings.columns"
     :loading-status="rankings.loading"
     :cypher-query="rankings.query.replace(/\$(.*?)}/, `${asNumber}}`)"
-    :slot-length="1"
+    :slot-length="rankings.show ? 1 : 0"
   >
     <IypGenericIndicatorsChart
-      v-if="rankings.data.length > 0" :chart-data="rankings.data"
+      v-if="rankings.data.length > 0 && rankings.show" :chart-data="rankings.data"
     />
   </IypGenericTable>
 </template>
