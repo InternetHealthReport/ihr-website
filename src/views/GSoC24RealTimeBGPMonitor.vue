@@ -317,7 +317,7 @@ const config = ref({ responsive: true })
 
 const plotSankey = () => {
   const hovertemplate =
-    '<b>AS:</b>%{customdata[0]}<br><b>Name:</b>%{customdata[1]}<br><b>Country:</b>%{customdata[2]}<extra></extra>'
+    'AS%{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}<extra></extra>'
   const data = {
     type: 'sankey',
     node: {
