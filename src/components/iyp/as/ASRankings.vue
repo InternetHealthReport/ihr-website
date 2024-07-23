@@ -2,7 +2,7 @@
 import { useRoute } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
-import IypGenericIndicatorsChart from '@/components/charts/IypGenericIndicatorsChart.vue'
+import IypGenericRadarChart from '@/components/charts/IypGenericRadarChart.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -21,6 +21,17 @@ const rankings = ref({
   ]
 })
 
+const layout = ref({
+  polar: {
+    radialaxis: {
+      visible: true,
+      range: [-100, 0],
+      tickvals: [-100, -90, -80, -70, -60, -50, -40, -30, -20, -10, 0],
+      ticktext: ['100', '90', '80', '70', '60', '50', '40', '30', '20', '10', '0']
+    }
+  }
+})
+
 const load = () => {
   rankings.value.loading = true
   // Run the cypher query
@@ -29,19 +40,14 @@ const load = () => {
     results => {
       rankings.value.data = results[0]
       rankings.value.loading = false
-      results[0].sort((a, b) => a.rank - b.rank)
-      if (results[0].length == 1) {
-        if (results[0][0].rank > 100) {
-          rankings.value.show = false
+      let showRadar = false
+      results[0].forEach(element => {
+        if (element.rank < 100) {
+          showRadar = true
         }
-      } else if (results[0].length == 2) {
-        if (results[0][0].rank > 100 && results[0][1].rank > 100) {
-          rankings.value.show = false
-        }
-      } else {
-        if (results[0][0].rank > 100 && results[0][1].rank > 100 && results[0][2].rank > 100) {
-          rankings.value.show = false
-        }
+      })
+      if (!showRadar) {
+        rankings.value.show = false
       }
     }
   )
@@ -64,8 +70,11 @@ onMounted(() => {
     :cypher-query="rankings.query.replace(/\$(.*?)}/, `${asNumber}}`)"
     :slot-length="rankings.show ? 1 : 0"
   >
-    <IypGenericIndicatorsChart
-      v-if="rankings.data.length > 0 && rankings.show" :chart-data="rankings.data"
+    <IypGenericRadarChart
+      v-if="rankings.data.length > 0  && rankings.show"
+      :chart-data="rankings.data.map(val => ({r: -val.rank, theta: val.name})).slice(1, 11)"
+      :chart-layout="layout"
+      :config="{hovermode: 'closest', customdata: rankings.data.map(val => ({rank: String(val.rank)})).slice(1, 11), hovertemplate: '<b>Rank:</b> %{customdata.rank}<br><b>Name:</b> %{theta}<br><extra></extra>'}"
     />
   </IypGenericTable>
 </template>
