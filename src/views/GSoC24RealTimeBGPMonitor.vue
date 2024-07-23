@@ -28,14 +28,13 @@ const selectedPeers = ref([])
 const defaultSelectedPeerCount = ref(5)
 const communities = ref([])
 const disableTimestampSlider = ref(false)
-const timestampSlider = ref({
-  min: Infinity,
-  max: -Infinity
-})
+const minTimestamp = ref(Infinity)
+const maxTimestamp = ref(-Infinity)
 const selectedMaxTimestamp = ref(0)
 const usedMessagesCount = ref(0)
 const lineChart = ref(null)
-const messageCounts = ref({})
+const announcementsCount = ref({})
+const withdrawalsCount = ref({})
 const asNames = ref({})
 
 const params = ref({
@@ -109,15 +108,16 @@ const resetData = () => {
   selectedPeers.value = []
   defaultSelectedPeerCount.value = 5
   disableTimestampSlider.value = false
-  timestampSlider.value = {
-    min: Infinity,
-    max: -Infinity
-  }
+  minTimestamp.value = Infinity
+  maxTimestamp.value = -Infinity
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
-  messageCounts.value = {}
-  chartData.value.x = []
-  chartData.value.y = []
+  announcementsCount.value = {}
+  withdrawalsCount.value = {}
+  chartData.value[0].x = []
+  chartData.value[0].y = []
+  chartData.value[1].x = []
+  chartData.value[1].y = []
   removeVerticalLine()
 }
 
@@ -205,7 +205,7 @@ const handleMessages = (data) => {
   if (!disableTimestampSlider.value) {
     handleFilterMessages(data)
   }
-  generateLineChartData(data.floor_timestamp)
+  generateLineChartData(data)
 }
 
 const handleFilterMessages = (data) => {
@@ -316,8 +316,7 @@ const layout = ref({
 const config = ref({ responsive: true })
 
 const plotSankey = () => {
-  const hovertemplate =
-    'AS%{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}<extra></extra>'
+  const hovertemplate = 'AS%{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}<extra></extra>'
   const data = {
     type: 'sankey',
     node: {
@@ -496,11 +495,11 @@ const timestampToUTC = (timestamp) => {
 
 const updateTimeRange = (timestamp) => {
   if (timestamp) {
-    if (timestamp > timestampSlider.value.max) timestampSlider.value.max = timestamp
-    if (timestamp < timestampSlider.value.min) timestampSlider.value.min = timestamp
+    if (timestamp < minTimestamp.value) minTimestamp.value = timestamp
+    if (timestamp > maxTimestamp.value) maxTimestamp.value = timestamp
   }
   if (!disableTimestampSlider.value) {
-    selectedMaxTimestamp.value = timestampSlider.value.max
+    selectedMaxTimestamp.value = maxTimestamp.value
   }
 }
 
@@ -521,44 +520,68 @@ watch(disableTimestampSlider, () => {
   }
 })
 
-const chartData = ref({
-  x: [],
-  y: [],
-  type: 'line',
-  line: { shape: 'linear' },
-  marker: { size: 8 }
-})
+const chartData = ref([
+  {
+    x: [],
+    y: [],
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Announcements',
+    line: { shape: 'linear' },
+    marker: { size: 8 }
+  },
+  {
+    x: [],
+    y: [],
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Withdrawals',
+    line: { shape: 'linear' },
+    marker: { size: 8 }
+  }
+])
 
 const chartLayout = ref({
   yaxis: { title: t('charts.bgpMessagesCount.yaxis'), rangemode: 'tozero' },
   shapes: []
 })
 
-const generateLineChartData = (timestamp) => {
-  // Incrementally update the message count for this timestamp
-  if (!messageCounts.value[timestamp]) {
-    messageCounts.value[timestamp] = 0
-  }
-  messageCounts.value[timestamp]++
-  // Extract the keys (timestamps) and values (counts) from the map
-  const timestamps = Object.keys(messageCounts.value)
-    .map(Number)
-    .sort((a, b) => a - b)
-  // Generate a complete list of timestamps from the minimum to the maximum
-  const minTimestamp = timestamps[0]
-  const maxTimestamp = timestamps[timestamps.length - 1]
+const generateLineChartData = (message) => {
+  const timestamp = message.floor_timestamp
   const completeTimestamps = []
-  for (let t = minTimestamp; t <= maxTimestamp; t++) {
+  const dates = []
+  const announcementsTrace = []
+  const withdrawalsTrace = []
+  //count no of messages based on type
+  if (isBgpMessageTypeAnnounce(message)) {
+    if (!announcementsCount.value[timestamp]) {
+      announcementsCount.value[timestamp] = 0
+    }
+    announcementsCount.value[timestamp]++
+  } else {
+    if (!withdrawalsCount.value[timestamp]) {
+      withdrawalsCount.value[timestamp] = 0
+    }
+    withdrawalsCount.value[timestamp]++
+  }
+  for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
     completeTimestamps.push(t)
   }
-  const dates = completeTimestamps.map((timestamp) => timestampToUTC(timestamp))
-  const counts = completeTimestamps.map((timestamp) => messageCounts.value[timestamp] || 0)
-  chartData.value.x = dates
-  chartData.value.y = counts
+  completeTimestamps.forEach((timestamp) => {
+    dates.push(timestampToUTC(timestamp))
+    announcementsTrace.push(announcementsCount.value[timestamp] || 0)
+    withdrawalsTrace.push(withdrawalsCount.value[timestamp] || 0)
+  })
+  // Update chart data for announcements
+  chartData.value[0].x = dates
+  chartData.value[0].y = announcementsTrace
+  // Update chart data for withdrawals
+  chartData.value[1].x = dates
+  chartData.value[1].y = withdrawalsTrace
 }
 
 const updateMessagesRecivedLineChart = () => {
-  Plotly.update(lineChart.value, [chartData.value], chartLayout.value, config.value)
+  Plotly.update(lineChart.value, chartData.value, chartLayout.value, config.value)
 }
 
 watch(
@@ -570,7 +593,7 @@ watch(
 )
 
 const initMessagesRecivedLineChart = () => {
-  Plotly.newPlot(lineChart.value, [chartData.value], chartLayout.value, config.value)
+  Plotly.newPlot(lineChart.value, chartData.value, chartLayout.value, config.value)
   lineChart.value.on('plotly_click', handlePlotlyClick)
 }
 
@@ -712,8 +735,8 @@ const getASInfo = (asn) => {
       </div>
       <QSlider
         v-model="selectedMaxTimestamp"
-        :min="timestampSlider.min === Infinity ? 0 : timestampSlider.min"
-        :max="timestampSlider.max === -Infinity ? 0 : timestampSlider.max"
+        :min="minTimestamp === Infinity ? 0 : minTimestamp"
+        :max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
         :disable="!disableTimestampSlider"
         label-always
         :label-value="'Timestamp: ' + timestampToUTC(selectedMaxTimestamp)"
@@ -722,15 +745,11 @@ const getASInfo = (asn) => {
       <div class="timestampInfo">
         <span
           >Min Timestamp:
-          {{
-            timestampSlider.min === Infinity ? 'No Data' : timestampToUTC(timestampSlider.min)
-          }}</span
+          {{ minTimestamp === Infinity ? 'No Data' : timestampToUTC(minTimestamp) }}</span
         >
         <span
           >Max Timestamp:
-          {{
-            timestampSlider.max === -Infinity ? 'No Data' : timestampToUTC(timestampSlider.max)
-          }}</span
+          {{ maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(maxTimestamp) }}</span
         >
       </div>
     </div>
