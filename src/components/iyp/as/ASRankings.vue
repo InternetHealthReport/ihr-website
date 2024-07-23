@@ -74,7 +74,7 @@ onMounted(() => {
       v-if="rankings.data.length > 0  && rankings.show"
       :chart-data="rankings.data.map(val => ({r: -val.rank, theta: val.name})).slice(1, 11)"
       :chart-layout="layout"
-      :config="{hovermode: 'closest', customdata: rankings.data.map(val => ({rank: String(val.rank)})).slice(1, 11), hovertemplate: '<b>Rank:</b> %{customdata.rank}<br><b>Name:</b> %{theta}<br><extra></extra>'}"
+    :config="{name: 'Rankings', hovermode: 'closest', customdata: rankings.data.map(val => ({rank: String(val.rank)})).slice(1, 11), hovertemplate: '<b>Rank:</b> %{customdata.rank}<br><b>Name:</b> %{theta}<br><extra></extra>'}"
     />
   </IypGenericTable>
 </template>
