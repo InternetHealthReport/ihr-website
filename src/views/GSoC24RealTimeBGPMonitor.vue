@@ -44,7 +44,7 @@ const params = ref({
   prefix: '170.238.225.0/24', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
   type: 'UPDATE',
   require: '',
-  moreSpecific: true,
+  moreSpecific: false,
   lessSpecific: false,
   host: '',
   socketOptions: {
@@ -551,7 +551,7 @@ const generateLineChartData = (timestamp) => {
   for (let t = minTimestamp; t <= maxTimestamp; t++) {
     completeTimestamps.push(t)
   }
-  const dates = completeTimestamps.map((timestamp) => new Date(timestamp * 1000).toISOString())
+  const dates = completeTimestamps.map((timestamp) => timestampToUTC(timestamp))
   const counts = completeTimestamps.map((timestamp) => messageCounts.value[timestamp] || 0)
   chartData.value.x = dates
   chartData.value.y = counts
