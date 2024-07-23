@@ -30,7 +30,6 @@ const allEdges = ref({})
 const layouts = reactive({nodes: {}})
 const graph = ref()
 const targetNodeId = ref("")
-const tooltipClickOpacity = ref(0)
 const tooltipHoverOpacity = ref(0)
 const tooltipPos = ref({ left: "0px", top: "0px" })
 const tooltip = ref()
@@ -347,28 +346,28 @@ const calculateNodeSize = (value) => {
 const eventHandlers = {
   "node:pointerover": ({ node }) => {
     targetNodeId.value = node 
-    if(!tooltipClickOpacity.value) tooltipHoverOpacity.value = 1
+    tooltipHoverOpacity.value = 1
   },
   "node:pointerout": () => {
-    if(tooltipClickOpacity.value) tooltipClickOpacity.value = 0
     tooltipHoverOpacity.value = 0
   },
   "node:click": ({ node , event}) => {
-    if (event.detail === 1){
-      targetNodeId.value = node 
-      !tooltipClickOpacity.value ? tooltipHoverOpacity.value = 0 : tooltipHoverOpacity.value = 1
-      tooltipClickOpacity.value = Number(!tooltipClickOpacity.value)
-    }else {
-      tooltipHoverOpacity.value = 0
-      tooltipClickOpacity.value = 0 
-      searchInput.value = node
-      search()
+    if (event.detail > 1){
+
+      if(!props.isComponent) {
+        tooltipHoverOpacity.value = 0
+        searchInput.value = node
+        search()
+      }else{
+        console.log(`Redirecting`)
+      }
+
     }
   }
 }
 
 watch(
-  () => [targetNodePos.value, tooltipClickOpacity.value, tooltipHoverOpacity.value],
+  () => [targetNodePos.value, tooltipHoverOpacity.value],
   () => {
     if (!graph.value || !tooltip.value) return
 
@@ -441,15 +440,11 @@ onMounted(() => {
 
       <div ref="tooltip" >
        
-        <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipClickOpacity }">
+        <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipHoverOpacity }">
           <div>{{ nodeInfo[targetNodeId]?.Name }}</div>
           <div>{{ nodeInfo[targetNodeId]?.Country }}</div>
           <div v-if="!isPrefix(targetNodeId)">Customer Cones : {{ nodeInfo[targetNodeId]?.CONES }}</div>
           <div v-if="targetNodeId!=ASN && !isPrefix(targetNodeId)" > Hegemony : {{ nodeInfo[targetNodeId]?.HEGE.toFixed(2)  }}%</div>
-        </div>
-
-        <div class="tooltip" :style="{ ...tooltipPos, opacity: tooltipHoverOpacity }">
-          <div>{{ nodeInfo[targetNodeId]?.Name }}</div>
         </div>
 
       </div>
