@@ -4,6 +4,7 @@ import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
 import '@/styles/chart.sass'
+import NetworkTopologyChart from '@/components/charts/NetworkTopologyChart.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -120,7 +121,7 @@ const handleReference = (key) => {
   } else if (key === 'stat.ripe.net') {
     externalLink = `${references.value[key]}/AS${asn}`
   } else {
-    console.log('none')
+    // console.log('none')
     return
   }
   return externalLink
@@ -191,6 +192,34 @@ onMounted(() => {
       </tbody>
     </QMarkupTable>
     <br />
+    <QMarkupTable separator="horizontal">
+      <thead>
+        <tr>
+          <th class="text-left">IPv4 Network Topology</th>
+          <th class="text-left">IPv6 Network Topology</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="topology">
+            <NetworkTopologyChart
+              :searchInput="String(asNumber)"
+              af="IPv4"
+              :isComponent="true"
+              :showLegend="false"
+            />
+          </td>
+          <td class="topology">
+            <NetworkTopologyChart
+              :searchInput="String(asNumber)"
+              af="IPv6"
+              :isComponent="true"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </QMarkupTable>
+    <br />
     <QMarkupTable>
       <thead>
         <tr>
@@ -226,5 +255,8 @@ h3 {
   cursor: pointer;
   width: 100%;
   text-align: right;
+}
+.topology {
+  padding 0 0 0 0 !important;
 }
 </style>

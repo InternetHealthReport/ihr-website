@@ -80,7 +80,7 @@ const hegemonyFilter = ref(null)
 const hegemonyTier1Filter = ref(null)
 const hegemonyConeFilter = ref(null)
 const traces = ref(DEFAULT_TRACE)
-const layout = ref(AS_INTERDEPENDENCIES_LAYOUT)
+const layout = ref({...AS_INTERDEPENDENCIES_LAYOUT})
 const loadingNeighbours = ref(true)
 const neighbours = ref([])
 const loading = ref(true)
@@ -277,8 +277,7 @@ const queryHegemonyAPI = () => {
 }
 
 const queryHegemonyTier1API = async() => {
-
-try {
+  try {
     const result = await new Promise((resolve, reject) => {
       ihr_api.hegemony(
         hegemonyTier1Filter.value,

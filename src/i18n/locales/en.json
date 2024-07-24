@@ -22,6 +22,10 @@
       "name": "Observable",
       "summary": "Community Observable notebook showcase"
     },
+    "networkTopology": {
+      "name": "Network Topology",
+      "summary": "Network Topology Overview"
+    },
     "globalReport": {
       "name": "Global",
       "summary": "Alarms reported across all networks"
@@ -893,7 +897,7 @@
         "caption": "Top ranks for AS",
         "info": {
             "title": "Rankings",
-            "description": "Rankings for the selected AS. The chart shows only the top three. <br><br>For the IHR country ranking:<ul><li>'Total AS' is based on the number of downstream ASes in a country.</li><li>'Total eyeball' is based on the country population covered by the selected AS and its downstream ASes.</li></ul>"
+            "description": "Rankings for the selected AS. The chart shows only the top ten. <br><br>For the IHR country ranking:<ul><li>'Total AS' is based on the number of downstream ASes in a country.</li><li>'Total eyeball' is based on the country population covered by the selected AS and its downstream ASes.</li></ul>"
             }
 
       },
