@@ -4,6 +4,8 @@ import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
 import '@/styles/chart.sass'
+import NetworkTopologyChart from '@/components/charts/NetworkTopologyChart.vue'
+import * as ipAddress from 'ip-address'
 
 const iyp_api = inject('iyp_api')
 
@@ -33,6 +35,9 @@ const props = defineProps({
   }
 })
 
+const Address4 = ipAddress.Address4
+const Address6 = ipAddress.Address6
+
 const loading = ref(2)
 const references = ref(REFERENCES)
 const queries = ref([
@@ -54,6 +59,24 @@ const queries = ref([
       RETURN  DISTINCT h.name as hostname, ra.rank AS rank ORDER BY rank LIMIT 5`
   }
 ])
+const af = ref(null)
+
+const getAf = (prefix) => {
+  let prefixMatch = null
+  try {
+    prefixMatch = (new Address4(prefix)).isCorrect()
+    return 'IPv4'
+  } catch (e) {
+    prefixMatch = null
+  }
+  if (!prefixMatch) {
+    try {
+      prefixMatch = (new Address6(prefix)).isCorrect()
+      return 'IPv6'
+    } catch (e) {}
+  }
+  return ''
+}
 
 const fetchData = async () => {
   let params = { prefix: props.getPrefix }
@@ -165,6 +188,25 @@ onMounted(() => {
       </tbody>
     </QMarkupTable>
     <br />
+    <QMarkupTable separator="horizontal">
+      <thead>
+        <tr>
+          <th class="text-left">Network Topology</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="topology">
+            <NetworkTopologyChart
+              :searchInput="props.getPrefix"
+              :af="getAf(props.getPrefix)"
+              :isComponent="true"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </QMarkupTable>
+    <br />
     <QMarkupTable>
       <thead>
         <tr>
@@ -190,5 +232,8 @@ onMounted(() => {
 p {
   font-size: 1rem;
   margin-bottom: 0;
+}
+.topology {
+  padding 0 0 0 0 !important;
 }
 </style>
