@@ -77,6 +77,11 @@ const  SIMPLE_MENU = [
         routeName: 'observable',
         summary: 'header.observable.summary',
       },
+      {
+        entryName: 'header.networkTopology.name',
+        routeName: 'network-topology',
+        summary: 'header.networkTopology.summary',
+      },
     ],
   },
   {
