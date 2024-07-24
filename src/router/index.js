@@ -156,7 +156,22 @@ const router = createRouter({
               }
             }
           }
-        }
+        },
+        {
+          path: 'network-topology',
+          name: 'network-topology',
+          component: NetworkTopology
+        },
+        {
+          path: 'gsoc24-traceroute-visualization',
+          name: 'gsoc24-traceroute-visualization',
+          component: GSoC24TracerouteVisualization
+        },
+        {
+          path: 'gsoc24-real-time-bgp-monitor',
+          name: 'gsoc24-real-time-bgp-monitor',
+          component: GSoC24RealTimeBGPMonitor
+        },
       ]
     },
     {
