@@ -22,6 +22,10 @@
       "name": "Observable",
       "summary": "Community Observable notebook showcase"
     },
+    "networkTopology": {
+      "name": "Network Topology",
+      "summary": "Network Topology Overview"
+    },
     "globalReport": {
       "name": "Global",
       "summary": "Alarms reported across all networks"

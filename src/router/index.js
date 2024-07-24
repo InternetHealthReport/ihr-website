@@ -17,6 +17,7 @@ import Countries from '../views/Countries.vue'
 import Ranks from '../views/Ranks.vue'
 import Tr from '@/i18n/translation'
 import Observable from '../views/Observable.vue'
+import NetworkTopology from '../views/NetworkTopology.vue'
 
 
 const router = createRouter({
@@ -153,6 +154,11 @@ const router = createRouter({
               }
             }
           }
+        },
+        {
+          path: 'network-topology',
+          name: 'network-topology',
+          component: NetworkTopology
         }
       ]
     },
