@@ -366,7 +366,7 @@ const eventHandlers = {
         tooltipHoverOpacity.value = 0
         searchInput.value = node
         search()
-      } else {
+      } else if (!node.includes("/")) {
 				router.push(Tr.i18nRoute({
 					name: 'network',
 					params: { id: `AS${node}` },
