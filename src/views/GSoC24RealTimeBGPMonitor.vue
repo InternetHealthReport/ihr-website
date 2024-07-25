@@ -27,7 +27,7 @@ const search = ref('')
 const selectedPeers = ref([])
 const defaultSelectedPeerCount = ref(5)
 const communities = ref([])
-const disableTimestampSlider = ref(false)
+const isLiveMode = ref(true)
 const minTimestamp = ref(Infinity)
 const maxTimestamp = ref(-Infinity)
 const selectedMaxTimestamp = ref(0)
@@ -40,7 +40,7 @@ const asNames = ref({})
 const params = ref({
   peer: '',
   path: '',
-  prefix: '170.238.225.0/24', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
+  prefix: '202.164.222.0/24', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: false,
@@ -107,7 +107,7 @@ const resetData = () => {
   search.value = ''
   selectedPeers.value = []
   defaultSelectedPeerCount.value = 5
-  disableTimestampSlider.value = false
+  isLiveMode.value = true
   minTimestamp.value = Infinity
   maxTimestamp.value = -Infinity
   selectedMaxTimestamp.value = 0
@@ -202,7 +202,7 @@ const handleMessages = (data) => {
 
   updateTimeRange(data.floor_timestamp)
   rawMessages.value.push(data)
-  if (!disableTimestampSlider.value) {
+  if (isLiveMode.value) {
     handleFilterMessages(data)
   }
   generateLineChartData(data)
@@ -487,6 +487,7 @@ onMounted(() => {
   fetchAllASInfo()
   initRoute()
   initMessagesRecivedLineChart()
+  adjustQSliderWidth()
 })
 
 const timestampToUTC = (timestamp) => {
@@ -498,27 +499,30 @@ const updateTimeRange = (timestamp) => {
     if (timestamp < minTimestamp.value) minTimestamp.value = timestamp
     if (timestamp > maxTimestamp.value) maxTimestamp.value = timestamp
   }
-  if (!disableTimestampSlider.value) {
+  if (isLiveMode.value) {
     selectedMaxTimestamp.value = maxTimestamp.value
   }
 }
 
 watch(selectedMaxTimestamp, () => {
-  if (disableTimestampSlider.value) {
+  if (!isLiveMode.value) {
     handleFilterMessages()
     addVerticalLine(selectedMaxTimestamp.value)
   }
 })
 
-watch(disableTimestampSlider, () => {
+watch(isLiveMode, () => {
   updateTimeRange()
   handleFilterMessages()
-  if (disableTimestampSlider.value) {
-    addVerticalLine(selectedMaxTimestamp.value)
-  } else {
-    removeVerticalLine()
-  }
 })
+
+const EnableLiveMode = () => {
+  removeVerticalLine()
+  isLiveMode.value = true
+}
+const disableLiveMode = () => {
+  isLiveMode.value = false
+}
 
 const chartData = ref([
   {
@@ -542,6 +546,13 @@ const chartData = ref([
 ])
 
 const chartLayout = ref({
+  legend: {
+    orientation: 'h',
+    y: 1.1,
+    x: 0.5,
+    xanchor: 'center',
+    yanchor: 'bottom'
+  },
   yaxis: { title: t('charts.bgpMessagesCount.yaxis'), rangemode: 'tozero' },
   shapes: []
 })
@@ -595,6 +606,7 @@ watch(
 const initMessagesRecivedLineChart = () => {
   Plotly.newPlot(lineChart.value, chartData.value, chartLayout.value, config.value)
   lineChart.value.on('plotly_click', handlePlotlyClick)
+  lineChart.value.on('plotly_relayout', adjustQSliderWidth)
 }
 
 const addVerticalLine = (timestamp) => {
@@ -626,7 +638,7 @@ const handlePlotlyClick = (event) => {
   const point = event.points[0]
   if (point) {
     const timestamp = Math.floor(new Date(point.x + 'Z').getTime() / 1000)
-    disableTimestampSlider.value = true
+    disableLiveMode()
     selectedMaxTimestamp.value = timestamp
     addVerticalLine(timestamp)
   }
@@ -646,6 +658,13 @@ const getASInfo = (asn) => {
   } else {
     return { asn: asn, asn_name: 'Unknown', cc: 'ZZ' }
   }
+}
+
+const adjustQSliderWidth = () => {
+  const rectElement = document.querySelector('rect.nsewdrag')
+  const width = rectElement.getAttribute('width')
+  const timestampSliderElement = document.querySelector('.timetampSlider')
+  timestampSliderElement.style.width = `${width}px`
 }
 </script>
 
@@ -707,6 +726,7 @@ const getASInfo = (asn) => {
       :info-description="$t('charts.bgpAsPaths.info.description')"
       class="card"
     >
+      <QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" />
       <div class="sankeyChart" ref="sankeyChart"></div>
       <div v-if="rawMessages.length === 0" class="noData">
         <h1>No data available</h1>
@@ -721,38 +741,45 @@ const getASInfo = (asn) => {
       :info-description="$t('charts.bgpMessagesCount.info.description')"
       class="card"
     >
+      <QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" />
       <div ref="lineChart"></div>
       <div v-if="rawMessages.length === 0" class="noData">
         <h1>No data available</h1>
         <h3>Try Changing the Input Parameters or you can wait</h3>
         <h6>Note: Some prefixes become active after some time.</h6>
       </div>
+      <div class="timetampSlider">
+        <div class="timeStampControls">
+          <div v-if="!isLiveMode">
+            <QBtn @click="EnableLiveMode" :color="'grey-9'" :label="'Switch to Live Mode'" />
+          </div>
+          <span>Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span>
+        </div>
+        <div class="timetampSliderContainer">
+          <QSlider
+            @update:model-value="disableLiveMode"
+            v-model="selectedMaxTimestamp"
+            :min="minTimestamp === Infinity ? 0 : minTimestamp"
+            :max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
+            label-always
+            :label-value="
+              maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
+            "
+            color="accent"
+          />
+          <div class="timestampInfo">
+            <span
+              >Min Timestamp:
+              {{ minTimestamp === Infinity ? 'No Data' : timestampToUTC(minTimestamp) }}</span
+            >
+            <span
+              >Max Timestamp:
+              {{ maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(maxTimestamp) }}</span
+            >
+          </div>
+        </div>
+      </div>
     </GenericCardController>
-    <div class="timetampSlider">
-      <div class="timeStampControls">
-        <QCheckbox v-model="disableTimestampSlider" label="Select Timestamp" />
-        <span>Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span>
-      </div>
-      <QSlider
-        v-model="selectedMaxTimestamp"
-        :min="minTimestamp === Infinity ? 0 : minTimestamp"
-        :max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
-        :disable="!disableTimestampSlider"
-        label-always
-        :label-value="'Timestamp: ' + timestampToUTC(selectedMaxTimestamp)"
-        color="accent"
-      />
-      <div class="timestampInfo">
-        <span
-          >Min Timestamp:
-          {{ minTimestamp === Infinity ? 'No Data' : timestampToUTC(minTimestamp) }}</span
-        >
-        <span
-          >Max Timestamp:
-          {{ maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(maxTimestamp) }}</span
-        >
-      </div>
-    </div>
     <GenericCardController
       :title="$t('charts.bgpMessagesTable.title')"
       :sub-title="$t('charts.bgpMessagesTable.subTitle')"
@@ -770,6 +797,9 @@ const getASInfo = (asn) => {
           selection="multiple"
           v-model:selected="selectedPeers"
         >
+          <template v-slot:top-left>
+            <QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" />
+          </template>
           <template v-slot:top-right>
             <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
               <template v-slot:append>
@@ -837,12 +867,17 @@ const getASInfo = (asn) => {
 .timetampSlider {
   display: flex
   flex-direction: column
-  gap: 20px
+  gap: 30px
   justify-content: center
   align-items: center
   width: 100%
-  overflow: hidden
-  padding: 20px
+  margin: 0 auto
+}
+.timetampSliderContainer{
+  display: flex
+  flex-direction: column
+  gap: 10px
+  width: 100%
 }
 .timestampInfo{
   width 100%
@@ -854,7 +889,7 @@ const getASInfo = (asn) => {
   display: flex
   align-items: center
   justify-content: center
-  gap:50px
+  gap:30px
 }
 .controlsContainer{
   display: flex
