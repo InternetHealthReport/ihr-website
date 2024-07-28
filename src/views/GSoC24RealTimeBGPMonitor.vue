@@ -12,7 +12,7 @@ import report from '@/plugins/report'
 const { utcString } = report()
 const { t } = i18n.global
 
-const maxHops = ref(3)
+const maxHops = ref(9)
 const isPlaying = ref(false)
 const rrcList = ref([])
 const disableButton = ref(false)
@@ -92,6 +92,7 @@ watch(
 watch(
   params,
   () => {
+    params.value.prefix = params.value.prefix.trim()
     resetData()
   },
   { deep: true }
@@ -141,6 +142,14 @@ const toggleRisProtocol = () => {
     socket.value.close()
   }
 }
+
+const toggleConnection = () => {
+  isPlaying.value = !isPlaying.value
+}
+
+watch(isPlaying, () => {
+  toggleRisProtocol()
+})
 
 const connectWebSocket = () => {
   socket.value = new WebSocket(`wss://ris-live.ripe.net/v1/ws/?client=ihr_${uid()}`)
@@ -206,6 +215,17 @@ const handleMessages = (data) => {
     handleFilterMessages(data)
   }
   generateLineChartData(data)
+}
+
+const handleRRC = (data) => {
+  if (data?.length > 0) {
+    if (route.query.rrc) {
+      params.value.host = route.query.rrc
+    } else {
+      params.value.host = data[0]
+    }
+    rrcList.value = data.sort()
+  }
 }
 
 const handleFilterMessages = (data) => {
@@ -289,31 +309,9 @@ watch(
   [filteredMessages, maxHops, selectedPeers],
   () => {
     generateGraphData()
-    //console.log("Message Paths",JSON.parse(JSON.stringify(filteredMessages.value)))
-    //console.log("Nodes",JSON.parse(JSON.stringify(nodes.value)))
-    //console.log("Links",JSON.parse(JSON.stringify(links.value)))
   },
   { deep: true }
 )
-
-const toggleConnection = () => {
-  isPlaying.value = !isPlaying.value
-}
-
-watch(isPlaying, () => {
-  toggleRisProtocol()
-})
-
-const handleRRC = (data) => {
-  if (data?.length > 0) {
-    if (route.query.rrc) {
-      params.value.host = route.query.rrc
-    } else {
-      params.value.host = data[0]
-    }
-    rrcList.value = data.sort()
-  }
-}
 
 const layout = ref({
   font: {
@@ -414,89 +412,6 @@ const rows = computed(() =>
         : 'Null'
   }))
 )
-
-const fetchGithubFiles = async () => {
-  const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
-  try {
-    const response = await axios.get(repoUrl)
-    const files = response.data
-    const txtFiles = files.filter(
-      (file) => file.name.startsWith('as') && file.name.endsWith('.txt')
-    )
-    const fetchFilePromises = txtFiles.map((file) => axios.get(file.download_url))
-    const fileContents = await Promise.all(fetchFilePromises)
-    const processedCommunities = fileContents.flatMap((content) => {
-      const lines = content.data.trim().split('\n')
-      return lines
-        .filter((line) => line.trim() !== '' && !line.startsWith('#'))
-        .map((line) => {
-          const [community, description] = line.split(',')
-          if (community && description) {
-            return { community: community.trim(), description: description.trim() }
-          }
-          return null // Return null for improperly formatted lines
-        })
-        .filter((entry) => entry !== null) // Filter out null entries
-    })
-    communities.value = processedCommunities
-  } catch (error) {
-    console.error('Error fetching the GitHUb files: ', error)
-  }
-}
-
-const matchPattern = (community, communityToFind) => {
-  if (community.split(':').length !== 2 || communityToFind.split(':').length !== 2) return false
-  // Exact Match
-  if (community === communityToFind) return true
-
-  const [pattern_1, pattern_2] = community.split(':')
-  const [comm_1, comm_2] = communityToFind.split(':')
-
-  // Range Match
-  if (pattern_2.includes('-')) {
-    const [start, end] = pattern_2.split('-').map(Number)
-    const commNumber = Number(comm_2)
-    if (pattern_1 === comm_1 && commNumber >= start && commNumber <= end) {
-      //console.log('Range', community, communityToFind)
-      return true
-    }
-  }
-
-  // Single Digit Wildcard Match
-  if (pattern_2.includes('x')) {
-    const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
-    if (pattern_1 === comm_1 && regex.test(comm_2)) {
-      //console.log('Wildcard', community, communityToFind)
-      return true
-    }
-  }
-
-  // Any Number Match
-  if (pattern_2.includes('nnn')) {
-    const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
-    if (pattern_1 === comm_1 && regex.test(comm_2)) {
-      //console.log('Any', community, communityToFind)
-      return true
-    }
-  }
-
-  return false
-}
-
-const findCommunityDescription = (communityToFind) => {
-  const community = communities.value.find((c) => matchPattern(c.community, communityToFind))
-  return community ? community.description : 'Null'
-}
-
-onMounted(() => {
-  connectWebSocket()
-  plotSankey()
-  fetchGithubFiles()
-  fetchAllASInfo()
-  initRoute()
-  initMessagesRecivedLineChart()
-  adjustQSliderWidth()
-})
 
 const timestampToUTC = (timestamp) => {
   return utcString(new Date(timestamp * 1000))
@@ -653,6 +568,74 @@ const handlePlotlyClick = (event) => {
   }
 }
 
+const fetchGithubFiles = async () => {
+  const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
+  try {
+    const response = await axios.get(repoUrl)
+    const files = response.data
+    const txtFiles = files.filter(
+      (file) => file.name.startsWith('as') && file.name.endsWith('.txt')
+    )
+    const fetchFilePromises = txtFiles.map((file) => axios.get(file.download_url))
+    const fileContents = await Promise.all(fetchFilePromises)
+    const processedCommunities = fileContents.flatMap((content) => {
+      const lines = content.data.trim().split('\n')
+      return lines
+        .filter((line) => line.trim() !== '' && !line.startsWith('#'))
+        .map((line) => {
+          const [community, description] = line.split(',')
+          if (community && description) {
+            return { community: community.trim(), description: description.trim() }
+          }
+          return null // Return null for improperly formatted lines
+        })
+        .filter((entry) => entry !== null) // Filter out null entries
+    })
+    communities.value = processedCommunities
+  } catch (error) {
+    console.error('Error fetching the GitHUb files: ', error)
+  }
+}
+
+const matchPattern = (community, communityToFind) => {
+  if (community.split(':').length !== 2 || communityToFind.split(':').length !== 2) return false
+  // Exact Match
+  if (community === communityToFind) return true
+  const [pattern_1, pattern_2] = community.split(':')
+  const [comm_1, comm_2] = communityToFind.split(':')
+  // Range Match
+  if (pattern_2.includes('-')) {
+    const [start, end] = pattern_2.split('-').map(Number)
+    const commNumber = Number(comm_2)
+    if (pattern_1 === comm_1 && commNumber >= start && commNumber <= end) {
+      //console.log('Range', community, communityToFind)
+      return true
+    }
+  }
+  // Single Digit Wildcard Match
+  if (pattern_2.includes('x')) {
+    const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
+    if (pattern_1 === comm_1 && regex.test(comm_2)) {
+      //console.log('Wildcard', community, communityToFind)
+      return true
+    }
+  }
+  // Any Number Match
+  if (pattern_2.includes('nnn')) {
+    const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
+    if (pattern_1 === comm_1 && regex.test(comm_2)) {
+      //console.log('Any', community, communityToFind)
+      return true
+    }
+  }
+  return false
+}
+
+const findCommunityDescription = (communityToFind) => {
+  const community = communities.value.find((c) => matchPattern(c.community, communityToFind))
+  return community ? community.description : 'Null'
+}
+
 const fetchAllASInfo = async () => {
   try {
     const data = await getASNamesCountryMappings()
@@ -675,6 +658,16 @@ const adjustQSliderWidth = () => {
   const timestampSliderElement = document.querySelector('.timetampSlider')
   timestampSliderElement.style.width = `${width}px`
 }
+
+onMounted(() => {
+  connectWebSocket()
+  plotSankey()
+  fetchGithubFiles()
+  fetchAllASInfo()
+  initRoute()
+  initMessagesRecivedLineChart()
+  adjustQSliderWidth()
+})
 </script>
 
 <template>
@@ -719,7 +712,7 @@ const adjustQSliderWidth = () => {
           @click="toggleConnection"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
-          :disable="disableButton"
+          :disable="disableButton || params.prefix === ''"
         />
         <QBtn @click="resetData" color="negative" :label="'Reset'" :disable="isPlaying" />
       </div>
