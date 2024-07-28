@@ -8,8 +8,8 @@ import GenericCardController from '@/components/controllers/GenericCardControlle
 import i18n from '@/i18n'
 import { getASNamesCountryMappings } from '../plugins/AsNames'
 import report from '@/plugins/report'
-let { utcString } = report()
 
+const { utcString } = report()
 const { t } = i18n.global
 
 const maxHops = ref(3)
@@ -228,11 +228,13 @@ const handleFilterMessages = (data) => {
   filteredMessages.value = Array.from(uniquePeerMessages.values())
 }
 
-const isBgpMessageTypeAnnounce = (data) => {
+const bgpMessageType = (data) => {
   if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
-    return true
+    return 'Announce'
   } else if (data.withdrawals.includes(params.value.prefix)) {
-    return false
+    return 'Withdraw'
+  } else {
+    return 'Unknown'
   }
 }
 
@@ -249,7 +251,13 @@ const generateGraphData = () => {
   )
 
   filteredSelectedMessages.forEach((message) => {
-    if (!message.path || message.path.length === 0 || !isBgpMessageTypeAnnounce(message)) return
+    if (
+      !message.path ||
+      message.path.length === 0 ||
+      bgpMessageType(message) === 'Withdraw' ||
+      bgpMessageType(message) === 'Unknown'
+    )
+      return
     const path = message.path.slice(-(maxHops.value + 1))
     path.forEach((n, i) => {
       if (!nodes.has(n)) {
@@ -396,7 +404,7 @@ const rows = computed(() =>
             .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
             .join('\n')
         : 'Null',
-    type: isBgpMessageTypeAnnounce(message) ? 'Announce' : 'Withdraw',
+    type: bgpMessageType(message),
     timestamp: timestampToUTC(message.floor_timestamp),
     community:
       message.community?.length > 0
@@ -564,17 +572,18 @@ const generateLineChartData = (message) => {
   const announcementsTrace = []
   const withdrawalsTrace = []
   //count no of messages based on type
-  if (isBgpMessageTypeAnnounce(message)) {
+  if (bgpMessageType(message) === 'Announce') {
     if (!announcementsCount.value[timestamp]) {
       announcementsCount.value[timestamp] = 0
     }
     announcementsCount.value[timestamp]++
-  } else {
+  } else if (bgpMessageType(message) === 'Withdraw') {
     if (!withdrawalsCount.value[timestamp]) {
       withdrawalsCount.value[timestamp] = 0
     }
     withdrawalsCount.value[timestamp]++
   }
+  // Generate complete timestamps
   for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
     completeTimestamps.push(t)
   }
