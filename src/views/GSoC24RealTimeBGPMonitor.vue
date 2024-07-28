@@ -316,7 +316,8 @@ watch(
 const layout = ref({
   font: {
     size: 12
-  }
+  },
+  margin: { t: 20, b: 20, l: 20, r: 20 }
 })
 
 const config = ref({ responsive: true })
