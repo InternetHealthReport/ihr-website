@@ -26,6 +26,10 @@
       "name": "Network Topology",
       "summary": "Network Topology Overview"
     },
+    "bgpMonitor": {
+      "name": "BGP Monitor",
+      "summary": "Real Time BGP Monitor"
+    },
     "globalReport": {
       "name": "Global",
       "summary": "Alarms reported across all networks"
