@@ -5,40 +5,41 @@ const RIPE_API_BASE = 'https://stat.ripe.net/data/'
 
 var ripe_axios = axios.create({ baseURL: RIPE_API_BASE })
 
+// Simple in-memory cache
+const cache = {}
+
+// Utility function to get data with caching
+const getCachedData = async (url, params) => {
+  const key = `${url}_${JSON.stringify(params)}`
+  if (cache[key]) {
+    return cache[key]
+  }
+
+  const response = await ripe_axios.get(url, { params })
+  cache[key] = response.data
+  return response.data
+}
+
 export default {
-  asnNeighbours(asn) {
+  async asnNeighbours(asn) {
     let queryarg = {
-      params: {
-        resource: asn,
-      },
+      resource: asn,
     }
-    return ripe_axios.get('asn-neighbours/data.json', queryarg).then(response => {
-      return response.data
-    })
+    return await getCachedData('asn-neighbours/data.json', queryarg)
   },
-  userIP() {
-    return ripe_axios.get('whats-my-ip/data.json').then(response => {
-      return response.data
-    })
+  async userIP() {
+    return await getCachedData('whats-my-ip/data.json', {})
   },
-  userASN(ip) {
+  async userASN(ip) {
     let queryarg = {
-      params: {
-        resource: ip,
-      },
+      resource: ip,
     }
-    return ripe_axios.get('network-info/data.json', queryarg).then(response => {
-      return response.data
-    })
+    return await getCachedData('network-info/data.json', queryarg)
   },
-  prefixOverview(ip) {
+  async prefixOverview(ip) {
     let queryarg = {
-      params: {
-        resource: ip,
-      },
+      resource: ip,
     }
-    return ripe_axios.get('prefix-overview/data.json', queryarg).then(response => {
-      return response.data
-    })
+    return await getCachedData('prefix-overview/data.json', queryarg)
   }
 }

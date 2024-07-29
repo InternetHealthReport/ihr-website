@@ -1,6 +1,6 @@
 <script setup>
 import { QInput, QIcon, QBtn, QSpinner, QRange, QCheckbox, QTable, QTd, QTr, QRadio } from "quasar";
-import { ref, inject, computed, watchEffect, watch, nextTick, onMounted } from "vue"; // Added onMounted
+import { ref, inject, computed, watchEffect, watch, nextTick, onMounted } from "vue";
 import { VNetworkGraph } from "v-network-graph";
 import * as vNG from "v-network-graph";
 import dagre from "dagre";
@@ -556,11 +556,25 @@ const loadMeasurementData = async (loadProbes = false) => {
     }
 };
 
-const loadMeasurementOnTimeRange = (e) => {
+const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    };
+};
+
+const loadMeasurementOnTimeRange = debounce((e) => {
     leftLabelValue.value = convertUnixTimestamp(e.min);
     rightLabelValue.value = convertUnixTimestamp(e.max);
     loadMeasurementData();
-};
+}, 1000);
+
+const loadMeasurementOnProbeChange = debounce(() => {
+    loadMeasurementData();
+}, 1000);
 
 function convertUnixTimestamp(unixTimestamp) {
     const date = new Date(unixTimestamp * 1000);
@@ -580,13 +594,13 @@ const maxTime = computed(() => metaData.value?.stop_time || 0);
 
 watchEffect(() => {
     if (selectedProbes.value.length > 0) {
-        loadMeasurementData();
+        loadMeasurementOnProbeChange();
     }
 });
 
 watchEffect(() => {
     if (!timeRange.value.disable) {
-        loadMeasurementData();
+        loadMeasurementOnTimeRange(timeRange.value);
     }
 });
 
@@ -646,8 +660,8 @@ onMounted(() => {
       <div class="graph-container">
         <QSpinner v-if="isLoading" color="primary" />
         <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
-                       :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0" zoom-level="0" />
-        <div v-else-if="!isLoading" class="placeholder-message">No graph data available. Please load a measurement.</div>
+                       :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading"  zoom-level="0" />
+        <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
         <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
             <div style="display: flex; align-items: center;">
                 <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
