@@ -1,10 +1,13 @@
 <script setup>
 import { QInput, QIcon, QBtn, QSpinner, QRange, QCheckbox, QTable, QTd, QTr, QRadio } from "quasar";
-import { ref, inject, computed, watchEffect, watch, nextTick } from "vue";
+import { ref, inject, computed, watchEffect, watch, nextTick, onMounted } from "vue"; // Added onMounted
 import { VNetworkGraph } from "v-network-graph";
 import * as vNG from "v-network-graph";
 import dagre from "dagre";
 import RipeApi from "../plugins/RipeApi";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const atlas_api = inject("atlas_api");
 const isLoading = ref(false);
@@ -620,6 +623,13 @@ const toggleSelectAll = (value) => {
     }
 };
 
+onMounted(() => {
+    const tracerouteid = route.query.tracerouteid;
+    if (tracerouteid) {
+        measurementID.value = tracerouteid;
+        loadMeasurement();
+    }
+});
 </script>
 
 <template>
