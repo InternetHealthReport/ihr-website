@@ -149,9 +149,9 @@ const calculateMedian = (values) => {
 
 const rttColor = (rtt) => {
     if (rtt === null || rtt === undefined) return "black";
-    const normalized = Math.min(Math.max(rtt / maxMedianRtt.value, 0), 1);
+    const normalized = Math.min(Math.max(rtt / maxDisplayedRtt.value, 0), 1);
     const green = Math.floor(255 * (1 - normalized));
-    return `rgb(0, ${green}, 0)`;
+    return `rgb(150, ${green}, 60)`;
 };
 
 const filteredAsnList = computed(() => {
@@ -306,19 +306,22 @@ const processData = async (tracerouteData, loadProbes = false) => {
 const updateDisplayedRttValues = () => {
     let minRtt = Infinity;
     let maxRtt = -Infinity;
+    let destinationNodeMedianRtt = null;
 
     Object.values(nodes.value).forEach(node => {
         if (node.hops && node.hops.length > 0) {
-            const rttValues = node.hops.map(hop => hop.rtt).filter(rtt => rtt !== undefined);
-            if (rttValues.length > 0) {
-                minRtt = Math.min(minRtt, ...rttValues);
-                maxRtt = Math.max(maxRtt, ...rttValues);
+            const medianRtt = calculateMedian(node.hops.map(hop => hop.rtt).filter(rtt => rtt !== undefined));
+            if (medianRtt !== null) {
+                minRtt = Math.min(minRtt, medianRtt);
+                if (node.isLastHop) {
+                    destinationNodeMedianRtt = medianRtt;
+                }
             }
         }
     });
 
     minDisplayedRtt.value = minRtt === Infinity ? null : minRtt;
-    maxDisplayedRtt.value = maxRtt === -Infinity ? null : maxRtt;
+    maxDisplayedRtt.value = destinationNodeMedianRtt !== null ? destinationNodeMedianRtt : (maxRtt === -Infinity ? null : maxRtt);
 };
 
 watch([nodes, displayMode], updateDisplayedRttValues);
