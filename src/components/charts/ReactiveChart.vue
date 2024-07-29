@@ -26,7 +26,14 @@ const props = defineProps({
     required: false,
     default: 0,
   },
-  treemapNodeClicked: null
+  treemapNodeClicked: null,
+  newPlot: {
+    type: Boolean,
+    default: false
+  },
+  shapes: {
+    type: Array,
+  },
 })
 
 const emits = defineEmits({
@@ -83,7 +90,11 @@ const react = () => {
   if (props.traces == undefined) {
     return
   }
-  Plotly.react(myId.value, props.traces, layoutLocal.value)
+  if (props.newPlot) {
+    Plotly.newPlot(myId.value, props.traces, layoutLocal.value)
+  } else {
+    Plotly.react(myId.value, props.traces, layoutLocal.value)
+  }
   // emits('loaded')
 }
 
@@ -152,6 +163,10 @@ watch(() => props.layout, () => {
 watch(() => props.yMax, (newValue) => {
   const graphDiv = myId.value
   Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+})
+watch(() => props.shapes, (newValue) => {
+  const graphDiv = myId.value
+  Plotly.relayout(graphDiv, 'shapes', newValue)
 })
 </script>
 

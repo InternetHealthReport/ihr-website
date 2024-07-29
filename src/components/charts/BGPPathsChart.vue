@@ -1,0 +1,135 @@
+<script setup>
+import { QBtn } from 'quasar'
+import ReactiveChart from './ReactiveChart.vue'
+import { ref, inject, reactive, onMounted, computed, watch } from 'vue' 
+
+const props  = defineProps({
+  filteredMessages: {
+		type: Array,
+    default: () => [],
+	},
+	maxHops: {
+		type: Number
+	},
+	selectedPeers: {
+		type: Array,
+		default: () => [],
+	},
+	bgpMessageType: {
+		type: Function
+	}
+})
+
+const actualChartData = ref([])
+const actualChartLayout = ref({})
+const nodes = ref(new Map())
+const links = ref([])
+
+const generateGraphData = () => {
+  nodes.value.clear()
+  const linkSet = new Set()
+  const sourceArray = []
+  const targetArray = []
+  const valueArray = []
+
+  const peers = props.selectedPeers.map((message) => message.peer)
+  const filteredSelectedMessages = props.filteredMessages.filter((message) =>
+    peers.includes(message.peer)
+  )
+
+  filteredSelectedMessages.forEach((message) => {
+    if (
+      !message.path ||
+      message.path.length === 0 ||
+      props.bgpMessageType(message) === 'Withdraw' ||
+      props.bgpMessageType(message) === 'Unknown'
+    )
+      return
+    const path = message.path.slice(-(props.maxHops + 1))
+    path.forEach((n, i) => {
+      if (!nodes.value.has(n)) {
+        nodes.value.set(n, [n, message.as_info[i].asn_name, message.as_info[i].country_iso_code2])
+      }
+      if (i < path.length - 1) {
+        const source = path[i]
+        const target = path[i + 1]
+        const link = [source, target].sort().join('-')
+        if (!linkSet.has(link) && source !== target) {
+          linkSet.add(link)
+          sourceArray.push(source)
+          targetArray.push(target)
+          valueArray.push(1)
+        }
+      }
+    })
+  })
+
+  const nodesArray = Array.from(nodes.value.keys())
+  links.value = {
+    source: sourceArray.map((node) => nodesArray.indexOf(node)),
+    target: targetArray.map((node) => nodesArray.indexOf(node)),
+    value: valueArray
+  }
+}
+
+const renderChart = () => {
+  const data = [
+		{
+			type: 'sankey',
+			node: {
+				pad: 15,
+				thickness: 20,
+				line: {
+					color: 'black',
+					width: 0.5
+				},
+				label: Array.from(nodes.value.keys()),
+				customdata: Array.from(nodes.value.values()),
+				// hovertemplate: 'AS%{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}<extra></extra>'
+			},
+			link: links.value
+		}
+	]
+
+  const layout = {
+		font: {
+			size: 12
+		},
+		margin: { t: 20, b: 20, l: 20, r: 20 }
+  }
+
+  actualChartData.value = data
+  actualChartLayout.value = layout
+}
+
+const init = () => {
+  if (props.filteredMessages && props.filteredMessages.length > 0) {
+    generateGraphData()
+		renderChart()
+  }
+}
+
+watch(() => props.filteredMessages, () => {
+  init()
+}, { deep: true })
+
+onMounted(() => {
+  init()
+})
+</script>
+
+<template>
+	<div v-if="props.filteredMessages.length">
+		<!-- <QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" /> -->
+		<ReactiveChart
+			:layout="actualChartLayout"
+			:traces="actualChartData"
+			:chart-title="actualChartLayout && actualChartLayout.title"
+		/>
+	</div>
+	<div v-else>
+		<h1>No data available</h1>
+		<h3>Try Changing the Input Parameters or you can wait</h3>
+		<h6>Note: Some prefixes become active after some time.</h6>
+	</div>
+</template>
