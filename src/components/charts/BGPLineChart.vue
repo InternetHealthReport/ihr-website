@@ -169,6 +169,11 @@ const enableLiveMode = () => {
 	shapes.value = []
 }
 
+const updateSlider = (timestamp) => {
+	emit('disable-live-mode')
+	addVerticalLine(timestamp)
+}
+
 const init = async () => {
   if (props.rawMessages && props.rawMessages.length > 0) {
 		updateTimeRange(props.rawMessages.at(-1).floor_timestamp)
@@ -208,7 +213,7 @@ onMounted(() => {
 		</div>
 		<div class="timetampSliderContainer">
 			<QSlider
-				@update:model-value="emit('disable-live-mode')"
+				@update:model-value="updateSlider"
 				v-model="selectedMaxTimestamp"
 				:min="minTimestamp === Infinity ? 0 : minTimestamp"
 				:max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
