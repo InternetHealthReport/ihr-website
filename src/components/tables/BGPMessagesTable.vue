@@ -1,8 +1,7 @@
 <script setup>
 import { QBtn, QTable, QInput, QIcon, QTd } from 'quasar'
-import { ref, inject, reactive, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import report from '@/plugins/report'
-import axios from 'axios'
 
 const props  = defineProps({
   filteredMessages: {

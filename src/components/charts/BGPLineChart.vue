@@ -1,7 +1,7 @@
 <script setup>
 import { QBtn, QSlider } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
-import { ref, inject, reactive, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
 import report from '@/plugins/report'
 
 const props  = defineProps({
@@ -41,6 +41,7 @@ const selectedMaxTimestamp = ref(0)
 const announcementsCount = ref({})
 const withdrawalsCount = ref({})
 const shapes = ref([])
+const sliderWidthInit = ref(false)
 
 const generateLineChartData = async (message) => {
   const timestamp = message.floor_timestamp
@@ -173,11 +174,24 @@ const updateSlider = (timestamp) => {
   emit('setSelectedMaxTimestamp', timestamp)
 }
 
+const adjustQSliderWidth = (relayout) => {
+  if (!sliderWidthInit.value || relayout) {
+    try {
+      const rectElement = document.querySelector('rect.nsewdrag.drag')
+      const sliderWidth = rectElement.getAttribute('width')
+      const slider = document.querySelector('div.timetampSliderContainer')
+      slider.style.width = `${sliderWidth}px`
+      sliderWidthInit.value = true
+    } catch (e) {}  
+  }
+}
+
 const init = async () => {
   if (props.rawMessages && props.rawMessages.length > 0) {
 		updateTimeRange(props.rawMessages.at(-1).floor_timestamp)
     const { dates, announcementsTrace, withdrawalsTrace } = await generateLineChartData(props.rawMessages.at(-1))
 		renderChart(dates, announcementsTrace, withdrawalsTrace)
+    adjustQSliderWidth(false)
   }
 }
 
@@ -210,6 +224,7 @@ onMounted(() => {
       :traces="actualChartData"
       :shapes="shapes"
       @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
     />
     <div class="timetampSlider">
       <div class="timeStampControls">

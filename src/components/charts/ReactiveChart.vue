@@ -60,6 +60,13 @@ const emits = defineEmits({
     } else {
       return false
     }
+  },
+  'plotly-relayout': (plotlyRelayout) => {
+    if (plotlyRelayout) {
+      return true
+    } else {
+      return false
+    }
   }
 })
 
@@ -123,6 +130,7 @@ const init = () => {
       endDateTime = new Date(endDateTime)
       emits('plotly-time-filter', { startDateTime, endDateTime })
     }
+    emits('plotly-relayout', event)
   })
 
   graphDiv.on('plotly_click', (eventData) => {

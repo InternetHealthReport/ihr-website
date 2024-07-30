@@ -1,18 +1,15 @@
 <script setup>
-import { QBtn, QSelect, QInput, QSlider, QTable, QIcon, QTd, QCheckbox, uid } from 'quasar'
-import { computed, onMounted, ref, watch, unref } from 'vue'
+import { QBtn, QSelect, QInput, QSlider, uid } from 'quasar'
+import { onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
-import Plotly from 'plotly.js-dist'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import i18n from '@/i18n'
 import { getASNamesCountryMappings } from '../plugins/AsNames'
-import report from '@/plugins/report'
 import BGPPathsChart from '@/components/charts/BGPPathsChart.vue'
 import BGPLineChart from '@/components/charts/BGPLineChart.vue'
 import BGPMessagesTable from '@/components/tables/BGPMessagesTable.vue'
 
-const { utcString } = report()
 const { t } = i18n.global
 
 const maxHops = ref(9)
@@ -23,20 +20,12 @@ const socket = ref(null)
 const rawMessages = ref([])
 const filteredMessages = ref([])
 const uniquePeerMessages = new Map()
-
-
-const sankeyChart = ref(null)
 const communities = ref([])
 const selectedPeers = ref([])
 const defaultSelectedPeerCount = ref(5)
-
 const isLiveMode = ref(true)
-
 const selectedMaxTimestamp = ref(0)
 const usedMessagesCount = ref(0)
-const lineChart = ref(null)
-
-
 const asNames = ref({})
 
 const params = ref({
@@ -66,22 +55,11 @@ const resetData = () => {
   rawMessages.value = []
   filteredMessages.value = []
   uniquePeerMessages.clear()
-
-  search.value = ''
   selectedPeers.value = []
   defaultSelectedPeerCount.value = 5
   isLiveMode.value = true
-  // minTimestamp.value = Infinity
-  // maxTimestamp.value = -Infinity
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
-  // announcementsCount.value = {}
-  withdrawalsCount.value = {}
-  // chartData.value[0].x = []
-  // chartData.value[0].y = []
-  // chartData.value[1].x = []
-  // chartData.value[1].y = []
-  // removeVerticalLine()
 }
 
 const initRoute = () => {
@@ -356,29 +334,6 @@ const updateSelectedPeers = (obj) => {
 //   { deep: true }
 // )
 
-// watch(links, () => {
-//   // plotSankey()
-// })
-
-
-// watch(isLiveMode, () => {
-//   updateTimeRange()
-//   handleFilterMessages()
-// })
-
-// const initMessagesRecivedLineChart = () => {
-//   Plotly.newPlot(lineChart.value, chartData.value, chartLayout.value, config.value)
-//   lineChart.value.on('plotly_click', handlePlotlyClick)
-//   lineChart.value.on('plotly_relayout', adjustQSliderWidth)
-// }
-
-// const adjustQSliderWidth = () => {
-//   const rectElement = document.querySelector('rect.nsewdrag')
-//   const width = rectElement.getAttribute('width')
-//   const timestampSliderElement = document.querySelector('.timetampSlider')
-//   timestampSliderElement.style.width = `${width}px`
-// }
-
 watch(isPlaying, () => {
   toggleRisProtocol()
 })
@@ -388,8 +343,6 @@ onMounted(() => {
   connectWebSocket()
   fetchAllASInfo()
   fetchGithubFiles()
-  // initMessagesRecivedLineChart()
-  // adjustQSliderWidth()
 })
 </script>
 
