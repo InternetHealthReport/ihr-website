@@ -93,7 +93,7 @@ const renderChart = () => {
 				},
 				label: Array.from(nodes.value.keys()),
 				customdata: Array.from(nodes.value.values()),
-				// hovertemplate: 'AS%{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}<extra></extra>'
+				hovertemplate: 'AS%{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}<extra></extra>'
 			},
 			link: links.value
 		}

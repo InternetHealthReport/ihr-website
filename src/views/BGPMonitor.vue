@@ -193,12 +193,10 @@ const handleMessages = (data) => {
     defaultSelectedPeerCount.value--
   }
 
-  // updateTimeRange(data.floor_timestamp)
   rawMessages.value.push(data)
   if (isLiveMode.value) {
     handleFilterMessages(data)
   }
-  // generateLineChartData(data)
 }
 
 const findCommunityDescription = (communityToFind) => {
@@ -256,6 +254,15 @@ const disableLiveMode = () => {
 
 const enableLiveMode = () => {
   isLiveMode.value = true
+}
+
+const fetchAllASInfo = async () => {
+  try {
+    const data = await getASNamesCountryMappings()
+    asNames.value = data
+  } catch (error) {
+    console.error('Error fetching AS Info:', error)
+  }
 }
 
 // watch(
@@ -437,16 +444,6 @@ const enableLiveMode = () => {
 //   return false
 // }
 
-// const fetchAllASInfo = async () => {
-//   try {
-//     const data = await getASNamesCountryMappings()
-//     asNames.value = data
-//   } catch (error) {
-//     console.error('Error fetching AS Info:', error)
-//   }
-// }
-
-
 // const adjustQSliderWidth = () => {
 //   const rectElement = document.querySelector('rect.nsewdrag')
 //   const width = rectElement.getAttribute('width')
@@ -461,8 +458,8 @@ watch(isPlaying, () => {
 onMounted(() => {
 	initRoute()
   connectWebSocket()
+  fetchAllASInfo()
   // fetchGithubFiles()
-  // fetchAllASInfo()
   // initMessagesRecivedLineChart()
   // adjustQSliderWidth()
 })
