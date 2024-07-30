@@ -1,7 +1,7 @@
 <script setup>
 import { QBtn, QSlider } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
-import { ref, onMounted, watch, onBeforeUnmount } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import report from '@/plugins/report'
 
 const props  = defineProps({
@@ -123,7 +123,7 @@ const renderChart = (dates, announcementsTrace, withdrawalsTrace) => {
 			xanchor: 'center',
 			yanchor: 'bottom'
 		},
-		yaxis: { title: '123', rangemode: 'tozero' },
+		yaxis: { title: 'Number of Messages', rangemode: 'tozero' },
 		shapes: []
 	}
 

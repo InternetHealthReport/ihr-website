@@ -1,7 +1,7 @@
 <script setup>
 import { QBtn, QSelect, QInput, QSlider, uid } from 'quasar'
 import { onMounted, ref, watch } from 'vue'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import i18n from '@/i18n'
@@ -388,10 +388,10 @@ onMounted(() => {
       </div>
     </div>
     <GenericCardController
-      :title="'123'"
-      :sub-title="'123'"
-      :info-title="'123'"
-      :info-description="'123'"
+      :title="$t('bgpAsPaths.title')"
+      :sub-title="$t('bgpAsPaths.subTitle')"
+      :info-title="$t('bgpAsPaths.info.title')"
+      :info-description="$t('bgpAsPaths.info.description')"
       class="cardBGP"
     >
       <BGPPathsChart
@@ -405,10 +405,10 @@ onMounted(() => {
 			/>
     </GenericCardController>
     <GenericCardController
-      :title="'123'"
-      :sub-title="'123'"
-      :info-title="'123'"
-      :info-description="'123'"
+      :title="$t('bgpMessagesCount.title')"
+      :sub-title="$t('bgpMessagesCount.subTitle')"
+      :info-title="$t('bgpMessagesCount.info.title')"
+      :info-description="$t('bgpMessagesCount.info.description')"
       class="cardBGP"
     >
       <BGPLineChart 
@@ -424,10 +424,10 @@ onMounted(() => {
 			/>
     </GenericCardController>
     <GenericCardController
-      :title="'123'"
-      :sub-title="'123'"
-      :info-title="'123'"
-      :info-description="'123'"
+      :title="$t('bgpMessagesTable.title')"
+      :sub-title="$t('bgpMessagesTable.subTitle')"
+      :info-title="$t('bgpMessagesTable.info.title')"
+      :info-description="$t('bgpMessagesTable.info.description')"
       class="lastCardBGP"
     >
       <BGPMessagesTable
