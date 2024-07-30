@@ -125,6 +125,10 @@ watch(() => props.filteredMessages, () => {
   init()
 }, { deep: true })
 
+watch(() => props.selectedPeers, () => {
+  init()
+}, {deep: true})
+
 onMounted(() => {
   init()
 })

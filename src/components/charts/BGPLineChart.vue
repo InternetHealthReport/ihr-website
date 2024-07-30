@@ -15,10 +15,6 @@ const props  = defineProps({
 	maxHops: {
 		type: Number
 	},
-	selectedPeers: {
-		type: Array,
-		default: () => [],
-	},
 	bgpMessageType: {
 		type: Function
 	},

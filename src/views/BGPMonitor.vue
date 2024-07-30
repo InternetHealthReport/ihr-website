@@ -10,6 +10,7 @@ import { getASNamesCountryMappings } from '../plugins/AsNames'
 import report from '@/plugins/report'
 import BGPPathsChart from '@/components/charts/BGPPathsChart.vue'
 import BGPLineChart from '@/components/charts/BGPLineChart.vue'
+import BGPMessagesTable from '@/components/tables/BGPMessagesTable.vue'
 
 const { utcString } = report()
 const { t } = i18n.global
@@ -25,10 +26,10 @@ const uniquePeerMessages = new Map()
 
 
 const sankeyChart = ref(null)
-const search = ref('')
+const communities = ref([])
 const selectedPeers = ref([])
 const defaultSelectedPeerCount = ref(5)
-const communities = ref([])
+
 const isLiveMode = ref(true)
 
 const selectedMaxTimestamp = ref(0)
@@ -265,6 +266,73 @@ const fetchAllASInfo = async () => {
   }
 }
 
+const fetchGithubFiles = async () => {
+  const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
+  try {
+    const response = await axios.get(repoUrl)
+    const files = response.data
+    const txtFiles = files.filter(
+      (file) => file.name.startsWith('as') && file.name.endsWith('.txt')
+    )
+    const fetchFilePromises = txtFiles.map((file) => axios.get(file.download_url))
+    const fileContents = await Promise.all(fetchFilePromises)
+    const processedCommunities = fileContents.flatMap((content) => {
+      const lines = content.data.trim().split('\n')
+      return lines
+        .filter((line) => line.trim() !== '' && !line.startsWith('#'))
+        .map((line) => {
+          const [community, description] = line.split(',')
+          if (community && description) {
+            return { community: community.trim(), description: description.trim() }
+          }
+          return null // Return null for improperly formatted lines
+        })
+        .filter((entry) => entry !== null) // Filter out null entries
+    })
+    communities.value = processedCommunities
+  } catch (error) {
+    console.error('Error fetching the GitHUb files: ', error)
+  }
+}
+
+const matchPattern = (community, communityToFind) => {
+  if (community.split(':').length !== 2 || communityToFind.split(':').length !== 2) return false
+  // Exact Match
+  if (community === communityToFind) return true
+  const [pattern_1, pattern_2] = community.split(':')
+  const [comm_1, comm_2] = communityToFind.split(':')
+  // Range Match
+  if (pattern_2.includes('-')) {
+    const [start, end] = pattern_2.split('-').map(Number)
+    const commNumber = Number(comm_2)
+    if (pattern_1 === comm_1 && commNumber >= start && commNumber <= end) {
+      //console.log('Range', community, communityToFind)
+      return true
+    }
+  }
+  // Single Digit Wildcard Match
+  if (pattern_2.includes('x')) {
+    const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
+    if (pattern_1 === comm_1 && regex.test(comm_2)) {
+      //console.log('Wildcard', community, communityToFind)
+      return true
+    }
+  }
+  // Any Number Match
+  if (pattern_2.includes('nnn')) {
+    const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
+    if (pattern_1 === comm_1 && regex.test(comm_2)) {
+      //console.log('Any', community, communityToFind)
+      return true
+    }
+  }
+  return false
+}
+
+const updateSelectedPeers = (obj) => {
+  selectedPeers.value = obj
+}
+
 // watch(
 //   [params, maxHops],
 //   () => {
@@ -288,87 +356,10 @@ const fetchAllASInfo = async () => {
 //   { deep: true }
 // )
 
-// const layout = ref({
-//   font: {
-//     size: 12
-//   },
-//   margin: { t: 20, b: 20, l: 20, r: 20 }
-// })
-
-// const config = ref({ responsive: true })
-
-
 // watch(links, () => {
 //   // plotSankey()
 // })
 
-// const columns = [
-//   {
-//     name: 'peer_asn',
-//     required: true,
-//     label: 'Peer ASN',
-//     align: 'left',
-//     field: 'peer_asn'
-//   },
-//   {
-//     name: 'peer',
-//     align: 'left',
-//     label: 'Peer',
-//     field: 'peer'
-//   },
-//   {
-//     name: 'path',
-//     label: 'AS Path',
-//     field: 'path',
-//     align: 'left'
-//   },
-//   {
-//     name: 'as_info',
-//     label: 'AS Info',
-//     field: 'as_info',
-//     align: 'left'
-//   },
-//   {
-//     name: 'type',
-//     label: 'Type',
-//     field: 'type',
-//     align: 'left'
-//   },
-//   {
-//     name: 'timestamp',
-//     label: 'Timestamp',
-//     field: 'timestamp',
-//     align: 'left'
-//   },
-//   {
-//     name: 'community',
-//     label: 'Community',
-//     field: 'community',
-//     align: 'left'
-//   }
-// ]
-
-// const rows = computed(() =>
-//   filteredMessages.value.map((message) => ({
-//     peer_asn: message.peer_asn,
-//     peer: message.peer,
-//     path: message.path?.length > 0 ? message.path : null,
-//     as_info:
-//       message.as_info?.length > 0
-//         ? message.as_info
-//             .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
-//             .join('\n')
-//         : 'Null',
-//     type: bgpMessageType(message),
-//     timestamp: timestampToUTC(message.floor_timestamp),
-//     community:
-//       message.community?.length > 0
-//         ? message.community
-//             .map((c) => `${c.community}, ${'AS' + c.comm_1}-${c.description}`)
-//             .join('\n')
-//         : 'Null'
-//   }))
-// )
 
 // watch(isLiveMode, () => {
 //   updateTimeRange()
@@ -379,69 +370,6 @@ const fetchAllASInfo = async () => {
 //   Plotly.newPlot(lineChart.value, chartData.value, chartLayout.value, config.value)
 //   lineChart.value.on('plotly_click', handlePlotlyClick)
 //   lineChart.value.on('plotly_relayout', adjustQSliderWidth)
-// }
-
-// const fetchGithubFiles = async () => {
-//   const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
-//   try {
-//     const response = await axios.get(repoUrl)
-//     const files = response.data
-//     const txtFiles = files.filter(
-//       (file) => file.name.startsWith('as') && file.name.endsWith('.txt')
-//     )
-//     const fetchFilePromises = txtFiles.map((file) => axios.get(file.download_url))
-//     const fileContents = await Promise.all(fetchFilePromises)
-//     const processedCommunities = fileContents.flatMap((content) => {
-//       const lines = content.data.trim().split('\n')
-//       return lines
-//         .filter((line) => line.trim() !== '' && !line.startsWith('#'))
-//         .map((line) => {
-//           const [community, description] = line.split(',')
-//           if (community && description) {
-//             return { community: community.trim(), description: description.trim() }
-//           }
-//           return null // Return null for improperly formatted lines
-//         })
-//         .filter((entry) => entry !== null) // Filter out null entries
-//     })
-//     communities.value = processedCommunities
-//   } catch (error) {
-//     console.error('Error fetching the GitHUb files: ', error)
-//   }
-// }
-
-// const matchPattern = (community, communityToFind) => {
-//   if (community.split(':').length !== 2 || communityToFind.split(':').length !== 2) return false
-//   // Exact Match
-//   if (community === communityToFind) return true
-//   const [pattern_1, pattern_2] = community.split(':')
-//   const [comm_1, comm_2] = communityToFind.split(':')
-//   // Range Match
-//   if (pattern_2.includes('-')) {
-//     const [start, end] = pattern_2.split('-').map(Number)
-//     const commNumber = Number(comm_2)
-//     if (pattern_1 === comm_1 && commNumber >= start && commNumber <= end) {
-//       //console.log('Range', community, communityToFind)
-//       return true
-//     }
-//   }
-//   // Single Digit Wildcard Match
-//   if (pattern_2.includes('x')) {
-//     const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
-//     if (pattern_1 === comm_1 && regex.test(comm_2)) {
-//       //console.log('Wildcard', community, communityToFind)
-//       return true
-//     }
-//   }
-//   // Any Number Match
-//   if (pattern_2.includes('nnn')) {
-//     const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
-//     if (pattern_1 === comm_1 && regex.test(comm_2)) {
-//       //console.log('Any', community, communityToFind)
-//       return true
-//     }
-//   }
-//   return false
 // }
 
 // const adjustQSliderWidth = () => {
@@ -459,7 +387,7 @@ onMounted(() => {
 	initRoute()
   connectWebSocket()
   fetchAllASInfo()
-  // fetchGithubFiles()
+  fetchGithubFiles()
   // initMessagesRecivedLineChart()
   // adjustQSliderWidth()
 })
@@ -543,7 +471,6 @@ onMounted(() => {
       <BGPLineChart 
 				:rawMessages="rawMessages"
 				:maxHops="maxHops"
-				:selectedPeers="selectedPeers"
 				:bgpMessageType="bgpMessageType"
 				:usedMessagesCount="usedMessagesCount"
 				:isLiveMode="isLiveMode"
@@ -553,74 +480,23 @@ onMounted(() => {
 				@enable-live-mode="enableLiveMode"
 			/>
     </GenericCardController>
-    <!-- <GenericCardController
-      :title="$t('charts.bgpMessagesTable.title')"
-      :sub-title="$t('charts.bgpMessagesTable.subTitle')"
-      :info-title="$t('charts.bgpMessagesTable.info.title')"
-      :info-description="$t('charts.bgpMessagesTable.info.description')"
+    <GenericCardController
+      :title="'123'"
+      :sub-title="'123'"
+      :info-title="'123'"
+      :info-description="'123'"
       class="card"
     >
-      <div class="tableContainer">
-        <QTable
-          flat
-          :rows="rows"
-          :columns="columns"
-          :filter="search"
-          row-key="peer"
-          selection="multiple"
-          v-model:selected="selectedPeers"
-        >
-          <template v-slot:top-left>
-            <QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" />
-          </template>
-          <template v-slot:top-right>
-            <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
-              <template v-slot:append>
-                <QIcon name="search" />
-              </template>
-            </QInput>
-          </template>
-          <template v-slot:body-cell-peer_asn="props">
-            <QTd :props="props">
-              <RouterLink
-                :to="{ name: 'network', params: { id: `AS${props.row.peer_asn}` } }"
-                target="_blank"
-              >
-                {{ props.row.peer_asn }}
-              </RouterLink>
-            </QTd>
-          </template>
-          <template v-slot:body-cell-path="props">
-            <QTd :props="props">
-              <span class="asn-list">
-                <template v-if="props.row.path">
-                  <span v-for="(asn, index) in props.row.path" :key="index">
-                    <RouterLink
-                      :to="{ name: 'network', params: { id: `AS${asn}` } }"
-                      target="_blank"
-                    >
-                      {{ asn }}
-                    </RouterLink>
-                    <span v-if="index < props.row.path.length - 1">&nbsp;</span>
-                  </span>
-                </template>
-                <template v-else> Null </template>
-              </span>
-            </QTd>
-          </template>
-          <template v-slot:body-cell-as_info="props">
-            <QTd :props="props">
-              <pre>{{ props.row.as_info }}</pre>
-            </QTd>
-          </template>
-          <template v-slot:body-cell-community="props">
-            <QTd :props="props">
-              <pre>{{ props.row.community }}</pre>
-            </QTd>
-          </template>
-        </QTable>
-      </div>
-    </GenericCardController> -->
+      <BGPMessagesTable
+        :filteredMessages="filteredMessages"
+				:selectedPeers="selectedPeers"
+        :isLiveMode="isLiveMode"
+				:isPlaying="isPlaying"
+				:bgpMessageType="bgpMessageType"
+        @enable-live-mode="enableLiveMode"
+        @update-selected-peers="updateSelectedPeers"
+      />
+    </GenericCardController>
   </div>
 </template>
 
