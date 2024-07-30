@@ -144,9 +144,15 @@ onMounted(() => {
 			:chart-title="actualChartLayout && actualChartLayout.title"
 		/>
 	</div>
-	<div v-else>
+	<div v-else class="noData">
 		<h1>No data available</h1>
 		<h3>Try Changing the Input Parameters or you can wait</h3>
 		<h6>Note: Some prefixes become active after some time.</h6>
 	</div>
 </template>
+
+<style>
+.noData{
+  text-align: center;
+}
+</style>

@@ -337,7 +337,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div id="IHR_as-and-ixp-container" class="IHR_char-container">
+	<div class="IHR_char-container">
     <h1 class="text-center q-pa-xl">Real-Time BGP Monitor</h1>
     <div class="controls justify-center q-pa-md flex">
       <QInput
@@ -392,7 +392,7 @@ onMounted(() => {
       :sub-title="'123'"
       :info-title="'123'"
       :info-description="'123'"
-      class="card"
+      class="cardBGP"
     >
       <BGPPathsChart
 				:filteredMessages="filteredMessages"
@@ -409,7 +409,7 @@ onMounted(() => {
       :sub-title="'123'"
       :info-title="'123'"
       :info-description="'123'"
-      class="card"
+      class="cardBGP"
     >
       <BGPLineChart 
 				:rawMessages="rawMessages"
@@ -428,7 +428,7 @@ onMounted(() => {
       :sub-title="'123'"
       :info-title="'123'"
       :info-description="'123'"
-      class="card"
+      class="lastCardBGP"
     >
       <BGPMessagesTable
         :filteredMessages="filteredMessages"
@@ -447,42 +447,6 @@ onMounted(() => {
 .controls{
 	gap: 30px;
 }
-.chartContainer{
-  position: relative;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  width: 100%;
-}
-.sankeyChart{
-  height: 100vh;
-  width: 100%;
-}
-.timetampSlider {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: 0 auto;
-}
-.timetampSliderContainer{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-.timestampInfo{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.timeStampControls{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-}
 .controlsContainer{
   display: flex;
   align-items: center;
@@ -493,25 +457,11 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
 }
-.noData{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.cardBGP{
+  margin-top: 20px;
 }
-.tableContainer{
-  height: 100vh;
-  overflow-y: scroll;
-}
-.asn-list {
-  display: inline-flex;
-  flex-wrap: nowrap;
-}
-.asn-list > span {
-  display: inline;
+.lastCardBGP{
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 </style>

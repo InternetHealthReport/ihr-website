@@ -176,3 +176,13 @@ onMounted(() => {
     </template>
   </QTable>
 </template>
+
+<style>
+.asn-list {
+  display: inline-flex;
+  flex-wrap: nowrap;
+}
+.asn-list > span {
+  display: inline;
+}
+</style>

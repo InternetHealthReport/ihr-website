@@ -211,7 +211,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="rawMessages.length === 0">
+  <div v-if="rawMessages.length === 0" class="noData">
 		<h1>No data available</h1>
 		<h3>Try Changing the Input Parameters or you can wait</h3>
 		<h6>Note: Some prefixes become active after some time.</h6>
@@ -256,3 +256,36 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style>
+.noData{
+  text-align: center;
+}
+.timetampSlider {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+}
+.timeStampControls{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+.timetampSliderContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.timestampInfo{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+</style>
