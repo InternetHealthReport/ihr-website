@@ -92,7 +92,6 @@ const updateTimeRange = (timestamp) => {
 		}
   }
   if (props.isLiveMode) {
-		emit('setSelectedMaxTimestamp', maxTimestamp.value)
     selectedMaxTimestamp.value = maxTimestamp.value
   }
 }
@@ -131,6 +130,10 @@ const renderChart = (dates, announcementsTrace, withdrawalsTrace) => {
 		shapes: []
 	}
 
+  if (shapes.value.length) {
+    layout.shapes = shapes.value
+  }
+
   actualChartData.value = data
   actualChartLayout.value = layout
 }
@@ -139,9 +142,10 @@ const handlePlotlyClick = (event) => {
   const point = event.points[0]
   if (point) {
     const timestamp = Math.floor(new Date(point.x + 'Z').getTime() / 1000)
-    // disableLiveMode()
     selectedMaxTimestamp.value = timestamp
+    emit('disable-live-mode')
     addVerticalLine(timestamp)
+    emit('setSelectedMaxTimestamp', timestamp)
   }
 }
 
@@ -161,7 +165,6 @@ const addVerticalLine = (timestamp) => {
       dash: 'dashdot'
     }
   }]
-  // updateMessagesRecivedLineChart()
 }
 
 const enableLiveMode = () => {
@@ -172,6 +175,7 @@ const enableLiveMode = () => {
 const updateSlider = (timestamp) => {
 	emit('disable-live-mode')
 	addVerticalLine(timestamp)
+  emit('setSelectedMaxTimestamp', timestamp)
 }
 
 const init = async () => {
@@ -192,47 +196,49 @@ onMounted(() => {
 </script>
 
 <template>
-	<QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" />
-	<ReactiveChart 
-		:layout="actualChartLayout"
-		:traces="actualChartData"
-		:shapes="shapes"
-		@plotly-click="handlePlotlyClick"
-	/>
-	<div v-if="rawMessages.length === 0" class="noData">
+  <div v-if="rawMessages.length === 0">
 		<h1>No data available</h1>
 		<h3>Try Changing the Input Parameters or you can wait</h3>
 		<h6>Note: Some prefixes become active after some time.</h6>
 	</div>
-	<div class="timetampSlider">
-		<div class="timeStampControls">
-			<div v-if="!isLiveMode">
-				<QBtn @click="enableLiveMode" :color="'grey-9'" :label="'Switch to Live Mode'" />
-			</div>
-			<span>Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span>
-		</div>
-		<div class="timetampSliderContainer">
-			<QSlider
-				@update:model-value="updateSlider"
-				v-model="selectedMaxTimestamp"
-				:min="minTimestamp === Infinity ? 0 : minTimestamp"
-				:max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
-				label-always
-				:label-value="
-					maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
-				"
-				color="accent"
-			/>
-			<div class="timestampInfo">
-				<span
-					>Min Timestamp:
-					{{ minTimestamp === Infinity ? 'No Data' : timestampToUTC(minTimestamp) }}</span
-				>
-				<span
-					>Max Timestamp:
-					{{ maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(maxTimestamp) }}</span
-				>
-			</div>
-		</div>
-	</div>
+  <div v-else>
+    <QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" />
+    <ReactiveChart
+      :layout="actualChartLayout"
+      :traces="actualChartData"
+      :shapes="shapes"
+      @plotly-click="handlePlotlyClick"
+    />
+    <div class="timetampSlider">
+      <div class="timeStampControls">
+        <div v-if="!isLiveMode">
+          <QBtn @click="enableLiveMode" :color="'grey-9'" :label="'Switch to Live Mode'" />
+        </div>
+        <span>Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span>
+      </div>
+      <div class="timetampSliderContainer">
+        <QSlider
+          @update:model-value="updateSlider"
+          v-model="selectedMaxTimestamp"
+          :min="minTimestamp === Infinity ? 0 : minTimestamp"
+          :max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
+          label-always
+          :label-value="
+            maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
+          "
+          color="accent"
+        />
+        <div class="timestampInfo">
+          <span
+            >Min Timestamp:
+            {{ minTimestamp === Infinity ? 'No Data' : timestampToUTC(minTimestamp) }}</span
+          >
+          <span
+            >Max Timestamp:
+            {{ maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(maxTimestamp) }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

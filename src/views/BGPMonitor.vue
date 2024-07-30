@@ -1,6 +1,6 @@
 <script setup>
 import { QBtn, QSelect, QInput, QSlider, QTable, QIcon, QTd, QCheckbox, uid } from 'quasar'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, unref } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Plotly from 'plotly.js-dist'
 import axios from 'axios'
@@ -221,10 +221,9 @@ const handleFilterMessages = (data) => {
   } else {
     filteredMessages.value = []
     uniquePeerMessages.clear()
-    const filteredRawMessages = rawMessages.value.filter(
-      (message) => message.floor_timestamp <= selectedMaxTimestamp.value
+    const filteredRawMessages = rawMessages.value.filter((message) => 
+      message.floor_timestamp <= selectedMaxTimestamp.value
     )
-
     usedMessagesCount.value = filteredRawMessages.length
 
     filteredRawMessages.forEach((message) => {
@@ -246,6 +245,9 @@ const bgpMessageType = (data) => {
 
 const setSelectedMaxTimestamp = (val) => {
 	selectedMaxTimestamp.value = val
+  if (!isLiveMode.value) {
+    handleFilterMessages()
+  }
 }
 
 const disableLiveMode = () => {
@@ -361,29 +363,10 @@ const enableLiveMode = () => {
 //   }))
 // )
 
-// watch(selectedMaxTimestamp, () => {
-//   if (!isLiveMode.value) {
-//     handleFilterMessages()
-//     addVerticalLine(selectedMaxTimestamp.value)
-//   }
-// })
-
 // watch(isLiveMode, () => {
 //   updateTimeRange()
 //   handleFilterMessages()
 // })
-
-// const updateMessagesRecivedLineChart = () => {
-//   Plotly.update(lineChart.value, chartData.value, chartLayout.value, config.value)
-// }
-
-// watch(
-//   chartData,
-//   () => {
-//     updateMessagesRecivedLineChart()
-//   },
-//   { deep: true }
-// )
 
 // const initMessagesRecivedLineChart = () => {
 //   Plotly.newPlot(lineChart.value, chartData.value, chartLayout.value, config.value)
