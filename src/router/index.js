@@ -18,8 +18,8 @@ import Ranks from '../views/Ranks.vue'
 import Tr from '@/i18n/translation'
 import Observable from '../views/Observable.vue'
 import NetworkTopology from '../views/NetworkTopology.vue'
+import BGPMonitor from '../views/BGPMonitor.vue'
 import GSoC24TracerouteVisualization from '../views/GSoC24TracerouteVisualization.vue'
-import GSoC24RealTimeBGPMonitor from '../views/GSoC24RealTimeBGPMonitor.vue'
 
 
 const router = createRouter({
@@ -163,14 +163,14 @@ const router = createRouter({
           component: NetworkTopology
         },
         {
+          path: 'bgp-monitor',
+          name: 'bgp-monitor',
+          component: BGPMonitor
+        },
+        {
           path: 'gsoc24-traceroute-visualization',
           name: 'gsoc24-traceroute-visualization',
           component: GSoC24TracerouteVisualization
-        },
-        {
-          path: 'gsoc24-real-time-bgp-monitor',
-          name: 'gsoc24-real-time-bgp-monitor',
-          component: GSoC24RealTimeBGPMonitor
         },
       ]
     },
