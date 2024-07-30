@@ -17,8 +17,16 @@ const props  = defineProps({
 	},
 	bgpMessageType: {
 		type: Function
+	},
+  isLiveMode: {
+		type: Boolean
+	},
+	isPlaying: {
+		type: Boolean
 	}
 })
+
+const emit = defineEmits(['enable-live-mode'])
 
 const actualChartData = ref([])
 const actualChartLayout = ref({})
@@ -109,6 +117,10 @@ const init = () => {
   }
 }
 
+const enableLiveMode = () => {
+	emit('enable-live-mode')
+}
+
 watch(() => props.filteredMessages, () => {
   init()
 }, { deep: true })
@@ -120,7 +132,8 @@ onMounted(() => {
 
 <template>
 	<div v-if="props.filteredMessages.length">
-		<!-- <QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" /> -->
+		<QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
 		<ReactiveChart
 			:layout="actualChartLayout"
 			:traces="actualChartData"

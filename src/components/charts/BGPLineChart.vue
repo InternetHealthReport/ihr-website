@@ -169,7 +169,6 @@ const addVerticalLine = (timestamp) => {
 
 const enableLiveMode = () => {
 	emit('enable-live-mode')
-	shapes.value = []
 }
 
 const updateSlider = (timestamp) => {
@@ -190,6 +189,12 @@ watch(() => props.rawMessages, () => {
   init()
 }, { deep: true })
 
+watch(() => props.isLiveMode, () => {
+  if (props.isLiveMode) {
+    shapes.value = []
+  }
+})
+
 onMounted(() => {
   init()
 })
@@ -202,7 +207,8 @@ onMounted(() => {
 		<h6>Note: Some prefixes become active after some time.</h6>
 	</div>
   <div v-else>
-    <QBtn :color="isLiveMode && isPlaying ? 'negative' : 'grey-9'" :label="'Live'" />
+    <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     <ReactiveChart
       :layout="actualChartLayout"
       :traces="actualChartData"
@@ -211,9 +217,6 @@ onMounted(() => {
     />
     <div class="timetampSlider">
       <div class="timeStampControls">
-        <div v-if="!isLiveMode">
-          <QBtn @click="enableLiveMode" :color="'grey-9'" :label="'Switch to Live Mode'" />
-        </div>
         <span>Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span>
       </div>
       <div class="timetampSliderContainer">

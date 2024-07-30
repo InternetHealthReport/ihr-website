@@ -530,7 +530,10 @@ onMounted(() => {
 				:filteredMessages="filteredMessages"
 				:maxHops="maxHops"
 				:selectedPeers="selectedPeers"
+        :isLiveMode="isLiveMode"
+				:isPlaying="isPlaying"
 				:bgpMessageType="bgpMessageType"
+        @enable-live-mode="enableLiveMode"
 			/>
     </GenericCardController>
     <GenericCardController
