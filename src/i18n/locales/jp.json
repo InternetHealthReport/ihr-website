@@ -26,6 +26,10 @@
       "name": "Network Topology",
       "summary": "Network Topology Overview"
     },
+    "bgpMonitor": {
+      "name": "BGP Monitor",
+      "summary": "Real Time BGP Monitor"
+    },
     "globalReport": {
       "name": "Global",
       "summary": "Alarms reported across all networks"
@@ -61,14 +65,6 @@
     "gsoc24TracerouteVisualization": {
       "name": "[GSoC24] Traceroute visualization",
       "summary": "The GSoC24 Traceroute visualization project"
-    },
-    "gsoc24RealTimeBgpMonitor": {
-      "name": "[GSoC24] Real-time BGP monitor",
-      "summary": "The GSoC24 Real-time BGP monitor project"
-    },
-    "gsoc24NetworkTopologyOverview": {
-      "name": "[GSoC24] Network topology overview",
-      "summary": "The GSoC24 Network topology overview project"
     },
     "contact": "Contact",
     "documentation": "Documentation",
@@ -264,31 +260,6 @@
       "table": {
         "title": "Average throughput",
         "apiTitle": "Displayed data is available at MLab's API:"
-      }
-    },
-    "bgpAsPaths": {
-      "title": "BGP Announcements",
-      "subTitle": "AS Paths",
-      "info": {
-        "title": "BGP Announcements",
-        "description": "BGP Announcements (AS Paths) Sankey Chart"
-      }
-    },
-    "bgpMessagesCount": {
-      "title": "BGP Messages Received Over Time",
-      "subTitle": "Number of Messages",
-      "yaxis": "Number of Messages",
-      "info": {
-        "title": "BGP Messages Received Over Time",
-        "description": "Number of messages Received Over Time Line Chart"
-      }
-    },
-    "bgpMessagesTable": {
-      "title": "RIS Live BGP messages",
-      "subTitle": "RIS Live",
-      "info": {
-        "title": "RIS Live BGP messages",
-        "description": "Messages received from Ris Live, displaying only unique peer messages"
       }
     }
   },
@@ -1157,6 +1128,30 @@
         "title": "Hostname rankings",
         "caption": "Top Hostnames in "
       }
+    }
+  },
+  "bgpAsPaths": {
+    "title": "BGP Announcements",
+    "subTitle": "AS Paths",
+    "info": {
+      "title": "BGP Announcements",
+      "description": "BGP Announcements (AS Paths) Sankey Chart"
+    }
+  },
+  "bgpMessagesCount": {
+    "title": "BGP Messages Received Over Time",
+    "subTitle": "Number of Messages",
+    "info": {
+      "title": "BGP Messages Received Over Time",
+      "description": "Number of messages Received Over Time Line Chart"
+    }
+  },
+  "bgpMessagesTable": {
+    "title": "RIS Live BGP messages",
+    "subTitle": "RIS Live",
+    "info": {
+      "title": "RIS Live BGP messages",
+      "description": "Messages received from Ris Live, displaying only unique peer messages"
     }
   }
 }

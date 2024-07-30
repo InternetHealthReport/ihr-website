@@ -83,14 +83,14 @@ const  SIMPLE_MENU = [
         summary: 'header.networkTopology.summary',
       },
       {
+        entryName: 'header.bgpMonitor.name',
+        routeName: 'bgp-monitor',
+        summary: 'header.bgpMonitor.summary',
+      },
+      {
         entryName: 'header.gsoc24TracerouteVisualization.name',
         routeName: 'gsoc24-traceroute-visualization',
         summary: 'header.gsoc24TracerouteVisualization.summary',
-      },
-      {
-        entryName: 'header.gsoc24RealTimeBgpMonitor.name',
-        routeName: 'gsoc24-real-time-bgp-monitor',
-        summary: 'header.gsoc24RealTimeBgpMonitor.summary',
       },
     ],
   },
