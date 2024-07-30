@@ -2,6 +2,7 @@
 import { QBtn, QTable, QInput, QIcon, QTd } from 'quasar'
 import { ref, onMounted, computed, watch } from 'vue'
 import report from '@/plugins/report'
+import Tr from '@/i18n/translation'
 
 const props  = defineProps({
   filteredMessages: {
@@ -138,7 +139,7 @@ onMounted(() => {
     <template v-slot:body-cell-peer_asn="props">
       <QTd :props="props">
         <RouterLink
-          :to="{ name: 'network', params: { id: `AS${props.row.peer_asn}` } }"
+          :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${props.row.peer_asn}` } })"
           target="_blank"
         >
           {{ props.row.peer_asn }}
@@ -151,7 +152,7 @@ onMounted(() => {
           <template v-if="props.row.path">
             <span v-for="(asn, index) in props.row.path" :key="index">
               <RouterLink
-                :to="{ name: 'network', params: { id: `AS${asn}` } }"
+                :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${asn}` } })"
                 target="_blank"
               >
                 {{ asn }}

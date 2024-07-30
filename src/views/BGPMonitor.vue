@@ -27,6 +27,7 @@ const isLiveMode = ref(true)
 const selectedMaxTimestamp = ref(0)
 const usedMessagesCount = ref(0)
 const asNames = ref({})
+const inputDisable = ref(false)
 
 const params = ref({
   peer: '',
@@ -47,6 +48,7 @@ const route = useRoute()
 const router = useRouter()
 
 const toggleConnection = () => {
+  inputDisable.value = true
   isPlaying.value = !isPlaying.value
 }
 
@@ -60,6 +62,7 @@ const resetData = () => {
   isLiveMode.value = true
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
+  inputDisable.value = false
 }
 
 const initRoute = () => {
@@ -311,28 +314,15 @@ const updateSelectedPeers = (obj) => {
   selectedPeers.value = obj
 }
 
-// watch(
-//   [params, maxHops],
-//   () => {
-//     const query = {
-//       ...route.query,
-//       prefix: params.value.prefix,
-//       maxHops: maxHops.value,
-//       rrc: params.value.host
-//     }
-//     router.replace({ query })
-//   },
-//   { deep: true }
-// )
-
-// watch(
-//   params,
-//   () => {
-//     params.value.prefix = params.value.prefix.trim()
-//     resetData()
-//   },
-//   { deep: true }
-// )
+watch([params, maxHops], () => {
+  const query = {
+    ...route.query,
+    prefix: params.value.prefix,
+    maxHops: maxHops.value,
+    rrc: params.value.host
+  }
+  router.replace({ query })
+}, { deep: true })
 
 watch(isPlaying, () => {
   toggleRisProtocol()
@@ -356,7 +346,7 @@ onMounted(() => {
         :dense="true"
         color="accent"
         v-model="params.prefix"
-        :disable="isPlaying"
+        :disable="isPlaying || inputDisable"
       />
       <QSelect
         style="min-width: 100px"
@@ -366,7 +356,7 @@ onMounted(() => {
         label="RRC"
         :dense="true"
         color="accent"
-        :disable="isPlaying"
+        :disable="isPlaying || inputDisable"
       />
       <QSlider
         style="max-width: 250px"
