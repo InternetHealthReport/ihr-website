@@ -129,6 +129,12 @@ watch(() => props.selectedPeers, () => {
   init()
 }, {deep: true})
 
+watch(() => props.maxHops, () => {
+  if (!props.isPlaying || !props.isLiveMode) {
+    init()
+  }
+}, {deep: true})
+
 onMounted(() => {
   init()
 })
