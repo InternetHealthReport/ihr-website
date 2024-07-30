@@ -18,6 +18,7 @@ import Ranks from '../views/Ranks.vue'
 import Tr from '@/i18n/translation'
 import Observable from '../views/Observable.vue'
 import NetworkTopology from '../views/NetworkTopology.vue'
+import BGPMonitor from '../views/BGPMonitor.vue'
 
 
 const router = createRouter({
@@ -159,6 +160,11 @@ const router = createRouter({
           path: 'network-topology',
           name: 'network-topology',
           component: NetworkTopology
+        },
+        {
+          path: 'bgp-monitor',
+          name: 'bgp-monitor',
+          component: BGPMonitor
         }
       ]
     },

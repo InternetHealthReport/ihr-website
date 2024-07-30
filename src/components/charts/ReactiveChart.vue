@@ -26,7 +26,14 @@ const props = defineProps({
     required: false,
     default: 0,
   },
-  treemapNodeClicked: null
+  treemapNodeClicked: null,
+  newPlot: {
+    type: Boolean,
+    default: false
+  },
+  shapes: {
+    type: Array,
+  },
 })
 
 const emits = defineEmits({
@@ -49,6 +56,13 @@ const emits = defineEmits({
   },
   'plotly-time-filter': (plotlyClickedLegend) => {
     if (plotlyClickedLegend) {
+      return true
+    } else {
+      return false
+    }
+  },
+  'plotly-relayout': (plotlyRelayout) => {
+    if (plotlyRelayout) {
       return true
     } else {
       return false
@@ -83,7 +97,11 @@ const react = () => {
   if (props.traces == undefined) {
     return
   }
-  Plotly.react(myId.value, props.traces, layoutLocal.value)
+  if (props.newPlot) {
+    Plotly.newPlot(myId.value, props.traces, layoutLocal.value)
+  } else {
+    Plotly.react(myId.value, props.traces, layoutLocal.value)
+  }
   // emits('loaded')
 }
 
@@ -112,6 +130,7 @@ const init = () => {
       endDateTime = new Date(endDateTime)
       emits('plotly-time-filter', { startDateTime, endDateTime })
     }
+    emits('plotly-relayout', event)
   })
 
   graphDiv.on('plotly_click', (eventData) => {
@@ -152,6 +171,10 @@ watch(() => props.layout, () => {
 watch(() => props.yMax, (newValue) => {
   const graphDiv = myId.value
   Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+})
+watch(() => props.shapes, (newValue) => {
+  const graphDiv = myId.value
+  Plotly.relayout(graphDiv, 'shapes', newValue)
 })
 </script>
 

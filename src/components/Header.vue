@@ -82,6 +82,11 @@ const  SIMPLE_MENU = [
         routeName: 'network-topology',
         summary: 'header.networkTopology.summary',
       },
+      {
+        entryName: 'header.bgpMonitor.name',
+        routeName: 'bgp-monitor',
+        summary: 'header.bgpMonitor.summary',
+      },
     ],
   },
   {
