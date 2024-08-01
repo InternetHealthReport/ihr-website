@@ -106,6 +106,10 @@ const rows = computed(() =>
   }))
 )
 
+watch(() => props.selectedPeers, () => {
+  selectedPeersModel.value = props.selectedPeers
+})
+
 watch(selectedPeersModel, () => {
   emit('update-selected-peers', selectedPeersModel.value)
 })
