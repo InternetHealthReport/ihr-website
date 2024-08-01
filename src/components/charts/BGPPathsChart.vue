@@ -147,7 +147,7 @@ onMounted(() => {
 		<ReactiveChart
 			:layout="actualChartLayout"
 			:traces="actualChartData"
-			:chart-title="actualChartLayout && actualChartLayout.title"
+			:newPlot="true"
 		/>
 	</div>
 	<div v-else class="noData">
