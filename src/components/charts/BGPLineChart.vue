@@ -187,6 +187,10 @@ const adjustQSliderWidth = (relayout) => {
 }
 
 const init = async () => {
+  if (props.rawMessages.length == 1) {
+    minTimestamp.value = Infinity
+    maxTimestamp.value = -Infinity
+  }
   if (props.rawMessages && props.rawMessages.length > 0) {
 		updateTimeRange(props.rawMessages.at(-1).floor_timestamp)
     const { dates, announcementsTrace, withdrawalsTrace } = await generateLineChartData(props.rawMessages.at(-1))
