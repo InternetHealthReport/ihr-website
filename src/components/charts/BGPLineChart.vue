@@ -190,6 +190,7 @@ const init = async () => {
   if (props.rawMessages.length == 1) {
     minTimestamp.value = Infinity
     maxTimestamp.value = -Infinity
+    sliderWidthInit.value = false
   }
   if (props.rawMessages && props.rawMessages.length > 0) {
 		updateTimeRange(props.rawMessages.at(-1).floor_timestamp)
@@ -278,7 +279,6 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 30px;
 }
 .timetampSliderContainer{
   display: flex;
