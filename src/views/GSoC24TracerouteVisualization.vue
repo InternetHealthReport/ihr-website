@@ -6,6 +6,7 @@ import * as vNG from "v-network-graph";
 import dagre from "dagre";
 import RipeApi from "../plugins/RipeApi";
 import { useRoute } from "vue-router";
+import Plotly from 'plotly.js-dist';
 
 const route = useRoute();
 const atlas_api = inject("atlas_api");
@@ -36,6 +37,7 @@ const asnColors = ref({});
 const asnList = ref([]);
 const ipToAsnMap = ref({});
 const showAsnOverlay = ref(true);
+const rttOverTime = ref([]);
 
 const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -233,6 +235,10 @@ const processData = async (tracerouteData, loadProbes = false) => {
                     ttl: result.ttl,
                 });
 
+                if (result.rtt !== undefined && result.rtt !== null) {
+                    rttOverTime.value.push({ timestamp: probeData.timestamp, rtt: result.rtt });
+                }
+
                 const medianRtt = calculateMedian(newNodeInfo.hops.map(hop => hop.rtt));
                 if (medianRtt > highestMedianRtt) {
                     highestMedianRtt = medianRtt;
@@ -291,6 +297,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     assignAsnColors();
     updateDisplayedRttValues();
+    plotRTTChart(); // Plot RTT chart after processing data
 };
 
 const updateDisplayedRttValues = () => {
@@ -315,6 +322,17 @@ const updateDisplayedRttValues = () => {
 };
 
 watch([nodes, displayMode], updateDisplayedRttValues);
+
+const filteredRttOverTime = computed(() => {
+  if (timeRange.value.disable) {
+    return rttOverTime.value;
+  }
+  
+  const { min, max } = timeRange.value;
+  return rttOverTime.value.filter(dataPoint => {
+    return dataPoint.timestamp >= min && dataPoint.timestamp <= max;
+  });
+});
 
 const graph = ref();
 const tooltip = ref();
@@ -344,10 +362,8 @@ watch(
 );
 
 const eventHandlers = {
-    "node:pointerover": ({ node }) => {
-    },
-    "node:pointerout": () => {
-    },
+    "node:pointerover": ({ node }) => {},
+    "node:pointerout": () => {},
     "view:click": () => {
         clearHighlight();
         tooltipOpacity.value = 0;
@@ -482,6 +498,7 @@ const loadMeasurement = async () => {
     asnList.value = [];
     ipToAsnMap.value = {};
     showAsnOverlay.value = true;
+    rttOverTime.value = [];
 
     if (measurementID.value.trim()) {
         isLoading.value = true;
@@ -627,11 +644,63 @@ const toggleSelectAll = (value) => {
     }
 };
 
+const plotRTTChart = () => {
+  const timeInterval = 600; // 10-minute intervals
+  const groupedData = {};
+
+  filteredRttOverTime.value.forEach(dataPoint => {
+    const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval;
+    if (!groupedData[timeSlot]) {
+      groupedData[timeSlot] = [];
+    }
+    groupedData[timeSlot].push(dataPoint.rtt);
+  });
+
+  if (Object.keys(groupedData).length <= 1) {
+    const rttChartContainer = document.getElementById("rtt-chart");
+    rttChartContainer.innerHTML = "<p>Interval too small</p>";
+  } else {
+    const trace = {
+      x: [],
+      y: [],
+      type: "scatter",
+      mode: "lines+markers",
+      name: "Median RTT"
+    };
+
+    for (const [timeSlot, rtts] of Object.entries(groupedData)) {
+      trace.x.push(new Date(timeSlot * 1000));
+      trace.y.push(calculateMedian(rtts));
+    }
+
+    const data = [trace];
+    const layout = {
+      height: "300",
+      xaxis: { title: "Time" },
+      yaxis: { title: "Median RTT (ms)" },
+      margin: {
+        l: 0,
+        r: 0,
+        b: 70,
+        t: 70,
+      }
+    };
+
+    Plotly.newPlot("rtt-chart", data, layout);
+  }
+};
+
 onMounted(() => {
     const tracerouteid = route.query.tracerouteid;
     if (tracerouteid) {
         measurementID.value = tracerouteid;
         loadMeasurement();
+    }
+});
+
+watchEffect(() => {
+    if (rttOverTime.value.length > 0) {
+        plotRTTChart();
     }
 });
 </script>
@@ -717,6 +786,8 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <h3>Median RTT Over Time</h3>
+      <div id="rtt-chart"></div>
       <h3>Time Range</h3>
       <div class="time-range">
         <QRange v-model="timeRange" :disable="timeRange.disable" :min="minTime" :max="maxTime"
@@ -939,4 +1010,4 @@ onMounted(() => {
       text-align: center;
       margin-left: 12%;
   }
-</style> 
+</style>
