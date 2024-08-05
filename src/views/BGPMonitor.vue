@@ -17,16 +17,16 @@ const isPlaying = ref(false)
 const rrcList = ref([])
 const disableButton = ref(false)
 const socket = ref(null)
-const rawMessages = ref([])
-const filteredMessages = ref([])
-const uniquePeerMessages = new Map()
-const communities = ref([])
+const rawMessages = ref([]) //Used to store all the messages from the websocket
+const filteredMessages = ref([]) //Used to store unique peer messages uses "uniquePeerMessages = new Map()""
+const uniquePeerMessages = new Map() //Used to store unique peer messages (For simplification)
+const communities = ref([]) //Community data from the GitHub repository
 const selectedPeers = ref([])
-const defaultSelectedPeerCount = ref(5)
+const defaultSelectedPeerCount = ref(5) //Default number of peers to display in the sankey chart
 const isLiveMode = ref(true)
 const selectedMaxTimestamp = ref(0)
-const usedMessagesCount = ref(0)
-const asNames = ref({})
+const usedMessagesCount = ref(0) //Just for displaying how many messages are being used
+const asNames = ref({}) // AS Info from asnames.txt file
 const inputDisable = ref(false)
 
 const params = ref({
@@ -52,6 +52,7 @@ const toggleConnection = () => {
   isPlaying.value = !isPlaying.value
 }
 
+// Reset all the data
 const resetData = () => {
   isPlaying.value = false
   rawMessages.value = []
@@ -65,6 +66,7 @@ const resetData = () => {
   inputDisable.value = false
 }
 
+// Initialize the route
 const initRoute = () => {
   const query = { ...route.query }
   if (route.query.prefix) {
@@ -85,6 +87,7 @@ const initRoute = () => {
   router.replace({ query })
 }
 
+// Connect to the WebSocket
 const connectWebSocket = () => {
   socket.value = new WebSocket(`wss://ris-live.ripe.net/v1/ws/?client=ihr_${uid()}`)
   if (socket.value.readyState === WebSocket.CONNECTING) {
@@ -121,9 +124,10 @@ const connectWebSocket = () => {
 
 const toggleRisProtocol = () => {
   if (!socket.value) {
+    // If websocket is not connected
     connectWebSocket()
   } else if (rrcList.value.length === 0) {
-    sendSocketType('request_rrc_list', null)
+    sendSocketType('request_rrc_list', null) // Request the RRC list called only once
   } else if (isPlaying.value) {
     sendSocketType('ris_subscribe', params.value)
   } else {
@@ -131,6 +135,7 @@ const toggleRisProtocol = () => {
   }
 }
 
+// Handle the RRC list (host)
 const handleRRC = (data) => {
   if (data?.length > 0) {
     if (route.query.rrc) {
@@ -142,6 +147,7 @@ const handleRRC = (data) => {
   }
 }
 
+//Stringify and send the socket type
 const sendSocketType = (protocol, paramData) => {
   socket.value.send(
     JSON.stringify({
@@ -167,6 +173,7 @@ const handleMessages = (data) => {
   // Creating new property to store the floor timestamp
   data.floor_timestamp = Math.floor(data.timestamp)
 
+  //Automatically select the first 5 peers for displaying the sankey chart
   if (
     defaultSelectedPeerCount.value > 0 &&
     !selectedPeers.value.some((peer) => peer.peer === data.peer)
@@ -176,16 +183,19 @@ const handleMessages = (data) => {
   }
 
   rawMessages.value.push(data)
+  //When in live mode
   if (isLiveMode.value) {
     handleFilterMessages(data)
   }
 }
 
+// Find the community description
 const findCommunityDescription = (communityToFind) => {
   const community = communities.value.find((c) => matchPattern(c.community, communityToFind))
   return community ? community.description : 'Null'
 }
 
+// Get the AS (AS Number, AS Name and Country Code) from the asnames.txt file
 const getASInfo = (asn) => {
   if (asNames.value[asn]) {
     return { asn: asn, ...asNames.value[asn] }
@@ -194,15 +204,18 @@ const getASInfo = (asn) => {
   }
 }
 
+// Filter bgp messages (stores only unique peer messages)
 const handleFilterMessages = (data) => {
   if (data) {
+    //When new message is received by the websocket
     uniquePeerMessages.set(data.peer, data)
     usedMessagesCount.value = rawMessages.value.length
   } else {
+    //When using the time slider
     filteredMessages.value = []
     uniquePeerMessages.clear()
-    const filteredRawMessages = rawMessages.value.filter((message) => 
-      message.floor_timestamp <= selectedMaxTimestamp.value
+    const filteredRawMessages = rawMessages.value.filter(
+      (message) => message.floor_timestamp <= selectedMaxTimestamp.value
     )
     usedMessagesCount.value = filteredRawMessages.length
 
@@ -213,6 +226,7 @@ const handleFilterMessages = (data) => {
   filteredMessages.value = Array.from(uniquePeerMessages.values())
 }
 
+// Determine the BGP message type
 const bgpMessageType = (data) => {
   if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
     return 'Announce'
@@ -224,7 +238,7 @@ const bgpMessageType = (data) => {
 }
 
 const setSelectedMaxTimestamp = (val) => {
-	selectedMaxTimestamp.value = val
+  selectedMaxTimestamp.value = val
   if (!isLiveMode.value) {
     handleFilterMessages()
   }
@@ -238,6 +252,7 @@ const enableLiveMode = () => {
   isLiveMode.value = true
 }
 
+// Fetching the AS Info from the asnames.txt file
 const fetchAllASInfo = async () => {
   try {
     const data = await getASNamesCountryMappings()
@@ -247,6 +262,7 @@ const fetchAllASInfo = async () => {
   }
 }
 
+// Fetching the communities from the GitHub repository
 const fetchGithubFiles = async () => {
   const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
   try {
@@ -276,13 +292,16 @@ const fetchGithubFiles = async () => {
   }
 }
 
+//Marching the community pattern
 const matchPattern = (community, communityToFind) => {
+  //This doesnot work with large communities, for example 65535:0:12345, 65535:nnn:0, 65535:123:100x.
   if (community.split(':').length !== 2 || communityToFind.split(':').length !== 2) return false
-  // Exact Match
+  // Exact match, for example: 65535:666, only matching this exact community
   if (community === communityToFind) return true
+
   const [pattern_1, pattern_2] = community.split(':')
   const [comm_1, comm_2] = communityToFind.split(':')
-  // Range Match
+  // Range match, for example: 65535:0-100, matching anything from 65535:0 upto 65535:100
   if (pattern_2.includes('-')) {
     const [start, end] = pattern_2.split('-').map(Number)
     const commNumber = Number(comm_2)
@@ -291,7 +310,7 @@ const matchPattern = (community, communityToFind) => {
       return true
     }
   }
-  // Single Digit Wildcard Match
+  // Single digit wildcard match, for example: 65535:x0, matching for 65535:00, 65535:10, 65535:20, etc
   if (pattern_2.includes('x')) {
     const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
     if (pattern_1 === comm_1 && regex.test(comm_2)) {
@@ -299,7 +318,7 @@ const matchPattern = (community, communityToFind) => {
       return true
     }
   }
-  // Any Number Match
+  // Any Number Match, for example: 65535:nnn, which matches any community staring with 65535: followed by any number.
   if (pattern_2.includes('nnn')) {
     const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
     if (pattern_1 === comm_1 && regex.test(comm_2)) {
@@ -314,22 +333,26 @@ const updateSelectedPeers = (obj) => {
   selectedPeers.value = obj
 }
 
-watch([params, maxHops], () => {
-  const query = {
-    ...route.query,
-    prefix: params.value.prefix,
-    maxHops: maxHops.value,
-    rrc: params.value.host
-  }
-  router.replace({ query })
-}, { deep: true })
+watch(
+  [params, maxHops],
+  () => {
+    const query = {
+      ...route.query,
+      prefix: params.value.prefix,
+      maxHops: maxHops.value,
+      rrc: params.value.host
+    }
+    router.replace({ query })
+  },
+  { deep: true }
+)
 
 watch(isPlaying, () => {
   toggleRisProtocol()
 })
 
 onMounted(() => {
-	initRoute()
+  initRoute()
   connectWebSocket()
   fetchAllASInfo()
   fetchGithubFiles()
@@ -337,7 +360,7 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="IHR_char-container">
+  <div class="IHR_char-container">
     <h1 class="text-center q-pa-xl">Real-Time BGP Monitor</h1>
     <div class="controls justify-center q-pa-md flex">
       <QInput
@@ -395,14 +418,14 @@ onMounted(() => {
       class="cardBGP"
     >
       <BGPPathsChart
-				:filteredMessages="filteredMessages"
-				:maxHops="maxHops"
-				:selectedPeers="selectedPeers"
+        :filteredMessages="filteredMessages"
+        :maxHops="maxHops"
+        :selectedPeers="selectedPeers"
         :isLiveMode="isLiveMode"
-				:isPlaying="isPlaying"
-				:bgpMessageType="bgpMessageType"
+        :isPlaying="isPlaying"
+        :bgpMessageType="bgpMessageType"
         @enable-live-mode="enableLiveMode"
-			/>
+      />
     </GenericCardController>
     <GenericCardController
       :title="$t('bgpMessagesCount.title')"
@@ -411,17 +434,17 @@ onMounted(() => {
       :info-description="$t('bgpMessagesCount.info.description')"
       class="cardBGP"
     >
-      <BGPLineChart 
-				:rawMessages="rawMessages"
-				:maxHops="maxHops"
-				:bgpMessageType="bgpMessageType"
-				:usedMessagesCount="usedMessagesCount"
-				:isLiveMode="isLiveMode"
-				:isPlaying="isPlaying"
-				@setSelectedMaxTimestamp="setSelectedMaxTimestamp"
-				@disable-live-mode="disableLiveMode"
-				@enable-live-mode="enableLiveMode"
-			/>
+      <BGPLineChart
+        :rawMessages="rawMessages"
+        :maxHops="maxHops"
+        :bgpMessageType="bgpMessageType"
+        :usedMessagesCount="usedMessagesCount"
+        :isLiveMode="isLiveMode"
+        :isPlaying="isPlaying"
+        @setSelectedMaxTimestamp="setSelectedMaxTimestamp"
+        @disable-live-mode="disableLiveMode"
+        @enable-live-mode="enableLiveMode"
+      />
     </GenericCardController>
     <GenericCardController
       :title="$t('bgpMessagesTable.title')"
@@ -432,10 +455,10 @@ onMounted(() => {
     >
       <BGPMessagesTable
         :filteredMessages="filteredMessages"
-				:selectedPeers="selectedPeers"
+        :selectedPeers="selectedPeers"
         :isLiveMode="isLiveMode"
-				:isPlaying="isPlaying"
-				:bgpMessageType="bgpMessageType"
+        :isPlaying="isPlaying"
+        :bgpMessageType="bgpMessageType"
         @enable-live-mode="enableLiveMode"
         @update-selected-peers="updateSelectedPeers"
       />
@@ -444,23 +467,23 @@ onMounted(() => {
 </template>
 
 <style>
-.controls{
-	gap: 30px;
+.controls {
+  gap: 30px;
 }
-.controlsContainer{
+.controlsContainer {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 50px;
 }
-.stats{
+.stats {
   display: flex;
   flex-direction: column;
 }
-.cardBGP{
+.cardBGP {
   margin-top: 20px;
 }
-.lastCardBGP{
+.lastCardBGP {
   margin-top: 20px;
   margin-bottom: 20px;
 }
