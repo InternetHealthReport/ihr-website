@@ -1,3 +1,142 @@
+<template>
+    <div class="main-container">
+        <h1>Traceroute Visualization</h1>
+        <QInput v-model="measurementID" @keyup.enter="loadMeasurement" placeholder="Enter RIPE ATLAS traceroute measurement ID">
+            <template v-slot:prepend>
+                <QIcon name="web" />
+            </template>
+            <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
+                <QIcon name="search" />
+            </QBtn>
+        </QInput>
+        <div class="graph-container">
+            <QSpinner v-if="isLoading" color="primary" />
+            <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
+                           :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading" v-model:zoom-level="zoomLevel" />
+            <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
+            <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
+                <div style="display: flex; align-items: center;">
+                    <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
+                </div>
+                <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available"}}</div>
+                <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
+                <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
+                <div><strong>IP:</strong> {{ tooltipData.label }}</div>
+                <div><strong>AS:</strong> {{ tooltipData?.data?.asns[0]?.asn ? tooltipData.data.asns[0].asn + ` (${tooltipData.data.asns[0].holder})` : "Not available"}}</div>
+                <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
+                <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available"}}</div>
+                <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
+                <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
+                <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
+                <div v-if="tooltipData.address_v6"><strong>IPv6 Address:</strong> {{ tooltipData.address_v6 }}</div>
+                <div v-if="tooltipData.country_code"><strong>Country Code:</strong> {{ tooltipData.country_code }}</div>
+                <div v-if="tooltipData.asn_v4"><strong>ASN4:</strong> {{ tooltipData.asn_v4 }}</div>
+                <div v-if="tooltipData.asn_v6"><strong>ASN6:</strong> {{ tooltipData.asn_v6 }}</div>
+                <div v-if="tooltipData.id"><strong>Probe ID:</strong> {{ tooltipData.id }}</div>
+                <div v-if="tooltipData.description"><strong>Probe Description:</strong> {{ tooltipData.description }}</div>
+                <div v-if="tooltipData.status?.name"><strong>Status:</strong> {{ tooltipData.status.name }}</div>
+                <div v-if="tooltipData.status?.since"><strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}</div>
+            </div>
+            <div v-if="Object.keys(nodes).length > 0" class="measurement-info-overlay">
+                <div><strong>Description:</strong> {{ metaData.description }}</div>
+                <div><strong>Target:</strong> {{ metaData.target }}</div>
+                <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
+                <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
+                <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
+                <div><strong>Status:</strong> {{ metaData.status.name }}</div>
+            </div>
+            <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
+                <QRadio v-model="displayMode" val="normal" label="Normal Mode" />
+                <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
+                <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
+                <QBtn v-if="displayMode === 'asn'" flat dense @click="showAsnOverlay = !showAsnOverlay">
+                    Toggle ASN Overlay
+                </QBtn>
+            </div>
+            <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
+                <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }"></span> <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}</div>
+                <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }"></span> <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}</div>
+            </div>
+            <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
+                <div class="row items-center">
+                    <div class="col">
+                        <div class="rttLabel">RTT</div>
+                    </div>
+                    <div class="col">
+                        <div class="scaleLabel">0%</div>
+                        <div class="scale">
+                            <div v-for="(percentage, index) in Array.from({length: 10}, (_, i) => minDisplayedRtt + i * (maxDisplayedRtt - minDisplayedRtt) / 9)" :key="index" class="scaleColor" :style="{backgroundColor: rttColor(percentage)}"></div>
+                        </div>
+                        <div class="scaleLabel">100%</div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay" class="asn-info-overlay" :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }">
+                <div class="asn-grid">
+                    <div v-for="asn in filteredAsnList" :key="asn" :style="{ backgroundColor: asnColors[asn] }" class="asn-box">
+                        {{ asn }}
+                    </div>
+                </div>
+            </div>
+            <div class="view-control-overlay">
+                <QBtn icon="zoom_in" @click="zoomIn" />
+                <QBtn icon="zoom_out" @click="zoomOut" />
+                <QBtn icon="fullscreen" @click="toggleFullScreen" />
+            </div>
+        </div>
+        <h3>Median RTT Over Time</h3>
+        <div id="rtt-chart"></div>
+        <h3>Time Range</h3>
+        <div class="time-range">
+            <QRange v-model="timeRange" :disable="timeRange.disable" :min="minTime" :max="maxTime"
+                    :left-label-value="leftLabelValue" :right-label-value="rightLabelValue" label-always
+                    drag-range @change="loadMeasurementOnTimeRange" />
+        </div>
+        <div class="probe-selection">
+            <h3>Select Probes</h3>
+            <QInput v-model="searchQuery" placeholder="Search probes..." :disable="Object.keys(nodes).length < 1" />
+            <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
+                <template v-slot:header="props">
+                    <QTr :props="props">
+                        <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
+                            <template v-if="col.name === 'probe'">
+                                <QCheckbox v-model="selectAllProbes" @update:model-value="toggleSelectAll" :disable="Object.keys(nodes).length < 1" />
+                            </template>
+                            <template v-else>
+                                {{ col.label }}
+                            </template>
+                        </QTd>
+                    </QTr>
+                </template>
+                <template v-slot:body="props">
+                    <QTr :props="props">
+                        <QTd>
+                            <QCheckbox v-model="selectedProbes" :val="props.row.probe" :label="props.row.probe" />
+                        </QTd>
+                        <QTd>{{ props.row.address_v4 }}</QTd>
+                        <QTd>{{ props.row.address_v6 }}</QTd>
+                        <QTd>{{ props.row.country_code }}</QTd>
+                        <QTd>{{ props.row.asn_v4 }}</QTd>
+                        <QTd>{{ props.row.asn_v6 }}</QTd>
+                    </QTr>
+                </template>
+            </QTable>
+        </div>
+        <div class="destination-selection">
+            <h3>Select Destination</h3>
+            <QTable :rows="[{ destination: 'all' }, ...allDestinations.map(dest => ({ destination: dest }))]" :columns="destinationColumns" row-key="destination">
+                <template v-slot:body="props">
+                    <QTr :props="props">
+                        <QTd>
+                            <QRadio v-model="selectedDestination" :val="props.row.destination" :label="props.row.destination === 'all' ? 'All Destinations' : props.row.destination" />
+                        </QTd>
+                    </QTr>
+                </template>
+            </QTable>
+        </div>
+    </div>
+</template>
+
 <script setup>
 import { ref, inject, computed, watchEffect, watch, nextTick, onMounted } from "vue";
 import { QInput, QIcon, QBtn, QSpinner, QRange, QCheckbox, QTable, QTd, QTr, QRadio } from "quasar";
@@ -6,7 +145,7 @@ import * as vNG from "v-network-graph";
 import dagre from "dagre";
 import RipeApi from "../plugins/RipeApi";
 import { useRoute } from "vue-router";
-import Plotly from 'plotly.js-dist';
+import Plotly from "plotly.js-dist";
 
 const route = useRoute();
 const atlas_api = inject("atlas_api");
@@ -38,6 +177,7 @@ const asnList = ref([]);
 const ipToAsnMap = ref({});
 const showAsnOverlay = ref(true);
 const rttOverTime = ref([]);
+const zoomLevel = ref(0);
 
 const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -690,6 +830,27 @@ const plotRTTChart = () => {
   }
 };
 
+const zoomIn = () => {
+    zoomLevel.value *= 1.2;
+};
+
+const zoomOut = () => {
+    zoomLevel.value *= 0.8;
+};
+
+const toggleFullScreen = () => {
+    const graphContainer = document.querySelector('.graph-container');
+    if (!document.fullscreenElement) {
+        graphContainer.requestFullscreen().then(() => {
+            graphContainer.style.background = 'white';
+        });
+    } else {
+        document.exitFullscreen().then(() => {
+            graphContainer.style.background = 'white';
+        });
+    }
+};
+
 onMounted(() => {
     const tracerouteid = route.query.tracerouteid;
     if (tracerouteid) {
@@ -705,309 +866,185 @@ watchEffect(() => {
 });
 </script>
 
-<template>
-    <div class="main-container">
-      <h1>Traceroute Visualization</h1>
-      <QInput v-model="measurementID" @keyup.enter="loadMeasurement" placeholder="Enter RIPE ATLAS traceroute measurement ID">
-        <template v-slot:prepend>
-          <QIcon name="web" />
-        </template>
-        <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
-          <QIcon name="search" />
-        </QBtn>
-      </QInput>
-      <div class="graph-container">
-        <QSpinner v-if="isLoading" color="primary" />
-        <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
-                       :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading" zoom-level="0" />
-        <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
-        <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
-          <div style="display: flex; align-items: center;">
-            <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
-          </div>
-          <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available"}}</div>
-          <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
-          <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
-          <div><strong>IP:</strong> {{ tooltipData.label }}</div>
-          <div><strong>AS:</strong> {{ tooltipData?.data?.asns[0]?.asn ? tooltipData.data.asns[0].asn + ` (${tooltipData.data.asns[0].holder})` : "Not available"}}</div>
-          <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
-          <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available"}}</div>
-          <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
-          <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
-          <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
-          <div v-if="tooltipData.address_v6"><strong>IPv6 Address:</strong> {{ tooltipData.address_v6 }}</div>
-          <div v-if="tooltipData.country_code"><strong>Country Code:</strong> {{ tooltipData.country_code }}</div>
-          <div v-if="tooltipData.asn_v4"><strong>ASN4:</strong> {{ tooltipData.asn_v4 }}</div>
-          <div v-if="tooltipData.asn_v6"><strong>ASN6:</strong> {{ tooltipData.asn_v6 }}</div>
-          <div v-if="tooltipData.id"><strong>Probe ID:</strong> {{ tooltipData.id }}</div>
-          <div v-if="tooltipData.description"><strong>Probe Description:</strong> {{ tooltipData.description }}</div>
-          <div v-if="tooltipData.status?.name"><strong>Status:</strong> {{ tooltipData.status.name }}</div>
-          <div v-if="tooltipData.status?.since"><strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}</div>
-        </div>
-        <div v-if="Object.keys(nodes).length > 0" class="measurement-info-overlay">
-          <div><strong>Description:</strong> {{ metaData.description }}</div>
-          <div><strong>Target:</strong> {{ metaData.target }}</div>
-          <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
-          <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
-          <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
-          <div><strong>Status:</strong> {{ metaData.status.name }}</div>
-        </div>
-        <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
-          <QRadio v-model="displayMode" val="normal" label="Normal Mode" />
-          <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
-          <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
-          <QBtn v-if="displayMode === 'asn'" flat dense @click="showAsnOverlay = !showAsnOverlay">
-            Toggle ASN Overlay
-          </QBtn>
-        </div>
-        <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
-          <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }"></span> <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}</div>
-          <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }"></span> <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}</div>
-        </div>
-        <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
-          <div class="row items-center">
-            <div class="col">
-              <div class="rttLabel">RTT</div>
-            </div>
-            <div class="col">
-              <div class="scaleLabel">0%</div>
-              <div class="scale">
-                <div v-for="(percentage, index) in Array.from({length: 10}, (_, i) => minDisplayedRtt + i * (maxDisplayedRtt - minDisplayedRtt) / 9)" :key="index" class="scaleColor" :style="{backgroundColor: rttColor(percentage)}"></div>
-              </div>
-              <div class="scaleLabel">100%</div>
-            </div>
-          </div>
-        </div>
-        <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay" class="asn-info-overlay" :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }">
-          <div class="asn-grid">
-            <div v-for="asn in filteredAsnList" :key="asn" :style="{ backgroundColor: asnColors[asn] }" class="asn-box">
-              {{ asn }}
-            </div>
-          </div>
-        </div>
-      </div>
-      <h3>Median RTT Over Time</h3>
-      <div id="rtt-chart"></div>
-      <h3>Time Range</h3>
-      <div class="time-range">
-        <QRange v-model="timeRange" :disable="timeRange.disable" :min="minTime" :max="maxTime"
-                :left-label-value="leftLabelValue" :right-label-value="rightLabelValue" label-always
-                drag-range @change="loadMeasurementOnTimeRange" />
-      </div>
-      <div class="probe-selection">
-        <h3>Select Probes</h3>
-        <QInput v-model="searchQuery" placeholder="Search probes..." :disable="Object.keys(nodes).length < 1" />
-        <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
-          <template v-slot:header="props">
-            <QTr :props="props">
-              <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
-                <template v-if="col.name === 'probe'">
-                  <QCheckbox v-model="selectAllProbes" @update:model-value="toggleSelectAll" :disable="Object.keys(nodes).length < 1"/>
-                </template>
-                <template v-else>
-                  {{ col.label }}
-                </template>
-              </QTd>
-            </QTr>
-          </template>
-          <template v-slot:body="props">
-            <QTr :props="props">
-              <QTd>
-                <QCheckbox v-model="selectedProbes" :val="props.row.probe" :label="props.row.probe" />
-              </QTd>
-              <QTd>{{ props.row.address_v4 }}</QTd>
-              <QTd>{{ props.row.address_v6 }}</QTd>
-              <QTd>{{ props.row.country_code }}</QTd>
-              <QTd>{{ props.row.asn_v4 }}</QTd>
-              <QTd>{{ props.row.asn_v6 }}</QTd>
-            </QTr>
-          </template>
-        </QTable>
-      </div>
-      <div class="destination-selection">
-        <h3>Select Destination</h3>
-        <QTable :rows="[{ destination: 'all' }, ...allDestinations.map(dest => ({ destination: dest }))]" :columns="destinationColumns" row-key="destination">
-          <template v-slot:body="props">
-            <QTr :props="props">
-              <QTd>
-                <QRadio v-model="selectedDestination" :val="props.row.destination" :label="props.row.destination === 'all' ? 'All Destinations' : props.row.destination" />
-              </QTd>
-            </QTr>
-          </template>
-        </QTable>
-      </div>
-    </div>
-</template>
-
 <style scoped>
-  .main-container {
-      padding: 2em;
-  }
-  
-  .probe-selection {
-      margin-bottom: 2em;
-  }
-  
-  .destination-selection {
-      margin-bottom: 2em;
-  }
-  
-  .checkbox-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-      gap: 1em;
-  }
-  
-  .graph-container {
-      margin-bottom: 3em;
-      position: relative;
-      border-radius: 5px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 75vh;
-      width: 100%;
-      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
-  }
-  
-  .placeholder-message {
-      display: flex; 
-      justify-content: center;
-      align-items: center;
-      height: 100%;
-      color: #666;
-      font-size: 1.2em;
-  }
-  
-  .tooltip {
-      padding: 1em;
-      position: absolute;
-      top: 0;
-      left: 0;
-      opacity: 0;
-      width: 30em;
-      font-size: 12px;
-      background-color: #fff0bd;
-      border: 1px solid #ffb950;
-      box-shadow: 2px 2px 2px #aaa;
-      transition: opacity 0.2s linear;
-      z-index: 10;
-  }
-  
-  .nodeTypeDot {
-      width: 10px; 
-      height: 10px; 
-      border-radius: 50%; 
-      margin-right: 5px;
-  }
-  
-  .rtt-dot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      margin-right: 5px;
-  }
-  
-  .time-range {
-      padding: 2em;
-      width: 95vw;
-      margin: 0 auto;
-  }
-  
-  .measurement-info-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-      border-right: 1px solid #ccc;
-      font-size: 12px;
-  }
-  
-  .mode-toggle-overlay {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-      border-left: 1px solid #ccc;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-  }
-  
-  .rtt-info-overlay {
-      position: absolute;
-      top: 0;
-      border-right: 1px solid #ccc;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-      border-left: 1px solid #ccc;
-      font-size: 12px;
-  }
-  
-  .asn-info-overlay {
-      position: absolute;
-      top: 0;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
-      border-left: 1px solid #ccc;
-      border-right: 1px solid #ccc;
-      font-size: 12px;
-      display: flex;
-      flex-direction: column;
-  }
-  
-  .asn-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 1em;
-  }
-  
-  .asn-box {
-      padding: 0.2em;
-      text-align: center;
-      color: #fff;
-      font-size: 0.9em;
-  }
-  
-  .legend {
-      text-align: center;
-      position: absolute;
-      z-index: 1;
-      top: 25%;
-      right: 1%;
-  }
-  
-  .scale {
-      display: flex;
-      flex-direction: column;
-      height: 250px;
-      border: 1px solid #ccc;
-      margin-left: 30%;
-      margin-right: 30%;
-  }
-  
-  .scaleColor {
-      flex: 1;
-      width: 100%;
-  }
-  
-  .rttLabel {
-      transform: rotate(-90deg);
-      font-size: 17px;
-      font-weight: bold;
-      margin-left: 50%;
-  }
-  
-  .scaleLabel {
-      font-size: 14px;
-      text-align: center;
-      margin-left: 12%;
-  }
+.main-container {
+    padding: 2em;
+}
+
+.probe-selection {
+    margin-bottom: 2em;
+}
+
+.destination-selection {
+    margin-bottom: 2em;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1em;
+}
+
+.graph-container {
+    margin-bottom: 3em;
+    position: relative;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75vh;
+    width: 100%;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
+    background: white; /* Set initial background to white */
+}
+
+.placeholder-message {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #666;
+    font-size: 1.2em;
+}
+
+.tooltip {
+    padding: 1em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 30em;
+    font-size: 12px;
+    background-color: #fff0bd;
+    border: 1px solid #ffb950;
+    box-shadow: 2px 2px 2px #aaa;
+    transition: opacity 0.2s linear;
+    z-index: 10;
+}
+
+.nodeTypeDot {
+    width: 10px; 
+    height: 10px; 
+    border-radius: 50%; 
+    margin-right: 5px;
+}
+
+.rtt-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.time-range {
+    padding: 2em;
+    width: 95vw;
+    margin: 0 auto;
+}
+
+.measurement-info-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    font-size: 12px;
+}
+
+.mode-toggle-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.rtt-info-overlay {
+    position: absolute;
+    top: 0;
+    border-right: 1px solid #ccc;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    font-size: 12px;
+}
+
+.asn-info-overlay {
+    position: absolute;
+    top: 0;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.asn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1em;
+}
+
+.asn-box {
+    padding: 0.2em;
+    text-align: center;
+    color: #fff;
+    font-size: 0.9em;
+}
+
+.legend {
+    text-align: center;
+    position: absolute;
+    z-index: 1;
+    top: 25%;
+    right: 1%;
+}
+
+.scale {
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+    border: 1px solid #ccc;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+.scaleColor {
+    flex: 1;
+    width: 100%;
+}
+
+.rttLabel {
+    transform: rotate(-90deg);
+    font-size: 17px;
+    font-weight: bold;
+    margin-left: 50%;
+}
+
+.scaleLabel {
+    font-size: 14px;
+    text-align: center;
+    margin-left: 12%;
+}
+
+.view-control-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
 </style>
