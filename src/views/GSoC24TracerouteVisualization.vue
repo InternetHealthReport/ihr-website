@@ -699,8 +699,8 @@ onMounted(() => {
             <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
         </div>
         <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
-          <div><strong>Min RTT:</strong> {{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}</div>
-          <div><strong>Max RTT:</strong> {{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}</div>
+          <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }"></span> <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}</div>
+          <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }"></span> <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}</div>
         </div>
         <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0" class="asn-info-overlay">
             <div class="asn-grid">
@@ -820,6 +820,14 @@ onMounted(() => {
     width: 10px; 
     height: 10px; 
     border-radius: 50%; 
+    margin-right: 5px;
+}
+
+.rtt-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
     margin-right: 5px;
 }
 
