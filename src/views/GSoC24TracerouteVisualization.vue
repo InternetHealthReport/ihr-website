@@ -702,6 +702,20 @@ onMounted(() => {
           <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }"></span> <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}</div>
           <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }"></span> <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}</div>
         </div>
+        <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
+            <div class="row items-center">
+                <div class="col">
+                    <div class="rttLabel">RTT</div>
+                </div>
+                <div class="col">
+                    <div class="scaleLabel">0%</div>
+                    <div class="scale">
+                        <div v-for="(percentage, index) in Array.from({length: 10}, (_, i) => minDisplayedRtt + i * (maxDisplayedRtt - minDisplayedRtt) / 9)" :key="index" class="scaleColor" :style="{backgroundColor: rttColor(percentage)}"></div>
+                    </div>
+                    <div class="scaleLabel">100%</div>
+                </div>
+            </div>
+        </div>
         <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0" class="asn-info-overlay">
             <div class="asn-grid">
                 <div v-for="asn in filteredAsnList" :key="asn" :style="{ backgroundColor: asnColors[asn] }" class="asn-box">
@@ -897,5 +911,41 @@ onMounted(() => {
     text-align: center;
     color: #fff;
     font-size: 0.9em;
+}
+
+.legend {
+    text-align: center;
+	position: absolute;
+	z-index: 1;
+	top: 25%;
+	right: 1%;
+}
+
+.scale {
+    display: flex;
+    flex-direction: column;
+	height: 250px;
+    border: 1px solid #ccc;
+	margin-left: 30%;
+	margin-right: 30%;
+}
+
+.scaleColor {
+    flex: 1;
+    width: 100%;
+}
+
+.rttLabel {
+    transform: rotate(-90deg);
+    font-size: 17px;
+    font-weight: bold;
+	margin-left: 50%;
+	margin-top: 150%;
+}
+
+.scaleLabel {
+    font-size: 14px;
+	text-align: center;
+	margin-left: 12%;
 }
 </style>
