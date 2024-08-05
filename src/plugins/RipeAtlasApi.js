@@ -2,11 +2,8 @@ import axios from 'axios';
 
 // Base URL for RIPE Atlas API
 const RIPE_ATLAS_API_BASE = 'https://atlas.ripe.net/api/v2/';
-// Default timeout before api calls are considered failed
+// Default timeout before API calls are considered failed
 const DEFAULT_TIMEOUT = 180000;
-
-// Simple in-memory cache
-const cache = {};
 
 // Utility function to get data with caching
 const getCachedData = async (url, params) => {
@@ -16,12 +13,14 @@ const getCachedData = async (url, params) => {
 	});
 
 	const key = `${url}_${JSON.stringify(params)}`;
-	if (cache[key]) {
-		return cache[key];
+	const cachedData = localStorage.getItem(key);
+
+	if (cachedData) {
+		return JSON.parse(cachedData);
 	}
 
 	const response = await axios_base.get(url, { params });
-	cache[key] = response.data;
+	localStorage.setItem(key, JSON.stringify(response.data));
 	return response.data;
 };
 

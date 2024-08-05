@@ -5,18 +5,17 @@ const RIPE_API_BASE = 'https://stat.ripe.net/data/'
 
 var ripe_axios = axios.create({ baseURL: RIPE_API_BASE })
 
-// Simple in-memory cache
-const cache = {}
-
 // Utility function to get data with caching
 const getCachedData = async (url, params) => {
   const key = `${url}_${JSON.stringify(params)}`
-  if (cache[key]) {
-    return cache[key]
+  const cachedData = localStorage.getItem(key)
+
+  if (cachedData) {
+    return JSON.parse(cachedData)
   }
 
   const response = await ripe_axios.get(url, { params })
-  cache[key] = response.data
+  localStorage.setItem(key, JSON.stringify(response.data))
   return response.data
 }
 
