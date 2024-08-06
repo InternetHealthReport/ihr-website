@@ -614,10 +614,13 @@ watchEffect(() => {
 
 const paginatedProbes = computed(() => {
     const query = searchQuery.value.toLowerCase();
+    const uniqueProbes = new Set();
     return allProbes.value.map(probe => ({
         probe,
         ...probeDetailsMap.value[probe]
     })).filter(probe => {
+        if (uniqueProbes.has(probe.probe)) return false;
+        uniqueProbes.add(probe.probe);
         return ["address_v4", "address_v6", "country_code", "asn_v4", "asn_v6"].some(field => {
             return probe[field] && probe[field].toString().toLowerCase().includes(query);
         });
@@ -657,9 +660,10 @@ const plotRTTChart = () => {
     groupedData[timeSlot].push(dataPoint.rtt);
   });
 
-  if (Object.keys(groupedData).length <= 1) {
+  if (Object.keys(groupedData).length == 1) {
     const rttChartContainer = document.getElementById("rtt-chart");
     rttChartContainer.innerHTML = "<p>Interval too small</p>";
+    return;
   } else {
     const trace = {
       x: [],
