@@ -238,10 +238,12 @@ const bgpMessageType = (data) => {
 }
 
 const setSelectedMaxTimestamp = (val) => {
-  selectedMaxTimestamp.value = val
-  if (!isLiveMode.value) {
-    handleFilterMessages()
+  if (val) {
+    selectedMaxTimestamp.value = val
+  } else {
+    selectedMaxTimestamp.value = Infinity
   }
+  handleFilterMessages()
 }
 
 const disableLiveMode = () => {
@@ -250,6 +252,7 @@ const disableLiveMode = () => {
 
 const enableLiveMode = () => {
   isLiveMode.value = true
+  setSelectedMaxTimestamp()
 }
 
 // Fetching the AS Info from the asnames.txt file

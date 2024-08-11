@@ -217,12 +217,13 @@ watch(
   { deep: true }
 )
 
-//Remove the vertical line
+//Remove the vertical line and update the selected timestamp
 watch(
   () => props.isLiveMode,
   () => {
     if (props.isLiveMode) {
       shapes.value = []
+      updateTimeRange()
     }
   }
 )
