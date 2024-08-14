@@ -1,11 +1,14 @@
 <script setup>
+import { ref, inject, computed, watchEffect, watch, nextTick, onMounted } from "vue";
 import { QInput, QIcon, QBtn, QSpinner, QRange, QCheckbox, QTable, QTd, QTr, QRadio } from "quasar";
-import { ref, inject, computed, watchEffect, watch, nextTick } from "vue";
 import { VNetworkGraph } from "v-network-graph";
 import * as vNG from "v-network-graph";
 import dagre from "dagre";
 import RipeApi from "../plugins/RipeApi";
+import { useRoute } from "vue-router";
+import Plotly from "plotly.js-dist";
 
+const route = useRoute();
 const atlas_api = inject("atlas_api");
 const isLoading = ref(false);
 const measurementID = ref("");
@@ -13,39 +16,29 @@ const nodes = ref({});
 const edges = ref({});
 const layoutNodes = ref({ nodes: {} });
 const metaData = ref({});
-
-const timeRange = ref({
-    disable: true
-});
-
+const timeRange = ref({ disable: true });
 const leftLabelValue = ref("");
 const rightLabelValue = ref("");
-
 const nodeSize = 15;
 const highlightedEdges = ref({});
-
 const selectedProbes = ref([]);
 const allProbes = ref([]);
-
 const probeDetailsMap = ref({});
 const selectAllProbes = ref(true);
-
 const selectedNode = ref(null);
 const searchQuery = ref("");
-
 const selectedDestination = ref("all");
 const allDestinations = ref([]);
-
 const displayMode = ref("normal");
-
 const maxMedianRtt = ref(200);
-
 const minDisplayedRtt = ref(null);
 const maxDisplayedRtt = ref(null);
-
 const asnColors = ref({});
 const asnList = ref([]);
 const ipToAsnMap = ref({});
+const showAsnOverlay = ref(true);
+const rttOverTime = ref([]);
+const zoomLevel = ref(0);
 
 const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -149,9 +142,9 @@ const calculateMedian = (values) => {
 
 const rttColor = (rtt) => {
     if (rtt === null || rtt === undefined) return "black";
-    const normalized = Math.min(Math.max(rtt / maxMedianRtt.value, 0), 1);
+    const normalized = Math.min(Math.max(rtt / maxDisplayedRtt.value, 0), 1);
     const green = Math.floor(255 * (1 - normalized));
-    return `rgb(0, ${green}, 0)`;
+    return `rgb(150, ${green}, 60)`;
 };
 
 const filteredAsnList = computed(() => {
@@ -243,6 +236,10 @@ const processData = async (tracerouteData, loadProbes = false) => {
                     ttl: result.ttl,
                 });
 
+                if (result.rtt !== undefined && result.rtt !== null) {
+                    rttOverTime.value.push({ timestamp: probeData.timestamp, rtt: result.rtt });
+                }
+
                 const medianRtt = calculateMedian(newNodeInfo.hops.map(hop => hop.rtt));
                 if (medianRtt > highestMedianRtt) {
                     highestMedianRtt = medianRtt;
@@ -301,32 +298,46 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     assignAsnColors();
     updateDisplayedRttValues();
+    plotRTTChart(); // Plot RTT chart after processing data
 };
 
 const updateDisplayedRttValues = () => {
     let minRtt = Infinity;
     let maxRtt = -Infinity;
+    let destinationNodeMedianRtt = null;
 
     Object.values(nodes.value).forEach(node => {
         if (node.hops && node.hops.length > 0) {
-            const rttValues = node.hops.map(hop => hop.rtt).filter(rtt => rtt !== undefined);
-            if (rttValues.length > 0) {
-                minRtt = Math.min(minRtt, ...rttValues);
-                maxRtt = Math.max(maxRtt, ...rttValues);
+            const medianRtt = calculateMedian(node.hops.map(hop => hop.rtt).filter(rtt => rtt !== undefined));
+            if (medianRtt !== null) {
+                minRtt = Math.min(minRtt, medianRtt);
+                if (node.isLastHop) {
+                    destinationNodeMedianRtt = medianRtt;
+                }
             }
         }
     });
 
     minDisplayedRtt.value = minRtt === Infinity ? null : minRtt;
-    maxDisplayedRtt.value = maxRtt === -Infinity ? null : maxRtt;
+    maxDisplayedRtt.value = destinationNodeMedianRtt !== null ? destinationNodeMedianRtt : (maxRtt === -Infinity ? null : maxRtt);
 };
 
 watch([nodes, displayMode], updateDisplayedRttValues);
 
+const filteredRttOverTime = computed(() => {
+  if (timeRange.value.disable) {
+    return rttOverTime.value;
+  }
+  
+  const { min, max } = timeRange.value;
+  return rttOverTime.value.filter(dataPoint => {
+    return dataPoint.timestamp >= min && dataPoint.timestamp <= max;
+  });
+});
+
 const graph = ref();
 const tooltip = ref();
 const tooltipData = ref({});
-
 const targetNodeId = ref("");
 const tooltipOpacity = ref(0);
 const tooltipPos = ref({ left: "0px", top: "0px" });
@@ -352,10 +363,8 @@ watch(
 );
 
 const eventHandlers = {
-    "node:pointerover": ({ node }) => {
-    },
-    "node:pointerout": () => {
-    },
+    "node:pointerover": ({ node }) => {},
+    "node:pointerout": () => {},
     "view:click": () => {
         clearHighlight();
         tooltipOpacity.value = 0;
@@ -486,6 +495,11 @@ const loadMeasurement = async () => {
     selectedDestination.value = "all";
     allDestinations.value = [];
     displayMode.value = "normal"
+    asnColors.value = {};
+    asnList.value = [];
+    ipToAsnMap.value = {};
+    showAsnOverlay.value = true;
+    rttOverTime.value = [];
 
     if (measurementID.value.trim()) {
         isLoading.value = true;
@@ -550,11 +564,25 @@ const loadMeasurementData = async (loadProbes = false) => {
     }
 };
 
-const loadMeasurementOnTimeRange = (e) => {
+const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, wait);
+    };
+};
+
+const loadMeasurementOnTimeRange = debounce((e) => {
     leftLabelValue.value = convertUnixTimestamp(e.min);
     rightLabelValue.value = convertUnixTimestamp(e.max);
     loadMeasurementData();
-};
+}, 1000);
+
+const loadMeasurementOnProbeChange = debounce(() => {
+    loadMeasurementData();
+}, 1000);
 
 function convertUnixTimestamp(unixTimestamp) {
     const date = new Date(unixTimestamp * 1000);
@@ -574,22 +602,25 @@ const maxTime = computed(() => metaData.value?.stop_time || 0);
 
 watchEffect(() => {
     if (selectedProbes.value.length > 0) {
-        loadMeasurementData();
+        loadMeasurementOnProbeChange();
     }
 });
 
 watchEffect(() => {
     if (!timeRange.value.disable) {
-        loadMeasurementData();
+        loadMeasurementOnTimeRange(timeRange.value);
     }
 });
 
 const paginatedProbes = computed(() => {
     const query = searchQuery.value.toLowerCase();
+    const uniqueProbes = new Set();
     return allProbes.value.map(probe => ({
         probe,
         ...probeDetailsMap.value[probe]
     })).filter(probe => {
+        if (uniqueProbes.has(probe.probe)) return false;
+        uniqueProbes.add(probe.probe);
         return ["address_v4", "address_v6", "country_code", "asn_v4", "asn_v6"].some(field => {
             return probe[field] && probe[field].toString().toLowerCase().includes(query);
         });
@@ -617,120 +648,225 @@ const toggleSelectAll = (value) => {
     }
 };
 
+const plotRTTChart = () => {
+  const timeInterval = 600; // 10-minute intervals
+  const groupedData = {};
+
+  filteredRttOverTime.value.forEach(dataPoint => {
+    const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval;
+    if (!groupedData[timeSlot]) {
+      groupedData[timeSlot] = [];
+    }
+    groupedData[timeSlot].push(dataPoint.rtt);
+  });
+
+  if (Object.keys(groupedData).length == 1) {
+    const rttChartContainer = document.getElementById("rtt-chart");
+    rttChartContainer.innerHTML = "<p>Interval too small</p>";
+    return;
+  } else {
+    const trace = {
+      x: [],
+      y: [],
+      type: "scatter",
+      mode: "lines+markers",
+      name: "Median RTT"
+    };
+
+    for (const [timeSlot, rtts] of Object.entries(groupedData)) {
+      trace.x.push(new Date(timeSlot * 1000));
+      trace.y.push(calculateMedian(rtts));
+    }
+
+    const data = [trace];
+    const layout = {
+      height: "300",
+      xaxis: { title: "Time" },
+      yaxis: { title: "Median RTT (ms)" },
+      margin: {
+        l: 0,
+        r: 0,
+        b: 70,
+        t: 70,
+      }
+    };
+
+    Plotly.newPlot("rtt-chart", data, layout);
+  }
+};
+
+const zoomIn = () => {
+    zoomLevel.value *= 1.2;
+};
+
+const zoomOut = () => {
+    zoomLevel.value *= 0.8;
+};
+
+const toggleFullScreen = () => {
+    const graphContainer = document.querySelector('.graph-container');
+    if (!document.fullscreenElement) {
+        graphContainer.requestFullscreen().then(() => {
+            graphContainer.style.background = 'white';
+        });
+    } else {
+        document.exitFullscreen().then(() => {
+            graphContainer.style.background = 'white';
+        });
+    }
+};
+
+onMounted(() => {
+    const tracerouteid = route.query.tracerouteid;
+    if (tracerouteid) {
+        measurementID.value = tracerouteid;
+        loadMeasurement();
+    }
+});
+
+watchEffect(() => {
+    if (rttOverTime.value.length > 0) {
+        plotRTTChart();
+    }
+});
 </script>
 
 <template>
     <div class="main-container">
-      <h1>Traceroute Visualization</h1>
-      <QInput v-model="measurementID" @keyup.enter="loadMeasurement" placeholder="Enter RIPE ATLAS traceroute measurement ID">
-        <template v-slot:prepend>
-          <QIcon name="web" />
-        </template>
-        <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
-          <QIcon name="search" />
-        </QBtn>
-      </QInput>
-      <div class="graph-container">
-        <QSpinner v-if="isLoading" color="primary" />
-        <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
-                       :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0" zoom-level="0" />
-        <div v-else-if="!isLoading" class="placeholder-message">No graph data available. Please load a measurement.</div>
-        <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
-            <div style="display: flex; align-items: center;">
-                <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
+        <h1>Traceroute Visualization</h1>
+        <QInput v-model="measurementID" @keyup.enter="loadMeasurement" placeholder="Enter RIPE ATLAS traceroute measurement ID">
+            <template v-slot:prepend>
+                <QIcon name="web" />
+            </template>
+            <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
+                <QIcon name="search" />
+            </QBtn>
+        </QInput>
+        <div class="graph-container">
+            <QSpinner v-if="isLoading" color="primary" />
+            <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
+                           :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading" v-model:zoom-level="zoomLevel" />
+            <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
+            <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
+                <div style="display: flex; align-items: center;">
+                    <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
+                </div>
+                <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available"}}</div>
+                <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
+                <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
+                <div><strong>IP:</strong> {{ tooltipData.label }}</div>
+                <div><strong>AS:</strong> {{ tooltipData?.data?.asns[0]?.asn ? tooltipData.data.asns[0].asn + ` (${tooltipData.data.asns[0].holder})` : "Not available"}}</div>
+                <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
+                <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available"}}</div>
+                <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
+                <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
+                <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
+                <div v-if="tooltipData.address_v6"><strong>IPv6 Address:</strong> {{ tooltipData.address_v6 }}</div>
+                <div v-if="tooltipData.country_code"><strong>Country Code:</strong> {{ tooltipData.country_code }}</div>
+                <div v-if="tooltipData.asn_v4"><strong>ASN4:</strong> {{ tooltipData.asn_v4 }}</div>
+                <div v-if="tooltipData.asn_v6"><strong>ASN6:</strong> {{ tooltipData.asn_v6 }}</div>
+                <div v-if="tooltipData.id"><strong>Probe ID:</strong> {{ tooltipData.id }}</div>
+                <div v-if="tooltipData.description"><strong>Probe Description:</strong> {{ tooltipData.description }}</div>
+                <div v-if="tooltipData.status?.name"><strong>Status:</strong> {{ tooltipData.status.name }}</div>
+                <div v-if="tooltipData.status?.since"><strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}</div>
             </div>
-            <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available"}}</div>
-            <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
-            <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
-            <div><strong>IP:</strong> {{ tooltipData.label }}</div>
-            <div><strong>AS:</strong> {{ tooltipData?.data?.asns[0]?.asn ? tooltipData.data.asns[0].asn + ` (${tooltipData.data.asns[0].holder})` : "Not available"}}</div>
-            <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
-            <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available"}}</div>
-            <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
-            <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
-            <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
-            <div v-if="tooltipData.address_v6"><strong>IPv6 Address:</strong> {{ tooltipData.address_v6 }}</div>
-            <div v-if="tooltipData.country_code"><strong>Country Code:</strong> {{ tooltipData.country_code }}</div>
-            <div v-if="tooltipData.asn_v4"><strong>ASN4:</strong> {{ tooltipData.asn_v4 }}</div>
-            <div v-if="tooltipData.asn_v6"><strong>ASN6:</strong> {{ tooltipData.asn_v6 }}</div>
-            <div v-if="tooltipData.id"><strong>Probe ID:</strong> {{ tooltipData.id }}</div>
-            <div v-if="tooltipData.description"><strong>Probe Description:</strong> {{ tooltipData.description }}</div>
-            <div v-if="tooltipData.status?.name"><strong>Status:</strong> {{ tooltipData.status.name }}</div>
-            <div v-if="tooltipData.status?.since"><strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}</div>
-        </div>
-        <div v-if="Object.keys(nodes).length > 0" class="measurement-info-overlay">
-          <div><strong>Description:</strong> {{ metaData.description }}</div>
-          <div><strong>Target:</strong> {{ metaData.target }}</div>
-          <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
-          <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
-          <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
-          <div><strong>Status:</strong> {{ metaData.status.name }}</div>
-        </div>
-        <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
-            <QRadio v-model="displayMode" val="normal" label="Normal Mode" />
-            <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
-            <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
-        </div>
-        <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
-          <div><strong>Min RTT:</strong> {{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}</div>
-          <div><strong>Max RTT:</strong> {{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}</div>
-        </div>
-        <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0" class="asn-info-overlay">
-            <div class="asn-grid">
-                <div v-for="asn in filteredAsnList" :key="asn" :style="{ backgroundColor: asnColors[asn] }" class="asn-box">
-                    {{ asn }}
+            <div v-if="Object.keys(nodes).length > 0" class="measurement-info-overlay">
+                <div><strong>Description:</strong> {{ metaData.description }}</div>
+                <div><strong>Target:</strong> {{ metaData.target }}</div>
+                <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
+                <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
+                <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
+                <div><strong>Status:</strong> {{ metaData.status.name }}</div>
+            </div>
+            <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
+                <QRadio v-model="displayMode" val="normal" label="Normal Mode" />
+                <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
+                <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
+                <QBtn v-if="displayMode === 'asn'" flat dense @click="showAsnOverlay = !showAsnOverlay">
+                    Toggle ASN Overlay
+                </QBtn>
+            </div>
+            <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
+                <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }"></span> <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}</div>
+                <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }"></span> <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}</div>
+            </div>
+            <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
+                <div class="row items-center">
+                    <div class="col">
+                        <div class="rttLabel">RTT</div>
+                    </div>
+                    <div class="col">
+                        <div class="scaleLabel">0%</div>
+                        <div class="scale">
+                            <div v-for="(percentage, index) in Array.from({length: 10}, (_, i) => minDisplayedRtt + i * (maxDisplayedRtt - minDisplayedRtt) / 9)" :key="index" class="scaleColor" :style="{backgroundColor: rttColor(percentage)}"></div>
+                        </div>
+                        <div class="scaleLabel">100%</div>
+                    </div>
                 </div>
             </div>
+            <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay" class="asn-info-overlay" :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }">
+                <div class="asn-grid">
+                    <div v-for="asn in filteredAsnList" :key="asn" :style="{ backgroundColor: asnColors[asn] }" class="asn-box">
+                        {{ asn }}
+                    </div>
+                </div>
+            </div>
+            <div class="view-control-overlay">
+                <QBtn icon="zoom_in" @click="zoomIn" />
+                <QBtn icon="zoom_out" @click="zoomOut" />
+                <QBtn icon="fullscreen" @click="toggleFullScreen" />
+            </div>
         </div>
-      </div>
-      <h3>Time Range</h3>
-      <div class="time-range">
-        <QRange v-model="timeRange" :disable="timeRange.disable" :min="minTime" :max="maxTime"
-                :left-label-value="leftLabelValue" :right-label-value="rightLabelValue" label-always
-                drag-range @change="loadMeasurementOnTimeRange" />
-      </div>
-      <div class="probe-selection">
-        <h3>Select Probes</h3>
-        <QInput v-model="searchQuery" placeholder="Search probes..." :disable="Object.keys(nodes).length < 1" />
-        <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
-          <template v-slot:header="props">
-            <QTr :props="props">
-              <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
-                <template v-if="col.name === 'probe'">
-                  <QCheckbox v-model="selectAllProbes" @update:model-value="toggleSelectAll" :disable="Object.keys(nodes).length < 1"/>
+        <h3>Median RTT Over Time</h3>
+        <div id="rtt-chart"></div>
+        <h3>Time Range</h3>
+        <div class="time-range">
+            <QRange v-model="timeRange" :disable="timeRange.disable" :min="minTime" :max="maxTime"
+                    :left-label-value="leftLabelValue" :right-label-value="rightLabelValue" label-always
+                    drag-range @change="loadMeasurementOnTimeRange" />
+        </div>
+        <div class="probe-selection">
+            <h3>Select Probes</h3>
+            <QInput v-model="searchQuery" placeholder="Search probes..." :disable="Object.keys(nodes).length < 1" />
+            <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
+                <template v-slot:header="props">
+                    <QTr :props="props">
+                        <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
+                            <template v-if="col.name === 'probe'">
+                                <QCheckbox v-model="selectAllProbes" @update:model-value="toggleSelectAll" :disable="Object.keys(nodes).length < 1" />
+                            </template>
+                            <template v-else>
+                                {{ col.label }}
+                            </template>
+                        </QTd>
+                    </QTr>
                 </template>
-                <template v-else>
-                  {{ col.label }}
+                <template v-slot:body="props">
+                    <QTr :props="props">
+                        <QTd>
+                            <QCheckbox v-model="selectedProbes" :val="props.row.probe" :label="props.row.probe" />
+                        </QTd>
+                        <QTd>{{ props.row.address_v4 }}</QTd>
+                        <QTd>{{ props.row.address_v6 }}</QTd>
+                        <QTd>{{ props.row.country_code }}</QTd>
+                        <QTd>{{ props.row.asn_v4 }}</QTd>
+                        <QTd>{{ props.row.asn_v6 }}</QTd>
+                    </QTr>
                 </template>
-              </QTd>
-            </QTr>
-          </template>
-          <template v-slot:body="props">
-            <QTr :props="props">
-              <QTd>
-                <QCheckbox v-model="selectedProbes" :val="props.row.probe" :label="props.row.probe" />
-              </QTd>
-              <QTd>{{ props.row.address_v4 }}</QTd>
-              <QTd>{{ props.row.address_v6 }}</QTd>
-              <QTd>{{ props.row.country_code }}</QTd>
-              <QTd>{{ props.row.asn_v4 }}</QTd>
-              <QTd>{{ props.row.asn_v6 }}</QTd>
-            </QTr>
-          </template>
-        </QTable>
-      </div>
-      <div class="destination-selection">
-        <h3>Select Destination</h3>
-        <QTable :rows="[{ destination: 'all' }, ...allDestinations.map(dest => ({ destination: dest }))]" :columns="destinationColumns" row-key="destination">
-          <template v-slot:body="props">
-            <QTr :props="props">
-              <QTd>
-                <QRadio v-model="selectedDestination" :val="props.row.destination" :label="props.row.destination === 'all' ? 'All Destinations' : props.row.destination" />
-              </QTd>
-            </QTr>
-          </template>
-        </QTable>
-      </div>
+            </QTable>
+        </div>
+        <div class="destination-selection">
+            <h3>Select Destination</h3>
+            <QTable :rows="[{ destination: 'all' }, ...allDestinations.map(dest => ({ destination: dest }))]" :columns="destinationColumns" row-key="destination">
+                <template v-slot:body="props">
+                    <QTr :props="props">
+                        <QTd>
+                            <QRadio v-model="selectedDestination" :val="props.row.destination" :label="props.row.destination === 'all' ? 'All Destinations' : props.row.destination" />
+                        </QTd>
+                    </QTr>
+                </template>
+            </QTable>
+        </div>
     </div>
 </template>
 
@@ -763,6 +899,7 @@ const toggleSelectAll = (value) => {
     height: 75vh;
     width: 100%;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
+    background: white; /* Set initial background to white */
 }
 
 .placeholder-message {
@@ -793,6 +930,14 @@ const toggleSelectAll = (value) => {
     width: 10px; 
     height: 10px; 
     border-radius: 50%; 
+    margin-right: 5px;
+}
+
+.rtt-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
     margin-right: 5px;
 }
 
@@ -838,7 +983,6 @@ const toggleSelectAll = (value) => {
 }
 
 .asn-info-overlay {
-    width: 40em;
     position: absolute;
     top: 0;
     background: rgba(255, 255, 255, 0.8);
@@ -862,5 +1006,49 @@ const toggleSelectAll = (value) => {
     text-align: center;
     color: #fff;
     font-size: 0.9em;
+}
+
+.legend {
+    text-align: center;
+    position: absolute;
+    z-index: 1;
+    top: 25%;
+    right: 1%;
+}
+
+.scale {
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+    border: 1px solid #ccc;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+.scaleColor {
+    flex: 1;
+    width: 100%;
+}
+
+.rttLabel {
+    transform: rotate(-90deg);
+    font-size: 17px;
+    font-weight: bold;
+    margin-left: 50%;
+}
+
+.scaleLabel {
+    font-size: 14px;
+    text-align: center;
+    margin-left: 12%;
+}
+
+.view-control-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
 }
 </style>
