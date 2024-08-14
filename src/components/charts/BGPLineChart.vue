@@ -100,18 +100,20 @@ const renderChart = (dates, announcementsTrace, withdrawalsTrace) => {
       x: dates,
       y: announcementsTrace,
       type: 'scatter',
-      mode: 'lines',
+      mode: 'none',
       name: 'Announcements',
       line: { shape: 'linear' },
+      fill: 'tonexty',
       marker: { size: 8 }
     },
     {
       x: dates,
       y: withdrawalsTrace,
       type: 'scatter',
-      mode: 'lines',
+      mode: 'none',
       name: 'Withdrawals',
       line: { shape: 'linear' },
+      fill: 'tozeroy',
       marker: { size: 8 }
     }
   ]
