@@ -1135,7 +1135,7 @@
     "subTitle": "AS Paths",
     "info": {
       "title": "BGP Announcements",
-      "description": "BGP Announcements (AS Paths) Sankey Chart"
+      "description": "<p><strong>Sankey Chart</strong></p><p>The Sankey chart displays the AS paths received in the BGP (Announcement) messages. See 'AS Paths' in the messages table. By default, only 5 messages are displayed to reduce clutter. You can select additional messages by choosing the 'Peers' in the messages table.</p><p><strong>Limit Number of Hops</strong></p><p>You can limit the number of hops in the Sankey chart by adjusting the 'Max Hops' input slider.</p>"
     }
   },
   "bgpMessagesCount": {
@@ -1143,7 +1143,7 @@
     "subTitle": "Number of Messages",
     "info": {
       "title": "BGP Messages Received Over Time",
-      "description": "Number of messages Received Over Time Line Chart"
+      "description": "<p><strong>Line Chart</strong></p><ul><li><b>Announcements</b>: Shows the number of BGP announcement messages received over time.</li><li><b>Withdrawals</b>: Shows the number of BGP withdrawal messages received over time.</li></ul><p><strong>View Past BGP Messages</strong></p><p>Use the time slider below the line chart or click on the line chart to view the BGP messages received at a particular timestamp. When viewing past messages, the 'LIVE' button in the Sankey chart, line chart, and Messages Table will automatically switch to 'GO TO LIVE'. During this time,  if the tool is Playing all new messages received will be stored in the background, which can be viewed again after clicking the 'GO TO LIVE' button.</p>"
     }
   },
   "bgpMessagesTable": {
@@ -1151,7 +1151,7 @@
     "subTitle": "RIS Live",
     "info": {
       "title": "RIS Live BGP messages",
-      "description": "Messages received from Ris Live, displaying only unique peer messages"
+      "description": "<p><strong>Routing Information Service Live (RIS Live)</strong></p><p>This tool internally uses 'RIS Live' to obtain live BGP updates. RIS Live is a feed that offers BGP messages in real-time. It collects information from the RIS Route Collectors (RRCs) and uses a WebSocket JSON API to monitor and detect routing events around the world.</p><p><strong>Messages Table</strong></p><p>The messages table contains data received from the RIS Live WebSocket and other external datasets, including 'AS Info' and 'BGP communities.' Only unique peers are displayed, and peers are continuously updated with new data. To view older BGP messages, use the timestamp slider. By default, the first 5 peers are selected to display the AS paths in the Sankey chart.</p><p>For more details, see <a href='https://ris-live.ripe.net/'>RIS Live</a>.</p>"
     }
   }
 }
