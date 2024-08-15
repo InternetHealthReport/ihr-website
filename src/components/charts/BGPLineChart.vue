@@ -98,23 +98,21 @@ const renderChart = (dates, announcementsTrace, withdrawalsTrace) => {
   const data = [
     {
       x: dates,
-      y: announcementsTrace,
-      type: 'scatter',
-      mode: 'none',
-      name: 'Announcements',
-      line: { shape: 'linear' },
-      fill: 'tonexty',
-      marker: { size: 8 }
-    },
-    {
-      x: dates,
       y: withdrawalsTrace,
       type: 'scatter',
       mode: 'none',
       name: 'Withdrawals',
-      line: { shape: 'linear' },
-      fill: 'tozeroy',
-      marker: { size: 8 }
+      fillcolor: 'rgba(255, 127, 14, 0.5)',
+      stackgroup: 'one'
+    },
+    {
+      x: dates,
+      y: announcementsTrace,
+      type: 'scatter',
+      mode: 'none',
+      name: 'Announcements',
+      fillcolor: 'rgba(31, 119, 180, 0.5)',
+      stackgroup: 'one'
     }
   ]
 
