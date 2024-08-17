@@ -10,6 +10,7 @@ import { useRouter } from 'vue-router'
 const iyp_api = inject('iyp_api')
 
 const router = useRouter()
+const emit = defineEmits(["searchChange","afChange"])
 
 const props  = defineProps({
   searchInput: {
@@ -394,6 +395,14 @@ watch(
   },
   { deep: true }
 );
+
+watch(searchInput, (newValue) => {
+  emit('searchChange', props.id, newValue);
+});
+
+watch(ipModel, (newValue) => {
+  emit('afChange', props.id, newValue[newValue.length-1]);
+});
 
 onMounted(() => {
   init()
