@@ -115,13 +115,13 @@ const afChange = (id, newValue) => {
 }
 
 watch(layout, (newLayout) => {
-  const searchInputs = newLayout.map(item => item.searchInput)
-  const afValues = newLayout.map(item => item.af)
+  const searchInputs = '[' + newLayout.map(item => item.searchInput).join(',') + ']'
+  const afValues = '[' + newLayout.map(item => Number(item.af)).join(',') + ']'
   router.replace({
     path: route.path,
     query: {
-      input: JSON.stringify(searchInputs),
-      af: JSON.stringify(afValues)
+      input: searchInputs,
+      af: afValues
     }
   })
 }, { deep: true })
@@ -129,7 +129,8 @@ watch(layout, (newLayout) => {
 onMounted(() => {
   let queryInput = route.query.input
   if (queryInput) {
-    queryInput = JSON.parse(queryInput)
+    queryInput = queryInput.slice(1, -1);
+    queryInput = queryInput.split(/,(?![^\[\]]*\])/);
     let af = JSON.parse(route.query.af)
     queryInput.forEach((query, index) => {
       incrementChart(query, af[index]);
