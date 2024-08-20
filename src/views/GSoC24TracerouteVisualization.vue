@@ -846,7 +846,7 @@ watchEffect(() => {
                 <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
                 <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
                 <QBtn v-if="displayMode === 'asn'" flat dense @click="showAsnOverlay = !showAsnOverlay">
-                    Toggle ASN Overlay
+                    ASN Overlay
                 </QBtn>
             </div>
             <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
