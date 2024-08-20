@@ -30,6 +30,7 @@ const searchQuery = ref("");
 const selectedDestinations = ref([]);
 const allDestinations = ref([]);
 const selectAllDestinations = ref(true);
+const destinationSearchQuery = ref("");
 const displayMode = ref("normal");
 const maxMedianRtt = ref(200);
 const minDisplayedRtt = ref(null);
@@ -651,8 +652,32 @@ const columns = [
 ];
 
 const destinationColumns = [
-    { name: "destination", align: "left", label: "Destination IP", field: "destination" }
+    { name: "destination", align: "left", label: "Destination IP", field: "destination" },
+    { name: "ip", align: "left", label: "IP Address", field: "ip" },
+    { name: "asn", align: "left", label: "ASN", field: "asn" },
 ];
+
+const destinationRows = computed(() => {
+    return allDestinations.value.map(destination => {
+        const nodeInfo = nodes.value[destination] || {};
+        const asn = ipToAsnMap.value[nodeInfo.label];
+        
+        return {
+            destination: destination,
+            ip: nodeInfo.label,
+            asn: asn,
+        };
+    });
+});
+
+const filteredDestinationRows = computed(() => {
+    const query = destinationSearchQuery.value.toLowerCase();
+    return destinationRows.value.filter(row => {
+        return ["destination", "ip", "asn"].some(field => {
+            return row[field] && row[field].toString().toLowerCase().includes(query);
+        });
+    });
+});
 
 const toggleSelectAll = (value) => {
     if (value) {
@@ -883,15 +908,16 @@ watchEffect(() => {
         </div>
         <div class="destination-selection">
             <h3>Select Destinations</h3>
-            <QTable :rows="allDestinations.map(dest => ({ destination: dest }))" :columns="destinationColumns" row-key="destination">
+            <QInput v-model="destinationSearchQuery" placeholder="Search destinations..." :disable="Object.keys(nodes).length < 1" />
+            <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination">
                 <template v-slot:header="props">
                     <QTr :props="props">
                         <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
                             <template v-if="col.name === 'destination'">
-                            <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" />
+                                <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" />
                             </template>
                             <template v-else>
-                            {{ col.label }}
+                                {{ col.label }}
                             </template>
                         </QTd>
                     </QTr>
@@ -901,6 +927,8 @@ watchEffect(() => {
                         <QTd>
                             <QCheckbox v-model="selectedDestinations" :val="props.row.destination" :label="props.row.destination" />
                         </QTd>
+                        <QTd>{{ props.row.ip }}</QTd>
+                        <QTd>{{ props.row.asn }}</QTd>
                     </QTr>
                 </template>
             </QTable>
