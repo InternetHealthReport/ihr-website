@@ -308,7 +308,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
     plotRTTChart(); // Plot RTT chart after processing data
 };
 
-
 const updateDisplayedRttValues = () => {
     let minRtt = Infinity;
     let maxRtt = -Infinity;
@@ -598,6 +597,14 @@ const loadMeasurementOnProbeChange = debounce(() => {
     loadMeasurementData();
 }, 1000);
 
+const loadMeasurementOnDestinationChange = debounce(() => {
+    loadMeasurementData();
+}, 1000);
+
+const loadMeasurementOnSearchQuery = debounce(() => {
+    loadMeasurementData();
+}, 1000);
+
 function convertUnixTimestamp(unixTimestamp) {
     const date = new Date(unixTimestamp * 1000);
 
@@ -628,7 +635,7 @@ watchEffect(() => {
 
 watchEffect(() => {
     if (selectedDestinations.value.length > 0) {
-        loadMeasurementData();
+        loadMeasurementOnDestinationChange();
     }
 });
 
@@ -883,7 +890,7 @@ watchEffect(() => {
         </div>
         <div class="probe-selection">
             <h3>Select Probes</h3>
-            <QInput v-model="searchQuery" placeholder="Search probes..." :disable="Object.keys(nodes).length < 1" />
+            <QInput v-model="searchQuery" placeholder="Search probes..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
             <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
                 <template v-slot:header="props">
                     <QTr :props="props">
@@ -913,7 +920,7 @@ watchEffect(() => {
         </div>
         <div class="destination-selection">
             <h3>Select Destinations</h3>
-            <QInput v-model="destinationSearchQuery" placeholder="Search destinations..." :disable="Object.keys(nodes).length < 1" />
+            <QInput v-model="destinationSearchQuery" placeholder="Search destinations..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
             <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination">
                 <template v-slot:header="props">
                     <QTr :props="props">
