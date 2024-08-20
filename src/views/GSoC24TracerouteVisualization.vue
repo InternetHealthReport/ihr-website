@@ -184,8 +184,12 @@ const processData = async (tracerouteData, loadProbes = false) => {
             atlas_api.getProbeById(probeData.prb_id.toString()).then(data => probeDetailsMap.value[probeData.prb_id.toString()] = data);
         }
 
+        // Ensure all destinations are included in allDestinations
         if (!allDestinations.value.includes(probeData.dst_addr)) {
             allDestinations.value.push(probeData.dst_addr);
+            if (!nodes.value[probeData.dst_addr]) {
+                nodes.value[probeData.dst_addr] = { label: probeData.dst_addr };
+            }
             selectedDestinations.value.push(probeData.dst_addr); // Add to selectedDestinations
         }
 
@@ -303,6 +307,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
     updateDisplayedRttValues();
     plotRTTChart(); // Plot RTT chart after processing data
 };
+
 
 const updateDisplayedRttValues = () => {
     let minRtt = Infinity;
@@ -659,9 +664,9 @@ const destinationColumns = [
 
 const destinationRows = computed(() => {
     return allDestinations.value.map(destination => {
-        const nodeInfo = nodes.value[destination] || {};
-        const asn = ipToAsnMap.value[nodeInfo.label];
-        
+        const nodeInfo = nodes.value[destination] || { label: destination };
+        const asn = ipToAsnMap.value[nodeInfo.label] || "unknown";
+
         return {
             destination: destination,
             ip: nodeInfo.label,
