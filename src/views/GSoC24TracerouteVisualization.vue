@@ -27,8 +27,9 @@ const probeDetailsMap = ref({});
 const selectAllProbes = ref(true);
 const selectedNode = ref(null);
 const searchQuery = ref("");
-const selectedDestination = ref("all");
+const selectedDestinations = ref([]);
 const allDestinations = ref([]);
+const selectAllDestinations = ref(true);
 const displayMode = ref("normal");
 const maxMedianRtt = ref(200);
 const minDisplayedRtt = ref(null);
@@ -184,6 +185,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
         if (!allDestinations.value.includes(probeData.dst_addr)) {
             allDestinations.value.push(probeData.dst_addr);
+            selectedDestinations.value.push(probeData.dst_addr); // Add to selectedDestinations
         }
 
         probeData.result.forEach((hopData, hopIndex) => {
@@ -325,14 +327,14 @@ const updateDisplayedRttValues = () => {
 watch([nodes, displayMode], updateDisplayedRttValues);
 
 const filteredRttOverTime = computed(() => {
-  if (timeRange.value.disable) {
-    return rttOverTime.value;
-  }
-  
-  const { min, max } = timeRange.value;
-  return rttOverTime.value.filter(dataPoint => {
-    return dataPoint.timestamp >= min && dataPoint.timestamp <= max;
-  });
+    if (timeRange.value.disable) {
+        return rttOverTime.value;
+    }
+    
+    const { min, max } = timeRange.value;
+    return rttOverTime.value.filter(dataPoint => {
+        return dataPoint.timestamp >= min && dataPoint.timestamp <= max;
+    });
 });
 
 const graph = ref();
@@ -492,7 +494,7 @@ const loadMeasurement = async () => {
     selectAllProbes.value = true;
     selectedNode.value = null;
     searchQuery.value = "";
-    selectedDestination.value = "all";
+    selectedDestinations.value = [];
     allDestinations.value = [];
     displayMode.value = "normal"
     asnColors.value = {};
@@ -520,6 +522,10 @@ const loadMeasurement = async () => {
             timeRange.value.disable = false;
 
             await loadMeasurementData(true);
+            
+            // Select all destinations by default
+            selectedDestinations.value = allDestinations.value;
+            selectAllDestinations.value = true;
         } catch (error) {
             console.error("Failed to load measurement:", error);
         } finally {
@@ -536,7 +542,7 @@ const loadMeasurementData = async (loadProbes = false) => {
                 allProbes.value = [];
                 selectedProbes.value = [];
                 allDestinations.value = [];
-                selectedDestination.value = "all";
+                selectedDestinations.value = [];
             }
 
             const params = {};
@@ -550,12 +556,14 @@ const loadMeasurementData = async (loadProbes = false) => {
                 params.probe_ids = selectedProbes.value.join(",");
             }
 
-            if (selectedDestination.value !== "all") {
-                params.target_ip = selectedDestination.value;
-            }
-
             const data = await atlas_api.getMeasurementData(measurementID.value, params);
-            processData(data, loadProbes);
+            
+            // Filter data locally based on selected destinations
+            const filteredData = data.filter(item => 
+                selectedDestinations.value.length === 0 || selectedDestinations.value.includes(item.dst_addr)
+            );
+            
+            processData(filteredData, loadProbes);
         } catch (error) {
             console.error("Failed to load measurement data:", error);
         } finally {
@@ -612,6 +620,12 @@ watchEffect(() => {
     }
 });
 
+watchEffect(() => {
+    if (selectedDestinations.value.length > 0) {
+        loadMeasurementData();
+    }
+});
+
 const paginatedProbes = computed(() => {
     const query = searchQuery.value.toLowerCase();
     const uniqueProbes = new Set();
@@ -649,50 +663,58 @@ const toggleSelectAll = (value) => {
 };
 
 const plotRTTChart = () => {
-  const timeInterval = 600; // 10-minute intervals
-  const groupedData = {};
+    const timeInterval = 600; // 10-minute intervals
+    const groupedData = {};
 
-  filteredRttOverTime.value.forEach(dataPoint => {
-    const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval;
-    if (!groupedData[timeSlot]) {
-      groupedData[timeSlot] = [];
+    filteredRttOverTime.value.forEach(dataPoint => {
+        const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval;
+        if (!groupedData[timeSlot]) {
+            groupedData[timeSlot] = [];
+        }
+        groupedData[timeSlot].push(dataPoint.rtt);
+    });
+
+    if (Object.keys(groupedData).length == 1) {
+        const rttChartContainer = document.getElementById("rtt-chart");
+        rttChartContainer.innerHTML = "<p>Interval too small</p>";
+        return;
+    } else {
+        const trace = {
+            x: [],
+            y: [],
+            type: "scatter",
+            mode: "lines+markers",
+            name: "Median RTT"
+        };
+
+        for (const [timeSlot, rtts] of Object.entries(groupedData)) {
+            trace.x.push(new Date(timeSlot * 1000));
+            trace.y.push(calculateMedian(rtts));
+        }
+
+        const data = [trace];
+        const layout = {
+            height: "300",
+            xaxis: { title: "Time" },
+            yaxis: { title: "Median RTT (ms)" },
+            margin: {
+                l: 0,
+                r: 0,
+                b: 70,
+                t: 70,
+            }
+        };
+
+        Plotly.newPlot("rtt-chart", data, layout);
     }
-    groupedData[timeSlot].push(dataPoint.rtt);
-  });
+};
 
-  if (Object.keys(groupedData).length == 1) {
-    const rttChartContainer = document.getElementById("rtt-chart");
-    rttChartContainer.innerHTML = "<p>Interval too small</p>";
-    return;
-  } else {
-    const trace = {
-      x: [],
-      y: [],
-      type: "scatter",
-      mode: "lines+markers",
-      name: "Median RTT"
-    };
-
-    for (const [timeSlot, rtts] of Object.entries(groupedData)) {
-      trace.x.push(new Date(timeSlot * 1000));
-      trace.y.push(calculateMedian(rtts));
+const toggleSelectAllDestinations = (value) => {
+    if (value) {
+        selectedDestinations.value = allDestinations.value;
+    } else {
+        selectedDestinations.value = [];
     }
-
-    const data = [trace];
-    const layout = {
-      height: "300",
-      xaxis: { title: "Time" },
-      yaxis: { title: "Median RTT (ms)" },
-      margin: {
-        l: 0,
-        r: 0,
-        b: 70,
-        t: 70,
-      }
-    };
-
-    Plotly.newPlot("rtt-chart", data, layout);
-  }
 };
 
 const zoomIn = () => {
@@ -720,7 +742,11 @@ onMounted(() => {
     const tracerouteid = route.query.tracerouteid;
     if (tracerouteid) {
         measurementID.value = tracerouteid;
-        loadMeasurement();
+        loadMeasurement().then(() => {
+            // Select all destinations by default after loading the measurement
+            selectedDestinations.value = allDestinations.value;
+            selectAllDestinations.value = true;
+        });
     }
 });
 
@@ -856,12 +882,24 @@ watchEffect(() => {
             </QTable>
         </div>
         <div class="destination-selection">
-            <h3>Select Destination</h3>
-            <QTable :rows="[{ destination: 'all' }, ...allDestinations.map(dest => ({ destination: dest }))]" :columns="destinationColumns" row-key="destination">
+            <h3>Select Destinations</h3>
+            <QTable :rows="allDestinations.map(dest => ({ destination: dest }))" :columns="destinationColumns" row-key="destination">
+                <template v-slot:header="props">
+                    <QTr :props="props">
+                        <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
+                            <template v-if="col.name === 'destination'">
+                            <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" />
+                            </template>
+                            <template v-else>
+                            {{ col.label }}
+                            </template>
+                        </QTd>
+                    </QTr>
+                </template>
                 <template v-slot:body="props">
                     <QTr :props="props">
                         <QTd>
-                            <QRadio v-model="selectedDestination" :val="props.row.destination" :label="props.row.destination === 'all' ? 'All Destinations' : props.row.destination" />
+                            <QCheckbox v-model="selectedDestinations" :val="props.row.destination" :label="props.row.destination" />
                         </QTd>
                     </QTr>
                 </template>
