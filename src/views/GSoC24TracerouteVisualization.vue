@@ -734,12 +734,12 @@ const plotRTTChart = () => {
             height: "300",
             xaxis: { title: "Time" },
             yaxis: { title: "Median RTT (ms)" },
-            margin: {
-                l: 0,
-                r: 0,
-                b: 70,
-                t: 70,
-            }
+            // margin: {
+            //     l: 0,
+            //     r: 0,
+            //     b: 70,
+            //     t: 70,
+            // }
         };
 
         Plotly.newPlot("rtt-chart", data, layout);
@@ -809,7 +809,7 @@ watchEffect(() => {
             <QSpinner v-if="isLoading" color="primary" />
             <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
                            :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading" v-model:zoom-level="zoomLevel" />
-            <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
+                           <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
             <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
                 <div style="display: flex; align-items: center;">
                     <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
@@ -818,9 +818,19 @@ watchEffect(() => {
                 <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
                 <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
                 <div><strong>IP:</strong> {{ tooltipData.label }}</div>
-                <div><strong>AS:</strong> {{ tooltipData?.data?.asns[0]?.asn ? tooltipData.data.asns[0].asn + ` (${tooltipData.data.asns[0].holder})` : "Not available"}}</div>
+                <div>
+                    <strong>AS: </strong> 
+                    <template v-if="tooltipData?.data?.asns[0]?.asn">
+                        <a :href="`/ihr/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
+                            {{ tooltipData.data.asns[0].asn }} ({{ tooltipData.data.asns[0].holder }})
+                        </a>
+                    </template>
+                    <template v-else>
+                        Not available
+                    </template>
+                </div>
                 <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
-                <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available"}}</div>
+                <div><strong>Prefix: {{ tooltipData?.data?.block?.resource }}</strong></div>
                 <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
                 <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
                 <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
@@ -870,7 +880,7 @@ watchEffect(() => {
             <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay" class="asn-info-overlay" :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }">
                 <div class="asn-grid">
                     <div v-for="asn in filteredAsnList" :key="asn" :style="{ backgroundColor: asnColors[asn] }" class="asn-box">
-                        {{ asn }}
+                        <a class="asn-link" :href="'/ihr/en/network/AS'+ asn" target="_blank">AS{{ asn }}</a>
                     </div>
                 </div>
             </div>
@@ -1082,8 +1092,12 @@ watchEffect(() => {
 .asn-box {
     padding: 0.2em;
     text-align: center;
-    color: #fff;
     font-size: 0.9em;
+}
+
+.asn-link {
+    color: #fff;
+    text-shadow: 1px 1px 2.5px rgba(0, 0, 0, 0.5);
 }
 
 .legend {
@@ -1122,6 +1136,7 @@ watchEffect(() => {
 }
 
 .view-control-overlay {
+    background-color: rgba(255, 255, 255, 0.8);
     position: absolute;
     bottom: 10px;
     right: 10px;
