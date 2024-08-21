@@ -10,6 +10,7 @@ const router = useRouter()
 
 const chartAmount = ref(0)
 const layout = reactive([])
+const childRefs = ref([]);
 
 const incrementChart = (searchInput,af) => {
   chartAmount.value++
@@ -114,6 +115,16 @@ const afChange = (id, newValue) => {
 
 }
 
+const fitScreen = () => {
+
+  childRefs.value.forEach(child => {
+    if (child && typeof child.fitToScreen === 'function') {
+      child.fitToScreen();
+    }
+  })
+
+}
+
 watch(layout, (newLayout) => {
   const searchInputs = '[' + newLayout.map(item => item.searchInput).join(',') + ']'
   const afValues = '[' + newLayout.map(item => Number(item.af)).join(',') + ']'
@@ -124,9 +135,12 @@ watch(layout, (newLayout) => {
       af: afValues
     }
   })
-}, { deep: true })
+  setTimeout(() => {
+    fitScreen(); 
+  }, 100); 
+  }, { deep: true })
 
-onMounted(() => {
+onMounted(async () => {
   let queryInput = route.query.input
   if (queryInput) {
     queryInput = queryInput.slice(1, -1);
@@ -136,6 +150,9 @@ onMounted(() => {
       incrementChart(query, af[index]);
     });  
   }
+  setTimeout(() => {
+    fitScreen(); 
+  }, 10); 
 })
 
 </script>
@@ -146,8 +163,17 @@ onMounted(() => {
     <QBtn color="secondary" label="Add Topology" @click="incrementChart(String(2501),String(4))"/>
   </div>
   <GridLayout v-model:layout="layout" :row-height="30">
-    <GridItem v-for="item in layout" :key="item.i" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :static='item.static'>
-      <NetworkTopologyChart :searchInput="item.searchInput" :af="`IPv`+ item.af" :showLegend="item.showLegend" :id="item.i" @deleteChart="deleteChart" @searchChange="searchChange" @afChange="afChange" />
+    <GridItem v-for="(item, index) in layout" :key="item.i" :x="item.x" :y="item.y" :w="item.w" :h="item.h" :i="item.i" :static='item.static'>
+      <NetworkTopologyChart 
+        :ref="el => childRefs[index] = el" 
+        :searchInput="item.searchInput" 
+        :af="`IPv`+ item.af" 
+        :showLegend="item.showLegend" 
+        :id="item.i" 
+        @deleteChart="deleteChart" 
+        @searchChange="searchChange" 
+        @afChange="afChange" 
+      />
     </GridItem>
   </GridLayout>
 </template>

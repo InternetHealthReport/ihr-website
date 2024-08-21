@@ -357,6 +357,10 @@ const calculateNodeSize = (value) => {
   return 10+1.3*Math.log2(value);
 }
 
+const fitToScreen = () => {
+  graph.value?.fitToContents()
+}
+
 const eventHandlers = {
   "node:pointerover": ({ node }) => {
     targetNodeId.value = node 
@@ -409,6 +413,8 @@ onMounted(() => {
   search()
 })
 
+defineExpose({fitToScreen})
+
 </script>
 
 <template>
@@ -441,7 +447,7 @@ onMounted(() => {
 			<QBtnGroup outline class="controlPanel">
 				<QBtn outline @click="graph?.zoomIn()" icon="zoom_in"></QBtn>
         <QBtn outline @click="graph?.zoomOut()" icon="zoom_out"></QBtn>
-        <QBtn outline @click="search()" icon="fit_screen"></QBtn>
+        <QBtn outline @click="fitToScreen()" icon="fit_screen"></QBtn>
 			</QBtnGroup>
               
       <VNetworkGraph
