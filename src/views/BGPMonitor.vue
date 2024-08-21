@@ -32,7 +32,7 @@ const inputDisable = ref(false)
 const params = ref({
   peer: '',
   path: '',
-  prefix: '202.164.222.0/24', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24
+  prefix: '169.145.140.0/23', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24, 202.164.222.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: false,

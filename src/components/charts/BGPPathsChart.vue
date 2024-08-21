@@ -55,7 +55,7 @@ const generateGraphData = () => {
       props.bgpMessageType(message) === 'Unknown'
     )
       return
-    const path = message.path.slice(-(props.maxHops + 1)) //+1 for the last as
+    const path = removeConsecutiveDuplicateAS(message.path).slice(-(props.maxHops + 1)) //+1 for the last AS
     path.forEach((n, i) => {
       if (!nodes.value.has(n)) {
         //Avoiding duplicate nodes
@@ -82,6 +82,17 @@ const generateGraphData = () => {
     target: targetArray.map((node) => nodesArray.indexOf(node)),
     value: valueArray
   }
+}
+
+const removeConsecutiveDuplicateAS = (arr) => {
+  const result = []
+  for (let i = 0; i < arr.length; i++) {
+    // Always add the first element, and add if the current element is different from the previous element
+    if (i === 0 || arr[i] !== arr[i - 1]) {
+      result.push(arr[i])
+    }
+  }
+  return result
 }
 
 const renderChart = () => {
