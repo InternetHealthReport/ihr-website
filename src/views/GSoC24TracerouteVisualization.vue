@@ -561,18 +561,25 @@ const loadMeasurement = async () => {
                 fetchedMetaData.stop_time = Math.floor(Date.now() / 1000);
             }
 
-            timeRange.value.min = fetchedMetaData.start_time;
-            timeRange.value.max = fetchedMetaData.stop_time;
+            let startTime = fetchedMetaData.start_time;
+            const stopTime = fetchedMetaData.stop_time;
 
-            leftLabelValue.value = convertUnixTimestamp(fetchedMetaData.start_time);
-            rightLabelValue.value = convertUnixTimestamp(fetchedMetaData.stop_time);
+            if ((stopTime - startTime) > 24 * 3600) {
+                startTime = stopTime - 24 * 3600;
+            }
+
+            timeRange.value.min = startTime;
+            timeRange.value.max = stopTime;
+
+            leftLabelValue.value = convertUnixTimestamp(startTime);
+            rightLabelValue.value = convertUnixTimestamp(stopTime);
 
             timeRange.value.disable = false;
 
             intervalValue.value = fetchedMetaData.interval || null;
 
             await loadMeasurementData(true);
-            
+
             selectedDestinations.value = allDestinations.value;
             selectAllDestinations.value = true;
         } catch (error) {
