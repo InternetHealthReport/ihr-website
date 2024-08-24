@@ -20,7 +20,18 @@ const getCachedData = async (url, params) => {
 	}
 
 	const response = await axios_base.get(url, { params });
-	localStorage.setItem(key, JSON.stringify(response.data));
+	try {
+		localStorage.setItem(key, JSON.stringify(response.data));
+	} catch (error) {
+		if (error instanceof DOMException && (
+            error.code === 22 || 
+            error.code === 1014 || 
+            error.name === 'QuotaExceededError' || 
+            error.name === 'NS_ERROR_DOM_QUOTA_REACHED'
+        )) {
+			return { error: 'LOCAL_STORAGE_FULL' };
+        }
+	}
 	return response.data;
 };
 

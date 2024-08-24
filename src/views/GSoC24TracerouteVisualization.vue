@@ -41,6 +41,11 @@ const ipToAsnMap = ref({});
 const showAsnOverlay = ref(true);
 const rttOverTime = ref([]);
 const zoomLevel = ref(0);
+const intervalValue = ref(null);
+const localStorageFullDialog = ref(false);
+const localStorageClearing = ref(false);
+const loadMeasurementErrorDialog = ref(false);
+const loadMeasurementErrorMessage = ref("");
 
 const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -98,7 +103,30 @@ const configs = computed(() => {
     });
 });
 
-function isPrivateIP(ip) {
+const handleClearStorage = () => {
+    localStorage.clear();
+    localStorageClearing.value = true;
+    setTimeout(() => {
+        localStorageClearing.value = false;
+        localStorageFullDialog.value = false;
+        window.location.reload();
+    }, 10000);
+};
+
+const handleCancel = () => {
+    null;
+};
+
+const handleLocalStorageFullError = () => {
+    localStorageFullDialog.value = true;
+};
+
+const handleLoadMeasurementError = (error) => {
+    loadMeasurementErrorMessage.value = error.message || "An unexpected error occurred.";
+    loadMeasurementErrorDialog.value = true;
+};
+
+const isPrivateIP = (ip) => {
     const privateRangesIPv4 = [
         { start: "10.0.0.0", end: "10.255.255.255" },
         { start: "172.16.0.0", end: "172.31.255.255" },
@@ -181,16 +209,20 @@ const processData = async (tracerouteData, loadProbes = false) => {
                 allProbes.value.push(probeData.prb_id.toString());
                 selectedProbes.value.push(probeData.prb_id.toString());
             }
-            atlas_api.getProbeById(probeData.prb_id.toString()).then(data => probeDetailsMap.value[probeData.prb_id.toString()] = data);
+            atlas_api.getProbeById(probeData.prb_id.toString()).then(data => {
+                if (data.error === "LOCAL_STORAGE_FULL") {
+                    return handleLocalStorageFullError();
+                }
+                probeDetailsMap.value[probeData.prb_id.toString()] = data
+            });
         }
 
-        // Ensure all destinations are included in allDestinations
         if (!allDestinations.value.includes(probeData.dst_addr)) {
             allDestinations.value.push(probeData.dst_addr);
             if (!nodes.value[probeData.dst_addr]) {
                 nodes.value[probeData.dst_addr] = { label: probeData.dst_addr };
             }
-            selectedDestinations.value.push(probeData.dst_addr); // Add to selectedDestinations
+            selectedDestinations.value.push(probeData.dst_addr);
         }
 
         probeData.result.forEach((hopData, hopIndex) => {
@@ -226,6 +258,9 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
                 if (!newNodeInfo.isNonResponsive) {
                     const asnPromise = RipeApi.userASN(newNodeInfo.label).then(asnData => {
+                        if (asnData.error === "LOCAL_STORAGE_FULL") {
+                            return handleLocalStorageFullError();
+                        }
                         const asn = asnData.data.asns[0];
                         if (asn) {
                             if (!asnList.value.includes(asn)) {
@@ -305,7 +340,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     assignAsnColors();
     updateDisplayedRttValues();
-    plotRTTChart(); // Plot RTT chart after processing data
+    plotRTTChart();
 };
 
 const updateDisplayedRttValues = () => {
@@ -389,6 +424,9 @@ const eventHandlers = {
         let nodeMetaData;
         if (!node.includes("*")) {
             nodeMetaData = await RipeApi.prefixOverview(node);
+            if (nodeMetaData.error === "LOCAL_STORAGE_FULL") {
+                return handleLocalStorageFullError();
+            }
         }
         const rttValues = nodeInfo.hops?.map(hop => hop.rtt);
         const sizeValues = nodeInfo.hops?.map(hop => hop.size);
@@ -507,11 +545,16 @@ const loadMeasurement = async () => {
     ipToAsnMap.value = {};
     showAsnOverlay.value = true;
     rttOverTime.value = [];
+    intervalValue.value = null;
 
     if (measurementID.value.trim()) {
         isLoading.value = true;
         try {
             const fetchedMetaData = await atlas_api.getMeasurementById(measurementID.value);
+            if (fetchedMetaData.error === "LOCAL_STORAGE_FULL") {
+                return handleLocalStorageFullError();
+            }
+
             metaData.value = fetchedMetaData;
 
             if (fetchedMetaData.status.name === "Ongoing") {
@@ -526,13 +569,14 @@ const loadMeasurement = async () => {
 
             timeRange.value.disable = false;
 
+            intervalValue.value = fetchedMetaData.interval || null;
+
             await loadMeasurementData(true);
             
-            // Select all destinations by default
             selectedDestinations.value = allDestinations.value;
             selectAllDestinations.value = true;
         } catch (error) {
-            console.error("Failed to load measurement:", error);
+            handleLoadMeasurementError(error);
         } finally {
             isLoading.value = false;
         }
@@ -562,8 +606,10 @@ const loadMeasurementData = async (loadProbes = false) => {
             }
 
             const data = await atlas_api.getMeasurementData(measurementID.value, params);
-            
-            // Filter data locally based on selected destinations
+            if (data.error === "LOCAL_STORAGE_FULL") {
+                return handleLocalStorageFullError();
+            }
+
             const filteredData = data.filter(item => 
                 selectedDestinations.value.length === 0 || selectedDestinations.value.includes(item.dst_addr)
             );
@@ -591,7 +637,7 @@ const loadMeasurementOnTimeRange = debounce((e) => {
     leftLabelValue.value = convertUnixTimestamp(e.min);
     rightLabelValue.value = convertUnixTimestamp(e.max);
     loadMeasurementData();
-}, 1000);
+}, 3000);
 
 const loadMeasurementOnProbeChange = debounce(() => {
     loadMeasurementData();
@@ -605,7 +651,7 @@ const loadMeasurementOnSearchQuery = debounce(() => {
     loadMeasurementData();
 }, 1000);
 
-function convertUnixTimestamp(unixTimestamp) {
+const convertUnixTimestamp = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
 
     const year = String(date.getFullYear());
@@ -700,9 +746,15 @@ const toggleSelectAll = (value) => {
 };
 
 const plotRTTChart = () => {
-    const timeInterval = 600; // 10-minute intervals
-    const groupedData = {};
+    if (!intervalValue.value) {
+        const rttChartContainer = document.getElementById("rtt-chart");
+        rttChartContainer.innerHTML = "<p>No interval found (probably one-off measurement)</p>";
+        return;
+    }
 
+    const timeInterval = intervalValue.value;
+    const groupedData = {};
+    
     filteredRttOverTime.value.forEach(dataPoint => {
         const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval;
         if (!groupedData[timeSlot]) {
@@ -733,13 +785,7 @@ const plotRTTChart = () => {
         const layout = {
             height: "300",
             xaxis: { title: "Time" },
-            yaxis: { title: "Median RTT (ms)" },
-            // margin: {
-            //     l: 0,
-            //     r: 0,
-            //     b: 70,
-            //     t: 70,
-            // }
+            yaxis: { title: "Median RTT (ms)" }
         };
 
         Plotly.newPlot("rtt-chart", data, layout);
@@ -763,14 +809,14 @@ const zoomOut = () => {
 };
 
 const toggleFullScreen = () => {
-    const graphContainer = document.querySelector('.graph-container');
+    const graphContainer = document.querySelector(".graph-container");
     if (!document.fullscreenElement) {
         graphContainer.requestFullscreen().then(() => {
-            graphContainer.style.background = 'white';
+            graphContainer.style.background = "white";
         });
     } else {
         document.exitFullscreen().then(() => {
-            graphContainer.style.background = 'white';
+            graphContainer.style.background = "white";
         });
     }
 };
@@ -780,7 +826,6 @@ onMounted(() => {
     if (tracerouteid) {
         measurementID.value = tracerouteid;
         loadMeasurement().then(() => {
-            // Select all destinations by default after loading the measurement
             selectedDestinations.value = allDestinations.value;
             selectAllDestinations.value = true;
         });
@@ -788,7 +833,7 @@ onMounted(() => {
 });
 
 watchEffect(() => {
-    if (rttOverTime.value.length > 0) {
+    if (rttOverTime.value.length > 0 && intervalValue.value) {
         plotRTTChart();
     }
 });
@@ -830,7 +875,7 @@ watchEffect(() => {
                     </template>
                 </div>
                 <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
-                <div><strong>Prefix: {{ tooltipData?.data?.block?.resource }}</strong></div>
+                <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource }}</div>
                 <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
                 <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
                 <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
@@ -936,7 +981,7 @@ watchEffect(() => {
                     <QTr :props="props">
                         <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
                             <template v-if="col.name === 'destination'">
-                                <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" />
+                                <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" :disable="Object.keys(nodes).length < 1" />
                             </template>
                             <template v-else>
                                 {{ col.label }}
@@ -955,6 +1000,39 @@ watchEffect(() => {
                 </template>
             </QTable>
         </div>
+        <q-dialog v-model="localStorageFullDialog">
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">Local Storage Full</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                    Your browser's local storage cache is full. Would you like to clear it to continue?
+                    <br>
+                    <span v-if="localStorageClearing">Clearing cache...</span>
+                </q-card-section>
+                
+                <q-card-actions align="right">
+                    <q-btn v-if="!localStorageClearing" flat label="Cancel" color="primary" @click="handleCancel" />
+                    <q-btn v-if="!localStorageClearing" flat label="Clear Storage" color="primary" @click="handleClearStorage" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+        <q-dialog v-model="loadMeasurementErrorDialog">
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">Error Loading Measurement</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                    {{ loadMeasurementErrorMessage }}
+                </q-card-section>
+                
+                <q-card-actions align="right">
+                    <q-btn flat label="Close" color="primary" @click="loadMeasurementErrorDialog = false" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 
@@ -987,7 +1065,7 @@ watchEffect(() => {
     height: 75vh;
     width: 100%;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
-    background: white; /* Set initial background to white */
+    background: white;
 }
 
 .placeholder-message {
