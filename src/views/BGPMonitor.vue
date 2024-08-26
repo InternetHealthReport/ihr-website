@@ -1,5 +1,15 @@
 <script setup>
-import { QBtn, QSelect, QInput, QSlider, uid } from 'quasar'
+import {
+  QBtn,
+  QSelect,
+  QInput,
+  QSlider,
+  uid,
+  QDialog,
+  QCard,
+  QCardSection,
+  QCardActions
+} from 'quasar'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
@@ -28,6 +38,7 @@ const selectedMaxTimestamp = ref(0)
 const usedMessagesCount = ref(0) //Just for displaying how many messages are being used
 const asNames = ref({}) // AS Info from asnames.txt file
 const inputDisable = ref(false)
+const isWsDisconnected = ref(false)
 
 const params = ref({
   peer: '',
@@ -105,6 +116,7 @@ const connectWebSocket = () => {
   }
   socket.value.onerror = (error) => {
     console.log('WebSocket Error:', error)
+    isWsDisconnected.value = true
     disableButton.value = false
     if (isPlaying.value) {
       isPlaying.value = false
@@ -200,7 +212,7 @@ const getASInfo = (asn) => {
   if (asNames.value[asn]) {
     return { asn: asn, ...asNames.value[asn] }
   } else {
-    return { asn: asn, asn_name: 'Unknown', cc: 'ZZ' }
+    return { asn: asn, asn_name: 'Unknown', country_iso_code2: 'ZZ' }
   }
 }
 
@@ -466,6 +478,23 @@ onMounted(() => {
         @update-selected-peers="updateSelectedPeers"
       />
     </GenericCardController>
+    <QDialog v-model="isWsDisconnected">
+      <QCard style="width: 1000px; height: auto">
+        <QCardSection>
+          <div class="text-h6">Failed to connect to the server.</div>
+        </QCardSection>
+        <QCardSection class="q-pt-none">
+          <p>
+            This may happen if the RIS Live server does not respond, or if the connection is lost
+            due to network issues. If the connection remains idle for too long, the server will also
+            close the WebSocket connection.
+          </p>
+        </QCardSection>
+        <QCardActions align="right">
+          <QBtn flat label="Close" color="primary" v-close-popup />
+        </QCardActions>
+      </QCard>
+    </QDialog>
   </div>
 </template>
 
