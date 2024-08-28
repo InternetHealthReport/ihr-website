@@ -27,8 +27,10 @@ const probeDetailsMap = ref({});
 const selectAllProbes = ref(true);
 const selectedNode = ref(null);
 const searchQuery = ref("");
-const selectedDestination = ref("all");
+const selectedDestinations = ref([]);
 const allDestinations = ref([]);
+const selectAllDestinations = ref(true);
+const destinationSearchQuery = ref("");
 const displayMode = ref("normal");
 const maxMedianRtt = ref(200);
 const minDisplayedRtt = ref(null);
@@ -39,6 +41,11 @@ const ipToAsnMap = ref({});
 const showAsnOverlay = ref(true);
 const rttOverTime = ref([]);
 const zoomLevel = ref(0);
+const intervalValue = ref(null);
+const localStorageFullDialog = ref(false);
+const localStorageClearing = ref(false);
+const loadMeasurementErrorDialog = ref(false);
+const loadMeasurementErrorMessage = ref("");
 
 const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -96,7 +103,30 @@ const configs = computed(() => {
     });
 });
 
-function isPrivateIP(ip) {
+const handleClearStorage = () => {
+    localStorage.clear();
+    localStorageClearing.value = true;
+    setTimeout(() => {
+        localStorageClearing.value = false;
+        localStorageFullDialog.value = false;
+        window.location.reload();
+    }, 10000);
+};
+
+const handleCancel = () => {
+    null;
+};
+
+const handleLocalStorageFullError = () => {
+    localStorageFullDialog.value = true;
+};
+
+const handleLoadMeasurementError = (error) => {
+    loadMeasurementErrorMessage.value = error.message || "An unexpected error occurred.";
+    loadMeasurementErrorDialog.value = true;
+};
+
+const isPrivateIP = (ip) => {
     const privateRangesIPv4 = [
         { start: "10.0.0.0", end: "10.255.255.255" },
         { start: "172.16.0.0", end: "172.31.255.255" },
@@ -179,11 +209,20 @@ const processData = async (tracerouteData, loadProbes = false) => {
                 allProbes.value.push(probeData.prb_id.toString());
                 selectedProbes.value.push(probeData.prb_id.toString());
             }
-            atlas_api.getProbeById(probeData.prb_id.toString()).then(data => probeDetailsMap.value[probeData.prb_id.toString()] = data);
+            atlas_api.getProbeById(probeData.prb_id.toString()).then(data => {
+                if (data.error === "LOCAL_STORAGE_FULL") {
+                    return handleLocalStorageFullError();
+                }
+                probeDetailsMap.value[probeData.prb_id.toString()] = data
+            });
         }
 
         if (!allDestinations.value.includes(probeData.dst_addr)) {
             allDestinations.value.push(probeData.dst_addr);
+            if (!nodes.value[probeData.dst_addr]) {
+                nodes.value[probeData.dst_addr] = { label: probeData.dst_addr };
+            }
+            selectedDestinations.value.push(probeData.dst_addr);
         }
 
         probeData.result.forEach((hopData, hopIndex) => {
@@ -219,6 +258,9 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
                 if (!newNodeInfo.isNonResponsive) {
                     const asnPromise = RipeApi.userASN(newNodeInfo.label).then(asnData => {
+                        if (asnData.error === "LOCAL_STORAGE_FULL") {
+                            return handleLocalStorageFullError();
+                        }
                         const asn = asnData.data.asns[0];
                         if (asn) {
                             if (!asnList.value.includes(asn)) {
@@ -298,7 +340,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     assignAsnColors();
     updateDisplayedRttValues();
-    plotRTTChart(); // Plot RTT chart after processing data
+    plotRTTChart();
 };
 
 const updateDisplayedRttValues = () => {
@@ -325,14 +367,14 @@ const updateDisplayedRttValues = () => {
 watch([nodes, displayMode], updateDisplayedRttValues);
 
 const filteredRttOverTime = computed(() => {
-  if (timeRange.value.disable) {
-    return rttOverTime.value;
-  }
-  
-  const { min, max } = timeRange.value;
-  return rttOverTime.value.filter(dataPoint => {
-    return dataPoint.timestamp >= min && dataPoint.timestamp <= max;
-  });
+    if (timeRange.value.disable) {
+        return rttOverTime.value;
+    }
+    
+    const { min, max } = timeRange.value;
+    return rttOverTime.value.filter(dataPoint => {
+        return dataPoint.timestamp >= min && dataPoint.timestamp <= max;
+    });
 });
 
 const graph = ref();
@@ -382,6 +424,9 @@ const eventHandlers = {
         let nodeMetaData;
         if (!node.includes("*")) {
             nodeMetaData = await RipeApi.prefixOverview(node);
+            if (nodeMetaData.error === "LOCAL_STORAGE_FULL") {
+                return handleLocalStorageFullError();
+            }
         }
         const rttValues = nodeInfo.hops?.map(hop => hop.rtt);
         const sizeValues = nodeInfo.hops?.map(hop => hop.size);
@@ -492,7 +537,7 @@ const loadMeasurement = async () => {
     selectAllProbes.value = true;
     selectedNode.value = null;
     searchQuery.value = "";
-    selectedDestination.value = "all";
+    selectedDestinations.value = [];
     allDestinations.value = [];
     displayMode.value = "normal"
     asnColors.value = {};
@@ -500,28 +545,45 @@ const loadMeasurement = async () => {
     ipToAsnMap.value = {};
     showAsnOverlay.value = true;
     rttOverTime.value = [];
+    intervalValue.value = null;
 
     if (measurementID.value.trim()) {
         isLoading.value = true;
         try {
             const fetchedMetaData = await atlas_api.getMeasurementById(measurementID.value);
+            if (fetchedMetaData.error === "LOCAL_STORAGE_FULL") {
+                return handleLocalStorageFullError();
+            }
+
             metaData.value = fetchedMetaData;
 
             if (fetchedMetaData.status.name === "Ongoing") {
                 fetchedMetaData.stop_time = Math.floor(Date.now() / 1000);
             }
 
-            timeRange.value.min = fetchedMetaData.start_time;
-            timeRange.value.max = fetchedMetaData.stop_time;
+            let startTime = fetchedMetaData.start_time;
+            const stopTime = fetchedMetaData.stop_time;
 
-            leftLabelValue.value = convertUnixTimestamp(fetchedMetaData.start_time);
-            rightLabelValue.value = convertUnixTimestamp(fetchedMetaData.stop_time);
+            if ((stopTime - startTime) > 24 * 3600) {
+                startTime = stopTime - 24 * 3600;
+            }
+
+            timeRange.value.min = startTime;
+            timeRange.value.max = stopTime;
+
+            leftLabelValue.value = convertUnixTimestamp(startTime);
+            rightLabelValue.value = convertUnixTimestamp(stopTime);
 
             timeRange.value.disable = false;
 
+            intervalValue.value = fetchedMetaData.interval || null;
+
             await loadMeasurementData(true);
+
+            selectedDestinations.value = allDestinations.value;
+            selectAllDestinations.value = true;
         } catch (error) {
-            console.error("Failed to load measurement:", error);
+            handleLoadMeasurementError(error);
         } finally {
             isLoading.value = false;
         }
@@ -536,7 +598,7 @@ const loadMeasurementData = async (loadProbes = false) => {
                 allProbes.value = [];
                 selectedProbes.value = [];
                 allDestinations.value = [];
-                selectedDestination.value = "all";
+                selectedDestinations.value = [];
             }
 
             const params = {};
@@ -550,12 +612,16 @@ const loadMeasurementData = async (loadProbes = false) => {
                 params.probe_ids = selectedProbes.value.join(",");
             }
 
-            if (selectedDestination.value !== "all") {
-                params.target_ip = selectedDestination.value;
+            const data = await atlas_api.getMeasurementData(measurementID.value, params);
+            if (data.error === "LOCAL_STORAGE_FULL") {
+                return handleLocalStorageFullError();
             }
 
-            const data = await atlas_api.getMeasurementData(measurementID.value, params);
-            processData(data, loadProbes);
+            const filteredData = data.filter(item => 
+                selectedDestinations.value.length === 0 || selectedDestinations.value.includes(item.dst_addr)
+            );
+            
+            processData(filteredData, loadProbes);
         } catch (error) {
             console.error("Failed to load measurement data:", error);
         } finally {
@@ -578,13 +644,21 @@ const loadMeasurementOnTimeRange = debounce((e) => {
     leftLabelValue.value = convertUnixTimestamp(e.min);
     rightLabelValue.value = convertUnixTimestamp(e.max);
     loadMeasurementData();
-}, 1000);
+}, 3000);
 
 const loadMeasurementOnProbeChange = debounce(() => {
     loadMeasurementData();
 }, 1000);
 
-function convertUnixTimestamp(unixTimestamp) {
+const loadMeasurementOnDestinationChange = debounce(() => {
+    loadMeasurementData();
+}, 1000);
+
+const loadMeasurementOnSearchQuery = debounce(() => {
+    loadMeasurementData();
+}, 1000);
+
+const convertUnixTimestamp = (unixTimestamp) => {
     const date = new Date(unixTimestamp * 1000);
 
     const year = String(date.getFullYear());
@@ -609,6 +683,12 @@ watchEffect(() => {
 watchEffect(() => {
     if (!timeRange.value.disable) {
         loadMeasurementOnTimeRange(timeRange.value);
+    }
+});
+
+watchEffect(() => {
+    if (selectedDestinations.value.length > 0) {
+        loadMeasurementOnDestinationChange();
     }
 });
 
@@ -637,8 +717,32 @@ const columns = [
 ];
 
 const destinationColumns = [
-    { name: "destination", align: "left", label: "Destination IP", field: "destination" }
+    { name: "destination", align: "left", label: "Destination IP", field: "destination" },
+    { name: "ip", align: "left", label: "IP Address", field: "ip" },
+    { name: "asn", align: "left", label: "ASN", field: "asn" },
 ];
+
+const destinationRows = computed(() => {
+    return allDestinations.value.map(destination => {
+        const nodeInfo = nodes.value[destination] || { label: destination };
+        const asn = ipToAsnMap.value[nodeInfo.label] || "unknown";
+
+        return {
+            destination: destination,
+            ip: nodeInfo.label,
+            asn: asn,
+        };
+    });
+});
+
+const filteredDestinationRows = computed(() => {
+    const query = destinationSearchQuery.value.toLowerCase();
+    return destinationRows.value.filter(row => {
+        return ["destination", "ip", "asn"].some(field => {
+            return row[field] && row[field].toString().toLowerCase().includes(query);
+        });
+    });
+});
 
 const toggleSelectAll = (value) => {
     if (value) {
@@ -649,50 +753,58 @@ const toggleSelectAll = (value) => {
 };
 
 const plotRTTChart = () => {
-  const timeInterval = 600; // 10-minute intervals
-  const groupedData = {};
-
-  filteredRttOverTime.value.forEach(dataPoint => {
-    const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval;
-    if (!groupedData[timeSlot]) {
-      groupedData[timeSlot] = [];
-    }
-    groupedData[timeSlot].push(dataPoint.rtt);
-  });
-
-  if (Object.keys(groupedData).length == 1) {
-    const rttChartContainer = document.getElementById("rtt-chart");
-    rttChartContainer.innerHTML = "<p>Interval too small</p>";
-    return;
-  } else {
-    const trace = {
-      x: [],
-      y: [],
-      type: "scatter",
-      mode: "lines+markers",
-      name: "Median RTT"
-    };
-
-    for (const [timeSlot, rtts] of Object.entries(groupedData)) {
-      trace.x.push(new Date(timeSlot * 1000));
-      trace.y.push(calculateMedian(rtts));
+    if (!intervalValue.value) {
+        const rttChartContainer = document.getElementById("rtt-chart");
+        rttChartContainer.innerHTML = "<p>No interval found (probably one-off measurement)</p>";
+        return;
     }
 
-    const data = [trace];
-    const layout = {
-      height: "300",
-      xaxis: { title: "Time" },
-      yaxis: { title: "Median RTT (ms)" },
-      margin: {
-        l: 0,
-        r: 0,
-        b: 70,
-        t: 70,
-      }
-    };
+    const timeInterval = intervalValue.value;
+    const groupedData = {};
+    
+    filteredRttOverTime.value.forEach(dataPoint => {
+        const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval;
+        if (!groupedData[timeSlot]) {
+            groupedData[timeSlot] = [];
+        }
+        groupedData[timeSlot].push(dataPoint.rtt);
+    });
 
-    Plotly.newPlot("rtt-chart", data, layout);
-  }
+    if (Object.keys(groupedData).length == 1) {
+        const rttChartContainer = document.getElementById("rtt-chart");
+        rttChartContainer.innerHTML = "<p>Interval too small</p>";
+        return;
+    } else {
+        const trace = {
+            x: [],
+            y: [],
+            type: "scatter",
+            mode: "lines+markers",
+            name: "Median RTT"
+        };
+
+        for (const [timeSlot, rtts] of Object.entries(groupedData)) {
+            trace.x.push(new Date(timeSlot * 1000));
+            trace.y.push(calculateMedian(rtts));
+        }
+
+        const data = [trace];
+        const layout = {
+            height: "300",
+            xaxis: { title: "Time" },
+            yaxis: { title: "Median RTT (ms)" }
+        };
+
+        Plotly.newPlot("rtt-chart", data, layout);
+    }
+};
+
+const toggleSelectAllDestinations = (value) => {
+    if (value) {
+        selectedDestinations.value = allDestinations.value;
+    } else {
+        selectedDestinations.value = [];
+    }
 };
 
 const zoomIn = () => {
@@ -704,14 +816,14 @@ const zoomOut = () => {
 };
 
 const toggleFullScreen = () => {
-    const graphContainer = document.querySelector('.graph-container');
+    const graphContainer = document.querySelector(".graph-container");
     if (!document.fullscreenElement) {
         graphContainer.requestFullscreen().then(() => {
-            graphContainer.style.background = 'white';
+            graphContainer.style.background = "white";
         });
     } else {
         document.exitFullscreen().then(() => {
-            graphContainer.style.background = 'white';
+            graphContainer.style.background = "white";
         });
     }
 };
@@ -720,12 +832,15 @@ onMounted(() => {
     const tracerouteid = route.query.tracerouteid;
     if (tracerouteid) {
         measurementID.value = tracerouteid;
-        loadMeasurement();
+        loadMeasurement().then(() => {
+            selectedDestinations.value = allDestinations.value;
+            selectAllDestinations.value = true;
+        });
     }
 });
 
 watchEffect(() => {
-    if (rttOverTime.value.length > 0) {
+    if (rttOverTime.value.length > 0 && intervalValue.value) {
         plotRTTChart();
     }
 });
@@ -746,7 +861,7 @@ watchEffect(() => {
             <QSpinner v-if="isLoading" color="primary" />
             <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
                            :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading" v-model:zoom-level="zoomLevel" />
-            <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
+                           <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
             <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
                 <div style="display: flex; align-items: center;">
                     <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
@@ -755,9 +870,19 @@ watchEffect(() => {
                 <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
                 <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
                 <div><strong>IP:</strong> {{ tooltipData.label }}</div>
-                <div><strong>AS:</strong> {{ tooltipData?.data?.asns[0]?.asn ? tooltipData.data.asns[0].asn + ` (${tooltipData.data.asns[0].holder})` : "Not available"}}</div>
+                <div>
+                    <strong>AS: </strong> 
+                    <template v-if="tooltipData?.data?.asns[0]?.asn">
+                        <a :href="`/ihr/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
+                            {{ tooltipData.data.asns[0].asn }} ({{ tooltipData.data.asns[0].holder }})
+                        </a>
+                    </template>
+                    <template v-else>
+                        Not available
+                    </template>
+                </div>
                 <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
-                <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available"}}</div>
+                <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource }}</div>
                 <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
                 <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
                 <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
@@ -783,7 +908,7 @@ watchEffect(() => {
                 <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
                 <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
                 <QBtn v-if="displayMode === 'asn'" flat dense @click="showAsnOverlay = !showAsnOverlay">
-                    Toggle ASN Overlay
+                    ASN Overlay
                 </QBtn>
             </div>
             <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
@@ -807,7 +932,7 @@ watchEffect(() => {
             <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay" class="asn-info-overlay" :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }">
                 <div class="asn-grid">
                     <div v-for="asn in filteredAsnList" :key="asn" :style="{ backgroundColor: asnColors[asn] }" class="asn-box">
-                        {{ asn }}
+                        <a class="asn-link" :href="'/ihr/en/network/AS'+ asn" target="_blank">AS{{ asn }}</a>
                     </div>
                 </div>
             </div>
@@ -827,7 +952,7 @@ watchEffect(() => {
         </div>
         <div class="probe-selection">
             <h3>Select Probes</h3>
-            <QInput v-model="searchQuery" placeholder="Search probes..." :disable="Object.keys(nodes).length < 1" />
+            <QInput v-model="searchQuery" placeholder="Search probes..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
             <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
                 <template v-slot:header="props">
                     <QTr :props="props">
@@ -856,17 +981,65 @@ watchEffect(() => {
             </QTable>
         </div>
         <div class="destination-selection">
-            <h3>Select Destination</h3>
-            <QTable :rows="[{ destination: 'all' }, ...allDestinations.map(dest => ({ destination: dest }))]" :columns="destinationColumns" row-key="destination">
+            <h3>Select Destinations</h3>
+            <QInput v-model="destinationSearchQuery" placeholder="Search destinations..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
+            <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination">
+                <template v-slot:header="props">
+                    <QTr :props="props">
+                        <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
+                            <template v-if="col.name === 'destination'">
+                                <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" :disable="Object.keys(nodes).length < 1" />
+                            </template>
+                            <template v-else>
+                                {{ col.label }}
+                            </template>
+                        </QTd>
+                    </QTr>
+                </template>
                 <template v-slot:body="props">
                     <QTr :props="props">
                         <QTd>
-                            <QRadio v-model="selectedDestination" :val="props.row.destination" :label="props.row.destination === 'all' ? 'All Destinations' : props.row.destination" />
+                            <QCheckbox v-model="selectedDestinations" :val="props.row.destination" :label="props.row.destination" />
                         </QTd>
+                        <QTd>{{ props.row.ip }}</QTd>
+                        <QTd>{{ props.row.asn }}</QTd>
                     </QTr>
                 </template>
             </QTable>
         </div>
+        <q-dialog v-model="localStorageFullDialog">
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">Local Storage Full</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                    Your browser's local storage cache is full. Would you like to clear it to continue?
+                    <br>
+                    <span v-if="localStorageClearing">Clearing cache...</span>
+                </q-card-section>
+                
+                <q-card-actions align="right">
+                    <q-btn v-if="!localStorageClearing" flat label="Cancel" color="primary" @click="handleCancel" />
+                    <q-btn v-if="!localStorageClearing" flat label="Clear Storage" color="primary" @click="handleClearStorage" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+        <q-dialog v-model="loadMeasurementErrorDialog">
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">Error Loading Measurement</div>
+                </q-card-section>
+
+                <q-card-section class="q-pt-none">
+                    {{ loadMeasurementErrorMessage }}
+                </q-card-section>
+                
+                <q-card-actions align="right">
+                    <q-btn flat label="Close" color="primary" @click="loadMeasurementErrorDialog = false" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 
@@ -899,7 +1072,7 @@ watchEffect(() => {
     height: 75vh;
     width: 100%;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
-    background: white; /* Set initial background to white */
+    background: white;
 }
 
 .placeholder-message {
@@ -1004,8 +1177,12 @@ watchEffect(() => {
 .asn-box {
     padding: 0.2em;
     text-align: center;
-    color: #fff;
     font-size: 0.9em;
+}
+
+.asn-link {
+    color: #fff;
+    text-shadow: 1px 1px 2.5px rgba(0, 0, 0, 0.5);
 }
 
 .legend {
@@ -1044,6 +1221,7 @@ watchEffect(() => {
 }
 
 .view-control-overlay {
+    background-color: rgba(255, 255, 255, 0.8);
     position: absolute;
     bottom: 10px;
     right: 10px;

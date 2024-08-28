@@ -10,11 +10,12 @@ import { useRouter } from 'vue-router'
 const iyp_api = inject('iyp_api')
 
 const router = useRouter()
+const emit = defineEmits(["searchChange","afChange"])
 
 const props  = defineProps({
   searchInput: {
     type: String,
-    default:'130.69.0.0/16'
+    default:'2501'
   },
   af: {
     type: String,
@@ -27,7 +28,11 @@ const props  = defineProps({
 	showLegend: {
 		type: Boolean,
 		default: true
-	}
+	},
+  id: {
+    type: String,
+    default: '',
+  }
 })
 
 const ipOptions = ref(['IPv4', 'IPv6'])
@@ -352,6 +357,10 @@ const calculateNodeSize = (value) => {
   return 10+1.3*Math.log2(value);
 }
 
+const fitToScreen = () => {
+  graph.value?.fitToContents()
+}
+
 const eventHandlers = {
   "node:pointerover": ({ node }) => {
     targetNodeId.value = node 
@@ -391,33 +400,46 @@ watch(
   { deep: true }
 );
 
+watch(searchInput, (newValue) => {
+  emit('searchChange', props.id, newValue);
+});
+
+watch(ipModel, (newValue) => {
+  emit('afChange', props.id, newValue[newValue.length-1]);
+});
+
 onMounted(() => {
   init()
   search()
 })
 
+defineExpose({fitToScreen})
+
 </script>
 
 <template>
 
-	<QCard :flat="props.isComponent" :bordered="!props.isComponent">
+	<QCard style="margin-bottom: 15px" :flat="props.isComponent" :bordered="!props.isComponent">
 
-    <QCardSection v-if="!props.isComponent">
-	
-      <div class="justify-center flex pb-0">
-        <QInput style="max-width: 145px"  outlined v-model="searchInput" placeholder="ASN" :dense="true" />
+  <QCardSection v-if="!props.isComponent">
+    
+    <div class="flex justify-between pb-0">
+      <div class="flex justify-center" style="flex-grow: 1;">
+        <QInput style="max-width: 145px" outlined v-model="searchInput" placeholder="ASN" :dense="true" />
         <QSelect
-					style="min-width: 100px; margin-left: 22px;"
-					filled
-					v-model="ipModel"
-					:options="ipOptions"
-					label="IP"
-					:dense="true"
-				/>
-        <QBtn style="margin-left:22px" color="secondary" label="Search"  @click="search"/>
+          style="min-width: 100px; margin-left: 22px;"
+          filled
+          v-model="ipModel"
+          :options="ipOptions"
+          label="IP"
+          :dense="true"
+        />
+        <QBtn style="margin-left:15px" color="secondary" label="Search"  @click="search"/>
       </div>
+      <QBtn color="negative" label="Delete"  @click="$emit('deleteChart', props.id)"/>
+    </div>
 
-    </QCardSection>
+  </QCardSection>
 
     <QCardSection class="graphContainer" v-if="!loading && Object.keys(allNodes).length>0">
 
@@ -425,7 +447,7 @@ onMounted(() => {
 			<QBtnGroup outline class="controlPanel">
 				<QBtn outline @click="graph?.zoomIn()" icon="zoom_in"></QBtn>
         <QBtn outline @click="graph?.zoomOut()" icon="zoom_out"></QBtn>
-        <QBtn outline @click="search()" icon="fit_screen"></QBtn>
+        <QBtn outline @click="fitToScreen()" icon="fit_screen"></QBtn>
 			</QBtnGroup>
               
       <VNetworkGraph

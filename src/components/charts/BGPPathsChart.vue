@@ -35,10 +35,9 @@ const links = ref([])
 
 const generateGraphData = () => {
   nodes.value.clear()
-  const linkSet = new Set()
   const sourceArray = []
   const targetArray = []
-  const valueArray = []
+  const linkSetCount = new Map()
 
   //Only consider selected peers which are selected in the table
   const peers = props.selectedPeers.map((message) => message.peer)
@@ -55,22 +54,26 @@ const generateGraphData = () => {
       props.bgpMessageType(message) === 'Unknown'
     )
       return
-    const path = message.path.slice(-(props.maxHops + 1)) //+1 for the last as
+    const path = removeConsecutiveDuplicateAS(message.path).slice(-(props.maxHops + 1)) //+1 for the last AS
     path.forEach((n, i) => {
-      if (!nodes.value.has(n)) {
-        //Avoiding duplicate nodes
-        nodes.value.set(n, [n, message.as_info[i].asn_name, message.as_info[i].country_iso_code2])
+      if (nodes.value.has(n)) {
+        const node = nodes.value.get(n)
+        node[3] = node[3] + 1
+        nodes.value.set(n, node)
+      } else {
+        const asn = message.as_info.find((entry) => entry.asn === n)
+        nodes.value.set(n, [asn.asn, asn.asn_name, asn.country_iso_code2, 1])
       }
       if (i < path.length - 1) {
         const source = path[i]
         const target = path[i + 1]
-        const link = [source, target].sort().join('-')
-        if (!linkSet.has(link) && source !== target) {
-          //Avoiding duplicate links
-          linkSet.add(link)
+        const link = [source, target].join('-')
+        if (linkSetCount.has(link)) {
+          linkSetCount.set(link, linkSetCount.get(link) + 1)
+        } else {
+          linkSetCount.set(link, 1)
           sourceArray.push(source)
           targetArray.push(target)
-          valueArray.push(1)
         }
       }
     })
@@ -80,8 +83,19 @@ const generateGraphData = () => {
   links.value = {
     source: sourceArray.map((node) => nodesArray.indexOf(node)),
     target: targetArray.map((node) => nodesArray.indexOf(node)),
-    value: valueArray
+    value: Array.from(linkSetCount.values())
   }
+}
+
+const removeConsecutiveDuplicateAS = (arr) => {
+  const result = []
+  for (let i = 0; i < arr.length; i++) {
+    // Always add the first element, and add if the current element is different from the previous element
+    if (i === 0 || arr[i] !== arr[i - 1]) {
+      result.push(arr[i])
+    }
+  }
+  return result
 }
 
 const renderChart = () => {
@@ -97,7 +111,8 @@ const renderChart = () => {
         },
         label: Array.from(nodes.value.keys()),
         customdata: Array.from(nodes.value.values()),
-        hovertemplate: 'AS%{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}<extra></extra>'
+        hovertemplate:
+          'AS%{customdata[0]}<br>%{customdata[1]}, %{customdata[2]}<br>Seen by %{customdata[3]} peers<extra></extra>'
       },
       link: links.value
     }
