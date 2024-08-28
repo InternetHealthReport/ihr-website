@@ -87,6 +87,11 @@ const  SIMPLE_MENU = [
         routeName: 'bgp-monitor',
         summary: 'header.bgpMonitor.summary',
       },
+      {
+        entryName: 'header.gsoc24TracerouteVisualization.name',
+        routeName: 'gsoc24-traceroute-visualization',
+        summary: 'header.gsoc24TracerouteVisualization.summary',
+      },
     ],
   },
   {

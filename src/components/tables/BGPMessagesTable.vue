@@ -4,24 +4,24 @@ import { ref, onMounted, computed, watch } from 'vue'
 import report from '@/plugins/report'
 import Tr from '@/i18n/translation'
 
-const props  = defineProps({
+const props = defineProps({
   filteredMessages: {
-		type: Array,
-    default: () => [],
-	},
-	selectedPeers: {
-		type: Array,
-		default: () => [],
-	},
-	bgpMessageType: {
-		type: Function
-	},
+    type: Array,
+    default: () => []
+  },
+  selectedPeers: {
+    type: Array,
+    default: () => []
+  },
+  bgpMessageType: {
+    type: Function
+  },
   isLiveMode: {
-		type: Boolean
-	},
-	isPlaying: {
-		type: Boolean
-	}
+    type: Boolean
+  },
+  isPlaying: {
+    type: Boolean
+  }
 })
 
 const { utcString } = report()
@@ -81,7 +81,7 @@ const timestampToUTC = (timestamp) => {
 }
 
 const enableLiveMode = () => {
-	emit('enable-live-mode')
+  emit('enable-live-mode')
 }
 
 const rows = computed(() =>
@@ -99,23 +99,20 @@ const rows = computed(() =>
     timestamp: timestampToUTC(message.floor_timestamp),
     community:
       message.community?.length > 0
-        ? message.community
-            .map((c) => `${c.community}, AS${c.comm_1}-${c.description}`)
-            .join('\n')
+        ? message.community.map((c) => `${c.community}, AS${c.comm_1}-${c.description}`).join('\n')
         : 'Null'
   }))
 )
 
-watch(() => props.selectedPeers, () => {
-  selectedPeersModel.value = props.selectedPeers
-})
+watch(
+  () => props.selectedPeers,
+  () => {
+    selectedPeersModel.value = props.selectedPeers
+  }
+)
 
 watch(selectedPeersModel, () => {
   emit('update-selected-peers', selectedPeersModel.value)
-})
-
-onMounted(() => {
-  
 })
 </script>
 
@@ -129,9 +126,9 @@ onMounted(() => {
     selection="multiple"
     v-model:selected="selectedPeersModel"
   >
-    <template v-slot:top-left>
+    <template v-if="props.filteredMessages.length !== 0" v-slot:top-left>
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
-    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </template>
     <template v-slot:top-right>
       <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
