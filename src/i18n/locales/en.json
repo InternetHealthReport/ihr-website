@@ -62,9 +62,9 @@
       "name": "COVID19",
       "summary": "RTT analysis during national lockdowns"
     },
-    "gsoc24TracerouteVisualization": {
-      "name": "[GSoC24] Traceroute visualization",
-      "summary": "The GSoC24 Traceroute visualization project"
+    "tracerouteVisualization": {
+      "name": "Traceroute visualization",
+      "summary": "A effective way to visualize traceroute data"
     },
     "contact": "Contact",
     "documentation": "Documentation",
