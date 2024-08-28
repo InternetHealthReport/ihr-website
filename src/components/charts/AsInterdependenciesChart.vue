@@ -141,7 +141,7 @@ const apiCall = async() => {
 
 const getNeighboursData = () => {
   ripeApi.asnNeighbours(props.asNumber).then(res => {
-    res.data.neighbours.forEach(neighbour => {
+    res.data.data.neighbours.forEach(neighbour => {
       neighbours.value.push(neighbour.asn)
     })
     loadingNeighbours.value = false

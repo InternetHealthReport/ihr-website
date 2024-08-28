@@ -18,7 +18,15 @@ const cache = async (key, fetcher, options) => {
 				localStorage.setItem(key, JSON.stringify(sessionObj))
 			}
 		} catch (e) {
-
+			if (error instanceof DOMException && (
+				error.code === 22 || 
+				error.code === 1014 || 
+				error.name === 'QuotaExceededError' || 
+				error.name === 'NS_ERROR_DOM_QUOTA_REACHED'
+      )) {
+				return { error: 'LOCAL_STORAGE_FULL' };
+      }
+			return e
 		}
 	}
 	return item

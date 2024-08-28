@@ -210,10 +210,10 @@ const processData = async (tracerouteData, loadProbes = false) => {
                 selectedProbes.value.push(probeData.prb_id.toString());
             }
             atlas_api.getProbeById(probeData.prb_id.toString()).then(data => {
-                if (data.error === "LOCAL_STORAGE_FULL") {
+                if (data.data.error === "LOCAL_STORAGE_FULL") {
                     return handleLocalStorageFullError();
                 }
-                probeDetailsMap.value[probeData.prb_id.toString()] = data
+                probeDetailsMap.value[probeData.prb_id.toString()] = data.data
             });
         }
 
@@ -261,7 +261,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
                         if (asnData.error === "LOCAL_STORAGE_FULL") {
                             return handleLocalStorageFullError();
                         }
-                        const asn = asnData.data.asns[0];
+                        const asn = asnData.data.data.asns[0];
                         if (asn) {
                             if (!asnList.value.includes(asn)) {
                                 asnList.value.push(asn);
@@ -423,7 +423,7 @@ const eventHandlers = {
         const nodeInfo = nodes.value[node];
         let nodeMetaData;
         if (!node.includes("*")) {
-            nodeMetaData = await RipeApi.prefixOverview(node);
+            nodeMetaData = (await RipeApi.prefixOverview(node)).data;
             if (nodeMetaData.error === "LOCAL_STORAGE_FULL") {
                 return handleLocalStorageFullError();
             }
@@ -550,7 +550,7 @@ const loadMeasurement = async () => {
     if (measurementID.value.trim()) {
         isLoading.value = true;
         try {
-            const fetchedMetaData = await atlas_api.getMeasurementById(measurementID.value);
+            const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
             if (fetchedMetaData.error === "LOCAL_STORAGE_FULL") {
                 return handleLocalStorageFullError();
             }
@@ -583,6 +583,7 @@ const loadMeasurement = async () => {
             selectedDestinations.value = allDestinations.value;
             selectAllDestinations.value = true;
         } catch (error) {
+            console.log(error)
             handleLoadMeasurementError(error);
         } finally {
             isLoading.value = false;
@@ -612,7 +613,7 @@ const loadMeasurementData = async (loadProbes = false) => {
                 params.probe_ids = selectedProbes.value.join(",");
             }
 
-            const data = await atlas_api.getMeasurementData(measurementID.value, params);
+            const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
             if (data.error === "LOCAL_STORAGE_FULL") {
                 return handleLocalStorageFullError();
             }
