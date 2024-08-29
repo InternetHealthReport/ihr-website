@@ -1,19 +1,20 @@
 <script setup>
-import { ref, inject, computed, watchEffect, watch, nextTick, onMounted } from "vue"
-import { QInput, QIcon, QBtn, QSpinner, QRange, QCheckbox, QTable, QTd, QTr, QRadio } from "quasar"
+import { ref, inject, computed, watchEffect, watch, onMounted } from "vue"
+import { QInput, QIcon, QBtn, QCheckbox, QTable, QTd, QTr, QDialog, QCard, QCardSection, QCardActions } from "quasar"
 import dagre from "dagre"
 import RipeApi from "../plugins/RipeApi"
 import { useRoute } from "vue-router"
 import TracerouteChart from "@/components/charts/TracerouteChart.vue"
 import TracerouteRttChart from "@/components/charts/TracerouteRttChart.vue"
+import TracerouteProbesTable from "@/components/tables/TracerouteProbesTable.vue"
 import { convertUnixTimestamp, isPrivateIP, calculateMedian } from "../plugins/tracerouteFunctions"
 
 const route = useRoute()
 const atlas_api = inject("atlas_api")
 const isLoading = ref(false)
 const measurementID = ref("")
-const measurementIDInput = ref("75404443")
-// const measurementIDInput = ref("32278172")
+// const measurementIDInput = ref("75404443")
+const measurementIDInput = ref("32278172")
 const nodes = ref({})
 const edges = ref({})
 const timeRange = ref({ disable: true })
@@ -24,9 +25,9 @@ const nodeSize = 15
 const selectedProbes = ref([])
 const allProbes = ref([])
 const probeDetailsMap = ref({})
-const selectAllProbes = ref(true)
+
 const layoutNodes = ref({ nodes: {} })
-const searchQuery = ref("")
+
 const selectedDestinations = ref([])
 const allDestinations = ref([])
 const selectAllDestinations = ref(true)
@@ -271,9 +272,8 @@ const loadMeasurement = async () => {
     selectedProbes.value = []
     allProbes.value = []
     probeDetailsMap.value = {}
-    selectAllProbes.value = true
+    
 		layoutNodes.value = { nodes: {} }
-    searchQuery.value = ""
     selectedDestinations.value = []
     allDestinations.value = []
     asnList.value = []
@@ -412,30 +412,6 @@ watchEffect(() => {
     }
 })
 
-const paginatedProbes = computed(() => {
-    const query = searchQuery.value.toLowerCase()
-    const uniqueProbes = new Set()
-    return allProbes.value.map(probe => ({
-        probe,
-        ...probeDetailsMap.value[probe]
-    })).filter(probe => {
-        if (uniqueProbes.has(probe.probe)) return false
-        uniqueProbes.add(probe.probe)
-        return ["address_v4", "address_v6", "country_code", "asn_v4", "asn_v6"].some(field => {
-            return probe[field] && probe[field].toString().toLowerCase().includes(query)
-        })
-    })
-})
-
-const columns = [
-    { name: "probe", align: "left", label: "Probe", field: "probe" },
-    { name: "ipv4", align: "left", label: "IPv4 Address", field: "ipv4" },
-    { name: "ipv6", align: "left", label: "IPv6 Address", field: "ipv6" },
-    { name: "country_code", align: "left", label: "Country Code", field: "country_code" },
-    { name: "asn_v4", align: "left", label: "ASN4", field: "asn_v4" },
-    { name: "asn_v6", align: "left", label: "ASN6", field: "asn_v6" }
-]
-
 const destinationColumns = [
     { name: "destination", align: "left", label: "Destination IP", field: "destination" },
     { name: "ip", align: "left", label: "IP Address", field: "ip" },
@@ -464,14 +440,9 @@ const filteredDestinationRows = computed(() => {
     })
 })
 
-const toggleSelectAll = (value) => {
-    if (value) {
-        selectedProbes.value = allProbes.value
-    } else {
-        selectedProbes.value = []
-    }
+const setSelectedProbes = (value) => {
+  selectedProbes.value = value
 }
-
 
 const toggleSelectAllDestinations = (value) => {
     if (value) {
@@ -495,133 +466,109 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="main-container">
-        <h1>Traceroute Visualization</h1>
-        <QInput v-model="measurementIDInput" @keyup.enter="loadMeasurement" placeholder="Enter RIPE ATLAS traceroute measurement ID">
-            <template v-slot:prepend>
-            <QIcon name="web" />
-            </template>
-            <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
-                <QIcon name="search" />
-            </QBtn>
-        </QInput>
-        <TracerouteChart
-            :measurementID="measurementID"
-						:isLoading="isLoading"
-						:nodes="nodes"
-						:selectedProbes="selectedProbes"
-						:nodeSize="nodeSize"
-						:edges="edges"
-						:layoutNodes="layoutNodes"
-						:metaData="metaData"
-						:probeDetailsMap="probeDetailsMap"
-						:minDisplayedRtt="minDisplayedRtt"
-						:maxDisplayedRtt="maxDisplayedRtt"
-						:ipToAsnMap="ipToAsnMap"
-						:asnList="asnList"
-						@updateDisplayedRttValues="updateDisplayedRttValues"
-        />
-        <h3>Median RTT Over Time</h3>
-        <TracerouteRttChart 
-          :intervalValue="intervalValue"
-          :timeRange="timeRange"
-          :metaData="metaData"
-          :leftLabelValue="leftLabelValue"
-          :rightLabelValue="rightLabelValue"
-          :rttOverTime="rttOverTime"
-          @loadMeasurementOnTimeRange="loadMeasurementOnTimeRange"
-        />
-        <div class="probe-selection">
-            <h3>Select Probes</h3>
-            <QInput v-model="searchQuery" placeholder="Search probes..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
-            <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
-                <template v-slot:header="props">
-                    <QTr :props="props">
-                        <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
-                            <template v-if="col.name === 'probe'">
-                                <QCheckbox v-model="selectAllProbes" @update:model-value="toggleSelectAll" :disable="Object.keys(nodes).length < 1" />
-                            </template>
-                            <template v-else>
-                                {{ col.label }}
-                            </template>
-                        </QTd>
-                    </QTr>
-                </template>
-                <template v-slot:body="props">
-                    <QTr :props="props">
-                        <QTd>
-                            <QCheckbox v-model="selectedProbes" :val="props.row.probe" :label="props.row.probe" />
-                        </QTd>
-                        <QTd>{{ props.row.address_v4 }}</QTd>
-                        <QTd>{{ props.row.address_v6 }}</QTd>
-                        <QTd>{{ props.row.country_code }}</QTd>
-                        <QTd>{{ props.row.asn_v4 }}</QTd>
-                        <QTd>{{ props.row.asn_v6 }}</QTd>
-                    </QTr>
-                </template>
-            </QTable>
-        </div>
-        <div class="destination-selection">
-            <h3>Select Destinations</h3>
-            <QInput v-model="destinationSearchQuery" placeholder="Search destinations..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
-            <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination">
-                <template v-slot:header="props">
-                    <QTr :props="props">
-                        <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
-                            <template v-if="col.name === 'destination'">
-                                <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" :disable="Object.keys(nodes).length < 1" />
-                            </template>
-                            <template v-else>
-                                {{ col.label }}
-                            </template>
-                        </QTd>
-                    </QTr>
-                </template>
-                <template v-slot:body="props">
-                    <QTr :props="props">
-                        <QTd>
-                            <QCheckbox v-model="selectedDestinations" :val="props.row.destination" :label="props.row.destination" />
-                        </QTd>
-                        <QTd>{{ props.row.ip }}</QTd>
-                        <QTd>{{ props.row.asn }}</QTd>
-                    </QTr>
-                </template>
-            </QTable>
-        </div>
-        <q-dialog v-model="localStorageFullDialog">
-            <q-card>
-                <q-card-section>
-                    <div class="text-h6">Local Storage Full</div>
-                </q-card-section>
-
-                <q-card-section class="q-pt-none">
-                    Your browser's local storage cache is full. Would you like to clear it to continue?
-                    <br>
-                    <span v-if="localStorageClearing">Clearing cache...</span>
-                </q-card-section>
-                
-                <q-card-actions align="right">
-                    <q-btn v-if="!localStorageClearing" flat label="Cancel" color="primary" @click="handleCancel" />
-                    <q-btn v-if="!localStorageClearing" flat label="Clear Storage" color="primary" @click="handleClearStorage" />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
-        <q-dialog v-model="loadMeasurementErrorDialog">
-            <q-card>
-                <q-card-section>
-                    <div class="text-h6">Error Loading Measurement</div>
-                </q-card-section>
-
-                <q-card-section class="q-pt-none">
-                    {{ loadMeasurementErrorMessage }}
-                </q-card-section>
-                
-                <q-card-actions align="right">
-                    <q-btn flat label="Close" color="primary" @click="loadMeasurementErrorDialog = false" />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
+  <div class="main-container">
+    <h1>Traceroute Visualization</h1>
+    <QInput v-model="measurementIDInput" @keyup.enter="loadMeasurement" placeholder="Enter RIPE ATLAS traceroute measurement ID">
+      <template v-slot:prepend>
+        <QIcon name="web" />
+      </template>
+      <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
+        <QIcon name="search" />
+      </QBtn>
+    </QInput>
+    <TracerouteChart
+        :measurementID="measurementID"
+        :isLoading="isLoading"
+        :nodes="nodes"
+        :selectedProbes="selectedProbes"
+        :nodeSize="nodeSize"
+        :edges="edges"
+        :layoutNodes="layoutNodes"
+        :metaData="metaData"
+        :probeDetailsMap="probeDetailsMap"
+        :minDisplayedRtt="minDisplayedRtt"
+        :maxDisplayedRtt="maxDisplayedRtt"
+        :ipToAsnMap="ipToAsnMap"
+        :asnList="asnList"
+        @updateDisplayedRttValues="updateDisplayedRttValues"
+    />
+    <h3>Median RTT Over Time</h3>
+    <TracerouteRttChart 
+      :intervalValue="intervalValue"
+      :timeRange="timeRange"
+      :metaData="metaData"
+      :leftLabelValue="leftLabelValue"
+      :rightLabelValue="rightLabelValue"
+      :rttOverTime="rttOverTime"
+      @loadMeasurementOnTimeRange="loadMeasurementOnTimeRange"
+    />
+    <div class="probe-selection">
+      <h3>Select Probes</h3>
+      <TracerouteProbesTable
+        :nodes="nodes"
+        :allProbes="allProbes"
+        :probeDetailsMap="probeDetailsMap"
+        :selectedProbes="selectedProbes"
+        @setSelectedProbes="setSelectedProbes"
+      />
     </div>
+    <div class="destination-selection">
+      <h3>Select Destinations</h3>
+      <QInput v-model="destinationSearchQuery" placeholder="Search destinations..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
+      <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination">
+        <template v-slot:header="props">
+          <QTr :props="props">
+            <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
+              <template v-if="col.name === 'destination'">
+                <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" :disable="Object.keys(nodes).length < 1" />
+              </template>
+              <template v-else>
+                {{ col.label }}
+              </template>
+            </QTd>
+          </QTr>
+        </template>
+        <template v-slot:body="props">
+          <QTr :props="props">
+            <QTd>
+              <QCheckbox v-model="selectedDestinations" :val="props.row.destination" :label="props.row.destination" />
+            </QTd>
+            <QTd>{{ props.row.ip }}</QTd>
+            <QTd>{{ props.row.asn }}</QTd>
+          </QTr>
+        </template>
+      </QTable>
+    </div>
+    <QDialog v-model="localStorageFullDialog">
+      <QCard>
+        <QCardSection>
+          <div class="text-h6">Local Storage Full</div>
+        </QCardSection>
+        <QCardSection class="q-pt-none">
+          Your browser's local storage cache is full. Would you like to clear it to continue?
+          <br>
+          <span v-if="localStorageClearing">Clearing cache...</span>
+        </QCardSection>
+        <QCardActions align="right">
+          <QBtn v-if="!localStorageClearing" flat label="Cancel" color="primary" @click="handleCancel" />
+          <QBtn v-if="!localStorageClearing" flat label="Clear Storage" color="primary" @click="handleClearStorage" />
+        </QCardActions>
+      </QCard>
+    </QDialog>
+    <QDialog v-model="loadMeasurementErrorDialog">
+      <QCard>
+        <QCardSection>
+          <div class="text-h6">Error Loading Measurement</div>
+        </QCardSection>
+        <QCardSection class="q-pt-none">
+          {{ loadMeasurementErrorMessage }}
+        </QCardSection>
+        <QCardActions align="right">
+          <QBtn flat label="Close" color="primary" @click="loadMeasurementErrorDialog = false" />
+        </QCardActions>
+      </QCard>
+    </QDialog>
+  </div>
 </template>
 
 <style scoped>
@@ -635,17 +582,5 @@ onMounted(() => {
 
 .destination-selection {
     margin-bottom: 2em;
-}
-
-.checkbox-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 1em;
-}
-
-.time-range {
-    padding: 2em;
-    width: 95vw;
-    margin: 0 auto;
 }
 </style>
