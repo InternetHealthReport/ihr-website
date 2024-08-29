@@ -1,5 +1,5 @@
 <script setup>
-import { ref, inject, computed, watchEffect, watch, onMounted } from "vue"
+import { ref, inject, watchEffect, watch, onMounted } from "vue"
 import { QInput, QIcon, QBtn, QDialog, QCard, QCardSection, QCardActions } from "quasar"
 import dagre from "dagre"
 import RipeApi from "../plugins/RipeApi"
@@ -14,403 +14,391 @@ const route = useRoute()
 const atlas_api = inject("atlas_api")
 const isLoading = ref(false)
 const measurementID = ref("")
-const measurementIDInput = ref("75404443")
-// const measurementIDInput = ref("32278172")
+const measurementIDInput = ref("")
 const nodes = ref({})
 const edges = ref({})
 const timeRange = ref({ disable: true })
 const leftLabelValue = ref("")
 const rightLabelValue = ref("")
 const nodeSize = 15
-
 const selectedProbes = ref([])
 const allProbes = ref([])
 const probeDetailsMap = ref({})
-
 const layoutNodes = ref({ nodes: {} })
-
 const selectedDestinations = ref([])
 const allDestinations = ref([])
 const selectAllDestinations = ref(true)
-
 const metaData = ref({})
 const maxMedianRtt = ref(200)
 const minDisplayedRtt = ref(null)
 const maxDisplayedRtt = ref(null)
-
 const asnList = ref([])
 const ipToAsnMap = ref({})
-
 const rttOverTime = ref([])
-
 const intervalValue = ref(null)
 const localStorageFullDialog = ref(false)
 const localStorageClearing = ref(false)
 const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref("")
 
-
-
-
-
 const handleClearStorage = () => {
-    localStorage.clear()
-    localStorageClearing.value = true
-    setTimeout(() => {
-        localStorageClearing.value = false
-        localStorageFullDialog.value = false
-        window.location.reload()
-    }, 10000)
+  localStorage.clear()
+  localStorageClearing.value = true
+  setTimeout(() => {
+    localStorageClearing.value = false
+    localStorageFullDialog.value = false
+    window.location.reload()
+  }, 10000)
 }
 
 const handleCancel = () => {
-    null
+  null
 }
 
 const handleLocalStorageFullError = () => {
-    localStorageFullDialog.value = true
+  localStorageFullDialog.value = true
 }
 
 const handleLoadMeasurementError = (error) => {
-    loadMeasurementErrorMessage.value = error.message || "An unexpected error occurred."
-    loadMeasurementErrorDialog.value = true
+  loadMeasurementErrorMessage.value = error.message || "An unexpected error occurred."
+  loadMeasurementErrorDialog.value = true
 }
 
 const processData = async (tracerouteData, loadProbes = false) => {
-    const g = new dagre.graphlib.Graph()
-    g.setGraph({ rankdir: "LR", nodesep: 290, edgesep: 150, ranksep: 1000 })
-    g.setDefaultEdgeLabel(() => ({}))
+  const g = new dagre.graphlib.Graph()
+  g.setGraph({ rankdir: "LR", nodesep: 290, edgesep: 150, ranksep: 1000 })
+  g.setDefaultEdgeLabel(() => ({}))
 
-    const nonResponsiveNodes = new Set()
-    const outgoingEdges = new Map()
-    let highestMedianRtt = 0
+  const nonResponsiveNodes = new Set()
+  const outgoingEdges = new Map()
+  let highestMedianRtt = 0
 
-    tracerouteData.forEach((probeData, probeIndex) => {
-        if (probeData.result[0].error) {
-            return
+  tracerouteData.forEach((probeData, probeIndex) => {
+    if (probeData.result[0].error) {
+      return
+    }
+
+    const sourceNodeId = probeData.from
+    if (!g.hasNode(sourceNodeId)) {
+      g.setNode(sourceNodeId, { label: sourceNodeId, width: nodeSize, height: nodeSize, isProbe: true })
+    }
+
+    let lastNodeId = sourceNodeId
+    let finalHopNodeId = null
+    let consecutiveStarCount = 0
+
+    if (loadProbes) {
+      if (!allProbes.value.includes(probeData.prb_id)) {
+        allProbes.value.push(probeData.prb_id.toString())
+        selectedProbes.value.push(probeData.prb_id.toString())
+      }
+      atlas_api.getProbeById(probeData.prb_id.toString()).then(data => {
+        if (data.data.error === "LOCAL_STORAGE_FULL") {
+          return handleLocalStorageFullError()
+        }
+        probeDetailsMap.value[probeData.prb_id.toString()] = data.data
+      })
+    }
+
+    if (!allDestinations.value.includes(probeData.dst_addr)) {
+      allDestinations.value.push(probeData.dst_addr)
+      if (!nodes.value[probeData.dst_addr]) {
+        nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
+      }
+      selectedDestinations.value.push(probeData.dst_addr)
+    }
+
+    probeData.result.forEach((hopData, hopIndex) => {
+      hopData.result.forEach((result, resultIndex) => {
+        let currentIp = result.from || result.x
+        let isNonResponsive = false
+
+        if (currentIp === "*") {
+          consecutiveStarCount++
+          if (consecutiveStarCount > 1) return
+          currentIp += `-${probeIndex}-${hopIndex}-${resultIndex}`
+          isNonResponsive = true
+          nonResponsiveNodes.add(currentIp)
+        } else {
+          consecutiveStarCount = 0
         }
 
-        const sourceNodeId = probeData.from
-        if (!g.hasNode(sourceNodeId)) {
-            g.setNode(sourceNodeId, { label: sourceNodeId, width: nodeSize, height: nodeSize, isProbe: true })
+        if (isPrivateIP(currentIp)) {
+          isNonResponsive = false
+          consecutiveStarCount = 0
         }
 
-        let lastNodeId = sourceNodeId
-        let finalHopNodeId = null
-        let consecutiveStarCount = 0
+        const nodeInfo = g.node(currentIp) || {}
+        const newNodeInfo = {
+          label: currentIp.replace(/-\d+-\d+-\d+$/, ""),
+          width: nodeSize,
+          height: nodeSize,
+          isNonResponsive,
+          isPrivate: isPrivateIP(currentIp),
+          hops: nodeInfo.hops || [],
+          asn: nodeInfo.asn || "unknown",
+        }
 
-        if (loadProbes) {
-            if (!allProbes.value.includes(probeData.prb_id)) {
-                allProbes.value.push(probeData.prb_id.toString())
-                selectedProbes.value.push(probeData.prb_id.toString())
+        if (!newNodeInfo.isNonResponsive) {
+          const asnPromise = RipeApi.userASN(newNodeInfo.label).then(asnData => {
+            if (asnData.error === "LOCAL_STORAGE_FULL") {
+              return handleLocalStorageFullError()
             }
-            atlas_api.getProbeById(probeData.prb_id.toString()).then(data => {
-                if (data.data.error === "LOCAL_STORAGE_FULL") {
-                    return handleLocalStorageFullError()
-                }
-                probeDetailsMap.value[probeData.prb_id.toString()] = data.data
-            })
-        }
-
-        if (!allDestinations.value.includes(probeData.dst_addr)) {
-            allDestinations.value.push(probeData.dst_addr)
-            if (!nodes.value[probeData.dst_addr]) {
-                nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
+            const asn = asnData.data.data.asns[0]
+            if (asn) {
+              if (!asnList.value.includes(asn)) {
+                asnList.value.push(asn)
+              }
+              ipToAsnMap.value[newNodeInfo.label] = asn
             }
-            selectedDestinations.value.push(probeData.dst_addr)
+          })
         }
 
-        probeData.result.forEach((hopData, hopIndex) => {
-            hopData.result.forEach((result, resultIndex) => {
-                let currentIp = result.from || result.x
-                let isNonResponsive = false
-
-                if (currentIp === "*") {
-                    consecutiveStarCount++
-                    if (consecutiveStarCount > 1) return
-                    currentIp += `-${probeIndex}-${hopIndex}-${resultIndex}`
-                    isNonResponsive = true
-                    nonResponsiveNodes.add(currentIp)
-                } else {
-                    consecutiveStarCount = 0
-                }
-
-                if (isPrivateIP(currentIp)) {
-                    isNonResponsive = false
-                    consecutiveStarCount = 0
-                }
-
-                const nodeInfo = g.node(currentIp) || {}
-                const newNodeInfo = {
-                    label: currentIp.replace(/-\d+-\d+-\d+$/, ""),
-                    width: nodeSize,
-                    height: nodeSize,
-                    isNonResponsive,
-                    isPrivate: isPrivateIP(currentIp),
-                    hops: nodeInfo.hops || [],
-                    asn: nodeInfo.asn || "unknown",
-                }
-
-                if (!newNodeInfo.isNonResponsive) {
-                    const asnPromise = RipeApi.userASN(newNodeInfo.label).then(asnData => {
-                        if (asnData.error === "LOCAL_STORAGE_FULL") {
-                            return handleLocalStorageFullError()
-                        }
-                        const asn = asnData.data.data.asns[0]
-                        if (asn) {
-                            if (!asnList.value.includes(asn)) {
-                                asnList.value.push(asn)
-                            }
-                            ipToAsnMap.value[newNodeInfo.label] = asn
-                        }
-                    })
-                }
-
-                newNodeInfo.hops.push({
-                    from: result.from,
-                    rtt: result.rtt,
-                    size: result.size,
-                    ttl: result.ttl,
-                })
-
-                if (result.rtt !== undefined && result.rtt !== null) {
-                    rttOverTime.value.push({ timestamp: probeData.timestamp, rtt: result.rtt })
-                }
-
-                const medianRtt = calculateMedian(newNodeInfo.hops.map(hop => hop.rtt))
-                if (medianRtt > highestMedianRtt) {
-                    highestMedianRtt = medianRtt
-                }
-
-                g.setNode(currentIp, newNodeInfo)
-
-                if (lastNodeId && currentIp && lastNodeId !== currentIp && !g.hasEdge(currentIp, lastNodeId)) {
-                    if (!g.hasEdge(lastNodeId, currentIp)) {
-                        g.setEdge(lastNodeId, currentIp)
-                        if (!outgoingEdges.has(lastNodeId)) {
-                            outgoingEdges.set(lastNodeId, [])
-                        }
-                        outgoingEdges.get(lastNodeId).push(currentIp)
-                    }
-                }
-                lastNodeId = currentIp
-                finalHopNodeId = currentIp
-            })
+        newNodeInfo.hops.push({
+          from: result.from,
+          rtt: result.rtt,
+          size: result.size,
+          ttl: result.ttl,
         })
 
-        if (finalHopNodeId && g.hasNode(finalHopNodeId)) {
-            const nodeInfo = g.node(finalHopNodeId)
-            g.setNode(finalHopNodeId, { ...nodeInfo, isLastHop: true })
+        if (result.rtt !== undefined && result.rtt !== null) {
+          rttOverTime.value.push({ timestamp: probeData.timestamp, rtt: result.rtt })
         }
-    })
 
-    nonResponsiveNodes.forEach(nodeId => {
-        if (!outgoingEdges.has(nodeId)) {
-            g.removeNode(nodeId)
+        const medianRtt = calculateMedian(newNodeInfo.hops.map(hop => hop.rtt))
+        if (medianRtt > highestMedianRtt) {
+          highestMedianRtt = medianRtt
         }
+
+        g.setNode(currentIp, newNodeInfo)
+
+        if (lastNodeId && currentIp && lastNodeId !== currentIp && !g.hasEdge(currentIp, lastNodeId)) {
+          if (!g.hasEdge(lastNodeId, currentIp)) {
+            g.setEdge(lastNodeId, currentIp)
+            if (!outgoingEdges.has(lastNodeId)) {
+              outgoingEdges.set(lastNodeId, [])
+            }
+            outgoingEdges.get(lastNodeId).push(currentIp)
+          }
+        }
+        lastNodeId = currentIp
+        finalHopNodeId = currentIp
+      })
     })
 
-    dagre.layout(g)
+    if (finalHopNodeId && g.hasNode(finalHopNodeId)) {
+      const nodeInfo = g.node(finalHopNodeId)
+      g.setNode(finalHopNodeId, { ...nodeInfo, isLastHop: true })
+    }
+  })
 
-    const nodesMap = {}
-    const edgesMap = {}
-    const layouts = { nodes: {} }
+  nonResponsiveNodes.forEach(nodeId => {
+      if (!outgoingEdges.has(nodeId)) {
+          g.removeNode(nodeId)
+      }
+  })
 
-    g.nodes().forEach(nodeId => {
-        const nodeInfo = g.node(nodeId)
-        nodesMap[nodeId] = { name: nodeInfo.label, ...nodeInfo }
-        layouts.nodes[nodeId] = { x: nodeInfo.x, y: nodeInfo.y }
-    })
+  dagre.layout(g)
 
-    g.edges().forEach(edge => {
-        const edgeInfo = g.edge(edge)
-        edgesMap[`${edge.v}-${edge.w}`] = { source: edge.v, target: edge.w }
-    })
+  const nodesMap = {}
+  const edgesMap = {}
+  const layouts = { nodes: {} }
 
-    nodes.value = nodesMap
-    edges.value = edgesMap
-    layoutNodes.value = layouts
+  g.nodes().forEach(nodeId => {
+      const nodeInfo = g.node(nodeId)
+      nodesMap[nodeId] = { name: nodeInfo.label, ...nodeInfo }
+      layouts.nodes[nodeId] = { x: nodeInfo.x, y: nodeInfo.y }
+  })
 
-    maxMedianRtt.value = highestMedianRtt
+  g.edges().forEach(edge => {
+      const edgeInfo = g.edge(edge)
+      edgesMap[`${edge.v}-${edge.w}`] = { source: edge.v, target: edge.w }
+  })
 
-    updateDisplayedRttValues()
+  nodes.value = nodesMap
+  edges.value = edgesMap
+  layoutNodes.value = layouts
+
+  maxMedianRtt.value = highestMedianRtt
+
+  updateDisplayedRttValues()
 }
 
 const updateDisplayedRttValues = () => {
-    let minRtt = Infinity
-    let maxRtt = -Infinity
-    let destinationNodeMedianRtt = null
+  let minRtt = Infinity
+  let maxRtt = -Infinity
+  let destinationNodeMedianRtt = null
 
-    Object.values(nodes.value).forEach(node => {
-        if (node.hops && node.hops.length > 0) {
-            const medianRtt = calculateMedian(node.hops.map(hop => hop.rtt).filter(rtt => rtt !== undefined))
-            if (medianRtt !== null) {
-                minRtt = Math.min(minRtt, medianRtt)
-                if (node.isLastHop) {
-                    destinationNodeMedianRtt = medianRtt
-                }
-            }
+  Object.values(nodes.value).forEach(node => {
+    if (node.hops && node.hops.length > 0) {
+      const medianRtt = calculateMedian(node.hops.map(hop => hop.rtt).filter(rtt => rtt !== undefined))
+      if (medianRtt !== null) {
+        minRtt = Math.min(minRtt, medianRtt)
+        if (node.isLastHop) {
+          destinationNodeMedianRtt = medianRtt
         }
-    })
+      }
+    }
+  })
 
-    minDisplayedRtt.value = minRtt === Infinity ? null : minRtt
-    maxDisplayedRtt.value = destinationNodeMedianRtt !== null ? destinationNodeMedianRtt : (maxRtt === -Infinity ? null : maxRtt)
+  minDisplayedRtt.value = minRtt === Infinity ? null : minRtt
+  maxDisplayedRtt.value = destinationNodeMedianRtt !== null ? destinationNodeMedianRtt : (maxRtt === -Infinity ? null : maxRtt)
 }
 
 watch(nodes, updateDisplayedRttValues)
 
 
 const loadMeasurement = async () => {
-		measurementID.value = measurementIDInput.value
-    nodes.value = {}
-    edges.value = {}
-    
-    metaData.value = {}
-    timeRange.value = { disable: true }
-    leftLabelValue.value = ""
-    rightLabelValue.value = ""
-    
-    selectedProbes.value = []
-    allProbes.value = []
-    probeDetailsMap.value = {}
-    
-		layoutNodes.value = { nodes: {} }
-    selectedDestinations.value = []
-    allDestinations.value = []
-    asnList.value = []
-    ipToAsnMap.value = {}
-    
-    rttOverTime.value = []
-    intervalValue.value = null
+  measurementID.value = measurementIDInput.value
+  nodes.value = {}
+  edges.value = {}
+  
+  metaData.value = {}
+  timeRange.value = { disable: true }
+  leftLabelValue.value = ""
+  rightLabelValue.value = ""
+  
+  selectedProbes.value = []
+  allProbes.value = []
+  probeDetailsMap.value = {}
+  
+  layoutNodes.value = { nodes: {} }
+  selectedDestinations.value = []
+  allDestinations.value = []
+  asnList.value = []
+  ipToAsnMap.value = {}
+  
+  rttOverTime.value = []
+  intervalValue.value = null
 
-    if (measurementID.value.trim()) {
-        isLoading.value = true
-        try {
-            const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
-            if (fetchedMetaData.error === "LOCAL_STORAGE_FULL") {
-                return handleLocalStorageFullError()
-            }
+  if (measurementID.value.trim()) {
+    isLoading.value = true
+    try {
+      const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
+      if (fetchedMetaData.error === "LOCAL_STORAGE_FULL") {
+        return handleLocalStorageFullError()
+      }
 
-            metaData.value = fetchedMetaData
+      metaData.value = fetchedMetaData
 
-            if (fetchedMetaData.status.name === "Ongoing") {
-                fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
-            }
+      if (fetchedMetaData.status.name === "Ongoing") {
+        fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
+      }
 
-            let startTime = fetchedMetaData.start_time
-            const stopTime = fetchedMetaData.stop_time
+      let startTime = fetchedMetaData.start_time
+      const stopTime = fetchedMetaData.stop_time
 
-            if ((stopTime - startTime) > 24 * 3600) {
-                startTime = stopTime - 24 * 3600
-            }
+      if ((stopTime - startTime) > 24 * 3600) {
+        startTime = stopTime - 24 * 3600
+      }
 
-            timeRange.value.min = startTime
-            timeRange.value.max = stopTime
+      timeRange.value.min = startTime
+      timeRange.value.max = stopTime
 
-            leftLabelValue.value = convertUnixTimestamp(startTime)
-            rightLabelValue.value = convertUnixTimestamp(stopTime)
+      leftLabelValue.value = convertUnixTimestamp(startTime)
+      rightLabelValue.value = convertUnixTimestamp(stopTime)
 
-            timeRange.value.disable = false
+      timeRange.value.disable = false
 
-            intervalValue.value = fetchedMetaData.interval || null
+      intervalValue.value = fetchedMetaData.interval || null
 
-            await loadMeasurementData(true)
+      await loadMeasurementData(true)
 
-            selectedDestinations.value = allDestinations.value
-            selectAllDestinations.value = true
-        } catch (error) {
-            console.log(error)
-            handleLoadMeasurementError(error)
-        } finally {
-            isLoading.value = false
-        }
+      selectedDestinations.value = allDestinations.value
+      selectAllDestinations.value = true
+    } catch (error) {
+      console.log(error)
+      handleLoadMeasurementError(error)
+    } finally {
+      isLoading.value = false
     }
+  }
 }
 
 const loadMeasurementData = async (loadProbes = false) => {
-    if (measurementID.value.trim()) {
-        isLoading.value = true
-        try {
-            if (loadProbes) {
-                allProbes.value = []
-                selectedProbes.value = []
-                allDestinations.value = []
-                selectedDestinations.value = []
-            }
+  if (measurementID.value.trim()) {
+    isLoading.value = true
+    try {
+      if (loadProbes) {
+        allProbes.value = []
+        selectedProbes.value = []
+        allDestinations.value = []
+        selectedDestinations.value = []
+      }
 
-            const params = {}
+      const params = {}
 
-            if (!timeRange.value.disable) {
-                params.start_time = timeRange.value.min
-                params.stop_time = timeRange.value.max
-            }
+      if (!timeRange.value.disable) {
+        params.start_time = timeRange.value.min
+        params.stop_time = timeRange.value.max
+      }
 
-            if (selectedProbes.value.length > 0) {
-                params.probe_ids = selectedProbes.value.join(",")
-            }
+      if (selectedProbes.value.length > 0) {
+        params.probe_ids = selectedProbes.value.join(",")
+      }
 
-            const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
-            if (data.error === "LOCAL_STORAGE_FULL") {
-                return handleLocalStorageFullError()
-            }
+      const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
+      if (data.error === "LOCAL_STORAGE_FULL") {
+        return handleLocalStorageFullError()
+      }
 
-            const filteredData = data.filter(item => 
-                selectedDestinations.value.length === 0 || selectedDestinations.value.includes(item.dst_addr)
-            )
-            
-            processData(filteredData, loadProbes)
-        } catch (error) {
-            console.error("Failed to load measurement data:", error)
-        } finally {
-            isLoading.value = false
-        }
+      const filteredData = data.filter(item => 
+        selectedDestinations.value.length === 0 || selectedDestinations.value.includes(item.dst_addr)
+      )
+      
+      processData(filteredData, loadProbes)
+    } catch (error) {
+      console.error("Failed to load measurement data:", error)
+    } finally {
+      isLoading.value = false
     }
+  }
 }
 
 const debounce = (func, wait) => {
-    let timeout
-    return (...args) => {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => {
-            func.apply(this, args)
-        }, wait)
-    }
+  let timeout
+  return (...args) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      func.apply(this, args)
+    }, wait)
+  }
 }
 
 const loadMeasurementOnTimeRange = debounce((e) => {
-    leftLabelValue.value = convertUnixTimestamp(e.min)
-    rightLabelValue.value = convertUnixTimestamp(e.max)
-    loadMeasurementData()
+  leftLabelValue.value = convertUnixTimestamp(e.min)
+  rightLabelValue.value = convertUnixTimestamp(e.max)
+  loadMeasurementData()
 }, 3000)
 
 const loadMeasurementOnProbeChange = debounce(() => {
-    loadMeasurementData()
+  loadMeasurementData()
 }, 1000)
 
 const loadMeasurementOnDestinationChange = debounce(() => {
-    loadMeasurementData()
+  loadMeasurementData()
 }, 1000)
 
 const loadMeasurementOnSearchQuery = debounce(() => {
-    loadMeasurementData()
+  loadMeasurementData()
 }, 1000)
 
 watchEffect(() => {
-    if (selectedProbes.value.length > 0) {
-        loadMeasurementOnProbeChange()
-    }
+  if (selectedProbes.value.length > 0) {
+    loadMeasurementOnProbeChange()
+  }
 })
 
 watchEffect(() => {
-    if (!timeRange.value.disable) {
-        loadMeasurementOnTimeRange(timeRange.value)
-    }
+  if (!timeRange.value.disable) {
+    loadMeasurementOnTimeRange(timeRange.value)
+  }
 })
 
 watchEffect(() => {
-    if (selectedDestinations.value.length > 0) {
-        loadMeasurementOnDestinationChange()
-    }
+  if (selectedDestinations.value.length > 0) {
+    loadMeasurementOnDestinationChange()
+  }
 })
 
 const setSelectedProbes = (value) => {
@@ -422,16 +410,15 @@ const setSelectedDestinations = (value) => {
 }
 
 onMounted(() => {
-    const tracerouteid = route.query.tracerouteid
-    if (tracerouteid) {
-        measurementID.value = tracerouteid
-        loadMeasurement().then(() => {
-            selectedDestinations.value = allDestinations.value
-            selectAllDestinations.value = true
-        })
-    }
+  const tracerouteid = route.query.tracerouteid
+  if (tracerouteid) {
+    measurementID.value = tracerouteid
+    loadMeasurement().then(() => {
+      selectedDestinations.value = allDestinations.value
+      selectAllDestinations.value = true
+    })
+  }
 })
-
 </script>
 
 <template>

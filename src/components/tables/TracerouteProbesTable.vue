@@ -1,6 +1,6 @@
 <script setup>
 import { QInput, QCheckbox, QTable, QTd, QTr } from "quasar"
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch } from "vue"
 
 const props = defineProps({
   nodes: {
