@@ -1,20 +1,21 @@
 <script setup>
 import { ref, inject, computed, watchEffect, watch, onMounted } from "vue"
-import { QInput, QIcon, QBtn, QCheckbox, QTable, QTd, QTr, QDialog, QCard, QCardSection, QCardActions } from "quasar"
+import { QInput, QIcon, QBtn, QDialog, QCard, QCardSection, QCardActions } from "quasar"
 import dagre from "dagre"
 import RipeApi from "../plugins/RipeApi"
 import { useRoute } from "vue-router"
 import TracerouteChart from "@/components/charts/TracerouteChart.vue"
 import TracerouteRttChart from "@/components/charts/TracerouteRttChart.vue"
 import TracerouteProbesTable from "@/components/tables/TracerouteProbesTable.vue"
+import TracerouteDestinationsTable from "@/components/tables/TracerouteDestinationsTable.vue"
 import { convertUnixTimestamp, isPrivateIP, calculateMedian } from "../plugins/tracerouteFunctions"
 
 const route = useRoute()
 const atlas_api = inject("atlas_api")
 const isLoading = ref(false)
 const measurementID = ref("")
-// const measurementIDInput = ref("75404443")
-const measurementIDInput = ref("32278172")
+const measurementIDInput = ref("75404443")
+// const measurementIDInput = ref("32278172")
 const nodes = ref({})
 const edges = ref({})
 const timeRange = ref({ disable: true })
@@ -31,7 +32,7 @@ const layoutNodes = ref({ nodes: {} })
 const selectedDestinations = ref([])
 const allDestinations = ref([])
 const selectAllDestinations = ref(true)
-const destinationSearchQuery = ref("")
+
 const metaData = ref({})
 const maxMedianRtt = ref(200)
 const minDisplayedRtt = ref(null)
@@ -412,44 +413,12 @@ watchEffect(() => {
     }
 })
 
-const destinationColumns = [
-    { name: "destination", align: "left", label: "Destination IP", field: "destination" },
-    { name: "ip", align: "left", label: "IP Address", field: "ip" },
-    { name: "asn", align: "left", label: "ASN", field: "asn" },
-]
-
-const destinationRows = computed(() => {
-    return allDestinations.value.map(destination => {
-        const nodeInfo = nodes.value[destination] || { label: destination }
-        const asn = ipToAsnMap.value[nodeInfo.label] || "unknown"
-
-        return {
-            destination: destination,
-            ip: nodeInfo.label,
-            asn: asn,
-        }
-    })
-})
-
-const filteredDestinationRows = computed(() => {
-    const query = destinationSearchQuery.value.toLowerCase()
-    return destinationRows.value.filter(row => {
-        return ["destination", "ip", "asn"].some(field => {
-            return row[field] && row[field].toString().toLowerCase().includes(query)
-        })
-    })
-})
-
 const setSelectedProbes = (value) => {
   selectedProbes.value = value
 }
 
-const toggleSelectAllDestinations = (value) => {
-    if (value) {
-        selectedDestinations.value = allDestinations.value
-    } else {
-        selectedDestinations.value = []
-    }
+const setSelectedDestinations = (value) => {
+  selectedDestinations.value = value
 }
 
 onMounted(() => {
@@ -510,34 +479,20 @@ onMounted(() => {
         :probeDetailsMap="probeDetailsMap"
         :selectedProbes="selectedProbes"
         @setSelectedProbes="setSelectedProbes"
+        @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
       />
     </div>
     <div class="destination-selection">
       <h3>Select Destinations</h3>
-      <QInput v-model="destinationSearchQuery" placeholder="Search destinations..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
-      <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination">
-        <template v-slot:header="props">
-          <QTr :props="props">
-            <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
-              <template v-if="col.name === 'destination'">
-                <QCheckbox v-model="selectAllDestinations" @update:model-value="toggleSelectAllDestinations" :disable="Object.keys(nodes).length < 1" />
-              </template>
-              <template v-else>
-                {{ col.label }}
-              </template>
-            </QTd>
-          </QTr>
-        </template>
-        <template v-slot:body="props">
-          <QTr :props="props">
-            <QTd>
-              <QCheckbox v-model="selectedDestinations" :val="props.row.destination" :label="props.row.destination" />
-            </QTd>
-            <QTd>{{ props.row.ip }}</QTd>
-            <QTd>{{ props.row.asn }}</QTd>
-          </QTr>
-        </template>
-      </QTable>
+      <TracerouteDestinationsTable
+        :nodes="nodes"
+        :allDestinations="allDestinations"
+        :selectAllDestinations="selectAllDestinations"
+        :ipToAsnMap="ipToAsnMap"
+        :selectedDestinations="selectedDestinations"
+        @setSelectedDestinations="setSelectedDestinations"
+        @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
+      />
     </div>
     <QDialog v-model="localStorageFullDialog">
       <QCard>
