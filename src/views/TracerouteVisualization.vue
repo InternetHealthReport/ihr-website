@@ -42,12 +42,4 @@ onMounted(() => {
 .main-container {
     padding: 2em;
 }
-
-.probe-selection {
-    margin-bottom: 2em;
-}
-
-.destination-selection {
-    margin-bottom: 2em;
-}
 </style>

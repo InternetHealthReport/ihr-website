@@ -419,93 +419,87 @@ watch(() => props.atlasMeasurementID, () => {
 </script>
 
 <template>
-  <div class="main-container">
-    <TracerouteChart
-        :measurementID="measurementID"
-        :isLoading="isLoading"
-        :nodes="nodes"
-        :selectedProbes="selectedProbes"
-        :nodeSize="nodeSize"
-        :edges="edges"
-        :layoutNodes="layoutNodes"
-        :metaData="metaData"
-        :probeDetailsMap="probeDetailsMap"
-        :minDisplayedRtt="minDisplayedRtt"
-        :maxDisplayedRtt="maxDisplayedRtt"
-        :ipToAsnMap="ipToAsnMap"
-        :asnList="asnList"
-        @updateDisplayedRttValues="updateDisplayedRttValues"
-    />
-    <h3>Median RTT Over Time</h3>
-    <TracerouteRttChart 
-      :intervalValue="intervalValue"
-      :timeRange="timeRange"
+  <TracerouteChart
+      :measurementID="measurementID"
+      :isLoading="isLoading"
+      :nodes="nodes"
+      :selectedProbes="selectedProbes"
+      :nodeSize="nodeSize"
+      :edges="edges"
+      :layoutNodes="layoutNodes"
       :metaData="metaData"
-      :leftLabelValue="leftLabelValue"
-      :rightLabelValue="rightLabelValue"
-      :rttOverTime="rttOverTime"
-      @loadMeasurementOnTimeRange="loadMeasurementOnTimeRange"
+      :probeDetailsMap="probeDetailsMap"
+      :minDisplayedRtt="minDisplayedRtt"
+      :maxDisplayedRtt="maxDisplayedRtt"
+      :ipToAsnMap="ipToAsnMap"
+      :asnList="asnList"
+      @updateDisplayedRttValues="updateDisplayedRttValues"
+  />
+  <h3>Median RTT Over Time</h3>
+  <TracerouteRttChart 
+    :intervalValue="intervalValue"
+    :timeRange="timeRange"
+    :metaData="metaData"
+    :leftLabelValue="leftLabelValue"
+    :rightLabelValue="rightLabelValue"
+    :rttOverTime="rttOverTime"
+    @loadMeasurementOnTimeRange="loadMeasurementOnTimeRange"
+  />
+  <div class="probe-selection">
+    <h3>Select Probes</h3>
+    <TracerouteProbesTable
+      :nodes="nodes"
+      :allProbes="allProbes"
+      :probeDetailsMap="probeDetailsMap"
+      :selectedProbes="selectedProbes"
+      @setSelectedProbes="setSelectedProbes"
+      @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
     />
-    <div class="probe-selection">
-      <h3>Select Probes</h3>
-      <TracerouteProbesTable
-        :nodes="nodes"
-        :allProbes="allProbes"
-        :probeDetailsMap="probeDetailsMap"
-        :selectedProbes="selectedProbes"
-        @setSelectedProbes="setSelectedProbes"
-        @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
-      />
-    </div>
-    <div class="destination-selection">
-      <h3>Select Destinations</h3>
-      <TracerouteDestinationsTable
-        :nodes="nodes"
-        :allDestinations="allDestinations"
-        :selectAllDestinations="selectAllDestinations"
-        :ipToAsnMap="ipToAsnMap"
-        :selectedDestinations="selectedDestinations"
-        @setSelectedDestinations="setSelectedDestinations"
-        @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
-      />
-    </div>
-    <QDialog v-model="localStorageFullDialog">
-      <QCard>
-        <QCardSection>
-          <div class="text-h6">Local Storage Full</div>
-        </QCardSection>
-        <QCardSection class="q-pt-none">
-          Your browser's local storage cache is full. Would you like to clear it to continue?
-          <br>
-          <span v-if="localStorageClearing">Clearing cache...</span>
-        </QCardSection>
-        <QCardActions align="right">
-          <QBtn v-if="!localStorageClearing" flat label="Cancel" color="primary" @click="handleCancel" />
-          <QBtn v-if="!localStorageClearing" flat label="Clear Storage" color="primary" @click="handleClearStorage" />
-        </QCardActions>
-      </QCard>
-    </QDialog>
-    <QDialog v-model="loadMeasurementErrorDialog">
-      <QCard>
-        <QCardSection>
-          <div class="text-h6">Error Loading Measurement</div>
-        </QCardSection>
-        <QCardSection class="q-pt-none">
-          {{ loadMeasurementErrorMessage }}
-        </QCardSection>
-        <QCardActions align="right">
-          <QBtn flat label="Close" color="primary" @click="loadMeasurementErrorDialog = false" />
-        </QCardActions>
-      </QCard>
-    </QDialog>
   </div>
+  <div class="destination-selection">
+    <h3>Select Destinations</h3>
+    <TracerouteDestinationsTable
+      :nodes="nodes"
+      :allDestinations="allDestinations"
+      :selectAllDestinations="selectAllDestinations"
+      :ipToAsnMap="ipToAsnMap"
+      :selectedDestinations="selectedDestinations"
+      @setSelectedDestinations="setSelectedDestinations"
+      @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
+    />
+  </div>
+  <QDialog v-model="localStorageFullDialog">
+    <QCard>
+      <QCardSection>
+        <div class="text-h6">Local Storage Full</div>
+      </QCardSection>
+      <QCardSection class="q-pt-none">
+        Your browser's local storage cache is full. Would you like to clear it to continue?
+        <br>
+        <span v-if="localStorageClearing">Clearing cache...</span>
+      </QCardSection>
+      <QCardActions align="right">
+        <QBtn v-if="!localStorageClearing" flat label="Cancel" color="primary" @click="handleCancel" />
+        <QBtn v-if="!localStorageClearing" flat label="Clear Storage" color="primary" @click="handleClearStorage" />
+      </QCardActions>
+    </QCard>
+  </QDialog>
+  <QDialog v-model="loadMeasurementErrorDialog">
+    <QCard>
+      <QCardSection>
+        <div class="text-h6">Error Loading Measurement</div>
+      </QCardSection>
+      <QCardSection class="q-pt-none">
+        {{ loadMeasurementErrorMessage }}
+      </QCardSection>
+      <QCardActions align="right">
+        <QBtn flat label="Close" color="primary" @click="loadMeasurementErrorDialog = false" />
+      </QCardActions>
+    </QCard>
+  </QDialog>
 </template>
 
 <style scoped>
-.main-container {
-    padding: 2em;
-}
-
 .probe-selection {
     margin-bottom: 2em;
 }
