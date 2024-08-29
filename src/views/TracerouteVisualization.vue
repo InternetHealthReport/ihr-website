@@ -13,7 +13,7 @@ const loadMeasurement = () => {
 }
 
 onMounted(() => {
-  const tracerouteid = route.query.tracerouteid
+  const tracerouteid = route.query.measurment
   if (tracerouteid) {
     measurementIDInput.value = tracerouteid
     measurementID.value = tracerouteid
