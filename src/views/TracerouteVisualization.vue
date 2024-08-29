@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue"
 import { QInput, QIcon, QBtn } from "quasar"
 import { useRoute } from "vue-router"
-import Traceroute from "@/components/Traceroute.vue"
+import TracerouteMonitor from "@/components/TracerouteMonitor.vue"
 
 const route = useRoute()
 const measurementID = ref("")
@@ -32,8 +32,9 @@ onMounted(() => {
         <QIcon name="search" />
       </QBtn>
     </QInput>
-    <Traceroute
+    <TracerouteMonitor
       :atlasMeasurementID="measurementID"
+      :openOptions="true"
     />
   </div>
 </template>

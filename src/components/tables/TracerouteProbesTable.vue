@@ -69,8 +69,8 @@ watch(selectedProbesModel, () => {
 </script>
 
 <template>
-  <QInput v-model="searchQuery" placeholder="Search probes based on IPv4..." @input="emit('loadMeasurementOnSearchQuery')" :disable="Object.keys(nodes).length < 1" />
-  <QTable :rows="paginatedProbes" :columns="columns" row-key="probe">
+  <QInput v-model="searchQuery" placeholder="Search..." @input="emit('loadMeasurementOnSearchQuery')" :disable="Object.keys(nodes).length < 1" />
+  <QTable :rows="paginatedProbes" :columns="columns" row-key="probe" flat>
     <template v-slot:header="props">
       <QTr :props="props">
         <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">

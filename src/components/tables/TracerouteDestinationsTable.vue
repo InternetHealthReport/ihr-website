@@ -77,7 +77,7 @@ watch(selectDestinationsModel, () => {
 
 <template>
   <QInput v-model="destinationSearchQuery" placeholder="Search destinations..." @input="emit('loadMeasurementOnSearchQuery')" :disable="Object.keys(nodes).length < 1" />
-  <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination">
+  <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination" flat>
     <template v-slot:header="props">
       <QTr :props="props">
         <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">

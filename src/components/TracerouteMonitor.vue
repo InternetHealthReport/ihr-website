@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject, watchEffect, watch, onMounted } from "vue"
-import { QBtn, QDialog, QCard, QCardSection, QCardActions } from "quasar"
+import { QBtn, QDialog, QCard, QCardSection, QCardActions, QExpansionItem } from "quasar"
 import dagre from "dagre"
 import RipeApi from "../plugins/RipeApi"
 import TracerouteChart from "@/components/charts/TracerouteChart.vue"
@@ -13,6 +13,10 @@ import GenericCardController from '@/components/controllers/GenericCardControlle
 const props = defineProps({
   atlasMeasurementID: {
     type: String
+  },
+  openOptions: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -419,7 +423,13 @@ watch(() => props.atlasMeasurementID, () => {
 </script>
 
 <template>
-  <TracerouteChart
+  <GenericCardController
+    title="$t('bgpAsPaths.title')"
+    sub-title="$t('bgpAsPaths.subTitle')"
+    info-title="$t('bgpAsPaths.info.title')"
+    info-description="$t('bgpAsPaths.info.description')"
+  >
+    <TracerouteChart
       :measurementID="measurementID"
       :isLoading="isLoading"
       :nodes="nodes"
@@ -434,40 +444,63 @@ watch(() => props.atlasMeasurementID, () => {
       :ipToAsnMap="ipToAsnMap"
       :asnList="asnList"
       @updateDisplayedRttValues="updateDisplayedRttValues"
-  />
-  <h3>Median RTT Over Time</h3>
-  <TracerouteRttChart 
-    :intervalValue="intervalValue"
-    :timeRange="timeRange"
-    :metaData="metaData"
-    :leftLabelValue="leftLabelValue"
-    :rightLabelValue="rightLabelValue"
-    :rttOverTime="rttOverTime"
-    @loadMeasurementOnTimeRange="loadMeasurementOnTimeRange"
-  />
-  <div class="probe-selection">
-    <h3>Select Probes</h3>
-    <TracerouteProbesTable
-      :nodes="nodes"
-      :allProbes="allProbes"
-      :probeDetailsMap="probeDetailsMap"
-      :selectedProbes="selectedProbes"
-      @setSelectedProbes="setSelectedProbes"
-      @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
     />
-  </div>
-  <div class="destination-selection">
-    <h3>Select Destinations</h3>
-    <TracerouteDestinationsTable
-      :nodes="nodes"
-      :allDestinations="allDestinations"
-      :selectAllDestinations="selectAllDestinations"
-      :ipToAsnMap="ipToAsnMap"
-      :selectedDestinations="selectedDestinations"
-      @setSelectedDestinations="setSelectedDestinations"
-      @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
-    />
-  </div>
+    <QExpansionItem
+      :default-opened="props.openOptions"
+      icon="tune"
+      label="Options"
+    >
+      <GenericCardController
+        title="$t('bgpAsPaths.title')"
+        sub-title="$t('bgpAsPaths.subTitle')"
+        info-title="$t('bgpAsPaths.info.title')"
+        info-description="$t('bgpAsPaths.info.description')"
+        class="cardTraceroute"
+      >
+        <TracerouteRttChart 
+          :intervalValue="intervalValue"
+          :timeRange="timeRange"
+          :metaData="metaData"
+          :leftLabelValue="leftLabelValue"
+          :rightLabelValue="rightLabelValue"
+          :rttOverTime="rttOverTime"
+          @loadMeasurementOnTimeRange="loadMeasurementOnTimeRange"
+        />
+      </GenericCardController>
+      <GenericCardController
+        title="$t('bgpAsPaths.title')"
+        sub-title="$t('bgpAsPaths.subTitle')"
+        info-title="$t('bgpAsPaths.info.title')"
+        info-description="$t('bgpAsPaths.info.description')"
+        class="cardTraceroute"
+      >
+        <TracerouteProbesTable
+          :nodes="nodes"
+          :allProbes="allProbes"
+          :probeDetailsMap="probeDetailsMap"
+          :selectedProbes="selectedProbes"
+          @setSelectedProbes="setSelectedProbes"
+          @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
+        />
+      </GenericCardController>
+      <GenericCardController
+        title="$t('bgpAsPaths.title')"
+        sub-title="$t('bgpAsPaths.subTitle')"
+        info-title="$t('bgpAsPaths.info.title')"
+        info-description="$t('bgpAsPaths.info.description')"
+      >
+        <TracerouteDestinationsTable
+          :nodes="nodes"
+          :allDestinations="allDestinations"
+          :selectAllDestinations="selectAllDestinations"
+          :ipToAsnMap="ipToAsnMap"
+          :selectedDestinations="selectedDestinations"
+          @setSelectedDestinations="setSelectedDestinations"
+          @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
+        />
+      </GenericCardController>
+    </QExpansionItem>
+  </GenericCardController>
   <QDialog v-model="localStorageFullDialog">
     <QCard>
       <QCardSection>
@@ -500,11 +533,7 @@ watch(() => props.atlasMeasurementID, () => {
 </template>
 
 <style scoped>
-.probe-selection {
-    margin-bottom: 2em;
-}
-
-.destination-selection {
-    margin-bottom: 2em;
+.cardTraceroute{
+  margin-bottom: 20px;
 }
 </style>
