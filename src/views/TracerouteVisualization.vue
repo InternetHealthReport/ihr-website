@@ -1,19 +1,19 @@
 <script setup>
 import { ref, inject, computed, watchEffect, watch, nextTick, onMounted } from "vue"
 import { QInput, QIcon, QBtn, QSpinner, QRange, QCheckbox, QTable, QTd, QTr, QRadio } from "quasar"
-
 import dagre from "dagre"
 import RipeApi from "../plugins/RipeApi"
 import { useRoute } from "vue-router"
-import Plotly from "plotly.js-dist"
 import TracerouteChart from "@/components/charts/TracerouteChart.vue"
+import TracerouteRttChart from "@/components/charts/TracerouteRttChart.vue"
 import { convertUnixTimestamp, isPrivateIP, calculateMedian } from "../plugins/tracerouteFunctions"
 
 const route = useRoute()
 const atlas_api = inject("atlas_api")
 const isLoading = ref(false)
 const measurementID = ref("")
-const measurementIDInput = ref("32278172")
+const measurementIDInput = ref("75404443")
+// const measurementIDInput = ref("32278172")
 const nodes = ref({})
 const edges = ref({})
 const timeRange = ref({ disable: true })
@@ -232,7 +232,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
     maxMedianRtt.value = highestMedianRtt
 
     updateDisplayedRttValues()
-    plotRTTChart()
 }
 
 const updateDisplayedRttValues = () => {
@@ -257,17 +256,6 @@ const updateDisplayedRttValues = () => {
 }
 
 watch(nodes, updateDisplayedRttValues)
-
-const filteredRttOverTime = computed(() => {
-    if (timeRange.value.disable) {
-        return rttOverTime.value
-    }
-    
-    const { min, max } = timeRange.value
-    return rttOverTime.value.filter(dataPoint => {
-        return dataPoint.timestamp >= min && dataPoint.timestamp <= max
-    })
-})
 
 
 const loadMeasurement = async () => {
@@ -406,9 +394,6 @@ const loadMeasurementOnSearchQuery = debounce(() => {
     loadMeasurementData()
 }, 1000)
 
-const minTime = computed(() => metaData.value?.start_time || 0)
-const maxTime = computed(() => metaData.value?.stop_time || 0)
-
 watchEffect(() => {
     if (selectedProbes.value.length > 0) {
         loadMeasurementOnProbeChange()
@@ -487,52 +472,6 @@ const toggleSelectAll = (value) => {
     }
 }
 
-const plotRTTChart = () => {
-    if (!intervalValue.value) {
-        const rttChartContainer = document.getElementById("rtt-chart")
-        rttChartContainer.innerHTML = "<p>No interval found (probably one-off measurement)</p>"
-        return
-    }
-
-    const timeInterval = intervalValue.value
-    const groupedData = {}
-    
-    filteredRttOverTime.value.forEach(dataPoint => {
-        const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval
-        if (!groupedData[timeSlot]) {
-            groupedData[timeSlot] = []
-        }
-        groupedData[timeSlot].push(dataPoint.rtt)
-    })
-
-    if (Object.keys(groupedData).length == 1) {
-        const rttChartContainer = document.getElementById("rtt-chart")
-        rttChartContainer.innerHTML = "<p>Interval too small</p>"
-        return
-    } else {
-        const trace = {
-            x: [],
-            y: [],
-            type: "scatter",
-            mode: "lines+markers",
-            name: "Median RTT"
-        }
-
-        for (const [timeSlot, rtts] of Object.entries(groupedData)) {
-            trace.x.push(new Date(timeSlot * 1000))
-            trace.y.push(calculateMedian(rtts))
-        }
-
-        const data = [trace]
-        const layout = {
-            height: "300",
-            xaxis: { title: "Time" },
-            yaxis: { title: "Median RTT (ms)" }
-        }
-
-        Plotly.newPlot("rtt-chart", data, layout)
-    }
-}
 
 const toggleSelectAllDestinations = (value) => {
     if (value) {
@@ -553,11 +492,6 @@ onMounted(() => {
     }
 })
 
-watchEffect(() => {
-    if (rttOverTime.value.length > 0 && intervalValue.value) {
-        plotRTTChart()
-    }
-})
 </script>
 
 <template>
@@ -588,13 +522,15 @@ watchEffect(() => {
 						@updateDisplayedRttValues="updateDisplayedRttValues"
         />
         <h3>Median RTT Over Time</h3>
-        <div id="rtt-chart"></div>
-        <h3>Time Range</h3>
-        <div class="time-range">
-            <QRange v-model="timeRange" :disable="timeRange.disable" :min="minTime" :max="maxTime"
-                    :left-label-value="leftLabelValue" :right-label-value="rightLabelValue" label-always
-                    drag-range @change="loadMeasurementOnTimeRange" />
-        </div>
+        <TracerouteRttChart 
+          :intervalValue="intervalValue"
+          :timeRange="timeRange"
+          :metaData="metaData"
+          :leftLabelValue="leftLabelValue"
+          :rightLabelValue="rightLabelValue"
+          :rttOverTime="rttOverTime"
+          @loadMeasurementOnTimeRange="loadMeasurementOnTimeRange"
+        />
         <div class="probe-selection">
             <h3>Select Probes</h3>
             <QInput v-model="searchQuery" placeholder="Search probes..." @input="loadMeasurementOnSearchQuery" :disable="Object.keys(nodes).length < 1" />
