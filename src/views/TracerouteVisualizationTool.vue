@@ -35,7 +35,7 @@ onMounted(() => {
 
 <template>
   <div class="main-container">
-    <h1>Traceroute Visualization</h1>
+    <h1>Traceroute Monitor</h1>
     <QInput v-model="measurementIDInput" @keyup.enter="loadMeasurement" placeholder="Enter RIPE ATLAS traceroute measurement ID">
       <template v-slot:prepend>
         <QIcon name="web" />

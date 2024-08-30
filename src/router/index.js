@@ -168,8 +168,8 @@ const router = createRouter({
           component: BGPMonitor
         },
         {
-          path: 'traceroute-visualization',
-          name: 'traceroute-visualization',
+          path: 'traceroute-monitor',
+          name: 'traceroute-monitor',
           component: TracerouteVisualizationTool
         },
       ]
