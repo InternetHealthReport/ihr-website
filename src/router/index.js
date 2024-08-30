@@ -19,7 +19,7 @@ import Tr from '@/i18n/translation'
 import Observable from '../views/Observable.vue'
 import NetworkTopology from '../views/NetworkTopology.vue'
 import BGPMonitor from '../views/BGPMonitor.vue'
-import GSoC24TracerouteVisualization from '../views/GSoC24TracerouteVisualization.vue'
+import TracerouteVisualizationTool from '../views/TracerouteVisualizationTool.vue'
 
 
 const router = createRouter({
@@ -168,9 +168,9 @@ const router = createRouter({
           component: BGPMonitor
         },
         {
-          path: 'gsoc24-traceroute-visualization',
-          name: 'gsoc24-traceroute-visualization',
-          component: GSoC24TracerouteVisualization
+          path: 'traceroute-monitor',
+          name: 'traceroute-monitor',
+          component: TracerouteVisualizationTool
         },
       ]
     },

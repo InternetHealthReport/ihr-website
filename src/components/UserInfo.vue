@@ -24,8 +24,8 @@ const as_info_query = ref({
 })
 
 const getUserInfo = async() => {
-  const userIP = await ripeApi.userIP()
-  const userASN = await ripeApi.userASN(userIP.data.ip)
+  const userIP = (await ripeApi.userIP()).data
+  const userASN = (await ripeApi.userASN(userIP.data.ip)).data
   userInfo.value.IP = userIP.data.ip
   userInfo.value.AS = userASN.data.asns[0]
   userInfo.value.PREFIX = userASN.data.prefix

@@ -62,9 +62,9 @@
       "name": "COVID19",
       "summary": "RTT analysis during national lockdowns"
     },
-    "gsoc24TracerouteVisualization": {
-      "name": "[GSoC24] Traceroute visualization",
-      "summary": "The GSoC24 Traceroute visualization project"
+    "tracerouteVisualization": {
+      "name": "Traceroute Monitor",
+      "summary": "A effective way to monitor traceroute data"
     },
     "contact": "Contact",
     "documentation": "Documentation",
@@ -1152,6 +1152,38 @@
     "info": {
       "title": "RIS Live BGP messages",
       "description": "<p><strong>Routing Information Service Live (RIS Live)</strong></p><p>This tool internally uses 'RIS Live' to obtain live BGP updates. RIS Live is a feed that offers BGP messages in real-time. It collects information from the RIS Route Collectors (RRCs) and uses a WebSocket JSON API to monitor and detect routing events around the world.</p><p><strong>Messages Table</strong></p><p>The messages table contains data received from the RIS Live WebSocket and other external datasets, including 'AS Info' and 'BGP communities.' Only unique peers are displayed, and peers are continuously updated with new data. To view older BGP messages, use the timestamp slider. By default, the first 5 peers are selected to display the AS paths in the Sankey chart.</p><p>For more details, see <a href='https://ris-live.ripe.net/'>RIS Live</a>.</p>"
+    }
+  },
+  "tracerouteMonitorChart": {
+    "title": "Traceroute Monitor",
+    "subTitle": "Monitor a RIPE Atlas measurement",
+    "info": {
+      "title": "Traceroute Monitor",
+      "description": ""
+    }
+  },
+  "tracerouteMonitorRtt": {
+    "title": "RTT",
+    "subTitle": "Median RTT over time",
+    "info": {
+      "title": "RTT",
+      "description": ""
+    }
+  },
+  "tracerouteMonitorProbes": {
+    "title": "RIPE Atlas probes",
+    "subTitle": "The probes of the measurement",
+    "info": {
+      "title": "RIPE Atlas probes",
+      "description": ""
+    }
+  },
+  "tracerouteMonitorDestinations": {
+    "title": "RIPE Atlas destinations",
+    "subTitle": "The destinations of the measurement",
+    "info": {
+      "title": "RIPE Atlas destinations",
+      "description": ""
     }
   }
 }
