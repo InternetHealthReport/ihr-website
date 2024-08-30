@@ -63,8 +63,8 @@
       "summary": "RTT analysis during national lockdowns"
     },
     "tracerouteVisualization": {
-      "name": "Traceroute visualization",
-      "summary": "A effective way to visualize traceroute data"
+      "name": "Traceroute Monitor",
+      "summary": "A effective way to monitor traceroute data"
     },
     "contact": "Contact",
     "documentation": "Documentation",
