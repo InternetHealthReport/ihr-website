@@ -424,10 +424,10 @@ watch(() => props.atlasMeasurementID, () => {
 
 <template>
   <GenericCardController
-    title="$t('bgpAsPaths.title')"
-    sub-title="$t('bgpAsPaths.subTitle')"
-    info-title="$t('bgpAsPaths.info.title')"
-    info-description="$t('bgpAsPaths.info.description')"
+    :title="$t('tracerouteMonitorChart.title')"
+    :sub-title="$t('tracerouteMonitorChart.subTitle')"
+    :info-title="$t('tracerouteMonitorChart.info.title')"
+    :info-description="$t('tracerouteMonitorChart.info.description')"
   >
     <TracerouteChart
       :measurementID="measurementID"
@@ -451,10 +451,10 @@ watch(() => props.atlasMeasurementID, () => {
       label="Options"
     >
       <GenericCardController
-        title="$t('bgpAsPaths.title')"
-        sub-title="$t('bgpAsPaths.subTitle')"
-        info-title="$t('bgpAsPaths.info.title')"
-        info-description="$t('bgpAsPaths.info.description')"
+        :title="$t('tracerouteMonitorRtt.title')"
+        :sub-title="$t('tracerouteMonitorRtt.subTitle')"
+        :info-title="$t('tracerouteMonitorRtt.info.title')"
+        :info-description="$t('tracerouteMonitorRtt.info.description')"
         class="cardTraceroute"
       >
         <TracerouteRttChart 
@@ -468,10 +468,10 @@ watch(() => props.atlasMeasurementID, () => {
         />
       </GenericCardController>
       <GenericCardController
-        title="$t('bgpAsPaths.title')"
-        sub-title="$t('bgpAsPaths.subTitle')"
-        info-title="$t('bgpAsPaths.info.title')"
-        info-description="$t('bgpAsPaths.info.description')"
+        :title="$t('tracerouteMonitorProbes.title')"
+        :sub-title="$t('tracerouteMonitorProbes.subTitle')"
+        :info-title="$t('tracerouteMonitorProbes.info.title')"
+        :info-description="$t('tracerouteMonitorProbes.info.description')"
         class="cardTraceroute"
       >
         <TracerouteProbesTable
@@ -484,10 +484,10 @@ watch(() => props.atlasMeasurementID, () => {
         />
       </GenericCardController>
       <GenericCardController
-        title="$t('bgpAsPaths.title')"
-        sub-title="$t('bgpAsPaths.subTitle')"
-        info-title="$t('bgpAsPaths.info.title')"
-        info-description="$t('bgpAsPaths.info.description')"
+        :title="$t('tracerouteMonitorDestinations.title')"
+        :sub-title="$t('tracerouteMonitorDestinations.subTitle')"
+        :info-title="$t('tracerouteMonitorDestinations.info.title')"
+        :info-description="$t('tracerouteMonitorDestinations.info.description')"
       >
         <TracerouteDestinationsTable
           :nodes="nodes"

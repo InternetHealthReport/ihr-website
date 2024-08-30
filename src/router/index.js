@@ -19,7 +19,7 @@ import Tr from '@/i18n/translation'
 import Observable from '../views/Observable.vue'
 import NetworkTopology from '../views/NetworkTopology.vue'
 import BGPMonitor from '../views/BGPMonitor.vue'
-import TracerouteVisualization from '../views/TracerouteVisualization.vue'
+import TracerouteVisualizationTool from '../views/TracerouteVisualizationTool.vue'
 
 
 const router = createRouter({
@@ -170,7 +170,7 @@ const router = createRouter({
         {
           path: 'traceroute-visualization',
           name: 'traceroute-visualization',
-          component: TracerouteVisualization
+          component: TracerouteVisualizationTool
         },
       ]
     },

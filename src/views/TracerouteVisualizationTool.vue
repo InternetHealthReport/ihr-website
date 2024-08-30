@@ -1,15 +1,27 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import { QInput, QIcon, QBtn } from "quasar"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import TracerouteMonitor from "@/components/TracerouteMonitor.vue"
+import Tr from '@/i18n/translation'
 
 const route = useRoute()
+const router = useRouter()
 const measurementID = ref("")
 const measurementIDInput = ref("")
 
 const loadMeasurement = () => {
   measurementID.value = measurementIDInput.value
+  pushRoute()
+}
+
+const pushRoute = () => {
+  router.push(Tr.i18nRoute({
+    replace: true,
+    query: Object.assign({}, route.query, {
+      measurment: measurementID.value,
+    })
+  }))
 }
 
 onMounted(() => {
