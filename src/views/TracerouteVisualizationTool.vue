@@ -47,9 +47,13 @@ onMounted(() => {
     <TracerouteMonitor
       :atlasMeasurementID="measurementID"
       :openOptions="true"
+      class="traceroute-monitor"
     />
   </div>
 </template>
 
 <style scoped>
+.traceroute-monitor{
+  margin-bottom: 20px;
+}
 </style>
