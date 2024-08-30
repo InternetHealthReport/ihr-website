@@ -10,6 +10,31 @@ const axios_base = axios.create({
   timeout: DEFAULT_TIMEOUT,
 })
 
+// Utility function to get data with caching
+const getCachedData = async (url, params) => {
+  const key = `${url}_${JSON.stringify(params)}`
+  const cachedData = localStorage.getItem(key)
+
+  if (cachedData) {
+    return JSON.parse(cachedData)
+  }
+
+  const response = await ripe_axios.get(url, { params })
+  try {
+    localStorage.setItem(key, JSON.stringify(response.data));
+  } catch (error) {
+    if (error instanceof DOMException && (
+      error.code === 22 || 
+      error.code === 1014 || 
+      error.name === 'QuotaExceededError' || 
+      error.name === 'NS_ERROR_DOM_QUOTA_REACHED'
+    )) {
+      return { error: 'LOCAL_STORAGE_FULL' };
+    }
+  }
+  return response.data
+}
+
 export default {
   async asnNeighbours(asn) {
     let queryarg = {
