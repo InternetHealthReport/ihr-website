@@ -24,7 +24,15 @@ const cache = async (key, fetcher, options) => {
 				error.name === 'QuotaExceededError' || 
 				error.name === 'NS_ERROR_DOM_QUOTA_REACHED'
       )) {
+        const storageAllowed = getItem("storage-allowed")
+        const userLocale = getItem("user-locale")
 				localStorage.clear()
+        if (storageAllowed) {
+          localStorage.setItem("storage-allowed", storageAllowed)
+        }
+        if (userLocale) {
+          localStorage.setItem("user-locale", userLocale)
+        }
       }
 		}
 	}
