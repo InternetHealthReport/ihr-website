@@ -44,28 +44,8 @@ const asnList = ref([])
 const ipToAsnMap = ref({})
 const rttOverTime = ref([])
 const intervalValue = ref(null)
-const localStorageFullDialog = ref(false)
-const localStorageClearing = ref(false)
 const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref("")
-
-const handleClearStorage = () => {
-  localStorage.clear()
-  localStorageClearing.value = true
-  setTimeout(() => {
-    localStorageClearing.value = false
-    localStorageFullDialog.value = false
-    window.location.reload()
-  }, 10000)
-}
-
-const handleCancel = () => {
-  null
-}
-
-const handleLocalStorageFullError = () => {
-  localStorageFullDialog.value = true
-}
 
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || "An unexpected error occurred."
@@ -101,9 +81,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
         selectedProbes.value.push(probeData.prb_id.toString())
       }
       atlas_api.getProbeById(probeData.prb_id.toString()).then(data => {
-        if (data.data.error === "LOCAL_STORAGE_FULL") {
-          return handleLocalStorageFullError()
-        }
         probeDetailsMap.value[probeData.prb_id.toString()] = data.data
       })
     }
@@ -149,9 +126,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
         if (!newNodeInfo.isNonResponsive) {
           const asnPromise = RipeApi.userASN(newNodeInfo.label).then(asnData => {
-            if (asnData.error === "LOCAL_STORAGE_FULL") {
-              return handleLocalStorageFullError()
-            }
             const asn = asnData.data.data.asns[0]
             if (asn) {
               if (!asnList.value.includes(asn)) {
@@ -283,9 +257,6 @@ const loadMeasurement = async () => {
     isLoading.value = true
     try {
       const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
-      if (fetchedMetaData.error === "LOCAL_STORAGE_FULL") {
-        return handleLocalStorageFullError()
-      }
 
       metaData.value = fetchedMetaData
 
@@ -346,9 +317,6 @@ const loadMeasurementData = async (loadProbes = false) => {
       }
 
       const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
-      if (data.error === "LOCAL_STORAGE_FULL") {
-        return handleLocalStorageFullError()
-      }
 
       const filteredData = data.filter(item => 
         selectedDestinations.value.length === 0 || selectedDestinations.value.includes(item.dst_addr)
@@ -501,35 +469,6 @@ watch(() => props.atlasMeasurementID, () => {
       </GenericCardController>
     </QExpansionItem>
   </GenericCardController>
-  <QDialog v-model="localStorageFullDialog">
-    <QCard>
-      <QCardSection>
-        <div class="text-h6">Local Storage Full</div>
-      </QCardSection>
-      <QCardSection class="q-pt-none">
-        Your browser's local storage cache is full. Would you like to clear it to continue?
-        <br>
-        <span v-if="localStorageClearing">Clearing cache...</span>
-      </QCardSection>
-      <QCardActions align="right">
-        <QBtn v-if="!localStorageClearing" flat label="Cancel" color="primary" @click="handleCancel" />
-        <QBtn v-if="!localStorageClearing" flat label="Clear Storage" color="primary" @click="handleClearStorage" />
-      </QCardActions>
-    </QCard>
-  </QDialog>
-  <QDialog v-model="loadMeasurementErrorDialog">
-    <QCard>
-      <QCardSection>
-        <div class="text-h6">Error Loading Measurement</div>
-      </QCardSection>
-      <QCardSection class="q-pt-none">
-        {{ loadMeasurementErrorMessage }}
-      </QCardSection>
-      <QCardActions align="right">
-        <QBtn flat label="Close" color="primary" @click="loadMeasurementErrorDialog = false" />
-      </QCardActions>
-    </QCard>
-  </QDialog>
 </template>
 
 <style scoped>

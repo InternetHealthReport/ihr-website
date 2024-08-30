@@ -34,7 +34,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="main-container">
+  <div class="IHR_char-container">
     <h1>Traceroute Monitor</h1>
     <QInput v-model="measurementIDInput" @keyup.enter="loadMeasurement" placeholder="Enter RIPE ATLAS traceroute measurement ID">
       <template v-slot:prepend>
@@ -52,7 +52,4 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.main-container {
-    padding: 2em;
-}
 </style>
