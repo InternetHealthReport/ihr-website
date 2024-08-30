@@ -87,6 +87,11 @@ const  SIMPLE_MENU = [
         routeName: 'bgp-monitor',
         summary: 'header.bgpMonitor.summary',
       },
+      {
+        entryName: 'header.tracerouteVisualization.name',
+        routeName: 'traceroute-monitor',
+        summary: 'header.tracerouteVisualization.summary',
+      },
     ],
   },
   {

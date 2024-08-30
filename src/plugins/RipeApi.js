@@ -1,34 +1,65 @@
 import axios from 'axios'
+import cache from './cache.js'
 
 // Base URL for RIPE stat API
 const RIPE_API_BASE = 'https://stat.ripe.net/data/'
+const DEFAULT_TIMEOUT = 180000
 
-var ripe_axios = axios.create({ baseURL: RIPE_API_BASE })
+const axios_base = axios.create({
+  baseURL: RIPE_API_BASE,
+  timeout: DEFAULT_TIMEOUT,
+})
 
 export default {
-  asnNeighbours(asn) {
+  async asnNeighbours(asn) {
     let queryarg = {
       params: {
         resource: asn,
-      },
+      }
     }
-    return ripe_axios.get('asn-neighbours/data.json', queryarg).then(response => {
-      return response.data
+    const storageAllowed = false//JSON.parse(localStorage.getItem('storage-allowed'))
+    const url = 'asn-neighbours/data.json'
+    return await cache(`${url}_${JSON.stringify(queryarg)}`, () => {
+        return axios_base.get(url, queryarg)
+      }, {
+        storageAllowed: storageAllowed ? storageAllowed : false
+      })
+  },
+  async userIP() {
+    const storageAllowed = false//JSON.parse(localStorage.getItem('storage-allowed'))
+    const url = 'whats-my-ip/data.json'
+    return await cache(`${url}_${JSON.stringify({})}`, () => {
+      return axios_base.get(url)
+    }, {
+      storageAllowed: storageAllowed ? storageAllowed : false
     })
   },
-  userIP() {
-    return ripe_axios.get('whats-my-ip/data.json').then(response => {
-      return response.data
-    })
-  },
-  userASN(ip) {
+  async userASN(ip) {
     let queryarg = {
       params: {
         resource: ip,
-      },
+      }
     }
-    return ripe_axios.get('network-info/data.json', queryarg).then(response => {
-      return response.data
+    const storageAllowed = false//JSON.parse(localStorage.getItem('storage-allowed'))
+    const url = 'network-info/data.json'
+    return await cache(`${url}_${JSON.stringify(queryarg)}`, () => {
+      return axios_base.get(url, queryarg)
+    }, {
+      storageAllowed: storageAllowed ? storageAllowed : false
+    })
+  },
+  async prefixOverview(ip) {
+    let queryarg = {
+      params: {
+        resource: ip,
+      }
+    }
+    const storageAllowed = false//JSON.parse(localStorage.getItem('storage-allowed'))
+    const url = 'prefix-overview/data.json'
+    return await cache(`${url}_${JSON.stringify(queryarg)}`, () => {
+      return axios_base.get(url, queryarg)
+    }, {
+      storageAllowed: storageAllowed ? storageAllowed : false
     })
   }
 }
