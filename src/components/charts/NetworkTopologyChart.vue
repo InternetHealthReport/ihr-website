@@ -475,7 +475,7 @@ defineExpose({fitToScreen})
 				</div>
 			</div>
        
-			<div ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipHoverOpacity }">
+			<div ref="tooltip" class="tooltipTopology" :style="{ ...tooltipPos, opacity: tooltipHoverOpacity }">
 				<div>{{ nodeInfo[targetNodeId]?.Name }}</div>
 				<div>{{ nodeInfo[targetNodeId]?.Country }}</div>
 				<div v-if="!isPrefix(targetNodeId)">Customer Cones : {{ nodeInfo[targetNodeId]?.CONES }}</div>
@@ -518,7 +518,7 @@ defineExpose({fitToScreen})
 	margin-top:25px;
 }
 
-.tooltip {
+.tooltipTopology {
   position: absolute;
   place-content: center;
   text-align: center;
