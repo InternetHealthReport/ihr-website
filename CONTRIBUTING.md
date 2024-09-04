@@ -121,36 +121,35 @@ Our website uses the following libraries:
 │   │   └── asnames.txt: A text file containing a list of AS names
 │   └── favicon.png: The favicon image
 ├── src
-│   ├── App.vue
+│   ├── App.vue: The root Vue component for the application, serving as the main entry point for the Vue.js application
 │   ├── assets
 │   │   ├── docs
-│   │   │   ├── global_report.md
-│   │   │   └── iyp.md
+│   │   │   └── global_report.md: A document explaining how to maintaine the Global Report page
 │   │   ├── imgs
-│   │   │   ├── AS-interdependece.png
-│   │   │   ├── AS-page-AS2497.png
-│   │   │   ├── DF-anomalies.png
-│   │   │   ├── Net-disconnections.png
-│   │   │   ├── aggregated-alarms-architecture.png
-│   │   │   ├── disco_AS16322.png
-│   │   │   ├── dns-anomaly-alarm-type-integration.png
-│   │   │   ├── edgecast-logo.png
-│   │   │   ├── forwarding_AS174.png
-│   │   │   ├── global-banner.png
-│   │   │   ├── gsoc-logo.png
-│   │   │   ├── gsoc-logo.svg
-│   │   │   ├── hegemony_AS2497.png
-│   │   │   ├── ihr_logo.png
-│   │   │   ├── ihr_logo.svg
-│   │   │   ├── iij-logo.jpg
-│   │   │   ├── isoc-logo.png
-│   │   │   ├── linkdelay_AS7922.png
-│   │   │   ├── manrs-logo.jpg
-│   │   │   ├── netdelay_AS24482.png
-│   │   │   ├── originated-prefixes-chart-AS2497.png
-│   │   │   ├── ripe-logo.png
-│   │   │   └── rv-logo.png
-│   │   └── rir-country-map.json
+│   │   │   ├── AS-interdependece.png: An image
+│   │   │   ├── AS-page-AS2497.png: An image
+│   │   │   ├── DF-anomalies.png: An image
+│   │   │   ├── Net-disconnections.png: An image
+│   │   │   ├── aggregated-alarms-architecture.png: An image
+│   │   │   ├── disco_AS16322.png: An image
+│   │   │   ├── dns-anomaly-alarm-type-integration.png: An image
+│   │   │   ├── edgecast-logo.png: An image
+│   │   │   ├── forwarding_AS174.png: An image
+│   │   │   ├── global-banner.png: An image
+│   │   │   ├── gsoc-logo.png: An image
+│   │   │   ├── gsoc-logo.svg: An image
+│   │   │   ├── hegemony_AS2497.png: An image
+│   │   │   ├── ihr_logo.png: An image
+│   │   │   ├── ihr_logo.svg: An image
+│   │   │   ├── iij-logo.jpg: An image
+│   │   │   ├── isoc-logo.png: An image
+│   │   │   ├── linkdelay_AS7922.png: An image
+│   │   │   ├── manrs-logo.jpg: An image
+│   │   │   ├── netdelay_AS24482.png: An image
+│   │   │   ├── originated-prefixes-chart-AS2497.png: An image
+│   │   │   ├── ripe-logo.png: An image
+│   │   │   └── rv-logo.png: An image
+│   │   └── rir-country-map.json: A JSON file containing data for a country map related to the Regional Internet Registry (RIR)
 │   ├── components
 │   │   ├── DateTimePicker.vue
 │   │   ├── Feedback.vue
