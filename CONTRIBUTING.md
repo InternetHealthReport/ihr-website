@@ -106,20 +106,20 @@ Our website uses the following libraries:
 
 ```
 .
-├── CODE_OF_CONDUCT.md
-├── CONTRIBUTING.md
-├── Dockerfile
-├── LICENSE
-├── README.md
-├── SECURITY.md
-├── babel.config.cjs
-├── default.conf
-├── index.html
-├── package.json
+├── CODE_OF_CONDUCT.md: A document outlining the expected behavior and guidelines for participants in the project, promoting a respectful and inclusive environment
+├── CONTRIBUTING.md: Guidelines for contributing to the project, including how to report issues, submit code, and adhere to project standards
+├── Dockerfile: A script containing instructions to build a Docker image for the application, specifying the environment and dependencies required to run it
+├── LICENSE: The legal document that specifies the terms under which the project's code can be used, modified, and distributed
+├── README.md: An overview of the project, including its purpose, features, installation instructions, and usage examples
+├── SECURITY.md: A document detailing the security practices of the project, including how to report vulnerabilities and security issues
+├── babel.config.cjs: Configuration file for Babel, a JavaScript compiler, specifying how to transform modern JavaScript code into a backward-compatible version
+├── default.conf: Nginx configuration file, specifying settings such as ports, routes, and other parameters
+├── index.html: The main HTML file that serves as the entry point for the web application, containing the structure and layout of the webpage
+├── package.json: A file that contains metadata about the project, including dependencies, scripts, and project configuration for Node.js applications
 ├── public
 │   ├── data
-│   │   └── asnames.txt
-│   └── favicon.png
+│   │   └── asnames.txt: A text file containing a list of AS names
+│   └── favicon.png: The favicon image
 ├── src
 │   ├── App.vue
 │   ├── assets
