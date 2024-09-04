@@ -151,15 +151,15 @@ Our website uses the following libraries:
 │   │   │   └── rv-logo.png: An image
 │   │   └── rir-country-map.json: A JSON file containing data for a country map related to the Regional Internet Registry (RIR)
 │   ├── components
-│   │   ├── DateTimePicker.vue
-│   │   ├── Feedback.vue
-│   │   ├── Footer.vue
-│   │   ├── Header.vue
-│   │   ├── LanguageSwitcher.vue
-│   │   ├── LocalStorageBanner.vue
-│   │   ├── MetisWidget.vue
-│   │   ├── TracerouteMonitor.vue
-│   │   ├── UserInfo.vue
+│   │   ├── DateTimePicker.vue: A component that allows users to select a date and time
+│   │   ├── Feedback.vue: A component for collecting user feedback (the red feedback button on the right of the report pages)
+│   │   ├── Footer.vue: The footer component that contains copyright information, links, or additional navigation options at the bottom of the website
+│   │   ├── Header.vue: The header component that includes the website title, logo, and main navigation links at the top of the website
+│   │   ├── LanguageSwitcher.vue: A component that allows users to switch between different languages (currently not in used)
+│   │   ├── LocalStorageBanner.vue: A component that inform users about the use of local storage (currently not in used)
+│   │   ├── MetisWidget.vue: A component related to the Metis paper (https://tma.ifip.org/2022/wp-content/uploads/sites/11/2022/06/tma2022-paper18.pdf)
+│   │   ├── TracerouteMonitor.vue: A component that monitors and displays traceroute data, which shows the path packets take to reach a destination on the network
+│   │   ├── UserInfo.vue: A component that displays user information, such as IP address, prefix and AS
 │   │   ├── charts
 │   │   │   ├── AsInterdependenciesChart.vue
 │   │   │   ├── BGPLineChart.vue
