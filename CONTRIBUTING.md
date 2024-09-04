@@ -6,13 +6,13 @@ When contributing to this repository, please first discuss the change you wish t
 
 ## Code of Conduct
 
-This project and everyone participating in it is governed by the [IHR Code of Conduct](), please follow it in all your interaction with the project. By participating, you are expected to uphold this code. Please report unacceptable behavior to admin@ihr.live
+This project and everyone participating in it is governed by the [IHR Code of Conduct](CODE_OF_CONDUCT.md), please follow it in all your interaction with the project. By participating, you are expected to uphold this code. Please report unacceptable behavior to [admin@ihr.live](mailto:admin@ihr.live)
 
 ## Pull Request Process
 
 1. Ensure any install or build dependencies are removed before the end of the layer when doing a
    build. Add only relevant files to commit and ignore the rest to keep the repo clean.
-2. Update the README.md with details of changes to the interface, this includes new environment
+2. Update the [README.md](README.md) with details of changes to the interface, this includes new environment
    variables, exposed ports, useful file locations and container parameters.
 3. You should request review from the maintainers once you submit the Pull Request.
 
@@ -28,9 +28,9 @@ This project and everyone participating in it is governed by the [IHR Code of Co
 $ git clone git@github.com:<User-Name>/<Repo-Name>.git
 # Add upstream remote
 $ git remote add upstream git@github.com:InternetHealthReport/ihr-website.git 
-# Fetch and merge with upstream/master
+# Fetch and merge with upstream/dev
 $ git fetch upstream
-$ git merge upstream/master
+$ git merge upstream/dev
 
 ## Step 2: Create and Publish Working Branch
 $ git checkout -b <type>/<issue|issue-number>/{<additional-fixes>}
@@ -49,21 +49,21 @@ $ git push origin <type>/<issue|issue-number>/{<additional-fixes>}
 ## Committing and pushing your work
 # Ensure branch
 $ git branch
-# Fetch and merge with upstream/master
+# Fetch and merge with upstream/dev
 $ git fetch upstream
-$ git merge upstream/master
+$ git merge upstream/dev
 # Add untracked files
 $ git add .
 # Commit all changes with appropriate commit message and description
 $ git commit -m "your-commit-message" -m "your-commit-description"
-# Fetch and merge with upstream/master again
+# Fetch and merge with upstream/dev again
 $ git fetch upstream
-$ git merge upstream/master
+$ git merge upstream/dev
 # Push changes to your forked repository
 $ git push origin <type>/<issue|issue-number>/{<additional-fixes>}
 
 ## Creating the PR using GitHub Website
-# Create Pull Request from <type>/<issue|issue-number>/{<additional-fixes>} branch in your forked repository to the master branch in the upstream repository
+# Create Pull Request from <type>/<issue|issue-number>/{<additional-fixes>} branch in your forked repository to the dev branch in the upstream repository
 # After creating PR, add a Reviewer (Any Admin) and yourself as the assignee
 # Link Pull Request to appropriate Issue, or Project+Milestone (if no issue created)
 # IMPORTANT: Do Not Merge the PR unless specifically asked to by an admin.
@@ -75,8 +75,8 @@ $ git push origin <type>/<issue|issue-number>/{<additional-fixes>}
 # Delete branch from forked repo
 $ git branch -d <type>/<issue|issue-number>/{<additional-fixes>}
 $ git push --delete origin <type>/<issue|issue-number>/{<additional-fixes>}
-# Fetch and merge with upstream/master
-$ git checkout master
+# Fetch and merge with upstream/dev
+$ git checkout dev
 $ git pull upstream
 $ git push origin
 ```
