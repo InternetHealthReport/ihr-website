@@ -104,6 +104,294 @@ Our website uses the following libraries:
 
 ## Component Descriptions
 
+```
+.
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── Dockerfile
+├── LICENSE
+├── README.md
+├── SECURITY.md
+├── babel.config.cjs
+├── default.conf
+├── index.html
+├── package.json
+├── public
+│   ├── data
+│   │   └── asnames.txt
+│   └── favicon.png
+├── src
+│   ├── App.vue
+│   ├── assets
+│   │   ├── docs
+│   │   │   ├── global_report.md
+│   │   │   └── iyp.md
+│   │   ├── imgs
+│   │   │   ├── AS-interdependece.png
+│   │   │   ├── AS-page-AS2497.png
+│   │   │   ├── DF-anomalies.png
+│   │   │   ├── Net-disconnections.png
+│   │   │   ├── aggregated-alarms-architecture.png
+│   │   │   ├── disco_AS16322.png
+│   │   │   ├── dns-anomaly-alarm-type-integration.png
+│   │   │   ├── edgecast-logo.png
+│   │   │   ├── forwarding_AS174.png
+│   │   │   ├── global-banner.png
+│   │   │   ├── gsoc-logo.png
+│   │   │   ├── gsoc-logo.svg
+│   │   │   ├── hegemony_AS2497.png
+│   │   │   ├── ihr_logo.png
+│   │   │   ├── ihr_logo.svg
+│   │   │   ├── iij-logo.jpg
+│   │   │   ├── isoc-logo.png
+│   │   │   ├── linkdelay_AS7922.png
+│   │   │   ├── manrs-logo.jpg
+│   │   │   ├── netdelay_AS24482.png
+│   │   │   ├── originated-prefixes-chart-AS2497.png
+│   │   │   ├── ripe-logo.png
+│   │   │   └── rv-logo.png
+│   │   └── rir-country-map.json
+│   ├── components
+│   │   ├── DateTimePicker.vue
+│   │   ├── Feedback.vue
+│   │   ├── Footer.vue
+│   │   ├── Header.vue
+│   │   ├── LanguageSwitcher.vue
+│   │   ├── LocalStorageBanner.vue
+│   │   ├── MetisWidget.vue
+│   │   ├── TracerouteMonitor.vue
+│   │   ├── UserInfo.vue
+│   │   ├── charts
+│   │   │   ├── AsInterdependenciesChart.vue
+│   │   │   ├── BGPLineChart.vue
+│   │   │   ├── BGPPathsChart.vue
+│   │   │   ├── CountryHegemonyChart.vue
+│   │   │   ├── DelayAndForwardingChart.vue
+│   │   │   ├── DelayChart.vue
+│   │   │   ├── DiscoChart.vue
+│   │   │   ├── IodaChart.vue
+│   │   │   ├── IypGenericBarChart.vue
+│   │   │   ├── IypGenericPieChart.vue
+│   │   │   ├── IypGenericRadarChart.vue
+│   │   │   ├── IypGenericTreemapChart.vue
+│   │   │   ├── NetworkDelayAlarmsChart.vue
+│   │   │   ├── NetworkDelayChart.vue
+│   │   │   ├── NetworkTopologyChart.vue
+│   │   │   ├── PrefixHegemonyChart.vue
+│   │   │   ├── ReactiveChart.vue
+│   │   │   ├── RirCountrySunburstChart.vue
+│   │   │   ├── TimeSeriesAggregatedAlarmsChart.vue
+│   │   │   ├── TracerouteChart.vue
+│   │   │   ├── TracerouteRttChart.vue
+│   │   │   ├── TreeMapAggregatedAlarmsChart.vue
+│   │   │   └── WorldMapAggregatedAlarmsChart.vue
+│   │   ├── controllers
+│   │   │   ├── AggregatedAlarmsController.vue
+│   │   │   └── GenericCardController.vue
+│   │   ├── iyp
+│   │   │   ├── as
+│   │   │   │   ├── ASAuthoritativeNameservers.vue
+│   │   │   │   ├── ASCoLocatedASes.vue
+│   │   │   │   ├── ASConnectedASes.vue
+│   │   │   │   ├── ASDownstreamsASes.vue
+│   │   │   │   ├── ASIXPs.vue
+│   │   │   │   ├── ASOriginatedPrefixes.vue
+│   │   │   │   ├── ASPopularDomains.vue
+│   │   │   │   ├── ASPopularHostNames.vue
+│   │   │   │   ├── ASRPKIRouteOriginAuthorization.vue
+│   │   │   │   ├── ASRankings.vue
+│   │   │   │   ├── ASRipeAtlas.vue
+│   │   │   │   ├── ASSiblingASes.vue
+│   │   │   │   └── ASUpstreamASes.vue
+│   │   │   ├── country
+│   │   │   │   ├── CountryASRankings.vue
+│   │   │   │   ├── CountryAutonomousSystems.vue
+│   │   │   │   ├── CountryIPPrefixes.vue
+│   │   │   │   ├── CountryInternetExchangePoints.vue
+│   │   │   │   └── CountryRipeAtlas.vue
+│   │   │   ├── hostName
+│   │   │   │   ├── HostNameAuthoritativeNameservers.vue
+│   │   │   │   ├── HostNameIPAddressesPrefixes.vue
+│   │   │   │   ├── HostNameQueryingASes.vue
+│   │   │   │   ├── HostNameQueryingCountries.vue
+│   │   │   │   └── HostNameRankings.vue
+│   │   │   ├── ixp
+│   │   │   │   ├── IXPCoLocationFacilities.vue
+│   │   │   │   ├── IXPMembers.vue
+│   │   │   │   ├── IXPPeeringLANs.vue
+│   │   │   │   └── IXPRPKIRouteOriginAuthorization.vue
+│   │   │   ├── prefix
+│   │   │   │   ├── PrefixAuthoritativeNameservers.vue
+│   │   │   │   ├── PrefixLessSpecificPrefixes.vue
+│   │   │   │   ├── PrefixMoreSpecificPrefixes.vue
+│   │   │   │   ├── PrefixPopularDomains.vue
+│   │   │   │   ├── PrefixPopularHostNames.vue
+│   │   │   │   ├── PrefixRPKIRouteOriginAuthorization.vue
+│   │   │   │   └── PrefixUpstreamASes.vue
+│   │   │   ├── rank
+│   │   │   │   ├── RankASRankings.vue
+│   │   │   │   └── RankHostNameRankings.vue
+│   │   │   └── tag
+│   │   │       ├── TagAutonomousSystems.vue
+│   │   │       ├── TagPopularHostNames.vue
+│   │   │       └── TagPrefixes.vue
+│   │   ├── maps
+│   │   │   ├── DiscoMap.vue
+│   │   │   ├── WorldMap.vue
+│   │   │   └── WorldMapAggregatedAlarmsMap.vue
+│   │   ├── networks
+│   │   │   ├── AS.vue
+│   │   │   ├── Country.vue
+│   │   │   ├── HostName.vue
+│   │   │   ├── IXP.vue
+│   │   │   ├── Prefix.vue
+│   │   │   ├── Rank.vue
+│   │   │   ├── Tag.vue
+│   │   │   ├── as
+│   │   │   │   ├── ASCustom.vue
+│   │   │   │   ├── ASDNS.vue
+│   │   │   │   ├── ASMonitoring.vue
+│   │   │   │   ├── ASOverview.vue
+│   │   │   │   ├── ASPeering.vue
+│   │   │   │   ├── ASRankings.vue
+│   │   │   │   ├── ASRegistration.vue
+│   │   │   │   └── ASRouting.vue
+│   │   │   ├── country
+│   │   │   │   ├── CountryCustom.vue
+│   │   │   │   ├── CountryMonitoring.vue
+│   │   │   │   ├── CountryOverview.vue
+│   │   │   │   ├── CountryPeering.vue
+│   │   │   │   ├── CountryRankings.vue
+│   │   │   │   └── CountryRouting.vue
+│   │   │   ├── hostName
+│   │   │   │   ├── HostNameCustom.vue
+│   │   │   │   ├── HostNameDNS.vue
+│   │   │   │   ├── HostNameRankings.vue
+│   │   │   │   └── HostNameRouting.vue
+│   │   │   ├── ixp
+│   │   │   │   ├── IXPCustom.vue
+│   │   │   │   ├── IXPMonitoring.vue
+│   │   │   │   ├── IXPOverview.vue
+│   │   │   │   ├── IXPPeering.vue
+│   │   │   │   └── IXPRouting.vue
+│   │   │   ├── prefix
+│   │   │   │   ├── PrefixCustom.vue
+│   │   │   │   ├── PrefixDNS.vue
+│   │   │   │   ├── PrefixOverview.vue
+│   │   │   │   └── PrefixRouting.vue
+│   │   │   ├── rank
+│   │   │   │   └── RankCustom.vue
+│   │   │   └── tag
+│   │   │       ├── TagCustom.vue
+│   │   │       └── TagOverview.vue
+│   │   ├── ripe
+│   │   │   ├── Bgplay.vue
+│   │   │   ├── Latencymon.vue
+│   │   │   ├── ReverseDnsIp.vue
+│   │   │   └── Tracemon.vue
+│   │   ├── search
+│   │   │   ├── LocationSearchBar.vue
+│   │   │   └── SearchBar.vue
+│   │   └── tables
+│   │       ├── AggregatedAlarmsTable.vue
+│   │       ├── AsInterdependenciesTable.vue
+│   │       ├── BGPMessagesTable.vue
+│   │       ├── CountryHegemonyTable.vue
+│   │       ├── DelayAlarmsTable.vue
+│   │       ├── DiscoAlarmsTable.vue
+│   │       ├── ForwardingAlarmsTable.vue
+│   │       ├── IypGenericTable.vue
+│   │       ├── MetisTable.vue
+│   │       ├── NetworkDelayAlarmsTable.vue
+│   │       ├── NetworkDelayTable.vue
+│   │       ├── PrefixHegemonyTable.vue
+│   │       ├── PrefixHegemonyTableStats.vue
+│   │       ├── TracerouteDestinationsTable.vue
+│   │       └── TracerouteProbesTable.vue
+│   ├── i18n
+│   │   ├── index.js
+│   │   ├── locales
+│   │   │   ├── en.json
+│   │   │   └── jp.json
+│   │   └── translation.js
+│   ├── main.js
+│   ├── plugins
+│   │   ├── AsNames.js
+│   │   ├── GripApi.js
+│   │   ├── IhrApi.js
+│   │   ├── IodaApi.js
+│   │   ├── IypApi.js
+│   │   ├── IypGenericTreemapChart.js
+│   │   ├── LibraryDelayer.js
+│   │   ├── RipeApi.js
+│   │   ├── RipeAtlasApi.js
+│   │   ├── cache.js
+│   │   ├── commonTable.js
+│   │   ├── countryName.js
+│   │   ├── covid19
+│   │   │   └── lockdowns.js
+│   │   ├── delay.js
+│   │   ├── disco.js
+│   │   ├── layouts
+│   │   │   └── layoutsChart.js
+│   │   ├── metadata
+│   │   │   └── AggregatedAlarmsMetadata.js
+│   │   ├── models
+│   │   │   ├── AggregatedAlarmsDataModel.js
+│   │   │   ├── IodaChartDataModel.js
+│   │   │   ├── TableAggregatedAlarmsDataModel.js
+│   │   │   ├── TimeSeriesAggregatedAlarmsDataModel.js
+│   │   │   ├── TreeMapAggregatedAlarmsDataModel.js
+│   │   │   └── WorldMapAggregatedAlarmsDataModel.js
+│   │   ├── networkName.js
+│   │   ├── query
+│   │   │   └── IhrQuery.js
+│   │   ├── report.js
+│   │   ├── tests
+│   │   │   ├── AggregatedAlarmsDataModel.test.js
+│   │   │   ├── AggregatedAlarmsUtils.test.js
+│   │   │   ├── AsNames.test.js
+│   │   │   ├── GripApi.test.js
+│   │   │   ├── IodaApi.test.js
+│   │   │   ├── IodaChartDataModel.test.js
+│   │   │   ├── TableAggregatedAlarmsDataModel.test.js
+│   │   │   ├── TimeSeriesAggregatedAlarmsDataModel.test.js
+│   │   │   ├── TreeMapAggregatedAlarmsDataModel.test.js
+│   │   │   ├── WorldMapAggregatedAlarmsDataModel.test.js
+│   │   │   └── resources
+│   │   │       └── data.js
+│   │   ├── tracerouteFunctions.js
+│   │   └── utils
+│   │       └── AggregatedAlarmsUtils.js
+│   ├── router
+│   │   └── index.js
+│   ├── styles
+│   │   ├── chart.sass
+│   │   ├── main.sass
+│   │   └── quasar.variables.sass
+│   └── views
+│       ├── Api.vue
+│       ├── BGPMonitor.vue
+│       ├── Contact.vue
+│       ├── Corona.vue
+│       ├── Countries.vue
+│       ├── Documentation.vue
+│       ├── GlobalReport.vue
+│       ├── Home.vue
+│       ├── HostNames.vue
+│       ├── MetisDeployment.vue
+│       ├── MetisHome.vue
+│       ├── MetisSelection.vue
+│       ├── NetworkTopology.vue
+│       ├── Networks.vue
+│       ├── Observable.vue
+│       ├── PageNotFound.vue
+│       ├── ROV.vue
+│       ├── Ranks.vue
+│       ├── Tags.vue
+│       └── TracerouteVisualizationTool.vue
+└── vite.config.js
+```
 
 ## Code Style
 
