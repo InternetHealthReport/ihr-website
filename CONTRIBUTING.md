@@ -83,3 +83,29 @@ $ git push origin
 
 - Always follow [commit message standards](https://chris.beams.io/posts/git-commit/)
 - About the [fork-and-branch workflow](https://blog.scottlowe.org/2015/01/27/using-fork-branch-git-workflow/)
+
+## Libraries Overview
+
+Our website uses the following libraries:
+
+- [@intlify/unplugin-vue-i18n](https://www.npmjs.com/package/@intlify/unplugin-vue-i18n): This is a plugin for Vue.js that helps with internationalization (i18n)
+- [@quasar/extras](https://www.npmjs.com/package/@quasar/extras): This includes icons, fonts, and other assets that enhance the UI
+- [axios](https://www.npmjs.com/package/axios): This is a library used to make HTTP requests
+- [dagre](https://www.npmjs.com/package/dagre): This is a library for laying out directed graphs
+- [grid-layout-plus](https://www.npmjs.com/package/grid-layout-plus): This is an extension of grid layout systems, allowing for more flexible and responsive grid designs in web applications
+- [ip-address](https://www.npmjs.com/package/ip-address): This provides utilities for working with IP addresses
+- [plotly.js-dist](https://www.npmjs.com/package/plotly.js-dist): This is a library for creating interactive charts and visualizations
+- [quasar](https://www.npmjs.com/package/quasar): It provides a rich set of UI components and tools
+- [swagger-ui](https://www.npmjs.com/package/swagger-ui): It generates interactive API documentation from OpenAPI specifications, making it easier for developers to understand and test API endpoints
+- [v-network-graph](https://www.npmjs.com/package/v-network-graph): This is used for creating network graphs in Vue.js applications
+- [vue](https://www.npmjs.com/package/vue): This is a progressive JavaScript framework for building user interfaces
+- [vue-i18n](https://www.npmjs.com/package/vue-i18n): This is an internationalization plugin for Vue.js
+- [vue-router](https://www.npmjs.com/package/vue-router): Vue Router is the official routing library for Vue.js
+
+## Component Descriptions
+
+
+## Code Style
+
+
+## Testing
