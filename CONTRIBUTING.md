@@ -402,3 +402,14 @@ npm run format
 ```
 
 ## Testing
+
+Before submitting your contribution, please ensure that you:
+
+1. Test All Pages and Functions: Navigate through all pages and functionalities of the website to
+verify that everything is working as expected. This includes checking for any visual or functional
+regressions that may have been introduced by your changes.
+2. Manual Testing: Perform manual testing to ensure that your contribution does not break existing
+features. Pay special attention to areas of the code that your changes may impact.
+3. Report Issues: If you encounter any issues during your testing, please address them before submitting
+your contribution. If you believe the issue is unrelated to your changes, feel free to document it in your
+pull request or create an issue.
