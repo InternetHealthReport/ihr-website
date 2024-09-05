@@ -308,33 +308,33 @@ Our website uses the following libraries:
 │   │       ├── TracerouteDestinationsTable.vue: A component that includes the table with the traceroute destinations
 │   │       └── TracerouteProbesTable.vue: A component that includes the table with the traceroute probes
 │   ├── i18n
-│   │   ├── index.js
+│   │   ├── index.js: Exports the i18n object
 │   │   ├── locales
-│   │   │   ├── en.json
-│   │   │   └── jp.json
-│   │   └── translation.js
-│   ├── main.js
+│   │   │   ├── en.json: Contains the English text for the website
+│   │   │   └── jp.json: Contains the Japanese text for the website (currently is a copy of the English text)
+│   │   └── translation.js: Contains all the functions related to the i18n
+│   ├── main.js: Initializes the Vue.js application
 │   ├── plugins
-│   │   ├── AsNames.js
-│   │   ├── GripApi.js
-│   │   ├── IhrApi.js
-│   │   ├── IodaApi.js
-│   │   ├── IypApi.js
-│   │   ├── IypGenericTreemapChart.js
-│   │   ├── LibraryDelayer.js
-│   │   ├── RipeApi.js
-│   │   ├── RipeAtlasApi.js
-│   │   ├── cache.js
-│   │   ├── commonTable.js
-│   │   ├── countryName.js
+│   │   ├── AsNames.js: Contains functions to parse and get AS names from `./public/data/asnames.txt`
+│   │   ├── GripApi.js: Contains functions for getting data from https://ihr.iijlab.net/proxy/grip/events (for global report page)
+│   │   ├── IhrApi.js: Contains functions for IHR API calls
+│   │   ├── IodaApi.js: Contains functions for IODA API calls
+│   │   ├── IypApi.js: Contains functions for IYP API calls
+│   │   ├── IypGenericTreemapChart.js: Contains functions for the IYP treemap chart, i.e. handling click on the chart
+│   │   ├── LibraryDelayer.js: Contains functions for handling CDN based tools
+│   │   ├── RipeApi.js: Contains functions for RIPE API calls
+│   │   ├── RipeAtlasApi.js: Contains functions for RIPE Atlas API calls
+│   │   ├── cache.js: Contains functions for caching the data retrieved from API calls
+│   │   ├── commonTable.js: Contains functions for table displaying and searching
+│   │   ├── countryName.js: Contains functions for getting a country name
 │   │   ├── covid19
-│   │   │   └── lockdowns.js
-│   │   ├── delay.js
-│   │   ├── disco.js
+│   │   │   └── lockdowns.js: Contains data about the COVID19 report page
+│   │   ├── delay.js: Contains constants about the delay components
+│   │   ├── disco.js: Contains constants about the network disconnections components
 │   │   ├── layouts
-│   │   │   └── layoutsChart.js
+│   │   │   └── layoutsChart.js: Contains charts layouts
 │   │   ├── metadata
-│   │   │   └── AggregatedAlarmsMetadata.js
+│   │   │   └── AggregatedAlarmsMetadata.js: Contains the table structures for the global report page
 │   │   ├── models
 │   │   │   ├── AggregatedAlarmsDataModel.js
 │   │   │   ├── IodaChartDataModel.js
