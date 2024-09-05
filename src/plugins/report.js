@@ -22,7 +22,7 @@ class DateInterval {
   }
 }
 
-export default function report(defaultTimeRange=null) {
+export default function report(defaultTimeRange = null) {
   const defaultTimeRangeVal = computed(() => {
     return defaultTimeRange ? defaultTimeRange : 3
   })
@@ -31,8 +31,7 @@ export default function report(defaultTimeRange=null) {
     const end = new Date(dateObj)
     const begin = new Date(end.getTime())
     begin.setUTCDate(begin.getUTCDate() - nDays)
-    if (isNaN(begin.getTime()) || isNaN(end.getTime()))
-      throw RangeError("invalid start or end")
+    if (isNaN(begin.getTime()) || isNaN(end.getTime())) throw RangeError('invalid start or end')
     const newInterval = new DateInterval(begin, end)
     // newInterval.setHours()
     return newInterval
@@ -52,14 +51,14 @@ export default function report(defaultTimeRange=null) {
 
   const reportDateFmt = computed(() => {
     var options = {
-      year: "numeric",
-      month: "long",
-      day: "2-digit",
-      timeZone: "UTC",
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit',
+      timeZone: 'UTC'
     }
     return interval.value.end.toLocaleDateString(undefined, options)
   })
-  
+
   const startTime = computed(() => {
     return interval.value.begin
   })

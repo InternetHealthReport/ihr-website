@@ -7,17 +7,17 @@ import '@/styles/chart.sass'
 
 const iyp_api = inject('iyp_api')
 
-const props  = defineProps({
+const props = defineProps({
   ixpNumber: {
     type: Number,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const route = useRoute()
 
 const REFERENCES = {
-  'peeringdb.com': 'https://www.peeringdb.com/ix',
+  'peeringdb.com': 'https://www.peeringdb.com/ix'
 }
 
 const getOverview = () => {
@@ -60,14 +60,17 @@ const fetchData = async () => {
 const handleReference = (key) => {
   let externalLink = ''
   if (key === 'peeringdb.com' && props.ixpNumber) {
-  externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
+    externalLink = `${references.value.peeringDB}/${props.ixpNumber}`
   }
   return externalLink
 }
 
-watch(() => props.ixpNumber, () => {
-  fetchData()
-})
+watch(
+  () => props.ixpNumber,
+  () => {
+    fetchData()
+  }
+)
 
 onMounted(() => {
   fetchData()
@@ -78,7 +81,7 @@ onMounted(() => {
   <div>
     <QMarkupTable separator="horizontal">
       <div v-if="loadingStatus" class="IHR_loading-spinner">
-        <QSpinner color="secondary" size="15em"/>
+        <QSpinner color="secondary" size="15em" />
       </div>
       <thead>
         <tr>
@@ -92,10 +95,18 @@ onMounted(() => {
         <tr>
           <td class="text-left">
             <div v-if="overview.name">
-              <div>Country: <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">{{ overview.country }}</RouterLink></div>
+              <div>
+                Country:
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">{{
+                  overview.country
+                }}</RouterLink>
+              </div>
               <div>Organization: {{ overview.organization }}</div>
               <div>
-                Website: <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{ overview.website }}</a>
+                Website:
+                <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{
+                  overview.website
+                }}</a>
               </div>
             </div>
           </td>
@@ -107,15 +118,27 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-for="item in overview.peer_lan" :key="item.prefix">
-                <RouterLink :to="Tr.i18nRoute({ name: 'prefix', params: {ip:item.network, length:item.prefixlen}})">
-                  {{ item.prefix }}
-                </RouterLink>
+              <RouterLink
+                :to="
+                  Tr.i18nRoute({
+                    name: 'prefix',
+                    params: { ip: item.network, length: item.prefixlen }
+                  })
+                "
+              >
+                {{ item.prefix }}
+              </RouterLink>
             </div>
           </td>
           <td class="text-left">
             <div v-if="overview.name">
               <div v-for="(value, key) in references" :key="key">
-                <a v-if="handleReference(key)" :href="handleReference(key)" target="_blank" rel="noreferrer">
+                <a
+                  v-if="handleReference(key)"
+                  :href="handleReference(key)"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {{ key }}
                 </a>
               </div>

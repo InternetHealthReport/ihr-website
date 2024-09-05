@@ -15,12 +15,26 @@ const peeringLANs = ref({
   data: [],
   show: false,
   loading: true,
-    query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY {reference_org: 'PeeringDB'}]-(s:Prefix)
+  query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY {reference_org: 'PeeringDB'}]-(s:Prefix)
     OPTIONAL MATCH (s)-[:ORIGINATE]-(a:AS)
     RETURN s.prefix as prefix, s.af as af, COLLECT(DISTINCT a.asn) as orig`,
   columns: [
-    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
-    { name: 'Origin AS', label: 'Origin AS in BGP', align: 'left', field: row => row.orig, format: val => `${val}`, sortable: true },
+    {
+      name: 'Prefix',
+      label: 'Prefix',
+      align: 'left',
+      field: (row) => row.prefix,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Origin AS',
+      label: 'Origin AS in BGP',
+      align: 'left',
+      field: (row) => row.orig,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -28,17 +42,20 @@ const load = () => {
   peeringLANs.value.loading = true
   // Run the cypher query
   let query_params = { id: props.ixpNumber }
-  iyp_api.run([{statement: peeringLANs.value.query, parameters: query_params}]).then(
-    results => {
+  iyp_api
+    .run([{ statement: peeringLANs.value.query, parameters: query_params }])
+    .then((results) => {
       peeringLANs.value.data = results[0]
       peeringLANs.value.loading = false
-    }
-  )
+    })
 }
 
-watch(() => props.ixpNumber, () => {
-  load()
-})
+watch(
+  () => props.ixpNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -57,7 +74,7 @@ onMounted(() => {
       v-if="peeringLANs.data.length > 0"
       :chart-data="peeringLANs.data"
       :chart-layout="{ title: '' }"
-      :config="{ keys: ['af', 'prefix'], root: pageTitle}"
+      :config="{ keys: ['af', 'prefix'], root: pageTitle }"
     />
   </IypGenericTable>
 </template>

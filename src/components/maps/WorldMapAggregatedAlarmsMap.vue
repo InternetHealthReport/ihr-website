@@ -11,7 +11,7 @@ const props = defineProps({
       hovertemplate: '',
       locations: [],
       text: [],
-      z: [],
+      z: []
     }
   },
   loading: {
@@ -30,7 +30,7 @@ const layout = ref({
     showland: true,
     landcolor: 'rgb(215, 215, 215)',
     countrycolor: 'rgb(235, 235, 235)',
-    showcountries: true,
+    showcountries: true
   },
   height: 500
 })
@@ -50,17 +50,17 @@ const traces = ref([
     marker: {
       line: {
         color: 'rgb(255,255,255)',
-        width: 1,
-      },
+        width: 1
+      }
     },
     hoverlabel: {
-      bgcolor: 'white',
+      bgcolor: 'white'
     },
     colorbar: {
       title: 'Alarm Density',
-      len: 0.9,
+      len: 0.9
     }
-  },
+  }
 ])
 const zmax = ref(null)
 
@@ -75,22 +75,24 @@ const setTraces = () => {
   traces.value[0].locations = props.data.locations
   traces.value[0].text = props.data.text
   traces.value[0].z = props.data.z
-  if(traces.value[0].customdata){
-    const max = Math.max(...traces.value[0].customdata.map(o => o.hegemony_count), 0)
-    if(zmax.value == null){
+  if (traces.value[0].customdata) {
+    const max = Math.max(...traces.value[0].customdata.map((o) => o.hegemony_count), 0)
+    if (zmax.value == null) {
       zmax.value = max
       traces.value[0].zmax = max
-    }
-    else {
+    } else {
       traces.value[0].zmax = zmax.value
     }
   }
 }
 
-watch(() => props.data, () => {
-  clearDataViz()
-  setTraces()
-})
+watch(
+  () => props.data,
+  () => {
+    clearDataViz()
+    setTraces()
+  }
+)
 
 const noData = computed(() => {
   if (!props.loading && !traces.value[0].locations?.length) {
@@ -114,6 +116,11 @@ onMounted(() => {
 
 <template>
   <div class="IHR_disco-chart">
-    <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-click="plotlyClickedDataHandler" />
+    <ReactiveChart
+      :layout="layout"
+      :traces="traces"
+      :no-data="noData"
+      @plotly-click="plotlyClickedDataHandler"
+    />
   </div>
 </template>

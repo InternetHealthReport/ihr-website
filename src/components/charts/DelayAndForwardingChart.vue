@@ -1,7 +1,12 @@
 <script setup>
 import { QCard, QCardSection, QBtn, QTabs, QSpinner, QTabPanels, QTabPanel, extend } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
-import { ForwardingQuery, DelayQuery, DelayAlarmsQuery, ForwardingAlarmsQuery } from '@/plugins/IhrApi'
+import {
+  ForwardingQuery,
+  DelayQuery,
+  DelayAlarmsQuery,
+  ForwardingAlarmsQuery
+} from '@/plugins/IhrApi'
 import { ref, inject, computed, watch, onMounted } from 'vue'
 import { DELAY_AND_FORWARDING_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import DelayAlarmsTable from '../tables/DelayAlarmsTable.vue'
@@ -16,25 +21,37 @@ const DEFAULT_TRACES = [
     y: [],
     yaxis: 'y',
     name: 'Delay',
-    showlegend: false,
+    showlegend: false
   },
   {
     x: [],
     y: [],
     yaxis: 'y2',
     name: 'Forwarding',
-    showlegend: false,
-  },
+    showlegend: false
+  }
 ]
 const DELAY_ALARM_INTERVAL = 5 * 3600 * 1000 //5 minutes in milliseconds
 
-const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-
+const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+]
 
 const props = defineProps({
   asNumber: {
     type: Number,
-    required: true,
+    required: true
   },
   startTime: {
     type: Object,
@@ -55,7 +72,7 @@ const emits = defineEmits({
     if (event !== null) {
       return true
     } else {
-      console.warn('Event is missing!');
+      console.warn('Event is missing!')
       return false
     }
   }
@@ -67,12 +84,22 @@ const details = ref({
   delayAlarmsFilter: new DelayAlarmsQuery().asNumber(props.asNumber),
   forwardingData: null,
   forwardingAlarmsFilter: new ForwardingAlarmsQuery().asNumber(props.asNumber),
-  tableVisible: false,
+  tableVisible: false
 })
 const loadingDelay = ref(true)
 const loadingForwarding = ref(true)
-const delayFilter = ref(new DelayQuery().asNumber(props.asNumber).timeInterval(props.startTime, props.endTime).orderedByTime())
-const forwardingFilter = ref(new ForwardingQuery().asNumber(props.asNumber).timeInterval(props.startTime, props.endTime).orderedByTime())
+const delayFilter = ref(
+  new DelayQuery()
+    .asNumber(props.asNumber)
+    .timeInterval(props.startTime, props.endTime)
+    .orderedByTime()
+)
+const forwardingFilter = ref(
+  new ForwardingQuery()
+    .asNumber(props.asNumber)
+    .timeInterval(props.startTime, props.endTime)
+    .orderedByTime()
+)
 const filters = ref([delayFilter.value, forwardingFilter.value])
 const traces = ref([])
 const layout = ref(DELAY_AND_FORWARDING_LAYOUT)
@@ -101,21 +128,21 @@ const showTable = (clickData) => {
     startTime: new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
     stopTime: new Date(chosenTime.getTime() + DELAY_ALARM_INTERVAL),
     data: [],
-    loading: true,
+    loading: true
   }
 
   details.value.forwardingData = {
     dateTime: chosenTime,
     data: [],
-    loading: true,
+    loading: true
   }
 
   ihr_api.delay_alarms(
     details.value.delayAlarmsFilter.timeBin(chosenTime),
-    results => {
+    (results) => {
       let data = []
-      results.results.forEach(alarm => {
-        data.some(elem => {
+      results.results.forEach((alarm) => {
+        data.some((elem) => {
           return alarm.asn == elem.asn && alarm.link == elem.link && alarm.timebin == elem.timebin
         }) || data.push(alarm)
       })
@@ -124,20 +151,20 @@ const showTable = (clickData) => {
       details.value.delayData.loading = false
       details.value.delayAlarmsFilter = details.value.delayAlarmsFilter.clone()
     },
-    error => {
+    (error) => {
       console.error(error) //TODO better error handling
     }
   )
 
   ihr_api.forwarding_alarms(
     details.value.forwardingAlarmsFilter.timeBin(chosenTime),
-    results => {
+    (results) => {
       details.value.forwardingData.data = results.results
       details.value.tableVisible = true
       details.value.forwardingData.loading = false
       details.value.forwardingAlarmsFilter = details.value.forwardingAlarmsFilter.clone()
     },
-    error => {
+    (error) => {
       console.error(error) //TODO better error handling
     }
   )
@@ -147,12 +174,12 @@ const queryForwardingAPI = () => {
   loadingForwarding.value = true
   ihr_api.forwarding(
     forwardingFilter.value,
-    result => {
+    (result) => {
       fetchForwarding(result.results)
       loadingForwarding.value = false
       loading.value = loadingDelay.value || loadingForwarding.value
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
     }
   )
@@ -162,19 +189,19 @@ const queryDelayAPI = () => {
   loadingDelay.value = true
   ihr_api.delay(
     delayFilter.value,
-    result => {
+    (result) => {
       fetchDelay(result.results)
       loadingDelay.value = false
       loading.value = loadingDelay.value || loadingForwarding.value
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
     }
   )
 }
 
 const fetchData = (trace, data) => {
-  data.forEach(resp => {
+  data.forEach((resp) => {
     trace.y.push(resp.magnitude)
     trace.x.push(resp.timebin)
   })
@@ -196,7 +223,7 @@ const fetchForwarding = (data) => {
 }
 
 const getDateFormat = (chosenTime) => {
-  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${("0" + chosenTime.getUTCHours()).slice(-2)}:${("0" + chosenTime.getUTCMinutes()).slice(-2)}`
+  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${('0' + chosenTime.getUTCHours()).slice(-2)}:${('0' + chosenTime.getUTCMinutes()).slice(-2)}`
 }
 
 const delayUrl = computed(() => {
@@ -212,15 +239,21 @@ const forwardingAlarmsUrl = computed(() => {
   return ihr_api.getUrl(details.value.forwardingAlarmsFilter)
 })
 
-watch(() => props.asNumber, () => {
-  // filters.value.forEach(filter => {
-  //   filter.asNumber(newValue)
-  // })
-  apiCall()
-})
-watch(() => props.endTime, () => {
-  apiCall()
-})
+watch(
+  () => props.asNumber,
+  () => {
+    // filters.value.forEach(filter => {
+    //   filter.asNumber(newValue)
+    // })
+    apiCall()
+  }
+)
+watch(
+  () => props.endTime,
+  () => {
+    apiCall()
+  }
+)
 
 onMounted(() => {
   apiCall()
@@ -229,7 +262,13 @@ onMounted(() => {
 
 <template>
   <div class="IHR_chart">
-    <ReactiveChart :layout="layout" :traces="traces" @loaded="loading" @plotly-click="showTable" :no-data="noData" />
+    <ReactiveChart
+      :layout="layout"
+      :traces="traces"
+      @loaded="loading"
+      @plotly-click="showTable"
+      :no-data="noData"
+    />
     <QCard v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
       <QCardSection class="q-pa-xs">
         <div class="row items-center">
@@ -278,7 +317,11 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="forwarding">
-          <ForwardingAlarmsTable :data="details.forwardingData.data" :loading="details.forwardingData.loading" @prefix-details="emits('prefix-details', $event)" />
+          <ForwardingAlarmsTable
+            :data="details.forwardingData.data"
+            :loading="details.forwardingData.loading"
+            @prefix-details="emits('prefix-details', $event)"
+          />
         </QTabPanel>
         <QTabPanel name="api" class="IHR_api-table">
           <h3>{{ $t('charts.delayAndForwarding.apiTitle') }}</h3>
@@ -320,7 +363,9 @@ onMounted(() => {
                 </p>
               </td>
               <td>
-                <a :href="forwardingAlarmsUrl" target="_blank" id="forwardingAlarms">{{ forwardingAlarmsUrl }}</a>
+                <a :href="forwardingAlarmsUrl" target="_blank" id="forwardingAlarms">{{
+                  forwardingAlarmsUrl
+                }}</a>
               </td>
             </tr>
           </table>
@@ -330,5 +375,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>

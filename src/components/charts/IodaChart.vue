@@ -3,7 +3,7 @@ import { IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT } from '@/plugins/layouts/
 import { ref, onMounted, computed } from 'vue'
 import ReactiveChart from './ReactiveChart.vue'
 import * as IodaChartDataModel from '@/plugins/models/IodaChartDataModel'
-import { watch } from 'vue';
+import { watch } from 'vue'
 
 const props = defineProps({
   entityValue: {
@@ -12,7 +12,7 @@ const props = defineProps({
   },
   filterByCountry: {
     type: Boolean,
-    required: true,
+    required: true
   },
   startTime: {
     type: Date,
@@ -37,7 +37,14 @@ const entityType = computed(() => {
 const apiCall = () => {
   loading.value = true
   const iodaAlarmTypesUnits = IodaChartDataModel.getIodaAlarmTypesUnits()
-  IodaChartDataModel.etl(entityType.value, props.entityValue, props.startTime, props.endTime, iodaAlarmTypesUnits, iodaSourceParams.value)
+  IodaChartDataModel.etl(
+    entityType.value,
+    props.entityValue,
+    props.startTime,
+    props.endTime,
+    iodaAlarmTypesUnits,
+    iodaSourceParams.value
+  )
     .then((res) => {
       traces.value = res
       layout.value.datarevision = new Date().getTime()
@@ -49,9 +56,12 @@ const apiCall = () => {
     })
 }
 
-watch(() => props.endTime, () => {
-  apiCall()
-})
+watch(
+  () => props.endTime,
+  () => {
+    apiCall()
+  }
+)
 
 onMounted(() => {
   apiCall()

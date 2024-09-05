@@ -7,13 +7,13 @@ import WorldMapAggregatedAlarmsMap from '@/components/maps/WorldMapAggregatedAla
 const props = defineProps({
   loading: {
     type: Boolean,
-    default: true,
+    default: true
   },
   alarms: {
-    type: Array,
+    type: Array
   },
   aggregatedAttrsSelected: {
-    type: Object,
+    type: Object
   },
   alarmTypeTitlesMap: {
     type: Object
@@ -30,14 +30,30 @@ const worldMapTrace = ref({})
 const chartTitle = ref('')
 
 const init = (alarms, alarmCountsSelected, alarmTypeTitlesMap, selectedCountry, legendSelected) => {
-  worldMapTrace.value = WorldMapAggregatedAlarmsDataModel.etl(alarms, alarmCountsSelected.counts, alarmTypeTitlesMap)
-  chartTitle.value = WorldMapAggregatedAlarmsDataModel.getChartTitle(worldMapTrace.value, alarms, selectedCountry, legendSelected)
+  worldMapTrace.value = WorldMapAggregatedAlarmsDataModel.etl(
+    alarms,
+    alarmCountsSelected.counts,
+    alarmTypeTitlesMap
+  )
+  chartTitle.value = WorldMapAggregatedAlarmsDataModel.getChartTitle(
+    worldMapTrace.value,
+    alarms,
+    selectedCountry,
+    legendSelected
+  )
 }
 
-
-watch(() => props.alarms, () => {
-  init(props.alarms, props.aggregatedAttrsSelected, props.alarmTypeTitlesMap, props.selectedCountry)
-})
+watch(
+  () => props.alarms,
+  () => {
+    init(
+      props.alarms,
+      props.aggregatedAttrsSelected,
+      props.alarmTypeTitlesMap,
+      props.selectedCountry
+    )
+  }
+)
 
 onMounted(() => {
   init(props.alarms, props.aggregatedAttrsSelected, props.alarmTypeTitlesMap, props.selectedCountry)
@@ -48,9 +64,12 @@ defineExpose({ init })
 <template>
   <div class="IHR_chart">
     <QCardSection>
-      <div class="text-h6 center"> {{ chartTitle }}</div>
+      <div class="text-h6 center">{{ chartTitle }}</div>
     </QCardSection>
-    <WorldMapAggregatedAlarmsMap :data="worldMapTrace" :loading="props.loading"
-      @country-clicked="emits('country-clicked', $event)" />
+    <WorldMapAggregatedAlarmsMap
+      :data="worldMapTrace"
+      :loading="props.loading"
+      @country-clicked="emits('country-clicked', $event)"
+    />
   </div>
 </template>

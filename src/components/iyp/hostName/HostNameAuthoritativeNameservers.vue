@@ -22,11 +22,46 @@ const nameservers = ref({
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
     RETURN  DISTINCT i.ip AS ip, n.name as nameserver, a.asn AS asn, p.prefix AS prefix, COLLECT(DISTINCT t.label) AS tags`,
   columns: [
-    { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.nameserver, format: val => `${val}`, sortable: true },
-    { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
-    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
-    { name: 'Prefix Tags', label: 'Prefix Tags', align: 'left', field: row => row.tags, format: val => `${val}`, sortable: true },
-    { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
+    {
+      name: 'Nameserver',
+      label: 'Authoritative Nameserver',
+      align: 'left',
+      field: (row) => row.nameserver,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'IP',
+      label: 'IP',
+      align: 'left',
+      field: (row) => row.ip,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Prefix',
+      label: 'Prefix',
+      align: 'left',
+      field: (row) => row.prefix,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Prefix Tags',
+      label: 'Prefix Tags',
+      align: 'left',
+      field: (row) => row.tags,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Origin AS',
+      label: 'Origin AS',
+      align: 'left',
+      field: (row) => row.asn,
+      format: (val) => `AS${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -34,17 +69,20 @@ const load = () => {
   nameservers.value.loading = true
   // Run the cypher query
   let query_params = { hostname: props.hostName }
-  iyp_api.run([{statement: nameservers.value.query, parameters: query_params}]).then(
-    results => {
+  iyp_api
+    .run([{ statement: nameservers.value.query, parameters: query_params }])
+    .then((results) => {
       nameservers.value.data = results[0]
       nameservers.value.loading = false
-    }
-  )
+    })
 }
 
-watch(() => props.hostName, () => {
-  load()
-})
+watch(
+  () => props.hostName,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -64,7 +102,7 @@ onMounted(() => {
         <IypGenericBarChart
           v-if="nameservers.data.length > 0"
           :chart-data="nameservers.data"
-          :config="{key:'tags'}"
+          :config="{ key: 'tags' }"
           :chart-layout="{ title: 'Prefix Tags' }"
         />
       </div>
@@ -72,8 +110,14 @@ onMounted(() => {
         <IypGenericTreemapChart
           v-if="nameservers.data.length > 0"
           :chart-data="nameservers.data"
-          :config="{ keys: ['asn', 'prefix', 'ip', 'nameserver'], root: pageTitle, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br><extra></extra>' }"
-          @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'nameserver'}})"
+          :config="{
+            keys: ['asn', 'prefix', 'ip', 'nameserver'],
+            root: pageTitle,
+            hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br><extra></extra>'
+          }"
+          @treemap-clicked="
+            treemapClicked({ ...$event, ...{ router: router, leafKey: 'nameserver' } })
+          "
         />
       </div>
     </div>

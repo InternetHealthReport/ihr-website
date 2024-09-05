@@ -8,10 +8,10 @@ import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
 const props = defineProps({
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   alarms: {
-    type: Array,
+    type: Array
   },
   startTime: {
     type: Date
@@ -20,7 +20,7 @@ const props = defineProps({
     type: Date
   },
   aggregatedAttrsSelected: {
-    type: Object,
+    type: Object
   },
   countryName: {
     type: String
@@ -71,16 +71,40 @@ const noData = computed(() => {
   }
 })
 
-const init = (alarms, startTime, endTime, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap, legendSelected, isASGranularity, render = true) => {
+const init = (
+  alarms,
+  startTime,
+  endTime,
+  aggregatedAttrsSelected,
+  countryName,
+  alarmTypeTitlesMap,
+  legendSelected,
+  isASGranularity,
+  render = true
+) => {
   if (render) {
     const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsSelected)
-    traces.value = TimeSeriesAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap, legendSelected, isASGranularity)
+    traces.value = TimeSeriesAggregatedAlarmsDataModel.etl(
+      alarms,
+      aggregatedAttrsZipped,
+      countryName,
+      alarmTypeTitlesMap,
+      legendSelected,
+      isASGranularity
+    )
     if (layout.value.xaxis && layout.value.yaxis) {
       layout.value.xaxis.autorange = true
       layout.value.yaxis.autorange = true
     }
   }
-  chartTitle.value = TimeSeriesAggregatedAlarmsDataModel.getChartTitle(traces.value, countryName, startTime, endTime, legendSelected, isASGranularity)
+  chartTitle.value = TimeSeriesAggregatedAlarmsDataModel.getChartTitle(
+    traces.value,
+    countryName,
+    startTime,
+    endTime,
+    legendSelected,
+    isASGranularity
+  )
 }
 
 const plotlySelectTimeHandler = (obj) => {
@@ -93,12 +117,33 @@ const onTimeseriesLegendClicked = (legend) => {
   emits('timeseries-legend-clicked', legend)
 }
 
-watch(() => props.alarms, () => {
-  init(props.alarms, props.startTime, props.endTime, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.legendSelected, props.isASGranularity)
-})
+watch(
+  () => props.alarms,
+  () => {
+    init(
+      props.alarms,
+      props.startTime,
+      props.endTime,
+      props.aggregatedAttrsSelected,
+      props.countryName,
+      props.alarmTypeTitlesMap,
+      props.legendSelected,
+      props.isASGranularity
+    )
+  }
+)
 
 onMounted(() => {
-  init(props.alarms, props.startTime, props.endTime, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.legendSelected, props.isASGranularity)
+  init(
+    props.alarms,
+    props.startTime,
+    props.endTime,
+    props.aggregatedAttrsSelected,
+    props.countryName,
+    props.alarmTypeTitlesMap,
+    props.legendSelected,
+    props.isASGranularity
+  )
 })
 
 defineExpose({ init })
@@ -110,8 +155,13 @@ defineExpose({ init })
       <div class="text-h6 center">{{ chartTitle }}</div>
     </QCardSection>
     <div class="IHR_disco-chart">
-      <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-legend-click="onTimeseriesLegendClicked"
-        @plotly-time-filter="plotlySelectTimeHandler" />
+      <ReactiveChart
+        :layout="layout"
+        :traces="traces"
+        :no-data="noData"
+        @plotly-legend-click="onTimeseriesLegendClicked"
+        @plotly-time-filter="plotlySelectTimeHandler"
+      />
     </div>
   </div>
 </template>

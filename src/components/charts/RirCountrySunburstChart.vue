@@ -9,13 +9,13 @@ const colors = new Map([
   ['APNIC', '#4daf4a'],
   ['AFRINIC', '#984ea3'],
   ['LACNIC', '#ff7f00'],
-  ['Other', '#8C564B'],
+  ['Other', '#8C564B']
 ])
 
 const props = defineProps({
   data: {
     type: Array,
-    required: true,
+    required: true
   }
 })
 

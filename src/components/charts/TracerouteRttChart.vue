@@ -2,11 +2,11 @@
 import { QRange } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, computed, watch } from 'vue'
-import { calculateMedian } from "../../plugins/tracerouteFunctions"
+import { calculateMedian } from '../../plugins/tracerouteFunctions'
 
 const props = defineProps({
   intervalValue: {
-    type: Number,
+    type: Number
   },
   timeRange: {
     type: Object
@@ -25,7 +25,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(["loadMeasurementOnTimeRange"])
+const emit = defineEmits(['loadMeasurementOnTimeRange'])
 
 const timeRangeModel = ref({})
 const sliderWidthInit = ref(false)
@@ -37,15 +37,15 @@ const showNoDataMessage = ref(true)
 
 const plotRTTChart = async () => {
   if (!props.intervalValue) {
-      showOneOffMessage.value = true
-      showNoDataMessage.value = false
-      return
+    showOneOffMessage.value = true
+    showNoDataMessage.value = false
+    return
   }
 
   const timeInterval = props.intervalValue
   const groupedData = {}
-  
-  filteredRttOverTime.value.forEach(dataPoint => {
+
+  filteredRttOverTime.value.forEach((dataPoint) => {
     const timeSlot = Math.floor(dataPoint.timestamp / timeInterval) * timeInterval
     if (!groupedData[timeSlot]) {
       groupedData[timeSlot] = []
@@ -61,9 +61,9 @@ const plotRTTChart = async () => {
     const trace = {
       x: [],
       y: [],
-      type: "scatter",
-      mode: "lines",
-      name: "Median RTT"
+      type: 'scatter',
+      mode: 'lines',
+      name: 'Median RTT'
     }
 
     for (const [timeSlot, rtts] of Object.entries(groupedData)) {
@@ -73,9 +73,9 @@ const plotRTTChart = async () => {
 
     actualChartData.value = [trace]
     actualChartLayout.value = {
-      height: "300",
-      xaxis: { title: "Time" },
-      yaxis: { title: "Median RTT (ms)" }
+      height: '300',
+      xaxis: { title: 'Time' },
+      yaxis: { title: 'Median RTT (ms)' }
     }
     showNoDataMessage.value = false
   }
@@ -88,9 +88,9 @@ const filteredRttOverTime = computed(() => {
   if (timeRangeModel.value.disable) {
     return props.rttOverTime
   }
-  
+
   const { min, max } = timeRangeModel.value
-  return props.rttOverTime.filter(dataPoint => {
+  return props.rttOverTime.filter((dataPoint) => {
     return dataPoint.timestamp >= min && dataPoint.timestamp <= max
   })
 })
@@ -109,12 +109,15 @@ const adjustQSliderWidth = (relayout) => {
 }
 
 const rangeOnChane = (event) => {
-  emit("loadMeasurementOnTimeRange", event)
+  emit('loadMeasurementOnTimeRange', event)
 }
 
-watch(() => props.timeRange, () => {
-  timeRangeModel.value = props.timeRange
-})
+watch(
+  () => props.timeRange,
+  () => {
+    timeRangeModel.value = props.timeRange
+  }
+)
 watch(filteredRttOverTime, () => {
   showOneOffMessage.value = false
   showTooSmallMessage.value = false
@@ -142,9 +145,17 @@ watch(filteredRttOverTime, () => {
     />
     <div class="timetampSlider">
       <div class="timetampSliderContainer">
-        <QRange v-model="timeRangeModel" :disable="timeRangeModel.disable" :min="minTime" :max="maxTime"
-          :left-label-value="leftLabelValue" :right-label-value="rightLabelValue" label-always
-          drag-range @change="rangeOnChane" />
+        <QRange
+          v-model="timeRangeModel"
+          :disable="timeRangeModel.disable"
+          :min="minTime"
+          :max="maxTime"
+          :left-label-value="leftLabelValue"
+          :right-label-value="rightLabelValue"
+          label-always
+          drag-range
+          @change="rangeOnChane"
+        />
       </div>
     </div>
   </div>

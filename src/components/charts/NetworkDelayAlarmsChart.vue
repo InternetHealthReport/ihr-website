@@ -12,29 +12,29 @@ const props = defineProps({
   minDeviation: {
     type: Number,
     default: DEFAULT_MIN_DEVIATION,
-    required: true,
+    required: true
   },
   selectedType: {
     type: String,
     default: 'AS',
-    required: false,
+    required: false
   },
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   endTime: {
     type: Date,
-    required: true,
+    required: true
   },
   fetch: {
     type: Boolean,
-    required: true,
+    required: true
   },
   filter: {
     type: String,
-    default: '',
-  },
+    default: ''
+  }
 })
 
 const emits = defineEmits(['loading', 'network-delay-alarms-data-loaded'])
@@ -44,19 +44,22 @@ const plot = ref({
   startpoint_name: '',
   startpoint_type: '',
   endpoints: [],
-  clear: 1,
+  clear: 1
 })
 const loading = ref(true)
 
 const apiCall = () => {
-  const networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery().deviation(props.minDeviation, Query.GTE).startPointType(props.selectedType).timeInterval(props.startTime, props.endTime)
+  const networkDelayAlarmsFilter = new NetworkDelayAlarmsQuery()
+    .deviation(props.minDeviation, Query.GTE)
+    .startPointType(props.selectedType)
+    .timeInterval(props.startTime, props.endTime)
   loading.value = true
   emits('loading', loading.value)
   ihr_api.network_delay_alarms(
     networkDelayAlarmsFilter,
-    result => {
+    (result) => {
       let data = []
-      result.results.forEach(alarm => {
+      result.results.forEach((alarm) => {
         alarm['event_type'] = 'network_delay'
         data.push(alarm)
       })
@@ -65,19 +68,25 @@ const apiCall = () => {
       emits('network-delay-alarms-data-loaded', data)
       emits('loading', loading.value)
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
     }
   )
 }
 
-watch(() => props.minDeviation, () => {
-  apiCall()
-})
+watch(
+  () => props.minDeviation,
+  () => {
+    apiCall()
+  }
+)
 
-watch(() => props.endTime, () => {
-  apiCall()
-})
+watch(
+  () => props.endTime,
+  () => {
+    apiCall()
+  }
+)
 
 onMounted(() => {
   apiCall()

@@ -20,9 +20,32 @@ const country_query = ref({
   query: `MATCH (:HostName {name: $hostname})-[:PART_OF]-(:DomainName)-[q:QUERIED_FROM]->(c:Country)
     RETURN DISTINCT c.country_code AS cc, c.name AS name, q.value AS perc`,
   columns: [
-    { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-    { name: 'Country', label: 'Country', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-    { name: 'Percentage of DNS queries', label: 'Percentage of DNS queries', align: 'left', field: row => Number(row.perc), format: val => `${val.toFixed(2)}`, sortable: true, description: 'Percentage of DNS queries received by Cloudflare\'s open resolver in the country. (Cloudflare Radar)' },
+    {
+      name: 'CC',
+      label: 'CC',
+      align: 'left',
+      field: (row) => row.cc,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Country',
+      label: 'Country',
+      align: 'left',
+      field: (row) => row.name,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Percentage of DNS queries',
+      label: 'Percentage of DNS queries',
+      align: 'left',
+      field: (row) => Number(row.perc),
+      format: (val) => `${val.toFixed(2)}`,
+      sortable: true,
+      description:
+        "Percentage of DNS queries received by Cloudflare's open resolver in the country. (Cloudflare Radar)"
+    }
   ],
   pagination: {
     sortBy: 'Percentage of DNS queries', //string column name
@@ -34,17 +57,20 @@ const load = () => {
   country_query.value.loading = true
   // Run the cypher query
   let query_params = { hostname: props.hostName }
-  iyp_api.run([{statement: country_query.value.query, parameters: query_params}]).then(
-    results => {
+  iyp_api
+    .run([{ statement: country_query.value.query, parameters: query_params }])
+    .then((results) => {
       country_query.value.data = results[0]
       country_query.value.loading = false
-    }
-  )
+    })
 }
 
-watch(() => props.hostName, () => {
-  load()
-})
+watch(
+  () => props.hostName,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -63,8 +89,13 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="country_query.data.length > 0"
       :chart-data="country_query.data"
-      :config="{ keys: ['cc'], keyValue: 'perc', root: pageTitle, hovertemplate: '<b>%{label}<br>%{value}%</b> <br><br><extra></extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'country'}})"
+      :config="{
+        keys: ['cc'],
+        keyValue: 'perc',
+        root: pageTitle,
+        hovertemplate: '<b>%{label}<br>%{value}%</b> <br><br><extra></extra>'
+      }"
+      @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'country' } })"
     />
   </IypGenericTable>
 </template>

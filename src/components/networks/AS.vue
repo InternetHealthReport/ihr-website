@@ -25,7 +25,17 @@ const router = useRouter()
 
 const timeRange = route.query.last ? route.query.last : 3
 
-let { interval, utcString, fetch, reportDateFmt, minDate, maxDate, setReportDate, startTime, endTime } = report(timeRange)
+let {
+  interval,
+  utcString,
+  fetch,
+  reportDateFmt,
+  minDate,
+  maxDate,
+  setReportDate,
+  startTime,
+  endTime
+} = report(timeRange)
 
 if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[0]) {
   setReportDate(new Date(route.query.date))
@@ -35,7 +45,7 @@ const activeMenu = route.query.active ? route.query.active : 'overview'
 
 const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
-const asNumber = ref(Number(route.params.id.replace('AS','')))
+const asNumber = ref(Number(route.params.id.replace('AS', '')))
 const asName = ref(null)
 const menu = ref(activeMenu)
 const peeringdbId = ref(null)
@@ -70,15 +80,17 @@ const setPeeringdbId = (id) => {
 }
 
 const pushRoute = () => {
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      af: family.value,
-      last: interval.value.dayDiff(),
-      date: utcString(interval.value.end).split('T')[0],
-      active: menu.value ? menu.value : activeMenu
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        af: family.value,
+        last: interval.value.dayDiff(),
+        date: utcString(interval.value.end).split('T')[0],
+        active: menu.value ? menu.value : activeMenu
+      })
     })
-  }))
+  )
 }
 
 const family = computed(() => {
@@ -92,24 +104,30 @@ const pageTitle = computed(() => {
 watch(addressFamily, () => {
   pushRoute()
 })
-watch(() => route.params.id, (asn) => {
-  const newAsn = Number(asn.replace('AS', ''))
-  if (newAsn != asNumber.value) {
-    asNumber.value = newAsn
-    if (asNumber.value) {
-      pushRoute()
-      fetchData()
+watch(
+  () => route.params.id,
+  (asn) => {
+    const newAsn = Number(asn.replace('AS', ''))
+    if (newAsn != asNumber.value) {
+      asNumber.value = newAsn
+      if (asNumber.value) {
+        pushRoute()
+        fetchData()
+      }
     }
   }
-})
+)
 watch(interval, () => {
   pushRoute()
 })
-watch(() => route.query.active, (active) => {
-  if (active != menu.value) {
-    menu.value = active
+watch(
+  () => route.query.active,
+  (active) => {
+    if (active != menu.value) {
+      menu.value = active
+    }
   }
-})
+)
 watch(menu, () => {
   if ('display' in route.query && !route.hash.includes('#')) {
     delete route.query.display
@@ -121,9 +139,11 @@ onMounted(() => {
     pushRoute()
     fetchData()
   } else {
-    router.push(Tr.i18nRoute({
-      name: 'network',
-    }))
+    router.push(
+      Tr.i18nRoute({
+        name: 'network'
+      })
+    )
   }
 })
 </script>
@@ -134,11 +154,16 @@ onMounted(() => {
     <h3 class="text-center">
       <div v-if="['monitoring', 'custom'].includes(menu)">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-        <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+        <DateTimePicker
+          :min="minDate"
+          :max="maxDate"
+          :value="maxDate"
+          @input="setReportDate"
+          hideTime
+          class="IHR_subtitle_calendar"
+        />
       </div>
-      <div v-else>
-        Weekly report
-      </div>
+      <div v-else>Weekly report</div>
     </h3>
     <QCard flat>
       <QTabs
@@ -159,15 +184,9 @@ onMounted(() => {
         <QTab name="custom">Custom</QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
+      <QTabPanels v-model="menu" v-if="pageTitle">
         <QTabPanel name="overview">
-          <ASOverview
-            :as-number="asNumber"
-            :peeringdbId="setPeeringdbId"
-          />
+          <ASOverview :as-number="asNumber" :peeringdbId="setPeeringdbId" />
         </QTabPanel>
         <QTabPanel name="monitoring">
           <ASMonitoring
@@ -180,34 +199,19 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="routing">
-          <ASRouting
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
+          <ASRouting :as-number="asNumber" :page-title="pageTitle" />
         </QTabPanel>
         <QTabPanel name="dns">
-          <ASDNS
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
+          <ASDNS :as-number="asNumber" :page-title="pageTitle" />
         </QTabPanel>
         <QTabPanel name="peering">
-          <ASPeering
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
+          <ASPeering :as-number="asNumber" :page-title="pageTitle" />
         </QTabPanel>
         <QTabPanel name="registration">
-          <ASRegistration
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
+          <ASRegistration :as-number="asNumber" :page-title="pageTitle" />
         </QTabPanel>
         <QTabPanel name="rankings">
-          <ASRankings
-            :as-number="asNumber"
-            :page-title="pageTitle"
-          />
+          <ASRankings :as-number="asNumber" :page-title="pageTitle" />
         </QTabPanel>
         <QTabPanel name="custom">
           <ASCustom

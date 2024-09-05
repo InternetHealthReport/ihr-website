@@ -10,13 +10,13 @@ const iyp_api = inject('iyp_api')
 const REFERENCES = {
   'bgp.he.net': 'https://bgp.he.net/country',
   'radar.cloudflare.com': 'https://radar.cloudflare.com',
-  'stat.ripe.net': 'https://stat.ripe.net/app/launchpad',
+  'stat.ripe.net': 'https://stat.ripe.net/app/launchpad'
 }
 
 const props = defineProps({
   countryCode: {
     type: String,
-    required: true,
+    required: true
   }
 })
 
@@ -33,7 +33,6 @@ const queries = ref([
       OPTIONAL MATCH (c)<-[:COUNTRY {reference_name: "nro.delegated_stats"}]-(pd:Prefix) WITH c, as_count, ixp_count, COUNT(DISTINCT pd) as preg_count
       OPTIONAL MATCH (c)<-[:COUNTRY {reference_name: "ihr.rov"}]-(pg:Prefix) WITH c, as_count, ixp_count, preg_count, COUNT(DISTINCT pg) as pgeo_count
       RETURN c.name AS country_name, as_count, ixp_count, preg_count, pgeo_count`
-
   },
   {
     data: [],
@@ -60,17 +59,17 @@ const queries = ref([
 
 const fetchData = async (cc) => {
   let params = { cc: cc.toUpperCase() }
-  iyp_api.run([{statement: queries.value[0].query, parameters: params}]).then((results) => {
+  iyp_api.run([{ statement: queries.value[0].query, parameters: params }]).then((results) => {
     queries.value[0].data = results[0]
     loading.value -= 1
   })
 
-  iyp_api.run([{statement: queries.value[1].query, parameters: params}]).then((results) => {
+  iyp_api.run([{ statement: queries.value[1].query, parameters: params }]).then((results) => {
     queries.value[1].data = results[0]
     loading.value -= 1
   })
 
-  iyp_api.run([{statement: queries.value[2].query, parameters: params}]).then((results) => {
+  iyp_api.run([{ statement: queries.value[2].query, parameters: params }]).then((results) => {
     queries.value[2].data = results[0]
     loading.value -= 1
   })
@@ -93,13 +92,16 @@ const handleReference = (key) => {
   return externalLink
 }
 
-watch(() => props.countryCode, () => {
-  loading.value = 3
-  queries.value.forEach(query => {
-    query.data = []
-  })
-  fetchData(props.countryCode)
-})
+watch(
+  () => props.countryCode,
+  () => {
+    loading.value = 3
+    queries.value.forEach((query) => {
+      query.data = []
+    })
+    fetchData(props.countryCode)
+  }
+)
 
 onMounted(() => {
   fetchData(props.countryCode)
@@ -110,7 +112,7 @@ onMounted(() => {
   <div>
     <QMarkupTable separator="horizontal">
       <div v-if="loading > 0" class="IHR_loading-spinner">
-        <QSpinner color="secondary" size="15em"/>
+        <QSpinner color="secondary" size="15em" />
       </div>
       <thead>
         <tr>
@@ -124,16 +126,66 @@ onMounted(() => {
         <tr>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div>{{ queries[0].data[0].as_count }} registered <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Autonomous-Systems'})">ASes</RouterLink></div>
-              <div>{{ queries[0].data[0].preg_count }} registered <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#IP-Prefixes'})">prefixes</RouterLink></div>
-              <div>{{ queries[0].data[0].pgeo_count }} geolocated <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#IP-Prefixes'})">prefixes</RouterLink></div>
-              <div>{{ queries[0].data[0].ixp_count }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Internet-Exchange-Points'})">Internet Exchange Points</RouterLink></div>
+              <div>
+                {{ queries[0].data[0].as_count }} registered
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, { active: 'custom' }),
+                      hash: '#Autonomous-Systems'
+                    })
+                  "
+                  >ASes</RouterLink
+                >
+              </div>
+              <div>
+                {{ queries[0].data[0].preg_count }} registered
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, { active: 'custom' }),
+                      hash: '#IP-Prefixes'
+                    })
+                  "
+                  >prefixes</RouterLink
+                >
+              </div>
+              <div>
+                {{ queries[0].data[0].pgeo_count }} geolocated
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, { active: 'custom' }),
+                      hash: '#IP-Prefixes'
+                    })
+                  "
+                  >prefixes</RouterLink
+                >
+              </div>
+              <div>
+                {{ queries[0].data[0].ixp_count }}
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, { active: 'custom' }),
+                      hash: '#Internet-Exchange-Points'
+                    })
+                  "
+                  >Internet Exchange Points</RouterLink
+                >
+              </div>
             </div>
           </td>
           <td class="text-left">
             <div v-if="queries[1].data.length > 0">
               <div v-for="item in queries[1].data" :key="Number(item.asn)">
-                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}`} })">
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}` } })"
+                >
                   AS{{ item.asn }} - {{ item.as_name }}
                 </RouterLink>
               </div>
@@ -142,7 +194,9 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
               <div v-for="item in queries[2].data" :key="Number(item.asn)">
-                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}`} })">
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}` } })"
+                >
                   AS{{ item.asn }} - {{ item.as_name }}
                 </RouterLink>
               </div>

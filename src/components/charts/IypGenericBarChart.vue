@@ -5,15 +5,15 @@ import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   chartData: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   chartLayout: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   },
   config: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   }
 })
 
@@ -27,46 +27,40 @@ const renderChart = () => {
   if (props.config.groupKey) {
     // find all different values for the groupping field
     let group_values = []
-    localChartData.value.forEach( item => {
+    localChartData.value.forEach((item) => {
       if (!group_values.includes(item[props.config.groupKey])) {
         group_values.push(item[props.config.groupKey])
       }
     })
 
     console.log(group_values)
-    
-    group_values.forEach(group => {
+
+    group_values.forEach((group) => {
       const filtData = localChartData.value.filter((item) => item[props.config.groupKey] == group)
 
       const formattedData = formatChartData(filtData)
       const groupedData = groupTopThreeAndExceptAsOthers(formattedData)
 
-      data.push(
-        {
-          name: group,
-          x: groupedData.labels,
-          y: groupedData.data,
-          type: 'bar',
-        }
-      )
-
+      data.push({
+        name: group,
+        x: groupedData.labels,
+        y: groupedData.data,
+        type: 'bar'
+      })
     })
-
   } else {
     const formattedData = formatChartData(localChartData.value)
     const groupedData = groupTopThreeAndExceptAsOthers(formattedData)
 
-    data.push(
-      {
-        x: groupedData.labels,
-        y: groupedData.data,
-        type: 'bar',
-      }
-    )
+    data.push({
+      x: groupedData.labels,
+      y: groupedData.data,
+      type: 'bar'
+    })
   }
 
   const layout = {
-    ...props.chartLayout,
+    ...props.chartLayout
   }
 
   actualChartLayout.value = layout
@@ -79,17 +73,17 @@ const formatChartData = (arrayOfObjects) => {
   }
   const map = {}
   let prefix = props.config.xlabel_prefix ? props.config.xlabel_prefix : ''
-  arrayOfObjects.forEach(item => {
+  arrayOfObjects.forEach((item) => {
     let keys = item[props.config.key]
-    if(!Array.isArray(keys)) {
+    if (!Array.isArray(keys)) {
       keys = [keys]
     }
-    keys.forEach(key => {
-      let value = props.config.value? item[props.config.value]: 1
-      if (!map[prefix+String(key)]) {
-        map[prefix+String(key)] = value
+    keys.forEach((key) => {
+      let value = props.config.value ? item[props.config.value] : 1
+      if (!map[prefix + String(key)]) {
+        map[prefix + String(key)] = value
       } else {
-        map[prefix+String(key)] += value
+        map[prefix + String(key)] += value
       }
     })
   })
@@ -133,9 +127,13 @@ const init = () => {
   }
 }
 
-watch(() => props.chartData, () => {
-  init()
-}, { deep: true })
+watch(
+  () => props.chartData,
+  () => {
+    init()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   init()

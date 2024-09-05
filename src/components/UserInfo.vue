@@ -20,10 +20,10 @@ const as_info_query = ref({
       OPTIONAL MATCH (a)-[:NAME]->(n:Name)
       OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
       OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
-      RETURN c.country_code AS cc, c.name AS country, prefixes_v4, prefixes_v6, COALESCE(pdbn.name, btn.name, ripen.name) AS name, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country `,
+      RETURN c.country_code AS cc, c.name AS country, prefixes_v4, prefixes_v6, COALESCE(pdbn.name, btn.name, ripen.name) AS name, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country `
 })
 
-const getUserInfo = async() => {
+const getUserInfo = async () => {
   const userIP = (await ripeApi.userIP()).data
   const userASN = (await ripeApi.userASN(userIP.data.ip)).data
   userInfo.value.IP = userIP.data.ip
@@ -32,57 +32,70 @@ const getUserInfo = async() => {
 
   as_info_query.value.loading = true
   let query_params = { asn: Number(userASN.data.asns[0]) }
-  iyp_api.run([{statement: as_info_query.value.query, parameters: query_params}]).then(
-    results => {
+  iyp_api
+    .run([{ statement: as_info_query.value.query, parameters: query_params }])
+    .then((results) => {
       userInfo.value.AS_NAME = results[0][0].name
       userInfo.value.COUNTRY = results[0][0].country
       userInfo.value.CC = results[0][0].cc
       as_info_query.value.loading = false
-    }
-  )
-
+    })
 }
 
 const userInfo = ref({})
 
 onMounted(() => {
-    getUserInfo()
+  getUserInfo()
 })
-
 </script>
 
 <template>
   <QMarkupTable class="user-info-card" dense bordered>
     <thead>
-      <th :colspan="2" align="center" style="border-bottom: 1px solid white;">
-        <td style="font-size: large;">YOUR CONNECTION</td>
+      <th :colspan="2" align="center" style="border-bottom: 1px solid white; font-size: large">
+        YOUR CONNECTION
       </th>
     </thead>
     <tbody v-if="!as_info_query.loading">
       <tr>
         <td align="right" class="user-info-text">IP:</td>
-        <td align="left" class="user-info-text">{{userInfo.IP}}</td>
+        <td align="left" class="user-info-text">{{ userInfo.IP }}</td>
       </tr>
       <tr>
         <td align="right" class="user-info-text">AS:</td>
         <td align="left" class="user-info-text">
-          <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${userInfo.AS}` } })" class="user-info-link">
-          AS{{userInfo.AS}} - {{userInfo.AS_NAME}}
+          <RouterLink
+            :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${userInfo.AS}` } })"
+            class="user-info-link"
+          >
+            AS{{ userInfo.AS }} - {{ userInfo.AS_NAME }}
           </RouterLink>
         </td>
       </tr>
       <tr>
         <td align="right" class="user-info-text">PREFIX:</td>
-        <td align="left" class="user-info-text"><RouterLink :to="Tr.i18nRoute({ name: 'prefix', params: { ip: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] } })" class="user-info-link">
-          {{userInfo.PREFIX}}
+        <td align="left" class="user-info-text">
+          <RouterLink
+            :to="
+              Tr.i18nRoute({
+                name: 'prefix',
+                params: { ip: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] }
+              })
+            "
+            class="user-info-link"
+          >
+            {{ userInfo.PREFIX }}
           </RouterLink>
         </td>
       </tr>
       <tr>
         <td align="right" class="user-info-text">COUNTRY:</td>
         <td align="left" class="user-info-text">
-          <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: userInfo.CC } })" class="user-info-link">
-            {{userInfo.COUNTRY}}
+          <RouterLink
+            :to="Tr.i18nRoute({ name: 'country', params: { cc: userInfo.CC } })"
+            class="user-info-link"
+          >
+            {{ userInfo.COUNTRY }}
           </RouterLink>
         </td>
       </tr>

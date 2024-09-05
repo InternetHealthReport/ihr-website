@@ -18,9 +18,32 @@ const upstreams = ref({
     OPTIONAL MATCH (a)-[:COUNTRY {reference_org:'NRO'}]-(c:Country)
     RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name, 100*dep.hege AS hege `,
   columns: [
-    { name: 'Reg. Country', label: 'Reg. Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true, description: 'Country code of the organization for which the ASN is registered for. (Delegated Stat.)' },
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
-    { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+    {
+      name: 'Reg. Country',
+      label: 'Reg. Country',
+      align: 'left',
+      field: (row) => row.cc,
+      format: (val) => `${val}`,
+      sortable: true,
+      description:
+        'Country code of the organization for which the ASN is registered for. (Delegated Stat.)'
+    },
+    {
+      name: 'ASN',
+      label: 'ASN',
+      align: 'left',
+      field: (row) => row.asn,
+      format: (val) => `AS${val}`,
+      sortable: true
+    },
+    {
+      name: 'Name',
+      label: 'AS Name',
+      align: 'left',
+      field: (row) => row.name,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -28,17 +51,18 @@ const load = () => {
   upstreams.value.loading = true
   // Run the cypher query
   let query_params = { prefix: props.getPrefix }
-  iyp_api.run([{statement: upstreams.value.query, parameters: query_params}]).then(
-    results => {
-      upstreams.value.data = results[0]
-      upstreams.value.loading = false
-    }
-  )
+  iyp_api.run([{ statement: upstreams.value.query, parameters: query_params }]).then((results) => {
+    upstreams.value.data = results[0]
+    upstreams.value.loading = false
+  })
 }
 
-watch(() => props.getPrefix, () => {
-  load()
-})
+watch(
+  () => props.getPrefix,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -55,9 +79,9 @@ onMounted(() => {
   >
     <IypGenericBarChart
       v-if="upstreams.data.length > 0"
-      :chart-data="upstreams.data" 
-      :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}'
-      :config="{key:'asn', groupKey: 'cc', value:'hege' , xlabel_prefix:'AS'}"
+      :chart-data="upstreams.data"
+      :chart-layout="{ yaxis: { title: { text: 'AS Hegemony (%)' }, range: [0, 100] } }"
+      :config="{ key: 'asn', groupKey: 'cc', value: 'hege', xlabel_prefix: 'AS' }"
     />
   </IypGenericTable>
 </template>

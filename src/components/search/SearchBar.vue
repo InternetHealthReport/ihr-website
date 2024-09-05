@@ -17,47 +17,47 @@ const MAX_RESULTS = 10
 const props = defineProps({
   bg: {
     type: String,
-    default: 'accent',
+    default: 'accent'
   },
   labelTxt: {
-    type: String,
+    type: String
   },
   label: {
     type: String,
-    default: 'grey-5',
+    default: 'grey-5'
   },
   input: {
     type: String,
-    default: 'text-white text-weight-bold q-mt-xs',
+    default: 'text-white text-weight-bold q-mt-xs'
   },
   noAS: {
     type: Boolean,
-    default: false,
+    default: false
   },
   noIXP: {
     type: Boolean,
-    default: false,
+    default: false
   },
   noPrefix: {
     type: Boolean,
-    default: false,
+    default: false
   },
   noCountry: {
     type: Boolean,
-    default: false,
+    default: false
   },
   noHostName: {
     type: Boolean,
-    default: false,
+    default: false
   },
   noTag: {
     type: Boolean,
-    default: false,
+    default: false
   },
   noRank: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const route = useRoute()
@@ -73,7 +73,7 @@ const Address6 = ipAddress.Address6
 
 let loadingQueryAS = false
 let loadingQueryPrefixes = false
-let loadingQueryIXPs =false
+let loadingQueryIXPs = false
 let loadingQueryCountries = false
 let loadingQueryASNames = false
 let loadingQueryHostNames = false
@@ -87,27 +87,27 @@ const search = async (value, update) => {
   const asnMatch = asnRegex.exec(value)
   let prefixMatch
   try {
-    prefixMatch = (new Address4(value)).isCorrect()
+    prefixMatch = new Address4(value).isCorrect()
   } catch (e) {
     prefixMatch = null
   }
   if (!prefixMatch) {
     try {
-      prefixMatch = (new Address6(value)).isCorrect()
+      prefixMatch = new Address6(value).isCorrect()
     } catch (e) {
       prefixMatch = null
     }
   }
   if (asnMatch) {
     loadingQueryAS = true
-    queryAS(asnMatch.input).then(res => {
+    queryAS(asnMatch.input).then((res) => {
       searchResponse(res, update)
       loadingQueryAS = false
       noResults(res, update)
     })
   } else if (prefixMatch) {
     loadingQueryPrefixes = true
-    queryPrefixes(value).then(res => {
+    queryPrefixes(value).then((res) => {
       searchResponse(res, update)
       loadingQueryPrefixes = false
       noResults(res, update)
@@ -118,12 +118,24 @@ const search = async (value, update) => {
 }
 
 const noResults = (res, update) => {
-  if (!res.length && !loadingQueryAS && !loadingQueryPrefixes && !loadingQueryIXPs && !loadingQueryCountries && !loadingQueryASNames && !loadingQueryHostNames && !loadingQueryTags && !loadingQueryRanks) {
-    const optRes = optimizeSearchResults([{
-      value: 'No results found',
-      name: 'No results found',
-      type: 'Fail',
-    }])
+  if (
+    !res.length &&
+    !loadingQueryAS &&
+    !loadingQueryPrefixes &&
+    !loadingQueryIXPs &&
+    !loadingQueryCountries &&
+    !loadingQueryASNames &&
+    !loadingQueryHostNames &&
+    !loadingQueryTags &&
+    !loadingQueryRanks
+  ) {
+    const optRes = optimizeSearchResults([
+      {
+        value: 'No results found',
+        name: 'No results found',
+        type: 'Fail'
+      }
+    ])
     if (optRes) {
       options.value.push(optRes[0])
       update()
@@ -133,7 +145,7 @@ const noResults = (res, update) => {
 }
 
 const searchResponse = (res, update) => {
-  res.forEach(element => {
+  res.forEach((element) => {
     let value
     let name
     if (element.node === 'AS') {
@@ -166,7 +178,7 @@ const searchResponse = (res, update) => {
     options.value.push({
       value: value,
       name: name,
-      type: element.node,
+      type: element.node
     })
     update()
     loading.value = false
@@ -177,8 +189,9 @@ const queryAS = async (asn) => {
   if (props.noAS) {
     return []
   }
-  const query = 'MATCH (a:AS) WHERE toString(a.asn) STARTS WITH $asn MATCH (a)-[:NAME]-(n:Name) RETURN a.asn as asn, head(collect(DISTINCT(n.name))) as name, head(labels(a)) AS node LIMIT 10'
-  const res = await iyp_api.run([{statement: query, parameters: { asn: asn }}])
+  const query =
+    'MATCH (a:AS) WHERE toString(a.asn) STARTS WITH $asn MATCH (a)-[:NAME]-(n:Name) RETURN a.asn as asn, head(collect(DISTINCT(n.name))) as name, head(labels(a)) AS node LIMIT 10'
+  const res = await iyp_api.run([{ statement: query, parameters: { asn: asn } }])
   return res[0]
 }
 
@@ -186,8 +199,9 @@ const queryPrefixes = async (value) => {
   if (props.noPrefix) {
     return []
   }
-  const query = 'MATCH (p:Prefix) WHERE p.prefix STARTS WITH $value RETURN p.prefix as prefix, head(labels(p)) AS node LIMIT 10'
-  const res = await iyp_api.run([{statement: query, parameters: { value: value }}])
+  const query =
+    'MATCH (p:Prefix) WHERE p.prefix STARTS WITH $value RETURN p.prefix as prefix, head(labels(p)) AS node LIMIT 10'
+  const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
 
@@ -195,7 +209,7 @@ const mixedEntitySearch = async (value, update) => {
   const searchTerm = value.toLowerCase()
   if (!props.noIXP) {
     loadingQueryIXPs = true
-    queryIXPs(searchTerm).then(res => {
+    queryIXPs(searchTerm).then((res) => {
       searchResponse(optimizeSearchResults(res), update)
       loadingQueryIXPs = false
       noResults(res, update)
@@ -203,7 +217,7 @@ const mixedEntitySearch = async (value, update) => {
   }
   if (!props.noCountry) {
     loadingQueryCountries = true
-    queryCountries(searchTerm).then(res => {
+    queryCountries(searchTerm).then((res) => {
       searchResponse(optimizeSearchResults(res), update)
       loadingQueryCountries = false
       noResults(res, update)
@@ -211,7 +225,7 @@ const mixedEntitySearch = async (value, update) => {
   }
   if (!props.noAS) {
     loadingQueryASNames = true
-    queryASNames(searchTerm).then(res => {
+    queryASNames(searchTerm).then((res) => {
       searchResponse(optimizeSearchResults(res), update)
       loadingQueryASNames = false
       noResults(res, update)
@@ -219,7 +233,7 @@ const mixedEntitySearch = async (value, update) => {
   }
   if (!props.noHostName) {
     loadingQueryHostNames = true
-    queryHostNames(searchTerm).then(res => {
+    queryHostNames(searchTerm).then((res) => {
       searchResponse(optimizeSearchResults(res), update)
       loadingQueryHostNames = false
       noResults(res, update)
@@ -227,7 +241,7 @@ const mixedEntitySearch = async (value, update) => {
   }
   if (!props.noTag) {
     loadingQueryTags = true
-    queryTags(searchTerm).then(res => {
+    queryTags(searchTerm).then((res) => {
       searchResponse(optimizeSearchResults(res), update)
       loadingQueryTags = false
       noResults(res, update)
@@ -235,7 +249,7 @@ const mixedEntitySearch = async (value, update) => {
   }
   if (!props.noRank) {
     loadingQueryRanks = true
-    queryRanks(searchTerm).then(res => {
+    queryRanks(searchTerm).then((res) => {
       searchResponse(optimizeSearchResults(res), update)
       loadingQueryRanks = false
       noResults(res, update)
@@ -244,37 +258,43 @@ const mixedEntitySearch = async (value, update) => {
 }
 
 const queryASNames = async (value) => {
-  const query = 'MATCH (n:Name)-[:NAME]-(a:AS) WHERE toLower(n.name) CONTAINS $value MATCH (n)-[:NAME]-(a:AS) RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 10'
+  const query =
+    'MATCH (n:Name)-[:NAME]-(a:AS) WHERE toLower(n.name) CONTAINS $value MATCH (n)-[:NAME]-(a:AS) RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
 
 const queryCountries = async (value) => {
-  const query = 'MATCH (c:Country) WHERE toLower(c.name) STARTS WITH $value RETURN c.country_code AS cc, c.name AS name, head(labels(c)) as node LIMIT 10'
+  const query =
+    'MATCH (c:Country) WHERE toLower(c.name) STARTS WITH $value RETURN c.country_code AS cc, c.name AS name, head(labels(c)) as node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
 
 const queryIXPs = async (value) => {
-  const query = 'MATCH (i:IXP)-[:EXTERNAL_ID]-(p:PeeringdbIXID) WHERE toLower(i.name) STARTS WITH $value RETURN i.name as ixp, p.id as id, head(labels(i)) AS node LIMIT 10'
+  const query =
+    'MATCH (i:IXP)-[:EXTERNAL_ID]-(p:PeeringdbIXID) WHERE toLower(i.name) STARTS WITH $value RETURN i.name as ixp, p.id as id, head(labels(i)) AS node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
 
 const queryHostNames = async (value) => {
-  const query = 'MATCH (h:HostName) WHERE toLower(h.name) STARTS WITH $value RETURN h.name as hostName, head(labels(h)) as node LIMIT 10'
+  const query =
+    'MATCH (h:HostName) WHERE toLower(h.name) STARTS WITH $value RETURN h.name as hostName, head(labels(h)) as node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
 
 const queryTags = async (value) => {
-  const query = 'MATCH (t:Tag) WHERE toLower(t.label) STARTS WITH $value RETURN t.label as label, head(labels(t)) as node LIMIT 10'
+  const query =
+    'MATCH (t:Tag) WHERE toLower(t.label) STARTS WITH $value RETURN t.label as label, head(labels(t)) as node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
 
 const queryRanks = async (value) => {
-  const query = 'MATCH (r:Ranking) WHERE toLower(r.name) STARTS WITH $value RETURN r.name as name, head(labels(r)) as node LIMIT 10'
+  const query =
+    'MATCH (r:Ranking) WHERE toLower(r.name) STARTS WITH $value RETURN r.name as name, head(labels(r)) as node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
@@ -285,11 +305,14 @@ const optimizeSearchResults = (res) => {
   } else if (res[0].type === 'Fail' && options.value.length > 1) {
     return null
   }
-  return res.flat().sort((a, b) => {
-    if (a.as && b.as) {
-      return a.as.length - b.as.length
-    }
-  }).reverse()
+  return res
+    .flat()
+    .sort((a, b) => {
+      if (a.as && b.as) {
+        return a.as.length - b.as.length
+      }
+    })
+    .reverse()
 }
 
 const filter = (value, update, abort) => {
@@ -317,10 +340,12 @@ const routeToAS = (asn) => {
       return
     }
   }
-  router.push(Tr.i18nRoute({
-    name: 'network',
-    params: { id: `AS${asn}` },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'network',
+      params: { id: `AS${asn}` }
+    })
+  )
 }
 
 const routeToIXP = (ixp) => {
@@ -331,10 +356,12 @@ const routeToIXP = (ixp) => {
       return
     }
   }
-  router.push(Tr.i18nRoute({
-    name: 'network',
-    params: { id: `IXP${ixp}` },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'network',
+      params: { id: `IXP${ixp}` }
+    })
+  )
 }
 
 const routeToPrefix = (name) => {
@@ -346,10 +373,12 @@ const routeToPrefix = (name) => {
     }
   }
   const [host, prefixLength] = name.split('/')
-  router.push(Tr.i18nRoute({
-    name: 'prefix',
-    params: { ip: host, length: prefixLength },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'prefix',
+      params: { ip: host, length: prefixLength }
+    })
+  )
 }
 
 const routeToCountry = (cc) => {
@@ -359,14 +388,16 @@ const routeToCountry = (cc) => {
       return
     }
   }
-  router.push(Tr.i18nRoute({
-    name: 'country',
-    params: { cc: cc },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'country',
+      params: { cc: cc }
+    })
+  )
 }
 
 const handleCountryClicked = (cc) => {
-  routeToCountry(cc) ;
+  routeToCountry(cc)
 }
 
 const routeToHostName = (hostName) => {
@@ -376,10 +407,12 @@ const routeToHostName = (hostName) => {
       return
     }
   }
-  router.push(Tr.i18nRoute({
-    name: 'hostname',
-    params: { hostname: hostName },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'hostname',
+      params: { hostname: hostName }
+    })
+  )
 }
 
 const routeToTag = (tag) => {
@@ -389,10 +422,12 @@ const routeToTag = (tag) => {
       return
     }
   }
-  router.push(Tr.i18nRoute({
-    name: 'tag',
-    params: { tag: tag },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'tag',
+      params: { tag: tag }
+    })
+  )
 }
 
 const routeToRank = (rank) => {
@@ -402,10 +437,12 @@ const routeToRank = (rank) => {
       return
     }
   }
-  router.push(Tr.i18nRoute({
-    name: 'rank',
-    params: { rank: rank },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'rank',
+      params: { rank: rank }
+    })
+  )
 }
 
 const showMapDialog = ref(false)
@@ -421,9 +458,12 @@ const placeholder = computed(() => {
   return props.labelTxt
 })
 
-watch(() => route.path, () => {
-  activateSearch.value = false
-})
+watch(
+  () => route.path,
+  () => {
+    activateSearch.value = false
+  }
+)
 </script>
 
 <template>
@@ -450,7 +490,18 @@ watch(() => route.path, () => {
         </QDialog>
       </div>
       <div>
-        <div v-if="!loadingQueryAS && !loadingQueryPrefixes && !loadingQueryIXPs && !loadingQueryCountries && !loadingQueryASNames && !loadingQueryHostNames && !loadingQueryTags && !loadingQueryRanks">
+        <div
+          v-if="
+            !loadingQueryAS &&
+            !loadingQueryPrefixes &&
+            !loadingQueryIXPs &&
+            !loadingQueryCountries &&
+            !loadingQueryASNames &&
+            !loadingQueryHostNames &&
+            !loadingQueryTags &&
+            !loadingQueryRanks
+          "
+        >
           <QBtn :color="label" icon="fas fa-search" flat dense />
         </div>
         <div v-else>
@@ -460,31 +511,59 @@ watch(() => route.path, () => {
     </template>
     <template v-slot:loading> </template>
     <template v-slot:option="scope">
-      <QItem v-if="scope.opt.type == 'AS' && activateSearch" v-bind="scope.itemProps" @click="routeToAS(scope.opt.value)">
+      <QItem
+        v-if="scope.opt.type == 'AS' && activateSearch"
+        v-bind="scope.itemProps"
+        @click="routeToAS(scope.opt.value)"
+      >
         <QItemSection side color="accent">AS{{ scope.opt.value }}</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Prefix' && activateSearch" v-bind="scope.itemProps" @click="routeToPrefix(scope.opt.value)">
+      <QItem
+        v-if="scope.opt.type == 'Prefix' && activateSearch"
+        v-bind="scope.itemProps"
+        @click="routeToPrefix(scope.opt.value)"
+      >
         <QItemSection side color="accent">Prefix</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'IXP' && activateSearch" v-bind="scope.itemProps" @click="routeToIXP(scope.opt.value)">
+      <QItem
+        v-if="scope.opt.type == 'IXP' && activateSearch"
+        v-bind="scope.itemProps"
+        @click="routeToIXP(scope.opt.value)"
+      >
         <QItemSection side color="accent">IXP{{ scope.opt.value }}</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Country' && activateSearch" v-bind="scope.itemProps" @click="routeToCountry(scope.opt.value)">
+      <QItem
+        v-if="scope.opt.type == 'Country' && activateSearch"
+        v-bind="scope.itemProps"
+        @click="routeToCountry(scope.opt.value)"
+      >
         <QItemSection side color="accent">Country</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'HostName' && activateSearch" v-bind="scope.itemProps" @click="routeToHostName(scope.opt.value)">
+      <QItem
+        v-if="scope.opt.type == 'HostName' && activateSearch"
+        v-bind="scope.itemProps"
+        @click="routeToHostName(scope.opt.value)"
+      >
         <QItemSection side color="accent">Hostname</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Tag' && activateSearch" v-bind="scope.itemProps" @click="routeToTag(scope.opt.value)">
+      <QItem
+        v-if="scope.opt.type == 'Tag' && activateSearch"
+        v-bind="scope.itemProps"
+        @click="routeToTag(scope.opt.value)"
+      >
         <QItemSection side color="accent" && activateSearch>Tag</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Ranking' && activateSearch" v-bind="scope.itemProps" @click="routeToRank(scope.opt.value)">
+      <QItem
+        v-if="scope.opt.type == 'Ranking' && activateSearch"
+        v-bind="scope.itemProps"
+        @click="routeToRank(scope.opt.value)"
+      >
         <QItemSection side color="accent">Rank</QItemSection>
         <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
       </QItem>

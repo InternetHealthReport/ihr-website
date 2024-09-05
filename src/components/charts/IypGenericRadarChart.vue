@@ -5,15 +5,15 @@ import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   chartData: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   chartLayout: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   },
   config: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   }
 })
 
@@ -25,7 +25,7 @@ const renderChart = () => {
   let data = formatChartData(localChartData.value)
 
   let layout = {
-    ...props.chartLayout,
+    ...props.chartLayout
   }
 
   actualChartData.value = data
@@ -42,8 +42,8 @@ const formatChartData = (arrayOfObjects) => {
     data = [
       {
         type: 'scatterpolar',
-        r: arrayOfObjects.map(val => val.r),
-        theta: arrayOfObjects.map(val => val.theta),
+        r: arrayOfObjects.map((val) => val.r),
+        theta: arrayOfObjects.map((val) => val.theta),
         fill: 'toself',
         ...props.config
       }
@@ -60,9 +60,13 @@ const init = () => {
   }
 }
 
-watch(() => props.chartData, () => {
-  init()
-}, { deep: true })
+watch(
+  () => props.chartData,
+  () => {
+    init()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   init()

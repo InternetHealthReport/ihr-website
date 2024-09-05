@@ -24,14 +24,71 @@ const moreSpecifics = ref({
     OPTIONAL MATCH (x)<-[o:ORIGINATE]-(a:AS)
     RETURN c.country_code AS cc, x.prefix as prefix, collect(DISTINCT a.asn) as asn, collect(DISTINCT t.label) as tags,  toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, cover_creg_country.country_code, '-')) AS rir_country, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility`,
   columns: [
-    { name: 'RIR', label: 'RIR', align: 'left', field: row => row.rir? row.rir : '', format: val => `${String(val).toUpperCase()}`, sortable: true },
-    { name: 'Reg. Country', label: 'Reg. Country ', align: 'left', field: row => row.rir_country, format: val => `${String(val).toUpperCase()}`, sortable: true },
-    { name: 'Geoloc. Country', label: 'Geoloc', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-    { name: 'Origin AS', label: 'Origin AS', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
-    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
-    { name: 'Description', label: 'Description', align: 'left', field: row => row.descr, format: val => `${val}`, sortable: true },
-    { name: 'Tags', label: 'Tags', align: 'left', field: row => row.tags, format: val => `${val.join(', ')}`, sortable: true },
-    { name: 'Visibility', label: 'Visibility', align: 'left', field: row => row.visibility, format: val => `${Number(val).toFixed(2)}%`, sortable: true },
+    {
+      name: 'RIR',
+      label: 'RIR',
+      align: 'left',
+      field: (row) => (row.rir ? row.rir : ''),
+      format: (val) => `${String(val).toUpperCase()}`,
+      sortable: true
+    },
+    {
+      name: 'Reg. Country',
+      label: 'Reg. Country ',
+      align: 'left',
+      field: (row) => row.rir_country,
+      format: (val) => `${String(val).toUpperCase()}`,
+      sortable: true
+    },
+    {
+      name: 'Geoloc. Country',
+      label: 'Geoloc',
+      align: 'left',
+      field: (row) => row.cc,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Origin AS',
+      label: 'Origin AS',
+      align: 'left',
+      field: (row) => row.asn,
+      format: (val) => `AS${val}`,
+      sortable: true
+    },
+    {
+      name: 'Prefix',
+      label: 'Prefix',
+      align: 'left',
+      field: (row) => row.prefix,
+      format: (val) => `${val}`,
+      sortable: true,
+      sortOrder: 'ad'
+    },
+    {
+      name: 'Description',
+      label: 'Description',
+      align: 'left',
+      field: (row) => row.descr,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Tags',
+      label: 'Tags',
+      align: 'left',
+      field: (row) => row.tags,
+      format: (val) => `${val.join(', ')}`,
+      sortable: true
+    },
+    {
+      name: 'Visibility',
+      label: 'Visibility',
+      align: 'left',
+      field: (row) => row.visibility,
+      format: (val) => `${Number(val).toFixed(2)}%`,
+      sortable: true
+    }
   ]
 })
 
@@ -39,17 +96,20 @@ const load = () => {
   moreSpecifics.value.loading = true
   // Run the cypher query
   let query_params = { prefix: props.getPrefix }
-  iyp_api.run([{statement: moreSpecifics.value.query, parameters: query_params}]).then(
-    results => {
+  iyp_api
+    .run([{ statement: moreSpecifics.value.query, parameters: query_params }])
+    .then((results) => {
       moreSpecifics.value.data = results[0]
       moreSpecifics.value.loading = false
-    }
-  )
+    })
 }
 
-watch(() => props.getPrefix, () => {
-  load()
-})
+watch(
+  () => props.getPrefix,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -63,6 +123,6 @@ onMounted(() => {
     :loading-status="moreSpecifics.loading"
     :cypher-query="moreSpecifics.query.replace(/\$(.*?)}/, `'${getPrefix}'}`)"
   >
-  <!-- <GenericPieChart v-if="lessSpecific.length > 0" :chart-data="lessSpecific" :chart-layout="{ title: 'Country' }" /> -->
+    <!-- <GenericPieChart v-if="lessSpecific.length > 0" :chart-data="lessSpecific" :chart-layout="{ title: 'Country' }" /> -->
   </IypGenericTable>
 </template>

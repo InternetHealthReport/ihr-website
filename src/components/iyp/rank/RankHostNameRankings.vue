@@ -19,8 +19,24 @@ const rankings = ref({
     ORDER BY rank
     LIMIT 100000`,
   columns: [
-    { name: 'Rank', label: 'Rank', align: 'left', field: row => Number(row.rank), format: val => `${val}`, sortable: true, description: 'Position in the ranking.'   },
-    { name: 'Hostname', label: 'Hostname', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true, description: 'Hostname.'    },
+    {
+      name: 'Rank',
+      label: 'Rank',
+      align: 'left',
+      field: (row) => Number(row.rank),
+      format: (val) => `${val}`,
+      sortable: true,
+      description: 'Position in the ranking.'
+    },
+    {
+      name: 'Hostname',
+      label: 'Hostname',
+      align: 'left',
+      field: (row) => row.name,
+      format: (val) => `${val}`,
+      sortable: true,
+      description: 'Hostname.'
+    }
   ],
   pagination: {
     sortBy: 'Rank', //string column name
@@ -32,15 +48,18 @@ const load = () => {
   rankings.value.loading = true
   // Run the cypher query
   let query_params = { rank: props.rank }
-  iyp_api.run([{statement: rankings.value.query, parameters: query_params}]).then(results => {
+  iyp_api.run([{ statement: rankings.value.query, parameters: query_params }]).then((results) => {
     rankings.value.data = results[0]
     rankings.value.loading = false
   })
 }
 
-watch(() => props.rank, () => {
-  load()
-})
+watch(
+  () => props.rank,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()

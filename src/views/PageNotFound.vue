@@ -1,6 +1,6 @@
 <script setup>
 import Tr from '@/i18n/translation'
-import { QBtn } from 'quasar';
+import { QBtn } from 'quasar'
 </script>
 
 <template>

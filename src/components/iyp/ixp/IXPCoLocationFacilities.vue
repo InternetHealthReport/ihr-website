@@ -18,8 +18,22 @@ const facilities = ref({
   query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)-[:LOCATED_IN]->(f:Facility) OPTIONAL MATCH (f)-[:COUNTRY]->(c:Country)
     RETURN f.name as name, c.country_code AS cc`,
   columns: [
-    { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-    { name: 'Facility', label: 'Facility', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+    {
+      name: 'CC',
+      label: 'CC',
+      align: 'left',
+      field: (row) => row.cc,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Facility',
+      label: 'Facility',
+      align: 'left',
+      field: (row) => row.name,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -27,17 +41,18 @@ const load = () => {
   facilities.value.loading = true
   // Run the cypher query
   let query_params = { id: props.ixpNumber }
-  iyp_api.run([{statement: facilities.value.query, parameters: query_params}]).then(
-    results => {
-      facilities.value.data = results[0]
-      facilities.value.loading = false
-    }
-  )
+  iyp_api.run([{ statement: facilities.value.query, parameters: query_params }]).then((results) => {
+    facilities.value.data = results[0]
+    facilities.value.loading = false
+  })
 }
 
-watch(() => props.ixpNumber, () => {
-  load()
-})
+watch(
+  () => props.ixpNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -56,7 +71,7 @@ onMounted(() => {
       v-if="facilities.data.length > 0"
       :chart-data="facilities.data"
       :chart-layout="{ title: '' }"
-      :config="{ keys: ['cc', 'name'], root: pageTitle}"
+      :config="{ keys: ['cc', 'name'], root: pageTitle }"
     />
   </IypGenericTable>
 </template>

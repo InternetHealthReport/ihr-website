@@ -1,6 +1,6 @@
 export function truncateString(str, maxLength) {
   if (str.length <= maxLength) {
-    return str;
+    return str
   } else {
     return str.slice(0, maxLength).trim()
   }
@@ -8,19 +8,19 @@ export function truncateString(str, maxLength) {
 
 export function flattenDictionary(inputDict) {
   function flatten(obj) {
-    let result = {};
+    let result = {}
     for (let key in obj) {
       if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
-        const nestedKeys = flatten(obj[key]);
-        result = { ...result, ...nestedKeys };
+        const nestedKeys = flatten(obj[key])
+        result = { ...result, ...nestedKeys }
       } else {
-        result[key] = obj[key];
+        result[key] = obj[key]
       }
     }
-    return result;
+    return result
   }
 
-  return flatten(inputDict);
+  return flatten(inputDict)
 }
 
 export function getKeysWithEmptyListsEndsWithSuffixes(obj, suffixes) {
@@ -44,37 +44,37 @@ export function getKeysWithEmptyListsEndsWithSuffix(obj, suffix) {
 
 export function deepCopy(obj, copiedObjects = new WeakMap()) {
   if (typeof obj !== 'object' || obj === null) {
-    return obj;
+    return obj
   }
 
   if (copiedObjects.has(obj)) {
-    return copiedObjects.get(obj);
+    return copiedObjects.get(obj)
   }
 
   if (obj instanceof Date) {
-    return new Date(obj.getTime());
+    return new Date(obj.getTime())
   }
 
-  const copy = Array.isArray(obj) ? [] : {};
+  const copy = Array.isArray(obj) ? [] : {}
 
-  copiedObjects.set(obj, copy);
+  copiedObjects.set(obj, copy)
 
   for (let key in obj) {
     if (obj.hasOwnProperty(key)) {
-      copy[key] = deepCopy(obj[key], copiedObjects);
+      copy[key] = deepCopy(obj[key], copiedObjects)
     }
   }
 
-  return copy;
+  return copy
 }
 
 export function isDictKeysSubset(subsetDict, supersetDict) {
   for (let key in subsetDict) {
     if (!supersetDict.hasOwnProperty(key)) {
-      return false;
+      return false
     }
   }
-  return true;
+  return true
 }
 
 export function filterDictByPrefixes(dict, prefixes) {
@@ -101,16 +101,16 @@ export function titleCase(str) {
 
 export function formatUTCTime(date, timezone = '') {
   if (!(date instanceof Date && !isNaN(date))) {
-    return '';
+    return ''
   } else {
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(date.getUTCDate()).padStart(2, '0');
-    const hours = String(date.getUTCHours()).padStart(2, '0');
-    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-    let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`;
+    const year = date.getUTCFullYear()
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+    const day = String(date.getUTCDate()).padStart(2, '0')
+    const hours = String(date.getUTCHours()).padStart(2, '0')
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+    let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}`
     formattedDate = timezone.length ? `${formattedDate}${timezone}` : formattedDate
-    return formattedDate;
+    return formattedDate
   }
 }
 
@@ -119,21 +119,21 @@ export function zipAggregatedAttrs(aggregatedAttrsDict) {
   for (const aggregatedAttrType in aggregatedAttrsDict) {
     arrays.push(aggregatedAttrsDict[aggregatedAttrType])
   }
-  const arraysTransposed = transposeArrays(arrays);
+  const arraysTransposed = transposeArrays(arrays)
   return arraysTransposed
 }
 
 export function transposeArrays(arrays) {
-  const length = Math.max(...arrays.map(arr => arr.length));
+  const length = Math.max(...arrays.map((arr) => arr.length))
 
   const arraysTransposed = Array.from({ length }, (_, index) => {
-    return arrays.map(array => (index < array.length ? array[index] : null))
+    return arrays.map((array) => (index < array.length ? array[index] : null))
   })
   return arraysTransposed
 }
 
 export function getPropertyUniqueValues(data, property) {
-  return [...new Set(data.map(item => item[property]))];
+  return [...new Set(data.map((item) => item[property]))]
 }
 
 export function isDictEmpty(dict) {
@@ -146,26 +146,26 @@ export function isDictEmpty(dict) {
 
 export function countItemOccurrences(items) {
   const itemCounts = {}
-  items.forEach(item => {
+  items.forEach((item) => {
     if (itemCounts[item]) {
-      itemCounts[item]++;
+      itemCounts[item]++
     } else {
-      itemCounts[item] = 1;
+      itemCounts[item] = 1
     }
-  });
-  return itemCounts;
+  })
+  return itemCounts
 }
 
 export function findAllIndices(array, value) {
-  const indices = [];
+  const indices = []
 
   for (let i = 0; i < array.length; i++) {
     if (array[i] === value) {
-      indices.push(i);
+      indices.push(i)
     }
   }
 
-  return indices;
+  return indices
 }
 
 export function resetChartZooming(chart) {
@@ -175,16 +175,19 @@ export function resetChartZooming(chart) {
 
 export function normalizeASNames(alarms, asNameTruncateLength = 20) {
   alarms.forEach((alarm) => {
-    const asNameTruncated = AggregatedAlarmsUtils.truncateString(alarm.asn_name, asNameTruncateLength);
+    const asNameTruncated = AggregatedAlarmsUtils.truncateString(
+      alarm.asn_name,
+      asNameTruncateLength
+    )
     alarm.asn_name = `${asNameTruncated} (AS${alarm.asn})`
   })
 }
 
 export function getIPAddressFamily(ipPrefix) {
   if (/:/.test(ipPrefix)) {
-    return 6;
+    return 6
   } else if (/\./.test(ipPrefix)) {
-    return 4;
+    return 4
   } else {
     return null
   }
@@ -202,39 +205,48 @@ export function normalizeColumns(dict) {
 }
 
 export function roundToDecimalPlaces(number, decimalPlaces) {
-  var factor = Math.pow(10, decimalPlaces);
-  return Math.round(number * factor) / factor;
+  var factor = Math.pow(10, decimalPlaces)
+  return Math.round(number * factor) / factor
 }
 
 export function getMedianValue(values) {
   const validValues = values.filter((value) => value !== null && value !== '' && !isNaN(value))
   if (validValues.length === 0) return null
-  let medianValue;
-  const sortedValues = validValues.slice().sort((a, b) => a - b);
-  const middle = Math.floor(validValues.length / 2);
+  let medianValue
+  const sortedValues = validValues.slice().sort((a, b) => a - b)
+  const middle = Math.floor(validValues.length / 2)
   if (validValues.length % 2 === 0) {
-    const mid1 = sortedValues[middle - 1];
-    const mid2 = sortedValues[middle];
+    const mid1 = sortedValues[middle - 1]
+    const mid2 = sortedValues[middle]
     medianValue = (mid1 + mid2) / 2
   } else {
-    medianValue = sortedValues[middle];
+    medianValue = sortedValues[middle]
   }
   medianValue = roundToDecimalPlaces(medianValue, 2)
   return medianValue
 }
 
-
 export function getAverageValue(values) {
   const validValues = values.filter((value) => value !== null && value !== '' && !isNaN(value))
   if (validValues.length === 0) return null
-  const sum = validValues.reduce((acc, num) => acc + num, 0);
-  let avgValue = sum / validValues.length;
+  const sum = validValues.reduce((acc, num) => acc + num, 0)
+  let avgValue = sum / validValues.length
   avgValue = roundToDecimalPlaces(avgValue, 2)
   return avgValue
 }
 
 export function getPercentageValue(firstValue, secondValue) {
-  if (firstValue === null || secondValue === null || firstValue === '' || secondValue === '' || isNaN(firstValue) || isNaN(secondValue) || secondValue === 0 || firstValue === 0 && secondValue === 0) return null
+  if (
+    firstValue === null ||
+    secondValue === null ||
+    firstValue === '' ||
+    secondValue === '' ||
+    isNaN(firstValue) ||
+    isNaN(secondValue) ||
+    secondValue === 0 ||
+    (firstValue === 0 && secondValue === 0)
+  )
+    return null
   const percentageValue = roundToDecimalPlaces((firstValue / secondValue) * 100, 2)
   return percentageValue
 }

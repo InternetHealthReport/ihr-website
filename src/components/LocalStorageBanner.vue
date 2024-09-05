@@ -35,11 +35,11 @@ onMounted(() => {
 <template>
   <QCard v-if="banner" dark class="fixed-bottom" wrap-text>
     <QCardSection class="text">
-      We use local storage to enhance your experience on our website.
-      By clicking &#39;Accept&#39;, you agree to allow us to store and access data on your device.
-      This helps us personalize content, remember preferences, and provide seamless
-      functionality. Your data is secure and will not be shared with third parties.
-      Thank you for trusting us with your browsing experience!
+      We use local storage to enhance your experience on our website. By clicking &#39;Accept&#39;,
+      you agree to allow us to store and access data on your device. This helps us personalize
+      content, remember preferences, and provide seamless functionality. Your data is secure and
+      will not be shared with third parties. Thank you for trusting us with your browsing
+      experience!
     </QCardSection>
     <QCardActions align="right">
       <QBtn flat color="green" label="Accept" @click="onAcceptClick" />

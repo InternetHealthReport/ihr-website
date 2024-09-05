@@ -6,25 +6,25 @@ import { uid } from 'quasar'
 const props = defineProps({
   layout: {
     type: Object,
-    required: true,
+    required: true
   },
   traces: {
     type: Array,
-    required: true,
+    required: true
   },
   chartTitle: {
     type: String,
     required: false,
-    default: null,
+    default: null
   },
   noData: {
     required: false,
-    default: false,
+    default: false
   },
   yMax: {
     type: Number,
     required: false,
-    default: 0,
+    default: 0
   },
   treemapNodeClicked: null,
   newPlot: {
@@ -32,8 +32,8 @@ const props = defineProps({
     default: false
   },
   shapes: {
-    type: Array,
-  },
+    type: Array
+  }
 })
 
 const emits = defineEmits({
@@ -44,7 +44,7 @@ const emits = defineEmits({
       return false
     }
   },
-  'loaded': () => {
+  loaded: () => {
     return false
   },
   'plotly-legend-click': (plotlyClickedLegend) => {
@@ -85,8 +85,8 @@ layoutLocal.value['images'] = [
     xref: 'paper',
     yanchor: 'bottom',
     yref: 'paper',
-    opacity: 0.2,
-  },
+    opacity: 0.2
+  }
 ]
 
 const react = () => {
@@ -113,7 +113,7 @@ const init = () => {
   const graphDiv = myId.value
   Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
     responsive: true,
-    displayModeBar: 'hover',
+    displayModeBar: 'hover'
   })
 
   if (document.documentElement.clientWidth < 576) {
@@ -121,8 +121,8 @@ const init = () => {
   }
 
   graphDiv.on('plotly_relayout', (event) => {
-    let startDateTime = event['xaxis.range[0]'];
-    let endDateTime = event['xaxis.range[1]'];
+    let startDateTime = event['xaxis.range[0]']
+    let endDateTime = event['xaxis.range[1]']
     if (startDateTime && endDateTime) {
       startDateTime += 'Z'
       endDateTime += 'Z'
@@ -142,12 +142,12 @@ const init = () => {
   graphDiv.on('plotly_legendclick', (eventData) => {
     if (eventData) {
       const legend = eventData.node.textContent
-      const opacityStyle = eventData.node.getAttribute('style');
-      const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/);
+      const opacityStyle = eventData.node.getAttribute('style')
+      const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/)
       if (opacityMatch && legend !== 'All') {
-        const opacity = Number(opacityMatch[1]);
+        const opacity = Number(opacityMatch[1])
         const result = { legend, opacity }
-        emits('plotly-legend-click', result);
+        emits('plotly-legend-click', result)
       }
     }
   })
@@ -159,23 +159,36 @@ onMounted(() => {
   init()
 })
 
-watch(() => props.traces, () => {
-  react()
-}, { deep: true })
-watch(() => props.layout, () => {
-  layoutLocal.value = Object.assign(layoutLocal.value, props.layout)
-  if (layoutLocal.value['title'] !== undefined) {
-    delete layoutLocal.value['title']
+watch(
+  () => props.traces,
+  () => {
+    react()
+  },
+  { deep: true }
+)
+watch(
+  () => props.layout,
+  () => {
+    layoutLocal.value = Object.assign(layoutLocal.value, props.layout)
+    if (layoutLocal.value['title'] !== undefined) {
+      delete layoutLocal.value['title']
+    }
   }
-})
-watch(() => props.yMax, (newValue) => {
-  const graphDiv = myId.value
-  Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-})
-watch(() => props.shapes, (newValue) => {
-  const graphDiv = myId.value
-  Plotly.relayout(graphDiv, 'shapes', newValue)
-})
+)
+watch(
+  () => props.yMax,
+  (newValue) => {
+    const graphDiv = myId.value
+    Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+  }
+)
+watch(
+  () => props.shapes,
+  (newValue) => {
+    const graphDiv = myId.value
+    Plotly.relayout(graphDiv, 'shapes', newValue)
+  }
+)
 </script>
 
 <template>
@@ -183,7 +196,7 @@ watch(() => props.shapes, (newValue) => {
     <h3 v-if="chartTitle">{{ chartTitle }}</h3>
     <div ref="myId"></div>
     <div v-if="noData" class="IHR_no-data">
-      <div class="bg-white" style="text-align: center;">{{ noData }}</div>
+      <div class="bg-white" style="text-align: center">{{ noData }}</div>
     </div>
   </div>
 </template>

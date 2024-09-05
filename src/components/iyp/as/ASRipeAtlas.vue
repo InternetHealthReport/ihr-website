@@ -33,11 +33,46 @@ const atlas = ref({
     }
     RETURN atlas.id AS id, atlas.status_name AS status, 'IPv'+loc.af AS af, cc.country_code as cc, prefix`,
   columns: [
-    { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-    { name: 'Probe ID', label: 'ID', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
-    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
-    { name: 'IP version', label: 'IP version', align: 'left', field: row => row.af, format: val => `${val}`, sortable: true },
-    { name: 'Status', label: 'Status', align: 'left', field: row => row.status, format: val => `${val}`, sortable: true },
+    {
+      name: 'Country',
+      label: 'Country',
+      align: 'left',
+      field: (row) => row.cc,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Probe ID',
+      label: 'ID',
+      align: 'left',
+      field: (row) => row.id,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Prefix',
+      label: 'Prefix',
+      align: 'left',
+      field: (row) => row.prefix,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'IP version',
+      label: 'IP version',
+      align: 'left',
+      field: (row) => row.af,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Status',
+      label: 'Status',
+      align: 'left',
+      field: (row) => row.status,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -45,17 +80,18 @@ const load = () => {
   atlas.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run([{statement: atlas.value.query, parameters: query_params}]).then(
-    results => {
-      atlas.value.data = results[0]
-      atlas.value.loading = false
-    }
-  )
+  iyp_api.run([{ statement: atlas.value.query, parameters: query_params }]).then((results) => {
+    atlas.value.data = results[0]
+    atlas.value.loading = false
+  })
 }
 
-watch(() => props.asNumber, () => {
-  load()
-})
+watch(
+  () => props.asNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -64,18 +100,22 @@ onMounted(() => {
 
 <template>
   <IypGenericTable
-      :data="atlas.data"
-      :columns="atlas.columns"
-      :loading-status="atlas.loading"
-      :cypher-query="atlas.query.replace(/\$(.*?)}/, `${asNumber}}`)"
-      :slot-length="1"
-    >
-      <IypGenericTreemapChart
-        v-if="atlas.data.length > 0"
-        :chart-data="atlas.data"
-        :chart-layout="{ title: 'RIPE Atlas probes per prefix' }"
-        :config="{ keys: ['af', 'prefix', 'id'],  root: pageTitle, hovertemplate: '<b>%{label}</b><br>%{value} probes<extra></extra>' }"
-        @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'atlasId'}})"
-        />
-    </IypGenericTable>
+    :data="atlas.data"
+    :columns="atlas.columns"
+    :loading-status="atlas.loading"
+    :cypher-query="atlas.query.replace(/\$(.*?)}/, `${asNumber}}`)"
+    :slot-length="1"
+  >
+    <IypGenericTreemapChart
+      v-if="atlas.data.length > 0"
+      :chart-data="atlas.data"
+      :chart-layout="{ title: 'RIPE Atlas probes per prefix' }"
+      :config="{
+        keys: ['af', 'prefix', 'id'],
+        root: pageTitle,
+        hovertemplate: '<b>%{label}</b><br>%{value} probes<extra></extra>'
+      }"
+      @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'atlasId' } })"
+    />
+  </IypGenericTable>
 </template>
