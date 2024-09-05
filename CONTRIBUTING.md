@@ -185,23 +185,23 @@ Our website uses the following libraries:
 │   │   │   ├── TreeMapAggregatedAlarmsChart.vue: A component that visualizes aggregated alarms in a treemap chart
 │   │   │   └── WorldMapAggregatedAlarmsChart.vue: A component that visualizes aggregated alarms in a world map
 │   │   ├── controllers
-│   │   │   ├── AggregatedAlarmsController.vue
-│   │   │   └── GenericCardController.vue
+│   │   │   ├── AggregatedAlarmsController.vue: A component that controls all the components related to the aggregated alarms (global report page)
+│   │   │   └── GenericCardController.vue: A component that creates the widget window. This widget window includes either the chart or the tables components. The window provides sharing and info about the incudeded chart or table.
 │   │   ├── iyp
 │   │   │   ├── as
-│   │   │   │   ├── ASAuthoritativeNameservers.vue
-│   │   │   │   ├── ASCoLocatedASes.vue
-│   │   │   │   ├── ASConnectedASes.vue
-│   │   │   │   ├── ASDownstreamsASes.vue
-│   │   │   │   ├── ASIXPs.vue
-│   │   │   │   ├── ASOriginatedPrefixes.vue
-│   │   │   │   ├── ASPopularDomains.vue
-│   │   │   │   ├── ASPopularHostNames.vue
-│   │   │   │   ├── ASRPKIRouteOriginAuthorization.vue
-│   │   │   │   ├── ASRankings.vue
-│   │   │   │   ├── ASRipeAtlas.vue
-│   │   │   │   ├── ASSiblingASes.vue
-│   │   │   │   └── ASUpstreamASes.vue
+│   │   │   │   ├── ASAuthoritativeNameservers.vue: An IYP component that visualizes the AS Authoritative Nameservers
+│   │   │   │   ├── ASCoLocatedASes.vue: An IYP component that visualizes the Co-Located ASes
+│   │   │   │   ├── ASConnectedASes.vue: An IYP component that visualizes the Connected ASes
+│   │   │   │   ├── ASDownstreamsASes.vue: An IYP component that visualizes the Downstreams ASes
+│   │   │   │   ├── ASIXPs.vue: An IYP component that visualizes the ASes' IXPs
+│   │   │   │   ├── ASOriginatedPrefixes.vue: An IYP component that visualizes the AS Originated Prefixes
+│   │   │   │   ├── ASPopularDomains.vue: An IYP component that visualizes the AS Popular Domains
+│   │   │   │   ├── ASPopularHostNames.vue: An IYP component that visualizes the AS Popular Hostnames
+│   │   │   │   ├── ASRPKIRouteOriginAuthorization.vue: An IYP component that visualizes the AS RPKI Route Origin Authorization
+│   │   │   │   ├── ASRankings.vue: An IYP component that visualizes the AS Rankings
+│   │   │   │   ├── ASRipeAtlas.vue: An IYP component that visualizes the AS Ripe Atlas probes
+│   │   │   │   ├── ASSiblingASes.vue: An IYP component that visualizes the Sibling ASes
+│   │   │   │   └── ASUpstreamASes.vue: An IYP component that visualizes the UpstreamASes
 │   │   │   ├── country
 │   │   │   │   ├── CountryASRankings.vue
 │   │   │   │   ├── CountryAutonomousSystems.vue
