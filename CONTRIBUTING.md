@@ -242,47 +242,47 @@ Our website uses the following libraries:
 │   │   │   ├── AS.vue: A component that creates the AS report page
 │   │   │   ├── Country.vue: A component that creates the Country report page
 │   │   │   ├── HostName.vue: A component that creates the Hostname report page
-│   │   │   ├── IXP.vue: A componenent that creates the IXP report page
+│   │   │   ├── IXP.vue: A component that creates the IXP report page
 │   │   │   ├── Prefix.vue: A component that creates the Prefix report page
 │   │   │   ├── Rank.vue: A component that creates the Rank report page
 │   │   │   ├── Tag.vue: A componoent that creates the Tag report page
 │   │   │   ├── as
-│   │   │   │   ├── ASCustom.vue: A component that lets the user create a custom AS report page
-│   │   │   │   ├── ASDNS.vue: A component that includes all the visualizations and tables related to DNS on the AS report page
-│   │   │   │   ├── ASMonitoring.vue: A component that includes all the visualizations and tables related to Monitoring on the AS report page
-│   │   │   │   ├── ASOverview.vue: A component that includes all the visualizations and tables related to Overview on the AS report page
-│   │   │   │   ├── ASPeering.vue: A component that includes all the visualizations and tables related to Peering on the AS report page
-│   │   │   │   ├── ASRankings.vue: A component that includes all the visualizations and tables related to Rankning on the AS report page
-│   │   │   │   ├── ASRegistration.vue: A component includes all the visualizations and tables related to Registration on the AS report page
-│   │   │   │   └── ASRouting.vue: A component includes all the visualizations and tables related to Routing on te AS report page
+│   │   │   │   ├── ASCustom.vue: A component that allows users to create a custom AS report page
+│   │   │   │   ├── ASDNS.vue: A component that includes all the visualizations and tables related to AS DNS on the AS report page
+│   │   │   │   ├── ASMonitoring.vue: A component that includes all the visualizations and tables related to AS Monitoring on the AS report page
+│   │   │   │   ├── ASOverview.vue: A component that includes all the visualizations and tables related to AS Overview on the AS report page
+│   │   │   │   ├── ASPeering.vue: A component that includes all the visualizations and tables related to AS Peering on the AS report page
+│   │   │   │   ├── ASRankings.vue: A component that includes all the visualizations and tables related to AS Rankning on the AS report page
+│   │   │   │   ├── ASRegistration.vue: A component includes all the visualizations and tables related to AS Registration on the AS report page
+│   │   │   │   └── ASRouting.vue: A component includes all the visualizations and tables related to AS Routing on te AS report page
 │   │   │   ├── country
-│   │   │   │   ├── CountryCustom.vue
-│   │   │   │   ├── CountryMonitoring.vue
-│   │   │   │   ├── CountryOverview.vue
-│   │   │   │   ├── CountryPeering.vue
-│   │   │   │   ├── CountryRankings.vue
-│   │   │   │   └── CountryRouting.vue
+│   │   │   │   ├── CountryCustom.vue: A component that allows users to create a custom Country report page
+│   │   │   │   ├── CountryMonitoring.vue: A component that includes all the visualizations and tables related to Country Monitoring on the Country report page
+│   │   │   │   ├── CountryOverview.vue: A component that includes all the visualizations and tables related to Country Overview on the Country report page
+│   │   │   │   ├── CountryPeering.vue: A component that includes all the visualizations and tables related to Country Peering on the Country report page
+│   │   │   │   ├── CountryRankings.vue: A component thet includes all the visualizations and tables related to Country Ranknings on the Country report page
+│   │   │   │   └── CountryRouting.vue: A component that includes all the visualizations and tables related to Country Routing on the Country report page
 │   │   │   ├── hostName
-│   │   │   │   ├── HostNameCustom.vue
-│   │   │   │   ├── HostNameDNS.vue
-│   │   │   │   ├── HostNameRankings.vue
-│   │   │   │   └── HostNameRouting.vue
+│   │   │   │   ├── HostNameCustom.vue: A component that allows users to create a custom Hostname report page
+│   │   │   │   ├── HostNameDNS.vue: A component that includes all the visualizations and tables related to Hostname DNS on the Hostname report page
+│   │   │   │   ├── HostNameRankings.vue: A component that includes all the visualizations and tables related to Hostname Ranknings on the Hostname report page
+│   │   │   │   └── HostNameRouting.vue: A component that includes all the visualizations and tables related to Hostname Routing on the Hostname report page
 │   │   │   ├── ixp
-│   │   │   │   ├── IXPCustom.vue
-│   │   │   │   ├── IXPMonitoring.vue
-│   │   │   │   ├── IXPOverview.vue
-│   │   │   │   ├── IXPPeering.vue
-│   │   │   │   └── IXPRouting.vue
+│   │   │   │   ├── IXPCustom.vue: A component that allows users to create a custom IXP report page
+│   │   │   │   ├── IXPMonitoring.vue: A component that includes all the visualizations and tables related to IXP Monitoring on the IXP report page
+│   │   │   │   ├── IXPOverview.vue: A component that includes all the visualizations and tables related to IXP overview on the IXP report page
+│   │   │   │   ├── IXPPeering.vue: A component that includes all the visualizations and tables related to IXP Peering on the IXP report page
+│   │   │   │   └── IXPRouting.vue: A component that includes all the visualizations and tables related to IXP Routing on the IXP report page
 │   │   │   ├── prefix
-│   │   │   │   ├── PrefixCustom.vue
-│   │   │   │   ├── PrefixDNS.vue
-│   │   │   │   ├── PrefixOverview.vue
-│   │   │   │   └── PrefixRouting.vue
+│   │   │   │   ├── PrefixCustom.vue: A component that allows users to create custom Prefix report page
+│   │   │   │   ├── PrefixDNS.vue: A component that includes all the visualizations and tables related to Prefix DNS on the Prefix report page
+│   │   │   │   ├── PrefixOverview.vue: A component that includes all the visualizations and tables related to Prefix Overview on the Prefix report page
+│   │   │   │   └── PrefixRouting.vue: A component that includes all the visualizations and tables related to Prefix Routing on the Prefix report page
 │   │   │   ├── rank
-│   │   │   │   └── RankCustom.vue
+│   │   │   │   └── RankCustom.vue: A component that allows users to create a custom Rank report page
 │   │   │   └── tag
-│   │   │       ├── TagCustom.vue
-│   │   │       └── TagOverview.vue
+│   │   │       ├── TagCustom.vue: A component that allows users to create a custom Tag report page
+│   │   │       └── TagOverview.vue: A component that includes all the visualizations and tables related to Tag Overview on the Tag report page
 │   │   ├── ripe
 │   │   │   ├── Bgplay.vue
 │   │   │   ├── Latencymon.vue
