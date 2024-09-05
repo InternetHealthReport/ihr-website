@@ -336,32 +336,32 @@ Our website uses the following libraries:
 │   │   ├── metadata
 │   │   │   └── AggregatedAlarmsMetadata.js: Contains the table structures for the global report page
 │   │   ├── models
-│   │   │   ├── AggregatedAlarmsDataModel.js
-│   │   │   ├── IodaChartDataModel.js
-│   │   │   ├── TableAggregatedAlarmsDataModel.js
-│   │   │   ├── TimeSeriesAggregatedAlarmsDataModel.js
-│   │   │   ├── TreeMapAggregatedAlarmsDataModel.js
-│   │   │   └── WorldMapAggregatedAlarmsDataModel.js
-│   │   ├── networkName.js
+│   │   │   ├── AggregatedAlarmsDataModel.js: Contains functions for parsing and transforming aggregated alarms data for global report page
+│   │   │   ├── IodaChartDataModel.js: Contains functions for parsing and transforming IODA data for global report page
+│   │   │   ├── TableAggregatedAlarmsDataModel.js: Contains functions for parsing and transforming aggregated alarms data for tables on the global report page
+│   │   │   ├── TimeSeriesAggregatedAlarmsDataModel.js: Contains functions for parsing and transforming aggregated alarms data for the time series chart on the global report page
+│   │   │   ├── TreeMapAggregatedAlarmsDataModel.js: Contains functions for parsing and transforming aggregated alarms data for the treemap chart on the global report page
+│   │   │   └── WorldMapAggregatedAlarmsDataModel.js: Contains functions for parsing and transforming aggregated alarms data for the world map chart on the global report page
+│   │   ├── networkName.js: [Deprecated] Contains functions for returning the name of an AS or IXP
 │   │   ├── query
-│   │   │   └── IhrQuery.js
-│   │   ├── report.js
+│   │   │   └── IhrQuery.js: Creates the queries for the IHR API call
+│   │   ├── report.js: Contains functions for handling the dates
 │   │   ├── tests
-│   │   │   ├── AggregatedAlarmsDataModel.test.js
-│   │   │   ├── AggregatedAlarmsUtils.test.js
-│   │   │   ├── AsNames.test.js
-│   │   │   ├── GripApi.test.js
-│   │   │   ├── IodaApi.test.js
-│   │   │   ├── IodaChartDataModel.test.js
-│   │   │   ├── TableAggregatedAlarmsDataModel.test.js
-│   │   │   ├── TimeSeriesAggregatedAlarmsDataModel.test.js
-│   │   │   ├── TreeMapAggregatedAlarmsDataModel.test.js
-│   │   │   ├── WorldMapAggregatedAlarmsDataModel.test.js
+│   │   │   ├── AggregatedAlarmsDataModel.test.js: Contains unit tests for AggregatedAlarmsDataModel.js
+│   │   │   ├── AggregatedAlarmsUtils.test.js: Contains unit tests for AggregatedAlarmsUtils.js
+│   │   │   ├── AsNames.test.js: Contains unit tests for AsNames.js
+│   │   │   ├── GripApi.test.js: Contains unit tests for GripApi.js
+│   │   │   ├── IodaApi.test.js: Contains unit tests for IodaApi.js
+│   │   │   ├── IodaChartDataModel.test.js: Contains unit tests for IodaChartDataModel.js
+│   │   │   ├── TableAggregatedAlarmsDataModel.test.js: Contains unit tests for TableAggregatedAlarmsDataModel.js
+│   │   │   ├── TimeSeriesAggregatedAlarmsDataModel.test.js: Contains unit tests for TimeSeriesAggregatedAlarmsDataModel.js
+│   │   │   ├── TreeMapAggregatedAlarmsDataModel.test.js: Contains unit tests for TreeMapAggregatedAlarmsDataModel.js
+│   │   │   ├── WorldMapAggregatedAlarmsDataModel.test.js: Contains unit tests for WorldMapAggregatedAlarmsDataModel.js
 │   │   │   └── resources
-│   │   │       └── data.js
-│   │   ├── tracerouteFunctions.js
+│   │   │       └── data.js: Contains data for the unit tests
+│   │   ├── tracerouteFunctions.js: Contains helper functions for the traceroute components
 │   │   └── utils
-│   │       └── AggregatedAlarmsUtils.js
+│   │       └── AggregatedAlarmsUtils.js: Contains helper functions for the global report page's aggregated alarms
 │   ├── router
 │   │   └── index.js
 │   ├── styles
