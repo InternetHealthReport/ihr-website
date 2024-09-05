@@ -34,7 +34,7 @@ function remove_style(all) {
     'frameborder',
     'clear',
     'scrolling',
-    'style',
+    'style'
   ]
 
   let attr_len = attr.length
@@ -59,7 +59,8 @@ function remove_style(all) {
 
 class Library {
   constructor() {
-    if (Library.prototype.documentWriteBackup != undefined) throw SyntaxError('only one instance of FakeDocument is possible!')
+    if (Library.prototype.documentWriteBackup != undefined)
+      throw SyntaxError('only one instance of FakeDocument is possible!')
 
     Library.prototype.documentWriteBackup = document.write
     Library.prototype.instance = this
@@ -103,12 +104,12 @@ class Library {
   }
 
   loadNext(body) {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve) => {
       let script = this.popScriptUrl()
       if (script != null) {
         let scriptElem = document.createElement('script')
         scriptElem.src = script
-        let promise = new Promise(localResolve => {
+        let promise = new Promise((localResolve) => {
           scriptElem.onload = () => {
             localResolve()
             // console.log('loaded: ' + script)
@@ -142,7 +143,7 @@ class Library {
           linkElem.href = link
           linkElem.rel = 'stylesheet'
           this.promises.push(
-            new Promise(localResolve => {
+            new Promise((localResolve) => {
               linkElem.onload = () => {
                 localResolve('link' + link)
               }
@@ -174,7 +175,6 @@ class Library {
 
 const LibraryDelayer = {
   install: (app, options) => {
-
     const library = new Library()
     const libraryList = options.libraries
 
@@ -218,8 +218,4 @@ const LibraryDelayer = {
   }
 }
 
-export {
-  remove_style,
-  Library,
-  LibraryDelayer
-}
+export { remove_style, Library, LibraryDelayer }

@@ -21,9 +21,31 @@ const peers = ref({
     OPTIONAL MATCH (peer)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
     RETURN c.country_code AS cc, peer.asn AS asn, head(collect(DISTINCT(n.name))) AS name`,
   columns: [
-    { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true, sortOrder: 'ad' },
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
-    { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+    {
+      name: 'Country',
+      label: 'Country',
+      align: 'left',
+      field: (row) => row.cc,
+      format: (val) => `${val}`,
+      sortable: true,
+      sortOrder: 'ad'
+    },
+    {
+      name: 'ASN',
+      label: 'ASN',
+      align: 'left',
+      field: (row) => row.asn,
+      format: (val) => `AS${val}`,
+      sortable: true
+    },
+    {
+      name: 'Name',
+      label: 'Name',
+      align: 'left',
+      field: (row) => row.name,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -31,17 +53,18 @@ const load = () => {
   peers.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run([{statement: peers.value.query, parameters: query_params}]).then(
-    results => {
-      peers.value.data = results[0]
-      peers.value.loading = false
-    }
-  )
+  iyp_api.run([{ statement: peers.value.query, parameters: query_params }]).then((results) => {
+    peers.value.data = results[0]
+    peers.value.loading = false
+  })
 }
 
-watch(() => props.asNumber, () => {
-  load()
-})
+watch(
+  () => props.asNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -59,8 +82,13 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="peers.data.length > 0"
       :chart-data="peers.data"
-      :config="{ keys: ['cc', 'asn'], root: props.pageTitle, show_percent: true, hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.percent:.1f}%</extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'asn'}})"
+      :config="{
+        keys: ['cc', 'asn'],
+        root: props.pageTitle,
+        show_percent: true,
+        hovertemplate: '<b>%{label} %{customdata.name}</b><extra>%{customdata.percent:.1f}%</extra>'
+      }"
+      @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'asn' } })"
     />
   </IypGenericTable>
 </template>

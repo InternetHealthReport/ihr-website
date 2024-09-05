@@ -1,18 +1,31 @@
 import * as TableAggregatedAlarmsDataModel from '../models/TableAggregatedAlarmsDataModel'
-import { ALARMS_INFO } from '../metadata/AggregatedAlarmsMetadata';
-import { ALARMS } from './resources/data';
+import { ALARMS_INFO } from '../metadata/AggregatedAlarmsMetadata'
+import { ALARMS } from './resources/data'
 
 describe('etlTableAggregatedAlarmsDataModel', () => {
   it('should correctly ETL TableAggregatedAlarmsDataModel when all data sources selected', () => {
-    const selectedAlarmType = 'bgp'; const selectedDataSource = 'ioda';
+    const selectedAlarmType = 'bgp'
+    const selectedDataSource = 'ioda'
     const bgpTableColumns = ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_columns
-    const bgpTableAggregatedColumns = ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_aggregated_columns
-    const key = 'entity'; const alternativeKey = null; const severitiesSelectedList = ['low', 'medium', 'high']
+    const bgpTableAggregatedColumns =
+      ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_aggregated_columns
+    const key = 'entity'
+    const alternativeKey = null
+    const severitiesSelectedList = ['low', 'medium', 'high']
 
-    const result = TableAggregatedAlarmsDataModel.etl(ALARMS, selectedAlarmType, selectedDataSource, bgpTableColumns, bgpTableAggregatedColumns, key, alternativeKey, severitiesSelectedList)
+    const result = TableAggregatedAlarmsDataModel.etl(
+      ALARMS,
+      selectedAlarmType,
+      selectedDataSource,
+      bgpTableColumns,
+      bgpTableAggregatedColumns,
+      key,
+      alternativeKey,
+      severitiesSelectedList
+    )
 
     const expectedResult = {
-      '1': {
+      1: {
         bgp_entity: [1, 1],
         bgp_entity_type: ['asn', 'asn'],
         bgp_entity_name: ['LVLT-1', 'LVLT-1'],
@@ -64,27 +77,53 @@ describe('etlTableAggregatedAlarmsDataModel', () => {
       }
     }
     expect(result[0]).toEqual(expect.objectContaining(expectedResult))
-  });
+  })
 
   it('should handle empty alarms array', () => {
-    const selectedAlarmType = 'bgp'; const selectedDataSource = 'ioda';
+    const selectedAlarmType = 'bgp'
+    const selectedDataSource = 'ioda'
     const bgpTableColumns = ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_columns
-    const bgpTableAggregatedColumns = ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_aggregated_columns
-    const key = 'entity'; const alternativeKey = null; const severitiesSelectedList = ['low', 'medium', 'high']
+    const bgpTableAggregatedColumns =
+      ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_aggregated_columns
+    const key = 'entity'
+    const alternativeKey = null
+    const severitiesSelectedList = ['low', 'medium', 'high']
 
-    const result = TableAggregatedAlarmsDataModel.etl([], selectedAlarmType, selectedDataSource, bgpTableColumns, bgpTableAggregatedColumns, key, alternativeKey, severitiesSelectedList)
+    const result = TableAggregatedAlarmsDataModel.etl(
+      [],
+      selectedAlarmType,
+      selectedDataSource,
+      bgpTableColumns,
+      bgpTableAggregatedColumns,
+      key,
+      alternativeKey,
+      severitiesSelectedList
+    )
 
-    expect(result[0]).toEqual({});
-  });
+    expect(result[0]).toEqual({})
+  })
 
   it('should handle empty severities array', () => {
-    const selectedAlarmType = 'bgp'; const selectedDataSource = 'ioda';
+    const selectedAlarmType = 'bgp'
+    const selectedDataSource = 'ioda'
     const bgpTableColumns = ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_columns
-    const bgpTableAggregatedColumns = ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_aggregated_columns
-    const key = 'entity'; const alternativeKey = null; const severitiesSelectedList = []
+    const bgpTableAggregatedColumns =
+      ALARMS_INFO.ioda.alarm_types.bgp.metadata.table_aggregated_columns
+    const key = 'entity'
+    const alternativeKey = null
+    const severitiesSelectedList = []
 
-    const result = TableAggregatedAlarmsDataModel.etl([], selectedAlarmType, selectedDataSource, bgpTableColumns, bgpTableAggregatedColumns, key, alternativeKey, severitiesSelectedList)
+    const result = TableAggregatedAlarmsDataModel.etl(
+      [],
+      selectedAlarmType,
+      selectedDataSource,
+      bgpTableColumns,
+      bgpTableAggregatedColumns,
+      key,
+      alternativeKey,
+      severitiesSelectedList
+    )
 
-    expect(result[0]).toEqual({});
-  });
+    expect(result[0]).toEqual({})
+  })
 })

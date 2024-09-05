@@ -23,39 +23,39 @@ const DEFAULT_TRACE = [
     yaxis: 'y2',
     name: t('charts.countryHegemony.defaultTrace'),
     showlegend: false,
-    hovertemplate: '%{x}<br>' + '%{yaxis.title.text}: <b>%{y:.2f}</b>' + '<extra></extra>',
-  },
+    hovertemplate: '%{x}<br>' + '%{yaxis.title.text}: <b>%{y:.2f}</b>' + '<extra></extra>'
+  }
 ]
 
 const props = defineProps({
   countryCode: {
     type: String,
-    required: true,
+    required: true
   },
   addressFamily: {
     type: Number,
-    default: AS_FAMILY.v4,
+    default: AS_FAMILY.v4
   },
   eyeballThreshold: {
     type: Number,
-    default: 10,
+    default: 10
   },
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   endTime: {
     type: Date,
-    required: true,
+    required: true
   }
 })
 
 const emits = defineEmits({
-  'eyeballs': (asns) => {
+  eyeballs: (asns) => {
     if (asns !== null) {
       return true
     } else {
-      console.warn('ASns is missing!');
+      console.warn('ASns is missing!')
       return false
     }
   }
@@ -65,9 +65,9 @@ const details = ref({
   activeTab: 'dependency',
   date: null,
   tablesData: {
-    dependency: { data: [] },
+    dependency: { data: [] }
   },
-  tableVisible: true,
+  tableVisible: true
 })
 const loading = ref(true)
 const hegemonyFilter = ref(null)
@@ -99,11 +99,11 @@ const queryCountryHegemonyAPI = () => {
   loading.value = true
   ihr_api.hegemony_country(
     hegemonyFilter.value,
-    result => {
+    (result) => {
       fetchCountryHegemony(result.results)
       loading.value = false
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
     }
   )
@@ -133,7 +133,7 @@ const median = (values) => {
 const fetchCountryHegemony = (data) => {
   traces.value = []
   let tracesLocal = {}
-  data.forEach(elem => {
+  data.forEach((elem) => {
     let trace = tracesLocal[elem.asn]
     if (trace === undefined) {
       trace = {
@@ -152,7 +152,7 @@ const fetchCountryHegemony = (data) => {
           '</b><br><br>' +
           '%{x}<br>' +
           '%{yaxis.title.text}: <b>%{y:.2f}</b>' +
-          '<extra></extra>',
+          '<extra></extra>'
       }
       tracesLocal[elem.asn] = trace
       traces.value.push(trace)
@@ -173,7 +173,7 @@ const fetchCountryHegemony = (data) => {
 
   // Compute median value from each array of hegemony scores
   major_eyeball.value = []
-  traces.value.forEach(elem => {
+  traces.value.forEach((elem) => {
     elem.hege_as = median(elem.hege_as) * 100
     elem.hege_eye_all = median(elem.hege_eye_all) * 100
     elem.hege_eye_transit = median(elem.hege_eye_transit) * 100
@@ -190,7 +190,7 @@ const fetchCountryHegemony = (data) => {
 
   details.value.tableVisible = true
   details.value.tablesData['dependency'] = {
-    data: traces.value,
+    data: traces.value
   }
 }
 
@@ -229,21 +229,33 @@ const hegemonyUrl = computed(() => {
   return ihr_api.getUrl(hegemonyFilter.value)
 })
 
-watch(() => props.addressFamily, () => {
-  apiCall()
-})
-watch(() => props.countryCode, () => {
-  apiCall()
-})
-watch(() => props.endTime, () => {
-  apiCall()
-})
-watch(() => details.value.activeTab, (newValue) => {
-  router.push({
-    replace: true,
-    query: Object.assign({}, route.query, { hege_tb: newValue })
-  })
-})
+watch(
+  () => props.addressFamily,
+  () => {
+    apiCall()
+  }
+)
+watch(
+  () => props.countryCode,
+  () => {
+    apiCall()
+  }
+)
+watch(
+  () => props.endTime,
+  () => {
+    apiCall()
+  }
+)
+watch(
+  () => details.value.activeTab,
+  (newValue) => {
+    router.push({
+      replace: true,
+      query: Object.assign({}, route.query, { hege_tb: newValue })
+    })
+  }
+)
 
 onBeforeMount(() => {
   updateAxesLabel()
@@ -298,7 +310,7 @@ onMounted(() => {
   position relative
 
 
-.bgplay-container 
+.bgplay-container
   &iframe
     border 0
     height 100%

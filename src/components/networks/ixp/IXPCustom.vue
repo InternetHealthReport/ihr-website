@@ -13,7 +13,16 @@ import IXPMembers from '@/components/iyp/ixp/IXPMembers.vue'
 import IXPCoLocationFacilities from '@/components/iyp/ixp/IXPCoLocationFacilities.vue'
 import IXPPeeringLANs from '@/components/iyp/ixp/IXPPeeringLANs.vue'
 
-const props = defineProps(['startTime', 'endTime', 'caidaId', 'family', 'peeringdbId', 'pageTitle', 'interval', 'hash'])
+const props = defineProps([
+  'startTime',
+  'endTime',
+  'caidaId',
+  'family',
+  'peeringdbId',
+  'pageTitle',
+  'interval',
+  'hash'
+])
 
 const route = useRoute()
 const router = useRouter()
@@ -29,25 +38,31 @@ const selects = ref([
   { value: false, label: t('charts.delayAndForwarding.title') },
   { value: false, label: t('iyp.ixp.members.title') },
   { value: false, label: t('iyp.ixp.facilities.title') },
-  { value: false, label: t('iyp.ixp.peeringLANs.title') },
+  { value: false, label: t('iyp.ixp.peeringLANs.title') }
 ])
 const selectAll = ref(false)
 
 const pushRoute = () => {
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      display: JSON.stringify(selects.value.map((obj, index) => {
-        if (obj.value) {
-          return index
-        }
-      }).filter(val => val != null))
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        display: JSON.stringify(
+          selects.value
+            .map((obj, index) => {
+              if (obj.value) {
+                return index
+              }
+            })
+            .filter((val) => val != null)
+        )
+      })
     })
-  }))
+  )
 }
 
 const hashToDisplay = () => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
       obj.value = true
     }
@@ -59,7 +74,7 @@ watch(selects.value, () => {
 })
 
 watch(selectAll, () => {
-  selects.value.forEach(obj => obj.value = selectAll.value)
+  selects.value.forEach((obj) => (obj.value = selectAll.value))
 })
 
 onMounted(() => {
@@ -68,7 +83,7 @@ onMounted(() => {
   } else if (props.hash) {
     hashToDisplay()
   } else {
-    displayWidgets.value.forEach(val => selects.value[val].value = true)
+    displayWidgets.value.forEach((val) => (selects.value[val].value = true))
   }
 })
 </script>
@@ -85,11 +100,7 @@ onMounted(() => {
     </QCardSection>
   </QCard>
   <!-- Overview -->
-  <IXPOverview
-    :ixp-number="peeringdbId"
-    class="card"
-    v-if="selects[0].value"
-  />
+  <IXPOverview :ixp-number="peeringdbId" class="card" v-if="selects[0].value" />
   <!-- Monitoring -->
   <GenericCardController
     :title="$t('charts.prefixHegemony.title')"
@@ -154,10 +165,7 @@ onMounted(() => {
     class="card"
     v-if="selects[4].value"
   >
-    <IXPMembers
-      :ixpNumber="peeringdbId"
-      :page-title="pageTitle"
-    />
+    <IXPMembers :ixpNumber="peeringdbId" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
@@ -168,10 +176,7 @@ onMounted(() => {
     class="card"
     v-if="selects[5].value"
   >
-    <IXPCoLocationFacilities
-      :ixpNumber="peeringdbId"
-      :page-title="pageTitle"
-    />
+    <IXPCoLocationFacilities :ixpNumber="peeringdbId" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.ixp.peeringLANs.title')"
@@ -181,10 +186,7 @@ onMounted(() => {
     class="card"
     v-if="selects[6].value"
   >
-    <IXPPeeringLANs
-      :ixpNumber="peeringdbId"
-      :page-title="pageTitle"
-    />
+    <IXPPeeringLANs :ixpNumber="peeringdbId" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

@@ -21,16 +21,15 @@ import NetworkTopology from '../views/NetworkTopology.vue'
 import BGPMonitor from '../views/BGPMonitor.vue'
 import TracerouteVisualizationTool from '../views/TracerouteVisualizationTool.vue'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_URL),
   scrollBehavior(to, from, savedPosition) {
-    if(savedPosition) {
+    if (savedPosition) {
       return savedPosition
     } else if (to.hash) {
       return {
         el: to.hash,
-        behavior: 'smooth',
+        behavior: 'smooth'
       }
     } else {
       if (from && Object.keys(to.query).length) {
@@ -116,7 +115,7 @@ const router = createRouter({
         {
           path: 'metis',
           name: 'metis',
-          component: MetisHome,
+          component: MetisHome
         },
         {
           path: 'metis/selection',
@@ -135,7 +134,7 @@ const router = createRouter({
         },
         {
           path: 'networks/:id?',
-          redirect: to => {
+          redirect: (to) => {
             return {
               name: 'network',
               query: {
@@ -147,7 +146,7 @@ const router = createRouter({
         },
         {
           path: 'countries/:cc?',
-          redirect: to => {
+          redirect: (to) => {
             return {
               name: 'country',
               query: {
@@ -171,7 +170,7 @@ const router = createRouter({
           path: 'traceroute-monitor',
           name: 'traceroute-monitor',
           component: TracerouteVisualizationTool
-        },
+        }
       ]
     },
     {

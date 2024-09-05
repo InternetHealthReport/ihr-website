@@ -1,304 +1,256 @@
-import * as AggregatedAlarmsDataModel from '../models/AggregatedAlarmsDataModel';
-import { ALARMS_INFO } from '../metadata/AggregatedAlarmsMetadata';
-import { ALARMS, IHR_ALARMS_MOCKED } from './resources/data';
+import * as AggregatedAlarmsDataModel from '../models/AggregatedAlarmsDataModel'
+import { ALARMS_INFO } from '../metadata/AggregatedAlarmsMetadata'
+import { ALARMS, IHR_ALARMS_MOCKED } from './resources/data'
 
 const GRIP_ALARMS_MOCKED = [
   {
-    'debug': {},
-    'duration': null,
-    'event_type': 'submoas',
-    'finished_ts': null,
-    'id': 'submoas-1697845800-174=272907',
-    'insert_ts': 1697847037,
-    'last_modified_ts': 1697847037,
-    'pfx_events': [
+    debug: {},
+    duration: null,
+    event_type: 'submoas',
+    finished_ts: null,
+    id: 'submoas-1697845800-174=272907',
+    insert_ts: 1697847037,
+    last_modified_ts: 1697847037,
+    pfx_events: [
       {
-        'finished_ts': null,
-        'inferences': [
+        finished_ts: null,
+        inferences: [
           {
-            'confidence': 50,
-            'explanation': 'no other inferences found, event is traceroute worthy',
-            'inference_id': 'default-tr-worthy',
-            'labels': [
-              'traceroute'
-            ],
-            'suspicion_level': 80
+            confidence: 50,
+            explanation: 'no other inferences found, event is traceroute worthy',
+            inference_id: 'default-tr-worthy',
+            labels: ['traceroute'],
+            suspicion_level: 80
           }
         ],
-        'sub_pfx': '38.255.24.0/22',
-        'super_pfx': '38.0.0.0/8',
+        sub_pfx: '38.255.24.0/22',
+        super_pfx: '38.0.0.0/8'
       }
     ],
-    'summary': {
-      'ases': [
-        '272907',
-        '174'
-      ],
-      'attackers': [
-        '272907'
-      ],
-      'inference_result': {
-        'inferences': [
+    summary: {
+      ases: ['272907', '174'],
+      attackers: ['272907'],
+      inference_result: {
+        inferences: [
           {
-            'confidence': 50,
-            'explanation': 'no other inferences found, event is traceroute worthy',
-            'inference_id': 'default-tr-worthy',
-            'labels': [
-              'traceroute'
-            ],
-            'suspicion_level': 80
+            confidence: 50,
+            explanation: 'no other inferences found, event is traceroute worthy',
+            inference_id: 'default-tr-worthy',
+            labels: ['traceroute'],
+            suspicion_level: 80
           }
         ],
-        'primary_inference': {
-          'confidence': 50,
-          'explanation': 'no other inferences found, event is traceroute worthy',
-          'inference_id': 'default-tr-worthy',
-          'labels': [
-            'traceroute'
-          ],
-          'suspicion_level': 80
+        primary_inference: {
+          confidence: 50,
+          explanation: 'no other inferences found, event is traceroute worthy',
+          inference_id: 'default-tr-worthy',
+          labels: ['traceroute'],
+          suspicion_level: 80
         }
       },
-      'newcomers': [
-        '272907'
-      ],
-      'prefixes': [
-        '38.255.24.0/22',
-        '38.0.0.0/8'
-      ],
-      'tr_worthy': true,
-      'victims': [
-        '174'
-      ]
+      newcomers: ['272907'],
+      prefixes: ['38.255.24.0/22', '38.0.0.0/8'],
+      tr_worthy: true,
+      victims: ['174']
     },
-    'tr_metrics': {
-      'max_event_ases': 3,
-      'max_pfx_events': 2,
-      'max_vps_per_event_as': 10,
-      'selected_event_as_cnt': 0,
-      'selected_pfx_event_cnt': 0,
-      'selected_unique_vp_cnt': 0,
-      'selected_vp_cnt': 0,
-      'total_event_as_cnt': 0,
-      'tr_request_cnt': 0,
-      'tr_request_failure_cnt': 0,
-      'tr_skip_reason': '',
-      'tr_skipped': false,
-      'tr_worthy': false,
-      'tr_worthy_pfx_event_cnt': 0,
-      'tr_worthy_tags': [
-        [
-          'prefix-small-edit-distance',
-          'not-previously-announced-by-any-newcomer'
-        ]
-      ]
+    tr_metrics: {
+      max_event_ases: 3,
+      max_pfx_events: 2,
+      max_vps_per_event_as: 10,
+      selected_event_as_cnt: 0,
+      selected_pfx_event_cnt: 0,
+      selected_unique_vp_cnt: 0,
+      selected_vp_cnt: 0,
+      total_event_as_cnt: 0,
+      tr_request_cnt: 0,
+      tr_request_failure_cnt: 0,
+      tr_skip_reason: '',
+      tr_skipped: false,
+      tr_worthy: false,
+      tr_worthy_pfx_event_cnt: 0,
+      tr_worthy_tags: [['prefix-small-edit-distance', 'not-previously-announced-by-any-newcomer']]
     },
-    'view_ts': 1697845800
+    view_ts: 1697845800
   },
   {
-    'debug': {},
-    'duration': 63900,
-    'event_type': 'submoas',
-    'finished_ts': 1697907900,
-    'id': 'submoas-1697844000-19957=2386',
-    'insert_ts': 1697846167,
-    'last_modified_ts': 1697910645,
-    'pfx_events': [
+    debug: {},
+    duration: 63900,
+    event_type: 'submoas',
+    finished_ts: 1697907900,
+    id: 'submoas-1697844000-19957=2386',
+    insert_ts: 1697846167,
+    last_modified_ts: 1697910645,
+    pfx_events: [
       {
-        'finished_ts': 1697907900,
-        'inferences': [
+        finished_ts: 1697907900,
+        inferences: [
           {
-            'confidence': 50,
-            'explanation': 'no other inferences found, event is traceroute worthy',
-            'inference_id': 'default-tr-worthy',
-            'labels': [
-              'traceroute'
-            ],
-            'suspicion_level': 80
+            confidence: 50,
+            explanation: 'no other inferences found, event is traceroute worthy',
+            inference_id: 'default-tr-worthy',
+            labels: ['traceroute'],
+            suspicion_level: 80
           }
         ],
-        'sub_pfx': '170.190.42.0/24',
-        'super_pfx': '170.190.40.0/22'
+        sub_pfx: '170.190.42.0/24',
+        super_pfx: '170.190.40.0/22'
       },
       {
-        'finished_ts': 1697907900,
-        'inferences': [
+        finished_ts: 1697907900,
+        inferences: [
           {
-            'confidence': 50,
-            'explanation': 'no other inferences found, event is traceroute worthy',
-            'inference_id': 'default-tr-worthy',
-            'labels': [
-              'traceroute'
-            ],
-            'suspicion_level': 80
+            confidence: 50,
+            explanation: 'no other inferences found, event is traceroute worthy',
+            inference_id: 'default-tr-worthy',
+            labels: ['traceroute'],
+            suspicion_level: 80
           }
         ],
-        'sub_pfx': '170.190.40.0/24',
-        'super_pfx': '170.190.40.0/22'
+        sub_pfx: '170.190.40.0/24',
+        super_pfx: '170.190.40.0/22'
       },
       {
-        'finished_ts': 1697907900,
-        'inferences': [
+        finished_ts: 1697907900,
+        inferences: [
           {
-            'confidence': 50,
-            'explanation': 'no other inferences found, event is traceroute worthy',
-            'inference_id': 'default-tr-worthy',
-            'labels': [
-              'traceroute'
-            ],
-            'suspicion_level': 80
+            confidence: 50,
+            explanation: 'no other inferences found, event is traceroute worthy',
+            inference_id: 'default-tr-worthy',
+            labels: ['traceroute'],
+            suspicion_level: 80
           }
         ],
-        'sub_pfx': '170.190.43.0/24',
-        'super_pfx': '170.190.40.0/22',
+        sub_pfx: '170.190.43.0/24',
+        super_pfx: '170.190.40.0/22'
       },
       {
-        'finished_ts': 1697907900,
-        'inferences': [
+        finished_ts: 1697907900,
+        inferences: [
           {
-            'confidence': 50,
-            'explanation': 'no other inferences found, event is traceroute worthy',
-            'inference_id': 'default-tr-worthy',
-            'labels': [
-              'traceroute'
-            ],
-            'suspicion_level': 80
+            confidence: 50,
+            explanation: 'no other inferences found, event is traceroute worthy',
+            inference_id: 'default-tr-worthy',
+            labels: ['traceroute'],
+            suspicion_level: 80
           }
         ],
-        'sub_pfx': '170.190.41.0/24',
-        'super_pfx': '170.190.40.0/22',
+        sub_pfx: '170.190.41.0/24',
+        super_pfx: '170.190.40.0/22'
       }
     ],
-    'summary': {
-      'ases': [
-        '2386',
-        '19957'
-      ],
-      'attackers': [
-        '2386'
-      ],
-      'inference_result': {
-        'inferences': [
+    summary: {
+      ases: ['2386', '19957'],
+      attackers: ['2386'],
+      inference_result: {
+        inferences: [
           {
-            'confidence': 50,
-            'explanation': 'no other inferences found, event is traceroute worthy',
-            'inference_id': 'default-tr-worthy',
-            'labels': [
-              'traceroute'
-            ],
-            'suspicion_level': 80
+            confidence: 50,
+            explanation: 'no other inferences found, event is traceroute worthy',
+            inference_id: 'default-tr-worthy',
+            labels: ['traceroute'],
+            suspicion_level: 80
           }
         ],
-        'primary_inference': {
-          'confidence': 50,
-          'explanation': 'no other inferences found, event is traceroute worthy',
-          'inference_id': 'default-tr-worthy',
-          'labels': [
-            'traceroute'
-          ],
-          'suspicion_level': 80
+        primary_inference: {
+          confidence: 50,
+          explanation: 'no other inferences found, event is traceroute worthy',
+          inference_id: 'default-tr-worthy',
+          labels: ['traceroute'],
+          suspicion_level: 80
         }
       },
-      'newcomers': [
-        '2386'
-      ],
-      'prefixes': [
+      newcomers: ['2386'],
+      prefixes: [
         '170.190.40.0/24',
         '170.190.41.0/24',
         '170.190.40.0/22',
         '170.190.43.0/24',
         '170.190.42.0/24'
       ],
-      'tr_worthy': true,
-      'victims': [
-        '19957'
-      ]
+      tr_worthy: true,
+      victims: ['19957']
     },
-    'tr_metrics': {
-      'max_event_ases': 3,
-      'max_pfx_events': 2,
-      'max_vps_per_event_as': 10,
-      'selected_event_as_cnt': 0,
-      'selected_pfx_event_cnt': 0,
-      'selected_unique_vp_cnt': 0,
-      'selected_vp_cnt': 0,
-      'total_event_as_cnt': 0,
-      'tr_request_cnt': 0,
-      'tr_request_failure_cnt': 0,
-      'tr_skip_reason': '',
-      'tr_skipped': false,
-      'tr_worthy': false,
-      'tr_worthy_pfx_event_cnt': 0,
-      'tr_worthy_tags': [
-        [
-          'not-previously-announced-by-any-newcomer'
-        ]
-      ]
+    tr_metrics: {
+      max_event_ases: 3,
+      max_pfx_events: 2,
+      max_vps_per_event_as: 10,
+      selected_event_as_cnt: 0,
+      selected_pfx_event_cnt: 0,
+      selected_unique_vp_cnt: 0,
+      selected_vp_cnt: 0,
+      total_event_as_cnt: 0,
+      tr_request_cnt: 0,
+      tr_request_failure_cnt: 0,
+      tr_skip_reason: '',
+      tr_skipped: false,
+      tr_worthy: false,
+      tr_worthy_pfx_event_cnt: 0,
+      tr_worthy_tags: [['not-previously-announced-by-any-newcomer']]
     },
-    'view_ts': 1697844000
+    view_ts: 1697844000
   }
 ]
 
 const IODA_ALARMS_MOCKED = [
   {
-    'datasource': 'bgp',
-    'entity': {
-      'code': '50369',
-      'name': 'AS50369 (SAFEGRID)',
-      'type': 'asn',
-      'attrs': {
-        'fqid': 'asn.50369',
-        'name': 'SAFEGRID',
-        'org': 'Safegrid Network SRL',
-        'ip_count': '4608'
+    datasource: 'bgp',
+    entity: {
+      code: '50369',
+      name: 'AS50369 (SAFEGRID)',
+      type: 'asn',
+      attrs: {
+        fqid: 'asn.50369',
+        name: 'SAFEGRID',
+        org: 'Safegrid Network SRL',
+        ip_count: '4608'
       }
     },
-    'time': 1697760000,
-    'level': 'critical',
-    'condition': '< 0.99',
-    'value': 19,
-    'historyValue': 21,
-    'method': 'median'
+    time: 1697760000,
+    level: 'critical',
+    condition: '< 0.99',
+    value: 19,
+    historyValue: 21,
+    method: 'median'
   },
   {
-    'datasource': 'bgp',
-    'entity': {
-      'code': '1848',
-      'name': 'AS1848 (AS1848)',
-      'type': 'asn',
-      'attrs': {
-        'fqid': 'asn.1848',
-        'name': 'AS1848',
-        'org': 'National Aeronautics and Space Administration',
-        'ip_count': '6144'
+    datasource: 'bgp',
+    entity: {
+      code: '1848',
+      name: 'AS1848 (AS1848)',
+      type: 'asn',
+      attrs: {
+        fqid: 'asn.1848',
+        name: 'AS1848',
+        org: 'National Aeronautics and Space Administration',
+        ip_count: '6144'
       }
     },
-    'time': 1697760300,
-    'level': 'critical',
-    'condition': '< 0.99',
-    'value': 1,
-    'historyValue': 24,
-    'method': 'median'
+    time: 1697760300,
+    level: 'critical',
+    condition: '< 0.99',
+    value: 1,
+    historyValue: 24,
+    method: 'median'
   },
   {
-    'datasource': 'bgp',
-    'entity': {
-      'code': '199366',
-      'name': 'AS199366 (TTNETDC)',
-      'type': 'asn',
-      'attrs': {
-        'fqid': 'asn.199366',
-        'name': 'TTNETDC',
-        'org': 'Yesilbir Bilisim Teknolojileri Bilgisayar Yayincilik Sanayi ve Ticaret Ltd. Sti.',
-        'ip_count': '5376'
+    datasource: 'bgp',
+    entity: {
+      code: '199366',
+      name: 'AS199366 (TTNETDC)',
+      type: 'asn',
+      attrs: {
+        fqid: 'asn.199366',
+        name: 'TTNETDC',
+        org: 'Yesilbir Bilisim Teknolojileri Bilgisayar Yayincilik Sanayi ve Ticaret Ltd. Sti.',
+        ip_count: '5376'
       }
     },
-    'time': 1697762100,
-    'level': 'normal',
-    'condition': 'normal',
-    'value': 20,
-    'historyValue': 20,
-    'method': 'median'
+    time: 1697762100,
+    level: 'normal',
+    condition: 'normal',
+    value: 20,
+    historyValue: 20,
+    method: 'median'
   }
 ]
 
@@ -307,8 +259,16 @@ const AS_NAMES_COUNTRY_MAPPINGS_MOCKED = {
   272907: { asn_name: 'CDM.NET, C.A.', country_iso_code2: 'VE' },
   50369: { asn_name: 'SAFEGRID Safegrid Network SRL', country_iso_code2: 'RO' },
   1848: { asn_name: 'AS1848', country_iso_code2: 'US' },
-  199366: { asn_name: 'TTNETDC Yesilbir Bilisim Teknolojileri Bilgisayar Yayincilik Sanayi ve Ticaret Ltd. Sti.', country_iso_code2: 'TR' },
-  197150: { asn_name: 'MCRBN-AS Federal State Unitary Enterprise of the Order of the Red Banner of Labour "Russian Broad-casting and Notification Network"', country_iso_code2: 'RU' },
+  199366: {
+    asn_name:
+      'TTNETDC Yesilbir Bilisim Teknolojileri Bilgisayar Yayincilik Sanayi ve Ticaret Ltd. Sti.',
+    country_iso_code2: 'TR'
+  },
+  197150: {
+    asn_name:
+      'MCRBN-AS Federal State Unitary Enterprise of the Order of the Red Banner of Labour "Russian Broad-casting and Notification Network"',
+    country_iso_code2: 'RU'
+  },
   12418: { asn_name: 'QUANTUM Quantum CJSC', country_iso_code2: 'RU' },
   135647: { asn_name: 'AFL-AS-AP Airports Fiji Limited', country_iso_code2: 'FJ' },
   45355: { asn_name: 'DIGICELPACIFIC-1-AP Digicel Fiji Limited', country_iso_code2: 'FJ' },
@@ -321,69 +281,70 @@ const AS_NAMES_COUNTRY_MAPPINGS_MOCKED = {
   19957: { asn_name: 'TENNESSEE-NET', country_iso_code2: 'US' }
 }
 jest.mock('../../plugins/GripApi', () => ({
-  getGripAlarms: jest.fn().mockResolvedValue(GRIP_ALARMS_MOCKED),
-}));
+  getGripAlarms: jest.fn().mockResolvedValue(GRIP_ALARMS_MOCKED)
+}))
 
 jest.mock('../../plugins/IodaApi', () => ({
-  getIodaAlarms: jest.fn().mockResolvedValue(IODA_ALARMS_MOCKED),
-}));
+  getIodaAlarms: jest.fn().mockResolvedValue(IODA_ALARMS_MOCKED)
+}))
 
 jest.mock('../../plugins/AsNames', () => ({
-  getASNamesCountryMappings: jest.fn().mockResolvedValue(AS_NAMES_COUNTRY_MAPPINGS_MOCKED),
-}));
+  getASNamesCountryMappings: jest.fn().mockResolvedValue(AS_NAMES_COUNTRY_MAPPINGS_MOCKED)
+}))
 
 describe('etlAggregatedAlarmsDataModel', () => {
   afterEach(() => {
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
   it('should correctly ETL AggregatedAlarmsDataModel for IHR, Grip, and IODA when all data sources are selected', async () => {
-    const dataSourcesSelected = { 'ihr': true, 'grip': true, 'ioda': true }
+    const dataSourcesSelected = { ihr: true, grip: true, ioda: true }
     const alarmTypesSelected = {
-      'hegemony': true,
-      'network_delay': true,
-      'network_disconnection': true,
-      'moas': true,
-      'submoas': false,
-      'defcon': false,
-      'edges': false,
-      'ping_slash24': false,
-      'bgp': true,
-      'ucsd_nt': false,
-      'merit_nt': false
+      hegemony: true,
+      network_delay: true,
+      network_disconnection: true,
+      moas: true,
+      submoas: false,
+      defcon: false,
+      edges: false,
+      ping_slash24: false,
+      bgp: true,
+      ucsd_nt: false,
+      merit_nt: false
     }
     const groupByKeys = {
-      'hegemony': 'origin_asn',
-      'network_delay': 'startpoint',
-      'network_disconnection': 'stream',
-      'moas': 'asn_attacker',
-      'submoas': 'asn_attacker',
-      'defcon': 'asn_attacker',
-      'edges': 'asn_attacker',
-      'ping_slash24': 'entity',
-      'bgp': 'entity',
-      'ucsd_nt': 'entity',
-      'merit_nt': 'entity'
+      hegemony: 'origin_asn',
+      network_delay: 'startpoint',
+      network_disconnection: 'stream',
+      moas: 'asn_attacker',
+      submoas: 'asn_attacker',
+      defcon: 'asn_attacker',
+      edges: 'asn_attacker',
+      ping_slash24: 'entity',
+      bgp: 'entity',
+      ucsd_nt: 'entity',
+      merit_nt: 'entity'
     }
     const externalAlarms = { grip: null, ioda: null }
     const iodaIPAddressFamilies = {
-      'ping_slash24': [
-        '4'
-      ],
-      'bgp': [
-        '4',
-        '6'
-      ],
-      'ucsd_nt': [
-        '4'
-      ],
-      'merit_nt': [
-        '4'
-      ]
+      ping_slash24: ['4'],
+      bgp: ['4', '6'],
+      ucsd_nt: ['4'],
+      merit_nt: ['4']
     }
     const startUnixTime = 1697760000
     const endUnixTime = 1697846399
 
-    const result = await AggregatedAlarmsDataModel.etl(dataSourcesSelected, ALARMS_INFO, alarmTypesSelected, groupByKeys, IHR_ALARMS_MOCKED, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime)
+    const result = await AggregatedAlarmsDataModel.etl(
+      dataSourcesSelected,
+      ALARMS_INFO,
+      alarmTypesSelected,
+      groupByKeys,
+      IHR_ALARMS_MOCKED,
+      externalAlarms,
+      iodaIPAddressFamilies,
+      startUnixTime,
+      endUnixTime
+    )
 
     const expectedResult = [
       {
@@ -787,7 +748,8 @@ describe('etlAggregatedAlarmsDataModel', () => {
       },
       {
         asn: 197150,
-        asn_name: 'MCRBN-AS Federal State Unitary Enterprise of the Order of the Red Banner of Labour "Russian Broad-casting and Notification Network"',
+        asn_name:
+          'MCRBN-AS Federal State Unitary Enterprise of the Order of the Red Banner of Labour "Russian Broad-casting and Notification Network"',
         asn_country: 'Russia',
         asn_country_iso_code2: 'RU',
         asn_country_iso_code3: 'RUS',
@@ -868,7 +830,8 @@ describe('etlAggregatedAlarmsDataModel', () => {
       },
       {
         asn: 199366,
-        asn_name: 'TTNETDC Yesilbir Bilisim Teknolojileri Bilgisayar Yayincilik Sanayi ve Ticaret Ltd. Sti.',
+        asn_name:
+          'TTNETDC Yesilbir Bilisim Teknolojileri Bilgisayar Yayincilik Sanayi ve Ticaret Ltd. Sti.',
         asn_country: 'Turkey',
         asn_country_iso_code2: 'TR',
         asn_country_iso_code3: 'TUR',
@@ -1028,56 +991,57 @@ describe('etlAggregatedAlarmsDataModel', () => {
       }
     ]
     expect(result).toEqual(expectedResult)
-  });
+  })
 
   it('should correctly ETL AggregatedAlarmsDataModel for IHR only', async () => {
-    const dataSourcesSelected = { 'ihr': true, 'grip': false, 'ioda': false }
+    const dataSourcesSelected = { ihr: true, grip: false, ioda: false }
     const alarmTypesSelected = {
-      'hegemony': true,
-      'network_delay': true,
-      'network_disconnection': true,
-      'moas': false,
-      'submoas': false,
-      'defcon': false,
-      'edges': false,
-      'ping_slash24': false,
-      'bgp': false,
-      'ucsd_nt': false,
-      'merit_nt': false
+      hegemony: true,
+      network_delay: true,
+      network_disconnection: true,
+      moas: false,
+      submoas: false,
+      defcon: false,
+      edges: false,
+      ping_slash24: false,
+      bgp: false,
+      ucsd_nt: false,
+      merit_nt: false
     }
     const groupByKeys = {
-      'hegemony': 'origin_asn',
-      'network_delay': 'startpoint',
-      'network_disconnection': 'stream',
-      'moas': 'asn_attacker',
-      'submoas': 'asn_attacker',
-      'defcon': 'asn_attacker',
-      'edges': 'asn_attacker',
-      'ping_slash24': 'entity',
-      'bgp': 'entity',
-      'ucsd_nt': 'entity',
-      'merit_nt': 'entity'
+      hegemony: 'origin_asn',
+      network_delay: 'startpoint',
+      network_disconnection: 'stream',
+      moas: 'asn_attacker',
+      submoas: 'asn_attacker',
+      defcon: 'asn_attacker',
+      edges: 'asn_attacker',
+      ping_slash24: 'entity',
+      bgp: 'entity',
+      ucsd_nt: 'entity',
+      merit_nt: 'entity'
     }
     const externalAlarms = { grip: null, ioda: null }
     const iodaIPAddressFamilies = {
-      'ping_slash24': [
-        '4'
-      ],
-      'bgp': [
-        '4',
-        '6'
-      ],
-      'ucsd_nt': [
-        '4'
-      ],
-      'merit_nt': [
-        '4'
-      ]
+      ping_slash24: ['4'],
+      bgp: ['4', '6'],
+      ucsd_nt: ['4'],
+      merit_nt: ['4']
     }
     const startUnixTime = 1697760000
     const endUnixTime = 1697846399
 
-    const result = await AggregatedAlarmsDataModel.etl(dataSourcesSelected, ALARMS_INFO, alarmTypesSelected, groupByKeys, IHR_ALARMS_MOCKED, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime)
+    const result = await AggregatedAlarmsDataModel.etl(
+      dataSourcesSelected,
+      ALARMS_INFO,
+      alarmTypesSelected,
+      groupByKeys,
+      IHR_ALARMS_MOCKED,
+      externalAlarms,
+      iodaIPAddressFamilies,
+      startUnixTime,
+      endUnixTime
+    )
 
     const expectedResult = [
       {
@@ -1275,7 +1239,8 @@ describe('etlAggregatedAlarmsDataModel', () => {
       },
       {
         asn: 197150,
-        asn_name: 'MCRBN-AS Federal State Unitary Enterprise of the Order of the Red Banner of Labour "Russian Broad-casting and Notification Network"',
+        asn_name:
+          'MCRBN-AS Federal State Unitary Enterprise of the Order of the Red Banner of Labour "Russian Broad-casting and Notification Network"',
         asn_country: 'Russia',
         asn_country_iso_code2: 'RU',
         asn_country_iso_code3: 'RUS',
@@ -1403,56 +1368,57 @@ describe('etlAggregatedAlarmsDataModel', () => {
       }
     ]
     expect(result).toEqual(expectedResult)
-  });
+  })
 
   it('should correctly ETL AggregatedAlarmsDataModel for third party alarms only', async () => {
-    const dataSourcesSelected = { 'ihr': false, 'grip': true, 'ioda': true }
+    const dataSourcesSelected = { ihr: false, grip: true, ioda: true }
     const alarmTypesSelected = {
-      'hegemony': false,
-      'network_delay': false,
-      'network_disconnection': false,
-      'moas': true,
-      'submoas': true,
-      'defcon': true,
-      'edges': true,
-      'ping_slash24': true,
-      'bgp': true,
-      'ucsd_nt': true,
-      'merit_nt': true
+      hegemony: false,
+      network_delay: false,
+      network_disconnection: false,
+      moas: true,
+      submoas: true,
+      defcon: true,
+      edges: true,
+      ping_slash24: true,
+      bgp: true,
+      ucsd_nt: true,
+      merit_nt: true
     }
     const groupByKeys = {
-      'hegemony': 'origin_asn',
-      'network_delay': 'startpoint',
-      'network_disconnection': 'stream',
-      'moas': 'asn_attacker',
-      'submoas': 'asn_attacker',
-      'defcon': 'asn_attacker',
-      'edges': 'asn_attacker',
-      'ping_slash24': 'entity',
-      'bgp': 'entity',
-      'ucsd_nt': 'entity',
-      'merit_nt': 'entity'
+      hegemony: 'origin_asn',
+      network_delay: 'startpoint',
+      network_disconnection: 'stream',
+      moas: 'asn_attacker',
+      submoas: 'asn_attacker',
+      defcon: 'asn_attacker',
+      edges: 'asn_attacker',
+      ping_slash24: 'entity',
+      bgp: 'entity',
+      ucsd_nt: 'entity',
+      merit_nt: 'entity'
     }
     const externalAlarms = { grip: null, ioda: null }
     const iodaIPAddressFamilies = {
-      'ping_slash24': [
-        '4'
-      ],
-      'bgp': [
-        '4',
-        '6'
-      ],
-      'ucsd_nt': [
-        '4'
-      ],
-      'merit_nt': [
-        '4'
-      ]
+      ping_slash24: ['4'],
+      bgp: ['4', '6'],
+      ucsd_nt: ['4'],
+      merit_nt: ['4']
     }
     const startUnixTime = 1697760000
     const endUnixTime = 1697846399
 
-    const result = await AggregatedAlarmsDataModel.etl(dataSourcesSelected, ALARMS_INFO, alarmTypesSelected, groupByKeys, IHR_ALARMS_MOCKED, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime)
+    const result = await AggregatedAlarmsDataModel.etl(
+      dataSourcesSelected,
+      ALARMS_INFO,
+      alarmTypesSelected,
+      groupByKeys,
+      IHR_ALARMS_MOCKED,
+      externalAlarms,
+      iodaIPAddressFamilies,
+      startUnixTime,
+      endUnixTime
+    )
 
     const expectedResult = [
       {
@@ -1975,7 +1941,8 @@ describe('etlAggregatedAlarmsDataModel', () => {
       },
       {
         asn: 199366,
-        asn_name: 'TTNETDC Yesilbir Bilisim Teknolojileri Bilgisayar Yayincilik Sanayi ve Ticaret Ltd. Sti.',
+        asn_name:
+          'TTNETDC Yesilbir Bilisim Teknolojileri Bilgisayar Yayincilik Sanayi ve Ticaret Ltd. Sti.',
         asn_country: 'Turkey',
         asn_country_iso_code2: 'TR',
         asn_country_iso_code3: 'TUR',
@@ -2325,62 +2292,62 @@ describe('etlAggregatedAlarmsDataModel', () => {
       }
     ]
     expect(result).toEqual(expectedResult)
-  });
+  })
 
   it('should handle the case where there is no alarms selected', async () => {
-    const dataSourcesSelected = { 'ihr': false, 'grip': false, 'ioda': false }
+    const dataSourcesSelected = { ihr: false, grip: false, ioda: false }
     const alarmTypesSelected = {
-      'hegemony': false,
-      'network_delay': false,
-      'network_disconnection': false,
-      'moas': false,
-      'submoas': false,
-      'defcon': false,
-      'edges': false,
-      'ping_slash24': false,
-      'bgp': false,
-      'ucsd_nt': false,
-      'merit_nt': false
+      hegemony: false,
+      network_delay: false,
+      network_disconnection: false,
+      moas: false,
+      submoas: false,
+      defcon: false,
+      edges: false,
+      ping_slash24: false,
+      bgp: false,
+      ucsd_nt: false,
+      merit_nt: false
     }
     const groupByKeys = {
-      'hegemony': 'origin_asn',
-      'network_delay': 'startpoint',
-      'network_disconnection': 'stream',
-      'moas': 'asn_attacker',
-      'submoas': 'asn_attacker',
-      'defcon': 'asn_attacker',
-      'edges': 'asn_attacker',
-      'ping_slash24': 'entity',
-      'bgp': 'entity',
-      'ucsd_nt': 'entity',
-      'merit_nt': 'entity'
+      hegemony: 'origin_asn',
+      network_delay: 'startpoint',
+      network_disconnection: 'stream',
+      moas: 'asn_attacker',
+      submoas: 'asn_attacker',
+      defcon: 'asn_attacker',
+      edges: 'asn_attacker',
+      ping_slash24: 'entity',
+      bgp: 'entity',
+      ucsd_nt: 'entity',
+      merit_nt: 'entity'
     }
     const externalAlarms = { grip: null, ioda: null }
     const iodaIPAddressFamilies = {
-      'ping_slash24': [
-        '4'
-      ],
-      'bgp': [
-        '4',
-        '6'
-      ],
-      'ucsd_nt': [
-        '4'
-      ],
-      'merit_nt': [
-        '4'
-      ]
+      ping_slash24: ['4'],
+      bgp: ['4', '6'],
+      ucsd_nt: ['4'],
+      merit_nt: ['4']
     }
     const startUnixTime = 1697760000
     const endUnixTime = 1697846399
 
-    const result = await AggregatedAlarmsDataModel.etl(dataSourcesSelected, ALARMS_INFO, alarmTypesSelected, groupByKeys, IHR_ALARMS_MOCKED, externalAlarms, iodaIPAddressFamilies, startUnixTime, endUnixTime)
+    const result = await AggregatedAlarmsDataModel.etl(
+      dataSourcesSelected,
+      ALARMS_INFO,
+      alarmTypesSelected,
+      groupByKeys,
+      IHR_ALARMS_MOCKED,
+      externalAlarms,
+      iodaIPAddressFamilies,
+      startUnixTime,
+      endUnixTime
+    )
 
     const expectedResult = []
 
     expect(result).toEqual(expectedResult)
-  });
-
+  })
 })
 
 describe('filterAlarmsByTime', () => {
@@ -2389,51 +2356,33 @@ describe('filterAlarmsByTime', () => {
       'hegemony_count',
       'hegemony_timebin',
       'hegemony_severity',
-      [
-        'hegemony_origin_asn_af',
-        'hegemony_asn_af'
-      ]
+      ['hegemony_origin_asn_af', 'hegemony_asn_af']
     ],
     [
       'network_delay_count',
       'network_delay_timebin',
       'network_delay_severity',
-      [
-        'network_delay_startpoint_af',
-        'network_delay_endpoint_af'
-      ]
+      ['network_delay_startpoint_af', 'network_delay_endpoint_af']
     ],
     [
       'network_disconnection_count',
       'network_disconnection_timebin',
       'network_disconnection_severity',
-      [
-        'network_disconnection_stream_af'
-      ]
+      ['network_disconnection_stream_af']
     ],
-    [
-      'moas_count',
-      'moas_timebin',
-      'moas_severity',
-      [
-        'moas_asn_attacker_af',
-        'moas_asn_victim_af'
-      ]
-    ],
-    [
-      'bgp_count',
-      'bgp_timebin',
-      'bgp_severity',
-      [
-        'bgp_entity_af'
-      ]
-    ]
+    ['moas_count', 'moas_timebin', 'moas_severity', ['moas_asn_attacker_af', 'moas_asn_victim_af']],
+    ['bgp_count', 'bgp_timebin', 'bgp_severity', ['bgp_entity_af']]
   ]
   it('should filter alarms by time range and aggregated attributes', () => {
     const startUnixTime = 1697829300
     const endUnixTime = 1697829300
 
-    const result = AggregatedAlarmsDataModel.filterAlarmsByTime(ALARMS, startUnixTime, endUnixTime, AGGREGATED_ATTRS_ZIPPED);
+    const result = AggregatedAlarmsDataModel.filterAlarmsByTime(
+      ALARMS,
+      startUnixTime,
+      endUnixTime,
+      AGGREGATED_ATTRS_ZIPPED
+    )
 
     const expectedResult = [
       {
@@ -2465,25 +2414,35 @@ describe('filterAlarmsByTime', () => {
       }
     ]
 
-    expect(result).toEqual(expectedResult);
-  });
+    expect(result).toEqual(expectedResult)
+  })
 
   it('should return an empty array if no alarms match the time range', () => {
     const startUnixTime = new Date(2200, 0, 1).getTime() / 1000
     const endUnixTime = new Date(2250, 0, 1).getTime() / 1000
 
-    const result = AggregatedAlarmsDataModel.filterAlarmsByTime(ALARMS, startUnixTime, endUnixTime, AGGREGATED_ATTRS_ZIPPED);
-    expect(result).toHaveLength(0);
-  });
+    const result = AggregatedAlarmsDataModel.filterAlarmsByTime(
+      ALARMS,
+      startUnixTime,
+      endUnixTime,
+      AGGREGATED_ATTRS_ZIPPED
+    )
+    expect(result).toHaveLength(0)
+  })
 
   it('should handle edge case with no aggregated attributes', () => {
-    const emptyAggregatedAttrs = [];
+    const emptyAggregatedAttrs = []
     const startUnixTime = 1697760000
     const endUnixTime = 1697846399
-    const result = AggregatedAlarmsDataModel.filterAlarmsByTime(ALARMS, startUnixTime, endUnixTime, emptyAggregatedAttrs);
-    expect(result).toHaveLength(0);
-  });
-});
+    const result = AggregatedAlarmsDataModel.filterAlarmsByTime(
+      ALARMS,
+      startUnixTime,
+      endUnixTime,
+      emptyAggregatedAttrs
+    )
+    expect(result).toHaveLength(0)
+  })
+})
 
 describe('filterAlarmsBySeverity', () => {
   const AGGREGATED_ATTRS_ZIPPED = [
@@ -2491,50 +2450,31 @@ describe('filterAlarmsBySeverity', () => {
       'hegemony_count',
       'hegemony_timebin',
       'hegemony_severity',
-      [
-        'hegemony_origin_asn_af',
-        'hegemony_asn_af'
-      ]
+      ['hegemony_origin_asn_af', 'hegemony_asn_af']
     ],
     [
       'network_delay_count',
       'network_delay_timebin',
       'network_delay_severity',
-      [
-        'network_delay_startpoint_af',
-        'network_delay_endpoint_af'
-      ]
+      ['network_delay_startpoint_af', 'network_delay_endpoint_af']
     ],
     [
       'network_disconnection_count',
       'network_disconnection_timebin',
       'network_disconnection_severity',
-      [
-        'network_disconnection_stream_af'
-      ]
+      ['network_disconnection_stream_af']
     ],
-    [
-      'moas_count',
-      'moas_timebin',
-      'moas_severity',
-      [
-        'moas_asn_attacker_af',
-        'moas_asn_victim_af'
-      ]
-    ],
-    [
-      'bgp_count',
-      'bgp_timebin',
-      'bgp_severity',
-      [
-        'bgp_entity_af'
-      ]
-    ]
+    ['moas_count', 'moas_timebin', 'moas_severity', ['moas_asn_attacker_af', 'moas_asn_victim_af']],
+    ['bgp_count', 'bgp_timebin', 'bgp_severity', ['bgp_entity_af']]
   ]
   it('should filter alarms by high severity and aggregated attributes', () => {
     const severitiesSelected = ['high']
 
-    const result = AggregatedAlarmsDataModel.filterAlarmsBySeverity(ALARMS, severitiesSelected, AGGREGATED_ATTRS_ZIPPED);
+    const result = AggregatedAlarmsDataModel.filterAlarmsBySeverity(
+      ALARMS,
+      severitiesSelected,
+      AGGREGATED_ATTRS_ZIPPED
+    )
 
     const expectedResult = [
       {
@@ -2629,11 +2569,15 @@ describe('filterAlarmsBySeverity', () => {
       }
     ]
     expect(result).toEqual(expectedResult)
-  });
+  })
 
   it('should filter alarms by multiple severities and aggregated attributes', () => {
     const severitiesSelected = ['high', 'low']
-    const result = AggregatedAlarmsDataModel.filterAlarmsBySeverity(ALARMS, severitiesSelected, AGGREGATED_ATTRS_ZIPPED);
+    const result = AggregatedAlarmsDataModel.filterAlarmsBySeverity(
+      ALARMS,
+      severitiesSelected,
+      AGGREGATED_ATTRS_ZIPPED
+    )
 
     const expectedResult = [
       {
@@ -2754,23 +2698,30 @@ describe('filterAlarmsBySeverity', () => {
         asn_name_truncated: 'Corporacio (AS27717)'
       }
     ]
-    expect(result).toEqual(expectedResult);
-  });
-
+    expect(result).toEqual(expectedResult)
+  })
 
   it('should return an empty array if no alarms match the severity', () => {
     const severitiesSelected = ['not found severity']
-    const result = AggregatedAlarmsDataModel.filterAlarmsBySeverity(ALARMS, severitiesSelected, AGGREGATED_ATTRS_ZIPPED);
-    expect(result).toHaveLength(0);
-  });
+    const result = AggregatedAlarmsDataModel.filterAlarmsBySeverity(
+      ALARMS,
+      severitiesSelected,
+      AGGREGATED_ATTRS_ZIPPED
+    )
+    expect(result).toHaveLength(0)
+  })
 
   it('should handle edge case with no aggregated attributes', () => {
     const severitiesSelected = ['high']
-    const emptyAggregatedAttrs = [];
-    const result = AggregatedAlarmsDataModel.filterAlarmsBySeverity(ALARMS, severitiesSelected, emptyAggregatedAttrs);
-    expect(result).toHaveLength(0);
-  });
-});
+    const emptyAggregatedAttrs = []
+    const result = AggregatedAlarmsDataModel.filterAlarmsBySeverity(
+      ALARMS,
+      severitiesSelected,
+      emptyAggregatedAttrs
+    )
+    expect(result).toHaveLength(0)
+  })
+})
 
 describe('filterAlarmsByIpAddressFamily', () => {
   const AGGREGATED_ATTRS_ZIPPED = [
@@ -2778,52 +2729,37 @@ describe('filterAlarmsByIpAddressFamily', () => {
       'hegemony_count',
       'hegemony_timebin',
       'hegemony_severity',
-      [
-        'hegemony_origin_asn_af',
-        'hegemony_asn_af'
-      ]
+      ['hegemony_origin_asn_af', 'hegemony_asn_af']
     ],
     [
       'network_delay_count',
       'network_delay_timebin',
       'network_delay_severity',
-      [
-        'network_delay_startpoint_af',
-        'network_delay_endpoint_af'
-      ]
+      ['network_delay_startpoint_af', 'network_delay_endpoint_af']
     ],
     [
       'network_disconnection_count',
       'network_disconnection_timebin',
       'network_disconnection_severity',
-      [
-        'network_disconnection_stream_af'
-      ]
+      ['network_disconnection_stream_af']
     ],
-    [
-      'moas_count',
-      'moas_timebin',
-      'moas_severity',
-      [
-        'moas_asn_attacker_af',
-        'moas_asn_victim_af'
-      ]
-    ],
-    [
-      'bgp_count',
-      'bgp_timebin',
-      'bgp_severity',
-      [
-        'bgp_entity_af'
-      ]
-    ]
+    ['moas_count', 'moas_timebin', 'moas_severity', ['moas_asn_attacker_af', 'moas_asn_victim_af']],
+    ['bgp_count', 'bgp_timebin', 'bgp_severity', ['bgp_entity_af']]
   ]
   it('should filter alarms by ip address family and aggregated attributes', () => {
     const ipAddressFamilies1 = [6]
     const ipAddressFamilies2 = [4]
 
-    const result1 = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(ALARMS, ipAddressFamilies1, AGGREGATED_ATTRS_ZIPPED);
-    const result2 = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(ALARMS, ipAddressFamilies2, AGGREGATED_ATTRS_ZIPPED);
+    const result1 = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(
+      ALARMS,
+      ipAddressFamilies1,
+      AGGREGATED_ATTRS_ZIPPED
+    )
+    const result2 = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(
+      ALARMS,
+      ipAddressFamilies2,
+      AGGREGATED_ATTRS_ZIPPED
+    )
 
     const expectedResult1 = [
       {
@@ -2853,24 +2789,36 @@ describe('filterAlarmsByIpAddressFamily', () => {
     ]
     expect(result1).toEqual(expectedResult1)
     expect(result2).toEqual(ALARMS)
-  });
+  })
 
   it('should filter alarms by multiple ip address families and aggregated attributes', () => {
     const ipAddressFamilies = ['4', '6']
-    const result = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(ALARMS, ipAddressFamilies, AGGREGATED_ATTRS_ZIPPED);
-    expect(result).toEqual(ALARMS);
-  });
+    const result = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(
+      ALARMS,
+      ipAddressFamilies,
+      AGGREGATED_ATTRS_ZIPPED
+    )
+    expect(result).toEqual(ALARMS)
+  })
 
   it('should return an empty array if no alarms match the ip address family', () => {
     const ipAddressFamilies = [null]
-    const result = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(ALARMS, ipAddressFamilies, AGGREGATED_ATTRS_ZIPPED);
-    expect(result).toHaveLength(0);
-  });
+    const result = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(
+      ALARMS,
+      ipAddressFamilies,
+      AGGREGATED_ATTRS_ZIPPED
+    )
+    expect(result).toHaveLength(0)
+  })
 
   it('should handle edge case with no aggregated attributes', () => {
     const ipAddressFamilies = ['4']
-    const emptyAggregatedAttrs = [];
-    const result = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(ALARMS, ipAddressFamilies, emptyAggregatedAttrs);
-    expect(result).toHaveLength(0);
-  });
+    const emptyAggregatedAttrs = []
+    const result = AggregatedAlarmsDataModel.filterAlarmsByIpAddressFamily(
+      ALARMS,
+      ipAddressFamilies,
+      emptyAggregatedAttrs
+    )
+    expect(result).toHaveLength(0)
+  })
 })

@@ -14,10 +14,25 @@ const rankings = ref({
   data: [],
   show: true,
   loading: true,
-  query: 'MATCH (:AS {asn: $asn})-[r:RANK]->(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank',
+  query:
+    'MATCH (:AS {asn: $asn})-[r:RANK]->(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank',
   columns: [
-    { name: 'Rank', label: 'Rank', align: 'left', field: row => row.rank, format: val => `${val}`, sortable: true },
-    { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+    {
+      name: 'Rank',
+      label: 'Rank',
+      align: 'left',
+      field: (row) => row.rank,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Name',
+      label: 'Name',
+      align: 'left',
+      field: (row) => row.name,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -36,26 +51,27 @@ const load = () => {
   rankings.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run([{statement: rankings.value.query, parameters: query_params}]).then(
-    results => {
-      rankings.value.data = results[0]
-      rankings.value.loading = false
-      let showRadar = false
-      results[0].forEach(element => {
-        if (element.rank < 100) {
-          showRadar = true
-        }
-      })
-      if (!showRadar) {
-        rankings.value.show = false
+  iyp_api.run([{ statement: rankings.value.query, parameters: query_params }]).then((results) => {
+    rankings.value.data = results[0]
+    rankings.value.loading = false
+    let showRadar = false
+    results[0].forEach((element) => {
+      if (element.rank < 100) {
+        showRadar = true
       }
+    })
+    if (!showRadar) {
+      rankings.value.show = false
     }
-  )
+  })
 }
 
-watch(() => props.asNumber, () => {
-  load()
-})
+watch(
+  () => props.asNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -71,10 +87,15 @@ onMounted(() => {
     :slot-length="rankings.show ? 1 : 0"
   >
     <IypGenericRadarChart
-      v-if="rankings.data.length > 0  && rankings.show"
-      :chart-data="rankings.data.map(val => ({r: -val.rank, theta: val.name})).slice(1, 11)"
+      v-if="rankings.data.length > 0 && rankings.show"
+      :chart-data="rankings.data.map((val) => ({ r: -val.rank, theta: val.name })).slice(1, 11)"
       :chart-layout="layout"
-    :config="{name: 'Rankings', hovermode: 'closest', customdata: rankings.data.map(val => ({rank: String(val.rank)})).slice(1, 11), hovertemplate: '<b>Rank:</b> %{customdata.rank}<br><b>Name:</b> %{theta}<br><extra></extra>'}"
+      :config="{
+        name: 'Rankings',
+        hovermode: 'closest',
+        customdata: rankings.data.map((val) => ({ rank: String(val.rank) })).slice(1, 11),
+        hovertemplate: '<b>Rank:</b> %{customdata.rank}<br><b>Name:</b> %{theta}<br><extra></extra>'
+      }"
     />
   </IypGenericTable>
 </template>

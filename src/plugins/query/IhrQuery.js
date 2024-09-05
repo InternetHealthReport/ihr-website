@@ -14,7 +14,7 @@ const _STRING_SEPARATOR = '|'
 const _DEFAULT_SEPARATOR = ','
 const AS_FAMILY = {
   v4: 4,
-  v6: 6,
+  v6: 6
 }
 const _NETWORK_DELAY_EDGE_TYPE = {
   AS: 'AS',
@@ -22,7 +22,7 @@ const _NETWORK_DELAY_EDGE_TYPE = {
   IP: 'IP',
   IXP: 'IX',
   PB: 'PB',
-  LM: 'LM',
+  LM: 'LM'
 }
 
 // exceptions
@@ -92,7 +92,8 @@ class QueryBase {
 
   toUrl() {
     let str = []
-    for (let param in this.filter) str.push(`${encodeURIComponent(param)}=${encodeURIComponent(this.filter[param])}`)
+    for (let param in this.filter)
+      str.push(`${encodeURIComponent(param)}=${encodeURIComponent(this.filter[param])}`)
     return `${this.constructor.ENTRY_POINT}?${str.join('&')}`
   }
 
@@ -104,7 +105,7 @@ class QueryBase {
 /** @brief all allowed filters in ihr-api
  */
 class Query extends QueryBase {
-  constructor(dictionary = {format: 'json'}) {
+  constructor(dictionary = { format: 'json' }) {
     super()
     this.filter = dictionary
   }
@@ -947,7 +948,7 @@ class NetworkDelayAlarmsQuery extends TimeQuery {
    */
   _pointKey(endpoint_key, query_param) {
     if (endpoint_key instanceof Array) {
-      endpoint_key = endpoint_key.map(elem => elem.toString())
+      endpoint_key = endpoint_key.map((elem) => elem.toString())
     } else {
       endpoint_key = endpoint_key.toString()
     }
@@ -1082,7 +1083,7 @@ class NetworkDelayQuery extends TimeQuery {
    */
   _pointKey(endpoint_key, query_param) {
     if (endpoint_key instanceof Array) {
-      endpoint_key = endpoint_key.map(elem => elem.toString())
+      endpoint_key = endpoint_key.map((elem) => elem.toString())
     } else {
       endpoint_key = endpoint_key.toString()
     }
@@ -1336,5 +1337,5 @@ export {
   NetworkDelayAlarmsQuery,
   NetworkDelayLocation,
   MetisAtlasSelectionQuery,
-  MetisAtlasDeploymentQuery,
+  MetisAtlasDeploymentQuery
 }

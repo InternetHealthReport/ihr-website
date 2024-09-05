@@ -506,7 +506,7 @@ var countryISOMapping = {
 
 function getCountryISOCode3(countryIsoCode2) {
   return countryISOMapping[countryIsoCode2]
-};
+}
 
 export default function getCountryName(countryIsoCode2) {
   return isoCountries[countryIsoCode2]

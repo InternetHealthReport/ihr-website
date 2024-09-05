@@ -1,13 +1,13 @@
 <script setup>
-import { ref, inject, watchEffect, watch, onMounted } from "vue"
-import { QBtn, QDialog, QCard, QCardSection, QCardActions, QExpansionItem } from "quasar"
-import dagre from "dagre"
-import RipeApi from "../plugins/RipeApi"
-import TracerouteChart from "@/components/charts/TracerouteChart.vue"
-import TracerouteRttChart from "@/components/charts/TracerouteRttChart.vue"
-import TracerouteProbesTable from "@/components/tables/TracerouteProbesTable.vue"
-import TracerouteDestinationsTable from "@/components/tables/TracerouteDestinationsTable.vue"
-import { convertUnixTimestamp, isPrivateIP, calculateMedian } from "../plugins/tracerouteFunctions"
+import { ref, inject, watchEffect, watch, onMounted } from 'vue'
+import { QBtn, QDialog, QCard, QCardSection, QCardActions, QExpansionItem } from 'quasar'
+import dagre from 'dagre'
+import RipeApi from '../plugins/RipeApi'
+import TracerouteChart from '@/components/charts/TracerouteChart.vue'
+import TracerouteRttChart from '@/components/charts/TracerouteRttChart.vue'
+import TracerouteProbesTable from '@/components/tables/TracerouteProbesTable.vue'
+import TracerouteDestinationsTable from '@/components/tables/TracerouteDestinationsTable.vue'
+import { convertUnixTimestamp, isPrivateIP, calculateMedian } from '../plugins/tracerouteFunctions'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const props = defineProps({
@@ -20,14 +20,14 @@ const props = defineProps({
   }
 })
 
-const atlas_api = inject("atlas_api")
+const atlas_api = inject('atlas_api')
 const isLoading = ref(false)
-const measurementID = ref("")
+const measurementID = ref('')
 const nodes = ref({})
 const edges = ref({})
 const timeRange = ref({ disable: true })
-const leftLabelValue = ref("")
-const rightLabelValue = ref("")
+const leftLabelValue = ref('')
+const rightLabelValue = ref('')
 const nodeSize = 15
 const selectedProbes = ref([])
 const allProbes = ref([])
@@ -45,16 +45,16 @@ const ipToAsnMap = ref({})
 const rttOverTime = ref([])
 const intervalValue = ref(null)
 const loadMeasurementErrorDialog = ref(false)
-const loadMeasurementErrorMessage = ref("")
+const loadMeasurementErrorMessage = ref('')
 
 const handleLoadMeasurementError = (error) => {
-  loadMeasurementErrorMessage.value = error.message || "An unexpected error occurred."
+  loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
   loadMeasurementErrorDialog.value = true
 }
 
 const processData = async (tracerouteData, loadProbes = false) => {
   const g = new dagre.graphlib.Graph()
-  g.setGraph({ rankdir: "LR", nodesep: 290, edgesep: 150, ranksep: 1000 })
+  g.setGraph({ rankdir: 'LR', nodesep: 290, edgesep: 150, ranksep: 1000 })
   g.setDefaultEdgeLabel(() => ({}))
 
   const nonResponsiveNodes = new Set()
@@ -68,7 +68,12 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     const sourceNodeId = probeData.from
     if (!g.hasNode(sourceNodeId)) {
-      g.setNode(sourceNodeId, { label: sourceNodeId, width: nodeSize, height: nodeSize, isProbe: true })
+      g.setNode(sourceNodeId, {
+        label: sourceNodeId,
+        width: nodeSize,
+        height: nodeSize,
+        isProbe: true
+      })
     }
 
     let lastNodeId = sourceNodeId
@@ -80,7 +85,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
         allProbes.value.push(probeData.prb_id.toString())
         selectedProbes.value.push(probeData.prb_id.toString())
       }
-      atlas_api.getProbeById(probeData.prb_id.toString()).then(data => {
+      atlas_api.getProbeById(probeData.prb_id.toString()).then((data) => {
         probeDetailsMap.value[probeData.prb_id.toString()] = data.data
       })
     }
@@ -98,7 +103,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
         let currentIp = result.from || result.x
         let isNonResponsive = false
 
-        if (currentIp === "*") {
+        if (currentIp === '*') {
           consecutiveStarCount++
           if (consecutiveStarCount > 1) return
           currentIp += `-${probeIndex}-${hopIndex}-${resultIndex}`
@@ -115,17 +120,17 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
         const nodeInfo = g.node(currentIp) || {}
         const newNodeInfo = {
-          label: currentIp.replace(/-\d+-\d+-\d+$/, ""),
+          label: currentIp.replace(/-\d+-\d+-\d+$/, ''),
           width: nodeSize,
           height: nodeSize,
           isNonResponsive,
           isPrivate: isPrivateIP(currentIp),
           hops: nodeInfo.hops || [],
-          asn: nodeInfo.asn || "unknown",
+          asn: nodeInfo.asn || 'unknown'
         }
 
         if (!newNodeInfo.isNonResponsive) {
-          const asnPromise = RipeApi.userASN(newNodeInfo.label).then(asnData => {
+          const asnPromise = RipeApi.userASN(newNodeInfo.label).then((asnData) => {
             const asn = asnData.data.data.asns[0]
             if (asn) {
               if (!asnList.value.includes(asn)) {
@@ -140,21 +145,26 @@ const processData = async (tracerouteData, loadProbes = false) => {
           from: result.from,
           rtt: result.rtt,
           size: result.size,
-          ttl: result.ttl,
+          ttl: result.ttl
         })
 
         if (result.rtt !== undefined && result.rtt !== null) {
           rttOverTime.value.push({ timestamp: probeData.timestamp, rtt: result.rtt })
         }
 
-        const medianRtt = calculateMedian(newNodeInfo.hops.map(hop => hop.rtt))
+        const medianRtt = calculateMedian(newNodeInfo.hops.map((hop) => hop.rtt))
         if (medianRtt > highestMedianRtt) {
           highestMedianRtt = medianRtt
         }
 
         g.setNode(currentIp, newNodeInfo)
 
-        if (lastNodeId && currentIp && lastNodeId !== currentIp && !g.hasEdge(currentIp, lastNodeId)) {
+        if (
+          lastNodeId &&
+          currentIp &&
+          lastNodeId !== currentIp &&
+          !g.hasEdge(currentIp, lastNodeId)
+        ) {
           if (!g.hasEdge(lastNodeId, currentIp)) {
             g.setEdge(lastNodeId, currentIp)
             if (!outgoingEdges.has(lastNodeId)) {
@@ -174,10 +184,10 @@ const processData = async (tracerouteData, loadProbes = false) => {
     }
   })
 
-  nonResponsiveNodes.forEach(nodeId => {
-      if (!outgoingEdges.has(nodeId)) {
-          g.removeNode(nodeId)
-      }
+  nonResponsiveNodes.forEach((nodeId) => {
+    if (!outgoingEdges.has(nodeId)) {
+      g.removeNode(nodeId)
+    }
   })
 
   dagre.layout(g)
@@ -186,15 +196,15 @@ const processData = async (tracerouteData, loadProbes = false) => {
   const edgesMap = {}
   const layouts = { nodes: {} }
 
-  g.nodes().forEach(nodeId => {
-      const nodeInfo = g.node(nodeId)
-      nodesMap[nodeId] = { name: nodeInfo.label, ...nodeInfo }
-      layouts.nodes[nodeId] = { x: nodeInfo.x, y: nodeInfo.y }
+  g.nodes().forEach((nodeId) => {
+    const nodeInfo = g.node(nodeId)
+    nodesMap[nodeId] = { name: nodeInfo.label, ...nodeInfo }
+    layouts.nodes[nodeId] = { x: nodeInfo.x, y: nodeInfo.y }
   })
 
-  g.edges().forEach(edge => {
-      const edgeInfo = g.edge(edge)
-      edgesMap[`${edge.v}-${edge.w}`] = { source: edge.v, target: edge.w }
+  g.edges().forEach((edge) => {
+    const edgeInfo = g.edge(edge)
+    edgesMap[`${edge.v}-${edge.w}`] = { source: edge.v, target: edge.w }
   })
 
   nodes.value = nodesMap
@@ -211,9 +221,11 @@ const updateDisplayedRttValues = () => {
   let maxRtt = -Infinity
   let destinationNodeMedianRtt = null
 
-  Object.values(nodes.value).forEach(node => {
+  Object.values(nodes.value).forEach((node) => {
     if (node.hops && node.hops.length > 0) {
-      const medianRtt = calculateMedian(node.hops.map(hop => hop.rtt).filter(rtt => rtt !== undefined))
+      const medianRtt = calculateMedian(
+        node.hops.map((hop) => hop.rtt).filter((rtt) => rtt !== undefined)
+      )
       if (medianRtt !== null) {
         minRtt = Math.min(minRtt, medianRtt)
         if (node.isLastHop) {
@@ -224,32 +236,36 @@ const updateDisplayedRttValues = () => {
   })
 
   minDisplayedRtt.value = minRtt === Infinity ? null : minRtt
-  maxDisplayedRtt.value = destinationNodeMedianRtt !== null ? destinationNodeMedianRtt : (maxRtt === -Infinity ? null : maxRtt)
+  maxDisplayedRtt.value =
+    destinationNodeMedianRtt !== null
+      ? destinationNodeMedianRtt
+      : maxRtt === -Infinity
+        ? null
+        : maxRtt
 }
 
 watch(nodes, updateDisplayedRttValues)
-
 
 const loadMeasurement = async () => {
   measurementID.value = props.atlasMeasurementID
   nodes.value = {}
   edges.value = {}
-  
+
   metaData.value = {}
   timeRange.value = { disable: true }
-  leftLabelValue.value = ""
-  rightLabelValue.value = ""
-  
+  leftLabelValue.value = ''
+  rightLabelValue.value = ''
+
   selectedProbes.value = []
   allProbes.value = []
   probeDetailsMap.value = {}
-  
+
   layoutNodes.value = { nodes: {} }
   selectedDestinations.value = []
   allDestinations.value = []
   asnList.value = []
   ipToAsnMap.value = {}
-  
+
   rttOverTime.value = []
   intervalValue.value = null
 
@@ -260,14 +276,14 @@ const loadMeasurement = async () => {
 
       metaData.value = fetchedMetaData
 
-      if (fetchedMetaData.status.name === "Ongoing") {
+      if (fetchedMetaData.status.name === 'Ongoing') {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
 
       let startTime = fetchedMetaData.start_time
       const stopTime = fetchedMetaData.stop_time
 
-      if ((stopTime - startTime) > 24 * 3600) {
+      if (stopTime - startTime > 24 * 3600) {
         startTime = stopTime - 24 * 3600
       }
 
@@ -313,18 +329,20 @@ const loadMeasurementData = async (loadProbes = false) => {
       }
 
       if (selectedProbes.value.length > 0) {
-        params.probe_ids = selectedProbes.value.join(",")
+        params.probe_ids = selectedProbes.value.join(',')
       }
 
       const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
 
-      const filteredData = data.filter(item => 
-        selectedDestinations.value.length === 0 || selectedDestinations.value.includes(item.dst_addr)
+      const filteredData = data.filter(
+        (item) =>
+          selectedDestinations.value.length === 0 ||
+          selectedDestinations.value.includes(item.dst_addr)
       )
-      
+
       processData(filteredData, loadProbes)
     } catch (error) {
-      console.error("Failed to load measurement data:", error)
+      console.error('Failed to load measurement data:', error)
     } finally {
       isLoading.value = false
     }
@@ -385,9 +403,12 @@ const setSelectedDestinations = (value) => {
   selectedDestinations.value = value
 }
 
-watch(() => props.atlasMeasurementID, () => {
-  loadMeasurement()
-})
+watch(
+  () => props.atlasMeasurementID,
+  () => {
+    loadMeasurement()
+  }
+)
 </script>
 
 <template>
@@ -413,11 +434,7 @@ watch(() => props.atlasMeasurementID, () => {
       :asnList="asnList"
       @updateDisplayedRttValues="updateDisplayedRttValues"
     />
-    <QExpansionItem
-      :default-opened="props.openOptions"
-      icon="tune"
-      label="Options"
-    >
+    <QExpansionItem :default-opened="props.openOptions" icon="tune" label="Options">
       <GenericCardController
         :title="$t('tracerouteMonitorRtt.title')"
         :sub-title="$t('tracerouteMonitorRtt.subTitle')"
@@ -425,7 +442,7 @@ watch(() => props.atlasMeasurementID, () => {
         :info-description="$t('tracerouteMonitorRtt.info.description')"
         class="cardTraceroute"
       >
-        <TracerouteRttChart 
+        <TracerouteRttChart
           :intervalValue="intervalValue"
           :timeRange="timeRange"
           :metaData="metaData"
@@ -472,7 +489,7 @@ watch(() => props.atlasMeasurementID, () => {
 </template>
 
 <style scoped>
-.cardTraceroute{
+.cardTraceroute {
   margin-bottom: 20px;
 }
 </style>

@@ -1,5 +1,15 @@
 <script setup>
-import { QSpinner, QCard, QCardSection, QBtn, QTabs, QTab, QTabPanels, QTabPanel, extend } from 'quasar'
+import {
+  QSpinner,
+  QCard,
+  QCardSection,
+  QBtn,
+  QTabs,
+  QTab,
+  QTabPanels,
+  QTabPanel,
+  extend
+} from 'quasar'
 import { ref, inject, onBeforeMount, onMounted, computed, watch, nextTick } from 'vue'
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { AS_INTERDEPENDENCIES_LAYOUT } from '@/plugins/layouts/layoutsChart'
@@ -25,30 +35,43 @@ const DEFAULT_TRACE = [
     yaxis: 'y2',
     name: t('charts.asInterdependencies.defaultTrace'),
     showlegend: false,
-    hovertemplate: '%{x}<br>' + '%{yaxis.title.text}: <b>%{y:.2f}</b>' + '<extra></extra>',
-  },
+    hovertemplate: '%{x}<br>' + '%{yaxis.title.text}: <b>%{y:.2f}</b>' + '<extra></extra>'
+  }
 ]
 
 const timeResolution = 900 * 1000
 
-const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+]
 
 const props = defineProps({
   asNumber: {
     type: Number,
-    required: true,
+    required: true
   },
   addressFamily: {
     type: Number,
-    default: AS_FAMILY.v4,
+    default: AS_FAMILY.v4
   },
   clear: {
     type: Number,
-    default: 1,
+    default: 1
   },
   noTable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   startTime: {
     type: Object,
@@ -69,10 +92,10 @@ const details = ref({
   date: props.endTime,
   tablesData: {
     dependency: null,
-    dependent: null,
+    dependent: null
   },
   tableVisible: false,
-  enableBgpPlay: false,
+  enableBgpPlay: false
 })
 const loadingHegemony = ref(true)
 const loadingHegemonyCone = ref(true)
@@ -80,7 +103,7 @@ const hegemonyFilter = ref(null)
 const hegemonyTier1Filter = ref(null)
 const hegemonyConeFilter = ref(null)
 const traces = ref(DEFAULT_TRACE)
-const layout = ref({...AS_INTERDEPENDENCIES_LAYOUT})
+const layout = ref({ ...AS_INTERDEPENDENCIES_LAYOUT })
 const loadingNeighbours = ref(true)
 const neighbours = ref([])
 const loading = ref(true)
@@ -104,7 +127,7 @@ const makeHegemonyFilter = () => {
 }
 
 const makeHegemonyTier1Filter = () => {
-    return new HegemonyQuery()
+  return new HegemonyQuery()
     .originAs(1299)
     .asNumber(1299)
     .addressFamily(props.addressFamily)
@@ -120,7 +143,7 @@ const makeHegemonyConeFilter = () => {
     .orderedByTime()
 }
 
-const apiCall = async() => {
+const apiCall = async () => {
   if (props.asNumber == 0) {
     return
   }
@@ -140,8 +163,8 @@ const apiCall = async() => {
 }
 
 const getNeighboursData = () => {
-  ripeApi.asnNeighbours(props.asNumber).then(res => {
-    res.data.data.neighbours.forEach(neighbour => {
+  ripeApi.asnNeighbours(props.asNumber).then((res) => {
+    res.data.data.neighbours.forEach((neighbour) => {
       neighbours.value.push(neighbour.asn)
     })
     loadingNeighbours.value = false
@@ -199,12 +222,12 @@ const showTable = (table, selectedDate) => {
   details.value.tablesData['dependency'] = {
     data: [],
     loading: true,
-    filter: dependencyFilter,
+    filter: dependencyFilter
   }
   details.value.tablesData['dependent'] = {
     data: [],
     loading: true,
-    filter: dependentFilter,
+    filter: dependentFilter
   }
   details.value.tableVisible = true
   if (!loadingNeighbours.value) {
@@ -216,12 +239,12 @@ const showTable = (table, selectedDate) => {
 const updateTable = (tableType, hegemonyComparator, filter, intervalStart, intervalEnd) => {
   ihr_api.hegemony(
     filter,
-    results => {
+    (results) => {
       if (intervalStart != intervalEnd) {
         let startString = intervalStart.toISOString().replace('.000', '')
         let data = {}
         let res = []
-        results.results.forEach(elem => {
+        results.results.forEach((elem) => {
           let asn = elem[hegemonyComparator]
           if (asn != 0) {
             if (elem.timebin == startString) {
@@ -248,14 +271,13 @@ const updateTable = (tableType, hegemonyComparator, filter, intervalStart, inter
         results.results = res
       }
 
-
       details.value.tablesData[tableType] = {
         data: results.results,
         loading: false,
-        filter: filter,
+        filter: filter
       }
     },
-    error => {
+    (error) => {
       console.error(error) //TODO better error handling
     }
   )
@@ -265,33 +287,33 @@ const queryHegemonyAPI = () => {
   loadingHegemony.value = true
   ihr_api.hegemony(
     hegemonyFilter.value,
-    result => {
+    (result) => {
       fetchHegemony(result.results)
       loadingHegemony.value = false
       loading.value = loadingHegemony.value || loadingHegemonyCone.value
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
     }
   )
 }
 
-const queryHegemonyTier1API = async() => {
+const queryHegemonyTier1API = async () => {
   try {
     const result = await new Promise((resolve, reject) => {
       ihr_api.hegemony(
         hegemonyTier1Filter.value,
-        result => {
-          resolve(result);
+        (result) => {
+          resolve(result)
         },
-        error => {
-          reject(error);
+        (error) => {
+          reject(error)
         }
-      );
-    });
-    if(result.results.length > 0) noDataError.value = false
+      )
+    })
+    if (result.results.length > 0) noDataError.value = false
   } catch (error) {
-    console.error(error); //FIXME do a correct alert
+    console.error(error) //FIXME do a correct alert
   }
 }
 
@@ -299,12 +321,12 @@ const queryHegemonyConeAPI = () => {
   loadingHegemonyCone.value = true
   ihr_api.hegemony_cone(
     hegemonyConeFilter.value,
-    result => {
+    (result) => {
       fetchHegemonyCone(result.results)
       loadingHegemonyCone.value = false
       loading.value = loadingHegemony.value || loadingHegemonyCone.value
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
     }
   )
@@ -316,7 +338,7 @@ const fetchHegemony = (data) => {
 
   let anotherAsn
   let minX, maxX
-  if (noDataError.value){
+  if (noDataError.value) {
     traces.value = extend(true, [], DEFAULT_TRACE)
     layout.value.annotations = [
       {
@@ -327,8 +349,8 @@ const fetchHegemony = (data) => {
         text: 'No Data Available',
         showarrow: false,
         font: {
-          size: 22,
-        },
+          size: 22
+        }
       },
       {
         x: 0.5,
@@ -338,13 +360,12 @@ const fetchHegemony = (data) => {
         text: 'No Data Available',
         showarrow: false,
         font: {
-          size: 22,
-        },
-      },
+          size: 22
+        }
+      }
     ]
     return
-  }
-  else if (data.length == 0) {
+  } else if (data.length == 0) {
     traces.value = extend(true, [], DEFAULT_TRACE)
     layout.value.annotations = [
       {
@@ -355,8 +376,8 @@ const fetchHegemony = (data) => {
         text: 'Network is Unreachable',
         showarrow: false,
         font: {
-          size: 22,
-        },
+          size: 22
+        }
       },
       {
         x: 0.5,
@@ -366,14 +387,14 @@ const fetchHegemony = (data) => {
         text: 'Network is Unreachable',
         showarrow: false,
         font: {
-          size: 22,
-        },
-      },
+          size: 22
+        }
+      }
     ]
     return
   } else if (data.length > 0) {
     let noDependency = false
-    data.forEach(elem => {
+    data.forEach((elem) => {
       if (elem.originasn == 0) {
         noDependency = true
       }
@@ -388,14 +409,14 @@ const fetchHegemony = (data) => {
           text: 'No dependency',
           showarrow: false,
           font: {
-            size: 22,
-          },
-        },
+            size: 22
+          }
+        }
       ]
     }
   }
 
-  data.forEach(elem => {
+  data.forEach((elem) => {
     if (elem.asn == props.asNumber) {
       return
     }
@@ -420,7 +441,7 @@ const fetchHegemony = (data) => {
           '%{x}<br>' +
           '%{yaxis.title.text}: <b>%{y:.2f}%</b>' +
           '<extra></extra>',
-        connectgaps: false,
+        connectgaps: false
       }
       if (elem.hege === 1) {
         trace.name = trace.name + ' (direct)'
@@ -448,7 +469,7 @@ const fetchHegemony = (data) => {
       if (anotherAsn === elem.asn) {
         missingDataList.push({
           start: trace.x.slice(-1)[0],
-          end: elem.timebin,
+          end: elem.timebin
         })
       }
 
@@ -465,11 +486,11 @@ const fetchHegemony = (data) => {
 
   let shapeList = []
 
-  missingDataList.forEach(interval => {
+  missingDataList.forEach((interval) => {
     const intervalStartTime = new Date(interval.start).getTime()
     const intervalEndTime = new Date(interval.end).getTime()
     let skip = false
-    data.forEach(elem => {
+    data.forEach((elem) => {
       const elemTime = new Date(elem.timebin).getTime()
       if (elemTime > intervalStartTime && elemTime < intervalEndTime) {
         skip = true
@@ -491,8 +512,8 @@ const fetchHegemony = (data) => {
       fillcolor: '#d3d3d3',
       opacity: 0.2,
       line: {
-        width: 0,
-      },
+        width: 0
+      }
     })
     let prevDate = new Date(interval.start).getTime()
     let currDate = new Date(interval.end).getTime()
@@ -504,7 +525,7 @@ const fetchHegemony = (data) => {
       text: ['no data'],
       x: [d.toISOString()],
       y: [15],
-      showlegend: false,
+      showlegend: false
     }
     traces.value.push(noDataTrace)
   })
@@ -608,7 +629,7 @@ const fetchHegemonyCone = (data) => {
   if (traceLocal === undefined) {
     return
   }
-  data.forEach(resp => {
+  data.forEach((resp) => {
     let prevDate = new Date(traceLocal.x.slice(-1)[0])
     let currDate = new Date(resp.timebin)
 
@@ -637,7 +658,7 @@ const clearGraph = () => {
 }
 
 const getDateFormat = (chosenTime) => {
-  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${("0" + chosenTime.getUTCHours()).slice(-2)}:${("0" + chosenTime.getUTCMinutes()).slice(-2)}`
+  return `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${('0' + chosenTime.getUTCHours()).slice(-2)}:${('0' + chosenTime.getUTCMinutes()).slice(-2)}`
 }
 
 const bgplay = computed(() => {
@@ -672,13 +693,13 @@ const dateStr = computed(() => {
 })
 
 const networkDependencyData = computed(() => {
-  return details.value.tablesData.dependency.data.filter(elem => {
+  return details.value.tablesData.dependency.data.filter((elem) => {
     return elem.asn != props.asNumber
   })
 })
 
 const dependentNetworksData = computed(() => {
-  return details.value.tablesData.dependent.data.filter(elem => {
+  return details.value.tablesData.dependent.data.filter((elem) => {
     return elem.originasn != props.asNumber
   })
 })
@@ -706,29 +727,41 @@ const dependentUrl = computed(() => {
 //   apiCall()
 //   details.value.tableVisible = false
 // })
-watch(() => details.value.activeTab, (newValue) => {
-  router.push({
-    replace: true,
-    query: Object.assign({}, route.query, { hege_tb: newValue })
-  })
-})
-watch(() => details.value.date, (newValue) => {
-  const str = newValue.toISOString().slice(0, 16).replace('T', ' ')
-  router.push({
-    replace: true,
-    query: Object.assign({}, route.query, { hege_dt: str })
-  })
-})
-watch(() => props.clear, () => {
-  clearGraph()
-  nextTick(() => {
-    loading.value = false
-  })
-})
-watch(() => props.endTime, () => {
-  apiCall()
-  tableFromQuery()
-})
+watch(
+  () => details.value.activeTab,
+  (newValue) => {
+    router.push({
+      replace: true,
+      query: Object.assign({}, route.query, { hege_tb: newValue })
+    })
+  }
+)
+watch(
+  () => details.value.date,
+  (newValue) => {
+    const str = newValue.toISOString().slice(0, 16).replace('T', ' ')
+    router.push({
+      replace: true,
+      query: Object.assign({}, route.query, { hege_dt: str })
+    })
+  }
+)
+watch(
+  () => props.clear,
+  () => {
+    clearGraph()
+    nextTick(() => {
+      loading.value = false
+    })
+  }
+)
+watch(
+  () => props.endTime,
+  () => {
+    apiCall()
+    tableFromQuery()
+  }
+)
 
 onBeforeMount(() => {
   updateAxesLabel()
@@ -752,12 +785,27 @@ onMounted(() => {
             <div class="text-h3">{{ getDateFormat(details.date) }}</div>
           </div>
           <div class="col-auto">
-            <QBtn class="IHR_table-close-button" size="sm" round flat @click="details.tableVisible = false" icon="fa fa-times-circle"></QBtn>
+            <QBtn
+              class="IHR_table-close-button"
+              size="sm"
+              round
+              flat
+              @click="details.tableVisible = false"
+              icon="fa fa-times-circle"
+            ></QBtn>
           </div>
         </div>
       </QCardSection>
-      <QTabs dense v-model="details.activeTab" class="table-card text-grey inset-shadow" indicator-color="secondary"
-        active-color="primary" active-bg-color="white" align="justify" narrow-indicator>
+      <QTabs
+        dense
+        v-model="details.activeTab"
+        class="table-card text-grey inset-shadow"
+        indicator-color="secondary"
+        active-color="primary"
+        active-bg-color="white"
+        align="justify"
+        narrow-indicator
+      >
         <QTab name="dependency" :label="$t('charts.asInterdependencies.table.dependencyTitle')" />
         <QTab name="dependent" :label="$t('charts.asInterdependencies.table.dependentTitle')" />
         <QTab name="bgpPlay" label="AS Graph" />
@@ -765,10 +813,17 @@ onMounted(() => {
       </QTabs>
       <QTabPanels v-model="details.activeTab" animated>
         <QTabPanel name="dependency">
-          <AsInterdependenciesTable :data="networkDependencyData" :loading="details.tablesData.dependency.loading" />
+          <AsInterdependenciesTable
+            :data="networkDependencyData"
+            :loading="details.tablesData.dependency.loading"
+          />
         </QTabPanel>
         <QTabPanel name="dependent">
-          <AsInterdependenciesTable :data="dependentNetworksData" use-origin-asn :loading="details.tablesData.dependent.loading" />
+          <AsInterdependenciesTable
+            :data="dependentNetworksData"
+            use-origin-asn
+            :loading="details.tablesData.dependent.loading"
+          />
         </QTabPanel>
         <QTabPanel name="bgpPlay">
           <div class="bgplay-container">

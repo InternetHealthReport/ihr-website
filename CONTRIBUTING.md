@@ -394,5 +394,10 @@ Our website uses the following libraries:
 
 ## Code Style
 
+run the following command:
+
+```
+npm run format
+```
 
 ## Testing

@@ -18,17 +18,17 @@ const props = defineProps({
   },
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   filter: {
     type: String,
-    default: '',
+    default: ''
   }
 })
 
 const emit = defineEmits({
-  'filteredRows': (filteredSearchRowValues) => {
-    if(filteredSearchRowValues !== null) {
+  filteredRows: (filteredSearchRowValues) => {
+    if (filteredSearchRowValues !== null) {
       return true
     } else {
       console.warn('FilteredSearchRowValues is missing')
@@ -43,7 +43,7 @@ const pagination = ref({
   sortBy: 'allEyeball',
   descending: true,
   page: 1,
-  rowsPerPage: 10,
+  rowsPerPage: 10
 })
 const tabFilter = ref('')
 const columns = ref([
@@ -52,61 +52,63 @@ const columns = ref([
     required: true,
     label: 'ASN',
     align: 'center',
-    field: row => row.asn,
-    format: val => `AS${val}`,
-    sortable: true,
+    field: (row) => row.asn,
+    format: (val) => `AS${val}`,
+    sortable: true
   },
   {
     name: 'asName',
     required: true,
     label: 'Autonomous System Name',
     align: 'left',
-    field: row => {
+    field: (row) => {
       return row.asn_name == '' ? '--' : row.asn_name
     },
-    format: val => `${val}`,
-    sortable: true,
+    format: (val) => `${val}`,
+    sortable: true
   },
   {
     name: 'allEyeball',
     label: 'Population coverage',
     align: 'center',
-    field: row => row.hege_eye_all,
-    format: val => `${val.toFixed(1)}%`,
-    sortable: true,
+    field: (row) => row.hege_eye_all,
+    format: (val) => `${val.toFixed(1)}%`,
+    sortable: true
   },
   {
     name: 'eyeball',
     label: 'Direct',
     align: 'center',
-    field: row => row.eyeball,
-    format: val => `${val.toFixed(1)}%`,
-    sortable: true,
+    field: (row) => row.eyeball,
+    format: (val) => `${val.toFixed(1)}%`,
+    sortable: true
   },
   {
     name: 'transitingEyeball',
     label: 'Indirect',
     align: 'center',
-    field: row => row.hege_eye_transit,
-    format: val => `${val.toFixed(1)}%`,
-    sortable: true,
+    field: (row) => row.hege_eye_transit,
+    format: (val) => `${val.toFixed(1)}%`,
+    sortable: true
   },
   {
     name: 'transitingAs',
     label: 'AS coverage',
     align: 'center',
-    field: row => row.hege_as,
-    format: val => `${val.toFixed(1)}%`,
-    sortable: true,
+    field: (row) => row.hege_as,
+    format: (val) => `${val.toFixed(1)}%`,
+    sortable: true
   }
 ])
 
 const routeToAsn = (asn, row) => {
   asn = asn.field(row)
-  router.push(Tr.i18nRoute({
-    name: 'network',
-    params: { id: iht_api.ihr_NumberToAsOrIxp(asn) },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'network',
+      params: { id: iht_api.ihr_NumberToAsOrIxp(asn) }
+    })
+  )
 }
 
 const getClassByHegemony = (hegemony) => {
@@ -140,7 +142,9 @@ const getClassByHegemony = (hegemony) => {
             Population coverage
             <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
             <QTooltip max-width="360px">
-              <div v-html="$t(`documentationPage.sections.countryasdependency.description.1.body`)"></div>
+              <div
+                v-html="$t(`documentationPage.sections.countryasdependency.description.1.body`)"
+              ></div>
             </QTooltip>
           </h3>
         </QTh>
@@ -149,7 +153,9 @@ const getClassByHegemony = (hegemony) => {
             AS coverage
             <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
             <QTooltip max-width="360px">
-              <div v-html="$t(`documentationPage.sections.countryasdependency.description.2.body`)"></div>
+              <div
+                v-html="$t(`documentationPage.sections.countryasdependency.description.2.body`)"
+              ></div>
             </QTooltip>
           </h3>
         </QTh>
@@ -170,14 +176,22 @@ const getClassByHegemony = (hegemony) => {
       </QTr>
     </template>
     <template v-slot:body="props">
-      <QTr :props="props" @click.native="routeToAsn(props.colsMap.asNumber, props.row)" class="IHR_table-row">
+      <QTr
+        :props="props"
+        @click.native="routeToAsn(props.colsMap.asNumber, props.row)"
+        class="IHR_table-row"
+      >
         <QTd
           v-for="col in columns"
           :key="col.name"
           :props="props"
-          :class="col.name == 'allEyeball' || col.name == 'transitingAs' ? ['IHR_important-cell', getClassByHegemony(col.field(props.row))] : ''"
-          >
-            {{ col.format(col.field(props.row)) }}
+          :class="
+            col.name == 'allEyeball' || col.name == 'transitingAs'
+              ? ['IHR_important-cell', getClassByHegemony(col.field(props.row))]
+              : ''
+          "
+        >
+          {{ col.format(col.field(props.row)) }}
         </QTd>
       </QTr>
     </template>

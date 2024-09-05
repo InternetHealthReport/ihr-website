@@ -47,13 +47,13 @@ const IP_ADDRESS_FAMILIES = [
 const props = defineProps({
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   alarms: {
-    type: Array,
+    type: Array
   },
   aggregatedAttrsSelected: {
-    type: Object,
+    type: Object
   },
   countryName: {
     type: String
@@ -75,7 +75,7 @@ const props = defineProps({
   },
   filter: {
     type: String,
-    default: '',
+    default: ''
   },
   data: {
     type: Array,
@@ -84,34 +84,44 @@ const props = defineProps({
   },
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   endTime: {
     type: Date,
-    required: true,
+    required: true
   }
 })
 
-const emit = defineEmits(['country-clicked', 'asn-name-key-clicked', {
-  'filteredRows': (filteredSearchRowValues) => {
-    if (filteredSearchRowValues !== null) {
-      return true
-    } else {
-      console.warn('FilteredSearchRowValues is missing')
-      return false
+const emit = defineEmits([
+  'country-clicked',
+  'asn-name-key-clicked',
+  {
+    filteredRows: (filteredSearchRowValues) => {
+      if (filteredSearchRowValues !== null) {
+        return true
+      } else {
+        console.warn('FilteredSearchRowValues is missing')
+        return false
+      }
     }
   }
-}])
+])
 
 const { rows, dateHourShift, setRows } = commonTable(props, { emit })
 
-const columns = ref(ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_columns)
-const aggregatedColumns = ref(ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_aggregated_columns)
+const columns = ref(
+  ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata
+    .table_columns
+)
+const aggregatedColumns = ref(
+  ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata
+    .table_aggregated_columns
+)
 const pagination = ref({
   sortBy: 'total_count',
   descending: true,
   page: 1,
-  rowsPerPage: 10,
+  rowsPerPage: 10
 })
 const expandedRow = ref([])
 const toggle = ref({})
@@ -161,13 +171,32 @@ const onTreemapNodeClicked = (newNodeClickedLabel, key) => {
 
 const initTimeSeriesManually = (key, alarms, renderTimeSeries = true) => {
   const timeseriesRef = `${key}_timeseries`
-  refs[timeseriesRef].init(alarms, new Date(`${startTimeFormatted.value[key]}:00Z`), new Date(`${endTimeFormatted.value[key]}:00Z`), alarmTypeAggregatedAttrsSelected.value, selectedCountry.value[key], props.alarmTypeTitlesMap, selectedLegend.value[key].legend, true, renderTimeSeries)
+  refs[timeseriesRef].init(
+    alarms,
+    new Date(`${startTimeFormatted.value[key]}:00Z`),
+    new Date(`${endTimeFormatted.value[key]}:00Z`),
+    alarmTypeAggregatedAttrsSelected.value,
+    selectedCountry.value[key],
+    props.alarmTypeTitlesMap,
+    selectedLegend.value[key].legend,
+    true,
+    renderTimeSeries
+  )
 }
 
 const initTreeMapManually = (key, alarms, renderTreeMap = true) => {
   const treemapRef = `${key}_treemap`
-  const selectSeveritiesLevelsList = selectSeveritiesLevels.value[key].map(obj => obj.value)
-  refs[treemapRef].init(alarms, selectSeveritiesLevelsList, alarmTypeAggregatedAttrsSelected.value, selectedCountry.value[key], props.alarmTypeTitlesMap, selectedLegend.value[key].legend, true, renderTreeMap)
+  const selectSeveritiesLevelsList = selectSeveritiesLevels.value[key].map((obj) => obj.value)
+  refs[treemapRef].init(
+    alarms,
+    selectSeveritiesLevelsList,
+    alarmTypeAggregatedAttrsSelected.value,
+    selectedCountry.value[key],
+    props.alarmTypeTitlesMap,
+    selectedLegend.value[key].legend,
+    true,
+    renderTreeMap
+  )
 }
 
 const tableAlternativeKeyCurrent = () => {
@@ -180,7 +209,6 @@ const tableAlternativeKeyCurrent = () => {
 
 const onASNameKeyClicked = (asName, country) => {
   emit('asn-name-key-clicked', { country, asName })
-
 }
 
 const onASCountryKeyClicked = (country) => {
@@ -208,17 +236,35 @@ const getColumnLabel = (columnName) => {
 }
 
 const getAlternativeKeyEndPointNames = (endpoints, ipAddressFamilies, deviations, topN = 35) => {
-  return TableAggregatedAlarmsDataModel.getAlternativeKeyEndPointNames(endpoints, ipAddressFamilies, deviations, topN)
+  return TableAggregatedAlarmsDataModel.getAlternativeKeyEndPointNames(
+    endpoints,
+    ipAddressFamilies,
+    deviations,
+    topN
+  )
 }
 
 const getAlarmsCurrent = (tableAlarms) => {
-  return TableAggregatedAlarmsDataModel.aggregateAlarmsByAlternativeKey(tableAlarms, props.selectedTableAlarmType, alternativeKey.value, ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].columns)
+  return TableAggregatedAlarmsDataModel.aggregateAlarmsByAlternativeKey(
+    tableAlarms,
+    props.selectedTableAlarmType,
+    alternativeKey.value,
+    ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].columns
+  )
 }
 
 const filterAlarmsHelper = (alarms, key) => {
-  const selectSeveritiesList = selectSeveritiesLevels.value[key].map(obj => obj.value)
-  const selectIPAddressFamiliesList = selectIPAddressFamilies.value[key].map(obj => obj.value)
-  const alarmsFiltered = AggregatedAlarmsDataModel.filterAlarms(alarms, new Date(`${startTimeFormatted.value[key]}:00Z`), new Date(`${endTimeFormatted.value[key]}:00Z`), props.aggregatedAttrsSelected, selectSeveritiesList, selectIPAddressFamiliesList, selectedCountry.value[key])
+  const selectSeveritiesList = selectSeveritiesLevels.value[key].map((obj) => obj.value)
+  const selectIPAddressFamiliesList = selectIPAddressFamilies.value[key].map((obj) => obj.value)
+  const alarmsFiltered = AggregatedAlarmsDataModel.filterAlarms(
+    alarms,
+    new Date(`${startTimeFormatted.value[key]}:00Z`),
+    new Date(`${endTimeFormatted.value[key]}:00Z`),
+    props.aggregatedAttrsSelected,
+    selectSeveritiesList,
+    selectIPAddressFamiliesList,
+    selectedCountry.value[key]
+  )
   return alarmsFiltered
 }
 
@@ -250,18 +296,29 @@ const getMeasurementProbeIds = (probeIds) => {
   return { 1030: probeIds, 1001: probeIds, 1591146: probeIds }
 }
 
-const getNetworkDisconnectionStartTime = (streamStartTime, streamDurationMinutes, minutesShiftedBefore = 120) => {
+const getNetworkDisconnectionStartTime = (
+  streamStartTime,
+  streamDurationMinutes,
+  minutesShiftedBefore = 120
+) => {
   return dateHourShift(streamStartTime, -Math.max(streamDurationMinutes, minutesShiftedBefore) / 60)
 }
 
-const getNetworkDisconnectionEndTime = (streamEndTime, streamDurationMinutes, minutesShiftedAfter = 120) => {
+const getNetworkDisconnectionEndTime = (
+  streamEndTime,
+  streamDurationMinutes,
+  minutesShiftedAfter = 120
+) => {
   return dateHourShift(streamEndTime, Math.max(streamDurationMinutes, minutesShiftedAfter) / 60)
 }
 
 const iodaEntityValue = (row, overviewColumn) => {
   const isCountry = iodaEntityFilteredByCountry(overviewColumn)
   if (isCountry) {
-    const countryIsoCode2 = alarmsTableDataFromModel.value[row.key_normalized][`${props.tableKeyCurrent}_country_iso_code2`][0]
+    const countryIsoCode2 =
+      alarmsTableDataFromModel.value[row.key_normalized][
+        `${props.tableKeyCurrent}_country_iso_code2`
+      ][0]
     return String(countryIsoCode2)
   } else {
     return String(row.key_normalized)
@@ -281,7 +338,7 @@ const initToggle = () => {
   selectedCountry.value = {}
   startTimeFormatted.value = {}
   endTimeFormatted.value = {}
-  rows.value.forEach(val => {
+  rows.value.forEach((val) => {
     for (const key in val) {
       toggle.value[`${val.key_normalized}_overview`] = false
       toggle.value[`${val.key_normalized}_asn_overview`] = false
@@ -301,13 +358,23 @@ const initToggle = () => {
 
 const setRef = (key) => {
   return (el) => {
-    refs[key] = el;
-  };
+    refs[key] = el
+  }
 }
 
 const init = () => {
   tableAlternativeKeyCurrent()
-  const [alarmsTableData, tableColumnsToInclude, tableAggregatedColumnsToInclude] = TableAggregatedAlarmsDataModel.etl(props.alarms, props.selectedTableAlarmType, props.selectedTableDataSource, columns.value, aggregatedColumns.value, props.tableKeyCurrent, alternativeKey.value, props.severitiesSelectedList)
+  const [alarmsTableData, tableColumnsToInclude, tableAggregatedColumnsToInclude] =
+    TableAggregatedAlarmsDataModel.etl(
+      props.alarms,
+      props.selectedTableAlarmType,
+      props.selectedTableDataSource,
+      columns.value,
+      aggregatedColumns.value,
+      props.tableKeyCurrent,
+      alternativeKey.value,
+      props.severitiesSelectedList
+    )
   setRows(Object.values(alarmsTableData))
   alarmsTableDataFromModel.value = alarmsTableData
   if (tableColumnsToInclude) {
@@ -320,7 +387,9 @@ const init = () => {
 }
 
 const alarmTypeAggregatedAttrsSelected = computed(() => {
-  const result = AggregatedAlarmsUtils.flattenDictionary(Object.keys(props.aggregatedAttrsSelected).map((attr) => ({ [attr]: [] })))
+  const result = AggregatedAlarmsUtils.flattenDictionary(
+    Object.keys(props.aggregatedAttrsSelected).map((attr) => ({ [attr]: [] }))
+  )
   for (let i = 0; i < props.aggregatedAttrsSelected.counts.length; i++) {
     const alarmType = props.aggregatedAttrsSelected.counts[i]
     if (alarmType.startsWith(props.selectedTableAlarmType)) {
@@ -333,55 +402,120 @@ const alarmTypeAggregatedAttrsSelected = computed(() => {
   return result
 })
 
-watch(() => props.alarms, () => {
-  columns.value = ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_columns
-  aggregatedColumns.value = ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_aggregated_columns
-  init()
-})
+watch(
+  () => props.alarms,
+  () => {
+    columns.value =
+      ALARMS_INFO[props.selectedTableDataSource].alarm_types[
+        props.selectedTableAlarmType
+      ].metadata.table_columns
+    aggregatedColumns.value =
+      ALARMS_INFO[props.selectedTableDataSource].alarm_types[
+        props.selectedTableAlarmType
+      ].metadata.table_aggregated_columns
+    init()
+  }
+)
 
-watch(() => props.selectedTableAlarmType, () => {
-  columns.value = ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_columns
-  aggregatedColumns.value = ALARMS_INFO[props.selectedTableDataSource].alarm_types[props.selectedTableAlarmType].metadata.table_aggregated_columns
-  init()
-}, { immediate: true })
-
+watch(
+  () => props.selectedTableAlarmType,
+  () => {
+    columns.value =
+      ALARMS_INFO[props.selectedTableDataSource].alarm_types[
+        props.selectedTableAlarmType
+      ].metadata.table_columns
+    aggregatedColumns.value =
+      ALARMS_INFO[props.selectedTableDataSource].alarm_types[
+        props.selectedTableAlarmType
+      ].metadata.table_aggregated_columns
+    init()
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
-  <QTable table-class="myClass" :rows="rows" :columns="[...columns, ...aggregatedColumns]" :pagination.sync="pagination"
-    :loading="loading" :filter="filter" flat loading-label="Loading Alarms ..."
-    :row-key="tableKeyCurrent" v-model:expanded="expandedRow">
+  <QTable
+    table-class="myClass"
+    :rows="rows"
+    :columns="[...columns, ...aggregatedColumns]"
+    :pagination.sync="pagination"
+    :loading="loading"
+    :filter="filter"
+    flat
+    loading-label="Loading Alarms ..."
+    :row-key="tableKeyCurrent"
+    v-model:expanded="expandedRow"
+  >
     <template v-slot:body="props">
       <QTr :props="props">
         <QTd v-for="(column, index) in columns" :key="column.name">
-          <div v-if="column.name.endsWith('overview')" :key="`${tableKeyCurrent}.${column.name}`"
-            :style="{ 'text-align': column.align }">
+          <div
+            v-if="column.name.endsWith('overview')"
+            :key="`${tableKeyCurrent}.${column.name}`"
+            :style="{ 'text-align': column.align }"
+          >
             <QToggle v-model="toggle[`${props.row.key_normalized}_${column.name}`]" />
           </div>
           <div v-else-if="column.name === tableKeyCurrent" :style="{ 'text-align': column.align }">
-            <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.key_normalized) } })">
+            <RouterLink
+              :to="
+                Tr.i18nRoute({
+                  name: 'network',
+                  params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.key_normalized) }
+                })
+              "
+            >
               {{ column.format(props.row[column.name], props.row) }}
             </RouterLink>
           </div>
-          <div v-else-if="column.name === `${tableKeyCurrent}_name`" :style="{ 'text-align': column.align }">
-            <a href="javascript:void(0)"
-              @click="onASNameKeyClicked(props.row.key_name_truncated, props.row[`${tableKeyCurrent}_country`])" flat no-caps>
+          <div
+            v-else-if="column.name === `${tableKeyCurrent}_name`"
+            :style="{ 'text-align': column.align }"
+          >
+            <a
+              href="javascript:void(0)"
+              @click="
+                onASNameKeyClicked(
+                  props.row.key_name_truncated,
+                  props.row[`${tableKeyCurrent}_country`]
+                )
+              "
+              flat
+              no-caps
+            >
               {{ column.format(props.row[column.name], props.row) }}
             </a>
           </div>
-          <div v-else-if="column.name === `${tableKeyCurrent}_country`" :style="{ 'text-align': column.align }">
-            <a href="javascript:void(0)" @click="onASCountryKeyClicked(props.row[column.name])" flat no-caps>
+          <div
+            v-else-if="column.name === `${tableKeyCurrent}_country`"
+            :style="{ 'text-align': column.align }"
+          >
+            <a
+              href="javascript:void(0)"
+              @click="onASCountryKeyClicked(props.row[column.name])"
+              flat
+              no-caps
+            >
               {{ column.format(props.row[column.name], props.row) }}
             </a>
           </div>
-          <div v-else-if="column.name === `${tableKeyCurrent}_country_iso_code3`" :style="{ 'text-align': column.align }">
+          <div
+            v-else-if="column.name === `${tableKeyCurrent}_country_iso_code3`"
+            :style="{ 'text-align': column.align }"
+          >
             {{ column.format(props.row[column.name], props.row) }}
           </div>
-          <div v-else-if="column.name === `${tableKeyCurrent}_af`" :style="{ 'text-align': column.align }">
+          <div
+            v-else-if="column.name === `${tableKeyCurrent}_af`"
+            :style="{ 'text-align': column.align }"
+          >
             {{ column.format(props.row[column.name], props.row) }}
           </div>
-          <div v-else-if="column.name === alternativeKey || column.is_comma_separated"
-            :style="{ 'text-align': column.align }">
+          <div
+            v-else-if="column.name === alternativeKey || column.is_comma_separated"
+            :style="{ 'text-align': column.align }"
+          >
             <div>{{ alternativeASNKeySubtitle(props.row[column.name], column.label) }}</div>
             <div class="alternative_key_body" v-html="props.row[column.name]"></div>
           </div>
@@ -389,8 +523,11 @@ watch(() => props.selectedTableAlarmType, () => {
             {{ column.format(props.row[column.name], props.row) }}
           </div>
         </QTd>
-        <QTd v-for="(aggregatedColumn, index) in aggregatedColumns" :key="aggregatedColumn.name"
-          :style="{ 'text-align': aggregatedColumn.align }">
+        <QTd
+          v-for="(aggregatedColumn, index) in aggregatedColumns"
+          :key="aggregatedColumn.name"
+          :style="{ 'text-align': aggregatedColumn.align }"
+        >
           <div>{{ aggregatedColumn.format(props.row[aggregatedColumn.name], props.row) }}</div>
         </QTd>
       </QTr>
@@ -402,93 +539,171 @@ watch(() => props.selectedTableAlarmType, () => {
                 <div class="col-auto">
                   <div class="row">
                     <div class="col">
-                      <QInput type="datetime-local" v-model="startTimeFormatted[props.row.key_normalized]"
-                        label="From (UTC)" :disable="false" :min="minTimeFormatted" :max="maxTimeFormatted" />
+                      <QInput
+                        type="datetime-local"
+                        v-model="startTimeFormatted[props.row.key_normalized]"
+                        label="From (UTC)"
+                        :disable="false"
+                        :min="minTimeFormatted"
+                        :max="maxTimeFormatted"
+                      />
                     </div>
-                    <div class="col-auto" style="width: 40px;"></div>
+                    <div class="col-auto" style="width: 40px"></div>
                     <div class="col">
-                      <QInput type="datetime-local" v-model="endTimeFormatted[props.row.key_normalized]" label="To (UTC)"
-                        :disable="false" :min="minTimeFormatted" :max="maxTimeFormatted" />
+                      <QInput
+                        type="datetime-local"
+                        v-model="endTimeFormatted[props.row.key_normalized]"
+                        label="To (UTC)"
+                        :disable="false"
+                        :min="minTimeFormatted"
+                        :max="maxTimeFormatted"
+                      />
                     </div>
                   </div>
-                  <div class="row" style="margin-top: 20px;margin-bottom: 10px;">
+                  <div class="row" style="margin-top: 20px; margin-bottom: 10px">
                     <div class="col-7 text-center">
-                      <QBtn color="primary" class="float-right" @click="resetTime(props.row.key_normalized)"
-                        :disable="false">RESET TIME</QBtn>
+                      <QBtn
+                        color="primary"
+                        class="float-right"
+                        @click="resetTime(props.row.key_normalized)"
+                        :disable="false"
+                        >RESET TIME</QBtn
+                      >
                     </div>
                   </div>
                 </div>
                 <div class="col offset-md-1">
-                  <QSelect outlined multiple v-model="selectSeveritiesLevels[props.row.key_normalized]"
-                    :options="SEVERITY_LEVELS" label="Severity Levels:" stack-label use-chips />
+                  <QSelect
+                    outlined
+                    multiple
+                    v-model="selectSeveritiesLevels[props.row.key_normalized]"
+                    :options="SEVERITY_LEVELS"
+                    label="Severity Levels:"
+                    stack-label
+                    use-chips
+                  />
                 </div>
                 <div class="col offset-md-1">
-                  <QSelect outlined multiple v-model="selectIPAddressFamilies[props.row.key_normalized]"
-                    :options="IP_ADDRESS_FAMILIES" label="IP Address Families:" stack-label use-chips />
+                  <QSelect
+                    outlined
+                    multiple
+                    v-model="selectIPAddressFamilies[props.row.key_normalized]"
+                    :options="IP_ADDRESS_FAMILIES"
+                    label="IP Address Families:"
+                    stack-label
+                    use-chips
+                  />
                 </div>
                 <div class="col">
-                  <QBtn color="primary" class="float-right" @click="resetGranularity(props.row.key_normalized)">Show All
-                    Countries</QBtn>
+                  <QBtn
+                    color="primary"
+                    class="float-right"
+                    @click="resetGranularity(props.row.key_normalized)"
+                    >Show All Countries</QBtn
+                  >
                 </div>
               </div>
               <QCard>
                 <QCardSection>
                   <!-- TODO: Configure here country-clicked event like in the Aggregated Alarms Controller-->
-                  <WorldMapAggregatedAlarmsChart :ref="setRef(`${props.row.key_normalized}_worldmap`)" :loading="false"
-                    :alarms="alarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized], props.row.key_normalized)"
+                  <WorldMapAggregatedAlarmsChart
+                    :ref="setRef(`${props.row.key_normalized}_worldmap`)"
+                    :loading="false"
+                    :alarms="
+                      alarmsCurrent(
+                        alarmsTableDataFromModel[props.row.key_normalized],
+                        props.row.key_normalized
+                      )
+                    "
                     :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected"
                     :selected-country="selectedCountry[props.row.key_normalized]"
                     :alarm-type-titles-map="alarmTypeTitlesMap"
-                    @country-clicked="onCountryClicked($event, props.row.key_normalized)" />
+                    @country-clicked="onCountryClicked($event, props.row.key_normalized)"
+                  />
                 </QCardSection>
               </QCard>
               <QCard>
                 <QCardSection>
                   <div class="col">
-                    <QBtn color="primary" class="full-width" @click="resetGranularity(props.row.key_normalized)"
-                      :disable="false">
+                    <QBtn
+                      color="primary"
+                      class="full-width"
+                      @click="resetGranularity(props.row.key_normalized)"
+                      :disable="false"
+                    >
                       Show All Countries
                     </QBtn>
                   </div>
                 </QCardSection>
                 <QCardSection>
-                  <TreeMapAggregatedAlarmsChart :ref="setRef(`${props.row.key_normalized}_treemap`)" :loading="false"
-                    :isASGranularity="true" :country-name="selectedCountry[props.row.key_normalized]"
+                  <TreeMapAggregatedAlarmsChart
+                    :ref="setRef(`${props.row.key_normalized}_treemap`)"
+                    :loading="false"
+                    :isASGranularity="true"
+                    :country-name="selectedCountry[props.row.key_normalized]"
                     :legend-selected="null"
-                    :select-severities-list="selectSeveritiesLevels[props.row.key_normalized].map(obj => obj.value)"
-                    :alarms="alarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized], props.row.key_normalized)"
+                    :select-severities-list="
+                      selectSeveritiesLevels[props.row.key_normalized].map((obj) => obj.value)
+                    "
+                    :alarms="
+                      alarmsCurrent(
+                        alarmsTableDataFromModel[props.row.key_normalized],
+                        props.row.key_normalized
+                      )
+                    "
                     :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected"
                     :alarm-type-titles-map="alarmTypeTitlesMap"
-                    @treemap-node-clicked="onTreemapNodeClicked($event, props.row.key_normalized)" />
+                    @treemap-node-clicked="onTreemapNodeClicked($event, props.row.key_normalized)"
+                  />
                 </QCardSection>
               </QCard>
               <QCard>
                 <QCardSection>
                   <div class="row items-center">
                     <div class="col">
-                      <QBtn color="primary" class="full-width" @click="resetTime(props.row.key_normalized)"
-                        :disable="false">
+                      <QBtn
+                        color="primary"
+                        class="full-width"
+                        @click="resetTime(props.row.key_normalized)"
+                        :disable="false"
+                      >
                         RESET TIME
                       </QBtn>
                     </div>
                     <div class="col">
-                      <QBtn color="primary" class="full-width" @click="resetGranularity(props.row.key_normalized)"
-                        :disable="false">
+                      <QBtn
+                        color="primary"
+                        class="full-width"
+                        @click="resetGranularity(props.row.key_normalized)"
+                        :disable="false"
+                      >
                         Show All Countries
                       </QBtn>
                     </div>
                   </div>
                 </QCardSection>
                 <QCardSection>
-                  <TimeSeriesAggregatedAlarmsChart :ref="setRef(`${props.row.key_normalized}_timeseries`)"
-                    :loading="false" :isASGranularity="true" :country-name="selectedCountry[props.row.key_normalized]"
-                    :legend-selected="null" :start-time="new Date(`${startTimeFormatted[props.row.key_normalized]}:00Z`)"
+                  <TimeSeriesAggregatedAlarmsChart
+                    :ref="setRef(`${props.row.key_normalized}_timeseries`)"
+                    :loading="false"
+                    :isASGranularity="true"
+                    :country-name="selectedCountry[props.row.key_normalized]"
+                    :legend-selected="null"
+                    :start-time="new Date(`${startTimeFormatted[props.row.key_normalized]}:00Z`)"
                     :end-time="new Date(`${endTimeFormatted[props.row.key_normalized]}:00Z`)"
-                    :alarms="alarmsCurrent(alarmsTableDataFromModel[props.row.key_normalized], props.row.key_normalized)"
+                    :alarms="
+                      alarmsCurrent(
+                        alarmsTableDataFromModel[props.row.key_normalized],
+                        props.row.key_normalized
+                      )
+                    "
                     :aggregated-attrs-selected="alarmTypeAggregatedAttrsSelected"
                     :alarm-type-titles-map="alarmTypeTitlesMap"
-                    @timeseries-legend-clicked="onTimeseriesLegendClicked($event, props.row.key_normalized)"
-                    @select-time="timeFilter($event, props.row.key_normalized)" />
+                    @timeseries-legend-clicked="
+                      onTimeseriesLegendClicked($event, props.row.key_normalized)
+                    "
+                    @select-time="timeFilter($event, props.row.key_normalized)"
+                  />
                 </QCardSection>
               </QCard>
             </div>
@@ -497,50 +712,94 @@ watch(() => props.selectedTableAlarmType, () => {
       </QTr>
       <QTr v-if="toggle[`${props.row.key_normalized}_asn_overview`]" :props="props">
         <QTd colspan="100%" class="IHR_nohover" bordered>
-          <div v-if="selectedTableAlarmType == 'hegemony'"
-            v-for="(af) in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])">
-            <div style="text-align: center; font-size: 18px;">
+          <div
+            v-if="selectedTableAlarmType == 'hegemony'"
+            v-for="af in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])"
+          >
+            <div style="text-align: center; font-size: 18px">
               {{ `${props.row[`${tableKeyCurrent}`]} ${getColumnLabel('asn_overview')} IPv${af}` }}
             </div>
-            <AsInterdependenciesChart :as-number="props.row.key_normalized" :no-table="true" :fetch="true"
-              :address-family="af" :start-time="startTime" :end-time="endTime" />
+            <AsInterdependenciesChart
+              :as-number="props.row.key_normalized"
+              :no-table="true"
+              :fetch="true"
+              :address-family="af"
+              :start-time="startTime"
+              :end-time="endTime"
+            />
           </div>
-          <div v-if="selectedTableAlarmType == 'network_delay'"
-            v-for="(af) in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])">
-            <div style="text-align: center; font-size: 18px;">
+          <div
+            v-if="selectedTableAlarmType == 'network_delay'"
+            v-for="af in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])"
+          >
+            <div style="text-align: center; font-size: 18px">
               {{ `${getColumnLabel('asn_overview')} IPv${af}` }}
             </div>
-            <NetworkDelayChart :start-time="startTime" :end-time="endTime" :asFamily="af"
-              :start-point-name="String(props.row.key_normalized)" start-point-type="AS"
-              :end-point-names="getAlternativeKeyEndPointNames(props.row.alternative_key_normalized, props.row.alternative_key_normalized_af, props.row.alternative_key_avg_deviation, 35)"
-              :no-table="true" :fetch="true" />
+            <NetworkDelayChart
+              :start-time="startTime"
+              :end-time="endTime"
+              :asFamily="af"
+              :start-point-name="String(props.row.key_normalized)"
+              start-point-type="AS"
+              :end-point-names="
+                getAlternativeKeyEndPointNames(
+                  props.row.alternative_key_normalized,
+                  props.row.alternative_key_normalized_af,
+                  props.row.alternative_key_avg_deviation,
+                  35
+                )
+              "
+              :no-table="true"
+              :fetch="true"
+            />
           </div>
-          <Latencymon v-if="selectedTableAlarmType == 'network_disconnection'"
-            :start-time="getNetworkDisconnectionStartTime(props.row.stream_start_time, props.row.stream_duration_minutes, 120)"
-            :stop-time="getNetworkDisconnectionEndTime(props.row.stream_end_time, props.row.stream_duration_minutes, 120)"
+          <Latencymon
+            v-if="selectedTableAlarmType == 'network_disconnection'"
+            :start-time="
+              getNetworkDisconnectionStartTime(
+                props.row.stream_start_time,
+                props.row.stream_duration_minutes,
+                120
+              )
+            "
+            :stop-time="
+              getNetworkDisconnectionEndTime(
+                props.row.stream_end_time,
+                props.row.stream_duration_minutes,
+                120
+              )
+            "
             :msm-prb-ids="getMeasurementProbeIds(props.row.stream_disconnected_probe_ids)"
-            style="max-width: 93%; margin: 0 auto" />
+            style="max-width: 93%; margin: 0 auto"
+          />
 
           <div v-if="selectedTableDataSource == 'ioda'">
-            <div style="text-align: center; font-size: 18px;">
+            <div style="text-align: center; font-size: 18px">
               {{ `${props.row[`${tableKeyCurrent}`]} Internet Overview` }}
             </div>
-            <IodaChart v-if="selectedTableDataSource == 'ioda'" :entity-value="iodaEntityValue(props.row, 'asn_overview')"
-              :filter-by-country="iodaEntityFilteredByCountry('asn_overview')" :start-time="startTime"
-              :end-time="endTime" />
+            <IodaChart
+              v-if="selectedTableDataSource == 'ioda'"
+              :entity-value="iodaEntityValue(props.row, 'asn_overview')"
+              :filter-by-country="iodaEntityFilteredByCountry('asn_overview')"
+              :start-time="startTime"
+              :end-time="endTime"
+            />
           </div>
         </QTd>
       </QTr>
       <QTr v-if="toggle[`${props.row.key_normalized}_country_overview`]" :props="props">
         <QTd colspan="100%" class="IHR_nohover" bordered>
           <div v-if="selectedTableDataSource == 'ioda'">
-            <div style="text-align: center; font-size: 18px;">
+            <div style="text-align: center; font-size: 18px">
               {{ `${props.row[`${tableKeyCurrent}_country`]} Internet Overview` }}
             </div>
-            <IodaChart v-if="selectedTableDataSource == 'ioda'"
+            <IodaChart
+              v-if="selectedTableDataSource == 'ioda'"
               :entity-value="iodaEntityValue(props.row, 'country_overview')"
-              :filter-by-country="iodaEntityFilteredByCountry('country_overview')" :start-time="startTime"
-              :end-time="endTime" />
+              :filter-by-country="iodaEntityFilteredByCountry('country_overview')"
+              :start-time="startTime"
+              :end-time="endTime"
+            />
           </div>
         </QTd>
       </QTr>
