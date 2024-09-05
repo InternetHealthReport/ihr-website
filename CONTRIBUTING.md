@@ -102,7 +102,7 @@ Our website uses the following libraries:
 - [vue-i18n](https://www.npmjs.com/package/vue-i18n): This is an internationalization plugin for Vue.js
 - [vue-router](https://www.npmjs.com/package/vue-router): Vue Router is the official routing library for Vue.js
 
-## Component Descriptions
+## Project tree
 
 ```
 .
@@ -363,33 +363,33 @@ Our website uses the following libraries:
 │   │   └── utils
 │   │       └── AggregatedAlarmsUtils.js: Contains helper functions for the global report page's aggregated alarms
 │   ├── router
-│   │   └── index.js
+│   │   └── index.js: Contains the Vue routing 
 │   ├── styles
-│   │   ├── chart.sass
-│   │   ├── main.sass
-│   │   └── quasar.variables.sass
+│   │   ├── chart.sass: Contains CSS classes for the charts
+│   │   ├── main.sass: Contains CSS classes for the webpage
+│   │   └── quasar.variables.sass: Contains CSS variables for the quasar library
 │   └── views
-│       ├── Api.vue
-│       ├── BGPMonitor.vue
-│       ├── Contact.vue
-│       ├── Corona.vue
-│       ├── Countries.vue
-│       ├── Documentation.vue
-│       ├── GlobalReport.vue
-│       ├── Home.vue
-│       ├── HostNames.vue
-│       ├── MetisDeployment.vue
-│       ├── MetisHome.vue
-│       ├── MetisSelection.vue
-│       ├── NetworkTopology.vue
-│       ├── Networks.vue
-│       ├── Observable.vue
-│       ├── PageNotFound.vue
-│       ├── ROV.vue
-│       ├── Ranks.vue
-│       ├── Tags.vue
-│       └── TracerouteVisualizationTool.vue
-└── vite.config.js
+│       ├── Api.vue: A component that creates the API page. It provides a UI for making calls to IHR API.
+│       ├── BGPMonitor.vue: A component that creates the BGP monitor tool page
+│       ├── Contact.vue: A component that creates the contact page
+│       ├── Corona.vue: A component that creates the COVID19 report page
+│       ├── Countries.vue: A component that creates the country report page
+│       ├── Documentation.vue: A component that creates the documentation page
+│       ├── GlobalReport.vue: A component that creates the global report page
+│       ├── Home.vue: A component that creates the home page
+│       ├── HostNames.vue: A component that creates the hostname report page
+│       ├── MetisDeployment.vue: A component that creates the metis probe deployment page
+│       ├── MetisHome.vue: A component that creates the metis page
+│       ├── MetisSelection.vue: A component that creates the metis probe selection page
+│       ├── NetworkTopology.vue: A component that creates the network topology tool page
+│       ├── Networks.vue: A component that creates the network report page
+│       ├── Observable.vue: A component that creates the observable tool page
+│       ├── PageNotFound.vue: A component that creates the not found page
+│       ├── ROV.vue: A component that creates the Route Origin Validation (ROV) page
+│       ├── Ranks.vue: A component that creates the ranks report page
+│       ├── Tags.vue: A component that creates the tags report page
+│       └── TracerouteVisualizationTool.vue: A component that creates the traceroute visualization tool page
+└── vite.config.js: Contains the vite configuarion
 ```
 
 ## Code Style
