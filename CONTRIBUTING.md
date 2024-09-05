@@ -235,26 +235,26 @@ Our website uses the following libraries:
 │   │   │       ├── TagPopularHostNames.vue: An IYP component that visualizes the Tag Popular Hostnames
 │   │   │       └── TagPrefixes.vue: An IYP component that visualizes the Tag Prefixes
 │   │   ├── maps
-│   │   │   ├── DiscoMap.vue
-│   │   │   ├── WorldMap.vue
-│   │   │   └── WorldMapAggregatedAlarmsMap.vue
+│   │   │   ├── DiscoMap.vue: A component that creates the network disconnections map
+│   │   │   ├── WorldMap.vue: A component that creates the world map for the global report page
+│   │   │   └── WorldMapAggregatedAlarmsMap.vue: A component that creates the world aggregated alarms map for the global report page 
 │   │   ├── networks
-│   │   │   ├── AS.vue
-│   │   │   ├── Country.vue
-│   │   │   ├── HostName.vue
-│   │   │   ├── IXP.vue
-│   │   │   ├── Prefix.vue
-│   │   │   ├── Rank.vue
-│   │   │   ├── Tag.vue
+│   │   │   ├── AS.vue: A component that creates the AS report page
+│   │   │   ├── Country.vue: A component that creates the Country report page
+│   │   │   ├── HostName.vue: A component that creates the Hostname report page
+│   │   │   ├── IXP.vue: A componenent that creates the IXP report page
+│   │   │   ├── Prefix.vue: A component that creates the Prefix report page
+│   │   │   ├── Rank.vue: A component that creates the Rank report page
+│   │   │   ├── Tag.vue: A componoent that creates the Tag report page
 │   │   │   ├── as
-│   │   │   │   ├── ASCustom.vue
-│   │   │   │   ├── ASDNS.vue
-│   │   │   │   ├── ASMonitoring.vue
-│   │   │   │   ├── ASOverview.vue
-│   │   │   │   ├── ASPeering.vue
-│   │   │   │   ├── ASRankings.vue
-│   │   │   │   ├── ASRegistration.vue
-│   │   │   │   └── ASRouting.vue
+│   │   │   │   ├── ASCustom.vue: A component that lets the user create a custom AS report page
+│   │   │   │   ├── ASDNS.vue: A component that includes all the visualizations and tables related to DNS on the AS report page
+│   │   │   │   ├── ASMonitoring.vue: A component that includes all the visualizations and tables related to Monitoring on the AS report page
+│   │   │   │   ├── ASOverview.vue: A component that includes all the visualizations and tables related to Overview on the AS report page
+│   │   │   │   ├── ASPeering.vue: A component that includes all the visualizations and tables related to Peering on the AS report page
+│   │   │   │   ├── ASRankings.vue: A component that includes all the visualizations and tables related to Rankning on the AS report page
+│   │   │   │   ├── ASRegistration.vue: A component includes all the visualizations and tables related to Registration on the AS report page
+│   │   │   │   └── ASRouting.vue: A component includes all the visualizations and tables related to Routing on te AS report page
 │   │   │   ├── country
 │   │   │   │   ├── CountryCustom.vue
 │   │   │   │   ├── CountryMonitoring.vue
