@@ -203,11 +203,11 @@ Our website uses the following libraries:
 │   │   │   │   ├── ASSiblingASes.vue: An IYP component that visualizes the Sibling ASes
 │   │   │   │   └── ASUpstreamASes.vue: An IYP component that visualizes the UpstreamASes
 │   │   │   ├── country
-│   │   │   │   ├── CountryASRankings.vue
-│   │   │   │   ├── CountryAutonomousSystems.vue
-│   │   │   │   ├── CountryIPPrefixes.vue
-│   │   │   │   ├── CountryInternetExchangePoints.vue
-│   │   │   │   └── CountryRipeAtlas.vue
+│   │   │   │   ├── CountryASRankings.vue: An IYP component that visualizes the Country AS Rankings
+│   │   │   │   ├── CountryAutonomousSystems.vue: An IYP component that visualizes the Country Autonomous Systems
+│   │   │   │   ├── CountryIPPrefixes.vue: An IYP component that visualizes the Country IP Prefixes
+│   │   │   │   ├── CountryInternetExchangePoints.vue: An IYP component that visualizes the Country IXPs
+│   │   │   │   └── CountryRipeAtlas.vue: An IYP component that visualizes the Country Ripe Atlas probes
 │   │   │   ├── hostName
 │   │   │   │   ├── HostNameAuthoritativeNameservers.vue
 │   │   │   │   ├── HostNameIPAddressesPrefixes.vue
