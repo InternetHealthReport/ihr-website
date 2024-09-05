@@ -284,29 +284,29 @@ Our website uses the following libraries:
 │   │   │       ├── TagCustom.vue: A component that allows users to create a custom Tag report page
 │   │   │       └── TagOverview.vue: A component that includes all the visualizations and tables related to Tag Overview on the Tag report page
 │   │   ├── ripe
-│   │   │   ├── Bgplay.vue
-│   │   │   ├── Latencymon.vue
-│   │   │   ├── ReverseDnsIp.vue
-│   │   │   └── Tracemon.vue
+│   │   │   ├── Bgplay.vue: A component that integrates RIPE's BGPlay (https://stat.ripe.net/special/bgplay)
+│   │   │   ├── Latencymon.vue: A component that integrates RIPE's LatencyMon (https://labs.ripe.net/author/massimo_candela/new-ripe-atlas-tool-latencymon/)
+│   │   │   ├── ReverseDnsIp.vue: A component that integrates RIPE's Reverse DNS IP (https://stat.ripe.net/widget/reverse-dns-ip)
+│   │   │   └── Tracemon.vue: A component that integrates RIPE's TraceMON (https://labs.ripe.net/author/massimo_candela/tracemon-network-debugging-made-easy/)
 │   │   ├── search
-│   │   │   ├── LocationSearchBar.vue
-│   │   │   └── SearchBar.vue
+│   │   │   ├── LocationSearchBar.vue: A component that allows searching by location using a world map (the map icon in the search bar)
+│   │   │   └── SearchBar.vue: A component for the search bar
 │   │   └── tables
-│   │       ├── AggregatedAlarmsTable.vue
-│   │       ├── AsInterdependenciesTable.vue
-│   │       ├── BGPMessagesTable.vue
-│   │       ├── CountryHegemonyTable.vue
-│   │       ├── DelayAlarmsTable.vue
-│   │       ├── DiscoAlarmsTable.vue
-│   │       ├── ForwardingAlarmsTable.vue
-│   │       ├── IypGenericTable.vue
-│   │       ├── MetisTable.vue
-│   │       ├── NetworkDelayAlarmsTable.vue
-│   │       ├── NetworkDelayTable.vue
-│   │       ├── PrefixHegemonyTable.vue
-│   │       ├── PrefixHegemonyTableStats.vue
-│   │       ├── TracerouteDestinationsTable.vue
-│   │       └── TracerouteProbesTable.vue
+│   │       ├── AggregatedAlarmsTable.vue: A component that includes the table with the aggregated alarms on the global report page
+│   │       ├── AsInterdependenciesTable.vue: A component that includes the table with information about the interdependencies between AS
+│   │       ├── BGPMessagesTable.vue: A component that includes the table with the BGP messages
+│   │       ├── CountryHegemonyTable.vue: A component that includes the table with the country hegemony values
+│   │       ├── DelayAlarmsTable.vue: A component that includes the table with the delay alarms values
+│   │       ├── DiscoAlarmsTable.vue: A component that includes the table with the network disconnections information 
+│   │       ├── ForwardingAlarmsTable.vue: A component that includes the table with the forwarding alarms values
+│   │       ├── IypGenericTable.vue: A component that includes the table for displaying IYP data
+│   │       ├── MetisTable.vue: A component that includes the table for displaying data for the Metis project
+│   │       ├── NetworkDelayAlarmsTable.vue: A component that includes the table with the network delay alarms
+│   │       ├── NetworkDelayTable.vue: A component that includes the table with the network delay data
+│   │       ├── PrefixHegemonyTable.vue: A component that includes the table with the prefix hegemony data
+│   │       ├── PrefixHegemonyTableStats.vue: A component that includes the table with the statistics of the prefix hegemony
+│   │       ├── TracerouteDestinationsTable.vue: A component that includes the table with the traceroute destinations
+│   │       └── TracerouteProbesTable.vue: A component that includes the table with the traceroute probes
 │   ├── i18n
 │   │   ├── index.js
 │   │   ├── locales
