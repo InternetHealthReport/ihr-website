@@ -209,31 +209,31 @@ Our website uses the following libraries:
 │   │   │   │   ├── CountryInternetExchangePoints.vue: An IYP component that visualizes the Country IXPs
 │   │   │   │   └── CountryRipeAtlas.vue: An IYP component that visualizes the Country Ripe Atlas probes
 │   │   │   ├── hostName
-│   │   │   │   ├── HostNameAuthoritativeNameservers.vue
-│   │   │   │   ├── HostNameIPAddressesPrefixes.vue
-│   │   │   │   ├── HostNameQueryingASes.vue
-│   │   │   │   ├── HostNameQueryingCountries.vue
-│   │   │   │   └── HostNameRankings.vue
+│   │   │   │   ├── HostNameAuthoritativeNameservers.vue: An IYP component that visualizes the Hostname Authoritative Nameservers 
+│   │   │   │   ├── HostNameIPAddressesPrefixes.vue: An IYP component that visualizes the Hostname IP Addresses Prefixes
+│   │   │   │   ├── HostNameQueryingASes.vue: An IYP component that visualizes Hostnames Querying ASes
+│   │   │   │   ├── HostNameQueryingCountries.vue: An IYP component that visualizes the Hostnames Querying Countries
+│   │   │   │   └── HostNameRankings.vue: An IYP component that visualizes the Hostname Rankings
 │   │   │   ├── ixp
-│   │   │   │   ├── IXPCoLocationFacilities.vue
-│   │   │   │   ├── IXPMembers.vue
-│   │   │   │   ├── IXPPeeringLANs.vue
-│   │   │   │   └── IXPRPKIRouteOriginAuthorization.vue
+│   │   │   │   ├── IXPCoLocationFacilities.vue: An IYP component that visualizes the IXP CoLocation Facilities
+│   │   │   │   ├── IXPMembers.vue: An IYP component that visualizes the IXP members
+│   │   │   │   ├── IXPPeeringLANs.vue: An IYP component that visualizes the IXP Peering LANs
+│   │   │   │   └── IXPRPKIRouteOriginAuthorization.vue: An IYP component that visualizes the IXP RPKI Route Origin Authorization
 │   │   │   ├── prefix
-│   │   │   │   ├── PrefixAuthoritativeNameservers.vue
-│   │   │   │   ├── PrefixLessSpecificPrefixes.vue
-│   │   │   │   ├── PrefixMoreSpecificPrefixes.vue
-│   │   │   │   ├── PrefixPopularDomains.vue
-│   │   │   │   ├── PrefixPopularHostNames.vue
-│   │   │   │   ├── PrefixRPKIRouteOriginAuthorization.vue
-│   │   │   │   └── PrefixUpstreamASes.vue
+│   │   │   │   ├── PrefixAuthoritativeNameservers.vue: An IYP component that visualizes the Prefix Authoritative Nameserves
+│   │   │   │   ├── PrefixLessSpecificPrefixes.vue: An IYP component that visualizes the Prefix Less Specific Prefixes
+│   │   │   │   ├── PrefixMoreSpecificPrefixes.vue: An IYP component that visualizes the Prefix More Specific Prefixes
+│   │   │   │   ├── PrefixPopularDomains.vue: An IYP component that visualizes the Prefix Populat Domains
+│   │   │   │   ├── PrefixPopularHostNames.vue: An IYP component that visualizes the Prefix Popular Hostnames
+│   │   │   │   ├── PrefixRPKIRouteOriginAuthorization.vue: An IYP component that visualizes the Prefix RPKI Route Origin Authorization
+│   │   │   │   └── PrefixUpstreamASes.vue: An IYP component that visualizes the Prefix Upstream ASes
 │   │   │   ├── rank
-│   │   │   │   ├── RankASRankings.vue
-│   │   │   │   └── RankHostNameRankings.vue
+│   │   │   │   ├── RankASRankings.vue: An IYP component that visualizes the Rank AS Rankings
+│   │   │   │   └── RankHostNameRankings.vue: An IYP component that visualizes the Rank Hostname Ranknings
 │   │   │   └── tag
-│   │   │       ├── TagAutonomousSystems.vue
-│   │   │       ├── TagPopularHostNames.vue
-│   │   │       └── TagPrefixes.vue
+│   │   │       ├── TagAutonomousSystems.vue: An IYP component that visualizes the Tag ASes
+│   │   │       ├── TagPopularHostNames.vue: An IYP component that visualizes the Tag Popular Hostnames
+│   │   │       └── TagPrefixes.vue: An IYP component that visualizes the Tag Prefixes
 │   │   ├── maps
 │   │   │   ├── DiscoMap.vue
 │   │   │   ├── WorldMap.vue
