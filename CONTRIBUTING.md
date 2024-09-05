@@ -394,9 +394,10 @@ Our website uses the following libraries:
 
 ## Code Style
 
-run the following command:
+Before push your contribution, ensure that your code is properly formatted. You can automatically
+format your code by running the following command:
 
-```
+```bash
 npm run format
 ```
 
