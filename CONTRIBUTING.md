@@ -161,29 +161,29 @@ Our website uses the following libraries:
 │   │   ├── TracerouteMonitor.vue: A component that monitors and displays traceroute data, which shows the path packets take to reach a destination on the network
 │   │   ├── UserInfo.vue: A component that displays user information, such as IP address, prefix and AS
 │   │   ├── charts
-│   │   │   ├── AsInterdependenciesChart.vue
-│   │   │   ├── BGPLineChart.vue
-│   │   │   ├── BGPPathsChart.vue
-│   │   │   ├── CountryHegemonyChart.vue
-│   │   │   ├── DelayAndForwardingChart.vue
-│   │   │   ├── DelayChart.vue
-│   │   │   ├── DiscoChart.vue
-│   │   │   ├── IodaChart.vue
-│   │   │   ├── IypGenericBarChart.vue
-│   │   │   ├── IypGenericPieChart.vue
-│   │   │   ├── IypGenericRadarChart.vue
-│   │   │   ├── IypGenericTreemapChart.vue
-│   │   │   ├── NetworkDelayAlarmsChart.vue
-│   │   │   ├── NetworkDelayChart.vue
-│   │   │   ├── NetworkTopologyChart.vue
-│   │   │   ├── PrefixHegemonyChart.vue
-│   │   │   ├── ReactiveChart.vue
-│   │   │   ├── RirCountrySunburstChart.vue
-│   │   │   ├── TimeSeriesAggregatedAlarmsChart.vue
-│   │   │   ├── TracerouteChart.vue
-│   │   │   ├── TracerouteRttChart.vue
-│   │   │   ├── TreeMapAggregatedAlarmsChart.vue
-│   │   │   └── WorldMapAggregatedAlarmsChart.vue
+│   │   │   ├── AsInterdependenciesChart.vue: A component that visualizes the interdependencies between AS
+│   │   │   ├── BGPLineChart.vue: A component that displays the BGP announcements and withdraws using a stack line chart
+│   │   │   ├── BGPPathsChart.vue: A component that visualizes the AS paths taken by BGP routes
+│   │   │   ├── CountryHegemonyChart.vue: A component that visualizes the country hegemony
+│   │   │   ├── DelayAndForwardingChart.vue: A component that visualizes the delay and forwarding of ASes, IXPs, Atlas probes, and cities
+│   │   │   ├── DelayChart.vue: A component that visualizes the delay of ASes, IXPs, Atlas probes, and cities
+│   │   │   ├── DiscoChart.vue: A component that visualizes the network disconnections
+│   │   │   ├── IodaChart.vue: A component that visualizes the Internet outages
+│   │   │   ├── IypGenericBarChart.vue: A component that creates bar chart for IYP data
+│   │   │   ├── IypGenericPieChart.vue: A component that creates pie chart for IYP data
+│   │   │   ├── IypGenericRadarChart.vue: A component that creates radar chart for IYP data
+│   │   │   ├── IypGenericTreemapChart.vue: A component that creates treemap chart for IYP data
+│   │   │   ├── NetworkDelayAlarmsChart.vue: A component that visualizes the alarms according tyo network delays
+│   │   │   ├── NetworkDelayChart.vue: A component that visualizes the network delay 
+│   │   │   ├── NetworkTopologyChart.vue: A component that visualizes the network topology
+│   │   │   ├── PrefixHegemonyChart.vue: A component that visualizes the prefix hegemony
+│   │   │   ├── ReactiveChart.vue: A component for rendering the charts using Plotly.js
+│   │   │   ├── RirCountrySunburstChart.vue: A component that visualizes the RIR data by country
+│   │   │   ├── TimeSeriesAggregatedAlarmsChart.vue: A component that visualizes aggregated alarms over time
+│   │   │   ├── TracerouteChart.vue: A component that visualizes the traceroute path of an ATLAS measurment
+│   │   │   ├── TracerouteRttChart.vue: A component that visualizes the RTT over time of an ATLAS measurment
+│   │   │   ├── TreeMapAggregatedAlarmsChart.vue: A component that visualizes aggregated alarms in a treemap chart
+│   │   │   └── WorldMapAggregatedAlarmsChart.vue: A component that visualizes aggregated alarms in a world map
 │   │   ├── controllers
 │   │   │   ├── AggregatedAlarmsController.vue
 │   │   │   └── GenericCardController.vue
