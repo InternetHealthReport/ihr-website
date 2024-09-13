@@ -503,14 +503,16 @@ onMounted(() => {
           </QTabPanel>
           <QTabPanel name="api" class="IHR_api-table">
             <table>
-              <tr>
-                <td>
-                  <label for="delay">{{ $t('charts.delayAndForwarding.yaxis') }}</label>
-                </td>
-                <td>
-                  <a :href="delayUrl" target="_blank" id="delay">{{ delayUrl }}</a>
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>
+                    <label for="delay">{{ $t('charts.delayAndForwarding.yaxis') }}</label>
+                  </td>
+                  <td>
+                    <a :href="delayUrl" target="_blank" id="delay">{{ delayUrl }}</a>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </QTabPanel>
         </QTabPanels>

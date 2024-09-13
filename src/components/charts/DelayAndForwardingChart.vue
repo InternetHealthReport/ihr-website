@@ -326,48 +326,50 @@ onMounted(() => {
         <QTabPanel name="api" class="IHR_api-table">
           <h3>{{ $t('charts.delayAndForwarding.apiTitle') }}</h3>
           <table>
-            <tr>
-              <td>
-                <p class="text-subtitle1">
-                  {{ $t('charts.delayAndForwarding.yaxis') }}
-                </p>
-              </td>
-              <td>
-                <a :href="delayUrl" target="_blank" id="delay">{{ delayUrl }}</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p class="text-subtitle1">
-                  {{ $t('charts.delayAndForwarding.yaxis2') }}
-                </p>
-              </td>
-              <td>
-                <a :href="forwardingUrl" target="_blank" id="forwarding">{{ forwardingUrl }}</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p class="text-subtitle1">
-                  {{ $t('charts.delayAndForwarding.tables.delay.title') }}
-                </p>
-              </td>
-              <td>
-                <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{ delayAlarmsUrl }}</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p class="text-subtitle1" name="forwardingAlarms">
-                  {{ $t('charts.delayAndForwarding.tables.forwarding.title') }}
-                </p>
-              </td>
-              <td>
-                <a :href="forwardingAlarmsUrl" target="_blank" id="forwardingAlarms">{{
-                  forwardingAlarmsUrl
-                }}</a>
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>
+                  <p class="text-subtitle1">
+                    {{ $t('charts.delayAndForwarding.yaxis') }}
+                  </p>
+                </td>
+                <td>
+                  <a :href="delayUrl" target="_blank" id="delay">{{ delayUrl }}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p class="text-subtitle1">
+                    {{ $t('charts.delayAndForwarding.yaxis2') }}
+                  </p>
+                </td>
+                <td>
+                  <a :href="forwardingUrl" target="_blank" id="forwarding">{{ forwardingUrl }}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p class="text-subtitle1">
+                    {{ $t('charts.delayAndForwarding.tables.delay.title') }}
+                  </p>
+                </td>
+                <td>
+                  <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{ delayAlarmsUrl }}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p class="text-subtitle1" name="forwardingAlarms">
+                    {{ $t('charts.delayAndForwarding.tables.forwarding.title') }}
+                  </p>
+                </td>
+                <td>
+                  <a :href="forwardingAlarmsUrl" target="_blank" id="forwardingAlarms">{{
+                    forwardingAlarmsUrl
+                  }}</a>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </QTabPanel>
       </QTabPanels>

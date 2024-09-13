@@ -17,6 +17,7 @@
     "axios": "^1.6.2",
     "dagre": "^0.8.5",
     "grid-layout-plus": "^1.0.5",
+    "idb-keyval": "^6.2.1",
     "ip-address": "^9.0.5",
     "plotly.js-dist": "^2.27.1",
     "quasar": "^2.14.0",

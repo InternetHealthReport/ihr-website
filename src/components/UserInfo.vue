@@ -52,9 +52,11 @@ onMounted(() => {
 <template>
   <QMarkupTable class="user-info-card" dense bordered>
     <thead>
-      <th :colspan="2" align="center" style="border-bottom: 1px solid white; font-size: large">
-        YOUR CONNECTION
-      </th>
+      <tr>
+        <th :colspan="2" align="center" style="border-bottom: 1px solid white; font-size: large">
+          YOUR CONNECTION
+        </th>
+      </tr>
     </thead>
     <tbody v-if="!as_info_query.loading">
       <tr>

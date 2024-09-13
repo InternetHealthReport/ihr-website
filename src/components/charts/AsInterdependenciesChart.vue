@@ -833,26 +833,28 @@ onMounted(() => {
         <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
           <h3>{{ $t('charts.asInterdependencies.table.apiTitle') }}</h3>
           <table>
-            <tr>
-              <td>
-                <p class="text-subtitle1">
-                  {{ $t('charts.asInterdependencies.table.dependencyTitle') }}
-                </p>
-              </td>
-              <td>
-                <a :href="dependencyUrl" target="_blank" id="tableUrl">{{ dependencyUrl }}</a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p class="text-subtitle1">
-                  {{ $t('charts.asInterdependencies.table.dependentTitle') }}
-                </p>
-              </td>
-              <td>
-                <a :href="dependentUrl" target="_blank" id="tableUrl">{{ dependentUrl }}</a>
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>
+                  <p class="text-subtitle1">
+                    {{ $t('charts.asInterdependencies.table.dependencyTitle') }}
+                  </p>
+                </td>
+                <td>
+                  <a :href="dependencyUrl" target="_blank" id="tableUrl">{{ dependencyUrl }}</a>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p class="text-subtitle1">
+                    {{ $t('charts.asInterdependencies.table.dependentTitle') }}
+                  </p>
+                </td>
+                <td>
+                  <a :href="dependentUrl" target="_blank" id="tableUrl">{{ dependentUrl }}</a>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </QTabPanel>
       </QTabPanels>
