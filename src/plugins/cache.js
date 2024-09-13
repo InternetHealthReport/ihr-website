@@ -1,4 +1,4 @@
-import { get, set, del, clear } from 'idb-keyval'
+import { get, set, del, clear, keys, getMany, delMany } from 'idb-keyval'
 
 const cache = async (key, fetcher, options) => {
   if (!options) {
@@ -27,15 +27,8 @@ const cache = async (key, fetcher, options) => {
           error.name === 'QuotaExceededError' ||
           error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
       ) {
-        const storageAllowed = await get('storage-allowed')
-        const userLocale = await get('user-locale')
-        await clear()
-        if (storageAllowed) {
-          await set('storage-allowed', storageAllowed)
-        }
-        if (userLocale) {
-          await set('user-locale', userLocale)
-        }
+        await deleteExpiredItemsAndReduceSpace()
+        item = await cache(key, fetcher, options)
       }
     }
   }
@@ -51,6 +44,35 @@ const getItem = async (key) => {
     }
   }
   return item
+}
+
+const deleteExpiredItemsAndReduceSpace = async () => {
+  const allKeys = await keys()
+  const allItems = await getMany(allKeys)
+  const keysToDel = []
+  const sortedKeys = []
+  allItems.forEach((item, index) => {
+    const parsedItem = JSON.parse(item)
+    if (parsedItem.expiresAt !== undefined) {
+      const getKey = allKeys.at(index)
+      if (parsedItem.expiresAt < new Date().getTime()) {
+        keysToDel.push(getKey)
+      } else {
+        sortedKeys.push([getKey, parsedItem.expiresAt])
+      }
+    }
+  })
+  if (keysToDel.length) {
+    await delMany(keysToDel)
+  }
+  if (sortedKeys.length) {
+    sortedKeys.sort(([, valueA], [, valueB]) => valueA - valueB)
+    const howManyToDel = Math.floor(sortedKeys.length * 0.5)
+    const sortedKeysToDel = sortedKeys.map(([key]) => key).slice(0, howManyToDel)
+    if (sortedKeysToDel.length) {
+      await delMany(sortedKeysToDel)
+    }
+  }
 }
 
 const setDefaultExpireDate = () => {

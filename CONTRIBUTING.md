@@ -93,6 +93,7 @@ Our website uses the following libraries:
 - [axios](https://www.npmjs.com/package/axios): This is a library used to make HTTP requests
 - [dagre](https://www.npmjs.com/package/dagre): This is a library for laying out directed graphs
 - [grid-layout-plus](https://www.npmjs.com/package/grid-layout-plus): This is an extension of grid layout systems, allowing for more flexible and responsive grid designs in web applications
+- [idb-keyval](https://www.npmjs.com/package/idb-keyval): Simplified key-value store for IndexedDB usage
 - [ip-address](https://www.npmjs.com/package/ip-address): This provides utilities for working with IP addresses
 - [plotly.js-dist](https://www.npmjs.com/package/plotly.js-dist): This is a library for creating interactive charts and visualizations
 - [quasar](https://www.npmjs.com/package/quasar): It provides a rich set of UI components and tools

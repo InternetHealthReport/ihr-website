@@ -354,7 +354,9 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{ delayAlarmsUrl }}</a>
+                  <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{
+                    delayAlarmsUrl
+                  }}</a>
                 </td>
               </tr>
               <tr>
