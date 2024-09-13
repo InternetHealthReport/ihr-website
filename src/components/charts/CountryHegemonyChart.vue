@@ -291,11 +291,13 @@ onMounted(() => {
         <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
           <h3>{{ $t('charts.countryHegemony.table.apiTitle') }}</h3>
           <table>
-            <tr>
-              <td>
-                <a :href="hegemonyUrl" target="_blank" id="tableUrl">{{ hegemonyUrl }}</a>
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>
+                  <a :href="hegemonyUrl" target="_blank" id="tableUrl">{{ hegemonyUrl }}</a>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </QTabPanel>
       </QTabPanels>

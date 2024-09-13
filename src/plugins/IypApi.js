@@ -1,5 +1,6 @@
 import axios from 'axios'
 import cache from './cache.js'
+import { get } from 'idb-keyval'
 
 /// Base url for api
 const IYP_API_BASE = 'https://iyp.iijlab.net/iyp/db/neo4j/tx/'
@@ -14,7 +15,7 @@ const IypApi = {
     })
 
     const run = async (queries) => {
-      const storageAllowed = JSON.parse(localStorage.getItem('storage-allowed'))
+      const storageAllowed = JSON.parse(await get('storage-allowed'))
       let response = await cache(
         JSON.stringify(queries),
         () => {

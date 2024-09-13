@@ -1,5 +1,6 @@
 import axios from 'axios'
 import cache from './cache.js'
+import { get, set } from 'idb-keyval'
 
 // Base URL for RIPE Atlas API
 const RIPE_ATLAS_API_BASE = 'https://atlas.ripe.net/api/v2/'
@@ -13,7 +14,7 @@ const axios_base = axios.create({
 const AtlasApi = {
   install: (app, options) => {
     const getMeasurementById = async (measurementId) => {
-      const storageAllowed = JSON.parse(localStorage.getItem('storage-allowed'))
+      const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}`
       return await cache(
         `${url}`,
@@ -27,7 +28,7 @@ const AtlasApi = {
     }
 
     const getMeasurementData = async (measurementId, params = {}) => {
-      const storageAllowed = JSON.parse(localStorage.getItem('storage-allowed'))
+      const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}/results`
       return await cache(
         `${url}_${JSON.stringify(params)}`,
@@ -43,7 +44,7 @@ const AtlasApi = {
     }
 
     const getProbeById = async (probeId) => {
-      const storageAllowed = JSON.parse(localStorage.getItem('storage-allowed'))
+      const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `probes/${probeId}`
       return await cache(
         `${url}`,

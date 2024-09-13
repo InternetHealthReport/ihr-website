@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { QCard, QCardSection, QCardActions, QBtn } from 'quasar'
+import { get, set } from 'idb-keyval'
 
 const props = defineProps({
   disable: {
@@ -11,16 +12,16 @@ const props = defineProps({
 
 const banner = ref(true)
 
-const onAcceptClick = () => {
-  localStorage.setItem('storage-allowed', true)
+const onAcceptClick = async () => {
+  await set('storage-allowed', true)
   banner.value = false
 }
 const onDeclineClick = () => {
   banner.value = false
 }
-onMounted(() => {
+onMounted(async () => {
   if (!props.disable) {
-    const preferenceValue = localStorage.getItem('storage-allowed')
+    const preferenceValue = await get('storage-allowed')
     if (preferenceValue === null || JSON.parse(preferenceValue) === false) {
       banner.value = true
     } else {

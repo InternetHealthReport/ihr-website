@@ -1,5 +1,6 @@
 import i18n from '@/i18n'
 import { nextTick } from 'vue'
+import { get, set } from 'idb-keyval'
 
 const Trans = {
   set currentLocale(newLocale) {
@@ -18,8 +19,8 @@ const Trans = {
     }
   },
 
-  getPersistedLocale() {
-    const persistedLocale = localStorage.getItem('user-locale')
+  async getPersistedLocale() {
+    const persistedLocale = await get('user-locale')
     if (Trans.isLocaleSupported(persistedLocale)) {
       return persistedLocale
     } else {
@@ -80,8 +81,8 @@ const Trans = {
     await Trans.loadLocaleMessages(newLocale)
     Trans.currentLocale = newLocale
     document.querySelector('html').setAttribute('lang', newLocale)
-    if (JSON.parse(localStorage.getItem('storage-allowed'))) {
-      localStorage.setItem('user-locale', newLocale)
+    if (JSON.parse(await get('storage-allowed'))) {
+      await set('user-locale', newLocale)
     }
   },
 

@@ -1,10 +1,12 @@
+import { get, set, del, clear, keys, getMany, delMany } from 'idb-keyval'
+
 const cache = async (key, fetcher, options) => {
   if (!options) {
     options = defaultOptions
   } else {
     options = Object.assign(defaultOptions, options)
   }
-  let item = getItem(key)
+  let item = await getItem(key)
   if (item) {
     item = JSON.parse(item).data
   } else {
@@ -15,7 +17,7 @@ const cache = async (key, fetcher, options) => {
         data: item
       }
       if (options.storageAllowed) {
-        localStorage.setItem(key, JSON.stringify(sessionObj))
+        await set(key, JSON.stringify(sessionObj))
       }
     } catch (error) {
       if (
@@ -25,30 +27,52 @@ const cache = async (key, fetcher, options) => {
           error.name === 'QuotaExceededError' ||
           error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
       ) {
-        const storageAllowed = getItem('storage-allowed')
-        const userLocale = getItem('user-locale')
-        localStorage.clear()
-        if (storageAllowed) {
-          localStorage.setItem('storage-allowed', storageAllowed)
-        }
-        if (userLocale) {
-          localStorage.setItem('user-locale', userLocale)
-        }
+        await deleteExpiredItemsAndReduceSpace()
+        item = await cache(key, fetcher, options)
       }
     }
   }
   return item
 }
 
-const getItem = (key) => {
-  let item = localStorage.getItem(key)
+const getItem = async (key) => {
+  let item = await get(key)
   if (item) {
     if (JSON.parse(item).expiresAt < new Date().getTime()) {
-      localStorage.removeItem(key)
+      await del(key)
       item = null
     }
   }
   return item
+}
+
+const deleteExpiredItemsAndReduceSpace = async () => {
+  const allKeys = await keys()
+  const allItems = await getMany(allKeys)
+  const keysToDel = []
+  const sortedKeys = []
+  allItems.forEach((item, index) => {
+    const parsedItem = JSON.parse(item)
+    if (parsedItem.expiresAt !== undefined) {
+      const getKey = allKeys.at(index)
+      if (parsedItem.expiresAt < new Date().getTime()) {
+        keysToDel.push(getKey)
+      } else {
+        sortedKeys.push([getKey, parsedItem.expiresAt])
+      }
+    }
+  })
+  if (keysToDel.length) {
+    await delMany(keysToDel)
+  }
+  if (sortedKeys.length) {
+    sortedKeys.sort(([, valueA], [, valueB]) => valueA - valueB)
+    const howManyToDel = Math.floor(sortedKeys.length * 0.5)
+    const sortedKeysToDel = sortedKeys.map(([key]) => key).slice(0, howManyToDel)
+    if (sortedKeysToDel.length) {
+      await delMany(sortedKeysToDel)
+    }
+  }
 }
 
 const setDefaultExpireDate = () => {
