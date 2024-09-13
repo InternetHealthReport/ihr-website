@@ -1,5 +1,6 @@
 import axios from 'axios'
 import cache from './cache.js'
+import { get, set } from 'idb-keyval'
 
 // Base URL for RIPE stat API
 const RIPE_API_BASE = 'https://stat.ripe.net/data/'
@@ -13,7 +14,7 @@ const axios_base = axios.create({
 // Utility function to get data with caching
 const getCachedData = async (url, params) => {
   const key = `${url}_${JSON.stringify(params)}`
-  const cachedData = localStorage.getItem(key)
+  const cachedData = await get(key)
 
   if (cachedData) {
     return JSON.parse(cachedData)
@@ -21,7 +22,7 @@ const getCachedData = async (url, params) => {
 
   const response = await ripe_axios.get(url, { params })
   try {
-    localStorage.setItem(key, JSON.stringify(response.data))
+    await set(key, JSON.stringify(response.data))
   } catch (error) {
     if (
       error instanceof DOMException &&
@@ -43,7 +44,7 @@ export default {
         resource: asn
       }
     }
-    const storageAllowed = false //JSON.parse(localStorage.getItem('storage-allowed'))
+    const storageAllowed = false //await get('storage-allowed'))
     const url = 'asn-neighbours/data.json'
     return await cache(
       `${url}_${JSON.stringify(queryarg)}`,
@@ -56,7 +57,7 @@ export default {
     )
   },
   async userIP() {
-    const storageAllowed = false //JSON.parse(localStorage.getItem('storage-allowed'))
+    const storageAllowed = false //JSON.parse(await get('storage-allowed'))
     const url = 'whats-my-ip/data.json'
     return await cache(
       `${url}_${JSON.stringify({})}`,
@@ -74,7 +75,7 @@ export default {
         resource: ip
       }
     }
-    const storageAllowed = false //JSON.parse(localStorage.getItem('storage-allowed'))
+    const storageAllowed = false //JSON.parse(await get('storage-allowed'))
     const url = 'network-info/data.json'
     return await cache(
       `${url}_${JSON.stringify(queryarg)}`,
@@ -92,7 +93,7 @@ export default {
         resource: ip
       }
     }
-    const storageAllowed = false //JSON.parse(localStorage.getItem('storage-allowed'))
+    const storageAllowed = false //JSON.parse(await get('storage-allowed'))
     const url = 'prefix-overview/data.json'
     return await cache(
       `${url}_${JSON.stringify(queryarg)}`,
