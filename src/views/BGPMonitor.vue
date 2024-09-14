@@ -179,8 +179,9 @@ const handleMessages = (data) => {
     })
   }
   if (data.path && Array.isArray(data.path)) {
+    const uniqueASpath = [...new Set(data.path)]
     // Creating new property and adding AS, AS names and country codes to the "as_info"
-    data.as_info = data.path.map((asn) => getASInfo(asn))
+    data.as_info = uniqueASpath.map((asn) => getASInfo(asn))
   }
   // Creating new property to store the floor timestamp
   data.floor_timestamp = Math.floor(data.timestamp)
