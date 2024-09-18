@@ -53,11 +53,13 @@ const Trans = {
 
   async routeMiddleware(to, _from, next) {
     let paramLocale = to.params.locale
-    if (paramLocale.includes('-')) {
-      paramLocale = paramLocale.split('-')[0]
+    if (paramLocale) {
+      if (paramLocale.includes('-')) {
+        paramLocale = paramLocale.split('-')[0]
+      }
     }
     if (!Trans.isLocaleSupported(paramLocale)) {
-      return next(Trans.guessDefaultLocale())
+      return next(await Trans.guessDefaultLocale())
     }
     await Trans.switchLanguage(paramLocale)
     return next()
