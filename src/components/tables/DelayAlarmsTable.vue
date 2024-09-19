@@ -323,5 +323,5 @@ onMounted(() => {
             margin 0px
             padding-bottom 10px
             & > a
-              color $accent !important
+              color #405057 !important
 </style>

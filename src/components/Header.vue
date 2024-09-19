@@ -306,7 +306,7 @@ menu-delinkify(val)
       box-shadow none
 
   &dropdown-menu
-    background-color $primary
+    background-color #263238
 
     a
       menu-delinkify 1

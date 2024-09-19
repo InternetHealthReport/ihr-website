@@ -21,7 +21,7 @@ import {
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
-import '@/styles/chart.sass'
+import '@/styles/chart.css'
 
 const iyp_api = inject('iyp_api')
 
