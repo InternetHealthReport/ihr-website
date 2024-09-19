@@ -3,7 +3,7 @@ import { QChip, QSpinner, QMarkupTable } from 'quasar'
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
-import '@/styles/chart.sass'
+import '@/styles/chart.css'
 import NetworkTopologyChart from '@/components/charts/NetworkTopologyChart.vue'
 
 const iyp_api = inject('iyp_api')

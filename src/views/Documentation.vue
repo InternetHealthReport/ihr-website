@@ -278,10 +278,10 @@ const sectionActive = ref('')
       margin 4pt auto 2pt auto
 
       & a:hover
-        border-bottom 1px solid $primary
+        border-bottom 1px solid #263238
 
       & a:active
-        border-bottom 1px solid $accent
+        border-bottom 1px solid #405057
 
       & ul
         margin 5px
@@ -307,5 +307,5 @@ const sectionActive = ref('')
 
 .router-link-inactived:hover,
 .router-link-actived:hover
-  border-bottom 1px solid $primary
+  border-bottom 1px solid #263238
 </style>

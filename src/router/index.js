@@ -1,25 +1,5 @@
 import { RouterView, createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import Documentation from '../views/Documentation.vue'
-import Contact from '../views/Contact.vue'
-import Api from '../views/Api.vue'
-import MetisHome from '../views/MetisHome.vue'
-import MetisSelection from '../views/MetisSelection.vue'
-import MetisDeployment from '../views/MetisDeployment.vue'
-import ROV from '../views/ROV.vue'
-import Corona from '../views/Corona.vue'
-import PageNotFound from '../views/PageNotFound.vue'
-import GlobalReport from '../views/GlobalReport.vue'
-import Networks from '../views/Networks.vue'
-import Tags from '../views/Tags.vue'
-import HostNames from '../views/HostNames.vue'
-import Countries from '../views/Countries.vue'
-import Ranks from '../views/Ranks.vue'
 import Tr from '@/i18n/translation'
-import Observable from '../views/Observable.vue'
-import NetworkTopology from '../views/NetworkTopology.vue'
-import BGPMonitor from '../views/BGPMonitor.vue'
-import TracerouteVisualizationTool from '../views/TracerouteVisualizationTool.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_URL),
@@ -50,87 +30,87 @@ const router = createRouter({
         {
           path: '',
           name: 'home',
-          component: Home
+          component: () => import('../views/Home.vue')
         },
         {
           path: 'global-report',
           name: 'global-report',
-          component: GlobalReport
+          component: () => import('../views/GlobalReport.vue')
         },
         {
           path: 'network/:id?',
           name: 'network',
-          component: Networks
+          component: () => import('../views/Networks.vue')
         },
         {
           path: 'prefix/:ip?/:length?',
           name: 'prefix',
-          component: Networks
+          component: () => import('../views/Networks.vue')
         },
         {
           path: 'tag/:tag?',
           name: 'tag',
-          component: Tags
+          component: () => import('../views/Tags.vue')
         },
         {
           path: 'hostname/:hostname?',
           name: 'hostname',
-          component: HostNames
+          component: () => import('../views/HostNames.vue')
         },
         {
           path: 'rank/:rank?',
           name: 'rank',
-          component: Ranks
+          component: () => import('../views/Ranks.vue')
         },
         {
           path: 'documentation',
           name: 'documentation',
-          component: Documentation
+          component: () => import('../views/Documentation.vue')
         },
         {
           path: 'contact',
           name: 'contact',
-          component: Contact
+          component: () => import('../views/Contact.vue')
         },
         {
           path: 'country/:cc?',
           name: 'country',
-          component: Countries
+          component: () => import('../views/Countries.vue')
         },
         {
           path: 'rov',
           name: 'rov',
-          component: ROV
+          component: () => import('../views/ROV.vue')
         },
         {
           path: 'covid19',
           name: 'covid19',
-          component: Corona
+          component: () => import('../views/Corona.vue')
         },
         {
           path: 'api',
           name: 'api',
-          component: Api
+          component: () => import('../views/Api.vue')
         },
         {
           path: 'metis',
           name: 'metis',
-          component: MetisHome
+          component: () => import('../views/MetisHome.vue')
         },
         {
           path: 'metis/selection',
           name: 'metis-selection',
-          component: MetisSelection
+          component: () => import('../views/MetisSelection.vue')
         },
         {
           path: 'metis/deployment',
           name: 'metis-deployment',
-          component: MetisDeployment
+          component: () => import('../views/MetisDeployment.vue')
         },
         {
           path: 'observable',
           name: 'observable',
-          component: Observable
+          component: () => import('../views/Observable.vue')
         },
         {
           path: 'networks/:id?',
@@ -159,24 +139,24 @@ const router = createRouter({
         {
           path: 'network-topology',
           name: 'network-topology',
-          component: NetworkTopology
+          component: () => import('../views/NetworkTopology.vue')
         },
         {
           path: 'bgp-monitor',
           name: 'bgp-monitor',
-          component: BGPMonitor
+          component: () => import('../views/BGPMonitor.vue')
         },
         {
           path: 'traceroute-monitor',
           name: 'traceroute-monitor',
-          component: TracerouteVisualizationTool
+          component: () => import('../views/TracerouteVisualizationTool.vue')
         }
       ]
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'page-not-found',
-      component: PageNotFound
+      component: () => import('../views/PageNotFound.vue')
     }
   ]
 })

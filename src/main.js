@@ -1,4 +1,4 @@
-import './styles/main.sass'
+import './styles/main.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -7,7 +7,7 @@ import { Quasar } from 'quasar'
 import '@quasar/extras/roboto-font/roboto-font.css'
 import '@quasar/extras/material-icons/material-icons.css'
 import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
-import 'quasar/src/css/index.sass'
+import 'quasar/dist/quasar.css'
 import i18n from './i18n'
 import { IhrApi } from '@/plugins/IhrApi'
 import { LibraryDelayer } from '@/plugins/LibraryDelayer'
@@ -20,7 +20,18 @@ const app = createApp(App)
 
 app.use(router)
 app.use(Quasar, {
-  plugins: {}
+  plugins: {},
+  config: {
+    brand: {
+      primary: '#263238',
+      secondary: '#1976d2',
+      accent: '#405057',
+      positive: '#21ba45',
+      negative: '#c10015',
+      info: '#4f5b62',
+      warning: '#ffee58'
+    }
+  }
 })
 app.use(i18n)
 app.use(IhrApi)

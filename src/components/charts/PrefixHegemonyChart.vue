@@ -6,7 +6,7 @@ import { AS_INTERDEPENDENCIES_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import { useRoute, useRouter } from 'vue-router'
 import PrefixHegemonyTable from '../tables/PrefixHegemonyTable.vue'
 import PrefixHegemonyTableStats from '../tables/PrefixHegemonyTableStats.vue'
-import '@/styles/chart.sass'
+import '@/styles/chart.css'
 
 const ihr_api = inject('ihr_api')
 

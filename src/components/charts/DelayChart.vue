@@ -8,7 +8,7 @@ import {
   DEFAULT_MIN_DIFFMEDIAN,
   DEFAULT_MAX_DIFFMEDIAN
 } from '@/plugins/delay'
-import '@/styles/chart.sass'
+import '@/styles/chart.css'
 
 const ihr_api = inject('ihr_api')
 

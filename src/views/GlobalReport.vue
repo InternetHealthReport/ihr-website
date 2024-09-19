@@ -403,7 +403,7 @@ onMounted(() => {
           font-weight 600
 
         & > span
-          color $accent
+          color #405057
           display inline-block
           padding 14px 0px
           transform rotate(-90deg)

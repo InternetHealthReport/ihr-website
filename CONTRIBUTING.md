@@ -388,9 +388,8 @@ pull request or create an issue.
 │   ├── router
 │   │   └── index.js: Contains the Vue routing 
 │   ├── styles
-│   │   ├── chart.sass: Contains CSS classes for the charts
-│   │   ├── main.sass: Contains CSS classes for the webpage
-│   │   └── quasar.variables.sass: Contains CSS variables for the quasar library
+│   │   ├── chart.css: Contains CSS classes for the charts
+│   │   └── main.css: Contains CSS classes for the webpage
 │   └── views
 │       ├── Api.vue: A component that creates the API page. It provides a UI for making calls to IHR API.
 │       ├── BGPMonitor.vue: A component that creates the BGP monitor tool page
