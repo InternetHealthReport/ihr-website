@@ -247,7 +247,20 @@ const simpleDependenciesFormat = (val) => {
 
       <template v-slot:body-cell-prefix="props">
         <QTd :props="props">
-          {{ props.row.prefix.value }}
+          <RouterLink
+            class="IHR_delikify"
+            :to="
+              Tr.i18nRoute({
+                name: 'prefix',
+                params: {
+                  ip: props.row.prefix.value.split('/')[0],
+                  length: props.row.prefix.value.split('/')[1]
+                }
+              })
+            "
+          >
+            {{ props.row.prefix.value }}
+          </RouterLink>
           <span class="text-weight-thin float-right">{{ props.row.prefix.descr }}</span>
         </QTd>
       </template>
