@@ -148,7 +148,7 @@ const init = () => {
 }
 
 const isPrefix = (input) => {
-  if (input.includes('.')) {
+  if (input.includes('.') || input.includes(':')) {
     return true
   } else {
     return false
@@ -430,6 +430,8 @@ watch(
 
 watch(searchInput, (newValue) => {
   emit('searchChange', props.id, newValue)
+  if(newValue.includes('.')) ipModel.value = "IPv4"
+  else if(newValue.includes(':')) ipModel.value = "IPv6"
 })
 
 watch(ipModel, (newValue) => {
@@ -453,7 +455,7 @@ defineExpose({ fitToScreen })
             style="max-width: 145px"
             outlined
             v-model="searchInput"
-            placeholder="ASN"
+            placeholder="Search"
             :dense="true"
           />
           <QSelect
