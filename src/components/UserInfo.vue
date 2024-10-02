@@ -95,10 +95,13 @@ onMounted(() => {
 
 <style lang="stylus">
 .user-info-card
-  width inherit
+  width 100% 
+  max-width 600px
+  height 190px
   background-color rgba(0,0,0,0) !important
   border-color white !important
   color white !important
+  overflow hidden 
 
 .user-info-text
   font-size 14px !important
@@ -110,4 +113,10 @@ onMounted(() => {
 .loading-spinner
   margin-top 30px
   text-align center
+  width 100%  
+  height 100%
+  display flex
+  justify-content center
+  align-items center
+  
 </style>
