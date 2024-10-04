@@ -26,7 +26,16 @@ import ASSiblingASes from '@/components/iyp/as/ASSiblingASes.vue'
 import ASRankings from '@/components/iyp/as/ASRankings.vue'
 import ASAuthoritativeNameservers from '@/components/iyp/as/ASAuthoritativeNameservers.vue'
 
-const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'peeringdbId', 'pageTitle', 'interval', 'hash'])
+const props = defineProps([
+  'startTime',
+  'endTime',
+  'asNumber',
+  'family',
+  'peeringdbId',
+  'pageTitle',
+  'interval',
+  'hash'
+])
 
 const route = useRoute()
 const router = useRouter()
@@ -55,25 +64,31 @@ const selects = ref([
   { value: false, label: t('iyp.as.ixp.title') },
   { value: false, label: t('iyp.as.facilities.title') },
   { value: false, label: t('iyp.as.siblings.title') },
-  { value: false, label: t('iyp.as.rankings.title') },
+  { value: false, label: t('iyp.as.rankings.title') }
 ])
 const selectAll = ref(false)
 
 const pushRoute = () => {
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      display: JSON.stringify(selects.value.map((obj, index) => {
-        if (obj.value) {
-          return index
-        }
-      }).filter(val => val != null))
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        display: JSON.stringify(
+          selects.value
+            .map((obj, index) => {
+              if (obj.value) {
+                return index
+              }
+            })
+            .filter((val) => val != null)
+        )
+      })
     })
-  }))
+  )
 }
 
 const hashToDisplay = (hash) => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.label === hash.replace('#', '').replaceAll('-', ' ')) {
       obj.value = true
     }
@@ -85,7 +100,7 @@ watch(selects.value, () => {
 })
 
 watch(selectAll, () => {
-  selects.value.forEach(obj => obj.value = selectAll.value)
+  selects.value.forEach((obj) => (obj.value = selectAll.value))
 })
 
 onMounted(() => {
@@ -96,7 +111,7 @@ onMounted(() => {
   } else if (route.hash) {
     hashToDisplay(route.hash)
   } else {
-    displayWidgets.value.forEach(val => selects.value[val].value = true)
+    displayWidgets.value.forEach((val) => (selects.value[val].value = true))
   }
 })
 </script>
@@ -194,16 +209,13 @@ onMounted(() => {
 
   <GenericCardController
     :title="$t('iyp.as.atlas.title')"
-    :sub-title="$t('iyp.as.atlas.caption')+asNumber"
+    :sub-title="$t('iyp.as.atlas.caption') + asNumber"
     :info-title="$t('iyp.as.atlas.info.title')"
     :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
     v-if="selects[5].value"
   >
-    <ASRipeAtlas
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASRipeAtlas :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 
   <!-- <GenericCardController
@@ -243,135 +255,105 @@ onMounted(() => {
   <!-- Routing -->
   <GenericCardController
     :title="$t('iyp.as.ipPrefix.title')"
-    :sub-title="$t('iyp.as.ipPrefix.caption')+asNumber"
+    :sub-title="$t('iyp.as.ipPrefix.caption') + asNumber"
     :info-title="$t('iyp.as.ipPrefix.info.title')"
     :info-description="$t('iyp.as.ipPrefix.info.description')"
     class="card"
     v-if="selects[7].value"
   >
-    <ASOriginatedPrefixes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASOriginatedPrefixes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.peers.title')"
-    :sub-title="$t('iyp.as.peers.caption')+asNumber"
+    :sub-title="$t('iyp.as.peers.caption') + asNumber"
     :info-title="$t('iyp.as.peers.info.title')"
     :info-description="$t('iyp.as.peers.info.description')"
     class="card"
     v-if="selects[8].value"
   >
-    <ASConnectedASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASConnectedASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.upstreams.title')"
-    :sub-title="$t('iyp.as.upstreams.caption')+asNumber"
+    :sub-title="$t('iyp.as.upstreams.caption') + asNumber"
     :info-title="$t('iyp.as.upstreams.info.title')"
     :info-description="$t('iyp.as.upstreams.info.description')"
     class="card"
     v-if="selects[9].value"
   >
-    <ASUpstreamASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASUpstreamASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.downstreams.title')"
-    :sub-title="$t('iyp.as.downstreams.caption')+asNumber"
+    :sub-title="$t('iyp.as.downstreams.caption') + asNumber"
     :info-title="$t('iyp.as.downstreams.info.title')"
     :info-description="$t('iyp.as.downstreams.info.description')"
     class="card"
     v-if="selects[10].value"
   >
-    <ASDownstreamsASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASDownstreamsASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.roas.title')"
-    :sub-title="$t('iyp.as.roas.caption')+asNumber"
+    :sub-title="$t('iyp.as.roas.caption') + asNumber"
     :info-title="$t('iyp.as.roas.info.title')"
     :info-description="$t('iyp.as.roas.info.description')"
     class="card"
     v-if="selects[11].value"
   >
-    <ASRPKIRouteOriginAuthorization
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASRPKIRouteOriginAuthorization :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
     :title="$t('iyp.as.popularDomains.title')"
-    :sub-title="$t('iyp.as.popularDomains.caption')+asNumber"
+    :sub-title="$t('iyp.as.popularDomains.caption') + asNumber"
     :info-title="$t('iyp.as.popularDomains.info.title')"
     :info-description="$t('iyp.as.popularDomains.info.description')"
     class="card"
     v-if="selects[12].value"
   >
-    <ASPopularDomains
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASPopularDomains :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.popularHostNames.title')"
-    :sub-title="$t('iyp.as.popularHostNames.caption')+asNumber"
+    :sub-title="$t('iyp.as.popularHostNames.caption') + asNumber"
     :info-title="$t('iyp.as.popularHostNames.info.title')"
     :info-description="$t('iyp.as.popularHostNames.info.description')"
     class="card"
     v-if="selects[13].value"
   >
-    <ASPopularHostNames
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASPopularHostNames :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.authoritativeNameservers.title')"
-    :sub-title="$t('iyp.as.authoritativeNameservers.caption')+asNumber"
+    :sub-title="$t('iyp.as.authoritativeNameservers.caption') + asNumber"
     :info-title="$t('iyp.as.authoritativeNameservers.info.title')"
     :info-description="$t('iyp.as.authoritativeNameservers.info.description')"
     class="card"
     v-if="selects[14].value"
   >
-    <ASAuthoritativeNameservers
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASAuthoritativeNameservers :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
     :title="$t('iyp.as.ixp.title')"
-    :sub-title="$t('iyp.as.ixp.caption')+asNumber"
+    :sub-title="$t('iyp.as.ixp.caption') + asNumber"
     :info-title="$t('iyp.as.ixp.info.title')"
     :info-description="$t('iyp.as.ixp.info.description')"
     class="card"
     v-if="selects[15].value"
   >
-    <ASIXPs
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASIXPs :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.facilities.title')"
-    :sub-title="$t('iyp.as.facilities.caption')+asNumber"
+    :sub-title="$t('iyp.as.facilities.caption') + asNumber"
     :info-title="$t('iyp.as.facilities.info.title')"
     :info-description="$t('iyp.as.facilities.info.description')"
     class="card"
     v-if="selects[16].value"
   >
-    <ASCoLocatedASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASCoLocatedASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Registration -->
   <GenericCardController
@@ -382,24 +364,18 @@ onMounted(() => {
     class="card"
     v-if="selects[17].value"
   >
-    <ASSiblingASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASSiblingASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
     :title="$t('iyp.as.rankings.title')"
-    :sub-title="$t('iyp.as.rankings.caption')+asNumber"
+    :sub-title="$t('iyp.as.rankings.caption') + asNumber"
     :info-title="$t('iyp.as.rankings.info.title')"
     :info-description="$t('iyp.as.rankings.info.description')"
     class="card"
     v-if="selects[18].value"
   >
-    <ASRankings
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASRankings :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

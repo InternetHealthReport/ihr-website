@@ -5,15 +5,15 @@ import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   chartData: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   chartLayout: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   },
   config: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   }
 })
 
@@ -25,8 +25,10 @@ const actualLayout = ref({})
 
 const renderChart = () => {
   const formattedData = formatChartData(localChartData.value)
-  let textinfo =  props.config.textinfo ? props.config.textinfo : 'label'
-  let hovertemplate = props.config.hovertemplate ? props.config.hovertemplate : '%{label}<br>%{value}<extra></extra>'
+  let textinfo = props.config.textinfo ? props.config.textinfo : 'label'
+  let hovertemplate = props.config.hovertemplate
+    ? props.config.hovertemplate
+    : '%{label}<br>%{value}<extra></extra>'
 
   let data = [
     {
@@ -39,11 +41,11 @@ const renderChart = () => {
       branchvalues: 'total',
       textinfo: textinfo,
       hovertemplate: hovertemplate
-    },
+    }
   ]
 
   const layout = {
-    ...props.chartLayout,
+    ...props.chartLayout
   }
 
   actualData.value = data
@@ -56,15 +58,15 @@ const formatChartData = (arrayOfObjects) => {
   }
 
   let handler = {
-    get: function(target, name) {
-      if(target.hasOwnProperty(name)) return target[name]
+    get: function (target, name) {
+      if (target.hasOwnProperty(name)) return target[name]
       // check if it is an object returned by cypher
-      if(target.keys && target.keys.includes(name)) return target[name]
-      return '';
+      if (target.keys && target.keys.includes(name)) return target[name]
+      return ''
     }
-  };
+  }
 
-  let emptyObj = new Proxy({}, handler);
+  let emptyObj = new Proxy({}, handler)
 
   let ids = []
   let labels = []
@@ -72,7 +74,7 @@ const formatChartData = (arrayOfObjects) => {
   let values = []
   let extras = []
   let parent_extra = {}
-  let total = {child: 0, value: 0}
+  let total = { child: 0, value: 0 }
   let leafs = {}
   let ex_leaf_item = ''
 
@@ -80,21 +82,20 @@ const formatChartData = (arrayOfObjects) => {
   ids.push(root)
   labels.push(root)
   parents.push('')
-  extras.push( emptyObj )
+  extras.push(emptyObj)
   values.push(0)
-  parent_extra[root] = {'__sum_value': 0, '__sum_child': 0}
+  parent_extra[root] = { __sum_value: 0, __sum_child: 0 }
 
   const map = {}
 
   let keys = props.config.keys
-  let lastKey = keys[keys.length-1]
-  arrayOfObjects.forEach(item => {
-
+  let lastKey = keys[keys.length - 1]
+  arrayOfObjects.forEach((item) => {
     let currentID = root
-    let parentID =  ''
+    let parentID = ''
     let item_value = props.config.keyValue ? Number(item[props.config.keyValue]) : 1
 
-    keys.forEach( key => {
+    keys.forEach((key) => {
       parentID = currentID
       currentID += item[key]
 
@@ -106,7 +107,7 @@ const formatChartData = (arrayOfObjects) => {
         labels.push(item[key])
         parents.push(parentID)
 
-        if(key==lastKey){
+        if (key == lastKey) {
           extras.push(new Proxy(item, handler))
           values.push(item_value)
           ex_leaf_item = item
@@ -117,17 +118,14 @@ const formatChartData = (arrayOfObjects) => {
           total.value += item_value
           item['__sum_child'] = 1
           item['__sum_value'] = item_value
-
-        }
-        else{
+        } else {
           // Maintain stats to calculate percentage per nodes
-          parent_extra[currentID] = {'__sum_value': item_value, '__sum_child': 1}
-          extras.push(new Proxy(parent_extra[currentID], handler) )
+          parent_extra[currentID] = { __sum_value: item_value, __sum_child: 1 }
+          extras.push(new Proxy(parent_extra[currentID], handler))
           values.push(0)
         }
-      }
-      else{
-        if(key!=lastKey){
+      } else {
+        if (key != lastKey) {
           // Maintain stats to calculate percentage per nodes
           parent_extra[currentID].__sum_value += item_value
           parent_extra[currentID].__sum_child += 1
@@ -137,25 +135,25 @@ const formatChartData = (arrayOfObjects) => {
   })
 
   // Update the total for all customdata and compute percentages
-  for(let i=0; i < extras.length; i++){
+  for (let i = 0; i < extras.length; i++) {
     let item = extras[i]
 
     values[i] = item['__sum_value']
 
-    item['percent'] = 100*item['__sum_value']/total.value
+    item['percent'] = (100 * item['__sum_value']) / total.value
     item['__total_child'] = total.child
     item['__total_value'] = total.value
 
     values[0] = item['__total_value']
 
-    if( !leafs[labels[i]]  & labels[i]!=root ){
-      if(props.config.show_percent){
-        labels[i] = labels[i]+' ('+item['percent'].toFixed(1)+'%)'
+    if (!leafs[labels[i]] & (labels[i] != root)) {
+      if (props.config.show_percent) {
+        labels[i] = labels[i] + ' (' + item['percent'].toFixed(1) + '%)'
       }
 
       // Default customdata to empty strings to avoid displaying hovertemplate syntax
-      Object.getOwnPropertyNames(ex_leaf_item).forEach( prop => {
-        if( !item[prop]) item[prop] = '';
+      Object.getOwnPropertyNames(ex_leaf_item).forEach((prop) => {
+        if (!item[prop]) item[prop] = ''
       })
     }
   }
@@ -174,9 +172,13 @@ const init = () => {
   }
 }
 
-watch(() => props.chartData, () => {
-  init()
-}, { deep: true })
+watch(
+  () => props.chartData,
+  () => {
+    init()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   init()

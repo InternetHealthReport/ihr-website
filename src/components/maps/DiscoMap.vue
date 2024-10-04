@@ -10,16 +10,16 @@ const { t } = useI18n()
 const props = defineProps({
   events: {
     type: Array,
-    required: true,
+    required: true
   },
   loading: {
     type: Boolean,
-    default: true,
+    default: true
   },
   yMax: {
     type: Number,
-    default: 1,
-  },
+    default: 1
+  }
 })
 
 const layout = ref({
@@ -30,7 +30,7 @@ const layout = ref({
     showland: true,
     landcolor: 'rgb(215, 215, 215)',
     countrycolor: 'rgb(235, 235, 235)',
-    showcountries: true,
+    showcountries: true
   }
 })
 const probes = ref([])
@@ -38,7 +38,7 @@ const noData = ref(t('loading'))
 
 const updateProbes = () => {
   probes.value = []
-  props.events.forEach(event => {
+  props.events.forEach((event) => {
     let label = ''
     if (event.streamtype == 'asn') {
       label = 'AS' + event.streamname
@@ -47,7 +47,7 @@ const updateProbes = () => {
     } else {
       label = event.streamname
     }
-    event.discoprobes.forEach(newProbe => {
+    event.discoprobes.forEach((newProbe) => {
       var start = new Date(newProbe.starttime)
       var end = new Date(newProbe.endtime)
       if (start.getTime() == end.getTime()) {
@@ -60,7 +60,7 @@ const updateProbes = () => {
         lat: newProbe.lat,
         id: newProbe.probe_id,
         startTime: start,
-        endTime: end,
+        endTime: end
       })
     })
   })
@@ -75,14 +75,17 @@ const dateFormatter = (datetime) => {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'UTC',
+    timeZone: 'UTC'
   }
   return dt.toLocaleDateString(undefined, options)
 }
 
-watch(() => props.events, () => {
-  updateProbes()
-})
+watch(
+  () => props.events,
+  () => {
+    updateProbes()
+  }
+)
 
 const traces = computed(() => {
   let latitudes = []
@@ -90,7 +93,7 @@ const traces = computed(() => {
   let sizes = []
   let colors = []
   let text = []
-  probes.value.forEach(prob => {
+  probes.value.forEach((prob) => {
     latitudes.push(prob.lat)
     longitudes.push(prob.lon)
     let color = prob.level - 6
@@ -129,11 +132,11 @@ const traces = computed(() => {
         color: colors,
         line: {
           color: 'black',
-          width: 1,
-        },
+          width: 1
+        }
       },
-      name: 'world events',
-    },
+      name: 'world events'
+    }
   ]
 })
 </script>

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { QCard, QCardSection, QCardActions, QBtn } from 'quasar'
+import { get, set } from 'idb-keyval'
 
 const props = defineProps({
   disable: {
@@ -11,16 +12,16 @@ const props = defineProps({
 
 const banner = ref(true)
 
-const onAcceptClick = () => {
-  localStorage.setItem('storage-allowed', true)
+const onAcceptClick = async () => {
+  await set('storage-allowed', true)
   banner.value = false
 }
 const onDeclineClick = () => {
   banner.value = false
 }
-onMounted(() => {
+onMounted(async () => {
   if (!props.disable) {
-    const preferenceValue = localStorage.getItem('storage-allowed')
+    const preferenceValue = await get('storage-allowed')
     if (preferenceValue === null || JSON.parse(preferenceValue) === false) {
       banner.value = true
     } else {
@@ -35,11 +36,11 @@ onMounted(() => {
 <template>
   <QCard v-if="banner" dark class="fixed-bottom" wrap-text>
     <QCardSection class="text">
-      We use local storage to enhance your experience on our website.
-      By clicking &#39;Accept&#39;, you agree to allow us to store and access data on your device.
-      This helps us personalize content, remember preferences, and provide seamless
-      functionality. Your data is secure and will not be shared with third parties.
-      Thank you for trusting us with your browsing experience!
+      We use local storage to enhance your experience on our website. By clicking &#39;Accept&#39;,
+      you agree to allow us to store and access data on your device. This helps us personalize
+      content, remember preferences, and provide seamless functionality. Your data is secure and
+      will not be shared with third parties. Thank you for trusting us with your browsing
+      experience!
     </QCardSection>
     <QCardActions align="right">
       <QBtn flat color="green" label="Accept" @click="onAcceptClick" />

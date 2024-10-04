@@ -9,23 +9,23 @@ const GRAPHS_TYPES = [
   {
     name: 'homePage.analysisModules.asInterdependence',
     icon: 'fas fa-project-diagram',
-    docsQuery: {},
+    docsQuery: {}
   },
   {
     name: 'homePage.analysisModules.networkDelay',
     icon: 'fas fa-shipping-fast',
-    docsQuery: {},
+    docsQuery: {}
   },
   {
     name: 'homePage.analysisModules.delayAndForwarding',
     icon: 'fas fa-exchange-alt',
-    docsQuery: {},
+    docsQuery: {}
   },
   {
     name: 'homePage.analysisModules.disco',
     icon: 'fas fa-plug',
-    docsQuery: {},
-  },
+    docsQuery: {}
+  }
 ]
 
 const ORGANIZATIONS = [
@@ -60,8 +60,9 @@ const ORGANIZATIONS = [
 ]
 
 const PLACEHOLDER_VALUES = {
-  asPaper: "<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
-  close: '</a>',
+  asPaper:
+    "<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
+  close: '</a>'
   /*
   ripe: "<a href='https://atlas.ripe.net/' target='_blank'>RIPE Atlas</a>",
   bgpstream:
@@ -74,10 +75,10 @@ const PLACEHOLDER_VALUES = {
 }
 
 const props = defineProps({
-    showSidebar: {
-        type: Boolean,
-        default: false
-    }
+  showSidebar: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const graphTypes = ref(GRAPHS_TYPES)
@@ -91,7 +92,12 @@ const organizations = ref(ORGANIZATIONS)
       <div class="col">
         <div>Internet Health Report</div>
         <div class="IHR_actions-area">
-          <QBtn outline style="width: inherit; font-size: large;" :to="Tr.i18nRoute({ name: 'global-report' })">{{ $t('homePage.globalReport.name') }}</QBtn>
+          <QBtn
+            outline
+            style="width: inherit; font-size: large"
+            :to="Tr.i18nRoute({ name: 'global-report' })"
+            >{{ $t('homePage.globalReport.name') }}</QBtn
+          >
           <div class="ihr-home-line"></div>
           <UserInfo />
         </div>
@@ -118,11 +124,14 @@ const organizations = ref(ORGANIZATIONS)
           <div class="IHR_description" v-html="$t(`${graphT.name}.description`)"></div>
           <div class="IHR_description IHR_description-link">
             <RouterLink
-              :to="Tr.i18nRoute({
-                name: 'documentation',
-                hash: $t(`${graphT.name}.docHash`),
-              })"
-              >{{ $t('homePage.learnmore') }} {{ $t(`${graphT.name}.title`) }}</RouterLink>
+              :to="
+                Tr.i18nRoute({
+                  name: 'documentation',
+                  hash: $t(`${graphT.name}.docHash`)
+                })
+              "
+              >{{ $t('homePage.learnmore') }} {{ $t(`${graphT.name}.title`) }}</RouterLink
+            >
           </div>
         </QCardSection>
       </QCard>
@@ -151,10 +160,10 @@ const organizations = ref(ORGANIZATIONS)
       <div class="row wrap justify-center">
         <div v-for="(org, index) in organizations" :key="index">
           <a :href="$t(`homePage.ack.organizations.${org.name}.url`)" target="_blank">
-          <div class="IHR_ack-logo">
-            <span></span>
-            <img :src="org.logo" :alt="$t(`homePage.ack.organizations.${org.name}.name`)" />
-          </div>
+            <div class="IHR_ack-logo">
+              <span></span>
+              <img :src="org.logo" :alt="$t(`homePage.ack.organizations.${org.name}.name`)" />
+            </div>
           </a>
         </div>
       </div>
@@ -286,8 +295,8 @@ const organizations = ref(ORGANIZATIONS)
 
       & > img:hover {
         transform: scale(1.1);
-      }  
-        
+      }
+
 
 .analysis-modules
     max-width 600px
@@ -297,6 +306,4 @@ const organizations = ref(ORGANIZATIONS)
 @media(max-width 1411px)
   .analysis-modules
     margin-left 0
-
-
 </style>

@@ -11,17 +11,17 @@ const props = defineProps({
   },
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   filter: {
     type: String,
-    default: '',
+    default: ''
   }
 })
 
 const emit = defineEmits({
-  'filteredRows': (filteredSearchRowValues) => {
-    if(filteredSearchRowValues !== null) {
+  filteredRows: (filteredSearchRowValues) => {
+    if (filteredSearchRowValues !== null) {
       return true
     } else {
       console.warn('FilteredSearchRowValues is missing')
@@ -47,44 +47,46 @@ const columns = ref([
     name: 'rank',
     label: 'Rank',
     field: 'rank',
-    sortable: true,
+    sortable: true
   },
   {
     name: 'asNumber',
     label: 'ASN',
     field: 'asn',
     align: 'left',
-    sortable: true,
+    sortable: true
   },
   {
     name: 'asName',
     label: 'Autonomous System Name',
     field: 'asn_name',
     align: 'left',
-    sortable: true,
+    sortable: true
   },
   {
     name: 'cc',
     label: 'Country',
     field: 'cc',
-    sortable: true,
-}
+    sortable: true
+  }
 ])
 
 const $q = useQuasar()
 
 const exportTable = () => {
-  const content = [columns.value.map(col => wrapCsvValue(col.field))]
-    .concat(rows.value.map(row => columns.value.map(col => wrapCsvValue(row[col.field])).join(',')))
+  const content = [columns.value.map((col) => wrapCsvValue(col.field))]
+    .concat(
+      rows.value.map((row) => columns.value.map((col) => wrapCsvValue(row[col.field])).join(','))
+    )
     .join('\n')
 
   const status = exportFile('selected-ases.csv', content, 'text/csv')
 
-  if(status !== true) {
+  if (status !== true) {
     $q.notify({
       message: 'Browser denied file download...',
       color: 'negative',
-      icon: 'warning',
+      icon: 'warning'
     })
   }
 }
@@ -115,5 +117,4 @@ const exportTable = () => {
   </QTable>
 </template>
 
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>

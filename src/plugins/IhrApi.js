@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { 
+import {
   AS_FAMILY,
   QueryBase,
   Query,
@@ -20,7 +20,7 @@ import {
   HegemonyCountryQuery,
   NetworkDelayAlarmsQuery,
   HegemonyAlarmsQuery
- } from './query/IhrQuery'
+} from './query/IhrQuery'
 
 /// Base url for api
 const IHR_API_BASE = 'https://ihr.iijlab.net/ihr/api/'
@@ -33,17 +33,18 @@ const IhrApi = {
   install: (app, options) => {
     const axios_base = axios.create({
       baseURL: IHR_API_BASE,
-      timeout: DEFAULT_TIMEOUT,
+      timeout: DEFAULT_TIMEOUT
     })
 
     const _resolveAxiosPromise = (endpoint, query, successCallback, errorCallback) => {
-      axios_base.get(endpoint, { params: query })
-        .then(res => {
+      axios_base
+        .get(endpoint, { params: query })
+        .then((res) => {
           if (successCallback instanceof Function) {
             successCallback(res.data, res)
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.error('error:', error)
           if (error.response) {
             if (errorCallback instanceof Function) {
@@ -76,7 +77,7 @@ const IhrApi = {
       }
       _resolveAxiosPromise(endpoint, query, successCallback, errorCallback)
     }
-    
+
     const getUrl = (queryFilter) => {
       if (queryFilter == null) {
         return ''
@@ -138,30 +139,15 @@ const IhrApi = {
     }
 
     const hegemony_prefix = (hegemonyPrefixQuery, successCallback, errorCallback) => {
-      _generic(
-        HegemonyPrefixQuery.ENTRY_POINT,
-        hegemonyPrefixQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(HegemonyPrefixQuery.ENTRY_POINT, hegemonyPrefixQuery, successCallback, errorCallback)
     }
 
     const network_delay = (networkDelayQuery, successCallback, errorCallback) => {
-      _generic(
-        NetworkDelayQuery.ENTRY_POINT,
-        networkDelayQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(NetworkDelayQuery.ENTRY_POINT, networkDelayQuery, successCallback, errorCallback)
     }
 
     const network = (networkQuery, successCallback, errorCallback) => {
-      _generic(
-        NetworkQuery.ENTRY_POINT,
-        networkQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(NetworkQuery.ENTRY_POINT, networkQuery, successCallback, errorCallback)
     }
 
     const network_delay_location = (networkDelayLocation, successCallback, errorCallback) => {
@@ -174,39 +160,19 @@ const IhrApi = {
     }
 
     const country = (countryQuery, successCallback, errorCallback) => {
-      _generic(
-        CountryQuery.ENTRY_POINT,
-        countryQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(CountryQuery.ENTRY_POINT, countryQuery, successCallback, errorCallback)
     }
 
     const hegemony = (hegemonyQuery, successCallback, errorCallback) => {
-      _generic(
-        HegemonyQuery.ENTRY_POINT,
-        hegemonyQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(HegemonyQuery.ENTRY_POINT, hegemonyQuery, successCallback, errorCallback)
     }
 
     const hegemony_cone = (hegemonyConeQuery, successCallback, errorCallback) => {
-      _generic(
-        HegemonyConeQuery.ENTRY_POINT,
-        hegemonyConeQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(HegemonyConeQuery.ENTRY_POINT, hegemonyConeQuery, successCallback, errorCallback)
     }
 
     const delay_alarms = (delayAlarmsQuery, successCallback, errorCallback) => {
-      _generic(
-        DelayAlarmsQuery.ENTRY_POINT,
-        delayAlarmsQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(DelayAlarmsQuery.ENTRY_POINT, delayAlarmsQuery, successCallback, errorCallback)
     }
 
     const forwarding_alarms = (forwardingAlarmsQuery, successCallback, errorCallback) => {
@@ -219,30 +185,15 @@ const IhrApi = {
     }
 
     const forwarding = (forwardingQuery, successCallback, errorCallback) => {
-      _generic(
-        ForwardingQuery.ENTRY_POINT,
-        forwardingQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(ForwardingQuery.ENTRY_POINT, forwardingQuery, successCallback, errorCallback)
     }
 
     const delay = (delayQuery, successCallback, errorCallback) => {
-      _generic(
-        DelayQuery.ENTRY_POINT,
-        delayQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(DelayQuery.ENTRY_POINT, delayQuery, successCallback, errorCallback)
     }
 
     const disco_events = (discoEventQuery, successCallback, errorCallback) => {
-      _generic(
-        DiscoEventQuery.ENTRY_POINT,
-        discoEventQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(DiscoEventQuery.ENTRY_POINT, discoEventQuery, successCallback, errorCallback)
     }
 
     const hegemony_country = (hegemonyCountryQuery, successCallback, errorCallback) => {
@@ -264,12 +215,7 @@ const IhrApi = {
     }
 
     const hegemony_alarms = (hegemonyAlarmsQuery, successCallback, errorCallback) => {
-      _generic(
-        HegemonyAlarmsQuery.ENTRY_POINT,
-        hegemonyAlarmsQuery,
-        successCallback,
-        errorCallback
-      )
+      _generic(HegemonyAlarmsQuery.ENTRY_POINT, hegemonyAlarmsQuery, successCallback, errorCallback)
     }
 
     const ihr_api = {

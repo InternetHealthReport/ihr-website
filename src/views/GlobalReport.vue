@@ -5,9 +5,19 @@ import { ref, computed, watch, nextTick, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
 import { useRoute, useRouter } from 'vue-router'
 import { DEFAULT_DISCO_AVG_LEVEL } from '@/plugins/disco'
-import { DEFAULT_MIN_NPROBES, DEFAULT_MIN_DEVIATION, DEFAULT_MIN_DIFFMEDIAN, DEFAULT_MAX_DIFFMEDIAN } from '@/plugins/delay'
+import {
+  DEFAULT_MIN_NPROBES,
+  DEFAULT_MIN_DEVIATION,
+  DEFAULT_MIN_DIFFMEDIAN,
+  DEFAULT_MAX_DIFFMEDIAN
+} from '@/plugins/delay'
 import AggregatedAlarmsController from '@/components/controllers/AggregatedAlarmsController.vue'
-import { Query, HegemonyAlarmsQuery, NetworkDelayAlarmsQuery, DiscoEventQuery } from '@/plugins/IhrApi'
+import {
+  Query,
+  HegemonyAlarmsQuery,
+  NetworkDelayAlarmsQuery,
+  DiscoEventQuery
+} from '@/plugins/IhrApi'
 import { ALARMS_INFO } from '@/plugins/metadata/AggregatedAlarmsMetadata'
 import Feedback from '@/components/Feedback.vue'
 
@@ -18,7 +28,17 @@ const router = useRouter()
 
 const timeRange = route.query.last ? route.query.last : 1
 
-let { interval, utcString, fetch, reportDateFmt, minDate, maxDate, setReportDate, startTime, endTime } = report(timeRange)
+let {
+  interval,
+  utcString,
+  fetch,
+  reportDateFmt,
+  minDate,
+  maxDate,
+  setReportDate,
+  startTime,
+  endTime
+} = report(timeRange)
 
 if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[0]) {
   setReportDate(new Date(route.query.date))
@@ -27,7 +47,7 @@ if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[
 const PARAMETERS_LEVEL = {
   LOW: 0,
   MEDIUM: 1,
-  HIGH: 2,
+  HIGH: 2
 }
 
 const PRAMETERS_PRESETS = {
@@ -35,7 +55,7 @@ const PRAMETERS_PRESETS = {
   MIN_NPROBES: [5, DEFAULT_MIN_NPROBES, 12],
   MIN_DEVIATION: [100, DEFAULT_MIN_DEVIATION, 120],
   MIN_DIFFMEDIAN: [10, DEFAULT_MIN_DIFFMEDIAN, 20],
-  MAX_DIFFMEDIAN: [150, DEFAULT_MAX_DIFFMEDIAN, 300],
+  MAX_DIFFMEDIAN: [150, DEFAULT_MAX_DIFFMEDIAN, 300]
 }
 
 let setFilterLevel = Number(route.query.filter_level)
@@ -83,9 +103,9 @@ const pushRoute = () => {
     query: {
       filter_level: filterLevel.value,
       last: interval.value.dayDiff(),
-      date: utcString(interval.value.end).split('T')[0],
+      date: utcString(interval.value.end).split('T')[0]
     },
-    hash: route.hash,
+    hash: route.hash
   })
 
   minAvgLevel.value = PRAMETERS_PRESETS.DISCO_AVG_LEVEL[filterLevel.value]
@@ -103,10 +123,11 @@ const hegemonyApiCall = () => {
     const newHegemonyAlarmsPromise = new Promise((resolve, reject) => {
       ihr_api.hegemony_alarms(
         hegemonyAlarmsFilter,
-        result => {
+        (result) => {
           alarms.push(...result.results)
           resolve()
-        }, error => {
+        },
+        (error) => {
           reject(error)
         }
       )
@@ -114,7 +135,7 @@ const hegemonyApiCall = () => {
     promises.push(newHegemonyAlarmsPromise)
   }
   Promise.all(promises).then(() => {
-    alarms.forEach((alarm) => alarm.event_type = 'hegemony')
+    alarms.forEach((alarm) => (alarm.event_type = 'hegemony'))
     hegemonyAlarms.value = alarms
     hegemonyLoading(false)
   })
@@ -128,18 +149,19 @@ const networkDelayApiCall = () => {
     const newNetworkDelayAlarmsPromise = new Promise((resolve, reject) => {
       ihr_api.network_delay_alarms(
         networkDelayFilter,
-        result => {
+        (result) => {
           alarms.push(...result.results)
           resolve()
-        }, error => {
+        },
+        (error) => {
           reject(error)
         }
       )
-    });
+    })
     promises.push(newNetworkDelayAlarmsPromise)
   }
   Promise.all(promises).then(() => {
-    alarms.forEach((alarm) => alarm.event_type = 'network_delay')
+    alarms.forEach((alarm) => (alarm.event_type = 'network_delay'))
     networkDelayAlarms.value = alarms
     networkDelayLoading(false)
   })
@@ -153,10 +175,11 @@ const networkDisconnectionApiCall = () => {
     const newNetworkDisconnectionAlarmsPromise = new Promise((resolve, reject) => {
       ihr_api.disco_events(
         networkDisconnectionFilter,
-        result => {
+        (result) => {
           alarms.push(...result.results)
           resolve()
-        }, error => {
+        },
+        (error) => {
           reject(error)
         }
       )
@@ -164,7 +187,7 @@ const networkDisconnectionApiCall = () => {
     promises.push(newNetworkDisconnectionAlarmsPromise)
   }
   Promise.all(promises).then(() => {
-    alarms.forEach((alarm) => alarm.event_type = 'network_disconnection')
+    alarms.forEach((alarm) => (alarm.event_type = 'network_disconnection'))
     networkDisconnectionAlarms.value = alarms
     discoLoading(false)
   })
@@ -173,9 +196,10 @@ const networkDisconnectionApiCall = () => {
 const aggregatedAlarmsKey = computed(() => {
   let renderingKey = ''
   const alarmTypes = Object.keys(ALARMS_INFO['ihr'].alarm_types)
-  alarmTypes.forEach(alarmType => {
-    const isAlarmTypeSelected = ALARMS_INFO['ihr'].alarm_types[alarmType].metadata.is_default_selected
-    renderingKey += `${JSON.stringify({ [alarmType]: (isAlarmTypeSelected && loading.value[alarmType]) })}-`
+  alarmTypes.forEach((alarmType) => {
+    const isAlarmTypeSelected =
+      ALARMS_INFO['ihr'].alarm_types[alarmType].metadata.is_default_selected
+    renderingKey += `${JSON.stringify({ [alarmType]: isAlarmTypeSelected && loading.value[alarmType] })}-`
   })
   return renderingKey
 })
@@ -202,7 +226,7 @@ const networkDisconnectionAlarmsFilters = computed(() => {
   const networkDisconnectionAlarmsFilter = new DiscoEventQuery()
     .streamName('')
     .timeInterval(startTime.value, endTime.value)
-    .orderedByTime();
+    .orderedByTime()
   return [networkDisconnectionAlarmsFilter]
 })
 
@@ -228,7 +252,6 @@ onMounted(() => {
   apiCalls()
   fetch.value = true
 })
-
 </script>
 
 <template>
@@ -238,13 +261,24 @@ onMounted(() => {
         <div class="text-h1">{{ $t('globalReport.title.global') }}</div>
         <div class="text-h3">
           {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-          <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime
-            class="IHR_subtitle_calendar" />
+          <DateTimePicker
+            :min="minDate"
+            :max="maxDate"
+            :value="maxDate"
+            @input="setReportDate"
+            hideTime
+            class="IHR_subtitle_calendar"
+          />
         </div>
       </div>
     </div>
-    <QExpansionItem caption="IHR Aggregated Alarms" header-class="IHR_chart-title" default-opened expand-icon-toggle
-      v-model="aggregatedAlarmsExpanded">
+    <QExpansionItem
+      caption="IHR Aggregated Alarms"
+      header-class="IHR_chart-title"
+      default-opened
+      expand-icon-toggle
+      v-model="aggregatedAlarmsExpanded"
+    >
       <template v-slot:header>
         <div class="graph-header-div">
           <QItemSection class="graph-header">
@@ -262,15 +296,21 @@ onMounted(() => {
           </QItemSection>
         </div>
       </template>
-      <AggregatedAlarmsController :startTime="startTime" :endTime="endTime" :hegemonyAlarms="hegemonyAlarms"
-        :networkDelayAlarms="networkDelayAlarms" :key="aggregatedAlarmsKey" :hegemonyLoading="loading.hegemony"
-        :networkDelayLoading="loading.network_delay" :networkDisconnectionAlarms="networkDisconnectionAlarms"
-        :networkDisconnectionLoading="loading.network_disconnection" />
+      <AggregatedAlarmsController
+        :startTime="startTime"
+        :endTime="endTime"
+        :hegemonyAlarms="hegemonyAlarms"
+        :networkDelayAlarms="networkDelayAlarms"
+        :key="aggregatedAlarmsKey"
+        :hegemonyLoading="loading.hegemony"
+        :networkDelayLoading="loading.network_delay"
+        :networkDisconnectionAlarms="networkDisconnectionAlarms"
+        :networkDisconnectionLoading="loading.network_disconnection"
+      />
     </QExpansionItem>
   </div>
   <Feedback />
 </template>
-
 
 <style lang="stylus">
 .stat-grid
@@ -363,7 +403,7 @@ onMounted(() => {
           font-weight 600
 
         & > span
-          color $accent
+          color #405057
           display inline-block
           padding 14px 0px
           transform rotate(-90deg)

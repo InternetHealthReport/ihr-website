@@ -87,15 +87,12 @@ const fetch = ref(true)
 
   <GenericCardController
     :title="$t('iyp.as.atlas.title')"
-    :sub-title="$t('iyp.as.atlas.caption')+asNumber"
+    :sub-title="$t('iyp.as.atlas.caption') + asNumber"
     :info-title="$t('iyp.as.atlas.info.title')"
     :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
   >
-    <ASRipeAtlas
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASRipeAtlas :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 
   <!-- <GenericCardController

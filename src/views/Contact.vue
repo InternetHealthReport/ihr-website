@@ -1,5 +1,4 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
   <div id="IHR_contact-page">
@@ -7,8 +6,9 @@
       <h1>Feedback</h1>
       <p class="IHR_description">
         Please submit bug reports and feature requests on Github:
-        <a href="https://github.com/InternetHealthReport/ihr-website/issues"
-          target="_blank">https://github.com/InternetHealthReport/ihr-website/issues</a>
+        <a href="https://github.com/InternetHealthReport/ihr-website/issues" target="_blank"
+          >https://github.com/InternetHealthReport/ihr-website/issues</a
+        >
       </p>
       <h1>Others</h1>
       <p>
@@ -18,7 +18,6 @@
     </div>
   </div>
 </template>
-
 
 <style lang="stylus">
 #IHR_

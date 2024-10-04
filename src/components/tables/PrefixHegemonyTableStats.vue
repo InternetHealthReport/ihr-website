@@ -11,7 +11,7 @@ const ihr_api = inject('ihr_api')
 const props = defineProps({
   columnName: {
     type: String,
-    default: 'Invalid types',
+    default: 'Invalid types'
   },
   data: {
     type: Array,
@@ -20,17 +20,17 @@ const props = defineProps({
   },
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   filter: {
     type: String,
-    default: '',
+    default: ''
   }
 })
 
 const emit = defineEmits({
-  'filteredRows': (filteredSearchRowValues) => {
-    if(filteredSearchRowValues !== null) {
+  filteredRows: (filteredSearchRowValues) => {
+    if (filteredSearchRowValues !== null) {
       return true
     } else {
       console.warn('FilteredSearchRowValues is missing')
@@ -45,7 +45,7 @@ const pagination = ref({
   sortBy: 'total',
   descending: true,
   page: 1,
-  rowsPerPage: 10,
+  rowsPerPage: 10
 })
 const tabFilter = ref('')
 const columns = ref([
@@ -54,55 +54,57 @@ const columns = ref([
     required: true,
     label: 'ASN',
     align: 'center',
-    field: row => row.asn,
-    format: val => `AS${val}`,
-    sortable: true,
+    field: (row) => row.asn,
+    format: (val) => `AS${val}`,
+    sortable: true
   },
   {
     name: 'ASName',
     required: true,
     label: 'AS Name',
     align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
-    sortable: true,
+    field: (row) => row.name,
+    format: (val) => `${val}`,
+    sortable: true
   },
   {
     name: 'invalid',
     required: true,
     label: 'Invalid',
     align: 'center',
-    field: row => row.count['Invalid'],
-    format: val => `${val}`,
-    sortable: true,
+    field: (row) => row.count['Invalid'],
+    format: (val) => `${val}`,
+    sortable: true
   },
   {
     name: 'specific',
     required: true,
     label: 'Invalid (more specific)',
     align: 'center',
-    field: row => row.count['Invalid,more-specific'],
-    format: val => `${val}`,
-    sortable: true,
+    field: (row) => row.count['Invalid,more-specific'],
+    format: (val) => `${val}`,
+    sortable: true
   },
   {
     name: 'total',
     required: true,
     label: 'Total',
     align: 'left',
-    field: row => Object.values(row.count).reduce((a, b) => a + b, 0),
-    sortable: true,
-  },
+    field: (row) => Object.values(row.count).reduce((a, b) => a + b, 0),
+    sortable: true
+  }
 ])
 
 const router = useRouter()
 
 const routeToAsn = (asn, row) => {
   asn = asn.field(row)
-  router.push(Tr.i18nRoute({
-    name: 'network',
-    params: { id: ihr_api.ihr_NumberToAsOrIxp(asn) },
-  }))
+  router.push(
+    Tr.i18nRoute({
+      name: 'network',
+      params: { id: ihr_api.ihr_NumberToAsOrIxp(asn) }
+    })
+  )
 }
 const getClassByHegemony = (hegemony) => {
   if (hegemony >= 25) {
@@ -150,7 +152,12 @@ const getClassByHegemony = (hegemony) => {
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
-            :to="Tr.i18nRoute({ name: 'network', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })"
+            :to="
+              Tr.i18nRoute({
+                name: 'network',
+                params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) }
+              })
+            "
           >
             <span :title="props.row.name">AS{{ props.row.asn }}</span>
           </RouterLink>
@@ -161,7 +168,12 @@ const getClassByHegemony = (hegemony) => {
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
-            :to="Tr.i18nRoute({ name: 'network', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })"
+            :to="
+              Tr.i18nRoute({
+                name: 'network',
+                params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) }
+              })
+            "
           >
             <span :title="props.row.name">{{ props.row.name }}</span>
           </RouterLink>
@@ -175,7 +187,11 @@ const getClassByHegemony = (hegemony) => {
       </template>
       <template v-slot:body-cell-specific="props">
         <QTd :props="props">
-          {{ 'Invalid,more-specific' in props.row.count ? props.row.count['Invalid,more-specific'] : 0 }}
+          {{
+            'Invalid,more-specific' in props.row.count
+              ? props.row.count['Invalid,more-specific']
+              : 0
+          }}
         </QTd>
       </template>
     </QTable>

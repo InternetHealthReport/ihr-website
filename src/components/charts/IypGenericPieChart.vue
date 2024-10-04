@@ -5,11 +5,11 @@ import { ref, onMounted, watch } from 'vue'
 const props = defineProps({
   chartData: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   chartLayout: {
     type: Object,
-    default: () => ({}),
+    default: () => ({})
   }
 })
 
@@ -26,13 +26,13 @@ const renderChart = () => {
     {
       values: groupedData.chartValues,
       labels: groupedData.chartLabels,
-      type: 'pie',
-    },
+      type: 'pie'
+    }
   ]
 
   const layout = {
     'max-width': 400,
-    ...props.chartLayout,
+    ...props.chartLayout
   }
 
   actualChartData.value = data
@@ -44,7 +44,7 @@ const formatChartData = (arrayOfObjects) => {
     return []
   }
   const map = {}
-  arrayOfObjects.forEach(item => {
+  arrayOfObjects.forEach((item) => {
     const countryCode = item.cc
     if (!map[countryCode]) {
       map[countryCode] = 1
@@ -53,7 +53,7 @@ const formatChartData = (arrayOfObjects) => {
     }
   })
   const totalCount = Object.values(map).reduce((sum, count) => sum + count, 0)
-  const percentages = Object.values(map).map(count => (count / totalCount) * 100)
+  const percentages = Object.values(map).map((count) => (count / totalCount) * 100)
   const labels = Object.keys(map)
   return [{ data: percentages, labels }]
 }
@@ -95,9 +95,13 @@ const init = () => {
   }
 }
 
-watch(() => props.chartData, () => {
-  init()
-}, { deep: true })
+watch(
+  () => props.chartData,
+  () => {
+    init()
+  },
+  { deep: true }
+)
 
 onMounted(() => {
   init()

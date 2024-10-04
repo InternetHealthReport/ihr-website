@@ -94,4 +94,4 @@ Please refer to the project's style and contribution guidelines for submitting p
 6. **Rebase** your branch with the `dev` branch
 7. Submit your **Pull Request** so that we can review it
 
-Please submit your issues and pull request while following the automated template. During the contributing phase abide by the [Contributing Guidelines](https://github.com/InternetHealthReport/ihr-website/blob/master/CONTRIBUTING.md) and [Code of Conduct](https://github.com/InternetHealthReport/ihr-website/blob/master/CODE_OF_CONDUCT.md).
+Please submit your issues and pull request while following the automated template. During the contributing phase abide by the [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md).

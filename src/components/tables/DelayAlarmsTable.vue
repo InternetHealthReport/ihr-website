@@ -12,11 +12,11 @@ const ihr_api = inject('ihr_api')
 const props = defineProps({
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   stopTime: {
     type: Date,
-    required: true,
+    required: true
   },
   data: {
     type: Array,
@@ -25,17 +25,17 @@ const props = defineProps({
   },
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   filter: {
     type: String,
-    default: '',
+    default: ''
   }
 })
 
 const emit = defineEmits({
-  'filteredRows': (filteredSearchRowValues) => {
-    if(filteredSearchRowValues !== null) {
+  filteredRows: (filteredSearchRowValues) => {
+    if (filteredSearchRowValues !== null) {
       return true
     } else {
       console.warn('FilteredSearchRowValues is missing')
@@ -50,58 +50,58 @@ const pagination = ref({
   ortBy: 'deviation',
   descending: true,
   page: 1,
-  rowsPerPage: 5,
+  rowsPerPage: 5
 })
 const columns = ref([
   {
     name: 'overview',
     label: 'Overview',
-    align: 'center',
+    align: 'center'
   },
   {
     name: 'asn',
     required: false,
     label: 'Autonomous System',
     align: 'center',
-    field: row => row.asn,
-    format: val => val,
-    sortable: false,
+    field: (row) => row.asn,
+    format: (val) => val,
+    sortable: false
   },
   {
     name: 'link',
     required: true,
     label: 'IP Link',
     align: 'center',
-    field: row => row.link,
-    format: val => val,
-    sortable: false,
+    field: (row) => row.link,
+    format: (val) => val,
+    sortable: false
   },
   {
     name: 'delayChange',
     required: true,
     label: 'Delay Change (ms)',
     align: 'center',
-    field: row => row.diffmedian / row.nbalarms,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.diffmedian / row.nbalarms,
+    format: (val) => val,
+    sortable: true
   },
   {
     name: 'deviation',
     required: true,
     label: 'Deviation',
     align: 'center',
-    field: row => row.deviation / row.nbalarms,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.deviation / row.nbalarms,
+    format: (val) => val,
+    sortable: true
   },
   {
     name: 'nbprobes',
     label: 'Nb. Atlas Probes',
     align: 'center',
-    field: row => row.nbprobes,
-    format: val => val,
-    sortable: true,
-  },
+    field: (row) => row.nbprobes,
+    format: (val) => val,
+    sortable: true
+  }
 ])
 
 const computeDataSummary = () => {
@@ -110,7 +110,7 @@ const computeDataSummary = () => {
   }
 
   var datasum = {}
-  props.data.forEach(alarm => {
+  props.data.forEach((alarm) => {
     if (alarm.link in datasum) {
       // update stats
       datasum[alarm.link].nbalarms += 1
@@ -129,9 +129,11 @@ const computeDataSummary = () => {
       }
 
       // update msm/probe ids
-      Object.keys(alarm.msm_prb_ids).forEach(msmid => {
+      Object.keys(alarm.msm_prb_ids).forEach((msmid) => {
         if (msmid in datasum[alarm.link].msm_prb_ids) {
-          const union = [...new Set([...alarm.msm_prb_ids[msmid], ...datasum[alarm.link].msm_prb_ids[msmid]])]
+          const union = [
+            ...new Set([...alarm.msm_prb_ids[msmid], ...datasum[alarm.link].msm_prb_ids[msmid]])
+          ]
           if (union.length > 0) {
             datasum[alarm.link].msm_prb_ids[msmid] = union
           } else {
@@ -150,7 +152,7 @@ const computeDataSummary = () => {
         nbprobes: alarm.nbprobes,
         deviation: alarm.deviation,
         diffmedian: alarm.diffmedian,
-        msm_prb_ids: alarm.msm_prb_ids,
+        msm_prb_ids: alarm.msm_prb_ids
       }
     }
   })
@@ -180,9 +182,12 @@ const expandRow = (vals) => {
   }
   vals.expanded = false
 }
-watch(() => props.data, () => {
-  computeDataSummary()
-})
+watch(
+  () => props.data,
+  () => {
+    computeDataSummary()
+  }
+)
 
 onMounted(() => {
   computeDataSummary()
@@ -208,30 +213,54 @@ onMounted(() => {
           <QToggle v-model="props.expand" />
         </QTd>
         <QTd key="asn" :props="props">
-          <RouterLink v-bind:key="asn" v-for="(asn, index) in props.row.asn" :to="Tr.i18nRoute({ name: 'network', params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) } })">
-            {{ index == 1 ? '/' + ihr_api.ihr_NumberToAsOrIxp(props.row.asn) : ihr_api.ihr_NumberToAsOrIxp(props.row.asn) }}
+          <RouterLink
+            v-bind:key="asn"
+            v-for="(asn, index) in props.row.asn"
+            :to="
+              Tr.i18nRoute({
+                name: 'network',
+                params: { id: ihr_api.ihr_NumberToAsOrIxp(props.row.asn) }
+              })
+            "
+          >
+            {{
+              index == 1
+                ? '/' + ihr_api.ihr_NumberToAsOrIxp(props.row.asn)
+                : ihr_api.ihr_NumberToAsOrIxp(props.row.asn)
+            }}
           </RouterLink>
         </QTd>
         <QTd key="link" :props="props">
           <a href="javascript:void(0)">
             {{ props.row.link[0] }}
             <QPopupProxy>
-              <ReverseDnsIp :ip="getCellValue(props, 'link')[0]" class="IHR_reverse-dns-ip-improved" />
+              <ReverseDnsIp
+                :ip="getCellValue(props, 'link')[0]"
+                class="IHR_reverse-dns-ip-improved"
+              />
             </QPopupProxy>
           </a>
           --
           <a href="javascript:void(0)">
             {{ props.row.link[1] }}
             <QPopupProxy>
-              <ReverseDnsIp :ip="getCellValue(props, 'link')[1]" class="IHR_reverse-dns-ip-improved" />
+              <ReverseDnsIp
+                :ip="getCellValue(props, 'link')[1]"
+                class="IHR_reverse-dns-ip-improved"
+              />
             </QPopupProxy>
           </a>
         </QTd>
-        <QTd key="delayChange" :props="props">{{ (props.row.diffmedian / props.row.nbalarms).toFixed(2) }}</QTd>
+        <QTd key="delayChange" :props="props">{{
+          (props.row.diffmedian / props.row.nbalarms).toFixed(2)
+        }}</QTd>
         <QTd
           key="deviation"
           :props="props"
-          :class="['IHR_important-cell', getClassByDeviation(props.row.deviation / props.row.nbalarms)]"
+          :class="[
+            'IHR_important-cell',
+            getClassByDeviation(props.row.deviation / props.row.nbalarms)
+          ]"
           >{{ (props.row.deviation / props.row.nbalarms).toFixed(2) }}</QTd
         >
         <QTd key="nbprobes" :props="props">
@@ -273,7 +302,7 @@ onMounted(() => {
     border-color black
     max-width 600px
     min-width 300px
-  
+
   &reverse-dns-ip-improved
     min-width 250px
     width 100%
@@ -294,5 +323,5 @@ onMounted(() => {
             margin 0px
             padding-bottom 10px
             & > a
-              color $accent !important
+              color #405057 !important
 </style>

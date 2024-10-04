@@ -4,7 +4,7 @@ const { t } = i18n.global
 
 const COMMON_FEATURE = {
   hovermode: 'closest',
-  margin: { t: 10, b: 10, l: 80, r: 80 },
+  margin: { t: 10, b: 10, l: 80, r: 80 }
 }
 
 export const COMMON_WITH_LEGEND = {
@@ -13,47 +13,47 @@ export const COMMON_WITH_LEGEND = {
   legend: {
     x: 0,
     y: 1.2,
-    orientation: 'h',
+    orientation: 'h'
   },
   yaxis: {
-    automargin: true,
+    automargin: true
   },
   xaxis: {
     autorange: true,
-    automargin: true,
-  },
+    automargin: true
+  }
 }
 
 var NET_DELAY_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
     title: t('charts.networkDelay.yaxis'),
-    autorange: true,
-  },
+    autorange: true
+  }
 }
 
 var NET_DELAY_ALARMS_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
     title: t('charts.networkDelayAlarms.yaxis'),
-    autorange: true,
-  },
+    autorange: true
+  }
 }
 
 var DISCO_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
     title: '',
-    autorange: 'reversed',
-  },
+    autorange: 'reversed'
+  }
 }
 
 var DELAY_CHART_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   yaxis: {
     title: t('charts.linkDelays.yaxis'),
-    autorange: true,
-  },
+    autorange: true
+  }
 }
 
 var DELAY_AND_FORWARDING_LAYOUT = {
@@ -61,13 +61,13 @@ var DELAY_AND_FORWARDING_LAYOUT = {
   yaxis: {
     title: t('charts.delayAndForwarding.yaxis'),
     domain: [0.55, 1],
-    autorange: true,
+    autorange: true
   },
   yaxis2: {
     title: t('charts.delayAndForwarding.yaxis2'),
     domain: [0, 0.45],
-    autorange: true,
-  },
+    autorange: true
+  }
 }
 
 var AS_INTERDEPENDENCIES_LAYOUT = {
@@ -80,8 +80,8 @@ var AS_INTERDEPENDENCIES_LAYOUT = {
   },
   yaxis2: {
     domain: [0, 0.4],
-    autorange: true,
-  },
+    autorange: true
+  }
 }
 
 var HEGEMONY_ALARMS_LAYOUT = {
@@ -89,17 +89,17 @@ var HEGEMONY_ALARMS_LAYOUT = {
   yaxis: {
     title: '',
     domain: [0.6, 1],
-    range: [0, 1.1],
+    range: [0, 1.1]
   },
   yaxis2: {
     domain: [0, 0.4],
-    autorange: true,
-  },
+    autorange: true
+  }
 }
 
 var RIR_COUNTRY_SUNBURST_LAYOUT = {
   ...COMMON_WITH_LEGEND,
-  margin: { l: 5, r: 5, b: 5, t: 5 },
+  margin: { l: 5, r: 5, b: 5, t: 5 }
 }
 
 var IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT = {
@@ -107,8 +107,7 @@ var IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT = {
   title: '',
   xaxis: { title: '', autorange: true },
   yaxis: { ticksuffix: '%', range: [0, 100] },
-  margin: { t: 10, b: 40, l: 80, r: 80 },
-
+  margin: { t: 10, b: 40, l: 80, r: 80 }
 }
 
 var AGGREGATED_ALARMS_WORLDMAP_LAYOUT = {
@@ -120,7 +119,7 @@ var AGGREGATED_ALARMS_WORLDMAP_LAYOUT = {
     showland: true,
     landcolor: 'rgb(215, 215, 215)',
     countrycolor: 'rgb(235, 235, 235)',
-    showcountries: true,
+    showcountries: true
   },
   height: 400
 }
@@ -142,7 +141,7 @@ var AGGREGATED_ALARMS_TIMESERIES_LAYOUT = {
 var AGGREGATED_ALARMS_TREEMAP_LAYOUT = {
   ...COMMON_WITH_LEGEND,
   margin: { t: 50, b: 0, l: 0, r: 0 },
-  height: 400,
+  height: 400
 }
 
 export {
@@ -158,5 +157,5 @@ export {
   IODA_ALARMS_SPECIFIC_ENTRY_TIMESERIES_LAYOUT,
   AGGREGATED_ALARMS_WORLDMAP_LAYOUT,
   AGGREGATED_ALARMS_TIMESERIES_LAYOUT,
-  AGGREGATED_ALARMS_TREEMAP_LAYOUT,
+  AGGREGATED_ALARMS_TREEMAP_LAYOUT
 }

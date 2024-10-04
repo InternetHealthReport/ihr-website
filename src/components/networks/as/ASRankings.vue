@@ -8,14 +8,11 @@ const props = defineProps(['asNumber', 'pageTitle'])
 <template>
   <GenericCardController
     :title="$t('iyp.as.rankings.title')"
-    :sub-title="$t('iyp.as.rankings.caption')+asNumber"
+    :sub-title="$t('iyp.as.rankings.caption') + asNumber"
     :info-title="$t('iyp.as.rankings.info.title')"
     :info-description="$t('iyp.as.rankings.info.description')"
   >
-    <ASRankings
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASRankings :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

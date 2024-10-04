@@ -56,30 +56,38 @@ const getPrefix = () => {
   return `${host.value}/${prefixLength.value}`
 }
 
-watch(() => route.params, () => {
-  if (route.params.ip != host.value || Number(route.params.length) != prefixLength.value) {
-    host.value = route.params.ip
-    prefixLength.value = Number(route.params.length)
-  }
-}, {deep: true})
+watch(
+  () => route.params,
+  () => {
+    if (route.params.ip != host.value || Number(route.params.length) != prefixLength.value) {
+      host.value = route.params.ip
+      prefixLength.value = Number(route.params.length)
+    }
+  },
+  { deep: true }
+)
 watch(menu, () => {
   if ('display' in route.query) {
     delete route.query.display
   }
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      active: menu.value
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        active: menu.value
+      })
     })
-  }))
+  )
 })
 onMounted(() => {
   if (host.value && prefixLength.value) {
     fetchData()
   } else {
-    router.push(Tr.i18nRoute({
-      name: 'prefix',
-    }))
+    router.push(
+      Tr.i18nRoute({
+        name: 'prefix'
+      })
+    )
   }
 })
 </script>
@@ -88,9 +96,7 @@ onMounted(() => {
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <h1 class="text-center">{{ pageTitle }}</h1>
     <h3 class="text-center">
-      <div>
-        Weekly report
-      </div>
+      <div>Weekly report</div>
     </h3>
     <QCard flat>
       <QTabs
@@ -107,28 +113,15 @@ onMounted(() => {
         <QTab name="custom">Custom</QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
+      <QTabPanels v-model="menu" v-if="pageTitle">
         <QTabPanel name="overview">
-          <PrefixOverview
-            :host="host"
-            :prefix-length="prefixLength"
-            :get-prefix="getPrefix()"
-          />
+          <PrefixOverview :host="host" :prefix-length="prefixLength" :get-prefix="getPrefix()" />
         </QTabPanel>
         <QTabPanel name="routing">
-          <PrefixRouting
-            :page-title="pageTitle"
-            :get-prefix="getPrefix()"
-          />
+          <PrefixRouting :page-title="pageTitle" :get-prefix="getPrefix()" />
         </QTabPanel>
         <QTabPanel name="dns">
-          <PrefixDNS
-            :page-title="pageTitle"
-            :get-prefix="getPrefix()"
-          />
+          <PrefixDNS :page-title="pageTitle" :get-prefix="getPrefix()" />
         </QTabPanel>
         <QTabPanel name="custom">
           <PrefixCustom
