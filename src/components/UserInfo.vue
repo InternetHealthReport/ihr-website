@@ -123,6 +123,6 @@ onMounted(() => {
   color white !important
 
 .loading-spinner
-  margin-top 30px
+  margin-bottom 10px
   text-align center
 </style>
