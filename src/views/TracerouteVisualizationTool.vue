@@ -4,6 +4,7 @@ import { QInput, QIcon, QBtn } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import TracerouteMonitor from '@/components/TracerouteMonitor.vue'
 import Tr from '@/i18n/translation'
+import '@/styles/chart.css'
 
 const route = useRoute()
 const router = useRouter()

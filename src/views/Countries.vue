@@ -6,6 +6,7 @@ import SearchBar from '@/components/search/SearchBar.vue'
 import Country from '@/components/networks/Country.vue'
 import { isoCountries } from '@/plugins/countryName'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const route = useRoute()
 
@@ -117,10 +118,6 @@ onMounted(() => {
 </template>
 
 <style lang="stylus">
-.IHR_
-  &char-container
-    width 90%
-    margin 0 auto
 .examples
   column-gap 30px
 @media screen and (max-width: 500px)

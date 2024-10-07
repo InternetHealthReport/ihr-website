@@ -14,6 +14,11 @@
   font-size: 18pt;
 }
 
+.IHR_char-container {
+  width: 90%;
+  margin: 0 auto;
+}
+
 .IHR_loading-spinner {
   position: absolute;
   top: 35%;
@@ -22,6 +27,11 @@
 .IHR_loading-spinner > * {
   width: 25%;
   height: 25%;
+}
+
+.IHR_description {
+  max-width: 900px;
+  font-size: 14pt;
 }
 
 .IHR_api-table table {

@@ -8,6 +8,7 @@ import rirMapping from '@/assets/rir-country-map.json'
 import getCountryName from '../plugins/countryName'
 import { MetisAtlasSelectionQuery } from '@/plugins/IhrApi'
 import RirCountrySunburstChart from '@/components/charts/RirCountrySunburstChart.vue'
+import '@/styles/chart.css'
 
 const ATLAS_PROBE = {
   type: 'asn',
@@ -247,9 +248,7 @@ const copyAPI = () => {
 </template>
 
 <style lang="stylus">
-.IHR_description
-    font-weight 400
-    max-width 900px
+
 
 .IHR_block
   max-width 900px

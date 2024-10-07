@@ -8,6 +8,7 @@ import report from '@/plugins/report'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const LOADING_STATUS = {
   ERROR: -3,
@@ -136,7 +137,6 @@ onMounted(() => {
           :value="maxDate"
           @input="setReportDate"
           hideTime
-          class="IHR_subtitle_calendar"
         />
       </h3>
     </div>

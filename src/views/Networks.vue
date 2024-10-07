@@ -8,6 +8,7 @@ import IXP from '@/components/networks/IXP.vue'
 import Prefix from '@/components/networks/Prefix.vue'
 import * as ipAddress from 'ip-address'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const route = useRoute()
 
@@ -157,10 +158,6 @@ onMounted(() => {
 </template>
 
 <style lang="stylus">
-.IHR_
-  &char-container
-    width 90%
-    margin 0 auto
 .examples
   column-gap 30px
 @media screen and (max-width: 500px)

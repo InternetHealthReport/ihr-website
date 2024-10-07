@@ -2,12 +2,13 @@
 import { RouterLink } from 'vue-router'
 import { QBtn } from 'quasar'
 import Tr from '@/i18n/translation'
+import '@/styles/chart.css'
 </script>
 
 <template>
   <div>
     <h1 class="text-center">Metis</h1>
-    <div class="row justify-center">
+    <div class="row justify-center metis-component">
       <div class="IHR_description">
         <p>Welcome to Metis! A data-driven method to select diverse vantage points.</p>
         <p>
@@ -76,11 +77,8 @@ import Tr from '@/i18n/translation'
   </div>
 </template>
 
-<style lang="stylus">
-.IHR_description
-    max-width 900px
-    padding 0 1rem
-    font-size 14pt
-h1
-  font-weight 500
+<style>
+.metis-component {
+  margin-bottom: 20px;
+}
 </style>

@@ -5,6 +5,7 @@ import { ref, watch, nextTick, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
 import report from '@/plugins/report'
+import '@/styles/chart.css'
 
 const countries = Object.keys(lockdowns).sort()
 const select = countries.map((name) => ({
@@ -211,9 +212,6 @@ watch(selected, (newValue) => {
 </template>
 
 <style lang="stylus">
-.IHR_description
-    font-weight 400
-
 .IHR_anchor
     display block
     position relative

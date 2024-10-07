@@ -1,5 +1,4 @@
 <script setup>
-import { QExpansionItem, QItemSection, QIcon, QInput, QCard, QCardSection } from 'quasar'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import { ref, computed, watch, nextTick, onMounted, inject } from 'vue'
 import report from '@/plugins/report'
@@ -20,6 +19,7 @@ import {
 } from '@/plugins/IhrApi'
 import { ALARMS_INFO } from '@/plugins/metadata/AggregatedAlarmsMetadata'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const ihr_api = inject('ihr_api')
 
@@ -267,149 +267,24 @@ onMounted(() => {
             :value="maxDate"
             @input="setReportDate"
             hideTime
-            class="IHR_subtitle_calendar"
           />
         </div>
       </div>
     </div>
-    <QExpansionItem
-      caption="IHR Aggregated Alarms"
-      header-class="IHR_chart-title"
-      default-opened
-      expand-icon-toggle
-      v-model="aggregatedAlarmsExpanded"
-    >
-      <template v-slot:header>
-        <div class="graph-header-div">
-          <QItemSection class="graph-header">
-            <QItemSection avatar>
-              <QIcon name="fas fa-bell" color="primary" text-color="white" />
-            </QItemSection>
-
-            <QItemSection>
-              <a id="aggregatedAlarms"></a>
-              <div class="text-primary">
-                {{ $t('charts.aggregatedAlarms.title') }}
-              </div>
-              <div class="text-caption text-grey">IHR Aggregated Alarms</div>
-            </QItemSection>
-          </QItemSection>
-        </div>
-      </template>
-      <AggregatedAlarmsController
-        :startTime="startTime"
-        :endTime="endTime"
-        :hegemonyAlarms="hegemonyAlarms"
-        :networkDelayAlarms="networkDelayAlarms"
-        :key="aggregatedAlarmsKey"
-        :hegemonyLoading="loading.hegemony"
-        :networkDelayLoading="loading.network_delay"
-        :networkDisconnectionAlarms="networkDisconnectionAlarms"
-        :networkDisconnectionLoading="loading.network_disconnection"
-      />
-    </QExpansionItem>
+    <AggregatedAlarmsController
+      :startTime="startTime"
+      :endTime="endTime"
+      :hegemonyAlarms="hegemonyAlarms"
+      :networkDelayAlarms="networkDelayAlarms"
+      :key="aggregatedAlarmsKey"
+      :hegemonyLoading="loading.hegemony"
+      :networkDelayLoading="loading.network_delay"
+      :networkDisconnectionAlarms="networkDisconnectionAlarms"
+      :networkDisconnectionLoading="loading.network_disconnection"
+    />
   </div>
   <Feedback />
 </template>
 
-<style lang="stylus">
-.stat-grid
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 20px;
-  align-items: stretch;
-@media screen and (max-width: 768px)
-  .stat-grid
-    grid-template-columns: repeat(2, 1fr);
-@media screen and (max-width: 480px)
-  .stat-grid
-    grid-template-columns: 1fr;
-.stat-cards
-  width 100% !important
-.stat-tab
-  border-radius 10px
-  min-height 120px
-  background: white;
-  border 1px solid #E9E8E8
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  display flex
-  flex-direction column
-  justify-content center
-  align-items center
-.IHR_global_stats
-  text-decoration none;
-  display flex;
-  justify-content center;
-  align-items center;
-  flex-direction column;
-.IHR_charts-body
-  margin-top 10pt
-  margin-right 10pt
-  border-radius 20px
-  background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-.graph-header
-  display flex
-  justify-content flex-start
-  align-items center
-  flex-direction row !important
-  width 100%
-.graph-header-div
-  display flex
-  justify-content space-between
-  align-items center
-  width 100%
-  font-size 18pt
-.filter-div
-  max-width 300px !important
-.toggle-arrow
-  padding 0px 0px 0px 16px
-@media screen and (max-width: 650px)
-  .graph-header-div
-    flex-direction column
-    justify-content center
-    align-items flex-start
-  .filter-div
-    margin-top 5px
-[dir=ltr] .q-item__section--side
-  padding-right: 0;
-  padding-left: 16px;
-.IHR_
-  &subtitle_calendar
-      position relative
-      top -5px
-      left 5px
-
-  &sidebar-filter-section-global
-    & label
-      margin 0pt 4pt
-      font-weight 600
-
-  &presets-name
-    font-weight 500
-    &-vertical
-        font-size 18pt
-        width 100%
-        text-align center
-        margin 8pt 0
-        border-top rgb(164, 171, 171, 90) solid 2px
-        transition font-weight 0.2s;
-
-        &:last-of-type
-          border-bottom rgb(164, 171, 171, 90) solid 2px
-
-        &:hover
-          font-weight 600
-
-        & > span
-          color #405057
-          display inline-block
-          padding 14px 0px
-          transform rotate(-90deg)
-          /*
-          text-orientation upright
-          letter-spacing -7px
-          */
-          cursor pointer
+<style>
 </style>

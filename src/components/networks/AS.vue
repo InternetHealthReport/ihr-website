@@ -149,7 +149,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <h1 class="text-center">{{ pageTitle }}</h1>
     <h3 class="text-center">
       <div v-if="['monitoring', 'custom'].includes(menu)">
@@ -160,7 +160,6 @@ onMounted(() => {
           :value="maxDate"
           @input="setReportDate"
           hideTime
-          class="IHR_subtitle_calendar"
         />
       </div>
       <div v-else>Weekly report</div>
