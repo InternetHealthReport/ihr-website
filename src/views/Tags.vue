@@ -5,6 +5,7 @@ import { ref, watch, onMounted } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
 import Tag from '@/components/networks/Tag.vue'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const route = useRoute()
 
@@ -121,10 +122,6 @@ onMounted(() => {
 </template>
 
 <style lang="stylus">
-.IHR_
-  &char-container
-    width 90%
-    margin 0 auto
 .examples
   column-gap 30px
 @media screen and (max-width: 500px)

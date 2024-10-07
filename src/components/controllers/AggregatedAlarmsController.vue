@@ -491,7 +491,7 @@ watch(selectedAlarmTypesOptions.value, () => {
 
 <template>
   <div>
-    <QCard class="IHR_charts-body">
+    <QCard>
       <QCardSection>
         <QMarkupTable flat bordered separator="cell">
           <thead>
@@ -622,7 +622,7 @@ watch(selectedAlarmTypesOptions.value, () => {
         </div>
       </QCardSection>
     </QCard>
-    <QCard class="IHR_charts-body">
+    <QCard class="card">
       <QCardSection>
         <WorldMapAggregatedAlarmsChart
           ref="worldMapRef"
@@ -636,8 +636,8 @@ watch(selectedAlarmTypesOptions.value, () => {
       </QCardSection>
     </QCard>
     <div class="row">
-      <div class="col">
-        <QCard class="IHR_charts-body">
+      <div class="col q-mr-md">
+        <QCard class="card">
           <QCardSection>
             <div class="row items-center">
               <div class="col">
@@ -676,7 +676,7 @@ watch(selectedAlarmTypesOptions.value, () => {
         </QCard>
       </div>
       <div class="col">
-        <QCard class="IHR_charts-body">
+        <QCard class="card">
           <QCardSection>
             <div class="col">
               <QBtn
@@ -706,7 +706,7 @@ watch(selectedAlarmTypesOptions.value, () => {
         </QCard>
       </div>
     </div>
-    <QCard class="IHR_charts-body">
+    <QCard class="card">
       <QTabs v-model="aggregatedAlarmsTab">
         <QTab
           v-for="(dataAlarmTypeTitlesMap, indexAlarmTypeTitlesMap) in alarmTypeTitlesMap"
@@ -760,4 +760,8 @@ watch(selectedAlarmTypesOptions.value, () => {
   </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style scoped>
+.card {
+  margin-top: 20px;
+}
+</style>

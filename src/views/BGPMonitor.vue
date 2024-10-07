@@ -19,6 +19,7 @@ import { getASNamesCountryMappings } from '../plugins/AsNames'
 import BGPPathsChart from '@/components/charts/BGPPathsChart.vue'
 import BGPLineChart from '@/components/charts/BGPLineChart.vue'
 import BGPMessagesTable from '@/components/tables/BGPMessagesTable.vue'
+import '@/styles/chart.css'
 
 const { t } = i18n.global
 

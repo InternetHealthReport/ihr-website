@@ -152,7 +152,6 @@ onMounted(() => {
           :value="maxDate"
           @input="setReportDate"
           hideTime
-          class="IHR_subtitle_calendar"
         />
       </div>
       <div v-else>Weekly report</div>

@@ -15,6 +15,7 @@ import TreeMapAggregatedAlarmsChart from '@/components/charts/TreeMapAggregatedA
 import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDataModel'
 import Latencymon from '@/components/ripe/Latencymon.vue'
 import IodaChart from '@/components/charts/IodaChart.vue'
+import '@/styles/chart.css'
 
 const ihr_api = inject('ihr_api')
 
@@ -532,8 +533,8 @@ watch(
         </QTd>
       </QTr>
       <QTr v-if="toggle[`${props.row.key_normalized}_overview`]" :props="props">
-        <QTd colspan="100%" class="IHR_nohover" bordered>
-          <div class="IHR_side_borders">
+        <QTd colspan="100%" bordered>
+          <div>
             <div v-if="alternativeKey">
               <div class="row">
                 <div class="col-auto">
@@ -603,7 +604,7 @@ watch(
                   >
                 </div>
               </div>
-              <QCard>
+              <QCard class="card">
                 <QCardSection>
                   <!-- TODO: Configure here country-clicked event like in the Aggregated Alarms Controller-->
                   <WorldMapAggregatedAlarmsChart
@@ -622,7 +623,7 @@ watch(
                   />
                 </QCardSection>
               </QCard>
-              <QCard>
+              <QCard class="card">
                 <QCardSection>
                   <div class="col">
                     <QBtn
@@ -657,7 +658,7 @@ watch(
                   />
                 </QCardSection>
               </QCard>
-              <QCard>
+              <QCard class="card">
                 <QCardSection>
                   <div class="row items-center">
                     <div class="col">
@@ -711,7 +712,7 @@ watch(
         </QTd>
       </QTr>
       <QTr v-if="toggle[`${props.row.key_normalized}_asn_overview`]" :props="props">
-        <QTd colspan="100%" class="IHR_nohover" bordered>
+        <QTd colspan="100%" bordered>
           <div
             v-if="selectedTableAlarmType == 'hegemony'"
             v-for="af in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])"
@@ -788,7 +789,7 @@ watch(
         </QTd>
       </QTr>
       <QTr v-if="toggle[`${props.row.key_normalized}_country_overview`]" :props="props">
-        <QTd colspan="100%" class="IHR_nohover" bordered>
+        <QTd colspan="100%" bordered>
           <div v-if="selectedTableDataSource == 'ioda'">
             <div style="text-align: center; font-size: 18px">
               {{ `${props.row[`${tableKeyCurrent}_country`]} Internet Overview` }}
@@ -807,32 +808,17 @@ watch(
   </QTable>
 </template>
 
-<style lang="stylus">
+<style>
 .alternative_key_body {
-    text-overflow: ellipsis
-    white-space: nowrap
-    font-style: italic
-    color: #555
-}
-.IHR_nohover:first-child {
-    padding-top: 0px;
-    padding-bottom: 20px;
-    padding-right: 20px;
-    padding-left: 20px;
-    background: #fafafa;
-}
-.IHR_side_borders:first-child {
-    padding-top: 20px;
-    border-style: solid;
-    border-color: #dddddd;
-    border-top-width: 0px;
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-radius: 5px;
-    background: #ffffff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-style: italic;
+    color: #555;
 }
 .myClass tbody td {
     text-align: left;
+}
+.card {
+  margin-top: 20px;
 }
 </style>

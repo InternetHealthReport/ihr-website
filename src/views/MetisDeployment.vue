@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import MetisWidget from '@/components/MetisWidget.vue'
 import Tr from '@/i18n/translation'
+import '@/styles/chart.css'
 
 const nbprobes = ref('100')
 </script>
@@ -65,7 +66,4 @@ const nbprobes = ref('100')
 </template>
 
 <style lang="stylus">
-.IHR_description
-    font-weight 400
-    max-width 900px
 </style>

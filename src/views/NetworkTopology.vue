@@ -4,6 +4,7 @@ import { QBtn } from 'quasar'
 import { GridLayout, GridItem } from 'grid-layout-plus'
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import '@/styles/chart.css'
 
 const route = useRoute()
 const router = useRouter()
@@ -151,64 +152,68 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="text-center">Network Topology Overview</h1>
-  <div class="IHR_description" v-if="chartAmount == 0">
-    <p>
-      This tool provides a comprehensive platform for researchers and network professionals to
-      explore and analyze the topology of an AS or a network prefix.
-    </p>
-    <p>
-      You may begin by either selecting from the examples provided below or by adding a new
-      topology.
-    </p>
-    <div class="row q-pa-sm column items-center">
-      <div class="col-6">
-        <h3>Examples</h3>
-      </div>
-    </div>
+  <div class="IHR_char-container">
+    <h1 class="text-center">Network Topology Overview</h1>
     <div class="row justify-center">
-      <div class="row examples">
-        <ul class="ul_styles">
-          <li @click="incrementChart(`2497`, `4`)">IIJ (AS2497)</li>
-          <li @click="incrementChart(`15169`, `4`)">Google (AS15169)</li>
-          <li @click="incrementChart(`2501`, `4`)">University of Tokyo (AS2501)</li>
-        </ul>
-        <ul class="ul_styles">
-          <li @click="incrementChart(`157.8.16.0/23`, `4`)">IIJ (157.8.16.0/23)</li>
-          <li @click="incrementChart(`152.65.235.0/24`, `4`)">Google (152.65.235.0/24)</li>
-          <li @click="incrementChart(`192.51.208.0/20`, `4`)">
-            University of Tokyo (192.51.208.0/20)
-          </li>
-        </ul>
+      <div class="IHR_description" v-if="chartAmount == 0">
+        <p>
+          This tool provides a comprehensive platform for researchers and network professionals to
+          explore and analyze the topology of an AS or a network prefix.
+        </p>
+        <p>
+          You may begin by either selecting from the examples provided below or by adding a new
+          topology.
+        </p>
+        <div class="row q-pa-sm column items-center">
+          <div class="col-6">
+            <h3>Examples</h3>
+          </div>
+        </div>
+        <div class="row justify-center">
+          <div class="row examples">
+            <ul class="ul_styles">
+              <li @click="incrementChart(`2497`, `4`)">IIJ (AS2497)</li>
+              <li @click="incrementChart(`15169`, `4`)">Google (AS15169)</li>
+              <li @click="incrementChart(`2501`, `4`)">University of Tokyo (AS2501)</li>
+            </ul>
+            <ul class="ul_styles">
+              <li @click="incrementChart(`157.8.16.0/23`, `4`)">IIJ (157.8.16.0/23)</li>
+              <li @click="incrementChart(`152.65.235.0/24`, `4`)">Google (152.65.235.0/24)</li>
+              <li @click="incrementChart(`192.51.208.0/20`, `4`)">
+                University of Tokyo (192.51.208.0/20)
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="addTopologyButton">
+      <QBtn color="secondary" label="Add Topology" @click="incrementChart(`2501`, `4`)" />
+    </div>
+    <GridLayout v-model:layout="layout" :row-height="30">
+      <GridItem
+        v-for="(item, index) in layout"
+        :key="item.i"
+        :x="item.x"
+        :y="item.y"
+        :w="item.w"
+        :h="item.h"
+        :i="item.i"
+        :static="item.static"
+      >
+        <NetworkTopologyChart
+          :ref="(el) => (childRefs[index] = el)"
+          :searchInput="item.searchInput"
+          :af="`IPv` + item.af"
+          :showLegend="item.showLegend"
+          :id="item.i"
+          @deleteChart="deleteChart"
+          @searchChange="searchChange"
+          @afChange="afChange"
+        />
+      </GridItem>
+    </GridLayout>
   </div>
-  <div class="addTopologyButton">
-    <QBtn color="secondary" label="Add Topology" @click="incrementChart(`2501`, `4`)" />
-  </div>
-  <GridLayout v-model:layout="layout" :row-height="30">
-    <GridItem
-      v-for="(item, index) in layout"
-      :key="item.i"
-      :x="item.x"
-      :y="item.y"
-      :w="item.w"
-      :h="item.h"
-      :i="item.i"
-      :static="item.static"
-    >
-      <NetworkTopologyChart
-        :ref="(el) => (childRefs[index] = el)"
-        :searchInput="item.searchInput"
-        :af="`IPv` + item.af"
-        :showLegend="item.showLegend"
-        :id="item.i"
-        @deleteChart="deleteChart"
-        @searchChange="searchChange"
-        @afChange="afChange"
-      />
-    </GridItem>
-  </GridLayout>
 </template>
 
 <style>
