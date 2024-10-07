@@ -111,7 +111,6 @@ onMounted(() => {
 <style lang="stylus">
 .user-info-card
   width inherit
-  height 190px
   background-color rgba(0,0,0,0) !important
   border-color white !important
   color white !important
@@ -124,6 +123,6 @@ onMounted(() => {
   color white !important
 
 .loading-spinner
-  margin-top 30px
+  margin-bottom 25px
   text-align center
 </style>
