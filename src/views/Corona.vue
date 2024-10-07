@@ -5,9 +5,10 @@ import { ref, watch, nextTick, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
 import report from '@/plugins/report'
+import '@/styles/chart.css'
 
 const countries = Object.keys(lockdowns).sort()
-const select = countries.map(name => ({
+const select = countries.map((name) => ({
   label: `${name} (${lockdowns[name].start})`,
   value: name
 }))
@@ -34,7 +35,13 @@ const { startTime, endTime } = report(7)
 
 onMounted(() => {
   const selectedCountry = route.query.country
-  selected.value = selectedCountry == undefined ? null : { value: selectedCountry, label: `${selectedCountry} (${lockdowns[selectedCountry].start})` }
+  selected.value =
+    selectedCountry == undefined
+      ? null
+      : {
+          value: selectedCountry,
+          label: `${selectedCountry} (${lockdowns[selectedCountry].start})`
+        }
 })
 
 const updateYaxis = (newMaxY) => {
@@ -48,7 +55,7 @@ watch(selected, (newValue) => {
   router.push({
     replace: true,
     query: Object.assign({}, route.query, {
-      country: newValue.value,
+      country: newValue.value
     })
   })
   fetch.value = false
@@ -56,9 +63,9 @@ watch(selected, (newValue) => {
   yMax.value = 0
   asns.value = countriesInfo.value[selected.value['value']].eyeball
   endpoints.value = {}
-  countriesInfo.value[selected.value['value']].eyeball.forEach(eyeball => {
+  countriesInfo.value[selected.value['value']].eyeball.forEach((eyeball) => {
     let dests = ['AS415169']
-    eyeball.dependency.forEach(dep => {
+    eyeball.dependency.forEach((dep) => {
       if (dep.hege > 0.1) {
         dests.push('AS4' + dep.asn)
       }
@@ -73,10 +80,18 @@ watch(selected, (newValue) => {
     }
     endpoints.value[eyeball.as] = dests
   })
-  before_start.value = new Date(countriesInfo.value[selected.value['value']].monitoring_dates.before.monday + ' 00:00Z')
-  before_end.value = new Date(countriesInfo.value[selected.value['value']].monitoring_dates.before.sunday + ' 23:59')
-  during_start.value = new Date(countriesInfo.value[selected.value['value']].monitoring_dates.lockdown.monday + ' 00:00Z')
-  during_end.value = new Date(countriesInfo.value[selected.value['value']].monitoring_dates.lockdown.sunday + ' 23:59')
+  before_start.value = new Date(
+    countriesInfo.value[selected.value['value']].monitoring_dates.before.monday + ' 00:00Z'
+  )
+  before_end.value = new Date(
+    countriesInfo.value[selected.value['value']].monitoring_dates.before.sunday + ' 23:59'
+  )
+  during_start.value = new Date(
+    countriesInfo.value[selected.value['value']].monitoring_dates.lockdown.monday + ' 00:00Z'
+  )
+  during_end.value = new Date(
+    countriesInfo.value[selected.value['value']].monitoring_dates.lockdown.sunday + ' 23:59'
+  )
   after_start.value = null
   after_end.value = null
   nextTick(() => {
@@ -94,22 +109,35 @@ watch(selected, (newValue) => {
         <div class="IHR_description q-pa-lg">
           <p>
             As part of the
-            <a href="https://labs.ripe.net/Members/becha/hackathons-in-the-time-of-corona" targeet="_blank"
+            <a
+              href="https://labs.ripe.net/Members/becha/hackathons-in-the-time-of-corona"
+              targeet="_blank"
               >RIPE Hackathon on the health of the Internet during the COVID-19 crisis</a
-            >, we hacked this experimental interface to look at network delays during national lockdowns. This is an attempt to monitor and
-            study congestion that could occur at large eyeball networks during mass quarantines.
+            >, we hacked this experimental interface to look at network delays during national
+            lockdowns. This is an attempt to monitor and study congestion that could occur at large
+            eyeball networks during mass quarantines.
           </p>
           <p>
-            Select a country below to display estimated delays from major eyeball ASes. As a reference we display a week of data taken one
-            month before the lockdown (left plots), then show the week during the official lockdown (center plots), and the latest 7 days of
+            Select a country below to display estimated delays from major eyeball ASes. As a
+            reference we display a week of data taken one month before the lockdown (left plots),
+            then show the week during the official lockdown (center plots), and the latest 7 days of
             data (right plots). All dates and times are UTC.
           </p>
           <p>
-            Displayed delays are computed from <a href="https://atlas.ripe.net/" target="_blank">RIPE Atlas</a> traceroutes towards Google
-            DNS, the networks' main upstream providers, and, for European countries, two large IXPs (AMS-IX and DE-CIX), and the E-root DNS
-            server for other countries. See also our
-            <router-link :to="{ name: 'documentation', hash: '#Network_delay' }">documentation on network delays</router-link> and
-            <a href="https://labs.ripe.net/Members/romain_fontugne/network-delays-in-times-of-corona" target="_blank">RIPE Labs article</a>.
+            Displayed delays are computed from
+            <a href="https://atlas.ripe.net/" target="_blank">RIPE Atlas</a> traceroutes towards
+            Google DNS, the networks' main upstream providers, and, for European countries, two
+            large IXPs (AMS-IX and DE-CIX), and the E-root DNS server for other countries. See also
+            our
+            <router-link :to="{ name: 'documentation', hash: '#Network_delay' }"
+              >documentation on network delays</router-link
+            >
+            and
+            <a
+              href="https://labs.ripe.net/Members/romain_fontugne/network-delays-in-times-of-corona"
+              target="_blank"
+              >RIPE Labs article</a
+            >.
           </p>
           <p>Be patient. Loading all graphs may take some time for certain countries.</p>
         </div>
@@ -125,69 +153,65 @@ watch(selected, (newValue) => {
           <QToggle v-model="searchBar" label="Add more destination networks" />
         </div>
       </div>
-      <div v-if="selected">
-        </div>
-        <div v-for="asn in asns" :key="`${asn.name}-${asn.as}`">
-          <div class="row">
-            <div class="col-12 text-center q-pa-md">
-              <div class="IHR_anchor" :id="asn.as"></div>
-              <h2>{{ asn.name }} (AS{{ asn.as }})</h2>
-            </div>
-            <div class="column_corona">
-              <NetworkDelayChart
-                :start-time="before_start"
-                :end-time="before_end"
-                :startPointName="asn.as.toString()"
-                startPointType="AS"
-                :endPointNames="endpoints[asn.as]"
-                :fetch="fetch"
-                :clear="clear"
-                @max-value="updateYaxis"
-                :yMax="yMax"
-                :searchBar="searchBar"
-              />
-              <p class="center">One month before Lockdown</p>
-            </div>
-            <div class="column_corona">
-              <NetworkDelayChart
-                :start-time="during_start"
-                :end-time="during_end"
-                :startPointName="asn.as.toString()"
-                startPointType="AS"
-                :endPointNames="endpoints[asn.as]"
-                :fetch="fetch"
-                :clear="clear"
-                @max-value="updateYaxis"
-                :yMax="yMax"
-                :searchBar="searchBar"
-              />
-              <p class="center">Lockdown({{ countriesInfo[selected['value']].start }})</p>
-            </div>
-            <div class="column_corona">
-              <NetworkDelayChart
-                :start-time="startTime"
-                :end-time="endTime"
-                :startPointName="asn.as.toString()"
-                startPointType="AS"
-                :endPointNames="endpoints[asn.as]"
-                :fetch="fetch"
-                :clear="clear"
-                @max-value="updateYaxis"
-                :yMax="yMax"
-                :searchBar="searchBar"
-              />
-              <p class="center">Latest</p>
-            </div>
+      <div v-if="selected"></div>
+      <div v-for="asn in asns" :key="`${asn.name}-${asn.as}`">
+        <div class="row">
+          <div class="col-12 text-center q-pa-md">
+            <div class="IHR_anchor" :id="asn.as"></div>
+            <h2>{{ asn.name }} (AS{{ asn.as }})</h2>
+          </div>
+          <div class="column_corona">
+            <NetworkDelayChart
+              :start-time="before_start"
+              :end-time="before_end"
+              :startPointName="asn.as.toString()"
+              startPointType="AS"
+              :endPointNames="endpoints[asn.as]"
+              :fetch="fetch"
+              :clear="clear"
+              @max-value="updateYaxis"
+              :yMax="yMax"
+              :searchBar="searchBar"
+            />
+            <p class="center">One month before Lockdown</p>
+          </div>
+          <div class="column_corona">
+            <NetworkDelayChart
+              :start-time="during_start"
+              :end-time="during_end"
+              :startPointName="asn.as.toString()"
+              startPointType="AS"
+              :endPointNames="endpoints[asn.as]"
+              :fetch="fetch"
+              :clear="clear"
+              @max-value="updateYaxis"
+              :yMax="yMax"
+              :searchBar="searchBar"
+            />
+            <p class="center">Lockdown({{ countriesInfo[selected['value']].start }})</p>
+          </div>
+          <div class="column_corona">
+            <NetworkDelayChart
+              :start-time="startTime"
+              :end-time="endTime"
+              :startPointName="asn.as.toString()"
+              startPointType="AS"
+              :endPointNames="endpoints[asn.as]"
+              :fetch="fetch"
+              :clear="clear"
+              @max-value="updateYaxis"
+              :yMax="yMax"
+              :searchBar="searchBar"
+            />
+            <p class="center">Latest</p>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <style lang="stylus">
-.IHR_description
-    font-weight 400
-
 .IHR_anchor
     display block
     position relative
@@ -214,5 +238,4 @@ p
 @media screen and (max-width:1024px) and (min-width 720px)
   .column_corona
     width 50%
-
 </style>

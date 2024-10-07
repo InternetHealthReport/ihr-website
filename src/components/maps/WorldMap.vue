@@ -19,22 +19,24 @@ const layout = {
     projection: {
       type: 'equirectangular'
     },
-    showcountries: true, 
+    showcountries: true,
     showcoastlines: 'yes'
   },
-  autosize: true 
+  autosize: true
 }
 
-const traces = ref([{
-  type: 'choropleth',
-  locationmode: 'country names',
-  locations: [],
-  z: [],
-  text: [],
-  hoverinfo: 'text',
-  autocolorscale: false,
-  showscale: false
-}])
+const traces = ref([
+  {
+    type: 'choropleth',
+    locationmode: 'country names',
+    locations: [],
+    z: [],
+    text: [],
+    hoverinfo: 'text',
+    autocolorscale: false,
+    showscale: false
+  }
+])
 
 const fetchData = async () => {
   try {
@@ -56,8 +58,8 @@ const fetchData = async () => {
   }
 }
 
-onMounted(()=>{
-    fetchData()
+onMounted(() => {
+  fetchData()
 })
 
 const onCountryClick = (eventData) => {
@@ -72,11 +74,7 @@ const onCountryClick = (eventData) => {
 <template>
   <div>
     <div class="map-container">
-      <ReactiveChart
-        :layout="layout"
-        :traces="traces"
-        @plotly-click="onCountryClick"
-      />
+      <ReactiveChart :layout="layout" :traces="traces" @plotly-click="onCountryClick" />
     </div>
   </div>
 </template>

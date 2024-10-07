@@ -16,7 +16,15 @@ import CountryIPPrefixes from '@/components/iyp/country/CountryIPPrefixes.vue'
 import CountryInternetExchangePoints from '@/components/iyp/country/CountryInternetExchangePoints.vue'
 import CountryASRankings from '@/components/iyp/country/CountryASRankings.vue'
 
-const props = defineProps(['startTime', 'endTime', 'countryCode', 'family', 'pageTitle', 'interval', 'hash'])
+const props = defineProps([
+  'startTime',
+  'endTime',
+  'countryCode',
+  'family',
+  'pageTitle',
+  'interval',
+  'hash'
+])
 
 const route = useRoute()
 const router = useRouter()
@@ -35,7 +43,7 @@ const selects = ref([
   { value: false, label: t('iyp.country.ases.title') },
   { value: false, label: t('iyp.country.prefixes.title') },
   { value: false, label: t('iyp.country.ixps.title') },
-  { value: false, label: t('iyp.country.rankings.title') },
+  { value: false, label: t('iyp.country.rankings.title') }
 ])
 const selectAll = ref(false)
 const majorEyeballs = ref([])
@@ -44,26 +52,32 @@ const clear = ref(0)
 
 const setMajorEyeballs = (asns) => {
   majorEyeballs.value = []
-  asns.forEach(elem => {
+  asns.forEach((elem) => {
     majorEyeballs.value.push('AS4' + elem)
   })
 }
 
 const pushRoute = () => {
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      display: JSON.stringify(selects.value.map((obj, index) => {
-        if (obj.value) {
-          return index
-        }
-      }).filter(val => val != null))
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        display: JSON.stringify(
+          selects.value
+            .map((obj, index) => {
+              if (obj.value) {
+                return index
+              }
+            })
+            .filter((val) => val != null)
+        )
+      })
     })
-  }))
+  )
 }
 
 const hashToDisplay = (hash) => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.label === hash.replace('#', '').replaceAll('-', ' ')) {
       obj.value = true
     }
@@ -75,7 +89,7 @@ watch(selects.value, () => {
 })
 
 watch(selectAll, () => {
-  selects.value.forEach(obj => obj.value = selectAll.value)
+  selects.value.forEach((obj) => (obj.value = selectAll.value))
 })
 
 onMounted(() => {
@@ -86,7 +100,7 @@ onMounted(() => {
   } else if (route.hash) {
     hashToDisplay(route.hash)
   } else {
-    displayWidgets.value.forEach(val => selects.value[val].value = true)
+    displayWidgets.value.forEach((val) => (selects.value[val].value = true))
   }
 })
 </script>
@@ -103,11 +117,7 @@ onMounted(() => {
     </QCardSection>
   </QCard>
   <!-- Overview -->
-  <CountryOverview
-    :country-code="countryCode"
-    class="card"
-    v-if="selects[0].value"
-  />
+  <CountryOverview :country-code="countryCode" class="card" v-if="selects[0].value" />
   <!-- Monitoring -->
   <GenericCardController
     :title="$t('charts.countryHegemony.title')"
@@ -182,7 +192,7 @@ onMounted(() => {
         'AS415169',
         'CT4Amsterdam, North Holland, NL',
         'CT4Singapore, Central Singapore, SG',
-        'CT4New York City, New York, US',
+        'CT4New York City, New York, US'
       ]"
       :eyeballThreshold="majorEyeballsThreshold"
       :fetch="majorEyeballs.length != 0"
@@ -193,71 +203,56 @@ onMounted(() => {
 
   <GenericCardController
     :title="$t('iyp.country.atlas.title')"
-    :sub-title="$t('iyp.country.atlas.caption')+pageTitle"
+    :sub-title="$t('iyp.country.atlas.caption') + pageTitle"
     :info-title="$t('iyp.country.atlas.info.title')"
     :info-description="$t('iyp.country.atlas.info.description')"
     class="card"
     v-if="selects[5].value"
   >
-    <CountryRipeAtlas
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryRipeAtlas :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Routing -->
   <GenericCardController
     :title="$t('iyp.country.ases.title')"
-    :sub-title="$t('iyp.country.ases.caption')+pageTitle"
+    :sub-title="$t('iyp.country.ases.caption') + pageTitle"
     :info-title="$t('iyp.country.ases.info.title')"
     :info-description="$t('iyp.country.ases.info.description')"
     class="card"
     v-if="selects[6].value"
   >
-    <CountryAutonomousSystems
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryAutonomousSystems :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.country.prefixes.title')"
-    :sub-title="$t('iyp.country.prefixes.caption')+pageTitle"
+    :sub-title="$t('iyp.country.prefixes.caption') + pageTitle"
     :info-title="$t('iyp.country.prefixes.info.title')"
     :info-description="$t('iyp.country.prefixes.info.description')"
     class="card"
     v-if="selects[7].value"
   >
-    <CountryIPPrefixes
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryIPPrefixes :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
     :title="$t('iyp.country.ixps.title')"
-    :sub-title="$t('iyp.country.ixps.caption')+pageTitle"
+    :sub-title="$t('iyp.country.ixps.caption') + pageTitle"
     :info-title="$t('iyp.country.ixps.info.title')"
     :info-description="$t('iyp.country.ixps.info.description')"
     class="card"
     v-if="selects[8].value"
   >
-    <CountryInternetExchangePoints
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryInternetExchangePoints :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
     :title="$t('iyp.country.rankings.title')"
-    :sub-title="$t('iyp.country.rankings.caption')+pageTitle"
+    :sub-title="$t('iyp.country.rankings.caption') + pageTitle"
     :info-title="$t('iyp.country.rankings.info.title')"
     :info-description="$t('iyp.country.rankings.info.description')"
     class="card"
     v-if="selects[9].value && pageTitle"
   >
-    <CountryASRankings
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryASRankings :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

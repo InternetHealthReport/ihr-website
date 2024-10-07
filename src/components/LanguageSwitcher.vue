@@ -11,12 +11,13 @@ const supportedLocales = ref(Tr.supportedLocales)
 
 const switchLanguage = async (newLocale) => {
   await Tr.switchLanguage(newLocale)
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: route.query
-  }))
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: route.query
+    })
+  )
 }
-
 </script>
 
 <template>
@@ -31,5 +32,4 @@ const switchLanguage = async (newLocale) => {
   </QBtn>
 </template>
 
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>

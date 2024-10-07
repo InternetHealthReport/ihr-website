@@ -20,9 +20,30 @@ const nameservers = ref({
   query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO {reference_name:'openintel.infra_ns'}]-(h:AuthoritativeNameServer)
     RETURN DISTINCT h.name AS nameserver, COLLECT(DISTINCT p.prefix) AS prefix, i.ip as ip`,
   columns: [
-    { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.nameserver, format: val => `${val}`, sortable: true },
-    { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
-    { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => `${val}`, sortable: true },
+    {
+      name: 'Nameserver',
+      label: 'Authoritative Nameserver',
+      align: 'left',
+      field: (row) => row.nameserver,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'IP',
+      label: 'IP',
+      align: 'left',
+      field: (row) => row.ip,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Prefix',
+      label: 'Prefix',
+      align: 'left',
+      field: (row) => row.prefix,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -30,17 +51,20 @@ const load = () => {
   nameservers.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run([{statement: nameservers.value.query, parameters: query_params}]).then(
-    results => {
+  iyp_api
+    .run([{ statement: nameservers.value.query, parameters: query_params }])
+    .then((results) => {
       nameservers.value.data = results[0]
       nameservers.value.loading = false
-    }
-  )
+    })
 }
 
-watch(() => props.asNumber, () => {
-  load()
-})
+watch(
+  () => props.asNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -58,8 +82,12 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="nameservers.data.length > 0"
       :chart-data="nameservers.data"
-      :config="{ keys: ['prefix', 'ip', 'nameserver'], root: pageTitle, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br><extra></extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'nameserver'}})"
+      :config="{
+        keys: ['prefix', 'ip', 'nameserver'],
+        root: pageTitle,
+        hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br><extra></extra>'
+      }"
+      @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'nameserver' } })"
     />
   </IypGenericTable>
 </template>

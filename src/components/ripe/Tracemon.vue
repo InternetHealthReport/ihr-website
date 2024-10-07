@@ -7,16 +7,16 @@ const library_delayer = inject('library_delayer')
 const props = defineProps({
   probeIds: {
     type: Array,
-    required: true,
+    required: true
   },
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   endTime: {
     type: Date,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const myId = ref(`tracemonWidget${uid()}`)
@@ -34,7 +34,7 @@ onMounted(() => {
       {
         measurements: props.probeIds,
         startTimestamp: getTimestamp(props.startTime),
-        stopTimestamp: getTimestamp(props.endTime),
+        stopTimestamp: getTimestamp(props.endTime)
       }
     )
   })

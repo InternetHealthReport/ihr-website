@@ -2,7 +2,7 @@
 import { RouterView } from 'vue-router'
 import { QLayout, QPageContainer, QIcon } from 'quasar'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import Header from './components/Header.vue';
+import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import LocalStorageBanner from './components/LocalStorageBanner.vue'
 
@@ -33,14 +33,20 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <QLayout view="hHh LpR fff" id="app" >
+  <QLayout view="hHh LpR fff" id="app">
     <Header></Header>
     <QPageContainer>
       <RouterView />
       <!-- <div id="IHR_last-element">&nbsp;</div> -->
     </QPageContainer>
     <Footer></Footer>
-    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
+    <button
+      v-if="showScrollTopButton"
+      @click="scrollToTop"
+      class="IHR_scroll-btn bg-primary text-white"
+    >
+      <QIcon name="fas fa-arrow-up"></QIcon>
+    </button>
   </QLayout>
   <LocalStorageBanner :disable="true" />
 </template>

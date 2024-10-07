@@ -10,10 +10,9 @@ onMounted(() => {
     layout: 'BaseLayout',
     defaultModelsExpandDepth: -1,
     presets: [SwaggerUI.presets.apis],
-    deepLinking: false,
+    deepLinking: false
   })
 })
-
 </script>
 
 <template>
@@ -24,5 +23,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus" scoped>
-</style>
+<style lang="stylus" scoped></style>

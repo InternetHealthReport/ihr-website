@@ -21,17 +21,21 @@ const fetch = ref(true)
 const displayWidgets = ref(route.query.display ? JSON.parse(route.query.display) : [])
 const selects = ref([
   { value: false, hasData: false, label: 'AS' },
-  { value: false, hasData: false, label: 'Hostname' },
+  { value: false, hasData: false, label: 'Hostname' }
 ])
 const selectAll = ref(false)
 
 const init = async () => {
-  const queries = [{
-    query: `MATCH (n)-[:RANK]-(:Ranking {name: $rank})
-      RETURN DISTINCT head(labels(n)) as node`,
-  }]
+  const queries = [
+    {
+      query: `MATCH (n)-[:RANK]-(:Ranking {name: $rank})
+      RETURN DISTINCT head(labels(n)) as node`
+    }
+  ]
   let params = { rank: props.rank }
-  let results = await iyp_api.run(queries.map(obj => ({statement: obj.query, parameters: params})))
+  let results = await iyp_api.run(
+    queries.map((obj) => ({ statement: obj.query, parameters: params }))
+  )
 
   const node = results[0][0].node
   if ('AS' == node) {
@@ -43,20 +47,26 @@ const init = async () => {
 }
 
 const pushRoute = () => {
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      display: JSON.stringify(selects.value.map((obj, index) => {
-        if (obj.value) {
-          return index
-        }
-      }).filter(val => val != null))
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        display: JSON.stringify(
+          selects.value
+            .map((obj, index) => {
+              if (obj.value) {
+                return index
+              }
+            })
+            .filter((val) => val != null)
+        )
+      })
     })
-  }))
+  )
 }
 
 const hashToDisplay = () => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
       obj.value = true
     }
@@ -68,7 +78,7 @@ watch(selects.value, () => {
 })
 
 watch(selectAll, () => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.hasData) {
       obj.value = selectAll.value
     }
@@ -82,7 +92,7 @@ onMounted(() => {
   } else if (props.hash) {
     hashToDisplay()
   } else {
-    displayWidgets.value.forEach(val => selects.value[val].value = true)
+    displayWidgets.value.forEach((val) => (selects.value[val].value = true))
   }
 })
 </script>
@@ -102,29 +112,23 @@ onMounted(() => {
   </QCard>
   <GenericCardController
     :title="$t('iyp.rank.topAs.title')"
-    :sub-title="$t('iyp.rank.topAs.caption')+pageTitle"
+    :sub-title="$t('iyp.rank.topAs.caption') + pageTitle"
     :info-title="$t('iyp.rank.topAs.info.title')"
     :info-description="$t('iyp.rank.topAs.info.description')"
     class="card"
     v-if="selects[0].value"
   >
-    <RankASRankings
-      :rank="rank"
-      :page-title="pageTitle"
-    />
+    <RankASRankings :rank="rank" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.rank.topHostnames.title')"
-    :sub-title="$t('iyp.rank.topHostnames.caption')+pageTitle+' (limited to 100K)'"
+    :sub-title="$t('iyp.rank.topHostnames.caption') + pageTitle + ' (limited to 100K)'"
     :info-title="$t('iyp.rank.topHostnames.info.title')"
     :info-description="$t('iyp.rank.topHostnames.info.description')"
     class="card"
     v-if="selects[1].value"
   >
-    <RankHostNameRankings
-      :rank="rank"
-      :page-title="pageTitle"
-    />
+    <RankHostNameRankings :rank="rank" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

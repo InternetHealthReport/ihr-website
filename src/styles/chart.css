@@ -1,0 +1,96 @@
+.IHR_chart {
+  text-align: center;
+  position: relative;
+}
+
+.IHR_chart h1 {
+  font-size: 25pt;
+  margin-bottom: 0px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.IHR_chart-title {
+  font-size: 18pt;
+}
+
+.IHR_char-container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.IHR_loading-spinner {
+  position: absolute;
+  top: 35%;
+  left: 49%;
+}
+.IHR_loading-spinner > * {
+  width: 25%;
+  height: 25%;
+}
+
+.IHR_description {
+  max-width: 900px;
+  font-size: 14pt;
+}
+
+.IHR_api-table table {
+  display: inline-block;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.IHR_api-table p {
+  text-align: left;
+  text-transform: capitalize;
+  color: #000;
+  font-weight: 200;
+}
+
+.IHR_api-table h3 {
+  color: #000;
+  text-align: left;
+  font-weight: 300;
+}
+
+.IHR_table-card {
+  padding: 0px;
+  background-color: #475057;
+  color: #475057;
+}
+
+.IHR_table-close-button {
+  position: absolute;
+  right: 20px;
+  z-index: 4;
+  color: #808080;
+  box-shadow: none;
+  font-size: 14pt;
+  font-family: monospace;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.IHR_table-row {
+  cursor: pointer;
+}
+
+.IHR_color-increment {
+  font-weight: 600;
+}
+
+.IHR_important-cell {
+  font-weight: bold;
+}
+
+.IHR_color-deviation-mid-threshold {
+  color: #eb9329;
+}
+
+.IHR_color-deviation-high-threshold {
+  color: #c41c00;
+}
+
+.q-td {
+  white-space: normal !important;
+}

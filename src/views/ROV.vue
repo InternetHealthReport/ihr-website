@@ -8,16 +8,23 @@ import report from '@/plugins/report'
 import DateTimePicker from '@/components/DateTimePicker.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const LOADING_STATUS = {
   ERROR: -3,
   EXPIRED: -2,
   NOT_FOUND: -1,
   LOADING: 0,
-  LOADED: 1,
+  LOADED: 1
 }
 
-const CHART_REFS = ['countryHegemonyChart', 'prefixHegemonyChart', 'networkDelayChart', 'delayAndForwardingChart', 'ihrChartDisco']
+const CHART_REFS = [
+  'countryHegemonyChart',
+  'prefixHegemonyChart',
+  'networkDelayChart',
+  'delayAndForwardingChart',
+  'ihrChartDisco'
+]
 
 const route = useRoute()
 const router = useRouter()
@@ -35,14 +42,24 @@ const show = ref({
   hegemony: true,
   hegemony_disable: false,
   net_delay: true,
-  net_delay_disable: false,
+  net_delay_disable: false
 })
 const majorEyeballs = ref([])
 const majorEyeballsThreshold = ref(10)
 
 const timeRange = route.query.last ? route.query.last : 3
 
-let { interval, minDate, maxDate, fetch, utcString, reportDateFmt, setReportDate, startTime, endTime } = report(timeRange)
+let {
+  interval,
+  minDate,
+  maxDate,
+  fetch,
+  utcString,
+  reportDateFmt,
+  setReportDate,
+  startTime,
+  endTime
+} = report(timeRange)
 
 if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[0]) {
   setReportDate(new Date(route.query.date))
@@ -114,7 +131,13 @@ onMounted(() => {
       <h1 class="text-center"><q-icon name="fas fa-route" />&nbsp; Route Origin Validation</h1>
       <h3 class="text-center">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
-        <DateTimePicker :min="minDate" :max="maxDate" :value="maxDate" @input="setReportDate" hideTime class="IHR_subtitle_calendar" />
+        <DateTimePicker
+          :min="minDate"
+          :max="maxDate"
+          :value="maxDate"
+          @input="setReportDate"
+          hideTime
+        />
       </h3>
     </div>
     <PrefixHegemonyChart :start-time="startTime" :end-time="endTime" :fetch="fetch" />

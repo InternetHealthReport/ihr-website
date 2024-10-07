@@ -22,63 +22,82 @@ const LINE_COLORS = [
   '#e377c2', // raspberry yogurt pink
   '#7f7f7f', // middle gray
   '#bcbd22', // curry yellow-green
-  '#17becf', // blue-teal
+  '#17becf' // blue-teal
 ]
 
-const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+const MONTHS_SHORT = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+]
 
 const props = defineProps({
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   endTime: {
     type: Date,
-    required: true,
+    required: true
   },
   startPointType: {
     type: String,
-    default: () => '',
+    default: () => ''
   },
   startPointName: {
     type: String,
-    default: () => '',
+    default: () => ''
   },
   startPointNames: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   endPointNames: {
     type: Array,
-    default: () => ['CT4Singapore, Central Singapore, SG', 'CT4Ashburn, Virginia, US', 'CT4London, England, GB', 'AS415169', 'AS425152'],
+    default: () => [
+      'CT4Singapore, Central Singapore, SG',
+      'CT4Ashburn, Virginia, US',
+      'CT4London, England, GB',
+      'AS415169',
+      'AS425152'
+    ]
   },
   asFamily: {
     type: Number,
-    default: AS_FAMILY.v4,
+    default: AS_FAMILY.v4
   },
   searchBar: {
     type: Boolean,
-    default: false,
+    default: false
   },
   clear: {
     type: Number,
-    default: 1,
+    default: 1
   },
   noTable: {
     type: Boolean,
-    default: false,
+    default: false
   },
   yMax: {
     type: Number,
-    default: 1,
+    default: 1
   },
   noYLabel: {
     type: Boolean,
-    default: false,
+    default: false
   },
   group: {
     type: String,
-    default: '',
+    default: ''
   },
   fetch: {
     type: Boolean
@@ -93,7 +112,7 @@ const props = defineProps({
   readonlyDestinationSearch: {
     type: Boolean,
     default: false
-  },
+  }
 })
 
 const emits = defineEmits({
@@ -107,15 +126,15 @@ const emits = defineEmits({
   },
   'max-value': (newMaxY) => {
     if (newMaxY !== null) {
-      return true;
+      return true
     } else {
       console.warn('NewMaxY is missing!')
       return false
     }
   },
-  'display': (isDisplayed) => {
+  display: (isDisplayed) => {
     if (isDisplayed !== null) {
-      return true;
+      return true
     } else {
       console.warn('IsDisplayed is missing!')
       return false
@@ -129,7 +148,7 @@ const details = ref({
   delayData: {},
   tableVisible: false,
   loading: true,
-  filter: '',
+  filter: ''
 })
 const apiFilter = ref(null)
 const openClose = ref(true)
@@ -170,13 +189,13 @@ const apiCall = () => {
     loading.value = true
     ihr_api.network_delay(
       apiFilter.value,
-      result => {
+      (result) => {
         nextTick(() => {
           fetchNetworkDelay(result.results)
           loading.value = false
         })
       },
-      error => {
+      (error) => {
         console.error(error) //FIXME do a correct alert
         loading.value = false
       }
@@ -207,21 +226,21 @@ const showTable = (clickData) => {
   details.value.filter = apiFilter.value.clone()
 
   details.value.delayData = {
-    dateTime: `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${("0" + chosenTime.getUTCHours()).slice(-2)}:${("0" + chosenTime.getUTCMinutes()).slice(-2)}`,
+    dateTime: `${MONTHS_SHORT[chosenTime.getMonth()]} ${chosenTime.getDate()}, ${chosenTime.getFullYear()}, ${('0' + chosenTime.getUTCHours()).slice(-2)}:${('0' + chosenTime.getUTCMinutes()).slice(-2)}`,
     startTime: new Date(chosenTime.getTime() - DELAY_ALARM_INTERVAL),
     stopTime: new Date(chosenTime.getTime() + DELAY_ALARM_INTERVAL),
     data: [],
-    loading: true,
+    loading: true
   }
   ihr_api.network_delay(
     details.value.filter.timeBin(chosenTime),
-    results => {
+    (results) => {
       details.value.delayData.data = results.results
       details.value.tableVisible = true
       details.value.delayData.loading = false
       details.value.filter = apiFilter.value.clone()
     },
-    error => {
+    (error) => {
       console.error(error) //TODO better error handling
     }
   )
@@ -236,7 +255,7 @@ const fetchNetworkDelay = (data) => {
   let maxValue = 0
   let timeResolution = 1800 * 1000
   const groups = []
-  data.forEach(elem => {
+  data.forEach((elem) => {
     let key = elem.startpoint_type
     key += elem.startpoint_af
     key += elem.startpoint_name
@@ -274,7 +293,7 @@ const fetchNetworkDelay = (data) => {
           '</b><br><br>' +
           '%{x}<br>' +
           '%{yaxis.title.text}: <b>%{y:.2f}</b>' +
-          '<extra></extra>',
+          '<extra></extra>'
       }
 
       // Group localTraces if needed
@@ -309,7 +328,7 @@ const fetchNetworkDelay = (data) => {
   })
   // Sort traces by alphabetical order
   let keys = Object.keys(localTraces).sort()
-  keys.forEach(key => traces.value.push(localTraces[key]))
+  keys.forEach((key) => traces.value.push(localTraces[key]))
   // emit max value
   emits('max-value', maxValue)
   if (traces.value.length == 0) {
@@ -337,20 +356,29 @@ const startPointNameStr = computed(() => {
   }
 })
 
-watch(() => props.endTime, () => {
-  clearGraph()
-  apiCall()
-})
-watch(() => props.startPointNames, () => {
-  clearGraph()
-  startPointKeysFilter.value = props.startPointNames
-  apiCall()
-})
-watch(() => props.startPointName, () => {
-  clearGraph()
-  startPointNameFilter.value = props.startPointName
-  apiCall()
-})
+watch(
+  () => props.endTime,
+  () => {
+    clearGraph()
+    apiCall()
+  }
+)
+watch(
+  () => props.startPointNames,
+  () => {
+    clearGraph()
+    startPointKeysFilter.value = props.startPointNames
+    apiCall()
+  }
+)
+watch(
+  () => props.startPointName,
+  () => {
+    clearGraph()
+    startPointNameFilter.value = props.startPointName
+    apiCall()
+  }
+)
 
 onMounted(() => {
   clearGraph()
@@ -362,63 +390,67 @@ onMounted(() => {
   <div class="IHR_chart">
     <div class="justify-center" v-if="searchBar">
       <div v-if="isCovid">
-        <div class="q-pa-sm"
-        >
+        <div class="q-pa-sm">
           <LocationSearchBar
             @select="addStartLocation"
             :hint="$t('searchBar.locationSource')"
             :label="$t('searchBar.locationHint')"
             :selected="startPointNameStr"
-            style="width: 65%;margin: auto; margin-bottom: -6px;"
-            />
-        </div>
-        <div class="q-pa-sm"
-        >
-          <LocationSearchBar
-          @select="addEndLocation"
-          :hint="$t('searchBar.locationDestination')"
-          :label="$t('searchBar.locationHint')"
-          :selected="startPointNameStr"
-          style="width: 65%;margin: auto;margin-bottom: -6px;"
+            style="width: 65%; margin: auto; margin-bottom: -6px"
           />
         </div>
-        <div style="display: block;">
-      <div class="col-3 q-pa-sm">
-        <QBtn @click="apiCall" color="secondary" class="q-ml-sm">Add</QBtn>
-        <QBtn @click="clearGraph" class="q-ml-sm">Clear all</QBtn>
-      </div>
-      </div>
+        <div class="q-pa-sm">
+          <LocationSearchBar
+            @select="addEndLocation"
+            :hint="$t('searchBar.locationDestination')"
+            :label="$t('searchBar.locationHint')"
+            :selected="startPointNameStr"
+            style="width: 65%; margin: auto; margin-bottom: -6px"
+          />
+        </div>
+        <div style="display: block">
+          <div class="col-3 q-pa-sm">
+            <QBtn @click="apiCall" color="secondary" class="q-ml-sm">Add</QBtn>
+            <QBtn @click="clearGraph" class="q-ml-sm">Clear all</QBtn>
+          </div>
+        </div>
       </div>
       <div v-else>
         <div class="row justify-center">
-      <div class="col-4 q-pa-sm">
-        <LocationSearchBar
-          @select="addStartLocation"
-          :hint="$t('searchBar.locationSource')"
-          :label="$t('searchBar.locationHint')"
-          :selected="startPointNameStr"
-          :readonly="readonlySourceSearch"
-          :peeringdbId="peeringdbId"
-        />
+          <div class="col-4 q-pa-sm">
+            <LocationSearchBar
+              @select="addStartLocation"
+              :hint="$t('searchBar.locationSource')"
+              :label="$t('searchBar.locationHint')"
+              :selected="startPointNameStr"
+              :readonly="readonlySourceSearch"
+              :peeringdbId="peeringdbId"
+            />
+          </div>
+          <div class="col-4 q-pa-sm">
+            <LocationSearchBar
+              @select="addEndLocation"
+              :hint="$t('searchBar.locationDestination')"
+              :readonly="readonlyDestinationSearch"
+              :label="$t('searchBar.locationHint')"
+            />
+          </div>
+          <div class="col-3 q-pa-sm">
+            <QBtn @click="apiCall" color="secondary" class="btn">Add</QBtn>
+            <QBtn @click="clearGraph" class="btn">Clear all</QBtn>
+          </div>
+        </div>
       </div>
-      <div class="col-4 q-pa-sm">
-        <LocationSearchBar
-          @select="addEndLocation"
-          :hint="$t('searchBar.locationDestination')"
-          :readonly="readonlyDestinationSearch"
-          :label="$t('searchBar.locationHint')"
-        />
-      </div>
-      <div class="col-3 q-pa-sm">
-        <QBtn @click="apiCall" color="secondary" class="btn">Add</QBtn>
-        <QBtn @click="clearGraph" class="btn">Clear all</QBtn>
-      </div>
-      </div>
-    </div>
     </div>
     <div class="row">
       <div class="col">
-        <ReactiveChart :layout="layout" :traces="traces" @plotly-click="showTable" :no-data="noData" :yMax="yMax" />
+        <ReactiveChart
+          :layout="layout"
+          :traces="traces"
+          @plotly-click="showTable"
+          :no-data="noData"
+          :yMax="yMax"
+        />
       </div>
     </div>
     <div v-if="loading" class="IHR_loading-spinner">
@@ -471,14 +503,16 @@ onMounted(() => {
           </QTabPanel>
           <QTabPanel name="api" class="IHR_api-table">
             <table>
-              <tr>
-                <td>
-                  <label for="delay">{{ $t('charts.delayAndForwarding.yaxis') }}</label>
-                </td>
-                <td>
-                  <a :href="delayUrl" target="_blank" id="delay">{{ delayUrl }}</a>
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>
+                    <label for="delay">{{ $t('charts.delayAndForwarding.yaxis') }}</label>
+                  </td>
+                  <td>
+                    <a :href="delayUrl" target="_blank" id="delay">{{ delayUrl }}</a>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </QTabPanel>
         </QTabPanels>

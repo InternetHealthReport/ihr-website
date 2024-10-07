@@ -22,11 +22,46 @@ const upstreams = ref({
     OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
     RETURN DISTINCT b.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, c.country_code AS cc, 100*d.hege AS hegemony_score, 'IPv'+d.af AS af`,
   columns: [
-    { name: 'IP version', label: 'IP version', align: 'left', field: row => row.af, format: val => `${val}`, sortable: true },
-    { name: 'Country', label: 'Country', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
-    { name: 'Name', label: 'Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
-    { name: 'Hegemony Score', label: 'Hegemony Score', align: 'left', field: row => row.hegemony_score, format: val => `${Number(val).toFixed(2)}%`, sortable: true, },
+    {
+      name: 'IP version',
+      label: 'IP version',
+      align: 'left',
+      field: (row) => row.af,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Country',
+      label: 'Country',
+      align: 'left',
+      field: (row) => row.cc,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'ASN',
+      label: 'ASN',
+      align: 'left',
+      field: (row) => row.asn,
+      format: (val) => `AS${val}`,
+      sortable: true
+    },
+    {
+      name: 'Name',
+      label: 'Name',
+      align: 'left',
+      field: (row) => row.name,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Hegemony Score',
+      label: 'Hegemony Score',
+      align: 'left',
+      field: (row) => row.hegemony_score,
+      format: (val) => `${Number(val).toFixed(2)}%`,
+      sortable: true
+    }
   ]
 })
 
@@ -34,17 +69,18 @@ const load = () => {
   upstreams.value.loading = true
   // Run the cypher query
   let query_params = { asn: props.asNumber }
-  iyp_api.run([{statement: upstreams.value.query, parameters: query_params}]).then(
-    results => {
-      upstreams.value.data = results[0]
-      upstreams.value.loading = false
-    }
-  )
+  iyp_api.run([{ statement: upstreams.value.query, parameters: query_params }]).then((results) => {
+    upstreams.value.data = results[0]
+    upstreams.value.loading = false
+  })
 }
 
-watch(() => props.asNumber, () => {
-  load()
-})
+watch(
+  () => props.asNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -62,8 +98,8 @@ onMounted(() => {
     <IypGenericBarChart
       v-if="upstreams.data.length > 0"
       :chart-data="upstreams.data"
-      :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"}, range: [0,100],}}'
-      :config="{key:'asn', groupKey:'af', value:'hegemony_score' , xlabel_prefix:'AS'}"
+      :chart-layout="{ yaxis: { title: { text: 'AS Hegemony (%)' }, range: [0, 100] } }"
+      :config="{ key: 'asn', groupKey: 'af', value: 'hegemony_score', xlabel_prefix: 'AS' }"
     />
     <!--  <IypGenericTreemapChart
       v-if="dependings.length > 0"

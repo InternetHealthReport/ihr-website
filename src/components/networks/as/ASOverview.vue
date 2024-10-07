@@ -3,27 +3,28 @@ import { QChip, QSpinner, QMarkupTable } from 'quasar'
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
-import '@/styles/chart.sass'
+import '@/styles/chart.css'
+import NetworkTopologyChart from '@/components/charts/NetworkTopologyChart.vue'
 
 const iyp_api = inject('iyp_api')
 
-const props  = defineProps({
+const props = defineProps({
   asNumber: {
     type: Number,
-    required: true,
+    required: true
   },
   asName: {
     type: String,
-    required: false,
+    required: false
   },
   peeringdbId: {
     type: Function,
-    required: false,
+    required: false
   },
   external: {
     type: Boolean,
     required: false,
-    default: false,
+    default: false
   }
 })
 
@@ -34,7 +35,7 @@ const REFERENCES = {
   'bgp.tools': 'https://bgp.tools/as',
   'peeringdb.com': 'https://www.peeringdb.com/net',
   'radar.cloudflare.com': 'https://radar.cloudflare.com',
-  'stat.ripe.net': 'https://stat.ripe.net/app/launchpad',
+  'stat.ripe.net': 'https://stat.ripe.net/app/launchpad'
 }
 
 const queries = ref([
@@ -79,18 +80,18 @@ const pdbid = ref(null)
 
 const fetchData = async (asn) => {
   let params = { asn: asn }
-  iyp_api.run([{statement: queries.value[0].query, parameters: params}]).then((res) => {
+  iyp_api.run([{ statement: queries.value[0].query, parameters: params }]).then((res) => {
     queries.value[0].data = res[0]
     loading.value -= 1
   })
 
-  iyp_api.run([{statement: queries.value[1].query, parameters: params}]).then((res) => {
+  iyp_api.run([{ statement: queries.value[1].query, parameters: params }]).then((res) => {
     queries.value[1].data = res[0]
     pdbid.value = queries.value[1].data[0].peeringdbNetId
     loading.value -= 1
   })
 
-  iyp_api.run([{statement: queries.value[2].query, parameters: params}]).then((res) => {
+  iyp_api.run([{ statement: queries.value[2].query, parameters: params }]).then((res) => {
     queries.value[2].data = res[0]
     loading.value -= 1
   })
@@ -100,7 +101,7 @@ const formatRank = (rank, name) => {
   let arr = []
   arr.push({
     rank,
-    name,
+    name
   })
   return arr
 }
@@ -120,19 +121,22 @@ const handleReference = (key) => {
   } else if (key === 'stat.ripe.net') {
     externalLink = `${references.value[key]}/AS${asn}`
   } else {
-    console.log('none')
+    // console.log('none')
     return
   }
   return externalLink
 }
 
-watch(() => props.asNumber, () => {
-  loading.value = 3
-  queries.value.forEach( query => {
-    query.data = []
-  })
-  fetchData(props.asNumber)
-})
+watch(
+  () => props.asNumber,
+  () => {
+    loading.value = 3
+    queries.value.forEach((query) => {
+      query.data = []
+    })
+    fetchData(props.asNumber)
+  }
+)
 
 onMounted(() => {
   fetchData(props.asNumber)
@@ -143,12 +147,20 @@ onMounted(() => {
   <div>
     <QMarkupTable separator="horizontal">
       <div v-if="loading > 0" class="IHR_loading-spinner">
-        <QSpinner color="secondary" size="15em"/>
+        <QSpinner color="secondary" size="15em" />
       </div>
       <thead>
         <tr>
           <th class="text-left">Summary</th>
-          <th class="text-left" v-if="queries[1].data.length > 0 & (queries[1].data[0]?(queries[1].data[0].rank?true:false):false)">Top Rank</th>
+          <th
+            class="text-left"
+            v-if="
+              (queries[1].data.length > 0) &
+              (queries[1].data[0] ? (queries[1].data[0].rank ? true : false) : false)
+            "
+          >
+            Top Rank
+          </th>
           <th class="text-left">Popular Hostnames</th>
           <th class="text-left">External Links</th>
         </tr>
@@ -157,22 +169,78 @@ onMounted(() => {
         <tr>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div>Registered in <RouterLink :to="Tr.i18nRoute({ name: 'country', params: {cc: queries[0].data[0].cc } })"> {{ queries[0].data[0].country }} </RouterLink></div>
-              <div>Member of {{ queries[0].data[0].nb_ixp }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#IXPs'})">IXPs</RouterLink> in {{ queries[0].data[0].nb_country }} Countries</div>
-              <div>{{ queries[0].data[0].prefixes_v4 }} IPv4 and {{ queries[0].data[0].prefixes_v6 }} IPv6 <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Originated-Prefixes'})">Originated Prefixes</RouterLink></div>
-              <div v-if="queries[1].data.length > 0">{{ queries[1].data[0].peers }} <RouterLink :to="Tr.i18nRoute({replace: true, query: Object.assign({}, route.query, {active: 'custom'}), hash: '#Connected-ASes'})">Connected ASes</RouterLink></div>
               <div>
-                Website: <a :href="queries[0].data[0].website" target="_blank" rel="noopener noreferrer">{{ queries[0].data[0].website}}</a>
+                Registered in
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'country', params: { cc: queries[0].data[0].cc } })"
+                >
+                  {{ queries[0].data[0].country }}
+                </RouterLink>
+              </div>
+              <div>
+                Member of {{ queries[0].data[0].nb_ixp }}
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, { active: 'custom' }),
+                      hash: '#IXPs'
+                    })
+                  "
+                  >IXPs</RouterLink
+                >
+                in {{ queries[0].data[0].nb_country }} Countries
+              </div>
+              <div>
+                {{ queries[0].data[0].prefixes_v4 }} IPv4 and
+                {{ queries[0].data[0].prefixes_v6 }} IPv6
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, { active: 'custom' }),
+                      hash: '#Originated-Prefixes'
+                    })
+                  "
+                  >Originated Prefixes</RouterLink
+                >
+              </div>
+              <div v-if="queries[1].data.length > 0">
+                {{ queries[1].data[0].peers }}
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, { active: 'custom' }),
+                      hash: '#Connected-ASes'
+                    })
+                  "
+                  >Connected ASes</RouterLink
+                >
+              </div>
+              <div>
+                Website:
+                <a :href="queries[0].data[0].website" target="_blank" rel="noopener noreferrer">{{
+                  queries[0].data[0].website
+                }}</a>
               </div>
             </div>
           </td>
-          <td class="text-left" v-if="queries[1].data.length > 0 & (queries[1].data[0]?(queries[1].data[0].rank?true:false):false)">
+          <td
+            class="text-left"
+            v-if="
+              (queries[1].data.length > 0) &
+              (queries[1].data[0] ? (queries[1].data[0].rank ? true : false) : false)
+            "
+          >
             <div>#{{ queries[1].data[0].rank }} in {{ queries[1].data[0].ranking_name }}</div>
           </td>
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
               <div v-for="item in queries[2].data" :key="item.hostname">
-                <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: {hostname:item.hostname}})">
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: item.hostname } })"
+                >
                   {{ item.hostname }}
                 </RouterLink>
               </div>
@@ -181,11 +249,40 @@ onMounted(() => {
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
               <div v-for="(value, key) in references" :key="key">
-                <a v-if="handleReference(key)" :href="handleReference(key)" target="_blank" rel="noreferrer">
+                <a
+                  v-if="handleReference(key)"
+                  :href="handleReference(key)"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {{ key }}
                 </a>
               </div>
             </div>
+          </td>
+        </tr>
+      </tbody>
+    </QMarkupTable>
+    <br />
+    <QMarkupTable separator="horizontal">
+      <thead>
+        <tr>
+          <th class="text-left">IPv4 Network Topology</th>
+          <th class="text-left">IPv6 Network Topology</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="topology">
+            <NetworkTopologyChart
+              :searchInput="String(asNumber)"
+              af="IPv4"
+              :isComponent="true"
+              :showLegend="false"
+            />
+          </td>
+          <td class="topology">
+            <NetworkTopologyChart :searchInput="String(asNumber)" af="IPv6" :isComponent="true" />
           </td>
         </tr>
       </tbody>
@@ -200,8 +297,14 @@ onMounted(() => {
       <tbody>
         <tr>
           <td :colspan="5">
-            <div  v-if="queries[0].data.length > 0" class="row">
-              <RouterLink v-for="tag in queries[0].data[0].tags" :key="tag" :to="Tr.i18nRoute({ name: 'tag', params: {tag: tag}, hash: '#Autonomous-Systems'})">
+            <div v-if="queries[0].data.length > 0" class="row">
+              <RouterLink
+                v-for="tag in queries[0].data[0].tags"
+                :key="tag"
+                :to="
+                  Tr.i18nRoute({ name: 'tag', params: { tag: tag }, hash: '#Autonomous-Systems' })
+                "
+              >
                 <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
               </RouterLink>
             </div>
@@ -226,5 +329,8 @@ h3 {
   cursor: pointer;
   width: 100%;
   text-align: right;
+}
+.topology {
+  padding 0 0 0 0 !important;
 }
 </style>

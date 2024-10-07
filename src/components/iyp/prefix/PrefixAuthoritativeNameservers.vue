@@ -20,10 +20,38 @@ const nameservers = ref({
     OPTIONAL MATCH (n)<-[:MANAGED_BY]-(:DomainName)-[:PART_OF]-(d:HostName)
     RETURN COLLECT(DISTINCT i.ip) AS ip, n.name as nameserver, split(n.name, '.')[-1] AS tld, COUNT(DISTINCT d.name) AS nb_hostnames`,
   columns: [
-    { name: 'TLD', label: 'TLD', align: 'left', field: row => row.tld, format: val => `${val}`, sortable: true },
-    { name: 'Nameserver', label: 'Authoritative Nameserver', align: 'left', field: row => row.nameserver, format: val => `${val}`, sortable: true },
-    { name: 'Hostname', label: 'Nb. Popular Hostnames', align: 'left', field: row => row.nb_hostnames, format: val => `${val}`, sortable: true },
-    { name: 'IP', label: 'IP', align: 'left', field: row => row.ip, format: val => `${val}`, sortable: true },
+    {
+      name: 'TLD',
+      label: 'TLD',
+      align: 'left',
+      field: (row) => row.tld,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Nameserver',
+      label: 'Authoritative Nameserver',
+      align: 'left',
+      field: (row) => row.nameserver,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'Hostname',
+      label: 'Nb. Popular Hostnames',
+      align: 'left',
+      field: (row) => row.nb_hostnames,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'IP',
+      label: 'IP',
+      align: 'left',
+      field: (row) => row.ip,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -31,18 +59,21 @@ const load = () => {
   nameservers.value.loading = true
   // Run the cypher query
   let query_params = { prefix: props.getPrefix }
-  iyp_api.run([{statement: nameservers.value.query, parameters: query_params}]).then(
-    results => {
-      results[0].forEach(obj => obj.tld == '' ? obj.tld='.' : obj.tld=obj.tld)
+  iyp_api
+    .run([{ statement: nameservers.value.query, parameters: query_params }])
+    .then((results) => {
+      results[0].forEach((obj) => (obj.tld == '' ? (obj.tld = '.') : (obj.tld = obj.tld)))
       nameservers.value.data = results[0]
       nameservers.value.loading = false
-    }
-  )
+    })
 }
 
-watch(() => props.getPrefix, () => {
-  load()
-})
+watch(
+  () => props.getPrefix,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -60,8 +91,13 @@ onMounted(() => {
     <IypGenericTreemapChart
       v-if="nameservers.data.length > 0"
       :chart-data="nameservers.data"
-      :config="{ keys: ['tld', 'nameserver', 'ip'], root: getPrefix, hovertemplate: '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_hostnames} popular Hostnames<extra></extra>' }"
-      @treemap-clicked="treemapClicked({...$event, ...{router: router, 'leafKey': 'ip'}})"
+      :config="{
+        keys: ['tld', 'nameserver', 'ip'],
+        root: getPrefix,
+        hovertemplate:
+          '<b>%{customdata.nameserver}<br>%{label}</b> <br><br>Manage %{customdata.nb_hostnames} popular Hostnames<extra></extra>'
+      }"
+      @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'ip' } })"
     />
   </IypGenericTable>
 </template>

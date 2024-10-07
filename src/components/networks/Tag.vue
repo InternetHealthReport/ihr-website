@@ -49,44 +49,49 @@ const pageTitle = computed(() => {
   return tagName.value
 })
 
-watch(() => route.params.tag, (newTag) => {
-  if (newTag != tag.value) {
-    tag.value = newTag
-    if (tag.value) {
-      menu.value = activeTab
-      fetchData()
+watch(
+  () => route.params.tag,
+  (newTag) => {
+    if (newTag != tag.value) {
+      tag.value = newTag
+      if (tag.value) {
+        menu.value = activeTab
+        fetchData()
+      }
     }
   }
-})
+)
 watch(menu, () => {
   if ('display' in route.query) {
     delete route.query.display
   }
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      active: menu.value
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        active: menu.value
+      })
     })
-  }))
+  )
 })
 onMounted(() => {
   if (tag.value) {
     fetchData()
   } else {
-    router.push(Tr.i18nRoute({
-      name: 'tag',
-    }))
+    router.push(
+      Tr.i18nRoute({
+        name: 'tag'
+      })
+    )
   }
 })
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <h1 class="text-center">{{ pageTitle }}</h1>
     <h3 class="text-center">
-      <div>
-        Weekly report
-      </div>
+      <div>Weekly report</div>
     </h3>
     <QCard flat>
       <QTabs
@@ -101,20 +106,14 @@ onMounted(() => {
         <QTab name="custom">Custom</QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
+      <QTabPanels v-model="menu" v-if="pageTitle">
         <!-- <QTabPanel name="overview">
           <TagOverview
             :tag="tag"
           />
         </QTabPanel> -->
         <QTabPanel name="custom">
-          <TagCustom
-            :tag="tag"
-            :hash="routeHash"
-          />
+          <TagCustom :tag="tag" :hash="routeHash" />
         </QTabPanel>
       </QTabPanels>
     </QCard>

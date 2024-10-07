@@ -21,11 +21,11 @@ const props = defineProps({
   },
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   endTime: {
     type: Date,
-    required: true,
+    required: true
   },
   fetch: {
     type: Boolean
@@ -35,16 +35,20 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['loading', 'filteredRows', {
-  'prefix-details': (event) => {
-    if (event !== null) {
-      return true
-    } else {
-      console.warn('Event is missing!')
-      return false
+const emits = defineEmits([
+  'loading',
+  'filteredRows',
+  {
+    'prefix-details': (event) => {
+      if (event !== null) {
+        return true
+      } else {
+        console.warn('Event is missing!')
+        return false
+      }
     }
   }
-}])
+])
 
 const mapData = ref([])
 const dataEvents = ref([])
@@ -57,8 +61,8 @@ const traces = ref([
     yaxis: 'y',
     name: '',
     showlegend: false,
-    line: { shape: 'hv' },
-  },
+    line: { shape: 'hv' }
+  }
 ])
 const layout = ref(DISCO_LAYOUT)
 const loading = ref(false)
@@ -78,17 +82,23 @@ const duration = (start, end, nonzero) => {
 const apiCall = () => {
   let filters = null
   if (props.streamName === -1) {
-    filters = new DiscoEventQuery().streamName('').timeInterval(props.startTime, props.endTime).orderedByTime()
+    filters = new DiscoEventQuery()
+      .streamName('')
+      .timeInterval(props.startTime, props.endTime)
+      .orderedByTime()
   } else {
-    filters = new DiscoEventQuery().streamName(props.streamName).timeInterval(props.startTime, props.endTime).orderedByTime()
+    filters = new DiscoEventQuery()
+      .streamName(props.streamName)
+      .timeInterval(props.startTime, props.endTime)
+      .orderedByTime()
   }
   loading.value = true
   emits('loading', loading.value)
   ihr_api.disco_events(
     filters,
-    result => {
+    (result) => {
       const events = []
-      result.results.forEach(event => {
+      result.results.forEach((event) => {
         event.duration = duration(event.starttime, event.endtime, 0)
         if (event.duration > DEFAULT_MIN_DISCO_DURATION || event.duration == 0) {
           events.push(event)
@@ -100,19 +110,25 @@ const apiCall = () => {
       emits('loading', loading.value)
       // emits('disco-alarms-data-loaded', result.results)
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
     }
   )
 }
 
-watch(() => props.minAvgLevel, () => {
-  apiCall()
-})
+watch(
+  () => props.minAvgLevel,
+  () => {
+    apiCall()
+  }
+)
 
-watch(() => props.endTime, () => {
-  apiCall()
-})
+watch(
+  () => props.endTime,
+  () => {
+    apiCall()
+  }
+)
 
 onMounted(() => {
   apiCall()

@@ -5,6 +5,7 @@ import { ref, watch, onMounted } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
 import Rank from '@/components/networks/Rank.vue'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const route = useRoute()
 
@@ -16,9 +17,12 @@ const init = () => {
   }
 }
 
-watch(() => route.params.rank, () => {
-  init()
-})
+watch(
+  () => route.params.rank,
+  () => {
+    init()
+  }
+)
 
 onMounted(() => {
   init()
@@ -60,24 +64,62 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'APNIC eyeball estimates (JP)' } })" class="IHR_delikify">APNIC eyeball estimates (JP)</RouterLink>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({ name: 'rank', params: { rank: 'APNIC eyeball estimates (JP)' } })
+                  "
+                  class="IHR_delikify"
+                  >APNIC eyeball estimates (JP)</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'IHR country ranking: Total AS (JP)' } })" class="IHR_delikify">IHR country ranking: Total AS (JP)</RouterLink>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      name: 'rank',
+                      params: { rank: 'IHR country ranking: Total AS (JP)' }
+                    })
+                  "
+                  class="IHR_delikify"
+                  >IHR country ranking: Total AS (JP)</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'IHR country ranking: Total eyeball (JP)' } })" class="IHR_delikify">IHR country ranking: Total eyeball (JP)</RouterLink>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      name: 'rank',
+                      params: { rank: 'IHR country ranking: Total eyeball (JP)' }
+                    })
+                  "
+                  class="IHR_delikify"
+                  >IHR country ranking: Total eyeball (JP)</RouterLink
+                >
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'CAIDA ASRank' } })" class="IHR_delikify">CAIDA ASRank</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'CAIDA ASRank' } })"
+                  class="IHR_delikify"
+                  >CAIDA ASRank</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'Tranco top 1M' } })" class="IHR_delikify">Tranco top 1M</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'Tranco top 1M' } })"
+                  class="IHR_delikify"
+                  >Tranco top 1M</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'Cisco Umbrella Top 1 million' } })" class="IHR_delikify">Cisco Umbrella Top 1 million</RouterLink>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({ name: 'rank', params: { rank: 'Cisco Umbrella Top 1 million' } })
+                  "
+                  class="IHR_delikify"
+                  >Cisco Umbrella Top 1 million</RouterLink
+                >
               </li>
             </ul>
           </div>
@@ -89,10 +131,6 @@ onMounted(() => {
 </template>
 
 <style lang="stylus">
-.IHR_
-  &char-container
-    width 90%
-    margin 0 auto
 .examples
   column-gap 30px
 @media screen and (max-width: 500px)

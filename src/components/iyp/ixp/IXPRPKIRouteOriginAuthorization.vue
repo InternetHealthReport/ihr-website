@@ -20,13 +20,62 @@ const roas = ref({
     OPTIONAL MATCH (b:AS)-[:ORIGINATE]->(p)
     RETURN p.prefix AS prefix, roa.maxLength AS maxLength, roa.notBefore AS notBefore, roa.notAfter AS notAfter, roa.uri AS uri, COLLECT(DISTINCT b.asn) AS bgp, a.asn AS asn`,
   columns: [
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn , format: val => val?`AS${val}`:'-', sortable: true },
-      { name: 'Prefix', label: 'Prefix', align: 'left', field: row => row.prefix, format: val => val?`${val}`:'-', sortable: true },
-      { name: 'Max. Prefix Length', label: 'Max. Prefix Length', align: 'left', field: row => row.maxLength, format: val => val?`${val}`:'-', sortable: true },
-      { name: 'NotBefore', label: 'NotBefore', align: 'left', field: row => row.notBefore, format: val => val?`${val}`:'-', sortable: true },
-      { name: 'NotAfter', label: 'NotAfter', align: 'left', field: row => row.notAfter, format: val => val?`${val}`:'-', sortable: true },
-      { name: 'URL', label: 'URL', align: 'left', field: row => row.uri, format: val => val?`${val}`:'-', sortable: true },
-    { name: 'Origin in BGP', label: 'Origin in BGP', align: 'left', field: row => row.bgp, format: val => val.length?`AS${val}`:'-', sortable: true },
+    {
+      name: 'ASN',
+      label: 'ASN',
+      align: 'left',
+      field: (row) => row.asn,
+      format: (val) => (val ? `AS${val}` : '-'),
+      sortable: true
+    },
+    {
+      name: 'Prefix',
+      label: 'Prefix',
+      align: 'left',
+      field: (row) => row.prefix,
+      format: (val) => (val ? `${val}` : '-'),
+      sortable: true
+    },
+    {
+      name: 'Max. Prefix Length',
+      label: 'Max. Prefix Length',
+      align: 'left',
+      field: (row) => row.maxLength,
+      format: (val) => (val ? `${val}` : '-'),
+      sortable: true
+    },
+    {
+      name: 'NotBefore',
+      label: 'NotBefore',
+      align: 'left',
+      field: (row) => row.notBefore,
+      format: (val) => (val ? `${val}` : '-'),
+      sortable: true
+    },
+    {
+      name: 'NotAfter',
+      label: 'NotAfter',
+      align: 'left',
+      field: (row) => row.notAfter,
+      format: (val) => (val ? `${val}` : '-'),
+      sortable: true
+    },
+    {
+      name: 'URL',
+      label: 'URL',
+      align: 'left',
+      field: (row) => row.uri,
+      format: (val) => (val ? `${val}` : '-'),
+      sortable: true
+    },
+    {
+      name: 'Origin in BGP',
+      label: 'Origin in BGP',
+      align: 'left',
+      field: (row) => row.bgp,
+      format: (val) => (val.length ? `AS${val}` : '-'),
+      sortable: true
+    }
   ]
 })
 
@@ -34,18 +83,19 @@ const load = () => {
   roas.value.loading = true
   // Run the cypher query
   let query_params = { id: props.ixpNumber }
-  iyp_api.run([{statement: roas.value.query, parameters: query_params}]).then(
-    results => {
-        console.log(results[0])
-      roas.value.data = results[0]
-      roas.value.loading = false
-    }
-  )
+  iyp_api.run([{ statement: roas.value.query, parameters: query_params }]).then((results) => {
+    console.log(results[0])
+    roas.value.data = results[0]
+    roas.value.loading = false
+  })
 }
 
-watch(() => props.asNumber, () => {
-  load()
-})
+watch(
+  () => props.asNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()

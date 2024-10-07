@@ -8,7 +8,14 @@ import IodaChart from '@/components/charts/IodaChart.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 import CountryRipeAtlas from '@/components/iyp/country/CountryRipeAtlas.vue'
 
-const props = defineProps(['startTime', 'endTime', 'countryCode', 'family', 'pageTitle', 'interval'])
+const props = defineProps([
+  'startTime',
+  'endTime',
+  'countryCode',
+  'family',
+  'pageTitle',
+  'interval'
+])
 
 const route = useRoute()
 
@@ -19,7 +26,7 @@ const clear = ref(0)
 
 const setMajorEyeballs = (asns) => {
   majorEyeballs.value = []
-  asns.forEach(elem => {
+  asns.forEach((elem) => {
     majorEyeballs.value.push('AS4' + elem)
   })
 }
@@ -94,7 +101,7 @@ const setMajorEyeballs = (asns) => {
         'AS415169',
         'CT4Amsterdam, North Holland, NL',
         'CT4Singapore, Central Singapore, SG',
-        'CT4New York City, New York, US',
+        'CT4New York City, New York, US'
       ]"
       :eyeballThreshold="majorEyeballsThreshold"
       :fetch="majorEyeballs.length != 0"
@@ -105,15 +112,12 @@ const setMajorEyeballs = (asns) => {
 
   <GenericCardController
     :title="$t('iyp.country.atlas.title')"
-    :sub-title="$t('iyp.country.atlas.caption')+pageTitle"
+    :sub-title="$t('iyp.country.atlas.caption') + pageTitle"
     :info-title="$t('iyp.country.atlas.info.title')"
     :info-description="$t('iyp.country.atlas.info.description')"
     class="card"
   >
-    <CountryRipeAtlas
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryRipeAtlas :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 
