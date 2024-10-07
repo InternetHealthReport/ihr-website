@@ -235,10 +235,12 @@ const organizations = ref(ORGANIZATIONS)
   &description_text
     font-size 18pt
     width 90%
+    height 110px
     margin 30pt auto
     text-align left
     padding: 0 1rem;
     @media screen and (max-width: 600px)
+        height auto
         font-size 12pt
     #IHR_graphs-types &
       text-align justify
@@ -254,6 +256,8 @@ const organizations = ref(ORGANIZATIONS)
     &-link
       position relative
       text-align right
+      height 30px
+  
 
   &section
     margin 60pt auto 40px auto
