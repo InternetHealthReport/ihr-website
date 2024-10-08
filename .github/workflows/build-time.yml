@@ -3,7 +3,7 @@ name: Build Performance
 on:
   pull_request:
     branches:
-      - master
+      - '*'
 
 jobs:
   build-time:
