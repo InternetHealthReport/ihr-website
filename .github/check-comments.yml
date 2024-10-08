@@ -1,0 +1,45 @@
+name: Check Issue Comments
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  check-comments:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for comments from team members
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const { context } = require('@actions/github');
+            const issueNumber = context.payload.pull_request.issue_url.split('/').pop();
+            const issueComments = await github.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+            });
+
+            // Get team members
+            const teamMembers = await github.teams.listMembersInOrg({
+              org: 'InternetHealthReport',
+              team_slug: 'iij',
+            });
+
+            const teamMemberLogins = teamMembers.data.map(member => member.login);
+            const prCreatorLogin = context.payload.pull_request.user.login;
+
+            // Check if the PR creator is a member of the specified team
+            if (teamMemberLogins.includes(prCreatorLogin)) {
+              console.log('PR creator is a team member, bypassing comment requirement.');
+              return;
+            }
+
+            // Check for comments from team members
+            const hasTeamMemberComment = issueComments.data.some(comment => 
+              teamMemberLogins.includes(comment.user.login)
+            );
+
+            if (!hasTeamMemberComment) {
+              throw new Error('Pull request cannot be created unless there is a comment from a team member on the related issue.');
+            }
