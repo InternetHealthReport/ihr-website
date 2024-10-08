@@ -9,8 +9,6 @@ on:
   #   branches:
   #     - '*'  # This will trigger the workflow on push events to all branches
 
-job
-
 jobs:
   check-comments:
     runs-on: ubuntu-latest
