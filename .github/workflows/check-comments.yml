@@ -17,11 +17,11 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const { context } = require('@actions/github');
-            const issueNumber = context.payload.pull_request.issue_url.split('/').pop();
+            const github = require('@actions/github');
+            const issueNumber = github.context.payload.pull_request.issue_url.split('/').pop();
             const issueComments = await github.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
+              owner: github.context.repo.owner,
+              repo: github.context.repo.repo,
               issue_number: issueNumber,
             });
 
@@ -32,7 +32,7 @@ jobs:
             });
 
             const teamMemberLogins = teamMembers.data.map(member => member.login);
-            const prCreatorLogin = context.payload.pull_request.user.login;
+            const prCreatorLogin = github.context.payload.pull_request.user.login;
 
             // Check if the PR creator is a member of the specified team
             if (teamMemberLogins.includes(prCreatorLogin)) {
