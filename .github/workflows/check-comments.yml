@@ -17,7 +17,6 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const github = require('@actions/github');
             const issueNumber = github.context.payload.pull_request.issue_url.split('/').pop();
             const issueComments = await github.issues.listComments({
               owner: github.context.repo.owner,
