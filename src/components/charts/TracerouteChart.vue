@@ -312,23 +312,25 @@ watch(displayMode, () => {
       <div style="display: flex; align-items: center">
         <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
       </div>
-      <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available"}}</div>
-      <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
-      <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
-      <div><strong>IP:</strong> {{ tooltipData.label }}</div>
-      <div>
-        <strong>AS: </strong> 
+      <div style="padding-bottom: 5px;">
         <template v-if="tooltipData?.data?.asns[0]?.asn">
-          <a :href="`/ihr/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
-            {{ tooltipData.data.asns[0].asn }} ({{ tooltipData.data.asns[0].holder }})
-          </a>
+          <div style="display: flex; align-items: center;">
+            <span 
+              class="asnDot" 
+              :style="{ backgroundColor: asnColors[tooltipData.data.asns[0].asn] || 'gray' }"
+            ></span>
+            <a :href="`/ihr/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
+              AS{{ tooltipData.data.asns[0].asn }} ({{ tooltipData.data.asns[0].holder }})
+            </a>
+          </div>
         </template>
         <template v-else>
-          Not available
+          ASN not available
         </template>
       </div>
+      <div><strong>IP:</strong> {{ tooltipData.label }}</div>
       <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
-      <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource }}</div>
+      <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available" }}</div>
       <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
       <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
       <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
@@ -336,6 +338,9 @@ watch(displayMode, () => {
       <div v-if="tooltipData.country_code"><strong>Country Code:</strong> {{ tooltipData.country_code }}</div>
       <div v-if="tooltipData.asn_v4"><strong>ASN4:</strong> {{ tooltipData.asn_v4 }}</div>
       <div v-if="tooltipData.asn_v6"><strong>ASN6:</strong> {{ tooltipData.asn_v6 }}</div>
+      <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available"}}</div>
+      <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
+      <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
       <div v-if="tooltipData.id"><strong>Probe ID:</strong> {{ tooltipData.id }}</div>
       <div v-if="tooltipData.description"><strong>Probe Description:</strong> {{ tooltipData.description }}</div>
       <div v-if="tooltipData.status?.name"><strong>Status:</strong> {{ tooltipData.status.name }}</div>
@@ -549,5 +554,12 @@ watch(displayMode, () => {
   border: 1px solid #ccc;
   margin-left: 30%;
   margin-right: 30%;
+}
+
+.asnDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
 }
 </style>

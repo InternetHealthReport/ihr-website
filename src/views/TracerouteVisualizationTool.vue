@@ -9,6 +9,8 @@ const route = useRoute()
 const router = useRouter()
 const measurementID = ref('')
 const measurementIDInput = ref('')
+const probeIDs = ref([])
+const destinationIPs = ref([])
 
 const loadMeasurement = () => {
   measurementID.value = measurementIDInput.value
@@ -20,7 +22,9 @@ const pushRoute = () => {
     Tr.i18nRoute({
       replace: true,
       query: Object.assign({}, route.query, {
-        measurment: measurementID.value
+        measurment: measurementID.value,
+        probeids: probeIDs.value.join(','),
+        destinationips: destinationIPs.value.join(',')
       })
     })
   )
@@ -28,15 +32,26 @@ const pushRoute = () => {
 
 onMounted(() => {
   const tracerouteid = route.query.measurment
+  const probes = route.query.probeids
+  const destinations = route.query.destinationips
+
   if (tracerouteid) {
     measurementIDInput.value = tracerouteid
     measurementID.value = tracerouteid
+  }
+
+  if (probes) {
+    probeIDs.value = probes.split(',')
+  }
+
+  if (destinations) {
+    destinationIPs.value = destinations.split(',')
   }
 })
 </script>
 
 <template>
-  <div class="IHR_char-container">
+  <div class="IHR_char-container q-ma-md">
     <h1>Traceroute Monitor</h1>
     <QInput
       v-model="measurementIDInput"
@@ -52,6 +67,8 @@ onMounted(() => {
     </QInput>
     <TracerouteMonitor
       :atlasMeasurementID="measurementID"
+      :probeIDs="probeIDs"
+      :destinationIPs="destinationIPs"
       :openOptions="true"
       class="traceroute-monitor"
     />

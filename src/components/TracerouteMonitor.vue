@@ -17,6 +17,12 @@ const props = defineProps({
   openOptions: {
     type: Boolean,
     default: false
+  },
+  probeIDs: {
+    type: Array,
+  },
+  destinationIPs: {
+    type: Array,
   }
 })
 
@@ -81,16 +87,22 @@ const processData = async (tracerouteData, loadProbes = false) => {
     let consecutiveStarCount = 0
 
     if (loadProbes) {
-      if (!allProbes.value.includes(probeData.prb_id)) {
+      if (
+        (!props.probeIDs || props.probeIDs.length === 0 || props.probeIDs.includes(probeData.prb_id.toString())) &&
+        !allProbes.value.includes(probeData.prb_id)
+      ) {
         allProbes.value.push(probeData.prb_id.toString())
         selectedProbes.value.push(probeData.prb_id.toString())
+        atlas_api.getProbeById(probeData.prb_id.toString()).then((data) => {
+          probeDetailsMap.value[probeData.prb_id.toString()] = data.data
+        })
       }
-      atlas_api.getProbeById(probeData.prb_id.toString()).then((data) => {
-        probeDetailsMap.value[probeData.prb_id.toString()] = data.data
-      })
     }
 
-    if (!allDestinations.value.includes(probeData.dst_addr)) {
+    if (
+      (!props.destinationIPs || props.destinationIPs.length === 0 || props.destinationIPs.includes(probeData.dst_addr)) &&
+      !allDestinations.value.includes(probeData.dst_addr)
+    ) {
       allDestinations.value.push(probeData.dst_addr)
       if (!nodes.value[probeData.dst_addr]) {
         nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
@@ -215,6 +227,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
   updateDisplayedRttValues()
 }
+
 
 const updateDisplayedRttValues = () => {
   let minRtt = Infinity
