@@ -243,8 +243,15 @@ const highlightPath = (startNodeId) => {
 }
 
 const filteredAsnList = computed(() => {
-  return props.asnList.filter(asn => asn && asnColors.value[asn])
-})
+  const visibleAsns = new Set();
+  Object.values(props.nodes).forEach(node => {
+    const asn = props.ipToAsnMap[node.label];
+    if (asn) {
+      visibleAsns.add(asn);
+    }
+  });
+  return Array.from(visibleAsns);
+});
 
 const clearHighlight = () => {
   highlightedEdges.value = {}
