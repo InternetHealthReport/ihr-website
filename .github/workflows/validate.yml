@@ -49,10 +49,13 @@ jobs:
           }
 
           # Check if PR author belongs to a specific team
+          org="InternetHealthReport"
           team_slug="iij"  # Replace with your actual team slug
-          team_membership=$(github_api_call GET "teams/${team_slug}/members/${pr_author}")
+          team_membership=$(github_api_call GET "/orgs/{org}/teams/{team_slug}/memberships/{pr_author}")
+          is_team_member=$(echo $team_membership | jq -r '.role')
+          echo "Author permissions: $is_team_member"
 
-          if [[ $(echo $team_membership | jq -r '.message') != "Not Found" ]]; then
+          if [[ "$is_team_member" == "admin" || "$is_team_member" == "maintain" ]]; then
             echo "Author is a team member, bypassing checks"
             message+="As a team member, your PR is automatically approved and will bypass further checks.\n"
             github_api_call POST "issues/${pr_number}/labels" '{"labels":["PR:team-member-bypass"]}'
