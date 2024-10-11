@@ -55,7 +55,7 @@ jobs:
             local data=$3
             local url="https://api.github.com/orgs/${org_full_name}/${endpoint}"
 
-            response=$(curl -s -X ${method} -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" ${data:+-d "$data"} "$url")
+            response=$(curl -s -X ${method} -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" ${data:+-d "$data"} "$url")
             echo "API call to ${endpoint}: $response" >&2
             echo "$response"
           }
