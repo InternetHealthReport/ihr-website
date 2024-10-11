@@ -60,12 +60,12 @@ jobs:
           else
           # echo "Proceeding with checks regardless of maintainer status for testing purposes"
           # Check PR template
-            if [[ "$pr_body" != *"### Description"* ]] || [[ "$pr_body" != *"### Related issue"* ]]; then
+            if [[ "$pr_body" != *"## Description"* ]] || [[ "$pr_body" != *"## Related issue"* ]]; then
               exit_code=2
               echo "PR template not respected. Exit code: $exit_code"
               reason="PR template is not respected. Please update your PR description to include the required sections."
               message+="\n- $reason\n\nHere's a minimal example of a valid PR body:\n\n"
-              message+='```markdown\n### Description\n\n[Provide a brief description of your changes]\n\n### Related issue\n\nFixes #123\n```\n'
+              message+='```markdown\n## Description\n\n[Provide a brief description of your changes]\n\n## Related issue\n\nFixes #123\n```\n'
               github_api_call POST "issues/${pr_number}/labels" '{"labels":["PR:fix-template"]}'
             else
               echo "PR template respected, checking linked issues"
