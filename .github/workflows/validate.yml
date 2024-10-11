@@ -31,7 +31,7 @@ jobs:
           pr_number="${{ github.event.pull_request.number }}"
           pr_url="${{ github.event.pull_request.html_url }}"
           repo_full_name="${{ github.repository }}"
-          org_full_name="${{ github }}"
+          org_full_name="${{ github.repository_owner }}"
           message="Hello @${pr_author}, your PR is being processed. Here are the results:\n\n"
           exit_code=0
 
