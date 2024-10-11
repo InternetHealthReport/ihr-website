@@ -62,7 +62,7 @@ jobs:
 
           # Check if PR author belongs to a specific team
           team_slug="iij"  # Replace with your actual team slug
-          team_membership=$(github_api_call_orgs GET "teams/{team_slug}/memberships/{pr_author}")
+          team_membership=$(github_api_call_orgs GET "teams/${team_slug}/memberships/${pr_author}")
           is_team_member=$(echo $team_membership | jq -r '.role')
           echo "Author permissions: $is_team_member"
 
