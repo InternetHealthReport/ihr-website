@@ -259,10 +259,11 @@ const organizations = ref(ORGANIZATIONS)
   text-align: justify;
 }
 .IHR_home-description-main {
-  font-size: 1.625rem;
+  font-size: 1.5rem;
   margin: 2.5rem auto !important;
   text-align: center;
   width: 85%;
+  max-width: 1450px;
 }
 @media screen and (max-width: 600px) {
   .IHR_home-description-main {
