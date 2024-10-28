@@ -286,5 +286,4 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style>
-</style>
+<style></style>

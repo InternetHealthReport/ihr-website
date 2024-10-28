@@ -186,7 +186,7 @@ const organizations = ref(ORGANIZATIONS)
   max-width: 100%;
   height: 440px;
   background-color: #000;
-  background-image: url("@/assets/imgs/global-banner.png");
+  background-image: url('@/assets/imgs/global-banner.png');
   background-repeat: no-repeat;
   background-position: right top;
   background-size: contain;

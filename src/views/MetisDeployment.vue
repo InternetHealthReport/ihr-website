@@ -65,5 +65,4 @@ const nbprobes = ref('100')
   </div>
 </template>
 
-<style lang="stylus">
-</style>
+<style lang="stylus"></style>
