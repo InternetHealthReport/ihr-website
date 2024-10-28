@@ -538,7 +538,7 @@ onMounted(() => {
     top 60px
     opacity 0
 .btn
-    margin-bottom 10pt
+    margin-bottom 0.8125rem
     width 80pt
-    margin-right 10pt
+    margin-right 0.8125rem
 </style>

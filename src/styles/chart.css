@@ -4,14 +4,10 @@
 }
 
 .IHR_chart h1 {
-  font-size: 25pt;
+  font-size: 2rem;
   margin-bottom: 0px;
   font-weight: 400;
   line-height: 1;
-}
-
-.IHR_chart-title {
-  font-size: 18pt;
 }
 
 .IHR_char-container {
@@ -31,7 +27,7 @@
 
 .IHR_description {
   max-width: 900px;
-  font-size: 14pt;
+  font-size: 1.1875rem;
 }
 
 .IHR_api-table table {
@@ -65,7 +61,7 @@
   z-index: 4;
   color: #808080;
   box-shadow: none;
-  font-size: 14pt;
+  font-size: 1.1875rem;
   font-family: monospace;
   font-weight: 600;
   cursor: pointer;

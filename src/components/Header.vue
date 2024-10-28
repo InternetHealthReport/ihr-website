@@ -286,7 +286,7 @@ watch(simpleMenu, () => {
 
 <style lang="stylus">
 menu-delinkify(val)
-  font-size 12pt
+  font-size 1rem
   color white
   text-decoration none
   text-transform capitalize
@@ -315,25 +315,12 @@ menu-delinkify(val)
   &home-button
     padding 0px 13px 0px 2px
 
-  &signin-button
-    margin 2pt 0pt 3pt 0pt
-
-  &sigin-title
-    font-weight 500
-    font-size 15pt
-    margin 3pt auto 2pt auto
-    &:first-letter
-      text-transform capitalize
-
-  &local-selector
-    margin-left 7pt
-
   &forgotten-password
     white-space nowrap
 
   &user-menu
-    padding 3pt
-    font-size 12pt
+    padding 0.25rem
+    font-size 1rem
     & *:first-letter
       text-transform capitalize
 

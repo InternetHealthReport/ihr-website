@@ -1,21 +1,21 @@
 h1,
 .text-h1 {
-  margin: 0pt;
-  font-size: 32pt !important;
+  margin: 0;
+  font-size: 2.6875rem !important;
   font-weight: 400;
 }
 
 h2,
 .text-h2 {
-  margin: 0pt;
-  font-size: 24pt !important;
+  margin: 0;
+  font-size: 2rem !important;
   font-weight: 300;
 }
 
 h3,
 .text-h3 {
-  margin: 0pt;
-  font-size: 16pt !important;
+  margin: 0;
+  font-size: 1.375rem !important;
   font-weight: 300;
 }
 
@@ -38,7 +38,7 @@ p:first-letter {
   margin-top: -1em;
 }
 .IHR_errors-banner p {
-  font-size: 14pt;
+  font-size: 1.1875rem;
   font-weight: 500;
   color: #fff;
 }
@@ -46,7 +46,7 @@ p:first-letter {
   text-transform: capitalize;
 }
 .IHR_errors-banner p:first-child {
-  margin-top: 5pt;
+  margin-top: 0.4375rem;
 }
 .IHR_errors-banner .q-btn__content > div {
   font-weight: 600;

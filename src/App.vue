@@ -53,7 +53,7 @@ onBeforeUnmount(() => {
 
 <style lang="stylus">
 menu-delinkify(val)
-  font-size 12pt
+  font-size 1rem
   color white
   text-decoration none
   text-transform capitalize
@@ -77,7 +77,7 @@ menu-delinkify(val)
 
     ~/copyright
       & > div
-        margin 7pt 0pt
+        margin 0.5rem 0
 
     ~/external-links
       font-size 3.0em
@@ -85,24 +85,6 @@ menu-delinkify(val)
 
       & a
         color white
-
-    ~/sitemap
-      font-size 12pt
-      font-weight 300
-      text-align center
-
-      & > span
-        padding-left 20pt
-        text-align left
-        & a
-            menu-delinkify 0
-        & > ul
-          margin-top 2pt
-          & > li
-            list-style-type: none;
-            text-align left
-            & > strong
-                text-transform capitalize
 
   &scroll-btn
     position fixed
@@ -123,25 +105,12 @@ menu-delinkify(val)
   &home-button
     padding 0px 13px 0px 2px
 
-  &signin-button
-    margin 2pt 0pt 3pt 0pt
-
-  &sigin-title
-    font-weight 500
-    font-size 15pt
-    margin 3pt auto 2pt auto
-    &:first-letter
-      text-transform capitalize
-
-  &local-selector
-    margin-left 7pt
-
   &forgotten-password
     white-space nowrap
 
   &user-menu
-    padding 3pt
-    font-size 12pt
+    padding 0.25rem
+    font-size 1rem
     & *:first-letter
       text-transform capitalize
 
