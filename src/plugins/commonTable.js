@@ -51,10 +51,13 @@ export default function commonTable(props, ctx) {
   })
   watch(rows, (newValue) => {
     filteredRows.value = newValue
-  })
-  watch(filter, (newValue) => {
-    filterTable.value = newValue
-  })
+    // Force a re-render even if filteredRows didn't technically change
+    nextTick(() => { 
+        if (ctx.emit && ctx.emit.filteredRows) {
+            ctx.emit('filteredRows', [filterTable.value, newValue])
+        }
+    });
+})
   return {
     filteredRows,
     filterTable,
