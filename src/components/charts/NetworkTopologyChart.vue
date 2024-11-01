@@ -432,10 +432,9 @@ watch(searchInput, (newValue) => {
   emit('searchChange', props.id, newValue)
   if (isPrefix(newValue)) {
     if (newValue.includes('.')) {
-      ipModel.value = "IPv4"
-    }
-    else if (newValue.includes(':')) {
-      ipModel.value = "IPv6"
+      ipModel.value = 'IPv4'
+    } else if (newValue.includes(':')) {
+      ipModel.value = 'IPv6'
     }
   }
 })

@@ -293,7 +293,7 @@ onMounted(() => {
 
     & > span:first-child
       font-weight 500
-      margin-right 6pt
+      margin-right 0.5rem
 
   &prefix-overview-popup
     max-width 400px

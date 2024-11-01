@@ -213,7 +213,7 @@ const sectionActive = ref('')
 <style lang="stylus">
 #IHR_
   &documentation-page
-    margin 0pt auto
+    margin 0 auto
     width 100%
     max-width 1200px
     padding 0 1rem
@@ -228,19 +228,19 @@ const sectionActive = ref('')
       border-bottom 1px solid #ccc
       margin 4rem 0 1.5rem
       @media screen and (max-width: 720px)
-        font-size 22pt
+        font-size 1.8125rem
         margin 2rem 0 1rem
 
     & > div
       & > h2
-        margin-top 34pt
+        margin-top 2.875rem
         margin-bottom 1rem
-        font-size 18pt !important
+        font-size 1.5rem !important
         font-weight 500
         line-height 1.5rem
         @media screen and (max-width: 600px)
-          font-size 16pt
-          margin-bottom 10pt
+          font-size 1.25rem
+          margin-bottom 0.8125rem
       & > .text-body1
         overflow-anchor none
         & > a
@@ -256,26 +256,26 @@ const sectionActive = ref('')
 #cod
       background-color: #e7e9eb
       padding:1em
-      border-radius: 6pt
+      border-radius: 0.5rem
       padding-bottom: 0
 
 .IHR_
   &documentation-page-sidebar
     & > h3
-      margin-top 2pt
+      margin-top 0.1875rem
       width 88%
       margin 0px auto
-      font-size 16pt
+      font-size 1.25rem
       font-weight 500
       @media screen and (max-width: 600px)
-        font-size 12pt
+        font-size 1rem
 
       &:first-letter
         text-transform capitalize
 
     & > div
       width 82%
-      margin 4pt auto 2pt auto
+      margin 0.375rem auto 0.1875rem auto
 
       & a:hover
         border-bottom 1px solid #263238

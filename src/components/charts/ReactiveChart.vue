@@ -209,7 +209,7 @@ watch(
     left 0
     & > div:first-child
       box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-      padding 16pt
+      padding 1.25rem
       position relative
       font-weight: 500;
       top -250px

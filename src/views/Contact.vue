@@ -23,7 +23,7 @@
 #IHR_
   &contact-page
     width 60%
-    margin 0pt auto
+    margin 0 auto
     @media screen and (max-width: 600px)
       width 100%
       padding: 0 1rem;
@@ -54,24 +54,24 @@
         border-bottom 1px solid #ccc
         margin 4rem 0 1.5rem
         @media screen and (max-width: 600px)
-          font-size 22pt
+          font-size 1.8125rem
 
     & > h2
-      margin-bottom 20pt
+      margin-bottom 1.625rem
       font-weight 500;
       line-height 1.5rem
       border-bottom 1px solid #ccc
       margin 4rem 0 1.5rem
       @media screen and (max-width: 600px)
-        font-size 18pt
+        font-size 1.5rem
 
     & > p
-      font-size 18pt
+      font-size 1.5rem
       width 100%
-      margin 30pt auto
+      margin 2.5rem auto
       text-align left
       @media screen and (max-width: 600px)
-        font-size 12pt
+        font-size 1rem
       & > a
         word-break break-word
 </style>

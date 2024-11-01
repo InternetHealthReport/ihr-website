@@ -810,13 +810,13 @@ watch(
 
 <style>
 .alternative_key_body {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-style: italic;
-    color: #555;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+  color: #555;
 }
 .myClass tbody td {
-    text-align: left;
+  text-align: left;
 }
 .card {
   margin-top: 20px;

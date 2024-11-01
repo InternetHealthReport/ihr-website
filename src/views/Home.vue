@@ -182,11 +182,11 @@ const organizations = ref(ORGANIZATIONS)
   margin-bottom: 10px;
 }
 #IHR_actions {
-  margin-bottom: 60pt;
+  margin-bottom: 5rem;
   max-width: 100%;
   height: 440px;
   background-color: #000;
-  background-image: url("@/assets/imgs/global-banner.png");
+  background-image: url('@/assets/imgs/global-banner.png');
   background-repeat: no-repeat;
   background-position: right top;
   background-size: contain;
@@ -204,14 +204,14 @@ const organizations = ref(ORGANIZATIONS)
   color: #fff;
   font-size: 50px;
   text-align: left;
-  padding-top: 40pt;
-  padding-left: 60pt;
+  padding-top: 3.375rem;
+  padding-left: 5rem;
   display: inline-block;
   text-shadow: 0 0 8px #000;
 }
 @media screen and (max-width: 600px) {
   #IHR_actions > div:first-child {
-    padding-top: 30pt;
+    padding-top: 2.5rem;
     padding-left: 0;
     text-align: center;
     font-size: 2rem;
@@ -227,12 +227,12 @@ const organizations = ref(ORGANIZATIONS)
 }
 #IHR_graphs-types > div > h2 {
   font-weight: 400;
-  margin-bottom: 4pt;
-  font-size: 28pt;
+  margin-bottom: 0.3125rem;
+  font-size: 2.375rem;
 }
 @media screen and (max-width: 600px) {
   #IHR_graphs-types > div > h2 {
-    font-size: 22pt;
+    font-size: 1.8125rem;
   }
 }
 #IHR_graphs-types > div > h2:first-letter {
@@ -245,28 +245,29 @@ const organizations = ref(ORGANIZATIONS)
 }
 .IHR_home-description_text {
   width: 90%;
-  margin: 30pt auto;
+  margin: 2.5rem auto;
   text-align: left;
   padding: 0 1rem;
-  font-size: 14pt;
+  font-size: 1.1875rem;
 }
 @media screen and (max-width: 600px) {
   .IHR_home-description_text {
-    font-size: 12pt;
+    font-size: 1rem;
   }
 }
 #IHR_graphs-types .IHR_home-description_text {
   text-align: justify;
 }
 .IHR_home-description-main {
-  font-size: 20pt;
-  margin: 30pt auto !important;
+  font-size: 1.5rem;
+  margin: 2.5rem auto !important;
   text-align: center;
   width: 85%;
+  max-width: 1450px;
 }
 @media screen and (max-width: 600px) {
   .IHR_home-description-main {
-    font-size: 14pt;
+    font-size: 1.1875rem;
   }
 }
 .IHR_home-description-link,
@@ -275,17 +276,17 @@ const organizations = ref(ORGANIZATIONS)
   text-align: right;
 }
 .IHR_section {
-  margin: 60pt auto 40px auto;
+  margin: 5rem auto 40px auto;
   width: 85%;
-  font-size: 18pt;
+  font-size: 1.5rem;
   text-align: center;
 }
 .IHR_section > h2 {
-  font-size: 32pt;
+  font-size: 2.6875rem;
 }
 @media screen and (max-width: 600px) {
   .IHR_section > h2 {
-    font-size: 22pt;
+    font-size: 1.8125rem;
   }
 }
 .IHR_ack-logo {
