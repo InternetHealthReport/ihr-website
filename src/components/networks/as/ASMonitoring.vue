@@ -12,9 +12,15 @@ import ASRipeAtlas from '@/components/iyp/as/ASRipeAtlas.vue'
 
 const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'pageTitle', 'interval'])
 
+const emit = defineEmits(['toggle-ip-family']);
+
 const route = useRoute()
 
 const fetch = ref(true)
+
+const toggleIpFamily = () => {
+  emit('toggle-ip-family');
+};
 </script>
 
 <template>
@@ -31,6 +37,7 @@ const fetch = ref(true)
       :as-number="asNumber"
       :address-family="family"
       :fetch="fetch"
+      @toggle-ip-family="toggleIpFamily"
     />
   </GenericCardController>
 
