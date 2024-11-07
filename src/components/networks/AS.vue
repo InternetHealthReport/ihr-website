@@ -227,6 +227,7 @@ onMounted(() => {
             :peeringdbId="setPeeringdbId"
             :interval="interval"
             :hash="routeHash"
+            @toggle-ip-family="toggleIpFamily"
           />
         </QTabPanel>
       </QTabPanels>

@@ -42,6 +42,8 @@ const router = useRouter()
 
 const { t } = useI18n()
 
+const emit = defineEmits(['toggle-ip-family']);
+
 const fetch = ref(true)
 const displayWidgets = ref(route.query.display ? JSON.parse(route.query.display) : [])
 const selects = ref([
@@ -94,6 +96,10 @@ const hashToDisplay = (hash) => {
     }
   })
 }
+
+const toggleIpFamily = () => {
+  emit('toggle-ip-family');
+};
 
 watch(selects.value, () => {
   pushRoute()
@@ -150,6 +156,7 @@ onMounted(() => {
       :as-number="asNumber"
       :address-family="family"
       :fetch="fetch"
+      @toggle-ip-family="toggleIpFamily"
     />
   </GenericCardController>
 
