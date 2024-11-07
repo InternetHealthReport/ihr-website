@@ -8,7 +8,8 @@ import {
   QTab,
   QTabPanels,
   QTabPanel,
-  extend
+  extend,
+  QBtnToggle
 } from 'quasar'
 import { ref, inject, onBeforeMount, onMounted, computed, watch, nextTick } from 'vue'
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from '@/plugins/IhrApi'
@@ -24,6 +25,8 @@ import '@/styles/chart.css'
 const ihr_api = inject('ihr_api')
 
 const { t } = useI18n()
+
+const emit = defineEmits(['toggle-ip-family'])
 
 const DEFAULT_TRACE = [
   {
@@ -720,6 +723,10 @@ const dependentUrl = computed(() => {
   return ihr_api.getUrl(details.value.tablesData.dependent.filter)
 })
 
+const toggleIpFamily = () => {
+  emit('toggle-ip-family')
+}
+
 // watch(() => props.addressFamily, () => {
 //   apiCall()
 // })
@@ -763,6 +770,14 @@ watch(
   }
 )
 
+watch(
+  () => props.addressFamily,
+  () => {
+    apiCall()
+    tableFromQuery()
+  }
+)
+
 onBeforeMount(() => {
   updateAxesLabel()
 })
@@ -774,6 +789,18 @@ onMounted(() => {
 
 <template>
   <div class="IHR_chart">
+    <div class="IpFamilyContainer">
+      <QBtnToggle
+        :model-value="props.addressFamily"
+        toggle-color="secondary"
+        class="toggleIpFamilyButton"
+        :options="[
+          { label: 'IPv4', value: AS_FAMILY.v4 },
+          { label: 'IPv6', value: AS_FAMILY.v6 }
+        ]"
+        @update:model-value="toggleIpFamily"
+      />
+    </div>
     <ReactiveChart :layout="layout" :traces="traces" @plotly-click="plotClick" :no-data="noData" />
     <div v-if="loading" class="IHR_loading-spinner">
       <QSpinner color="secondary" size="15em" />
@@ -867,4 +894,15 @@ onMounted(() => {
     overflow hidden
     padding-top 0px !important
     position relative
+
+.IpFamilyContainer{
+  display flex
+  width 100%
+  flex-direction column
+  margin-bottom 3px
+}
+
+.toggleIpFamilyButton{
+  align-self end
+}
 </style>

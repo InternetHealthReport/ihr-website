@@ -101,6 +101,10 @@ const pageTitle = computed(() => {
   return `AS${asNumber.value} - ${asName.value}`
 })
 
+const toggleIpFamily = () => {
+  addressFamily.value = addressFamily.value == AS_FAMILY.v4 ? AS_FAMILY.v6 : AS_FAMILY.v4
+}
+
 watch(addressFamily, () => {
   pushRoute()
 })
@@ -195,6 +199,7 @@ onMounted(() => {
             :family="family"
             :page-title="pageTitle"
             :interval="interval"
+            @toggle-ip-family="toggleIpFamily"
           />
         </QTabPanel>
         <QTabPanel name="routing">
@@ -222,6 +227,7 @@ onMounted(() => {
             :peeringdbId="setPeeringdbId"
             :interval="interval"
             :hash="routeHash"
+            @toggle-ip-family="toggleIpFamily"
           />
         </QTabPanel>
       </QTabPanels>
