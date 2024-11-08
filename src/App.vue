@@ -2,7 +2,7 @@
 import { RouterView } from 'vue-router'
 import { QLayout, QPageContainer, QIcon } from 'quasar'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
-import Header from './components/Header.vue';
+import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import LocalStorageBanner from './components/LocalStorageBanner.vue'
 
@@ -33,112 +33,83 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <QLayout view="hHh LpR fff" id="app" >
+  <QLayout view="hHh LpR fff" id="app">
     <Header></Header>
     <QPageContainer>
       <RouterView />
       <!-- <div id="IHR_last-element">&nbsp;</div> -->
     </QPageContainer>
     <Footer></Footer>
-    <button v-if="showScrollTopButton" @click="scrollToTop" class="IHR_scroll-btn bg-primary text-white"><QIcon name="fas fa-arrow-up"></QIcon></button>
+    <button
+      v-if="showScrollTopButton"
+      @click="scrollToTop"
+      class="IHR_scroll-btn bg-primary text-white"
+    >
+      <QIcon name="fas fa-arrow-up"></QIcon>
+    </button>
   </QLayout>
   <LocalStorageBanner :disable="true" />
 </template>
 
-<style lang="stylus">
-menu-delinkify(val)
-  font-size 12pt
-  color white
-  text-decoration none
-  text-transform capitalize
-  if val
-    font-weight 700
+<style>
+.IHR_menu-entries a,
+.IHR_menu-entries button {
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  text-transform: capitalize;
+  font-weight: 700;
+}
+.IHR_menu-entries button {
+  box-shadow: none;
+}
+.IHR_footer a {
+  color: #fff;
+}
+.IHR_footer afirst-child {
+  border-left: none;
+}
+.IHR_copyright > div {
+  margin: 0.5rem 0;
+}
+.IHR_external-links {
+  font-size: 3em;
+  text-decoration: none;
+}
+.IHR_external-links a {
+  color: #fff;
+}
+.IHR_scroll-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2000;
+  cursor: pointer;
+  transition: all 0.6s;
+  border-radius: 50%;
+  color: #fff;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #fff;
+  opacity: 0.8;
+}
+.IHR_scroll-btn:hover {
+  transform: scale(1.1);
+}
+#IHR_home-button {
+  padding: 0px 13px 0px 2px;
+}
+#IHR_forgotten-password {
+  white-space: nowrap;
+}
+#IHR_user-menu {
+  padding: 0.25rem;
+  font-size: 1rem;
+}
+#IHR_user-menu *:first-letter {
+  text-transform: capitalize;
+}
+#IHR_last-element {
+  height: 50px;
+}
 
-.IHR_
-  &menu-entries
-    a, button
-      menu-delinkify 1
-
-    button
-      box-shadow none
-
-  &footer
-    & a
-      color white
-
-      &first-child
-        border-left none
-
-    ~/copyright
-      & > div
-        margin 7pt 0pt
-
-    ~/external-links
-      font-size 3.0em
-      text-decoration none
-
-      & a
-        color white
-
-    ~/sitemap
-      font-size 12pt
-      font-weight 300
-      text-align center
-
-      & > span
-        padding-left 20pt
-        text-align left
-        & a
-            menu-delinkify 0
-        & > ul
-          margin-top 2pt
-          & > li
-            list-style-type: none;
-            text-align left
-            & > strong
-                text-transform capitalize
-
-  &scroll-btn
-    position fixed
-    bottom 20px
-    right 20px
-    z-index 2000
-    cursor pointer
-    transition all 0.6s
-    border-radius 50%
-    color white
-    padding 0.7rem 0.8rem
-    border 1px solid white
-    opacity 0.8
-    &:hover
-      transform scale(1.1)
-
-#IHR_
-  &home-button
-    padding 0px 13px 0px 2px
-
-  &signin-button
-    margin 2pt 0pt 3pt 0pt
-
-  &sigin-title
-    font-weight 500
-    font-size 15pt
-    margin 3pt auto 2pt auto
-    &:first-letter
-      text-transform capitalize
-
-  &local-selector
-    margin-left 7pt
-
-  &forgotten-password
-    white-space nowrap
-
-  &user-menu
-    padding 3pt
-    font-size 12pt
-    & *:first-letter
-      text-transform capitalize
-
-  &last-element
-    height 50px;
 </style>

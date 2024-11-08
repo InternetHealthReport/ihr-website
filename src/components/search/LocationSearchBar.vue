@@ -11,19 +11,19 @@ const MAX_RESULTS = 100
 const props = defineProps({
   dark: {
     type: Boolean,
-    default: false,
+    default: false
   },
   label: {
     type: String,
-    default: '',
+    default: ''
   },
   hint: {
     type: String,
-    default: '',
+    default: ''
   },
   selected: {
     type: String,
-    default: '',
+    default: ''
   },
   readonly: {
     type: Boolean,
@@ -36,12 +36,12 @@ const props = defineProps({
 })
 
 const emits = defineEmits({
-  'select': function(location) {
+  select: function (location) {
     if (location !== null) {
-      return true;
+      return true
     } else {
-      console.warn('Location is missing!');
-      return false;
+      console.warn('Location is missing!')
+      return false
     }
   }
 })
@@ -69,41 +69,41 @@ const search = (value, update) => {
   networkQuery.value.mixedContentSearch(value)
   ihr_api.network(
     networkQuery.value,
-    result => {
-      result.results.some(element => {
+    (result) => {
+      result.results.some((element) => {
         const elem = {
           value: element,
           type: element.number < 0 ? 'IX' : 'AS',
           name: Math.abs(element.number),
-          af: 4,
+          af: 4
         }
         options.value.push({
           value: elem,
           type: elem.type,
           name: element.name + ' (' + elem.type + elem.name + ')',
           label: elem.type + elem.name,
-          asFamily: elem.af,
+          asFamily: elem.af
         })
         update()
         return options.value.length > MAX_RESULTS
       })
     },
-    error => {
+    (error) => {
       console.error(error)
     }
   )
   networkDelayLocation.value.name(value)
   ihr_api.network_delay_location(
     networkDelayLocation.value,
-    result => {
-      result.results.some(element => {
+    (result) => {
+      result.results.some((element) => {
         if (element.type != 'AS' && element.type != 'IX') {
           options.value.push({
             value: element,
             type: element.type,
             name: element.name,
             label: element.name,
-            asFamily: element.af,
+            asFamily: element.af
           })
           update()
         }
@@ -111,7 +111,7 @@ const search = (value, update) => {
       })
       loading.value = false
     },
-    error => {
+    (error) => {
       console.error(error)
     }
   )
@@ -129,11 +129,14 @@ const filter = (value, update, abort) => {
   }
 }
 
-watch(() => props.selected, (newValue) => {
-  if (!props.readonly) {
-    model.value = newValue
+watch(
+  () => props.selected,
+  (newValue) => {
+    if (!props.readonly) {
+      model.value = newValue
+    }
   }
-})
+)
 </script>
 
 <template>
@@ -143,7 +146,7 @@ watch(() => props.selected, (newValue) => {
     clearable
     dense
     outlined
-    :placeholder="!model?label:''"
+    :placeholder="!model ? label : ''"
     :options="options"
     v-model="model"
     @filter="filter"
@@ -171,12 +174,13 @@ watch(() => props.selected, (newValue) => {
   </QSelect>
 </template>
 
-<style lang="stylus" scoped>
-.IHR_
-  &asn-element
-    width 100%
-    margin 0px
-    padding 0px
-    &-name
-      text-align left
+<style scoped>
+.IHR_asn-element {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+.IHR_asn-element-name {
+  text-align: left;
+}
 </style>

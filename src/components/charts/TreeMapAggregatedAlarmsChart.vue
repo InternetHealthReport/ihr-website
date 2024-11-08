@@ -8,16 +8,16 @@ import * as AggregatedAlarmsUtils from '@/plugins/utils/AggregatedAlarmsUtils'
 const props = defineProps({
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   alarms: {
-    type: Array,
+    type: Array
   },
   selectSeveritiesList: {
-    type: Array,
+    type: Array
   },
   aggregatedAttrsSelected: {
-    type: Object,
+    type: Object
   },
   countryName: {
     type: String
@@ -55,33 +55,74 @@ const noData = computed(() => {
   }
 })
 
-const init = (alarms, selectSeveritiesList, aggregatedAttrsSelected, countryName, alarmTypeTitlesMap, legendSelected, isASGranularity, render = true) => {
+const init = (
+  alarms,
+  selectSeveritiesList,
+  aggregatedAttrsSelected,
+  countryName,
+  alarmTypeTitlesMap,
+  legendSelected,
+  isASGranularity,
+  render = true
+) => {
   if (render) {
     const aggregatedAttrsZipped = AggregatedAlarmsUtils.zipAggregatedAttrs(aggregatedAttrsSelected)
-    const treeMapTrace = TreeMapAggregatedAlarmsDataModel.etl(alarms, aggregatedAttrsZipped, countryName, alarmTypeTitlesMap, legendSelected, isASGranularity)
+    const treeMapTrace = TreeMapAggregatedAlarmsDataModel.etl(
+      alarms,
+      aggregatedAttrsZipped,
+      countryName,
+      alarmTypeTitlesMap,
+      legendSelected,
+      isASGranularity
+    )
     traces.value = !AggregatedAlarmsUtils.isDictEmpty(treeMapTrace) ? [treeMapTrace] : []
   }
-  chartTitle.value = TreeMapAggregatedAlarmsDataModel.getChartTitle(traces.value?.[0], selectSeveritiesList, countryName, legendSelected, isASGranularity)
+  chartTitle.value = TreeMapAggregatedAlarmsDataModel.getChartTitle(
+    traces.value?.[0],
+    selectSeveritiesList,
+    countryName,
+    legendSelected,
+    isASGranularity
+  )
 }
 
 const onTreemapNodeClicked = (clickedData) => {
-  if (clickProcessing.value) return;
-  const treemapPointClicked = clickedData.points[0];
+  if (clickProcessing.value) return
+  const treemapPointClicked = clickedData.points[0]
   if (treemapPointClicked.pointNumber !== undefined && treemapPointClicked.parent == '') {
-    clickProcessing.value = true;
+    clickProcessing.value = true
     emits('treemap-node-clicked', treemapPointClicked.label)
     setTimeout(() => {
-      clickProcessing.value = false;
-    }, 900);
+      clickProcessing.value = false
+    }, 900)
   }
 }
 
-watch(() => props.alarms, () => {
-  init(props.alarms, props.selectSeveritiesList, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.legendSelected, props.isASGranularity)
-})
+watch(
+  () => props.alarms,
+  () => {
+    init(
+      props.alarms,
+      props.selectSeveritiesList,
+      props.aggregatedAttrsSelected,
+      props.countryName,
+      props.alarmTypeTitlesMap,
+      props.legendSelected,
+      props.isASGranularity
+    )
+  }
+)
 
 onMounted(() => {
-  init(props.alarms, props.selectSeveritiesList, props.aggregatedAttrsSelected, props.countryName, props.alarmTypeTitlesMap, props.legendSelected, props.isASGranularity)
+  init(
+    props.alarms,
+    props.selectSeveritiesList,
+    props.aggregatedAttrsSelected,
+    props.countryName,
+    props.alarmTypeTitlesMap,
+    props.legendSelected,
+    props.isASGranularity
+  )
 })
 
 defineExpose({ init })
@@ -93,7 +134,12 @@ defineExpose({ init })
       <div class="text-h6 center">{{ chartTitle }}</div>
     </QCardSection>
     <div class="IHR_disco-chart">
-      <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-click="onTreemapNodeClicked" />
+      <ReactiveChart
+        :layout="layout"
+        :traces="traces"
+        :no-data="noData"
+        @plotly-click="onTreemapNodeClicked"
+      />
     </div>
   </div>
 </template>

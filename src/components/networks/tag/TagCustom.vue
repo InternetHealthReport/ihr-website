@@ -25,21 +25,25 @@ const selects = ref([
   // { value: false, hasData: true, label: 'Overview' },
   { value: false, hasData: false, label: t('iyp.tag.domains.title') },
   { value: false, hasData: false, label: t('iyp.tag.ases.title') },
-  { value: false, hasData: false, label: t('iyp.tag.prefixes.title') },
+  { value: false, hasData: false, label: t('iyp.tag.prefixes.title') }
 ])
 const selectAll = ref(false)
 const selectedWidgets = ref(null)
 
 const init = async () => {
-  const queries = [{
-    query: `MATCH (t:Tag {label: $tag})
+  const queries = [
+    {
+      query: `MATCH (t:Tag {label: $tag})
       OPTIONAL MATCH (t)<-[cat_a:CATEGORIZED]-(a:AS) WITH t, count(DISTINCT a) as nb_ases, COLLECT(DISTINCT cat_a.reference_org) as data_source_ases
       OPTIONAL MATCH (t)<-[cat_p:CATEGORIZED]-(p:Prefix) WITH t, nb_ases, data_source_ases, count(DISTINCT p) as nb_prefixes, COLLECT(DISTINCT cat_p.reference_org) as data_source_prefixes
       OPTIONAL MATCH (t)<-[cat_d:CATEGORIZED]-(:URL)-[:PART_OF]-(d:HostName) WITH t, nb_ases, data_source_ases, nb_prefixes, data_source_prefixes, count(DISTINCT d) as nb_domains, COLLECT(DISTINCT cat_d.reference_org) as data_source_domains
-      RETURN  nb_domains, nb_ases, nb_prefixes, data_source_ases, data_source_domains, data_source_prefixes`,
-  }]
+      RETURN  nb_domains, nb_ases, nb_prefixes, data_source_ases, data_source_domains, data_source_prefixes`
+    }
+  ]
   let params = { tag: props.tag }
-  let results = await iyp_api.run(queries.map(obj => ({statement: obj.query, parameters: params})))
+  let results = await iyp_api.run(
+    queries.map((obj) => ({ statement: obj.query, parameters: params }))
+  )
 
   selectedWidgets.value = results[0][0]
   if (selectedWidgets.value.nb_domains > 0) {
@@ -54,20 +58,26 @@ const init = async () => {
 }
 
 const pushRoute = () => {
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      display: JSON.stringify(selects.value.map((obj, index) => {
-        if (obj.value) {
-          return index
-        }
-      }).filter(val => val != null))
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        display: JSON.stringify(
+          selects.value
+            .map((obj, index) => {
+              if (obj.value) {
+                return index
+              }
+            })
+            .filter((val) => val != null)
+        )
+      })
     })
-  }))
+  )
 }
 
 const hashToDisplay = () => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
       obj.value = true
     }
@@ -79,7 +89,7 @@ watch(selects.value, () => {
 })
 
 watch(selectAll, () => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.hasData) {
       obj.value = selectAll.value
     }
@@ -93,7 +103,7 @@ onMounted(() => {
   } else if (props.hash) {
     hashToDisplay()
   } else {
-    displayWidgets.value.forEach(val => selects.value[val].value = true)
+    displayWidgets.value.forEach((val) => (selects.value[val].value = true))
   }
 })
 </script>
@@ -120,43 +130,47 @@ onMounted(() => {
   <!-- All -->
   <GenericCardController
     :title="$t('iyp.tag.domains.title')"
-    :sub-title="$t('iyp.tag.domains.caption')+tag+' by '+selectedWidgets.data_source_domains.join(', ')"
+    :sub-title="
+      $t('iyp.tag.domains.caption') + tag + ' by ' + selectedWidgets.data_source_domains.join(', ')
+    "
     :info-title="$t('iyp.tag.domains.info.title')"
     :info-description="$t('iyp.tag.domains.info.description')"
     class="card"
     v-if="selects[0].value && selects[0].hasData"
   >
-    <TagPopularHostNames
-      :tag="tag"
-    />
+    <TagPopularHostNames :tag="tag" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.tag.ases.title')"
-    :sub-title="$t('iyp.tag.ases.caption')+tag+' by '+selectedWidgets.data_source_ases.join(', ')"
+    :sub-title="
+      $t('iyp.tag.ases.caption') + tag + ' by ' + selectedWidgets.data_source_ases.join(', ')
+    "
     :info-title="$t('iyp.tag.ases.info.title')"
     :info-description="$t('iyp.tag.ases.info.description')"
     class="card"
     v-if="selects[1].value && selects[1].hasData"
   >
-    <TagAutonomousSystems
-      :tag="tag"
-    />
+    <TagAutonomousSystems :tag="tag" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.tag.prefixes.title')"
-    :sub-title="$t('iyp.tag.prefixes.caption')+tag+' by '+selectedWidgets.data_source_prefixes.join(', ')"
+    :sub-title="
+      $t('iyp.tag.prefixes.caption') +
+      tag +
+      ' by ' +
+      selectedWidgets.data_source_prefixes.join(', ')
+    "
     :info-title="$t('iyp.tag.prefixes.info.title')"
     :info-description="$t('iyp.tag.prefixes.info.description')"
     class="card"
     v-if="selects[2].value && selects[2].hasData"
   >
-    <TagPrefixes
-      :tag="tag"
-    />
+    <TagPrefixes :tag="tag" />
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

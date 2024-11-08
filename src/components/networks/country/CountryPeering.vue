@@ -8,18 +8,16 @@ const props = defineProps(['countryCode', 'pageTitle'])
 <template>
   <GenericCardController
     :title="$t('iyp.country.ixps.title')"
-    :sub-title="$t('iyp.country.ixps.caption')+pageTitle"
+    :sub-title="$t('iyp.country.ixps.caption') + pageTitle"
     :info-title="$t('iyp.country.ixps.info.title')"
     :info-description="$t('iyp.country.ixps.info.description')"
   >
-    <CountryInternetExchangePoints
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryInternetExchangePoints :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

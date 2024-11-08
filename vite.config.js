@@ -30,9 +30,7 @@ export default defineConfig({
     vue({
       template: { transformAssetUrls }
     }),
-    quasar({
-      sassVariables: 'src/styles/quasar.variables.sass',
-    }),
+    quasar(),
     VueI18nPlugin({
       strictMessage: false,
       include: resolve(dirname(fileURLToPath(import.meta.url)), './src/i18n/locales/**'),

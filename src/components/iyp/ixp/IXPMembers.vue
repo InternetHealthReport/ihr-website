@@ -23,9 +23,30 @@ const members = ref({
     OPTIONAL MATCH (a)-[:COUNTRY {reference_org: 'NRO'}]->(c:Country)
     RETURN distinct a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, c.country_code as cc`,
   columns: [
-    { name: 'CC', label: 'CC', align: 'left', field: row => row.cc, format: val => `${val}`, sortable: true },
-    { name: 'ASN', label: 'ASN', align: 'left', field: row => row.asn, format: val => `AS${val}`, sortable: true },
-    { name: 'Name', label: 'AS Name', align: 'left', field: row => row.name, format: val => `${val}`, sortable: true },
+    {
+      name: 'CC',
+      label: 'CC',
+      align: 'left',
+      field: (row) => row.cc,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'ASN',
+      label: 'ASN',
+      align: 'left',
+      field: (row) => row.asn,
+      format: (val) => `AS${val}`,
+      sortable: true
+    },
+    {
+      name: 'Name',
+      label: 'AS Name',
+      align: 'left',
+      field: (row) => row.name,
+      format: (val) => `${val}`,
+      sortable: true
+    }
   ]
 })
 
@@ -33,17 +54,18 @@ const load = () => {
   members.value.loading = true
   // Run the cypher query
   let query_params = { id: props.ixpNumber }
-  iyp_api.run([{statement: members.value.query, parameters: query_params}]).then(
-    results => {
-      members.value.data = results[0]
-      members.value.loading = false
-    }
-  )
+  iyp_api.run([{ statement: members.value.query, parameters: query_params }]).then((results) => {
+    members.value.data = results[0]
+    members.value.loading = false
+  })
 }
 
-watch(() => props.ixpNumber, () => {
-  load()
-})
+watch(
+  () => props.ixpNumber,
+  () => {
+    load()
+  }
+)
 
 onMounted(() => {
   load()
@@ -62,7 +84,12 @@ onMounted(() => {
       v-if="members.data.length > 0"
       :chart-data="members.data"
       :chart-layout="{ title: '' }"
-      :config="{ keys: ['cc', 'asn'], root: pageTitle, show_percent: true, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<extra></extra>' }"
+      :config="{
+        keys: ['cc', 'asn'],
+        root: pageTitle,
+        show_percent: true,
+        hovertemplate: '<b>%{label}</b><br>%{customdata.name}<extra></extra>'
+      }"
     />
   </IypGenericTable>
 </template>

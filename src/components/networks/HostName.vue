@@ -51,44 +51,49 @@ const pageTitle = computed(() => {
   return domainName.value
 })
 
-watch(() => route.params.hostname, (newDomain) => {
-  if (newDomain != domain.value) {
-    domain.value = newDomain
-    if (domain.value) {
-      menu.value = activeTab
-      fetchData()
+watch(
+  () => route.params.hostname,
+  (newDomain) => {
+    if (newDomain != domain.value) {
+      domain.value = newDomain
+      if (domain.value) {
+        menu.value = activeTab
+        fetchData()
+      }
     }
   }
-})
+)
 watch(menu, () => {
   if ('display' in route.query) {
     delete route.query.display
   }
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      active: menu.value
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        active: menu.value
+      })
     })
-  }))
+  )
 })
 onMounted(() => {
   if (domain.value) {
     fetchData()
   } else {
-    router.push(Tr.i18nRoute({
-      name: 'hostname',
-    }))
+    router.push(
+      Tr.i18nRoute({
+        name: 'hostname'
+      })
+    )
   }
 })
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <h1 class="text-center">{{ pageTitle }}</h1>
     <h3 class="text-center">
-      <div>
-        Weekly report
-      </div>
+      <div>Weekly report</div>
     </h3>
     <QCard flat>
       <QTabs
@@ -106,44 +111,29 @@ onMounted(() => {
         <QTab name="custom">Custom</QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
+      <QTabPanels v-model="menu" v-if="pageTitle">
         <!-- <QTabPanel name="overview">
           
         </QTabPanel> -->
         <QTabPanel name="routing">
-          <HostNameRouting
-            :page-title="pageTitle"
-            :host-name="domainName"
-          />
+          <HostNameRouting :page-title="pageTitle" :host-name="domainName" />
         </QTabPanel>
         <QTabPanel name="dns">
-          <HostNameDNS
-            :page-title="pageTitle"
-            :host-name="domainName"
-          />
+          <HostNameDNS :page-title="pageTitle" :host-name="domainName" />
         </QTabPanel>
         <QTabPanel name="rankings">
-          <HostNameRankings
-            :page-title="pageTitle"
-            :host-name="domainName"
-          />
+          <HostNameRankings :page-title="pageTitle" :host-name="domainName" />
         </QTabPanel>
         <QTabPanel name="custom">
-          <HostNameCustom
-            :page-title="pageTitle"
-            :host-name="domainName"
-            :hash="routeHash"
-          />
+          <HostNameCustom :page-title="pageTitle" :host-name="domainName" :hash="routeHash" />
         </QTabPanel>
       </QTabPanels>
     </QCard>
   </div>
 </template>
 
-<style lang="stylus">
-.cards
-  display inline-block
+<style>
+.cards {
+  display: inline-block;
+}
 </style>

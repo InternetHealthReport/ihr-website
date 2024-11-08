@@ -48,44 +48,49 @@ const pageTitle = computed(() => {
   return rankName.value
 })
 
-watch(() => route.params.rank, (newRank) => {
-  if (newRank != rank.value) {
-    rank.value = newRank
-    if (rank.value) {
-      menu.value = activeTab
-      fetchData()
+watch(
+  () => route.params.rank,
+  (newRank) => {
+    if (newRank != rank.value) {
+      rank.value = newRank
+      if (rank.value) {
+        menu.value = activeTab
+        fetchData()
+      }
     }
   }
-})
+)
 watch(menu, () => {
   if ('display' in route.query) {
     delete route.query.display
   }
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      active: menu.value
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        active: menu.value
+      })
     })
-  }))
+  )
 })
 onMounted(() => {
   if (rank.value) {
     fetchData()
   } else {
-    router.push(Tr.i18nRoute({
-      name: 'rank',
-    }))
+    router.push(
+      Tr.i18nRoute({
+        name: 'rank'
+      })
+    )
   }
 })
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <h1 class="text-center">{{ pageTitle }}</h1>
     <h3 class="text-center">
-      <div>
-        Weekly report
-      </div>
+      <div>Weekly report</div>
     </h3>
     <QCard flat>
       <QTabs
@@ -99,23 +104,17 @@ onMounted(() => {
         <QTab name="custom">Custom</QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels
-        v-model="menu"
-        v-if="pageTitle"
-      >
+      <QTabPanels v-model="menu" v-if="pageTitle">
         <QTabPanel name="custom">
-          <RankCustom
-            :rank="rank"
-            :page-title="pageTitle"
-            :hash="routeHash"
-          />
+          <RankCustom :rank="rank" :page-title="pageTitle" :hash="routeHash" />
         </QTabPanel>
       </QTabPanels>
     </QCard>
   </div>
 </template>
 
-<style lang="stylus">
-.cards
-  display inline-block
+<style>
+.cards {
+  display: inline-block;
+}
 </style>

@@ -5,6 +5,7 @@ import { ref, watch, onMounted } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
 import Tag from '@/components/networks/Tag.vue'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const route = useRoute()
 
@@ -16,9 +17,12 @@ const init = () => {
   }
 }
 
-watch(() => route.params.tag, () => {
-  init()
-})
+watch(
+  () => route.params.tag,
+  () => {
+    init()
+  }
+)
 
 onMounted(() => {
   init()
@@ -60,24 +64,53 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Home ISP' } })" class="IHR_delikify">Home ISP</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Home ISP' } })"
+                  class="IHR_delikify"
+                  >Home ISP</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Validating RPKI ROV' } })" class="IHR_delikify">Validating RPKI ROV</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Validating RPKI ROV' } })"
+                  class="IHR_delikify"
+                  >Validating RPKI ROV</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Anycast' } })" class="IHR_delikify">Anycast</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Anycast' } })"
+                  class="IHR_delikify"
+                  >Anycast</RouterLink
+                >
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'ToR Services' } })" class="IHR_delikify">ToR Services</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'ToR Services' } })"
+                  class="IHR_delikify"
+                  >ToR Services</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Internet Critical Infra' } })" class="IHR_delikify">Internet Critical Infra</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Internet Critical Infra' } })"
+                  class="IHR_delikify"
+                  >Internet Critical Infra</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Computer and Information Technology' } })" class="IHR_delikify">Computer and Information Technology</RouterLink>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      name: 'tag',
+                      params: { tag: 'Computer and Information Technology' }
+                    })
+                  "
+                  class="IHR_delikify"
+                  >Computer and Information Technology</RouterLink
+                >
               </li>
             </ul>
           </div>
@@ -88,18 +121,19 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style lang="stylus">
-.IHR_
-  &char-container
-    width 90%
-    margin 0 auto
-.examples
-  column-gap 30px
-@media screen and (max-width: 500px)
-  .examples
-    flex-direction column
-.ul_styles
-  padding 0
-  margin 0
-  list-style-position: inside
+<style>
+.examples {
+  column-gap: 30px;
+}
+@media screen and (max-width: 500px) {
+  .examples {
+    flex-direction: column;
+  }
+}
+.ul_styles {
+  padding: 0;
+  margin: 0;
+  list-style-position: inside;
+}
+
 </style>

@@ -1,0 +1,69 @@
+h1,
+.text-h1 {
+  margin: 0;
+  font-size: 2.6875rem !important;
+  font-weight: 400;
+}
+
+h2,
+.text-h2 {
+  margin: 0;
+  font-size: 2rem !important;
+  font-weight: 300;
+}
+
+h3,
+.text-h3 {
+  margin: 0;
+  font-size: 1.375rem !important;
+  font-weight: 300;
+}
+
+a {
+  color: #405057;
+}
+
+p:first-letter {
+  text-transform: uppercase;
+}
+
+.IHR_label {
+  text-align: right;
+  font-weight: 500;
+}
+
+.IHR_errors-banner {
+  background-color: #c10015;
+  width: 100%;
+  margin-top: -1em;
+}
+.IHR_errors-banner p {
+  font-size: 1.1875rem;
+  font-weight: 500;
+  color: #fff;
+}
+.IHR_errors-banner p:first-letter {
+  text-transform: capitalize;
+}
+.IHR_errors-banner p:first-child {
+  margin-top: 0.4375rem;
+}
+.IHR_errors-banner .q-btn__content > div {
+  font-weight: 600;
+}
+
+.IHR_errors-banner-animation-enter-active,
+.IHR_errors-banner-animation-leave-active {
+  transition: all 0.5s;
+}
+
+.IHR_errors-banner-animation-enter,
+.IHR_errors-banner-animation-leave-to {
+  height: 0em;
+}
+
+.IHR_delikify {
+  color: #000;
+  text-decoration: none;
+  font-weight: 400;
+}

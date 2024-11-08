@@ -12,66 +12,52 @@ const props = defineProps(['asNumber', 'pageTitle'])
 <template>
   <GenericCardController
     :title="$t('iyp.as.peers.title')"
-    :sub-title="$t('iyp.as.peers.caption')+asNumber"
+    :sub-title="$t('iyp.as.peers.caption') + asNumber"
     :info-title="$t('iyp.as.peers.info.title')"
     :info-description="$t('iyp.as.peers.info.description')"
   >
-    <ASConnectedASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASConnectedASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.upstreams.title')"
-    :sub-title="$t('iyp.as.upstreams.caption')+asNumber"
+    :sub-title="$t('iyp.as.upstreams.caption') + asNumber"
     :info-title="$t('iyp.as.upstreams.info.title')"
     :info-description="$t('iyp.as.upstreams.info.description')"
     class="card"
   >
-    <ASUpstreamASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASUpstreamASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.downstreams.title')"
-    :sub-title="$t('iyp.as.downstreams.caption')+asNumber"
+    :sub-title="$t('iyp.as.downstreams.caption') + asNumber"
     :info-title="$t('iyp.as.downstreams.info.title')"
     :info-description="$t('iyp.as.downstreams.info.description')"
     class="card"
   >
-    <ASDownstreamsASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASDownstreamsASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.ixp.title')"
-    :sub-title="$t('iyp.as.ixp.caption')+asNumber"
+    :sub-title="$t('iyp.as.ixp.caption') + asNumber"
     :info-title="$t('iyp.as.ixp.info.title')"
     :info-description="$t('iyp.as.ixp.info.description')"
     class="card"
   >
-    <ASIXPs
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASIXPs :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.facilities.title')"
-    :sub-title="$t('iyp.as.facilities.caption')+asNumber"
+    :sub-title="$t('iyp.as.facilities.caption') + asNumber"
     :info-title="$t('iyp.as.facilities.info.title')"
     :info-description="$t('iyp.as.facilities.info.description')"
     class="card"
   >
-    <ASCoLocatedASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASCoLocatedASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

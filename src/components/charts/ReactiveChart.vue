@@ -6,27 +6,34 @@ import { uid } from 'quasar'
 const props = defineProps({
   layout: {
     type: Object,
-    required: true,
+    required: true
   },
   traces: {
     type: Array,
-    required: true,
+    required: true
   },
   chartTitle: {
     type: String,
     required: false,
-    default: null,
+    default: null
   },
   noData: {
     required: false,
-    default: false,
+    default: false
   },
   yMax: {
     type: Number,
     required: false,
-    default: 0,
+    default: 0
   },
-  treemapNodeClicked: null
+  treemapNodeClicked: null,
+  newPlot: {
+    type: Boolean,
+    default: false
+  },
+  shapes: {
+    type: Array
+  }
 })
 
 const emits = defineEmits({
@@ -37,7 +44,7 @@ const emits = defineEmits({
       return false
     }
   },
-  'loaded': () => {
+  loaded: () => {
     return false
   },
   'plotly-legend-click': (plotlyClickedLegend) => {
@@ -49,6 +56,13 @@ const emits = defineEmits({
   },
   'plotly-time-filter': (plotlyClickedLegend) => {
     if (plotlyClickedLegend) {
+      return true
+    } else {
+      return false
+    }
+  },
+  'plotly-relayout': (plotlyRelayout) => {
+    if (plotlyRelayout) {
       return true
     } else {
       return false
@@ -71,8 +85,8 @@ layoutLocal.value['images'] = [
     xref: 'paper',
     yanchor: 'bottom',
     yref: 'paper',
-    opacity: 0.2,
-  },
+    opacity: 0.2
+  }
 ]
 
 const react = () => {
@@ -83,7 +97,11 @@ const react = () => {
   if (props.traces == undefined) {
     return
   }
-  Plotly.react(myId.value, props.traces, layoutLocal.value)
+  if (props.newPlot) {
+    Plotly.newPlot(myId.value, props.traces, layoutLocal.value)
+  } else {
+    Plotly.react(myId.value, props.traces, layoutLocal.value)
+  }
   // emits('loaded')
 }
 
@@ -95,7 +113,7 @@ const init = () => {
   const graphDiv = myId.value
   Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
     responsive: true,
-    displayModeBar: 'hover',
+    displayModeBar: 'hover'
   })
 
   if (document.documentElement.clientWidth < 576) {
@@ -103,8 +121,8 @@ const init = () => {
   }
 
   graphDiv.on('plotly_relayout', (event) => {
-    let startDateTime = event['xaxis.range[0]'];
-    let endDateTime = event['xaxis.range[1]'];
+    let startDateTime = event['xaxis.range[0]']
+    let endDateTime = event['xaxis.range[1]']
     if (startDateTime && endDateTime) {
       startDateTime += 'Z'
       endDateTime += 'Z'
@@ -112,6 +130,7 @@ const init = () => {
       endDateTime = new Date(endDateTime)
       emits('plotly-time-filter', { startDateTime, endDateTime })
     }
+    emits('plotly-relayout', event)
   })
 
   graphDiv.on('plotly_click', (eventData) => {
@@ -123,12 +142,12 @@ const init = () => {
   graphDiv.on('plotly_legendclick', (eventData) => {
     if (eventData) {
       const legend = eventData.node.textContent
-      const opacityStyle = eventData.node.getAttribute('style');
-      const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/);
+      const opacityStyle = eventData.node.getAttribute('style')
+      const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/)
       if (opacityMatch && legend !== 'All') {
-        const opacity = Number(opacityMatch[1]);
+        const opacity = Number(opacityMatch[1])
         const result = { legend, opacity }
-        emits('plotly-legend-click', result);
+        emits('plotly-legend-click', result)
       }
     }
   })
@@ -140,19 +159,36 @@ onMounted(() => {
   init()
 })
 
-watch(() => props.traces, () => {
-  react()
-}, { deep: true })
-watch(() => props.layout, () => {
-  layoutLocal.value = Object.assign(layoutLocal.value, props.layout)
-  if (layoutLocal.value['title'] !== undefined) {
-    delete layoutLocal.value['title']
+watch(
+  () => props.traces,
+  () => {
+    react()
+  },
+  { deep: true }
+)
+watch(
+  () => props.layout,
+  () => {
+    layoutLocal.value = Object.assign(layoutLocal.value, props.layout)
+    if (layoutLocal.value['title'] !== undefined) {
+      delete layoutLocal.value['title']
+    }
   }
-})
-watch(() => props.yMax, (newValue) => {
-  const graphDiv = myId.value
-  Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-})
+)
+watch(
+  () => props.yMax,
+  (newValue) => {
+    const graphDiv = myId.value
+    Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+  }
+)
+watch(
+  () => props.shapes,
+  (newValue) => {
+    const graphDiv = myId.value
+    Plotly.relayout(graphDiv, 'shapes', newValue)
+  }
+)
 </script>
 
 <template>
@@ -160,24 +196,27 @@ watch(() => props.yMax, (newValue) => {
     <h3 v-if="chartTitle">{{ chartTitle }}</h3>
     <div ref="myId"></div>
     <div v-if="noData" class="IHR_no-data">
-      <div class="bg-white" style="text-align: center;">{{ noData }}</div>
+      <div class="bg-white" style="text-align: center">{{ noData }}</div>
     </div>
   </div>
 </template>
 
-<style lang="stylus" scoped>
-.IHR_
-  &no-data
-    position relative
-    bottom 0
-    left 0
-    & > div:first-child
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-      padding 16pt
-      position relative
-      font-weight: 500;
-      top -250px
-      left 0%
-      &:first-letter
-        text-transform uppercase
+<style scoped>
+.IHR_no-data {
+  position: relative;
+  bottom: 0;
+  left: 0;
+}
+.IHR_no-data > div:first-child {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  padding: 1.25rem;
+  position: relative;
+  font-weight: 500;
+  top: -250px;
+  left: 0%;
+}
+.IHR_no-data > div:first-child:first-letter {
+  text-transform: uppercase;
+}
+
 </style>

@@ -11,7 +11,7 @@ const SELECTION_ROW = {
   rank: 0,
   asn: '0',
   asn_name: '',
-  cc: '',
+  cc: ''
 }
 
 const RIR_MAP = new Map()
@@ -35,20 +35,20 @@ const translateCC = (cc) => {
 const props = defineProps({
   af: {
     type: String,
-    required: true,
+    required: true
   },
   metric: {
     type: String,
-    required: true,
+    required: true
   },
   nbprobes: {
     type: String,
-    default: '100',
+    default: '100'
   },
   widgetTitle: {
     type: String,
-    default: null,
-  },
+    default: null
+  }
 })
 
 const apiFilter = ref(null)
@@ -62,7 +62,11 @@ const ihr_api = inject('ihr_api')
 
 const setFilter = () => {
   if (props.metric && props.nbprobes && props.af) {
-    apiFilter.value = new MetisAtlasDeploymentQuery().ranking(props.nbprobes).addressFamily(props.af).metric(props.metric).orderedByTime()
+    apiFilter.value = new MetisAtlasDeploymentQuery()
+      .ranking(props.nbprobes)
+      .addressFamily(props.af)
+      .metric(props.metric)
+      .orderedByTime()
   }
 }
 
@@ -72,13 +76,13 @@ const apiCall = () => {
   setFilter()
   ihr_api.metisAtlasDeployment(
     apiFilter.value,
-    result => {
+    (result) => {
       nextTick(() => {
         readRanking(result.results)
         fetch.value = true
       })
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
       loading.value = false
     }
@@ -93,7 +97,7 @@ const readRanking = (data) => {
   const country_counts = new Map()
   const rir_counts = new Map()
 
-  data.forEach(elem => {
+  data.forEach((elem) => {
     const row = { ...SELECTION_ROW }
     row.rank = elem.rank
     row.asn = elem.asn

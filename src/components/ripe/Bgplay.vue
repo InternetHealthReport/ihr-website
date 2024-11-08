@@ -7,16 +7,16 @@ const library_delayer = inject('library_delayer')
 const props = defineProps({
   asNumber: {
     type: Number,
-    required: true,
+    required: true
   },
   dateTime: {
     type: Date,
-    required: true,
+    required: true
   },
   intervalLength: {
     type: Number,
-    default: 3600, //length of interval in seconds
-  },
+    default: 3600 //length of interval in seconds
+  }
 })
 
 const myId = ref(`bgplayContainer${uid()}`)
@@ -35,51 +35,60 @@ const endTime = computed(() => {
   return props.dateTime.getTime() / 1000 + props.intervalLength / 2
 })
 
-watch(() => props.asNumber, (oldValue, newValue) => {
-  if (oldValue == newValue) {
-    return
+watch(
+  () => props.asNumber,
+  (oldValue, newValue) => {
+    if (oldValue == newValue) {
+      return
+    }
+    bgplay.value.shell.set_params({ resource: asName.value })
   }
-  bgplay.value.shell.set_params({ resource: asName.value })
-})
-watch(() => props.dateTime, (oldValue, newValue) => {
-  if (oldValue == newValue) {
-    return
+)
+watch(
+  () => props.dateTime,
+  (oldValue, newValue) => {
+    if (oldValue == newValue) {
+      return
+    }
+    bgplay.value.shell.set_params({
+      starttime: startTime.value,
+      endtime: endTime.value
+    })
   }
-  bgplay.value.shell.set_params({
-    starttime: startTime.value,
-    endtime: endTime.value,
-  })
-})
-watch(() => props.intervalLength, (oldValue, newValue) => {
-  if (oldValue == newValue) {
-    return
+)
+watch(
+  () => props.intervalLength,
+  (oldValue, newValue) => {
+    if (oldValue == newValue) {
+      return
+    }
+    bgplay.value.shell.set_params({
+      starttime: startTime.value,
+      endtime: endTime.value
+    })
   }
-  bgplay.value.shell.set_params({
-    starttime: startTime.value,
-    endtime: endTime.value,
-  })
-})
+)
 
 onMounted(() => {
   library_delayer.load('bgplay_api', () => {
     bgplay.value = BGPlayWidget(
-        'BGPlay',
-        myId.value,
-        {
-          width: '100vw',
-          height: 800,
-        },
-        {
-          unix_timestamps: 'TRUE',
-          ignoreReannouncements: 'true',
-          resource: asName.value,
-          starttime: startTime.value,
-          endtime: endTime.value,
-          rrcs: '10',
-          type: 'bgp',
-        }
-      )
-      loaded.value = true
+      'BGPlay',
+      myId.value,
+      {
+        width: '100vw',
+        height: 800
+      },
+      {
+        unix_timestamps: 'TRUE',
+        ignoreReannouncements: 'true',
+        resource: asName.value,
+        starttime: startTime.value,
+        endtime: endTime.value,
+        rrcs: '10',
+        type: 'bgp'
+      }
+    )
+    loaded.value = true
   })
 })
 </script>
@@ -96,5 +105,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
-</style>
+<style></style>

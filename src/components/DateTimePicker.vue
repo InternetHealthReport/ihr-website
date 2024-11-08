@@ -8,33 +8,33 @@ const QTIME_MASK = 'YYYY-MM-DDTHH:mm:ss.SSSZ'
 const props = defineProps({
   value: {
     type: Date,
-    required: true,
+    required: true
   },
   min: {
     type: Date,
     required: true,
     default: () => {
       return new Date()
-    },
+    }
   },
   max: {
     type: Date,
     required: true,
     default: () => {
       return new Date()
-    },
+    }
   },
   white: {
-    type: Boolean,
+    type: Boolean
   },
   hideTime: {
     type: Boolean,
-    default: false,
-  },
+    default: false
+  }
 })
 
 const emits = defineEmits({
-  'input': (selectedDate) => {
+  input: (selectedDate) => {
     if (selectedDate !== null) {
       return true
     } else {
@@ -56,7 +56,7 @@ const options = (selectDate) => {
 }
 
 const propagate = (event) => {
-  if(event === null) {
+  if (event === null) {
     return
   }
   const selectedDate = new Date(event)
@@ -74,22 +74,29 @@ const textColor = computed(() => {
 <template>
   <QIcon name="fas fa-calendar-day" class="cursor-pointer" :class="textColor">
     <QPopupProxy id="popupid" v-model="show">
-      <QDate v-model="qTimeModel" @update:model-value="propagate($event)" :mask="mask" :options="options" color="accent" minimal />
+      <QDate
+        v-model="qTimeModel"
+        @update:model-value="propagate($event)"
+        :mask="mask"
+        :options="options"
+        color="accent"
+        minimal
+      />
     </QPopupProxy>
   </QIcon>
 </template>
 
-<style lang="stylus" scoped>
-.IHR_
-  &date-time-picker
-    cursor pointer
-
-  &white-text
-    color white
-
-  &black-text
-    color black
-
-  &date-input
-    font-weight bolder
+<style scoped>
+.IHR_date-time-picker {
+  cursor: pointer;
+}
+.IHR_white-text {
+  color: #fff;
+}
+.IHR_black-text {
+  color: #000;
+}
+.IHR_date-input {
+  font-weight: bolder;
+}
 </style>

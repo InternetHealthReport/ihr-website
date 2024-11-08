@@ -1,22 +1,27 @@
-import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils';
+import * as AggregatedAlarmsUtils from '../utils/AggregatedAlarmsUtils'
 
 export function etl(alarms, alarmCountsSelected, alarmTypeTitlesMap) {
   const alarmCountsByCountry = groupAlarmCountsByCountry(alarms, alarmCountsSelected)
   addTotalAlarmCountsAttr(alarmCountsByCountry, alarmCountsSelected)
   const worldMapData = getWorldMapData(alarmCountsByCountry)
   const hoverData = getHoverZippedData(worldMapData, alarmCountsSelected)
-  const worldMapTrace = getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected, alarmTypeTitlesMap)
+  const worldMapTrace = getWorldMapTrace(
+    worldMapData,
+    hoverData,
+    alarmCountsSelected,
+    alarmTypeTitlesMap
+  )
   return worldMapTrace
 }
 
 function groupAlarmCountsByCountry(alarms, alarmCountsSelected) {
   const alarmsByCountry = alarms.reduce((result, obj) => {
     const existingEntry = result.find(
-      entry =>
+      (entry) =>
         entry.asn_country_iso_code2 === obj.asn_country_iso_code2 &&
         entry.asn_country_iso_code3 === obj.asn_country_iso_code3 &&
         entry.asn_country === obj.asn_country
-    );
+    )
 
     if (existingEntry) {
       addAlarmCountsAttr(existingEntry, obj, alarmCountsSelected)
@@ -28,28 +33,30 @@ function groupAlarmCountsByCountry(alarms, alarmCountsSelected) {
         total_alarm_counts: obj.total_alarm_counts
       }
       addAlarmCountsAttr(alarmsInitial, obj, alarmCountsSelected)
-      result.push(alarmsInitial);
+      result.push(alarmsInitial)
     }
 
-    return result;
-  }, []);
+    return result
+  }, [])
   return alarmsByCountry
 }
 
 function addAlarmCountsAttr(accumulator, current, alarmCountsSelected) {
   for (const alarmCountType of alarmCountsSelected) {
-    accumulator[alarmCountType] = (accumulator[alarmCountType] || 0) + (current[alarmCountType] ? current[alarmCountType].length : 0);
+    accumulator[alarmCountType] =
+      (accumulator[alarmCountType] || 0) +
+      (current[alarmCountType] ? current[alarmCountType].length : 0)
   }
 }
 
 function addTotalAlarmCountsAttr(alarms, alarmCountsSelected) {
-  alarms.forEach(alarm => {
+  alarms.forEach((alarm) => {
     let totalAlarmCounts = 0
-    alarmCountsSelected.forEach(alarmCountColumn => {
+    alarmCountsSelected.forEach((alarmCountColumn) => {
       totalAlarmCounts += alarm[alarmCountColumn]
-    });
+    })
     alarm.total_alarm_counts = totalAlarmCounts
-  });
+  })
 }
 
 function getWorldMapData(inputData) {
@@ -72,11 +79,11 @@ function getHoverZippedData(alarmsData, alarmCountsSelected) {
   const zippedData = []
   const alarmCountsTypeList = alarmsData[alarmCountsSelected[0]]
   for (let i = 0; i < alarmCountsTypeList.length; i++) {
-    const customDataElement = {};
-    alarmCountsSelected.forEach(alarmCountsType => {
-      let alarmCountsValue = alarmsData[alarmCountsType][i];
-      customDataElement[alarmCountsType] = alarmCountsValue;
-    });
+    const customDataElement = {}
+    alarmCountsSelected.forEach((alarmCountsType) => {
+      let alarmCountsValue = alarmsData[alarmCountsType][i]
+      customDataElement[alarmCountsType] = alarmCountsValue
+    })
     zippedData.push(customDataElement)
   }
   return zippedData
@@ -85,7 +92,9 @@ function getHoverZippedData(alarmsData, alarmCountsSelected) {
 function getWorldMapTrace(worldMapData, hoverData, alarmCountsSelected, alarmTypeTitlesMap) {
   let trace = {}
   trace.customdata = hoverData
-  trace.locations = worldMapData['asn_country_iso_code3'] ? worldMapData['asn_country_iso_code3'] : []
+  trace.locations = worldMapData['asn_country_iso_code3']
+    ? worldMapData['asn_country_iso_code3']
+    : []
   trace.z = worldMapData['total_alarm_counts'] ? worldMapData['total_alarm_counts'] : []
   trace.text = worldMapData['asn_country'] ? worldMapData['asn_country'] : []
   trace.hovertemplate = getHoverTemplate(alarmCountsSelected, alarmTypeTitlesMap)
@@ -103,15 +112,15 @@ function getHoverTemplate(alarmCountsSelected, alarmTypeTitlesMap) {
   return hoverTemplate
 }
 
-export function getChartTitle(trace=null, alarms=null, selectedCountry=null, legend=null){
+export function getChartTitle(trace = null, alarms = null, selectedCountry = null, legend = null) {
   if (!trace || AggregatedAlarmsUtils.isDictEmpty(trace)) {
     return 'Alarms by Countries'
   } else {
     const selectedCountryVal = selectedCountry || legend
     const alarmCounts = trace.z.reduce((acc, curr) => acc + curr, 0)
     const chartTitle = selectedCountryVal
-    ? `${selectedCountryVal}: ${alarmCounts} Alarms | ${alarms.length} ASes`
-    : `${alarmCounts} Alarms | ${trace.locations.length} Countries | ${alarms.length} ASes`
+      ? `${selectedCountryVal}: ${alarmCounts} Alarms | ${alarms.length} ASes`
+      : `${alarmCounts} Alarms | ${trace.locations.length} Countries | ${alarms.length} ASes`
     return chartTitle
   }
 }

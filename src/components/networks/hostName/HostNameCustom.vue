@@ -25,25 +25,31 @@ const selects = ref([
   { value: false, label: t('iyp.domainname.nameservers.title') },
   { value: false, label: t('iyp.domainname.country_query.title') },
   { value: false, label: t('iyp.domainname.as_query.title') },
-  { value: false, label: t('iyp.domainname.rankings.title') },
+  { value: false, label: t('iyp.domainname.rankings.title') }
 ])
 const selectAll = ref(false)
 
 const pushRoute = () => {
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      display: JSON.stringify(selects.value.map((obj, index) => {
-        if (obj.value) {
-          return index
-        }
-      }).filter(val => val != null))
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        display: JSON.stringify(
+          selects.value
+            .map((obj, index) => {
+              if (obj.value) {
+                return index
+              }
+            })
+            .filter((val) => val != null)
+        )
+      })
     })
-  }))
+  )
 }
 
 const hashToDisplay = () => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
       obj.value = true
     }
@@ -55,7 +61,7 @@ watch(selects.value, () => {
 })
 
 watch(selectAll, () => {
-  selects.value.forEach(obj => obj.value = selectAll.value)
+  selects.value.forEach((obj) => (obj.value = selectAll.value))
 })
 
 onMounted(() => {
@@ -64,7 +70,7 @@ onMounted(() => {
   } else if (props.hash) {
     hashToDisplay()
   } else {
-    displayWidgets.value.forEach(val => selects.value[val].value = true)
+    displayWidgets.value.forEach((val) => (selects.value[val].value = true))
   }
 })
 </script>
@@ -83,74 +89,60 @@ onMounted(() => {
   <!-- Routing -->
   <GenericCardController
     :title="$t('iyp.domainname.ips.title')"
-    :sub-title="$t('iyp.domainname.ips.caption')+pageTitle"
+    :sub-title="$t('iyp.domainname.ips.caption') + pageTitle"
     :info-title="$t('iyp.domainname.ips.info.title')"
     :info-description="$t('iyp.domainname.ips.info.description')"
     class="card"
     v-if="selects[0].value"
   >
-    <HostNameIPAddressesPrefixes
-      :page-title="pageTitle"
-      :host-name="hostName"
-    />
+    <HostNameIPAddressesPrefixes :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
     :title="$t('iyp.domainname.nameservers.title')"
-    :sub-title="$t('iyp.domainname.nameservers.caption')+pageTitle"
+    :sub-title="$t('iyp.domainname.nameservers.caption') + pageTitle"
     :info-title="$t('iyp.domainname.nameservers.info.title')"
     :info-description="$t('iyp.domainname.nameservers.info.description')"
     class="card"
     v-if="selects[1].value"
   >
-    <HostNameAuthoritativeNameservers
-      :page-title="pageTitle"
-      :host-name="hostName"
-    />
+    <HostNameAuthoritativeNameservers :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.domainname.country_query.title')"
-    :sub-title="$t('iyp.domainname.country_query.caption')+pageTitle"
+    :sub-title="$t('iyp.domainname.country_query.caption') + pageTitle"
     :info-title="$t('iyp.domainname.country_query.info.title')"
     :info-description="$t('iyp.domainname.country_query.info.description')"
     class="card"
     v-if="selects[2].value"
   >
-    <HostNameQueryingCountries
-      :page-title="pageTitle"
-      :host-name="hostName"
-    />
+    <HostNameQueryingCountries :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.domainname.as_query.title')"
-    :sub-title="$t('iyp.domainname.as_query.caption')+pageTitle"
+    :sub-title="$t('iyp.domainname.as_query.caption') + pageTitle"
     :info-title="$t('iyp.domainname.as_query.info.title')"
     :info-description="$t('iyp.domainname.as_query.info.description')"
     class="card"
     v-if="selects[3].value"
   >
-    <HostNameQueryingASes
-      :page-title="pageTitle"
-      :host-name="hostName"
-    />
+    <HostNameQueryingASes :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
     :title="$t('iyp.domainname.rankings.title')"
-    :sub-title="$t('iyp.domainname.rankings.caption')+pageTitle"
+    :sub-title="$t('iyp.domainname.rankings.caption') + pageTitle"
     :info-title="$t('iyp.domainname.rankings.info.title')"
     :info-description="$t('iyp.domainname.rankings.info.description')"
     class="card"
     v-if="selects[4].value"
   >
-    <HostNameRankings
-      :page-title="pageTitle"
-      :host-name="hostName"
-    />
+    <HostNameRankings :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

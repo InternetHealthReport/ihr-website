@@ -8,6 +8,7 @@ import IXP from '@/components/networks/IXP.vue'
 import Prefix from '@/components/networks/Prefix.vue'
 import * as ipAddress from 'ip-address'
 import Feedback from '@/components/Feedback.vue'
+import '@/styles/chart.css'
 
 const route = useRoute()
 
@@ -21,20 +22,24 @@ const Address6 = ipAddress.Address6
 
 const init = () => {
   if (route.params.id) {
-    asNumber.value = route.params.id.includes('AS') ? Number(route.params.id.replace('AS', '')) : null
-    ixpNumber.value = route.params.id.includes('IXP') ? Number(route.params.id.replace('IXP', '')) : null
+    asNumber.value = route.params.id.includes('AS')
+      ? Number(route.params.id.replace('AS', ''))
+      : null
+    ixpNumber.value = route.params.id.includes('IXP')
+      ? Number(route.params.id.replace('IXP', ''))
+      : null
     prefixHostString.value = null
     prefixLengthNumber.value = null
   } else if (route.params.ip && route.params.length) {
     let prefixMatch
     try {
-      prefixMatch = (new Address4(route.params.ip)).isCorrect()
+      prefixMatch = new Address4(route.params.ip).isCorrect()
     } catch (e) {
       prefixMatch = null
     }
     if (!prefixMatch) {
       try {
-        prefixMatch = (new Address6(route.params.ip)).isCorrect()
+        prefixMatch = new Address6(route.params.ip).isCorrect()
       } catch (e) {
         prefixMatch = null
       }
@@ -46,13 +51,19 @@ const init = () => {
   }
 }
 
-watch(() => route.params.id, () => {
-  init()
-})
+watch(
+  () => route.params.id,
+  () => {
+    init()
+  }
+)
 
-watch(() => route.params.ip, () => {
-  init()
-})
+watch(
+  () => route.params.ip,
+  () => {
+    init()
+  }
+)
 
 onMounted(() => {
   init()
@@ -94,24 +105,48 @@ onMounted(() => {
           <div class="row examples">
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2497' } })" class="IHR_delikify">IIJ (AS2497)</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2497' } })"
+                  class="IHR_delikify"
+                  >IIJ (AS2497)</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS15169' } })" class="IHR_delikify">Google (AS15169)</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS15169' } })"
+                  class="IHR_delikify"
+                  >Google (AS15169)</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2501' } })" class="IHR_delikify">University of Tokyo (AS2501)</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2501' } })"
+                  class="IHR_delikify"
+                  >University of Tokyo (AS2501)</RouterLink
+                >
               </li>
             </ul>
             <ul class="ul_styles">
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP1997' } })" class="IHR_delikify">Equinix London (IXP1997)</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP1997' } })"
+                  class="IHR_delikify"
+                  >Equinix London (IXP1997)</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP26' } })" class="IHR_delikify">AMS-IX (IXP26)</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP26' } })"
+                  class="IHR_delikify"
+                  >AMS-IX (IXP26)</RouterLink
+                >
               </li>
               <li>
-                <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP2588' } })" class="IHR_delikify">DE-CIX Chennai (IXP2588)</RouterLink>
+                <RouterLink
+                  :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP2588' } })"
+                  class="IHR_delikify"
+                  >DE-CIX Chennai (IXP2588)</RouterLink
+                >
               </li>
             </ul>
           </div>
@@ -122,18 +157,18 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style lang="stylus">
-.IHR_
-  &char-container
-    width 90%
-    margin 0 auto
-.examples
-  column-gap 30px
-@media screen and (max-width: 500px)
-  .examples
-    flex-direction column
-.ul_styles
-  padding 0
-  margin 0
-  list-style-position: inside
+<style>
+.examples {
+  column-gap: 30px;
+}
+@media screen and (max-width: 500px) {
+  .examples {
+    flex-direction: column;
+  }
+}
+.ul_styles {
+  padding: 0;
+  margin: 0;
+  list-style-position: inside;
+}
 </style>

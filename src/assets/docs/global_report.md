@@ -1,4 +1,5 @@
 # Table of Contents
+
 - [How to Add Alarm Type](#how-to-add-alarm-type)
   - [Step 1: Choose Your Data Source](#step-1-choose-your-data-source)
   - [Step2: Dataset Requirements](#step2-dataset-requirements)
@@ -21,21 +22,30 @@
     - [To Revise Table Column Names:](#to-revise-table-column-names)
 
 # How to Add Alarm Type
+
 ## Step 1: Choose Your Data Source
+
 Before adding a data source to your dashboard, you need to determine where your data will come from. Common data sources include databases, APIs, spreadsheets, and other data storage systems. Once you've selected your data source, make sure you have the necessary access credentials, API keys, or connection details.
+
 ## Step2: Dataset Requirements
+
 Our dashboard is currently designed to work with specific attributes: Autonomous System, Country, Time, and Severity Granularities. To ensure proper functionality across all data visualizations, your dataset must include the following: autonomous system number, country ISO code 3 (mandatory for the world map), timebin (mandatory for the time series), deviation (mandatory for the treemap), and country ISO code 2 (optional but convenient for inclusion).
+
 ## Step3: Adding Alarm Types to the Dashboard
+
 To add an alarm type to the dashboard, it's essential to understand the following context: we have approximately 3 data sources and 11 alarm types, with each alarm type considered a data source with its complex schema and time variation. To avoid accidental complexity, we follow the Extract Transform Load (ETL) with Model View Controller (MVC) architecture, allowing each step to evolve independently. Adopting this approach ensures maintainable and testable code over time.
 
 If the alarm type you want to add is sourced from IHR, it's advisable to use the IHR API Vue.js client to benefit from caching or debouncing API calls. To do this, place the extraction code in the Aggregated Alarms Controller and handle transformation and loading steps in the Aggregated Alarms Data Model. If the alarm type comes from other data sources, perform all ETL steps in the Aggregated Alarms Data Model.
 ![Aggregated Alarms Architecture](../imgs/aggregated-alarms-architecture.png)
 
 ## Step4: Adding IHR DNS Anomaly Alarm Type to the Dashboard (Demo)
+
 ### Step4.1: Metadata
+
 When writing your configuration, pay attention to the `columns`, `name`, and `field` values, ensuring they access the same attribute name. Also, distinguish between the key and alternative key to enable proper grouping by different keys. For example, I distinguished the key as `main_stream` and the alternative key as `alternative_stream`. Make sure that attributes related to each key start with the respective prefix, except for `timebin,` `severity`, `deviation`, and `count`, as they are related to the alarm as a whole and not specific to each key. Review other metadata in the file for a better understanding of the pattern.
 
 Add the following metadata under the `ihr` data source in the `AggregatedAlarmsMetadata.js` file:
+
 ```javascript
 dns_anomaly: {
     columns: {
@@ -88,8 +98,11 @@ dns_anomaly: {
     }
 }
 ```
+
 ### Step4.2: Extracting the IHR DNS Anomaly Data
+
 The DNS anomaly data we want to extract is sourced from IHR. To gain an understanding of the integration process, I've hardcoded simulated data. In the `AggregatedAlarmsController.js` file, please follow these steps to add the DNS anomaly and its related method. Note that the event type is tagged with the `event_type` attribute.
+
 ```javascript
 ...
 ihrAlarms: {
@@ -157,52 +170,69 @@ const staticData =  [{
     ]
 }
 ```
+
 ### Step4.3: Integrating DNS Anomaly Alarms with Other IHR Alarms
+
 In the `AggregatedAlarmsDataModel.js` file, update the `transformIHRAlarms` method to incorporate the DNS anomaly alarms into the aggregation. The following code snippet demonstrates how to join the DNS anomaly alarms with other IHR alarms:
+
 ```javascript
-const ihrAlarmsJoined = [/*Oher IHR Alarms */, ...dnsAnomalyAlarmsTransformed]
+const ihrAlarmsJoined = [, /*Oher IHR Alarms */ ...dnsAnomalyAlarmsTransformed]
 ```
 
 ### Step4.4: Successful Integration of DNS Anomaly Alarms into the Dashboard 🚀
+
 You can confirm this integration through data visualization, and I've verified it for you. Here's a snapshot of the DNS Anomaly Alarm Type Integration:
 ![DNS Anomaly Alarm Type Integration](../imgs/dns-anomaly-alarm-type-integration.png)
 
 # How to Add Data Source
+
 To add a data source effectively, it's important to understand the process of adding an alarm type and how it integrates with other data sources, such as `IHR`, `GRIP`, and `IODA`. Please refer to the sections above for detailed instructions on adding alarm types and the broader integration process.
 
 # How to Change the Selected Alarm Types by Default
+
 To modify the default selection of alarm types for the data visualizations, simply locate and update the `is_default_selected` attribute within the `AggregatedAlarmsMetadata.js` file. To modify the initial selected alarm type in the table data visualization, simply update `INITIAL_TABLE_ALARM_TYPE_SELECTED` variable in `AggregatedAlarmsController.js` file make sure it matches with the alarm type in `AggregatedAlarmsMetadata.js`.
 
 # How to Change the Default Group By Keys
+
 To adjust the default group by keys, you can easily do so by modifying the `default_key` attribute in the `AggregatedAlarmsMetadata.js` file to match one of the values listed in the `group_by_key_options` attribute.
 
 # How to Modify Text Content in the Dashboard
+
 You have the flexibility to customize and alter the text content within the dashboard by making modifications in the `AggregatedAlarmsMetadata.js` file. For more detailed information, please refer to the following sections.
 
 ## How to Modify Text Content in the Filters Area and Data Visualizations (WorldMap, TimeSeries, and TreeMap)
 
 ### To Change the Data Source Name in the Table Filters Area:
+
 Please review and update the `title` attribute within the metadata for the specific data source in the `AggregatedAlarmsMetadata.js` file.
 
 ### To Alter the Alarm Type Name in the Table Filters Area and Data Visualizations:
+
 To modify the Alarm Type name displayed in the table filters area and data visualizations, navigate to the `title` attribute of the respective alarm type in the `AggregatedAlarmsMetadata.js` file.
 
 ### To Adjust Group By Key Names in the Table Filters Area:
+
 To change the names of group by keys in the table filters area, refer to the `group_by_key_options` attribute in the `AggregatedAlarmsMetadata.js` file. Modify the key as needed to match the desired UI appearance. For instance, if you want to change "source" to "source_startpoint," you can update it like this:
 From:
+
 ```javascript
 { source: 'startpoint', destination: 'endpoint' }
 ```
+
 To:
+
 ```javascript
 { source_startpoint: 'startpoint', destination: 'endpoint' }
 ```
+
 Note: The keys in this context are related to the UI, as they map what appears in the UI to the corresponding dataset elements.
 
 ## How to Customize Text Content in the Table Data Visualization
 
 ### To Modify the Text of the Button in the Table Data Visualization:
+
 - To change the text of the button in the table data visualization, adjust the `table_button_text` attribute within the `AggregatedAlarmsMetadata.js` file.
 
 ### To Revise Table Column Names:
+
 - To update the names of table columns, you can modify the `label` attribute within the `table_columns` and `table_aggregated_columns` in the `AggregatedAlarmsMetadata.js` file to reflect the desired column labels.

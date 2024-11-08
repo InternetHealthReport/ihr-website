@@ -15,25 +15,25 @@ const props = defineProps({
   },
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   filter: {
     type: String,
-    default: '',
+    default: ''
   },
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   stopTime: {
     type: Date,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const emit = defineEmits({
-  'filteredRows': (filteredSearchRowValues) => {
-    if(filteredSearchRowValues !== null) {
+  filteredRows: (filteredSearchRowValues) => {
+    if (filteredSearchRowValues !== null) {
       return true
     } else {
       console.warn('FilteredSearchRowValues is missing')
@@ -49,58 +49,58 @@ const pagination = ref({
   sortBy: 'deviation',
   descending: true,
   page: 1,
-  rowsPerPage: 5,
+  rowsPerPage: 5
 })
 const columns = ref([
   {
     name: 'overview',
     label: 'Overview',
-    align: 'center',
+    align: 'center'
   },
   {
     name: 'location',
     required: true,
     label: 'Location',
     align: 'left',
-    field: row => [row.streamtype, row.streamname],
-    format: val => (val[0] == 'country' ? getCountryName(val[1]) : val[1]),
-    sortable: true,
+    field: (row) => [row.streamtype, row.streamname],
+    format: (val) => (val[0] == 'country' ? getCountryName(val[1]) : val[1]),
+    sortable: true
   },
   {
     name: 'starttime',
     required: false,
     label: 'Disconnection Time',
     align: 'left',
-    field: row => row.starttime,
-    format: val => val,
-    sortable: false,
+    field: (row) => row.starttime,
+    format: (val) => val,
+    sortable: false
   },
   {
     name: 'duration',
     required: true,
     label: 'Duration (minutes)',
     align: 'left',
-    field: row => row.duration,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.duration,
+    format: (val) => val,
+    sortable: true
   },
   {
     name: 'deviation',
     required: true,
     label: 'Deviation',
     align: 'left',
-    field: row => row.avglevel,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.avglevel,
+    format: (val) => val,
+    sortable: true
   },
   {
     name: 'discoProbes',
     required: true,
     label: 'Nb. Disco. Probes',
     align: 'left',
-    field: row => row.nbdiscoprobes,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.nbdiscoprobes,
+    format: (val) => val,
+    sortable: true
   }
 ])
 
@@ -112,13 +112,13 @@ const dateFormatter = (datetime) => {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'UTC',
+    timeZone: 'UTC'
   }
   return dt.toLocaleDateString(undefined, options)
 }
 
 const msmPrbIds = (probes) => {
-  const probeIds = probes.map(probe => {
+  const probeIds = probes.map((probe) => {
     return probe.probe_id
   })
   return { 1030: probeIds, 1001: probeIds, 1591146: probeIds }
@@ -126,9 +126,18 @@ const msmPrbIds = (probes) => {
 </script>
 
 <template>
-  <QTable table-class="myClass" :rows="rows" :columns="columns" :pagination.sync="pagination" :loading="loading"
-    :filter="filterTable" flat row-key="id" v-model:expanded="expandedRow"
-    loading-label="Fetching the latest network disconnections...">
+  <QTable
+    table-class="myClass"
+    :rows="rows"
+    :columns="columns"
+    :pagination.sync="pagination"
+    :loading="loading"
+    :filter="filterTable"
+    flat
+    row-key="id"
+    v-model:expanded="expandedRow"
+    loading-label="Fetching the latest network disconnections..."
+  >
     <template v-slot:body="props">
       <QTr :props="props">
         <QTd auto-width>
@@ -136,7 +145,9 @@ const msmPrbIds = (probes) => {
         </QTd>
         <QTd key="location" align>
           <div v-if="props.row.streamtype == 'asn'">
-            <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS' + props.row.streamname } })">
+            <RouterLink
+              :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS' + props.row.streamname } })"
+            >
               AS{{ props.row.streamname }}
             </RouterLink>
           </div>
@@ -153,9 +164,14 @@ const msmPrbIds = (probes) => {
         <QTd colspan="100%" class="IHR_nohover" bordered>
           <div class="text-h3 text-center">Pings from disconnected probes</div>
           <div class="IHR_side_borders">
-            <Latencymon :start-time="dateHourShift(props.row.starttime, -Math.max(props.row.duration, 120) / 60)"
+            <Latencymon
+              :start-time="
+                dateHourShift(props.row.starttime, -Math.max(props.row.duration, 120) / 60)
+              "
               :stop-time="dateHourShift(props.row.endtime, Math.max(props.row.duration, 120) / 60)"
-              :msm-prb-ids="msmPrbIds(props.row.discoprobes)" style="max-width: 93%; margin: 0 auto" />
+              :msm-prb-ids="msmPrbIds(props.row.discoprobes)"
+              style="max-width: 93%; margin: 0 auto"
+            />
           </div>
         </QTd>
       </QTr>
@@ -163,30 +179,26 @@ const msmPrbIds = (probes) => {
   </QTable>
 </template>
 
-<style lang="stylus">
-.IHR_nohover
-    &:first-child
-      padding-top 0px
-      padding-bottom 20px
-      padding-right 20px
-      padding-left 20px
-      background #fafafa
-
-.IHR_side_borders
-    &:first-child
-        padding-top 20px
-        border-style solid
-        border-color #dddddd
-        border-top-width 0px
-        border-left-width 1px
-        border-right-width 1px
-        border-bottom-width 1px
-        border-radius 5px
-        background #ffffff
-
-
-.myClass
-
-    tbody td
-        text-align left
+<style>
+.IHR_nohover:first-child {
+  padding-top: 0px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  background: #fafafa;
+}
+.IHR_side_borders:first-child {
+  padding-top: 20px;
+  border-style: solid;
+  border-color: #ddd;
+  border-top-width: 0px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-radius: 5px;
+  background: #fff;
+}
+.myClass tbody td {
+  text-align: left;
+}
 </style>

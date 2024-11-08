@@ -1,6 +1,6 @@
 <script setup>
 import Tr from '@/i18n/translation'
-import { QBtn } from 'quasar';
+import { QBtn } from 'quasar'
 </script>
 
 <template>
@@ -16,34 +16,30 @@ import { QBtn } from 'quasar';
   </div>
 </template>
 
-<style lang="stylus" scoped>
+<style scoped>
 #page {
-  margin : 0;
+  margin: 0;
   padding: 0;
   position: relative;
   height: 60vh;
 }
-
 #page .notfound {
   position: absolute;
   left: 50%;
   top: 50%;
   -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
-
 .notfound {
   max-width: 520px;
   width: 100%;
   text-align: center;
   line-height: 1.5;
 }
-
 .notfound .image404 {
   height: 190px;
 }
-
 .notfound .image404 h1 {
   font-family: 'Montserrat', sans-serif;
   font-size: 170px !important;
@@ -51,19 +47,17 @@ import { QBtn } from 'quasar';
   margin: 0px;
   color: #232323;
 }
-
 .notfound .image404 h1>span {
   display: inline-block;
   width: 100px;
   height: 100px;
-  background-image: url('../assets/imgs/ihr_logo.svg');
+  background-image: url("../assets/imgs/ihr_logo.svg");
   background-size: cover;
   -webkit-transform: scale(1.4);
-      -ms-transform: scale(1.4);
-          transform: scale(1.4);
+  -ms-transform: scale(1.4);
+  transform: scale(1.4);
   z-index: -1;
 }
-
 .notfound h2 {
   font-family: 'Montserrat', sans-serif;
   font-size: 22px;
@@ -72,13 +66,11 @@ import { QBtn } from 'quasar';
   text-transform: uppercase;
   color: #232323;
 }
-
 .notfound p {
   font-family: 'Montserrat', sans-serif;
   color: #787878;
   font-weight: 300;
 }
-
 .sec {
   font-family: 'Montserrat', sans-serif;
   display: inline-block;
@@ -91,13 +83,10 @@ import { QBtn } from 'quasar';
   -webkit-transition: 0.2s all;
   transition: 0.2s all;
 }
-
 .notfound button:hover {
   opacity: 0.8;
 }
-
 @media screen and (max-width: 320px) {
-
   #page {
     width: 100vw;
   }
@@ -112,12 +101,9 @@ import { QBtn } from 'quasar';
     height: 40px;
   }
 }
-
 @media screen and (max-width: 767px) {
-
   #page {
     width: 100vw;
-
   }
   .notfound .image404 {
     height: 115px;

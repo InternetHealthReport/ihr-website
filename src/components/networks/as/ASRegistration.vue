@@ -9,14 +9,11 @@ const props = defineProps(['asNumber', 'pageTitle'])
 <template>
   <GenericCardController
     :title="$t('iyp.as.ipPrefix.title')"
-    :sub-title="$t('iyp.as.ipPrefix.caption')+asNumber"
+    :sub-title="$t('iyp.as.ipPrefix.caption') + asNumber"
     :info-title="$t('iyp.as.ipPrefix.info.title')"
     :info-description="$t('iyp.as.ipPrefix.info.description')"
   >
-    <ASOriginatedPrefixes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASOriginatedPrefixes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.siblings.title')"
@@ -25,14 +22,12 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.siblings.info.description')"
     class="card"
   >
-    <ASSiblingASes
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASSiblingASes :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

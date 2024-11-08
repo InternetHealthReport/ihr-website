@@ -4,7 +4,7 @@ import networkName from './networkName'
 export default function commonTable(props, ctx) {
   const { data, loading, filter } = toRefs(props)
   const filteredRows = ref([])
-  const filterTable = ref("")
+  const filterTable = ref('')
   const rows = ref(data.value)
 
   const prettyName = (shortname) => {
@@ -19,10 +19,7 @@ export default function commonTable(props, ctx) {
   const filterFct = (rows, terms, cols, cellValue) => {
     const lowerTerms = terms ? terms.toLowerCase() : ''
     filteredRows.value = rows.filter((row) =>
-      cols.some(
-        (col) =>
-          (cellValue(col, row) + "").toLowerCase().indexOf(lowerTerms) !== -1
-      )
+      cols.some((col) => (cellValue(col, row) + '').toLowerCase().indexOf(lowerTerms) !== -1)
     )
     return filteredRows.value
   }
@@ -44,7 +41,7 @@ export default function commonTable(props, ctx) {
     }
   })
   watch(filterTable, (newValue) => {
-    if (newValue == "") filteredRows.value = rows.value
+    if (newValue == '') filteredRows.value = rows.value
   })
   watch(data, (newValue) => {
     rows.value = newValue

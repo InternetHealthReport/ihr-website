@@ -7,16 +7,16 @@ const library_delayer = inject('library_delayer')
 const props = defineProps({
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   stopTime: {
     type: Date,
-    required: true,
+    required: true
   },
   msmPrbIds: {
     type: Object,
-    required: true,
-  },
+    required: true
+  }
 })
 
 const getTimestamp = (datetime) => {
@@ -34,7 +34,7 @@ const targetName = (msmid) => {
     1006: 'M-root servers',
     1010: 'B-root servers',
     1030: 'Atlas Controller',
-    1591146: 'Google DNS',
+    1591146: 'Google DNS'
   }
 
   if (msmid in names) {
@@ -54,7 +54,7 @@ onMounted(() => {
         id: targetName(msms),
         measurementId: Number(msms),
         probes: props.msmPrbIds[msms],
-        type: 'multi-probes',
+        type: 'multi-probes'
       })
     }
 
@@ -64,14 +64,14 @@ onMounted(() => {
       lm.value = initLatencymon(
         `#${myId.value}`,
         {
-          autoStartGrouping: false,
+          autoStartGrouping: false
         },
         {
           measurements: Object.keys(props.msmPrbIds), //measurements: [1030, 1031],
           startTimestamp: startTimestamp.value, //startTimestamp: 1580422400,
           stopTimestamp: stopTimestamp.value, // stopTimestamp:  1580508800,
           syncWithRealTimeData: false,
-          groups: lm_grp,
+          groups: lm_grp
         }
       )
     } catch (err) {
@@ -85,11 +85,12 @@ onMounted(() => {
   <div class="IHR_nowrap" :id="myId"></div>
 </template>
 
-<style lang="stylus">
-.latencymon-container .probe-multi-info .probe-info-line
-    white-space normal!important;
-    margin-top 10px!important;
-
-.IHR_nowrap
-    white-space normal !important;
+<style>
+.latencymon-container .probe-multi-info .probe-info-line {
+  white-space: normal !important;
+  margin-top: 10px !important;
+}
+.IHR_nowrap {
+  white-space: normal !important;
+}
 </style>

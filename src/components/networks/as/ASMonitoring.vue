@@ -14,7 +14,13 @@ const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'pageTi
 
 const route = useRoute()
 
+const emit = defineEmits(['toggle-ip-family']);
+
 const fetch = ref(true)
+
+const toggleIpFamily = () => {
+  emit('toggle-ip-family');
+};
 </script>
 
 <template>
@@ -31,6 +37,7 @@ const fetch = ref(true)
       :as-number="asNumber"
       :address-family="family"
       :fetch="fetch"
+      @toggle-ip-family="toggleIpFamily"
     />
   </GenericCardController>
 
@@ -87,15 +94,12 @@ const fetch = ref(true)
 
   <GenericCardController
     :title="$t('iyp.as.atlas.title')"
-    :sub-title="$t('iyp.as.atlas.caption')+asNumber"
+    :sub-title="$t('iyp.as.atlas.caption') + asNumber"
     :info-title="$t('iyp.as.atlas.info.title')"
     :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
   >
-    <ASRipeAtlas
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASRipeAtlas :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 
   <!-- <GenericCardController
@@ -132,7 +136,8 @@ const fetch = ref(true)
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

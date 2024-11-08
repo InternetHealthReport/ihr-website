@@ -31,25 +31,31 @@ const selects = ref([
   { value: false, label: t('iyp.prefix.moreSpecific.title') },
   { value: false, label: t('iyp.prefix.popularDomains.title') },
   { value: false, label: t('iyp.prefix.popularHostNames.title') },
-  { value: false, label: t('iyp.prefix.nameservers.title') },
+  { value: false, label: t('iyp.prefix.nameservers.title') }
 ])
 const selectAll = ref(false)
 
 const pushRoute = () => {
-  router.push(Tr.i18nRoute({
-    replace: true,
-    query: Object.assign({}, route.query, {
-      display: JSON.stringify(selects.value.map((obj, index) => {
-        if (obj.value) {
-          return index
-        }
-      }).filter(val => val != null))
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: Object.assign({}, route.query, {
+        display: JSON.stringify(
+          selects.value
+            .map((obj, index) => {
+              if (obj.value) {
+                return index
+              }
+            })
+            .filter((val) => val != null)
+        )
+      })
     })
-  }))
+  )
 }
 
 const hashToDisplay = () => {
-  selects.value.forEach(obj => {
+  selects.value.forEach((obj) => {
     if (obj.label === props.hash.replace('#', '').replaceAll('-', ' ')) {
       obj.value = true
     }
@@ -61,7 +67,7 @@ watch(selects.value, () => {
 })
 
 watch(selectAll, () => {
-  selects.value.forEach(obj => obj.value = selectAll.value)
+  selects.value.forEach((obj) => (obj.value = selectAll.value))
 })
 
 onMounted(() => {
@@ -70,7 +76,7 @@ onMounted(() => {
   } else if (props.hash) {
     hashToDisplay()
   } else {
-    displayWidgets.value.forEach(val => selects.value[val].value = true)
+    displayWidgets.value.forEach((val) => (selects.value[val].value = true))
   }
 })
 </script>
@@ -97,99 +103,79 @@ onMounted(() => {
   <!-- Routing -->
   <GenericCardController
     :title="$t('iyp.prefix.upstreams.title')"
-    :sub-title="getPrefix+' depends on these ASes'"
+    :sub-title="getPrefix + ' depends on these ASes'"
     :info-title="$t('iyp.prefix.upstreams.info.title')"
     :info-description="$t('iyp.prefix.upstreams.info.description')"
     class="card"
     v-if="selects[1].value"
   >
-    <PrefixUpstreamASes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixUpstreamASes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.roas.title')"
-    :sub-title="$t('iyp.prefix.roas.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.roas.caption') + getPrefix"
     :info-title="$t('iyp.prefix.roas.info.title')"
     :info-description="$t('iyp.prefix.roas.info.description')"
     class="card"
     v-if="selects[2].value"
   >
-    <PrefixRPKIRouteOriginAuthorization
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixRPKIRouteOriginAuthorization :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.lessSpecific.title')"
-    :sub-title="$t('iyp.prefix.lessSpecific.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.lessSpecific.caption') + getPrefix"
     :info-title="$t('iyp.prefix.lessSpecific.info.title')"
     :info-description="$t('iyp.prefix.lessSpecific.info.description')"
     class="card"
     v-if="selects[3].value"
   >
-    <PrefixLessSpecificPrefixes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixLessSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.moreSpecific.title')"
-    :sub-title="$t('iyp.prefix.moreSpecific.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.moreSpecific.caption') + getPrefix"
     :info-title="$t('iyp.prefix.moreSpecific.info.title')"
     :info-description="$t('iyp.prefix.moreSpecific.info.description')"
     class="card"
     v-if="selects[4].value"
   >
-    <PrefixMoreSpecificPrefixes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixMoreSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
     :title="$t('iyp.prefix.popularDomains.title')"
-    :sub-title="$t('iyp.prefix.popularDomains.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.popularDomains.caption') + getPrefix"
     :info-title="$t('iyp.prefix.popularDomains.info.title')"
     :info-description="$t('iyp.prefix.popularDomains.info.description')"
     class="card"
     v-if="selects[5].value"
   >
-    <PrefixPopularDomains
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixPopularDomains :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.popularHostNames.title')"
-    :sub-title="$t('iyp.prefix.popularHostNames.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.popularHostNames.caption') + getPrefix"
     :info-title="$t('iyp.prefix.popularHostNames.info.title')"
     :info-description="$t('iyp.prefix.popularHostNames.info.description')"
     class="card"
     v-if="selects[6].value"
   >
-    <PrefixPopularHostNames
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixPopularHostNames :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.nameservers.title')"
-    :sub-title="$t('iyp.prefix.nameservers.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.nameservers.caption') + getPrefix"
     :info-title="$t('iyp.prefix.nameservers.info.title')"
     :info-description="$t('iyp.prefix.nameservers.info.description')"
     class="card"
     v-if="selects[7].value"
   >
-    <PrefixAuthoritativeNameservers
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixAuthoritativeNameservers :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

@@ -5,16 +5,16 @@ import commonTable from '@/plugins/commonTable'
 
 const props = defineProps({
   startTime: {
-      type: Date,
-      required: true,
-    },
+    type: Date,
+    required: true
+  },
   stopTime: {
     type: Date,
-    required: true,
+    required: true
   },
   showStart: {
     type: Boolean,
-    default: false,
+    default: false
   },
   data: {
     type: Array,
@@ -23,17 +23,17 @@ const props = defineProps({
   },
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   filter: {
     type: String,
-    default: '',
+    default: ''
   }
 })
 
 const emit = defineEmits({
-  'filteredRows': (filteredSearchRowValues) => {
-    if(filteredSearchRowValues !== null) {
+  filteredRows: (filteredSearchRowValues) => {
+    if (filteredSearchRowValues !== null) {
       return true
     } else {
       console.warn('FilteredSearchRowValues is missing')
@@ -48,7 +48,7 @@ const pagination = ref({
   sortBy: 'median',
   descending: true,
   page: 1,
-  rowsPerPage: 10,
+  rowsPerPage: 10
 })
 const visibleColumns = ref(['startpoint', 'endpoint', 'median', 'nbtracks', 'realrtt', 'nbprobes'])
 const columns = ref([
@@ -57,52 +57,52 @@ const columns = ref([
     required: false,
     label: 'Startpoint',
     align: 'left',
-    field: row => row.startpoint_type + row.startpoint_name,
-    format: val => locationNameStr(val),
-    sortable: true,
+    field: (row) => row.startpoint_type + row.startpoint_name,
+    format: (val) => locationNameStr(val),
+    sortable: true
   },
   {
     name: 'endpoint',
     required: true,
     label: 'Endpoint',
     align: 'left',
-    field: row => row.endpoint_type + row.endpoint_name,
-    format: val => locationNameStr(val),
-    sortable: true,
+    field: (row) => row.endpoint_type + row.endpoint_name,
+    format: (val) => locationNameStr(val),
+    sortable: true
   },
   {
     name: 'median',
     required: true,
     label: 'RTT (ms)',
     align: 'center',
-    field: row => row.median,
-    format: val => val.toFixed(2),
-    sortable: true,
+    field: (row) => row.median,
+    format: (val) => val.toFixed(2),
+    sortable: true
   },
   {
     name: 'nbtracks',
     required: true,
     label: 'Nb. Samples',
     align: 'center',
-    field: row => row.nbtracks,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.nbtracks,
+    format: (val) => val,
+    sortable: true
   },
   {
     name: 'realrtt',
     label: 'Nb. Real RTTs',
     align: 'center',
-    field: row => row.nbrealrtts,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.nbrealrtts,
+    format: (val) => val,
+    sortable: true
   },
   {
     name: 'nbprobes',
     label: 'Nb. Atlas Probes',
     align: 'center',
-    field: row => row.nbprobes,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.nbprobes,
+    format: (val) => val,
+    sortable: true
   }
 ])
 
@@ -154,5 +154,4 @@ onMounted(() => {
   </QTable>
 </template>
 
-<style lang="stylus">
-</style>
+<style></style>

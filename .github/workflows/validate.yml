@@ -1,0 +1,124 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [edited, opened, synchronize, reopened]
+    branches: ["*"]
+
+jobs:
+  validate-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Clear all PR labels
+        run: |
+          pr_number=${{ github.event.pull_request.number }}
+          labels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/$pr_number/labels" | jq -r '.[].name // empty')
+          for label in $labels; do
+            curl -s -X DELETE -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/$pr_number/labels/$label"
+          done
+
+      - name: Validate PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pr_body="${{ github.event.pull_request.body }}"
+          pr_author="${{ github.event.pull_request.user.login }}"
+          pr_number="${{ github.event.pull_request.number }}"
+          pr_url="${{ github.event.pull_request.html_url }}"
+          repo_full_name="${{ github.repository }}"
+          message="Hello @${pr_author}, your PR is being processed. Here are the results:\n\n"
+          exit_code=0
+
+          echo "Starting PR validation for PR #${pr_number} by ${pr_author}"
+
+          # Function to make GitHub API calls
+          github_api_call() {
+            local method=$1
+            local endpoint=$2
+            local data=$3
+            local url="https://api.github.com/repos/${repo_full_name}/${endpoint}"
+
+            response=$(curl -s -X ${method} -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3+json" ${data:+-d "$data"} "$url")
+            echo "API call to ${endpoint}: $response" >&2
+            echo "$response"
+          }
+
+          # Check if PR author is a maintainer
+          permissions=$(github_api_call GET "collaborators/${pr_author}/permission")
+          is_maintainer=$(echo $permissions | jq -r '.permission')
+          echo "Author permissions: $is_maintainer"
+
+          if [[ "$is_maintainer" == "admin" || "$is_maintainer" == "maintain" ]]; then
+            echo "Author is a maintainer, bypassing checks"
+            message+="As a maintainer, your PR is automatically approved and will bypass further checks.\n"
+            github_api_call POST "issues/${pr_number}/labels" '{"labels":["PR:maintainer-bypass"]}'
+          else
+          # echo "Proceeding with checks regardless of maintainer status for testing purposes"
+          # Check PR template
+            if [[ "$pr_body" != *"## Description"* ]] || [[ "$pr_body" != *"## Related issue"* ]]; then
+              exit_code=2
+              echo "PR template not respected. Exit code: $exit_code"
+              reason="PR template is not respected. Please update your PR description to include the required sections."
+              message+="\n- $reason\n\nHere's a minimal example of a valid PR body:\n\n"
+              message+='```markdown\n## Description\n\n[Provide a brief description of your changes]\n\n## Related issue\n\nFixes #123\n```\n'
+              github_api_call POST "issues/${pr_number}/labels" '{"labels":["PR:fix-template"]}'
+            else
+              echo "PR template respected, checking linked issues"
+              # Extract linked issues
+              # issue_numbers=$(echo "$pr_body" | grep -oP '#\K\d+')
+              issue_numbers=$(echo "$pr_body" | grep -o '#[0-9]\+' | cut -d'#' -f2)
+
+              echo "debug linked issues"
+
+              if [ -z "$issue_numbers" ]; then
+                echo "No linked issues detected. Setting default empty value for issue_numbers to avoid error."
+                issue_numbers="empty"
+                exit_code=3
+                echo "No linked issue found. Exit code: $exit_code"
+                reason="No linked issue found. Please link an issue in your PR description (e.g., 'Fixes #123')."
+                message+="\n- $reason"
+                github_api_call POST "issues/${pr_number}/labels" '{"labels":["PR:no-linked-issue"]}'
+              else
+                echo "Linked issues found: $issue_numbers"
+                # Check if PR author is assigned to the linked issue(s)
+                if [[ "$issue_numbers" != "empty" ]]; then
+                  for issue_number in $issue_numbers; do
+                    issue_data=$(github_api_call GET "issues/${issue_number}")
+                    issue_assignees=$(echo "$issue_data" | jq -r '.assignees[].login')
+                    if ! echo "$issue_assignees" | grep -q "$pr_author"; then
+                      exit_code=4
+                      echo "Author not assigned to issue #${issue_number}. Exit code: $exit_code"
+                      reason="PR author is not assigned to the linked issue #$issue_number. Please assign yourself to the issue before submitting a PR."
+                      message+="\n- $reason"
+                      github_api_call POST "issues/${pr_number}/labels" '{"labels":["PR:author-not-assigned"]}'
+                    else
+                      echo "Author is assigned to issue #${issue_number}"
+                    fi
+                  done
+                fi
+              fi
+            fi
+          fi
+
+          # Finalize validation
+          if [ "$exit_code" = 0 ]; then
+            echo "PR is valid"
+            message+="\n\nYour PR is valid and ready for review. Thank you for your contribution!"
+            github_api_call POST "issues/${pr_number}/labels" '{"labels":["PR:ready-for-review"]}'
+          else
+            echo "PR is invalid. Closing PR."
+            message+="\n\nPlease address the above issues and update your PR. Once you've made the necessary changes, the PR will be automatically re-evaluated."
+            github_api_call PATCH "pulls/${pr_number}" '{"state":"closed"}'
+          fi
+
+          # Add comment to PR
+          echo "Adding comment to PR"
+          github_api_call POST "issues/${pr_number}/comments" "{\"body\":\"$message\"}"
+
+          echo "PR validation completed. Exit code: $exit_code"
+          exit $exit_code

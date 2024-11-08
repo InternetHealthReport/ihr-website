@@ -11,54 +11,43 @@ const props = defineProps(['getPrefix', 'pageTitle'])
 <template>
   <GenericCardController
     :title="$t('iyp.prefix.upstreams.title')"
-    :sub-title="getPrefix+' depends on these ASes'"
+    :sub-title="getPrefix + ' depends on these ASes'"
     :info-title="$t('iyp.prefix.upstreams.info.title')"
     :info-description="$t('iyp.prefix.upstreams.info.description')"
   >
-    <PrefixUpstreamASes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixUpstreamASes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.roas.title')"
-    :sub-title="$t('iyp.prefix.roas.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.roas.caption') + getPrefix"
     :info-title="$t('iyp.prefix.roas.info.title')"
     :info-description="$t('iyp.prefix.roas.info.description')"
     class="card"
   >
-    <PrefixRPKIRouteOriginAuthorization
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixRPKIRouteOriginAuthorization :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.lessSpecific.title')"
-    :sub-title="$t('iyp.prefix.lessSpecific.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.lessSpecific.caption') + getPrefix"
     :info-title="$t('iyp.prefix.lessSpecific.info.title')"
     :info-description="$t('iyp.prefix.lessSpecific.info.description')"
     class="card"
   >
-    <PrefixLessSpecificPrefixes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixLessSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.moreSpecific.title')"
-    :sub-title="$t('iyp.prefix.moreSpecific.caption')+getPrefix"
+    :sub-title="$t('iyp.prefix.moreSpecific.caption') + getPrefix"
     :info-title="$t('iyp.prefix.moreSpecific.info.title')"
     :info-description="$t('iyp.prefix.moreSpecific.info.description')"
     class="card"
   >
-    <PrefixMoreSpecificPrefixes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixMoreSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

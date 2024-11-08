@@ -7,11 +7,11 @@ const library_delayer = inject('library_delayer')
 const props = defineProps({
   ip: {
     type: String,
-    required: true,
+    required: true
   },
   removeStyle: {
     type: Boolean,
-    default: true,
+    default: true
   }
 })
 
@@ -28,26 +28,29 @@ const navigateAndRemove = () => {
   loaded.value = true
 }
 
-watch(() => props.ip, (oldValue, newValue) => {
-  if (oldValue == newValue) {
-    return
+watch(
+  () => props.ip,
+  (oldValue, newValue) => {
+    if (oldValue == newValue) {
+      return
+    }
+    ripeWidget.value.update({ resource: props.ip })
+    ripeWidget.value.reload()
   }
-  ripeWidget.value.update({ resource: props.ip })
-  ripeWidget.value.reload()
-})
+)
 
 onMounted(() => {
   library_delayer.load('ripe_widget_api', () => {
     ripeWidget.value = ripestat.init(
-        'reverse-dns-ip',
-        { resource: props.ip },
-        myId.value,
-        {
-          size: 'small',
-          disable: ['footer-buttons', 'info', 'controls', 'maximize'],
-        },
-        navigateAndRemove
-      )
+      'reverse-dns-ip',
+      { resource: props.ip },
+      myId.value,
+      {
+        size: 'small',
+        disable: ['footer-buttons', 'info', 'controls', 'maximize']
+      },
+      navigateAndRemove
+    )
   })
 })
 </script>
@@ -62,5 +65,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
-</style>
+<style></style>

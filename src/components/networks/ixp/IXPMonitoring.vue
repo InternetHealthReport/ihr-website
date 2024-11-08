@@ -6,7 +6,15 @@ import NetworkDelayChart from '@/components/charts/NetworkDelayChart.vue'
 import DelayAndForwardingChart from '@/components/charts/DelayAndForwardingChart.vue'
 import PrefixHegemonyChart from '@/components/charts/PrefixHegemonyChart.vue'
 
-const props = defineProps(['startTime', 'endTime', 'caidaId', 'family', 'pageTitle', 'interval', 'peeringdbId'])
+const props = defineProps([
+  'startTime',
+  'endTime',
+  'caidaId',
+  'family',
+  'pageTitle',
+  'interval',
+  'peeringdbId'
+])
 
 const route = useRoute()
 
@@ -35,7 +43,8 @@ const fetch = ref(true)
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

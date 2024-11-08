@@ -10,42 +10,34 @@ const props = defineProps(['asNumber', 'pageTitle'])
 <template>
   <GenericCardController
     :title="$t('iyp.as.popularDomains.title')"
-    :sub-title="$t('iyp.as.popularDomains.caption')+asNumber"
+    :sub-title="$t('iyp.as.popularDomains.caption') + asNumber"
     :info-title="$t('iyp.as.popularDomains.info.title')"
     :info-description="$t('iyp.as.popularDomains.info.description')"
   >
-    <ASPopularDomains
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASPopularDomains :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.popularHostNames.title')"
-    :sub-title="$t('iyp.as.popularHostNames.caption')+asNumber"
+    :sub-title="$t('iyp.as.popularHostNames.caption') + asNumber"
     :info-title="$t('iyp.as.popularHostNames.info.title')"
     :info-description="$t('iyp.as.popularHostNames.info.description')"
     class="card"
   >
-    <ASPopularHostNames
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASPopularHostNames :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.authoritativeNameservers.title')"
-    :sub-title="$t('iyp.as.authoritativeNameservers.caption')+asNumber"
+    :sub-title="$t('iyp.as.authoritativeNameservers.caption') + asNumber"
     :info-title="$t('iyp.as.authoritativeNameservers.info.title')"
     :info-description="$t('iyp.as.authoritativeNameservers.info.description')"
     class="card"
   >
-    <ASAuthoritativeNameservers
-      :asNumber="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASAuthoritativeNameservers :asNumber="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 
-<style lang="stylus">
-.card
-  margin-top 20px
+<style>
+.card {
+  margin-top: 20px;
+}
 </style>

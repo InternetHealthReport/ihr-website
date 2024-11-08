@@ -6,8 +6,7 @@ import { AS_INTERDEPENDENCIES_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import { useRoute, useRouter } from 'vue-router'
 import PrefixHegemonyTable from '../tables/PrefixHegemonyTable.vue'
 import PrefixHegemonyTableStats from '../tables/PrefixHegemonyTableStats.vue'
-import '@/styles/chart.sass'
-
+import '@/styles/chart.css'
 
 const ihr_api = inject('ihr_api')
 
@@ -18,29 +17,29 @@ const ROV_SELECTIONS = {
       value: 'Originated prefix',
       description: 'All routes observed in BGP data',
       disable: false,
-      icon: 'fas fa-cloud-upload-alt',
+      icon: 'fas fa-cloud-upload-alt'
     },
     {
       label: 'RPKI invalid',
       value: 'RPKI invalid',
       description: 'Routes conflicting with RPKI data',
       disable: false,
-      icon: 'fas fa-minus-circle',
+      icon: 'fas fa-minus-circle'
     },
     {
       label: 'IRR invalid',
       value: 'IRR invalid',
       description: 'Routes conflicting with IRR data',
       disable: false,
-      icon: 'fas fa-exclamation',
+      icon: 'fas fa-exclamation'
     },
     {
       label: 'Bogon ASN',
       value: 'Bogon ASN',
       description: 'Unregistered Autonomous System Numbers seen in BGP data',
       disable: false,
-      icon: 'fas fa-exclamation-triangle',
-    },
+      icon: 'fas fa-exclamation-triangle'
+    }
   ],
   asn: [
     {
@@ -48,36 +47,36 @@ const ROV_SELECTIONS = {
       value: 'Originated prefix',
       description: 'All routes observed in BGP data',
       disable: false,
-      icon: 'fas fa-cloud-upload-alt',
+      icon: 'fas fa-cloud-upload-alt'
     },
     {
       label: 'RPKI invalid (origin & transit)',
       value: 'RPKI invalid',
       description: 'Routes conflicting with RPKI data',
       disable: false,
-      icon: 'fas fa-minus-circle',
+      icon: 'fas fa-minus-circle'
     },
     {
       label: 'IRR invalid (origin & transit)',
       value: 'IRR invalid',
       description: 'Routes conflicting with IRR data',
       disable: false,
-      icon: 'fas fa-exclamation',
+      icon: 'fas fa-exclamation'
     },
     {
       label: 'Bogon prefix (origin & transit)',
       value: 'Bogon prefix',
       description: 'Unregistered prefixes seen in BGP data',
       disable: false,
-      icon: 'fas fa-exclamation-triangle',
+      icon: 'fas fa-exclamation-triangle'
     },
     {
       label: 'Bogon ASN (transit)',
       value: 'Bogon ASN',
       description: 'Unregistered Autonomous System Numbers seen in BGP data',
       disable: false,
-      icon: 'fas fa-exclamation-triangle',
-    },
+      icon: 'fas fa-exclamation-triangle'
+    }
   ],
   global: [
     {
@@ -85,42 +84,42 @@ const ROV_SELECTIONS = {
       value: 'RPKI invalid',
       description: 'Routes conflicting with RPKI data',
       disable: false,
-      icon: 'fas fa-minus-circle',
+      icon: 'fas fa-minus-circle'
     },
     {
       label: 'IRR invalid',
       value: 'IRR invalid',
       description: 'Routes conflicting with IRR data',
       disable: false,
-      icon: 'fas fa-exclamation',
+      icon: 'fas fa-exclamation'
     },
     {
       label: 'Bogon prefix',
       value: 'Bogon prefix',
       description: 'Unregistered prefixes seen in BGP data',
       disable: false,
-      icon: 'fas fa-exclamation-triangle',
+      icon: 'fas fa-exclamation-triangle'
     },
     {
       label: 'Bogon ASN',
       value: 'Bogon ASN',
       description: 'Unregistered Autonomous System Numbers seen in BGP data',
       disable: false,
-      icon: 'fas fa-exclamation-triangle',
-    },
-  ],
+      icon: 'fas fa-exclamation-triangle'
+    }
+  ]
 }
 
 const props = defineProps({
   asNumber: {
-    type: Number,
+    type: Number
   },
   countryCode: {
-    type: String,
+    type: String
   },
   addressFamily: {
     type: Number,
-    default: AS_FAMILY.v4,
+    default: AS_FAMILY.v4
   },
   startTime: {
     type: Object,
@@ -142,9 +141,9 @@ const details = ref({
   tablesData: {
     routes: [],
     origins: [],
-    transits: [],
+    transits: []
   },
-  tableVisible: true,
+  tableVisible: true
 })
 const statsDisable = ref(false)
 const loading = ref(true)
@@ -218,11 +217,11 @@ const queryPrefixHegemonyAPI = () => {
   loading.value = true
   ihr_api.hegemony_prefix(
     hegemonyFilter.value,
-    result => {
+    (result) => {
       fetchPrefixHegemony(result.results)
       loading.value = false
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
     }
   )
@@ -250,7 +249,7 @@ const fetchPrefixHegemony = (data) => {
   origins.value = {}
   transits.value = {}
   const traces = {}
-  data.forEach(elem => {
+  data.forEach((elem) => {
     const trace_key = elem.prefix + elem.originasn
     let trace = traces[trace_key]
     if (trace === undefined) {
@@ -267,14 +266,14 @@ const fetchPrefixHegemony = (data) => {
         delegated_asn_status: elem.delegated_asn_status,
         name: ihr_api.ihr_NumberToAsOrIxp(elem.asn) + ' ' + elem.asn_name.split(' ')[0],
         hovertemplate:
-                        '<b>' +
-                        ihr_api.ihr_NumberToAsOrIxp(elem.asn) +
-                        ' ' +
-                        elem.asn_name.split(' ')[0] +
-                        '</b><br><br>' +
-                        '%{x}<br>' +
-                        '%{yaxis.title.text}: <b>%{y:.2f}</b>' +
-                        '<extra></extra>',
+          '<b>' +
+          ihr_api.ihr_NumberToAsOrIxp(elem.asn) +
+          ' ' +
+          elem.asn_name.split(' ')[0] +
+          '</b><br><br>' +
+          '%{x}<br>' +
+          '%{yaxis.title.text}: <b>%{y:.2f}</b>' +
+          '<extra></extra>'
       }
       traces[trace_key] = trace
       routes.value.push(trace)
@@ -287,7 +286,7 @@ const fetchPrefixHegemony = (data) => {
       origins.value[elem.originasn] = {
         count: {},
         name: elem.originasn_name,
-        asn: elem.originasn,
+        asn: elem.originasn
       }
     }
     if (selection.value.value.startsWith('RPKI')) {
@@ -318,7 +317,7 @@ const fetchPrefixHegemony = (data) => {
       trace.dependencies[elem.asn] = {
         asn: elem.asn,
         name: elem.asn_name,
-        hege: elem.hege,
+        hege: elem.hege
       }
 
       // Count the different status per transit ASN
@@ -326,7 +325,7 @@ const fetchPrefixHegemony = (data) => {
         transits.value[elem.asn] = {
           count: {},
           name: elem.asn_name,
-          asn: elem.asn,
+          asn: elem.asn
         }
       }
 
@@ -358,7 +357,7 @@ const fetchPrefixHegemony = (data) => {
         trace.dependencies[elem.asn] = {
           asn: elem.asn,
           name: elem.asn_name,
-          hege: elem.hege,
+          hege: elem.hege
         }
 
         // Count the different status per transit ASN
@@ -366,7 +365,7 @@ const fetchPrefixHegemony = (data) => {
           transits.value[elem.asn] = {
             count: {},
             name: elem.asn_name,
-            asn: elem.asn,
+            asn: elem.asn
           }
         }
 
@@ -395,18 +394,18 @@ const fetchPrefixHegemony = (data) => {
     }
   })
   // Compute median value of hegemony scores
-  routes.value.forEach(elem => {
+  routes.value.forEach((elem) => {
     elem.hege_as = median(elem.hege_as) * 100
   })
 
   // Count unique routes
-  Object.values(transits.value).forEach(transit => {
-    Object.keys(transit.count).forEach(status => {
+  Object.values(transits.value).forEach((transit) => {
+    Object.keys(transit.count).forEach((status) => {
       transit.count[status] = Object.keys(transit.count[status]).length
     })
   })
-  Object.values(origins.value).forEach(origin => {
-    Object.keys(origin.count).forEach(status => {
+  Object.values(origins.value).forEach((origin) => {
+    Object.keys(origin.count).forEach((status) => {
       origin.count[status] = Object.keys(origin.count[status]).length
     })
   })
@@ -463,21 +462,33 @@ const hegemonyUrl = computed(() => {
 watch(selection, () => {
   apiCall()
 })
-watch(() => props.addressFamily, () => {
-  apiCall()
-})
-watch(() => props.countryCode, () => {
-  apiCall()
-})
-watch(() => props.endTime, () => {
-  apiCall()
-})
-watch(() => details.value.activeTab, (newValue) => {
-  router.push({
-    replace: true,
-    query: Object.assign({}, route.query, { rov_tb: newValue })
-  })
-})
+watch(
+  () => props.addressFamily,
+  () => {
+    apiCall()
+  }
+)
+watch(
+  () => props.countryCode,
+  () => {
+    apiCall()
+  }
+)
+watch(
+  () => props.endTime,
+  () => {
+    apiCall()
+  }
+)
+watch(
+  () => details.value.activeTab,
+  (newValue) => {
+    router.push({
+      replace: true,
+      query: Object.assign({}, route.query, { rov_tb: newValue })
+    })
+  }
+)
 </script>
 
 <template>
@@ -488,7 +499,7 @@ watch(() => details.value.activeTab, (newValue) => {
       </div>
     </div>
     <br />
-    <QCard v-if="details.tableVisible" :flat="route.name == 'rov'?false:true">
+    <QCard v-if="details.tableVisible" :flat="route.name == 'rov' ? false : true">
       <QTabs
         v-model="details.activeTab"
         class="table-card text-grey bg-grey-2"
@@ -498,28 +509,50 @@ watch(() => details.value.activeTab, (newValue) => {
         narrow-indicator
       >
         <QTab name="routes" :label="$t('charts.prefixHegemony.table.routesTitle')" />
-        <QTab name="origins" :disable="statsDisable" :label="$t('charts.prefixHegemony.table.originsTitle')" />
-        <QTab name="transits" :disable="statsDisable" :label="$t('charts.prefixHegemony.table.transitsTitle')" />
+        <QTab
+          name="origins"
+          :disable="statsDisable"
+          :label="$t('charts.prefixHegemony.table.originsTitle')"
+        />
+        <QTab
+          name="transits"
+          :disable="statsDisable"
+          :label="$t('charts.prefixHegemony.table.transitsTitle')"
+        />
         <QTab name="api" label="API" />
       </QTabs>
       <QTabPanels v-model="details.activeTab" animated>
         <QTabPanel name="routes">
-          <PrefixHegemonyTable :data="prefixHegemonyData" :loading="loading" :showCountry="countryCode == null" />
+          <PrefixHegemonyTable
+            :data="prefixHegemonyData"
+            :loading="loading"
+            :showCountry="countryCode == null"
+          />
         </QTabPanel>
         <QTabPanel name="origins">
-          <PrefixHegemonyTableStats :data="prefixHegemonyDataOrigins" :loading="loading" :columnName="selection.label" />
+          <PrefixHegemonyTableStats
+            :data="prefixHegemonyDataOrigins"
+            :loading="loading"
+            :columnName="selection.label"
+          />
         </QTabPanel>
         <QTabPanel name="transits">
-          <PrefixHegemonyTableStats :data="prefixHegemonyDataTransits" :loading="loading" :columnName="selection.label" />
+          <PrefixHegemonyTableStats
+            :data="prefixHegemonyDataTransits"
+            :loading="loading"
+            :columnName="selection.label"
+          />
         </QTabPanel>
         <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
           <h3>{{ $t('charts.prefixHegemony.table.apiTitle') }}</h3>
           <table>
-            <tr>
+            <tbody>
+              <tr>
                 <td>
-                    <a :href="hegemonyUrl" target="_blank" id="tableUrl">{{ hegemonyUrl }}</a>
+                  <a :href="hegemonyUrl" target="_blank" id="tableUrl">{{ hegemonyUrl }}</a>
                 </td>
-            </tr>
+              </tr>
+            </tbody>
           </table>
         </QTabPanel>
       </QTabPanels>
@@ -527,5 +560,4 @@ watch(() => details.value.activeTab, (newValue) => {
   </div>
 </template>
 
-<style lang="stylus">
-</style>
+<style></style>

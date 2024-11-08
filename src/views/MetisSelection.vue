@@ -3,34 +3,35 @@ import { RouterLink } from 'vue-router'
 import { QInput, QSelect, QBtn, copyToClipboard } from 'quasar'
 import Tr from '@/i18n/translation'
 import MetisTable from '@/components/tables/MetisTable.vue'
-import { ref, onMounted, inject, nextTick  } from 'vue'
+import { ref, onMounted, inject, nextTick } from 'vue'
 import rirMapping from '@/assets/rir-country-map.json'
 import getCountryName from '../plugins/countryName'
 import { MetisAtlasSelectionQuery } from '@/plugins/IhrApi'
 import RirCountrySunburstChart from '@/components/charts/RirCountrySunburstChart.vue'
+import '@/styles/chart.css'
 
 const ATLAS_PROBE = {
   type: 'asn',
   value: 0,
-  requested: 1,
+  requested: 1
 }
 const SELECTION_ROW = {
   rank: 0,
   asn: '0',
   asn_name: '',
-  cc: '',
+  cc: ''
 }
 const RIR_MAP = new Map()
 
 const loadRirMap = () => {
-  for(const [rir, cc_list] of Object.entries(rirMapping)) {
+  for (const [rir, cc_list] of Object.entries(rirMapping)) {
     const cc_set = new Set(cc_list)
     RIR_MAP.set(rir, cc_set)
   }
 }
 
 const translateCC = (cc) => {
-  for(const [rir, cc_set] of RIR_MAP) {
+  for (const [rir, cc_set] of RIR_MAP) {
     if (cc_set.has(cc)) {
       return rir
     }
@@ -41,30 +42,30 @@ const translateCC = (cc) => {
 const afoptions = ref([
   {
     label: 'IPv4',
-    value: 4,
+    value: 4
   },
   {
     label: 'IPv6',
-    value: 6,
+    value: 6
   }
 ])
 const metricoptions = ref([
   {
     label: 'AS-path length',
-    value: 'as_path_length',
+    value: 'as_path_length'
   },
   {
     label: 'RTT',
-    value: 'rtt',
+    value: 'rtt'
   },
   {
     label: 'IP hops',
-    value: 'ip_hops',
+    value: 'ip_hops'
   }
 ])
 const metric = ref({
   label: 'AS-path length',
-  value: 'as_path_length',
+  value: 'as_path_length'
 })
 const nbprobes = ref(10)
 const af = ref({
@@ -104,13 +105,13 @@ const apiCall = () => {
   setFilter()
   ihr_api.metisAtlasSelection(
     apiFilter.value,
-    result => {   
+    (result) => {
       nextTick(() => {
         readRanking(result.results)
         fetch.value = true
       })
     },
-    error => {
+    (error) => {
       console.error(error) //FIXME do a correct alert
       loading.value = false
     }
@@ -127,7 +128,7 @@ const readRanking = (data) => {
   const countryCounts = new Map()
   const rirCounts = new Map()
 
-  data.forEach(elem => {
+  data.forEach((elem) => {
     const asn = { ...ATLAS_PROBE }
     const row = { ...SELECTION_ROW }
     asn.value = elem.asn
@@ -183,21 +184,23 @@ const copyAPI = () => {
     <div class="row justify-center q-pa-md">
       <div class="IHR_description">
         <p>
-          On this page, we provide a simple interface to select a probe set based on the latest topology measurement results. The data is
-          updated every Sunday/Monday night at midnight UTC (e.g., 2022-05-30T00:00) and is based on the last four weeks of measurement
-          data.
+          On this page, we provide a simple interface to select a probe set based on the latest
+          topology measurement results. The data is updated every Sunday/Monday night at midnight
+          UTC (e.g., 2022-05-30T00:00) and is based on the last four weeks of measurement data.
         </p>
         <p>
-          We actually provide a list of autonomous systems (ASes) instead of probes. This is because the connected probes are constantly
-          changing. In order to avoid querying the Atlas API each time in parallel, we provide the API specification that can be directly
-          used with the
+          We actually provide a list of autonomous systems (ASes) instead of probes. This is because
+          the connected probes are constantly changing. In order to avoid querying the Atlas API
+          each time in parallel, we provide the API specification that can be directly used with the
           <a href="https://atlas.ripe.net/measurements/form/" target="_blank"
             >template that Atlas provides when creating a new measurement</a
-          >. The specification is a bit bulky, but Atlas currently does not provide a way to enter a <i>list</i> of ASes.
+          >. The specification is a bit bulky, but Atlas currently does not provide a way to enter a
+          <i>list</i> of ASes.
         </p>
         <p>
-          Select a number of Atlas probes, a distance metric, and IP version to generate a list of diverse probe ASes. In addition to the
-          API specification, the results can also be downloaded as a CSV file. The corresponding query to the IHR API is also listed at the
+          Select a number of Atlas probes, a distance metric, and IP version to generate a list of
+          diverse probe ASes. In addition to the API specification, the results can also be
+          downloaded as a CSV file. The corresponding query to the IHR API is also listed at the
           bottom of the page.
         </p>
         <p>
@@ -244,15 +247,12 @@ const copyAPI = () => {
   </div>
 </template>
 
-<style lang="stylus">
-.IHR_description
-    font-weight 400
-    max-width 900px
-
-.IHR_block
-  max-width 900px
-
-.apiTextarea
-  width 100%
-  min-height 500px
+<style>
+.IHR_block {
+  max-width: 900px;
+}
+.apiTextarea {
+  width: 100%;
+  min-height: 500px;
+}
 </style>

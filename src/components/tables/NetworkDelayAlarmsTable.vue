@@ -16,19 +16,19 @@ const MAX_NETDELAY_PLOTS = 12
 const props = defineProps({
   data: {
     type: Array,
-    required: true,
+    required: true
   },
   loading: {
     type: Boolean,
-    required: true,
+    required: true
   },
   startTime: {
     type: Date,
-    required: true,
+    required: true
   },
   stopTime: {
     type: Date,
-    required: true,
+    required: true
   },
   filter: {
     type: String
@@ -36,8 +36,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits({
-  'filteredRows': (filteredSearchRowValues) => {
-    if(filteredSearchRowValues !== null) {
+  filteredRows: (filteredSearchRowValues) => {
+    if (filteredSearchRowValues !== null) {
       return true
     } else {
       console.warn('FilteredSearchRowValues is missing')
@@ -53,49 +53,49 @@ const pagination = ref({
   sortBy: 'nbalarms',
   descending: true,
   page: 1,
-  rowsPerPage: 5,
+  rowsPerPage: 5
 })
 const columns = ref([
   {
     name: 'overview',
     label: 'Overview',
-    align: 'center',
+    align: 'center'
   },
   {
     name: 'asNumber',
     required: true,
     label: 'Source',
     align: 'left',
-    field: row => row.asNumber,
-    format: val => ihr_api.ihr_NumberToAsOrIxp(val),
-    sortable: true,
+    field: (row) => row.asNumber,
+    format: (val) => ihr_api.ihr_NumberToAsOrIxp(val),
+    sortable: true
   },
   {
     name: 'destinations',
     required: false,
     label: 'Destinations',
     align: 'left',
-    field: row => row.endpoints,
-    format: val => ihr_api.sortedKeys(val),
-    sortable: false,
+    field: (row) => row.endpoints,
+    format: (val) => ihr_api.sortedKeys(val),
+    sortable: false
   },
   {
     name: 'nbalarms',
     required: true,
     label: 'Nb. Alarms',
     align: 'left',
-    field: row => row.nbalarms,
-    format: val => val,
-    sortable: true,
+    field: (row) => row.nbalarms,
+    format: (val) => val,
+    sortable: true
   },
   {
     name: 'avgdev',
     required: true,
     label: 'Average Deviation',
     align: 'left',
-    field: row => row.cumdev / row.nbalarms,
-    format: val => val.toFixed(2),
-    sortable: true,
+    field: (row) => row.cumdev / row.nbalarms,
+    format: (val) => val.toFixed(2),
+    sortable: true
   }
 ])
 
@@ -105,9 +105,10 @@ const computeDataSummary = () => {
   }
 
   const datasum = {}
-  props.data.forEach(alarm => {
+  props.data.forEach((alarm) => {
     const start = alarm.startpoint_type + alarm.startpoint_name
-    const asNumber = alarm.type == 'IX' ? -parseInt(alarm.startpoint_name) : parseInt(alarm.startpoint_name)
+    const asNumber =
+      alarm.type == 'IX' ? -parseInt(alarm.startpoint_name) : parseInt(alarm.startpoint_name)
     if (asNumber != 0) {
       if (start in datasum) {
         datasum[start].nbalarms += 1
@@ -117,7 +118,7 @@ const computeDataSummary = () => {
           asNumber: asNumber,
           nbalarms: 1,
           cumdev: alarm.deviation,
-          endpoints: {},
+          endpoints: {}
         }
       }
 
@@ -135,15 +136,19 @@ const computeDataSummary = () => {
 }
 
 const destinationsSubtitle = (val) => {
-  if(Object.keys(val).length===1) {
-    return String(Object.keys(val).length) + ' ' + t('charts.networkDelayAlarms.table.destinations').slice(0,-1)
+  if (Object.keys(val).length === 1) {
+    return (
+      String(Object.keys(val).length) +
+      ' ' +
+      t('charts.networkDelayAlarms.table.destinations').slice(0, -1)
+    )
   }
   return String(Object.keys(val).length) + ' ' + t('charts.networkDelayAlarms.table.destinations')
 }
 
 const destinationsBody = (val) => {
   let body = ''
-  Object.keys(val).forEach(dest => {
+  Object.keys(val).forEach((dest) => {
     const loc = dest.startsWith('CT') ? dest.substring(2) : dest
     body += loc + ', '
   })
@@ -170,9 +175,12 @@ const endpointKeys = (endpoints) => {
   return keys
 }
 
-watch(() => props.data, () => {
-  computeDataSummary()
-})
+watch(
+  () => props.data,
+  () => {
+    computeDataSummary()
+  }
+)
 
 onMounted(() => {
   computeDataSummary()
@@ -200,7 +208,14 @@ onMounted(() => {
           <QToggle v-model="props.expand" />
         </QTd>
         <QTd key="asNumber" align>
-          <RouterLink :to="Tr.i18nRoute({ name: 'network', params: {asn: ihr_api.ihr_NumberToAsOrIxp(props.row.asNumber)} })">
+          <RouterLink
+            :to="
+              Tr.i18nRoute({
+                name: 'network',
+                params: { asn: ihr_api.ihr_NumberToAsOrIxp(props.row.asNumber) }
+              })
+            "
+          >
             {{ ihr_api.ihr_NumberToAsOrIxp(props.row.asNumber) }}
           </RouterLink>
         </QTd>
@@ -231,41 +246,37 @@ onMounted(() => {
   </QTable>
 </template>
 
-<style lang="stylus">
-.IHR_ndelay_table_cell
-    max-width 700px
-
-.IHR_ndelay_destinations
-    text-overflow ellipsis
-    /* Required for text-overflow to do anything */
-    white-space nowrap
-    overflow hidden
-    font-style italic
-    color #555
-
-.IHR_nohover
-    &:first-child
-      padding-top 0px
-      padding-bottom 20px
-      padding-right 20px
-      padding-left 20px
-      background #fafafa
-
-.IHR_side_borders
-    &:first-child
-        padding-top 20px
-        border-style solid
-        border-color #dddddd
-        border-top-width 0px
-        border-left-width 1px
-        border-right-width 1px
-        border-bottom-width 1px
-        border-radius 5px
-        background #ffffff
-
-
-.myClass
-
-    tbody td
-        text-align left
+<style>
+.IHR_ndelay_table_cell {
+  max-width: 700px;
+}
+.IHR_ndelay_destinations {
+  text-overflow: ellipsis;
+/* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+  font-style: italic;
+  color: #555;
+}
+.IHR_nohover:first-child {
+  padding-top: 0px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  background: #fafafa;
+}
+.IHR_side_borders:first-child {
+  padding-top: 20px;
+  border-style: solid;
+  border-color: #ddd;
+  border-top-width: 0px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-radius: 5px;
+  background: #fff;
+}
+.myClass tbody td {
+  text-align: left;
+}
 </style>
