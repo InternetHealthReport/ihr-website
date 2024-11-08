@@ -134,7 +134,7 @@ onMounted(() => {
         <DateTimePicker
           :min="minDate"
           :max="maxDate"
-          :value="maxDate"
+          :value="endTime"
           @input="setReportDate"
           hideTime
         />
