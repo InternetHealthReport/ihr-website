@@ -14,13 +14,13 @@ const props = defineProps(['startTime', 'endTime', 'asNumber', 'family', 'pageTi
 
 const route = useRoute()
 
-const emit = defineEmits(['toggle-ip-family']);
+const emit = defineEmits(['toggle-ip-family'])
 
 const fetch = ref(true)
 
 const toggleIpFamily = () => {
-  emit('toggle-ip-family');
-};
+  emit('toggle-ip-family')
+}
 </script>
 
 <template>
@@ -99,10 +99,7 @@ const toggleIpFamily = () => {
     :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
   >
-    <ASRipeAtlas
-      :as-number="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASRipeAtlas :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 
   <!-- <GenericCardController

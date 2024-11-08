@@ -30,19 +30,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    id="IHR_as-and-ixp-container"
-    ref="ihrAsAndIxpContainer"
-    class="IHR_char-container"
-  >
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div v-if="route.params.hostname">
       <HostName v-if="hostName" />
     </div>
     <div v-else>
       <div>
-        <h1 class="text-center q-pa-xl">
-          Hostname Report
-        </h1>
+        <h1 class="text-center q-pa-xl">Hostname Report</h1>
         <div class="row justify-center">
           <div class="col-6">
             <SearchBar

@@ -15,10 +15,7 @@ const props = defineProps(['getPrefix', 'pageTitle'])
     :info-title="$t('iyp.prefix.upstreams.info.title')"
     :info-description="$t('iyp.prefix.upstreams.info.description')"
   >
-    <PrefixUpstreamASes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixUpstreamASes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.roas.title')"
@@ -27,10 +24,7 @@ const props = defineProps(['getPrefix', 'pageTitle'])
     :info-description="$t('iyp.prefix.roas.info.description')"
     class="card"
   >
-    <PrefixRPKIRouteOriginAuthorization
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixRPKIRouteOriginAuthorization :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.lessSpecific.title')"
@@ -39,10 +33,7 @@ const props = defineProps(['getPrefix', 'pageTitle'])
     :info-description="$t('iyp.prefix.lessSpecific.info.description')"
     class="card"
   >
-    <PrefixLessSpecificPrefixes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixLessSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.moreSpecific.title')"
@@ -51,10 +42,7 @@ const props = defineProps(['getPrefix', 'pageTitle'])
     :info-description="$t('iyp.prefix.moreSpecific.info.description')"
     class="card"
   >
-    <PrefixMoreSpecificPrefixes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixMoreSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
 </template>
 

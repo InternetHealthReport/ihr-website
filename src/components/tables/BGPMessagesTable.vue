@@ -126,31 +126,12 @@ watch(selectedPeersModel, () => {
     row-key="peer"
     selection="multiple"
   >
-    <template
-      v-if="props.filteredMessages.length !== 0"
-      #top-left
-    >
-      <QBtn
-        v-if="isLiveMode && isPlaying"
-        color="negative"
-        label="Live"
-      />
-      <QBtn
-        v-else
-        color="grey-9"
-        label="Go to Live"
-        @click="enableLiveMode"
-      />
+    <template v-if="props.filteredMessages.length !== 0" #top-left>
+      <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </template>
     <template #top-right>
-      <QInput
-        v-model="search"
-        dense
-        outlined
-        debounce="300"
-        color="accent"
-        label="Search"
-      >
+      <QInput v-model="search" dense outlined debounce="300" color="accent" label="Search">
         <template #append>
           <QIcon name="search" />
         </template>
@@ -170,10 +151,7 @@ watch(selectedPeersModel, () => {
       <QTd :props="props">
         <span class="asn-list">
           <template v-if="props.row.path">
-            <span
-              v-for="(asn, index) in props.row.path"
-              :key="index"
-            >
+            <span v-for="(asn, index) in props.row.path" :key="index">
               <RouterLink
                 :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${asn}` } })"
                 target="_blank"

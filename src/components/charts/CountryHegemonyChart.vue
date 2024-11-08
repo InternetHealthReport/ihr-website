@@ -269,19 +269,10 @@ onMounted(() => {
 
 <template>
   <div class="IHR_chart">
-    <div
-      v-if="loading"
-      class="IHR_loading-spinner"
-    >
-      <QSpinner
-        color="secondary"
-        size="15em"
-      />
+    <div v-if="loading" class="IHR_loading-spinner">
+      <QSpinner color="secondary" size="15em" />
     </div>
-    <QCard
-      v-if="details.tableVisible"
-      flat
-    >
+    <QCard v-if="details.tableVisible" flat>
       <QTabs
         v-model="details.activeTab"
         class="table-card text-grey bg-grey-2"
@@ -290,40 +281,20 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab
-          name="dependency"
-          :label="$t('charts.countryHegemony.table.dependencyTitle')"
-        />
-        <QTab
-          name="api"
-          label="API"
-        />
+        <QTab name="dependency" :label="$t('charts.countryHegemony.table.dependencyTitle')" />
+        <QTab name="api" label="API" />
       </QTabs>
-      <QTabPanels
-        v-model="details.activeTab"
-        animated
-      >
+      <QTabPanels v-model="details.activeTab" animated>
         <QTabPanel name="dependency">
-          <CountryHegemonyTable
-            :data="countryHegemonyData"
-            :loading="loading"
-          />
+          <CountryHegemonyTable :data="countryHegemonyData" :loading="loading" />
         </QTabPanel>
-        <QTabPanel
-          name="api"
-          class="IHR_api-table q-pa-lg"
-          light
-        >
+        <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
           <h3>{{ $t('charts.countryHegemony.table.apiTitle') }}</h3>
           <table>
             <tbody>
               <tr>
                 <td>
-                  <a
-                    id="tableUrl"
-                    :href="hegemonyUrl"
-                    target="_blank"
-                  >{{ hegemonyUrl }}</a>
+                  <a id="tableUrl" :href="hegemonyUrl" target="_blank">{{ hegemonyUrl }}</a>
                 </td>
               </tr>
             </tbody>

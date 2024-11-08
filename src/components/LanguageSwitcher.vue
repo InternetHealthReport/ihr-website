@@ -21,10 +21,7 @@ const switchLanguage = async (newLocale) => {
 </script>
 
 <template>
-  <QBtn
-    flat
-    icon="fa-solid fa-language"
-  >
+  <QBtn flat icon="fa-solid fa-language">
     <QMenu>
       <QList>
         <QItem

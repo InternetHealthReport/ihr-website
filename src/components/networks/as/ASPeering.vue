@@ -16,10 +16,7 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-title="$t('iyp.as.peers.info.title')"
     :info-description="$t('iyp.as.peers.info.description')"
   >
-    <ASConnectedASes
-      :as-number="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASConnectedASes :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.upstreams.title')"
@@ -28,10 +25,7 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.upstreams.info.description')"
     class="card"
   >
-    <ASUpstreamASes
-      :as-number="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASUpstreamASes :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.downstreams.title')"
@@ -40,10 +34,7 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.downstreams.info.description')"
     class="card"
   >
-    <ASDownstreamsASes
-      :as-number="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASDownstreamsASes :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.ixp.title')"
@@ -52,10 +43,7 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.ixp.info.description')"
     class="card"
   >
-    <ASIXPs
-      :as-number="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASIXPs :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.facilities.title')"
@@ -64,10 +52,7 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.facilities.info.description')"
     class="card"
   >
-    <ASCoLocatedASes
-      :as-number="asNumber"
-      :page-title="pageTitle"
-    />
+    <ASCoLocatedASes :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

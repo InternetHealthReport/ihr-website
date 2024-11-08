@@ -7,9 +7,7 @@ import '@/styles/chart.css'
 
 <template>
   <div>
-    <h1 class="text-center">
-      Metis
-    </h1>
+    <h1 class="text-center">Metis</h1>
     <div class="row justify-center metis-component">
       <div class="IHR_description">
         <p>Welcome to Metis! A data-driven method to select diverse vantage points.</p>
@@ -20,19 +18,15 @@ import '@/styles/chart.css'
         </p>
         <p>
           We developed Metis to solve a problem that we faced while running experiments with RIPE's
-          <a
-            href="https://atlas.ripe.net/"
-            target="_blank"
-          >Atlas</a> measurement platform: How can
+          <a href="https://atlas.ripe.net/" target="_blank">Atlas</a> measurement platform: How can
           we be certain that the measurement results are not skewed by the distribution of available
           VPs?
         </p>
         <p>
           Looking at the
-          <a
-            href="https://atlas.ripe.net/results/maps/network-coverage/"
-            target="_blank"
-          >probe map</a>
+          <a href="https://atlas.ripe.net/results/maps/network-coverage/" target="_blank"
+            >probe map</a
+          >
           already makes it clear, that simply using all probes will yield unbalanced results. Now,
           one approach might be to try and somehow adjust the results to account for this imbalance,
           however, it might be difficult.
@@ -47,10 +41,9 @@ import '@/styles/chart.css'
           <a
             href="https://tma.ifip.org/2022/wp-content/uploads/sites/11/2022/06/tma2022-paper18.pdf"
           >
-            "Metis: Better Atlas Vantage Point Selection for Everyone”</a>. We are also working on a high-level explanation for the
-          <RouterLink :to="Tr.i18nRoute({ name: 'documentation' })">
-            documentation
-          </RouterLink>.
+            "Metis: Better Atlas Vantage Point Selection for Everyone”</a
+          >. We are also working on a high-level explanation for the
+          <RouterLink :to="Tr.i18nRoute({ name: 'documentation' })"> documentation </RouterLink>.
         </p>
         <p>
           Although the approach is applicable to any kind of measurement platform, we currently only

@@ -495,17 +495,11 @@ watch(
   <div class="IHR_chart">
     <div class="row justify-center">
       <div class="col-xs-10 col-sm-4 col-lg-2">
-        <QSelect
-          v-model="selection"
-          :options="selectionOptions"
-        />
+        <QSelect v-model="selection" :options="selectionOptions" />
       </div>
     </div>
-    <br>
-    <QCard
-      v-if="details.tableVisible"
-      :flat="route.name == 'rov' ? false : true"
-    >
+    <br />
+    <QCard v-if="details.tableVisible" :flat="route.name == 'rov' ? false : true">
       <QTabs
         v-model="details.activeTab"
         class="table-card text-grey bg-grey-2"
@@ -514,10 +508,7 @@ watch(
         align="justify"
         narrow-indicator
       >
-        <QTab
-          name="routes"
-          :label="$t('charts.prefixHegemony.table.routesTitle')"
-        />
+        <QTab name="routes" :label="$t('charts.prefixHegemony.table.routesTitle')" />
         <QTab
           name="origins"
           :disable="statsDisable"
@@ -528,15 +519,9 @@ watch(
           :disable="statsDisable"
           :label="$t('charts.prefixHegemony.table.transitsTitle')"
         />
-        <QTab
-          name="api"
-          label="API"
-        />
+        <QTab name="api" label="API" />
       </QTabs>
-      <QTabPanels
-        v-model="details.activeTab"
-        animated
-      >
+      <QTabPanels v-model="details.activeTab" animated>
         <QTabPanel name="routes">
           <PrefixHegemonyTable
             :data="prefixHegemonyData"
@@ -558,21 +543,13 @@ watch(
             :column-name="selection.label"
           />
         </QTabPanel>
-        <QTabPanel
-          name="api"
-          class="IHR_api-table q-pa-lg"
-          light
-        >
+        <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
           <h3>{{ $t('charts.prefixHegemony.table.apiTitle') }}</h3>
           <table>
             <tbody>
               <tr>
                 <td>
-                  <a
-                    id="tableUrl"
-                    :href="hegemonyUrl"
-                    target="_blank"
-                  >{{ hegemonyUrl }}</a>
+                  <a id="tableUrl" :href="hegemonyUrl" target="_blank">{{ hegemonyUrl }}</a>
                 </td>
               </tr>
             </tbody>

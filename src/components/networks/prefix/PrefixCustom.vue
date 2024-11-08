@@ -82,14 +82,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard
-    flat
-    bordered
-  >
+  <QCard flat bordered>
     <QCardSection>
-      <div class="text-h6">
-        Select widgets to show
-      </div>
+      <div class="text-h6">Select widgets to show</div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
@@ -99,10 +94,7 @@ onMounted(() => {
         v-model="select.value"
         :label="select.label"
       />
-      <QCheckbox
-        v-model="selectAll"
-        label="All"
-      />
+      <QCheckbox v-model="selectAll" label="All" />
     </QCardSection>
   </QCard>
   <!-- Overview -->
@@ -122,10 +114,7 @@ onMounted(() => {
     :info-description="$t('iyp.prefix.upstreams.info.description')"
     class="card"
   >
-    <PrefixUpstreamASes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixUpstreamASes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     v-if="selects[2].value"
@@ -135,10 +124,7 @@ onMounted(() => {
     :info-description="$t('iyp.prefix.roas.info.description')"
     class="card"
   >
-    <PrefixRPKIRouteOriginAuthorization
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixRPKIRouteOriginAuthorization :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     v-if="selects[3].value"
@@ -148,10 +134,7 @@ onMounted(() => {
     :info-description="$t('iyp.prefix.lessSpecific.info.description')"
     class="card"
   >
-    <PrefixLessSpecificPrefixes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixLessSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     v-if="selects[4].value"
@@ -161,10 +144,7 @@ onMounted(() => {
     :info-description="$t('iyp.prefix.moreSpecific.info.description')"
     class="card"
   >
-    <PrefixMoreSpecificPrefixes
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixMoreSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
@@ -175,10 +155,7 @@ onMounted(() => {
     :info-description="$t('iyp.prefix.popularDomains.info.description')"
     class="card"
   >
-    <PrefixPopularDomains
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixPopularDomains :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     v-if="selects[6].value"
@@ -188,10 +165,7 @@ onMounted(() => {
     :info-description="$t('iyp.prefix.popularHostNames.info.description')"
     class="card"
   >
-    <PrefixPopularHostNames
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixPopularHostNames :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     v-if="selects[7].value"
@@ -201,10 +175,7 @@ onMounted(() => {
     :info-description="$t('iyp.prefix.nameservers.info.description')"
     class="card"
   >
-    <PrefixAuthoritativeNameservers
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixAuthoritativeNameservers :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
 </template>
 

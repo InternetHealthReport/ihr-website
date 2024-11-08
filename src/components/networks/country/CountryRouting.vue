@@ -13,10 +13,7 @@ const props = defineProps(['countryCode', 'pageTitle'])
     :info-title="$t('iyp.country.ases.info.title')"
     :info-description="$t('iyp.country.ases.info.description')"
   >
-    <CountryAutonomousSystems
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryAutonomousSystems :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.country.prefixes.title')"
@@ -25,10 +22,7 @@ const props = defineProps(['countryCode', 'pageTitle'])
     :info-description="$t('iyp.country.prefixes.info.description')"
     class="card"
   >
-    <CountryIPPrefixes
-      :country-code="countryCode"
-      :page-title="pageTitle"
-    />
+    <CountryIPPrefixes :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

@@ -88,19 +88,10 @@ watch(selectDestinationsModel, () => {
     :disable="Object.keys(nodes).length < 1"
     @input="emit('loadMeasurementOnSearchQuery')"
   />
-  <QTable
-    :rows="filteredDestinationRows"
-    :columns="destinationColumns"
-    row-key="destination"
-    flat
-  >
+  <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination" flat>
     <template #header="props">
       <QTr :props="props">
-        <QTd
-          v-for="col in props.cols"
-          :key="col.name"
-          :props="props.colProps"
-        >
+        <QTd v-for="col in props.cols" :key="col.name" :props="props.colProps">
           <template v-if="col.name === 'destination'">
             <QCheckbox
               v-model="selectAllDestinationsModel"

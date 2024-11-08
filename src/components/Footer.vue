@@ -6,146 +6,84 @@ import { version } from '../../package.json'
 </script>
 
 <template>
-  <QFooter
-    elevated
-    primary
-    class="IHR_footer text-white text-center"
-    style="z-index: 999"
-  >
+  <QFooter elevated primary class="IHR_footer text-white text-center" style="z-index: 999">
     <div class="IHR_footer_contents">
       <div class="IHR_fsection">
-        <div
-          class=""
-          style="max-width: 400px"
-        >
+        <div class="" style="max-width: 400px">
           <div>
-            <QBtn
-              round
-              dense
-              flat
-              :ripple="false"
-              no-caps
-            >
+            <QBtn round dense flat :ripple="false" no-caps>
               <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-                <img
-                  src="@/assets/imgs/ihr_logo.svg"
-                  class="ihr-logo"
-                >
+                <img src="@/assets/imgs/ihr_logo.svg" class="ihr-logo" />
               </RouterLink>
               <a
                 :href="`https://github.com/InternetHealthReport/ihr-website/releases/tag/v${version}`"
                 class=""
                 target="_blank"
               >
-                <QBadge
-                  color="red"
-                  floating
-                >v{{ version }}</QBadge>
+                <QBadge color="red" floating>v{{ version }}</QBadge>
               </a>
             </QBtn>
-            <div class="text-weight-bold text-h5 q-mt-sm">
-              Internet Health Report
-            </div>
+            <div class="text-weight-bold text-h5 q-mt-sm">Internet Health Report</div>
           </div>
           <div class="IHR_external-links">
             <div class="row nowrap justify-evenly">
-              <a
-                href="https://x.com/ihr_alerts"
-                class=""
-                target="_blank"
-              >
-                <QIcon
-                  name="fab fa-square-x-twitter"
-                  class="inline-block"
-                />
+              <a href="https://x.com/ihr_alerts" class="" target="_blank">
+                <QIcon name="fab fa-square-x-twitter" class="inline-block" />
               </a>
-              <a
-                href="https://github.com/InternetHealthReport"
-                class=""
-                target="_blank"
-              >
-                <QIcon
-                  name="fab fa-github-square"
-                  class="inline-block"
-                />
+              <a href="https://github.com/InternetHealthReport" class="" target="_blank">
+                <QIcon name="fab fa-github-square" class="inline-block" />
               </a>
-              <a
-                href="mailto:admin@ihr.live"
-                class=""
-                target="_blank"
-              >
-                <QIcon
-                  name="fas fa-envelope-square"
-                  class="inline-block"
-                />
+              <a href="mailto:admin@ihr.live" class="" target="_blank">
+                <QIcon name="fas fa-envelope-square" class="inline-block" />
               </a>
             </div>
           </div>
         </div>
       </div>
       <div class="IHR_fsection">
-        <div
-          class="IHR_sitemap"
-          style="max-width: 700px"
-        >
+        <div class="IHR_sitemap" style="max-width: 700px">
           <ul>
             <li class="text-weight-bold links-title text-capitalize">
               {{ $t('footer.reportPages.title') }}
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">
-                {{
-                  $t('footer.reportPages.global')
-                }}
+                {{ $t('footer.reportPages.global') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: null } })">
-                {{
-                  $t('footer.reportPages.country')
-                }}
+                {{ $t('footer.reportPages.country') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: null } })">
-                {{
-                  $t('footer.reportPages.network')
-                }}
+                {{ $t('footer.reportPages.network') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { id: null } })">
-                {{
-                  $t('footer.reportPages.hostName')
-                }}
+                {{ $t('footer.reportPages.hostName') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { id: null } })">
-                {{
-                  $t('footer.reportPages.tag')
-                }}
+                {{ $t('footer.reportPages.tag') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: null } })">
-                {{
-                  $t('footer.reportPages.rank')
-                }}
+                {{ $t('footer.reportPages.rank') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'rov' })">
-                {{
-                  $t('footer.reportPages.rov')
-                }}
+                {{ $t('footer.reportPages.rov') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'covid19' })">
-                {{
-                  $t('footer.reportPages.covid19')
-                }}
+                {{ $t('footer.reportPages.covid19') }}
               </RouterLink>
             </li>
           </ul>
@@ -157,23 +95,17 @@ import { version } from '../../package.json'
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'documentation' })">
-                {{
-                  $t('footer.about.title')
-                }}
+                {{ $t('footer.about.title') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#AS-dependency' })">
-                {{
-                  $t('footer.documentation.analysisModules')
-                }}
+                {{ $t('footer.documentation.analysisModules') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#REST-API' })">
-                {{
-                  $t('footer.documentation.dataAccess')
-                }}
+                {{ $t('footer.documentation.dataAccess') }}
               </RouterLink>
             </li>
           </ul>
@@ -184,17 +116,13 @@ import { version } from '../../package.json'
               </RouterLink>
             </li>
             <li>
-              <RouterLink
-                :to="Tr.i18nRoute({ name: 'documentation', hash: '#Acknowledgements' })"
-              >
+              <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#Acknowledgements' })">
                 {{ $t('footer.about.acknowledgments') }}
               </RouterLink>
             </li>
             <li>
               <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#Data-policy' })">
-                {{
-                  $t('footer.about.datapolicy')
-                }}
+                {{ $t('footer.about.datapolicy') }}
               </RouterLink>
             </li>
           </ul>
@@ -202,20 +130,14 @@ import { version } from '../../package.json'
       </div>
     </div>
     <div class="IHR_fsection">
-      <div
-        class="row items-center IHR_license-section"
-        style="max-width: 800px"
-      >
+      <div class="row items-center IHR_license-section" style="max-width: 800px">
         <div class="col-3">
-          <a
-            rel="license"
-            href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
-            target="_blank"
-          ><img
-            alt="Creative Commons License"
-            style="border-width: 0"
-            src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
-          ></a>
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
+            ><img
+              alt="Creative Commons License"
+              style="border-width: 0"
+              src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
+          /></a>
         </div>
         <div class="col-9 text-caption text-center q-pa-sm">
           <span
@@ -224,18 +146,18 @@ import { version } from '../../package.json'
             property="dct:title"
             rel="dct:type"
           >
-            Internet Health Report</span>
+            Internet Health Report</span
+          >
           is licensed under a
-          <a
-            rel="license"
-            href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
-            target="_blank"
-          >Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Permissions beyond the scope of this license may be available at
+          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
+            >Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a
+          >. Permissions beyond the scope of this license may be available at
           <a
             xmlns:cc="http://creativecommons.org/ns#"
             href="mailto:admin@ihr.live"
             rel="cc:morePermissions"
-          >admin@ihr.live</a>.
+            >admin@ihr.live</a
+          >.
         </div>
       </div>
     </div>

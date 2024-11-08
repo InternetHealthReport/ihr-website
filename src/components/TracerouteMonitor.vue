@@ -19,10 +19,10 @@ const props = defineProps({
     default: false
   },
   probeIDs: {
-    type: Array,
+    type: Array
   },
   destinationIPs: {
-    type: Array,
+    type: Array
   }
 })
 
@@ -88,7 +88,9 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     if (loadProbes) {
       if (
-        (!props.probeIDs || props.probeIDs.length === 0 || props.probeIDs.includes(probeData.prb_id.toString())) &&
+        (!props.probeIDs ||
+          props.probeIDs.length === 0 ||
+          props.probeIDs.includes(probeData.prb_id.toString())) &&
         !allProbes.value.includes(probeData.prb_id)
       ) {
         allProbes.value.push(probeData.prb_id.toString())
@@ -100,7 +102,9 @@ const processData = async (tracerouteData, loadProbes = false) => {
     }
 
     if (
-      (!props.destinationIPs || props.destinationIPs.length === 0 || props.destinationIPs.includes(probeData.dst_addr)) &&
+      (!props.destinationIPs ||
+        props.destinationIPs.length === 0 ||
+        props.destinationIPs.includes(probeData.dst_addr)) &&
       !allDestinations.value.includes(probeData.dst_addr)
     ) {
       allDestinations.value.push(probeData.dst_addr)
@@ -227,7 +231,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
   updateDisplayedRttValues()
 }
-
 
 const updateDisplayedRttValues = () => {
   let minRtt = Infinity
@@ -447,11 +450,7 @@ watch(
       :asn-list="asnList"
       @update-displayed-rtt-values="updateDisplayedRttValues"
     />
-    <QExpansionItem
-      :default-opened="props.openOptions"
-      icon="tune"
-      label="Options"
-    >
+    <QExpansionItem :default-opened="props.openOptions" icon="tune" label="Options">
       <GenericCardController
         :title="$t('tracerouteMonitorRtt.title')"
         :sub-title="$t('tracerouteMonitorRtt.subTitle')"

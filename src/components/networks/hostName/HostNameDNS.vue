@@ -14,10 +14,7 @@ const props = defineProps(['pageTitle', 'hostName'])
     :info-title="$t('iyp.domainname.nameservers.info.title')"
     :info-description="$t('iyp.domainname.nameservers.info.description')"
   >
-    <HostNameAuthoritativeNameservers
-      :page-title="pageTitle"
-      :host-name="hostName"
-    />
+    <HostNameAuthoritativeNameservers :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.domainname.country_query.title')"
@@ -26,10 +23,7 @@ const props = defineProps(['pageTitle', 'hostName'])
     :info-description="$t('iyp.domainname.country_query.info.description')"
     class="card"
   >
-    <HostNameQueryingCountries
-      :page-title="pageTitle"
-      :host-name="hostName"
-    />
+    <HostNameQueryingCountries :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.domainname.as_query.title')"
@@ -38,10 +32,7 @@ const props = defineProps(['pageTitle', 'hostName'])
     :info-description="$t('iyp.domainname.as_query.info.description')"
     class="card"
   >
-    <HostNameQueryingASes
-      :page-title="pageTitle"
-      :host-name="hostName"
-    />
+    <HostNameQueryingASes :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
 </template>
 

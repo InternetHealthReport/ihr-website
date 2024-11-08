@@ -234,26 +234,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    v-if="rawMessages.length === 0"
-    class="noData"
-  >
+  <div v-if="rawMessages.length === 0" class="noData">
     <h1>No data available</h1>
     <h3>Try Changing the Input Parameters or you can wait</h3>
     <h6>Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>
-    <QBtn
-      v-if="isLiveMode && isPlaying"
-      color="negative"
-      label="Live"
-    />
-    <QBtn
-      v-else
-      color="grey-9"
-      label="Go to Live"
-      @click="enableLiveMode"
-    />
+    <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     <ReactiveChart
       :layout="actualChartLayout"
       :traces="actualChartData"
@@ -278,10 +266,14 @@ onMounted(() => {
           @update:model-value="updateSlider"
         />
         <div class="timestampInfo">
-          <span>Min Timestamp:
-            {{ minTimestamp === Infinity ? 'No Data' : timestampToUTC(minTimestamp) }}</span>
-          <span>Max Timestamp:
-            {{ maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(maxTimestamp) }}</span>
+          <span
+            >Min Timestamp:
+            {{ minTimestamp === Infinity ? 'No Data' : timestampToUTC(minTimestamp) }}</span
+          >
+          <span
+            >Max Timestamp:
+            {{ maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(maxTimestamp) }}</span
+          >
         </div>
       </div>
     </div>

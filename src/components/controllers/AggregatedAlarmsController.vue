@@ -493,17 +493,11 @@ watch(selectedAlarmTypesOptions.value, () => {
   <div>
     <QCard>
       <QCardSection>
-        <QMarkupTable
-          flat
-          bordered
-          separator="cell"
-        >
+        <QMarkupTable flat bordered separator="cell">
           <thead>
             <tr>
               <th>Data Source</th>
-              <th :colspan="maxAlarmTypesLength">
-                Alarm Types
-              </th>
+              <th :colspan="maxAlarmTypesLength">Alarm Types</th>
             </tr>
           </thead>
           <tbody>
@@ -513,10 +507,7 @@ watch(selectedAlarmTypesOptions.value, () => {
               class="q-tr--no-hover"
             >
               <td>
-                <QCheckbox
-                  v-model="selectedDataSources[indexSource]"
-                  disable
-                />{{
+                <QCheckbox v-model="selectedDataSources[indexSource]" disable />{{
                   dataSource.metadata.title
                 }}
                 <QIcon name="fas fa-circle-info">
@@ -525,10 +516,7 @@ watch(selectedAlarmTypesOptions.value, () => {
                   </QTooltip>
                 </QIcon>
               </td>
-              <td
-                v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types"
-                :key="indexAlarm"
-              >
+              <td v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types" :key="indexAlarm">
                 <QCheckbox
                   v-model="selectedAlarmTypes[indexSource][indexAlarm]"
                   :disable="isLoaded"
@@ -556,7 +544,7 @@ watch(selectedAlarmTypesOptions.value, () => {
             </tr>
           </tbody>
         </QMarkupTable>
-        <br>
+        <br />
         <div class="row">
           <div class="col-auto">
             <div class="row">
@@ -570,10 +558,7 @@ watch(selectedAlarmTypesOptions.value, () => {
                   :max="maxTimeFormatted"
                 />
               </div>
-              <div
-                class="col-auto"
-                style="width: 40px"
-              />
+              <div class="col-auto" style="width: 40px" />
               <div class="col">
                 <QInput
                   v-model="endTimeFormatted"
@@ -585,10 +570,7 @@ watch(selectedAlarmTypesOptions.value, () => {
                 />
               </div>
             </div>
-            <div
-              class="row"
-              style="margin-top: 20px"
-            >
+            <div class="row" style="margin-top: 20px">
               <div class="col-5 text-center">
                 <QBtn
                   color="primary"
@@ -602,12 +584,7 @@ watch(selectedAlarmTypesOptions.value, () => {
                 </QBtn>
               </div>
               <div class="col-4 text-center">
-                <QBtn
-                  color="primary"
-                  class="float-right"
-                  :disable="isLoaded"
-                  @click="resetTime"
-                >
+                <QBtn color="primary" class="float-right" :disable="isLoaded" @click="resetTime">
                   RESET TIME
                 </QBtn>
               </div>
@@ -638,12 +615,7 @@ watch(selectedAlarmTypesOptions.value, () => {
             />
           </div>
           <div class="col">
-            <QBtn
-              color="primary"
-              class="float-right"
-              :disable="isLoaded"
-              @click="resetGranularity"
-            >
+            <QBtn color="primary" class="float-right" :disable="isLoaded" @click="resetGranularity">
               Show All Countries
             </QBtn>
           </div>
@@ -669,12 +641,7 @@ watch(selectedAlarmTypesOptions.value, () => {
           <QCardSection>
             <div class="row items-center">
               <div class="col">
-                <QBtn
-                  color="primary"
-                  class="full-width"
-                  :disable="isLoaded"
-                  @click="resetTime"
-                >
+                <QBtn color="primary" class="full-width" :disable="isLoaded" @click="resetTime">
                   RESET TIME
                 </QBtn>
               </div>
@@ -748,7 +715,7 @@ watch(selectedAlarmTypesOptions.value, () => {
           :name="indexAlarmTypeTitlesMap"
           :disable="
             isLoaded ||
-              !AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypes)[indexAlarmTypeTitlesMap]
+            !AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypes)[indexAlarmTypeTitlesMap]
           "
         />
       </QTabs>
@@ -759,11 +726,7 @@ watch(selectedAlarmTypesOptions.value, () => {
           :key="indexAlarmTypeTitlesMap"
           :name="indexAlarmTypeTitlesMap"
         >
-          <QInput
-            v-model="filter"
-            debounce="300"
-            placeholder="Filter"
-          >
+          <QInput v-model="filter" debounce="300" placeholder="Filter">
             <template #append>
               <QIcon name="fas fa-filter" />
             </template>

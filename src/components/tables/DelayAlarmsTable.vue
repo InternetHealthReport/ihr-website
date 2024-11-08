@@ -212,10 +212,7 @@ onMounted(() => {
         <QTd auto-width>
           <QToggle v-model="props.expand" />
         </QTd>
-        <QTd
-          key="asn"
-          :props="props"
-        >
+        <QTd key="asn" :props="props">
           <RouterLink
             v-for="(asn, index) in props.row.asn"
             :key="asn"
@@ -233,10 +230,7 @@ onMounted(() => {
             }}
           </RouterLink>
         </QTd>
-        <QTd
-          key="link"
-          :props="props"
-        >
+        <QTd key="link" :props="props">
           <a href="javascript:void(0)">
             {{ props.row.link[0] }}
             <QPopupProxy>
@@ -257,13 +251,8 @@ onMounted(() => {
             </QPopupProxy>
           </a>
         </QTd>
-        <QTd
-          key="delayChange"
-          :props="props"
-        >
-          {{
-            (props.row.diffmedian / props.row.nbalarms).toFixed(2)
-          }}
+        <QTd key="delayChange" :props="props">
+          {{ (props.row.diffmedian / props.row.nbalarms).toFixed(2) }}
         </QTd>
         <QTd
           key="deviation"
@@ -275,25 +264,13 @@ onMounted(() => {
         >
           {{ (props.row.deviation / props.row.nbalarms).toFixed(2) }}
         </QTd>
-        <QTd
-          key="nbprobes"
-          :props="props"
-        >
+        <QTd key="nbprobes" :props="props">
           {{ Math.floor(props.row.nbprobes / props.row.nbalarms) }}
         </QTd>
       </QTr>
-      <QTr
-        v-if="props.expand"
-        :props="props"
-      >
-        <QTd
-          colspan="100%"
-          class="IHR_nohover"
-          bordered
-        >
-          <div class="text-h3 text-center">
-            RTTs of traceroutes crossing reported link
-          </div>
+      <QTr v-if="props.expand" :props="props">
+        <QTd colspan="100%" class="IHR_nohover" bordered>
+          <div class="text-h3 text-center">RTTs of traceroutes crossing reported link</div>
           <div class="IHR_side_borders">
             <Latencymon
               :start-time="dateHourShift(props.row.starttime, -6)"
@@ -350,7 +327,12 @@ onMounted(() => {
   margin: 0px;
   padding-bottom: 10px;
 }
-.IHR_reverse-dns-ip-improved > div:first-child > .box-content > div:last-child > .res_info_holder > a {
+.IHR_reverse-dns-ip-improved
+  > div:first-child
+  > .box-content
+  > div:last-child
+  > .res_info_holder
+  > a {
   color: #405057 !important;
 }
 </style>

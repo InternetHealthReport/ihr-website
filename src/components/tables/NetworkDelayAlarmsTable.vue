@@ -207,10 +207,7 @@ onMounted(() => {
         <QTd auto-width>
           <QToggle v-model="props.expand" />
         </QTd>
-        <QTd
-          key="asNumber"
-          align
-        >
+        <QTd key="asNumber" align>
           <RouterLink
             :to="
               Tr.i18nRoute({
@@ -222,10 +219,7 @@ onMounted(() => {
             {{ ihr_api.ihr_NumberToAsOrIxp(props.row.asNumber) }}
           </RouterLink>
         </QTd>
-        <QTd
-          key="destinations"
-          class="IHR_ndelay_table_cell"
-        >
+        <QTd key="destinations" class="IHR_ndelay_table_cell">
           <div>{{ destinationsSubtitle(props.row.endpoints) }}</div>
           <div class="IHR_ndelay_destinations">
             {{ destinationsBody(props.row.endpoints) }}
@@ -238,15 +232,8 @@ onMounted(() => {
           {{ (props.row.cumdev / props.row.nbalarms).toFixed(2) }}
         </QTd>
       </QTr>
-      <QTr
-        v-if="props.expand"
-        :props="props"
-      >
-        <QTd
-          colspan="100%"
-          class="IHR_nohover"
-          bordered
-        >
+      <QTr v-if="props.expand" :props="props">
+        <QTd colspan="100%" class="IHR_nohover" bordered>
           <div class="IHR_side_borders">
             <NetworkDelayChart
               :start-time="startTime"
@@ -269,7 +256,7 @@ onMounted(() => {
 }
 .IHR_ndelay_destinations {
   text-overflow: ellipsis;
-/* Required for text-overflow to do anything */
+  /* Required for text-overflow to do anything */
   white-space: nowrap;
   overflow: hidden;
   font-style: italic;

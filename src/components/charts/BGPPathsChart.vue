@@ -173,27 +173,11 @@ onMounted(() => {
 
 <template>
   <div v-if="props.filteredMessages.length">
-    <QBtn
-      v-if="isLiveMode && isPlaying"
-      color="negative"
-      label="Live"
-    />
-    <QBtn
-      v-else
-      color="grey-9"
-      label="Go to Live"
-      @click="enableLiveMode"
-    />
-    <ReactiveChart
-      :layout="actualChartLayout"
-      :traces="actualChartData"
-      :new-plot="true"
-    />
+    <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
   </div>
-  <div
-    v-else
-    class="noData"
-  >
+  <div v-else class="noData">
     <h1>No data available</h1>
     <h3>Try Changing the Input Parameters or you can wait</h3>
     <h6>Note: Some prefixes become active after some time.</h6>

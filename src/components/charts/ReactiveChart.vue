@@ -197,14 +197,8 @@ watch(
       {{ chartTitle }}
     </h3>
     <div ref="myId" />
-    <div
-      v-if="noData"
-      class="IHR_no-data"
-    >
-      <div
-        class="bg-white"
-        style="text-align: center"
-      >
+    <div v-if="noData" class="IHR_no-data">
+      <div class="bg-white" style="text-align: center">
         {{ noData }}
       </div>
     </div>
@@ -218,7 +212,9 @@ watch(
   left: 0;
 }
 .IHR_no-data > div:first-child {
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.16),
+    0 3px 6px rgba(0, 0, 0, 0.23);
   padding: 1.25rem;
   position: relative;
   font-weight: 500;
@@ -228,5 +224,4 @@ watch(
 .IHR_no-data > div:first-child:first-letter {
   text-transform: uppercase;
 }
-
 </style>

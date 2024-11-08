@@ -33,10 +33,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <QLayout
-    id="app"
-    view="hHh LpR fff"
-  >
+  <QLayout id="app" view="hHh LpR fff">
     <Header />
     <QPageContainer>
       <RouterView />
@@ -114,5 +111,4 @@ onBeforeUnmount(() => {
 #IHR_last-element {
   height: 50px;
 }
-
 </style>

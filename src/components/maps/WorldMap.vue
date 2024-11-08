@@ -74,11 +74,7 @@ const onCountryClick = (eventData) => {
 <template>
   <div>
     <div class="map-container">
-      <ReactiveChart
-        :layout="layout"
-        :traces="traces"
-        @plotly-click="onCountryClick"
-      />
+      <ReactiveChart :layout="layout" :traces="traces" @plotly-click="onCountryClick" />
     </div>
   </div>
 </template>

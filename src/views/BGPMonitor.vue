@@ -378,9 +378,7 @@ onMounted(() => {
 
 <template>
   <div class="IHR_char-container">
-    <h1 class="text-center q-pa-xl">
-      Real-Time BGP Monitor
-    </h1>
+    <h1 class="text-center q-pa-xl">Real-Time BGP Monitor</h1>
     <div class="controls justify-center q-pa-md flex">
       <QInput
         v-model="params.prefix"
@@ -422,12 +420,7 @@ onMounted(() => {
           :disable="disableButton || params.prefix === ''"
           @click="toggleConnection"
         />
-        <QBtn
-          color="negative"
-          :label="'Reset'"
-          :disable="isPlaying"
-          @click="resetData"
-        />
+        <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
       </div>
       <div class="stats">
         <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
@@ -490,9 +483,7 @@ onMounted(() => {
     <QDialog v-model="isWsDisconnected">
       <QCard style="width: 1000px; height: auto">
         <QCardSection>
-          <div class="text-h6">
-            Failed to connect to the server.
-          </div>
+          <div class="text-h6">Failed to connect to the server.</div>
         </QCardSection>
         <QCardSection class="q-pt-none">
           <p>
@@ -502,12 +493,7 @@ onMounted(() => {
           </p>
         </QCardSection>
         <QCardActions align="right">
-          <QBtn
-            v-close-popup
-            flat
-            label="Close"
-            color="primary"
-          />
+          <QBtn v-close-popup flat label="Close" color="primary" />
         </QCardActions>
       </QCard>
     </QDialog>

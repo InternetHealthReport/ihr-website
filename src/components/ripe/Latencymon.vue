@@ -60,7 +60,7 @@ onMounted(() => {
 
     try {
       //see https://atlas.ripe.net/docs/tools-latencymon/ for more options and details
-       
+
       lm.value = initLatencymon(
         `#${myId.value}`,
         {
@@ -82,10 +82,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :id="myId"
-    class="IHR_nowrap"
-  />
+  <div :id="myId" class="IHR_nowrap" />
 </template>
 
 <style>

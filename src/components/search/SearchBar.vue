@@ -483,16 +483,8 @@ watch(
     @filter="filter"
   >
     <template #append>
-      <div
-        v-if="!props.noCountry"
-        @click="showMap"
-      >
-        <QBtn
-          :color="label"
-          icon="fas fa-map"
-          flat
-          dense
-        />
+      <div v-if="!props.noCountry" @click="showMap">
+        <QBtn :color="label" icon="fas fa-map" flat dense />
         <QDialog v-model="showMapDialog">
           <WorldMap @country-selected="handleCountryClicked" />
         </QDialog>
@@ -501,27 +493,19 @@ watch(
         <div
           v-if="
             !loadingQueryAS &&
-              !loadingQueryPrefixes &&
-              !loadingQueryIXPs &&
-              !loadingQueryCountries &&
-              !loadingQueryASNames &&
-              !loadingQueryHostNames &&
-              !loadingQueryTags &&
-              !loadingQueryRanks
+            !loadingQueryPrefixes &&
+            !loadingQueryIXPs &&
+            !loadingQueryCountries &&
+            !loadingQueryASNames &&
+            !loadingQueryHostNames &&
+            !loadingQueryTags &&
+            !loadingQueryRanks
           "
         >
-          <QBtn
-            :color="label"
-            icon="fas fa-search"
-            flat
-            dense
-          />
+          <QBtn :color="label" icon="fas fa-search" flat dense />
         </div>
         <div v-else>
-          <QSpinner
-            :color="label"
-            size="0.82em"
-          />
+          <QSpinner :color="label" size="0.82em" />
         </div>
       </div>
     </template>
@@ -532,12 +516,7 @@ watch(
         v-bind="scope.itemProps"
         @click="routeToAS(scope.opt.value)"
       >
-        <QItemSection
-          side
-          color="accent"
-        >
-          AS{{ scope.opt.value }}
-        </QItemSection>
+        <QItemSection side color="accent"> AS{{ scope.opt.value }} </QItemSection>
         <QItemSection class="IHR_asn-element-name">
           {{ scope.opt.name }}
         </QItemSection>
@@ -547,12 +526,7 @@ watch(
         v-bind="scope.itemProps"
         @click="routeToPrefix(scope.opt.value)"
       >
-        <QItemSection
-          side
-          color="accent"
-        >
-          Prefix
-        </QItemSection>
+        <QItemSection side color="accent"> Prefix </QItemSection>
         <QItemSection class="IHR_asn-element-name">
           {{ scope.opt.name }}
         </QItemSection>
@@ -562,12 +536,7 @@ watch(
         v-bind="scope.itemProps"
         @click="routeToIXP(scope.opt.value)"
       >
-        <QItemSection
-          side
-          color="accent"
-        >
-          IXP{{ scope.opt.value }}
-        </QItemSection>
+        <QItemSection side color="accent"> IXP{{ scope.opt.value }} </QItemSection>
         <QItemSection class="IHR_asn-element-name">
           {{ scope.opt.name }}
         </QItemSection>
@@ -577,12 +546,7 @@ watch(
         v-bind="scope.itemProps"
         @click="routeToCountry(scope.opt.value)"
       >
-        <QItemSection
-          side
-          color="accent"
-        >
-          Country
-        </QItemSection>
+        <QItemSection side color="accent"> Country </QItemSection>
         <QItemSection class="IHR_asn-element-name">
           {{ scope.opt.name }}
         </QItemSection>
@@ -592,12 +556,7 @@ watch(
         v-bind="scope.itemProps"
         @click="routeToHostName(scope.opt.value)"
       >
-        <QItemSection
-          side
-          color="accent"
-        >
-          Hostname
-        </QItemSection>
+        <QItemSection side color="accent"> Hostname </QItemSection>
         <QItemSection class="IHR_asn-element-name">
           {{ scope.opt.name }}
         </QItemSection>
@@ -607,14 +566,7 @@ watch(
         v-bind="scope.itemProps"
         @click="routeToTag(scope.opt.value)"
       >
-        <QItemSection
-          side
-          color="accent"
-          &&
-          activate-search
-        >
-          Tag
-        </QItemSection>
+        <QItemSection side color="accent" && activate-search> Tag </QItemSection>
         <QItemSection class="IHR_asn-element-name">
           {{ scope.opt.name }}
         </QItemSection>
@@ -624,20 +576,12 @@ watch(
         v-bind="scope.itemProps"
         @click="routeToRank(scope.opt.value)"
       >
-        <QItemSection
-          side
-          color="accent"
-        >
-          Rank
-        </QItemSection>
+        <QItemSection side color="accent"> Rank </QItemSection>
         <QItemSection class="IHR_asn-element-name">
           {{ scope.opt.name }}
         </QItemSection>
       </QItem>
-      <QItem
-        v-if="scope.opt.type == 'Fail' && activateSearch"
-        v-bind="scope.itemProps"
-      >
+      <QItem v-if="scope.opt.type == 'Fail' && activateSearch" v-bind="scope.itemProps">
         <!-- <QItemSection side color="accent">Country</QItemSection> -->
         <QItemSection class="IHR_asn-element-name">
           {{ scope.opt.name }}

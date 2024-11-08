@@ -388,10 +388,7 @@ onMounted(() => {
 
 <template>
   <div class="IHR_chart">
-    <div
-      v-if="searchBar"
-      class="justify-center"
-    >
+    <div v-if="searchBar" class="justify-center">
       <div v-if="isCovid">
         <div class="q-pa-sm">
           <LocationSearchBar
@@ -413,19 +410,8 @@ onMounted(() => {
         </div>
         <div style="display: block">
           <div class="col-3 q-pa-sm">
-            <QBtn
-              color="secondary"
-              class="q-ml-sm"
-              @click="apiCall"
-            >
-              Add
-            </QBtn>
-            <QBtn
-              class="q-ml-sm"
-              @click="clearGraph"
-            >
-              Clear all
-            </QBtn>
+            <QBtn color="secondary" class="q-ml-sm" @click="apiCall"> Add </QBtn>
+            <QBtn class="q-ml-sm" @click="clearGraph"> Clear all </QBtn>
           </div>
         </div>
       </div>
@@ -450,19 +436,8 @@ onMounted(() => {
             />
           </div>
           <div class="col-3 q-pa-sm">
-            <QBtn
-              color="secondary"
-              class="btn"
-              @click="apiCall"
-            >
-              Add
-            </QBtn>
-            <QBtn
-              class="btn"
-              @click="clearGraph"
-            >
-              Clear all
-            </QBtn>
+            <QBtn color="secondary" class="btn" @click="apiCall"> Add </QBtn>
+            <QBtn class="btn" @click="clearGraph"> Clear all </QBtn>
           </div>
         </div>
       </div>
@@ -478,21 +453,11 @@ onMounted(() => {
         />
       </div>
     </div>
-    <div
-      v-if="loading"
-      class="IHR_loading-spinner"
-    >
-      <QSpinner
-        color="secondary"
-        size="15em"
-      />
+    <div v-if="loading" class="IHR_loading-spinner">
+      <QSpinner color="secondary" size="15em" />
     </div>
     <div>
-      <QCard
-        v-if="details.tableVisible"
-        class="bg-accent q-ma-xl"
-        dark
-      >
+      <QCard v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
         <QCardSection class="q-pa-xs">
           <div class="row items-center">
             <div class="col">
@@ -522,19 +487,10 @@ onMounted(() => {
           align="justify"
           narrow-indicator
         >
-          <QTab
-            name="delay"
-            :label="$t('charts.networkDelay.table.title')"
-          />
-          <QTab
-            name="api"
-            label="API"
-          />
+          <QTab name="delay" :label="$t('charts.networkDelay.table.title')" />
+          <QTab name="api" label="API" />
         </QTabs>
-        <QTabPanels
-          v-model="details.activeTab"
-          animated
-        >
+        <QTabPanels v-model="details.activeTab" animated>
           <QTabPanel name="delay">
             <NetworkDelayTable
               :start-time="startTime"
@@ -545,10 +501,7 @@ onMounted(() => {
               @prefix-details="emits('prefix-details', $event)"
             />
           </QTabPanel>
-          <QTabPanel
-            name="api"
-            class="IHR_api-table"
-          >
+          <QTabPanel name="api" class="IHR_api-table">
             <table>
               <tbody>
                 <tr>
@@ -556,11 +509,7 @@ onMounted(() => {
                     <label for="delay">{{ $t('charts.delayAndForwarding.yaxis') }}</label>
                   </td>
                   <td>
-                    <a
-                      id="delay"
-                      :href="delayUrl"
-                      target="_blank"
-                    >{{ delayUrl }}</a>
+                    <a id="delay" :href="delayUrl" target="_blank">{{ delayUrl }}</a>
                   </td>
                 </tr>
               </tbody>

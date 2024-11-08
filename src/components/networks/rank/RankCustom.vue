@@ -98,31 +98,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard
-    flat
-    bordered
-  >
+  <QCard flat bordered>
     <QCardSection>
-      <div class="text-h6">
-        Select widgets to show
-      </div>
+      <div class="text-h6">Select widgets to show</div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <span
-        v-for="select in selects"
-        :key="select.value"
-      >
-        <QCheckbox
-          v-if="select.hasData"
-          v-model="select.value"
-          :label="select.label"
-        />
+      <span v-for="select in selects" :key="select.value">
+        <QCheckbox v-if="select.hasData" v-model="select.value" :label="select.label" />
       </span>
-      <QCheckbox
-        v-model="selectAll"
-        label="All"
-      />
+      <QCheckbox v-model="selectAll" label="All" />
     </QCardSection>
   </QCard>
   <GenericCardController
@@ -133,10 +118,7 @@ onMounted(() => {
     :info-description="$t('iyp.rank.topAs.info.description')"
     class="card"
   >
-    <RankASRankings
-      :rank="rank"
-      :page-title="pageTitle"
-    />
+    <RankASRankings :rank="rank" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     v-if="selects[1].value"
@@ -146,10 +128,7 @@ onMounted(() => {
     :info-description="$t('iyp.rank.topHostnames.info.description')"
     class="card"
   >
-    <RankHostNameRankings
-      :rank="rank"
-      :page-title="pageTitle"
-    />
+    <RankHostNameRankings :rank="rank" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

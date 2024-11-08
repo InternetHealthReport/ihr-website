@@ -146,35 +146,23 @@ onMounted(() => {
 <template>
   <div>
     <QMarkupTable separator="horizontal">
-      <div
-        v-if="loading > 0"
-        class="IHR_loading-spinner"
-      >
-        <QSpinner
-          color="secondary"
-          size="15em"
-        />
+      <div v-if="loading > 0" class="IHR_loading-spinner">
+        <QSpinner color="secondary" size="15em" />
       </div>
       <thead>
         <tr>
-          <th class="text-left">
-            Summary
-          </th>
+          <th class="text-left">Summary</th>
           <th
             v-if="
               (queries[1].data.length > 0) &
-                (queries[1].data[0] ? (queries[1].data[0].rank ? true : false) : false)
+              (queries[1].data[0] ? (queries[1].data[0].rank ? true : false) : false)
             "
             class="text-left"
           >
             Top Rank
           </th>
-          <th class="text-left">
-            Popular Hostnames
-          </th>
-          <th class="text-left">
-            External Links
-          </th>
+          <th class="text-left">Popular Hostnames</th>
+          <th class="text-left">External Links</th>
         </tr>
       </thead>
       <tbody>
@@ -235,11 +223,7 @@ onMounted(() => {
               </div>
               <div>
                 Website:
-                <a
-                  :href="queries[0].data[0].website"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >{{
+                <a :href="queries[0].data[0].website" target="_blank" rel="noopener noreferrer">{{
                   queries[0].data[0].website
                 }}</a>
               </div>
@@ -248,7 +232,7 @@ onMounted(() => {
           <td
             v-if="
               (queries[1].data.length > 0) &
-                (queries[1].data[0] ? (queries[1].data[0].rank ? true : false) : false)
+              (queries[1].data[0] ? (queries[1].data[0].rank ? true : false) : false)
             "
             class="text-left"
           >
@@ -256,10 +240,7 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
-              <div
-                v-for="item in queries[2].data"
-                :key="item.hostname"
-              >
+              <div v-for="item in queries[2].data" :key="item.hostname">
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: item.hostname } })"
                 >
@@ -270,10 +251,7 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div
-                v-for="(value, key) in references"
-                :key="key"
-              >
+              <div v-for="(value, key) in references" :key="key">
                 <a
                   v-if="handleReference(key)"
                   :href="handleReference(key)"
@@ -288,16 +266,12 @@ onMounted(() => {
         </tr>
       </tbody>
     </QMarkupTable>
-    <br>
+    <br />
     <QMarkupTable separator="horizontal">
       <thead>
         <tr>
-          <th class="text-left">
-            IPv4 Network Topology
-          </th>
-          <th class="text-left">
-            IPv6 Network Topology
-          </th>
+          <th class="text-left">IPv4 Network Topology</th>
+          <th class="text-left">IPv6 Network Topology</th>
         </tr>
       </thead>
       <tbody>
@@ -311,34 +285,22 @@ onMounted(() => {
             />
           </td>
           <td class="topology">
-            <NetworkTopologyChart
-              :search-input="String(asNumber)"
-              af="IPv6"
-              :is-component="true"
-            />
+            <NetworkTopologyChart :search-input="String(asNumber)" af="IPv6" :is-component="true" />
           </td>
         </tr>
       </tbody>
     </QMarkupTable>
-    <br>
+    <br />
     <QMarkupTable>
       <thead>
         <tr>
-          <th
-            class="text-left"
-            :colspan="5"
-          >
-            Tags
-          </th>
+          <th class="text-left" :colspan="5">Tags</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td :colspan="5">
-            <div
-              v-if="queries[0].data.length > 0"
-              class="row"
-            >
+            <div v-if="queries[0].data.length > 0" class="row">
               <RouterLink
                 v-for="tag in queries[0].data[0].tags"
                 :key="tag"
@@ -346,12 +308,7 @@ onMounted(() => {
                   Tr.i18nRoute({ name: 'tag', params: { tag: tag }, hash: '#Autonomous-Systems' })
                 "
               >
-                <QChip
-                  dense
-                  size="md"
-                  color="info"
-                  text-color="white"
-                >
+                <QChip dense size="md" color="info" text-color="white">
                   {{ tag }}
                 </QChip>
               </RouterLink>
@@ -370,7 +327,7 @@ p {
 }
 h3 {
   font-size: 1rem;
-  line-height: 1.5
+  line-height: 1.5;
 }
 .overview-footer {
   text-decoration: underline;

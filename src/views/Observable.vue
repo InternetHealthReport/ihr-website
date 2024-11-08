@@ -27,10 +27,7 @@ const tree = [
 
 <template>
   <div>
-    <QSplitter
-      v-model="splitterModel"
-      style="height: 100vh"
-    >
+    <QSplitter v-model="splitterModel" style="height: 100vh">
       <template #before>
         <div class="q-pa-md">
           <QTree
@@ -44,12 +41,7 @@ const tree = [
         </div>
       </template>
       <template #after>
-        <QTabPanels
-          v-model="selected"
-          animated
-          transition-prev="jump-up"
-          transition-next="jump-up"
-        >
+        <QTabPanels v-model="selected" animated transition-prev="jump-up" transition-next="jump-up">
           <QTabPanel name="Root">
             <h1>Community Observable Notebook Showcase</h1>
             <p>
@@ -79,10 +71,7 @@ const tree = [
               matters related to Internet governance, infrastructure, and security.
             </p>
           </QTabPanel>
-          <QTabPanel
-            name="Internet outages as seen by RIPE Atlas"
-            style="height: 100vh"
-          >
+          <QTabPanel name="Internet outages as seen by RIPE Atlas" style="height: 100vh">
             <iframe
               width="100%"
               height="100%"
@@ -90,10 +79,7 @@ const tree = [
               src="https://observablehq.com/embed/@ripencc/internet-outages-as-seen-by-ripe-atlas?cell=*"
             />
           </QTabPanel>
-          <QTabPanel
-            name="Atlas Latency World Map"
-            style="height: 100vh"
-          >
+          <QTabPanel name="Atlas Latency World Map" style="height: 100vh">
             <iframe
               width="100%"
               height="100%"
@@ -116,10 +102,7 @@ const tree = [
               collaboration.
             </p>
           </QTabPanel>
-          <QTabPanel
-            name="Plug and Plot with Internet data"
-            style="height: 100vh"
-          >
+          <QTabPanel name="Plug and Plot with Internet data" style="height: 100vh">
             <iframe
               width="100%"
               height="100%"

@@ -57,14 +57,8 @@ onMounted(() => {
 
 <template>
   <div>
-    <div
-      v-if="loaded === null"
-      class="IHR_loading-spin"
-    >
-      <QSpinner
-        color="secondary"
-        size="2em"
-      />
+    <div v-if="loaded === null" class="IHR_loading-spin">
+      <QSpinner color="secondary" size="2em" />
       Loading RIPEstat widgets...
     </div>
     <div :id="myId" />

@@ -80,29 +80,15 @@ onMounted(() => {
 <template>
   <div>
     <QMarkupTable separator="horizontal">
-      <div
-        v-if="loadingStatus"
-        class="IHR_loading-spinner"
-      >
-        <QSpinner
-          color="secondary"
-          size="15em"
-        />
+      <div v-if="loadingStatus" class="IHR_loading-spinner">
+        <QSpinner color="secondary" size="15em" />
       </div>
       <thead>
         <tr>
-          <th class="text-left">
-            Summary
-          </th>
-          <th class="text-left">
-            Stats
-          </th>
-          <th class="text-left">
-            Peering LAN
-          </th>
-          <th class="text-left">
-            External Links
-          </th>
+          <th class="text-left">Summary</th>
+          <th class="text-left">Stats</th>
+          <th class="text-left">Peering LAN</th>
+          <th class="text-left">External Links</th>
         </tr>
       </thead>
       <tbody>
@@ -112,19 +98,13 @@ onMounted(() => {
               <div>
                 Country:
                 <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">
-                  {{
-                    overview.country
-                  }}
+                  {{ overview.country }}
                 </RouterLink>
               </div>
               <div>Organization: {{ overview.organization }}</div>
               <div>
                 Website:
-                <a
-                  :href="overview.website"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >{{
+                <a :href="overview.website" target="_blank" rel="noopener noreferrer">{{
                   overview.website
                 }}</a>
               </div>
@@ -137,10 +117,7 @@ onMounted(() => {
             </div>
           </td>
           <td class="text-left">
-            <div
-              v-for="item in overview.peer_lan"
-              :key="item.prefix"
-            >
+            <div v-for="item in overview.peer_lan" :key="item.prefix">
               <RouterLink
                 :to="
                   Tr.i18nRoute({
@@ -155,10 +132,7 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="overview.name">
-              <div
-                v-for="(value, key) in references"
-                :key="key"
-              >
+              <div v-for="(value, key) in references" :key="key">
                 <a
                   v-if="handleReference(key)"
                   :href="handleReference(key)"
@@ -183,7 +157,7 @@ p {
 }
 h3 {
   font-size: 1rem;
-  line-height: 1.5
+  line-height: 1.5;
 }
 .overview-footer {
   text-decoration: underline;

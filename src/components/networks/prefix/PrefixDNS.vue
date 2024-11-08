@@ -14,10 +14,7 @@ const props = defineProps(['getPrefix', 'pageTitle'])
     :info-title="$t('iyp.prefix.popularDomains.info.title')"
     :info-description="$t('iyp.prefix.popularDomains.info.description')"
   >
-    <PrefixPopularDomains
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixPopularDomains :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.popularHostNames.title')"
@@ -26,10 +23,7 @@ const props = defineProps(['getPrefix', 'pageTitle'])
     :info-description="$t('iyp.prefix.popularHostNames.info.description')"
     class="card"
   >
-    <PrefixPopularHostNames
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixPopularHostNames :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.prefix.nameservers.title')"
@@ -38,10 +32,7 @@ const props = defineProps(['getPrefix', 'pageTitle'])
     :info-description="$t('iyp.prefix.nameservers.info.description')"
     class="card"
   >
-    <PrefixAuthoritativeNameservers
-      :page-title="pageTitle"
-      :get-prefix="getPrefix"
-    />
+    <PrefixAuthoritativeNameservers :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
 </template>
 

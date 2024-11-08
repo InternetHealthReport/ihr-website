@@ -169,26 +169,13 @@ watch(simpleMenu, () => {
 </script>
 
 <template>
-  <QHeader
-    elevated
-    primary
-  >
+  <QHeader elevated primary>
     <QToolbar class="q-py-sm q-px-lg row">
       <div class="col-12 row no-wrap items-center">
         <QItem id="IHR_home-button">
           <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-            <QBtn
-              round
-              dense
-              flat
-              :ripple="false"
-              no-caps
-              size="22px"
-            >
-              <img
-                src="@/assets/imgs/ihr_logo.svg"
-                style="width: 45px"
-              >
+            <QBtn round dense flat :ripple="false" no-caps size="22px">
+              <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px" />
             </QBtn>
           </RouterLink>
         </QItem>
@@ -196,11 +183,7 @@ watch(simpleMenu, () => {
         <div
           class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md"
         >
-          <QBtnGroup
-            v-for="(item, index) in simpleMenu"
-            :key="item.entryName"
-            flat
-          >
+          <QBtnGroup v-for="(item, index) in simpleMenu" :key="item.entryName" flat>
             <QBtn
               v-if="item.options == null"
               flat
@@ -238,14 +221,8 @@ watch(simpleMenu, () => {
                     <QItemLabel class="text-bold">
                       {{ $t(option.entryName) }}
                     </QItemLabel>
-                    <QItemLabel
-                      class="text-grey"
-                      caption
-                      lines="2"
-                    >
-                      {{
-                        $t(option.summary)
-                      }}
+                    <QItemLabel class="text-grey" caption lines="2">
+                      {{ $t(option.summary) }}
                     </QItemLabel>
                   </QItemSection>
                 </QItem>
@@ -267,18 +244,10 @@ watch(simpleMenu, () => {
       </div>
       <!--Log in /Log out stuff here-->
     </QToolbar>
-    <QDrawer
-      v-model="leftDrawerOpen"
-      bordered
-      class="bg-primary"
-    >
+    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
       <QList>
         <!-- <QItemLabel header>Essential Links</QItemLabel> -->
-        <QItem
-          v-for="item in simpleMenu"
-          :key="item.entryName"
-          flat
-        >
+        <QItem v-for="item in simpleMenu" :key="item.entryName" flat>
           <QBtn
             v-if="item.options == null"
             flat
@@ -292,12 +261,7 @@ watch(simpleMenu, () => {
             menu-anchor="bottom left"
             menu-self="top left"
           >
-            <QList
-              class="rounded-borders text-white bg-primary"
-              bordered
-              separator
-              padding
-            >
+            <QList class="rounded-borders text-white bg-primary" bordered separator padding>
               <QItem
                 v-for="option in item.options"
                 :key="option.entryName"
@@ -310,14 +274,8 @@ watch(simpleMenu, () => {
                   <QItemLabel class="text-bold">
                     {{ $t(option.entryName) }}
                   </QItemLabel>
-                  <QItemLabel
-                    class="text-grey"
-                    caption
-                    lines="2"
-                  >
-                    {{
-                      $t(option.summary)
-                    }}
+                  <QItemLabel class="text-grey" caption lines="2">
+                    {{ $t(option.summary) }}
                   </QItemLabel>
                 </QItemSection>
               </QItem>

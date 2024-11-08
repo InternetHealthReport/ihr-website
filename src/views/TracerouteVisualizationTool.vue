@@ -62,15 +62,7 @@ onMounted(() => {
       <template #prepend>
         <QIcon name="web" />
       </template>
-      <QBtn
-        round
-        dense
-        flat
-        :ripple="false"
-        no-caps
-        size="22px"
-        @click="loadMeasurement"
-      >
+      <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
         <QIcon name="search" />
       </QBtn>
     </QInput>
