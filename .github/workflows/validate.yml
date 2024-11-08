@@ -1,9 +1,10 @@
 name: PR Validation
 
 on:
-  pull_request_target:
+  pull_request:
     types: [edited, opened, synchronize, reopened]
     branches: ["*"]
+  workflow_dispatch:
 
 jobs:
   validate-pr:
