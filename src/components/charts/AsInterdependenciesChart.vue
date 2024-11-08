@@ -314,7 +314,7 @@ const queryHegemonyTier1API = async () => {
         }
       )
     })
-    if (result.results.length > 0) noDataError.value = false
+    if (result.results.length >= 0) noDataError.value = false
   } catch (error) {
     console.error(error) //FIXME do a correct alert
   }
@@ -338,6 +338,7 @@ const queryHegemonyConeAPI = () => {
 const fetchHegemony = (data) => {
   let tracesLocal = {}
   let missingDataList = []
+  layout.value.annotations = []
 
   let anotherAsn
   let minX, maxX
