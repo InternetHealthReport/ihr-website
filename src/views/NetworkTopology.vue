@@ -153,9 +153,14 @@ onMounted(async () => {
 
 <template>
   <div class="IHR_char-container">
-    <h1 class="text-center">Network Topology Overview</h1>
+    <h1 class="text-center">
+      Network Topology Overview
+    </h1>
     <div class="row justify-center">
-      <div class="IHR_description" v-if="chartAmount == 0">
+      <div
+        v-if="chartAmount == 0"
+        class="IHR_description"
+      >
         <p>
           This tool provides a comprehensive platform for researchers and network professionals to
           explore and analyze the topology of an AS or a network prefix.
@@ -172,13 +177,23 @@ onMounted(async () => {
         <div class="row justify-center">
           <div class="row examples">
             <ul class="ul_styles">
-              <li @click="incrementChart(`2497`, `4`)">IIJ (AS2497)</li>
-              <li @click="incrementChart(`15169`, `4`)">Google (AS15169)</li>
-              <li @click="incrementChart(`2501`, `4`)">University of Tokyo (AS2501)</li>
+              <li @click="incrementChart(`2497`, `4`)">
+                IIJ (AS2497)
+              </li>
+              <li @click="incrementChart(`15169`, `4`)">
+                Google (AS15169)
+              </li>
+              <li @click="incrementChart(`2501`, `4`)">
+                University of Tokyo (AS2501)
+              </li>
             </ul>
             <ul class="ul_styles">
-              <li @click="incrementChart(`157.8.16.0/23`, `4`)">IIJ (157.8.16.0/23)</li>
-              <li @click="incrementChart(`152.65.235.0/24`, `4`)">Google (152.65.235.0/24)</li>
+              <li @click="incrementChart(`157.8.16.0/23`, `4`)">
+                IIJ (157.8.16.0/23)
+              </li>
+              <li @click="incrementChart(`152.65.235.0/24`, `4`)">
+                Google (152.65.235.0/24)
+              </li>
               <li @click="incrementChart(`192.51.208.0/20`, `4`)">
                 University of Tokyo (192.51.208.0/20)
               </li>
@@ -188,9 +203,16 @@ onMounted(async () => {
       </div>
     </div>
     <div class="addTopologyButton">
-      <QBtn color="secondary" label="Add Topology" @click="incrementChart(`2501`, `4`)" />
+      <QBtn
+        color="secondary"
+        label="Add Topology"
+        @click="incrementChart(`2501`, `4`)"
+      />
     </div>
-    <GridLayout v-model:layout="layout" :row-height="30">
+    <GridLayout
+      v-model:layout="layout"
+      :row-height="30"
+    >
       <GridItem
         v-for="(item, index) in layout"
         :key="item.i"
@@ -202,14 +224,14 @@ onMounted(async () => {
         :static="item.static"
       >
         <NetworkTopologyChart
-          :ref="(el) => (childRefs[index] = el)"
-          :searchInput="item.searchInput"
-          :af="`IPv` + item.af"
-          :showLegend="item.showLegend"
           :id="item.i"
-          @deleteChart="deleteChart"
-          @searchChange="searchChange"
-          @afChange="afChange"
+          :ref="(el) => (childRefs[index] = el)"
+          :search-input="item.searchInput"
+          :af="`IPv` + item.af"
+          :show-legend="item.showLegend"
+          @delete-chart="deleteChart"
+          @search-change="searchChange"
+          @af-change="afChange"
         />
       </GridItem>
     </GridLayout>

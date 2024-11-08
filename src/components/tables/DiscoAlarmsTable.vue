@@ -127,23 +127,26 @@ const msmPrbIds = (probes) => {
 
 <template>
   <QTable
+    v-model:pagination="pagination"
+    v-model:expanded="expandedRow"
     table-class="myClass"
     :rows="rows"
     :columns="columns"
-    :pagination.sync="pagination"
     :loading="loading"
     :filter="filterTable"
     flat
     row-key="id"
-    v-model:expanded="expandedRow"
     loading-label="Fetching the latest network disconnections..."
   >
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr :props="props">
         <QTd auto-width>
           <QToggle v-model="props.expand" />
         </QTd>
-        <QTd key="location" align>
+        <QTd
+          key="location"
+          align
+        >
           <div v-if="props.row.streamtype == 'asn'">
             <RouterLink
               :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS' + props.row.streamname } })"
@@ -155,14 +158,31 @@ const msmPrbIds = (probes) => {
             {{ getCountryName(props.row.streamname) }}
           </div>
         </QTd>
-        <QTd key="starttime"> {{ dateFormatter(props.row.starttime) }} </QTd>
-        <QTd key="duration"> {{ props.row.duration }} </QTd>
-        <QTd key="deviation">{{ props.row.avglevel }}</QTd>
-        <QTd key="nbdiscoprobes"> {{ props.row.nbdiscoprobes }} </QTd>
+        <QTd key="starttime">
+          {{ dateFormatter(props.row.starttime) }}
+        </QTd>
+        <QTd key="duration">
+          {{ props.row.duration }}
+        </QTd>
+        <QTd key="deviation">
+          {{ props.row.avglevel }}
+        </QTd>
+        <QTd key="nbdiscoprobes">
+          {{ props.row.nbdiscoprobes }}
+        </QTd>
       </QTr>
-      <QTr v-if="props.expand" :props="props">
-        <QTd colspan="100%" class="IHR_nohover" bordered>
-          <div class="text-h3 text-center">Pings from disconnected probes</div>
+      <QTr
+        v-if="props.expand"
+        :props="props"
+      >
+        <QTd
+          colspan="100%"
+          class="IHR_nohover"
+          bordered
+        >
+          <div class="text-h3 text-center">
+            Pings from disconnected probes
+          </div>
           <div class="IHR_side_borders">
             <Latencymon
               :start-time="

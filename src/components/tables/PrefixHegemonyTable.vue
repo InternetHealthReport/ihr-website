@@ -179,8 +179,12 @@ const simpleDependenciesFormat = (val) => {
 <template>
   <div>
     <div>
-      <QInput debounce="300" v-model="tabFilter" placeholder="Search">
-        <template v-slot:prepend>
+      <QInput
+        v-model="tabFilter"
+        debounce="300"
+        placeholder="Search"
+      >
+        <template #prepend>
           <QIcon name="fas fa-search" />
         </template>
       </QInput>
@@ -197,44 +201,106 @@ const simpleDependenciesFormat = (val) => {
       binary-state-sort
       flat
     >
-      <template #header="props" style="display: contents">
+      <template
+        #header="props"
+        style="display: contents"
+      >
         <QTr>
-          <QTh :colspan="showCountry ? 3 : 2"><h3>Route</h3> </QTh>
-          <QTh colspan="5"
-            ><h3>
+          <QTh :colspan="showCountry ? 3 : 2">
+            <h3>Route</h3>
+          </QTh>
+          <QTh colspan="5">
+            <h3>
               Status
-              <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
+              <QIcon
+                name="far fa-question-circle"
+                color="grey"
+                style="font-size: 0.9em"
+                right
+              />
               <QTooltip max-width="360px">
                 <div
                   v-html="$t(`documentationPage.sections.prefixasdependency.description.1.body`)"
-                ></div>
-              </QTooltip></h3
-          ></QTh>
-          <QTh colspan="2"
-            ><h3>
+                />
+              </QTooltip>
+            </h3>
+          </QTh>
+          <QTh colspan="2">
+            <h3>
               AS dependency
-              <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
+              <QIcon
+                name="far fa-question-circle"
+                color="grey"
+                style="font-size: 0.9em"
+                right
+              />
               <QTooltip max-width="360px">
                 <div
                   v-html="$t(`documentationPage.sections.prefixasdependency.description.2.body`)"
-                ></div>
-              </QTooltip></h3
-          ></QTh>
+                />
+              </QTooltip>
+            </h3>
+          </QTh>
         </QTr>
         <QTr>
-          <QTh key="country" :props="props">Country</QTh>
-          <QTh key="originASN" :props="props">Origin ASN</QTh>
-          <QTh key="prefix" :props="props">Prefix</QTh>
-          <QTh key="rpkiStatus" :props="props">RPKI</QTh>
-          <QTh key="irrStatus" :props="props">IRR</QTh>
-          <QTh key="delegatedPrefixStatus" :props="props">Prefix</QTh>
-          <QTh key="delegatedASNStatus" :props="props">Origin ASN</QTh>
-          <QTh key="visibility" :props="props">Visibility</QTh>
-          <QTh key="dependencies" :props="props">Main Transits</QTh>
+          <QTh
+            key="country"
+            :props="props"
+          >
+            Country
+          </QTh>
+          <QTh
+            key="originASN"
+            :props="props"
+          >
+            Origin ASN
+          </QTh>
+          <QTh
+            key="prefix"
+            :props="props"
+          >
+            Prefix
+          </QTh>
+          <QTh
+            key="rpkiStatus"
+            :props="props"
+          >
+            RPKI
+          </QTh>
+          <QTh
+            key="irrStatus"
+            :props="props"
+          >
+            IRR
+          </QTh>
+          <QTh
+            key="delegatedPrefixStatus"
+            :props="props"
+          >
+            Prefix
+          </QTh>
+          <QTh
+            key="delegatedASNStatus"
+            :props="props"
+          >
+            Origin ASN
+          </QTh>
+          <QTh
+            key="visibility"
+            :props="props"
+          >
+            Visibility
+          </QTh>
+          <QTh
+            key="dependencies"
+            :props="props"
+          >
+            Main Transits
+          </QTh>
         </QTr>
       </template>
 
-      <template v-slot:body-cell-country="props">
+      <template #body-cell-country="props">
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
@@ -245,7 +311,7 @@ const simpleDependenciesFormat = (val) => {
         </QTd>
       </template>
 
-      <template v-slot:body-cell-prefix="props">
+      <template #body-cell-prefix="props">
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
@@ -265,7 +331,7 @@ const simpleDependenciesFormat = (val) => {
         </QTd>
       </template>
 
-      <template v-slot:body-cell-originASN="props">
+      <template #body-cell-originASN="props">
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
@@ -281,9 +347,13 @@ const simpleDependenciesFormat = (val) => {
         </QTd>
       </template>
 
-      <template v-slot:body-cell-dependencies="props">
+      <template #body-cell-dependencies="props">
         <QTd :props="props">
-          <span v-for="dep in sorted(props.row.dependencies)" :key="dep.prefix" class="comma">
+          <span
+            v-for="dep in sorted(props.row.dependencies)"
+            :key="dep.prefix"
+            class="comma"
+          >
             <RouterLink
               class="IHR_delikify"
               :to="
@@ -321,89 +391,148 @@ const simpleDependenciesFormat = (val) => {
         </QTd>
       </template>
 
-      <template v-slot:body-cell-rpkiStatus="props">
+      <template #body-cell-rpkiStatus="props">
         <QTd :props="props">
-          <span v-if="props.row.rpki_status == 'Invalid'" justify>
-            <QIcon name="fas fa-times" color="red" left />
+          <span
+            v-if="props.row.rpki_status == 'Invalid'"
+            justify
+          >
+            <QIcon
+              name="fas fa-times"
+              color="red"
+              left
+            />
             {{ props.row.rpki_status }}
           </span>
           <span v-else-if="props.row.rpki_status == 'Invalid,more-specific'">
-            <QIcon name="fas fa-times" color="red" left />
+            <QIcon
+              name="fas fa-times"
+              color="red"
+              left
+            />
             Invalid (more specific)
           </span>
           <span v-else-if="props.row.rpki_status.startsWith('Valid')">
-            <QIcon name="fas fa-check" color="green" left />
+            <QIcon
+              name="fas fa-check"
+              color="green"
+              left
+            />
             {{ props.row.rpki_status }}
           </span>
           <span v-else>
-            <QIcon name="fas fa-question" color="grey" left />
+            <QIcon
+              name="fas fa-question"
+              color="grey"
+              left
+            />
             {{ props.row.rpki_status }}
           </span>
         </QTd>
       </template>
 
-      <template v-slot:body-cell-irrStatus="props">
+      <template #body-cell-irrStatus="props">
         <QTd :props="props">
           <span v-if="props.row.irr_status == 'Invalid'">
-            <QIcon name="fas fa-times" color="red" left />
+            <QIcon
+              name="fas fa-times"
+              color="red"
+              left
+            />
             {{ props.row.irr_status }}
           </span>
           <span v-else-if="props.row.irr_status == 'Invalid,more-specific'">
-            <QIcon name="fas fa-times" color="orange" left />
+            <QIcon
+              name="fas fa-times"
+              color="orange"
+              left
+            />
             Invalid (more specific)
           </span>
           <span v-else-if="props.row.irr_status.startsWith('Valid')">
-            <QIcon name="fas fa-check" color="green" left />
+            <QIcon
+              name="fas fa-check"
+              color="green"
+              left
+            />
             {{ props.row.irr_status }}
           </span>
           <span v-else>
-            <QIcon name="fas fa-question" color="grey" left />
+            <QIcon
+              name="fas fa-question"
+              color="grey"
+              left
+            />
             {{ props.row.irr_status }}
           </span>
         </QTd>
       </template>
 
-      <template v-slot:body-cell-delegatedPrefixStatus="props">
+      <template #body-cell-delegatedPrefixStatus="props">
         <QTd :props="props">
           <span
-            color="red"
             v-if="
               (props.row.delegated_prefix_status == 'available') |
                 (props.row.delegated_prefix_status == 'reserved')
             "
+            color="red"
           >
-            <QIcon name="fas fa-times" color="red" left />
+            <QIcon
+              name="fas fa-times"
+              color="red"
+              left
+            />
             {{ props.row.delegated_prefix_status }}
           </span>
           <span v-else-if="props.row.delegated_prefix_status == 'assigned'">
-            <QIcon name="fas fa-check" color="green" left />
+            <QIcon
+              name="fas fa-check"
+              color="green"
+              left
+            />
             {{ props.row.delegated_prefix_status }}
           </span>
           <span v-else>
-            <QIcon name="fas fa-question" color="grey" left />
+            <QIcon
+              name="fas fa-question"
+              color="grey"
+              left
+            />
             {{ props.row.delegated_prefix_status }}
           </span>
         </QTd>
       </template>
 
-      <template v-slot:body-cell-delegatedASNStatus="props">
+      <template #body-cell-delegatedASNStatus="props">
         <QTd :props="props">
           <span
-            color="red"
             v-if="
               (props.row.delegated_asn_status == 'available') |
                 (props.row.delegated_asn_status == 'reserved')
             "
+            color="red"
           >
-            <QIcon name="fas fa-times" color="red" left />
+            <QIcon
+              name="fas fa-times"
+              color="red"
+              left
+            />
             {{ props.row.delegated_asn_status }}
           </span>
           <span v-else-if="props.row.delegated_asn_status == 'assigned'">
-            <QIcon name="fas fa-check" color="green" left />
+            <QIcon
+              name="fas fa-check"
+              color="green"
+              left
+            />
             {{ props.row.delegated_asn_status }}
           </span>
           <span v-else>
-            <QIcon name="fas fa-question" color="grey" left />
+            <QIcon
+              name="fas fa-question"
+              color="grey"
+              left
+            />
             {{ props.row.delegated_asn_status }}
           </span>
         </QTd>

@@ -388,30 +388,44 @@ onMounted(() => {
 
 <template>
   <div class="IHR_chart">
-    <div class="justify-center" v-if="searchBar">
+    <div
+      v-if="searchBar"
+      class="justify-center"
+    >
       <div v-if="isCovid">
         <div class="q-pa-sm">
           <LocationSearchBar
-            @select="addStartLocation"
             :hint="$t('searchBar.locationSource')"
             :label="$t('searchBar.locationHint')"
             :selected="startPointNameStr"
             style="width: 65%; margin: auto; margin-bottom: -6px"
+            @select="addStartLocation"
           />
         </div>
         <div class="q-pa-sm">
           <LocationSearchBar
-            @select="addEndLocation"
             :hint="$t('searchBar.locationDestination')"
             :label="$t('searchBar.locationHint')"
             :selected="startPointNameStr"
             style="width: 65%; margin: auto; margin-bottom: -6px"
+            @select="addEndLocation"
           />
         </div>
         <div style="display: block">
           <div class="col-3 q-pa-sm">
-            <QBtn @click="apiCall" color="secondary" class="q-ml-sm">Add</QBtn>
-            <QBtn @click="clearGraph" class="q-ml-sm">Clear all</QBtn>
+            <QBtn
+              color="secondary"
+              class="q-ml-sm"
+              @click="apiCall"
+            >
+              Add
+            </QBtn>
+            <QBtn
+              class="q-ml-sm"
+              @click="clearGraph"
+            >
+              Clear all
+            </QBtn>
           </div>
         </div>
       </div>
@@ -419,25 +433,36 @@ onMounted(() => {
         <div class="row justify-center">
           <div class="col-4 q-pa-sm">
             <LocationSearchBar
-              @select="addStartLocation"
               :hint="$t('searchBar.locationSource')"
               :label="$t('searchBar.locationHint')"
               :selected="startPointNameStr"
               :readonly="readonlySourceSearch"
-              :peeringdbId="peeringdbId"
+              :peeringdb-id="peeringdbId"
+              @select="addStartLocation"
             />
           </div>
           <div class="col-4 q-pa-sm">
             <LocationSearchBar
-              @select="addEndLocation"
               :hint="$t('searchBar.locationDestination')"
               :readonly="readonlyDestinationSearch"
               :label="$t('searchBar.locationHint')"
+              @select="addEndLocation"
             />
           </div>
           <div class="col-3 q-pa-sm">
-            <QBtn @click="apiCall" color="secondary" class="btn">Add</QBtn>
-            <QBtn @click="clearGraph" class="btn">Clear all</QBtn>
+            <QBtn
+              color="secondary"
+              class="btn"
+              @click="apiCall"
+            >
+              Add
+            </QBtn>
+            <QBtn
+              class="btn"
+              @click="clearGraph"
+            >
+              Clear all
+            </QBtn>
           </div>
         </div>
       </div>
@@ -447,17 +472,27 @@ onMounted(() => {
         <ReactiveChart
           :layout="layout"
           :traces="traces"
-          @plotly-click="showTable"
           :no-data="noData"
-          :yMax="yMax"
+          :y-max="yMax"
+          @plotly-click="showTable"
         />
       </div>
     </div>
-    <div v-if="loading" class="IHR_loading-spinner">
-      <QSpinner color="secondary" size="15em" />
+    <div
+      v-if="loading"
+      class="IHR_loading-spinner"
+    >
+      <QSpinner
+        color="secondary"
+        size="15em"
+      />
     </div>
     <div>
-      <QCard v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
+      <QCard
+        v-if="details.tableVisible"
+        class="bg-accent q-ma-xl"
+        dark
+      >
         <QCardSection class="q-pa-xs">
           <div class="row items-center">
             <div class="col">
@@ -471,9 +506,9 @@ onMounted(() => {
                 size="sm"
                 round
                 flat
-                @click="details.tableVisible = false"
                 icon="fa fa-times-circle"
-              ></QBtn>
+                @click="details.tableVisible = false"
+              />
             </div>
           </div>
         </QCardSection>
@@ -487,10 +522,19 @@ onMounted(() => {
           align="justify"
           narrow-indicator
         >
-          <QTab name="delay" :label="$t('charts.networkDelay.table.title')" />
-          <QTab name="api" label="API" />
+          <QTab
+            name="delay"
+            :label="$t('charts.networkDelay.table.title')"
+          />
+          <QTab
+            name="api"
+            label="API"
+          />
         </QTabs>
-        <QTabPanels v-model="details.activeTab" animated>
+        <QTabPanels
+          v-model="details.activeTab"
+          animated
+        >
           <QTabPanel name="delay">
             <NetworkDelayTable
               :start-time="startTime"
@@ -501,7 +545,10 @@ onMounted(() => {
               @prefix-details="emits('prefix-details', $event)"
             />
           </QTabPanel>
-          <QTabPanel name="api" class="IHR_api-table">
+          <QTabPanel
+            name="api"
+            class="IHR_api-table"
+          >
             <table>
               <tbody>
                 <tr>
@@ -509,7 +556,11 @@ onMounted(() => {
                     <label for="delay">{{ $t('charts.delayAndForwarding.yaxis') }}</label>
                   </td>
                   <td>
-                    <a :href="delayUrl" target="_blank" id="delay">{{ delayUrl }}</a>
+                    <a
+                      id="delay"
+                      :href="delayUrl"
+                      target="_blank"
+                    >{{ delayUrl }}</a>
                   </td>
                 </tr>
               </tbody>

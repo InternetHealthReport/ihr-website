@@ -6,13 +6,13 @@ import { ref, onMounted, watch, computed } from 'vue'
 const props = defineProps({
   data: {
     type: Object,
-    default: {
+    default: () => ({
       customdata: [],
       hovertemplate: '',
       locations: [],
       text: [],
       z: []
-    }
+    })
   },
   loading: {
     type: Boolean

@@ -98,37 +98,58 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <span v-for="select in selects">
-        <QCheckbox v-if="select.hasData" :label="select.label" v-model="select.value" />
+      <span
+        v-for="select in selects"
+        :key="select.value"
+      >
+        <QCheckbox
+          v-if="select.hasData"
+          v-model="select.value"
+          :label="select.label"
+        />
       </span>
-      <QCheckbox label="All" v-model="selectAll" />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <GenericCardController
+    v-if="selects[0].value"
     :title="$t('iyp.rank.topAs.title')"
     :sub-title="$t('iyp.rank.topAs.caption') + pageTitle"
     :info-title="$t('iyp.rank.topAs.info.title')"
     :info-description="$t('iyp.rank.topAs.info.description')"
     class="card"
-    v-if="selects[0].value"
   >
-    <RankASRankings :rank="rank" :page-title="pageTitle" />
+    <RankASRankings
+      :rank="rank"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[1].value"
     :title="$t('iyp.rank.topHostnames.title')"
     :sub-title="$t('iyp.rank.topHostnames.caption') + pageTitle + ' (limited to 100K)'"
     :info-title="$t('iyp.rank.topHostnames.info.title')"
     :info-description="$t('iyp.rank.topHostnames.info.description')"
     class="card"
-    v-if="selects[1].value"
   >
-    <RankHostNameRankings :rank="rank" :page-title="pageTitle" />
+    <RankHostNameRankings
+      :rank="rank"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

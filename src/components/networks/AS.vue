@@ -153,8 +153,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
-    <h1 class="text-center">{{ pageTitle }}</h1>
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+  >
+    <h1 class="text-center">
+      {{ pageTitle }}
+    </h1>
     <h3 class="text-center">
       <div v-if="['monitoring', 'custom'].includes(menu)">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
@@ -162,11 +167,13 @@ onMounted(() => {
           :min="minDate"
           :max="maxDate"
           :value="endTime"
+          hide-time
           @input="setReportDate"
-          hideTime
         />
       </div>
-      <div v-else>Weekly report</div>
+      <div v-else>
+        Weekly report
+      </div>
     </h3>
     <QCard flat>
       <QTabs
@@ -177,19 +184,41 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="overview">Overview</QTab>
-        <QTab name="monitoring">Monitoring</QTab>
-        <QTab name="routing">Routing</QTab>
-        <QTab name="dns">DNS</QTab>
-        <QTab name="peering">Peering</QTab>
-        <QTab name="registration">Registration</QTab>
-        <QTab name="rankings">Rankings</QTab>
-        <QTab name="custom">Custom</QTab>
+        <QTab name="overview">
+          Overview
+        </QTab>
+        <QTab name="monitoring">
+          Monitoring
+        </QTab>
+        <QTab name="routing">
+          Routing
+        </QTab>
+        <QTab name="dns">
+          DNS
+        </QTab>
+        <QTab name="peering">
+          Peering
+        </QTab>
+        <QTab name="registration">
+          Registration
+        </QTab>
+        <QTab name="rankings">
+          Rankings
+        </QTab>
+        <QTab name="custom">
+          Custom
+        </QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels v-model="menu" v-if="pageTitle">
+      <QTabPanels
+        v-if="pageTitle"
+        v-model="menu"
+      >
         <QTabPanel name="overview">
-          <ASOverview :as-number="asNumber" :peeringdbId="setPeeringdbId" />
+          <ASOverview
+            :as-number="asNumber"
+            :peeringdb-id="setPeeringdbId"
+          />
         </QTabPanel>
         <QTabPanel name="monitoring">
           <ASMonitoring
@@ -203,19 +232,34 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="routing">
-          <ASRouting :as-number="asNumber" :page-title="pageTitle" />
+          <ASRouting
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="dns">
-          <ASDNS :as-number="asNumber" :page-title="pageTitle" />
+          <ASDNS
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="peering">
-          <ASPeering :as-number="asNumber" :page-title="pageTitle" />
+          <ASPeering
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="registration">
-          <ASRegistration :as-number="asNumber" :page-title="pageTitle" />
+          <ASRegistration
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="rankings">
-          <ASRankings :as-number="asNumber" :page-title="pageTitle" />
+          <ASRankings
+            :as-number="asNumber"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="custom">
           <ASCustom
@@ -224,7 +268,7 @@ onMounted(() => {
             :as-number="asNumber"
             :family="family"
             :page-title="pageTitle"
-            :peeringdbId="setPeeringdbId"
+            :peeringdb-id="setPeeringdbId"
             :interval="interval"
             :hash="routeHash"
             @toggle-ip-family="toggleIpFamily"

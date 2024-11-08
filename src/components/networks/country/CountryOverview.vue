@@ -111,15 +111,29 @@ onMounted(() => {
 <template>
   <div>
     <QMarkupTable separator="horizontal">
-      <div v-if="loading > 0" class="IHR_loading-spinner">
-        <QSpinner color="secondary" size="15em" />
+      <div
+        v-if="loading > 0"
+        class="IHR_loading-spinner"
+      >
+        <QSpinner
+          color="secondary"
+          size="15em"
+        />
       </div>
       <thead>
         <tr>
-          <th class="text-left">Summary</th>
-          <th class="text-left">Prominent ISPs</th>
-          <th class="text-left">Prominent Hosting Providers</th>
-          <th class="text-left">External Links</th>
+          <th class="text-left">
+            Summary
+          </th>
+          <th class="text-left">
+            Prominent ISPs
+          </th>
+          <th class="text-left">
+            Prominent Hosting Providers
+          </th>
+          <th class="text-left">
+            External Links
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -136,8 +150,9 @@ onMounted(() => {
                       hash: '#Autonomous-Systems'
                     })
                   "
-                  >ASes</RouterLink
                 >
+                  ASes
+                </RouterLink>
               </div>
               <div>
                 {{ queries[0].data[0].preg_count }} registered
@@ -149,8 +164,9 @@ onMounted(() => {
                       hash: '#IP-Prefixes'
                     })
                   "
-                  >prefixes</RouterLink
                 >
+                  prefixes
+                </RouterLink>
               </div>
               <div>
                 {{ queries[0].data[0].pgeo_count }} geolocated
@@ -162,8 +178,9 @@ onMounted(() => {
                       hash: '#IP-Prefixes'
                     })
                   "
-                  >prefixes</RouterLink
                 >
+                  prefixes
+                </RouterLink>
               </div>
               <div>
                 {{ queries[0].data[0].ixp_count }}
@@ -175,14 +192,18 @@ onMounted(() => {
                       hash: '#Internet-Exchange-Points'
                     })
                   "
-                  >Internet Exchange Points</RouterLink
                 >
+                  Internet Exchange Points
+                </RouterLink>
               </div>
             </div>
           </td>
           <td class="text-left">
             <div v-if="queries[1].data.length > 0">
-              <div v-for="item in queries[1].data" :key="Number(item.asn)">
+              <div
+                v-for="item in queries[1].data"
+                :key="Number(item.asn)"
+              >
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}` } })"
                 >
@@ -193,7 +214,10 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
-              <div v-for="item in queries[2].data" :key="Number(item.asn)">
+              <div
+                v-for="item in queries[2].data"
+                :key="Number(item.asn)"
+              >
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}` } })"
                 >
@@ -204,8 +228,15 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div v-for="(value, key) in references" :key="key">
-                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+              <div
+                v-for="(value, key) in references"
+                :key="key"
+              >
+                <a
+                  :href="handleReference(key)"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {{ key }}
                 </a>
               </div>

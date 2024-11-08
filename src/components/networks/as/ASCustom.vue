@@ -123,32 +123,45 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <QCheckbox v-for="select in selects" :label="select.label" v-model="select.value" />
-      <QCheckbox label="All" v-model="selectAll" />
+      <QCheckbox
+        v-for="select in selects"
+        :key="select.value"
+        v-model="select.value"
+        :label="select.label"
+      />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Overview -->
   <ASOverview
-    :as-number="asNumber"
-    :peeringdbId="peeringdbId"
-    class="card"
     v-if="selects[0].value"
+    :as-number="asNumber"
+    :peeringdb-id="peeringdbId"
+    class="card"
   />
   <!-- Monitoring -->
   <GenericCardController
+    v-if="selects[1].value"
     :title="$t('charts.asInterdependencies.title')"
     sub-title="BGP Data"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.asInterdependencies.info.title')"
     :info-description="$t('charts.asInterdependencies.info.description')"
     class="card"
-    v-if="selects[1].value"
   >
     <AsInterdependenciesChart
       :start-time="startTime"
@@ -161,13 +174,13 @@ onMounted(() => {
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[2].value"
     :title="$t('charts.iodaChart.title')"
     sub-title="Reachability data from Georgia Tech's Internet Intelligence Lab"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.iodaChart.info.title')"
     :info-description="$t('charts.iodaChart.info.description')"
     class="card"
-    v-if="selects[2].value"
   >
     <IodaChart
       :entity-value="String(asNumber)"
@@ -178,13 +191,13 @@ onMounted(() => {
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[3].value"
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.prefixHegemony.info.title')"
     :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
-    v-if="selects[3].value"
   >
     <PrefixHegemonyChart
       :start-time="startTime"
@@ -195,34 +208,37 @@ onMounted(() => {
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[4].value"
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.networkDelay.info.title')"
     :info-description="$t('charts.networkDelay.info.description')"
     class="card"
-    v-if="selects[4].value"
   >
     <NetworkDelayChart
       :start-time="startTime"
       :end-time="endTime"
-      :startPointName="Math.abs(asNumber).toString()"
-      :startPointType="route.params.id.substring(0, 2)"
+      :start-point-name="Math.abs(asNumber).toString()"
+      :start-point-type="route.params.id.substring(0, 2)"
       :fetch="fetch"
-      :readonlySourceSearch="true"
-      searchBar
+      :readonly-source-search="true"
+      search-bar
     />
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[5].value"
     :title="$t('iyp.as.atlas.title')"
     :sub-title="$t('iyp.as.atlas.caption') + asNumber"
     :info-title="$t('iyp.as.atlas.info.title')"
     :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
-    v-if="selects[5].value"
   >
-    <ASRipeAtlas :asNumber="asNumber" :page-title="pageTitle" />
+    <ASRipeAtlas
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 
   <!-- <GenericCardController
@@ -243,146 +259,182 @@ onMounted(() => {
   </GenericCardController> -->
 
   <GenericCardController
+    v-if="selects[6].value"
     :title="$t('charts.disconnections.title')"
     sub-title="RIPE Atlas Log"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.disconnections.info.title')"
     :info-description="$t('charts.disconnections.info.description')"
     class="card"
-    v-if="selects[6].value"
   >
     <DiscoChart
-      :streamName="asNumber"
+      :stream-name="asNumber"
       :start-time="startTime"
       :end-time="endTime"
       :fetch="fetch"
-      :minAvgLevel="9"
+      :min-avg-level="9"
     />
   </GenericCardController>
   <!-- Routing -->
   <GenericCardController
+    v-if="selects[7].value"
     :title="$t('iyp.as.ipPrefix.title')"
     :sub-title="$t('iyp.as.ipPrefix.caption') + asNumber"
     :info-title="$t('iyp.as.ipPrefix.info.title')"
     :info-description="$t('iyp.as.ipPrefix.info.description')"
     class="card"
-    v-if="selects[7].value"
   >
-    <ASOriginatedPrefixes :asNumber="asNumber" :page-title="pageTitle" />
+    <ASOriginatedPrefixes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[8].value"
     :title="$t('iyp.as.peers.title')"
     :sub-title="$t('iyp.as.peers.caption') + asNumber"
     :info-title="$t('iyp.as.peers.info.title')"
     :info-description="$t('iyp.as.peers.info.description')"
     class="card"
-    v-if="selects[8].value"
   >
-    <ASConnectedASes :asNumber="asNumber" :page-title="pageTitle" />
+    <ASConnectedASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[9].value"
     :title="$t('iyp.as.upstreams.title')"
     :sub-title="$t('iyp.as.upstreams.caption') + asNumber"
     :info-title="$t('iyp.as.upstreams.info.title')"
     :info-description="$t('iyp.as.upstreams.info.description')"
     class="card"
-    v-if="selects[9].value"
   >
-    <ASUpstreamASes :asNumber="asNumber" :page-title="pageTitle" />
+    <ASUpstreamASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[10].value"
     :title="$t('iyp.as.downstreams.title')"
     :sub-title="$t('iyp.as.downstreams.caption') + asNumber"
     :info-title="$t('iyp.as.downstreams.info.title')"
     :info-description="$t('iyp.as.downstreams.info.description')"
     class="card"
-    v-if="selects[10].value"
   >
-    <ASDownstreamsASes :asNumber="asNumber" :page-title="pageTitle" />
+    <ASDownstreamsASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[11].value"
     :title="$t('iyp.as.roas.title')"
     :sub-title="$t('iyp.as.roas.caption') + asNumber"
     :info-title="$t('iyp.as.roas.info.title')"
     :info-description="$t('iyp.as.roas.info.description')"
     class="card"
-    v-if="selects[11].value"
   >
-    <ASRPKIRouteOriginAuthorization :asNumber="asNumber" :page-title="pageTitle" />
+    <ASRPKIRouteOriginAuthorization
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
+    v-if="selects[12].value"
     :title="$t('iyp.as.popularDomains.title')"
     :sub-title="$t('iyp.as.popularDomains.caption') + asNumber"
     :info-title="$t('iyp.as.popularDomains.info.title')"
     :info-description="$t('iyp.as.popularDomains.info.description')"
     class="card"
-    v-if="selects[12].value"
   >
-    <ASPopularDomains :asNumber="asNumber" :page-title="pageTitle" />
+    <ASPopularDomains
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[13].value"
     :title="$t('iyp.as.popularHostNames.title')"
     :sub-title="$t('iyp.as.popularHostNames.caption') + asNumber"
     :info-title="$t('iyp.as.popularHostNames.info.title')"
     :info-description="$t('iyp.as.popularHostNames.info.description')"
     class="card"
-    v-if="selects[13].value"
   >
-    <ASPopularHostNames :asNumber="asNumber" :page-title="pageTitle" />
+    <ASPopularHostNames
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[14].value"
     :title="$t('iyp.as.authoritativeNameservers.title')"
     :sub-title="$t('iyp.as.authoritativeNameservers.caption') + asNumber"
     :info-title="$t('iyp.as.authoritativeNameservers.info.title')"
     :info-description="$t('iyp.as.authoritativeNameservers.info.description')"
     class="card"
-    v-if="selects[14].value"
   >
-    <ASAuthoritativeNameservers :asNumber="asNumber" :page-title="pageTitle" />
+    <ASAuthoritativeNameservers
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
+    v-if="selects[15].value"
     :title="$t('iyp.as.ixp.title')"
     :sub-title="$t('iyp.as.ixp.caption') + asNumber"
     :info-title="$t('iyp.as.ixp.info.title')"
     :info-description="$t('iyp.as.ixp.info.description')"
     class="card"
-    v-if="selects[15].value"
   >
-    <ASIXPs :asNumber="asNumber" :page-title="pageTitle" />
+    <ASIXPs
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[16].value"
     :title="$t('iyp.as.facilities.title')"
     :sub-title="$t('iyp.as.facilities.caption') + asNumber"
     :info-title="$t('iyp.as.facilities.info.title')"
     :info-description="$t('iyp.as.facilities.info.description')"
     class="card"
-    v-if="selects[16].value"
   >
-    <ASCoLocatedASes :asNumber="asNumber" :page-title="pageTitle" />
+    <ASCoLocatedASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Registration -->
   <GenericCardController
+    v-if="selects[17].value"
     :title="$t('iyp.as.siblings.title')"
     :sub-title="$t('iyp.as.siblings.caption')"
     :info-title="$t('iyp.as.siblings.info.title')"
     :info-description="$t('iyp.as.siblings.info.description')"
     class="card"
-    v-if="selects[17].value"
   >
-    <ASSiblingASes :asNumber="asNumber" :page-title="pageTitle" />
+    <ASSiblingASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
+    v-if="selects[18].value"
     :title="$t('iyp.as.rankings.title')"
     :sub-title="$t('iyp.as.rankings.caption') + asNumber"
     :info-title="$t('iyp.as.rankings.info.title')"
     :info-description="$t('iyp.as.rankings.info.description')"
     class="card"
-    v-if="selects[18].value"
   >
-    <ASRankings :asNumber="asNumber" :page-title="pageTitle" />
+    <ASRankings
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

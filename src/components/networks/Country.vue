@@ -139,8 +139,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
-    <h1 class="text-center">{{ pageTitle }}</h1>
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+  >
+    <h1 class="text-center">
+      {{ pageTitle }}
+    </h1>
     <h3 class="text-center">
       <div v-if="['monitoring', 'custom'].includes(menu)">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
@@ -148,11 +153,13 @@ onMounted(() => {
           :min="minDate"
           :max="maxDate"
           :value="endTime"
+          hide-time
           @input="setReportDate"
-          hideTime
         />
       </div>
-      <div v-else>Weekly report</div>
+      <div v-else>
+        Weekly report
+      </div>
     </h3>
     <QCard flat>
       <QTabs
@@ -163,15 +170,30 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="overview">Overview</QTab>
-        <QTab name="monitoring">Monitoring</QTab>
-        <QTab name="routing">Routing</QTab>
-        <QTab name="peering">Peering</QTab>
-        <QTab name="rankings">Rankings</QTab>
-        <QTab name="custom">Custom</QTab>
+        <QTab name="overview">
+          Overview
+        </QTab>
+        <QTab name="monitoring">
+          Monitoring
+        </QTab>
+        <QTab name="routing">
+          Routing
+        </QTab>
+        <QTab name="peering">
+          Peering
+        </QTab>
+        <QTab name="rankings">
+          Rankings
+        </QTab>
+        <QTab name="custom">
+          Custom
+        </QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels v-model="menu" v-if="pageTitle">
+      <QTabPanels
+        v-if="pageTitle"
+        v-model="menu"
+      >
         <QTabPanel name="overview">
           <CountryOverview :country-code="countryCode" />
         </QTabPanel>
@@ -186,13 +208,22 @@ onMounted(() => {
           />
         </QTabPanel>
         <QTabPanel name="routing">
-          <CountryRouting :country-code="countryCode" :page-title="pageTitle" />
+          <CountryRouting
+            :country-code="countryCode"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="peering">
-          <CountryPeering :country-code="countryCode" :page-title="pageTitle" />
+          <CountryPeering
+            :country-code="countryCode"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="rankings">
-          <CountryRankings :country-code="countryCode" :page-title="pageTitle" />
+          <CountryRankings
+            :country-code="countryCode"
+            :page-title="pageTitle"
+          />
         </QTabPanel>
         <QTabPanel name="custom">
           <CountryCustom

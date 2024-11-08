@@ -82,95 +82,129 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <QCheckbox v-for="select in selects" :label="select.label" v-model="select.value" />
-      <QCheckbox label="All" v-model="selectAll" />
+      <QCheckbox
+        v-for="select in selects"
+        :key="select.value"
+        v-model="select.value"
+        :label="select.label"
+      />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Overview -->
   <PrefixOverview
+    v-if="selects[0].value"
     :host="host"
     :prefix-length="prefixLength"
     :get-prefix="getPrefix"
     class="card"
-    v-if="selects[0].value"
   />
   <!-- Routing -->
   <GenericCardController
+    v-if="selects[1].value"
     :title="$t('iyp.prefix.upstreams.title')"
     :sub-title="getPrefix + ' depends on these ASes'"
     :info-title="$t('iyp.prefix.upstreams.info.title')"
     :info-description="$t('iyp.prefix.upstreams.info.description')"
     class="card"
-    v-if="selects[1].value"
   >
-    <PrefixUpstreamASes :page-title="pageTitle" :get-prefix="getPrefix" />
+    <PrefixUpstreamASes
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[2].value"
     :title="$t('iyp.prefix.roas.title')"
     :sub-title="$t('iyp.prefix.roas.caption') + getPrefix"
     :info-title="$t('iyp.prefix.roas.info.title')"
     :info-description="$t('iyp.prefix.roas.info.description')"
     class="card"
-    v-if="selects[2].value"
   >
-    <PrefixRPKIRouteOriginAuthorization :page-title="pageTitle" :get-prefix="getPrefix" />
+    <PrefixRPKIRouteOriginAuthorization
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[3].value"
     :title="$t('iyp.prefix.lessSpecific.title')"
     :sub-title="$t('iyp.prefix.lessSpecific.caption') + getPrefix"
     :info-title="$t('iyp.prefix.lessSpecific.info.title')"
     :info-description="$t('iyp.prefix.lessSpecific.info.description')"
     class="card"
-    v-if="selects[3].value"
   >
-    <PrefixLessSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
+    <PrefixLessSpecificPrefixes
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[4].value"
     :title="$t('iyp.prefix.moreSpecific.title')"
     :sub-title="$t('iyp.prefix.moreSpecific.caption') + getPrefix"
     :info-title="$t('iyp.prefix.moreSpecific.info.title')"
     :info-description="$t('iyp.prefix.moreSpecific.info.description')"
     class="card"
-    v-if="selects[4].value"
   >
-    <PrefixMoreSpecificPrefixes :page-title="pageTitle" :get-prefix="getPrefix" />
+    <PrefixMoreSpecificPrefixes
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
+    v-if="selects[5].value"
     :title="$t('iyp.prefix.popularDomains.title')"
     :sub-title="$t('iyp.prefix.popularDomains.caption') + getPrefix"
     :info-title="$t('iyp.prefix.popularDomains.info.title')"
     :info-description="$t('iyp.prefix.popularDomains.info.description')"
     class="card"
-    v-if="selects[5].value"
   >
-    <PrefixPopularDomains :page-title="pageTitle" :get-prefix="getPrefix" />
+    <PrefixPopularDomains
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[6].value"
     :title="$t('iyp.prefix.popularHostNames.title')"
     :sub-title="$t('iyp.prefix.popularHostNames.caption') + getPrefix"
     :info-title="$t('iyp.prefix.popularHostNames.info.title')"
     :info-description="$t('iyp.prefix.popularHostNames.info.description')"
     class="card"
-    v-if="selects[6].value"
   >
-    <PrefixPopularHostNames :page-title="pageTitle" :get-prefix="getPrefix" />
+    <PrefixPopularHostNames
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[7].value"
     :title="$t('iyp.prefix.nameservers.title')"
     :sub-title="$t('iyp.prefix.nameservers.caption') + getPrefix"
     :info-title="$t('iyp.prefix.nameservers.info.title')"
     :info-description="$t('iyp.prefix.nameservers.info.description')"
     class="card"
-    v-if="selects[7].value"
   >
-    <PrefixAuthoritativeNameservers :page-title="pageTitle" :get-prefix="getPrefix" />
+    <PrefixAuthoritativeNameservers
+      :page-title="pageTitle"
+      :get-prefix="getPrefix"
+    />
   </GenericCardController>
 </template>
 

@@ -71,7 +71,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div
+    id="IHR_as-and-ixp-container"
+    class="IHR_char-container"
+  >
     <div v-if="route.params.id || route.params.ip">
       <AS v-if="asNumber" />
       <IXP v-if="ixpNumber" />
@@ -79,18 +82,20 @@ onMounted(() => {
     </div>
     <div v-else>
       <div>
-        <h1 class="text-center q-pa-xl">Network Report</h1>
+        <h1 class="text-center q-pa-xl">
+          Network Report
+        </h1>
         <div class="row justify-center">
           <div class="col-6">
             <SearchBar
               bg="white"
               label="grey-8"
               input="black"
-              labelTxt="Enter an AS ID, IXP or network name (at least 3 characters)"
-              :noCountry="true"
-              :noHostName="true"
-              :noTag="true"
-              :noRank="true"
+              label-txt="Enter an AS ID, IXP or network name (at least 3 characters)"
+              :no-country="true"
+              :no-host-name="true"
+              :no-tag="true"
+              :no-rank="true"
             />
           </div>
         </div>
@@ -108,22 +113,25 @@ onMounted(() => {
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2497' } })"
                   class="IHR_delikify"
-                  >IIJ (AS2497)</RouterLink
                 >
+                  IIJ (AS2497)
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS15169' } })"
                   class="IHR_delikify"
-                  >Google (AS15169)</RouterLink
                 >
+                  Google (AS15169)
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS2501' } })"
                   class="IHR_delikify"
-                  >University of Tokyo (AS2501)</RouterLink
                 >
+                  University of Tokyo (AS2501)
+                </RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
@@ -131,22 +139,25 @@ onMounted(() => {
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP1997' } })"
                   class="IHR_delikify"
-                  >Equinix London (IXP1997)</RouterLink
                 >
+                  Equinix London (IXP1997)
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP26' } })"
                   class="IHR_delikify"
-                  >AMS-IX (IXP26)</RouterLink
                 >
+                  AMS-IX (IXP26)
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: 'IXP2588' } })"
                   class="IHR_delikify"
-                  >DE-CIX Chennai (IXP2588)</RouterLink
                 >
+                  DE-CIX Chennai (IXP2588)
+                </RouterLink>
               </li>
             </ul>
           </div>

@@ -70,9 +70,19 @@ onMounted(() => {
 
 <template>
   <div>
-    <ReactiveChart :layout="layout" :traces="traces" :noData="noData" />
-    <div v-if="loading" class="IHR_loading-spinner">
-      <q-spinner color="secondary" size="15em" />
+    <ReactiveChart
+      :layout="layout"
+      :traces="traces"
+      :no-data="noData"
+    />
+    <div
+      v-if="loading"
+      class="IHR_loading-spinner"
+    >
+      <q-spinner
+        color="secondary"
+        size="15em"
+      />
     </div>
   </div>
 </template>

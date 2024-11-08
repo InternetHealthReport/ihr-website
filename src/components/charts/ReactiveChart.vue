@@ -193,10 +193,20 @@ watch(
 
 <template>
   <div>
-    <h3 v-if="chartTitle">{{ chartTitle }}</h3>
-    <div ref="myId"></div>
-    <div v-if="noData" class="IHR_no-data">
-      <div class="bg-white" style="text-align: center">{{ noData }}</div>
+    <h3 v-if="chartTitle">
+      {{ chartTitle }}
+    </h3>
+    <div ref="myId" />
+    <div
+      v-if="noData"
+      class="IHR_no-data"
+    >
+      <div
+        class="bg-white"
+        style="text-align: center"
+      >
+        {{ noData }}
+      </div>
     </div>
   </div>
 </template>

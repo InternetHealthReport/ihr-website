@@ -7,11 +7,16 @@ import { QBtn } from 'quasar'
   <div id="page">
     <div class="notfound">
       <div class="image404">
-        <h1>4<span> </span>4</h1>
+        <h1>4<span />4</h1>
       </div>
       <h2>What on Internet are you doing here !</h2>
       <p>Well this is sad the page that you were looking for is not here</p>
-      <QBtn class="sec" :to="Tr.i18nRoute({ name: 'home' })">Get Yourself Home</QBtn>
+      <QBtn
+        class="sec"
+        :to="Tr.i18nRoute({ name: 'home' })"
+      >
+        Get Yourself Home
+      </QBtn>
     </div>
   </div>
 </template>

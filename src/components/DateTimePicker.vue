@@ -72,15 +72,22 @@ const textColor = computed(() => {
 </script>
 
 <template>
-  <QIcon name="fas fa-calendar-day" class="cursor-pointer" :class="textColor">
-    <QPopupProxy id="popupid" v-model="show">
+  <QIcon
+    name="fas fa-calendar-day"
+    class="cursor-pointer"
+    :class="textColor"
+  >
+    <QPopupProxy
+      id="popupid"
+      v-model="show"
+    >
       <QDate
         v-model="qTimeModel"
-        @update:model-value="propagate($event)"
         :mask="mask"
         :options="options"
         color="accent"
         minimal
+        @update:model-value="propagate($event)"
       />
     </QPopupProxy>
   </QIcon>

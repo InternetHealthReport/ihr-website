@@ -138,7 +138,7 @@ export function getPropertyUniqueValues(data, property) {
 
 export function isDictEmpty(dict) {
   if (dict) {
-    return !Boolean(Object.keys(dict).length)
+    return !Object.keys(dict).length
   } else {
     return true
   }

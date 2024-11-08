@@ -13,7 +13,7 @@ const router = useRouter()
 const emit = defineEmits(['searchChange', 'afChange'])
 
 const props = defineProps({
-  searchInput: {
+  searchInputP: {
     type: String,
     default: '2501'
   },
@@ -143,7 +143,7 @@ const targetNodePos = computed(() => {
 })
 
 const init = () => {
-  searchInput.value = props.searchInput
+  searchInput.value = props.searchInputP
   ipModel.value = props.af
 }
 
@@ -452,41 +452,75 @@ defineExpose({ fitToScreen })
 </script>
 
 <template>
-  <QCard style="margin-bottom: 15px" :flat="props.isComponent" :bordered="!props.isComponent">
+  <QCard
+    style="margin-bottom: 15px"
+    :flat="props.isComponent"
+    :bordered="!props.isComponent"
+  >
     <QCardSection v-if="!props.isComponent">
       <div class="flex justify-between pb-0">
-        <div class="flex justify-center" style="flex-grow: 1">
+        <div
+          class="flex justify-center"
+          style="flex-grow: 1"
+        >
           <QInput
+            v-model="searchInput"
             style="max-width: 145px"
             outlined
-            v-model="searchInput"
             placeholder="AS or Prefix"
             :dense="true"
           />
           <QSelect
+            v-model="ipModel"
             style="min-width: 100px; margin-left: 22px"
             filled
-            v-model="ipModel"
             :options="ipOptions"
             label="IP"
             :dense="true"
           />
-          <QBtn style="margin-left: 15px" color="secondary" label="Search" @click="search" />
+          <QBtn
+            style="margin-left: 15px"
+            color="secondary"
+            label="Search"
+            @click="search"
+          />
         </div>
-        <QBtn color="negative" label="Delete" @click="$emit('deleteChart', props.id)" />
+        <QBtn
+          color="negative"
+          label="Delete"
+          @click="$emit('deleteChart', props.id)"
+        />
       </div>
     </QCardSection>
 
-    <QCardSection class="graphContainer" v-if="!loading && Object.keys(allNodes).length > 0">
-      <QBtnGroup outline class="controlPanel">
-        <QBtn outline @click="graph?.zoomIn()" icon="zoom_in"></QBtn>
-        <QBtn outline @click="graph?.zoomOut()" icon="zoom_out"></QBtn>
-        <QBtn outline @click="fitToScreen()" icon="fit_screen"></QBtn>
+    <QCardSection
+      v-if="!loading && Object.keys(allNodes).length > 0"
+      class="graphContainer"
+    >
+      <QBtnGroup
+        outline
+        class="controlPanel"
+      >
+        <QBtn
+          outline
+          icon="zoom_in"
+          @click="graph?.zoomIn()"
+        />
+        <QBtn
+          outline
+          icon="zoom_out"
+          @click="graph?.zoomOut()"
+        />
+        <QBtn
+          outline
+          icon="fit_screen"
+          @click="fitToScreen()"
+        />
       </QBtnGroup>
 
       <VNetworkGraph
-        class="graph"
         ref="graph"
+        class="graph"
         :nodes="allNodes"
         :edges="allEdges"
         :layouts="layouts"
@@ -494,22 +528,31 @@ defineExpose({ fitToScreen })
         :event-handlers="eventHandlers"
       />
 
-      <div class="legend" v-if="props.showLegend">
+      <div
+        v-if="props.showLegend"
+        class="legend"
+      >
         <div class="row items-center">
           <div class="col">
-            <div class="hegemonyLabel">Hegemony</div>
+            <div class="hegemonyLabel">
+              Hegemony
+            </div>
           </div>
           <div class="col">
-            <div class="scaleLabel">100%</div>
+            <div class="scaleLabel">
+              100%
+            </div>
             <div class="scale">
               <div
                 v-for="percentage in [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0]"
                 :key="percentage"
                 class="scaleColor"
                 :style="{ backgroundColor: calculateNodeColor(percentage) }"
-              ></div>
+              />
             </div>
-            <div class="scaleLabel">0%</div>
+            <div class="scaleLabel">
+              0%
+            </div>
           </div>
         </div>
       </div>
@@ -530,9 +573,19 @@ defineExpose({ fitToScreen })
       </div>
     </QCardSection>
 
-    <QSpinner v-if="loading" color="secondary" size="5em" class="spinner" />
+    <QSpinner
+      v-if="loading"
+      color="secondary"
+      size="5em"
+      class="spinner"
+    />
 
-    <h5 v-if="!loading && Object.keys(allNodes).length == 0" class="text-center">No data found</h5>
+    <h5
+      v-if="!loading && Object.keys(allNodes).length == 0"
+      class="text-center"
+    >
+      No data found
+    </h5>
   </QCard>
 </template>
 

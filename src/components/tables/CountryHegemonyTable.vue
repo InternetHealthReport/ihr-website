@@ -124,62 +124,103 @@ const getClassByHegemony = (hegemony) => {
 
 <template>
   <QTable
+    v-model:pagination="pagination"
     :rows="rows"
     :columns="columns"
     row-key="asNumber"
-    :pagination.sync="pagination"
     :loading="loading"
     :filter="tabFilter"
     separator="vertical"
     binary-state-sort
     flat
   >
-    <template v-slot:header="props" style="display: contents">
+    <template
+      #header="props"
+      style="display: contents"
+    >
       <QTr>
-        <QTh colspan="2"><h3>Autonomous System</h3></QTh>
+        <QTh colspan="2">
+          <h3>Autonomous System</h3>
+        </QTh>
         <QTh colspan="3">
           <h3>
             Population coverage
-            <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
+            <QIcon
+              name="far fa-question-circle"
+              color="grey"
+              style="font-size: 0.9em"
+              right
+            />
             <QTooltip max-width="360px">
               <div
                 v-html="$t(`documentationPage.sections.countryasdependency.description.1.body`)"
-              ></div>
+              />
             </QTooltip>
           </h3>
         </QTh>
         <QTh colspan="1">
           <h3>
             AS coverage
-            <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
+            <QIcon
+              name="far fa-question-circle"
+              color="grey"
+              style="font-size: 0.9em"
+              right
+            />
             <QTooltip max-width="360px">
               <div
                 v-html="$t(`documentationPage.sections.countryasdependency.description.2.body`)"
-              ></div>
+              />
             </QTooltip>
           </h3>
         </QTh>
       </QTr>
       <QTr>
-        <QTh></QTh>
+        <QTh />
         <QTh>
-          <QInput dense debounce="300" borderless v-model="tabFilter" placeholder="Search">
-            <template v-slot:prepend>
+          <QInput
+            v-model="tabFilter"
+            dense
+            debounce="300"
+            borderless
+            placeholder="Search"
+          >
+            <template #prepend>
               <QIcon name="fas fa-search" />
             </template>
           </QInput>
         </QTh>
-        <QTh key="allEyeball" :props="props">Total</QTh>
-        <QTh key="eyeball" :props="props">Direct</QTh>
-        <QTh key="transitingEyeball" :props="props">Indirect</QTh>
-        <QTh key="transitingAs" :props="props">Total</QTh>
+        <QTh
+          key="allEyeball"
+          :props="props"
+        >
+          Total
+        </QTh>
+        <QTh
+          key="eyeball"
+          :props="props"
+        >
+          Direct
+        </QTh>
+        <QTh
+          key="transitingEyeball"
+          :props="props"
+        >
+          Indirect
+        </QTh>
+        <QTh
+          key="transitingAs"
+          :props="props"
+        >
+          Total
+        </QTh>
       </QTr>
     </template>
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr
         :props="props"
-        @click.native="routeToAsn(props.colsMap.asNumber, props.row)"
         class="IHR_table-row"
+        @click.enter="routeToAsn(props.colsMap.asNumber, props.row)"
       >
         <QTd
           v-for="col in columns"

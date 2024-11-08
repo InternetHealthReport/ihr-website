@@ -255,32 +255,38 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+    class="IHR_char-container"
+  >
     <div class="q-mb-xs">
       <div class="text-center">
-        <div class="text-h1">{{ $t('globalReport.title.global') }}</div>
+        <div class="text-h1">
+          {{ $t('globalReport.title.global') }}
+        </div>
         <div class="text-h3">
           {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
           <DateTimePicker
             :min="minDate"
             :max="maxDate"
             :value="endTime"
+            hide-time
             @input="setReportDate"
-            hideTime
           />
         </div>
       </div>
     </div>
     <AggregatedAlarmsController
-      :startTime="startTime"
-      :endTime="endTime"
-      :hegemonyAlarms="hegemonyAlarms"
-      :networkDelayAlarms="networkDelayAlarms"
       :key="aggregatedAlarmsKey"
-      :hegemonyLoading="loading.hegemony"
-      :networkDelayLoading="loading.network_delay"
-      :networkDisconnectionAlarms="networkDisconnectionAlarms"
-      :networkDisconnectionLoading="loading.network_disconnection"
+      :start-time="startTime"
+      :end-time="endTime"
+      :hegemony-alarms="hegemonyAlarms"
+      :network-delay-alarms="networkDelayAlarms"
+      :hegemony-loading="loading.hegemony"
+      :network-delay-loading="loading.network_delay"
+      :network-disconnection-alarms="networkDisconnectionAlarms"
+      :network-disconnection-loading="loading.network_disconnection"
     />
   </div>
   <Feedback />

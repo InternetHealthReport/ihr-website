@@ -311,13 +311,37 @@ watch(displayMode, () => {
 
 <template>
   <div class="graph-container">
-    <QSpinner v-if="isLoading" color="primary" />
-    <VNetworkGraph ref="graph" :nodes="nodes" :edges="edges" :layouts="layoutNodes" :configs="configs"
-      :event-handlers="eventHandlers" v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading" v-model:zoom-level="zoomLevel" />
-    <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
-    <div v-if="selectedNode" ref="tooltip" class="tooltip" :style="{ ...tooltipPos, opacity: tooltipOpacity }">
+    <QSpinner
+      v-if="isLoading"
+      color="primary"
+    />
+    <VNetworkGraph
+      v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading"
+      ref="graph"
+      v-model:zoom-level="zoomLevel"
+      :nodes="nodes"
+      :edges="edges"
+      :layouts="layoutNodes"
+      :configs="configs"
+      :event-handlers="eventHandlers"
+    />
+    <div
+      v-else-if="!isLoading"
+      class="placeholder-message"
+    >
+      No graph data available.
+    </div>
+    <div
+      v-if="selectedNode"
+      ref="tooltip"
+      class="tooltip"
+      :style="{ ...tooltipPos, opacity: tooltipOpacity }"
+    >
       <div style="display: flex; align-items: center">
-        <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }"></span>{{ tooltipData.type }}
+        <span
+          class="nodeTypeDot"
+          :style="{ backgroundColor: tooltipData.color }"
+        />{{ tooltipData.type }}
       </div>
       <div style="padding-bottom: 5px;">
         <template v-if="tooltipData?.data?.asns[0]?.asn">
@@ -325,8 +349,11 @@ watch(displayMode, () => {
             <span 
               class="asnDot" 
               :style="{ backgroundColor: asnColors[tooltipData.data.asns[0].asn] || 'gray' }"
-            ></span>
-            <a :href="`/ihr/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
+            />
+            <a
+              :href="`/ihr/en/network/AS${tooltipData.data.asns[0].asn}`"
+              target="_blank"
+            >
               AS{{ tooltipData.data.asns[0].asn }} ({{ tooltipData.data.asns[0].holder }})
             </a>
           </div>
@@ -336,24 +363,45 @@ watch(displayMode, () => {
         </template>
       </div>
       <div><strong>IP:</strong> {{ tooltipData.label }}</div>
-      <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available"}}</div>
+      <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? "Not available" }}</div>
       <div><strong>Prefix:</strong> {{ tooltipData?.data?.block?.resource ?? "Not available" }}</div>
-      <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available"}}</div>
-      <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available"}}</div>
-      <div v-if="tooltipData.address_v4"><strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}</div>
-      <div v-if="tooltipData.address_v6"><strong>IPv6 Address:</strong> {{ tooltipData.address_v6 }}</div>
-      <div v-if="tooltipData.country_code"><strong>Country Code:</strong> {{ tooltipData.country_code }}</div>
-      <div v-if="tooltipData.asn_v4"><strong>ASN4:</strong> {{ tooltipData.asn_v4 }}</div>
-      <div v-if="tooltipData.asn_v6"><strong>ASN6:</strong> {{ tooltipData.asn_v6 }}</div>
-      <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available"}}</div>
-      <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available"}}</div>
-      <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available"}}</div>
-      <div v-if="tooltipData.id"><strong>Probe ID:</strong> {{ tooltipData.id }}</div>
-      <div v-if="tooltipData.description"><strong>Probe Description:</strong> {{ tooltipData.description }}</div>
-      <div v-if="tooltipData.status?.name"><strong>Status:</strong> {{ tooltipData.status.name }}</div>
-      <div v-if="tooltipData.status?.since"><strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}</div>
+      <div><strong>Description:</strong> {{ tooltipData?.data?.block?.desc ?? "Not available" }}</div>
+      <div><strong>Name:</strong> {{ tooltipData?.data?.block?.name ?? "Not available" }}</div>
+      <div v-if="tooltipData.address_v4">
+        <strong>IPv4 Address:</strong> {{ tooltipData.address_v4 }}
+      </div>
+      <div v-if="tooltipData.address_v6">
+        <strong>IPv6 Address:</strong> {{ tooltipData.address_v6 }}
+      </div>
+      <div v-if="tooltipData.country_code">
+        <strong>Country Code:</strong> {{ tooltipData.country_code }}
+      </div>
+      <div v-if="tooltipData.asn_v4">
+        <strong>ASN4:</strong> {{ tooltipData.asn_v4 }}
+      </div>
+      <div v-if="tooltipData.asn_v6">
+        <strong>ASN6:</strong> {{ tooltipData.asn_v6 }}
+      </div>
+      <div><strong>Median RTT:</strong> {{ tooltipData.medianRtt ? tooltipData.medianRtt + "ms" : "Not available" }}</div>
+      <div><strong>Median Size:</strong> {{ tooltipData.medianSize ? tooltipData.medianSize + " bytes" : "Not available" }}</div>
+      <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? "Not available" }}</div>
+      <div v-if="tooltipData.id">
+        <strong>Probe ID:</strong> {{ tooltipData.id }}
+      </div>
+      <div v-if="tooltipData.description">
+        <strong>Probe Description:</strong> {{ tooltipData.description }}
+      </div>
+      <div v-if="tooltipData.status?.name">
+        <strong>Status:</strong> {{ tooltipData.status.name }}
+      </div>
+      <div v-if="tooltipData.status?.since">
+        <strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}
+      </div>
     </div>
-    <div v-if="Object.keys(nodes).length > 0" class="measurement-info-overlay">
+    <div
+      v-if="Object.keys(nodes).length > 0"
+      class="measurement-info-overlay"
+    >
       <div><strong>Description:</strong> {{ metaData.description }}</div>
       <div><strong>Target:</strong> {{ metaData.target }}</div>
       <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
@@ -361,43 +409,112 @@ watch(displayMode, () => {
       <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
       <div><strong>Status:</strong> {{ metaData.status.name }}</div>
     </div>
-    <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
-      <QRadio v-model="displayMode" val="normal" label="Normal Mode" />
-      <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
-      <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
-      <QBtn v-if="displayMode === 'asn'" flat dense @click="showAsnOverlay = !showAsnOverlay">
+    <div
+      v-if="Object.keys(nodes).length > 0"
+      class="mode-toggle-overlay"
+    >
+      <QRadio
+        v-model="displayMode"
+        val="normal"
+        label="Normal Mode"
+      />
+      <QRadio
+        v-model="displayMode"
+        val="rtt"
+        label="RTT Mode"
+      />
+      <QRadio
+        v-model="displayMode"
+        val="asn"
+        label="ASN Mode"
+      />
+      <QBtn
+        v-if="displayMode === 'asn'"
+        flat
+        dense
+        @click="showAsnOverlay = !showAsnOverlay"
+      >
         ASN Overlay
       </QBtn>
     </div>
-    <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
-      <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }"></span> <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}</div>
-      <div><span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }"></span> <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}</div>
+    <div
+      v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0"
+      class="rtt-info-overlay"
+    >
+      <div>
+        <span
+          class="rtt-dot"
+          :style="{ backgroundColor: rttColor(minDisplayedRtt) }"
+        /> <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + " ms" : "Not available" }}
+      </div>
+      <div>
+        <span
+          class="rtt-dot"
+          :style="{ backgroundColor: rttColor(maxDisplayedRtt) }"
+        /> <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + " ms" : "Not available" }}
+      </div>
     </div>
-    <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
+    <div
+      v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0"
+      class="legend"
+    >
       <div class="row items-center">
         <div class="col">
-          <div class="rttLabel">RTT</div>
+          <div class="rttLabel">
+            RTT
+          </div>
         </div>
         <div class="col">
-          <div class="scaleLabel">0%</div>
-          <div class="scale">
-            <div v-for="(percentage, index) in Array.from({length: 10}, (_, i) => minDisplayedRtt + i * (maxDisplayedRtt - minDisplayedRtt) / 9)" :key="index" class="scaleColor" :style="{backgroundColor: rttColor(percentage)}"></div>
+          <div class="scaleLabel">
+            0%
           </div>
-          <div class="scaleLabel">100%</div>
+          <div class="scale">
+            <div
+              v-for="(percentage, index) in Array.from({length: 10}, (_, i) => minDisplayedRtt + i * (maxDisplayedRtt - minDisplayedRtt) / 9)"
+              :key="index"
+              class="scaleColor"
+              :style="{backgroundColor: rttColor(percentage)}"
+            />
+          </div>
+          <div class="scaleLabel">
+            100%
+          </div>
         </div>
       </div>
     </div>
-    <div v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay" class="asn-info-overlay" :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }">
+    <div
+      v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay"
+      class="asn-info-overlay"
+      :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }"
+    >
       <div class="asn-grid">
-        <div v-for="asn in filteredAsnList" :key="asn" :style="{ backgroundColor: asnColors[asn] }" class="asn-box">
-          <a class="asn-link" :href="'/ihr/en/network/AS'+ asn" target="_blank">AS{{ asn }}</a>
+        <div
+          v-for="asn in filteredAsnList"
+          :key="asn"
+          :style="{ backgroundColor: asnColors[asn] }"
+          class="asn-box"
+        >
+          <a
+            class="asn-link"
+            :href="'/ihr/en/network/AS'+ asn"
+            target="_blank"
+          >AS{{ asn }}</a>
         </div>
       </div>
     </div>
     <div class="view-control-overlay">
-      <QBtn icon="zoom_in" @click="zoomIn" />
-      <QBtn icon="zoom_out" @click="zoomOut" />
-      <QBtn icon="fullscreen" @click="toggleFullScreen" />
+      <QBtn
+        icon="zoom_in"
+        @click="zoomIn"
+      />
+      <QBtn
+        icon="zoom_out"
+        @click="zoomOut"
+      />
+      <QBtn
+        icon="fullscreen"
+        @click="toggleFullScreen"
+      />
     </div>
   </div>
 </template>

@@ -666,7 +666,7 @@ const getDateFormat = (chosenTime) => {
 }
 
 const bgplay = computed(() => {
-  return `/ihr/widget/bgplay?asn=${props.asNumber}&date=${dateStr}`
+  return `/ihr/widget/bgplay?asn=${props.asNumber}&date=${dateStr.value}`
 })
 
 const dateStr = computed(() => {
@@ -802,15 +802,32 @@ onMounted(() => {
         @update:model-value="toggleIpFamily"
       />
     </div>
-    <ReactiveChart :layout="layout" :traces="traces" @plotly-click="plotClick" :no-data="noData" />
-    <div v-if="loading" class="IHR_loading-spinner">
-      <QSpinner color="secondary" size="15em" />
+    <ReactiveChart
+      :layout="layout"
+      :traces="traces"
+      :no-data="noData"
+      @plotly-click="plotClick"
+    />
+    <div
+      v-if="loading"
+      class="IHR_loading-spinner"
+    >
+      <QSpinner
+        color="secondary"
+        size="15em"
+      />
     </div>
-    <QCard v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
+    <QCard
+      v-if="details.tableVisible"
+      class="bg-accent q-ma-xl"
+      dark
+    >
       <QCardSection class="q-pa-xs">
         <div class="row items-center">
           <div class="col">
-            <div class="text-h3">{{ getDateFormat(details.date) }}</div>
+            <div class="text-h3">
+              {{ getDateFormat(details.date) }}
+            </div>
           </div>
           <div class="col-auto">
             <QBtn
@@ -818,15 +835,15 @@ onMounted(() => {
               size="sm"
               round
               flat
-              @click="details.tableVisible = false"
               icon="fa fa-times-circle"
-            ></QBtn>
+              @click="details.tableVisible = false"
+            />
           </div>
         </div>
       </QCardSection>
       <QTabs
-        dense
         v-model="details.activeTab"
+        dense
         class="table-card text-grey inset-shadow"
         indicator-color="secondary"
         active-color="primary"
@@ -834,12 +851,27 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="dependency" :label="$t('charts.asInterdependencies.table.dependencyTitle')" />
-        <QTab name="dependent" :label="$t('charts.asInterdependencies.table.dependentTitle')" />
-        <QTab name="bgpPlay" label="AS Graph" />
-        <QTab name="api" label="API" />
+        <QTab
+          name="dependency"
+          :label="$t('charts.asInterdependencies.table.dependencyTitle')"
+        />
+        <QTab
+          name="dependent"
+          :label="$t('charts.asInterdependencies.table.dependentTitle')"
+        />
+        <QTab
+          name="bgpPlay"
+          label="AS Graph"
+        />
+        <QTab
+          name="api"
+          label="API"
+        />
       </QTabs>
-      <QTabPanels v-model="details.activeTab" animated>
+      <QTabPanels
+        v-model="details.activeTab"
+        animated
+      >
         <QTabPanel name="dependency">
           <AsInterdependenciesTable
             :data="networkDependencyData"
@@ -855,10 +887,17 @@ onMounted(() => {
         </QTabPanel>
         <QTabPanel name="bgpPlay">
           <div class="bgplay-container">
-            <Bgplay :as-number="asNumber" :date-time="details.date" />
+            <Bgplay
+              :as-number="asNumber"
+              :date-time="details.date"
+            />
           </div>
         </QTabPanel>
-        <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
+        <QTabPanel
+          name="api"
+          class="IHR_api-table q-pa-lg"
+          light
+        >
           <h3>{{ $t('charts.asInterdependencies.table.apiTitle') }}</h3>
           <table>
             <tbody>
@@ -869,7 +908,11 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="dependencyUrl" target="_blank" id="tableUrl">{{ dependencyUrl }}</a>
+                  <a
+                    id="tableUrl"
+                    :href="dependencyUrl"
+                    target="_blank"
+                  >{{ dependencyUrl }}</a>
                 </td>
               </tr>
               <tr>
@@ -879,7 +922,11 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="dependentUrl" target="_blank" id="tableUrl">{{ dependentUrl }}</a>
+                  <a
+                    id="tableUrl"
+                    :href="dependentUrl"
+                    target="_blank"
+                  >{{ dependentUrl }}</a>
                 </td>
               </tr>
             </tbody>

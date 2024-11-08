@@ -14,7 +14,10 @@ const props = defineProps(['ixpNumber', 'pageTitle'])
     :info-title="$t('iyp.ixp.members.info.title')"
     :info-description="$t('iyp.ixp.members.info.description')"
   >
-    <IXPMembers :ixpNumber="ixpNumber" :page-title="pageTitle" />
+    <IXPMembers
+      :ixp-number="ixpNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.ixp.facilities.title')"
@@ -23,7 +26,10 @@ const props = defineProps(['ixpNumber', 'pageTitle'])
     :info-description="$t('iyp.ixp.facilities.info.description')"
     class="card"
   >
-    <IXPCoLocationFacilities :ixpNumber="ixpNumber" :page-title="pageTitle" />
+    <IXPCoLocationFacilities
+      :ixp-number="ixpNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.ixp.peeringLANs.title')"
@@ -32,7 +38,10 @@ const props = defineProps(['ixpNumber', 'pageTitle'])
     :info-description="$t('iyp.ixp.peeringLANs.info.description')"
     class="card"
   >
-    <IXPPeeringLANs :ixpNumber="ixpNumber" :page-title="pageTitle" />
+    <IXPPeeringLANs
+      :ixp-number="ixpNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

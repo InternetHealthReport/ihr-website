@@ -88,8 +88,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
-    <h1 class="text-center">{{ pageTitle }}</h1>
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+  >
+    <h1 class="text-center">
+      {{ pageTitle }}
+    </h1>
     <h3 class="text-center">
       <div>Weekly report</div>
     </h3>
@@ -103,17 +108,25 @@ onMounted(() => {
         narrow-indicator
       >
         <!-- <QTab name="overview">Overview</QTab> -->
-        <QTab name="custom">Custom</QTab>
+        <QTab name="custom">
+          Custom
+        </QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels v-model="menu" v-if="pageTitle">
+      <QTabPanels
+        v-if="pageTitle"
+        v-model="menu"
+      >
         <!-- <QTabPanel name="overview">
           <TagOverview
             :tag="tag"
           />
         </QTabPanel> -->
         <QTabPanel name="custom">
-          <TagCustom :tag="tag" :hash="routeHash" />
+          <TagCustom
+            :tag="tag"
+            :hash="routeHash"
+          />
         </QTabPanel>
       </QTabPanels>
     </QCard>

@@ -474,17 +474,25 @@ watch(
     use-input
     :label="placeholder"
     :options="options"
-    @filter="filter"
     hide-dropdown-icon
     input-debounce="1000"
     :bg-color="bg"
     :label-color="label"
     :input-class="input"
     hide-selected
+    @filter="filter"
   >
-    <template v-slot:append>
-      <div v-if="!props.noCountry" @click="showMap">
-        <QBtn :color="label" icon="fas fa-map" flat dense />
+    <template #append>
+      <div
+        v-if="!props.noCountry"
+        @click="showMap"
+      >
+        <QBtn
+          :color="label"
+          icon="fas fa-map"
+          flat
+          dense
+        />
         <QDialog v-model="showMapDialog">
           <WorldMap @country-selected="handleCountryClicked" />
         </QDialog>
@@ -493,83 +501,147 @@ watch(
         <div
           v-if="
             !loadingQueryAS &&
-            !loadingQueryPrefixes &&
-            !loadingQueryIXPs &&
-            !loadingQueryCountries &&
-            !loadingQueryASNames &&
-            !loadingQueryHostNames &&
-            !loadingQueryTags &&
-            !loadingQueryRanks
+              !loadingQueryPrefixes &&
+              !loadingQueryIXPs &&
+              !loadingQueryCountries &&
+              !loadingQueryASNames &&
+              !loadingQueryHostNames &&
+              !loadingQueryTags &&
+              !loadingQueryRanks
           "
         >
-          <QBtn :color="label" icon="fas fa-search" flat dense />
+          <QBtn
+            :color="label"
+            icon="fas fa-search"
+            flat
+            dense
+          />
         </div>
         <div v-else>
-          <QSpinner :color="label" size="0.82em" />
+          <QSpinner
+            :color="label"
+            size="0.82em"
+          />
         </div>
       </div>
     </template>
-    <template v-slot:loading> </template>
-    <template v-slot:option="scope">
+    <template #loading />
+    <template #option="scope">
       <QItem
         v-if="scope.opt.type == 'AS' && activateSearch"
         v-bind="scope.itemProps"
         @click="routeToAS(scope.opt.value)"
       >
-        <QItemSection side color="accent">AS{{ scope.opt.value }}</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection
+          side
+          color="accent"
+        >
+          AS{{ scope.opt.value }}
+        </QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
       <QItem
         v-if="scope.opt.type == 'Prefix' && activateSearch"
         v-bind="scope.itemProps"
         @click="routeToPrefix(scope.opt.value)"
       >
-        <QItemSection side color="accent">Prefix</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection
+          side
+          color="accent"
+        >
+          Prefix
+        </QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
       <QItem
         v-if="scope.opt.type == 'IXP' && activateSearch"
         v-bind="scope.itemProps"
         @click="routeToIXP(scope.opt.value)"
       >
-        <QItemSection side color="accent">IXP{{ scope.opt.value }}</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection
+          side
+          color="accent"
+        >
+          IXP{{ scope.opt.value }}
+        </QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
       <QItem
         v-if="scope.opt.type == 'Country' && activateSearch"
         v-bind="scope.itemProps"
         @click="routeToCountry(scope.opt.value)"
       >
-        <QItemSection side color="accent">Country</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection
+          side
+          color="accent"
+        >
+          Country
+        </QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
       <QItem
         v-if="scope.opt.type == 'HostName' && activateSearch"
         v-bind="scope.itemProps"
         @click="routeToHostName(scope.opt.value)"
       >
-        <QItemSection side color="accent">Hostname</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection
+          side
+          color="accent"
+        >
+          Hostname
+        </QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
       <QItem
         v-if="scope.opt.type == 'Tag' && activateSearch"
         v-bind="scope.itemProps"
         @click="routeToTag(scope.opt.value)"
       >
-        <QItemSection side color="accent" && activateSearch>Tag</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection
+          side
+          color="accent"
+          &&
+          activate-search
+        >
+          Tag
+        </QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
       <QItem
         v-if="scope.opt.type == 'Ranking' && activateSearch"
         v-bind="scope.itemProps"
         @click="routeToRank(scope.opt.value)"
       >
-        <QItemSection side color="accent">Rank</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection
+          side
+          color="accent"
+        >
+          Rank
+        </QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
-      <QItem v-if="scope.opt.type == 'Fail' && activateSearch" v-bind="scope.itemProps">
+      <QItem
+        v-if="scope.opt.type == 'Fail' && activateSearch"
+        v-bind="scope.itemProps"
+      >
         <!-- <QItemSection side color="accent">Country</QItemSection> -->
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
     </template>
   </QSelect>

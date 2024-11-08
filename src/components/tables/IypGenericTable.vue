@@ -314,57 +314,102 @@ onMounted(() => {
       class="IHR_loading-spinner"
       style="z-index: 1000"
     >
-      <QSpinner color="secondary" size="15em" />
+      <QSpinner
+        color="secondary"
+        size="15em"
+      />
     </div>
     <div>
       <QTabs
-        class="table-card text-grey bg-grey-2"
         v-model="activeTab"
+        class="table-card text-grey bg-grey-2"
         indicator-color="secondary"
         active-color="primary"
         align="justify"
         narrow-indicator
       >
-        <QTab name="chart" label="CHART" :disable="slotLength <= 0 ? true : false"></QTab>
-        <QTab name="data" label="DATA"></QTab>
-        <QTab name="api" label="CYPHER QUERY"></QTab>
-        <QTab name="metadata" label="METADATA"></QTab>
+        <QTab
+          name="chart"
+          label="CHART"
+          :disable="slotLength <= 0 ? true : false"
+        />
+        <QTab
+          name="data"
+          label="DATA"
+        />
+        <QTab
+          name="api"
+          label="CYPHER QUERY"
+        />
+        <QTab
+          name="metadata"
+          label="METADATA"
+        />
       </QTabs>
-      <QTabPanels v-model="activeTab" animated @transition="transition">
+      <QTabPanels
+        v-model="activeTab"
+        animated
+        @transition="transition"
+      >
         <QTabPanel name="chart">
           <div id="chartContainer">
-            <slot></slot>
+            <slot />
           </div>
         </QTabPanel>
         <QTabPanel name="data">
-          <QTable :rows="data" :columns="columns" :filter="filter" :pagination="pagination" flat>
-            <template v-slot:header-cell="props">
+          <QTable
+            :rows="data"
+            :columns="columns"
+            :filter="filter"
+            :pagination="pagination"
+            flat
+          >
+            <template #header-cell="props">
               <QTh :props="props">
-                <QTooltip v-if="props.col.description" anchor="bottom start" self="bottom start">{{
-                  props.col.description
-                }}</QTooltip>
+                <QTooltip
+                  v-if="props.col.description"
+                  anchor="bottom start"
+                  self="bottom start"
+                >
+                  {{
+                    props.col.description
+                  }}
+                </QTooltip>
                 {{ props.col.label }}
               </QTh>
             </template>
-            <template v-slot:top-right>
-              <QInput debounce="300" v-model="filter" placeholder="Search">
-                <template v-slot:append>
+            <template #top-right>
+              <QInput
+                v-model="filter"
+                debounce="300"
+                placeholder="Search"
+              >
+                <template #append>
                   <QIcon name="search" />
-                  <QTooltip class="bg-accent">Search in the table</QTooltip>
+                  <QTooltip class="bg-accent">
+                    Search in the table
+                  </QTooltip>
                 </template>
               </QInput>
-              <QBtn flat rounded icon-right="archive" @click="exportTable">
-                <QTooltip class="bg-accent">Download CSV file</QTooltip>
+              <QBtn
+                flat
+                rounded
+                icon-right="archive"
+                @click="exportTable"
+              >
+                <QTooltip class="bg-accent">
+                  Download CSV file
+                </QTooltip>
               </QBtn>
             </template>
-            <template v-slot:body="props">
+            <template #body="props">
               <QTr :props="props">
                 <QTd
-                  :class="toUnderline(column.name)"
                   v-for="column in columns"
-                  :props="props"
                   :key="column.name"
-                  @click.native="routeToEntity(column.name, props.row)"
+                  :class="toUnderline(column.name)"
+                  :props="props"
+                  @click.enter="routeToEntity(column.name, props.row)"
                 >
                   {{ column.format(column.field(props.row)) }}
                 </QTd>
@@ -372,44 +417,80 @@ onMounted(() => {
             </template>
           </QTable>
         </QTabPanel>
-        <QTabPanel name="api" class="text-left q-pa-lg" light>
-          <QBtn no-caps dense flat @click="copyToClipboard(cypherQuery)">
+        <QTabPanel
+          name="api"
+          class="text-left q-pa-lg"
+          light
+        >
+          <QBtn
+            no-caps
+            dense
+            flat
+            @click="copyToClipboard(cypherQuery)"
+          >
             <code>{{ cypherQuery }}</code>
             <QTooltip>Click to copy</QTooltip>
           </QBtn>
           <div>
-            <br />IYP Public Instance Link:
+            <br>IYP Public Instance Link:
             <a href="https://iyp.iijlab.net/">https://iyp.iijlab.net/</a>
           </div>
         </QTabPanel>
         <QTabPanel name="metadata">
-          <QMarkupTable flat bordered v-if="!loadingStatus">
+          <QMarkupTable
+            v-if="!loadingStatus"
+            flat
+            bordered
+          >
             <thead>
               <tr>
-                <th class="text-left">Data Source</th>
-                <th class="text-left">Fetched Time</th>
-                <th class="text-left">Modification Time</th>
-                <th class="text-left">URL</th>
+                <th class="text-left">
+                  Data Source
+                </th>
+                <th class="text-left">
+                  Fetched Time
+                </th>
+                <th class="text-left">
+                  Modification Time
+                </th>
+                <th class="text-left">
+                  URL
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="key in Object.keys(metadata)">
+              <tr
+                v-for="key in Object.keys(metadata)"
+                :key="key"
+              >
                 <td class="text-left">
                   <a
-                    :href="metadata[key].reference_url_info[0]"
                     v-if="metadata[key].reference_url_info[0]"
-                    >{{ key }}</a
-                  >
+                    :href="metadata[key].reference_url_info[0]"
+                  >{{ key }}</a>
                   <span v-else>{{ key }}</span>
                 </td>
                 <td class="text-left">
-                  <div v-for="time in metadata[key].reference_time_fetch">{{ time }}</div>
+                  <div
+                    v-for="time in metadata[key].reference_time_fetch"
+                    :key="time"
+                  >
+                    {{ time }}
+                  </div>
                 </td>
                 <td class="text-left">
-                  <div v-for="time in metadata[key].reference_time_modification">{{ time }}</div>
+                  <div
+                    v-for="time in metadata[key].reference_time_modification"
+                    :key="time"
+                  >
+                    {{ time }}
+                  </div>
                 </td>
                 <td class="text-left">
-                  <div v-for="url in metadata[key].reference_url_data">
+                  <div
+                    v-for="url in metadata[key].reference_url_data"
+                    :key="url"
+                  >
                     <a :href="url">{{ url }}</a>
                   </div>
                 </td>

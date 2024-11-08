@@ -141,7 +141,9 @@ onMounted(() => {
 
 <template>
   <div v-if="fetch">
-    <h2 v-if="widgetTitle">{{ widgetTitle }}</h2>
+    <h2 v-if="widgetTitle">
+      {{ widgetTitle }}
+    </h2>
     <div class="row justify-center">
       <div class="col q-px-md q-pb-md">
         <RirCountrySunburstChart :data="plotData" />
@@ -149,8 +151,14 @@ onMounted(() => {
     </div>
     <div class="row justify-center">
       <div class="col q-px-md">
-        <QExpansionItem label="Show data" class="bg-grey-2">
-          <MetisTable :data="tableData" :loading="!fetch" />
+        <QExpansionItem
+          label="Show data"
+          class="bg-grey-2"
+        >
+          <MetisTable
+            :data="tableData"
+            :loading="!fetch"
+          />
         </QExpansionItem>
       </div>
     </div>

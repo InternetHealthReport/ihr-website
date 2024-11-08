@@ -31,26 +31,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+    class="IHR_char-container"
+  >
     <div v-if="route.params.cc">
       <Country v-if="countryString" />
     </div>
     <div v-else>
       <div>
-        <h1 class="text-center q-pa-xl">Country Report</h1>
+        <h1 class="text-center q-pa-xl">
+          Country Report
+        </h1>
         <div class="row justify-center">
           <div class="col-6">
             <SearchBar
               bg="white"
               label="grey-8"
               input="black"
-              labelTxt="Enter a country name"
-              :noAS="true"
-              :noIXP="true"
-              :noPrefix="true"
-              :noHostName="true"
-              :noTag="true"
-              :noRank="true"
+              label-txt="Enter a country name"
+              :no-a-s="true"
+              :no-i-x-p="true"
+              :no-prefix="true"
+              :no-host-name="true"
+              :no-tag="true"
+              :no-rank="true"
             />
           </div>
         </div>
@@ -68,22 +74,25 @@ onMounted(() => {
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'country', params: { cc: 'JP' } })"
                   class="IHR_delikify"
-                  >Japan</RouterLink
                 >
+                  Japan
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'country', params: { cc: 'FR' } })"
                   class="IHR_delikify"
-                  >France</RouterLink
                 >
+                  France
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'country', params: { cc: 'US' } })"
                   class="IHR_delikify"
-                  >United States</RouterLink
                 >
+                  United States
+                </RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
@@ -91,22 +100,25 @@ onMounted(() => {
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'country', params: { cc: 'BR' } })"
                   class="IHR_delikify"
-                  >Brazil</RouterLink
                 >
+                  Brazil
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'country', params: { cc: 'DE' } })"
                   class="IHR_delikify"
-                  >Germany</RouterLink
                 >
+                  Germany
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'country', params: { cc: 'CN' } })"
                   class="IHR_delikify"
-                  >China</RouterLink
                 >
+                  China
+                </RouterLink>
               </li>
             </ul>
           </div>

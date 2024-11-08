@@ -66,35 +66,35 @@ if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[
 }
 
 const family = computed(() => {
-  return addressFamily == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
+  return addressFamily.value == 6 ? AS_FAMILY.v6 : AS_FAMILY.v4
 })
 const addressFamilyText = computed(() => {
-  return addressFamily ? 'IPv4' : 'IPv6'
+  return addressFamily.value ? 'IPv4' : 'IPv6'
 })
 const showGraphs = computed(() => {
-  return loadingStatus == LOADING_STATUS.LOADED
+  return loadingStatus.value == LOADING_STATUS.LOADED
 })
 const headerString = computed(() => {
-  if (loadingStatus == LOADING_STATUS.LOADING) {
+  if (loadingStatus.value == LOADING_STATUS.LOADING) {
     return t('Networks.headerString.loading')
-  } else if (loadingStatus == LOADING_STATUS.NOT_FOUND) {
+  } else if (loadingStatus.value == LOADING_STATUS.NOT_FOUND) {
     return t('Networks.headerString.notFound')
-  } else if (loadingStatus == LOADING_STATUS.EXPIRED) {
+  } else if (loadingStatus.value == LOADING_STATUS.EXPIRED) {
     return t('Networks.headerString.expired')
-  } else if (loadingStatus == LOADING_STATUS.LOADED) {
+  } else if (loadingStatus.value == LOADING_STATUS.LOADED) {
     return isoCountries[countryCode]
   } else {
     return t('genericErrors.ups')
   }
 })
 const subHeader = computed(() => {
-  if (loadingStatus == LOADING_STATUS.LOADING) {
+  if (loadingStatus.value == LOADING_STATUS.LOADING) {
     return t('Networks.subHeader.loading')
-  } else if (loadingStatus == LOADING_STATUS.NOT_FOUND) {
+  } else if (loadingStatus.value == LOADING_STATUS.NOT_FOUND) {
     return t('Networks.subHeader.notFound')
-  } else if (loadingStatus == LOADING_STATUS.EXPIRED) {
+  } else if (loadingStatus.value == LOADING_STATUS.EXPIRED) {
     return t('Networks.subHeader.expired')
-  } else if (loadingStatus == LOADING_STATUS.LOADED) {
+  } else if (loadingStatus.value == LOADING_STATUS.LOADED) {
     return countryCode
   } else {
     return t('genericErrors.badHappened')
@@ -126,21 +126,31 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+    class="IHR_char-container"
+  >
     <div>
-      <h1 class="text-center"><q-icon name="fas fa-route" />&nbsp; Route Origin Validation</h1>
+      <h1 class="text-center">
+        <q-icon name="fas fa-route" />&nbsp; Route Origin Validation
+      </h1>
       <h3 class="text-center">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
         <DateTimePicker
           :min="minDate"
           :max="maxDate"
           :value="endTime"
+          hide-time
           @input="setReportDate"
-          hideTime
         />
       </h3>
     </div>
-    <PrefixHegemonyChart :start-time="startTime" :end-time="endTime" :fetch="fetch" />
+    <PrefixHegemonyChart
+      :start-time="startTime"
+      :end-time="endTime"
+      :fetch="fetch"
+    />
     <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
   </div>
   <Feedback />

@@ -140,14 +140,25 @@ const sectionActive = ref('')
 
 <template>
   <div>
-    <QDrawer v-model="showSidebar" side="left" bordered class="IHR_documentation-page-sidebar">
+    <QDrawer
+      v-model="showSidebar"
+      side="left"
+      bordered
+      class="IHR_documentation-page-sidebar"
+    >
       <h3>{{ $t('documentationPage.title') }}</h3>
-      <div v-for="(sec, idx) in sections" v-bind:key="idx">
+      <div
+        v-for="(sec, idx) in sections"
+        :key="idx"
+      >
         <div class="text-weight-light">
           {{ $t(`documentationPage.sectionsTitle.${sec.sectionsTitle}`) }}
         </div>
         <ul>
-          <li v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)" v-bind:key="idx">
+          <li
+            v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)"
+            :key="idx"
+          >
             <RouterLink
               :to="
                 Tr.i18nRoute({
@@ -156,38 +167,45 @@ const sectionActive = ref('')
                 })
               "
               class="IHR_delikify"
-              v-bind:class="{
+              :class="{
                 'router-link-inactived': !sectionActiveStatus[secB],
                 'router-link-actived': sectionActiveStatus[secB]
               }"
-              v-on:click="activateSelection(secB)"
-              >{{ $t(`documentationPage.sections.${secB}.title`) }}</RouterLink
+              @click="activateSelection(secB)"
             >
+              {{ $t(`documentationPage.sections.${secB}.title`) }}
+            </RouterLink>
           </li>
         </ul>
       </div>
     </QDrawer>
 
     <div id="IHR_documentation-page">
-      <div v-for="(mainSec, mainIdx) in sections" v-bind:key="mainIdx">
+      <div
+        v-for="(mainSec, mainIdx) in sections"
+        :key="mainIdx"
+      >
         <div
           v-for="(bodySec, bodyIdx) in mainSec.sectionsBody"
-          v-bind:key="bodyIdx"
+          :key="bodyIdx"
           class="IHR_documentation-page"
         >
           <div
-            class="IHR_anchor"
             :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"
-          ></div>
-          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)"></h1>
+            class="IHR_anchor"
+          />
+          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)" />
           <p
             class="text-left text-body1"
             v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"
-          ></p>
-          <div v-for="idx in bodySec.numberOfDescriptions" v-bind:key="idx">
+          />
+          <div
+            v-for="idx in bodySec.numberOfDescriptions"
+            :key="idx"
+          >
             <h2
               v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"
-            ></h2>
+            />
             <img
               v-if="
                 $t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`) !== ''
@@ -198,11 +216,11 @@ const sectionActive = ref('')
                 )
               "
               :style="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.style`)"
-            />
+            >
             <p
               class="text-left text-body1"
               v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"
-            ></p>
+            />
           </div>
         </div>
       </div>

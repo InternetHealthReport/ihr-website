@@ -189,25 +189,28 @@ onMounted(() => {
 
 <template>
   <QTable
+    v-model:pagination="pagination"
+    v-model:expanded="expandedRow"
     table-class="myClass"
     :rows="rows"
     :columns="columns"
-    :pagination.sync="pagination"
     :loading="loading"
     :filter="filterTable"
     :filter-method="filterFct"
     binary-state-sort
     flat
     row-key="asNumber"
-    v-model:expanded="expandedRow"
     loading-label="Fetching latest network delay alarms..."
   >
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr :props="props">
         <QTd auto-width>
           <QToggle v-model="props.expand" />
         </QTd>
-        <QTd key="asNumber" align>
+        <QTd
+          key="asNumber"
+          align
+        >
           <RouterLink
             :to="
               Tr.i18nRoute({
@@ -219,24 +222,38 @@ onMounted(() => {
             {{ ihr_api.ihr_NumberToAsOrIxp(props.row.asNumber) }}
           </RouterLink>
         </QTd>
-        <QTd key="destinations" class="IHR_ndelay_table_cell">
+        <QTd
+          key="destinations"
+          class="IHR_ndelay_table_cell"
+        >
           <div>{{ destinationsSubtitle(props.row.endpoints) }}</div>
           <div class="IHR_ndelay_destinations">
             {{ destinationsBody(props.row.endpoints) }}
           </div>
         </QTd>
-        <QTd key="nbalarms">{{ props.row.nbalarms }}</QTd>
-        <QTd key="avgdev">{{ (props.row.cumdev / props.row.nbalarms).toFixed(2) }}</QTd>
+        <QTd key="nbalarms">
+          {{ props.row.nbalarms }}
+        </QTd>
+        <QTd key="avgdev">
+          {{ (props.row.cumdev / props.row.nbalarms).toFixed(2) }}
+        </QTd>
       </QTr>
-      <QTr v-if="props.expand" :props="props">
-        <QTd colspan="100%" class="IHR_nohover" bordered>
+      <QTr
+        v-if="props.expand"
+        :props="props"
+      >
+        <QTd
+          colspan="100%"
+          class="IHR_nohover"
+          bordered
+        >
           <div class="IHR_side_borders">
             <NetworkDelayChart
               :start-time="startTime"
               :end-time="stopTime"
-              :startPointName="String(props.row.asNumber)"
-              :startPointType="props.row.asNumber > 0 ? 'AS' : 'IX'"
-              :endPointNames="endpointKeys(props.row.endpoints)"
+              :start-point-name="String(props.row.asNumber)"
+              :start-point-type="props.row.asNumber > 0 ? 'AS' : 'IX'"
+              :end-point-names="endpointKeys(props.row.endpoints)"
               fetch
             />
           </div>

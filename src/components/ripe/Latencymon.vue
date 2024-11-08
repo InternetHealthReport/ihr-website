@@ -60,7 +60,7 @@ onMounted(() => {
 
     try {
       //see https://atlas.ripe.net/docs/tools-latencymon/ for more options and details
-      // eslint-disable-next-line no-undef
+       
       lm.value = initLatencymon(
         `#${myId.value}`,
         {
@@ -82,7 +82,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="IHR_nowrap" :id="myId"></div>
+  <div
+    :id="myId"
+    class="IHR_nowrap"
+  />
 </template>
 
 <style>

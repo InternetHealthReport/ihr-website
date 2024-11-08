@@ -86,46 +86,71 @@ const columns = ref([
 
 <template>
   <QTable
+    v-model:pagination="pagination"
+    v-model:expanded="expandedRow"
     :rows="rows"
     :columns="columns"
     row-key="ip"
-    :pagination.sync="pagination"
     :loading="loading"
     flat
     :filter="filterTable"
     :filter-method="filterFct"
-    v-model:expanded="expandedRow"
   >
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr :props="props">
         <QTd auto-width>
           <QToggle v-model="props.expand" />
         </QTd>
-        <QTd key="reportedIp" :props="props">
+        <QTd
+          key="reportedIp"
+          :props="props"
+        >
           <a href="javascript:void(0)">
             {{ props.row.ip }}
             <QPopupProxy>
-              <ReverseDnsIp :ip="props.row.ip" class="IHR_reverse-dns-ip-improved" />
+              <ReverseDnsIp
+                :ip="props.row.ip"
+                class="IHR_reverse-dns-ip-improved"
+              />
             </QPopupProxy>
           </a>
         </QTd>
-        <QTd key="usualPrecedingIp" :props="props">
+        <QTd
+          key="usualPrecedingIp"
+          :props="props"
+        >
           <a href="javascript:void(0)">
             {{ props.row.previoushop }}
             <QPopupProxy>
-              <ReverseDnsIp :ip="props.row.previoushop" class="IHR_reverse-dns-ip-improved" />
+              <ReverseDnsIp
+                :ip="props.row.previoushop"
+                class="IHR_reverse-dns-ip-improved"
+              />
             </QPopupProxy>
           </a>
         </QTd>
-        <QTd key="correlation" :props="props">
+        <QTd
+          key="correlation"
+          :props="props"
+        >
           {{ props.row.correlation }}
         </QTd>
-        <QTd key="responsibility" :props="props">
+        <QTd
+          key="responsibility"
+          :props="props"
+        >
           {{ props.row.responsibility }}
         </QTd>
       </QTr>
-      <QTr v-if="props.expand" :props="props">
-        <QTd colspan="100%" class="IHR_nohover" bordered>
+      <QTr
+        v-if="props.expand"
+        :props="props"
+      >
+        <QTd
+          colspan="100%"
+          class="IHR_nohover"
+          bordered
+        >
           <div class="IHR_side_borders">
             <Tracemon
               :start-time="dateHourShift(props.row.timebin, -1)"

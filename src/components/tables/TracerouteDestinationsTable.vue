@@ -85,18 +85,27 @@ watch(selectDestinationsModel, () => {
   <QInput
     v-model="destinationSearchQuery"
     placeholder="Search destinations..."
-    @input="emit('loadMeasurementOnSearchQuery')"
     :disable="Object.keys(nodes).length < 1"
+    @input="emit('loadMeasurementOnSearchQuery')"
   />
-  <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination" flat>
-    <template v-slot:header="props">
+  <QTable
+    :rows="filteredDestinationRows"
+    :columns="destinationColumns"
+    row-key="destination"
+    flat
+  >
+    <template #header="props">
       <QTr :props="props">
-        <QTd :props="props.colProps" v-for="col in props.cols" :key="col.name">
+        <QTd
+          v-for="col in props.cols"
+          :key="col.name"
+          :props="props.colProps"
+        >
           <template v-if="col.name === 'destination'">
             <QCheckbox
               v-model="selectAllDestinationsModel"
-              @update:model-value="toggleSelectAllDestinations"
               :disable="Object.keys(nodes).length < 1"
+              @update:model-value="toggleSelectAllDestinations"
             />
           </template>
           <template v-else>
@@ -105,7 +114,7 @@ watch(selectDestinationsModel, () => {
         </QTd>
       </QTr>
     </template>
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr :props="props">
         <QTd>
           <QCheckbox

@@ -21,10 +21,19 @@ const switchLanguage = async (newLocale) => {
 </script>
 
 <template>
-  <QBtn flat icon="fa-solid fa-language">
+  <QBtn
+    flat
+    icon="fa-solid fa-language"
+  >
     <QMenu>
       <QList>
-        <QItem clickable v-close-popup v-for="loc in supportedLocales" @click="switchLanguage(loc)">
+        <QItem
+          v-for="loc in supportedLocales"
+          :key="loc"
+          v-close-popup
+          clickable
+          @click="switchLanguage(loc)"
+        >
           <QItemSection>{{ $t(`locale.${loc}`) }}</QItemSection>
         </QItem>
       </QList>

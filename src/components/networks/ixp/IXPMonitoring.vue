@@ -33,12 +33,12 @@ const fetch = ref(true)
     <NetworkDelayChart
       :start-time="startTime"
       :end-time="endTime"
-      :startPointName="Math.abs(caidaId).toString()"
-      :startPointType="route.params.id.substring(0, 2)"
+      :start-point-name="Math.abs(caidaId).toString()"
+      :start-point-type="route.params.id.substring(0, 2)"
       :fetch="fetch"
-      searchBar
-      :peeringdbId="peeringdbId"
-      :readonlySourceSearch="true"
+      search-bar
+      :peeringdb-id="peeringdbId"
+      :readonly-source-search="true"
     />
   </GenericCardController>
 </template>

@@ -109,16 +109,31 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <span v-for="select in selects">
-        <QCheckbox v-if="select.hasData" :label="select.label" v-model="select.value" />
+      <span
+        v-for="select in selects"
+        :key="select.value"
+      >
+        <QCheckbox
+          v-if="select.hasData"
+          v-model="select.value"
+          :label="select.label"
+        />
       </span>
-      <QCheckbox label="All" v-model="selectAll" />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Overview -->
@@ -129,6 +144,7 @@ onMounted(() => {
   /> -->
   <!-- All -->
   <GenericCardController
+    v-if="selects[0].value && selects[0].hasData"
     :title="$t('iyp.tag.domains.title')"
     :sub-title="
       $t('iyp.tag.domains.caption') + tag + ' by ' + selectedWidgets.data_source_domains.join(', ')
@@ -136,11 +152,11 @@ onMounted(() => {
     :info-title="$t('iyp.tag.domains.info.title')"
     :info-description="$t('iyp.tag.domains.info.description')"
     class="card"
-    v-if="selects[0].value && selects[0].hasData"
   >
     <TagPopularHostNames :tag="tag" />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[1].value && selects[1].hasData"
     :title="$t('iyp.tag.ases.title')"
     :sub-title="
       $t('iyp.tag.ases.caption') + tag + ' by ' + selectedWidgets.data_source_ases.join(', ')
@@ -148,22 +164,21 @@ onMounted(() => {
     :info-title="$t('iyp.tag.ases.info.title')"
     :info-description="$t('iyp.tag.ases.info.description')"
     class="card"
-    v-if="selects[1].value && selects[1].hasData"
   >
     <TagAutonomousSystems :tag="tag" />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[2].value && selects[2].hasData"
     :title="$t('iyp.tag.prefixes.title')"
     :sub-title="
       $t('iyp.tag.prefixes.caption') +
-      tag +
-      ' by ' +
-      selectedWidgets.data_source_prefixes.join(', ')
+        tag +
+        ' by ' +
+        selectedWidgets.data_source_prefixes.join(', ')
     "
     :info-title="$t('iyp.tag.prefixes.info.title')"
     :info-description="$t('iyp.tag.prefixes.info.description')"
     class="card"
-    v-if="selects[2].value && selects[2].hasData"
   >
     <TagPrefixes :tag="tag" />
   </GenericCardController>

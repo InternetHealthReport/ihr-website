@@ -76,68 +76,96 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <QCheckbox v-for="select in selects" :label="select.label" v-model="select.value" />
-      <QCheckbox label="All" v-model="selectAll" />
+      <QCheckbox
+        v-for="select in selects"
+        :key="select.value"
+        v-model="select.value"
+        :label="select.label"
+      />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Routing -->
   <GenericCardController
+    v-if="selects[0].value"
     :title="$t('iyp.domainname.ips.title')"
     :sub-title="$t('iyp.domainname.ips.caption') + pageTitle"
     :info-title="$t('iyp.domainname.ips.info.title')"
     :info-description="$t('iyp.domainname.ips.info.description')"
     class="card"
-    v-if="selects[0].value"
   >
-    <HostNameIPAddressesPrefixes :page-title="pageTitle" :host-name="hostName" />
+    <HostNameIPAddressesPrefixes
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
+    v-if="selects[1].value"
     :title="$t('iyp.domainname.nameservers.title')"
     :sub-title="$t('iyp.domainname.nameservers.caption') + pageTitle"
     :info-title="$t('iyp.domainname.nameservers.info.title')"
     :info-description="$t('iyp.domainname.nameservers.info.description')"
     class="card"
-    v-if="selects[1].value"
   >
-    <HostNameAuthoritativeNameservers :page-title="pageTitle" :host-name="hostName" />
+    <HostNameAuthoritativeNameservers
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[2].value"
     :title="$t('iyp.domainname.country_query.title')"
     :sub-title="$t('iyp.domainname.country_query.caption') + pageTitle"
     :info-title="$t('iyp.domainname.country_query.info.title')"
     :info-description="$t('iyp.domainname.country_query.info.description')"
     class="card"
-    v-if="selects[2].value"
   >
-    <HostNameQueryingCountries :page-title="pageTitle" :host-name="hostName" />
+    <HostNameQueryingCountries
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[3].value"
     :title="$t('iyp.domainname.as_query.title')"
     :sub-title="$t('iyp.domainname.as_query.caption') + pageTitle"
     :info-title="$t('iyp.domainname.as_query.info.title')"
     :info-description="$t('iyp.domainname.as_query.info.description')"
     class="card"
-    v-if="selects[3].value"
   >
-    <HostNameQueryingASes :page-title="pageTitle" :host-name="hostName" />
+    <HostNameQueryingASes
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
+    v-if="selects[4].value"
     :title="$t('iyp.domainname.rankings.title')"
     :sub-title="$t('iyp.domainname.rankings.caption') + pageTitle"
     :info-title="$t('iyp.domainname.rankings.info.title')"
     :info-description="$t('iyp.domainname.rankings.info.description')"
     class="card"
-    v-if="selects[4].value"
   >
-    <HostNameRankings :page-title="pageTitle" :host-name="hostName" />
+    <HostNameRankings
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
 </template>
 

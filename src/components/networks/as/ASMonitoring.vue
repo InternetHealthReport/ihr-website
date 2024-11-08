@@ -84,11 +84,11 @@ const toggleIpFamily = () => {
     <NetworkDelayChart
       :start-time="startTime"
       :end-time="endTime"
-      :startPointName="Math.abs(asNumber).toString()"
-      :startPointType="route.params.id.substring(0, 2)"
+      :start-point-name="Math.abs(asNumber).toString()"
+      :start-point-type="route.params.id.substring(0, 2)"
       :fetch="fetch"
-      :readonlySourceSearch="true"
-      searchBar
+      :readonly-source-search="true"
+      search-bar
     />
   </GenericCardController>
 
@@ -99,7 +99,10 @@ const toggleIpFamily = () => {
     :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
   >
-    <ASRipeAtlas :asNumber="asNumber" :page-title="pageTitle" />
+    <ASRipeAtlas
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 
   <!-- <GenericCardController
@@ -127,11 +130,11 @@ const toggleIpFamily = () => {
     class="card"
   >
     <DiscoChart
-      :streamName="asNumber"
+      :stream-name="asNumber"
       :start-time="startTime"
       :end-time="endTime"
       :fetch="fetch"
-      :minAvgLevel="9"
+      :min-avg-level="9"
     />
   </GenericCardController>
 </template>

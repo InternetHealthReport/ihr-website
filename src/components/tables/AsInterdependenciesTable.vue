@@ -164,19 +164,19 @@ const getCalssByHegemony = (props) => {
 
 <template>
   <QTable
+    v-model:pagination="pagination"
     :rows="rows"
     :columns="columns"
     row-key="asNumber"
-    :pagination.sync="pagination"
     :loading="loading"
     binary-state-sort
     flat
   >
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr
         :props="props"
-        @click.native="routeToAsn(props.colsMap.asNumber, props.row)"
         class="IHR_table-row"
+        @click.enter="routeToAsn(props.colsMap.asNumber, props.row)"
       >
         <QTd
           v-for="col in columns"
@@ -185,8 +185,14 @@ const getCalssByHegemony = (props) => {
           :class="col.name == 'hegemony' ? ['IHR_important-cell', getCalssByHegemony(props)] : ''"
         >
           <div v-if="col.name == 'direct'">
-            <QIcon name="fas fa-check" v-if="props.row.direct" />
-            <QIcon name="fas fa-times" v-if="!props.row.direct" />
+            <QIcon
+              v-if="props.row.direct"
+              name="fas fa-check"
+            />
+            <QIcon
+              v-if="!props.row.direct"
+              name="fas fa-times"
+            />
           </div>
           {{ col.format(col.field(props.row)) }}
         </QTd>

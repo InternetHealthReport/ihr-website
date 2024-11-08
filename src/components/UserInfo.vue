@@ -50,22 +50,48 @@ onMounted(() => {
 </script>
 
 <template>
-  <QMarkupTable class="user-info-card" dense bordered>
+  <QMarkupTable
+    class="user-info-card"
+    dense
+    bordered
+  >
     <thead>
       <tr>
-        <th :colspan="2" align="center" style="border-bottom: 1px solid white; font-size: large">
+        <th
+          :colspan="2"
+          align="center"
+          style="border-bottom: 1px solid white; font-size: large"
+        >
           YOUR CONNECTION
         </th>
       </tr>
     </thead>
     <tbody v-if="!as_info_query.loading">
       <tr>
-        <td align="right" class="user-info-text">IP:</td>
-        <td align="left" class="user-info-text">{{ userInfo.IP }}</td>
+        <td
+          align="right"
+          class="user-info-text"
+        >
+          IP:
+        </td>
+        <td
+          align="left"
+          class="user-info-text"
+        >
+          {{ userInfo.IP }}
+        </td>
       </tr>
       <tr>
-        <td align="right" class="user-info-text">AS:</td>
-        <td align="left" class="user-info-text">
+        <td
+          align="right"
+          class="user-info-text"
+        >
+          AS:
+        </td>
+        <td
+          align="left"
+          class="user-info-text"
+        >
           <RouterLink
             :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${userInfo.AS}` } })"
             class="user-info-link"
@@ -75,8 +101,16 @@ onMounted(() => {
         </td>
       </tr>
       <tr>
-        <td align="right" class="user-info-text">PREFIX:</td>
-        <td align="left" class="user-info-text">
+        <td
+          align="right"
+          class="user-info-text"
+        >
+          PREFIX:
+        </td>
+        <td
+          align="left"
+          class="user-info-text"
+        >
           <RouterLink
             :to="
               Tr.i18nRoute({
@@ -91,8 +125,16 @@ onMounted(() => {
         </td>
       </tr>
       <tr>
-        <td align="right" class="user-info-text">COUNTRY:</td>
-        <td align="left" class="user-info-text">
+        <td
+          align="right"
+          class="user-info-text"
+        >
+          COUNTRY:
+        </td>
+        <td
+          align="left"
+          class="user-info-text"
+        >
           <RouterLink
             :to="Tr.i18nRoute({ name: 'country', params: { cc: userInfo.CC } })"
             class="user-info-link"
@@ -102,8 +144,14 @@ onMounted(() => {
         </td>
       </tr>
     </tbody>
-    <div v-else class="loading-spinner">
-      <QSpinner color="secondary" size="1em" />
+    <div
+      v-else
+      class="loading-spinner"
+    >
+      <QSpinner
+        color="secondary"
+        size="1em"
+      />
     </div>
   </QMarkupTable>
 </template>
