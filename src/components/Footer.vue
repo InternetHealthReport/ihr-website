@@ -165,115 +165,118 @@ import { version } from '../../package.json'
   </QFooter>
 </template>
 
-<style lang="stylus">
-.inline-block:hover{
+<style>
+.inline-block:hover {
   transform: scale(1.2);
 }
-.ihr-logo{
+.ihr-logo {
   width: 80px;
-  border 4px solid transparent
+  border: 4px solid transparent;
 }
-
-menu-delinkify(val)
-  font-size 1rem
-  color white
-  text-decoration none
-  text-transform capitalize
-  if val
-    font-weight 700
-
-.IHR_
-
-  &menu-entries
-    a, button
-      menu-delinkify 1
-
-    button
-      box-shadow none
-
-  &footer
-    display flex
-    flex-direction column
-    align-items center
-
-  &footer_contents
-      display flex
-      flex-direction column
-      align-items center
-      @media screen and (min-width: 1000px)
-        width 80%
-        margin-left auto
-        margin-right auto
-        flex-direction row
-        justify-content space-evenly
-        align-items flex-start
-
-    & a
-      color white
-
-    ~/fsection
-      padding-top 1.5rem
-      padding-bottom 1.5rem
-      border none
-      @media screen and (max-width: 600px)
-        padding-top 1rem
-        padding-bottom 1rem
-
-    ~/license-section
-      @media screen and (max-width: 1000px)
-        display flex
-        flex-direction column
-
-    ~/external-links
-      font-size 3.0em
-      margin-top .5rem
-
-      & a
-        color white
-        text-decoration none
-
-    ~/sitemap
-      display flex
-      justify-content center
-      font-size 1rem
-      font-weight 300
-      text-align center
-      @media screen and (max-width 600px)
-        flex-direction column
-
-      & > ul
-        min-width 10rem
-        list-style-type none
-        margin 0
-        padding .5rem 1.5rem
-
-        & > li > a
-          text-decoration none
-          text-transform capitalize
-
-          &:hover
-            text-decoration underline
-
-
-        & > .links-title
-          font-size 1.25rem
-
-          & > a:hover
-            text-decoration none
-
-#IHR_
-  &home-button
-    padding 0px 13px 0px 2px
-
-  &forgotten-password
-    white-space nowrap
-
-  &user-menu
-    padding 0.25rem
-    font-size 1rem
-    & *:first-letter
-      text-transform capitalize
-
-  &last-element
-    height 50px;
+.IHR_menu-entries a,
+.IHR_menu-entries button {
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  text-transform: capitalize;
+  font-weight: 700;
+}
+.IHR_menu-entries button {
+  box-shadow: none;
+}
+.IHR_footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.IHR_footer_contents {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+@media screen and (min-width: 1000px) {
+  .IHR_footer_contents {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-start;
+  }
+}
+.IHR_ a {
+  color: #fff;
+}
+.IHR_fsection {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  border: none;
+}
+@media screen and (max-width: 600px) {
+  .IHR_fsection {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .IHR_license-section {
+    display: flex;
+    flex-direction: column;
+  }
+}
+.IHR_external-links {
+  font-size: 3em;
+  margin-top: 0.5rem;
+}
+.IHR_external-links a {
+  color: #fff;
+  text-decoration: none;
+}
+.IHR_sitemap {
+  display: flex;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 300;
+  text-align: center;
+}
+@media screen and (max-width: 600px) {
+  .IHR_sitemap {
+    flex-direction: column;
+  }
+}
+.IHR_sitemap > ul {
+  min-width: 10rem;
+  list-style-type: none;
+  margin: 0;
+  padding: 0.5rem 1.5rem;
+}
+.IHR_sitemap > ul > li > a {
+  text-decoration: none;
+  text-transform: capitalize;
+}
+.IHR_sitemap > ul > li > a:hover {
+  text-decoration: underline;
+}
+.IHR_sitemap > ul > .links-title {
+  font-size: 1.25rem;
+}
+.IHR_sitemap > ul > .links-title > a:hover {
+  text-decoration: none;
+}
+#IHR_home-button {
+  padding: 0px 13px 0px 2px;
+}
+#IHR_forgotten-password {
+  white-space: nowrap;
+}
+#IHR_user-menu {
+  padding: 0.25rem;
+  font-size: 1rem;
+}
+#IHR_user-menu *:first-letter {
+  text-transform: capitalize;
+}
+#IHR_last-element {
+  height: 50px;
+}
 </style>

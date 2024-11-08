@@ -284,55 +284,57 @@ watch(simpleMenu, () => {
   </QHeader>
 </template>
 
-<style lang="stylus">
-menu-delinkify(val)
-  font-size 1rem
-  color white
-  text-decoration none
-  text-transform capitalize
-  margin-right 10px
-  if val
-    font-weight 700
-
-.IHR_
-  &minimum-width
-    min-width 640px !important
-
-  &menu-entries
-    a, button
-      menu-delinkify 1
-
-    button
-      box-shadow none
-
-  &dropdown-menu
-    background-color #263238
-
-    a
-      menu-delinkify 1
-
-#IHR_
-  &home-button
-    padding 0px 13px 0px 2px
-
-  &forgotten-password
-    white-space nowrap
-
-  &user-menu
-    padding 0.25rem
-    font-size 1rem
-    & *:first-letter
-      text-transform capitalize
-
-  &last-element
-    height 50px;
-
-@media screen and (max-width: 1024px)
-  .col-12.row.no-wrap.items-center
-    justify-content space-around
-
-@media screen and (max-width: 1024px)
-  .IHR_
-    &search-box.col-4
-      flex-grow 1
+<style>
+.IHR_minimum-width {
+  min-width: 640px !important;
+}
+.IHR_menu-entries a,
+.IHR_menu-entries button {
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  text-transform: capitalize;
+  margin-right: 10px;
+  font-weight: 700;
+}
+.IHR_menu-entries button {
+  box-shadow: none;
+}
+.IHR_dropdown-menu {
+  background-color: #263238;
+}
+.IHR_dropdown-menu a {
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  text-transform: capitalize;
+  margin-right: 10px;
+  font-weight: 700;
+}
+#IHR_home-button {
+  padding: 0px 13px 0px 2px;
+}
+#IHR_forgotten-password {
+  white-space: nowrap;
+}
+#IHR_user-menu {
+  padding: 0.25rem;
+  font-size: 1rem;
+}
+#IHR_user-menu *:first-letter {
+  text-transform: capitalize;
+}
+#IHR_last-element {
+  height: 50px;
+}
+@media screen and (max-width: 1024px) {
+  .col-12.row.no-wrap.items-center {
+    justify-content: space-around;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .IHR_search-box.col-4 {
+    flex-grow: 1;
+  }
+}
 </style>

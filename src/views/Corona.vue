@@ -211,31 +211,39 @@ watch(selected, (newValue) => {
   </div>
 </template>
 
-<style lang="stylus">
-.IHR_anchor
-    display block
-    position relative
-    top -250px
-    visibility hidden
-
-.toolbox
-    padding 16px
-    justify-content: flex-end
-
-p
-    font-size 1.2rem
-.center
-    text-align center
-.box_corona
-    padding-top 40px
-    padding-bottom 50px
-.column_corona
-  float left
-  width 33.33%
-@media screen and (max-width:720px)
-  .column_corona
-    width 100%
-@media screen and (max-width:1024px) and (min-width 720px)
-  .column_corona
-    width 50%
+<style>
+.IHR_anchor {
+  display: block;
+  position: relative;
+  top: -250px;
+  visibility: hidden;
+}
+.toolbox {
+  padding: 16px;
+  justify-content: flex-end;
+}
+p {
+  font-size: 1.2rem;
+}
+.center {
+  text-align: center;
+}
+.box_corona {
+  padding-top: 40px;
+  padding-bottom: 50px;
+}
+.column_corona {
+  float: left;
+  width: 33.33%;
+}
+@media screen and (max-width: 720px) {
+  .column_corona {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 1024px) and (min-width: 720px) {
+  .column_corona {
+    width: 50%;
+  }
+}
 </style>

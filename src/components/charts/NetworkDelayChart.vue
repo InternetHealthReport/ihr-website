@@ -521,24 +521,29 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus" scoped>
-.IHR_
-  &charts-title
-    overflow hidden
-    ~/last
-      right 50px
-  &searchbar
-    position absolute
-    transition top .6s
-  &showed-bar
-    top 10px
-    visibility visible
-    opacity 1
-  &hidden-bar
-    top 60px
-    opacity 0
-.btn
-    margin-bottom 0.8125rem
-    width 80pt
-    margin-right 0.8125rem
+<style scoped>
+.IHR_charts-title {
+  overflow: hidden;
+}
+.IHR_last {
+  right: 50px;
+}
+.IHR_searchbar {
+  position: absolute;
+  transition: top 0.6s;
+}
+.IHR_showed-bar {
+  top: 10px;
+  visibility: visible;
+  opacity: 1;
+}
+.IHR_hidden-bar {
+  top: 60px;
+  opacity: 0;
+}
+.btn {
+  margin-bottom: 0.8125rem;
+  width: 80pt;
+  margin-right: 0.8125rem;
+}
 </style>

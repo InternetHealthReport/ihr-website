@@ -195,4 +195,4 @@ const getCalssByHegemony = (props) => {
   </QTable>
 </template>
 
-<style lang="stylus"></style>
+<style></style>

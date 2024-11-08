@@ -113,7 +113,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
-.cards
-  display inline-block
+<style>
+.cards {
+  display: inline-block;
+}
 </style>

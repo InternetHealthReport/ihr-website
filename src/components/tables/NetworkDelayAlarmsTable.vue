@@ -246,41 +246,37 @@ onMounted(() => {
   </QTable>
 </template>
 
-<style lang="stylus">
-.IHR_ndelay_table_cell
-    max-width 700px
-
-.IHR_ndelay_destinations
-    text-overflow ellipsis
-    /* Required for text-overflow to do anything */
-    white-space nowrap
-    overflow hidden
-    font-style italic
-    color #555
-
-.IHR_nohover
-    &:first-child
-      padding-top 0px
-      padding-bottom 20px
-      padding-right 20px
-      padding-left 20px
-      background #fafafa
-
-.IHR_side_borders
-    &:first-child
-        padding-top 20px
-        border-style solid
-        border-color #dddddd
-        border-top-width 0px
-        border-left-width 1px
-        border-right-width 1px
-        border-bottom-width 1px
-        border-radius 5px
-        background #ffffff
-
-
-.myClass
-
-    tbody td
-        text-align left
+<style>
+.IHR_ndelay_table_cell {
+  max-width: 700px;
+}
+.IHR_ndelay_destinations {
+  text-overflow: ellipsis;
+/* Required for text-overflow to do anything */
+  white-space: nowrap;
+  overflow: hidden;
+  font-style: italic;
+  color: #555;
+}
+.IHR_nohover:first-child {
+  padding-top: 0px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
+  background: #fafafa;
+}
+.IHR_side_borders:first-child {
+  padding-top: 20px;
+  border-style: solid;
+  border-color: #ddd;
+  border-top-width: 0px;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  border-radius: 5px;
+  background: #fff;
+}
+.myClass tbody td {
+  text-align: left;
+}
 </style>

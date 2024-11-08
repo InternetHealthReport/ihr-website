@@ -154,4 +154,4 @@ onMounted(() => {
   </QTable>
 </template>
 
-<style lang="stylus"></style>
+<style></style>

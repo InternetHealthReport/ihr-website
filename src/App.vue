@@ -51,69 +51,65 @@ onBeforeUnmount(() => {
   <LocalStorageBanner :disable="true" />
 </template>
 
-<style lang="stylus">
-menu-delinkify(val)
-  font-size 1rem
-  color white
-  text-decoration none
-  text-transform capitalize
-  if val
-    font-weight 700
+<style>
+.IHR_menu-entries a,
+.IHR_menu-entries button {
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  text-transform: capitalize;
+  font-weight: 700;
+}
+.IHR_menu-entries button {
+  box-shadow: none;
+}
+.IHR_footer a {
+  color: #fff;
+}
+.IHR_footer afirst-child {
+  border-left: none;
+}
+.IHR_copyright > div {
+  margin: 0.5rem 0;
+}
+.IHR_external-links {
+  font-size: 3em;
+  text-decoration: none;
+}
+.IHR_external-links a {
+  color: #fff;
+}
+.IHR_scroll-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2000;
+  cursor: pointer;
+  transition: all 0.6s;
+  border-radius: 50%;
+  color: #fff;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #fff;
+  opacity: 0.8;
+}
+.IHR_scroll-btn:hover {
+  transform: scale(1.1);
+}
+#IHR_home-button {
+  padding: 0px 13px 0px 2px;
+}
+#IHR_forgotten-password {
+  white-space: nowrap;
+}
+#IHR_user-menu {
+  padding: 0.25rem;
+  font-size: 1rem;
+}
+#IHR_user-menu *:first-letter {
+  text-transform: capitalize;
+}
+#IHR_last-element {
+  height: 50px;
+}
 
-.IHR_
-  &menu-entries
-    a, button
-      menu-delinkify 1
-
-    button
-      box-shadow none
-
-  &footer
-    & a
-      color white
-
-      &first-child
-        border-left none
-
-    ~/copyright
-      & > div
-        margin 0.5rem 0
-
-    ~/external-links
-      font-size 3.0em
-      text-decoration none
-
-      & a
-        color white
-
-  &scroll-btn
-    position fixed
-    bottom 20px
-    right 20px
-    z-index 2000
-    cursor pointer
-    transition all 0.6s
-    border-radius 50%
-    color white
-    padding 0.7rem 0.8rem
-    border 1px solid white
-    opacity 0.8
-    &:hover
-      transform scale(1.1)
-
-#IHR_
-  &home-button
-    padding 0px 13px 0px 2px
-
-  &forgotten-password
-    white-space nowrap
-
-  &user-menu
-    padding 0.25rem
-    font-size 1rem
-    & *:first-letter
-      text-transform capitalize
-
-  &last-element
-    height 50px;
 </style>

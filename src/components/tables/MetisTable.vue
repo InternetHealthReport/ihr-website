@@ -117,4 +117,4 @@ const exportTable = () => {
   </QTable>
 </template>
 
-<style lang="stylus"></style>
+<style></style>

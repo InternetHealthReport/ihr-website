@@ -422,7 +422,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
+<style>
 .underline:hover {
   text-decoration: underline;
 }

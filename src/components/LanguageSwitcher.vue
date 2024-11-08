@@ -32,4 +32,4 @@ const switchLanguage = async (newLocale) => {
   </QBtn>
 </template>
 
-<style lang="stylus"></style>
+<style></style>

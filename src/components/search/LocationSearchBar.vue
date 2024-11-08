@@ -174,12 +174,13 @@ watch(
   </QSelect>
 </template>
 
-<style lang="stylus" scoped>
-.IHR_
-  &asn-element
-    width 100%
-    margin 0px
-    padding 0px
-    &-name
-      text-align left
+<style scoped>
+.IHR_asn-element {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+.IHR_asn-element-name {
+  text-align: left;
+}
 </style>

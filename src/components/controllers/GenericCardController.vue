@@ -90,14 +90,16 @@ const getUrlAnchor = () => {
   </div>
 </template>
 
-<style lang="stylus">
-.bar
-  height 100% !important
-  background-color #263238 !important
-  color white !important
-.anchor
-  display block
-  position relative
-  top -80px
-  visibility hidden
+<style>
+.bar {
+  height: 100% !important;
+  background-color: #263238 !important;
+  color: #fff !important;
+}
+.anchor {
+  display: block;
+  position: relative;
+  top: -80px;
+  visibility: hidden;
+}
 </style>

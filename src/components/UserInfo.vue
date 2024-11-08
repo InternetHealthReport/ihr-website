@@ -108,21 +108,22 @@ onMounted(() => {
   </QMarkupTable>
 </template>
 
-<style lang="stylus">
-.user-info-card
-  width inherit
-  background-color rgba(0,0,0,0) !important
-  border-color white !important
-  color white !important
-
-.user-info-text
-  font-size 14px !important
-  font-weight 500 !important
-
-.user-info-link
-  color white !important
-
-.loading-spinner
-  margin-bottom 10px
-  text-align center
+<style>
+.user-info-card {
+  width: inherit;
+  background-color: rgba(0,0,0,0) !important;
+  border-color: #fff !important;
+  color: #fff !important;
+}
+.user-info-text {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+.user-info-link {
+  color: #fff !important;
+}
+.loading-spinner {
+  margin-bottom: 10px;
+  text-align: center;
+}
 </style>

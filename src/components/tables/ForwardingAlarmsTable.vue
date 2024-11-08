@@ -140,4 +140,4 @@ const columns = ref([
   </QTable>
 </template>
 
-<style lang="stylus"></style>
+<style></style>

@@ -105,4 +105,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus"></style>
+<style></style>
