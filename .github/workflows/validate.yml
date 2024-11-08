@@ -1,7 +1,7 @@
 name: PR Validation
 
 on:
-  pull_request:
+  pull_request_target:
     types: [edited, opened, synchronize, reopened]
     branches: ["*"]
 
@@ -11,15 +11,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Determine if PR is from fork
-        id: check_fork
-        run: |
-          if [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
-            echo "is_fork=true" >> $GITHUB_ENV
-          else
-            echo "is_fork=false" >> $GITHUB_ENV
-          fi
 
       - name: Clear all PR labels
         run: |
