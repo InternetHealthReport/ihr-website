@@ -3,11 +3,10 @@ name: PR Validation
 on:
   pull_request:
     types: [edited, opened, synchronize, reopened]
-    branches: ["*"]
+    branches: ["main", "dev"]
 
 jobs:
   validate-pr:
-    permissions: write-all
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
