@@ -86,17 +86,17 @@ const textColor = computed(() => {
   </QIcon>
 </template>
 
-<style lang="stylus" scoped>
-.IHR_
-  &date-time-picker
-    cursor pointer
-
-  &white-text
-    color white
-
-  &black-text
-    color black
-
-  &date-input
-    font-weight bolder
+<style scoped>
+.IHR_date-time-picker {
+  cursor: pointer;
+}
+.IHR_white-text {
+  color: #fff;
+}
+.IHR_black-text {
+  color: #000;
+}
+.IHR_date-input {
+  font-weight: bolder;
+}
 </style>

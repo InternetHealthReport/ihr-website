@@ -198,7 +198,8 @@ const getClassByHegemony = (hegemony) => {
   </div>
 </template>
 
-<style lang="stylus">
-.comma:not(:empty) ~ .comma:not(:empty):before
-  content ", "
+<style>
+.comma:not(:empty) ~ .comma:not(:empty):before {
+  content: ", ";
+}
 </style>

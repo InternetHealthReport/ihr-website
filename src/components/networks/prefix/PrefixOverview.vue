@@ -245,12 +245,12 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
+<style>
 p {
   font-size: 1rem;
   margin-bottom: 0;
 }
 .topology {
-  padding 0 0 0 0 !important;
+  padding: 0 0 0 0 !important;
 }
 </style>

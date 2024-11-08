@@ -284,44 +284,49 @@ onMounted(() => {
   </QTable>
 </template>
 
-<style lang="stylus">
-.IHR_
-  &probe-popup
-    padding 10px
-    max-width 200px
-    background transparent
-
-    & > span:first-child
-      font-weight 500
-      margin-right 0.5rem
-
-  &prefix-overview-popup
-    max-width 400px
-
-  &popup
-    border-color black
-    max-width 600px
-    min-width 300px
-
-  &reverse-dns-ip-improved
-    min-width 250px
-    width 100%
-    margin-bottom 0px
-    padding-bottom 0px
-    & > div:first-child
-      margin 0px
-      & > .stat-widget.full-box
-          margin 0px
-      & > .box-content
-        border none
-        padding 0 10px
-        margin 0px
-        & > .controls-container
-          display none
-        & > div:last-child
-          & > .res_info_holder
-            margin 0px
-            padding-bottom 10px
-            & > a
-              color #405057 !important
+<style>
+.IHR_probe-popup {
+  padding: 10px;
+  max-width: 200px;
+  background: transparent;
+}
+.IHR_probe-popup > span:first-child {
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+.IHR_prefix-overview-popup {
+  max-width: 400px;
+}
+.IHR_popup {
+  border-color: #000;
+  max-width: 600px;
+  min-width: 300px;
+}
+.IHR_reverse-dns-ip-improved {
+  min-width: 250px;
+  width: 100%;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+.IHR_reverse-dns-ip-improved > div:first-child {
+  margin: 0px;
+}
+.IHR_reverse-dns-ip-improved > div:first-child > .stat-widget.full-box {
+  margin: 0px;
+}
+.IHR_reverse-dns-ip-improved > div:first-child > .box-content {
+  border: none;
+  padding: 0 10px;
+  margin: 0px;
+}
+.IHR_reverse-dns-ip-improved > div:first-child > .box-content > .controls-container {
+  display: none;
+}
+.IHR_reverse-dns-ip-improved > div:first-child > .box-content > div:last-child > .res_info_holder {
+  margin: 0px;
+  padding-bottom: 10px;
+}
+.IHR_reverse-dns-ip-improved > div:first-child > .box-content > div:last-child > .res_info_holder > a {
+  color: #405057 !important;
+}
 </style>

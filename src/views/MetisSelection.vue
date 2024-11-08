@@ -247,13 +247,12 @@ const copyAPI = () => {
   </div>
 </template>
 
-<style lang="stylus">
-
-
-.IHR_block
-  max-width 900px
-
-.apiTextarea
-  width 100%
-  min-height 500px
+<style>
+.IHR_block {
+  max-width: 900px;
+}
+.apiTextarea {
+  width: 100%;
+  min-height: 500px;
+}
 </style>

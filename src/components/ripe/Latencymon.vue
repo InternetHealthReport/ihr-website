@@ -85,11 +85,12 @@ onMounted(() => {
   <div class="IHR_nowrap" :id="myId"></div>
 </template>
 
-<style lang="stylus">
-.latencymon-container .probe-multi-info .probe-info-line
-    white-space normal!important;
-    margin-top 10px!important;
-
-.IHR_nowrap
-    white-space normal !important;
+<style>
+.latencymon-container .probe-multi-info .probe-info-line {
+  white-space: normal !important;
+  margin-top: 10px !important;
+}
+.IHR_nowrap {
+  white-space: normal !important;
+}
 </style>

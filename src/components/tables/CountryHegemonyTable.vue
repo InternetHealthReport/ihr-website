@@ -198,4 +198,4 @@ const getClassByHegemony = (hegemony) => {
   </QTable>
 </template>
 
-<style lang="stylus"></style>
+<style></style>

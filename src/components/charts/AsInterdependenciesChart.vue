@@ -890,20 +890,19 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
-.bgplay-container
-    overflow hidden
-    padding-top 0px !important
-    position relative
-
-.IpFamilyContainer{
-  display flex
-  width 100%
-  flex-direction column
-  margin-bottom 3px
+<style>
+.bgplay-container {
+  overflow: hidden;
+  padding-top: 0px !important;
+  position: relative;
 }
-
-.toggleIpFamilyButton{
-  align-self end
+.IpFamilyContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  margin-bottom: 3px;
+}
+.toggleIpFamilyButton {
+  align-self: end;
 }
 </style>

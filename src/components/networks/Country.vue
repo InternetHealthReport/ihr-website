@@ -147,7 +147,7 @@ onMounted(() => {
         <DateTimePicker
           :min="minDate"
           :max="maxDate"
-          :value="maxDate"
+          :value="endTime"
           @input="setReportDate"
           hideTime
         />
@@ -210,7 +210,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
-.cards
-  display inline-block
+<style>
+.cards {
+  display: inline-block;
+}
 </style>

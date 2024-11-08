@@ -23,4 +23,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus" scoped></style>
+<style scoped></style>

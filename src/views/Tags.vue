@@ -121,14 +121,19 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style lang="stylus">
-.examples
-  column-gap 30px
-@media screen and (max-width: 500px)
-  .examples
-    flex-direction column
-.ul_styles
-  padding 0
-  margin 0
-  list-style-position: inside
+<style>
+.examples {
+  column-gap: 30px;
+}
+@media screen and (max-width: 500px) {
+  .examples {
+    flex-direction: column;
+  }
+}
+.ul_styles {
+  padding: 0;
+  margin: 0;
+  list-style-position: inside;
+}
+
 </style>

@@ -210,102 +210,108 @@ const sectionActive = ref('')
   </div>
 </template>
 
-<style lang="stylus">
-#IHR_
-  &documentation-page
-    margin 0 auto
-    width 100%
-    max-width 1200px
-    padding 0 1rem
-    overflow-x scroll
-
-.IHR_
-  &documentation-page
-    & > h1
-      line-height 2rem
-      padding 0.5rem 0
-      font-weight 500
-      border-bottom 1px solid #ccc
-      margin 4rem 0 1.5rem
-      @media screen and (max-width: 720px)
-        font-size 1.8125rem
-        margin 2rem 0 1rem
-
-    & > div
-      & > h2
-        margin-top 2.875rem
-        margin-bottom 1rem
-        font-size 1.5rem !important
-        font-weight 500
-        line-height 1.5rem
-        @media screen and (max-width: 600px)
-          font-size 1.25rem
-          margin-bottom 0.8125rem
-      & > .text-body1
-        overflow-anchor none
-        & > a
-          overflow-anchor none
-          word-break break-word
-        & > ul
-          & > li
-            & > a
-              word-break break-word
-        & > p
-          & > a
-            word-break break-word
-#cod
-      background-color: #e7e9eb
-      padding:1em
-      border-radius: 0.5rem
-      padding-bottom: 0
-
-.IHR_
-  &documentation-page-sidebar
-    & > h3
-      margin-top 0.1875rem
-      width 88%
-      margin 0px auto
-      font-size 1.25rem
-      font-weight 500
-      @media screen and (max-width: 600px)
-        font-size 1rem
-
-      &:first-letter
-        text-transform capitalize
-
-    & > div
-      width 82%
-      margin 0.375rem auto 0.1875rem auto
-
-      & a:hover
-        border-bottom 1px solid #263238
-
-      & a:active
-        border-bottom 1px solid #405057
-
-      & ul
-        margin 5px
-        padding 0px
-
-      & li
-        list-style-type none
-        margin 0px
-        padding 0px
-        padding-left 15px
-
-.IHR_anchor
-  display block
-  position relative
-  top -100px
-  visibility hidden
-
-.router-link-inactived
-  border-bottom 0
-
-.router-link-actived
-  border-bottom 1px solid red
-
+<style>
+#IHR_documentation-page {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 1rem;
+  overflow-x: scroll;
+}
+.IHR_documentation-page > h1 {
+  line-height: 2rem;
+  padding: 0.5rem 0;
+  font-weight: 500;
+  border-bottom: 1px solid #ccc;
+  margin: 4rem 0 1.5rem;
+}
+@media screen and (max-width: 720px) {
+  .IHR_documentation-page > h1 {
+    font-size: 1.8125rem;
+    margin: 2rem 0 1rem;
+  }
+}
+.IHR_documentation-page > div > h2 {
+  margin-top: 2.875rem;
+  margin-bottom: 1rem;
+  font-size: 1.5rem !important;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+@media screen and (max-width: 600px) {
+  .IHR_documentation-page > div > h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.8125rem;
+  }
+}
+.IHR_documentation-page > div > .text-body1 {
+  overflow-anchor: none;
+}
+.IHR_documentation-page > div > .text-body1 > a {
+  overflow-anchor: none;
+  word-break: break-word;
+}
+.IHR_documentation-page > div > .text-body1 > ul > li > a {
+  word-break: break-word;
+}
+.IHR_documentation-page > div > .text-body1 > p > a {
+  word-break: break-word;
+}
+#cod {
+  background-color: #e7e9eb;
+  padding: 1em;
+  border-radius: 0.5rem;
+  padding-bottom: 0;
+}
+.IHR_documentation-page-sidebar > h3 {
+  margin-top: 0.1875rem;
+  width: 88%;
+  margin: 0px auto;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+@media screen and (max-width: 600px) {
+  .IHR_documentation-page-sidebar > h3 {
+    font-size: 1rem;
+  }
+}
+.IHR_documentation-page-sidebar > h3:first-letter {
+  text-transform: capitalize;
+}
+.IHR_documentation-page-sidebar > div {
+  width: 82%;
+  margin: 0.375rem auto 0.1875rem auto;
+}
+.IHR_documentation-page-sidebar > div a:hover {
+  border-bottom: 1px solid #263238;
+}
+.IHR_documentation-page-sidebar > div a:active {
+  border-bottom: 1px solid #405057;
+}
+.IHR_documentation-page-sidebar > div ul {
+  margin: 5px;
+  padding: 0px;
+}
+.IHR_documentation-page-sidebar > div li {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  padding-left: 15px;
+}
+.IHR_anchor {
+  display: block;
+  position: relative;
+  top: -100px;
+  visibility: hidden;
+}
+.router-link-inactived {
+  border-bottom: 0;
+}
+.router-link-actived {
+  border-bottom: 1px solid #f00;
+}
 .router-link-inactived:hover,
-.router-link-actived:hover
-  border-bottom 1px solid #263238
+.router-link-actived:hover {
+  border-bottom: 1px solid #263238;
+}
 </style>

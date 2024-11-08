@@ -201,19 +201,22 @@ watch(
   </div>
 </template>
 
-<style lang="stylus" scoped>
-.IHR_
-  &no-data
-    position relative
-    bottom 0
-    left 0
-    & > div:first-child
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-      padding 1.25rem
-      position relative
-      font-weight: 500;
-      top -250px
-      left 0%
-      &:first-letter
-        text-transform uppercase
+<style scoped>
+.IHR_no-data {
+  position: relative;
+  bottom: 0;
+  left: 0;
+}
+.IHR_no-data > div:first-child {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  padding: 1.25rem;
+  position: relative;
+  font-weight: 500;
+  top: -250px;
+  left: 0%;
+}
+.IHR_no-data > div:first-child:first-letter {
+  text-transform: uppercase;
+}
+
 </style>

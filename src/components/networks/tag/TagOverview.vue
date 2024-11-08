@@ -76,7 +76,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style lang="stylus">
+<style>
 p {
   font-size: 1rem;
   margin-bottom: 0;
