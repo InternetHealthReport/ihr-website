@@ -19,10 +19,10 @@ const props = defineProps({
     default: false
   },
   probeIDs: {
-    type: Array,
+    type: Array
   },
   destinationIPs: {
-    type: Array,
+    type: Array
   }
 })
 
@@ -88,7 +88,9 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     if (loadProbes) {
       if (
-        (!props.probeIDs || props.probeIDs.length === 0 || props.probeIDs.includes(probeData.prb_id.toString())) &&
+        (!props.probeIDs ||
+          props.probeIDs.length === 0 ||
+          props.probeIDs.includes(probeData.prb_id.toString())) &&
         !allProbes.value.includes(probeData.prb_id)
       ) {
         allProbes.value.push(probeData.prb_id.toString())
@@ -100,7 +102,9 @@ const processData = async (tracerouteData, loadProbes = false) => {
     }
 
     if (
-      (!props.destinationIPs || props.destinationIPs.length === 0 || props.destinationIPs.includes(probeData.dst_addr)) &&
+      (!props.destinationIPs ||
+        props.destinationIPs.length === 0 ||
+        props.destinationIPs.includes(probeData.dst_addr)) &&
       !allDestinations.value.includes(probeData.dst_addr)
     ) {
       allDestinations.value.push(probeData.dst_addr)
@@ -227,7 +231,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
   updateDisplayedRttValues()
 }
-
 
 const updateDisplayedRttValues = () => {
   let minRtt = Infinity
@@ -432,20 +435,20 @@ watch(
     :info-description="$t('tracerouteMonitorChart.info.description')"
   >
     <TracerouteChart
-      :measurementID="measurementID"
-      :isLoading="isLoading"
+      :measurement-i-d="measurementID"
+      :is-loading="isLoading"
       :nodes="nodes"
-      :selectedProbes="selectedProbes"
-      :nodeSize="nodeSize"
+      :selected-probes="selectedProbes"
+      :node-size="nodeSize"
       :edges="edges"
-      :layoutNodes="layoutNodes"
-      :metaData="metaData"
-      :probeDetailsMap="probeDetailsMap"
-      :minDisplayedRtt="minDisplayedRtt"
-      :maxDisplayedRtt="maxDisplayedRtt"
-      :ipToAsnMap="ipToAsnMap"
-      :asnList="asnList"
-      @updateDisplayedRttValues="updateDisplayedRttValues"
+      :layout-nodes="layoutNodes"
+      :meta-data="metaData"
+      :probe-details-map="probeDetailsMap"
+      :min-displayed-rtt="minDisplayedRtt"
+      :max-displayed-rtt="maxDisplayedRtt"
+      :ip-to-asn-map="ipToAsnMap"
+      :asn-list="asnList"
+      @update-displayed-rtt-values="updateDisplayedRttValues"
     />
     <QExpansionItem :default-opened="props.openOptions" icon="tune" label="Options">
       <GenericCardController
@@ -456,13 +459,13 @@ watch(
         class="cardTraceroute"
       >
         <TracerouteRttChart
-          :intervalValue="intervalValue"
-          :timeRange="timeRange"
-          :metaData="metaData"
-          :leftLabelValue="leftLabelValue"
-          :rightLabelValue="rightLabelValue"
-          :rttOverTime="rttOverTime"
-          @loadMeasurementOnTimeRange="loadMeasurementOnTimeRange"
+          :interval-value="intervalValue"
+          :time-range="timeRange"
+          :meta-data="metaData"
+          :left-label-value="leftLabelValue"
+          :right-label-value="rightLabelValue"
+          :rtt-over-time="rttOverTime"
+          @load-measurement-on-time-range="loadMeasurementOnTimeRange"
         />
       </GenericCardController>
       <GenericCardController
@@ -474,11 +477,11 @@ watch(
       >
         <TracerouteProbesTable
           :nodes="nodes"
-          :allProbes="allProbes"
-          :probeDetailsMap="probeDetailsMap"
-          :selectedProbes="selectedProbes"
-          @setSelectedProbes="setSelectedProbes"
-          @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
+          :all-probes="allProbes"
+          :probe-details-map="probeDetailsMap"
+          :selected-probes="selectedProbes"
+          @set-selected-probes="setSelectedProbes"
+          @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
         />
       </GenericCardController>
       <GenericCardController
@@ -489,12 +492,12 @@ watch(
       >
         <TracerouteDestinationsTable
           :nodes="nodes"
-          :allDestinations="allDestinations"
-          :selectAllDestinations="selectAllDestinations"
-          :ipToAsnMap="ipToAsnMap"
-          :selectedDestinations="selectedDestinations"
-          @setSelectedDestinations="setSelectedDestinations"
-          @loadMeasurementOnSearchQuery="loadMeasurementOnSearchQuery"
+          :all-destinations="allDestinations"
+          :select-all-destinations="selectAllDestinations"
+          :ip-to-asn-map="ipToAsnMap"
+          :selected-destinations="selectedDestinations"
+          @set-selected-destinations="setSelectedDestinations"
+          @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
         />
       </GenericCardController>
     </QExpansionItem>

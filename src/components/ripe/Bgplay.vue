@@ -101,7 +101,7 @@ onMounted(() => {
     <div v-if="loaded === null" class="IHR_loading-spinner">
       <QSpinner color="secondary" size="15em" />
     </div>
-    <div :id="myId"></div>
+    <div :id="myId" />
   </div>
 </template>
 

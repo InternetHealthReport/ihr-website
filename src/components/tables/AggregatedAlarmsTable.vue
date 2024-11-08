@@ -437,20 +437,20 @@ watch(
 
 <template>
   <QTable
+    v-model:pagination="pagination"
+    v-model:expanded="expandedRow"
     table-class="myClass"
     :rows="rows"
     :columns="[...columns, ...aggregatedColumns]"
-    :pagination.sync="pagination"
     :loading="loading"
     :filter="filter"
     flat
     loading-label="Loading Alarms ..."
     :row-key="tableKeyCurrent"
-    v-model:expanded="expandedRow"
   >
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr :props="props">
-        <QTd v-for="(column, index) in columns" :key="column.name">
+        <QTd v-for="column in columns" :key="column.name">
           <div
             v-if="column.name.endsWith('overview')"
             :key="`${tableKeyCurrent}.${column.name}`"
@@ -476,14 +476,14 @@ watch(
           >
             <a
               href="javascript:void(0)"
+              flat
+              no-caps
               @click="
                 onASNameKeyClicked(
                   props.row.key_name_truncated,
                   props.row[`${tableKeyCurrent}_country`]
                 )
               "
-              flat
-              no-caps
             >
               {{ column.format(props.row[column.name], props.row) }}
             </a>
@@ -494,9 +494,9 @@ watch(
           >
             <a
               href="javascript:void(0)"
-              @click="onASCountryKeyClicked(props.row[column.name])"
               flat
               no-caps
+              @click="onASCountryKeyClicked(props.row[column.name])"
             >
               {{ column.format(props.row[column.name], props.row) }}
             </a>
@@ -518,14 +518,14 @@ watch(
             :style="{ 'text-align': column.align }"
           >
             <div>{{ alternativeASNKeySubtitle(props.row[column.name], column.label) }}</div>
-            <div class="alternative_key_body" v-html="props.row[column.name]"></div>
+            <div class="alternative_key_body" v-html="props.row[column.name]" />
           </div>
           <div v-else :style="{ 'text-align': column.align }">
             {{ column.format(props.row[column.name], props.row) }}
           </div>
         </QTd>
         <QTd
-          v-for="(aggregatedColumn, index) in aggregatedColumns"
+          v-for="aggregatedColumn in aggregatedColumns"
           :key="aggregatedColumn.name"
           :style="{ 'text-align': aggregatedColumn.align }"
         >
@@ -541,19 +541,19 @@ watch(
                   <div class="row">
                     <div class="col">
                       <QInput
-                        type="datetime-local"
                         v-model="startTimeFormatted[props.row.key_normalized]"
+                        type="datetime-local"
                         label="From (UTC)"
                         :disable="false"
                         :min="minTimeFormatted"
                         :max="maxTimeFormatted"
                       />
                     </div>
-                    <div class="col-auto" style="width: 40px"></div>
+                    <div class="col-auto" style="width: 40px" />
                     <div class="col">
                       <QInput
-                        type="datetime-local"
                         v-model="endTimeFormatted[props.row.key_normalized]"
+                        type="datetime-local"
                         label="To (UTC)"
                         :disable="false"
                         :min="minTimeFormatted"
@@ -566,18 +566,19 @@ watch(
                       <QBtn
                         color="primary"
                         class="float-right"
-                        @click="resetTime(props.row.key_normalized)"
                         :disable="false"
-                        >RESET TIME</QBtn
+                        @click="resetTime(props.row.key_normalized)"
                       >
+                        RESET TIME
+                      </QBtn>
                     </div>
                   </div>
                 </div>
                 <div class="col offset-md-1">
                   <QSelect
+                    v-model="selectSeveritiesLevels[props.row.key_normalized]"
                     outlined
                     multiple
-                    v-model="selectSeveritiesLevels[props.row.key_normalized]"
                     :options="SEVERITY_LEVELS"
                     label="Severity Levels:"
                     stack-label
@@ -586,9 +587,9 @@ watch(
                 </div>
                 <div class="col offset-md-1">
                   <QSelect
+                    v-model="selectIPAddressFamilies[props.row.key_normalized]"
                     outlined
                     multiple
-                    v-model="selectIPAddressFamilies[props.row.key_normalized]"
                     :options="IP_ADDRESS_FAMILIES"
                     label="IP Address Families:"
                     stack-label
@@ -600,8 +601,9 @@ watch(
                     color="primary"
                     class="float-right"
                     @click="resetGranularity(props.row.key_normalized)"
-                    >Show All Countries</QBtn
                   >
+                    Show All Countries
+                  </QBtn>
                 </div>
               </div>
               <QCard class="card">
@@ -629,8 +631,8 @@ watch(
                     <QBtn
                       color="primary"
                       class="full-width"
-                      @click="resetGranularity(props.row.key_normalized)"
                       :disable="false"
+                      @click="resetGranularity(props.row.key_normalized)"
                     >
                       Show All Countries
                     </QBtn>
@@ -640,7 +642,7 @@ watch(
                   <TreeMapAggregatedAlarmsChart
                     :ref="setRef(`${props.row.key_normalized}_treemap`)"
                     :loading="false"
-                    :isASGranularity="true"
+                    :is-a-s-granularity="true"
                     :country-name="selectedCountry[props.row.key_normalized]"
                     :legend-selected="null"
                     :select-severities-list="
@@ -665,8 +667,8 @@ watch(
                       <QBtn
                         color="primary"
                         class="full-width"
-                        @click="resetTime(props.row.key_normalized)"
                         :disable="false"
+                        @click="resetTime(props.row.key_normalized)"
                       >
                         RESET TIME
                       </QBtn>
@@ -675,8 +677,8 @@ watch(
                       <QBtn
                         color="primary"
                         class="full-width"
-                        @click="resetGranularity(props.row.key_normalized)"
                         :disable="false"
+                        @click="resetGranularity(props.row.key_normalized)"
                       >
                         Show All Countries
                       </QBtn>
@@ -687,7 +689,7 @@ watch(
                   <TimeSeriesAggregatedAlarmsChart
                     :ref="setRef(`${props.row.key_normalized}_timeseries`)"
                     :loading="false"
-                    :isASGranularity="true"
+                    :is-a-s-granularity="true"
                     :country-name="selectedCountry[props.row.key_normalized]"
                     :legend-selected="null"
                     :start-time="new Date(`${startTimeFormatted[props.row.key_normalized]}:00Z`)"
@@ -714,45 +716,51 @@ watch(
       <QTr v-if="toggle[`${props.row.key_normalized}_asn_overview`]" :props="props">
         <QTd colspan="100%" bordered>
           <div
-            v-if="selectedTableAlarmType == 'hegemony'"
             v-for="af in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])"
+            :key="af"
           >
-            <div style="text-align: center; font-size: 18px">
-              {{ `${props.row[`${tableKeyCurrent}`]} ${getColumnLabel('asn_overview')} IPv${af}` }}
+            <div v-if="selectedTableAlarmType == 'hegemony'">
+              <div style="text-align: center; font-size: 18px">
+                {{
+                  `${props.row[`${tableKeyCurrent}`]} ${getColumnLabel('asn_overview')} IPv${af}`
+                }}
+              </div>
+              <AsInterdependenciesChart
+                :as-number="props.row.key_normalized"
+                :no-table="true"
+                :fetch="true"
+                :address-family="af"
+                :start-time="startTime"
+                :end-time="endTime"
+              />
             </div>
-            <AsInterdependenciesChart
-              :as-number="props.row.key_normalized"
-              :no-table="true"
-              :fetch="true"
-              :address-family="af"
-              :start-time="startTime"
-              :end-time="endTime"
-            />
           </div>
           <div
-            v-if="selectedTableAlarmType == 'network_delay'"
             v-for="af in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])"
+            :key="af"
           >
-            <div style="text-align: center; font-size: 18px">
-              {{ `${getColumnLabel('asn_overview')} IPv${af}` }}
+            <div v-if="selectedTableAlarmType == 'network_delay'">
+              <div style="text-align: center; font-size: 18px">
+                {{ `${getColumnLabel('asn_overview')} IPv${af}` }}
+              </div>
+              <NetworkDelayChart
+                :start-time="startTime"
+                :end-time="endTime"
+                :as-family="af"
+                :start-point-name="String(props.row.key_normalized)"
+                start-point-type="AS"
+                :end-point-names="
+                  getAlternativeKeyEndPointNames(
+                    props.row.alternative_key_normalized,
+                    props.row.alternative_key_normalized_af,
+                    props.row.alternative_key_avg_deviation,
+                    35
+                  )
+                "
+                :no-table="true"
+                :fetch="true"
+              />
             </div>
-            <NetworkDelayChart
-              :start-time="startTime"
-              :end-time="endTime"
-              :asFamily="af"
-              :start-point-name="String(props.row.key_normalized)"
-              start-point-type="AS"
-              :end-point-names="
-                getAlternativeKeyEndPointNames(
-                  props.row.alternative_key_normalized,
-                  props.row.alternative_key_normalized_af,
-                  props.row.alternative_key_avg_deviation,
-                  35
-                )
-              "
-              :no-table="true"
-              :fetch="true"
-            />
           </div>
           <Latencymon
             v-if="selectedTableAlarmType == 'network_disconnection'"

@@ -86,17 +86,17 @@ const columns = ref([
 
 <template>
   <QTable
+    v-model:pagination="pagination"
+    v-model:expanded="expandedRow"
     :rows="rows"
     :columns="columns"
     row-key="ip"
-    :pagination.sync="pagination"
     :loading="loading"
     flat
     :filter="filterTable"
     :filter-method="filterFct"
-    v-model:expanded="expandedRow"
   >
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr :props="props">
         <QTd auto-width>
           <QToggle v-model="props.expand" />

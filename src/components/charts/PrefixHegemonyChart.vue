@@ -495,7 +495,7 @@ watch(
   <div class="IHR_chart">
     <div class="row justify-center">
       <div class="col-xs-10 col-sm-4 col-lg-2">
-        <QSelect v-model="selection" :options="selectionOptions"></QSelect>
+        <QSelect v-model="selection" :options="selectionOptions" />
       </div>
     </div>
     <br />
@@ -526,21 +526,21 @@ watch(
           <PrefixHegemonyTable
             :data="prefixHegemonyData"
             :loading="loading"
-            :showCountry="countryCode == null"
+            :show-country="countryCode == null"
           />
         </QTabPanel>
         <QTabPanel name="origins">
           <PrefixHegemonyTableStats
             :data="prefixHegemonyDataOrigins"
             :loading="loading"
-            :columnName="selection.label"
+            :column-name="selection.label"
           />
         </QTabPanel>
         <QTabPanel name="transits">
           <PrefixHegemonyTableStats
             :data="prefixHegemonyDataTransits"
             :loading="loading"
-            :columnName="selection.label"
+            :column-name="selection.label"
           />
         </QTabPanel>
         <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
@@ -549,7 +549,7 @@ watch(
             <tbody>
               <tr>
                 <td>
-                  <a :href="hegemonyUrl" target="_blank" id="tableUrl">{{ hegemonyUrl }}</a>
+                  <a id="tableUrl" :href="hegemonyUrl" target="_blank">{{ hegemonyUrl }}</a>
                 </td>
               </tr>
             </tbody>

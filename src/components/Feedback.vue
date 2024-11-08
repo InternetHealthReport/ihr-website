@@ -8,11 +8,11 @@ const showFeedbackDialog = ref(false)
 <template>
   <QBtn
     class="feedback-btn"
-    @click="showFeedbackDialog = true"
     no-caps
     unelevated
     label="Feedback"
     dense
+    @click="showFeedbackDialog = true"
   />
   <QDialog v-model="showFeedbackDialog">
     <QCard>
@@ -45,7 +45,7 @@ const showFeedbackDialog = ref(false)
         </div>
       </QCardSection>
       <QCardActions align="right">
-        <QBtn flat label="Close" v-close-popup />
+        <QBtn v-close-popup flat label="Close" />
       </QCardActions>
     </QCard>
   </QDialog>

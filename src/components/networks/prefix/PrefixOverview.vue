@@ -155,8 +155,9 @@ onMounted(() => {
                 Registered in
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'country', params: { cc: queries[0].data[0].cc } })"
-                  >{{ queries[0].data[0].country }}</RouterLink
                 >
+                  {{ queries[0].data[0].country }}
+                </RouterLink>
                 ({{ queries[0].data[0].rir.toUpperCase() }})
               </div>
             </div>
@@ -211,9 +212,9 @@ onMounted(() => {
         <tr>
           <td class="topology">
             <NetworkTopologyChart
-              :searchInput="props.getPrefix"
+              :search-input="props.getPrefix"
               :af="getAf(props.getPrefix)"
-              :isComponent="true"
+              :is-component="true"
             />
           </td>
         </tr>
@@ -235,7 +236,9 @@ onMounted(() => {
                 :key="tag"
                 :to="Tr.i18nRoute({ name: 'tag', params: { tag: tag }, hash: '#Prefixes' })"
               >
-                <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
+                <QChip dense size="md" color="info" text-color="white">
+                  {{ tag }}
+                </QChip>
               </RouterLink>
             </div>
           </td>

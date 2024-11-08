@@ -13,7 +13,7 @@ const router = useRouter()
 const emit = defineEmits(['searchChange', 'afChange'])
 
 const props = defineProps({
-  searchInput: {
+  searchInputP: {
     type: String,
     default: '2501'
   },
@@ -143,7 +143,7 @@ const targetNodePos = computed(() => {
 })
 
 const init = () => {
-  searchInput.value = props.searchInput
+  searchInput.value = props.searchInputP
   ipModel.value = props.af
 }
 
@@ -457,16 +457,16 @@ defineExpose({ fitToScreen })
       <div class="flex justify-between pb-0">
         <div class="flex justify-center" style="flex-grow: 1">
           <QInput
+            v-model="searchInput"
             style="max-width: 145px"
             outlined
-            v-model="searchInput"
             placeholder="AS or Prefix"
             :dense="true"
           />
           <QSelect
+            v-model="ipModel"
             style="min-width: 100px; margin-left: 22px"
             filled
-            v-model="ipModel"
             :options="ipOptions"
             label="IP"
             :dense="true"
@@ -477,16 +477,16 @@ defineExpose({ fitToScreen })
       </div>
     </QCardSection>
 
-    <QCardSection class="graphContainer" v-if="!loading && Object.keys(allNodes).length > 0">
+    <QCardSection v-if="!loading && Object.keys(allNodes).length > 0" class="graphContainer">
       <QBtnGroup outline class="controlPanel">
-        <QBtn outline @click="graph?.zoomIn()" icon="zoom_in"></QBtn>
-        <QBtn outline @click="graph?.zoomOut()" icon="zoom_out"></QBtn>
-        <QBtn outline @click="fitToScreen()" icon="fit_screen"></QBtn>
+        <QBtn outline icon="zoom_in" @click="graph?.zoomIn()" />
+        <QBtn outline icon="zoom_out" @click="graph?.zoomOut()" />
+        <QBtn outline icon="fit_screen" @click="fitToScreen()" />
       </QBtnGroup>
 
       <VNetworkGraph
-        class="graph"
         ref="graph"
+        class="graph"
         :nodes="allNodes"
         :edges="allEdges"
         :layouts="layouts"
@@ -494,7 +494,7 @@ defineExpose({ fitToScreen })
         :event-handlers="eventHandlers"
       />
 
-      <div class="legend" v-if="props.showLegend">
+      <div v-if="props.showLegend" class="legend">
         <div class="row items-center">
           <div class="col">
             <div class="hegemonyLabel">Hegemony</div>
@@ -507,7 +507,7 @@ defineExpose({ fitToScreen })
                 :key="percentage"
                 class="scaleColor"
                 :style="{ backgroundColor: calculateNodeColor(percentage) }"
-              ></div>
+              />
             </div>
             <div class="scaleLabel">0%</div>
           </div>

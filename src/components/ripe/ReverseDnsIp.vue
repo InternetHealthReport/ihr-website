@@ -61,7 +61,7 @@ onMounted(() => {
       <QSpinner color="secondary" size="2em" />
       Loading RIPEstat widgets...
     </div>
-    <div :id="myId"></div>
+    <div :id="myId" />
   </div>
 </template>
 

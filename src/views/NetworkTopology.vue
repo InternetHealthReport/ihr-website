@@ -155,7 +155,7 @@ onMounted(async () => {
   <div class="IHR_char-container">
     <h1 class="text-center">Network Topology Overview</h1>
     <div class="row justify-center">
-      <div class="IHR_description" v-if="chartAmount == 0">
+      <div v-if="chartAmount == 0" class="IHR_description">
         <p>
           This tool provides a comprehensive platform for researchers and network professionals to
           explore and analyze the topology of an AS or a network prefix.
@@ -202,14 +202,14 @@ onMounted(async () => {
         :static="item.static"
       >
         <NetworkTopologyChart
-          :ref="(el) => (childRefs[index] = el)"
-          :searchInput="item.searchInput"
-          :af="`IPv` + item.af"
-          :showLegend="item.showLegend"
           :id="item.i"
-          @deleteChart="deleteChart"
-          @searchChange="searchChange"
-          @afChange="afChange"
+          :ref="(el) => (childRefs[index] = el)"
+          :search-input="item.searchInput"
+          :af="`IPv` + item.af"
+          :show-legend="item.showLegend"
+          @delete-chart="deleteChart"
+          @search-change="searchChange"
+          @af-change="afChange"
         />
       </GridItem>
     </GridLayout>

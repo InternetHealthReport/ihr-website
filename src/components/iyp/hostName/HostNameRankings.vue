@@ -74,6 +74,5 @@ onMounted(() => {
     :loading-status="rankings.loading"
     :cypher-query="rankings.query.replace(/\$(.*?)}/, `'${hostName}'}`)"
     :pagination="rankings.pagination"
-  >
-  </IypGenericTable>
+  />
 </template>

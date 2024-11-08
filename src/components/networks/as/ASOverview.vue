@@ -153,11 +153,11 @@ onMounted(() => {
         <tr>
           <th class="text-left">Summary</th>
           <th
-            class="text-left"
             v-if="
               (queries[1].data.length > 0) &
               (queries[1].data[0] ? (queries[1].data[0].rank ? true : false) : false)
             "
+            class="text-left"
           >
             Top Rank
           </th>
@@ -187,8 +187,9 @@ onMounted(() => {
                       hash: '#IXPs'
                     })
                   "
-                  >IXPs</RouterLink
                 >
+                  IXPs
+                </RouterLink>
                 in {{ queries[0].data[0].nb_country }} Countries
               </div>
               <div>
@@ -202,8 +203,9 @@ onMounted(() => {
                       hash: '#Originated-Prefixes'
                     })
                   "
-                  >Originated Prefixes</RouterLink
                 >
+                  Originated Prefixes
+                </RouterLink>
               </div>
               <div v-if="queries[1].data.length > 0">
                 {{ queries[1].data[0].peers }}
@@ -215,8 +217,9 @@ onMounted(() => {
                       hash: '#Connected-ASes'
                     })
                   "
-                  >Connected ASes</RouterLink
                 >
+                  Connected ASes
+                </RouterLink>
               </div>
               <div>
                 Website:
@@ -227,11 +230,11 @@ onMounted(() => {
             </div>
           </td>
           <td
-            class="text-left"
             v-if="
               (queries[1].data.length > 0) &
               (queries[1].data[0] ? (queries[1].data[0].rank ? true : false) : false)
             "
+            class="text-left"
           >
             <div>#{{ queries[1].data[0].rank }} in {{ queries[1].data[0].ranking_name }}</div>
           </td>
@@ -275,14 +278,14 @@ onMounted(() => {
         <tr>
           <td class="topology">
             <NetworkTopologyChart
-              :searchInput="String(asNumber)"
+              :search-input="String(asNumber)"
               af="IPv4"
-              :isComponent="true"
-              :showLegend="false"
+              :is-component="true"
+              :show-legend="false"
             />
           </td>
           <td class="topology">
-            <NetworkTopologyChart :searchInput="String(asNumber)" af="IPv6" :isComponent="true" />
+            <NetworkTopologyChart :search-input="String(asNumber)" af="IPv6" :is-component="true" />
           </td>
         </tr>
       </tbody>
@@ -305,7 +308,9 @@ onMounted(() => {
                   Tr.i18nRoute({ name: 'tag', params: { tag: tag }, hash: '#Autonomous-Systems' })
                 "
               >
-                <QChip dense size="md" color="info" text-color="white">{{ tag }}</QChip>
+                <QChip dense size="md" color="info" text-color="white">
+                  {{ tag }}
+                </QChip>
               </RouterLink>
             </div>
           </td>
@@ -322,7 +327,7 @@ p {
 }
 h3 {
   font-size: 1rem;
-  line-height: 1.5
+  line-height: 1.5;
 }
 .overview-footer {
   text-decoration: underline;

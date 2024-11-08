@@ -129,9 +129,9 @@ watch(selected, (newValue) => {
             Google DNS, the networks' main upstream providers, and, for European countries, two
             large IXPs (AMS-IX and DE-CIX), and the E-root DNS server for other countries. See also
             our
-            <router-link :to="{ name: 'documentation', hash: '#Network_delay' }"
-              >documentation on network delays</router-link
-            >
+            <router-link :to="{ name: 'documentation', hash: '#Network_delay' }">
+              documentation on network delays
+            </router-link>
             and
             <a
               href="https://labs.ripe.net/Members/romain_fontugne/network-delays-in-times-of-corona"
@@ -153,25 +153,25 @@ watch(selected, (newValue) => {
           <QToggle v-model="searchBar" label="Add more destination networks" />
         </div>
       </div>
-      <div v-if="selected"></div>
+      <div v-if="selected" />
       <div v-for="asn in asns" :key="`${asn.name}-${asn.as}`">
         <div class="row">
           <div class="col-12 text-center q-pa-md">
-            <div class="IHR_anchor" :id="asn.as"></div>
+            <div :id="asn.as" class="IHR_anchor" />
             <h2>{{ asn.name }} (AS{{ asn.as }})</h2>
           </div>
           <div class="column_corona">
             <NetworkDelayChart
               :start-time="before_start"
               :end-time="before_end"
-              :startPointName="asn.as.toString()"
-              startPointType="AS"
-              :endPointNames="endpoints[asn.as]"
+              :start-point-name="asn.as.toString()"
+              start-point-type="AS"
+              :end-point-names="endpoints[asn.as]"
               :fetch="fetch"
               :clear="clear"
+              :y-max="yMax"
+              :search-bar="searchBar"
               @max-value="updateYaxis"
-              :yMax="yMax"
-              :searchBar="searchBar"
             />
             <p class="center">One month before Lockdown</p>
           </div>
@@ -179,14 +179,14 @@ watch(selected, (newValue) => {
             <NetworkDelayChart
               :start-time="during_start"
               :end-time="during_end"
-              :startPointName="asn.as.toString()"
-              startPointType="AS"
-              :endPointNames="endpoints[asn.as]"
+              :start-point-name="asn.as.toString()"
+              start-point-type="AS"
+              :end-point-names="endpoints[asn.as]"
               :fetch="fetch"
               :clear="clear"
+              :y-max="yMax"
+              :search-bar="searchBar"
               @max-value="updateYaxis"
-              :yMax="yMax"
-              :searchBar="searchBar"
             />
             <p class="center">Lockdown({{ countriesInfo[selected['value']].start }})</p>
           </div>
@@ -194,14 +194,14 @@ watch(selected, (newValue) => {
             <NetworkDelayChart
               :start-time="startTime"
               :end-time="endTime"
-              :startPointName="asn.as.toString()"
-              startPointType="AS"
-              :endPointNames="endpoints[asn.as]"
+              :start-point-name="asn.as.toString()"
+              start-point-type="AS"
+              :end-point-names="endpoints[asn.as]"
               :fetch="fetch"
               :clear="clear"
+              :y-max="yMax"
+              :search-bar="searchBar"
               @max-value="updateYaxis"
-              :yMax="yMax"
-              :searchBar="searchBar"
             />
             <p class="center">Latest</p>
           </div>

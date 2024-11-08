@@ -97,9 +97,9 @@ onMounted(() => {
             <div v-if="overview.name">
               <div>
                 Country:
-                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">{{
-                  overview.country
-                }}</RouterLink>
+                <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: overview.cc } })">
+                  {{ overview.country }}
+                </RouterLink>
               </div>
               <div>Organization: {{ overview.organization }}</div>
               <div>
@@ -157,7 +157,7 @@ p {
 }
 h3 {
   font-size: 1rem;
-  line-height: 1.5
+  line-height: 1.5;
 }
 .overview-footer {
   text-decoration: underline;

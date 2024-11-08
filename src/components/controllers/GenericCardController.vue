@@ -54,36 +54,40 @@ const getUrlAnchor = () => {
 <template>
   <div>
     <QCard>
-      <div :id="anchorUrl" class="anchor"></div>
+      <div :id="anchorUrl" class="anchor" />
       <QBar class="bar">
         <div>
-          <div class="text-h6">{{ title }}</div>
-          <div class="text-subtitle2">{{ subTitle }}</div>
+          <div class="text-h6">
+            {{ title }}
+          </div>
+          <div class="text-subtitle2">
+            {{ subTitle }}
+          </div>
         </div>
         <QSpace />
-        <QBtn @click="copyToClipboard(getUrlAnchor())" dense flat icon="fa-solid fa-link">
+        <QBtn dense flat icon="fa-solid fa-link" @click="copyToClipboard(getUrlAnchor())">
           <QTooltip> Copy widget's URL </QTooltip>
         </QBtn>
         <QBtn
           v-if="infoTitle.includes('info.title') ? false : true"
-          @click="getInfo()"
           dense
           flat
           icon="fa-solid fa-circle-info"
+          @click="getInfo()"
         />
       </QBar>
       <QCardSection>
-        <slot></slot>
+        <slot />
       </QCardSection>
     </QCard>
     <QDialog v-model="infoDialog">
       <QCard style="width: 1000px; height: auto">
         <QCardSection>
-          <div class="text-h6" v-html="infoTitle"></div>
+          <div class="text-h6" v-html="infoTitle" />
         </QCardSection>
-        <QCardSection class="q-pt-none" v-html="infoDescription"> </QCardSection>
+        <QCardSection class="q-pt-none" v-html="infoDescription" />
         <QCardActions align="right">
-          <QBtn flat label="Close" color="primary" v-close-popup />
+          <QBtn v-close-popup flat label="Close" color="primary" />
         </QCardActions>
       </QCard>
     </QDialog>

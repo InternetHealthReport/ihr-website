@@ -47,44 +47,44 @@ import { version } from '../../package.json'
               {{ $t('footer.reportPages.title') }}
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">{{
-                $t('footer.reportPages.global')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">
+                {{ $t('footer.reportPages.global') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: null } })">{{
-                $t('footer.reportPages.country')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'country', params: { cc: null } })">
+                {{ $t('footer.reportPages.country') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: null } })">{{
-                $t('footer.reportPages.network')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'network', params: { id: null } })">
+                {{ $t('footer.reportPages.network') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { id: null } })">{{
-                $t('footer.reportPages.hostName')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'hostname', params: { id: null } })">
+                {{ $t('footer.reportPages.hostName') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { id: null } })">{{
-                $t('footer.reportPages.tag')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'tag', params: { id: null } })">
+                {{ $t('footer.reportPages.tag') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: null } })">{{
-                $t('footer.reportPages.rank')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'rank', params: { rank: null } })">
+                {{ $t('footer.reportPages.rank') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'rov' })">{{
-                $t('footer.reportPages.rov')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'rov' })">
+                {{ $t('footer.reportPages.rov') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'covid19' })">{{
-                $t('footer.reportPages.covid19')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'covid19' })">
+                {{ $t('footer.reportPages.covid19') }}
+              </RouterLink>
             </li>
           </ul>
           <ul>
@@ -94,19 +94,19 @@ import { version } from '../../package.json'
               </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'documentation' })">{{
-                $t('footer.about.title')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'documentation' })">
+                {{ $t('footer.about.title') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#AS-dependency' })">{{
-                $t('footer.documentation.analysisModules')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#AS-dependency' })">
+                {{ $t('footer.documentation.analysisModules') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#REST-API' })">{{
-                $t('footer.documentation.dataAccess')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#REST-API' })">
+                {{ $t('footer.documentation.dataAccess') }}
+              </RouterLink>
             </li>
           </ul>
           <ul>
@@ -116,15 +116,14 @@ import { version } from '../../package.json'
               </RouterLink>
             </li>
             <li>
-              <RouterLink
-                :to="Tr.i18nRoute({ name: 'documentation', hash: '#Acknowledgements' })"
-                >{{ $t('footer.about.acknowledgments') }}</RouterLink
-              >
+              <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#Acknowledgements' })">
+                {{ $t('footer.about.acknowledgments') }}
+              </RouterLink>
             </li>
             <li>
-              <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#Data-policy' })">{{
-                $t('footer.about.datapolicy')
-              }}</RouterLink>
+              <RouterLink :to="Tr.i18nRoute({ name: 'documentation', hash: '#Data-policy' })">
+                {{ $t('footer.about.datapolicy') }}
+              </RouterLink>
             </li>
           </ul>
         </div>

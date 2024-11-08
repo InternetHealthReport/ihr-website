@@ -112,41 +112,46 @@ onMounted(() => {
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <QCheckbox v-for="select in selects" :label="select.label" v-model="select.value" />
-      <QCheckbox label="All" v-model="selectAll" />
+      <QCheckbox
+        v-for="select in selects"
+        :key="select.value"
+        v-model="select.value"
+        :label="select.label"
+      />
+      <QCheckbox v-model="selectAll" label="All" />
     </QCardSection>
   </QCard>
   <!-- Overview -->
-  <CountryOverview :country-code="countryCode" class="card" v-if="selects[0].value" />
+  <CountryOverview v-if="selects[0].value" :country-code="countryCode" class="card" />
   <!-- Monitoring -->
   <GenericCardController
+    v-if="selects[1].value"
     :title="$t('charts.countryHegemony.title')"
     sub-title="BGP data / APNIC population estimates"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.countryHegemony.info.title')"
     :info-description="$t('charts.countryHegemony.info.description')"
     class="card"
-    v-if="selects[1].value"
   >
     <CountryHegemonyChart
+      ref="asInterdependenciesChart"
       :start-time="startTime"
       :end-time="endTime"
       :country-code="countryCode"
       :address-family="family"
       :fetch="fetch"
-      ref="asInterdependenciesChart"
       @eyeballs="setMajorEyeballs($event)"
     />
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[2].value"
     :title="$t('charts.iodaChart.title')"
     sub-title="Reachability data from Georgia Tech's Internet Intelligence Lab"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.iodaChart.info.title')"
     :info-description="$t('charts.iodaChart.info.description')"
     class="card"
-    v-if="selects[2].value"
   >
     <IodaChart
       :entity-value="countryCode"
@@ -157,13 +162,13 @@ onMounted(() => {
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[3].value"
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.prefixHegemony.info.title')"
     :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
-    v-if="selects[3].value"
   >
     <PrefixHegemonyChart
       :start-time="startTime"
@@ -175,82 +180,82 @@ onMounted(() => {
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[4].value"
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.networkDelay.info.title')"
     :info-description="$t('charts.networkDelay.info.description')"
     class="card"
-    v-if="selects[4].value"
   >
     <NetworkDelayChart
       group="start"
       :start-time="startTime"
       :end-time="endTime"
-      :startPointNames="majorEyeballs"
-      :endPointNames="[
+      :start-point-names="majorEyeballs"
+      :end-point-names="[
         'AS415169',
         'CT4Amsterdam, North Holland, NL',
         'CT4Singapore, Central Singapore, SG',
         'CT4New York City, New York, US'
       ]"
-      :eyeballThreshold="majorEyeballsThreshold"
+      :eyeball-threshold="majorEyeballsThreshold"
       :fetch="majorEyeballs.length != 0"
       :clear="clear"
-      searchBar
+      search-bar
     />
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[5].value"
     :title="$t('iyp.country.atlas.title')"
     :sub-title="$t('iyp.country.atlas.caption') + pageTitle"
     :info-title="$t('iyp.country.atlas.info.title')"
     :info-description="$t('iyp.country.atlas.info.description')"
     class="card"
-    v-if="selects[5].value"
   >
     <CountryRipeAtlas :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Routing -->
   <GenericCardController
+    v-if="selects[6].value"
     :title="$t('iyp.country.ases.title')"
     :sub-title="$t('iyp.country.ases.caption') + pageTitle"
     :info-title="$t('iyp.country.ases.info.title')"
     :info-description="$t('iyp.country.ases.info.description')"
     class="card"
-    v-if="selects[6].value"
   >
     <CountryAutonomousSystems :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[7].value"
     :title="$t('iyp.country.prefixes.title')"
     :sub-title="$t('iyp.country.prefixes.caption') + pageTitle"
     :info-title="$t('iyp.country.prefixes.info.title')"
     :info-description="$t('iyp.country.prefixes.info.description')"
     class="card"
-    v-if="selects[7].value"
   >
     <CountryIPPrefixes :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
+    v-if="selects[8].value"
     :title="$t('iyp.country.ixps.title')"
     :sub-title="$t('iyp.country.ixps.caption') + pageTitle"
     :info-title="$t('iyp.country.ixps.info.title')"
     :info-description="$t('iyp.country.ixps.info.description')"
     class="card"
-    v-if="selects[8].value"
   >
     <CountryInternetExchangePoints :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
+    v-if="selects[9].value && pageTitle"
     :title="$t('iyp.country.rankings.title')"
     :sub-title="$t('iyp.country.rankings.caption') + pageTitle"
     :info-title="$t('iyp.country.rankings.info.title')"
     :info-description="$t('iyp.country.rankings.info.description')"
     class="card"
-    v-if="selects[9].value && pageTitle"
   >
     <CountryASRankings :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>

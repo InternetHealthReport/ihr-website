@@ -103,6 +103,14 @@ Our website uses the following libraries:
 - [vue-i18n](https://www.npmjs.com/package/vue-i18n): This is an internationalization plugin for Vue.js
 - [vue-router](https://www.npmjs.com/package/vue-router): Vue Router is the official routing library for Vue.js
 
+## Code Lint
+
+It's important to check your code for potential errors and adherence to coding standards. You can do this by running the linter with the following command:
+
+```bash
+npm run lint
+```
+
 ## Code Style
 
 Before push your contribution, ensure that your code is properly formatted. You can automatically
@@ -137,6 +145,7 @@ pull request or create an issue.
 ├── SECURITY.md: A document detailing the security practices of the project, including how to report vulnerabilities and security issues
 ├── babel.config.cjs: Configuration file for Babel, a JavaScript compiler, specifying how to transform modern JavaScript code into a backward-compatible version
 ├── default.conf: Nginx configuration file, specifying settings such as ports, routes, and other parameters
+├── eslint.config.cjs: Configuration file for ESLint
 ├── index.html: The main HTML file that serves as the entry point for the web application, containing the structure and layout of the webpage
 ├── package.json: A file that contains metadata about the project, including dependencies, scripts, and project configuration for Node.js applications
 ├── public

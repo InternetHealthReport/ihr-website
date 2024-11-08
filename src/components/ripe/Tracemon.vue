@@ -42,5 +42,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :id="myId"></div>
+  <div :id="myId" />
 </template>

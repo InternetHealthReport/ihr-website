@@ -96,32 +96,33 @@ const organizations = ref(ORGANIZATIONS)
             outline
             style="width: inherit; font-size: large"
             :to="Tr.i18nRoute({ name: 'global-report' })"
-            >{{ $t('homePage.globalReport.name') }}</QBtn
           >
-          <div class="ihr-home-line"></div>
+            {{ $t('homePage.globalReport.name') }}
+          </QBtn>
+          <div class="ihr-home-line" />
           <UserInfo />
         </div>
       </div>
     </div>
 
-    <div class="IHR_home-description-main" v-html="$t('homePage.globalReport.description')"></div>
+    <div class="IHR_home-description-main" v-html="$t('homePage.globalReport.description')" />
     <div class="IHR_home-description-main">
       See latest alarms in the
-      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">global report</RouterLink>
+      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })"> global report </RouterLink>
       and network metrics in
-      <RouterLink :to="Tr.i18nRoute({ name: 'network' })">network reports</RouterLink>.
+      <RouterLink :to="Tr.i18nRoute({ name: 'network' })"> network reports </RouterLink>.
     </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_home-description-main">
-      <QCard class="analysis-modules" v-for="graphT in graphTypes" :key="graphT.name">
+      <QCard v-for="graphT in graphTypes" :key="graphT.name" class="analysis-modules">
         <QCardSection class="bg-primary text-white q-pa-sm">
           <div>
-            <QAvatar :icon="graphT.icon"></QAvatar>
+            <QAvatar :icon="graphT.icon" />
             {{ $t(`${graphT.name}.title`) }}
           </div>
         </QCardSection>
         <QCardSection class="q-pa-xs">
-          <div class="IHR_home-description_text" v-html="$t(`${graphT.name}.description`)"></div>
+          <div class="IHR_home-description_text" v-html="$t(`${graphT.name}.description`)" />
           <div class="IHR_home-description_text IHR_home-description-link">
             <RouterLink
               :to="
@@ -130,8 +131,9 @@ const organizations = ref(ORGANIZATIONS)
                   hash: $t(`${graphT.name}.docHash`)
                 })
               "
-              >{{ $t('homePage.learnmore') }} {{ $t(`${graphT.name}.title`) }}</RouterLink
             >
+              {{ $t('homePage.learnmore') }} {{ $t(`${graphT.name}.title`) }}
+            </RouterLink>
           </div>
         </QCardSection>
       </QCard>
@@ -153,7 +155,7 @@ const organizations = ref(ORGANIZATIONS)
 
     <div class="IHR_section">
       <h2 class="text-h2">
-        <QIcon name="fa fa-heart"></QIcon>
+        <QIcon name="fa fa-heart" />
         {{ $t('homePage.ack.title') }}
       </h2>
 
@@ -161,7 +163,7 @@ const organizations = ref(ORGANIZATIONS)
         <div v-for="(org, index) in organizations" :key="index">
           <a :href="$t(`homePage.ack.organizations.${org.name}.url`)" target="_blank">
             <div class="IHR_ack-logo">
-              <span></span>
+              <span />
               <img :src="org.logo" :alt="$t(`homePage.ack.organizations.${org.name}.name`)" />
             </div>
           </a>

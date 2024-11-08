@@ -41,12 +41,12 @@ const setMajorEyeballs = (asns) => {
     :info-description="$t('charts.countryHegemony.info.description')"
   >
     <CountryHegemonyChart
+      ref="asInterdependenciesChart"
       :start-time="startTime"
       :end-time="endTime"
       :country-code="countryCode"
       :address-family="family"
       :fetch="fetch"
-      ref="asInterdependenciesChart"
       @eyeballs="setMajorEyeballs($event)"
     />
   </GenericCardController>
@@ -96,17 +96,17 @@ const setMajorEyeballs = (asns) => {
       group="start"
       :start-time="startTime"
       :end-time="endTime"
-      :startPointNames="majorEyeballs"
-      :endPointNames="[
+      :start-point-names="majorEyeballs"
+      :end-point-names="[
         'AS415169',
         'CT4Amsterdam, North Holland, NL',
         'CT4Singapore, Central Singapore, SG',
         'CT4New York City, New York, US'
       ]"
-      :eyeballThreshold="majorEyeballsThreshold"
+      :eyeball-threshold="majorEyeballsThreshold"
       :fetch="majorEyeballs.length != 0"
       :clear="clear"
-      searchBar
+      search-bar
     />
   </GenericCardController>
 

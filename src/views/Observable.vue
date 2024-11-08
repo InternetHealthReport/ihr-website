@@ -28,19 +28,19 @@ const tree = [
 <template>
   <div>
     <QSplitter v-model="splitterModel" style="height: 100vh">
-      <template v-slot:before>
+      <template #before>
         <div class="q-pa-md">
           <QTree
+            v-model:selected="selected"
             :nodes="tree"
             node-key="label"
             selected-color="primary"
-            v-model:selected="selected"
             default-expand-all
             no-selection-unset
           />
         </div>
       </template>
-      <template v-slot:after>
+      <template #after>
         <QTabPanels v-model="selected" animated transition-prev="jump-up" transition-next="jump-up">
           <QTabPanel name="Root">
             <h1>Community Observable Notebook Showcase</h1>
@@ -77,7 +77,7 @@ const tree = [
               height="100%"
               frameborder="0"
               src="https://observablehq.com/embed/@ripencc/internet-outages-as-seen-by-ripe-atlas?cell=*"
-            ></iframe>
+            />
           </QTabPanel>
           <QTabPanel name="Atlas Latency World Map" style="height: 100vh">
             <iframe
@@ -85,7 +85,7 @@ const tree = [
               height="100%"
               frameborder="0"
               src="https://observablehq.com/embed/@ripencc/atlas-latency-worldmap?cell=*"
-            ></iframe>
+            />
           </QTabPanel>
           <QTabPanel name="Google Summer of Code">
             <h1>Google Summer of Code</h1>
@@ -108,7 +108,7 @@ const tree = [
               height="100%"
               frameborder="0"
               src="https://observablehq.com/embed/57d2ee478ddd0170?cell=*"
-            ></iframe>
+            />
           </QTabPanel>
         </QTabPanels>
       </template>

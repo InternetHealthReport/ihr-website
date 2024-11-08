@@ -118,26 +118,26 @@ watch(selectedPeersModel, () => {
 
 <template>
   <QTable
+    v-model:selected="selectedPeersModel"
     flat
     :rows="rows"
     :columns="columns"
     :filter="search"
     row-key="peer"
     selection="multiple"
-    v-model:selected="selectedPeersModel"
   >
-    <template v-if="props.filteredMessages.length !== 0" v-slot:top-left>
+    <template v-if="props.filteredMessages.length !== 0" #top-left>
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </template>
-    <template v-slot:top-right>
-      <QInput dense outlined debounce="300" color="accent" label="Search" v-model="search">
-        <template v-slot:append>
+    <template #top-right>
+      <QInput v-model="search" dense outlined debounce="300" color="accent" label="Search">
+        <template #append>
           <QIcon name="search" />
         </template>
       </QInput>
     </template>
-    <template v-slot:body-cell-peer_asn="props">
+    <template #body-cell-peer_asn="props">
       <QTd :props="props">
         <RouterLink
           :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${props.row.peer_asn}` } })"
@@ -147,7 +147,7 @@ watch(selectedPeersModel, () => {
         </RouterLink>
       </QTd>
     </template>
-    <template v-slot:body-cell-path="props">
+    <template #body-cell-path="props">
       <QTd :props="props">
         <span class="asn-list">
           <template v-if="props.row.path">
@@ -165,12 +165,12 @@ watch(selectedPeersModel, () => {
         </span>
       </QTd>
     </template>
-    <template v-slot:body-cell-as_info="props">
+    <template #body-cell-as_info="props">
       <QTd :props="props">
         <pre>{{ props.row.as_info }}</pre>
       </QTd>
     </template>
-    <template v-slot:body-cell-community="props">
+    <template #body-cell-community="props">
       <QTd :props="props">
         <pre>{{ props.row.community }}</pre>
       </QTd>

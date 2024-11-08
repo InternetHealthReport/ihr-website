@@ -43,7 +43,7 @@ import '@/styles/chart.css'
           >
             "Metis: Better Atlas Vantage Point Selection for Everyone”</a
           >. We are also working on a high-level explanation for the
-          <RouterLink :to="Tr.i18nRoute({ name: 'documentation' })">documentation</RouterLink>.
+          <RouterLink :to="Tr.i18nRoute({ name: 'documentation' })"> documentation </RouterLink>.
         </p>
         <p>
           Although the approach is applicable to any kind of measurement platform, we currently only

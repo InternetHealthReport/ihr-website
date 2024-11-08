@@ -9,7 +9,7 @@ import LocalStorageBanner from './components/LocalStorageBanner.vue'
 let scrollPosition = ref(0)
 
 const showScrollTopButton = () => {
-  return scrollPosition > 0
+  return scrollPosition.value > 0
 }
 
 const scrollToTop = () => {
@@ -20,7 +20,7 @@ const scrollToTop = () => {
 }
 
 const updateScrollPosition = () => {
-  scrollPosition = window.scrollY
+  scrollPosition.value = window.scrollY
 }
 
 onMounted(() => {
@@ -33,19 +33,19 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <QLayout view="hHh LpR fff" id="app">
-    <Header></Header>
+  <QLayout id="app" view="hHh LpR fff">
+    <Header />
     <QPageContainer>
       <RouterView />
       <!-- <div id="IHR_last-element">&nbsp;</div> -->
     </QPageContainer>
-    <Footer></Footer>
+    <Footer />
     <button
       v-if="showScrollTopButton"
-      @click="scrollToTop"
       class="IHR_scroll-btn bg-primary text-white"
+      @click="scrollToTop"
     >
-      <QIcon name="fas fa-arrow-up"></QIcon>
+      <QIcon name="fas fa-arrow-up" />
     </button>
   </QLayout>
   <LocalStorageBanner :disable="true" />
@@ -111,5 +111,4 @@ onBeforeUnmount(() => {
 #IHR_last-element {
   height: 50px;
 }
-
 </style>

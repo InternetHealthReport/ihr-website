@@ -76,11 +76,11 @@ const textColor = computed(() => {
     <QPopupProxy id="popupid" v-model="show">
       <QDate
         v-model="qTimeModel"
-        @update:model-value="propagate($event)"
         :mask="mask"
         :options="options"
         color="accent"
         minimal
+        @update:model-value="propagate($event)"
       />
     </QPopupProxy>
   </QIcon>

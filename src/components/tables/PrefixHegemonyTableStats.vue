@@ -120,8 +120,8 @@ const getClassByHegemony = (hegemony) => {
 <template>
   <div>
     <div>
-      <QInput debounce="300" v-model="tabFilter" placeholder="Search">
-        <template v-slot:prepend>
+      <QInput v-model="tabFilter" debounce="300" placeholder="Search">
+        <template #prepend>
           <QIcon name="fas fa-search" />
         </template>
       </QInput>
@@ -138,17 +138,21 @@ const getClassByHegemony = (hegemony) => {
       binary-state-sort
       flat
     >
-      <div slot="header" slot-scope="props" style="display: contents">
-        <QTr>
-          <q-th key="ASN" :props="props">ASN</q-th>
-          <q-th key="ASName" :props="props">Name</q-th>
-          <q-th key="invalid" :props="props">{{ columnName }}</q-th>
-          <q-th key="specific" :props="props">{{ columnName }} (more specific)</q-th>
-          <q-th key="total" :props="props">Total</q-th>
-        </QTr>
-      </div>
+      <template #header="props">
+        <div style="display: contents">
+          <QTr>
+            <q-th key="ASN" :props="props"> ASN </q-th>
+            <q-th key="ASName" :props="props"> Name </q-th>
+            <q-th key="invalid" :props="props">
+              {{ columnName }}
+            </q-th>
+            <q-th key="specific" :props="props"> {{ columnName }} (more specific) </q-th>
+            <q-th key="total" :props="props"> Total </q-th>
+          </QTr>
+        </div>
+      </template>
 
-      <template v-slot:body-cell-ASN="props">
+      <template #body-cell-ASN="props">
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
@@ -164,7 +168,7 @@ const getClassByHegemony = (hegemony) => {
         </QTd>
       </template>
 
-      <template v-slot:body-cell-ASName="props">
+      <template #body-cell-ASName="props">
         <QTd :props="props">
           <RouterLink
             class="IHR_delikify"
@@ -180,12 +184,12 @@ const getClassByHegemony = (hegemony) => {
         </QTd>
       </template>
 
-      <template v-slot:body-cell-invalid="props">
+      <template #body-cell-invalid="props">
         <QTd :props="props">
           {{ 'Invalid' in props.row.count ? props.row.count['Invalid'] : 0 }}
         </QTd>
       </template>
-      <template v-slot:body-cell-specific="props">
+      <template #body-cell-specific="props">
         <QTd :props="props">
           {{
             'Invalid,more-specific' in props.row.count
@@ -200,6 +204,6 @@ const getClassByHegemony = (hegemony) => {
 
 <style>
 .comma:not(:empty) ~ .comma:not(:empty):before {
-  content: ", ";
+  content: ', ';
 }
 </style>
