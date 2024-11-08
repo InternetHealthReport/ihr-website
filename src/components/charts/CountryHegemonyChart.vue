@@ -294,7 +294,7 @@ onMounted(() => {
             <tbody>
               <tr>
                 <td>
-                  <a :href="hegemonyUrl" target="_blank" id="tableUrl">{{ hegemonyUrl }}</a>
+                  <a id="tableUrl" :href="hegemonyUrl" target="_blank">{{ hegemonyUrl }}</a>
                 </td>
               </tr>
             </tbody>

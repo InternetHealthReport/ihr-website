@@ -25,7 +25,8 @@ const nbprobes = ref('100')
         <p>
           The recommendations are updated every Sunday/Monday night at midnight UTC. For historical
           queries, or more recommendations, check out the
-          <router-link :to="Tr.i18nRoute({ name: 'api' })">Metis section of the IHR API</router-link
+          <router-link :to="Tr.i18nRoute({ name: 'api' })">
+            Metis section of the IHR API </router-link
           >.
         </p>
       </div>

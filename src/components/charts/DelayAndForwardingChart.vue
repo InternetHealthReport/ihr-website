@@ -265,9 +265,9 @@ onMounted(() => {
     <ReactiveChart
       :layout="layout"
       :traces="traces"
+      :no-data="noData"
       @loaded="loading"
       @plotly-click="showTable"
-      :no-data="noData"
     />
     <QCard v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
       <QCardSection class="q-pa-xs">
@@ -283,9 +283,9 @@ onMounted(() => {
               size="sm"
               round
               flat
-              @click="details.tableVisible = false"
               icon="fa fa-times-circle"
-            ></QBtn>
+              @click="details.tableVisible = false"
+            />
           </div>
         </div>
       </QCardSection>
@@ -334,7 +334,7 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="delayUrl" target="_blank" id="delay">{{ delayUrl }}</a>
+                  <a id="delay" :href="delayUrl" target="_blank">{{ delayUrl }}</a>
                 </td>
               </tr>
               <tr>
@@ -344,7 +344,7 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="forwardingUrl" target="_blank" id="forwarding">{{ forwardingUrl }}</a>
+                  <a id="forwarding" :href="forwardingUrl" target="_blank">{{ forwardingUrl }}</a>
                 </td>
               </tr>
               <tr>
@@ -354,7 +354,7 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="delayAlarmsUrl" target="_blank" id="delayAlarms">{{
+                  <a id="delayAlarms" :href="delayAlarmsUrl" target="_blank">{{
                     delayAlarmsUrl
                   }}</a>
                 </td>
@@ -366,7 +366,7 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="forwardingAlarmsUrl" target="_blank" id="forwardingAlarms">{{
+                  <a id="forwardingAlarms" :href="forwardingAlarmsUrl" target="_blank">{{
                     forwardingAlarmsUrl
                   }}</a>
                 </td>

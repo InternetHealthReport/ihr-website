@@ -255,7 +255,6 @@ onMounted(() => {
       </div>
       <div class="timetampSliderContainer">
         <QSlider
-          @update:model-value="updateSlider"
           v-model="selectedMaxTimestamp"
           :min="minTimestamp === Infinity ? 0 : minTimestamp"
           :max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
@@ -264,6 +263,7 @@ onMounted(() => {
             maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
           "
           color="accent"
+          @update:model-value="updateSlider"
         />
         <div class="timestampInfo">
           <span

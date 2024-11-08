@@ -141,6 +141,7 @@ watch(
 
 <template>
   <QSelect
+    v-model="model"
     :dark="dark"
     use-input
     clearable
@@ -148,27 +149,30 @@ watch(
     outlined
     :placeholder="!model ? label : ''"
     :options="options"
-    v-model="model"
-    @filter="filter"
     hide-dropdown-icon
     input-debounce="1000"
     class="IHR_search-bar"
     :hint="hint"
     :readonly="readonly"
+    @filter="filter"
   >
-    <template v-slot:append>
+    <template #append>
       <div v-if="!loading">
-        <QIcon name="fas fa-search" style="font-size: 0.82em; margin-right: 4px" v-if="!readonly" />
+        <QIcon v-if="!readonly" name="fas fa-search" style="font-size: 0.82em; margin-right: 4px" />
       </div>
       <div v-else>
         <QSpinner color="primary" size="0.82em" />
       </div>
     </template>
-    <template v-slot:loading> </template>
-    <template v-slot:option="scope">
+    <template #loading />
+    <template #option="scope">
       <QItem v-bind="scope.itemProps" @click="selectLocation(scope.opt.value)">
-        <QItemSection side color="accent">{{ ihr_api.readableType(scope.opt.type) }}</QItemSection>
-        <QItemSection class="IHR_asn-element-name">{{ scope.opt.name }}</QItemSection>
+        <QItemSection side color="accent">
+          {{ ihr_api.readableType(scope.opt.type) }}
+        </QItemSection>
+        <QItemSection class="IHR_asn-element-name">
+          {{ scope.opt.name }}
+        </QItemSection>
       </QItem>
     </template>
   </QSelect>

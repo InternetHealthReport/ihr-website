@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "lint": "npx eslint --format stylish --fix",
     "format": "prettier --write src/",
     "test": "jest --verbose"
   },
@@ -29,12 +29,13 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.26.0",
+    "@eslint/js": "^9.14.0",
     "@quasar/vite-plugin": "^1.8.0",
-    "@rushstack/eslint-patch": "^1.10.4",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vue/eslint-config-prettier": "^10.1.0",
     "eslint": "^9.14.0",
     "eslint-plugin-vue": "^9.30.0",
+    "globals": "^15.12.0",
     "jest": "^29.7.0",
     "joi": "^17.13.3",
     "prettier": "^3.3.3",

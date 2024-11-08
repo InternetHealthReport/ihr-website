@@ -527,8 +527,8 @@ watch(selectedAlarmTypesOptions.value, () => {
                   </QTooltip>
                 </QIcon>
                 <QSelect
-                  filled
                   v-model="selectedAlarmTypesOptions[indexSource][indexAlarm]"
+                  filled
                   :options="
                     Object.values(
                       ALARMS_INFO[indexSource].alarm_types[indexAlarm].metadata.group_by_key_options
@@ -540,7 +540,7 @@ watch(selectedAlarmTypesOptions.value, () => {
               <td
                 v-for="i in maxAlarmTypesLength - Object.keys(dataSource.alarm_types).length"
                 :key="`empty-cell-${i}`"
-              ></td>
+              />
             </tr>
           </tbody>
         </QMarkupTable>
@@ -550,19 +550,19 @@ watch(selectedAlarmTypesOptions.value, () => {
             <div class="row">
               <div class="col">
                 <QInput
-                  type="datetime-local"
                   v-model="startTimeFormatted"
+                  type="datetime-local"
                   label="From (UTC)"
                   :disable="isLoaded"
                   :min="minTimeFormatted"
                   :max="maxTimeFormatted"
                 />
               </div>
-              <div class="col-auto" style="width: 40px"></div>
+              <div class="col-auto" style="width: 40px" />
               <div class="col">
                 <QInput
-                  type="datetime-local"
                   v-model="endTimeFormatted"
+                  type="datetime-local"
                   label="To (UTC)"
                   :disable="isLoaded"
                   :min="minTimeFormatted"
@@ -575,16 +575,16 @@ watch(selectedAlarmTypesOptions.value, () => {
                 <QBtn
                   color="primary"
                   class="float-right"
+                  :disable="isLoaded"
                   @click="
                     timeFilter({ startDateTime: startTimeFormatted, endDateTime: endTimeFormatted })
                   "
-                  :disable="isLoaded"
                 >
                   APPLY
                 </QBtn>
               </div>
               <div class="col-4 text-center">
-                <QBtn color="primary" class="float-right" @click="resetTime" :disable="isLoaded">
+                <QBtn color="primary" class="float-right" :disable="isLoaded" @click="resetTime">
                   RESET TIME
                 </QBtn>
               </div>
@@ -592,10 +592,10 @@ watch(selectedAlarmTypesOptions.value, () => {
           </div>
           <div class="col offset-md-1">
             <QSelect
+              v-model="selectSeveritiesLevels"
               :disable="isLoaded"
               outlined
               multiple
-              v-model="selectSeveritiesLevels"
               :options="SEVERITY_LEVELS"
               label="Severity Levels:"
               stack-label
@@ -604,10 +604,10 @@ watch(selectedAlarmTypesOptions.value, () => {
           </div>
           <div class="col offset-md-1">
             <QSelect
+              v-model="selectIPAddressFamilies"
               :disable="isLoaded"
               outlined
               multiple
-              v-model="selectIPAddressFamilies"
               :options="IP_ADDRESS_FAMILIES"
               label="IP Address Families:"
               stack-label
@@ -615,9 +615,9 @@ watch(selectedAlarmTypesOptions.value, () => {
             />
           </div>
           <div class="col">
-            <QBtn color="primary" class="float-right" @click="resetGranularity" :disable="isLoaded"
-              >Show All Countries</QBtn
-            >
+            <QBtn color="primary" class="float-right" :disable="isLoaded" @click="resetGranularity">
+              Show All Countries
+            </QBtn>
           </div>
         </div>
       </QCardSection>
@@ -641,7 +641,7 @@ watch(selectedAlarmTypesOptions.value, () => {
           <QCardSection>
             <div class="row items-center">
               <div class="col">
-                <QBtn color="primary" class="full-width" @click="resetTime" :disable="isLoaded">
+                <QBtn color="primary" class="full-width" :disable="isLoaded" @click="resetTime">
                   RESET TIME
                 </QBtn>
               </div>
@@ -649,8 +649,8 @@ watch(selectedAlarmTypesOptions.value, () => {
                 <QBtn
                   color="primary"
                   class="full-width"
-                  @click="resetGranularity"
                   :disable="isLoaded"
+                  @click="resetGranularity"
                 >
                   Show All Countries
                 </QBtn>
@@ -668,7 +668,7 @@ watch(selectedAlarmTypesOptions.value, () => {
               :aggregated-attrs-selected="aggregatedAttrs"
               :alarm-type-titles-map="alarmTypeTitlesMap"
               :legend-selected="legendSelected.legend"
-              :isASGranularity="false"
+              :is-a-s-granularity="false"
               @timeseries-legend-clicked="onTimeseriesLegendClicked"
               @select-time="timeFilter"
             />
@@ -682,8 +682,8 @@ watch(selectedAlarmTypesOptions.value, () => {
               <QBtn
                 color="primary"
                 class="full-width"
-                @click="resetGranularity"
                 :disable="isLoaded"
+                @click="resetGranularity"
               >
                 Show All Countries
               </QBtn>
@@ -699,7 +699,7 @@ watch(selectedAlarmTypesOptions.value, () => {
               :aggregated-attrs-selected="aggregatedAttrs"
               :alarm-type-titles-map="alarmTypeTitlesMap"
               :legend-selected="legendSelected.legend"
-              :isASGranularity="false"
+              :is-a-s-granularity="false"
               @treemap-node-clicked="onTreemapNodeClicked"
             />
           </QCardSection>
@@ -726,8 +726,8 @@ watch(selectedAlarmTypesOptions.value, () => {
           :key="indexAlarmTypeTitlesMap"
           :name="indexAlarmTypeTitlesMap"
         >
-          <QInput debounce="300" v-model="filter" placeholder="Filter">
-            <template v-slot:append>
+          <QInput v-model="filter" debounce="300" placeholder="Filter">
+            <template #append>
               <QIcon name="fas fa-filter" />
             </template>
           </QInput>

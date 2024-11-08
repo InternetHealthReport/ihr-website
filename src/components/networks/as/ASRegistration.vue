@@ -13,7 +13,7 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-title="$t('iyp.as.ipPrefix.info.title')"
     :info-description="$t('iyp.as.ipPrefix.info.description')"
   >
-    <ASOriginatedPrefixes :asNumber="asNumber" :page-title="pageTitle" />
+    <ASOriginatedPrefixes :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.siblings.title')"
@@ -22,7 +22,7 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.siblings.info.description')"
     class="card"
   >
-    <ASSiblingASes :asNumber="asNumber" :page-title="pageTitle" />
+    <ASSiblingASes :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

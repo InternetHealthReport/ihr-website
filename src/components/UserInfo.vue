@@ -61,7 +61,9 @@ onMounted(() => {
     <tbody v-if="!as_info_query.loading">
       <tr>
         <td align="right" class="user-info-text">IP:</td>
-        <td align="left" class="user-info-text">{{ userInfo.IP }}</td>
+        <td align="left" class="user-info-text">
+          {{ userInfo.IP }}
+        </td>
       </tr>
       <tr>
         <td align="right" class="user-info-text">AS:</td>
@@ -111,7 +113,7 @@ onMounted(() => {
 <style>
 .user-info-card {
   width: inherit;
-  background-color: rgba(0,0,0,0) !important;
+  background-color: rgba(0, 0, 0, 0) !important;
   border-color: #fff !important;
   color: #fff !important;
 }

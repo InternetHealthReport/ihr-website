@@ -43,13 +43,13 @@ onMounted(() => {
               bg="white"
               label="grey-8"
               input="black"
-              labelTxt="Enter a tag"
-              :noAS="true"
-              :noIXP="true"
-              :noPrefix="true"
-              :noCountry="true"
-              :noRank="true"
-              :noHostName="true"
+              label-txt="Enter a tag"
+              :no-a-s="true"
+              :no-i-x-p="true"
+              :no-prefix="true"
+              :no-country="true"
+              :no-rank="true"
+              :no-host-name="true"
             />
           </div>
         </div>
@@ -67,22 +67,25 @@ onMounted(() => {
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Home ISP' } })"
                   class="IHR_delikify"
-                  >Home ISP</RouterLink
                 >
+                  Home ISP
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Validating RPKI ROV' } })"
                   class="IHR_delikify"
-                  >Validating RPKI ROV</RouterLink
                 >
+                  Validating RPKI ROV
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Anycast' } })"
                   class="IHR_delikify"
-                  >Anycast</RouterLink
                 >
+                  Anycast
+                </RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
@@ -90,15 +93,17 @@ onMounted(() => {
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'ToR Services' } })"
                   class="IHR_delikify"
-                  >ToR Services</RouterLink
                 >
+                  ToR Services
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Internet Critical Infra' } })"
                   class="IHR_delikify"
-                  >Internet Critical Infra</RouterLink
                 >
+                  Internet Critical Infra
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
@@ -109,8 +114,9 @@ onMounted(() => {
                     })
                   "
                   class="IHR_delikify"
-                  >Computer and Information Technology</RouterLink
                 >
+                  Computer and Information Technology
+                </RouterLink>
               </li>
             </ul>
           </div>
@@ -135,5 +141,4 @@ onMounted(() => {
   margin: 0;
   list-style-position: inside;
 }
-
 </style>

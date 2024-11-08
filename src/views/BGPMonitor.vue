@@ -381,17 +381,17 @@ onMounted(() => {
     <h1 class="text-center q-pa-xl">Real-Time BGP Monitor</h1>
     <div class="controls justify-center q-pa-md flex">
       <QInput
+        v-model="params.prefix"
         outlined
         placeholder="Prefix"
         :dense="true"
         color="accent"
-        v-model="params.prefix"
         :disable="isPlaying || inputDisable"
       />
       <QSelect
+        v-model="params.host"
         style="min-width: 100px"
         filled
-        v-model="params.host"
         :options="rrcList"
         label="RRC"
         :dense="true"
@@ -399,8 +399,8 @@ onMounted(() => {
         :disable="isPlaying || inputDisable"
       />
       <QSlider
-        style="max-width: 250px"
         v-model="maxHops"
+        style="max-width: 250px"
         :min="1"
         :max="9"
         :step="1"
@@ -415,12 +415,12 @@ onMounted(() => {
     <div class="controlsContainer">
       <div class="controls justify-center q-pa-md flex">
         <QBtn
-          @click="toggleConnection"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
           :disable="disableButton || params.prefix === ''"
+          @click="toggleConnection"
         />
-        <QBtn @click="resetData" color="negative" :label="'Reset'" :disable="isPlaying" />
+        <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
       </div>
       <div class="stats">
         <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
@@ -435,12 +435,12 @@ onMounted(() => {
       class="cardBGP"
     >
       <BGPPathsChart
-        :filteredMessages="filteredMessages"
-        :maxHops="maxHops"
-        :selectedPeers="selectedPeers"
-        :isLiveMode="isLiveMode"
-        :isPlaying="isPlaying"
-        :bgpMessageType="bgpMessageType"
+        :filtered-messages="filteredMessages"
+        :max-hops="maxHops"
+        :selected-peers="selectedPeers"
+        :is-live-mode="isLiveMode"
+        :is-playing="isPlaying"
+        :bgp-message-type="bgpMessageType"
         @enable-live-mode="enableLiveMode"
       />
     </GenericCardController>
@@ -452,13 +452,13 @@ onMounted(() => {
       class="cardBGP"
     >
       <BGPLineChart
-        :rawMessages="rawMessages"
-        :maxHops="maxHops"
-        :bgpMessageType="bgpMessageType"
-        :usedMessagesCount="usedMessagesCount"
-        :isLiveMode="isLiveMode"
-        :isPlaying="isPlaying"
-        @setSelectedMaxTimestamp="setSelectedMaxTimestamp"
+        :raw-messages="rawMessages"
+        :max-hops="maxHops"
+        :bgp-message-type="bgpMessageType"
+        :used-messages-count="usedMessagesCount"
+        :is-live-mode="isLiveMode"
+        :is-playing="isPlaying"
+        @set-selected-max-timestamp="setSelectedMaxTimestamp"
         @disable-live-mode="disableLiveMode"
         @enable-live-mode="enableLiveMode"
       />
@@ -471,11 +471,11 @@ onMounted(() => {
       class="lastCardBGP"
     >
       <BGPMessagesTable
-        :filteredMessages="filteredMessages"
-        :selectedPeers="selectedPeers"
-        :isLiveMode="isLiveMode"
-        :isPlaying="isPlaying"
-        :bgpMessageType="bgpMessageType"
+        :filtered-messages="filteredMessages"
+        :selected-peers="selectedPeers"
+        :is-live-mode="isLiveMode"
+        :is-playing="isPlaying"
+        :bgp-message-type="bgpMessageType"
         @enable-live-mode="enableLiveMode"
         @update-selected-peers="updateSelectedPeers"
       />
@@ -493,7 +493,7 @@ onMounted(() => {
           </p>
         </QCardSection>
         <QCardActions align="right">
-          <QBtn flat label="Close" color="primary" v-close-popup />
+          <QBtn v-close-popup flat label="Close" color="primary" />
         </QCardActions>
       </QCard>
     </QDialog>

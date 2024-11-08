@@ -83,7 +83,7 @@ p {
 }
 h3 {
   font-size: 1rem;
-  line-height: 1.5
+  line-height: 1.5;
 }
 .overview-footer {
   text-decoration: underline;

@@ -95,21 +95,26 @@ onMounted(() => {
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <QCheckbox v-for="select in selects" :label="select.label" v-model="select.value" />
-      <QCheckbox label="All" v-model="selectAll" />
+      <QCheckbox
+        v-for="select in selects"
+        :key="select.value"
+        v-model="select.value"
+        :label="select.label"
+      />
+      <QCheckbox v-model="selectAll" label="All" />
     </QCardSection>
   </QCard>
   <!-- Overview -->
-  <IXPOverview :ixp-number="peeringdbId" class="card" v-if="selects[0].value" />
+  <IXPOverview v-if="selects[0].value" :ixp-number="peeringdbId" class="card" />
   <!-- Monitoring -->
   <GenericCardController
+    v-if="selects[1].value && caidaId"
     :title="$t('charts.prefixHegemony.title')"
     sub-title="BGP / IRR / RPKI / delegated"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.prefixHegemony.info.title')"
     :info-description="$t('charts.prefixHegemony.info.description')"
     class="card"
-    v-if="selects[1].value && caidaId"
   >
     <PrefixHegemonyChart
       :start-time="startTime"
@@ -120,34 +125,34 @@ onMounted(() => {
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[2].value"
     :title="$t('charts.networkDelay.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.networkDelay.info.title')"
     :info-description="$t('charts.networkDelay.info.description')"
     class="card"
-    v-if="selects[2].value"
   >
     <NetworkDelayChart
       :start-time="startTime"
       :end-time="endTime"
-      :startPointName="Math.abs(caidaId).toString()"
-      :startPointType="route.params.id.substring(0, 2)"
+      :start-point-name="Math.abs(caidaId).toString()"
+      :start-point-type="route.params.id.substring(0, 2)"
       :fetch="fetch"
-      searchBar
-      :readonlySourceSearch="true"
-      :peeringdbId="peeringdbId"
+      search-bar
+      :readonly-source-search="true"
+      :peeringdb-id="peeringdbId"
     />
   </GenericCardController>
 
   <GenericCardController
+    v-if="selects[3].value"
     :title="$t('charts.delayAndForwarding.title')"
     sub-title="Traceroute Data"
     :report-day="interval.dayDiff()"
     :info-title="$t('charts.delayAndForwarding.info.title')"
     :info-description="$t('charts.delayAndForwarding.info.description')"
     class="card"
-    v-if="selects[3].value"
   >
     <DelayAndForwardingChart
       :start-time="startTime"
@@ -158,35 +163,35 @@ onMounted(() => {
   </GenericCardController>
   <!-- Routing -->
   <GenericCardController
+    v-if="selects[4].value"
     :title="$t('iyp.ixp.members.title')"
     sub-title="Member Autonomous Systems (ASes)"
     :info-title="$t('iyp.ixp.members.info.title')"
     :info-description="$t('iyp.ixp.members.info.description')"
     class="card"
-    v-if="selects[4].value"
   >
-    <IXPMembers :ixpNumber="peeringdbId" :page-title="pageTitle" />
+    <IXPMembers :ixp-number="peeringdbId" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
+    v-if="selects[5].value"
     :title="$t('iyp.ixp.facilities.title')"
     sub-title="Facilities"
     :info-title="$t('iyp.ixp.facilities.info.title')"
     :info-description="$t('iyp.ixp.facilities.info.description')"
     class="card"
-    v-if="selects[5].value"
   >
-    <IXPCoLocationFacilities :ixpNumber="peeringdbId" :page-title="pageTitle" />
+    <IXPCoLocationFacilities :ixp-number="peeringdbId" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
+    v-if="selects[6].value"
     :title="$t('iyp.ixp.peeringLANs.title')"
     sub-title="Peering LANs of an IXP"
     :info-title="$t('iyp.ixp.peeringLANs.info.title')"
     :info-description="$t('iyp.ixp.peeringLANs.info.description')"
     class="card"
-    v-if="selects[6].value"
   >
-    <IXPPeeringLANs :ixpNumber="peeringdbId" :page-title="pageTitle" />
+    <IXPPeeringLANs :ixp-number="peeringdbId" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

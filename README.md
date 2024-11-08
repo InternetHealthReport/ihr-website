@@ -25,14 +25,14 @@ cd ihr-website
 Note: 
 - you can use [nvm](https://github.com/nvm-sh/nvm) to switch between node versions as per your need 
 
-Install all the npm packages. Go to root directory and type the following command to install all npm packages
+#### Install all the npm packages.
 
 ```bash
 npm install
 ```
 
 
-For compilations and hot-reloads in development
+#### For compilations and hot-reloads in development
 
 ```bash
 npm run dev
@@ -48,6 +48,12 @@ npm run build
 
 ```bash
 npm run lint
+```
+
+#### To format files
+
+```bash
+npm run format
 ```
 
 ## Deploy with Docker
@@ -79,10 +85,11 @@ Replace `<host-port>` with the port on your host machine where you want to expos
 
 First off, thanks for taking the time to contribute! 🎉🎉
 
-When contributing to this repository, please first discuss the change you wish to make via issue with the maintainers of this repository before making a change. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
+Before you start, please follow these guidelines:
 
-1. Solve the issues which are listed
-2. Create your own issue and then send PR.
+1. **Solve Existing Issues**: If you find an existing issue that you would like to work on, please discuss it with the maintainers before starting to solve it. This ensures that everyone is on the same page regarding the approach and scope of the solution.
+2. **Create a New Issue**: If you have an idea for a new feature or have identified a bug that is not listed, please discuss it with the maintainers before creating a new issue. Providing context and details will help us understand the importance of your suggestion.
+3. **Pull Requests (PRs)**: Please note that PRs that are not assigned to contributors and are not related to an open issue will be closed automatically.
 
 Please refer to the project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow. The basic workflow:
 

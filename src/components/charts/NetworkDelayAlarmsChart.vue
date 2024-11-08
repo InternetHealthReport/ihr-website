@@ -6,12 +6,10 @@ import '@/styles/chart.css'
 
 const ihr_api = inject('ihr_api')
 
-const DEFAULT_MIN_DEVIATION = 10
-
 const props = defineProps({
   minDeviation: {
     type: Number,
-    default: DEFAULT_MIN_DEVIATION,
+    default: 10,
     required: true
   },
   selectedType: {

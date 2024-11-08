@@ -205,7 +205,8 @@ const copyAPI = () => {
         </p>
         <p>
           If you are looking for historical data or want to automate the process, check out the
-          <RouterLink :to="Tr.i18nRoute({ name: 'api' })">Metis section of the IHR API</RouterLink>.
+          <RouterLink :to="Tr.i18nRoute({ name: 'api' })"> Metis section of the IHR API </RouterLink
+          >.
         </p>
       </div>
     </div>
@@ -214,7 +215,7 @@ const copyAPI = () => {
         <QInput v-model="nbprobes" label="Number of probes" />
         <QSelect v-model="metric" :options="metricoptions" label="Distance metric" />
         <QSelect v-model="af" :options="afoptions" label="IP version" />
-        <QBtn class="q-mt-sm" @click="apiCall" label="Go"></QBtn>
+        <QBtn class="q-mt-sm" label="Go" @click="apiCall" />
       </div>
     </div>
     <div v-if="fetch">
@@ -231,8 +232,8 @@ const copyAPI = () => {
         <div class="row justify-center">
           <div class="IHR_block q-px-md">
             <h2>Atlas API specification</h2>
-            <QBtn class="q-mb-sm" color="secondary" @click="copyAPI" label="Copy"></QBtn>
-            <textarea class="apiTextarea" readonly v-model="apiJson"></textarea>
+            <QBtn class="q-mb-sm" color="secondary" label="Copy" @click="copyAPI" />
+            <textarea v-model="apiJson" class="apiTextarea" readonly />
           </div>
         </div>
         <div class="row justify-center">

@@ -43,13 +43,13 @@ onMounted(() => {
               bg="white"
               label="grey-8"
               input="black"
-              labelTxt="Enter a rank"
-              :noAS="true"
-              :noIXP="true"
-              :noPrefix="true"
-              :noCountry="true"
-              :noTag="true"
-              :noHostName="true"
+              label-txt="Enter a rank"
+              :no-a-s="true"
+              :no-i-x-p="true"
+              :no-prefix="true"
+              :no-country="true"
+              :no-tag="true"
+              :no-host-name="true"
             />
           </div>
         </div>
@@ -69,8 +69,9 @@ onMounted(() => {
                     Tr.i18nRoute({ name: 'rank', params: { rank: 'APNIC eyeball estimates (JP)' } })
                   "
                   class="IHR_delikify"
-                  >APNIC eyeball estimates (JP)</RouterLink
                 >
+                  APNIC eyeball estimates (JP)
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
@@ -81,8 +82,9 @@ onMounted(() => {
                     })
                   "
                   class="IHR_delikify"
-                  >IHR country ranking: Total AS (JP)</RouterLink
                 >
+                  IHR country ranking: Total AS (JP)
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
@@ -93,8 +95,9 @@ onMounted(() => {
                     })
                   "
                   class="IHR_delikify"
-                  >IHR country ranking: Total eyeball (JP)</RouterLink
                 >
+                  IHR country ranking: Total eyeball (JP)
+                </RouterLink>
               </li>
             </ul>
             <ul class="ul_styles">
@@ -102,15 +105,17 @@ onMounted(() => {
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'CAIDA ASRank' } })"
                   class="IHR_delikify"
-                  >CAIDA ASRank</RouterLink
                 >
+                  CAIDA ASRank
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'rank', params: { rank: 'Tranco top 1M' } })"
                   class="IHR_delikify"
-                  >Tranco top 1M</RouterLink
                 >
+                  Tranco top 1M
+                </RouterLink>
               </li>
               <li>
                 <RouterLink
@@ -118,8 +123,9 @@ onMounted(() => {
                     Tr.i18nRoute({ name: 'rank', params: { rank: 'Cisco Umbrella Top 1 million' } })
                   "
                   class="IHR_delikify"
-                  >Cisco Umbrella Top 1 million</RouterLink
                 >
+                  Cisco Umbrella Top 1 million
+                </RouterLink>
               </li>
             </ul>
           </div>

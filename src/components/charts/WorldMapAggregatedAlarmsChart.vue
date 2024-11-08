@@ -64,7 +64,9 @@ defineExpose({ init })
 <template>
   <div class="IHR_chart">
     <QCardSection>
-      <div class="text-h6 center">{{ chartTitle }}</div>
+      <div class="text-h6 center">
+        {{ chartTitle }}
+      </div>
     </QCardSection>
     <WorldMapAggregatedAlarmsMap
       :data="worldMapTrace"

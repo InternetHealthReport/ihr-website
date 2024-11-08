@@ -175,7 +175,7 @@ onMounted(() => {
   <div v-if="props.filteredMessages.length">
     <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
     <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
-    <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :newPlot="true" />
+    <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
   </div>
   <div v-else class="noData">
     <h1>No data available</h1>

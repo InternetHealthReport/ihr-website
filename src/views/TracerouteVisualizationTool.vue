@@ -56,10 +56,10 @@ onMounted(() => {
     <h1>Traceroute Monitor</h1>
     <QInput
       v-model="measurementIDInput"
-      @keyup.enter="loadMeasurement"
       placeholder="Enter RIPE ATLAS traceroute measurement ID"
+      @keyup.enter="loadMeasurement"
     >
-      <template v-slot:prepend>
+      <template #prepend>
         <QIcon name="web" />
       </template>
       <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
@@ -67,10 +67,10 @@ onMounted(() => {
       </QBtn>
     </QInput>
     <TracerouteMonitor
-      :atlasMeasurementID="measurementID"
-      :probeIDs="probeIDs"
-      :destinationIPs="destinationIPs"
-      :openOptions="true"
+      :atlas-measurement-i-d="measurementID"
+      :probe-i-ds="probeIDs"
+      :destination-i-ps="destinationIPs"
+      :open-options="true"
       class="traceroute-monitor"
     />
   </div>

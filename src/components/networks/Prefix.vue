@@ -94,7 +94,9 @@ onMounted(() => {
 
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
-    <h1 class="text-center">{{ pageTitle }}</h1>
+    <h1 class="text-center">
+      {{ pageTitle }}
+    </h1>
     <h3 class="text-center">
       <div>Weekly report</div>
     </h3>
@@ -107,13 +109,13 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="overview">Overview</QTab>
-        <QTab name="routing">Routing</QTab>
-        <QTab name="dns">DNS</QTab>
-        <QTab name="custom">Custom</QTab>
+        <QTab name="overview"> Overview </QTab>
+        <QTab name="routing"> Routing </QTab>
+        <QTab name="dns"> DNS </QTab>
+        <QTab name="custom"> Custom </QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels v-model="menu" v-if="pageTitle">
+      <QTabPanels v-if="pageTitle" v-model="menu">
         <QTabPanel name="overview">
           <PrefixOverview :host="host" :prefix-length="prefixLength" :get-prefix="getPrefix()" />
         </QTabPanel>

@@ -666,7 +666,7 @@ const getDateFormat = (chosenTime) => {
 }
 
 const bgplay = computed(() => {
-  return `/ihr/widget/bgplay?asn=${props.asNumber}&date=${dateStr}`
+  return `/ihr/widget/bgplay?asn=${props.asNumber}&date=${dateStr.value}`
 })
 
 const dateStr = computed(() => {
@@ -802,7 +802,7 @@ onMounted(() => {
         @update:model-value="toggleIpFamily"
       />
     </div>
-    <ReactiveChart :layout="layout" :traces="traces" @plotly-click="plotClick" :no-data="noData" />
+    <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" @plotly-click="plotClick" />
     <div v-if="loading" class="IHR_loading-spinner">
       <QSpinner color="secondary" size="15em" />
     </div>
@@ -810,7 +810,9 @@ onMounted(() => {
       <QCardSection class="q-pa-xs">
         <div class="row items-center">
           <div class="col">
-            <div class="text-h3">{{ getDateFormat(details.date) }}</div>
+            <div class="text-h3">
+              {{ getDateFormat(details.date) }}
+            </div>
           </div>
           <div class="col-auto">
             <QBtn
@@ -818,15 +820,15 @@ onMounted(() => {
               size="sm"
               round
               flat
-              @click="details.tableVisible = false"
               icon="fa fa-times-circle"
-            ></QBtn>
+              @click="details.tableVisible = false"
+            />
           </div>
         </div>
       </QCardSection>
       <QTabs
-        dense
         v-model="details.activeTab"
+        dense
         class="table-card text-grey inset-shadow"
         indicator-color="secondary"
         active-color="primary"
@@ -869,7 +871,7 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="dependencyUrl" target="_blank" id="tableUrl">{{ dependencyUrl }}</a>
+                  <a id="tableUrl" :href="dependencyUrl" target="_blank">{{ dependencyUrl }}</a>
                 </td>
               </tr>
               <tr>
@@ -879,7 +881,7 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a :href="dependentUrl" target="_blank" id="tableUrl">{{ dependentUrl }}</a>
+                  <a id="tableUrl" :href="dependentUrl" target="_blank">{{ dependentUrl }}</a>
                 </td>
               </tr>
             </tbody>

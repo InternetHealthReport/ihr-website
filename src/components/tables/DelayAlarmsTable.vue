@@ -196,26 +196,26 @@ onMounted(() => {
 
 <template>
   <QTable
+    v-model:pagination="pagination"
+    v-model:expanded="expandedRow"
     :rows="rows"
     :columns="columns"
     row-key="link"
-    :pagination.sync="pagination"
     :loading="loading"
     flat
     :filter="filterTable"
     :filter-method="filterFct"
     loading-label="Fetching latest link delay alarms..."
-    v-model:expanded="expandedRow"
   >
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr :props="props">
         <QTd auto-width>
           <QToggle v-model="props.expand" />
         </QTd>
         <QTd key="asn" :props="props">
           <RouterLink
-            v-bind:key="asn"
             v-for="(asn, index) in props.row.asn"
+            :key="asn"
             :to="
               Tr.i18nRoute({
                 name: 'network',
@@ -251,9 +251,9 @@ onMounted(() => {
             </QPopupProxy>
           </a>
         </QTd>
-        <QTd key="delayChange" :props="props">{{
-          (props.row.diffmedian / props.row.nbalarms).toFixed(2)
-        }}</QTd>
+        <QTd key="delayChange" :props="props">
+          {{ (props.row.diffmedian / props.row.nbalarms).toFixed(2) }}
+        </QTd>
         <QTd
           key="deviation"
           :props="props"
@@ -261,8 +261,9 @@ onMounted(() => {
             'IHR_important-cell',
             getClassByDeviation(props.row.deviation / props.row.nbalarms)
           ]"
-          >{{ (props.row.deviation / props.row.nbalarms).toFixed(2) }}</QTd
         >
+          {{ (props.row.deviation / props.row.nbalarms).toFixed(2) }}
+        </QTd>
         <QTd key="nbprobes" :props="props">
           {{ Math.floor(props.row.nbprobes / props.row.nbalarms) }}
         </QTd>
@@ -326,7 +327,12 @@ onMounted(() => {
   margin: 0px;
   padding-bottom: 10px;
 }
-.IHR_reverse-dns-ip-improved > div:first-child > .box-content > div:last-child > .res_info_holder > a {
+.IHR_reverse-dns-ip-improved
+  > div:first-child
+  > .box-content
+  > div:last-child
+  > .res_info_holder
+  > a {
   color: #405057 !important;
 }
 </style>

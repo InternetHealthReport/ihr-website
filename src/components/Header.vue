@@ -183,45 +183,47 @@ watch(simpleMenu, () => {
         <div
           class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md"
         >
-          <QBtnGroup flat :key="item.entryName" v-for="(item, index) in simpleMenu">
+          <QBtnGroup v-for="(item, index) in simpleMenu" :key="item.entryName" flat>
             <QBtn
-              flat
               v-if="item.options == null"
+              flat
               :label="$t(item.entryName)"
               :to="Tr.i18nRoute({ name: item.routeName })"
             />
             <QBtnDropdown
-              @mouseover.native="toggleValue(index, 1, true)"
-              @mouseout.native="toggleValue(index, 1, false)"
+              v-else
               v-model="item.menu"
               flat
               :label="$t(item.entryName)"
-              v-else
               menu-anchor="bottom left"
               menu-self="top left"
+              @mouseover.enter="toggleValue(index, 1, true)"
+              @mouseout.enter="toggleValue(index, 1, false)"
             >
               <QList
-                @mouseover.native="toggleValue(index, 2, true)"
-                @mouseout.native="toggleValue(index, 2, false)"
                 class="rounded-borders text-white bg-primary"
                 bordered
                 separator
                 padding
+                @mouseover.enter="toggleValue(index, 2, true)"
+                @mouseout.enter="toggleValue(index, 2, false)"
               >
                 <QItem
-                  clickable
-                  @click="closeMenu"
-                  v-close-popup
-                  :key="option.entryName"
                   v-for="option in item.options"
+                  :key="option.entryName"
+                  v-close-popup
+                  clickable
                   :to="Tr.i18nRoute({ name: option.routeName })"
                   active-class="text-grey"
+                  @click="closeMenu"
                 >
                   <QItemSection>
-                    <QItemLabel class="text-bold">{{ $t(option.entryName) }}</QItemLabel>
-                    <QItemLabel class="text-grey" caption lines="2">{{
-                      $t(option.summary)
-                    }}</QItemLabel>
+                    <QItemLabel class="text-bold">
+                      {{ $t(option.entryName) }}
+                    </QItemLabel>
+                    <QItemLabel class="text-grey" caption lines="2">
+                      {{ $t(option.summary) }}
+                    </QItemLabel>
                   </QItemSection>
                 </QItem>
               </QList>
@@ -234,10 +236,10 @@ watch(simpleMenu, () => {
             flat
             dense
             round
-            @click="leftDrawerOpen = !leftDrawerOpen"
             icon="menu"
             aria-label="Menu"
-          ></q-btn>
+            @click="leftDrawerOpen = !leftDrawerOpen"
+          />
         </div>
       </div>
       <!--Log in /Log out stuff here-->
@@ -245,34 +247,36 @@ watch(simpleMenu, () => {
     <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
       <QList>
         <!-- <QItemLabel header>Essential Links</QItemLabel> -->
-        <QItem flat :key="item.entryName" v-for="item in simpleMenu">
+        <QItem v-for="item in simpleMenu" :key="item.entryName" flat>
           <QBtn
-            flat
             v-if="item.options == null"
+            flat
             :label="$t(item.entryName)"
             :to="Tr.i18nRoute({ name: item.routeName })"
           />
           <QBtnDropdown
+            v-else
             flat
             :label="$t(item.entryName)"
-            v-else
             menu-anchor="bottom left"
             menu-self="top left"
           >
             <QList class="rounded-borders text-white bg-primary" bordered separator padding>
               <QItem
-                clickable
-                v-close-popup
-                :key="option.entryName"
                 v-for="option in item.options"
+                :key="option.entryName"
+                v-close-popup
+                clickable
                 :to="Tr.i18nRoute({ name: option.routeName })"
                 active-class="text-grey"
               >
                 <QItemSection>
-                  <QItemLabel class="text-bold">{{ $t(option.entryName) }}</QItemLabel>
-                  <QItemLabel class="text-grey" caption lines="2">{{
-                    $t(option.summary)
-                  }}</QItemLabel>
+                  <QItemLabel class="text-bold">
+                    {{ $t(option.entryName) }}
+                  </QItemLabel>
+                  <QItemLabel class="text-grey" caption lines="2">
+                    {{ $t(option.summary) }}
+                  </QItemLabel>
                 </QItemSection>
               </QItem>
             </QList>

@@ -136,8 +136,9 @@ onMounted(() => {
                       hash: '#Autonomous-Systems'
                     })
                   "
-                  >ASes</RouterLink
                 >
+                  ASes
+                </RouterLink>
               </div>
               <div>
                 {{ queries[0].data[0].preg_count }} registered
@@ -149,8 +150,9 @@ onMounted(() => {
                       hash: '#IP-Prefixes'
                     })
                   "
-                  >prefixes</RouterLink
                 >
+                  prefixes
+                </RouterLink>
               </div>
               <div>
                 {{ queries[0].data[0].pgeo_count }} geolocated
@@ -162,8 +164,9 @@ onMounted(() => {
                       hash: '#IP-Prefixes'
                     })
                   "
-                  >prefixes</RouterLink
                 >
+                  prefixes
+                </RouterLink>
               </div>
               <div>
                 {{ queries[0].data[0].ixp_count }}
@@ -175,8 +178,9 @@ onMounted(() => {
                       hash: '#Internet-Exchange-Points'
                     })
                   "
-                  >Internet Exchange Points</RouterLink
                 >
+                  Internet Exchange Points
+                </RouterLink>
               </div>
             </div>
           </td>
@@ -224,7 +228,7 @@ p {
 }
 h3 {
   font-size: 1rem;
-  line-height: 1.5
+  line-height: 1.5;
 }
 .overview-footer {
   text-decoration: underline;

@@ -94,20 +94,20 @@ const exportTable = () => {
 
 <template>
   <QTable
+    v-model:pagination="pagination"
     title="Selected ASes"
     :rows="rows"
     :columns="columns"
     row-key="rank"
-    :pagination.sync="pagination"
     :filter="tabFilter"
     :loading="loading"
     flat
   >
-    <template v-slot:top>
+    <template #top>
       <div class="q-table__title">Selected ASes</div>
       <QSpace />
-      <QInput debounce="300" v-model="tabFilter" placeholder="Search">
-        <template v-slot:prepend>
+      <QInput v-model="tabFilter" debounce="300" placeholder="Search">
+        <template #prepend>
           <QIcon name="search" />
         </template>
       </QInput>

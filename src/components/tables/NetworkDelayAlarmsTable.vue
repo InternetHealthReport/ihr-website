@@ -189,20 +189,20 @@ onMounted(() => {
 
 <template>
   <QTable
+    v-model:pagination="pagination"
+    v-model:expanded="expandedRow"
     table-class="myClass"
     :rows="rows"
     :columns="columns"
-    :pagination.sync="pagination"
     :loading="loading"
     :filter="filterTable"
     :filter-method="filterFct"
     binary-state-sort
     flat
     row-key="asNumber"
-    v-model:expanded="expandedRow"
     loading-label="Fetching latest network delay alarms..."
   >
-    <template v-slot:body="props">
+    <template #body="props">
       <QTr :props="props">
         <QTd auto-width>
           <QToggle v-model="props.expand" />
@@ -225,8 +225,12 @@ onMounted(() => {
             {{ destinationsBody(props.row.endpoints) }}
           </div>
         </QTd>
-        <QTd key="nbalarms">{{ props.row.nbalarms }}</QTd>
-        <QTd key="avgdev">{{ (props.row.cumdev / props.row.nbalarms).toFixed(2) }}</QTd>
+        <QTd key="nbalarms">
+          {{ props.row.nbalarms }}
+        </QTd>
+        <QTd key="avgdev">
+          {{ (props.row.cumdev / props.row.nbalarms).toFixed(2) }}
+        </QTd>
       </QTr>
       <QTr v-if="props.expand" :props="props">
         <QTd colspan="100%" class="IHR_nohover" bordered>
@@ -234,9 +238,9 @@ onMounted(() => {
             <NetworkDelayChart
               :start-time="startTime"
               :end-time="stopTime"
-              :startPointName="String(props.row.asNumber)"
-              :startPointType="props.row.asNumber > 0 ? 'AS' : 'IX'"
-              :endPointNames="endpointKeys(props.row.endpoints)"
+              :start-point-name="String(props.row.asNumber)"
+              :start-point-type="props.row.asNumber > 0 ? 'AS' : 'IX'"
+              :end-point-names="endpointKeys(props.row.endpoints)"
               fetch
             />
           </div>
@@ -252,7 +256,7 @@ onMounted(() => {
 }
 .IHR_ndelay_destinations {
   text-overflow: ellipsis;
-/* Required for text-overflow to do anything */
+  /* Required for text-overflow to do anything */
   white-space: nowrap;
   overflow: hidden;
   font-style: italic;

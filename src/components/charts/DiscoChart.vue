@@ -138,14 +138,14 @@ onMounted(() => {
 <template>
   <div class="IHR_chart">
     <div>
-      <DiscoMap :events="mapData" ref="ihrChartMap" :loading="loading" />
+      <DiscoMap ref="ihrChartMap" :events="mapData" :loading="loading" />
       <DiscoAlarmsTable
         :start-time="startTime"
         :stop-time="endTime"
         :data="dataEvents"
         :loading="loading"
-        @prefix-details="emits('prefix-details', $event)"
         :filter="filter"
+        @prefix-details="emits('prefix-details', $event)"
       />
     </div>
   </div>

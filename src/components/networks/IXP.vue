@@ -142,7 +142,9 @@ onMounted(() => {
 
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
-    <h1 class="text-center">{{ pageTitle }}</h1>
+    <h1 class="text-center">
+      {{ pageTitle }}
+    </h1>
     <h3 class="text-center">
       <div v-if="['monitoring', 'custom'].includes(menu)">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
@@ -150,8 +152,8 @@ onMounted(() => {
           :min="minDate"
           :max="maxDate"
           :value="endTime"
+          hide-time
           @input="setReportDate"
-          hideTime
         />
       </div>
       <div v-else>Weekly report</div>
@@ -165,14 +167,14 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="overview">Overview</QTab>
-        <QTab name="monitoring">Monitoring</QTab>
-        <QTab name="routing">Routing</QTab>
-        <QTab name="peering">Peering</QTab>
-        <QTab name="custom">Custom</QTab>
+        <QTab name="overview"> Overview </QTab>
+        <QTab name="monitoring"> Monitoring </QTab>
+        <QTab name="routing"> Routing </QTab>
+        <QTab name="peering"> Peering </QTab>
+        <QTab name="custom"> Custom </QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels v-model="menu" v-if="pageTitle">
+      <QTabPanels v-if="pageTitle" v-model="menu">
         <QTabPanel name="overview">
           <IXPOverview :ixp-number="ixpNumber" />
         </QTabPanel>
@@ -200,7 +202,7 @@ onMounted(() => {
             :caida-id="caidaId"
             :family="family"
             :page-title="pageTitle"
-            :peeringdbId="ixpNumber"
+            :peeringdb-id="ixpNumber"
             :interval="interval"
             :hash="routeHash"
           />
