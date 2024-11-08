@@ -1,11 +1,15 @@
+<!--- Provide a general summary of your changes in the Title above. -->
+<!--- Do not include backticks (`) in the Title above.  -->
+
 ## Description
 
-<!--- Describe your changes in detail -->
+<!--- Describe your changes in detail. -->
 <!--- Why is this change required? What problem does it solve? -->
+<!--- Do not include backticks (`).  -->
 
 ## Related issue
 
-<!--- Replace '000' with the issue number. -->
+<!--- Replace only the '000' with the issue number. -->
 <!--- Do not include a URL. -->
 
 #000
@@ -13,8 +17,9 @@
 ## How Has This Been Tested?
 
 <!--- Please describe in detail how you tested your changes. -->
-<!--- Include details of your testing environment, the tests you ran to -->
+<!--- Include details of your testing environment, the tests you ran to. -->
 <!--- see how your change affects other areas of the code, etc. -->
+<!--- Do not include backticks (`).  -->
 
 ## Screenshots (if appropriate):
 
