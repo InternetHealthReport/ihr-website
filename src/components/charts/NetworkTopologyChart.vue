@@ -10,16 +10,16 @@ import { useRouter } from 'vue-router'
 const iyp_api = inject('iyp_api')
 
 const router = useRouter()
-const emit = defineEmits(['searchChange', 'afChange'])
+const emit = defineEmits(['searchChange', 'afChange', 'deleteChart'])
 
 const props = defineProps({
   searchInputP: {
     type: String,
-    default: '2501'
+    // default: '2501'
   },
   af: {
     type: String,
-    default: 'IPv4'
+    // default: 'IPv4'
   },
   isComponent: {
     type: Boolean,
@@ -428,12 +428,17 @@ watch(
   { deep: true }
 )
 
-watch(searchInput, (newValue) => {
-  emit('searchChange', props.id, newValue)
-  if (isPrefix(newValue)) {
-    if (newValue.includes('.')) {
+const watchInput = computed(() => ({
+  input: searchInput.value,
+  af: ipModel.value
+}))
+
+watch(watchInput, (newValue) => {
+  emit('searchChange', props.id, {input: newValue.input, af: newValue.af.includes('4') ? '4' : '6'})
+  if (isPrefix(newValue.input)) {
+    if (newValue.input.includes('.')) {
       ipModel.value = 'IPv4'
-    } else if (newValue.includes(':')) {
+    } else if (newValue.input.includes(':')) {
       ipModel.value = 'IPv6'
     }
   }
