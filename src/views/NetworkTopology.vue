@@ -2,28 +2,58 @@
 import NetworkTopologyChart from '@/components/charts/NetworkTopologyChart.vue'
 import { QBtn } from 'quasar'
 import { GridLayout, GridItem } from 'grid-layout-plus'
-import { ref, reactive, watch, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
+import { useRoute, useRouter, RouterLink } from 'vue-router'
+import Tr from '@/i18n/translation'
 import '@/styles/chart.css'
+import Feedback from '@/components/Feedback.vue'
 
 const route = useRoute()
 const router = useRouter()
 
 const chartAmount = ref(0)
-const layout = reactive([])
+const layout = ref([])
 const childRefs = ref([])
 
-const incrementChart = (searchInput, af) => {
-  chartAmount.value++
+const isLinkClick = ref(false)
+
+const incrementChart = (searchInput, af, fromLink = false) => {
+  chartAmount.value += 1
   changeLayout(searchInput, af)
+  if (!fromLink) {
+    pushRoute(
+      `[${layout.value.map((obj) => obj.searchInput).toString()}]`,
+      `[${layout.value.map((obj) => obj.af).toString()}]`
+    )
+  }
+}
+
+const pushRoute = (searchInput, af) => {
+  let query = null
+  if (searchInput !== '[]') {
+    query = Object.assign({}, route.query, {
+      input: searchInput,
+      af: af
+    })
+  }
+  router.push(
+    Tr.i18nRoute({
+      replace: true,
+      query: query
+    })
+  )
 }
 
 const deleteChart = (id) => {
-  const index = layout.findIndex((item) => item.i === id)
+  const index = layout.value.findIndex((item) => item.i === id)
   if (index > -1) {
-    layout.splice(index, 1)
-    chartAmount.value--
+    layout.value.splice(index, 1)
+    chartAmount.value -= 1
     adjustLayoutAfterDelete()
+    pushRoute(
+      `[${layout.value.map((obj) => obj.searchInput).toString()}]`,
+      `[${layout.value.map((obj) => obj.af).toString()}]`
+    )
   }
 }
 
@@ -37,7 +67,7 @@ const changeLayout = (searchInput, af) => {
   const row = Math.floor((chartAmount.value - 1) / maxItemsInRow)
   const col = (chartAmount.value - 1) % maxItemsInRow
 
-  layout.push({
+  layout.value.push({
     x: col * (12 / maxItemsInRow),
     y: row * 15,
     w: 12 / maxItemsInRow,
@@ -54,20 +84,22 @@ const changeLayout = (searchInput, af) => {
 }
 
 const adjustWidthsToFillRow = (maxItemsInRow) => {
-  const itemsInLastRow = layout.length % maxItemsInRow || maxItemsInRow
+  const itemsInLastRow = layout.value.length % maxItemsInRow || maxItemsInRow
   const widthPerItem = 12 / itemsInLastRow
-  const startIndex = layout.length - itemsInLastRow
+  const startIndex = layout.value.length - itemsInLastRow
 
-  for (let i = startIndex; i < layout.length; i++) {
-    layout[i].w = widthPerItem
-    layout[i].x = (i % maxItemsInRow) * widthPerItem
+  if (startIndex >= 0) {
+    for (let i = startIndex; i < layout.value.length; i++) {
+      layout.value[i].w = widthPerItem
+      layout.value[i].x = (i % maxItemsInRow) * widthPerItem
+    }
   }
 }
 
 const adjustLayoutAfterDelete = () => {
   const maxItemsInRow = getMaxItemsInRow()
 
-  layout.forEach((item, index) => {
+  layout.value.forEach((item, index) => {
     const row = Math.floor(index / maxItemsInRow)
     const col = index % maxItemsInRow
 
@@ -82,10 +114,10 @@ const adjustLayoutAfterDelete = () => {
 }
 
 const updateLegends = (maxItemsInRow) => {
-  layout.forEach((item) => (item.showLegend = false))
+  layout.value.forEach((item) => (item.showLegend = false))
 
-  layout.forEach((item, index) => {
-    const isLastInRow = (index + 1) % maxItemsInRow === 0 || index === layout.length - 1
+  layout.value.forEach((item, index) => {
+    const isLastInRow = (index + 1) % maxItemsInRow === 0 || index === layout.value.length - 1
     if (isLastInRow) {
       item.showLegend = true
     }
@@ -93,16 +125,21 @@ const updateLegends = (maxItemsInRow) => {
 }
 
 const searchChange = (id, newValue) => {
-  const index = layout.findIndex((item) => item.i === id)
+  const index = layout.value.findIndex((item) => item.i === id)
   if (index > -1) {
-    layout[index].searchInput = newValue
+    layout.value[index].searchInput = newValue.input
+    layout.value[index].af = newValue.af
+    pushRoute(
+      `[${layout.value.map((obj) => obj.searchInput).toString()}]`,
+      `[${layout.value.map((obj) => obj.af).toString()}]`
+    )
   }
 }
 
 const afChange = (id, newValue) => {
-  const index = layout.findIndex((item) => item.i === id)
+  const index = layout.value.findIndex((item) => item.i === id)
   if (index > -1) {
-    layout[index].af = newValue
+    layout.value[index].af = newValue
   }
 }
 
@@ -114,26 +151,7 @@ const fitScreen = () => {
   })
 }
 
-watch(
-  layout,
-  (newLayout) => {
-    const searchInputs = '[' + newLayout.map((item) => item.searchInput).join(',') + ']'
-    const afValues = '[' + newLayout.map((item) => Number(item.af)).join(',') + ']'
-    router.replace({
-      path: route.path,
-      query: {
-        input: searchInputs,
-        af: afValues
-      }
-    })
-    setTimeout(() => {
-      fitScreen()
-    }, 100)
-  },
-  { deep: true }
-)
-
-onMounted(async () => {
+const init = (fromLink = false) => {
   let queryInput = route.query.input
   if (queryInput) {
     queryInput = queryInput.slice(1, -1)
@@ -141,13 +159,33 @@ onMounted(async () => {
     if (queryInput[0] != '') {
       let af = JSON.parse(route.query.af)
       queryInput.forEach((query, index) => {
-        incrementChart(query, af[index])
+        incrementChart(query, af[index], fromLink)
       })
+      fitScreen()
     }
   }
-  setTimeout(() => {
-    fitScreen()
-  }, 10)
+}
+
+const setLinkClick = () => {
+  isLinkClick.value = true
+}
+
+watch(
+  () => route.query,
+  () => {
+    if (Object.keys(route.query).length === 0) {
+      chartAmount.value = 0
+      layout.value = []
+      childRefs.value = []
+    } else if (isLinkClick.value) {
+      init(true)
+      isLinkClick.value = false
+    }
+  }
+)
+
+onMounted(async () => {
+  init()
 })
 </script>
 
@@ -172,15 +210,109 @@ onMounted(async () => {
         <div class="row justify-center">
           <div class="row examples">
             <ul class="ul_styles">
-              <li @click="incrementChart(`2497`, `4`)">IIJ (AS2497)</li>
-              <li @click="incrementChart(`15169`, `4`)">Google (AS15169)</li>
-              <li @click="incrementChart(`2501`, `4`)">University of Tokyo (AS2501)</li>
+              <li>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[2497]`,
+                        af: `[4]`
+                      })
+                    })
+                  "
+                  class="IHR_delikify"
+                  @click="setLinkClick"
+                >
+                  IIJ (AS2497)
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[15169]`,
+                        af: `[4]`
+                      })
+                    })
+                  "
+                  class="IHR_delikify"
+                  @click="setLinkClick"
+                >
+                  Google (AS15169)
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[2501]`,
+                        af: `[4]`
+                      })
+                    })
+                  "
+                  class="IHR_delikify"
+                  @click="setLinkClick"
+                >
+                  University of Tokyo (AS2501)
+                </RouterLink>
+              </li>
             </ul>
             <ul class="ul_styles">
-              <li @click="incrementChart(`157.8.16.0/23`, `4`)">IIJ (157.8.16.0/23)</li>
-              <li @click="incrementChart(`152.65.235.0/24`, `4`)">Google (152.65.235.0/24)</li>
-              <li @click="incrementChart(`192.51.208.0/20`, `4`)">
-                University of Tokyo (192.51.208.0/20)
+              <li>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[2404:d540:1::/48]`,
+                        af: `[6]`
+                      })
+                    })
+                  "
+                  class="IHR_delikify"
+                  @click="setLinkClick"
+                >
+                  University of Tokyo (2404:d540:1::/48)
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[192.16.51.0/24]`,
+                        af: `[4]`
+                      })
+                    })
+                  "
+                  class="IHR_delikify"
+                  @click="setLinkClick"
+                >
+                  Edgecast (192.16.51.0/24)
+                </RouterLink>
+              </li>
+              <li>
+                <RouterLink
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[218.47.0.0/16]`,
+                        af: `[4]`
+                      })
+                    })
+                  "
+                  class="IHR_delikify"
+                  @click="setLinkClick"
+                >
+                  NTT OCN (218.47.0.0/16)
+                </RouterLink>
               </li>
             </ul>
           </div>
@@ -188,8 +320,9 @@ onMounted(async () => {
       </div>
     </div>
     <div class="addTopologyButton">
-      <QBtn color="secondary" label="Add Topology" @click="incrementChart(`2501`, `4`)" />
+      <QBtn color="secondary" label="Add Topology" @click="incrementChart(``, ``)" />
     </div>
+    {{ layout.value }}
     <GridLayout v-model:layout="layout" :row-height="30">
       <GridItem
         v-for="(item, index) in layout"
@@ -204,7 +337,7 @@ onMounted(async () => {
         <NetworkTopologyChart
           :id="item.i"
           :ref="(el) => (childRefs[index] = el)"
-          :search-input="item.searchInput"
+          :search-input-p="item.searchInput"
           :af="`IPv` + item.af"
           :show-legend="item.showLegend"
           @delete-chart="deleteChart"
@@ -214,6 +347,7 @@ onMounted(async () => {
       </GridItem>
     </GridLayout>
   </div>
+  <Feedback />
 </template>
 
 <style>
