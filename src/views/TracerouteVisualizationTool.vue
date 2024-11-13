@@ -5,6 +5,7 @@ import { useRoute, useRouter } from 'vue-router'
 import TracerouteMonitor from '@/components/TracerouteMonitor.vue'
 import Tr from '@/i18n/translation'
 import '@/styles/chart.css'
+import Feedback from '@/components/Feedback.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -74,6 +75,7 @@ onMounted(() => {
       class="traceroute-monitor"
     />
   </div>
+  <Feedback />
 </template>
 
 <style scoped>

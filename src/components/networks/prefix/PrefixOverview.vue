@@ -212,7 +212,7 @@ onMounted(() => {
         <tr>
           <td class="topology">
             <NetworkTopologyChart
-              :search-input="props.getPrefix"
+              :search-input-p="props.getPrefix"
               :af="getAf(props.getPrefix)"
               :is-component="true"
             />
