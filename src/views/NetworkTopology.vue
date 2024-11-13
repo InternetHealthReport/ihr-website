@@ -17,20 +17,23 @@ const childRefs = ref([])
 
 const isLinkClick = ref(false)
 
-const incrementChart = (searchInput, af, fromLink=false) => {
+const incrementChart = (searchInput, af, fromLink = false) => {
   chartAmount.value += 1
   changeLayout(searchInput, af)
   if (!fromLink) {
-    pushRoute(`[${layout.value.map(obj => obj.searchInput).toString()}]`, `[${layout.value.map(obj => obj.af).toString()}]`)
+    pushRoute(
+      `[${layout.value.map((obj) => obj.searchInput).toString()}]`,
+      `[${layout.value.map((obj) => obj.af).toString()}]`
+    )
   }
 }
 
 const pushRoute = (searchInput, af) => {
   let query = null
-  if (searchInput !== "[]") {
+  if (searchInput !== '[]') {
     query = Object.assign({}, route.query, {
       input: searchInput,
-      af: af,
+      af: af
     })
   }
   router.push(
@@ -47,7 +50,10 @@ const deleteChart = (id) => {
     layout.value.splice(index, 1)
     chartAmount.value -= 1
     adjustLayoutAfterDelete()
-    pushRoute(`[${layout.value.map(obj => obj.searchInput).toString()}]`, `[${layout.value.map(obj => obj.af).toString()}]`)
+    pushRoute(
+      `[${layout.value.map((obj) => obj.searchInput).toString()}]`,
+      `[${layout.value.map((obj) => obj.af).toString()}]`
+    )
   }
 }
 
@@ -123,7 +129,10 @@ const searchChange = (id, newValue) => {
   if (index > -1) {
     layout.value[index].searchInput = newValue.input
     layout.value[index].af = newValue.af
-    pushRoute(`[${layout.value.map(obj => obj.searchInput).toString()}]`, `[${layout.value.map(obj => obj.af).toString()}]`)
+    pushRoute(
+      `[${layout.value.map((obj) => obj.searchInput).toString()}]`,
+      `[${layout.value.map((obj) => obj.af).toString()}]`
+    )
   }
 }
 
@@ -142,7 +151,7 @@ const fitScreen = () => {
   })
 }
 
-const init = (fromLink=false) => {
+const init = (fromLink = false) => {
   let queryInput = route.query.input
   if (queryInput) {
     queryInput = queryInput.slice(1, -1)
@@ -161,16 +170,19 @@ const setLinkClick = () => {
   isLinkClick.value = true
 }
 
-watch(() => route.query, () => {
-  if (Object.keys(route.query).length === 0) {
-    chartAmount.value = 0
-    layout.value = []
-    childRefs.value = []
-  } else if (isLinkClick.value) {
-    init(true)
-    isLinkClick.value = false
+watch(
+  () => route.query,
+  () => {
+    if (Object.keys(route.query).length === 0) {
+      chartAmount.value = 0
+      layout.value = []
+      childRefs.value = []
+    } else if (isLinkClick.value) {
+      init(true)
+      isLinkClick.value = false
+    }
   }
-})
+)
 
 onMounted(async () => {
   init()
@@ -200,45 +212,51 @@ onMounted(async () => {
             <ul class="ul_styles">
               <li>
                 <RouterLink
-                  :to="Tr.i18nRoute({
-                    replace: true,
-                    query: Object.assign({}, route.query, {
-                      input: `[2497]`,
-                      af: `[4]`,
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[2497]`,
+                        af: `[4]`
+                      })
                     })
-                  })"
-                  @click="setLinkClick"
+                  "
                   class="IHR_delikify"
+                  @click="setLinkClick"
                 >
                   IIJ (AS2497)
                 </RouterLink>
               </li>
               <li>
                 <RouterLink
-                  :to="Tr.i18nRoute({
-                    replace: true,
-                    query: Object.assign({}, route.query, {
-                      input: `[15169]`,
-                      af: `[4]`,
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[15169]`,
+                        af: `[4]`
+                      })
                     })
-                  })"
-                  @click="setLinkClick"
+                  "
                   class="IHR_delikify"
+                  @click="setLinkClick"
                 >
                   Google (AS15169)
                 </RouterLink>
               </li>
               <li>
                 <RouterLink
-                  :to="Tr.i18nRoute({
-                    replace: true,
-                    query: Object.assign({}, route.query, {
-                      input: `[2501]`,
-                      af: `[4]`,
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[2501]`,
+                        af: `[4]`
+                      })
                     })
-                  })"
-                  @click="setLinkClick"
+                  "
                   class="IHR_delikify"
+                  @click="setLinkClick"
                 >
                   University of Tokyo (AS2501)
                 </RouterLink>
@@ -247,45 +265,51 @@ onMounted(async () => {
             <ul class="ul_styles">
               <li>
                 <RouterLink
-                  :to="Tr.i18nRoute({
-                    replace: true,
-                    query: Object.assign({}, route.query, {
-                      input: `[2404:d540:1::/48]`,
-                      af: `[6]`,
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[2404:d540:1::/48]`,
+                        af: `[6]`
+                      })
                     })
-                  })"
-                  @click="setLinkClick"
+                  "
                   class="IHR_delikify"
+                  @click="setLinkClick"
                 >
                   University of Tokyo (2404:d540:1::/48)
                 </RouterLink>
               </li>
               <li>
                 <RouterLink
-                  :to="Tr.i18nRoute({
-                    replace: true,
-                    query: Object.assign({}, route.query, {
-                      input: `[192.16.51.0/24]`,
-                      af: `[4]`,
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[192.16.51.0/24]`,
+                        af: `[4]`
+                      })
                     })
-                  })"
-                  @click="setLinkClick"
+                  "
                   class="IHR_delikify"
+                  @click="setLinkClick"
                 >
                   Edgecast (192.16.51.0/24)
                 </RouterLink>
               </li>
               <li>
                 <RouterLink
-                  :to="Tr.i18nRoute({
-                    replace: true,
-                    query: Object.assign({}, route.query, {
-                      input: `[218.47.0.0/16]`,
-                      af: `[4]`,
+                  :to="
+                    Tr.i18nRoute({
+                      replace: true,
+                      query: Object.assign({}, route.query, {
+                        input: `[218.47.0.0/16]`,
+                        af: `[4]`
+                      })
                     })
-                  })"
-                  @click="setLinkClick"
+                  "
                   class="IHR_delikify"
+                  @click="setLinkClick"
                 >
                   NTT OCN (218.47.0.0/16)
                 </RouterLink>

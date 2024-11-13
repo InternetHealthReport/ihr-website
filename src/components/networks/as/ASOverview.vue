@@ -285,7 +285,11 @@ onMounted(() => {
             />
           </td>
           <td class="topology">
-            <NetworkTopologyChart :search-input-p="String(asNumber)" af="IPv6" :is-component="true" />
+            <NetworkTopologyChart
+              :search-input-p="String(asNumber)"
+              af="IPv6"
+              :is-component="true"
+            />
           </td>
         </tr>
       </tbody>

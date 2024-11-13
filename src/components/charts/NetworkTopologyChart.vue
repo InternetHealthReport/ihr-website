@@ -14,11 +14,11 @@ const emit = defineEmits(['searchChange', 'afChange', 'deleteChart'])
 
 const props = defineProps({
   searchInputP: {
-    type: String,
+    type: String
     // default: '2501'
   },
   af: {
-    type: String,
+    type: String
     // default: 'IPv4'
   },
   isComponent: {
@@ -434,7 +434,10 @@ const watchInput = computed(() => ({
 }))
 
 watch(watchInput, (newValue) => {
-  emit('searchChange', props.id, {input: newValue.input, af: newValue.af.includes('4') ? '4' : '6'})
+  emit('searchChange', props.id, {
+    input: newValue.input,
+    af: newValue.af.includes('4') ? '4' : '6'
+  })
   if (isPrefix(newValue.input)) {
     if (newValue.input.includes('.')) {
       ipModel.value = 'IPv4'
