@@ -6,6 +6,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter, RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import '@/styles/chart.css'
+import Feedback from '@/components/Feedback.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -322,6 +323,7 @@ onMounted(async () => {
       </GridItem>
     </GridLayout>
   </div>
+  <Feedback />
 </template>
 
 <style>

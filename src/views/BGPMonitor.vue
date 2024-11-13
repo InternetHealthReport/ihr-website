@@ -20,6 +20,7 @@ import BGPPathsChart from '@/components/charts/BGPPathsChart.vue'
 import BGPLineChart from '@/components/charts/BGPLineChart.vue'
 import BGPMessagesTable from '@/components/tables/BGPMessagesTable.vue'
 import '@/styles/chart.css'
+import Feedback from '@/components/Feedback.vue'
 
 const { t } = i18n.global
 
@@ -498,6 +499,7 @@ onMounted(() => {
       </QCard>
     </QDialog>
   </div>
+  <Feedback />
 </template>
 
 <style>

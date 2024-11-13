@@ -21,7 +21,7 @@ const showFeedbackDialog = ref(false)
       </QCardSection>
       <QCardSection>
         <div>
-          Please share your feedback to improve our report pages. You can either:
+          Please share your feedback to improve our pages. You can either:
           <ul>
             <li>
               Send your feedback by email to
