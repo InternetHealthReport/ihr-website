@@ -91,7 +91,7 @@ const SIMPLE_MENU = [
       },
       {
         entryName: 'header.networkTopology.name',
-        routeName: 'network-topology',
+        routeName: 'upstream-topology',
         summary: 'header.networkTopology.summary'
       },
       {

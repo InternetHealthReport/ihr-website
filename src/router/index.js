@@ -137,8 +137,8 @@ const router = createRouter({
           }
         },
         {
-          path: 'network-topology',
-          name: 'network-topology',
+          path: 'upstream-topology',
+          name: 'upstream-topology',
           component: () => import('../views/NetworkTopology.vue')
         },
         {
