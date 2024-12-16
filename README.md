@@ -16,7 +16,7 @@ Install [Npm v10.2.4](https://docs.npmjs.com/cli/v10/configuring-npm)
 
 #### Cloning and Running the Application in local
 
-Clone the project in localhost
+Clone the project
 
 ```bash
 git clone https://github.com/InternetHealthReport/ihr-website.git
