@@ -23,8 +23,8 @@
       "summary": "Community Observable notebook showcase"
     },
     "networkTopology": {
-      "name": "Network Topology",
-      "summary": "Network Topology Overview"
+      "name": "\"Upstream\" Topology",
+      "summary": "\"Upstream\" Topology Overview"
     },
     "bgpMonitor": {
       "name": "BGP Monitor",
