@@ -270,8 +270,8 @@ onMounted(() => {
     <QMarkupTable separator="horizontal">
       <thead>
         <tr>
-          <th class="text-left">IPv4 Network Topology</th>
-          <th class="text-left">IPv6 Network Topology</th>
+          <th class="text-left">IPv4 "Upstream" Topology</th>
+          <th class="text-left">IPv6 "Upstream" Topology</th>
         </tr>
       </thead>
       <tbody>

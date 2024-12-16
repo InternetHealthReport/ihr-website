@@ -191,7 +191,7 @@ onMounted(async () => {
 
 <template>
   <div class="IHR_char-container">
-    <h1 class="text-center">Network Topology Overview</h1>
+    <h1 class="text-center">"Upstream" Topology Overview</h1>
     <div class="row justify-center">
       <div v-if="chartAmount == 0" class="IHR_description">
         <p>

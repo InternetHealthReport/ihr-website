@@ -205,7 +205,7 @@ onMounted(() => {
     <QMarkupTable separator="horizontal">
       <thead>
         <tr>
-          <th class="text-left">Network Topology</th>
+          <th class="text-left">"Upstream" Topology</th>
         </tr>
       </thead>
       <tbody>

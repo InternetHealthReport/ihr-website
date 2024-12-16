@@ -98,7 +98,7 @@ Please refer to the project's style and contribution guidelines for submitting p
 3. Create a **branch** and name it with the `issue number`
 4. **Commit** changes to the branch
 5. **Push** your work back to your fork
-6. **Rebase** your branch with the `dev` branch
+6. **Rebase** your branch with the `master` branch
 7. Submit your **Pull Request** so that we can review it
 
 Please submit your issues and pull request while following the automated template. During the contributing phase abide by the [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md).
