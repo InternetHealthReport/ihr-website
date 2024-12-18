@@ -436,7 +436,31 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://www.edgecast.com/'>Edgecast</a> is a Content Delivery Network (CDN) that distributes IHR's website and API worldwide."
+            "body": "<a href='https://www.edgecast.com/'>Edgecast</a> is a Content Delivery Network (CDN) that distributed IHR's website and API worldwide until 2024."
+          },
+          "9": {
+            "header": "APNIC",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://apnic.foundation/'>APNIC Foundation</a> has sponsored IHR."
+          },
+          "10": {
+            "header": "Cloudflare",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://www.cloudflare.com/'>Cloudflare</a> is a Content Delivery Network (CDN) that distributed IHR's website and API worldwide."
+          },
+          "11": {
+            "header": "Fastly",
+            "img": {
+              "src": "",
+              "style": ""
+            },
+            "body": "<a href='https://www.fastly.com/'>Fastly</a> is a Content Delivery Network (CDN) that distributed IHR's website and API worldwide."
           }
         }
       },

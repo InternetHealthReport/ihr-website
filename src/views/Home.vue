@@ -31,32 +31,54 @@ const GRAPHS_TYPES = [
 const ORGANIZATIONS = [
   {
     name: 'iij',
-    logo: new URL('@/assets/imgs/iij-logo.jpg', import.meta.url).href
+    logo: new URL('@/assets/imgs/IIJ-logo.svg', import.meta.url).href,
+    url: 'https://www.iij.ad.jp/en/'
   },
   {
     name: 'ripe',
-    logo: new URL('@/assets/imgs/ripe-logo.png', import.meta.url).href
+    logo: new URL('@/assets/imgs/ripe-logo.png', import.meta.url).href,
+    url: 'https://www.ripe.net/'
   },
   {
     name: 'gsoc',
-    logo: new URL('@/assets/imgs/gsoc-logo.png', import.meta.url).href
+    logo: new URL('@/assets/imgs/gsoc-logo.svg', import.meta.url).href,
+    url: 'https://summerofcode.withgoogle.com/'
   },
   {
     name: 'routeviews',
-    logo: new URL('@/assets/imgs/rv-logo.png', import.meta.url).href
+    logo: new URL('@/assets/imgs/rv-logo.png', import.meta.url).href,
+    url: 'http://www.routeviews.org/'
   },
   {
     name: 'isoc',
-    logo: new URL('@/assets/imgs/isoc-logo.png', import.meta.url).href
+    logo: new URL('@/assets/imgs/isoc-logo.png', import.meta.url).href,
+    url: 'https://www.internetsociety.org/'
   },
   {
     name: 'manrs',
-    logo: new URL('@/assets/imgs/manrs-logo.jpg', import.meta.url).href
+    logo: new URL('@/assets/imgs/manrs-logo.jpg', import.meta.url).href,
+    url: 'https://www.manrs.org/'
+  },
+  // {
+  //   name: 'edgecast',
+  //   logo: new URL('@/assets/imgs/edgecast-logo.png', import.meta.url).href,
+  //   url: 'https://www.edgecast.com/'
+  // },
+  {
+    name: 'apnic',
+    logo: new URL('@/assets/imgs/apnic-foundation-logo.png', import.meta.url).href,
+    url: 'https://apnic.foundation/'
   },
   {
-    name: 'edgecast',
-    logo: new URL('@/assets/imgs/edgecast-logo.png', import.meta.url).href
-  }
+    name: 'cloudflare',
+    logo: new URL('@/assets/imgs/cloudflare-logo.png', import.meta.url).href,
+    url: 'https://www.cloudflare.com/'
+  },
+  {
+    name: 'fastly',
+    logo: new URL('@/assets/imgs/fastly-logo.svg', import.meta.url).href,
+    url: 'https://www.fastly.com/'
+  },
 ]
 
 const PLACEHOLDER_VALUES = {
@@ -161,10 +183,10 @@ const organizations = ref(ORGANIZATIONS)
 
       <div class="row wrap justify-center">
         <div v-for="(org, index) in organizations" :key="index">
-          <a :href="$t(`homePage.ack.organizations.${org.name}.url`)" target="_blank">
+          <a :href="org.url" target="_blank">
             <div class="IHR_ack-logo">
-              <span />
-              <img :src="org.logo" :alt="$t(`homePage.ack.organizations.${org.name}.name`)" />
+              <span></span>
+              <img :src="org.logo" :alt="org.name" />
             </div>
           </a>
         </div>
@@ -305,7 +327,7 @@ const organizations = ref(ORGANIZATIONS)
 }
 .IHR_ack-logo > img {
   vertical-align: middle;
-  max-height: 100px;
+  max-height: 200px;
   max-width: 300px;
   width: auto;
   height: auto;

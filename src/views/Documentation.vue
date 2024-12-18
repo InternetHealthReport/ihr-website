@@ -18,7 +18,7 @@ const SECTIONS = [
       },
       {
         name: 'ack',
-        numberOfDescriptions: 8
+        numberOfDescriptions: 11
       }
     ]
   },
