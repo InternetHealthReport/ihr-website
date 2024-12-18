@@ -396,7 +396,7 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://summerofcode.withgoogle.com/' target='_blank'>Google Summer of Code</a>  supports new contributors into the development of IHR."
+            "body": "<a href='https://summerofcode.withgoogle.com/' target='_blank'>Google Summer of Code</a> supports new contributors into the development of IHR."
           },
           "4": {
             "header": "RIPE NCC",
@@ -420,7 +420,7 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://www.internetsociety.org/'>Internet Society</a> supported the development of an IHR tool to monitor the AS dependency of countries and increase IHR's computational power."
+            "body": "<a href='https://www.internetsociety.org/' target='_blank'>Internet Society</a> supported the development of an IHR tool to monitor the AS dependency of countries and increase IHR's computational power."
           },
           "7": {
             "header": "MANRS",
@@ -428,7 +428,7 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://www.manrs.org/'>Mutually Agreed Norms for Routing Security (MANRS)</a> is a global initiative that supported the development of IHR tools to monitor route origin validation via the <a href='https://www.manrs.org/ambassadors-program/fellows/'>MANRS Fellowship Program</a>."
+            "body": "<a href='https://www.manrs.org/ target='_blank''>Mutually Agreed Norms for Routing Security (MANRS)</a> is a global initiative that supported the development of IHR tools to monitor route origin validation via the <a href='https://www.manrs.org/ambassadors-program/fellows/'>MANRS Fellowship Program</a>."
           },
           "8": {
             "header": "Edgecast",
@@ -436,7 +436,7 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://www.edgecast.com/'>Edgecast</a> is a Content Delivery Network (CDN) that distributed IHR's website and API worldwide until 2024."
+            "body": "<a href='https://www.edgecast.com/' target='_blank'>Edgecast</a> is a Content Delivery Network (CDN) that distributed IHR's website and API worldwide until 2024."
           },
           "9": {
             "header": "APNIC",
@@ -444,7 +444,7 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://apnic.foundation/'>APNIC Foundation</a> has sponsored IHR."
+            "body": "<a href='https://apnic.foundation/' target='_blank'>APNIC Foundation</a> has sponsored IHR."
           },
           "10": {
             "header": "Cloudflare",
@@ -452,7 +452,7 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://www.cloudflare.com/'>Cloudflare</a> is a Content Delivery Network (CDN) that distributed IHR's website and API worldwide."
+            "body": "<a href='https://www.cloudflare.com/' target='_blank'>Cloudflare</a> is a Content Delivery Network (CDN) that distributes IHR's website and API worldwide."
           },
           "11": {
             "header": "Fastly",
@@ -460,7 +460,7 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://www.fastly.com/'>Fastly</a> is a Content Delivery Network (CDN) that distributed IHR's website and API worldwide."
+            "body": "<a href='https://www.fastly.com/' target='_blank'>Fastly</a> is a Content Delivery Network (CDN) that distributes IHR's website and API worldwide."
           }
         }
       },
