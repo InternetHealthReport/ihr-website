@@ -59,11 +59,6 @@ const ORGANIZATIONS = [
     logo: new URL('@/assets/imgs/manrs-logo.jpg', import.meta.url).href,
     url: 'https://www.manrs.org/'
   },
-  // {
-  //   name: 'edgecast',
-  //   logo: new URL('@/assets/imgs/edgecast-logo.png', import.meta.url).href,
-  //   url: 'https://www.edgecast.com/'
-  // },
   {
     name: 'apnic',
     logo: new URL('@/assets/imgs/apnic-foundation-logo.png', import.meta.url).href,
@@ -186,7 +181,7 @@ const organizations = ref(ORGANIZATIONS)
           <a :href="org.url" target="_blank">
             <div class="IHR_ack-logo">
               <span></span>
-              <img :src="org.logo" :alt="org.name" />
+              <img :src="org.logo" :alt="org.name" :id="org.name" />
             </div>
           </a>
         </div>
@@ -318,7 +313,8 @@ const organizations = ref(ORGANIZATIONS)
   margin-right: auto;
   text-align: center;
   height: 200px;
-  width: 400px;
+  width: 500px;
+  overflow: hidden;
 }
 .IHR_ack-logo > span {
   display: inline-block;
@@ -327,10 +323,45 @@ const organizations = ref(ORGANIZATIONS)
 }
 .IHR_ack-logo > img {
   vertical-align: middle;
-  max-height: 200px;
-  max-width: 300px;
   width: auto;
   height: auto;
+  object-fit: contain;
+}
+.IHR_ack-logo > img#iij {
+  max-height: 200px;
+  max-width: 350px;
+}
+.IHR_ack-logo > img#ripe {
+  max-height: 200px;
+  max-width: 300px;
+}
+.IHR_ack-logo > img#gsoc {
+  max-height: 200px;
+  max-width: 400px;
+}
+.IHR_ack-logo > img#routeviews {
+  max-height: 200px;
+  max-width: 100px;
+}
+.IHR_ack-logo > img#isoc {
+  max-height: 200px;
+  max-width: 300px;
+}
+.IHR_ack-logo > img#manrs {
+  max-height: 200px;
+  max-width: 300px;
+}
+.IHR_ack-logo > img#apnic {
+  max-height: 200px;
+  max-width: 200px;
+}
+.IHR_ack-logo > img#cloudflare {
+  max-height: 200px;
+  max-width: 250px;
+}
+.IHR_ack-logo > img#fastly {
+  max-height: 200px;
+  max-width: 170px;
 }
 .IHR_ack-logo > img:hover {
   transform: scale(1.1);

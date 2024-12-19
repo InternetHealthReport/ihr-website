@@ -439,12 +439,12 @@
             "body": "<a href='https://www.edgecast.com/' target='_blank'>Edgecast</a> is a Content Delivery Network (CDN) that distributed IHR's website and API worldwide until 2024."
           },
           "9": {
-            "header": "APNIC",
+            "header": "APNIC Foundation",
             "img": {
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://apnic.foundation/' target='_blank'>APNIC Foundation</a> has sponsored IHR."
+            "body": "<a href='https://apnic.foundation/' target='_blank'>APNIC Foundation</a> has supported the development of IHR tools to monitor IXPs deployment and increase IHR's computational power."
           },
           "10": {
             "header": "Cloudflare",
