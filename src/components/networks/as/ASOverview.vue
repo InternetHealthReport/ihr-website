@@ -77,6 +77,8 @@ const queries = ref([
 const loading = ref(3)
 const references = ref(REFERENCES)
 const pdbid = ref(null)
+const hasIpv4Topology = ref(true)
+const hasIpv6Topology = ref(true)
 
 const fetchData = async (asn) => {
   let params = { asn: asn }
@@ -104,6 +106,22 @@ const formatRank = (rank, name) => {
     name
   })
   return arr
+}
+
+const detectIpv4Topology = (length, af) => {
+  if (length) {
+    hasIpv4Topology.value = true
+  } else {
+    hasIpv4Topology.value = false
+  }
+}
+
+const detectIpv6Topology = (length, af) => {
+  if (length) {
+    hasIpv6Topology.value = true
+  } else {
+    hasIpv6Topology.value = false
+  }
 }
 
 const handleReference = (key) => {
@@ -281,7 +299,8 @@ onMounted(() => {
               :search-input-p="String(asNumber)"
               af="IPv4"
               :is-component="true"
-              :show-legend="false"
+              :show-legend="Boolean(hasIpv4Topology^hasIpv6Topology)"
+              @has-topology="detectIpv4Topology"
             />
           </td>
           <td class="topology">
@@ -289,6 +308,8 @@ onMounted(() => {
               :search-input-p="String(asNumber)"
               af="IPv6"
               :is-component="true"
+              :show-legend="Boolean(hasIpv4Topology|hasIpv6Topology)"
+              @has-topology="detectIpv6Topology"
             />
           </td>
         </tr>

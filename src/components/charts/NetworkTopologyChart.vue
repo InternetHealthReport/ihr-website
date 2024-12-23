@@ -10,7 +10,7 @@ import { useRouter } from 'vue-router'
 const iyp_api = inject('iyp_api')
 
 const router = useRouter()
-const emit = defineEmits(['searchChange', 'afChange', 'deleteChart'])
+const emit = defineEmits(['searchChange', 'afChange', 'deleteChart', 'hasTopology'])
 
 const props = defineProps({
   searchInputP: {
@@ -331,6 +331,7 @@ const sortNodes = (data) => {
     }
 
   allNodes.value = sortedUniqueNodes
+  emit('hasTopology', Object.keys(sortedUniqueNodes).length)
 }
 
 const sortRelations = (data) => {
@@ -515,7 +516,7 @@ defineExpose({ fitToScreen })
                 :key="percentage"
                 class="scaleColor"
                 :style="{ backgroundColor: calculateNodeColor(percentage) }"
-              />
+              ></div>
             </div>
             <div class="scaleLabel">0%</div>
           </div>
