@@ -172,6 +172,7 @@ const router = createRouter({
           }
           return `/${to.params.pathMatch.join('/')}`
         }
+        return '/'
       }
     },
     {
