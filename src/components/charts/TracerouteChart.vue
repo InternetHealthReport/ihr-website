@@ -356,7 +356,7 @@ watch(displayMode, () => {
               class="asnDot"
               :style="{ backgroundColor: asnColors[tooltipData.data.asns[0].asn] || 'gray' }"
             />
-            <a :href="`/ihr/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
+            <a :href="`/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
               AS{{ tooltipData.data.asns[0].asn }} ({{ tooltipData.data.asns[0].holder }})
             </a>
           </div>
@@ -463,7 +463,7 @@ watch(displayMode, () => {
           :style="{ backgroundColor: asnColors[asn] }"
           class="asn-box"
         >
-          <a class="asn-link" :href="'/ihr/en/network/AS' + asn" target="_blank">AS{{ asn }}</a>
+          <a class="asn-link" :href="'/en/network/AS' + asn" target="_blank">AS{{ asn }}</a>
         </div>
       </div>
     </div>

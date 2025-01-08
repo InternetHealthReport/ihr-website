@@ -22,6 +22,12 @@ const router = createRouter({
   },
   routes: [
     {
+      path: '/',
+      redirect: () => {
+        return `/${Tr.defaultLocale}`
+      }
+    },
+    {
       path: '/:locale?',
       meta: { title: 'Internet Health Report' },
       component: RouterView,
@@ -152,6 +158,21 @@ const router = createRouter({
           component: () => import('../views/TracerouteVisualizationTool.vue')
         }
       ]
+    },
+    {
+      path: '/ihr/:pathMatch(.*)*',
+      redirect: (to) => {
+        if (to.params.pathMatch.length) {
+          let paramLocale = to.params.pathMatch[0]
+          if (paramLocale) {
+            if (paramLocale.includes('-')) {
+              paramLocale = paramLocale.split('-')[0]
+              to.params.pathMatch[0] = paramLocale
+            }
+          }
+          return `/${to.params.pathMatch.join('/')}`
+        }
+      }
     },
     {
       path: '/:pathMatch(.*)*',

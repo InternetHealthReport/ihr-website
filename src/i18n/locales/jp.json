@@ -132,7 +132,7 @@
       "title": "Route Origin Validation",
       "info": {
         "title": "Route Origin Validation",
-        "description": "By default this widget shows prefixes that are RPKI invalid and that are either propagated or originated by the selected AS. The dropdown menu permits to display:<ul><li><b>Originated prefix</b>: All the prefixes originated by the selected AS.</li><li><b>RPKI invalid (origin & transit)</b>: RPKI invalid prefixes originated or propagated by the selected AS.</li> <li><b>IRR invalid (origin & transit)</b>: IRR invalid prefixes originated or propagated by the selected AS.</li> <li><b>Bogon prefix (origin & transit)</b>: Bogon prefixes originated or propagated by the selected AS.</li> <li><b>Bogon ASN</b>: Bogon ASN propagated by the selected AS.</li></ul>See also the corresponding <a href='/ihr/en/documentation#Route-Origin-Validation'>documentation page</a>."
+        "description": "By default this widget shows prefixes that are RPKI invalid and that are either propagated or originated by the selected AS. The dropdown menu permits to display:<ul><li><b>Originated prefix</b>: All the prefixes originated by the selected AS.</li><li><b>RPKI invalid (origin & transit)</b>: RPKI invalid prefixes originated or propagated by the selected AS.</li> <li><b>IRR invalid (origin & transit)</b>: IRR invalid prefixes originated or propagated by the selected AS.</li> <li><b>Bogon prefix (origin & transit)</b>: Bogon prefixes originated or propagated by the selected AS.</li> <li><b>Bogon ASN</b>: Bogon ASN propagated by the selected AS.</li></ul>See also the corresponding <a href='/en/documentation#Route-Origin-Validation'>documentation page</a>."
       },
       "table": {
         "routesTitle": "Routes",
@@ -145,7 +145,7 @@
       "title": "AS Dependency",
       "info": {
         "title": "AS Dependency",
-        "description": "<p>AS Dependency (a.k.a. AS Hegemony) is a metric to evaluate the interdependencies between ASes. This metric is computed from BGP data. </p><p><b>Top plot</b></p><p>You can view this as the upstream providers of the selected network. Values close to 100% mean that most BGP paths to the selected AS are going via that AS.</p><p> ASes that are directly connected to the selected AS have the '(direct)' tag attached to their name.</p> <p><b>Bottom plot</b></p><p>ASes that depend on the selected AS. This is equivalent to the customer cone of an AS. Click on the graph to see the details.</p><p>For more details <a href='/ihr/en/documentation#AS-dependency'>see the documentation</a>.</p>"
+        "description": "<p>AS Dependency (a.k.a. AS Hegemony) is a metric to evaluate the interdependencies between ASes. This metric is computed from BGP data. </p><p><b>Top plot</b></p><p>You can view this as the upstream providers of the selected network. Values close to 100% mean that most BGP paths to the selected AS are going via that AS.</p><p> ASes that are directly connected to the selected AS have the '(direct)' tag attached to their name.</p> <p><b>Bottom plot</b></p><p>ASes that depend on the selected AS. This is equivalent to the customer cone of an AS. Click on the graph to see the details.</p><p>For more details <a href='/en/documentation#AS-dependency'>see the documentation</a>.</p>"
       },
       "defaultTrace": "Number of dependents",
       "yaxis": "dependency",
@@ -170,7 +170,7 @@
       "title": "Network Dependency",
       "info": {
         "title": "Network Dependency",
-        "description": "<p>A Country network dependency is computed in two different ways, emphasizing either the distribution of the country's population or the country ASes.</p><p><b>Population coverage</b></p><p>The population coverage combines two data sources, the estimated population for each AS and the paths from the Internet to these ASes. The <b>total</b> value represents the percentage of the population that is reached through the corresponding AS. This value is also dissected into two parts: <ul><li> <b>Direct</b> is the percentage of the population directly connected to this AS</li> <li><b>Indirect</b> is the percentage of the population that is reached via this AS but that is not directly connected to it.</li></ul></p><p><b>AS coverage</b></p><p>The AS coverage is the percentage of the country's ASes that are reached via this AS. Large values represent significant transit networks for the monitored country.</p><p>See the <a href='/ihr/en/documentation#Country-s-network-dependency'>documentation for more details</a>.</p>"
+        "description": "<p>A Country network dependency is computed in two different ways, emphasizing either the distribution of the country's population or the country ASes.</p><p><b>Population coverage</b></p><p>The population coverage combines two data sources, the estimated population for each AS and the paths from the Internet to these ASes. The <b>total</b> value represents the percentage of the population that is reached through the corresponding AS. This value is also dissected into two parts: <ul><li> <b>Direct</b> is the percentage of the population directly connected to this AS</li> <li><b>Indirect</b> is the percentage of the population that is reached via this AS but that is not directly connected to it.</li></ul></p><p><b>AS coverage</b></p><p>The AS coverage is the percentage of the country's ASes that are reached via this AS. Large values represent significant transit networks for the monitored country.</p><p>See the <a href='/en/documentation#Country-s-network-dependency'>documentation for more details</a>.</p>"
       },
       "table": {
         "dependencyTitle": "Summary",
@@ -217,7 +217,7 @@
       "title": "Network Disconnections",
       "info": {
         "title": "Network Disconnections",
-        "description": "<p>Network disconnections found by monitoring the status of RIPE Atlas probes. This widget reports synchronized disconnections of probes that are in the same geographical or topological area. The scope of this outage detector is limited to ASes and regions where RIPE Atlas has multiple probes.</p><p>See the <a href='/ihr/en/documentation#Network-disconnections'>documentation for more details</a>.</p>"
+        "description": "<p>Network disconnections found by monitoring the status of RIPE Atlas probes. This widget reports synchronized disconnections of probes that are in the same geographical or topological area. The scope of this outage detector is limited to ASes and regions where RIPE Atlas has multiple probes.</p><p>See the <a href='/en/documentation#Network-disconnections'>documentation for more details</a>.</p>"
       },
       "table": {
         "event": "event",
@@ -236,7 +236,7 @@
       "title": "Network Delay",
       "info": {
         "title": "Network Delay",
-        "description": "<p>Network delays between ASes, IXPs, Atlas probes, and cities (IP addresses are geolocated with RIPE IPmap) computed using traceroute data collected with the RIPE Atlas measurement platform.</p><p>See <a href='/ihr/en/documentation#Network-delay'>documentation for more details</a>.</p>"
+        "description": "<p>Network delays between ASes, IXPs, Atlas probes, and cities (IP addresses are geolocated with RIPE IPmap) computed using traceroute data collected with the RIPE Atlas measurement platform.</p><p>See <a href='/en/documentation#Network-delay'>documentation for more details</a>.</p>"
       },
       "yaxis": "Median RTT (ms)",
       "table": {
@@ -358,7 +358,7 @@
               "src": "",
               "style": ""
             },
-            "body": "The source code of all IHR tools is hosted on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a>. You can review and submit bug reports for the IHR website <a href='https://github.com/InternetHealthReport/ihr-website/issues' target='_blank'>here</a>. If you don't have a GitHub account <a href='/ihr/en-us/contact'>contact us directly</a>."
+            "body": "The source code of all IHR tools is hosted on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a>. You can review and submit bug reports for the IHR website <a href='https://github.com/InternetHealthReport/ihr-website/issues' target='_blank'>here</a>. If you don't have a GitHub account <a href='/en/contact'>contact us directly</a>."
           },
           "6": {
             "header": "<div class='IHR_anchor' id='faq-contribution'></div>How can I contribute to IHR?",
@@ -366,7 +366,7 @@
               "src": "",
               "style": ""
             },
-            "body": "IHR is mainly built and maintained by researchers and students. We need help at all levels for the frontend, backend, documentation, and data collection. Feel free to take a look at IHR projects on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a> or <a href='/ihr/en-us/contact'>contact us</a>. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>The IIJ Research Laboratory summer internship program</a> is also a good way to visit us and work on IHR tools."
+            "body": "IHR is mainly built and maintained by researchers and students. We need help at all levels for the frontend, backend, documentation, and data collection. Feel free to take a look at IHR projects on <a href='https://github.com/InternetHealthReport/' target='_blank'>GitHub</a> or <a href='/en/contact'>contact us</a>. <a href='https://www.iijlab.net/en/career/internship.html' target='_blank'>The IIJ Research Laboratory summer internship program</a> is also a good way to visit us and work on IHR tools."
           }
         }
       },
@@ -471,12 +471,12 @@
       },
       "networkreport": {
         "title": "Network report",
-        "summary": "Network reports provide all information collected by IHR about a selected network (AS or IXP). Network reports are available through the search bar at the top of the IHR webpages or by following links from the global report. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/AS2497' target='_blank'>Internet Initiative Japan (AS2497)</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/AS15169' target='_blank'>Google (AS15169)</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/networks/IXP208' target='_blank'>DE-CIX (IXP208)</a></li></ul>",
+        "summary": "Network reports provide all information collected by IHR about a selected network (AS or IXP). Network reports are available through the search bar at the top of the IHR webpages or by following links from the global report. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/en/networks/AS2497' target='_blank'>Internet Initiative Japan (AS2497)</a></li><li><a href='https://ihr.iijlab.net/en/networks/AS15169' target='_blank'>Google (AS15169)</a></li><li><a href='https://ihr.iijlab.net/en/networks/IXP208' target='_blank'>DE-CIX (IXP208)</a></li></ul>",
         "description": {}
       },
       "countryreport": {
         "title": "Country Report",
-        "summary": "A country report provides information collected by IHR about a certain country. Country reports are available through the search bar at the top of the IHR webpages. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/US' target='_blank'>United States</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/JP' target='_blank'>Japan</a></li><li><a href='https://ihr.iijlab.net/ihr/en-us/countries/NL' target='_blank'>Netherlands</a></li></ul>",
+        "summary": "A country report provides information collected by IHR about a certain country. Country reports are available through the search bar at the top of the IHR webpages. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/en/countries/US' target='_blank'>United States</a></li><li><a href='https://ihr.iijlab.net/en/countries/JP' target='_blank'>Japan</a></li><li><a href='https://ihr.iijlab.net/en/countries/NL' target='_blank'>Netherlands</a></li></ul>",
         "description": {}
       },
       "asdependency": {
@@ -625,7 +625,7 @@
               "src": "assets/imgs/forwarding_AS174.png",
               "style": "max-width:100%"
             },
-            "body": "For forwarding anomalies let's look at another example, <a href='https://ihr.iijlab.net/ihr/en-us/networks/AS174?af=4&amp;date=2017-11-02&amp;last=3'>AS174 Cogent on November 2017</a>.<br><br><b>The bottom plot</b> represents the forwarding anomalies observed for AS174. Intuitively, this graph represents the presence and absence of IP addresses for AS174 in the monitored traceroutes. If the number of observed IP addresses for AS174 is constant then the forwarding anomaly level is close to 0. If we observe more IP addresses than usual then the forwarding anomaly level takes higher positive values. On the other hand if we observe fewer IP addresses than usual, the forwarding anomaly level takes lower negative values. In this example, IP addresses from AS174 are appearing more than usual due to an internal routing anomaly. You can click on the graphs to obtain the list of reported IP addresses, we used to have a visualization of corresponding traceroutes (TraceMON) but this currently not working."
+            "body": "For forwarding anomalies let's look at another example, <a href='https://ihr.iijlab.net/en/networks/AS174?af=4&amp;date=2017-11-02&amp;last=3'>AS174 Cogent on November 2017</a>.<br><br><b>The bottom plot</b> represents the forwarding anomalies observed for AS174. Intuitively, this graph represents the presence and absence of IP addresses for AS174 in the monitored traceroutes. If the number of observed IP addresses for AS174 is constant then the forwarding anomaly level is close to 0. If we observe more IP addresses than usual then the forwarding anomaly level takes higher positive values. On the other hand if we observe fewer IP addresses than usual, the forwarding anomaly level takes lower negative values. In this example, IP addresses from AS174 are appearing more than usual due to an internal routing anomaly. You can click on the graphs to obtain the list of reported IP addresses, we used to have a visualization of corresponding traceroutes (TraceMON) but this currently not working."
           },
           "3": {
             "header": "Known issues",
@@ -693,7 +693,7 @@
               "src": "",
               "style": ""
             },
-            "body": "The API is accessible at <a href='/ihr/api/'>http://ihr.iijlab.net/ihr/api/</a>, there are multiple endpoints available, which are documented in the <a href='/ihr/en-us/api'>API documentation</a>."
+            "body": "The API is accessible at <a href='/ihr/api/'>http://ihr.iijlab.net/ihr/api/</a>, there are multiple endpoints available, which are documented in the <a href='/en/api'>API documentation</a>."
           },
           "3": {
             "header": "Filtering",
@@ -947,7 +947,7 @@
         "caption": "ASes depending on AS",
         "info": {
           "title": "''Downstream'' ASes",
-          "description": "<p>ASes that are usually seen downstream of the selected network in BGP data. This is equivalent to the customer cone of the selected AS. Values close to 100% mean that the selected AS is seen in all, or at least most, of the AS paths to that AS.</p><p>See also <a href='/ihr/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
+          "description": "<p>ASes that are usually seen downstream of the selected network in BGP data. This is equivalent to the customer cone of the selected AS. Values close to 100% mean that the selected AS is seen in all, or at least most, of the AS paths to that AS.</p><p>See also <a href='/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
         }
       },
       "upstreams": {
@@ -955,7 +955,7 @@
         "caption": "ASes depending on AS",
         "info": {
           "title": "''Upstream'' ASes",
-          "description": "<p>ASes that are usually seen upstream of the selected network in BGP data. Values close to 100% mean that the AS is seen in all, or at least most, of the AS paths to the selected AS.</p><p>See also <a href='/ihr/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
+          "description": "<p>ASes that are usually seen upstream of the selected network in BGP data. Values close to 100% mean that the AS is seen in all, or at least most, of the AS paths to the selected AS.</p><p>See also <a href='/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
         }
       },
       "atlas": {
@@ -1108,7 +1108,7 @@
         "title": "''Upstream'' ASes",
         "info": {
           "title": "''Upstream'' ASes",
-          "description": "<p>ASes that are usually seen upstream of the selected prefix in BGP data. Values close to 100% mean that the AS is seen in all, or at least most, of the AS paths to the selected prefix.</p><p>See also <a href='/ihr/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
+          "description": "<p>ASes that are usually seen upstream of the selected prefix in BGP data. Values close to 100% mean that the AS is seen in all, or at least most, of the AS paths to the selected prefix.</p><p>See also <a href='/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
         }
       },
       "roas": {
