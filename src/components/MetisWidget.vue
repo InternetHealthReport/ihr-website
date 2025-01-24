@@ -3,9 +3,11 @@ import RirCountrySunburstChart from './charts/RirCountrySunburstChart.vue'
 import MetisTable from './tables/MetisTable.vue'
 import { QExpansionItem } from 'quasar'
 import { MetisAtlasDeploymentQuery } from '@/plugins/IhrApi'
-import rirMapping from '@/assets/rir-country-map.json'
 import getCountryName from '@/plugins/countryName'
 import { ref, onMounted, nextTick, inject } from 'vue'
+import axios from 'axios'
+
+let rirMapping = {}
 
 const SELECTION_ROW = {
   rank: 0,
@@ -133,7 +135,8 @@ const readRanking = (data) => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  rirMapping = (await axios.get('/data/rir-country-map.json')).data
   loadRirMap()
   apiCall()
 })

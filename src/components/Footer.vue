@@ -13,7 +13,7 @@ import { version } from '../../package.json'
           <div>
             <QBtn round dense flat :ripple="false" no-caps>
               <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-                <img src="@/assets/imgs/ihr_logo.svg" class="ihr-logo" />
+                <img src="/imgs/ihr_logo.svg" class="ihr-logo" />
               </RouterLink>
               <a
                 :href="`https://github.com/InternetHealthReport/ihr-website/releases/tag/v${version}`"

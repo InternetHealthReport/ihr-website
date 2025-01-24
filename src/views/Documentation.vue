@@ -109,10 +109,6 @@ const replaceSpaces = (text) => {
   return text.split(' ').join('-').split('(').join('-').split(')').join('-').split("'").join('-')
 }
 
-const replaceImgURL = (url) => {
-  return `${window.location.origin}/src/${url}`
-}
-
 const activateSelection = (sec) => {
   if (sectionActive.value !== '') {
     sectionActiveStatus.value[sectionActive.value] = false
@@ -179,35 +175,31 @@ const sectionActive = ref('')
           <div
             :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"
             class="IHR_anchor"
-          />
-          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)" />
+          ></div>
+          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)"></h1>
           <p
             class="text-left text-body1"
             v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"
-          />
+          ></p>
           <div v-for="idx in bodySec.numberOfDescriptions" :key="idx">
-            <h2
-              v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"
-            />
+            <h2 v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"></h2>
             <img
               v-if="
                 $t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`) !== ''
               "
-              :src="
-                replaceImgURL(
-                  $t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`)
-                )
-              "
+              :src="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`)"
               :style="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.style`)"
-            />
+            >
             <p
               class="text-left text-body1"
               v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"
-            />
+            ></p>
           </div>
         </div>
       </div>
     </div>
+
+
   </div>
 </template>
 

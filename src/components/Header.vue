@@ -175,7 +175,7 @@ watch(simpleMenu, () => {
         <QItem id="IHR_home-button">
           <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
             <QBtn round dense flat :ripple="false" no-caps size="22px">
-              <img src="@/assets/imgs/ihr_logo.svg" style="width: 45px" />
+              <img src="/imgs/ihr_logo.svg" style="width: 45px" />
             </QBtn>
           </RouterLink>
         </QItem>

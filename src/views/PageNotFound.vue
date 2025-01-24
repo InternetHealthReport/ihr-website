@@ -51,7 +51,7 @@ import { QBtn } from 'quasar'
   display: inline-block;
   width: 100px;
   height: 100px;
-  background-image: url('../assets/imgs/ihr_logo.svg');
+  background-image: url('/imgs/ihr_logo.svg');
   background-size: cover;
   -webkit-transform: scale(1.4);
   -ms-transform: scale(1.4);

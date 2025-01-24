@@ -80,7 +80,7 @@ layoutLocal.value['images'] = [
     y: 0.92,
     sizex: 0.1,
     sizey: 0.1,
-    source: new URL('@/assets/imgs/ihr_logo.png', import.meta.url).href,
+    source: '/imgs/ihr_logo.png',
     xanchor: 'right',
     xref: 'paper',
     yanchor: 'bottom',

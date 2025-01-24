@@ -31,47 +31,47 @@ const GRAPHS_TYPES = [
 const ORGANIZATIONS = [
   {
     name: 'iij',
-    logo: new URL('@/assets/imgs/IIJ-logo.svg', import.meta.url).href,
+    logo: '/imgs/IIJ-logo.svg',
     url: 'https://www.iij.ad.jp/en/'
   },
   {
     name: 'ripe',
-    logo: new URL('@/assets/imgs/ripe-logo.png', import.meta.url).href,
+    logo: '/imgs/ripe-logo.png',
     url: 'https://www.ripe.net/'
   },
   {
     name: 'gsoc',
-    logo: new URL('@/assets/imgs/gsoc-logo.svg', import.meta.url).href,
+    logo: '/imgs/gsoc-logo.svg',
     url: 'https://summerofcode.withgoogle.com/'
   },
   {
     name: 'routeviews',
-    logo: new URL('@/assets/imgs/rv-logo.png', import.meta.url).href,
+    logo: '/imgs/rv-logo.png',
     url: 'http://www.routeviews.org/'
   },
   {
     name: 'isoc',
-    logo: new URL('@/assets/imgs/isoc-logo.png', import.meta.url).href,
+    logo: '/imgs/isoc-logo.png',
     url: 'https://www.internetsociety.org/'
   },
   {
     name: 'manrs',
-    logo: new URL('@/assets/imgs/manrs-logo.jpg', import.meta.url).href,
+    logo: '/imgs/manrs-logo.jpg',
     url: 'https://www.manrs.org/'
   },
   {
     name: 'apnic',
-    logo: new URL('@/assets/imgs/apnic-foundation-logo.png', import.meta.url).href,
+    logo: '/imgs/apnic-foundation-logo.png',
     url: 'https://apnic.foundation/'
   },
   {
     name: 'cloudflare',
-    logo: new URL('@/assets/imgs/cloudflare-logo.png', import.meta.url).href,
+    logo: '/imgs/cloudflare-logo.png',
     url: 'https://www.cloudflare.com/'
   },
   {
     name: 'fastly',
-    logo: new URL('@/assets/imgs/fastly-logo.svg', import.meta.url).href,
+    logo: '/imgs/fastly-logo.svg',
     url: 'https://www.fastly.com/'
   },
 ]
@@ -205,7 +205,7 @@ const organizations = ref(ORGANIZATIONS)
   max-width: 100%;
   height: 440px;
   background-color: #000;
-  background-image: url('@/assets/imgs/global-banner.png');
+  background-image: url('/imgs/global-banner.png');
   background-repeat: no-repeat;
   background-position: right top;
   background-size: contain;

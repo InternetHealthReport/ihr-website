@@ -4,12 +4,13 @@ import { QInput, QSelect, QBtn, copyToClipboard } from 'quasar'
 import Tr from '@/i18n/translation'
 import MetisTable from '@/components/tables/MetisTable.vue'
 import { ref, onMounted, inject, nextTick } from 'vue'
-import rirMapping from '@/assets/rir-country-map.json'
 import getCountryName from '../plugins/countryName'
 import { MetisAtlasSelectionQuery } from '@/plugins/IhrApi'
 import RirCountrySunburstChart from '@/components/charts/RirCountrySunburstChart.vue'
 import '@/styles/chart.css'
+import axios from 'axios'
 
+let rirMapping = {}
 const ATLAS_PROBE = {
   type: 'asn',
   value: 0,
@@ -83,7 +84,8 @@ const loading = ref(false)
 
 const ihr_api = inject('ihr_api')
 
-onMounted(() => {
+onMounted(async () => {
+  rirMapping = (await axios.get('/data/rir-country-map.json')).data
   loadRirMap()
 })
 
