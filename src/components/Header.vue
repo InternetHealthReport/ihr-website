@@ -122,6 +122,11 @@ const SIMPLE_MENU = [
 
 const simpleMenu = ref(SIMPLE_MENU)
 const leftDrawerOpen = ref(false)
+const expandedItems = ref({})
+
+const toggleMobileSubmenu = (itemIndex) => {
+  expandedItems.value[itemIndex] = !expandedItems.value[itemIndex]
+}
 
 onMounted(() => {
   document.title = 'Internet Health Report'
@@ -244,45 +249,70 @@ watch(simpleMenu, () => {
       </div>
       <!--Log in /Log out stuff here-->
     </QToolbar>
-    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
-      <QList>
+    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary mobile-drawer">
+      <QList class="mobile-nav q-pt-md">
         <!-- <QItemLabel header>Essential Links</QItemLabel> -->
-        <QItem v-for="item in simpleMenu" :key="item.entryName" flat>
-          <QBtn
-            v-if="item.options == null"
-            flat
-            :label="$t(item.entryName)"
-            :to="Tr.i18nRoute({ name: item.routeName })"
-          />
-          <QBtnDropdown
-            v-else
-            flat
-            :label="$t(item.entryName)"
-            menu-anchor="bottom left"
-            menu-self="top left"
-          >
-            <QList class="rounded-borders text-white bg-primary" bordered separator padding>
+        <template v-for="(item, index) in simpleMenu" :key="item.entryName">
+          <!-- Regular menu items without dropdown -->
+          <QItem v-if="!item.options" flat class="menu-item">
+            <QBtn
+              class="full-width text-left"
+              flat
+              :label="$t(item.entryName)"
+              :to="Tr.i18nRoute({ name: item.routeName })"
+              @click="leftDrawerOpen = false"
+            />
+          </QItem>
+
+          <!-- Items with dropdowns -->
+          <div v-else class="menu-item">
+            <QItem flat>
+              <QBtn
+                class="full-width text-left submenu-btn"
+                flat
+                :class="{ 'submenu-expanded': expandedItems[index] }"
+                @click="toggleMobileSubmenu(index)"
+              >
+                <div class="row full-width items-center justify-between">
+                  <span class="text-weight-medium">{{ $t(item.entryName) }}</span>
+                  <q-icon
+                    name="arrow_drop_down"
+                    size="24px"
+                    class="submenu-arrow"
+                    :class="{ 'rotate-arrow': expandedItems[index] }"
+                  />
+                </div>
+              </QBtn>
+            </QItem>
+
+            <!-- Submenu items -->
+            <QList
+              v-show="expandedItems[index]"
+              class="submenu-items"
+              bordered
+              separator
+            >
               <QItem
                 v-for="option in item.options"
                 :key="option.entryName"
-                v-close-popup
                 clickable
                 :to="Tr.i18nRoute({ name: option.routeName })"
-                active-class="text-grey"
+                @click="leftDrawerOpen = false"
+                class="submenu-item"
               >
                 <QItemSection>
-                  <QItemLabel class="text-bold">
+                  <QItemLabel class="text-bold q-pb-xs">
                     {{ $t(option.entryName) }}
                   </QItemLabel>
-                  <QItemLabel class="text-grey" caption lines="2">
+                  <QItemLabel class="text-grey text-caption" lines="2">
                     {{ $t(option.summary) }}
                   </QItemLabel>
                 </QItemSection>
               </QItem>
+              <!-- <LanguageSwitcher /> -->
             </QList>
-          </QBtnDropdown>
-        </QItem>
-        <!-- <LanguageSwitcher /> -->
+          </div>
+        </template>
       </QList>
     </QDrawer>
   </QHeader>
@@ -331,12 +361,94 @@ watch(simpleMenu, () => {
 #IHR_last-element {
   height: 50px;
 }
+
+.mobile-drawer,
+.mobile-drawer .q-drawer__content {
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.mobile-drawer::-webkit-scrollbar,
+.mobile-drawer .q-drawer__content::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.mobile-nav {
+  padding: 0;
+}
+
+.mobile-nav .menu-item {
+  padding: 0 !important;
+  margin-bottom: 4px;
+}
+
+.mobile-nav .submenu-container {
+  width: 100%;
+}
+
+.mobile-nav .submenu-items {
+  background: rgba(255, 255, 255, 0.05);
+  margin-top: 2px;
+  padding: 4px 0;
+  margin-left: 0 !important;
+}
+
+.mobile-nav .submenu-item {
+  padding: 12px 24px !important;
+  min-height: unset;
+}
+
+.mobile-nav .q-btn {
+  justify-content: flex-start;
+  text-transform: uppercase;
+  font-size: 16px;
+  letter-spacing: normal;
+  padding: 12px 16px;
+  min-height: 48px;
+  width: 100%;
+  margin: 0 !important; 
+}
+
+.mobile-nav .q-item {
+  padding: 0;
+  min-height: unset;
+}
+
+.mobile-nav .q-btn__content,
+.mobile-nav .q-item__section {
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+
+.mobile-nav .q-list {
+  padding: 0 !important;
+}
+
+.mobile-nav span {
+  color: white;
+  font-size: 16px;
+}
+
+.submenu-btn {
+  position: relative;
+}
+
+.submenu-arrow {
+  transition: transform 0.2s ease;
+  margin-left: 8px;
+}
+
+.rotate-arrow {
+  transform: rotate(180deg);
+}
+
 @media screen and (max-width: 1024px) {
   .col-12.row.no-wrap.items-center {
     justify-content: space-around;
   }
-}
-@media screen and (max-width: 1024px) {
+
   .IHR_search-box.col-4 {
     flex-grow: 1;
   }
