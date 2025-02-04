@@ -389,7 +389,7 @@ watch(simpleMenu, () => {
 }
 
 .mobile-nav .submenu-items {
-  background: rgba(255, 255, 255, 0.05);
+  background: #263238;
   margin-top: 2px;
   padding: 4px 0;
   margin-left: 0 !important;
