@@ -11,6 +11,7 @@ import {
   QItemSection,
   QItemLabel,
   QDrawer,
+  QExpansionItem,
   debounce
 } from 'quasar'
 import Tr from '@/i18n/translation'
@@ -122,11 +123,6 @@ const SIMPLE_MENU = [
 
 const simpleMenu = ref(SIMPLE_MENU)
 const leftDrawerOpen = ref(false)
-const expandedItems = ref({})
-
-const toggleMobileSubmenu = (itemIndex) => {
-  expandedItems.value[itemIndex] = !expandedItems.value[itemIndex]
-}
 
 onMounted(() => {
   document.title = 'Internet Health Report'
@@ -250,58 +246,41 @@ watch(simpleMenu, () => {
       <!--Log in /Log out stuff here-->
     </QToolbar>
     <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary mobile-drawer">
-      <QList class="mobile-nav q-pt-md">
+      <QList class="q-pt-md">
         <!-- <QItemLabel header>Essential Links</QItemLabel> -->
-        <template v-for="(item, index) in simpleMenu" :key="item.entryName">
-          <!-- Regular menu items without dropdown -->
-          <QItem v-if="!item.options" flat class="menu-item">
+        <template v-for="(item, index) in simpleMenu" :key="index">
+          <QItem v-if="!item.options" flat class="q-pa-none">
             <QBtn
-              class="full-width text-left"
+              class="full-width"
               flat
               :label="$t(item.entryName)"
               :to="Tr.i18nRoute({ name: item.routeName })"
               @click="leftDrawerOpen = false"
+              align="left"
+              style="min-height: 48px; padding: 12px 16px; font-size: 16px;"
             />
           </QItem>
 
-          <!-- Items with dropdowns -->
-          <div v-else class="menu-item">
-            <QItem flat>
-              <QBtn
-                class="full-width text-left submenu-btn"
-                flat
-                :class="{ 'submenu-expanded': expandedItems[index] }"
-                @click="toggleMobileSubmenu(index)"
-              >
-                <div class="row full-width items-center justify-between">
-                  <span class="text-weight-medium">{{ $t(item.entryName) }}</span>
-                  <q-icon
-                    name="arrow_drop_down"
-                    size="24px"
-                    class="submenu-arrow"
-                    :class="{ 'rotate-arrow': expandedItems[index] }"
-                  />
-                </div>
-              </QBtn>
-            </QItem>
-
+          <QExpansionItem
+            v-else
+            :label="$t(item.entryName)"
+            expand-icon="arrow_drop_down"
+            expand-icon-class="text-white"
+            style="font-size: 16px;"
+            header-class="text-white text-uppercase text-weight-medium q-py-md"
+          >
             <!-- Submenu items -->
-            <QList
-              v-show="expandedItems[index]"
-              class="submenu-items"
-              bordered
-              separator
-            >
+            <QList padding>
               <QItem
                 v-for="option in item.options"
                 :key="option.entryName"
                 clickable
                 :to="Tr.i18nRoute({ name: option.routeName })"
                 @click="leftDrawerOpen = false"
-                class="submenu-item"
+                style="padding: 12px 24px;"
               >
                 <QItemSection>
-                  <QItemLabel class="text-bold q-pb-xs">
+                  <QItemLabel class="text-weight-medium text-white q-pb-xs">
                     {{ $t(option.entryName) }}
                   </QItemLabel>
                   <QItemLabel class="text-grey text-caption" lines="2">
@@ -311,7 +290,7 @@ watch(simpleMenu, () => {
               </QItem>
               <!-- <LanguageSwitcher /> -->
             </QList>
-          </div>
+          </QExpansionItem>
         </template>
       </QList>
     </QDrawer>
@@ -373,75 +352,6 @@ watch(simpleMenu, () => {
 .mobile-drawer .q-drawer__content::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
-}
-
-.mobile-nav {
-  padding: 0;
-}
-
-.mobile-nav .menu-item {
-  padding: 0 !important;
-  margin-bottom: 4px;
-}
-
-.mobile-nav .submenu-container {
-  width: 100%;
-}
-
-.mobile-nav .submenu-items {
-  background: #263238;
-  margin-top: 2px;
-  padding: 4px 0;
-  margin-left: 0 !important;
-}
-
-.mobile-nav .submenu-item {
-  padding: 12px 24px !important;
-  min-height: unset;
-}
-
-.mobile-nav .q-btn {
-  justify-content: flex-start;
-  text-transform: uppercase;
-  font-size: 16px;
-  letter-spacing: normal;
-  padding: 12px 16px;
-  min-height: 48px;
-  width: 100%;
-  margin: 0 !important; 
-}
-
-.mobile-nav .q-item {
-  padding: 0;
-  min-height: unset;
-}
-
-.mobile-nav .q-btn__content,
-.mobile-nav .q-item__section {
-  justify-content: flex-start !important;
-  text-align: left !important;
-}
-
-.mobile-nav .q-list {
-  padding: 0 !important;
-}
-
-.mobile-nav span {
-  color: white;
-  font-size: 16px;
-}
-
-.submenu-btn {
-  position: relative;
-}
-
-.submenu-arrow {
-  transition: transform 0.2s ease;
-  margin-left: 8px;
-}
-
-.rotate-arrow {
-  transform: rotate(180deg);
 }
 
 @media screen and (max-width: 1024px) {
