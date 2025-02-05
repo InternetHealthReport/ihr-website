@@ -245,7 +245,7 @@ watch(simpleMenu, () => {
       </div>
       <!--Log in /Log out stuff here-->
     </QToolbar>
-    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary mobile-drawer">
+    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
       <QList class="q-pt-md">
         <!-- <QItemLabel header>Essential Links</QItemLabel> -->
         <template v-for="(item, index) in simpleMenu" :key="index">
@@ -339,19 +339,6 @@ watch(simpleMenu, () => {
 }
 #IHR_last-element {
   height: 50px;
-}
-
-.mobile-drawer,
-.mobile-drawer .q-drawer__content {
-  overflow-y: auto !important;
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-.mobile-drawer::-webkit-scrollbar,
-.mobile-drawer .q-drawer__content::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
 }
 
 @media screen and (max-width: 1024px) {
