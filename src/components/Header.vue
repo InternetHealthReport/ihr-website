@@ -11,6 +11,7 @@ import {
   QItemSection,
   QItemLabel,
   QDrawer,
+  QExpansionItem,
   debounce
 } from 'quasar'
 import Tr from '@/i18n/translation'
@@ -245,44 +246,52 @@ watch(simpleMenu, () => {
       <!--Log in /Log out stuff here-->
     </QToolbar>
     <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
-      <QList>
+      <QList class="q-pt-md">
         <!-- <QItemLabel header>Essential Links</QItemLabel> -->
-        <QItem v-for="item in simpleMenu" :key="item.entryName" flat>
-          <QBtn
-            v-if="item.options == null"
-            flat
-            :label="$t(item.entryName)"
-            :to="Tr.i18nRoute({ name: item.routeName })"
-          />
-          <QBtnDropdown
+        <template v-for="(item, index) in simpleMenu" :key="index">
+          <QItem v-if="!item.options" flat class="q-pa-none">
+            <QBtn
+              class="full-width"
+              flat
+              :label="$t(item.entryName)"
+              :to="Tr.i18nRoute({ name: item.routeName })"
+              @click="leftDrawerOpen = false"
+              align="left"
+              style="min-height: 48px; padding: 12px 16px; font-size: 16px;"
+            />
+          </QItem>
+
+          <QExpansionItem
             v-else
-            flat
             :label="$t(item.entryName)"
-            menu-anchor="bottom left"
-            menu-self="top left"
+            expand-icon="arrow_drop_down"
+            expand-icon-class="text-white"
+            style="font-size: 16px;"
+            header-class="text-white text-uppercase text-weight-medium q-py-md"
           >
-            <QList class="rounded-borders text-white bg-primary" bordered separator padding>
+            <!-- Submenu items -->
+            <QList padding>
               <QItem
                 v-for="option in item.options"
                 :key="option.entryName"
-                v-close-popup
                 clickable
                 :to="Tr.i18nRoute({ name: option.routeName })"
-                active-class="text-grey"
+                @click="leftDrawerOpen = false"
+                style="padding: 12px 24px;"
               >
                 <QItemSection>
-                  <QItemLabel class="text-bold">
+                  <QItemLabel class="text-weight-medium text-white q-pb-xs">
                     {{ $t(option.entryName) }}
                   </QItemLabel>
-                  <QItemLabel class="text-grey" caption lines="2">
+                  <QItemLabel class="text-grey text-caption" lines="2">
                     {{ $t(option.summary) }}
                   </QItemLabel>
                 </QItemSection>
               </QItem>
+              <!-- <LanguageSwitcher /> -->
             </QList>
-          </QBtnDropdown>
-        </QItem>
-        <!-- <LanguageSwitcher /> -->
+          </QExpansionItem>
+        </template>
       </QList>
     </QDrawer>
   </QHeader>
@@ -331,12 +340,12 @@ watch(simpleMenu, () => {
 #IHR_last-element {
   height: 50px;
 }
+
 @media screen and (max-width: 1024px) {
   .col-12.row.no-wrap.items-center {
     justify-content: space-around;
   }
-}
-@media screen and (max-width: 1024px) {
+
   .IHR_search-box.col-4 {
     flex-grow: 1;
   }
