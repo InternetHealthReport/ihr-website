@@ -83,7 +83,8 @@ let loadingQueryRanks = false
 const search = async (value, update) => {
   loading.value = true
   options.value = []
-  const asnRegex = /^(as)?(\d+)$/i
+  // Detect if input is AS followed by a number
+  const asnRegex = /^AS(\d+)$/i
   const asnMatch = asnRegex.exec(value)
   let prefixMatch
   try {
@@ -99,8 +100,9 @@ const search = async (value, update) => {
     }
   }
   if (asnMatch) {
+    // If input is AS followed by a number, search for ASNs
     loadingQueryAS = true
-    queryAS(asnMatch.input).then((res) => {
+    queryAS(asnMatch[1]).then((res) => {
       searchResponse(res, update)
       loadingQueryAS = false
       noResults(res, update)
@@ -113,6 +115,7 @@ const search = async (value, update) => {
       noResults(res, update)
     })
   } else {
+    // General search for AS names, IXPs, prefixes, countries, etc.
     mixedEntitySearch(value, update)
   }
 }
@@ -194,6 +197,7 @@ const queryAS = async (asn) => {
   const res = await iyp_api.run([{ statement: query, parameters: { asn: asn } }])
   return res[0]
 }
+
 
 const queryPrefixes = async (value) => {
   if (props.noPrefix) {
@@ -317,12 +321,19 @@ const optimizeSearchResults = (res) => {
 
 const filter = (value, update, abort) => {
   activateSearch.value = true
-  if (value.length < MIN_CHARACTERS) {
+  if (value.length === 0) {
     abort()
-  } else {
-    search(value, update)
+    return
   }
+
+  const asnRegex = /^AS(\d+)$/i
+  if (value.length < MIN_CHARACTERS && !asnRegex.test(value)) {
+    abort()
+    return
+  }
+  search(value, update)
 }
+
 
 const paramExists = (param) => {
   const params = route.params
