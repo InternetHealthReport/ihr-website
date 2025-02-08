@@ -100,7 +100,7 @@ const search = async (value, update) => {
   }
   if (asnMatch) {
     loadingQueryAS = true
-    queryAS(asnMatch.input).then((res) => {
+    queryAS(asnMatch[2]).then((res) => {
       searchResponse(res, update)
       loadingQueryAS = false
       noResults(res, update)
