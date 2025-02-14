@@ -215,7 +215,7 @@ watch(simpleMenu, () => {
                   v-close-popup
                   clickable
                   :to="Tr.i18nRoute({ name: option.routeName })"
-                  active-class="text-grey"
+                  active-class="IHR_active-route"
                   @click="closeMenu"
                 >
                   <QItemSection>
@@ -269,13 +269,14 @@ watch(simpleMenu, () => {
             style="font-size: 16px;"
             header-class="text-white text-uppercase text-weight-medium q-py-md"
           >
-            <!-- Submenu items -->
+            <!-- Submenu items -->  
             <QList padding>
               <QItem
                 v-for="option in item.options"
                 :key="option.entryName"
                 clickable
                 :to="Tr.i18nRoute({ name: option.routeName })"
+                active-class="IHR_active-route"
                 @click="leftDrawerOpen = false"
                 style="padding: 12px 24px;"
               >
@@ -339,6 +340,10 @@ watch(simpleMenu, () => {
 }
 #IHR_last-element {
   height: 50px;
+}
+.IHR_active-route {
+  background: #ffffff26 !important;
+  border-radius: 4px;
 }
 
 @media screen and (max-width: 1024px) {
