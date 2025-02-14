@@ -342,7 +342,7 @@ watch(simpleMenu, () => {
   height: 50px;
 }
 .IHR_active-route {
-  background: rgba(255, 255, 255, 0.15) !important;
+  background: #ffffff26 !important;
   border-radius: 4px;
 }
 
