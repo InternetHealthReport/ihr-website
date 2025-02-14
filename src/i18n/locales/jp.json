@@ -928,7 +928,7 @@
       },
       "upstreams": {
         "title": "''Upstream'' ASes",
-        "caption": "ASes depending on AS",
+        "caption": "Network dependency of AS",
         "info": {
           "title": "''Upstream'' ASes",
           "description": "<p>ASes that are usually seen upstream of the selected network in BGP data. Values close to 100% mean that the AS is seen in all, or at least most, of the AS paths to the selected AS.</p><p>See also <a href='/ihr/en/documentation#AS-dependency'>AS Dependency documentation</a>.</p>"
