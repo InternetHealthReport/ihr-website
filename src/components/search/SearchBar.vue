@@ -83,7 +83,7 @@ let loadingQueryRanks = false
 const search = async (value, update) => {
   loading.value = true
   options.value = []
-  const asnRegex = /^(as)?(\d+)$/i
+  const asnRegex = /^as(\d+)$/i
   const asnMatch = asnRegex.exec(value)
   let prefixMatch
   try {
@@ -100,7 +100,7 @@ const search = async (value, update) => {
   }
   if (asnMatch) {
     loadingQueryAS = true
-    queryAS(asnMatch[2]).then((res) => {
+    queryAS(asnMatch[1]).then((res) => {
       searchResponse(res, update)
       loadingQueryAS = false
       noResults(res, update)
@@ -259,7 +259,7 @@ const mixedEntitySearch = async (value, update) => {
 
 const queryASNames = async (value) => {
   const query =
-    'MATCH (n:Name)-[:NAME]-(a:AS) WHERE toLower(n.name) CONTAINS $value MATCH (n)-[:NAME]-(a:AS) RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 10'
+    'MATCH (n:Name)-[:NAME]-(a:AS) WHERE a.asn = toInteger($value) OR toLower(n.name) CONTAINS $value RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 1'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
