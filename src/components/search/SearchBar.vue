@@ -259,7 +259,7 @@ const mixedEntitySearch = async (value, update) => {
 
 const queryASNames = async (value) => {
   const query =
-    'MATCH (n:Name)-[:NAME]-(a:AS) WHERE a.asn = toInteger($value) OR toLower(n.name) CONTAINS $value RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 1'
+    'MATCH (n:Name)-[:NAME]-(a:AS) WHERE toLower(n.name) CONTAINS $value MATCH (n)-[:NAME]-(a:AS) RETURN head(collect(DISTINCT(n.name))) AS as, a.asn AS id, head(labels(a)) AS node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }
@@ -602,8 +602,6 @@ watch(
   margin-left: 10px;
 }
 .IHR_search-bar {
-  text-color: 'white';
   color: 'white';
-  input: #fff;
 }
 </style>
