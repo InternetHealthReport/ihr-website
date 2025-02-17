@@ -33,42 +33,13 @@ const selectedMode = ref('None')
 // Dropdown visibility toggle
 const showDropdown = ref(false)
 
-// Sample data for testing
-const sampleTraces = ref([
-  {
-    x: ['2025-01-01', '2025-01-02', '2025-01-03', '2025-01-04'],
-    y: [10, 15, 13, 17],
-    type: 'scatter',
-    mode: 'lines+markers',
-    name: 'Trace 1',
-  },
-  {
-    x: ['2025-01-01', '2025-01-02', '2025-01-03', '2025-01-04'],
-    y: [22, 27, 25, 30],
-    type: 'scatter',
-    mode: 'lines+markers',
-    name: 'Trace 2',
-  },
-])
-
-const sampleLayout = ref({
-  title: 'Sample Plotly Chart',
-  xaxis: {
-    title: 'Date',
-    type: 'date',
-  },
-  yaxis: {
-    title: 'Value',
-  },
-  showlegend: true,
-})
-
 // Function to render the Plotly chart (unchanged, just uses updated `layoutLocal` and `props.traces`)
 const react = () => {
   if (!created.value) {
     console.error('SHOULD NEVER HAPPEN')
   }
-  Plotly.react(myId.value, sampleTraces.value, sampleLayout.value)
+  // Use props.traces instead of sampleTraces
+  Plotly.react(myId.value, props.traces, props.layout)
 }
 
 // Initialize the chart
@@ -83,8 +54,8 @@ const init = () => {
     react() // Apply color mode changes right here
   })
 
-  // Make sure `sampleTraces` is passed to the plot function
-  Plotly.newPlot(graphDiv, sampleTraces.value, sampleLayout.value, {
+  // Make sure `props.traces` is passed to the plot function
+  Plotly.newPlot(graphDiv, props.traces, props.layout, {
     responsive: true,
     displayModeBar: true,
     modeBarButtonsToAdd: [
@@ -108,7 +79,7 @@ onMounted(() => {
 // Watch for changes in `selectedMode` to update color in the traces
 watch(selectedMode, (newMode) => {
   const colors = colorPalettes[newMode]
-  sampleTraces.value.forEach((trace, index) => {
+  props.traces.forEach((trace, index) => {
     if (colors) {
       trace.marker = { color: colors[index % colors.length] }
       trace.line = { color: colors[index % colors.length] }
