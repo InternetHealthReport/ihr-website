@@ -135,7 +135,7 @@ const sectionActive = ref('')
 <template>
   <div class="IHR_documentation-container">
     <!-- Sidebar -->
-    <div class="IHR_documentation-sidebar">
+    <div class="IHR_documentation-sidebar ">
       <h3>{{ $t('documentationPage.title') }}</h3>
       <div v-for="(sec, idx) in sections" :key="idx" class="q-pl-sm">
         <div class="text-weight-light">
@@ -271,9 +271,24 @@ const sectionActive = ref('')
 }
 
 @media screen and (max-width: 720px) {
+  .IHR_documentation-sidebar {
+    display: none; 
+  }
+
+  #IHR_documentation-page {
+    margin: 0; 
+    padding: 0 1rem; 
+  }
+
   .IHR_documentation-page > h1 {
     font-size: 1.8125rem;
     margin: 2rem 0 1rem;
+  }
+}
+
+@media screen and (min-width: 721px) {
+  .IHR_documentation-sidebar {
+    display: block; 
   }
 }
 
@@ -336,3 +351,4 @@ const sectionActive = ref('')
   border-bottom: 1px solid #263238;
 }
 </style>
+
