@@ -210,6 +210,7 @@ const sectionActive = ref('')
 .IHR_documentation-sidebar {
   width: 300px;
   height: 100vh; 
+  display: block;
   overflow-y: auto; 
   border-right: 1px solid #ccc;
   padding: 1rem;
@@ -286,12 +287,6 @@ const sectionActive = ref('')
   }
 }
 
-@media screen and (min-width: 721px) {
-  .IHR_documentation-sidebar {
-    display: block; 
-  }
-}
-
 .IHR_documentation-page > div > h2 {
   margin-top: 2.875rem;
   margin-bottom: 1rem;
@@ -352,3 +347,5 @@ const sectionActive = ref('')
 }
 </style>
 
+Fixed the hiding of the sidebar with the footer when we scroll to the end of the Documentation page.
+Removed the `QDrawer` for better and controlled behaviour of Sidebar.
