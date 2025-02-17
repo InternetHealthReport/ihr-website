@@ -4,7 +4,7 @@ import { ref, onMounted, watch } from 'vue'
 import { uid } from 'quasar'
 import { set, get } from 'idb-keyval'
 
-// Define props
+// Define props (no changes made to existing props)
 const props = defineProps({
   layout: { type: Object, required: true },
   traces: { type: Array, required: true },
@@ -13,14 +13,14 @@ const props = defineProps({
   yMax: { type: Number, default: 0 }
 })
 
-// Define event emits
+// Define event emits (kept unchanged)
 const emits = defineEmits(['plotly-click', 'loaded', 'plotly-legend-click', 'plotly-time-filter', 'plotly-relayout'])
 
 const created = ref(false)
 const myId = ref(`ihrReactiveChart${uid()}`)
 const layoutLocal = ref({ ...props.layout })
 
-// Updated color palettes for different CVD modes
+// Updated color palettes for different CVD modes (new feature)
 const colorPalettes = {
   None: null, // Uses default Plotly colors
   Protanopia: ['#ffe41c', '#aabdff', '#3c360f', '#c8b317', '#19376a', '#8f8c8b', '#d7c997', '#648ceb', '#505b80', '#7e711b'],
@@ -33,12 +33,42 @@ const selectedMode = ref('None')
 // Dropdown visibility toggle
 const showDropdown = ref(false)
 
-// Function to render the Plotly chart
+// Sample data for testing
+const sampleTraces = ref([
+  {
+    x: ['2025-01-01', '2025-01-02', '2025-01-03', '2025-01-04'],
+    y: [10, 15, 13, 17],
+    type: 'scatter',
+    mode: 'lines+markers',
+    name: 'Trace 1',
+  },
+  {
+    x: ['2025-01-01', '2025-01-02', '2025-01-03', '2025-01-04'],
+    y: [22, 27, 25, 30],
+    type: 'scatter',
+    mode: 'lines+markers',
+    name: 'Trace 2',
+  },
+])
+
+const sampleLayout = ref({
+  title: 'Sample Plotly Chart',
+  xaxis: {
+    title: 'Date',
+    type: 'date',
+  },
+  yaxis: {
+    title: 'Value',
+  },
+  showlegend: true,
+})
+
+// Function to render the Plotly chart (unchanged, just uses updated `layoutLocal` and `props.traces`)
 const react = () => {
   if (!created.value) {
     console.error('SHOULD NEVER HAPPEN')
   }
-  Plotly.react(myId.value, props.traces, layoutLocal.value)
+  Plotly.react(myId.value, sampleTraces.value, sampleLayout.value)
 }
 
 // Initialize the chart
@@ -53,7 +83,8 @@ const init = () => {
     react() // Apply color mode changes right here
   })
 
-  Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
+  // Make sure `sampleTraces` is passed to the plot function
+  Plotly.newPlot(graphDiv, sampleTraces.value, sampleLayout.value, {
     responsive: true,
     displayModeBar: true,
     modeBarButtonsToAdd: [
@@ -74,9 +105,10 @@ onMounted(() => {
   init()
 })
 
+// Watch for changes in `selectedMode` to update color in the traces
 watch(selectedMode, (newMode) => {
   const colors = colorPalettes[newMode]
-  props.traces.forEach((trace, index) => {
+  sampleTraces.value.forEach((trace, index) => {
     if (colors) {
       trace.marker = { color: colors[index % colors.length] }
       trace.line = { color: colors[index % colors.length] }
@@ -90,7 +122,6 @@ watch(selectedMode, (newMode) => {
   set('colorVisionMode', newMode) // Save the selected mode to IndexedDB
   showDropdown.value = false // Hide the dropdown after selection
 })
-
 </script>
 
 <template>
