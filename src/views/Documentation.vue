@@ -346,6 +346,3 @@ const sectionActive = ref('')
   border-bottom: 1px solid #263238;
 }
 </style>
-
-Fixed the hiding of the sidebar with the footer when we scroll to the end of the Documentation page.
-Removed the `QDrawer` for better and controlled behaviour of Sidebar.
