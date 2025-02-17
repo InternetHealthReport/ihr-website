@@ -2,154 +2,69 @@
 import Plotly from 'plotly.js-dist'
 import { ref, onMounted, watch } from 'vue'
 import { uid } from 'quasar'
+import { set, get } from 'idb-keyval'
 
+// Define props
 const props = defineProps({
-  layout: {
-    type: Object,
-    required: true
-  },
-  traces: {
-    type: Array,
-    required: true
-  },
-  chartTitle: {
-    type: String,
-    required: false,
-    default: null
-  },
-  noData: {
-    required: false,
-    default: false
-  },
-  yMax: {
-    type: Number,
-    required: false,
-    default: 0
-  },
-  treemapNodeClicked: null,
-  newPlot: {
-    type: Boolean,
-    default: false
-  },
-  shapes: {
-    type: Array
-  }
+  layout: { type: Object, required: true },
+  traces: { type: Array, required: true },
+  chartTitle: { type: String, default: null },
+  noData: { required: false, default: false },
+  yMax: { type: Number, default: 0 }
 })
 
-const emits = defineEmits({
-  'plotly-click': (plotlyClickedData) => {
-    if (plotlyClickedData) {
-      return true
-    } else {
-      return false
-    }
-  },
-  loaded: () => {
-    return false
-  },
-  'plotly-legend-click': (plotlyClickedLegend) => {
-    if (plotlyClickedLegend) {
-      return true
-    } else {
-      return false
-    }
-  },
-  'plotly-time-filter': (plotlyClickedLegend) => {
-    if (plotlyClickedLegend) {
-      return true
-    } else {
-      return false
-    }
-  },
-  'plotly-relayout': (plotlyRelayout) => {
-    if (plotlyRelayout) {
-      return true
-    } else {
-      return false
-    }
-  }
-})
+// Define event emits
+const emits = defineEmits(['plotly-click', 'loaded', 'plotly-legend-click', 'plotly-time-filter', 'plotly-relayout'])
 
 const created = ref(false)
 const myId = ref(`ihrReactiveChart${uid()}`)
-const layoutLocal = ref(props.layout)
+const layoutLocal = ref({ ...props.layout })
 
-layoutLocal.value['images'] = [
-  {
-    x: 0.98,
-    y: 0.92,
-    sizex: 0.1,
-    sizey: 0.1,
-    source: '/imgs/ihr_logo.png',
-    xanchor: 'right',
-    xref: 'paper',
-    yanchor: 'bottom',
-    yref: 'paper',
-    opacity: 0.2
-  }
-]
+// Updated color palettes for different CVD modes
+const colorPalettes = {
+  None: null, // Uses default Plotly colors
+  Protanopia: ['#ffe41c', '#aabdff', '#3c360f', '#c8b317', '#19376a', '#8f8c8b', '#d7c997', '#648ceb', '#505b80', '#7e711b'],
+  Deuteranopia: ['#ffd592', '#b0bcf9', '#c09300', '#679bf2', '#ffeafd', '#f6c600', '#918694', '#674f00', '#253d60', '#6f6367'],
+  Tritanopia: ['#fd6e74', '#cbefff', '#bfa9b6', '#cc1600', '#228791', '#67656c', '#660b00', '#79eeff', '#173033', '#ffc0cd']
+}
 
+const selectedMode = ref('None')
+
+// Dropdown visibility toggle
+const showDropdown = ref(false)
+
+// Function to render the Plotly chart
 const react = () => {
   if (!created.value) {
     console.error('SHOULD NEVER HAPPEN')
   }
-
-  if (props.traces == undefined) {
-    return
-  }
-  if (props.newPlot) {
-    Plotly.newPlot(myId.value, props.traces, layoutLocal.value)
-  } else {
-    Plotly.react(myId.value, props.traces, layoutLocal.value)
-  }
-  // emits('loaded')
+  Plotly.react(myId.value, props.traces, layoutLocal.value)
 }
 
-const relayout = () => {
-  Plotly.relayout(myId.value, {})
-}
-
+// Initialize the chart
 const init = () => {
   const graphDiv = myId.value
+
+  // Load the selected mode from IndexedDB (if any)
+  get('colorVisionMode').then((mode) => {
+    if (mode && colorPalettes[mode] !== undefined) {
+      selectedMode.value = mode
+    }
+    react() // Apply color mode changes right here
+  })
+
   Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
     responsive: true,
-    displayModeBar: 'hover'
-  })
-
-  if (document.documentElement.clientWidth < 576) {
-    Plotly.relayout(graphDiv, { showlegend: false })
-  }
-
-  graphDiv.on('plotly_relayout', (event) => {
-    let startDateTime = event['xaxis.range[0]']
-    let endDateTime = event['xaxis.range[1]']
-    if (startDateTime && endDateTime) {
-      startDateTime += 'Z'
-      endDateTime += 'Z'
-      startDateTime = new Date(startDateTime)
-      endDateTime = new Date(endDateTime)
-      emits('plotly-time-filter', { startDateTime, endDateTime })
-    }
-    emits('plotly-relayout', event)
-  })
-
-  graphDiv.on('plotly_click', (eventData) => {
-    if (eventData && eventData.points) {
-      emits('plotly-click', eventData)
-    }
-  })
-
-  graphDiv.on('plotly_legendclick', (eventData) => {
-    if (eventData) {
-      const legend = eventData.node.textContent
-      const opacityStyle = eventData.node.getAttribute('style')
-      const opacityMatch = opacityStyle.match(/opacity:\s*([^;]+);/)
-      if (opacityMatch && legend !== 'All') {
-        const opacity = Number(opacityMatch[1])
-        const result = { legend, opacity }
-        emits('plotly-legend-click', result)
+    displayModeBar: true,
+    modeBarButtonsToAdd: [
+      {
+        name: 'Color Mode',
+        icon: Plotly.Icons.pencil,
+        click: () => {
+          showDropdown.value = !showDropdown.value
+        }
       }
-    }
+    ]
   })
 
   created.value = true
@@ -159,49 +74,54 @@ onMounted(() => {
   init()
 })
 
-watch(
-  () => props.traces,
-  () => {
-    react()
-  },
-  { deep: true }
-)
-watch(
-  () => props.layout,
-  () => {
-    layoutLocal.value = Object.assign(layoutLocal.value, props.layout)
-    if (layoutLocal.value['title'] !== undefined) {
-      delete layoutLocal.value['title']
+watch(selectedMode, (newMode) => {
+  const colors = colorPalettes[newMode]
+  props.traces.forEach((trace, index) => {
+    if (colors) {
+      trace.marker = { color: colors[index % colors.length] }
+      trace.line = { color: colors[index % colors.length] }
+    } else {
+      // Reset to default Plotly colors when "None" mode is selected
+      trace.marker = { color: undefined }
+      trace.line = { color: undefined }
     }
-  }
-)
-watch(
-  () => props.yMax,
-  (newValue) => {
-    const graphDiv = myId.value
-    Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
-  }
-)
-watch(
-  () => props.shapes,
-  (newValue) => {
-    const graphDiv = myId.value
-    Plotly.relayout(graphDiv, 'shapes', newValue)
-  }
-)
+  })
+  react() // Apply changes when mode is updated
+  set('colorVisionMode', newMode) // Save the selected mode to IndexedDB
+  showDropdown.value = false // Hide the dropdown after selection
+})
+
 </script>
 
 <template>
   <div>
-    <h3 v-if="chartTitle">
-      {{ chartTitle }}
-    </h3>
+    <h3 v-if="chartTitle">{{ chartTitle }}</h3>
     <div ref="myId" />
     <div v-if="noData" class="IHR_no-data">
-      <div class="bg-white" style="text-align: center">
-        {{ noData }}
-      </div>
+      <div class="bg-white" style="text-align: center">{{ noData }}</div>
     </div>
+
+    <!-- Dropdown for color mode selection with border styling -->
+    <q-select
+      v-if="showDropdown"
+      v-model="selectedMode"
+      :options="Object.keys(colorPalettes)"
+      label="Select Color Mode"
+      dense
+      stack-label
+      :hide-dropdown-icon="true"
+      :style="{
+        position: 'absolute',
+        top: '45px',
+        left: '15px',
+        zIndex: 1000,
+        width: '200px',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+        backgroundColor: '#fff'
+      }"
+    />
   </div>
 </template>
 
@@ -220,8 +140,5 @@ watch(
   font-weight: 500;
   top: -250px;
   left: 0%;
-}
-.IHR_no-data > div:first-child:first-letter {
-  text-transform: uppercase;
 }
 </style>
