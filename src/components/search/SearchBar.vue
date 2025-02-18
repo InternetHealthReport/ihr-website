@@ -83,7 +83,7 @@ let loadingQueryRanks = false
 const search = async (value, update) => {
   loading.value = true
   options.value = []
-  const asnRegex = /^(as)?(\d+)$/i
+  const asnRegex = /^as(\d+)$/i
   const asnMatch = asnRegex.exec(value)
   let prefixMatch
   try {
@@ -100,7 +100,7 @@ const search = async (value, update) => {
   }
   if (asnMatch) {
     loadingQueryAS = true
-    queryAS(asnMatch.input).then((res) => {
+    queryAS(asnMatch[1]).then((res) => {
       searchResponse(res, update)
       loadingQueryAS = false
       noResults(res, update)
@@ -602,8 +602,6 @@ watch(
   margin-left: 10px;
 }
 .IHR_search-bar {
-  text-color: 'white';
   color: 'white';
-  input: #fff;
 }
 </style>
