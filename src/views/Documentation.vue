@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { QSplitter } from 'quasar'
 import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 
@@ -133,131 +134,80 @@ const sectionActive = ref('')
 </script>
 
 <template>
-  <div class="IHR_documentation-container">
-    <!-- Sidebar -->
-    <div class="IHR_documentation-sidebar ">
-      <h3>{{ $t('documentationPage.title') }}</h3>
-      <div v-for="(sec, idx) in sections" :key="idx" class="q-pl-sm">
-        <div class="text-weight-light">
-          {{ $t(`documentationPage.sectionsTitle.${sec.sectionsTitle}`) }}
+  <QSplitter>
+    <template v-slot:before>
+      <div class="IHR_documentation-page-sidebar">
+        <h3>{{ $t('documentationPage.title') }}</h3>
+        <div v-for="(sec, idx) in sections" :key="idx">
+          <div class="text-weight-light">
+            {{ $t(`documentationPage.sectionsTitle.${sec.sectionsTitle}`) }}
+          </div>
+          <ul>
+            <li v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)" :key="idx">
+              <RouterLink
+                :to="
+                  Tr.i18nRoute({
+                    name: 'documentation',
+                    hash: '#' + replaceSpaces($t(`documentationPage.sections.${secB}.title`))
+                  })
+                "
+                class="IHR_delikify"
+                :class="{
+                  'router-link-inactived': !sectionActiveStatus[secB],
+                  'router-link-actived': sectionActiveStatus[secB]
+                }"
+                @click="activateSelection(secB)"
+              >
+                {{ $t(`documentationPage.sections.${secB}.title`) }}
+              </RouterLink>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)" :key="idx">
-            <RouterLink
-              :to="
-                Tr.i18nRoute({
-                  name: 'documentation',
-                  hash: '#' + replaceSpaces($t(`documentationPage.sections.${secB}.title`))
-                })
-              "
-              class="IHR_delikify"
-              :class="{
-                'router-link-inactived': !sectionActiveStatus[secB],
-                'router-link-actived': sectionActiveStatus[secB]
-              }"
-              @click="activateSelection(secB)"
-            >
-              {{ $t(`documentationPage.sections.${secB}.title`) }}
-            </RouterLink>
-          </li>
-        </ul>
       </div>
-    </div>
+    </template>
 
-    <!-- Main Content -->
-    <div id="IHR_documentation-page">
-      <div v-for="(mainSec, mainIdx) in sections" :key="mainIdx">
-        <div
-          v-for="(bodySec, bodyIdx) in mainSec.sectionsBody"
-          :key="bodyIdx"
-          class="IHR_documentation-page"
-        >
+    <template v-slot:after>
+      <div id="IHR_documentation-page">
+        <div v-for="(mainSec, mainIdx) in sections" :key="mainIdx">
           <div
-            :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"
-            class="IHR_anchor"
-          ></div>
-          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)"></h1>
-          <p
-            class="text-left text-body1"
-            v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"
-          ></p>
-          <div v-for="idx in bodySec.numberOfDescriptions" :key="idx">
-            <h2 v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"></h2>
-            <img
-              v-if="
-                $t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`) !== ''
-              "
-              :src="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`)"
-              :style="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.style`)"
-            >
+            v-for="(bodySec, bodyIdx) in mainSec.sectionsBody"
+            :key="bodyIdx"
+            class="IHR_documentation-page"
+          >
+            <div
+              :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"
+              class="IHR_anchor"
+            ></div>
+            <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)"></h1>
             <p
               class="text-left text-body1"
-              v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"
+              v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"
             ></p>
+            <div v-for="idx in bodySec.numberOfDescriptions" :key="idx">
+              <h2 v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"></h2>
+              <img
+                v-if="
+                  $t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`) !== ''
+                "
+                :src="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`)"
+                :style="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.style`)"
+              >
+              <p
+                class="text-left text-body1"
+                v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"
+              ></p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </template>
+  </QSplitter>
 </template>
 
 <style>
-.IHR_documentation-container {
-  display: flex;
-  width: 100%;
-}
-
-.IHR_documentation-sidebar {
-  width: 300px;
-  height: 100vh; 
-  display: block;
-  overflow-y: auto; 
-  border-right: 1px solid #ccc;
-  padding: 1rem;
-  padding-top: 0;
-  background-color: #f9f9f9;
-  position: sticky;
-  top: 0;
-}
-
-.IHR_documentation-sidebar h3 {
-  margin-top: 0.1875rem;
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-.IHR_documentation-sidebar > div {
-  margin: 0.375rem auto 0.1875rem auto;
-}
-
-.IHR_documentation-sidebar ul {
-  margin: 5px;
-  padding: 0px;
-}
-
-.IHR_documentation-sidebar li {
-  list-style-type: none;
-  margin: 0px;
-  padding: 0px;
-  padding-left: 15px;
-}
-
-.IHR_documentation-sidebar a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.IHR_documentation-sidebar a:hover {
-  border-bottom: 1px solid #263238;
-}
-
-.IHR_documentation-sidebar a:active {
-  border-bottom: 1px solid #405057;
-}
-
 #IHR_documentation-page {
-  flex: 1;
   margin: 0 auto;
+  width: 100%;
   max-width: 1200px;
   padding: 0 1rem;
   overflow-x: scroll;
@@ -271,22 +221,6 @@ const sectionActive = ref('')
   margin: 4rem 0 1.5rem;
 }
 
-@media screen and (max-width: 720px) {
-  .IHR_documentation-sidebar {
-    display: none; 
-  }
-
-  #IHR_documentation-page {
-    margin: 0; 
-    padding: 0 1rem; 
-  }
-
-  .IHR_documentation-page > h1 {
-    font-size: 1.8125rem;
-    margin: 2rem 0 1rem;
-  }
-}
-
 .IHR_documentation-page > div > h2 {
   margin-top: 2.875rem;
   margin-bottom: 1rem;
@@ -295,42 +229,51 @@ const sectionActive = ref('')
   line-height: 1.5rem;
 }
 
-@media screen and (max-width: 600px) {
-  .IHR_documentation-page > div > h2 {
-    font-size: 1.25rem;
-    margin-bottom: 0.8125rem;
-  }
-}
-
 .IHR_documentation-page > div > .text-body1 {
   overflow-anchor: none;
 }
 
-.IHR_documentation-page > div > .text-body1 > a {
-  overflow-anchor: none;
-  word-break: break-word;
-}
-
-.IHR_documentation-page > div > .text-body1 > ul > li > a {
-  word-break: break-word;
-}
-
+.IHR_documentation-page > div > .text-body1 > a,
+.IHR_documentation-page > div > .text-body1 > ul > li > a,
 .IHR_documentation-page > div > .text-body1 > p > a {
   word-break: break-word;
 }
 
-#cod {
-  background-color: #e7e9eb;
-  padding: 1em;
-  border-radius: 0.5rem;
-  padding-bottom: 0;
+.IHR_documentation-page-sidebar {
+  height: 100vh;
+  width: 300px;
+  display: block;
+  background-color: #fff;
+  border-right: 1px solid #ccc;
+  padding: 0.5rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.IHR_anchor {
-  display: block;
-  position: relative;
-  top: -100px;
-  visibility: hidden;
+.IHR_documentation-page-sidebar > h3 {
+  width: 88%;
+  margin: 0 auto;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.IHR_documentation-page-sidebar > h3:first-letter {
+  text-transform: capitalize;
+}
+
+.IHR_documentation-page-sidebar > div {
+  width: 82%;
+  margin: 0.375rem auto 0.1875rem auto;
+}
+
+.IHR_documentation-page-sidebar > div ul {
+  margin: 2px;
+  padding: 5px 0;
+}
+
+.IHR_documentation-page-sidebar > div li {
+  list-style-type: none;
+  font-weight: 500;
+  padding-left: 12px;
 }
 
 .router-link-inactived {
@@ -344,5 +287,34 @@ const sectionActive = ref('')
 .router-link-inactived:hover,
 .router-link-actived:hover {
   border-bottom: 1px solid #263238;
+}
+
+.IHR_anchor {
+  display: block;
+  position: relative;
+  top: -100px;
+  visibility: hidden;
+}
+
+@media screen and (max-width: 720px) {
+  .IHR_documentation-page > h1 {
+    font-size: 1.8125rem;
+    margin: 2rem 0 1rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .IHR_documentation-page > div > h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.8125rem;
+  }
+
+  .IHR_documentation-page-sidebar {
+    display: none;
+  }
+
+  .IHR_documentation-page-sidebar > h3 {
+    font-size: 1rem;
+  }
 }
 </style>
