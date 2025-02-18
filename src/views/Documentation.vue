@@ -131,12 +131,13 @@ const sectionActiveStatus = ref(
   )
 )
 const sectionActive = ref('')
+const isCardDisabled = false
 </script>
 
 <template>
   <div class="IHR_documentation-container">
     <!-- Sidebar -->
-    <QCard class="IHR_documentation-page-sidebar">
+    <QCard class="IHR_documentation-page-sidebar" :disabled="isCardDisabled">
       <QCardSection>
         <h3>{{ $t('documentationPage.title') }}</h3>
         <div v-for="(sec, idx) in sections" :key="idx" class="q-pl-sm q-pb-xs">
