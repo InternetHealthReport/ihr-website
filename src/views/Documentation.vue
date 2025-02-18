@@ -256,6 +256,13 @@ const sectionActive = ref('')
   font-weight: 500;
 }
 
+#cod {
+  background-color: #e7e9eb;
+  padding: 1em;
+  border-radius: 0.5rem;
+  padding-bottom: 0;
+}
+
 .IHR_documentation-page-sidebar > h3:first-letter {
   text-transform: capitalize;
 }
