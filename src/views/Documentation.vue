@@ -171,9 +171,9 @@ const sectionActive = ref('')
     <div id="IHR_documentation-page">
       <div v-for="(mainSec, mainIdx) in sections" :key="mainIdx">
         <div 
-        v-for="(bodySec, bodyIdx) in mainSec.sectionsBody" 
-        :key="bodyIdx" 
-        class="IHR_documentation-page"
+          v-for="(bodySec, bodyIdx) in mainSec.sectionsBody" 
+          :key="bodyIdx" 
+          class="IHR_documentation-page"
         >
           <div
             :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"
