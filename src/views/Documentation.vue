@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { QDrawer } from 'quasar'
 import { RouterLink } from 'vue-router'
+import { QCard, QCardSection } from 'quasar'
 import Tr from '@/i18n/translation'
 
 const SECTIONS = [
@@ -118,7 +118,6 @@ const activateSelection = (sec) => {
 }
 
 const sections = ref(SECTIONS)
-const showSidebar = ref(true)
 const sectionActiveStatus = ref(
   Object.assign(
     {},
@@ -135,41 +134,45 @@ const sectionActive = ref('')
 </script>
 
 <template>
-  <div>
-    <QDrawer v-model="showSidebar" side="left" bordered class="IHR_documentation-page-sidebar">
-      <h3>{{ $t('documentationPage.title') }}</h3>
-      <div v-for="(sec, idx) in sections" :key="idx">
-        <div class="text-weight-light">
-          {{ $t(`documentationPage.sectionsTitle.${sec.sectionsTitle}`) }}
+  <div class="IHR_documentation-container">
+    <!-- Sidebar -->
+    <QCard class="IHR_documentation-page-sidebar">
+      <QCardSection>
+        <h3>{{ $t('documentationPage.title') }}</h3>
+        <div v-for="(sec, idx) in sections" :key="idx" class="q-pl-sm q-pb-xs">
+          <div class="text-weight-light">
+            {{ $t(`documentationPage.sectionsTitle.${sec.sectionsTitle}`) }}
+          </div>
+          <ul>
+            <li v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)" :key="idx">
+              <RouterLink
+                :to="
+                  Tr.i18nRoute({
+                    name: 'documentation',
+                    hash: '#' + replaceSpaces($t(`documentationPage.sections.${secB}.title`))
+                  })
+                "
+                class="IHR_delikify"
+                :class="{
+                  'router-link-inactived': !sectionActiveStatus[secB],
+                  'router-link-actived': sectionActiveStatus[secB]
+                }"
+                @click="activateSelection(secB)"
+              >
+                {{ $t(`documentationPage.sections.${secB}.title`) }}
+              </RouterLink>
+            </li>
+          </ul>
         </div>
-        <ul>
-          <li v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)" :key="idx">
-            <RouterLink
-              :to="
-                Tr.i18nRoute({
-                  name: 'documentation',
-                  hash: '#' + replaceSpaces($t(`documentationPage.sections.${secB}.title`))
-                })
-              "
-              class="IHR_delikify"
-              :class="{
-                'router-link-inactived': !sectionActiveStatus[secB],
-                'router-link-actived': sectionActiveStatus[secB]
-              }"
-              @click="activateSelection(secB)"
-            >
-              {{ $t(`documentationPage.sections.${secB}.title`) }}
-            </RouterLink>
-          </li>
-        </ul>
-      </div>
-    </QDrawer>
+      </QCardSection>
+    </QCard>
 
+    <!-- Main Content -->
     <div id="IHR_documentation-page">
       <div v-for="(mainSec, mainIdx) in sections" :key="mainIdx">
-        <div
-          v-for="(bodySec, bodyIdx) in mainSec.sectionsBody"
-          :key="bodyIdx"
+        <div 
+          v-for="(bodySec, bodyIdx) in mainSec.sectionsBody" 
+          :key="bodyIdx" 
           class="IHR_documentation-page"
         >
           <div
@@ -198,19 +201,24 @@ const sectionActive = ref('')
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
 <style>
-#IHR_documentation-page {
-  margin: 0 auto;
+.IHR_documentation-container {
+  display: flex;
   width: 100%;
+}
+
+/* Main Content */
+#IHR_documentation-page {
+  flex: 1;
+  margin: 0 auto;
   max-width: 1200px;
   padding: 0 1rem;
-  overflow-x: scroll;
+  overflow-x: auto; 
 }
+
 .IHR_documentation-page > h1 {
   line-height: 2rem;
   padding: 0.5rem 0;
@@ -218,12 +226,7 @@ const sectionActive = ref('')
   border-bottom: 1px solid #ccc;
   margin: 4rem 0 1.5rem;
 }
-@media screen and (max-width: 720px) {
-  .IHR_documentation-page > h1 {
-    font-size: 1.8125rem;
-    margin: 2rem 0 1rem;
-  }
-}
+
 .IHR_documentation-page > div > h2 {
   margin-top: 2.875rem;
   margin-bottom: 1rem;
@@ -231,80 +234,102 @@ const sectionActive = ref('')
   font-weight: 500;
   line-height: 1.5rem;
 }
-@media screen and (max-width: 600px) {
-  .IHR_documentation-page > div > h2 {
-    font-size: 1.25rem;
-    margin-bottom: 0.8125rem;
-  }
-}
+
 .IHR_documentation-page > div > .text-body1 {
   overflow-anchor: none;
 }
-.IHR_documentation-page > div > .text-body1 > a {
-  overflow-anchor: none;
-  word-break: break-word;
-}
-.IHR_documentation-page > div > .text-body1 > ul > li > a {
-  word-break: break-word;
-}
+
+.IHR_documentation-page > div > .text-body1 > a,
+.IHR_documentation-page > div > .text-body1 > ul > li > a,
 .IHR_documentation-page > div > .text-body1 > p > a {
   word-break: break-word;
 }
+
 #cod {
   background-color: #e7e9eb;
   padding: 1em;
   border-radius: 0.5rem;
   padding-bottom: 0;
 }
-.IHR_documentation-page-sidebar > h3 {
-  margin-top: 0.1875rem;
-  width: 88%;
-  margin: 0px auto;
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-@media screen and (max-width: 600px) {
-  .IHR_documentation-page-sidebar > h3 {
-    font-size: 1rem;
-  }
-}
-.IHR_documentation-page-sidebar > h3:first-letter {
-  text-transform: capitalize;
-}
-.IHR_documentation-page-sidebar > div {
-  width: 82%;
-  margin: 0.375rem auto 0.1875rem auto;
-}
-.IHR_documentation-page-sidebar > div a:hover {
-  border-bottom: 1px solid #263238;
-}
-.IHR_documentation-page-sidebar > div a:active {
-  border-bottom: 1px solid #405057;
-}
-.IHR_documentation-page-sidebar > div ul {
-  margin: 5px;
-  padding: 0px;
-}
-.IHR_documentation-page-sidebar > div li {
-  list-style-type: none;
-  margin: 0px;
-  padding: 0px;
-  padding-left: 15px;
-}
+
 .IHR_anchor {
   display: block;
   position: relative;
   top: -100px;
   visibility: hidden;
 }
+
+/* Sidebar */
+.IHR_documentation-page-sidebar {
+  height: 100vh;
+  width: 300px;
+  border-right: 1px solid #ccc;
+  background-color: #f9f9f9;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+}
+
+.IHR_documentation-page-sidebar h3 {
+  padding-bottom: 5px;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.IHR_documentation-page-sidebar ul {
+  margin: 2px;
+  padding: 5px 0;
+}
+
+.IHR_documentation-page-sidebar li {
+  list-style-type: none;
+  padding-left: 12px;
+}
+
+.IHR_documentation-page-sidebar a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.IHR_documentation-page-sidebar a:hover {
+  border-bottom: 1px solid #263238;
+}
+
+.IHR_documentation-page-sidebar a:active {
+  border-bottom: 1px solid #405057;
+}
+
 .router-link-inactived {
   border-bottom: 0;
 }
+
 .router-link-actived {
   border-bottom: 1px solid #f00;
 }
+
 .router-link-inactived:hover,
 .router-link-actived:hover {
   border-bottom: 1px solid #263238;
+}
+
+@media screen and (max-width: 720px) {
+  .IHR_documentation-page-sidebar {
+    display: none;
+  }
+
+  #IHR_documentation-page {
+    margin: 0;
+    padding: 0 1rem;
+  }
+
+  .IHR_documentation-page > h1 {
+    font-size: 1.8125rem;
+    margin: 2rem 0 1rem;
+  }
+
+  .IHR_documentation-page > div > h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.8125rem;
+  }
 }
 </style>
