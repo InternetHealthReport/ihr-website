@@ -14,8 +14,8 @@ const rankings = ref({
   data: [],
   show: true,
   loading: true,
-  query:
-    'MATCH (:AS {asn: $asn})-[r:RANK]->(s:Ranking) RETURN r.rank AS rank, s.name AS name ORDER BY rank',
+  query: `MATCH (:AS {asn: $asn})-[r:RANK]->(s:Ranking)
+    RETURN r.rank AS rank, s.name AS name ORDER BY rank`,
   columns: [
     {
       name: 'Rank',

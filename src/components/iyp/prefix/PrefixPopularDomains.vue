@@ -17,10 +17,10 @@ const domains = ref({
   show: false,
   loading: true,
   query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(d:DomainName)-[ra:RANK {reference_name:'tranco.top1m'}]->(rn:Ranking)
-WHERE h.name = d.name
- OPTIONAL MATCH (h)<-[:PART_OF]-(p)-[:CATEGORIZED]->(t:Tag)
- RETURN COLLECT(DISTINCT i.ip) AS ip, h.name as hostName, collect(DISTINCT t.label) as tags, ra.rank AS rank, split(h.name, '.')[-1] AS tld, 1/toFloat(ra.rank) AS inv_rank, rn.name as rankingName
- ORDER BY rank`,
+  WHERE h.name = d.name
+  OPTIONAL MATCH (h)<-[:PART_OF]-(p)-[:CATEGORIZED]->(t:Tag)
+  RETURN COLLECT(DISTINCT i.ip) AS ip, h.name as hostName, collect(DISTINCT t.label) as tags, ra.rank AS rank, split(h.name, '.')[-1] AS tld, 1/toFloat(ra.rank) AS inv_rank, rn.name as rankingName
+  ORDER BY rank`,
   columns: [
     {
       name: 'Tranco Rank',

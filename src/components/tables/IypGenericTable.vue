@@ -18,10 +18,15 @@ import {
   QMarkupTable,
   copyToClipboard
 } from 'quasar'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
-import { ref, inject, computed, watch, nextTick, onMounted } from 'vue'
+import { ref, inject, watch, onMounted } from 'vue'
 import '@/styles/chart.css'
+import hljs from 'highlight.js'
+import hljsCypher from 'highlightjs-cypher'
+import 'highlight.js/scss/vs.scss'
+
+hljs.registerLanguage('cypher', hljsCypher)
 
 const iyp_api = inject('iyp_api')
 
@@ -333,7 +338,7 @@ onMounted(() => {
       <QTabPanels v-model="activeTab" animated @transition="transition">
         <QTabPanel name="chart">
           <div id="chartContainer">
-            <slot />
+            <slot></slot>
           </div>
         </QTabPanel>
         <QTabPanel name="data">
@@ -373,8 +378,8 @@ onMounted(() => {
           </QTable>
         </QTabPanel>
         <QTabPanel name="api" class="text-left q-pa-lg" light>
-          <QBtn no-caps dense flat @click="copyToClipboard(cypherQuery)">
-            <code>{{ cypherQuery }}</code>
+          <QBtn no-caps dense flat @click="copyToClipboard(cypherQuery.replace(/^\s+|\s+$/gm, ''))">
+            <pre style="text-align: left;"><code v-html="hljs.highlight(cypherQuery.replace(/^\s+|\s+$/gm, ''), { language: 'cypher' }).value"></code></pre>
             <QTooltip>Click to copy</QTooltip>
           </QBtn>
           <div>

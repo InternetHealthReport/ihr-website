@@ -15,7 +15,7 @@ const roas = ref({
   show: false,
   loading: true,
   query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[m:MANAGED_BY]-(p:Prefix)
-  WHERE m.reference_org <> 'CAIDA'
+    WHERE m.reference_org <> 'CAIDA'
     OPTIONAL MATCH (p)-[roa:ROUTE_ORIGIN_AUTHORIZATION]-(a:AS)
     OPTIONAL MATCH (b:AS)-[:ORIGINATE]->(p)
     RETURN p.prefix AS prefix, roa.maxLength AS maxLength, roa.notBefore AS notBefore, roa.notAfter AS notAfter, roa.uri AS uri, COLLECT(DISTINCT b.asn) AS bgp, a.asn AS asn`,
