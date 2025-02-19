@@ -378,8 +378,8 @@ onMounted(() => {
           </QTable>
         </QTabPanel>
         <QTabPanel name="api" class="text-left q-pa-lg" light>
-          <QBtn no-caps dense flat @click="copyToClipboard(cypherQuery.replace(/^\s+|\s+$/gm, ''))">
-            <pre style="text-align: left;"><code v-html="hljs.highlight(cypherQuery.replace(/^\s+|\s+$/gm, ''), { language: 'cypher' }).value"></code></pre>
+          <QBtn no-caps dense flat @click="copyToClipboard(cypherQuery.replace(/^\s+|\s+$/gm, ''))" style="width: 100%;" align="left">
+            <pre style="text-align: left;"><code style="white-space: pre-wrap;" v-html="hljs.highlight(cypherQuery.replace(/^\s+|\s+$/gm, ''), { language: 'cypher' }).value"></code></pre>
             <QTooltip>Click to copy</QTooltip>
           </QBtn>
           <div>
