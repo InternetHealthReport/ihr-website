@@ -36,6 +36,64 @@ const props = defineProps({
   }
 })
 
+const colorPalettes = {
+  default: [
+    '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', 
+    '#8c564b', '#e377c2','#7f7f7f','#bcbd22', '#17becf'
+  ],
+  protanopia: [
+    '#ffe41c', '#aabdff', '#3c360f', '#c8b317', '#19376a',
+    '#8f8c8b', '#d7c997', '#648ceb', '#505b80', '#7e711b'
+  ],
+  deuteranopia: [
+    '#ffd592', '#b0bcf9', '#c09300', '#679bf2', '#ffeafd',
+    '#f6c600', '#918694', '#674f00', '#253d60', '#6f6367'
+  ],
+  tritanopia: [
+    '#fd6e74', '#cbefff', '#bfa9b6', '#cc1600', '#228791',
+    '#67656c', '#660b00', '#79eeff', '#173033', '#ffc0cd'
+  ]
+};
+
+const cvdDropdown=ref(null)
+
+const addCustomModebarButton = () => {
+  const graphDiv = myId.value
+  if (!graphDiv) return
+  console.log("Dropdown component:", cvdDropdown.value);
+
+  Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
+    displayModeBar: true,
+    modeBarButtonsToAdd: [{
+      name: 'cvd-dropdown',
+      title: 'Toggle CVD Colors',
+      icon: Plotly.Icons.pencil,
+      click: () => {
+        console.log("Dropdown clicked", cvdDropdown.value);
+        if (cvdDropdown.value) {
+          cvdDropdown.value.toggle();  
+        } else {
+          console.error("cvdDropdown.value does not have toggle method", cvdDropdown.value);
+        }
+      }
+    }]
+  });
+};
+
+const updateColors = (paletteKey) => {
+  const newTraces = props.traces.map((trace, index) => {
+    const color = colorPalettes[paletteKey][index % colorPalettes[paletteKey].length];
+    return {
+      ...trace,
+      marker: { ...trace.marker, color },
+      line: { ...trace.line, color }
+    };
+  });
+
+  // Re-render the chart with the new colors
+  Plotly.react(myId.value, newTraces, layoutLocal.value);
+};
+
 const emits = defineEmits({
   'plotly-click': (plotlyClickedData) => {
     if (plotlyClickedData) {
@@ -114,6 +172,8 @@ const init = () => {
   Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
     responsive: true,
     displayModeBar: 'hover'
+  }).then(() => {
+    addCustomModebarButton()
   })
 
   if (document.documentElement.clientWidth < 576) {
@@ -197,6 +257,22 @@ watch(
       {{ chartTitle }}
     </h3>
     <div ref="myId" />
+    <q-btn-dropdown ref="cvdDropdown" flat round icon="palette" class="q-ml-sm">
+      <q-list>
+        <q-item clickable @click="updateColors('default')">
+          <q-item-section>Default</q-item-section>
+        </q-item>
+        <q-item clickable @click="updateColors('protanopia')">
+          <q-item-section>Protanopia</q-item-section>
+        </q-item>
+        <q-item clickable @click="updateColors('deuteranopia')">
+          <q-item-section>Deuteranopia</q-item-section>
+        </q-item>
+        <q-item clickable @click="updateColors('tritanopia')">
+          <q-item-section>Tritanopia</q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
     <div v-if="noData" class="IHR_no-data">
       <div class="bg-white" style="text-align: center">
         {{ noData }}
