@@ -3,7 +3,7 @@ name: PR Validation
 on:
   pull_request:
     types: [edited, opened, synchronize, reopened]
-    branches: ["*"]
+    branches: ["master"]
 
 jobs:
   validate-pr:
