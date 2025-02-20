@@ -1,0 +1,17 @@
+name: Docker CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Docker image
+      run: docker build -t internethealthreport/ihr-website:${{ github.ref_name }} .
