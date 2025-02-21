@@ -12,6 +12,7 @@ import {
   QItemLabel,
   QDrawer,
   QExpansionItem,
+  QBadge,
   debounce
 } from 'quasar'
 import Tr from '@/i18n/translation'
@@ -26,7 +27,6 @@ const SIMPLE_MENU = [
   },
   {
     entryName: 'header.reports',
-    routeName: 'global_report',
     menuOver: false,
     listOver: false,
     menu: false,
@@ -75,7 +75,6 @@ const SIMPLE_MENU = [
   },
   {
     entryName: 'header.tools',
-    routeName: 'global_report',
     menuOver: false,
     listOver: false,
     menu: false,
@@ -83,27 +82,32 @@ const SIMPLE_MENU = [
       {
         entryName: 'header.metis.name',
         routeName: 'metis',
-        summary: 'header.metis.summary'
+        summary: 'header.metis.summary',
+        experimental: false
       },
       {
         entryName: 'header.observable.name',
         routeName: 'observable',
-        summary: 'header.observable.summary'
+        summary: 'header.observable.summary',
+        experimental: false
       },
       {
         entryName: 'header.networkTopology.name',
         routeName: 'upstream-topology',
-        summary: 'header.networkTopology.summary'
+        summary: 'header.networkTopology.summary',
+        experimental: false
       },
       {
         entryName: 'header.bgpMonitor.name',
         routeName: 'bgp-monitor',
-        summary: 'header.bgpMonitor.summary'
+        summary: 'header.bgpMonitor.summary',
+        experimental: false
       },
       {
         entryName: 'header.tracerouteVisualization.name',
         routeName: 'traceroute-monitor',
-        summary: 'header.tracerouteVisualization.summary'
+        summary: 'header.tracerouteVisualization.summary',
+        experimental: true
       }
     ]
   },
@@ -219,6 +223,7 @@ watch(simpleMenu, () => {
                   @click="closeMenu"
                 >
                   <QItemSection>
+                    <QBadge v-if="option.experimental" color="red" label="Experimental" style="width: fit-content;" />
                     <QItemLabel class="text-bold">
                       {{ $t(option.entryName) }}
                     </QItemLabel>
@@ -281,6 +286,7 @@ watch(simpleMenu, () => {
                 style="padding: 12px 24px;"
               >
                 <QItemSection>
+                  <QBadge v-if="option.experimental" color="red" label="Experimental" style="width: fit-content;" />
                   <QItemLabel class="text-weight-medium text-white q-pb-xs">
                     {{ $t(option.entryName) }}
                   </QItemLabel>
