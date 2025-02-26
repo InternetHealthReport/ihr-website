@@ -497,7 +497,7 @@ watch(showMapDialog, (newVal) => {
           @show="isSearchBarDisabled = true" 
           @hide="isSearchBarDisabled = false"
         >
-            <WorldMap @country-selected="handleCountryClicked" />
+          <WorldMap @country-selected="handleCountryClicked" />
         </QDialog>
       </div>
       <div>
