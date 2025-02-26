@@ -67,6 +67,8 @@ const options = ref([{ name: 'Suggestions' }, { label: 2497, value: 2497, name: 
 const model = ref([])
 const loading = ref(false)
 const activateSearch = ref(true)
+const showMapDialog = ref(false)
+const isSearchBarDisabled = ref(false)
 
 const Address4 = ipAddress.Address4
 const Address6 = ipAddress.Address6
@@ -81,6 +83,7 @@ let loadingQueryTags = false
 let loadingQueryRanks = false
 
 const search = async (value, update) => {
+  if (isSearchBarDisabled.value) return
   loading.value = true
   options.value = []
   const asnRegex = /^as(\d+)$/i
@@ -316,6 +319,7 @@ const optimizeSearchResults = (res) => {
 }
 
 const filter = (value, update, abort) => {
+  if (isSearchBarDisabled.value) return
   activateSearch.value = true
   if (value.length < MIN_CHARACTERS) {
     abort()
@@ -445,8 +449,6 @@ const routeToRank = (rank) => {
   )
 }
 
-const showMapDialog = ref(false)
-
 const showMap = () => {
   showMapDialog.value = true
 }
@@ -464,6 +466,10 @@ watch(
     activateSearch.value = false
   }
 )
+
+watch(showMapDialog, (newVal) => {
+  isSearchBarDisabled.value = newVal
+})
 </script>
 
 <template>
@@ -481,12 +487,17 @@ watch(
     :input-class="input"
     hide-selected
     @filter="filter"
+    :disable="isSearchBarDisabled"
   >
     <template #append>
       <div v-if="!props.noCountry" @click="showMap">
         <QBtn :color="label" icon="fas fa-map" flat dense />
-        <QDialog v-model="showMapDialog">
-          <WorldMap @country-selected="handleCountryClicked" />
+        <QDialog 
+          v-model="showMapDialog" 
+          @show="isSearchBarDisabled = true" 
+          @hide="isSearchBarDisabled = false"
+        >
+            <WorldMap @country-selected="handleCountryClicked" />
         </QDialog>
       </div>
       <div>
