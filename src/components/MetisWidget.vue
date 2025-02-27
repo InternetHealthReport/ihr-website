@@ -160,4 +160,16 @@ onMounted(async () => {
       </div>
     </div>
   </div>
+  <div v-else class="spinner-container">
+    <q-spinner color="secondary" size="50px" />
+  </div>
 </template>
+
+<style scoped>
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+</style>
