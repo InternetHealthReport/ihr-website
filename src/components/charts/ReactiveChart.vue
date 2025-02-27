@@ -1,8 +1,8 @@
 <script setup>
 import Plotly from 'plotly.js-dist'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch} from 'vue'
 import { uid } from 'quasar'
-
+const dropdown = ref(false)
 const props = defineProps({
   layout: {
     type: Object,
@@ -35,7 +35,6 @@ const props = defineProps({
     type: Array
   }
 })
-
 const colorPalettes = {
   default: [
     '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', 
@@ -53,15 +52,10 @@ const colorPalettes = {
     '#fd6e74', '#cbefff', '#bfa9b6', '#cc1600', '#228791',
     '#67656c', '#660b00', '#79eeff', '#173033', '#ffc0cd'
   ]
-};
-
-const cvdDropdown=ref(null)
-
+}
 const addCustomModebarButton = () => {
   const graphDiv = myId.value
   if (!graphDiv) return
-  console.log("Dropdown component:", cvdDropdown.value);
-
   Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
     displayModeBar: true,
     modeBarButtonsToAdd: [{
@@ -69,31 +63,41 @@ const addCustomModebarButton = () => {
       title: 'Toggle CVD Colors',
       icon: Plotly.Icons.pencil,
       click: () => {
-        console.log("Dropdown clicked", cvdDropdown.value);
-        if (cvdDropdown.value) {
-          cvdDropdown.value.toggle();  
-        } else {
-          console.error("cvdDropdown.value does not have toggle method", cvdDropdown.value);
-        }
+        dropdown.value = !dropdown.value
       }
     }]
-  });
-};
-
+  })
+}
 const updateColors = (paletteKey) => {
-  const newTraces = props.traces.map((trace, index) => {
-    const color = colorPalettes[paletteKey][index % colorPalettes[paletteKey].length];
-    return {
-      ...trace,
-      marker: { ...trace.marker, color },
-      line: { ...trace.line, color }
-    };
-  });
-
-  // Re-render the chart with the new colors
-  Plotly.react(myId.value, newTraces, layoutLocal.value);
-};
-
+  return props.traces.map((trace, index) => {
+    const colorsArray = colorPalettes[paletteKey]
+    const color = colorPalettes[paletteKey][index % colorPalettes[paletteKey].length]
+    if (trace.type === 'treemap') {
+      console.log()
+      return {
+        ...trace,
+        marker: { 
+          ...trace.marker, 
+          colors: trace.ids.map((id, i) => colorsArray[i % colorsArray.length]),
+        }
+      }
+    } else if (trace.type === 'pie') {
+      return {
+        ...trace,
+        marker: { 
+          ...trace.marker, 
+          colors: colorsArray.slice(0, trace.labels?.length || colorsArray.length)
+        },
+      }
+    } else {
+      return {
+        ...trace,
+        marker: { ...trace.marker, color },
+        line: { ...trace.line, color },
+      }
+    }
+  })
+}
 const emits = defineEmits({
   'plotly-click': (plotlyClickedData) => {
     if (plotlyClickedData) {
@@ -127,11 +131,9 @@ const emits = defineEmits({
     }
   }
 })
-
 const created = ref(false)
 const myId = ref(`ihrReactiveChart${uid()}`)
 const layoutLocal = ref(props.layout)
-
 layoutLocal.value['images'] = [
   {
     x: 0.98,
@@ -146,12 +148,10 @@ layoutLocal.value['images'] = [
     opacity: 0.2
   }
 ]
-
 const react = () => {
   if (!created.value) {
     console.error('SHOULD NEVER HAPPEN')
   }
-
   if (props.traces == undefined) {
     return
   }
@@ -162,11 +162,13 @@ const react = () => {
   }
   // emits('loaded')
 }
-
+const onCvdDropdown = async (paletteKey) => {
+  Plotly.react(myId.value, updateColors(paletteKey), layoutLocal.value)
+  dropdown.value=false
+}
 const relayout = () => {
   Plotly.relayout(myId.value, {})
 }
-
 const init = () => {
   const graphDiv = myId.value
   Plotly.newPlot(graphDiv, props.traces, layoutLocal.value, {
@@ -175,11 +177,9 @@ const init = () => {
   }).then(() => {
     addCustomModebarButton()
   })
-
   if (document.documentElement.clientWidth < 576) {
     Plotly.relayout(graphDiv, { showlegend: false })
   }
-
   graphDiv.on('plotly_relayout', (event) => {
     let startDateTime = event['xaxis.range[0]']
     let endDateTime = event['xaxis.range[1]']
@@ -192,13 +192,11 @@ const init = () => {
     }
     emits('plotly-relayout', event)
   })
-
   graphDiv.on('plotly_click', (eventData) => {
     if (eventData && eventData.points) {
       emits('plotly-click', eventData)
     }
   })
-
   graphDiv.on('plotly_legendclick', (eventData) => {
     if (eventData) {
       const legend = eventData.node.textContent
@@ -211,14 +209,11 @@ const init = () => {
       }
     }
   })
-
   created.value = true
 }
-
 onMounted(() => {
   init()
 })
-
 watch(
   () => props.traces,
   () => {
@@ -257,27 +252,27 @@ watch(
       {{ chartTitle }}
     </h3>
     <div ref="myId" />
-    <q-btn-dropdown ref="cvdDropdown" flat round icon="palette" class="q-ml-sm">
-      <q-list>
-        <q-item clickable @click="updateColors('default')">
-          <q-item-section>Default</q-item-section>
-        </q-item>
-        <q-item clickable @click="updateColors('protanopia')">
-          <q-item-section>Protanopia</q-item-section>
-        </q-item>
-        <q-item clickable @click="updateColors('deuteranopia')">
-          <q-item-section>Deuteranopia</q-item-section>
-        </q-item>
-        <q-item clickable @click="updateColors('tritanopia')">
-          <q-item-section>Tritanopia</q-item-section>
-        </q-item>
-      </q-list>
-    </q-btn-dropdown>
     <div v-if="noData" class="IHR_no-data">
       <div class="bg-white" style="text-align: center">
         {{ noData }}
       </div>
     </div>
+    <q-menu v-if="dropdown" anchor="top right" self="top right" :offset="[10,-50]">
+      <q-list>
+        <q-item clickable @click="onCvdDropdown('default')">
+          <q-item-section>Default</q-item-section>
+        </q-item>
+        <q-item clickable @click="onCvdDropdown('protanopia')">
+          <q-item-section>Protanopia</q-item-section>
+        </q-item>
+        <q-item clickable @click="onCvdDropdown('deuteranopia')">
+          <q-item-section>Deuteranopia</q-item-section>
+        </q-item>
+        <q-item clickable @click="onCvdDropdown('tritanopia')">
+          <q-item-section>Tritanopia</q-item-section>
+        </q-item>
+      </q-list>
+    </q-menu>
   </div>
 </template>
 
