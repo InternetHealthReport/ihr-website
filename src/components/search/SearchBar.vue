@@ -83,7 +83,6 @@ let loadingQueryTags = false
 let loadingQueryRanks = false
 
 const search = async (value, update) => {
-  if (isSearchBarDisabled.value) return
   loading.value = true
   options.value = []
   const asnRegex = /^as(\d+)$/i
