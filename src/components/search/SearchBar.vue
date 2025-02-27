@@ -81,7 +81,6 @@ let loadingQueryTags = false
 let loadingQueryRanks = false
 
 const search = async (value, update) => {
-  value = value.trim()
   loading.value = true
   options.value = []
   const asnRegex = /^as(\d+)$/i
@@ -317,12 +316,11 @@ const optimizeSearchResults = (res) => {
 }
 
 const filter = (value, update, abort) => {
-  value = value.trim()
   activateSearch.value = true
   if (value.length < MIN_CHARACTERS) {
     abort()
   } else {
-    search(value, update)
+    search(value.trim(), update)
   }
 }
 
