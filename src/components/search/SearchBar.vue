@@ -324,7 +324,7 @@ const filter = (value, update, abort) => {
   if (value.length < MIN_CHARACTERS) {
     abort()
   } else {
-    search(value, update)
+    search(value.trim(), update)
   }
 }
 
