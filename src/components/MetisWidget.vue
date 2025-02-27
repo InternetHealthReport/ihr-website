@@ -58,7 +58,7 @@ const tableData = ref([])
 const plotData = ref([])
 const fetch = ref(false)
 const apiUrl = ref('')
-const loading = ref(true)
+const loading = ref(false)
 
 const ihr_api = inject('ihr_api')
 
@@ -143,31 +143,29 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div v-if="fetch">
     <h2 v-if="widgetTitle">
       {{ widgetTitle }}
     </h2>
-    <div v-if="loading" class="spinner-container">
-      <q-spinner color="secondary" size="50px" />
-    </div>
-    <div v-else>
-      <div class="row justify-center">
-        <div class="col q-px-md q-pb-md">
-          <RirCountrySunburstChart :data="plotData" />
-        </div>
+    <div class="row justify-center">
+      <div class="col q-px-md q-pb-md">
+        <RirCountrySunburstChart :data="plotData" />
       </div>
-      <div class="row justify-center">
-        <div class="col q-px-md">
-          <QExpansionItem label="Show data" class="bg-grey-2">
-            <MetisTable :data="tableData" :loading="loading" />
-          </QExpansionItem>
-        </div>
+    </div>
+    <div class="row justify-center">
+      <div class="col q-px-md">
+        <QExpansionItem label="Show data" class="bg-grey-2">
+          <MetisTable :data="tableData" :loading="!fetch" />
+        </QExpansionItem>
       </div>
     </div>
   </div>
+  <div v-else class="spinner-container">
+    <q-spinner color="secondary" size="50px" />
+  </div>
 </template>
 
-<style>
+<style scoped>
 .spinner-container {
   display: flex;
   justify-content: center;
