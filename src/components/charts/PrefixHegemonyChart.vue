@@ -523,25 +523,46 @@ watch(
       </QTabs>
       <QTabPanels v-model="details.activeTab" animated>
         <QTabPanel name="routes">
-          <PrefixHegemonyTable
-            :data="prefixHegemonyData"
-            :loading="loading"
-            :show-country="countryCode == null"
-          />
+          <template v-if="loading">
+            <div class="spinner-container">
+              <q-spinner color="secondary" size="50px" />
+            </div>
+          </template>
+          <template v-else>
+            <PrefixHegemonyTable
+              :data="prefixHegemonyData"
+              :loading="loading"
+              :show-country="countryCode == null"
+            />
+          </template>
         </QTabPanel>
         <QTabPanel name="origins">
-          <PrefixHegemonyTableStats
-            :data="prefixHegemonyDataOrigins"
-            :loading="loading"
-            :column-name="selection.label"
-          />
+          <template v-if="loading">
+            <div class="spinner-container">
+              <q-spinner color="secondary" size="50px" />
+            </div>
+          </template>
+          <template v-else>
+            <PrefixHegemonyTableStats
+              :data="prefixHegemonyDataOrigins"
+              :loading="loading"
+              :column-name="selection.label"
+            />
+          </template>
         </QTabPanel>
         <QTabPanel name="transits">
-          <PrefixHegemonyTableStats
-            :data="prefixHegemonyDataTransits"
-            :loading="loading"
-            :column-name="selection.label"
-          />
+          <template v-if="loading">
+            <div class="spinner-container">
+              <q-spinner color="secondary" size="50px" />
+            </div>
+          </template>
+          <template v-else>
+            <PrefixHegemonyTableStats
+              :data="prefixHegemonyDataTransits"
+              :loading="loading"
+              :column-name="selection.label"
+            />
+          </template>
         </QTabPanel>
         <QTabPanel name="api" class="IHR_api-table q-pa-lg" light>
           <h3>{{ $t('charts.prefixHegemony.table.apiTitle') }}</h3>
@@ -560,4 +581,11 @@ watch(
   </div>
 </template>
 
-<style></style>
+<style>
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+</style>
