@@ -134,6 +134,16 @@ const getClassByHegemony = (hegemony) => {
     binary-state-sort
     flat
   >
+    <template #no-data>
+      <div v-if="loading" class="spinner-container">
+        <q-spinner color="secondary" size="50px" />
+      </div>
+      <div v-else class="q-table__bottom row items-center q-table__bottom--nodata">
+        <QIcon name="warning" class="q-table__bottom-nodata-icon" />
+        No data available
+      </div>
+    </template>
+
     <template #header="props" style="display: contents">
       <QTr>
         <QTh colspan="2">
@@ -200,4 +210,11 @@ const getClassByHegemony = (hegemony) => {
   </QTable>
 </template>
 
-<style></style>
+<style>
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+</style>
