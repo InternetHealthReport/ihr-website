@@ -62,7 +62,7 @@ const columns = ref([
     label: 'Autonomous System Name',
     align: 'left',
     field: (row) => {
-      return row.asn_name == '' ? '--' : row.asn_name
+      return row.asn_name === '' ? '--' : row.asn_name
     },
     format: (val) => `${val}`,
     sortable: true
@@ -134,16 +134,17 @@ const getClassByHegemony = (hegemony) => {
     binary-state-sort
     flat
   >
-    <template #no-data>
-      <div v-if="loading" class="spinner-container">
+    <template #loading>
+      <div class="spinner-container">
         <q-spinner color="secondary" size="50px" />
       </div>
-      <div v-else class="q-table__bottom row items-center q-table__bottom--nodata">
+    </template>
+    <template #no-data>
+      <div v-if="!loading" class="q-table__bottom row items-center q-table__bottom--nodata">
         <QIcon name="warning" class="q-table__bottom-nodata-icon" />
         No data available
       </div>
     </template>
-
     <template #header="props" style="display: contents">
       <QTr>
         <QTh colspan="2">
