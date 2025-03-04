@@ -176,14 +176,24 @@ watch(simpleMenu, () => {
 <template>
   <QHeader elevated primary>
     <QToolbar class="q-py-sm q-px-lg row">
-      <div class="col-12 row no-wrap items-center">
-        <QItem id="IHR_home-button">
-          <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-            <QBtn round dense flat :ripple="false" no-caps size="22px">
-              <img src="/imgs/ihr_logo.svg" style="width: 45px" />
-            </QBtn>
-          </RouterLink>
-        </QItem>
+      <div class="col-12 row no-wrap items-center">    
+      <QItem id="IHR_home-button" role="button">
+        <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
+          <QBtn 
+            round 
+            dense 
+            flat 
+            :ripple="false" 
+            no-caps 
+            size="22px" 
+            aria-label="IHR Logo - Go to Home"
+          >
+            <img src="/imgs/ihr_logo.svg" style="width: 45px" alt="IHR Logo" />
+          </QBtn>
+        </RouterLink>
+      </QItem>
+
+
         <SearchBar class="IHR_search-box col-4" />
         <div
           class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md"
