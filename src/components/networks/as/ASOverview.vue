@@ -299,7 +299,7 @@ onMounted(() => {
               :search-input-p="String(asNumber)"
               af="IPv4"
               :is-component="true"
-              :show-legend="Boolean(hasIpv4Topology^hasIpv6Topology)"
+              :show-legend="Boolean(hasIpv4Topology ^ hasIpv6Topology)"
               @has-topology="detectIpv4Topology"
             />
           </td>
@@ -308,7 +308,7 @@ onMounted(() => {
               :search-input-p="String(asNumber)"
               af="IPv6"
               :is-component="true"
-              :show-legend="Boolean(hasIpv4Topology|hasIpv6Topology)"
+              :show-legend="Boolean(hasIpv4Topology | hasIpv6Topology)"
               @has-topology="detectIpv6Topology"
             />
           </td>

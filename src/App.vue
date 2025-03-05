@@ -44,6 +44,7 @@ onBeforeUnmount(() => {
       v-if="showScrollTopButton"
       class="IHR_scroll-btn bg-primary text-white"
       @click="scrollToTop"
+      aria-label="Scroll to top"
     >
       <QIcon name="fas fa-arrow-up" />
     </button>

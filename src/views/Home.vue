@@ -73,7 +73,7 @@ const ORGANIZATIONS = [
     name: 'fastly',
     logo: '/imgs/fastly-logo.svg',
     url: 'https://www.fastly.com/'
-  },
+  }
 ]
 
 const PLACEHOLDER_VALUES = {
