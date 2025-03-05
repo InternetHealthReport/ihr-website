@@ -507,9 +507,8 @@ watch(selectedAlarmTypesOptions.value, () => {
               class="q-tr--no-hover"
             >
               <td>
-                <QCheckbox v-model="selectedDataSources[indexSource]" disable />{{
-                  dataSource.metadata.title
-                }}
+                <QCheckbox v-model="selectedDataSources[indexSource]" disable />
+                {{ dataSource.metadata.title }}
                 <QIcon name="fas fa-circle-info">
                   <QTooltip>
                     {{ ALARMS_INFO[indexSource].metadata.description }}
@@ -520,7 +519,8 @@ watch(selectedAlarmTypesOptions.value, () => {
                 <QCheckbox
                   v-model="selectedAlarmTypes[indexSource][indexAlarm]"
                   :disable="isLoaded"
-                />{{ dataAlarm.metadata.title }}
+                />
+                {{ dataAlarm.metadata.title }}
                 <QIcon name="fas fa-circle-info">
                   <QTooltip>
                     {{ ALARMS_INFO[indexSource].alarm_types[indexAlarm].metadata.description }}
@@ -624,19 +624,24 @@ watch(selectedAlarmTypesOptions.value, () => {
     </QCard>
     <QCard class="card">
       <QCardSection>
-        <WorldMapAggregatedAlarmsChart
-          ref="worldMapRef"
-          :loading="loadingVal"
-          :alarms="alarms.filter"
-          :aggregated-attrs-selected="aggregatedAttrs"
-          :alarm-type-titles-map="alarmTypeTitlesMap"
-          :selected-country="selectedCountry"
-          @country-clicked="onCountryClicked"
-        />
+        <div v-if="loadingVal" class="loader-wrapper">
+          <q-spinner color="secondary" size="50px" />
+        </div>
+        <div v-else>
+          <WorldMapAggregatedAlarmsChart
+            ref="worldMapRef"
+            :loading="loadingVal"
+            :alarms="alarms.filter"
+            :aggregated-attrs-selected="aggregatedAttrs"
+            :alarm-type-titles-map="alarmTypeTitlesMap"
+            :selected-country="selectedCountry"
+            @country-clicked="onCountryClicked"
+          />
+        </div>
       </QCardSection>
     </QCard>
-    <div class="row">
-      <div class="col q-mr-md">
+    <div class="row q-col-gutter-md">
+      <div class="col-6">
         <QCard class="card">
           <QCardSection>
             <div class="row items-center">
@@ -658,24 +663,29 @@ watch(selectedAlarmTypesOptions.value, () => {
             </div>
           </QCardSection>
           <QCardSection>
-            <TimeSeriesAggregatedAlarmsChart
-              ref="timeSeriesRef"
-              :loading="loadingVal"
-              :country-name="selectedCountry"
-              :alarms="alarms.filter"
-              :start-time="new Date(`${startTimeFormatted}:00Z`)"
-              :end-time="new Date(`${endTimeFormatted}:00Z`)"
-              :aggregated-attrs-selected="aggregatedAttrs"
-              :alarm-type-titles-map="alarmTypeTitlesMap"
-              :legend-selected="legendSelected.legend"
-              :is-a-s-granularity="false"
-              @timeseries-legend-clicked="onTimeseriesLegendClicked"
-              @select-time="timeFilter"
-            />
+            <div v-if="loadingVal" class="loader-wrapper">
+              <q-spinner color="secondary" size="50px" />
+            </div>
+            <div v-else>
+              <TimeSeriesAggregatedAlarmsChart
+                ref="timeSeriesRef"
+                :loading="loadingVal"
+                :country-name="selectedCountry"
+                :alarms="alarms.filter"
+                :start-time="new Date(`${startTimeFormatted}:00Z`)"
+                :end-time="new Date(`${endTimeFormatted}:00Z`)"
+                :aggregated-attrs-selected="aggregatedAttrs"
+                :alarm-type-titles-map="alarmTypeTitlesMap"
+                :legend-selected="legendSelected.legend"
+                :is-a-s-granularity="false"
+                @timeseries-legend-clicked="onTimeseriesLegendClicked"
+                @select-time="timeFilter"
+              />
+            </div>
           </QCardSection>
         </QCard>
       </div>
-      <div class="col">
+      <div class="col-6">
         <QCard class="card">
           <QCardSection>
             <div class="col">
@@ -690,18 +700,23 @@ watch(selectedAlarmTypesOptions.value, () => {
             </div>
           </QCardSection>
           <QCardSection>
-            <TreeMapAggregatedAlarmsChart
-              ref="treeMapRef"
-              :loading="loadingVal"
-              :country-name="selectedCountry"
-              :alarms="alarms.filter"
-              :select-severities-list="selectSeveritiesLevels.map((obj) => obj.value)"
-              :aggregated-attrs-selected="aggregatedAttrs"
-              :alarm-type-titles-map="alarmTypeTitlesMap"
-              :legend-selected="legendSelected.legend"
-              :is-a-s-granularity="false"
-              @treemap-node-clicked="onTreemapNodeClicked"
-            />
+            <div v-if="loadingVal" class="loader-wrapper">
+              <q-spinner color="secondary" size="50px" />
+            </div>
+            <div v-else>
+              <TreeMapAggregatedAlarmsChart
+                ref="treeMapRef"
+                :loading="loadingVal"
+                :country-name="selectedCountry"
+                :alarms="alarms.filter"
+                :select-severities-list="selectSeveritiesLevels.map((obj) => obj.value)"
+                :aggregated-attrs-selected="aggregatedAttrs"
+                :alarm-type-titles-map="alarmTypeTitlesMap"
+                :legend-selected="legendSelected.legend"
+                :is-a-s-granularity="false"
+                @treemap-node-clicked="onTreemapNodeClicked"
+              />
+            </div>
           </QCardSection>
         </QCard>
       </div>
@@ -731,29 +746,34 @@ watch(selectedAlarmTypesOptions.value, () => {
               <QIcon name="fas fa-filter" />
             </template>
           </QInput>
-          <AggregatedAlarmsTable
-            ref="tableRef"
-            :start-time="new Date(`${startTimeFormatted}:00Z`)"
-            :end-time="new Date(`${endTimeFormatted}:00Z`)"
-            :table-key-current="
-              AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions)[
-                indexAlarmTypeTitlesMap
-              ]
-            "
-            :severities-selected-list="selectSeveritiesLevels.map((obj) => obj.value)"
-            :selected-table-data-source="
-              getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)
-            "
-            :selected-table-alarm-type="indexAlarmTypeTitlesMap"
-            :loading="loadingVal"
-            :country-name="selectedCountry"
-            :alarms="alarms.filter"
-            :aggregated-attrs-selected="aggregatedAttrs"
-            :alarm-type-titles-map="alarmTypeTitlesMap"
-            :filter="filter"
-            @country-clicked="onCountryClicked"
-            @asn-name-key-clicked="onASNameClicked"
-          />
+          <div v-if="loadingVal" class="loader-wrapper">
+            <q-spinner color="secondary" size="50px" />
+          </div>
+          <div v-else>
+            <AggregatedAlarmsTable
+              ref="tableRef"
+              :start-time="new Date(`${startTimeFormatted}:00Z`)"
+              :end-time="new Date(`${endTimeFormatted}:00Z`)"
+              :table-key-current="
+                AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypesOptions)[
+                  indexAlarmTypeTitlesMap
+                ]
+              "
+              :severities-selected-list="selectSeveritiesLevels.map((obj) => obj.value)"
+              :selected-table-data-source="
+                getDataSourceFromSelectedAlarmType(indexAlarmTypeTitlesMap)
+              "
+              :selected-table-alarm-type="indexAlarmTypeTitlesMap"
+              :loading="loadingVal"
+              :country-name="selectedCountry"
+              :alarms="alarms.filter"
+              :aggregated-attrs-selected="aggregatedAttrs"
+              :alarm-type-titles-map="alarmTypeTitlesMap"
+              :filter="filter"
+              @country-clicked="onCountryClicked"
+              @asn-name-key-clicked="onASNameClicked"
+            />
+          </div>
         </QTabPanel>
       </QTabPanels>
     </QCard>
@@ -763,5 +783,11 @@ watch(selectedAlarmTypesOptions.value, () => {
 <style scoped>
 .card {
   margin-top: 20px;
+}
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100px;
 }
 </style>
