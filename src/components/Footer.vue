@@ -13,7 +13,7 @@ import { version } from '../../package.json'
           <div>
             <QBtn round dense flat :ripple="false" no-caps>
               <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-                <img src="/imgs/ihr_logo.svg" class="ihr-logo" />
+                <img src="/imgs/ihr_logo.svg" class="ihr-logo" alt="IHR Logo" />
               </RouterLink>
               <a
                 :href="`https://github.com/InternetHealthReport/ihr-website/releases/tag/v${version}`"
@@ -27,13 +27,28 @@ import { version } from '../../package.json'
           </div>
           <div class="IHR_external-links">
             <div class="row nowrap justify-evenly">
-              <a href="https://x.com/ihr_alerts" class="" target="_blank">
+              <a
+                href="https://x.com/ihr_alerts"
+                class=""
+                target="_blank"
+                aria-label="Follow us on X"
+              >
                 <QIcon name="fab fa-square-x-twitter" class="inline-block" />
               </a>
-              <a href="https://github.com/InternetHealthReport" class="" target="_blank">
+              <a
+                href="https://github.com/InternetHealthReport"
+                class=""
+                target="_blank"
+                aria-label="Visit our GitHub"
+              >
                 <QIcon name="fab fa-github-square" class="inline-block" />
               </a>
-              <a href="mailto:admin@ihr.live" class="" target="_blank">
+              <a
+                href="mailto:admin@ihr.live"
+                class=""
+                target="_blank"
+                aria-label="Contact us via email"
+              >
                 <QIcon name="fas fa-envelope-square" class="inline-block" />
               </a>
             </div>

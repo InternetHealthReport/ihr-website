@@ -491,9 +491,9 @@ watch(showMapDialog, (newVal) => {
     <template #append>
       <div v-if="!props.noCountry" @click="showMap">
         <QBtn :color="label" icon="fas fa-map" flat dense />
-        <QDialog 
-          v-model="showMapDialog" 
-          @show="isSearchBarDisabled = true" 
+        <QDialog
+          v-model="showMapDialog"
+          @show="isSearchBarDisabled = true"
           @hide="isSearchBarDisabled = false"
         >
           <WorldMap @country-selected="handleCountryClicked" />

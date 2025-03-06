@@ -177,10 +177,18 @@ watch(simpleMenu, () => {
   <QHeader elevated primary>
     <QToolbar class="q-py-sm q-px-lg row">
       <div class="col-12 row no-wrap items-center">
-        <QItem id="IHR_home-button">
+        <QItem id="IHR_home-button" role="button">
           <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-            <QBtn round dense flat :ripple="false" no-caps size="22px">
-              <img src="/imgs/ihr_logo.svg" style="width: 45px" />
+            <QBtn
+              round
+              dense
+              flat
+              :ripple="false"
+              no-caps
+              size="22px"
+              aria-label="IHR Logo - Go to Home"
+            >
+              <img src="/imgs/ihr_logo.svg" style="width: 45px" alt="IHR Logo" />
             </QBtn>
           </RouterLink>
         </QItem>
@@ -223,7 +231,12 @@ watch(simpleMenu, () => {
                   @click="closeMenu"
                 >
                   <QItemSection>
-                    <QBadge v-if="option.experimental" color="red" label="Experimental" style="width: fit-content;" />
+                    <QBadge
+                      v-if="option.experimental"
+                      color="red"
+                      label="Experimental"
+                      style="width: fit-content"
+                    />
                     <QItemLabel class="text-bold">
                       {{ $t(option.entryName) }}
                     </QItemLabel>
@@ -262,7 +275,7 @@ watch(simpleMenu, () => {
               :to="Tr.i18nRoute({ name: item.routeName })"
               @click="leftDrawerOpen = false"
               align="left"
-              style="min-height: 48px; padding: 12px 16px; font-size: 16px;"
+              style="min-height: 48px; padding: 12px 16px; font-size: 16px"
             />
           </QItem>
 
@@ -271,10 +284,10 @@ watch(simpleMenu, () => {
             :label="$t(item.entryName)"
             expand-icon="arrow_drop_down"
             expand-icon-class="text-white"
-            style="font-size: 16px;"
+            style="font-size: 16px"
             header-class="text-white text-uppercase text-weight-medium q-py-md"
           >
-            <!-- Submenu items -->  
+            <!-- Submenu items -->
             <QList padding>
               <QItem
                 v-for="option in item.options"
@@ -283,10 +296,15 @@ watch(simpleMenu, () => {
                 :to="Tr.i18nRoute({ name: option.routeName })"
                 active-class="IHR_active-route"
                 @click="leftDrawerOpen = false"
-                style="padding: 12px 24px;"
+                style="padding: 12px 24px"
               >
                 <QItemSection>
-                  <QBadge v-if="option.experimental" color="red" label="Experimental" style="width: fit-content;" />
+                  <QBadge
+                    v-if="option.experimental"
+                    color="red"
+                    label="Experimental"
+                    style="width: fit-content"
+                  />
                   <QItemLabel class="text-weight-medium text-white q-pb-xs">
                     {{ $t(option.entryName) }}
                   </QItemLabel>

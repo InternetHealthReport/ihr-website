@@ -170,9 +170,9 @@ const sectionActive = ref('')
     <!-- Main Content -->
     <div id="IHR_documentation-page">
       <div v-for="(mainSec, mainIdx) in sections" :key="mainIdx">
-        <div 
-          v-for="(bodySec, bodyIdx) in mainSec.sectionsBody" 
-          :key="bodyIdx" 
+        <div
+          v-for="(bodySec, bodyIdx) in mainSec.sectionsBody"
+          :key="bodyIdx"
           class="IHR_documentation-page"
         >
           <div
@@ -185,14 +185,16 @@ const sectionActive = ref('')
             v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"
           ></p>
           <div v-for="idx in bodySec.numberOfDescriptions" :key="idx">
-            <h2 v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"></h2>
+            <h2
+              v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"
+            ></h2>
             <img
               v-if="
                 $t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`) !== ''
               "
               :src="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`)"
               :style="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.style`)"
-            >
+            />
             <p
               class="text-left text-body1"
               v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"
@@ -216,7 +218,7 @@ const sectionActive = ref('')
   margin: 0 auto;
   max-width: 1200px;
   padding: 0 1rem;
-  overflow-x: auto; 
+  overflow-x: auto;
 }
 
 .IHR_documentation-page > h1 {
