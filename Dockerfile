@@ -1,7 +1,10 @@
 FROM node:20.10.0 AS builder
 WORKDIR /app
+COPY package*.json ./
+RUN npm install
 COPY . .
-RUN npm install && npm run build
+RUN npm run build
+
 FROM nginx:stable-alpine-slim
 WORKDIR /app
 COPY --from=builder /app/dist /usr/share/nginx/html
