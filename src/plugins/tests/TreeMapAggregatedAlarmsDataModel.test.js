@@ -51,22 +51,22 @@ describe('etlTreeMapAggregatedAlarmsDataModel', () => {
 
     const expectedResult = {
       ids: [
-        'Venezuela',
-        'United States',
-        'Venezuela-Network Delay',
-        'Venezuela-Moas',
-        'Venezuela-Bgp',
-        'United States-Network Delay',
-        'United States-Moas',
-        'United States-Bgp',
-        'Venezuela-Network Delay-Low',
-        'United States-Moas-High',
-        'United States-Bgp-High',
-        'United States-Bgp-Medium'
+        'Venezuela, Bolivarian Republic of',
+        'United States of America',
+        'Venezuela, Bolivarian Republic of-Network Delay',
+        'Venezuela, Bolivarian Republic of-Moas',
+        'Venezuela, Bolivarian Republic of-Bgp',
+        'United States of America-Network Delay',
+        'United States of America-Moas',
+        'United States of America-Bgp',
+        'Venezuela, Bolivarian Republic of-Network Delay-Low',
+        'United States of America-Moas-High',
+        'United States of America-Bgp-High',
+        'United States of America-Bgp-Medium'
       ],
       labels: [
-        'Venezuela',
-        'United States',
+        'Venezuela, Bolivarian Republic of',
+        'United States of America',
         'Network Delay',
         'MOAS',
         'BGP',
@@ -81,16 +81,16 @@ describe('etlTreeMapAggregatedAlarmsDataModel', () => {
       parents: [
         '',
         '',
-        'Venezuela',
-        'Venezuela',
-        'Venezuela',
-        'United States',
-        'United States',
-        'United States',
-        'Venezuela-Network Delay',
-        'United States-Moas',
-        'United States-Bgp',
-        'United States-Bgp'
+        'Venezuela, Bolivarian Republic of',
+        'Venezuela, Bolivarian Republic of',
+        'Venezuela, Bolivarian Republic of',
+        'United States of America',
+        'United States of America',
+        'United States of America',
+        'Venezuela, Bolivarian Republic of-Network Delay',
+        'United States of America-Moas',
+        'United States of America-Bgp',
+        'United States of America-Bgp'
       ],
       values: [0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1, 1]
     }
@@ -136,7 +136,7 @@ describe('etlTreeMapAggregatedAlarmsDataModel', () => {
 
   it('should handle non-nullable countryName', () => {
     const aggregatedAttrsZipped = [['bgp_count', 'bgp_timebin', 'bgp_severity', ['bgp_entity_af']]]
-    const countryName = 'United States'
+    const countryName = 'United States of America'
     const legend = null
     const isASGranularity = false
 

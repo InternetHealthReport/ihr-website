@@ -110,7 +110,7 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
           '2023-10-20T09:30:26.000Z'
         ],
         y: [1, 1, 1, 1],
-        name: 'United States',
+        name: 'United States of America',
         customdata: [
           {
             hegemony_count: 0,
@@ -149,7 +149,7 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
       {
         x: ['2023-10-20T19:15:00.000Z'],
         y: [2],
-        name: 'Venezuela',
+        name: 'Venezuela, Bolivarian Republic of',
         customdata: [
           {
             hegemony_count: 0,
@@ -215,7 +215,7 @@ describe('etlTimeSeriesAggregatedAlarmsDataModel', () => {
 
   it('should handle non-nullable countryName', () => {
     const aggregatedAttrsZipped = [['bgp_count', 'bgp_timebin', 'bgp_severity', ['bgp_entity_af']]]
-    const countryName = 'United States'
+    const countryName = 'United States of America'
     const legend = null
     const isASGranularity = false
 
