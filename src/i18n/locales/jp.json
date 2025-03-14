@@ -476,7 +476,7 @@
       },
       "countryreport": {
         "title": "Country Report",
-        "summary": "A country report provides information collected by IHR about a certain country. Country reports are available through the search bar at the top of the IHR webpages. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/en/countries/US' target='_blank'>United States</a></li><li><a href='https://ihr.iijlab.net/en/countries/JP' target='_blank'>Japan</a></li><li><a href='https://ihr.iijlab.net/en/countries/NL' target='_blank'>Netherlands</a></li></ul>",
+        "summary": "A country report provides information collected by IHR about a certain economic zone. Country reports are available through the search bar at the top of the IHR webpages. Here are links to a few reports:<ul><li><a href='https://ihr.iijlab.net/en/countries/US' target='_blank'>United States</a></li><li><a href='https://ihr.iijlab.net/en/countries/JP' target='_blank'>Japan</a></li><li><a href='https://ihr.iijlab.net/en/countries/NL' target='_blank'>Netherlands</a></li></ul>",
         "description": {}
       },
       "asdependency": {
