@@ -73,12 +73,24 @@ const updateColors = (paletteKey) => {
     const colorsArray = colorPalettes[paletteKey]
     const color = colorPalettes[paletteKey][index % colorPalettes[paletteKey].length]
     if (trace.type === 'treemap') {
-      console.log()
+      const firstNode = trace.ids[0]
+      let childIndex = 0
       return {
         ...trace,
         marker: { 
           ...trace.marker, 
-          colors: trace.ids.map((id, i) => colorsArray[i % colorsArray.length]),
+          colors: trace.ids.map((id, i) => {
+            const parent = trace.parents[i]
+            if (!parent) {
+              return "rgba(0,0,0,0)"
+            }
+            if(parent === firstNode){
+              const colorIndex = childIndex % colorPalettes[paletteKey].length
+              childIndex++
+              return colorPalettes[paletteKey][colorIndex]
+            }
+            return null
+          }),
         }
       }
     } else if (trace.type === 'pie') {
@@ -163,7 +175,12 @@ const react = () => {
   // emits('loaded')
 }
 const onCvdDropdown = async (paletteKey) => {
-  Plotly.react(myId.value, updateColors(paletteKey), layoutLocal.value)
+  if(paletteKey=='default'){
+    Plotly.react(myId.value, props.traces, layoutLocal.value)
+  }
+  else{
+    Plotly.react(myId.value, updateColors(paletteKey), layoutLocal.value)
+  }
   dropdown.value=false
 }
 const relayout = () => {
