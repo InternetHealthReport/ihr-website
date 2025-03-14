@@ -98,7 +98,10 @@ export const ALARMS = [
     network_delay_startpoint: [27717, 27717],
     network_delay_startpoint_type: ['AS', 'AS'],
     network_delay_startpoint_name: ['Corporacion Digitel C.A.', 'Corporacion Digitel C.A.'],
-    network_delay_startpoint_country: ['Venezuela, Bolivarian Republic of', 'Venezuela, Bolivarian Republic of'],
+    network_delay_startpoint_country: [
+      'Venezuela, Bolivarian Republic of',
+      'Venezuela, Bolivarian Republic of'
+    ],
     network_delay_startpoint_country_iso_code2: ['VE', 'VE'],
     network_delay_startpoint_country_iso_code3: ['VEN', 'VEN'],
     network_delay_startpoint_af: [4, 4],
