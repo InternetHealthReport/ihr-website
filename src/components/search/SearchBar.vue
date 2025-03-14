@@ -85,7 +85,7 @@ let loadingQueryRanks = false
 const search = async (value, update) => {
   loading.value = true
   options.value = []
-  const asnRegex = /^as(\d+)$/i
+  const asnRegex = /^(as)?(\d+)$/i
   const asnMatch = asnRegex.exec(value)
   let prefixMatch
   try {
@@ -102,7 +102,7 @@ const search = async (value, update) => {
   }
   if (asnMatch) {
     loadingQueryAS = true
-    queryAS(asnMatch[1]).then((res) => {
+    queryAS(asnMatch[2]).then((res) => {
       searchResponse(res, update)
       loadingQueryAS = false
       noResults(res, update)
