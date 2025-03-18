@@ -522,4 +522,8 @@ function isCountryName(countryName) {
   return Object.values(isoCountries).includes(countryName)
 }
 
-export { isoCountries, countryISOMapping, getCountryName, getCountryISOCode3, isCountryName }
+function getCountryISOCode2(countryIsoCode3) {
+  return Object.keys(countryISOMapping).find(key => countryISOMapping[key] === countryIsoCode3)
+}
+
+export { isoCountries, countryISOMapping, getCountryName, getCountryISOCode3, isCountryName, getCountryISOCode2 }
