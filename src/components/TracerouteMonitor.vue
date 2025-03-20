@@ -91,8 +91,8 @@ const processData = async (tracerouteData, loadProbes = false) => {
         (!props.probeIDs ||
           props.probeIDs.length === 0 ||
           props.probeIDs.includes(probeData.prb_id.toString())) &&
-        !allProbes.value.includes(probeData.prb_id)
-      ) {
+          !allProbes.value.includes(probeData.prb_id.toString())
+          ) {
         allProbes.value.push(probeData.prb_id.toString())
         selectedProbes.value.push(probeData.prb_id.toString())
         atlas_api.getProbeById(probeData.prb_id.toString()).then((data) => {
