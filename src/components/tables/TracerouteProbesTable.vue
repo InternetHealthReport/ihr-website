@@ -25,15 +25,12 @@ const selectedProbesModel = ref(props.selectedProbes)
 
 const paginatedProbes = computed(() => {
   const query = searchQuery.value.toLowerCase()
-  const uniqueProbes = new Set()
   return props.allProbes
     .map((probe) => ({
       probe,
       ...props.probeDetailsMap[probe]
     }))
     .filter((probe) => {
-      if (uniqueProbes.has(probe.probe)) return false
-      uniqueProbes.add(probe.probe)
       return ['address_v4', 'address_v6', 'country_code', 'asn_v4', 'asn_v6'].some((field) => {
         return probe[field] && probe[field].toString().toLowerCase().includes(query)
       })
