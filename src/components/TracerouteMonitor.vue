@@ -52,6 +52,7 @@ const rttOverTime = ref([])
 const intervalValue = ref(null)
 const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
+const nodeSet = ref(new Set())
 
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
@@ -145,7 +146,8 @@ const processData = async (tracerouteData, loadProbes = false) => {
           asn: nodeInfo.asn || 'unknown'
         }
 
-        if (!newNodeInfo.isNonResponsive) {
+        if (!newNodeInfo.isNonResponsive && !nodeSet.value.has(newNodeInfo.label)) {
+          nodeSet.value.add(newNodeInfo.label)
           const asnPromise = RipeApi.userASN(newNodeInfo.label).then((asnData) => {
             const asn = asnData.data.data.asns[0]
             if (asn) {
