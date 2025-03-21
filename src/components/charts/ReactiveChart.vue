@@ -1,6 +1,6 @@
 <script setup>
 import Plotly from 'plotly.js-dist'
-import { ref, onMounted, watch} from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { uid } from 'quasar'
 const dropdown = ref(false)
 const props = defineProps({
@@ -36,21 +36,23 @@ const props = defineProps({
   }
 })
 const colorPalettes = {
-  default: [
-    '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', 
-    '#8c564b', '#e377c2','#7f7f7f','#bcbd22', '#17becf'
-  ],
   protanopia: [
     '#ffe41c', '#aabdff', '#3c360f', '#c8b317', '#19376a',
-    '#8f8c8b', '#d7c997', '#648ceb', '#505b80', '#7e711b'
+    '#8f8c8b', '#d7c997', '#648ceb', '#505b80', '#7e711b',
+    '#000000', '#0060c7', '#a18e21', '#bbb3a4', '#c7ccee',
+    '#ffefb1', '#4a4100', '#8e91a7', '#0079fc', '#686566'
   ],
   deuteranopia: [
     '#ffd592', '#b0bcf9', '#c09300', '#679bf2', '#ffeafd',
-    '#f6c600', '#918694', '#674f00', '#253d60', '#6f6367'
+    '#f6c600', '#918694', '#674f00', '#253d60', '#6f6367',
+    '#557dc2', '#ddb69e', '#004b84', '#987648', '#000000',
+    '#bab4d9', '#0068b5', '#423100', '#cfa36c', '#8894ca'
   ],
   tritanopia: [
     '#fd6e74', '#cbefff', '#bfa9b6', '#cc1600', '#228791',
-    '#67656c', '#660b00', '#79eeff', '#173033', '#ffc0cd'
+    '#67656c', '#660b00', '#79eeff', '#173033', '#ffc0cd',
+    '#67becd', '#ff4346', '#36aebb', '#ed656c', '#4d717a',
+    '#d46269', '#845c63', '#98b3c2', '#cf818b', '#6a6168'
   ]
 }
 const addCustomModebarButton = () => {
@@ -60,8 +62,10 @@ const addCustomModebarButton = () => {
     displayModeBar: true,
     modeBarButtonsToAdd: [{
       name: 'cvd-dropdown',
-      title: 'Toggle CVD Colors',
-      icon: Plotly.Icons.pencil,
+      title: 'CVD Palette',
+      icon:{
+        svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M512 256c0 .9 0 1.8 0 2.7c-.4 36.5-33.6 61.3-70.1 61.3L344 320c-26.5 0-48 21.5-48 48c0 3.4 .4 6.7 1 9.9c2.1 10.2 6.5 20 10.8 29.9c6.1 13.8 12.1 27.5 12.1 42c0 31.8-21.6 60.7-53.4 62c-3.5 .1-7 .2-10.6 .2C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM288 96a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm96 96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>'
+      },
       click: () => {
         dropdown.value = !dropdown.value
       }
