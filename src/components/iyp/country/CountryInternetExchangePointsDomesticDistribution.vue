@@ -104,7 +104,9 @@ const boxPlotDataFormat = (data) => {
     if (!acc[current.label][current.asn]) {
       acc[current.label][current.asn] = new Set()
     }
-    acc[current.label][current.asn].add(current.ix_name?.toLowerCase())
+    if (current.ix_name) {
+      acc[current.label][current.asn].add(current.ix_name.toLowerCase())
+    }
     return acc
   }, {})
 
