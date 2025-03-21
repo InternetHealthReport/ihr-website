@@ -15,6 +15,8 @@ import CountryAutonomousSystems from '@/components/iyp/country/CountryAutonomous
 import CountryIPPrefixes from '@/components/iyp/country/CountryIPPrefixes.vue'
 import CountryInternetExchangePoints from '@/components/iyp/country/CountryInternetExchangePoints.vue'
 import CountryASRankings from '@/components/iyp/country/CountryASRankings.vue'
+import CountryInternetExchangePointsDomesticFacilities from '@/components/iyp/country/CountryInternetExchangePointsDomesticFacilities.vue'
+import CountryInternetExchangePointsInternationalFacilities from '@/components/iyp/country/CountryInternetExchangePointsInternationalFacilities.vue'
 
 const props = defineProps([
   'startTime',
@@ -43,6 +45,8 @@ const selects = ref([
   { value: false, label: t('iyp.country.ases.title') },
   { value: false, label: t('iyp.country.prefixes.title') },
   { value: false, label: t('iyp.country.ixps.title') },
+  { value: false, label: t('iyp.country.ixps_domestic_facilities.title') },
+  { value: false, label: t('iyp.country.ixps_international_facilities.title') },
   { value: false, label: t('iyp.country.rankings.title') }
 ])
 const selectAll = ref(false)
@@ -248,9 +252,29 @@ onMounted(() => {
   >
     <CountryInternetExchangePoints :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
+  <GenericCardController
+    v-if="selects[9].value"
+    :title="$t('iyp.country.ixps_domestic_facilities.title')"
+    :sub-title="$t('iyp.country.ixps_domestic_facilities.caption') + pageTitle"
+    :info-title="$t('iyp.country.ixps_domestic_facilities.info.title')"
+    :info-description="$t('iyp.country.ixps_domestic_facilities.info.description')"
+    class="card"
+  >
+    <CountryInternetExchangePointsDomesticFacilities :country-code="countryCode" :page-title="pageTitle" />
+  </GenericCardController>
+  <GenericCardController
+    v-if="selects[10].value"
+    :title="$t('iyp.country.ixps_international_facilities.title')"
+    :sub-title="$t('iyp.country.ixps_international_facilities.caption') + pageTitle"
+    :info-title="$t('iyp.country.ixps_international_facilities.info.title')"
+    :info-description="$t('iyp.country.ixps_international_facilities.info.description')"
+    class="card"
+  >
+    <CountryInternetExchangePointsInternationalFacilities :country-code="countryCode" :page-title="pageTitle" />
+  </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
-    v-if="selects[9].value && pageTitle"
+    v-if="selects[11].value && pageTitle"
     :title="$t('iyp.country.rankings.title')"
     :sub-title="$t('iyp.country.rankings.caption') + pageTitle"
     :info-title="$t('iyp.country.rankings.info.title')"

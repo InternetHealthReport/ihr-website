@@ -992,6 +992,22 @@
           "description": "<p>Internet Exchange Points (IXPs) operating in the selected country.</p>"
         }
       },
+      "ixps_domestic_facilities": {
+        "title": "Internet Exchange Points",
+        "caption": "Internet Exchange Points located in ",
+        "info": {
+          "title": "Internet Exchange Points (IXPs)",
+          "description": "<p>Internet Exchange Points (IXPs) operating in the selected country.</p>"
+        }
+      },
+      "ixps_international_facilities": {
+        "title": "Internet Exchange Points",
+        "caption": "Internet Exchange Points located in ",
+        "info": {
+          "title": "Internet Exchange Points (IXPs)",
+          "description": "<p>Internet Exchange Points (IXPs) operating in the selected country.</p>"
+        }
+      },
       "prefixes": {
         "title": "IP Prefixes",
         "caption": "Prefixes registered and geo-located in ",
