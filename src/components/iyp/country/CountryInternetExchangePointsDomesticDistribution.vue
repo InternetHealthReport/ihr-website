@@ -2,8 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
-import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
-import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
+import IypGenericBoxPlotChart from '@/components/charts/IypGenericBoxPlotChart.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -118,18 +117,16 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
-      <!-- <IypGenericTreemapChart
+      <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
         :chart-data="ixps.data"
-        :chart-layout="{ title: 'IXPs in ' + pageTitle + ' weighted by their number of members' }"
+        :chart-layout="{ title: 'IXP distribution in ' + pageTitle, yaxis: { title: { text: 'Number of IXPs' } } }"
         :config="{
-          keys: ['org', 'ixp'],
-          keyValue: 'nb_members',
-          root: pageTitle,
-          hovertemplate: '<b>%{label}</b><br>%{value} members<extra></extra>'
+          keys: ['label', 'asn'],
+          keyValue: 'ix_name',
+          // hovertemplate: '<b>%{label}</b><br>%{value} members<extra></extra>'
         }"
-        @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'ixpName' } })"
-      /> -->
+      />
     </div>
   </IypGenericTable>
 </template>
