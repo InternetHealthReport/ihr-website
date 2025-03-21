@@ -136,7 +136,7 @@ onMounted(() => {
       <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
         :chart-data="boxPlotDataFormat(ixps.data)"
-        :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs' }, range: [0,null] } }"
+        :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs' } } }"
         :config="{}"
       />
       <IypGenericBarChart
