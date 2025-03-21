@@ -2,7 +2,6 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
-import IypGenericBoxPlotChart from '@/components/charts/IypGenericBoxPlotChart.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -95,23 +94,6 @@ const load = () => {
   })
 }
 
-const boxPlotDataFormat = (data) => {
-  const groupByLabel = data.reduce((acc, current) => {
-    if (!acc[current.label]) {
-      acc[current.label] = {}
-    }
-    if (!acc[current.label][current.asn]) {
-      acc[current.label][current.asn] = new Set()
-    }
-    if (current.ix_name) {
-      acc[current.label][current.asn].add(current.ix_name.toLowerCase())
-    }
-    return acc
-  }, {})
-
-  return [groupByLabel]
-}
-
 watch(
   () => props.countryCode,
   () => {
@@ -134,12 +116,7 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
-      <IypGenericBoxPlotChart
-        v-if="ixps.data.length > 0"
-        :chart-data="boxPlotDataFormat(ixps.data)"
-        :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs' } } }"
-        :config="{}"
-      />
+      
     </div>
   </IypGenericTable>
 </template>

@@ -97,7 +97,7 @@ const load = () => {
 }
 
 const boxPlotDataFormat = (data) => {
-  const groupByLabel = data.filter(obj => obj.ix_country === props.countryCode || obj.ix_country === null).reduce((acc, current) => {
+  const groupByLabel = data.reduce((acc, current) => {
     if (!acc[current.label]) {
       acc[current.label] = {}
     }
@@ -135,6 +135,7 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
+      <!-- TODO: show both the count for domestic and international in the same plot -->
       <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
         :chart-data="boxPlotDataFormat(ixps.data)"
