@@ -39,23 +39,10 @@ const formatChartData = (arrayOfObjects) => {
 
   let data = []
   if (arrayOfObjects.length) {
-    const groupKey1 = props.config.keys[0]
-    const groupKey2 = props.config.keys[1]
-    const groupByLabel = arrayOfObjects.reduce((acc, current) => {
-      if (!acc[current[groupKey1]]) {
-        acc[current[groupKey1]] = {}
-      }
-      if (!acc[current[groupKey1]][current[groupKey2]]) {
-        acc[current[groupKey1]][current[groupKey2]] = new Set()
-      }
-      acc[current[groupKey1]][current[groupKey2]].add(current[props.config.keyValue]?.toLowerCase())
-      return acc
-    }, {})
-
-    Object.keys(groupByLabel).forEach(group => {
+    Object.keys(arrayOfObjects[0]).forEach(group => {
       let y = []
-      Object.keys(groupByLabel[group]).forEach(asn => {
-        y.push(groupByLabel[group][asn].size)
+      Object.keys(arrayOfObjects[0][group]).forEach(asn => {
+        y.push(arrayOfObjects[0][group][asn].size)
       })
       data.push({
         type: 'box',
