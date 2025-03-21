@@ -15,8 +15,8 @@ import CountryAutonomousSystems from '@/components/iyp/country/CountryAutonomous
 import CountryIPPrefixes from '@/components/iyp/country/CountryIPPrefixes.vue'
 import CountryInternetExchangePoints from '@/components/iyp/country/CountryInternetExchangePoints.vue'
 import CountryASRankings from '@/components/iyp/country/CountryASRankings.vue'
-import CountryInternetExchangePointsDomesticFacilities from '@/components/iyp/country/CountryInternetExchangePointsDomesticFacilities.vue'
-import CountryInternetExchangePointsInternationalFacilities from '@/components/iyp/country/CountryInternetExchangePointsInternationalFacilities.vue'
+import CountryInternetExchangePointsDomesticDistribution from '@/components/iyp/country/CountryInternetExchangePointsDomesticDistribution.vue'
+import CountryInternetExchangePointsInternationalDistribution from '@/components/iyp/country/CountryInternetExchangePointsInternationalDistribution.vue'
 
 const props = defineProps([
   'startTime',
@@ -45,8 +45,8 @@ const selects = ref([
   { value: false, label: t('iyp.country.ases.title') },
   { value: false, label: t('iyp.country.prefixes.title') },
   { value: false, label: t('iyp.country.ixps.title') },
-  { value: false, label: t('iyp.country.ixps_domestic_facilities.title') },
-  { value: false, label: t('iyp.country.ixps_international_facilities.title') },
+  { value: false, label: t('iyp.country.ixps_domestic_distribution.title') },
+  { value: false, label: t('iyp.country.ixps_international_distribution.title') },
   { value: false, label: t('iyp.country.rankings.title') }
 ])
 const selectAll = ref(false)
@@ -254,23 +254,23 @@ onMounted(() => {
   </GenericCardController>
   <GenericCardController
     v-if="selects[9].value"
-    :title="$t('iyp.country.ixps_domestic_facilities.title')"
-    :sub-title="$t('iyp.country.ixps_domestic_facilities.caption') + pageTitle"
-    :info-title="$t('iyp.country.ixps_domestic_facilities.info.title')"
-    :info-description="$t('iyp.country.ixps_domestic_facilities.info.description')"
+    :title="$t('iyp.country.ixps_domestic_distribution.title')"
+    :sub-title="$t('iyp.country.ixps_domestic_distribution.caption') + pageTitle"
+    :info-title="$t('iyp.country.ixps_domestic_distribution.info.title')"
+    :info-description="$t('iyp.country.ixps_domestic_distribution.info.description')"
     class="card"
   >
-    <CountryInternetExchangePointsDomesticFacilities :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePointsDomesticDistribution :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
     v-if="selects[10].value"
-    :title="$t('iyp.country.ixps_international_facilities.title')"
-    :sub-title="$t('iyp.country.ixps_international_facilities.caption') + pageTitle"
-    :info-title="$t('iyp.country.ixps_international_facilities.info.title')"
-    :info-description="$t('iyp.country.ixps_international_facilities.info.description')"
+    :title="$t('iyp.country.ixps_international_distribution.title')"
+    :sub-title="$t('iyp.country.ixps_international_distribution.caption') + pageTitle"
+    :info-title="$t('iyp.country.ixps_international_distribution.info.title')"
+    :info-description="$t('iyp.country.ixps_international_distribution.info.description')"
     class="card"
   >
-    <CountryInternetExchangePointsInternationalFacilities :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePointsInternationalDistribution :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController

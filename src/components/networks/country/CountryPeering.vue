@@ -1,8 +1,8 @@
 <script setup>
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import CountryInternetExchangePoints from '@/components/iyp/country/CountryInternetExchangePoints.vue'
-import CountryInternetExchangePointsDomesticFacilities from '@/components/iyp/country/CountryInternetExchangePointsDomesticFacilities.vue'
-import CountryInternetExchangePointsInternationalFacilities from '@/components/iyp/country/CountryInternetExchangePointsInternationalFacilities.vue'
+import CountryInternetExchangePointsDomesticDistribution from '@/components/iyp/country/CountryInternetExchangePointsDomesticDistribution.vue'
+import CountryInternetExchangePointsInternationalDistribution from '@/components/iyp/country/CountryInternetExchangePointsInternationalDistribution.vue'
 
 const props = defineProps(['countryCode', 'pageTitle'])
 </script>
@@ -17,22 +17,22 @@ const props = defineProps(['countryCode', 'pageTitle'])
     <CountryInternetExchangePoints :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
-    :title="$t('iyp.country.ixps_domestic_facilities.title')"
-    :sub-title="$t('iyp.country.ixps_domestic_facilities.caption') + pageTitle"
-    :info-title="$t('iyp.country.ixps_domestic_facilities.info.title')"
-    :info-description="$t('iyp.country.ixps_domestic_facilities.info.description')"
+    :title="$t('iyp.country.ixps_domestic_distribution.title')"
+    :sub-title="$t('iyp.country.ixps_domestic_distribution.caption') + pageTitle"
+    :info-title="$t('iyp.country.ixps_domestic_distribution.info.title')"
+    :info-description="$t('iyp.country.ixps_domestic_distribution.info.description')"
     class="card"
   >
-    <CountryInternetExchangePointsDomesticFacilities :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePointsDomesticDistribution :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
   <GenericCardController
-    :title="$t('iyp.country.ixps_international_facilities.title')"
-    :sub-title="$t('iyp.country.ixps_international_facilities.caption') + pageTitle"
-    :info-title="$t('iyp.country.ixps_international_facilities.info.title')"
-    :info-description="$t('iyp.country.ixps_international_facilities.info.description')"
+    :title="$t('iyp.country.ixps_international_distribution.title')"
+    :sub-title="$t('iyp.country.ixps_international_distribution.caption') + pageTitle"
+    :info-title="$t('iyp.country.ixps_international_distribution.info.title')"
+    :info-description="$t('iyp.country.ixps_international_distribution.info.description')"
     class="card"
   >
-    <CountryInternetExchangePointsInternationalFacilities :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePointsInternationalDistribution :country-code="countryCode" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 

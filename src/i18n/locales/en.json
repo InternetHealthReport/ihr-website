@@ -992,16 +992,16 @@
           "description": "<p>Internet Exchange Points (IXPs) operating in the selected country.</p>"
         }
       },
-      "ixps_domestic_facilities": {
-        "title": "Internet Exchange Points",
+      "ixps_domestic_distribution": {
+        "title": "Internet Exchange Points Domestic Distribution",
         "caption": "Internet Exchange Points located in ",
         "info": {
           "title": "Internet Exchange Points (IXPs)",
           "description": "<p>Internet Exchange Points (IXPs) operating in the selected country.</p>"
         }
       },
-      "ixps_international_facilities": {
-        "title": "Internet Exchange Points",
+      "ixps_international_distribution": {
+        "title": "Internet Exchange Points International Distribution",
         "caption": "Internet Exchange Points located in ",
         "info": {
           "title": "Internet Exchange Points (IXPs)",
