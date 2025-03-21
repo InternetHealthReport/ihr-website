@@ -91,7 +91,6 @@ const load = () => {
   // Run the cypher query
   let query_params = { country_code: props.countryCode }
   iyp_api.run([{ statement: ixps.value.query, parameters: query_params }]).then((results) => {
-    console.log(results[0])
     ixps.value.data = results[0]
     ixps.value.loading = false
   })
