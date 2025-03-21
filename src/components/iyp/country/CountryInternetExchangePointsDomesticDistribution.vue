@@ -16,38 +16,68 @@ const ixps = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (c:Country {country_code: $cc})<-[:COUNTRY {reference_name: 'peeringdb.ix'}]-(i:IXP)
-    MATCH (i)-[:EXTERNAL_ID]-(p:PeeringdbIXID)
-    OPTIONAL MATCH (i)-[:MANAGED_BY]-(o:Organization)
-    OPTIONAL MATCH (i)-[:MEMBER_OF]-(a:AS)
-    RETURN c.country_code AS cc, i.name AS ixp, p.id AS id, o.name AS org, COUNT(DISTINCT a) AS nb_members`,
+  query: `MATCH (:Country {country_code:$country_code})-[:COUNTRY {reference_org:'NRO'}]-(member:AS)
+    WHERE (member)-[:ORIGINATE]-(:Prefix)
+    OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
+    OPTIONAL MATCH (member)-[mem:MEMBER_OF]-(ix:IXP)-[:COUNTRY]-(ix_country:Country)
+    OPTIONAL MATCH (ix)-[man:MANAGED_BY]-(org:Organization)
+    RETURN  DISTINCT member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, $country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name`,
   columns: [
     {
-      name: 'IXP',
-      label: 'PeeringDB ID',
+      name: 'ASN',
+      label: 'ASN',
       align: 'left',
-      field: (row) => row.id,
-      format: (val) => `IXP${val}`,
+      field: (row) => row.asn,
+      format: (val) => `AS${val}`,
       sortable: true,
-      description: 'Identifier used in the PeeringDB database and website.'
     },
     {
-      name: 'Name',
-      label: 'Name',
+      name: 'Organization',
+      label: 'Organization',
       align: 'left',
-      field: (row) => row.ixp,
+      field: (row) => row.org_name,
       format: (val) => `${val}`,
       sortable: true,
-      description: 'Name of the IXP as given by PeeringDB.'
     },
     {
-      name: 'Number of members',
-      label: 'Number of members',
+      name: 'IXP Name',
+      label: 'IXP Name',
       align: 'left',
-      field: (row) => row.nb_members,
+      field: (row) => row.ix_name,
       format: (val) => `${val}`,
       sortable: true,
-      description: 'Number of members according to PeeringDB.'
+    },
+    {
+      name: 'ASN Country',
+      label: 'ASN Country',
+      align: 'left',
+      field: (row) => row.as_country,
+      format: (val) => `${val}`,
+      sortable: true,
+    },
+    {
+      name: 'IXP Country',
+      label: 'IXP Country',
+      align: 'left',
+      field: (row) => row.ix_country,
+      format: (val) => `${val}`,
+      sortable: true,
+    },
+    {
+      name: 'IXP Label',
+      label: 'IXP Label',
+      align: 'left',
+      field: (row) => row.label,
+      format: (val) => `${val}`,
+      sortable: true,
+    },
+    {
+      name: 'Reference Organization',
+      label: 'Reference Organization',
+      align: 'left',
+      field: (row) => row.mem_reference_org,
+      format: (val) => `${val}`,
+      sortable: true,
     }
   ],
   pagination: {
@@ -59,7 +89,7 @@ const ixps = ref({
 const load = () => {
   ixps.value.loading = true
   // Run the cypher query
-  let query_params = { cc: props.countryCode }
+  let query_params = { country_code: props.countryCode }
   iyp_api.run([{ statement: ixps.value.query, parameters: query_params }]).then((results) => {
     ixps.value.data = results[0]
     ixps.value.loading = false
@@ -88,7 +118,7 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
-      <IypGenericTreemapChart
+      <!-- <IypGenericTreemapChart
         v-if="ixps.data.length > 0"
         :chart-data="ixps.data"
         :chart-layout="{ title: 'IXPs in ' + pageTitle + ' weighted by their number of members' }"
@@ -99,7 +129,7 @@ onMounted(() => {
           hovertemplate: '<b>%{label}</b><br>%{value} members<extra></extra>'
         }"
         @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'ixpName' } })"
-      />
+      /> -->
     </div>
   </IypGenericTable>
 </template>
