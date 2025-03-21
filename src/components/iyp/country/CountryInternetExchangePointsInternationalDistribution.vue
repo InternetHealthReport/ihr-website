@@ -2,8 +2,7 @@
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
-import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
-import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
+import IypGenericBoxPlotChart from '@/components/charts/IypGenericBoxPlotChart.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -21,7 +20,7 @@ const ixps = ref({
     WHERE  as_country.country_code <> $country_code AND (member)-[:ORIGINATE]-(:Prefix)
     OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
     OPTIONAL MATCH (ix:IXP)-[:MANAGED_BY {reference_org:'PeeringDB'}]-(org:Organization)
-    RETURN  member.asn AS asn, tag.label AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, as_country.country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name`,
+    RETURN  member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, as_country.country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name`,
   columns: [
   {
       name: 'ASN',
@@ -96,6 +95,23 @@ const load = () => {
   })
 }
 
+const boxPlotDataFormat = (data) => {
+  const groupByLabel = data.reduce((acc, current) => {
+    if (!acc[current.label]) {
+      acc[current.label] = {}
+    }
+    if (!acc[current.label][current.asn]) {
+      acc[current.label][current.asn] = new Set()
+    }
+    if (current.ix_name) {
+      acc[current.label][current.asn].add(current.ix_name.toLowerCase())
+    }
+    return acc
+  }, {})
+
+  return [groupByLabel]
+}
+
 watch(
   () => props.countryCode,
   () => {
@@ -118,18 +134,12 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
-      <!-- <IypGenericTreemapChart
+      <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
-        :chart-data="ixps.data"
-        :chart-layout="{ title: 'IXPs in ' + pageTitle + ' weighted by their number of members' }"
-        :config="{
-          keys: ['org', 'ixp'],
-          keyValue: 'nb_members',
-          root: pageTitle,
-          hovertemplate: '<b>%{label}</b><br>%{value} members<extra></extra>'
-        }"
-        @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'ixpName' } })"
-      /> -->
+        :chart-data="boxPlotDataFormat(ixps.data)"
+        :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs' } } }"
+        :config="{}"
+      />
     </div>
   </IypGenericTable>
 </template>

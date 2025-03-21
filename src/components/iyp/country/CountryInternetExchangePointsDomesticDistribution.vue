@@ -141,12 +141,12 @@ onMounted(() => {
         :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs' } } }"
         :config="{}"
       />
-      <IypGenericBarChart
+      <!-- <IypGenericBarChart
         v-if="ixps.data.length > 0"
         :chart-data="ixps.data"
         :chart-layout="{ title: 'IXPs origin', yaxis: { title: { text: 'Number of IXPs' } } }"
         :config="{ key: 'ix_country' }"
-      />
+      /> -->
     </div>
   </IypGenericTable>
 </template>
