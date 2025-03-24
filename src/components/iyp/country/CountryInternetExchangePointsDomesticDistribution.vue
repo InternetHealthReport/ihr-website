@@ -4,6 +4,7 @@ import { ref, inject, watch, onMounted } from 'vue'
 import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericBoxPlotChart from '@/components/charts/IypGenericBoxPlotChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
+import IypGenericHeatmapChart from '@/components/charts/IypGenericHeatmapChart.vue'
 
 const iyp_api = inject('iyp_api')
 
@@ -14,6 +15,7 @@ const router = useRouter()
 
 const ixps = ref({
   data: [],
+  group: {},
   show: false,
   loading: true,
   query: `MATCH (:Country {country_code:$country_code})-[:COUNTRY {reference_org:'NRO'}]-(member:AS)
@@ -92,6 +94,18 @@ const load = () => {
   let query_params = { country_code: props.countryCode }
   iyp_api.run([{ statement: ixps.value.query, parameters: query_params }]).then((results) => {
     ixps.value.data = results[0]
+    ixps.value.group = results[0].reduce((acc, current) => {
+      if (current.ix_name) {
+        const key = `${current.ix_name.toLowerCase()} - ${current.ix_country}`
+        if (!acc[key]) {
+          acc[key] = new Set()
+        }
+        if (current.asn) {
+          acc[key].add(current.asn)
+        }
+      }
+      return acc
+    }, {})
     ixps.value.loading = false
   })
 }
@@ -128,26 +142,13 @@ const boxPlotDataFormat = (data) => {
   return [groupByLabelDomestic, groupByLabelInternational]
 }
 
-const barPlotDataFormat = (data) => {
-  const groupByIXP = data.reduce((acc, current) => {
-    if (current.ix_name) {
-      const key = `${current.ix_name.toLowerCase()}-${current.ix_country}`
-      if (!acc[key]) {
-        acc[key] = new Set()
-      }
-      if (current.asn) {
-        acc[key].add(current.asn)
-      }
-    }
-    return acc
-  }, {})
-  
+const barPlotDataFormat = (data) => {  
   const ixpCountry = []
   const asnExist = new Set()
-  Object.keys(groupByIXP).forEach(ixp => {
-    if (groupByIXP[ixp].size > 0) {
-      const cc = ixp.split('-').reverse()[0]
-      groupByIXP[ixp].forEach(asn => {
+  Object.keys(data).forEach(ixp => {
+    if (data[ixp].size > 0) {
+      const cc = ixp.split(' - ').reverse()[0]
+      data[ixp].forEach(asn => {
         if (!asnExist.has(`${asn}-${cc}`)) {
           ixpCountry.push({
             ix_country: cc
@@ -157,8 +158,17 @@ const barPlotDataFormat = (data) => {
       })
     }
   })
-
   return ixpCountry
+}
+
+const heatmapPlotDataFormat= (data) => {
+  const ixpDistribution = {}
+  Object.keys(data).forEach(ixp => {
+    if (data[ixp].size > 3) {
+      ixpDistribution[ixp] = data[ixp]
+    }
+  })
+  return [ixpDistribution]
 }
 
 watch(
@@ -186,15 +196,21 @@ onMounted(() => {
       <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
         :chart-data="boxPlotDataFormat(ixps.data)"
-        :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs per AS' }, zeroline: false }, boxmode: 'group' }"
+        :chart-layout="{ title: 'IXPs distribution per category', yaxis: { title: { text: 'Number of IXPs per AS' }, zeroline: false }, boxmode: 'group' }"
         :config="{}"
       />
       <IypGenericBarChart
         v-if="ixps.data.length > 0"
-        :chart-data="barPlotDataFormat(ixps.data)"
+        :chart-data="barPlotDataFormat(ixps.group)"
         :chart-layout="{ title: 'Top countries where ASNs peer (nb. unique ASNs)', yaxis: { title: { text: 'Number of peers' } } }"
         :config="{ key: 'ix_country' }"
         :group-top-n-and-except-as-others="5"
+      />
+      <IypGenericHeatmapChart
+        v-if="ixps.data.length > 0"
+        :chart-data="heatmapPlotDataFormat(ixps.group)"
+        :chart-layout="{ title: 'IXPs distribution', xaxis: { automargin: true }, yaxis: { automargin: true } }"
+        :config="{ }"
       />
     </div>
   </IypGenericTable>
