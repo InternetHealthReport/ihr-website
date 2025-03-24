@@ -164,6 +164,7 @@ const barPlotDataFormat = (data) => {
 const heatmapPlotDataFormat= (data) => {
   const ixpDistribution = {}
   Object.keys(data).forEach(ixp => {
+    // TODO: add a slider to control number 3. Sometimes the number 3 must be much bigger. Default value will be 6.
     if (data[ixp].size > 3) {
       ixpDistribution[ixp] = data[ixp]
     }
