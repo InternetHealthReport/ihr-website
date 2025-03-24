@@ -14,6 +14,10 @@ const props = defineProps({
   config: {
     type: Object,
     default: () => ({})
+  },
+  groupTopNAndExceptAsOthers: {
+    type: Number,
+    default: 3
   }
 })
 
@@ -39,7 +43,7 @@ const renderChart = () => {
       const filtData = localChartData.value.filter((item) => item[props.config.groupKey] == group)
 
       const formattedData = formatChartData(filtData)
-      const groupedData = groupTopThreeAndExceptAsOthers(formattedData)
+      const groupedData = groupTopNAndExceptAsOthers(formattedData)
 
       data.push({
         name: group,
@@ -50,7 +54,7 @@ const renderChart = () => {
     })
   } else {
     const formattedData = formatChartData(localChartData.value)
-    const groupedData = groupTopThreeAndExceptAsOthers(formattedData)
+    const groupedData = groupTopNAndExceptAsOthers(formattedData)
 
     data.push({
       x: groupedData.labels,
@@ -90,8 +94,8 @@ const formatChartData = (arrayOfObjects) => {
   return [{ data: Object.values(map), labels: Object.keys(map) }]
 }
 
-const groupTopThreeAndExceptAsOthers = (formattedData) => {
-  // following is to clean the data to plot the chart (top three, and except as others)
+const groupTopNAndExceptAsOthers = (formattedData) => {
+  // following is to clean the data to plot the chart (top N, and except as others)
   // mapping data and labels
   let arr = []
   for (let i = 0; i < formattedData[0].data.length; i++) {
@@ -101,15 +105,15 @@ const groupTopThreeAndExceptAsOthers = (formattedData) => {
   // sorting the arr (array) with the data property
   let sortedChartData = arr.slice().sort((a, b) => b.data - a.data)
 
-  // grouping top three and except as others
-  const topThree = sortedChartData.slice(0, 3)
-  const othersSum = sortedChartData.slice(3).reduce((sum, obj) => sum + obj.data, 0)
+  // grouping top N and except as others
+  const topN = sortedChartData.slice(0, props.groupTopNAndExceptAsOthers)
+  const othersSum = sortedChartData.slice(props.groupTopNAndExceptAsOthers).reduce((sum, obj) => sum + obj.data, 0)
 
   let chartValues = []
   let chartLabels = []
-  for (let i = 0; i < topThree.length; i++) {
-    chartValues.push(topThree[i].data)
-    chartLabels.push(topThree[i].cc)
+  for (let i = 0; i < topN.length; i++) {
+    chartValues.push(topN[i].data)
+    chartLabels.push(topN[i].cc)
   }
 
   if (othersSum > 0) {

@@ -128,6 +128,39 @@ const boxPlotDataFormat = (data) => {
   return [groupByLabelDomestic, groupByLabelInternational]
 }
 
+const barPlotDataFormat = (data) => {
+  const groupByIXP = data.reduce((acc, current) => {
+    if (current.ix_name) {
+      const key = `${current.ix_name.toLowerCase()}-${current.ix_country}`
+      if (!acc[key]) {
+        acc[key] = new Set()
+      }
+      if (current.asn) {
+        acc[key].add(current.asn)
+      }
+    }
+    return acc
+  }, {})
+  
+  const ixpCountry = []
+  const asnExist = new Set()
+  Object.keys(groupByIXP).forEach(ixp => {
+    if (groupByIXP[ixp].size > 0) {
+      const cc = ixp.split('-').reverse()[0]
+      groupByIXP[ixp].forEach(asn => {
+        if (!asnExist.has(`${asn}-${cc}`)) {
+          ixpCountry.push({
+            ix_country: cc
+          })
+          asnExist.add(`${asn}-${cc}`)
+        }
+      })
+    }
+  })
+
+  return ixpCountry
+}
+
 watch(
   () => props.countryCode,
   () => {
@@ -156,12 +189,13 @@ onMounted(() => {
         :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs per AS' }, zeroline: false }, boxmode: 'group' }"
         :config="{}"
       />
-      <!-- <IypGenericBarChart
+      <IypGenericBarChart
         v-if="ixps.data.length > 0"
-        :chart-data="ixps.data"
-        :chart-layout="{ title: 'IXPs origin', yaxis: { title: { text: 'Number of IXPs' } } }"
+        :chart-data="barPlotDataFormat(ixps.data)"
+        :chart-layout="{ title: 'Top countries where ASNs peer (nb. unique ASNs)', yaxis: { title: { text: 'Number of peers' } } }"
         :config="{ key: 'ix_country' }"
-      /> -->
+        :group-top-n-and-except-as-others="5"
+      />
     </div>
   </IypGenericTable>
 </template>
