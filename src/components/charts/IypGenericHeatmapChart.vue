@@ -38,7 +38,6 @@ const formatChartData = (arrayOfObjects) => {
   }
 
   let data = []
-  console.log(arrayOfObjects[0])
   if (Object.keys(arrayOfObjects[0]).length) {
     let distribution = []
     const xLabel = new Set()
