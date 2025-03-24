@@ -97,20 +97,35 @@ const load = () => {
 }
 
 const boxPlotDataFormat = (data) => {
-  const groupByLabel = data.reduce((acc, current) => {
-    if (!acc[current.label]) {
-      acc[current.label] = {}
+  const groupByLabelDomestic = data.filter(obj => obj.ix_country === props.countryCode).reduce((acc, current) => {
+    const label = `${current.label}-Domestic`
+    if (!acc[label]) {
+      acc[label] = {}
     }
-    if (!acc[current.label][current.asn]) {
-      acc[current.label][current.asn] = new Set()
+    if (!acc[label][current.asn]) {
+      acc[label][current.asn] = new Set()
     }
     if (current.ix_name) {
-      acc[current.label][current.asn].add(current.ix_name.toLowerCase())
+      acc[label][current.asn].add(current.ix_name.toLowerCase())
     }
     return acc
   }, {})
 
-  return [groupByLabel]
+  const groupByLabelInternational = data.filter(obj => obj.ix_country !== props.countryCode).reduce((acc, current) => {
+    const label = `${current.label}-International`
+    if (!acc[label]) {
+      acc[label] = {}
+    }
+    if (!acc[label][current.asn]) {
+      acc[label][current.asn] = new Set()
+    }
+    if (current.ix_name) {
+      acc[label][current.asn].add(current.ix_name.toLowerCase())
+    }
+    return acc
+  }, {})
+
+  return [groupByLabelDomestic, groupByLabelInternational]
 }
 
 watch(
@@ -135,11 +150,10 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
-      <!-- TODO: show both the count for domestic and international in the same plot -->
       <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
         :chart-data="boxPlotDataFormat(ixps.data)"
-        :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs' } } }"
+        :chart-layout="{ title: 'IXPs distribution', yaxis: { title: { text: 'Number of IXPs per AS' }, zeroline: false }, boxmode: 'group' }"
         :config="{}"
       />
       <!-- <IypGenericBarChart

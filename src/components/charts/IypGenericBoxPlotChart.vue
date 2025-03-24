@@ -39,26 +39,38 @@ const formatChartData = (arrayOfObjects) => {
 
   let data = []
   if (arrayOfObjects.length) {
-    Object.keys(arrayOfObjects[0]).forEach(group => {
-      let y = []
-      Object.keys(arrayOfObjects[0][group]).forEach(asn => {
-        y.push(arrayOfObjects[0][group][asn].size)
+    const groupData = {}
+    arrayOfObjects.forEach(obj => {
+      Object.keys(obj).forEach(group => {
+        let y = []
+        if (obj[group]) {
+          Object.keys(obj[group]).forEach(asn => {
+            y.push(obj[group][asn].size)
+          })
+          const groupName = group.split('-')[1]
+          if (!groupData[groupName]) {
+            groupData[groupName] = {
+              y: [],
+              x: []
+            }
+          }
+          groupData[groupName].y = [...groupData[groupName].y, ...y]
+          groupData[groupName].x = [...groupData[groupName].x, ...y.map(_ => group.split('-')[0])]
+        }
       })
+    })    
+    Object.keys(groupData).forEach(group => {
+      const notOtherX = groupData[group].x.filter(val => val !== "Other");
+      const notOtherY = groupData[group].y.filter((_, index) => groupData[group].x[index] !== "Other");
+      const otherX = groupData[group].x.filter(val => val === "Other");
+      const otherY = groupData[group].y.filter((_, index) => groupData[group].x[index] === "Other");
       data.push({
         type: 'box',
-        y: y,
+        y: [...notOtherY, ...otherY],
+        x: [...notOtherX, ...otherX],
         name: group,
-        ...props.config
+        ...props.config,
       })
-    })
-
-    data.sort((a, b) => {
-      if (a.name === 'Other') {
-        return 1
-      }
-      if (b.name === 'Other') {
-        return -1
-      }
     })
   }
 
