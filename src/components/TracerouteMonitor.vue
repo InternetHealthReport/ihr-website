@@ -52,6 +52,7 @@ const rttOverTime = ref([])
 const intervalValue = ref(null)
 const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
+const nodeSet = ref(new Set())
 
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
@@ -91,8 +92,8 @@ const processData = async (tracerouteData, loadProbes = false) => {
         (!props.probeIDs ||
           props.probeIDs.length === 0 ||
           props.probeIDs.includes(probeData.prb_id.toString())) &&
-        !allProbes.value.includes(probeData.prb_id)
-      ) {
+          !allProbes.value.includes(probeData.prb_id.toString())
+          ) {
         allProbes.value.push(probeData.prb_id.toString())
         selectedProbes.value.push(probeData.prb_id.toString())
         atlas_api.getProbeById(probeData.prb_id.toString()).then((data) => {
@@ -145,7 +146,8 @@ const processData = async (tracerouteData, loadProbes = false) => {
           asn: nodeInfo.asn || 'unknown'
         }
 
-        if (!newNodeInfo.isNonResponsive) {
+        if (!newNodeInfo.isNonResponsive && !nodeSet.value.has(newNodeInfo.label)) {
+          nodeSet.value.add(newNodeInfo.label)
           const asnPromise = RipeApi.userASN(newNodeInfo.label).then((asnData) => {
             const asn = asnData.data.data.asns[0]
             if (asn) {
