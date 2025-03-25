@@ -5,6 +5,7 @@ import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericBoxPlotChart from '@/components/charts/IypGenericBoxPlotChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 import IypGenericHeatmapChart from '@/components/charts/IypGenericHeatmapChart.vue'
+import { QSlider, QBadge } from 'quasar'
 
 const iyp_api = inject('iyp_api')
 
@@ -87,6 +88,9 @@ const ixps = ref({
     descending: true //boolean
   }
 })
+const uniqueASperIXP = ref(6)
+const uniqueASperIXPMax = ref(0)
+const uniqueASperIXPMin = ref(0)
 
 const load = () => {
   ixps.value.loading = true
@@ -106,11 +110,26 @@ const load = () => {
       }
       return acc
     }, {})
+    const ixpsSize = Object.values(ixps.value.group).map(obj => obj.size).sort((a, b) => b - a)
+    uniqueASperIXPMax.value = ixpsSize[0]
+    const uniqueIxpSize = new Set(ixpsSize)
+    if (uniqueIxpSize.size > 5) {
+      uniqueASperIXP.value = Array.from(uniqueIxpSize)[4]
+    } else {
+      uniqueASperIXP.value = Array.from(uniqueIxpSize)[uniqueIxpSize.size - 1]
+    }
     ixps.value.loading = false
   })
 }
 
 const boxPlotDataFormat = (data) => {
+  const filteredIXPs = new Set()
+  Object.keys(ixps.value.group).forEach(ixp => {
+    if (ixps.value.group[ixp].size >= uniqueASperIXP.value) {
+      filteredIXPs.add(ixp.split(' - ')[0])
+    }
+  })
+
   const groupByLabelDomestic = data.filter(obj => obj.ix_country === props.countryCode).reduce((acc, current) => {
     const label = `${current.label}-Domestic`
     if (!acc[label]) {
@@ -120,7 +139,9 @@ const boxPlotDataFormat = (data) => {
       acc[label][current.asn] = new Set()
     }
     if (current.ix_name) {
-      acc[label][current.asn].add(current.ix_name.toLowerCase())
+      if (filteredIXPs.has(current.ix_name.toLowerCase())) {
+        acc[label][current.asn].add(current.ix_name.toLowerCase())
+      }
     }
     return acc
   }, {})
@@ -134,7 +155,9 @@ const boxPlotDataFormat = (data) => {
       acc[label][current.asn] = new Set()
     }
     if (current.ix_name) {
-      acc[label][current.asn].add(current.ix_name.toLowerCase())
+      if (filteredIXPs.has(current.ix_name.toLowerCase())) {
+        acc[label][current.asn].add(current.ix_name.toLowerCase())
+      }
     }
     return acc
   }, {})
@@ -146,7 +169,7 @@ const barPlotDataFormat = (data) => {
   const ixpCountry = []
   const asnExist = new Set()
   Object.keys(data).forEach(ixp => {
-    if (data[ixp].size > 0) {
+    if (data[ixp].size >= uniqueASperIXP.value) {
       const cc = ixp.split(' - ').reverse()[0]
       data[ixp].forEach(asn => {
         if (!asnExist.has(`${asn}-${cc}`)) {
@@ -164,8 +187,7 @@ const barPlotDataFormat = (data) => {
 const heatmapPlotDataFormat= (data) => {
   const ixpDistribution = {}
   Object.keys(data).forEach(ixp => {
-    // TODO: add a slider to control number 3. Sometimes the number 3 must be much bigger. Default value will be 6.
-    if (data[ixp].size > 3) {
+    if (data[ixp].size >= uniqueASperIXP.value) {
       ixpDistribution[ixp] = data[ixp]
     }
   })
@@ -194,6 +216,11 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
+      <div>
+        <h3>Filtering</h3>
+        <QBadge>Number of unique ASes per IXP: {{ uniqueASperIXP }}</QBadge>
+        <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
+      </div>
       <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
         :chart-data="boxPlotDataFormat(ixps.data)"
