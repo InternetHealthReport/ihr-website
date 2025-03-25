@@ -245,9 +245,15 @@ onMounted(() => {
     <div class="col-6">
       <div>
         <h3>Filtering</h3>
-        <QBadge>Number of unique ASes per IXP: {{ uniqueASperIXP }}</QBadge>
-        <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
-        <QSelect use-chips filled multiple v-model="selectResource" :options="optionsResource" @update:model-value="load(true)" :rules="[val => val.length > 0 || 'Please select at least one Reference Organization']" label="Reference Organizations" />
+        <div class="row">
+          <div class="col q-mr-xl">
+            <QBadge>Number of unique ASes per IXP: {{ uniqueASperIXP }}</QBadge>
+            <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
+          </div>
+          <div class="col">
+            <QSelect use-chips filled multiple v-model="selectResource" :options="optionsResource" @update:model-value="load(true)" :rules="[val => val.length > 0 || 'Please select at least one Reference Organization']" label="Reference Organizations" />
+          </div>
+        </div>
       </div>
       <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
