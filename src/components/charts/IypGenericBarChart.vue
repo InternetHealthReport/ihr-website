@@ -128,6 +128,11 @@ const init = () => {
   if (props.chartData && props.chartData.length > 0) {
     localChartData.value = props.chartData
     renderChart()
+  } else {
+    actualChartData.value = []
+    actualChartLayout.value = {
+      ...props.layout
+    }
   }
 }
 

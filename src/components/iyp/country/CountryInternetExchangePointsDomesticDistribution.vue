@@ -5,7 +5,7 @@ import IypGenericTable from '@/components/tables/IypGenericTable.vue'
 import IypGenericBoxPlotChart from '@/components/charts/IypGenericBoxPlotChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 import IypGenericHeatmapChart from '@/components/charts/IypGenericHeatmapChart.vue'
-import { QSlider, QBadge } from 'quasar'
+import { QSlider, QBadge, QSelect } from 'quasar'
 
 const iyp_api = inject('iyp_api')
 
@@ -91,12 +91,15 @@ const ixps = ref({
 const uniqueASperIXP = ref(6)
 const uniqueASperIXPMax = ref(0)
 const uniqueASperIXPMin = ref(0)
+const optionsResource = ref([])
+const selectResource = ref([])
+const errorMessageResource = ref('')
 
-const load = () => {
+const load = (filterReferenceOrganization) => {
   ixps.value.loading = true
   // Run the cypher query
   let query_params = { country_code: props.countryCode }
-  iyp_api.run([{ statement: ixps.value.query, parameters: query_params }]).then((results) => {
+  iyp_api.run([{ statement: onReferenceOrganizationSelection(ixps.value.query, filterReferenceOrganization), parameters: query_params }]).then((results) => {
     ixps.value.data = results[0]
     ixps.value.group = results[0].reduce((acc, current) => {
       if (current.ix_name) {
@@ -118,8 +121,24 @@ const load = () => {
     } else {
       uniqueASperIXP.value = Array.from(uniqueIxpSize)[uniqueIxpSize.size - 1]
     }
+    if (!filterReferenceOrganization) {
+      const uniqueRefOrgs = new Set(ixps.value.data.map(obj => obj.mem_reference_org))
+      uniqueRefOrgs.delete(null)
+      optionsResource.value = Array.from(uniqueRefOrgs)
+      selectResource.value = optionsResource.value
+    }
     ixps.value.loading = false
   })
+}
+
+const onReferenceOrganizationSelection = (query, filterReferenceOrganization) => {
+  if (filterReferenceOrganization) {
+    const splitQuery = query.split('RETURN')
+    const updateQuery = `WITH member, tag, ix, ix_country, org, mem, man
+      WHERE mem IS null OR mem.reference_org IN ['${selectResource.value.join("','")}']`
+    return `${splitQuery[0]} ${updateQuery} RETURN ${splitQuery[1]}`
+  }
+  return query
 }
 
 const boxPlotDataFormat = (data) => {
@@ -194,15 +213,23 @@ const heatmapPlotDataFormat= (data) => {
   return [ixpDistribution]
 }
 
+watch(selectResource, () => {
+  if (selectResource.value.length < 1) {
+    errorMessageResource.value = 'Reference Organizations field is empty'
+  } else {
+    errorMessageResource.value = ''
+  }
+})
+
 watch(
   () => props.countryCode,
   () => {
-    load()
+    load(false)
   }
 )
 
 onMounted(() => {
-  load()
+  load(false)
 })
 </script>
 
@@ -220,12 +247,14 @@ onMounted(() => {
         <h3>Filtering</h3>
         <QBadge>Number of unique ASes per IXP: {{ uniqueASperIXP }}</QBadge>
         <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
+        <QSelect use-chips filled multiple v-model="selectResource" :options="optionsResource" @update:model-value="load(true)" :rules="[val => val.length > 0 || 'Please select at least one Reference Organization']" label="Reference Organizations" />
       </div>
       <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
         :chart-data="boxPlotDataFormat(ixps.data)"
         :chart-layout="{ title: 'IXPs distribution per category', yaxis: { title: { text: 'Number of IXPs per AS' }, zeroline: false }, boxmode: 'group' }"
         :config="{}"
+        :no-data="errorMessageResource"
       />
       <IypGenericBarChart
         v-if="ixps.data.length > 0"
@@ -233,12 +262,14 @@ onMounted(() => {
         :chart-layout="{ title: 'Top countries where ASNs peer (nb. unique ASNs)', yaxis: { title: { text: 'Number of peers' } } }"
         :config="{ key: 'ix_country' }"
         :group-top-n-and-except-as-others="5"
+        :no-data="errorMessageResource"
       />
       <IypGenericHeatmapChart
         v-if="ixps.data.length > 0"
         :chart-data="heatmapPlotDataFormat(ixps.group)"
         :chart-layout="{ title: 'IXPs distribution', xaxis: { automargin: true }, yaxis: { automargin: true } }"
         :config="{ }"
+        :no-data="errorMessageResource"
       />
     </div>
   </IypGenericTable>
