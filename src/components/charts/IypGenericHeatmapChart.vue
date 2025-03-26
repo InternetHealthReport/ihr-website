@@ -44,15 +44,15 @@ const formatChartData = (arrayOfObjects) => {
     const yLabel = new Set()
 
     const keys = Object.keys(arrayOfObjects[0])
-    keys.forEach(key1 => {
+    keys.forEach((key1) => {
       const set1 = arrayOfObjects[0][key1]
       let row = null
       xLabel.add(key1)
       row = []
-      keys.forEach(key2 => {
+      keys.forEach((key2) => {
         const set2 = arrayOfObjects[0][key2]
         yLabel.add(key2)
-        const intersection = new Set([...set1].filter(x => set2.has(x)))
+        const intersection = new Set([...set1].filter((x) => set2.has(x)))
         row.push(intersection.size)
       })
       if (row) {
@@ -60,7 +60,7 @@ const formatChartData = (arrayOfObjects) => {
       }
     })
 
-    distribution = distribution.map(row => row.reverse())
+    distribution = distribution.map((row) => row.reverse())
 
     data.push({
       type: 'heatmap',
@@ -68,11 +68,11 @@ const formatChartData = (arrayOfObjects) => {
       y: [...yLabel],
       x: [...xLabel].reverse(),
       text: distribution.map((row, _) => row.map((value, _) => value.toString())),
-      texttemplate: "%{text}",
-      textposition: "center",
+      texttemplate: '%{text}',
+      textposition: 'center',
       hoverinfo: 'x+y+z',
       colorscale: 'Hot_r',
-      ...props.config,
+      ...props.config
     })
   }
 

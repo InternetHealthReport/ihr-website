@@ -23,7 +23,10 @@ const props = defineProps(['countryCode', 'pageTitle'])
     :info-description="$t('iyp.country.ixps_domestic_distribution.info.description')"
     class="card"
   >
-    <CountryInternetExchangePointsDomesticDistribution :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePointsDomesticDistribution
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.country.ixps_international_distribution.title')"
@@ -32,7 +35,10 @@ const props = defineProps(['countryCode', 'pageTitle'])
     :info-description="$t('iyp.country.ixps_international_distribution.info.description')"
     class="card"
   >
-    <CountryInternetExchangePointsInternationalDistribution :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePointsInternationalDistribution
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

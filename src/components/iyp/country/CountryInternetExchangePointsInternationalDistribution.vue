@@ -25,13 +25,13 @@ const ixps = ref({
     OPTIONAL MATCH (ix:IXP)-[:MANAGED_BY {reference_org:'PeeringDB'}]-(org:Organization)
     RETURN  member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, as_country.country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name`,
   columns: [
-  {
+    {
       name: 'ASN',
       label: 'ASN',
       align: 'left',
       field: (row) => row.asn,
       format: (val) => `AS${val}`,
-      sortable: true,
+      sortable: true
     },
     {
       name: 'Organization',
@@ -39,7 +39,7 @@ const ixps = ref({
       align: 'left',
       field: (row) => row.org_name,
       format: (val) => `${val}`,
-      sortable: true,
+      sortable: true
     },
     {
       name: 'IXP Name',
@@ -47,7 +47,7 @@ const ixps = ref({
       align: 'left',
       field: (row) => row.ix_name,
       format: (val) => `${val}`,
-      sortable: true,
+      sortable: true
     },
     {
       name: 'ASN Country',
@@ -55,7 +55,7 @@ const ixps = ref({
       align: 'left',
       field: (row) => row.as_country,
       format: (val) => `${val}`,
-      sortable: true,
+      sortable: true
     },
     {
       name: 'IXP Country',
@@ -63,7 +63,7 @@ const ixps = ref({
       align: 'left',
       field: (row) => row.ix_country,
       format: (val) => `${val}`,
-      sortable: true,
+      sortable: true
     },
     {
       name: 'IXP Label',
@@ -71,7 +71,7 @@ const ixps = ref({
       align: 'left',
       field: (row) => row.label,
       format: (val) => `${val}`,
-      sortable: true,
+      sortable: true
     },
     {
       name: 'Reference Organization',
@@ -79,7 +79,7 @@ const ixps = ref({
       align: 'left',
       field: (row) => row.mem_reference_org,
       format: (val) => `${val}`,
-      sortable: true,
+      sortable: true
     }
   ],
   pagination: {
@@ -98,36 +98,42 @@ const load = () => {
   ixps.value.loading = true
   // Run the cypher query
   let query_params = { country_code: props.countryCode }
-  iyp_api.run([{ statement: onReferenceOrganizationSelection(ixps.value.query), parameters: query_params }]).then((results) => {
-    ixps.value.data = results[0]
-    ixps.value.group = results[0].reduce((acc, current) => {
-      if (current.ix_name) {
-        const key = `${current.ix_name.toLowerCase()} - ${current.ix_country}`
-        if (!acc[key]) {
-          acc[key] = new Set()
+  iyp_api
+    .run([
+      { statement: onReferenceOrganizationSelection(ixps.value.query), parameters: query_params }
+    ])
+    .then((results) => {
+      ixps.value.data = results[0]
+      ixps.value.group = results[0].reduce((acc, current) => {
+        if (current.ix_name) {
+          const key = `${current.ix_name.toLowerCase()} - ${current.ix_country}`
+          if (!acc[key]) {
+            acc[key] = new Set()
+          }
+          if (current.asn) {
+            acc[key].add(current.asn)
+          }
         }
-        if (current.asn) {
-          acc[key].add(current.asn)
-        }
+        return acc
+      }, {})
+      const ixpsSize = Object.values(ixps.value.group)
+        .map((obj) => obj.size)
+        .sort((a, b) => b - a)
+      uniqueASperIXPMax.value = ixpsSize[0]
+      const uniqueIxpSize = new Set(ixpsSize)
+      if (uniqueIxpSize.size > 5) {
+        uniqueASperIXP.value = Array.from(uniqueIxpSize)[4]
+      } else {
+        uniqueASperIXP.value = Array.from(uniqueIxpSize)[uniqueIxpSize.size - 1]
       }
-      return acc
-    }, {})
-    const ixpsSize = Object.values(ixps.value.group).map(obj => obj.size).sort((a, b) => b - a)
-    uniqueASperIXPMax.value = ixpsSize[0]
-    const uniqueIxpSize = new Set(ixpsSize)
-    if (uniqueIxpSize.size > 5) {
-      uniqueASperIXP.value = Array.from(uniqueIxpSize)[4]
-    } else {
-      uniqueASperIXP.value = Array.from(uniqueIxpSize)[uniqueIxpSize.size - 1]
-    }
-    if (!optionsResource.value.length) {
-      const uniqueRefOrgs = new Set(ixps.value.data.map(obj => obj.mem_reference_org))
-      uniqueRefOrgs.delete(null)
-      optionsResource.value = Array.from(uniqueRefOrgs)
-      selectResource.value = optionsResource.value
-    }
-    ixps.value.loading = false
-  })
+      if (!optionsResource.value.length) {
+        const uniqueRefOrgs = new Set(ixps.value.data.map((obj) => obj.mem_reference_org))
+        uniqueRefOrgs.delete(null)
+        optionsResource.value = Array.from(uniqueRefOrgs)
+        selectResource.value = optionsResource.value
+      }
+      ixps.value.loading = false
+    })
 }
 
 const onReferenceOrganizationSelection = (query) => {
@@ -142,14 +148,14 @@ const onReferenceOrganizationSelection = (query) => {
 
 const barPlotDataFormat = (data) => {
   const filteredIXPs = new Set()
-  Object.keys(ixps.value.group).forEach(ixp => {
+  Object.keys(ixps.value.group).forEach((ixp) => {
     if (ixps.value.group[ixp].size >= uniqueASperIXP.value) {
       filteredIXPs.add(ixp.split(' - ')[0])
     }
   })
 
   const countryToASN = {}
-  data.forEach(obj => {
+  data.forEach((obj) => {
     if (filteredIXPs.has(obj.ix_name.toLowerCase())) {
       if (!countryToASN[obj.as_country]) {
         countryToASN[obj.as_country] = new Set()
@@ -159,8 +165,8 @@ const barPlotDataFormat = (data) => {
   })
 
   const asnCountry = []
-  Object.keys(countryToASN).forEach(cc => {
-    countryToASN[cc].forEach(_ => {
+  Object.keys(countryToASN).forEach((cc) => {
+    countryToASN[cc].forEach((_) => {
       asnCountry.push({
         as_country: cc
       })
@@ -170,9 +176,9 @@ const barPlotDataFormat = (data) => {
   return asnCountry
 }
 
-const heatmapPlotDataFormat= (data) => {
+const heatmapPlotDataFormat = (data) => {
   const ixpDistribution = {}
-  Object.keys(data).forEach(ixp => {
+  Object.keys(data).forEach((ixp) => {
     if (data[ixp].size >= uniqueASperIXP.value) {
       ixpDistribution[ixp] = data[ixp]
     }
@@ -205,7 +211,9 @@ onMounted(() => {
     :data="ixps.data"
     :columns="ixps.columns"
     :loading-status="ixps.loading"
-    :cypher-query="onReferenceOrganizationSelection(ixps.query).replace(/\$(.*?)}/, `'${countryCode}'}`)"
+    :cypher-query="
+      onReferenceOrganizationSelection(ixps.query).replace(/\$(.*?)}/, `'${countryCode}'}`)
+    "
     :pagination="ixps.pagination"
     :slot-length="1"
   >
@@ -218,22 +226,40 @@ onMounted(() => {
             <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
           </div>
           <div class="col">
-            <QSelect use-chips filled multiple v-model="selectResource" :options="optionsResource" @update:model-value="load()" :rules="[val => val.length > 0 || 'Please select at least one Reference Organization']" label="Reference Organizations" />
+            <QSelect
+              use-chips
+              filled
+              multiple
+              v-model="selectResource"
+              :options="optionsResource"
+              @update:model-value="load()"
+              :rules="[
+                (val) => val.length > 0 || 'Please select at least one Reference Organization'
+              ]"
+              label="Reference Organizations"
+            />
           </div>
         </div>
       </div>
       <IypGenericBarChart
         v-if="ixps.data.length > 0"
         :chart-data="barPlotDataFormat(ixps.data)"
-        :chart-layout="{ title: 'TODO 2: Change text here', yaxis: { title: { text: 'Number of peers' } } }"
+        :chart-layout="{
+          title: 'TODO 2: Change text here',
+          yaxis: { title: { text: 'Number of peers' } }
+        }"
         :config="{ key: 'as_country' }"
         :group-top-n-and-except-as-others="5"
       />
       <IypGenericHeatmapChart
         v-if="ixps.data.length > 0"
         :chart-data="heatmapPlotDataFormat(ixps.group)"
-        :chart-layout="{ title: 'TODO 2: Change text here', xaxis: { automargin: true }, yaxis: { automargin: true } }"
-        :config="{ }"
+        :chart-layout="{
+          title: 'TODO 2: Change text here',
+          xaxis: { automargin: true },
+          yaxis: { automargin: true }
+        }"
+        :config="{}"
       />
     </div>
   </IypGenericTable>

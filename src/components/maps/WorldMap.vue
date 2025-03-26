@@ -11,7 +11,7 @@ const emit = defineEmits(['country-selected'])
 
 const layout = {
   title: {
-    text: 'Select a country',
+    text: 'Select a country'
   },
   geo: {
     showframe: false,
@@ -19,7 +19,7 @@ const layout = {
       type: 'equirectangular'
     },
     showcountries: true,
-    showcoastlines: true,
+    showcoastlines: true
   },
   autosize: true,
   margin: {
@@ -27,7 +27,7 @@ const layout = {
     r: 10,
     t: 40,
     b: 0
-  },
+  }
 }
 
 const traces = ref([

@@ -260,7 +260,10 @@ onMounted(() => {
     :info-description="$t('iyp.country.ixps_domestic_distribution.info.description')"
     class="card"
   >
-    <CountryInternetExchangePointsDomesticDistribution :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePointsDomesticDistribution
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[10].value"
@@ -270,7 +273,10 @@ onMounted(() => {
     :info-description="$t('iyp.country.ixps_international_distribution.info.description')"
     class="card"
   >
-    <CountryInternetExchangePointsInternationalDistribution :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePointsInternationalDistribution
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController

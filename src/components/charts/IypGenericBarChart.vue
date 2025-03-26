@@ -107,7 +107,9 @@ const groupTopNAndExceptAsOthers = (formattedData) => {
 
   // grouping top N and except as others
   const topN = sortedChartData.slice(0, props.groupTopNAndExceptAsOthers)
-  const othersSum = sortedChartData.slice(props.groupTopNAndExceptAsOthers).reduce((sum, obj) => sum + obj.data, 0)
+  const othersSum = sortedChartData
+    .slice(props.groupTopNAndExceptAsOthers)
+    .reduce((sum, obj) => sum + obj.data, 0)
 
   let chartValues = []
   let chartLabels = []

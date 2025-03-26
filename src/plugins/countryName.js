@@ -523,7 +523,14 @@ function isCountryName(countryName) {
 }
 
 function getCountryISOCode2(countryIsoCode3) {
-  return Object.keys(countryISOMapping).find(key => countryISOMapping[key] === countryIsoCode3)
+  return Object.keys(countryISOMapping).find((key) => countryISOMapping[key] === countryIsoCode3)
 }
 
-export { isoCountries, countryISOMapping, getCountryName, getCountryISOCode3, isCountryName, getCountryISOCode2 }
+export {
+  isoCountries,
+  countryISOMapping,
+  getCountryName,
+  getCountryISOCode3,
+  isCountryName,
+  getCountryISOCode2
+}
