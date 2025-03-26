@@ -131,7 +131,7 @@ describe('getIodaEntityInfo', () => {
       until: Joi.number().required(),
       step: Joi.number().optional().allow(null),
       nativeStep: Joi.number().required(),
-      values: Joi.array().items(Joi.number().allow(null)).required()
+      values: Joi.array().required()
     })
 
     const expectedSchema = Joi.array().items(dataItemSchema)
