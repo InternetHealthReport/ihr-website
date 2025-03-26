@@ -225,14 +225,14 @@ onMounted(() => {
       <IypGenericBarChart
         v-if="ixps.data.length > 0"
         :chart-data="barPlotDataFormat(ixps.data)"
-        :chart-layout="{ title: 'Top countries where ASNs peer (nb. unique ASNs)', yaxis: { title: { text: 'Number of peers' } } }"
+        :chart-layout="{ title: 'TODO 2: Change text here', yaxis: { title: { text: 'Number of peers' } } }"
         :config="{ key: 'as_country' }"
         :group-top-n-and-except-as-others="5"
       />
       <IypGenericHeatmapChart
         v-if="ixps.data.length > 0"
         :chart-data="heatmapPlotDataFormat(ixps.group)"
-        :chart-layout="{ title: 'IXPs distribution', xaxis: { automargin: true }, yaxis: { automargin: true } }"
+        :chart-layout="{ title: 'TODO 2: Change text here', xaxis: { automargin: true }, yaxis: { automargin: true } }"
         :config="{ }"
       />
     </div>

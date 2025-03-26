@@ -993,19 +993,19 @@
         }
       },
       "ixps_domestic_distribution": {
-        "title": "Internet Exchange Points Domestic Distribution",
-        "caption": "Internet Exchange Points located in ",
+        "title": "TODO 1: Change text here",
+        "caption": "TODO 1: Change text here ",
         "info": {
-          "title": "Internet Exchange Points (IXPs)",
-          "description": "<p>Internet Exchange Points (IXPs) operating in the selected country.</p>"
+          "title": "TODO 1: Change text here",
+          "description": "<p>TODO 1: Change text here</p>"
         }
       },
       "ixps_international_distribution": {
-        "title": "Internet Exchange Points International Distribution",
-        "caption": "Internet Exchange Points located in ",
+        "title": "TODO 2: Change text here",
+        "caption": "TODO 2: Change text here ",
         "info": {
-          "title": "Internet Exchange Points (IXPs)",
-          "description": "<p>Internet Exchange Points (IXPs) operating in the selected country.</p>"
+          "title": "TODO 2: Change text here",
+          "description": "<p>TODO 2: Change text here</p>"
         }
       },
       "prefixes": {
