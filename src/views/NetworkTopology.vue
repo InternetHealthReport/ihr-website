@@ -29,13 +29,10 @@ const incrementChart = (searchInput, af, fromLink = false) => {
 }
 
 const pushRoute = (searchInput, af) => {
-  let query = null
-  if (searchInput !== '[]') {
-    query = Object.assign({}, route.query, {
-      input: searchInput,
-      af: af
-    })
-  }
+  let query = Object.assign({}, route.query, {
+    input: searchInput,
+    af: af
+  })
   router.push(
     Tr.i18nRoute({
       replace: true,
