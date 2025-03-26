@@ -95,11 +95,11 @@ const optionsResource = ref([])
 const selectResource = ref([])
 const errorMessageResource = ref('')
 
-const load = (filterReferenceOrganization) => {
+const load = () => {
   ixps.value.loading = true
   // Run the cypher query
   let query_params = { country_code: props.countryCode }
-  iyp_api.run([{ statement: onReferenceOrganizationSelection(ixps.value.query, filterReferenceOrganization), parameters: query_params }]).then((results) => {
+  iyp_api.run([{ statement: onReferenceOrganizationSelection(ixps.value.query), parameters: query_params }]).then((results) => {
     ixps.value.data = results[0]
     ixps.value.group = results[0].reduce((acc, current) => {
       if (current.ix_name) {
@@ -121,7 +121,7 @@ const load = (filterReferenceOrganization) => {
     } else {
       uniqueASperIXP.value = Array.from(uniqueIxpSize)[uniqueIxpSize.size - 1]
     }
-    if (!filterReferenceOrganization) {
+    if (!optionsResource.value.length) {
       const uniqueRefOrgs = new Set(ixps.value.data.map(obj => obj.mem_reference_org))
       uniqueRefOrgs.delete(null)
       optionsResource.value = Array.from(uniqueRefOrgs)
@@ -131,12 +131,12 @@ const load = (filterReferenceOrganization) => {
   })
 }
 
-const onReferenceOrganizationSelection = (query, filterReferenceOrganization) => {
-  if (filterReferenceOrganization) {
+const onReferenceOrganizationSelection = (query) => {
+  if (selectResource.value.length < optionsResource.value.length) {
     const splitQuery = query.split('RETURN')
     const updateQuery = `WITH member, tag, ix, ix_country, org, mem, man
       WHERE mem IS null OR mem.reference_org IN ['${selectResource.value.join("','")}']`
-    return `${splitQuery[0]} ${updateQuery} RETURN ${splitQuery[1]}`
+    return `${splitQuery[0]} ${updateQuery}\nRETURN ${splitQuery[1].trim()}`
   }
   return query
 }
@@ -224,12 +224,12 @@ watch(selectResource, () => {
 watch(
   () => props.countryCode,
   () => {
-    load(false)
+    load()
   }
 )
 
 onMounted(() => {
-  load(false)
+  load()
 })
 </script>
 
@@ -238,7 +238,7 @@ onMounted(() => {
     :data="ixps.data"
     :columns="ixps.columns"
     :loading-status="ixps.loading"
-    :cypher-query="ixps.query.replace(/\$(.*?)}/, `'${countryCode}'}`)"
+    :cypher-query="onReferenceOrganizationSelection(ixps.query).replace(/\$(.*?)}/, `'${countryCode}'}`)"
     :pagination="ixps.pagination"
     :slot-length="1"
   >
@@ -251,7 +251,7 @@ onMounted(() => {
             <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
           </div>
           <div class="col">
-            <QSelect use-chips filled multiple v-model="selectResource" :options="optionsResource" @update:model-value="load(true)" :rules="[val => val.length > 0 || 'Please select at least one Reference Organization']" label="Reference Organizations" />
+            <QSelect use-chips filled multiple v-model="selectResource" :options="optionsResource" @update:model-value="load()" :rules="[val => val.length > 0 || 'Please select at least one Reference Organization']" label="Reference Organizations" />
           </div>
         </div>
       </div>
