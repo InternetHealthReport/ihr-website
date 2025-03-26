@@ -117,8 +117,8 @@ onMounted(() => {
     <QSeparator inset />
     <QCardSection>
       <QCheckbox
-        v-for="select in selects"
-        :key="select.value"
+        v-for="(select, index) in selects"
+        :key="index"
         v-model="select.value"
         :label="select.label"
       />

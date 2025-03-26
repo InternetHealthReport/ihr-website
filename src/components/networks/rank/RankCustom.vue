@@ -104,7 +104,7 @@ onMounted(() => {
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <span v-for="select in selects" :key="select.value">
+      <span v-for="(select, index) in selects" :key="index">
         <QCheckbox v-if="select.hasData" v-model="select.value" :label="select.label" />
       </span>
       <QCheckbox v-model="selectAll" label="All" />
