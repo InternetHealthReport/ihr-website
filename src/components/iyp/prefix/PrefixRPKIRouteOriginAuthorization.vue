@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 
 const iyp_api = inject('iyp_api')
@@ -83,7 +83,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="roas.data"
     :columns="roas.columns"
     :loading-status="roas.loading"
@@ -92,5 +92,5 @@ onMounted(() => {
   >
     <!--  <IypGenericBarChart v-if="roas.length > 0" :chart-data="roas"  :chart-layout='{yaxis: { title: {text: "AS Hegemony (%)"},
     range: [0,100],}}' :config="{key:'asn', value:'hege' , xlabel_prefix:'AS'}"/> -->
-  </IypGenericTable>
+  </IypController>
 </template>

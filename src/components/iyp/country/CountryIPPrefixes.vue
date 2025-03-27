@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
@@ -149,7 +149,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="prefixes.data"
     :columns="prefixes.columns"
     :loading-status="prefixes.loading"
@@ -180,5 +180,5 @@ onMounted(() => {
         />
       </div>
     </div>
-  </IypGenericTable>
+  </IypController>
 </template>

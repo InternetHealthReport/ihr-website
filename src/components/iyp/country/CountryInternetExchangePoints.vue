@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 import treemapClicked from '@/plugins/IypGenericTreemapChart.js'
 
@@ -79,7 +79,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="ixps.data"
     :columns="ixps.columns"
     :loading-status="ixps.loading"
@@ -101,5 +101,5 @@ onMounted(() => {
         @treemap-clicked="treemapClicked({ ...$event, ...{ router: router, leafKey: 'ixpName' } })"
       />
     </div>
-  </IypGenericTable>
+  </IypController>
 </template>

@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 
 const iyp_api = inject('iyp_api')
@@ -88,7 +88,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="upstreams.data"
     :columns="upstreams.columns"
     :loading-status="upstreams.loading"
@@ -107,5 +107,5 @@ onMounted(() => {
       :chart-layout="{ title: 'Dependings' }"
       :config="{ keys: ['cc', 'asn'], keyValue: 'hegemony_score', root: this.asn, hovertemplate: '<b>%{label}</b><br>%{customdata.name}<br><br> Hegemony value: %{customdata.hegemony_score:.2f}%<extra></extra>' }"
       /> -->
-  </IypGenericTable>
+  </IypController>
 </template>

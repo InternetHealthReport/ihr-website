@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 
 const iyp_api = inject('iyp_api')
@@ -73,7 +73,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="members.data"
     :columns="members.columns"
     :loading-status="members.loading"
@@ -91,5 +91,5 @@ onMounted(() => {
         hovertemplate: '<b>%{label}</b><br>%{customdata.name}<extra></extra>'
       }"
     />
-  </IypGenericTable>
+  </IypController>
 </template>

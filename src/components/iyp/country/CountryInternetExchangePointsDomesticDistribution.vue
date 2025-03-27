@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericBoxPlotChart from '@/components/charts/IypGenericBoxPlotChart.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 import IypGenericHeatmapChart from '@/components/charts/IypGenericHeatmapChart.vue'
@@ -244,7 +244,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="ixps.data"
     :columns="ixps.columns"
     :loading-status="ixps.loading"
@@ -312,5 +312,5 @@ onMounted(() => {
         :no-data="errorMessageResource"
       />
     </div>
-  </IypGenericTable>
+  </IypController>
 </template>

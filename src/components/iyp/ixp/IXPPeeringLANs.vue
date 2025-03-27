@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericTreemapChart from '@/components/charts/IypGenericTreemapChart.vue'
 
 const iyp_api = inject('iyp_api')
@@ -63,7 +63,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="peeringLANs.data"
     :columns="peeringLANs.columns"
     :loading-status="peeringLANs.loading"
@@ -76,5 +76,5 @@ onMounted(() => {
       :chart-layout="{ title: '' }"
       :config="{ keys: ['af', 'prefix'], root: pageTitle }"
     />
-  </IypGenericTable>
+  </IypController>
 </template>

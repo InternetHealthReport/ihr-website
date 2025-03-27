@@ -331,7 +331,7 @@ pull request or create an issue.
 │   │       ├── DelayAlarmsTable.vue: A component that includes the table with the delay alarms values
 │   │       ├── DiscoAlarmsTable.vue: A component that includes the table with the network disconnections information 
 │   │       ├── ForwardingAlarmsTable.vue: A component that includes the table with the forwarding alarms values
-│   │       ├── IypGenericTable.vue: A component that includes the table for displaying IYP data
+│   │       ├── IypController.vue: A component that includes the table for displaying IYP data
 │   │       ├── MetisTable.vue: A component that includes the table for displaying data for the Metis project
 │   │       ├── NetworkDelayAlarmsTable.vue: A component that includes the table with the network delay alarms
 │   │       ├── NetworkDelayTable.vue: A component that includes the table with the network delay data

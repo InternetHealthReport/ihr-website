@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericRadarChart from '@/components/charts/IypGenericRadarChart.vue'
 
 const iyp_api = inject('iyp_api')
@@ -79,7 +79,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="rankings.data"
     :columns="rankings.columns"
     :loading-status="rankings.loading"
@@ -97,5 +97,5 @@ onMounted(() => {
         hovertemplate: '<b>Rank:</b> %{customdata.rank}<br><b>Name:</b> %{theta}<br><extra></extra>'
       }"
     />
-  </IypGenericTable>
+  </IypController>
 </template>

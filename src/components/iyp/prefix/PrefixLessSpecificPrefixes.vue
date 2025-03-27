@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import IypGenericTable from '@/components/tables/IypGenericTable.vue'
+import IypController from '@/components/controllers/IypController.vue'
 import IypGenericBarChart from '@/components/charts/IypGenericBarChart.vue'
 
 const iyp_api = inject('iyp_api')
@@ -117,12 +117,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <IypGenericTable
+  <IypController
     :data="lessSpecifics.data"
     :columns="lessSpecifics.columns"
     :loading-status="lessSpecifics.loading"
     :cypher-query="lessSpecifics.query.replace(/\$(.*?)}/, `'${getPrefix}'}`)"
   >
     <!-- <GenericPieChart v-if="lessSpecific.length > 0" :chart-data="lessSpecific" :chart-layout="{ title: 'Country' }" /> -->
-  </IypGenericTable>
+  </IypController>
 </template>
