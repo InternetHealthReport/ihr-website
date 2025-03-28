@@ -73,7 +73,7 @@ const created = ref(false)
 const myId = ref(`ihrReactiveChart${uid()}`)
 const layoutLocal = ref(props.layout)
 const dropdownCVD = ref(false)
-const supportedCVDPlots = ['treemap', 'pie', 'bar', 'box', 'scatter', 'scatterpolar']
+const supportedCVDPlots = ['treemap', 'pie', 'bar', 'box', 'scatter', 'scatterpolar', 'heatmap']
 
 layoutLocal.value['images'] = [
   {
@@ -92,7 +92,7 @@ layoutLocal.value['images'] = [
 
 const colorPalettes = {
   protanopia: [
-    '#ffe41c',
+    '#ffe41c',  //Light Yellow
     '#aabdff',
     '#3c360f',
     '#c8b317',
@@ -104,7 +104,7 @@ const colorPalettes = {
     '#7e711b',
     '#000000',
     '#0060c7',
-    '#a18e21',
+    '#a18e21',   // dark yellow
     '#bbb3a4',
     '#c7ccee',
     '#ffefb1',
@@ -114,10 +114,10 @@ const colorPalettes = {
     '#686566'
   ],
   deuteranopia: [
-    '#ffd592',
+    '#679bf2',  //Light blue
     '#b0bcf9',
     '#c09300',
-    '#679bf2',
+    '#ffd592',
     '#ffeafd',
     '#f6c600',
     '#918694',
@@ -126,7 +126,7 @@ const colorPalettes = {
     '#6f6367',
     '#557dc2',
     '#ddb69e',
-    '#004b84',
+    '#004b84',  // dark blue 
     '#987648',
     '#000000',
     '#bab4d9',
@@ -136,7 +136,8 @@ const colorPalettes = {
     '#8894ca'
   ],
   tritanopia: [
-    '#fd6e74',
+    '#ed656c ',  //light pink
+    //'#ffc0cd ',
     '#cbefff',
     '#bfa9b6',
     '#cc1600',
@@ -148,10 +149,10 @@ const colorPalettes = {
     '#ffc0cd',
     '#67becd',
     '#ff4346',
-    '#36aebb',
+    '#d46269',  //dark pink
     '#ed656c',
     '#4d717a',
-    '#d46269',
+    '#36aebb',
     '#845c63',
     '#98b3c2',
     '#cf818b',
@@ -180,46 +181,54 @@ const addCustomModebarButton = () => {
 
 const updateColors = (paletteKey) => {
   return props.traces.map((trace, index) => {
-    const colorsArray = colorPalettes[paletteKey]
-    const color = colorPalettes[paletteKey][index % colorPalettes[paletteKey].length]
-    if (trace.type === supportedCVDPlots[0]) {
-      const firstNode = trace.ids[0]
-      let childIndex = 0
+    const colorsArray = colorPalettes[paletteKey];
+    if (trace.type === 'heatmap') {
       return {
         ...trace,
-        marker: {
-          ...trace.marker,
-          colors: trace.ids.map((id, i) => {
-            const parent = trace.parents[i]
-            if (!parent) {
-              return 'rgba(0,0,0,0)'
-            }
-            if (parent === firstNode) {
-              const colorIndex = childIndex % colorPalettes[paletteKey].length
-              childIndex++
-              return colorPalettes[paletteKey][colorIndex]
-            }
-            return null
-          })
-        }
+        colorscale: [
+          [0, '#dddbd9'], // start with white
+          [0.5, colorsArray[0]], // Light color
+          [1, colorsArray[Math.floor(colorsArray.length * 0.6)]] // Strong color
+        ]
+      };
+    }else if (trace.type === supportedCVDPlots[0]) {
+        const firstNode = trace.ids[0];
+        let childIndex = 0;
+        return {
+          ...trace,
+          marker: {
+            ...trace.marker,
+            colors: trace.ids.map((id, i) => {
+              const parent = trace.parents[i];
+              if (!parent) {
+                return 'rgba(0,0,0,0)';
+              }
+              if (parent === firstNode) {
+                const colorIndex = childIndex % colorsArray.length;
+                childIndex++;
+                return colorsArray[colorIndex];
+              }
+              return null;
+            })
+          }
+        };
+      } else if (trace.type === supportedCVDPlots[1]) {
+        return {
+          ...trace,
+          marker: {
+            ...trace.marker,
+            colors: colorsArray.slice(0, trace.labels?.length || colorsArray.length)
+          }
+        };
+      } else {
+        return {
+          ...trace,
+          marker: { ...trace.marker, color: colorsArray[index % colorsArray.length] },
+          line: { ...trace.line, color: colorsArray[index % colorsArray.length] }
+        };
       }
-    } else if (trace.type === supportedCVDPlots[1]) {
-      return {
-        ...trace,
-        marker: {
-          ...trace.marker,
-          colors: colorsArray.slice(0, trace.labels?.length || colorsArray.length)
-        }
-      }
-    } else {
-      return {
-        ...trace,
-        marker: { ...trace.marker, color },
-        line: { ...trace.line, color }
-      }
-    }
-  })
-}
+    });
+};
 
 const isCvdSupported = () => {
   let notSupported = true
