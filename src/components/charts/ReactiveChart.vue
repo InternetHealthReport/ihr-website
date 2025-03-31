@@ -73,7 +73,7 @@ const created = ref(false)
 const myId = ref(`ihrReactiveChart${uid()}`)
 const layoutLocal = ref(props.layout)
 const dropdownCVD = ref(false)
-const supportedCVDPlots = ['treemap', 'pie', 'bar', 'box', 'scatter', 'scatterpolar', 'heatmap']
+const supportedCVDPlots = ['treemap', 'pie', 'heatmap', 'bar', 'box', 'scatter', 'scatterpolar']
 
 layoutLocal.value['images'] = [
   {
@@ -92,7 +92,7 @@ layoutLocal.value['images'] = [
 
 const colorPalettes = {
   protanopia: [
-    '#ffe41c',  //Light Yellow
+    '#ffe41c',
     '#aabdff',
     '#3c360f',
     '#c8b317',
@@ -104,7 +104,7 @@ const colorPalettes = {
     '#7e711b',
     '#000000',
     '#0060c7',
-    '#a18e21',   // dark yellow
+    '#a18e21',
     '#bbb3a4',
     '#c7ccee',
     '#ffefb1',
@@ -114,10 +114,10 @@ const colorPalettes = {
     '#686566'
   ],
   deuteranopia: [
-    '#679bf2',  //Light blue
+    '#ffd592',
     '#b0bcf9',
     '#c09300',
-    '#ffd592',
+    '#679bf2',
     '#ffeafd',
     '#f6c600',
     '#918694',
@@ -126,7 +126,7 @@ const colorPalettes = {
     '#6f6367',
     '#557dc2',
     '#ddb69e',
-    '#004b84',  // dark blue 
+    '#004b84',
     '#987648',
     '#000000',
     '#bab4d9',
@@ -136,8 +136,7 @@ const colorPalettes = {
     '#8894ca'
   ],
   tritanopia: [
-    '#ed656c ',  //light pink
-    //'#ffc0cd ',
+    '#fd6e74',
     '#cbefff',
     '#bfa9b6',
     '#cc1600',
@@ -149,16 +148,31 @@ const colorPalettes = {
     '#ffc0cd',
     '#67becd',
     '#ff4346',
-    '#d46269',  //dark pink
+    '#36aebb',
     '#ed656c',
     '#4d717a',
-    '#36aebb',
+    '#d46269',
     '#845c63',
     '#98b3c2',
     '#cf818b',
     '#6a6168'
   ]
 }
+
+const colorPalettesScaling = {
+  protanopia: {
+    light: '#ffe41c',
+    dark: '#d4af37'
+  },
+  deuteranopia: {
+    light: '#ffd592',
+    dark: '#c2955c'
+  },
+  tritanopia: {
+    light: '#fd6e74',
+    dark: '#a84348'
+  }
+};
 
 const addCustomModebarButton = () => {
   const graphDiv = myId.value
@@ -181,54 +195,56 @@ const addCustomModebarButton = () => {
 
 const updateColors = (paletteKey) => {
   return props.traces.map((trace, index) => {
-    const colorsArray = colorPalettes[paletteKey];
-    if (trace.type === 'heatmap') {
+    const colorsArray = colorPalettes[paletteKey]
+    const color = colorPalettes[paletteKey][index % colorPalettes[paletteKey].length]
+    if (trace.type === supportedCVDPlots[0]) {
+      const firstNode = trace.ids[0]
+      let childIndex = 0
+      return {
+        ...trace,
+        marker: {
+          ...trace.marker,
+          colors: trace.ids.map((id, i) => {
+            const parent = trace.parents[i]
+            if (!parent) {
+              return 'rgba(0,0,0,0)'
+            }
+            if (parent === firstNode) {
+              const colorIndex = childIndex % colorPalettes[paletteKey].length
+              childIndex++
+              return colorPalettes[paletteKey][colorIndex]
+            }
+            return null
+          })
+        }
+      }
+    } else if (trace.type === supportedCVDPlots[1]) {
+      return {
+        ...trace,
+        marker: {
+          ...trace.marker,
+          colors: colorsArray.slice(0, trace.labels?.length || colorsArray.length)
+        }
+      }
+    } else if (trace.type === supportedCVDPlots[2]) {
+      const palette = colorPalettesScaling[paletteKey] || { light: '#ffffff', dark: '#000000' };
       return {
         ...trace,
         colorscale: [
-          [0, '#dddbd9'], // start with white
-          [0.5, colorsArray[0]], // Light color
-          [1, colorsArray[Math.floor(colorsArray.length * 0.6)]] // Strong color
+          [0, '#dddbd9'],
+          [0.5, palette.light],
+          [1, palette.dark]
         ]
-      };
-    }else if (trace.type === supportedCVDPlots[0]) {
-        const firstNode = trace.ids[0];
-        let childIndex = 0;
-        return {
-          ...trace,
-          marker: {
-            ...trace.marker,
-            colors: trace.ids.map((id, i) => {
-              const parent = trace.parents[i];
-              if (!parent) {
-                return 'rgba(0,0,0,0)';
-              }
-              if (parent === firstNode) {
-                const colorIndex = childIndex % colorsArray.length;
-                childIndex++;
-                return colorsArray[colorIndex];
-              }
-              return null;
-            })
-          }
-        };
-      } else if (trace.type === supportedCVDPlots[1]) {
-        return {
-          ...trace,
-          marker: {
-            ...trace.marker,
-            colors: colorsArray.slice(0, trace.labels?.length || colorsArray.length)
-          }
-        };
-      } else {
-        return {
-          ...trace,
-          marker: { ...trace.marker, color: colorsArray[index % colorsArray.length] },
-          line: { ...trace.line, color: colorsArray[index % colorsArray.length] }
-        };
       }
-    });
-};
+    } else {
+      return {
+        ...trace,
+        marker: { ...trace.marker, color },
+        line: { ...trace.line, color }
+      }
+    }
+  })
+}
 
 const isCvdSupported = () => {
   let notSupported = true
@@ -397,7 +413,8 @@ watch(
   bottom: 0;
   left: 0;
 }
-.IHR_no-data > div:first-child {
+
+.IHR_no-data>div:first-child {
   box-shadow:
     0 3px 6px rgba(0, 0, 0, 0.16),
     0 3px 6px rgba(0, 0, 0, 0.23);
@@ -407,7 +424,8 @@ watch(
   top: -250px;
   left: 0%;
 }
-.IHR_no-data > div:first-child:first-letter {
+
+.IHR_no-data>div:first-child:first-letter {
   text-transform: uppercase;
 }
 </style>
