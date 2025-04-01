@@ -172,7 +172,7 @@ const colorPalettesScaling = {
     light: '#fd6e74',
     dark: '#a84348'
   }
-};
+}
 
 const addCustomModebarButton = () => {
   const graphDiv = myId.value
@@ -227,13 +227,12 @@ const updateColors = (paletteKey) => {
         }
       }
     } else if (trace.type === supportedCVDPlots[2]) {
-      const palette = colorPalettesScaling[paletteKey] || { light: '#ffffff', dark: '#000000' };
       return {
         ...trace,
         colorscale: [
           [0, '#dddbd9'],
-          [0.5, palette.light],
-          [1, palette.dark]
+          [0.5, colorPalettesScaling[paletteKey].light],
+          [1, colorPalettesScaling[paletteKey].dark]
         ]
       }
     } else {
@@ -414,7 +413,7 @@ watch(
   left: 0;
 }
 
-.IHR_no-data>div:first-child {
+.IHR_no-data > div:first-child {
   box-shadow:
     0 3px 6px rgba(0, 0, 0, 0.16),
     0 3px 6px rgba(0, 0, 0, 0.23);
@@ -425,7 +424,7 @@ watch(
   left: 0%;
 }
 
-.IHR_no-data>div:first-child:first-letter {
+.IHR_no-data > div:first-child:first-letter {
   text-transform: uppercase;
 }
 </style>
