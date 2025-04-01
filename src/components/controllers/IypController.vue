@@ -138,19 +138,19 @@ const getMetadataQuery = () => {
     queryVars.push(`edge${i - 1}`)
     query[i] = `${queryVars[i - 1]}:${query[i]}`
   }
-  query = `${query.join('[')} `
-  const collectList = `WITH *, CASE WHEN var0 IS :: LIST<RELATIONSHIP> THEN var0 ELSE [var0] END AS var
-    WITH *, head(var) AS var0
-    WITH *, COLLECT(DISTINCT [var0.reference_org, var0.reference_url_data, var0.reference_url_info, var0.reference_time_fetch, var0.reference_time_modification]) AS var1`
+  query = `${query.join('[')} WITH`
+  const collectList = `
+    COLLECT(DISTINCT [var0.reference_org, var0.reference_url_data, var0.reference_url_info, var0.reference_time_fetch, var0.reference_time_modification]) AS var1`  
   const listVars = []
   queryVars.forEach((el, index) => {
     listVars.push(`list${index}`)
     query += collectList.replaceAll('var0', el).replace('var1', listVars[index])
     if (index < queryVars.length - 1) {
-      query += ' '
+      query += ','
     }
   })
   query += ` UNWIND ${listVars.join('+')} AS metadata_list RETURN DISTINCT metadata_list`
+  console.log(query)
   return query
 }
 
