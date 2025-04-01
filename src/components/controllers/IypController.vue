@@ -140,7 +140,7 @@ const getMetadataQuery = () => {
   }
   query = `${query.join('[')} WITH`
   const collectList = `
-    COLLECT(DISTINCT [var0.reference_org, var0.reference_url_data, var0.reference_url_info, var0.reference_time_fetch, var0.reference_time_modification]) AS var1`  
+    COLLECT(DISTINCT [var0.reference_org, var0.reference_url_data, var0.reference_url_info, var0.reference_time_fetch, var0.reference_time_modification]) AS var1`
   const listVars = []
   queryVars.forEach((el, index) => {
     listVars.push(`list${index}`)
@@ -329,10 +329,14 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="chart" label="CHART" :disable="slotLength <= 0 ? true : false" />
+        <QTab
+          name="chart"
+          label="CHART"
+          :disable="slotLength <= 0 || data.length <= 0 ? true : false"
+        />
         <QTab name="data" label="DATA" />
         <QTab name="api" label="CYPHER QUERY" />
-        <QTab name="metadata" label="METADATA" />
+        <QTab name="metadata" label="METADATA" :disable="data.length ? false : true" />
       </QTabs>
       <QTabPanels v-model="activeTab" animated @transition="transition">
         <QTabPanel name="chart">
