@@ -73,7 +73,7 @@ const created = ref(false)
 const myId = ref(`ihrReactiveChart${uid()}`)
 const layoutLocal = ref(props.layout)
 const dropdownCVD = ref(false)
-const supportedCVDPlots = ['treemap', 'pie', 'bar', 'box', 'scatter', 'scatterpolar']
+const supportedCVDPlots = ['treemap', 'pie', 'heatmap', 'bar', 'box', 'scatter', 'scatterpolar']
 
 layoutLocal.value['images'] = [
   {
@@ -159,6 +159,21 @@ const colorPalettes = {
   ]
 }
 
+const colorPalettesScaling = {
+  protanopia: {
+    light: '#ffe41c',
+    dark: '#d4af37'
+  },
+  deuteranopia: {
+    light: '#ffd592',
+    dark: '#c2955c'
+  },
+  tritanopia: {
+    light: '#fd6e74',
+    dark: '#a84348'
+  }
+};
+
 const addCustomModebarButton = () => {
   const graphDiv = myId.value
   if (!graphDiv) return
@@ -210,6 +225,16 @@ const updateColors = (paletteKey) => {
           ...trace.marker,
           colors: colorsArray.slice(0, trace.labels?.length || colorsArray.length)
         }
+      }
+    } else if (trace.type === supportedCVDPlots[2]) {
+      const palette = colorPalettesScaling[paletteKey] || { light: '#ffffff', dark: '#000000' };
+      return {
+        ...trace,
+        colorscale: [
+          [0, '#dddbd9'],
+          [0.5, palette.light],
+          [1, palette.dark]
+        ]
       }
     } else {
       return {
@@ -388,7 +413,8 @@ watch(
   bottom: 0;
   left: 0;
 }
-.IHR_no-data > div:first-child {
+
+.IHR_no-data>div:first-child {
   box-shadow:
     0 3px 6px rgba(0, 0, 0, 0.16),
     0 3px 6px rgba(0, 0, 0, 0.23);
@@ -398,7 +424,8 @@ watch(
   top: -250px;
   left: 0%;
 }
-.IHR_no-data > div:first-child:first-letter {
+
+.IHR_no-data>div:first-child:first-letter {
   text-transform: uppercase;
 }
 </style>
