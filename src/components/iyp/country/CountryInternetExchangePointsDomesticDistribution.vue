@@ -19,14 +19,25 @@ const ixps = ref({
   group: {},
   show: false,
   loading: true,
-  query: `MATCH (:Country {country_code:$country_code})-[:COUNTRY {reference_org:'NRO'}]-(member:AS)
+  query: `MATCH (ix:IXP)-[:MEMBER_OF]-(member:AS)-[:COUNTRY {reference_org:'NRO'}]-(:Country {country_code:$country_code})
     WHERE (member)-[:ORIGINATE]-(:Prefix)
+    WITH ix, COLLECT(member) AS members, COUNT(DISTINCT member) AS ixp_domestic_members
+    UNWIND members as member
     OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
     OPTIONAL MATCH (member)-[mem:MEMBER_OF]-(ix:IXP)-[:COUNTRY]-(ix_country:Country)
     OPTIONAL MATCH (ix)-[man:MANAGED_BY]-(org:Organization)
-    RETURN  DISTINCT member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, $country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name`,
+    RETURN  DISTINCT member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, $country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name, ixp_domestic_members
+    ORDER BY ixp_domestic_members`,
   columns: [
-    {
+   {
+      name: 'AS Country',
+      label: 'AS Country',
+      align: 'left',
+      field: (row) => row.as_country,
+      format: (val) => `${val}`,
+      sortable: true
+   },
+   {
       name: 'ASN',
       label: 'ASN',
       align: 'left',
@@ -35,8 +46,24 @@ const ixps = ref({
       sortable: true
     },
     {
-      name: 'Organization',
-      label: 'Organization',
+      name: 'AS Category',
+      label: 'AS Category',
+      align: 'left',
+      field: (row) => row.label,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'IXP Country',
+      label: 'IXP Country',
+      align: 'left',
+      field: (row) => row.ix_country,
+      format: (val) => `${val}`,
+      sortable: true
+    },
+    {
+      name: 'IXP Organization',
+      label: 'IXP Organization',
       align: 'left',
       field: (row) => row.org_name,
       format: (val) => `${val}`,
@@ -51,32 +78,8 @@ const ixps = ref({
       sortable: true
     },
     {
-      name: 'ASN Country',
-      label: 'ASN Country',
-      align: 'left',
-      field: (row) => row.as_country,
-      format: (val) => `${val}`,
-      sortable: true
-    },
-    {
-      name: 'IXP Country',
-      label: 'IXP Country',
-      align: 'left',
-      field: (row) => row.ix_country,
-      format: (val) => `${val}`,
-      sortable: true
-    },
-    {
-      name: 'IXP Label',
-      label: 'IXP Label',
-      align: 'left',
-      field: (row) => row.label,
-      format: (val) => `${val}`,
-      sortable: true
-    },
-    {
-      name: 'Reference Organization',
-      label: 'Reference Organization',
+      name: 'Data Source',
+      label: 'Data Source',
       align: 'left',
       field: (row) => row.mem_reference_org,
       format: (val) => `${val}`,
@@ -121,11 +124,15 @@ const load = () => {
         .map((obj) => obj.size)
         .sort((a, b) => b - a)
       uniqueASperIXPMax.value = ixpsSize[0]
-      const uniqueIxpSize = new Set(ixpsSize)
-      if (uniqueIxpSize.size > 5) {
-        uniqueASperIXP.value = Array.from(uniqueIxpSize)[4]
+      if (ixpsSize.length > 20) {
+       if (ixpsSize[14] < 5 ){
+         uniqueASperIXP.value = 5
+       }
+       else{
+         uniqueASperIXP.value = ixpsSize[19]
+       }
       } else {
-        uniqueASperIXP.value = Array.from(uniqueIxpSize)[uniqueIxpSize.size - 1]
+        uniqueASperIXP.value = ixpsSize[ixpsSize.length - 1]
       }
       if (!optionsResource.value.length) {
         const uniqueRefOrgs = new Set(ixps.value.data.map((obj) => obj.mem_reference_org))
@@ -282,7 +289,7 @@ onMounted(() => {
         v-if="ixps.data.length > 0"
         :chart-data="boxPlotDataFormat(ixps.data)"
         :chart-layout="{
-          title: 'TODO 1: Change text here',
+          title: 'IXP Membership per AS',
           yaxis: { title: { text: 'Number of IXPs per AS' }, zeroline: false },
           boxmode: 'group'
         }"
@@ -293,8 +300,8 @@ onMounted(() => {
         v-if="ixps.data.length > 0"
         :chart-data="barPlotDataFormat(ixps.group)"
         :chart-layout="{
-          title: 'TODO 1: Change text here',
-          yaxis: { title: { text: 'Number of peers' } }
+          title: 'IXPs location',
+          yaxis: { title: { text: 'Number of unique ASes' } }
         }"
         :config="{ key: 'ix_country' }"
         :group-top-n-and-except-as-others="5"
@@ -304,9 +311,10 @@ onMounted(() => {
         v-if="ixps.data.length > 0"
         :chart-data="heatmapPlotDataFormat(ixps.group)"
         :chart-layout="{
-          title: 'TODO 1: Change text here',
-          xaxis: { automargin: true },
-          yaxis: { automargin: true }
+          title: `IXP Membership for ASes Registered in ${pageTitle}`,
+          xaxis: { automargin: true, constrain: 'domain', scaleanchor: 'y' },
+          yaxis: { automargin: true, constrain: 'domain' },
+          height: 900
         }"
         :config="{}"
         :no-data="errorMessageResource"

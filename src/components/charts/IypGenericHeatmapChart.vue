@@ -71,7 +71,8 @@ const formatChartData = (arrayOfObjects) => {
       texttemplate: '%{text}',
       textposition: 'center',
       hoverinfo: 'x+y+z',
-      colorscale: 'Hot_r',
+      colorscale: 'YlOrRd',
+      reversescale: true,
       ...props.config
     })
   }

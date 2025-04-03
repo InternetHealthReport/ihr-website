@@ -993,16 +993,16 @@
         }
       },
       "ixps_domestic_distribution": {
-        "title": "TODO 1: Change text here",
-        "caption": "TODO 1: Change text here ",
+        "title": "Domestic ASes",
+        "caption": "IXP membership for ASes registered in ",
         "info": {
           "title": "TODO 1: Change text here",
           "description": "<p>TODO 1: Change text here</p>"
         }
       },
       "ixps_international_distribution": {
-        "title": "TODO 2: Change text here",
-        "caption": "TODO 2: Change text here ",
+        "title": "International ASes",
+        "caption": "International ASes member of IXPs in ",
         "info": {
           "title": "TODO 2: Change text here",
           "description": "<p>TODO 2: Change text here</p>"
