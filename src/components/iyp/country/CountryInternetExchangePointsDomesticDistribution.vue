@@ -125,7 +125,7 @@ const load = () => {
         .sort((a, b) => b - a)
       uniqueASperIXPMax.value = ixpsSize[0]
       if (ixpsSize.length > 20) {
-       if (ixpsSize[14] < 5 ){
+       if (ixpsSize[19] < 5 ){
          uniqueASperIXP.value = 5
        }
        else{
@@ -304,7 +304,7 @@ onMounted(() => {
           yaxis: { title: { text: 'Number of unique ASes' } }
         }"
         :config="{ key: 'ix_country' }"
-        :group-top-n-and-except-as-others="5"
+        :group-top-n-and-except-as-others="8"
         :no-data="errorMessageResource"
       />
       <IypGenericHeatmapChart
