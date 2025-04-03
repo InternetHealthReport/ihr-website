@@ -30,15 +30,15 @@ const ixps = ref({
     RETURN  member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, as_country.country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name, ixp_domestic_members
     ORDER BY ixp_domestic_members`,
   columns: [
-   {
+    {
       name: 'AS Country',
       label: 'AS Country',
       align: 'left',
       field: (row) => row.as_country,
       format: (val) => `${val}`,
       sortable: true
-   },
-   {
+    },
+    {
       name: 'ASN',
       label: 'ASN',
       align: 'left',
@@ -126,12 +126,11 @@ const load = () => {
         .sort((a, b) => b - a)
       uniqueASperIXPMax.value = ixpsSize[0]
       if (ixpsSize.length > 20) {
-       if (ixpsSize[19] < 5 ){
-         uniqueASperIXP.value = 5
-       }
-       else{
-         uniqueASperIXP.value = ixpsSize[19]
-       }
+        if (ixpsSize[19] < 5) {
+          uniqueASperIXP.value = 5
+        } else {
+          uniqueASperIXP.value = ixpsSize[19]
+        }
       } else {
         uniqueASperIXP.value = ixpsSize[ixpsSize.length - 1]
       }

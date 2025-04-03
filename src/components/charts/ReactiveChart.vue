@@ -163,17 +163,17 @@ const colorPalettesScaling = {
   protanopia: {
     light: '#ffffe0',
     medium: '#ffe41c',
-    dark: '#d4af37',
+    dark: '#d4af37'
   },
   deuteranopia: {
     light: '#ffffdb',
     medium: '#ffd592',
-    dark: '#c2955c',
+    dark: '#c2955c'
   },
   tritanopia: {
     light: '#fffcff',
     medium: '#fd6e74',
-    dark: '#a84348',
+    dark: '#a84348'
   }
 }
 
@@ -237,7 +237,7 @@ const updateColors = (paletteKey) => {
           [0.5, colorPalettesScaling[paletteKey].medium],
           [1, colorPalettesScaling[paletteKey].dark]
         ],
-        reversescale: false,
+        reversescale: false
       }
     } else {
       return {
