@@ -158,9 +158,7 @@ const onReferenceOrganizationSelection = (query) => {
 const boxPlotDataFormat = (data) => {
   const filteredIXPs = new Set()
   Object.keys(ixps.value.group).forEach((ixp) => {
-    if (ixps.value.group[ixp].size >= uniqueASperIXP.value) {
-      filteredIXPs.add(ixp.split(' - ')[0])
-    }
+    filteredIXPs.add(ixp.split(' - ')[0])
   })
 
   const groupByLabelDomestic = data
@@ -263,29 +261,6 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
-      <div>
-        <h3>Filtering</h3>
-        <div class="row">
-          <div class="col q-mr-xl">
-            <QBadge>Number of unique ASes per IXP: {{ uniqueASperIXP }}</QBadge>
-            <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
-          </div>
-          <div class="col">
-            <QSelect
-              use-chips
-              filled
-              multiple
-              v-model="selectResource"
-              :options="optionsResource"
-              @update:model-value="load()"
-              :rules="[
-                (val) => val.length > 0 || 'Please select at least one Reference Organization'
-              ]"
-              label="Reference Organizations"
-            />
-          </div>
-        </div>
-      </div>
       <IypGenericBoxPlotChart
         v-if="ixps.data.length > 0"
         :chart-data="boxPlotDataFormat(ixps.data)"
@@ -320,6 +295,30 @@ onMounted(() => {
         :config="{}"
         :no-data="errorMessageResource"
       />
+      <div>
+        <h3>Filtering</h3>
+        <div class="row">
+          <div class="col q-mr-xl">
+            <QBadge>Number of unique ASes per IXP: {{ uniqueASperIXP }}</QBadge>
+            <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
+          </div>
+          <div class="col">
+            <QSelect
+              use-chips
+              filled
+              multiple
+              v-model="selectResource"
+              :options="optionsResource"
+              @update:model-value="load()"
+              :rules="[
+                (val) => val.length > 0 || 'Please select at least one Reference Organization'
+              ]"
+              label="Reference Organizations"
+            />
+          </div>
+        </div>
+      </div>
+
     </div>
   </IypController>
 </template>

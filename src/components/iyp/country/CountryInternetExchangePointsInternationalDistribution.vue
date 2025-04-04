@@ -226,6 +226,27 @@ onMounted(() => {
     :slot-length="1"
   >
     <div class="col-6">
+      <IypGenericBarChart
+        v-if="ixps.data.length > 0"
+        :chart-data="barPlotDataFormat(ixps.data)"
+        :chart-layout="{
+          title: 'ASes Registration Country Code',
+          yaxis: { title: { text: 'Number of unique ASes' } }
+        }"
+        :config="{ key: 'as_country' }"
+        :group-top-n-and-except-as-others="8"
+      />
+      <IypGenericHeatmapChart
+        v-if="ixps.data.length > 0"
+        :chart-data="heatmapPlotDataFormat(ixps.group)"
+        :chart-layout="{
+          title: `IXP Membership in ${pageTitle}`,
+          xaxis: { automargin: true, constrain: 'domain', scaleanchor: 'y' },
+          yaxis: { automargin: true, constrain: 'domain' },
+          height: 900
+        }"
+        :config="{}"
+      />
       <div>
         <h3>Filtering</h3>
         <div class="row">
@@ -249,27 +270,6 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <IypGenericBarChart
-        v-if="ixps.data.length > 0"
-        :chart-data="barPlotDataFormat(ixps.data)"
-        :chart-layout="{
-          title: 'ASes Registration Country Code',
-          yaxis: { title: { text: 'Number of unique ASes' } }
-        }"
-        :config="{ key: 'as_country' }"
-        :group-top-n-and-except-as-others="8"
-      />
-      <IypGenericHeatmapChart
-        v-if="ixps.data.length > 0"
-        :chart-data="heatmapPlotDataFormat(ixps.group)"
-        :chart-layout="{
-          title: `IXP Membership in ${pageTitle}`,
-          xaxis: { automargin: true, constrain: 'domain', scaleanchor: 'y' },
-          yaxis: { automargin: true, constrain: 'domain' },
-          height: 900
-        }"
-        :config="{}"
-      />
     </div>
   </IypController>
 </template>
