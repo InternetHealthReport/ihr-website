@@ -276,7 +276,7 @@ onMounted(() => {
         v-if="ixps.data.length > 0"
         :chart-data="barPlotDataFormat(ixps.group)"
         :chart-layout="{
-          title: 'IXPs location',
+          title: 'IXPs Location',
           yaxis: { title: { text: 'Number of unique ASes' } }
         }"
         :config="{ key: 'ix_country' }"
