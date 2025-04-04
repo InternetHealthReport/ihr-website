@@ -19,8 +19,10 @@ const ixps = ref({
   group: {},
   show: false,
   loading: true,
-  query: `MATCH (ix:IXP)-[:MEMBER_OF]-(member:AS)-[:COUNTRY {reference_org:'NRO'}]-(:Country {country_code:$country_code})
+  query: `
+    MATCH (member:AS)-[:COUNTRY {reference_org:'NRO'}]-(:Country {country_code:$country_code})
     WHERE (member)-[:ORIGINATE]-(:Prefix)
+    OPTIONAL MATCH (ix:IXP)-[:MEMBER_OF]-(member)
     WITH ix, COLLECT(member) AS members, COUNT(DISTINCT member) AS ixp_domestic_members
     UNWIND members as member
     OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
@@ -162,7 +164,7 @@ const boxPlotDataFormat = (data) => {
   })
 
   const groupByLabelDomestic = data
-    .filter((obj) => obj.ix_country === props.countryCode)
+    .filter((obj) => obj.ix_country === props.countryCode || obj.ix_country == null )
     .reduce((acc, current) => {
       const label = `${current.label}-Domestic`
       if (!acc[label]) {
@@ -180,7 +182,7 @@ const boxPlotDataFormat = (data) => {
     }, {})
 
   const groupByLabelInternational = data
-    .filter((obj) => obj.ix_country !== props.countryCode)
+    .filter((obj) => obj.ix_country !== props.countryCode )
     .reduce((acc, current) => {
       const label = `${current.label}-International`
       if (!acc[label]) {
