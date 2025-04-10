@@ -40,14 +40,20 @@ const formatChartData = (arrayOfObjects) => {
   let data = []
   if (arrayOfObjects.length) {
     const groupData = {}
+    const countCategoryItems = {}
     arrayOfObjects.forEach((obj) => {
       Object.keys(obj).forEach((group) => {
         let y = []
         if (obj[group]) {
+          const category = group.slice(0, group.lastIndexOf('-'))
           Object.keys(obj[group]).forEach((asn) => {
             y.push(obj[group][asn].size)
+            if (!countCategoryItems[category]) {
+              countCategoryItems[category] = 0
+            }
+            countCategoryItems[category] += 1
           })
-          const groupName = group.split('-')[1]
+          const groupName = group.split('-').pop()
           if (!groupData[groupName]) {
             groupData[groupName] = {
               y: [],
@@ -55,7 +61,7 @@ const formatChartData = (arrayOfObjects) => {
             }
           }
           groupData[groupName].y = [...groupData[groupName].y, ...y]
-          groupData[groupName].x = [...groupData[groupName].x, ...y.map((_) => group.split('-')[0])]
+          groupData[groupName].x = [...groupData[groupName].x, ...y.map((_) => category)]
         }
       })
     })
@@ -69,7 +75,7 @@ const formatChartData = (arrayOfObjects) => {
       data.push({
         type: 'box',
         y: [...notOtherY, ...otherY],
-        x: [...notOtherX, ...otherX],
+        x: [...notOtherX, ...otherX].map(val => props.config.xAxisCount ? props.config.xAxisCount.replace('{val}', val).replace('{count}', countCategoryItems[val]) : val),
         name: group,
         ...props.config
       })

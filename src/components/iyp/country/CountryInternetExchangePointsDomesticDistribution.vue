@@ -278,7 +278,7 @@ onMounted(() => {
           yaxis: { title: { text: 'Number of IXPs per AS' }, zeroline: false },
           boxmode: 'group'
         }"
-        :config="{}"
+        :config="{xAxisCount: '{val}<br><sub>Total AS: {count}</sub>'}"
         :no-data="errorMessageResource"
       />
       <IypGenericBarChart
