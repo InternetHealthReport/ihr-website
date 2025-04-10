@@ -75,7 +75,13 @@ const formatChartData = (arrayOfObjects) => {
       data.push({
         type: 'box',
         y: [...notOtherY, ...otherY],
-        x: [...notOtherX, ...otherX].map(val => props.config.xAxisCount ? props.config.xAxisCount.replace('{val}', val).replace('{count}', countCategoryItems[val]) : val),
+        x: [...notOtherX, ...otherX].map((val) =>
+          props.config.xAxisCount
+            ? props.config.xAxisCount
+                .replace('{val}', val)
+                .replace('{count}', countCategoryItems[val])
+            : val
+        ),
         name: group,
         ...props.config
       })

@@ -176,7 +176,13 @@ const parseDate = (date) => {
 const fetchMetadata = async () => {
   loadingStatusMetadata.value = true
   try {
-    let res = await iyp_api.run([{ statement: getMetadataQuery(props.metadataCypherQuery ? props.metadataCypherQuery : props.cypherQuery) }])
+    let res = await iyp_api.run([
+      {
+        statement: getMetadataQuery(
+          props.metadataCypherQuery ? props.metadataCypherQuery : props.cypherQuery
+        )
+      }
+    ])
     metadata.value = {}
     res[0].forEach((obj) => {
       const list = obj.metadata_list
@@ -341,11 +347,17 @@ onMounted(() => {
         <QTab
           name="chart"
           label="CHART"
-          :disable="slotLength <= 0 || ((data.length <= 0 ? true : false) && disableChartOnEmptyData)"
+          :disable="
+            slotLength <= 0 || ((data.length <= 0 ? true : false) && disableChartOnEmptyData)
+          "
         />
         <QTab name="data" label="DATA" />
         <QTab name="api" label="CYPHER QUERY" />
-        <QTab name="metadata" label="METADATA" :disable="(data.length ? false : true) && disableChartOnEmptyData" />
+        <QTab
+          name="metadata"
+          label="METADATA"
+          :disable="(data.length ? false : true) && disableChartOnEmptyData"
+        />
       </QTabs>
       <QTabPanels v-model="activeTab" animated @transition="transition">
         <QTabPanel name="chart">
