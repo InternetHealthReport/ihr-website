@@ -44,6 +44,10 @@ const props = defineProps({
   cypherQuery: {
     type: String
   },
+  metadataCypherQuery: {
+    type: String,
+    default: null
+  },
   slotLength: {
     type: Number,
     default: 0
@@ -125,8 +129,8 @@ const exportTable = () => {
   }
 }
 
-const getMetadataQuery = () => {
-  let query = props.cypherQuery.replace(/(RETURN|return)(?:.)*/gm, '')
+const getMetadataQuery = (cypherQuery) => {
+  let query = cypherQuery.replace(/(RETURN|return)(?:.)*/gm, '')
   query = query.replace(/(CALL|call)(?:.|\n)*}/gm, '')
   query = query.replace(/(ORDER|order)(?:.|\n)*/gm, '')
   query = query.replace(/(WHERE|where)(?:.|n)*/gm, '')
@@ -168,7 +172,7 @@ const parseDate = (date) => {
 const fetchMetadata = async () => {
   loadingStatusMetadata.value = true
   try {
-    let res = await iyp_api.run([{ statement: getMetadataQuery() }])
+    let res = await iyp_api.run([{ statement: getMetadataQuery(props.metadataCypherQuery ? props.metadataCypherQuery : props.cypherQuery) }])
     res[0].forEach((obj) => {
       const list = obj.metadata_list
       if (list[0] === null) {

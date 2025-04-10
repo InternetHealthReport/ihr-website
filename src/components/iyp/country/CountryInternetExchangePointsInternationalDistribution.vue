@@ -29,6 +29,15 @@ const ixps = ref({
     OPTIONAL MATCH (ix:IXP)-[:MANAGED_BY {reference_org:'PeeringDB'}]-(org:Organization)
     RETURN  member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, as_country.country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name, ixp_domestic_members
     ORDER BY ixp_domestic_members`,
+  metadata: `
+    MATCH (ix:IXP)-[:MEMBER_OF]-(member:AS)-[:COUNTRY {reference_org:'NRO'}]-(:Country {country_code:$country_code})
+    WHERE (member)-[:ORIGINATE]-(:Prefix)
+    MATCH (member:AS)-[mem:MEMBER_OF]-(ix:IXP)-[:COUNTRY]-(ix_country:Country {country_code:$country_code})
+    MATCH (member:AS)-[:COUNTRY {reference_org:'NRO'}]-(as_country:Country)
+    WHERE  as_country.country_code <> $country_code AND (member)-[:ORIGINATE]-(:Prefix)
+    OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
+    OPTIONAL MATCH (ix:IXP)-[:MANAGED_BY {reference_org:'PeeringDB'}]-(org:Organization)
+    RETURN  member.asn AS asn`,
   columns: [
     {
       name: 'AS Country',
@@ -147,7 +156,7 @@ const load = () => {
 const onReferenceOrganizationSelection = (query) => {
   if (selectResource.value.length < optionsResource.value.length) {
     const splitQuery = query.split('RETURN')
-    const updateQuery = `WITH member, tag, ix, ix_country, org, mem, as_country
+    const updateQuery = `WITH member, tag, ix, ix_country, org, mem, as_country, ixp_domestic_members
       WHERE mem IS null OR mem.reference_org IN ['${selectResource.value.join("','")}']`
     return `${splitQuery[0]} ${updateQuery}\nRETURN ${splitQuery[1].trim()}`
   }
@@ -220,8 +229,9 @@ onMounted(() => {
     :columns="ixps.columns"
     :loading-status="ixps.loading"
     :cypher-query="
-      onReferenceOrganizationSelection(ixps.query).replace(/\$(.*?)}/, `'${countryCode}'}`)
+      onReferenceOrganizationSelection(ixps.query).replace(/\$(.*?)}/gm, `'${countryCode}'}`)
     "
+    :metadata-cypher-query="onReferenceOrganizationSelection(ixps.metadata).replace(/\$(.*?)}/gm, `'${countryCode}'}`)"
     :pagination="ixps.pagination"
     :slot-length="1"
   >

@@ -30,6 +30,13 @@ const ixps = ref({
     OPTIONAL MATCH (ix)-[man:MANAGED_BY]-(org:Organization)
     RETURN  DISTINCT member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, $country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name, ixp_domestic_members
     ORDER BY ixp_domestic_members`,
+  metadata: `
+    MATCH (member:AS)-[:COUNTRY {reference_org:'NRO'}]-(:Country {country_code:$country_code})
+    WHERE (member)-[:ORIGINATE]-(:Prefix)
+    OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
+    OPTIONAL MATCH (member)-[mem:MEMBER_OF]-(ix:IXP)-[:COUNTRY]-(ix_country:Country)
+    OPTIONAL MATCH (ix)-[man:MANAGED_BY]-(org:Organization)
+    RETURN DISTINCT member.asn AS asn`,
   columns: [
     {
       name: 'AS Country',
@@ -148,7 +155,7 @@ const load = () => {
 const onReferenceOrganizationSelection = (query) => {
   if (selectResource.value.length < optionsResource.value.length) {
     const splitQuery = query.split('RETURN')
-    const updateQuery = `WITH member, tag, ix, ix_country, org, mem, man
+    const updateQuery = `WITH member, tag, ix, ix_country, org, mem, man, ixp_domestic_members
       WHERE mem IS null OR mem.reference_org IN ['${selectResource.value.join("','")}']`
     return `${splitQuery[0]} ${updateQuery}\nRETURN ${splitQuery[1].trim()}`
   }
@@ -162,7 +169,7 @@ const boxPlotDataFormat = (data) => {
   })
 
   const groupByLabelDomestic = data
-    .filter((obj) => obj.ix_country === props.countryCode || obj.ix_country == null )
+    .filter((obj) => obj.ix_country === props.countryCode || obj.ix_country == null)
     .reduce((acc, current) => {
       const label = `${current.label}-Domestic`
       if (!acc[label]) {
@@ -180,7 +187,7 @@ const boxPlotDataFormat = (data) => {
     }, {})
 
   const groupByLabelInternational = data
-    .filter((obj) => obj.ix_country !== props.countryCode )
+    .filter((obj) => obj.ix_country !== props.countryCode)
     .reduce((acc, current) => {
       const label = `${current.label}-International`
       if (!acc[label]) {
@@ -257,6 +264,7 @@ onMounted(() => {
     :cypher-query="
       onReferenceOrganizationSelection(ixps.query).replace(/\$(.*?)}/, `'${countryCode}'}`)
     "
+    :metadata-cypher-query="onReferenceOrganizationSelection(ixps.metadata).replace(/\$(.*?)}/, `'${countryCode}'}`)"
     :pagination="ixps.pagination"
     :slot-length="1"
   >
@@ -318,7 +326,6 @@ onMounted(() => {
           </div>
         </div>
       </div>
-
     </div>
   </IypController>
 </template>
