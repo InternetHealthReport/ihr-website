@@ -173,6 +173,7 @@ const fetchMetadata = async () => {
   loadingStatusMetadata.value = true
   try {
     let res = await iyp_api.run([{ statement: getMetadataQuery(props.metadataCypherQuery ? props.metadataCypherQuery : props.cypherQuery) }])
+    metadata.value = {}
     res[0].forEach((obj) => {
       const list = obj.metadata_list
       if (list[0] === null) {
