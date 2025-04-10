@@ -55,6 +55,10 @@ const props = defineProps({
   pagination: {
     type: Object,
     default: Object
+  },
+  disableChartOnEmptyData: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -337,11 +341,11 @@ onMounted(() => {
         <QTab
           name="chart"
           label="CHART"
-          :disable="slotLength <= 0 || data.length <= 0 ? true : false"
+          :disable="slotLength <= 0 || ((data.length <= 0 ? true : false) && disableChartOnEmptyData)"
         />
         <QTab name="data" label="DATA" />
         <QTab name="api" label="CYPHER QUERY" />
-        <QTab name="metadata" label="METADATA" :disable="data.length ? false : true" />
+        <QTab name="metadata" label="METADATA" :disable="(data.length ? false : true) && disableChartOnEmptyData" />
       </QTabs>
       <QTabPanels v-model="activeTab" animated @transition="transition">
         <QTabPanel name="chart">

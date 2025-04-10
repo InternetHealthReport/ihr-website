@@ -231,9 +231,10 @@ onMounted(() => {
     :cypher-query="
       onReferenceOrganizationSelection(ixps.query).replace(/\$(.*?)}/gm, `'${countryCode}'}`)
     "
-    :metadata-cypher-query="onReferenceOrganizationSelection(ixps.metadata).replace(/\$(.*?)}/gm, `'${countryCode}'}`)"
+    :metadata-cypher-query="ixps.metadata.replace(/\$(.*?)}/gm, `'${countryCode}'}`)"
     :pagination="ixps.pagination"
     :slot-length="1"
+    :disable-chart-on-empty-data="false"
   >
     <div class="col-6">
       <IypGenericBarChart
