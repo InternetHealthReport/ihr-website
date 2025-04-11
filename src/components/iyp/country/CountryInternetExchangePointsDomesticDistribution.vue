@@ -262,7 +262,7 @@ onMounted(() => {
     :columns="ixps.columns"
     :loading-status="ixps.loading"
     :cypher-query="
-      onReferenceOrganizationSelection(ixps.query).replace(/\$(.*?)}/, `'${countryCode}'}`)
+      onReferenceOrganizationSelection(ixps.query).replace(/\$country_code/gm, `'${countryCode}'`)
     "
     :metadata-cypher-query="ixps.metadata.replace(/\$(.*?)}/, `'${countryCode}'}`)"
     :pagination="ixps.pagination"
