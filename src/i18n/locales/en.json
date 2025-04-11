@@ -996,16 +996,16 @@
         "title": "Domestic ASes",
         "caption": "IXP membership for ASes registered in ",
         "info": {
-          "title": "TODO 1: Change text here",
-          "description": "<p>TODO 1: Change text here</p>"
+          "title": "IXP membership for domestic ASes",
+          "description": "<p>Distribution of ASes registered in the selected country (and active in BGP) accross domestic and international Internet Exchange Points (IXPs).</p>"
         }
       },
       "ixps_international_distribution": {
         "title": "International ASes",
         "caption": "International ASes member of IXPs in ",
         "info": {
-          "title": "TODO 2: Change text here",
-          "description": "<p>TODO 2: Change text here</p>"
+          "title": "IXP membership for international ASes",
+          "description": "<p>Distribution of ASes registered outside of the selected country (and active in BGP) accross Internet Exchange Points (IXPs) operating in the selected country.</p>"
         }
       },
       "prefixes": {
