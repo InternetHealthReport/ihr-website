@@ -6,7 +6,7 @@ import { isoCountries, countryISOMapping, getCountryISOCode2 } from '@/plugins/c
 const countryNames = ref(Object.values(isoCountries))
 const countryCodes = ref(Object.values(countryISOMapping))
 const loading = ref(false)
-
+const isMap=true
 const emit = defineEmits(['country-selected'])
 
 const layout = {
@@ -64,5 +64,5 @@ const onCountryClick = (eventData) => {
 </script>
 
 <template>
-  <ReactiveChart :layout="layout" :traces="traces" @plotly-click="onCountryClick" />
+  <ReactiveChart :layout="layout" :traces="traces" :isMap="isMap" @plotly-click="onCountryClick" />
 </template>
