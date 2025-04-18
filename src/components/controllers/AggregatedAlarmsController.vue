@@ -545,10 +545,12 @@ watch(selectedAlarmTypesOptions.value, () => {
           </tbody>
         </QMarkupTable>
         <br />
-        <div class="row">
-          <div class="col-auto">
-            <div class="row">
-              <div class="col">
+          <!--FILTER + ACTIONS LAYOUT-->
+          <div class="row q-col-gutter-md">
+          <!-- LEFT BLOCK: Date pickers + Apply/Reset -->
+          <div class="col-12 col-sm-5 col-md-4">
+            <div class="row q-col-gutter-sm">
+              <div class="col-12 col-sm-6">
                 <QInput
                   v-model="startTimeFormatted"
                   type="datetime-local"
@@ -558,8 +560,7 @@ watch(selectedAlarmTypesOptions.value, () => {
                   :max="maxTimeFormatted"
                 />
               </div>
-              <div class="col-auto" style="width: 40px" />
-              <div class="col">
+              <div class="col-12 col-sm-6">
                 <QInput
                   v-model="endTimeFormatted"
                   type="datetime-local"
@@ -570,56 +571,71 @@ watch(selectedAlarmTypesOptions.value, () => {
                 />
               </div>
             </div>
-            <div class="row" style="margin-top: 20px">
-              <div class="col-5 text-center">
+            <div class="row q-col-gutter-sm q-mt-sm">
+              <div class="col-6">
                 <QBtn
                   color="primary"
-                  class="float-right"
+                  class="full-width"
                   :disable="isLoaded"
-                  @click="
-                    timeFilter({ startDateTime: startTimeFormatted, endDateTime: endTimeFormatted })
-                  "
+                  @click="timeFilter({ startDateTime: startTimeFormatted, endDateTime: endTimeFormatted })"
                 >
                   APPLY
                 </QBtn>
               </div>
-              <div class="col-4 text-center">
-                <QBtn color="primary" class="float-right" :disable="isLoaded" @click="resetTime">
+              <div class="col-6">
+                <QBtn
+                  color="primary"
+                  class="full-width"
+                  :disable="isLoaded"
+                  @click="resetTime"
+                >
                   RESET TIME
                 </QBtn>
               </div>
             </div>
           </div>
-          <div class="col offset-md-1">
-            <QSelect
-              v-model="selectSeveritiesLevels"
-              :disable="isLoaded"
-              outlined
-              multiple
-              :options="SEVERITY_LEVELS"
-              label="Severity Levels:"
-              stack-label
-              use-chips
-            />
+          <!-- RIGHT BLOCK: Selectors + Show All-->
+          <div class="col-12 col-sm-7 col-md-8">
+            <div class="row q-col-gutter-md q-gutter-y-sm items-end">
+              <div class="col-12 col-sm-6 col-md-4">
+                <QSelect
+                  class="full-width"
+                  v-model="selectSeveritiesLevels"
+                  :disable="isLoaded"
+                  outlined
+                  multiple
+                  :options="SEVERITY_LEVELS"
+                  label="Severity Levels:"
+                  stack-label
+                  use-chips
+                />
+              </div>
+              <div class="col-12 col-sm-6 col-md-4">
+                <QSelect
+                  class="full-width"
+                  v-model="selectIPAddressFamilies"
+                  :disable="isLoaded"
+                  outlined
+                  multiple
+                  :options="IP_ADDRESS_FAMILIES"
+                  label="IP Address Families:"
+                  stack-label
+                  use-chips
+                />
+              </div>
+              <div class="col-12 col-sm-6 col-md-auto text-sm-right">
+                <QBtn
+                  class="full-width"
+                  color="primary"
+                  :disable="isLoaded"
+                  @click="resetGranularity"
+                >
+                  SHOW ALL COUNTRIES
+                </QBtn>
+              </div>
+            </div>
           </div>
-          <div class="col offset-md-1">
-            <QSelect
-              v-model="selectIPAddressFamilies"
-              :disable="isLoaded"
-              outlined
-              multiple
-              :options="IP_ADDRESS_FAMILIES"
-              label="IP Address Families:"
-              stack-label
-              use-chips
-            />
           </div>
-          <div class="col">
-            <QBtn color="primary" class="float-right" :disable="isLoaded" @click="resetGranularity">
-              Show All Countries
-            </QBtn>
-          </div>
-        </div>
       </QCardSection>
     </QCard>
     <QCard class="card">
@@ -644,7 +660,7 @@ watch(selectedAlarmTypesOptions.value, () => {
       <div class="col q-mr-md">
         <QCard class="card">
           <QCardSection>
-            <div class="row items-center">
+            <div class="row alarm-actions items-center">
               <div class="col">
                 <QBtn color="primary" class="full-width" :disable="isLoaded" @click="resetTime">
                   RESET TIME
@@ -789,5 +805,18 @@ watch(selectedAlarmTypesOptions.value, () => {
   justify-content: center;
   align-items: center;
   min-height: 100px;
+}
+.alarm-actions {
+  display: flex;
+  gap: 12px;        
+}
+@media (max-width: 600px) {
+  .alarm-actions {
+    flex-direction: column; 
+    gap: 8px;                
+  }
+  .alarm-actions .q-btn__content {
+    font-size: 0.75rem;   
+  }
 }
 </style>
