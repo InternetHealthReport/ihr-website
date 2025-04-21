@@ -1,6 +1,7 @@
 import i18n from '@/i18n'
 import { nextTick } from 'vue'
 import { get, set } from 'idb-keyval'
+import axios from 'axios'
 
 const Trans = {
   set currentLocale(newLocale) {
@@ -85,8 +86,8 @@ const Trans = {
 
   async loadLocaleMessages(locale) {
     if (!i18n.global.availableLocales.includes(locale)) {
-      const messages = await import(`@/i18n/locales/${locale}.json`)
-      i18n.global.setLocaleMessage(locale, messages.default)
+      const messages = (await axios.get(`/locales/${locale}.json`)).data
+      i18n.global.setLocaleMessage(locale, messages)
     }
     return nextTick()
   }

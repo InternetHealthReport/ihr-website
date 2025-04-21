@@ -3,7 +3,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { quasar, transformAssetUrls } from '@quasar/vite-plugin'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
-import { resolve, dirname } from 'node:path'
 import { existsSync } from 'fs'
 import VueDevTools from 'vite-plugin-vue-devtools'
 
@@ -34,7 +33,6 @@ export default defineConfig({
     quasar(),
     VueI18nPlugin({
       strictMessage: false,
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/i18n/locales/**'),
     }),
     dotPathFixPlugin(),
     VueDevTools(),
@@ -43,5 +41,8 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  build: {
+    target: ['es2022']
   }
 })
