@@ -656,8 +656,8 @@ watch(selectedAlarmTypesOptions.value, () => {
         </div>
       </QCardSection>
     </QCard>
-    <div class="row">
-      <div class="col q-mr-md">
+    <div class="row q-col-gutter-md">
+      <div class="col-12 col-md-6">
         <QCard class="card">
           <QCardSection>
             <div class="row alarm-actions items-center">
@@ -701,7 +701,7 @@ watch(selectedAlarmTypesOptions.value, () => {
           </QCardSection>
         </QCard>
       </div>
-      <div class="col">
+      <div class="col-12 col-md-6">
         <QCard class="card">
           <QCardSection>
             <div class="col">
