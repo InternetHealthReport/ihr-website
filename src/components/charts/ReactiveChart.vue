@@ -33,6 +33,10 @@ const props = defineProps({
   },
   shapes: {
     type: Array
+  },
+  disableCVD: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -292,7 +296,9 @@ const init = () => {
     responsive: true,
     displayModeBar: 'hover'
   }).then(() => {
-    addCustomModebarButton()
+    if(!props.disableCVD){
+      addCustomModebarButton()
+    }
   })
   if (document.documentElement.clientWidth < 576) {
     Plotly.relayout(graphDiv, { showlegend: false })

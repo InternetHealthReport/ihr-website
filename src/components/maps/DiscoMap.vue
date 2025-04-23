@@ -35,6 +35,7 @@ const layout = ref({
 })
 const probes = ref([])
 const noData = ref(t('loading'))
+const disableCVD=true;
 
 const updateProbes = () => {
   probes.value = []
@@ -143,6 +144,6 @@ const traces = computed(() => {
 
 <template>
   <div class="IHR_disco-chart">
-    <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" :y-max="yMax" />
+    <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" :disableCVD="disableCVD" :y-max="yMax" />
   </div>
 </template>

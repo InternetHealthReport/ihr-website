@@ -20,6 +20,7 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['country-clicked'])
+const disableCVD=true;
 
 const layout = ref({
   ...COMMON_FEATURE,
@@ -120,6 +121,7 @@ onMounted(() => {
       :layout="layout"
       :traces="traces"
       :no-data="noData"
+      :disableCVD="disableCVD"
       @plotly-click="plotlyClickedDataHandler"
     />
   </div>
