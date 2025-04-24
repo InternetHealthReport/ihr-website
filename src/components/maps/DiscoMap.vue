@@ -143,6 +143,6 @@ const traces = computed(() => {
 
 <template>
   <div class="IHR_disco-chart">
-    <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" :y-max="yMax" />
+    <ReactiveChart :layout="layout" :traces="traces" :no-data="noData" :disableCVD="true" :y-max="yMax" />
   </div>
 </template>
