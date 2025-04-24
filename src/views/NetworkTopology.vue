@@ -56,7 +56,16 @@ const deleteChart = (id) => {
 
 const getMaxItemsInRow = () => {
   const screenWidth = window.innerWidth
-  return screenWidth >= 1800 ? 3 : 2
+  if (screenWidth >= 1800) {
+    // Ultra-wide monitors (e.g., 28-inch)
+    return 3
+  } else if (screenWidth >= 1024) {
+    // Desktops and large tablets in landscape
+    return 2
+  } else {
+    // Tablets (portrait), mobiles
+    return 1
+  }
 }
 
 const changeLayout = (searchInput, af) => {

@@ -480,9 +480,16 @@ defineExpose({ fitToScreen })
             label="IP"
             :dense="true"
           />
-          <QBtn style="margin-left: 15px" color="secondary" label="Search" @click="search" />
+          <div class="row q-col-gutter-sm q-gutter-y-sm q-gutter-x-none q-responsive buttons">
+          <div class="col-6 col-sm-auto">
+            <QBtn color="secondary" label="Search" class="full-width" @click="search" />
+          </div>
+          <div class="col-6 col-sm-auto">
+            <QBtn color="negative" label="Delete" class="full-width" @click="$emit('deleteChart', props.id)" />
+          </div>
         </div>
-        <QBtn color="negative" label="Delete" @click="$emit('deleteChart', props.id)" />
+        </div>
+        
       </div>
     </QCardSection>
 
@@ -619,5 +626,8 @@ defineExpose({ fitToScreen })
   top: 5%;
   right: 5%;
   background-color: white;
+}
+.buttons{
+  margin-left: 10px;
 }
 </style>
