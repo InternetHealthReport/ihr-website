@@ -62,7 +62,7 @@ watch(
   }
 )
 watch(menu, () => {
-  if ('display' in route.query) {
+  if ('display' in route.query && !route.hash.includes('#')) {
     delete route.query.display
   }
   router.push(

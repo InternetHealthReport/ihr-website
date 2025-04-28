@@ -20,8 +20,8 @@ const { t } = useI18n()
 const fetch = ref(true)
 const displayWidgets = ref(route.query.display ? JSON.parse(route.query.display) : [])
 const selects = ref([
-  { value: false, hasData: false, label: 'AS' },
-  { value: false, hasData: false, label: 'Hostname' }
+  { value: false, hasData: false, label: t('iyp.rank.topAs.title') },
+  { value: false, hasData: false, label: t('iyp.rank.topHostnames.title') }
 ])
 const selectAll = ref(false)
 
@@ -41,7 +41,7 @@ const init = async () => {
   if ('AS' == node) {
     selects.value[0].hasData = true
   }
-  if ('DomainName' == node) {
+  if ('HostName' == node) {
     selects.value[1].hasData = true
   }
 }
