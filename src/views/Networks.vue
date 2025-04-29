@@ -78,21 +78,19 @@ onMounted(() => {
       <Prefix v-if="prefixHostString && prefixLengthNumber" />
     </div>
     <div v-else>
-      <div>
-        <h1 class="text-center q-pa-xl">Network Report</h1>
-        <div class="row justify-center">
-          <div class="col-6">
-            <SearchBar
-              bg="white"
-              label="grey-8"
-              input="black"
-              label-txt="Enter an AS ID, IXP or network name (at least 3 characters)"
-              :no-country="true"
-              :no-host-name="true"
-              :no-tag="true"
-              :no-rank="true"
-            />
-          </div>
+      <h1 class="text-center q-pa-xl">Network Report</h1>
+      <div class="q-pa-md flex flex-center">
+        <div style="width: 100%; max-width: 500px;">
+          <SearchBar
+            bg="white"
+            label="grey-8"
+            input="black"
+            label-txt="Enter an AS ID, IXP or network name (at least 3 characters)"
+            :no-country="true"
+            :no-host-name="true"
+            :no-tag="true"
+            :no-rank="true"
+          />
         </div>
       </div>
       <div class="q-pa-lg">

@@ -38,8 +38,8 @@ onMounted(() => {
     <div v-else>
       <div>
         <h1 class="text-center q-pa-xl">Country Report</h1>
-        <div class="row justify-center">
-          <div class="col-6">
+        <div class="q-pa-md flex flex-center">
+          <div style="width: 100%; max-width: 500px;">
             <SearchBar
               bg="white"
               label="grey-8"
