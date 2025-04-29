@@ -38,7 +38,7 @@ onMounted(() => {
       <div>
         <h1 class="text-center q-pa-xl">Hostname Report</h1>
         <div class="q-pa-md flex flex-center">
-          <div style="width: 100%; max-width: 500px;">
+          <div style="width: 100%; max-width: 500px">
             <SearchBar
               bg="white"
               label="grey-8"

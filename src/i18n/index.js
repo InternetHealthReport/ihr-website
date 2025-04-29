@@ -9,8 +9,8 @@ const i18n = async () => {
     legacy: false,
     globalInjection: true,
     warnHtmlMessage: false,
-    messages: { en: messages },
+    messages: { en: messages }
   })
 }
 
-export default (await i18n())
+export default await i18n()

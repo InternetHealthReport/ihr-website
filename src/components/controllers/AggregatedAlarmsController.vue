@@ -545,8 +545,8 @@ watch(selectedAlarmTypesOptions.value, () => {
           </tbody>
         </QMarkupTable>
         <br />
-          <!--FILTER + ACTIONS LAYOUT-->
-          <div class="row q-col-gutter-md">
+        <!--FILTER + ACTIONS LAYOUT-->
+        <div class="row q-col-gutter-md">
           <!-- LEFT BLOCK: Date pickers + Apply/Reset -->
           <div class="col-12 col-sm-5 col-md-4">
             <div class="row q-col-gutter-sm">
@@ -577,18 +577,15 @@ watch(selectedAlarmTypesOptions.value, () => {
                   color="primary"
                   class="full-width"
                   :disable="isLoaded"
-                  @click="timeFilter({ startDateTime: startTimeFormatted, endDateTime: endTimeFormatted })"
+                  @click="
+                    timeFilter({ startDateTime: startTimeFormatted, endDateTime: endTimeFormatted })
+                  "
                 >
                   APPLY
                 </QBtn>
               </div>
               <div class="col-6">
-                <QBtn
-                  color="primary"
-                  class="full-width"
-                  :disable="isLoaded"
-                  @click="resetTime"
-                >
+                <QBtn color="primary" class="full-width" :disable="isLoaded" @click="resetTime">
                   RESET TIME
                 </QBtn>
               </div>
@@ -635,7 +632,7 @@ watch(selectedAlarmTypesOptions.value, () => {
               </div>
             </div>
           </div>
-          </div>
+        </div>
       </QCardSection>
     </QCard>
     <QCard class="card">
@@ -808,15 +805,15 @@ watch(selectedAlarmTypesOptions.value, () => {
 }
 .alarm-actions {
   display: flex;
-  gap: 12px;        
+  gap: 12px;
 }
 @media (max-width: 600px) {
   .alarm-actions {
-    flex-direction: column; 
-    gap: 8px;                
+    flex-direction: column;
+    gap: 8px;
   }
   .alarm-actions .q-btn__content {
-    font-size: 0.75rem;   
+    font-size: 0.75rem;
   }
 }
 </style>
