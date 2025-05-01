@@ -92,6 +92,7 @@ const configs = vNG.defineConfigs({
     autoPanAndZoomOnLoad: 'fit-content',
     fitContentMargin: '15%',
     scalingObjects: 'true',
+    zoomEnabled: false, // Disables mouse wheel / pinch zoom
     grid: {
       visible: false,
       interval: 100,
@@ -397,6 +398,7 @@ const eventHandlers = {
     tooltipHoverOpacity.value = 0
   },
   'node:click': ({ node, event }) => {
+
     if (event.detail > 0) {
       if (!props.isComponent) {
         tooltipHoverOpacity.value = 0
@@ -458,6 +460,7 @@ onMounted(() => {
 })
 
 defineExpose({ fitToScreen })
+
 </script>
 
 <template>
@@ -512,6 +515,7 @@ defineExpose({ fitToScreen })
         :layouts="layouts"
         :configs="configs"
         :event-handlers="eventHandlers"
+        :options="graphOptions"
       />
 
       <div v-if="props.showLegend" class="legend">
@@ -555,6 +559,7 @@ defineExpose({ fitToScreen })
     <h5 v-if="!loading && Object.keys(allNodes).length == 0" class="text-center">No data found</h5>
   </QCard>
 </template>
+
 
 <style scoped>
 .graphContainer {
