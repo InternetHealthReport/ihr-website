@@ -32,7 +32,7 @@ const nbprobes = ref('100')
       </div>
     </div>
     <div class="row justify-center">
-      <div class="col-4 q-px-md">
+      <div class="col-12 q-px-md">
         <MetisWidget
           widget-title="IPv4 AS-path length"
           af="4"
@@ -40,15 +40,18 @@ const nbprobes = ref('100')
           :nbprobes="nbprobes"
         />
       </div>
-      <div class="col-4 q-px-md">
+      <hr>
+      <div class="col-12 q-px-md">
         <MetisWidget widget-title="IPv4 RTT" af="4" metric="rtt" :nbprobes="nbprobes" />
       </div>
-      <div class="col-4 q-px-md">
+      <hr>
+      <div class="col-12 q-px-md">
         <MetisWidget widget-title="IPv4 IP hops" af="4" metric="ip_hops" :nbprobes="nbprobes" />
       </div>
+      <hr>
     </div>
     <div class="row justify-center">
-      <div class="col-4 q-px-md">
+      <div class="col-12 q-px-md">
         <MetisWidget
           widget-title="IPv6 AS-path length"
           af="6"
@@ -56,12 +59,15 @@ const nbprobes = ref('100')
           :nbprobes="nbprobes"
         />
       </div>
-      <div class="col-4 q-px-md">
+      <hr>
+      <div class="col-12 q-px-md">
         <MetisWidget widget-title="IPv6 RTT" af="6" metric="rtt" :nbprobes="nbprobes" />
       </div>
-      <div class="col-4 q-px-md">
+      <hr>
+      <div class="col-12 q-px-md">
         <MetisWidget widget-title="IPv6 IP hops" af="6" metric="ip_hops" :nbprobes="nbprobes" />
       </div>
+      <hr>
     </div>
   </div>
 </template>

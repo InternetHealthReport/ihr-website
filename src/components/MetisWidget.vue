@@ -147,18 +147,16 @@ onMounted(async () => {
     <h2 v-if="widgetTitle">
       {{ widgetTitle }}
     </h2>
-    <div class="row justify-center">
-      <div class="col q-px-md q-pb-md">
+    <div class="row justify-evenly">
+      <div class="col-12 col-md-6 q-px-md">
+          <MetisTable :data="tableData" :loading="!fetch" />
+      </div>
+      <div class="col-12 col-md-6 q-px-md q-pb-md">
         <RirCountrySunburstChart :data="plotData" />
       </div>
+      
     </div>
-    <div class="row justify-center">
-      <div class="col q-px-md">
-        <QExpansionItem label="Show data" class="bg-grey-2">
-          <MetisTable :data="tableData" :loading="!fetch" />
-        </QExpansionItem>
-      </div>
-    </div>
+    
   </div>
   <div v-else class="spinner-container">
     <q-spinner color="secondary" size="50px" />
