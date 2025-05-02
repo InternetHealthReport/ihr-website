@@ -91,7 +91,7 @@ const configs = vNG.defineConfigs({
   view: {
     autoPanAndZoomOnLoad: 'fit-content',
     fitContentMargin: '15%',
-    scalingObjects: 'true',
+    scalingObjects: true,
     grid: {
       visible: false,
       interval: 100,
