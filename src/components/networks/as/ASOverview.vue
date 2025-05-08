@@ -331,7 +331,7 @@ onMounted(() => {
                 :key="tag"
                 :to="
                   Tr.i18nRoute({ name: 'tag', params: { tag: tag }, hash: '#Autonomous-Systems' })
-                " 
+                "
               >
                 <QChip dense size="md" color="info" text-color="white">
                   {{ tag }}
