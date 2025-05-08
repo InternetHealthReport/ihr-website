@@ -573,6 +573,7 @@ defineExpose({ fitToScreen })
   z-index: 1;
   top: 25%;
   right: 5%;
+  pointer-events: none;
 }
 
 .spinner {
