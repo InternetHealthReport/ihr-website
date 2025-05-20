@@ -155,7 +155,7 @@ const load = () => {
 const onReferenceOrganizationSelection = (query) => {
   if (selectResource.value.length < optionsResource.value.length) {
     const splitQuery = query.split('RETURN')
-    const updateQuery = `WITH member, tag, ix, ix_country, org, mem, man, ixp_domestic_members
+    const updateQuery = `WITH member, tag, ix, ix_country, org, mem, man, ixp_domestic_members, ix_country_rel
       WHERE mem IS null OR mem.reference_org IN ['${selectResource.value.join("','")}'] AND mem.reference_org = ix_country_rel.reference_org`
     return `${splitQuery[0]} ${updateQuery}\nRETURN ${splitQuery[1].trim()}`
   }

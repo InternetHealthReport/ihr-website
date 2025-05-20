@@ -22,9 +22,9 @@ const ixps = ref({
     MATCH (ix:IXP)-[:MEMBER_OF]-(member:AS)-[:COUNTRY {reference_org:'NRO'}]-(:Country {country_code:$country_code})
     WHERE (member)-[:ORIGINATE]-(:Prefix)
     WITH ix, COUNT(DISTINCT member) AS ixp_domestic_members
-    MATCH (member:AS)-[mem:MEMBER_OF]-(ix:IXP)-[:COUNTRY]-(ix_country:Country {country_code:$country_code})
+    MATCH (member:AS)-[mem:MEMBER_OF]-(ix:IXP)-[ix_country_rel:COUNTRY]-(ix_country:Country {country_code:$country_code})
     MATCH (member:AS)-[:COUNTRY {reference_org:'NRO'}]-(as_country:Country)
-    WHERE  as_country.country_code <> $country_code AND (member)-[:ORIGINATE]-(:Prefix)
+    WHERE  as_country.country_code <> $country_code AND (member)-[:ORIGINATE]-(:Prefix) AND mem.reference_org = ix_country_rel.reference_org
     OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
     OPTIONAL MATCH (ix:IXP)-[:MANAGED_BY {reference_org:'PeeringDB'}]-(org:Organization)
     RETURN  member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, as_country.country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name, ixp_domestic_members
