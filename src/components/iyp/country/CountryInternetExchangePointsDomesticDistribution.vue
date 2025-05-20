@@ -26,7 +26,7 @@ const ixps = ref({
     WITH ix, COLLECT(member) AS members, COUNT(DISTINCT member) AS ixp_domestic_members
     UNWIND members as member
     OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
-    OPTIONAL MATCH (member)-[mem:MEMBER_OF]-(ix:IXP)-[:COUNTRY]-(ix_country:Country)
+    OPTIONAL MATCH (member)-[mem:MEMBER_OF]-(ix:IXP)-[ix_country_rel:COUNTRY]-(ix_country:Country)
     OPTIONAL MATCH (ix)-[man:MANAGED_BY]-(org:Organization)
     RETURN  DISTINCT member.asn AS asn, coalesce(tag.label, 'Other') AS label, ix.name AS ix_name, ix_country.country_code AS ix_country, $country_code AS as_country, mem.reference_org AS mem_reference_org, org.name AS org_name, ixp_domestic_members
     ORDER BY ixp_domestic_members`,
@@ -156,7 +156,7 @@ const onReferenceOrganizationSelection = (query) => {
   if (selectResource.value.length < optionsResource.value.length) {
     const splitQuery = query.split('RETURN')
     const updateQuery = `WITH member, tag, ix, ix_country, org, mem, man, ixp_domestic_members
-      WHERE mem IS null OR mem.reference_org IN ['${selectResource.value.join("','")}']`
+      WHERE mem IS null OR mem.reference_org IN ['${selectResource.value.join("','")}'] AND mem.reference_org = ix_country_rel.reference_org`
     return `${splitQuery[0]} ${updateQuery}\nRETURN ${splitQuery[1].trim()}`
   }
   return query
