@@ -18,7 +18,7 @@ const ips = ref({
   show: false,
   loading: true,
   query: `MATCH (:HostName {name: $hostname})-[:RESOLVES_TO]-(i:IP)
-    OPTIONAL MATCH (i)-[:PART_OF]-(p:Prefix)-[:ORIGINATE]-(a:AS)
+    OPTIONAL MATCH (i)-[:PART_OF]-(p:BGPPrefix)-[:ORIGINATE]-(a:AS)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)

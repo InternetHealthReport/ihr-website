@@ -21,7 +21,7 @@ const ixps = ref({
   loading: true,
   query: `
     MATCH (member:AS)-[:COUNTRY {reference_org:'NRO'}]-(:Country {country_code:$country_code})
-    WHERE (member)-[:ORIGINATE]-(:Prefix)
+    WHERE (member)-[:ORIGINATE]-(:BGPPrefix)
     OPTIONAL MATCH (ix:IXP)-[:MEMBER_OF]-(member)
     WITH ix, COLLECT(member) AS members, COUNT(DISTINCT member) AS ixp_domestic_members
     UNWIND members as member
@@ -32,7 +32,7 @@ const ixps = ref({
     ORDER BY ixp_domestic_members`,
   metadata: `
     MATCH (member:AS)-[:COUNTRY {reference_org:'NRO'}]-(:Country {country_code:$country_code})
-    WHERE (member)-[:ORIGINATE]-(:Prefix)
+    WHERE (member)-[:ORIGINATE]-(:BGPPrefix)
     OPTIONAL MATCH (member)-[:CATEGORIZED {reference_name:'bgptools.as_names'}]-(tag:Tag)
     OPTIONAL MATCH (member)-[mem:MEMBER_OF]-(ix:IXP)-[:COUNTRY]-(ix_country:Country)
     OPTIONAL MATCH (ix)-[man:MANAGED_BY]-(org:Organization)

@@ -72,13 +72,13 @@ const as_topology_query = ref({
 })
 
 const prefix_topology_query = ref({
-  query1: `MATCH (a:AS)-[o:ORIGINATE]-(pfx:Prefix {prefix: $prefix})-[h:DEPENDS_ON {af:$af}]->(d:AS)
+  query1: `MATCH (a:AS)-[o:ORIGINATE]-(pfx:BGPPrefix {prefix: $prefix})-[h:DEPENDS_ON {af:$af}]->(d:AS)
           WITH a, COLLECT(DISTINCT d) AS dependencies, pfx, o
           UNWIND dependencies AS d
           MATCH p = allShortestPaths((a)-[:PEERS_WITH*]-(d))
           WHERE a.asn <> d.asn AND all(r IN relationships(p) WHERE r.af = $af) AND all(n IN nodes(p) WHERE n IN dependencies)
           RETURN p, a, pfx, o`,
-  query2: `MATCH (p:Prefix {prefix: $prefix})
+  query2: `MATCH (p:BGPPrefix {prefix: $prefix})
           OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
           OPTIONAL MATCH(p)-[deleg:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
           RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS Name, c.name AS Country`

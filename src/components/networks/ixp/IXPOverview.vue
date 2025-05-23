@@ -25,7 +25,7 @@ const getOverview = () => {
       OPTIONAL MATCH (i)-[:MANAGED_BY]->(o:Organization)
       OPTIONAL MATCH (i)-[:COUNTRY]->(c:Country)
       OPTIONAL MATCH (i)-[:WEBSITE]->(u:URL)
-      OPTIONAL MATCH (i)<-[p:MANAGED_BY]-(plan:Prefix)
+      OPTIONAL MATCH (i)<-[p:MANAGED_BY]-(plan:PeeringLAN)
       WHERE p.reference_org <> 'CAIDA'
       OPTIONAL MATCH (i)<-[m:MEMBER_OF]-(a:AS)
       WHERE m.reference_org <> 'CAIDA'

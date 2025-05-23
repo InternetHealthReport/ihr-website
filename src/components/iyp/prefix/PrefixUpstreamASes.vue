@@ -14,7 +14,7 @@ const upstreams = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (p:Prefix {prefix: $prefix})-[dep:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name)
+  query: `MATCH (p:BGPPrefix {prefix: $prefix})-[dep:DEPENDS_ON]-(a:AS)-[:NAME]-(n:Name)
     OPTIONAL MATCH (a)-[:COUNTRY {reference_org:'NRO'}]-(c:Country)
     RETURN DISTINCT a.asn AS asn, head(collect(c.country_code)) AS cc, head(collect(DISTINCT(n.name))) AS name, 100*dep.hege AS hege `,
   columns: [

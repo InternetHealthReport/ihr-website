@@ -10,9 +10,9 @@ const iyp_api = inject('iyp_api')
 const as_info_query = ref({
   loading: true,
   query: `MATCH (a:AS {asn: $asn})
-      OPTIONAL MATCH (a)-[:ORIGINATE]->(p4:Prefix {af:4})
+      OPTIONAL MATCH (a)-[:ORIGINATE]->(p4:BGPPrefix {af:4})
       WITH COALESCE(COUNT(DISTINCT p4.prefix), 0) AS prefixes_v4, a
-      OPTIONAL MATCH (a)-[:ORIGINATE]->(p6:Prefix {af:6})
+      OPTIONAL MATCH (a)-[:ORIGINATE]->(p6:BGPPrefix {af:6})
       WITH COALESCE(COUNT(DISTINCT p6.prefix), 0) AS prefixes_v6, prefixes_v4, a
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)

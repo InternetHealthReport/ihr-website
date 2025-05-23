@@ -80,7 +80,8 @@ import cache from './cache.js'
 import { get } from 'idb-keyval'
 
 /// Base url for api
-const IYP_API_BASE = 'https://iyp.iijlab.net/iyp/db/neo4j/tx/'
+//const IYP_API_BASE = 'https://iyp.iijlab.net/iyp/db/neo4j/tx/'
+const IYP_API_BASE = 'http://iyp-bolt.ihr.live:7474/db/neo4j/tx/'
 /// Default timeout before api call are considered failed
 const DEFAULT_TIMEOUT = 180000
 

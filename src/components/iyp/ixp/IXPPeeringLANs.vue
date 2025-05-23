@@ -15,7 +15,7 @@ const peeringLANs = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY {reference_org: 'PeeringDB'}]-(s:Prefix)
+  query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[:MANAGED_BY {reference_org: 'PeeringDB'}]-(s:PeeringLAN)
     OPTIONAL MATCH (s)-[:ORIGINATE]-(a:AS)
     RETURN s.prefix as prefix, s.af as af, COLLECT(DISTINCT a.asn) as orig`,
   columns: [

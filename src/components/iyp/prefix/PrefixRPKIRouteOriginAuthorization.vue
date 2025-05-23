@@ -14,7 +14,7 @@ const roas = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (p:Prefix {prefix: $prefix})-[roa:ROUTE_ORIGIN_AUTHORIZATION]-(a:AS)
+  query: `MATCH (p:RPKIPrefix {prefix: $prefix})-[roa:ROUTE_ORIGIN_AUTHORIZATION]-(a:AS)
     RETURN a.asn AS asn, roa.maxLength AS maxLength, roa.notBefore AS notBefore, roa.notAfter AS notAfter, roa.uri AS uri`,
   columns: [
     {
