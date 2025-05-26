@@ -16,7 +16,7 @@ const domains = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:Prefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]->(d:DomainName)-[rr:RANK]->(rn:Ranking)
+  query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:BGPPrefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]->(d:DomainName)-[rr:RANK]->(rn:Ranking)
     WHERE rr.rank < 100000 and rr.reference_name = 'tranco.top1m' and h.name = d.name
     RETURN DISTINCT h.name AS hostName, rr.rank AS rank, rn.name AS rankingName, split(h.name, '.')[-1] AS tld, 1/toFloat(rr.rank) AS inv_rank, COLLECT(DISTINCT p.prefix) AS prefix
     ORDER BY rank`,

@@ -13,7 +13,7 @@ const roas = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (a:AS {asn: $asn})-[roa:ROUTE_ORIGIN_AUTHORIZATION]-(p:Prefix)
+  query: `MATCH (a:AS {asn: $asn})-[roa:ROUTE_ORIGIN_AUTHORIZATION]-(p:RPKIPrefix)
     OPTIONAL MATCH (b:AS)-[:ORIGINATE]->(p)
     RETURN p.prefix AS prefix, roa.maxLength AS maxLength, roa.notBefore AS notBefore, roa.notAfter AS notAfter, roa.uri AS uri, COLLECT(DISTINCT b.asn) AS bgp`,
   columns: [
