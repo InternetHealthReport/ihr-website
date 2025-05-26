@@ -173,7 +173,7 @@ const init = () => {
 }
 
 watch(
-  () => props.chartData,
+  () => props,
   () => {
     init()
   },

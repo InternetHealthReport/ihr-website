@@ -138,7 +138,7 @@ onMounted(() => {
           :chart-data="prefixes.data"
           :chart-layout="{ title: 'Breakdown per RIR and geo-location (Maxmind)' }"
           :config="{
-            keys: ['rir', 'cc', 'prefix'],
+            keys: ['cc', 'prefix'],
             root: pageTitle,
             show_percent: true,
             hovertemplate:
