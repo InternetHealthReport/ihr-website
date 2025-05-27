@@ -145,7 +145,7 @@ const load = () => {
       }
       if (!optionsResource.value.length) {
         const uniqueRefOrgs = new Set(ixps.value.data.map((obj) => obj.mem_reference_org))
-        uniqueRefOrgs.delete(null)
+        uniqueRefOrgs.delete(undefined)
         optionsResource.value = Array.from(uniqueRefOrgs)
         selectResource.value = optionsResource.value
       }
@@ -205,7 +205,7 @@ const heatmapPlotDataFormat = (data) => {
 
 watch(selectResource, () => {
   if (selectResource.value.length < 1) {
-    errorMessageResource.value = 'Reference Organizations field is empty'
+    errorMessageResource.value = 'Data Sources field is empty'
   } else {
     errorMessageResource.value = ''
   }
@@ -274,9 +274,9 @@ onMounted(() => {
               :options="optionsResource"
               @update:model-value="load()"
               :rules="[
-                (val) => val.length > 0 || 'Please select at least one Reference Organization'
+                (val) => val.length > 0 || 'Please select at least one Data Sources'
               ]"
-              label="Reference Organizations"
+              label="Data Sources"
             />
           </div>
         </div>
