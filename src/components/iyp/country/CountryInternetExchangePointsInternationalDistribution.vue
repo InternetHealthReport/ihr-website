@@ -273,9 +273,7 @@ onMounted(() => {
               v-model="selectResource"
               :options="optionsResource"
               @update:model-value="load()"
-              :rules="[
-                (val) => val.length > 0 || 'Please select at least one Data Sources'
-              ]"
+              :rules="[(val) => val.length > 0 || 'Please select at least one Data Sources']"
               label="Data Sources"
             />
           </div>

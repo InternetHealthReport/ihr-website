@@ -1,39 +1,22 @@
-import axios from 'axios'
+import { runIyp } from './IypApi'
 
-export function getASNamesCountryMappings(asNamesPath = '/data/asnames.txt', content = null) {
+export function getASNamesCountryMappings() {
+  const cypher = `
+    MATCH (a:AS)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
+    OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]-(cc:Country)
+    RETURN DISTINCT a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, cc.country_code AS country_code
+  `
   const request = () => {
     return new Promise((resolve, reject) => {
-      if (content === null) {
-        axios
-          .get(asNamesPath)
-          .then((response) => {
-            const result = parseAsNamesCountryMappings(response.data)
-            resolve(result)
-          })
-          .catch((error) => reject(error))
-      } else {
-        const result = parseAsNamesCountryMappings(content)
-        resolve(result)
-      }
+      runIyp([{ statement: cypher }])
+        .then((response) => {
+          resolve(response[0])
+        })
+        .catch((error) => reject(error))
     })
   }
   return request()
-}
-
-export function parseAsNamesCountryMappings(content) {
-  if (content === '') return {}
-  const lines = content.split('\n')
-  const parsedData = {}
-  for (let line of lines) {
-    line = line.replace(/(\r\n|\n|\r)/gm, '')
-    if (line === '') continue
-    const match = line.match(/^(\d+)\s(.*),\s([A-Z]{2})$/)
-    if (match) {
-      const [_, asn, asnName, country_iso_code2] = match
-      parsedData[asn] = { asn_name: asnName, country_iso_code2: country_iso_code2 }
-    } else {
-      throw new Error(`No match for line: ${line}`)
-    }
-  }
-  return parsedData
 }
