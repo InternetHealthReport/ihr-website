@@ -11,9 +11,16 @@ export function getASNamesCountryMappings() {
   `
   const request = () => {
     return new Promise((resolve, reject) => {
+      const parsedData = {}
       runIyp([{ statement: cypher }])
         .then((response) => {
-          resolve(response[0])
+          response[0].forEach(obj => {
+            parsedData[obj.asn] = {
+              asn_name: obj.name,
+              country_iso_code2: obj.country_code
+            }
+          })
+          resolve(parsedData)
         })
         .catch((error) => reject(error))
     })
