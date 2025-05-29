@@ -145,7 +145,7 @@ const load = () => {
       }
       if (!optionsResource.value.length) {
         const uniqueRefOrgs = new Set(ixps.value.data.map((obj) => obj.mem_reference_org))
-        uniqueRefOrgs.delete(undefined)
+        uniqueRefOrgs.delete(null)
         optionsResource.value = Array.from(uniqueRefOrgs)
         selectResource.value = optionsResource.value
       }
