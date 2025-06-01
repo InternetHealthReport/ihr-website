@@ -54,6 +54,8 @@ const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 
+const paginationProbes = ref([])
+
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
   loadMeasurementErrorDialog.value = true
@@ -287,12 +289,20 @@ const loadMeasurement = async () => {
   rttOverTime.value = []
   intervalValue.value = null
 
+  paginationProbes.value = []
+
   if (measurementID.value.trim()) {
     isLoading.value = true
     try {
-      const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
+      const [fetchedMetaData, fetchedPaginationProbes] = await Promise.all([
+        atlas_api.getMeasurementById(measurementID.value), 
+        atlas_api.getMeasurementById(measurementID.value,{ fields: "probes" })
+      ]);
+      metaData.value = fetchedMetaData?.data ?? {}
+      paginationProbes.value = fetchedPaginationProbes?.data.probes ?? [];
 
-      metaData.value = fetchedMetaData
+      console.log("Measurement output::: ", metaData.value)
+      console.log("Pagination output::: ", paginationProbes.value)
 
       if (fetchedMetaData.status.name === 'Ongoing') {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
@@ -301,9 +311,14 @@ const loadMeasurement = async () => {
       let startTime = fetchedMetaData.start_time
       const stopTime = fetchedMetaData.stop_time
 
-      if (stopTime - startTime > 24 * 3600) {
-        startTime = stopTime - 24 * 3600
-      }
+      // Already having last day measurement
+      // TODO: Instead of that, calcuate for which start time it will have 2 iterations
+      // if (stopTime - startTime > 24 * 3600) {
+      //   startTime = stopTime - 24 * 3600
+      // }
+
+      const shortenedDurationStartTime = stopTime - 2*metaData.value["interval"]
+      startTime = shortenedDurationStartTime > 0? shortenedDurationStartTime: startTime 
 
       timeRange.value.min = startTime
       timeRange.value.max = stopTime
@@ -328,6 +343,38 @@ const loadMeasurement = async () => {
   }
 }
 
+const splitProbesListToChunks = (probeList) => {
+  // for (let i = 0; i < probeList.length; i++) {
+  //   if((i+1) % 10 == 0) {
+  //     probeChunksList.push(probeChunk)
+  //   } else {
+  //     probeChunk.push(probeList[i])
+  //   }
+  // }
+  // if(probeChunk.length > 0) {
+  //   probeChunksList.push(probeChunk)
+  // }
+
+  return probeList.slice(0, 10);
+}
+
+const fetchMeasureMentResultByChunks = async (measurementID, probesList, params) =>  {
+  const probeChunksList = splitProbesListToChunks(probesList)
+  console.log("probeChunksList::: ", probeChunksList)
+  // let responses = await Promise.all(probeChunksList.map(probesChunk => {
+  //   params.probe_list = probesChunk.join(',')
+  //   return atlas_api.getMeasurementData(measurementID, params)
+  // }))
+  
+  params.probe_list = probeChunksList.join(',')
+  return (await atlas_api.getMeasurementData(measurementID, params)).data
+  // let response = await 
+
+  // return  responses.reduce((result, chunkRes) => {
+
+  // }, [])
+}
+
 const loadMeasurementData = async (loadProbes = false) => {
   if (measurementID.value.trim()) {
     isLoading.value = true
@@ -340,6 +387,7 @@ const loadMeasurementData = async (loadProbes = false) => {
       }
 
       const params = {}
+      let requestProbes = [];
 
       if (!timeRange.value.disable) {
         params.start_time = timeRange.value.min
@@ -347,10 +395,14 @@ const loadMeasurementData = async (loadProbes = false) => {
       }
 
       if (selectedProbes.value.length > 0) {
-        params.probe_ids = selectedProbes.value.join(',')
+        requestProbes = selectedProbes.value
       }
 
-      const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
+      if(requestProbes.length == 0) {
+        requestProbes = paginationProbes.value
+      }
+
+      const data = await fetchMeasureMentResultByChunks(measurementID.value, requestProbes, params)
 
       const filteredData = data.filter(
         (item) =>

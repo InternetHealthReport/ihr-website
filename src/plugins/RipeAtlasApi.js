@@ -13,13 +13,15 @@ const axios_base = axios.create({
 
 const AtlasApi = {
   install: (app, options) => {
-    const getMeasurementById = async (measurementId) => {
+    const getMeasurementById = async (measurementId, params = {}) => {
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}`
       return await cache(
-        `${url}`,
+        params !== null || params != {} ? `${url}_${JSON.stringify(params)}` : url,
         () => {
-          return axios_base.get(url)
+          return axios_base.get(url, {
+            params
+          })
         },
         {
           storageAllowed: storageAllowed ? storageAllowed : false
