@@ -28,7 +28,7 @@
     },
     "bgpMonitor": {
       "name": "BGP Monitor",
-      "summary": "Real Time BGP Monitor"
+      "summary": "Monitor Real-Time and Past BGP events"
     },
     "globalReport": {
       "name": "Global",
