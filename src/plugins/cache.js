@@ -12,9 +12,24 @@ const cache = async (key, fetcher, options) => {
   } else {
     try {
       item = await fetcher()
-      const sessionObj = {
-        ...options,
-        data: item
+      let sessionObj = {}
+
+      // TODO: Handle array of responses here!
+      if (options?.isManyRequests === true) {
+        sessionObj = {
+          ...options,
+          data: item.reduce((result, response) => {
+            console.log('response::: ', response)
+            response.forEach((probeResult) => {
+              result.push(probeResult)
+            })
+          })
+        }
+      } else {
+        sessionObj = {
+          ...options,
+          data: item
+        }
       }
       if (options.storageAllowed) {
         await set(key, JSON.stringify(sessionObj))

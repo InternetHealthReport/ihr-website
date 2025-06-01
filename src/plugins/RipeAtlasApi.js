@@ -9,7 +9,7 @@ const DEFAULT_TIMEOUT = 180000
 const axios_base = axios.create({
   baseURL: RIPE_ATLAS_API_BASE,
   timeout: DEFAULT_TIMEOUT
-}) 
+})
 
 const AtlasApi = {
   install: (app, options) => {
@@ -41,6 +41,39 @@ const AtlasApi = {
         },
         {
           storageAllowed: storageAllowed ? storageAllowed : false
+        }
+      )
+    }
+
+    const getAndAggregateMeasurementResultChunks = async (measurementId, probesList) => {
+      const probeChunksList = splitListToChunks(probesList)
+      const storageAllowed = JSON.parse(await get('storage-allowed'))
+      const url = `measurements/${measurementId}/results`
+      return await cache(
+        `${url}}`,
+        () => {
+          Promise.all(
+            probeChunksList.reduce((result, probesChunk) => {
+              let probeListString = probesChunk.join(',')
+              if (!probeListString) return result
+
+              const currentParams = {
+                ...params,
+                probe_ids: probeListString
+              }
+              result.push(
+                axios_base.get(url, {
+                  params: currentParams
+                })
+              )
+
+              return result
+            }, [])
+          )
+        },
+        {
+          storageAllowed: storageAllowed ? storageAllowed : false,
+          isManyRequests: true
         }
       )
     }

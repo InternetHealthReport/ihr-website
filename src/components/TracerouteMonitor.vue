@@ -335,41 +335,14 @@ const loadMeasurement = async () => {
   }
 }
 
-// TODO: Make this with some utility, not a js for loop
-const splitProbesListToChunks = (probeList) => {
-  const CHUNK_SIZE = 10
-  const probeChunksList = []
-
-  probeList.sort((a, b) => +a - +b)
-
-  for (let i = 0; i < probeList.length; i += CHUNK_SIZE) {
-    probeChunksList.push((probeList.slice(i, i+CHUNK_SIZE)))
-  }
-  return probeChunksList
-}
-
 const fetchMeasurementResultByChunks = async (measurementID, probesList = [], params) =>  {
   if(probesList === null || probesList == []) return []
   const probeChunksList = splitProbesListToChunks(probesList)
 
   // example: responses = [{ data: [{m11}, {m12} ... {m1n}] }, { data: [{m21}, {m22} ... {m2n}] } ...]
-  let responses = await Promise.all(probeChunksList.reduce((result, probesChunk) => {
-    let probeListString = probesChunk.join(',')
-    if(!probeListString) return result;
-    
-    const currentParams = {
-      ...params, 
-      probe_ids: probeListString
-    }
-    result.push(atlas_api.getMeasurementData(measurementID, currentParams))
-
-    return result
-  }, []))
+  let responses = 
   
-  return responses.reduce((result, response) => {
-    response.data.forEach((probeResult) => {
-      result.push(probeResult)
-    })
+  return 
 
     return result
   }, [])
