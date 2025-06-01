@@ -9,7 +9,7 @@ const DEFAULT_TIMEOUT = 180000
 const axios_base = axios.create({
   baseURL: RIPE_ATLAS_API_BASE,
   timeout: DEFAULT_TIMEOUT
-})
+}) 
 
 const AtlasApi = {
   install: (app, options) => {

@@ -296,27 +296,19 @@ const loadMeasurement = async () => {
     try {
       const [fetchedMetaData, fetchedPaginationProbes] = await Promise.all([
         atlas_api.getMeasurementById(measurementID.value), 
-        atlas_api.getMeasurementById(measurementID.value,{ fields: "probes" })
+        atlas_api.getMeasurementById(measurementID.value, { fields: "probes" })
       ]);
       metaData.value = fetchedMetaData?.data ?? {}
-      paginationProbes.value = fetchedPaginationProbes?.data.probes ?? [];
-
-      console.log("Measurement output::: ", metaData.value)
-      console.log("Pagination output::: ", paginationProbes.value)
+      paginationProbes.value = fetchedPaginationProbes?.data.probes.map(p => p.id.toString()) ?? [];
 
       if (fetchedMetaData.status.name === 'Ongoing') {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
 
-      let startTime = fetchedMetaData.start_time
-      const stopTime = fetchedMetaData.stop_time
+      let startTime = metaData.value.start_time
+      const stopTime = metaData.value.stop_time
 
-      // Already having last day measurement
-      // TODO: Instead of that, calcuate for which start time it will have 2 iterations
-      // if (stopTime - startTime > 24 * 3600) {
-      //   startTime = stopTime - 24 * 3600
-      // }
-
+      // Fetch last 2 measurements
       const shortenedDurationStartTime = stopTime - 2*metaData.value["interval"]
       startTime = shortenedDurationStartTime > 0? shortenedDurationStartTime: startTime 
 
@@ -343,36 +335,44 @@ const loadMeasurement = async () => {
   }
 }
 
+// TODO: Make this with some utility, not a js for loop
 const splitProbesListToChunks = (probeList) => {
-  // for (let i = 0; i < probeList.length; i++) {
-  //   if((i+1) % 10 == 0) {
-  //     probeChunksList.push(probeChunk)
-  //   } else {
-  //     probeChunk.push(probeList[i])
-  //   }
-  // }
-  // if(probeChunk.length > 0) {
-  //   probeChunksList.push(probeChunk)
-  // }
+  const CHUNK_SIZE = 10
+  const probeChunksList = []
 
-  return probeList.slice(0, 10);
+  probeList.sort((a, b) => +a - +b)
+
+  for (let i = 0; i < probeList.length; i += CHUNK_SIZE) {
+    probeChunksList.push((probeList.slice(i, i+CHUNK_SIZE)))
+  }
+  return probeChunksList
 }
 
-const fetchMeasureMentResultByChunks = async (measurementID, probesList, params) =>  {
+const fetchMeasurementResultByChunks = async (measurementID, probesList = [], params) =>  {
+  if(probesList === null || probesList == []) return []
   const probeChunksList = splitProbesListToChunks(probesList)
-  console.log("probeChunksList::: ", probeChunksList)
-  // let responses = await Promise.all(probeChunksList.map(probesChunk => {
-  //   params.probe_list = probesChunk.join(',')
-  //   return atlas_api.getMeasurementData(measurementID, params)
-  // }))
+
+  // example: responses = [{ data: [{m11}, {m12} ... {m1n}] }, { data: [{m21}, {m22} ... {m2n}] } ...]
+  let responses = await Promise.all(probeChunksList.reduce((result, probesChunk) => {
+    let probeListString = probesChunk.join(',')
+    if(!probeListString) return result;
+    
+    const currentParams = {
+      ...params, 
+      probe_ids: probeListString
+    }
+    result.push(atlas_api.getMeasurementData(measurementID, currentParams))
+
+    return result
+  }, []))
   
-  params.probe_list = probeChunksList.join(',')
-  return (await atlas_api.getMeasurementData(measurementID, params)).data
-  // let response = await 
+  return responses.reduce((result, response) => {
+    response.data.forEach((probeResult) => {
+      result.push(probeResult)
+    })
 
-  // return  responses.reduce((result, chunkRes) => {
-
-  // }, [])
+    return result
+  }, [])
 }
 
 const loadMeasurementData = async (loadProbes = false) => {
@@ -402,7 +402,7 @@ const loadMeasurementData = async (loadProbes = false) => {
         requestProbes = paginationProbes.value
       }
 
-      const data = await fetchMeasureMentResultByChunks(measurementID.value, requestProbes, params)
+      const data = (await fetchMeasurementResultByChunks(measurementID.value, requestProbes, params))
 
       const filteredData = data.filter(
         (item) =>
