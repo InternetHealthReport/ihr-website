@@ -31,17 +31,45 @@ const AtlasApi = {
     }
 
     const getMeasurementData = async (measurementId, params = {}) => {
+      
+      // Batch measurement result by smaller chunks of probes ids results
+      
+      // Get probes involved in the measurement
+      const probesInMeasurement = await getMeasurementById(measurementId, { fields: 'probes' })
+      const probeList = probesInMeasurement?.data.probes.map((p) => p.id.toString()) ?? []
+
+      // Create a list of smaller chunks of probes
+      const probeChunksList = splitListToChunks(probeList)
+
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}/results`
       return await cache(
         `${url}_${JSON.stringify(params)}`,
         () => {
-          return axios_base.get(url, {
-            params
-          })
+          return Promise.all(
+            probeChunksList.reduce((result, probesChunk) => {
+              if (!probesChunk) return result
+              let probesChunkListString = probesChunk.join(',')
+
+              const currentParams = {
+                ...params,
+                probe_ids: probesChunkListString
+              }
+              result.push(
+                axios_base.get(url, {
+                  params: currentParams
+                })
+              )
+
+              return result
+            }, [])
+          )
         },
         {
-          storageAllowed: storageAllowed ? storageAllowed : false
+          storageAllowed: storageAllowed ? storageAllowed : false,
+          
+          // Because it cntains many calls
+          isManyRequests: true
         }
       )
     }

@@ -54,8 +54,6 @@ const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 
-const paginationProbes = ref([])
-
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
   loadMeasurementErrorDialog.value = true
@@ -289,17 +287,11 @@ const loadMeasurement = async () => {
   rttOverTime.value = []
   intervalValue.value = null
 
-  paginationProbes.value = []
-
   if (measurementID.value.trim()) {
     isLoading.value = true
     try {
-      const [fetchedMetaData, fetchedPaginationProbes] = await Promise.all([
-        atlas_api.getMeasurementById(measurementID.value), 
-        atlas_api.getMeasurementById(measurementID.value, { fields: "probes" })
-      ]);
-      metaData.value = fetchedMetaData?.data ?? {}
-      paginationProbes.value = fetchedPaginationProbes?.data.probes.map(p => p.id.toString()) ?? [];
+      const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
+      metaData.value = fetchedMetaData
 
       if (fetchedMetaData.status.name === 'Ongoing') {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
@@ -347,7 +339,6 @@ const loadMeasurementData = async (loadProbes = false) => {
       }
 
       const params = {}
-      let requestProbes = [];
 
       if (!timeRange.value.disable) {
         params.start_time = timeRange.value.min
@@ -355,14 +346,10 @@ const loadMeasurementData = async (loadProbes = false) => {
       }
 
       if (selectedProbes.value.length > 0) {
-        requestProbes = selectedProbes.value
+        params.probe_ids = selectedProbes.value.join(',')
       }
 
-      if(requestProbes.length == 0) {
-        requestProbes = paginationProbes.value
-      }
-
-      const data = (await atlas_api.getAndAggregateMeasurementResultChunks(measurementID.value, params, requestProbes))
+      const data = await atlas_api.getMeasurementData(measurementID.value, params)
 
       const filteredData = data.filter(
         (item) =>
