@@ -335,19 +335,6 @@ const loadMeasurement = async () => {
   }
 }
 
-const fetchMeasurementResultByChunks = async (measurementID, probesList = [], params) =>  {
-  if(probesList === null || probesList == []) return []
-  const probeChunksList = splitProbesListToChunks(probesList)
-
-  // example: responses = [{ data: [{m11}, {m12} ... {m1n}] }, { data: [{m21}, {m22} ... {m2n}] } ...]
-  let responses = 
-  
-  return 
-
-    return result
-  }, [])
-}
-
 const loadMeasurementData = async (loadProbes = false) => {
   if (measurementID.value.trim()) {
     isLoading.value = true
@@ -375,7 +362,7 @@ const loadMeasurementData = async (loadProbes = false) => {
         requestProbes = paginationProbes.value
       }
 
-      const data = (await fetchMeasurementResultByChunks(measurementID.value, requestProbes, params))
+      const data = (await atlas_api.getAndAggregateMeasurementResultChunks(measurementID.value, params, requestProbes))
 
       const filteredData = data.filter(
         (item) =>

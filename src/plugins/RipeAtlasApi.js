@@ -1,6 +1,7 @@
 import axios from 'axios'
 import cache from './cache.js'
 import { get, set } from 'idb-keyval'
+import { splitListToChunks } from '../plugins/utils/ListUtils.js'
 
 // Base URL for RIPE Atlas API
 const RIPE_ATLAS_API_BASE = 'https://atlas.ripe.net/api/v2/'
@@ -45,21 +46,21 @@ const AtlasApi = {
       )
     }
 
-    const getAndAggregateMeasurementResultChunks = async (measurementId, probesList) => {
+    const getAndAggregateMeasurementResultChunks = async (measurementId, params, probesList) => {
       const probeChunksList = splitListToChunks(probesList)
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}/results`
       return await cache(
         `${url}}`,
         () => {
-          Promise.all(
+          return Promise.all(
             probeChunksList.reduce((result, probesChunk) => {
-              let probeListString = probesChunk.join(',')
-              if (!probeListString) return result
+              if (!probesChunk) return result
+              let probesChunkListString = probesChunk.join(',')
 
               const currentParams = {
                 ...params,
-                probe_ids: probeListString
+                probe_ids: probesChunkListString
               }
               result.push(
                 axios_base.get(url, {
@@ -95,7 +96,8 @@ const AtlasApi = {
     const atlas_api = {
       getMeasurementById,
       getMeasurementData,
-      getProbeById
+      getProbeById,
+      getAndAggregateMeasurementResultChunks
     }
 
     app.provide('atlas_api', atlas_api)
