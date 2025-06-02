@@ -18,7 +18,7 @@ const AtlasApi = {
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}`
       return await cache(
-        params !== null || params != {} ? `${url}_${JSON.stringify(params)}` : url,
+        params !== null && params != {} ? `${url}_${JSON.stringify(params)}` : url,
         () => {
           return axios_base.get(url, {
             params
@@ -31,9 +31,8 @@ const AtlasApi = {
     }
 
     const getMeasurementData = async (measurementId, params = {}) => {
-      
       // Batch measurement result by smaller chunks of probes ids results
-      
+
       // Get probes involved in the measurement
       const probesInMeasurement = await getMeasurementById(measurementId, { fields: 'probes' })
       const probeList = probesInMeasurement?.data.probes.map((p) => p.id.toString()) ?? []
@@ -67,41 +66,8 @@ const AtlasApi = {
         },
         {
           storageAllowed: storageAllowed ? storageAllowed : false,
-          
+
           // Because it cntains many calls
-          isManyRequests: true
-        }
-      )
-    }
-
-    const getAndAggregateMeasurementResultChunks = async (measurementId, params, probesList) => {
-      const probeChunksList = splitListToChunks(probesList)
-      const storageAllowed = JSON.parse(await get('storage-allowed'))
-      const url = `measurements/${measurementId}/results`
-      return await cache(
-        `${url}}`,
-        () => {
-          return Promise.all(
-            probeChunksList.reduce((result, probesChunk) => {
-              if (!probesChunk) return result
-              let probesChunkListString = probesChunk.join(',')
-
-              const currentParams = {
-                ...params,
-                probe_ids: probesChunkListString
-              }
-              result.push(
-                axios_base.get(url, {
-                  params: currentParams
-                })
-              )
-
-              return result
-            }, [])
-          )
-        },
-        {
-          storageAllowed: storageAllowed ? storageAllowed : false,
           isManyRequests: true
         }
       )
@@ -124,8 +90,7 @@ const AtlasApi = {
     const atlas_api = {
       getMeasurementById,
       getMeasurementData,
-      getProbeById,
-      getAndAggregateMeasurementResultChunks
+      getProbeById
     }
 
     app.provide('atlas_api', atlas_api)
