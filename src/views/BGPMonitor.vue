@@ -16,7 +16,7 @@ import {
   QTime,
   QPopupProxy
 } from 'quasar'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
@@ -52,6 +52,38 @@ const dataSource = ref('risLive') //'risLive' or 'bgplay'
 
 const startTime = ref(new Date().toISOString().slice(0, 16))
 const endTime = ref(new Date().toISOString().slice(0, 16))
+const rccs = ref([])
+
+const rrcLocations = {
+  0: 'Amsterdam',
+  1: 'London',
+  2: 'Paris',
+  3: 'Amsterdam',
+  4: 'Geneva',
+  5: 'Vienna',
+  6: 'Otemachi',
+  7: 'Stockholm',
+  8: 'San Jose',
+  9: 'Zurich',
+  10: 'Milan',
+  11: 'New York',
+  12: 'Frankfurt',
+  13: 'Moscow',
+  14: 'Palo Alto',
+  15: 'Sao Paulo',
+  16: 'Miami',
+  18: 'Barcelona',
+  19: 'Johannesburg',
+  20: 'Zurich',
+  21: 'Paris'
+}
+
+const rrcOptions = computed(() =>
+  Object.entries(rrcLocations).map(([key, label]) => ({
+    label: `${key} - ${label}`,
+    value: Number(key)
+  }))
+)
 
 const params = ref({
   peer: '',
@@ -447,7 +479,18 @@ onMounted(() => {
               color="accent"
               :disable="isPlaying || inputDisable"
             />
-            <QInput v-else class="input" outlined placeholder="RCCs e.g. 0, 1" :dense="true" />
+            <QSelect
+              filled
+              :dense="true"
+              v-else
+              v-model="rccs"
+              multiple
+              :options="rrcOptions"
+              label="RCCs"
+              emit-value
+              style="min-width: 180px; max-width: 180px"
+              clearable
+            />
           </div>
           <div class="controls upperRight">
             <div v-if="dataSource === 'bgplay'" class="controls">
