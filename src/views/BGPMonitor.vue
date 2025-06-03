@@ -145,12 +145,12 @@ const initRoute = () => {
   } else {
     query.dataSource = dataSource.value
   }
-  if (route.query.startDateTime) {
+  if (route.query.startTime) {
     startTime.value = route.query.startTime
   } else {
     query.startTime = startTime.value
   }
-  if (route.query.endDateTime) {
+  if (route.query.endTime) {
     endTime.value = route.query.endTime
   } else {
     query.endTime = endTime.value
@@ -501,10 +501,10 @@ onMounted(() => {
             >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
-                  <QPopupProxy cover>
+                  <QPopupProxy no-route-dismiss cover>
                     <div class="q-pa-md q-gutter-md row items-start">
-                      <QDate v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
-                      <QTime v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                      <QDate flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                      <QTime flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
                     </div>
                   </QPopupProxy>
                 </QIcon>
@@ -518,10 +518,10 @@ onMounted(() => {
             >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
-                  <QPopupProxy cover>
+                  <QPopupProxy no-route-dismiss cover>
                     <div class="q-pa-md q-gutter-md row items-start">
-                      <QDate v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
-                      <QTime v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                      <QDate flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                      <QTime flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
                     </div>
                   </QPopupProxy>
                 </QIcon>
