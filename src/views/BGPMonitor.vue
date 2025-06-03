@@ -441,25 +441,25 @@ onMounted(() => {
 <template>
   <div class="IHR_char-container">
     <h1 class="text-center q-pa-xl">BGP Monitor</h1>
-    <div class="inputContainer">
-      <QCard class="dataSourceCard">
+    <div class="row items-center justify-center gap-30 full-width">
+      <QCard class="q-pa-md q-pr-lg">
         <p>Data Source</p>
-        <div class="dataSource">
+        <div>
           <QRadio v-model="dataSource" val="risLive" label="RisLive" />
-          <QIcon name="fas fa-circle-info">
+          <QIcon name="fas fa-circle-info" class="q-ml-md">
             <QTooltip>Monitor Real-Time BGP events</QTooltip>
           </QIcon>
         </div>
-        <div class="dataSource">
+        <div>
           <QRadio v-model="dataSource" val="bgplay" label="BGPlay" />
-          <QIcon name="fas fa-circle-info">
+          <QIcon name="fas fa-circle-info" class="q-ml-md">
             <QTooltip>Monitor BGP events from a specific time range</QTooltip>
           </QIcon>
         </div>
       </QCard>
-      <div class="controlsContainer">
-        <div class="controls upper">
-          <div class="controls">
+      <div class="column gap-30 items-center justify-center">
+        <div class="gap-30 row justify-center items-center full-width">
+          <div class="row gap-30 justify-center items-center">
             <QInput
               class="input"
               v-model="params.prefix"
@@ -488,40 +488,48 @@ onMounted(() => {
               :options="rrcOptions"
               label="RCCs"
               emit-value
-              style="min-width: 180px; max-width: 180px"
+              class="input"
               clearable
             />
           </div>
-          <div class="controls upperRight">
-            <div v-if="dataSource === 'bgplay'" class="controls">
-              <QInput label="Start Date Time in (UTC)" v-model="startTime" class="input">
-                <template v-slot:append>
-                  <QIcon name="event" class="cursor-pointer">
-                    <QPopupProxy cover>
-                      <div class="q-pa-md q-gutter-md row items-start">
-                        <QDate v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
-                        <QTime v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
-                      </div>
-                    </QPopupProxy>
-                  </QIcon>
-                </template>
-              </QInput>
-              <QInput label="End Date Time in (UTC)" v-model="endTime" class="input">
-                <template v-slot:append>
-                  <QIcon name="event" class="cursor-pointer">
-                    <QPopupProxy cover>
-                      <div class="q-pa-md q-gutter-md row items-start">
-                        <QDate v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
-                        <QTime v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
-                      </div>
-                    </QPopupProxy>
-                  </QIcon>
-                </template>
-              </QInput>
-            </div>
+          <div class="row items-center justify-center gap-30">
+            <QInput
+              v-if="dataSource === 'bgplay'"
+              label="Start Date Time in (UTC)"
+              v-model="startTime"
+              class="input"
+            >
+              <template v-slot:append>
+                <QIcon name="event" class="cursor-pointer">
+                  <QPopupProxy cover>
+                    <div class="q-pa-md q-gutter-md row items-start">
+                      <QDate v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                      <QTime v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                    </div>
+                  </QPopupProxy>
+                </QIcon>
+              </template>
+            </QInput>
+            <QInput
+              v-if="dataSource === 'bgplay'"
+              label="End Date Time in (UTC)"
+              v-model="endTime"
+              class="input"
+            >
+              <template v-slot:append>
+                <QIcon name="event" class="cursor-pointer">
+                  <QPopupProxy cover>
+                    <div class="q-pa-md q-gutter-md row items-start">
+                      <QDate v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                      <QTime v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                    </div>
+                  </QPopupProxy>
+                </QIcon>
+              </template>
+            </QInput>
             <QSlider
               v-model="maxHops"
-              class="input slider"
+              class="input"
               :min="1"
               :max="9"
               :step="1"
@@ -534,7 +542,7 @@ onMounted(() => {
             />
           </div>
         </div>
-        <div class="controls">
+        <div class="row items-center justify-center gap-30">
           <QBtn
             v-if="dataSource === 'risLive'"
             :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
@@ -544,7 +552,7 @@ onMounted(() => {
           />
           <QBtn v-else color="secondary" :label="'Submit'" />
           <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
-          <div class="stats">
+          <div class="column">
             <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
             <span>Total messages received: {{ rawMessages.length }}</span>
           </div>
@@ -557,7 +565,7 @@ onMounted(() => {
       :sub-title="$t('bgpAsPaths.subTitle')"
       :info-title="$t('bgpAsPaths.info.title')"
       :info-description="$t('bgpAsPaths.info.description')"
-      class="cardBGP"
+      class="q-mt-lg"
     >
       <BGPPathsChart
         :filtered-messages="filteredMessages"
@@ -574,7 +582,7 @@ onMounted(() => {
       :sub-title="$t('bgpMessagesCount.subTitle')"
       :info-title="$t('bgpMessagesCount.info.title')"
       :info-description="$t('bgpMessagesCount.info.description')"
-      class="cardBGP"
+      class="q-mt-lg"
     >
       <BGPLineChart
         :raw-messages="rawMessages"
@@ -593,7 +601,7 @@ onMounted(() => {
       :sub-title="$t('bgpMessagesTable.subTitle')"
       :info-title="$t('bgpMessagesTable.info.title')"
       :info-description="$t('bgpMessagesTable.info.description')"
-      class="lastCardBGP"
+      class="q-my-lg"
     >
       <BGPMessagesTable
         :filtered-messages="filteredMessages"
@@ -626,73 +634,11 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style>
-.controlsContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-.controls {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-}
-.stats {
-  display: flex;
-  flex-direction: column;
-}
-.cardBGP {
-  margin-top: 20px;
-}
-.lastCardBGP {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.inputContainer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
-  padding: 16px;
-}
-.dataSourceCard {
-  padding: 16px;
-  padding-right: 24px;
-}
-.dataSource {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+<style scoped>
 .input {
-  width: 100%;
-  min-width: max-content;
+  width: 200px;
 }
-.slider {
-  min-width: 200px;
-}
-
-@media screen and (max-width: 1300px) {
-  .upper {
-    flex-direction: column;
-  }
-}
-@media screen and (max-width: 900px) {
-  .upperRight {
-    flex-direction: column;
-  }
-}
-@media screen and (max-width: 650px) {
-  .inputContainer {
-    flex-direction: column;
-  }
-}
-@media screen and (max-width: 500px) {
-  .controls {
-    flex-direction: column;
-  }
+.gap-30 {
+  gap: 30px;
 }
 </style>
