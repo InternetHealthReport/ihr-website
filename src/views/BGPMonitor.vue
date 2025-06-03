@@ -11,7 +11,10 @@ import {
   QCardActions,
   QRadio,
   QIcon,
-  QTooltip
+  QTooltip,
+  QDate,
+  QTime,
+  QPopupProxy
 } from 'quasar'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -448,18 +451,30 @@ onMounted(() => {
           </div>
           <div class="controls upperRight">
             <div v-if="dataSource === 'bgplay'" class="controls">
-              <QInput
-                class="input"
-                v-model="startTime"
-                type="datetime-local"
-                label="Start Date Time in (UTC)"
-              />
-              <QInput
-                class="input"
-                v-model="endTime"
-                type="datetime-local"
-                label="End Date Time in (UTC)"
-              />
+              <QInput label="Start Date Time in (UTC)" v-model="startTime" class="input">
+                <template v-slot:append>
+                  <QIcon name="event" class="cursor-pointer">
+                    <QPopupProxy cover>
+                      <div class="q-pa-md q-gutter-md row items-start">
+                        <QDate v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                        <QTime v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                      </div>
+                    </QPopupProxy>
+                  </QIcon>
+                </template>
+              </QInput>
+              <QInput label="End Date Time in (UTC)" v-model="endTime" class="input">
+                <template v-slot:append>
+                  <QIcon name="event" class="cursor-pointer">
+                    <QPopupProxy cover>
+                      <div class="q-pa-md q-gutter-md row items-start">
+                        <QDate v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                        <QTime v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                      </div>
+                    </QPopupProxy>
+                  </QIcon>
+                </template>
+              </QInput>
             </div>
             <QSlider
               v-model="maxHops"
