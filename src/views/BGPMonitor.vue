@@ -16,7 +16,7 @@ import {
   QTime,
   QPopupProxy
 } from 'quasar'
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
@@ -52,38 +52,8 @@ const dataSource = ref('risLive') //'risLive' or 'bgplay'
 
 const startTime = ref(new Date().toISOString().slice(0, 16))
 const endTime = ref(new Date().toISOString().slice(0, 16))
-const rccs = ref([])
-
-const rrcLocations = {
-  0: 'Amsterdam',
-  1: 'London',
-  2: 'Paris',
-  3: 'Amsterdam',
-  4: 'Geneva',
-  5: 'Vienna',
-  6: 'Otemachi',
-  7: 'Stockholm',
-  8: 'San Jose',
-  9: 'Zurich',
-  10: 'Milan',
-  11: 'New York',
-  12: 'Frankfurt',
-  13: 'Moscow',
-  14: 'Palo Alto',
-  15: 'Sao Paulo',
-  16: 'Miami',
-  18: 'Barcelona',
-  19: 'Johannesburg',
-  20: 'Zurich',
-  21: 'Paris'
-}
-
-const rrcOptions = computed(() =>
-  Object.entries(rrcLocations).map(([key, label]) => ({
-    label: `${key} - ${label}`,
-    value: Number(key)
-  }))
-)
+const rrcs = ref([])
+const rrcLocations = ref([])
 
 const params = ref({
   peer: '',
@@ -154,6 +124,11 @@ const initRoute = () => {
     endTime.value = route.query.endTime
   } else {
     query.endTime = endTime.value
+  }
+  if (route.query.rrcs) {
+    rrcs.value = route.query.rrcs.split(',').map(Number)
+  } else {
+    query.rrcs = rrcs.value.join(',')
   }
   router.replace({ query })
 }
@@ -338,6 +313,28 @@ const fetchAllASInfo = async () => {
   }
 }
 
+const fetchRCCs = async () => {
+  try {
+    const res = await axios.get('https://stat.ripe.net/data/rrc-info/data.json')
+    const data = res.data.data.rrcs
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error('No RRC data found')
+      return
+    }
+    data.forEach((rcc) => {
+      rrcLocations.value.push({
+        label:
+          rcc.multihop === true
+            ? `${rcc.id} - Multihop (${rcc.geographical_location})`
+            : `${rcc.id} - ${rcc.geographical_location}`,
+        value: rcc.id
+      })
+    })
+  } catch (error) {
+    console.error('Error fetching RRC list:', error)
+  }
+}
+
 // Fetching the communities from the GitHub repository
 const fetchGithubFiles = async () => {
   const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
@@ -410,7 +407,7 @@ const updateSelectedPeers = (obj) => {
 }
 
 watch(
-  [params, maxHops, dataSource, startTime, endTime],
+  [params, maxHops, dataSource, startTime, endTime, rrcs],
   () => {
     const query = {
       ...route.query,
@@ -419,7 +416,8 @@ watch(
       rrc: params.value.host,
       dataSource: dataSource.value,
       startTime: startTime.value,
-      endTime: endTime.value
+      endTime: endTime.value,
+      rrcs: rrcs.value ? rrcs.value.join(',') : ''
     }
     router.replace({ query })
   },
@@ -435,6 +433,7 @@ onMounted(() => {
   connectWebSocket()
   fetchAllASInfo()
   fetchGithubFiles()
+  fetchRCCs()
 })
 </script>
 
@@ -483,10 +482,10 @@ onMounted(() => {
               filled
               :dense="true"
               v-else
-              v-model="rccs"
+              v-model="rrcs"
               multiple
-              :options="rrcOptions"
-              label="RCCs"
+              :options="rrcLocations"
+              label="RRCs"
               emit-value
               class="input"
               clearable
