@@ -349,7 +349,7 @@ const loadMeasurementData = async (loadProbes = false) => {
         params.probe_ids = selectedProbes.value.join(',')
       }
 
-      const data = await atlas_api.getMeasurementData(measurementID.value, params)
+      const data = await atlas_api.getAndCacheMeasurementDataInChunks(measurementID.value, params)
 
       const filteredData = data.filter(
         (item) =>
