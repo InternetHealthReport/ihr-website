@@ -291,19 +291,18 @@ const loadMeasurement = async () => {
     isLoading.value = true
     try {
       const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
-
       metaData.value = fetchedMetaData
 
       if (fetchedMetaData.status.name === 'Ongoing') {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
 
-      let startTime = fetchedMetaData.start_time
-      const stopTime = fetchedMetaData.stop_time
+      let startTime = metaData.value.start_time
+      const stopTime = metaData.value.stop_time
 
-      if (stopTime - startTime > 24 * 3600) {
-        startTime = stopTime - 24 * 3600
-      }
+      // Fetch last 2 measurements
+      const shortenedDurationStartTime = stopTime - 2*metaData.value["interval"]
+      startTime = shortenedDurationStartTime > 0? shortenedDurationStartTime: startTime 
 
       timeRange.value.min = startTime
       timeRange.value.max = stopTime
@@ -350,7 +349,7 @@ const loadMeasurementData = async (loadProbes = false) => {
         params.probe_ids = selectedProbes.value.join(',')
       }
 
-      const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
+      const data = await atlas_api.getAndCacheMeasurementDataInChunks(measurementID.value, params)
 
       const filteredData = data.filter(
         (item) =>

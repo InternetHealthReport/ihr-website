@@ -92,4 +92,43 @@ const defaultOptions = {
   storageAllowed: true
 }
 
+// Fetches data using promise array and prepares a response for api and cache using a combine function Function
+export const cachePromiseArrayResponses = async (key, fetcher, options, combinator) => {
+  if (!options) {
+    options = defaultOptions
+  } else {
+    options = Object.assign(defaultOptions, options)
+  }
+  let item = await getItem(key)
+  if (item) {
+    item = JSON.parse(item).data
+  } else {
+    try {
+      item = await fetcher()
+      let sessionObj = {}
+
+      sessionObj = {
+        ...options,
+        data: combinator(item)
+      }
+
+      if (options.storageAllowed) {
+        await set(key, JSON.stringify(sessionObj))
+      }
+    } catch (error) {
+      if (
+        error instanceof DOMException &&
+        (error.code === 22 ||
+          error.code === 1014 ||
+          error.name === 'QuotaExceededError' ||
+          error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
+      ) {
+        await deleteExpiredItemsAndReduceSpace()
+        item = await cachePromiseArrayResponses(key, fetcher, options, combinator)
+      }
+    }
+  }
+  return item
+}
+
 export default cache
