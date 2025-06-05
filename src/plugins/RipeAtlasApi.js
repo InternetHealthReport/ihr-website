@@ -1,7 +1,6 @@
 import axios from 'axios'
 import cache, { cachePromiseArrayResponses } from './cache.js'
 import { get, set } from 'idb-keyval'
-import { splitListToChunks } from '../plugins/utils/ListUtils.js'
 
 // Base URL for RIPE Atlas API
 const RIPE_ATLAS_API_BASE = 'https://atlas.ripe.net/api/v2/'
@@ -11,6 +10,20 @@ const axios_base = axios.create({
   baseURL: RIPE_ATLAS_API_BASE,
   timeout: DEFAULT_TIMEOUT
 })
+
+// Helper functions
+// Split a large array into array of smaller size chunks
+const splitListToChunks = (list) => {
+  const CHUNK_SIZE = 10
+  const chunksList = []
+
+  list.sort((a, b) => +a - +b)
+
+  for (let i = 0; i < list.length; i += CHUNK_SIZE) {
+    chunksList.push(list.slice(i, i + CHUNK_SIZE))
+  }
+  return chunksList
+}
 
 const AtlasApi = {
   install: (app, options) => {
