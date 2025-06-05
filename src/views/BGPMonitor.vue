@@ -8,7 +8,13 @@ import {
   QDialog,
   QCard,
   QCardSection,
-  QCardActions
+  QCardActions,
+  QRadio,
+  QIcon,
+  QTooltip,
+  QDate,
+  QTime,
+  QPopupProxy
 } from 'quasar'
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -41,6 +47,13 @@ const usedMessagesCount = ref(0) //Just for displaying how many messages are bei
 const asNames = ref({}) // AS Info from asnames.txt file
 const inputDisable = ref(false)
 const isWsDisconnected = ref(false)
+
+const dataSource = ref('risLive') //'risLive' or 'bgplay'
+
+const startTime = ref(new Date().toISOString().slice(0, 16))
+const endTime = ref(new Date().toISOString().slice(0, 16))
+const rrcs = ref([])
+const rrcLocations = ref([])
 
 const params = ref({
   peer: '',
@@ -96,6 +109,26 @@ const initRoute = () => {
     params.value.host = route.query.rrc
   } else {
     query.rrc = params.value.host
+  }
+  if (route.query.dataSource) {
+    dataSource.value = route.query.dataSource
+  } else {
+    query.dataSource = dataSource.value
+  }
+  if (route.query.startTime) {
+    startTime.value = route.query.startTime
+  } else {
+    query.startTime = startTime.value
+  }
+  if (route.query.endTime) {
+    endTime.value = route.query.endTime
+  } else {
+    query.endTime = endTime.value
+  }
+  if (route.query.rrcs) {
+    rrcs.value = route.query.rrcs.split(',').map(Number)
+  } else {
+    query.rrcs = rrcs.value.join(',')
   }
   router.replace({ query })
 }
@@ -280,6 +313,28 @@ const fetchAllASInfo = async () => {
   }
 }
 
+const fetchRCCs = async () => {
+  try {
+    const res = await axios.get('https://stat.ripe.net/data/rrc-info/data.json')
+    const data = res.data.data.rrcs
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error('No RRC data found')
+      return
+    }
+    data.forEach((rcc) => {
+      rrcLocations.value.push({
+        label:
+          rcc.multihop === true
+            ? `${rcc.id} - Multihop (${rcc.geographical_location})`
+            : `${rcc.id} - ${rcc.geographical_location}`,
+        value: rcc.id
+      })
+    })
+  } catch (error) {
+    console.error('Error fetching RRC list:', error)
+  }
+}
+
 // Fetching the communities from the GitHub repository
 const fetchGithubFiles = async () => {
   const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
@@ -352,13 +407,17 @@ const updateSelectedPeers = (obj) => {
 }
 
 watch(
-  [params, maxHops],
+  [params, maxHops, dataSource, startTime, endTime, rrcs],
   () => {
     const query = {
       ...route.query,
       prefix: params.value.prefix,
       maxHops: maxHops.value,
-      rrc: params.value.host
+      rrc: params.value.host,
+      dataSource: dataSource.value,
+      startTime: startTime.value,
+      endTime: endTime.value,
+      rrcs: rrcs.value ? rrcs.value.join(',') : ''
     }
     router.replace({ query })
   },
@@ -374,66 +433,138 @@ onMounted(() => {
   connectWebSocket()
   fetchAllASInfo()
   fetchGithubFiles()
+  fetchRCCs()
 })
 </script>
 
 <template>
   <div class="IHR_char-container">
-    <h1 class="text-center q-pa-xl">Real-Time BGP Monitor</h1>
-    <div class="controls justify-center q-pa-md flex">
-      <QInput
-        v-model="params.prefix"
-        outlined
-        placeholder="Prefix"
-        :dense="true"
-        color="accent"
-        :disable="isPlaying || inputDisable"
-      />
-      <QSelect
-        v-model="params.host"
-        style="min-width: 100px"
-        filled
-        :options="rrcList"
-        label="RRC"
-        :dense="true"
-        color="accent"
-        :disable="isPlaying || inputDisable"
-      />
-      <QSlider
-        v-model="maxHops"
-        style="max-width: 250px"
-        :min="1"
-        :max="9"
-        :step="1"
-        label-always
-        snap
-        label
-        :label-value="'Max Hops: ' + maxHops"
-        color="accent"
-        marker-labels
-      />
-    </div>
-    <div class="controlsContainer">
-      <div class="controls justify-center q-pa-md flex">
-        <QBtn
-          :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
-          :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
-          :disable="disableButton || params.prefix === ''"
-          @click="toggleConnection"
-        />
-        <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
+    <h1 class="text-center q-pa-xl">BGP Monitor</h1>
+    <div class="row items-center justify-center gap-30 full-width">
+      <QCard class="q-pa-md q-pr-lg">
+        <p>Data Source</p>
+        <div>
+          <QRadio v-model="dataSource" val="risLive" label="RisLive" />
+          <QIcon name="fas fa-circle-info" class="q-ml-md">
+            <QTooltip>Monitor Real-Time BGP events</QTooltip>
+          </QIcon>
+        </div>
+        <div>
+          <QRadio v-model="dataSource" val="bgplay" label="BGPlay" />
+          <QIcon name="fas fa-circle-info" class="q-ml-md">
+            <QTooltip>Monitor BGP events from a specific time range</QTooltip>
+          </QIcon>
+        </div>
+      </QCard>
+      <div class="column gap-30 items-center justify-center">
+        <div class="gap-30 row justify-center items-center full-width">
+          <div class="row gap-30 justify-center items-center">
+            <QInput
+              class="input"
+              v-model="params.prefix"
+              outlined
+              placeholder="Prefix"
+              :dense="true"
+              color="accent"
+              :disable="isPlaying || inputDisable"
+            />
+            <QSelect
+              v-if="dataSource === 'risLive'"
+              v-model="params.host"
+              filled
+              :options="rrcList"
+              label="RRC"
+              :dense="true"
+              color="accent"
+              :disable="isPlaying || inputDisable"
+            />
+            <QSelect
+              filled
+              :dense="true"
+              v-else
+              v-model="rrcs"
+              multiple
+              :options="rrcLocations"
+              label="RRCs"
+              emit-value
+              class="input"
+              clearable
+            />
+          </div>
+          <div class="row items-center justify-center gap-30">
+            <QInput
+              v-if="dataSource === 'bgplay'"
+              label="Start Date Time in (UTC)"
+              v-model="startTime"
+              class="input"
+            >
+              <template v-slot:append>
+                <QIcon name="event" class="cursor-pointer">
+                  <QPopupProxy no-route-dismiss cover>
+                    <div class="q-pa-md q-gutter-md row items-start">
+                      <QDate flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                      <QTime flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                    </div>
+                  </QPopupProxy>
+                </QIcon>
+              </template>
+            </QInput>
+            <QInput
+              v-if="dataSource === 'bgplay'"
+              label="End Date Time in (UTC)"
+              v-model="endTime"
+              class="input"
+            >
+              <template v-slot:append>
+                <QIcon name="event" class="cursor-pointer">
+                  <QPopupProxy no-route-dismiss cover>
+                    <div class="q-pa-md q-gutter-md row items-start">
+                      <QDate flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                      <QTime flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                    </div>
+                  </QPopupProxy>
+                </QIcon>
+              </template>
+            </QInput>
+            <QSlider
+              v-model="maxHops"
+              class="input"
+              :min="1"
+              :max="9"
+              :step="1"
+              label-always
+              snap
+              label
+              :label-value="'Max Hops: ' + maxHops"
+              color="accent"
+              marker-labels
+            />
+          </div>
+        </div>
+        <div class="row items-center justify-center gap-30">
+          <QBtn
+            v-if="dataSource === 'risLive'"
+            :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
+            :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
+            :disable="disableButton || params.prefix === ''"
+            @click="toggleConnection"
+          />
+          <QBtn v-else color="secondary" :label="'Submit'" />
+          <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
+          <div class="column">
+            <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
+            <span>Total messages received: {{ rawMessages.length }}</span>
+          </div>
+        </div>
       </div>
-      <div class="stats">
-        <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
-        <span>Total messages received: {{ rawMessages.length }}</span>
-      </div>
     </div>
+
     <GenericCardController
       :title="$t('bgpAsPaths.title')"
       :sub-title="$t('bgpAsPaths.subTitle')"
       :info-title="$t('bgpAsPaths.info.title')"
       :info-description="$t('bgpAsPaths.info.description')"
-      class="cardBGP"
+      class="q-mt-lg"
     >
       <BGPPathsChart
         :filtered-messages="filteredMessages"
@@ -450,7 +581,7 @@ onMounted(() => {
       :sub-title="$t('bgpMessagesCount.subTitle')"
       :info-title="$t('bgpMessagesCount.info.title')"
       :info-description="$t('bgpMessagesCount.info.description')"
-      class="cardBGP"
+      class="q-mt-lg"
     >
       <BGPLineChart
         :raw-messages="rawMessages"
@@ -469,7 +600,7 @@ onMounted(() => {
       :sub-title="$t('bgpMessagesTable.subTitle')"
       :info-title="$t('bgpMessagesTable.info.title')"
       :info-description="$t('bgpMessagesTable.info.description')"
-      class="lastCardBGP"
+      class="q-my-lg"
     >
       <BGPMessagesTable
         :filtered-messages="filteredMessages"
@@ -502,25 +633,11 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style>
-.controls {
+<style scoped>
+.input {
+  width: 200px;
+}
+.gap-30 {
   gap: 30px;
-}
-.controlsContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 50px;
-}
-.stats {
-  display: flex;
-  flex-direction: column;
-}
-.cardBGP {
-  margin-top: 20px;
-}
-.lastCardBGP {
-  margin-top: 20px;
-  margin-bottom: 20px;
 }
 </style>
