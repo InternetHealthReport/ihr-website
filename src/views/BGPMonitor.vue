@@ -248,6 +248,7 @@ const processResData = (data) => {
       const peer = data.attrs.source_id.split('-')[1] //removes the 'rrc-' prefix
       bgPlayEvents.value.push({
         peer_asn: bgPlaySources.value[peer].as_number,
+        rcc: bgPlaySources.value[peer].rrc,
         peer: peer,
         path: data.attrs.path || [],
         community: addCommunityAndDescriptions(data.attrs.community),
@@ -256,10 +257,22 @@ const processResData = (data) => {
         timestamp: data.timestamp
       })
     })
-    data.data.initial_state.map((data) => {
+
+    // Filter the initial state to only include the data that do not match the selected RRCs
+    const filteredInitialState = data.data.initial_state.filter((data) => {
+      const peer = data.source_id.split('-')[1]
+      const source = bgPlaySources.value[peer]
+      if (rrcs.value.includes(Number(source.rrc))) {
+        return true
+      }
+      return false
+    })
+
+    filteredInitialState.map((data) => {
       const peer = data.source_id.split('-')[1] //removes the 'rrc-' prefix
       bgPlayInitialState.value.set(peer, {
         peer_asn: bgPlaySources.value[peer].as_number,
+        rcc: bgPlaySources.value[peer].rrc,
         peer: peer,
         path: data.path || [],
         community: addCommunityAndDescriptions(data.community),
