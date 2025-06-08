@@ -303,19 +303,13 @@ const addCommunityAndDescriptions = (communityDataArray) => {
   return communityDataArray.map((entry) => {
     const [comm_1, comm_2] = typeof entry === 'string' ? entry.split(':').map(Number) : entry
     const community = `${comm_1}:${comm_2}`
-    const description = findCommunityDescription(community)
+    const matched = communities.value.find((c) => matchPattern(c.community, community))
     return {
       community,
       comm_1,
-      description
+      description: matched ? matched.description : 'Null'
     }
   })
-}
-
-// Find the community description
-const findCommunityDescription = (communityToFind) => {
-  const community = communities.value.find((c) => matchPattern(c.community, communityToFind))
-  return community ? community.description : 'Null'
 }
 
 // Add AS Info to the AS path
