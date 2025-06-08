@@ -55,6 +55,7 @@ const endTime = ref(new Date().toISOString().slice(0, 16))
 const rrcs = ref([])
 const rrcLocations = ref([])
 const isLoadingBGPlayData = ref(false)
+const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
 const bgPlayEvents = ref([]) // Used to store the "events" for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
 
@@ -229,6 +230,12 @@ const processResData = (data) => {
       handleFilterMessages(data)
     }
   } else {
+    data.data.sources.map((source) => {
+      bgPlaySources.value[source.id] = {
+        as_number: source.as_number,
+        rrc: source.rrc
+      }
+    })
     data.data.nodes.map((node) => {
       bgPlayASNames.value[node.as_number] = {
         asn_name: node.owner.split(', ')[0],
@@ -237,8 +244,9 @@ const processResData = (data) => {
     })
     data.data.events.map((data) => {
       bgPlayEvents.value.push({
-        source_id: data.attrs.source_id,
-        currentPath: data.attrs.path || [],
+        peer_asn: bgPlaySources.value[data.attrs.source_id].as_number,
+        peer: data.attrs.source_id.split('-')[1], //removes the 'rrc-' prefix
+        path: data.attrs.path || [],
         community: addCommunityAndDescriptions(data.attrs.community),
         as_info: addASInfo(data.attrs.path),
         type: data.type,
