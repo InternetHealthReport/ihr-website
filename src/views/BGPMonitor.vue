@@ -63,7 +63,7 @@ const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPl
 const params = ref({
   peer: '',
   path: '',
-  prefix: '169.145.140.0/23', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24, 202.164.222.0/24
+  prefix: '', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24, 202.164.222.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: false,
@@ -95,6 +95,11 @@ const resetData = () => {
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
   inputDisable.value = false
+
+  bgPlaySources.value = {}
+  bgPlayEvents.value = []
+  bgPlayInitialState.value.clear()
+  bgPlayASNames.value = {}
 }
 
 // Initialize the route
@@ -542,13 +547,33 @@ onMounted(() => {
       <QCard class="q-pa-md q-pr-lg">
         <p>Data Source</p>
         <div>
-          <QRadio v-model="dataSource" val="risLive" label="RisLive" />
+          <QRadio
+            v-model="dataSource"
+            val="risLive"
+            label="RisLive"
+            :disable="
+              isPlaying ||
+              inputDisable ||
+              Object.keys(bgPlaySources).length > 0 ||
+              isLoadingBGPlayData
+            "
+          />
           <QIcon name="fas fa-circle-info" class="q-ml-md">
             <QTooltip>Monitor Real-Time BGP events</QTooltip>
           </QIcon>
         </div>
         <div>
-          <QRadio v-model="dataSource" val="bgplay" label="BGPlay" />
+          <QRadio
+            v-model="dataSource"
+            val="bgplay"
+            label="BGPlay"
+            :disable="
+              isPlaying ||
+              inputDisable ||
+              Object.keys(bgPlaySources).length > 0 ||
+              isLoadingBGPlayData
+            "
+          />
           <QIcon name="fas fa-circle-info" class="q-ml-md">
             <QTooltip>Monitor BGP events from a specific time range</QTooltip>
           </QIcon>
@@ -564,7 +589,12 @@ onMounted(() => {
               placeholder="Prefix"
               :dense="true"
               color="accent"
-              :disable="isPlaying || inputDisable"
+              :disable="
+                isPlaying ||
+                inputDisable ||
+                Object.keys(bgPlaySources).length > 0 ||
+                isLoadingBGPlayData
+              "
             />
             <QSelect
               v-if="dataSource === 'risLive'"
@@ -587,6 +617,7 @@ onMounted(() => {
               emit-value
               class="input"
               clearable
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
             />
           </div>
           <div class="row items-center justify-center gap-30">
@@ -595,6 +626,7 @@ onMounted(() => {
               label="Start Date Time in (UTC)"
               v-model="startTime"
               class="input"
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
             >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
@@ -612,6 +644,7 @@ onMounted(() => {
               label="End Date Time in (UTC)"
               v-model="endTime"
               class="input"
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
             >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
@@ -652,7 +685,11 @@ onMounted(() => {
             color="secondary"
             :label="'Submit'"
             @click="fetchBGPlayData"
-            :disable="isLoadingBGPlayData || !haveRequiredBGPlayParams()"
+            :disable="
+              Object.keys(bgPlaySources).length > 0 ||
+              isLoadingBGPlayData ||
+              !haveRequiredBGPlayParams()
+            "
           />
           <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
           <div class="column">
