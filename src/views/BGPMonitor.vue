@@ -56,6 +56,7 @@ const rrcs = ref([])
 const rrcLocations = ref([])
 const isLoadingBGPlayData = ref(false)
 const bgPlayEvents = ref([]) // Used to store the "events" for BGPlay
+const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
 
 const params = ref({
   peer: '',
@@ -209,11 +210,7 @@ const sendSocketType = (protocol, paramData) => {
 const processResData = (data) => {
   if (dataSource.value === 'risLive') {
     data.community = addCommunityAndDescriptions(data.community)
-    if (data.path && Array.isArray(data.path)) {
-      const uniqueASpath = [...new Set(data.path)]
-      // Creating new property and adding AS, AS names and country codes to the "as_info"
-      data.as_info = uniqueASpath.map((asn) => getASInfo(asn))
-    }
+    data.as_info = addASInfo(data.path)
     // Creating new property to store the floor timestamp
     data.floor_timestamp = Math.floor(data.timestamp)
 
@@ -232,11 +229,18 @@ const processResData = (data) => {
       handleFilterMessages(data)
     }
   } else {
+    data.data.nodes.map((node) => {
+      bgPlayASNames.value[node.as_number] = {
+        asn_name: node.owner.split(', ')[0],
+        country_iso_code2: node.owner.split(', ')[1]
+      }
+    })
     data.data.events.map((data) => {
       bgPlayEvents.value.push({
         source_id: data.attrs.source_id,
         currentPath: data.attrs.path || [],
         community: addCommunityAndDescriptions(data.attrs.community),
+        as_info: addASInfo(data.attrs.path),
         type: data.type,
         timestamp: data.timestamp
       })
@@ -266,13 +270,18 @@ const findCommunityDescription = (communityToFind) => {
   return community ? community.description : 'Null'
 }
 
-// Get the AS (AS Number, AS Name and Country Code) from the asnames.txt file
-const getASInfo = (asn) => {
-  if (asNames.value[asn]) {
-    return { asn: asn, ...asNames.value[asn] }
-  } else {
-    return { asn: asn, asn_name: 'Unknown', country_iso_code2: 'ZZ' }
-  }
+// Add AS Info to the AS path
+const addASInfo = (asPathArray) => {
+  if (!Array.isArray(asPathArray)) return []
+  const uniqueASpath = [...new Set(asPathArray)]
+  return uniqueASpath.map((asn) => {
+    const asInfo = dataSource.value === 'risLive' ? asNames.value[asn] : bgPlayASNames.value[asn]
+    return {
+      asn,
+      asn_name: asInfo?.asn_name || 'Unknown',
+      country_iso_code2: asInfo?.country_iso_code2 || 'ZZ'
+    }
+  })
 }
 
 // Filter bgp messages (stores only unique peer messages)
