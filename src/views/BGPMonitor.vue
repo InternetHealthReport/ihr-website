@@ -55,6 +55,7 @@ const endTime = ref(new Date().toISOString().slice(0, 16))
 const rrcs = ref([])
 const rrcLocations = ref([])
 const isLoadingBGPlayData = ref(false)
+const bgPlayEvents = ref([]) // Used to store the "events" for BGPlay
 
 const params = ref({
   peer: '',
@@ -161,7 +162,7 @@ const connectWebSocket = () => {
   socket.value.onmessage = (event) => {
     const res = JSON.parse(event.data)
     if (res.type === 'ris_message') {
-      handleMessages(res.data)
+      processResData(res.data)
     } else if (res.type === 'ris_rrc_list') {
       handleRRC(res.data)
     } else if (res.type === 'ris_error') {
@@ -205,37 +206,58 @@ const sendSocketType = (protocol, paramData) => {
   )
 }
 
-const handleMessages = (data) => {
-  if (data.community && Array.isArray(data.community)) {
-    // Add descriptions to community data
-    data.community = data.community.map(([comm_1, comm_2]) => {
-      const community = `${comm_1}:${comm_2}`
-      const description = findCommunityDescription(community)
-      return { community: community, comm_1: comm_1, description: description }
+const processResData = (data) => {
+  if (dataSource.value === 'risLive') {
+    data.community = addCommunityAndDescriptions(data.community)
+    if (data.path && Array.isArray(data.path)) {
+      const uniqueASpath = [...new Set(data.path)]
+      // Creating new property and adding AS, AS names and country codes to the "as_info"
+      data.as_info = uniqueASpath.map((asn) => getASInfo(asn))
+    }
+    // Creating new property to store the floor timestamp
+    data.floor_timestamp = Math.floor(data.timestamp)
+
+    //Automatically select the first 5 peers for displaying the sankey chart
+    if (
+      defaultSelectedPeerCount.value > 0 &&
+      !selectedPeers.value.some((peer) => peer.peer === data.peer)
+    ) {
+      selectedPeers.value.push({ peer: data.peer })
+      defaultSelectedPeerCount.value--
+    }
+
+    rawMessages.value.push(data)
+    //When in live mode
+    if (isLiveMode.value) {
+      handleFilterMessages(data)
+    }
+  } else {
+    data.data.events.map((data) => {
+      bgPlayEvents.value.push({
+        source_id: data.attrs.source_id,
+        currentPath: data.attrs.path || [],
+        community: addCommunityAndDescriptions(data.attrs.community),
+        type: data.type,
+        timestamp: data.timestamp
+      })
     })
+    console.log('BGPlay Events:', bgPlayEvents.value)
   }
-  if (data.path && Array.isArray(data.path)) {
-    const uniqueASpath = [...new Set(data.path)]
-    // Creating new property and adding AS, AS names and country codes to the "as_info"
-    data.as_info = uniqueASpath.map((asn) => getASInfo(asn))
-  }
-  // Creating new property to store the floor timestamp
-  data.floor_timestamp = Math.floor(data.timestamp)
+}
 
-  //Automatically select the first 5 peers for displaying the sankey chart
-  if (
-    defaultSelectedPeerCount.value > 0 &&
-    !selectedPeers.value.some((peer) => peer.peer === data.peer)
-  ) {
-    selectedPeers.value.push({ peer: data.peer })
-    defaultSelectedPeerCount.value--
-  }
-
-  rawMessages.value.push(data)
-  //When in live mode
-  if (isLiveMode.value) {
-    handleFilterMessages(data)
-  }
+// Apply community descriptions to the community data array
+const addCommunityAndDescriptions = (communityDataArray) => {
+  if (!Array.isArray(communityDataArray)) return []
+  return communityDataArray.map((entry) => {
+    const [comm_1, comm_2] = typeof entry === 'string' ? entry.split(':').map(Number) : entry
+    const community = `${comm_1}:${comm_2}`
+    const description = findCommunityDescription(community)
+    return {
+      community,
+      comm_1,
+      description
+    }
+  })
 }
 
 // Find the community description
@@ -357,7 +379,7 @@ const fetchBGPlayData = async () => {
         rrcs: rrcs.value.join(',')
       }
     })
-    console.log('Fetched data:', res.data)
+    processResData(res.data)
   } catch (error) {
     console.error('Error fetching BGPlay data:', error)
   } finally {
