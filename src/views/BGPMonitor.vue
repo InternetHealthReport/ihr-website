@@ -221,14 +221,7 @@ const processResData = (data) => {
     // Creating new property to store the floor timestamp
     data.floor_timestamp = Math.floor(data.timestamp)
 
-    //Automatically select the first 5 peers for displaying the sankey chart
-    if (
-      defaultSelectedPeerCount.value > 0 &&
-      !selectedPeers.value.some((peer) => peer.peer === data.peer)
-    ) {
-      selectedPeers.value.push({ peer: data.peer })
-      defaultSelectedPeerCount.value--
-    }
+    applyDefaultSelectedPeers(data.peer)
 
     rawMessages.value.push(data)
     //When in live mode
@@ -275,6 +268,8 @@ const processResData = (data) => {
 
     filteredInitialState.map((data) => {
       const peer = data.source_id.split('-')[1] //removes the 'rrc-' prefix
+      applyDefaultSelectedPeers(peer)
+
       bgPlayInitialState.value.set(peer, {
         peer_asn: bgPlaySources.value[peer].as_number,
         rcc: bgPlaySources.value[peer].rrc,
@@ -288,6 +283,17 @@ const processResData = (data) => {
     })
     console.log('BGPlay Events:', bgPlayEvents.value)
     console.log('BGPlay Initial State:', bgPlayInitialState.value)
+  }
+}
+
+//Automatically select the first 5 peers for displaying the sankey chart
+const applyDefaultSelectedPeers = (peer) => {
+  if (
+    defaultSelectedPeerCount.value > 0 &&
+    !selectedPeers.value.some((data) => data.peer === peer)
+  ) {
+    selectedPeers.value.push({ peer: peer })
+    defaultSelectedPeerCount.value--
   }
 }
 
