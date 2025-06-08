@@ -54,6 +54,7 @@ const startTime = ref(new Date().toISOString().slice(0, 16))
 const endTime = ref(new Date().toISOString().slice(0, 16))
 const rrcs = ref([])
 const rrcLocations = ref([])
+const isLoadingBGPlayData = ref(false)
 
 const params = ref({
   peer: '',
@@ -335,6 +336,35 @@ const fetchRCCs = async () => {
   }
 }
 
+const haveRequiredBGPlayParams = () => {
+  return (
+    params.value.prefix && startTime.value && endTime.value && rrcs.value && rrcs.value.length > 0
+  )
+}
+
+const fetchBGPlayData = async () => {
+  if (!haveRequiredBGPlayParams()) {
+    console.error('Missing required parameters')
+    return
+  }
+  try {
+    isLoadingBGPlayData.value = true
+    const res = await axios.get('https://stat-ui.stat.ripe.net/data/bgplay/data.json', {
+      params: {
+        resource: params.value.prefix,
+        starttime: startTime.value,
+        endtime: endTime.value,
+        rrcs: rrcs.value.join(',')
+      }
+    })
+    console.log('Fetched data:', res.data)
+  } catch (error) {
+    console.error('Error fetching BGPlay data:', error)
+  } finally {
+    isLoadingBGPlayData.value = false
+  }
+}
+
 // Fetching the communities from the GitHub repository
 const fetchGithubFiles = async () => {
   const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
@@ -549,7 +579,13 @@ onMounted(() => {
             :disable="disableButton || params.prefix === ''"
             @click="toggleConnection"
           />
-          <QBtn v-else color="secondary" :label="'Submit'" />
+          <QBtn
+            v-else
+            color="secondary"
+            :label="'Submit'"
+            @click="fetchBGPlayData"
+            :disable="isLoadingBGPlayData || !haveRequiredBGPlayParams()"
+          />
           <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
           <div class="column">
             <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
