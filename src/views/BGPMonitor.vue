@@ -57,6 +57,7 @@ const rrcLocations = ref([])
 const isLoadingBGPlayData = ref(false)
 const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
 const bgPlayEvents = ref([]) // Used to store the "events" for BGPlay
+const bgPlayInitialState = ref(new Map()) // Used to store the initial state for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
 
 const params = ref({
@@ -231,7 +232,8 @@ const processResData = (data) => {
     }
   } else {
     data.data.sources.map((source) => {
-      bgPlaySources.value[source.id] = {
+      const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
+      bgPlaySources.value[peer] = {
         as_number: source.as_number,
         rrc: source.rrc
       }
@@ -243,9 +245,10 @@ const processResData = (data) => {
       }
     })
     data.data.events.map((data) => {
+      const peer = data.attrs.source_id.split('-')[1] //removes the 'rrc-' prefix
       bgPlayEvents.value.push({
-        peer_asn: bgPlaySources.value[data.attrs.source_id].as_number,
-        peer: data.attrs.source_id.split('-')[1], //removes the 'rrc-' prefix
+        peer_asn: bgPlaySources.value[peer].as_number,
+        peer: peer,
         path: data.attrs.path || [],
         community: addCommunityAndDescriptions(data.attrs.community),
         as_info: addASInfo(data.attrs.path),
@@ -253,7 +256,20 @@ const processResData = (data) => {
         timestamp: data.timestamp
       })
     })
+    data.data.initial_state.map((data) => {
+      const peer = data.source_id.split('-')[1] //removes the 'rrc-' prefix
+      bgPlayInitialState.value.set(peer, {
+        peer_asn: bgPlaySources.value[peer].as_number,
+        peer: peer,
+        path: data.path || [],
+        community: addCommunityAndDescriptions(data.community),
+        as_info: addASInfo(data.path),
+        type: 'I', // Assigning type I for initial state
+        timestamp: 0 //For ease of filtering when using timestamp
+      })
+    })
     console.log('BGPlay Events:', bgPlayEvents.value)
+    console.log('BGPlay Initial State:', bgPlayInitialState.value)
   }
 }
 
