@@ -229,54 +229,52 @@ const processResData = (data) => {
       handleFilterMessages(data)
     }
   } else {
-    data.data.sources.map((source) => {
+    data.data.sources.forEach((source) => {
       const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
       bgPlaySources.value[peer] = {
         as_number: source.as_number,
         rrc: source.rrc
       }
     })
-    data.data.nodes.map((node) => {
+    data.data.nodes.forEach((node) => {
+      const [asn_name, country_iso_code2] = node.owner.split(', ')
       bgPlayASNames.value[node.as_number] = {
-        asn_name: node.owner.split(', ')[0],
-        country_iso_code2: node.owner.split(', ')[1]
+        asn_name,
+        country_iso_code2
       }
     })
-    data.data.events.map((data) => {
-      const peer = data.attrs.source_id.split('-')[1] //removes the 'rrc-' prefix
+
+    data.data.events.forEach((event) => {
+      const peer = event.attrs.source_id.split('-')[1]
+      const peerInfo = bgPlaySources.value[peer]
+
       bgPlayEvents.value.push({
-        peer_asn: bgPlaySources.value[peer].as_number,
-        rcc: bgPlaySources.value[peer].rrc,
+        peer_asn: peerInfo.as_number,
+        rcc: peerInfo.rrc,
         peer: peer,
-        path: data.attrs.path || [],
-        community: addCommunityAndDescriptions(data.attrs.community),
-        as_info: addASInfo(data.attrs.path),
-        type: data.type,
-        timestamp: data.timestamp
+        path: event.attrs.path || [],
+        community: addCommunityAndDescriptions(event.attrs.community),
+        as_info: addASInfo(event.attrs.path),
+        type: event.type,
+        timestamp: event.timestamp
       })
     })
 
-    // Filter the initial state to only include the data that do not match the selected RRCs
-    const filteredInitialState = data.data.initial_state.filter((data) => {
-      const peer = data.source_id.split('-')[1]
-      const source = bgPlaySources.value[peer]
-      if (rrcs.value.includes(Number(source.rrc))) {
-        return true
-      }
-      return false
-    })
+    data.data.initial_state.forEach((event) => {
+      const peer = event.source_id.split('-')[1]
+      const peerInfo = bgPlaySources.value[peer]
 
-    filteredInitialState.map((data) => {
-      const peer = data.source_id.split('-')[1] //removes the 'rrc-' prefix
+      if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
+
       applyDefaultSelectedPeers(peer)
 
       bgPlayInitialState.value.set(peer, {
-        peer_asn: bgPlaySources.value[peer].as_number,
-        rcc: bgPlaySources.value[peer].rrc,
+        peer_asn: peerInfo.as_number,
+        rcc: peerInfo.rrc,
         peer: peer,
-        path: data.path || [],
-        community: addCommunityAndDescriptions(data.community),
-        as_info: addASInfo(data.path),
+        path: event.path || [],
+        community: addCommunityAndDescriptions(event.community),
+        as_info: addASInfo(event.path),
         type: 'I', // Assigning type I for initial state
         timestamp: 0 //For ease of filtering when using timestamp
       })
@@ -314,16 +312,23 @@ const addCommunityAndDescriptions = (communityDataArray) => {
 
 // Add AS Info to the AS path
 const addASInfo = (asPathArray) => {
-  if (!Array.isArray(asPathArray)) return []
-  const uniqueASpath = [...new Set(asPathArray)]
-  return uniqueASpath.map((asn) => {
-    const asInfo = dataSource.value === 'risLive' ? asNames.value[asn] : bgPlayASNames.value[asn]
-    return {
+  if (!Array.isArray(asPathArray) || asPathArray.length === 0) return []
+
+  const source = dataSource.value === 'risLive' ? asNames.value : bgPlayASNames.value
+  const seen = new Set()
+
+  const result = []
+  for (const asn of asPathArray) {
+    if (seen.has(asn)) continue
+    seen.add(asn)
+    const info = source[asn] || {}
+    result.push({
       asn,
-      asn_name: asInfo?.asn_name || 'Unknown',
-      country_iso_code2: asInfo?.country_iso_code2 || 'ZZ'
-    }
-  })
+      asn_name: info.asn_name || 'Unknown',
+      country_iso_code2: info.country_iso_code2 || 'ZZ'
+    })
+  }
+  return result
 }
 
 // Filter bgp messages (stores only unique peer messages)
