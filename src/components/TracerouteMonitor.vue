@@ -341,8 +341,8 @@ const loadMeasurementData = async (loadProbes = false) => {
       const params = {}
 
       if (!timeRange.value.disable) {
-        params.start_time = timeRange.value.min
-        params.stop_time = timeRange.value.max
+        params.start = timeRange.value.min
+        params.stop = timeRange.value.max
       }
 
       if (selectedProbes.value.length > 0) {

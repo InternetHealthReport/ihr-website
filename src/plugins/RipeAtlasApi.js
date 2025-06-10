@@ -14,7 +14,7 @@ const axios_base = axios.create({
 // Helper functions
 // Split a large array into array of smaller size chunks
 const splitListToChunks = (list) => {
-  const CHUNK_SIZE = 10
+  const CHUNK_SIZE = 100
   const chunksList = []
 
   list.sort((a, b) => +a - +b)
