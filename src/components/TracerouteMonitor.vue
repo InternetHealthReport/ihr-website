@@ -291,6 +291,7 @@ const loadMeasurement = async () => {
     isLoading.value = true
     try {
       const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
+
       metaData.value = fetchedMetaData
 
       if (fetchedMetaData.status.name === 'Ongoing') {

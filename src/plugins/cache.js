@@ -95,5 +95,4 @@ const defaultOptions = {
   storageAllowed: true
 }
 
-
 export default cache
