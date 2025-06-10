@@ -99,17 +99,18 @@ export const cachePromiseArrayResponses = async (key, fetcher, options, combinat
   } else {
     options = Object.assign(defaultOptions, options)
   }
-  let item = await getItem(key)
-  if (item) {
-    item = JSON.parse(item).data
+  let result = await getItem(key)
+  if (result) {
+    result = JSON.parse(result).data
   } else {
     try {
-      item = await fetcher()
+      let resultList = await fetcher()
+      result = combinator(resultList)
       let sessionObj = {}
 
       sessionObj = {
         ...options,
-        data: combinator(item)
+        data: result
       }
 
       if (options.storageAllowed) {
@@ -124,11 +125,11 @@ export const cachePromiseArrayResponses = async (key, fetcher, options, combinat
           error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
       ) {
         await deleteExpiredItemsAndReduceSpace()
-        item = await cachePromiseArrayResponses(key, fetcher, options, combinator)
+        result = await cachePromiseArrayResponses(key, fetcher, options, combinator)
       }
     }
   }
-  return item
+  return result
 }
 
 export default cache

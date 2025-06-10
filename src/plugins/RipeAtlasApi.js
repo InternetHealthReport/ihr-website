@@ -118,9 +118,9 @@ const AtlasApi = {
         },
         // combinator function: defines how to combine the responses
         (resolvedPromisesList) => {
-          return resolvedPromisesList.reduce((result, responses) => {
-            responses.data.forEach((response) => {
-              result.push(response)
+          return resolvedPromisesList.reduce((result, response) => {
+            response.data.forEach((hopData) => {
+              result.push(hopData)
             })
 
             return result
