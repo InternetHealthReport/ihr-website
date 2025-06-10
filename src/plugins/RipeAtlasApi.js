@@ -1,5 +1,5 @@
 import axios from 'axios'
-import cache, { cachePromiseArrayResponses } from './cache.js'
+import cache from './cache.js'
 import { get, set } from 'idb-keyval'
 
 // Base URL for RIPE Atlas API
@@ -93,7 +93,7 @@ const AtlasApi = {
 
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}/results`
-      return await cachePromiseArrayResponses(
+      return await cache(
         params && Object.keys(params).length > 0 ? `${url}_${JSON.stringify(params)}` : url,
         async () => {
           // fetcher function: defines how to fetch data in chunks

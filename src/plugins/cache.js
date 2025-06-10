@@ -1,6 +1,6 @@
 import { get, set, del, clear, keys, getMany, delMany } from 'idb-keyval'
 
-const cache = async (key, fetcher, options) => {
+const cache = async (key, fetcher, options, combinator = null) => {
   if (!options) {
     options = defaultOptions
   } else {
@@ -12,6 +12,9 @@ const cache = async (key, fetcher, options) => {
   } else {
     try {
       item = await fetcher()
+      if (combinator != null) {
+        item = combinator(item)
+      }
       const sessionObj = {
         ...options,
         data: item
@@ -28,7 +31,7 @@ const cache = async (key, fetcher, options) => {
           error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
       ) {
         await deleteExpiredItemsAndReduceSpace()
-        item = await cache(key, fetcher, options)
+        item = await cache(key, fetcher, options, combinator)
       }
     }
   }
@@ -92,44 +95,5 @@ const defaultOptions = {
   storageAllowed: true
 }
 
-// Fetches data using promise array and prepares a response for api and cache using a combine function Function
-export const cachePromiseArrayResponses = async (key, fetcher, options, combinator) => {
-  if (!options) {
-    options = defaultOptions
-  } else {
-    options = Object.assign(defaultOptions, options)
-  }
-  let result = await getItem(key)
-  if (result) {
-    result = JSON.parse(result).data
-  } else {
-    try {
-      let resultList = await fetcher()
-      result = combinator(resultList)
-      let sessionObj = {}
-
-      sessionObj = {
-        ...options,
-        data: result
-      }
-
-      if (options.storageAllowed) {
-        await set(key, JSON.stringify(sessionObj))
-      }
-    } catch (error) {
-      if (
-        error instanceof DOMException &&
-        (error.code === 22 ||
-          error.code === 1014 ||
-          error.name === 'QuotaExceededError' ||
-          error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
-      ) {
-        await deleteExpiredItemsAndReduceSpace()
-        result = await cachePromiseArrayResponses(key, fetcher, options, combinator)
-      }
-    }
-  }
-  return result
-}
 
 export default cache
