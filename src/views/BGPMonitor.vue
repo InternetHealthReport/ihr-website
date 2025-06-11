@@ -218,6 +218,7 @@ const processResData = (data) => {
   if (dataSource.value === 'risLive') {
     data.community = addCommunityAndDescriptions(data.community)
     data.as_info = addASInfo(data.path)
+    data.type = addBGPMessageType(data)
     // Creating new property to store the floor timestamp
     data.floor_timestamp = Math.floor(data.timestamp)
 
@@ -255,7 +256,7 @@ const processResData = (data) => {
         path: event.attrs.path || [],
         community: addCommunityAndDescriptions(event.attrs.community),
         as_info: addASInfo(event.attrs.path),
-        type: event.type,
+        type: addBGPMessageType(event.type),
         timestamp: event.timestamp
       })
     })
@@ -275,8 +276,8 @@ const processResData = (data) => {
         path: event.path || [],
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(event.path),
-        type: 'I', // Assigning type I for initial state
-        timestamp: 0 //For ease of filtering when using timestamp
+        type: addBGPMessageType('I'), // Manually Assigning 'I' for Initial State
+        timestamp: 0 // For ease of filtering when using timestamp
       })
     })
     console.log('BGPlay Events:', bgPlayEvents.value)
@@ -335,6 +336,30 @@ const addASInfo = (asPathArray) => {
   return result
 }
 
+// Determine the BGP message type
+const addBGPMessageType = (data) => {
+  if (dataSource.value === 'risLive') {
+    if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
+      return 'Announce'
+    } else if (data.withdrawals.includes(params.value.prefix)) {
+      return 'Withdraw'
+    } else {
+      return 'Unknown'
+    }
+  } else {
+    // For BGPlay, we can directly use the type from the event
+    if (data === 'I') {
+      return 'Initial State'
+    } else if (data === 'A') {
+      return 'Announce'
+    } else if (data === 'W') {
+      return 'Withdraw'
+    } else {
+      return 'Unknown'
+    }
+  }
+}
+
 // Filter bgp messages (stores only unique peer messages)
 const handleFilterMessages = (data) => {
   if (data) {
@@ -355,17 +380,6 @@ const handleFilterMessages = (data) => {
     })
   }
   filteredMessages.value = Array.from(uniquePeerMessages.values())
-}
-
-// Determine the BGP message type
-const bgpMessageType = (data) => {
-  if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
-    return 'Announce'
-  } else if (data.withdrawals.includes(params.value.prefix)) {
-    return 'Withdraw'
-  } else {
-    return 'Unknown'
-  }
 }
 
 const setSelectedMaxTimestamp = (val) => {
@@ -766,7 +780,6 @@ onMounted(() => {
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
-        :bgp-message-type="bgpMessageType"
         @enable-live-mode="enableLiveMode"
       />
     </GenericCardController>
@@ -780,7 +793,6 @@ onMounted(() => {
       <BGPLineChart
         :raw-messages="rawMessages"
         :max-hops="maxHops"
-        :bgp-message-type="bgpMessageType"
         :used-messages-count="usedMessagesCount"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
@@ -801,7 +813,6 @@ onMounted(() => {
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
-        :bgp-message-type="bgpMessageType"
         @enable-live-mode="enableLiveMode"
         @update-selected-peers="updateSelectedPeers"
       />

@@ -15,9 +15,6 @@ const props = defineProps({
   maxHops: {
     type: Number
   },
-  bgpMessageType: {
-    type: Function
-  },
   usedMessagesCount: {
     type: Number
   },
@@ -50,12 +47,12 @@ const generateLineChartData = async (message) => {
   const announcementsTrace = []
   const withdrawalsTrace = []
   //count no of messages based on type
-  if (props.bgpMessageType(message) === 'Announce') {
+  if (message.type === 'Announce') {
     if (!announcementsCount.value[timestamp]) {
       announcementsCount.value[timestamp] = 0
     }
     announcementsCount.value[timestamp]++
-  } else if (props.bgpMessageType(message) === 'Withdraw') {
+  } else if (message.type === 'Withdraw') {
     if (!withdrawalsCount.value[timestamp]) {
       withdrawalsCount.value[timestamp] = 0
     }

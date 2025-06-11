@@ -15,9 +15,6 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  bgpMessageType: {
-    type: Function
-  },
   isLiveMode: {
     type: Boolean
   },
@@ -50,8 +47,9 @@ const generateGraphData = () => {
     if (
       !message.path ||
       message.path.length === 0 ||
-      props.bgpMessageType(message) === 'Withdraw' ||
-      props.bgpMessageType(message) === 'Unknown'
+      message.type === 'Withdraw' ||
+      message.type === 'Unknown' ||
+      message.type === 'Initial State'
     )
       return
     const path = removeConsecutiveDuplicateAS(message.path).slice(-(props.maxHops + 1)) //+1 for the last AS
