@@ -93,7 +93,7 @@ const rows = computed(() =>
             .join('\n')
         : 'Null',
     type: message.type,
-    timestamp: timestampToUTC(message.floor_timestamp),
+    timestamp: timestampToUTC(message.timestamp),
     community:
       message.community?.length > 0
         ? message.community.map((c) => `${c.community}, AS${c.comm_1}-${c.description}`).join('\n')

@@ -219,8 +219,8 @@ const processResData = (data) => {
     data.community = addCommunityAndDescriptions(data.community)
     data.as_info = addASInfo(data.path)
     data.type = addBGPMessageType(data)
-    // Creating new property to store the floor timestamp
-    data.floor_timestamp = Math.floor(data.timestamp)
+    // Modify the timestamp to be in seconds
+    data.timestamp = Math.floor(data.timestamp)
 
     applyDefaultSelectedPeers(data.peer)
 
@@ -248,7 +248,7 @@ const processResData = (data) => {
     data.data.events.forEach((event) => {
       const peer = event.attrs.source_id.split('-')[1]
       const peerInfo = bgPlaySources.value[peer]
-
+      const timestamp = Math.floor(new Date(event.timestamp + 'Z').getTime() / 1000)
       bgPlayEvents.value.push({
         peer_asn: peerInfo.as_number,
         rcc: peerInfo.rrc,
@@ -257,7 +257,7 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.attrs.community),
         as_info: addASInfo(event.attrs.path),
         type: addBGPMessageType(event.type),
-        timestamp: event.timestamp
+        timestamp: timestamp
       })
     })
 
@@ -371,7 +371,7 @@ const handleFilterMessages = (data) => {
     filteredMessages.value = []
     uniquePeerMessages.clear()
     const filteredRawMessages = rawMessages.value.filter(
-      (message) => message.floor_timestamp <= selectedMaxTimestamp.value
+      (message) => message.timestamp <= selectedMaxTimestamp.value
     )
     usedMessagesCount.value = filteredRawMessages.length
 

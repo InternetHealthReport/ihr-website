@@ -42,7 +42,7 @@ const sliderWidthInit = ref(false)
 
 // Generate the stacked line chart data for the Plotly chart
 const generateLineChartData = async (message) => {
-  const timestamp = message.floor_timestamp
+  const timestamp = message.timestamp
   const dates = []
   const announcementsTrace = []
   const withdrawalsTrace = []
@@ -197,7 +197,7 @@ const init = async () => {
     sliderWidthInit.value = false
   }
   if (props.rawMessages && props.rawMessages.length > 0) {
-    updateTimeRange(props.rawMessages.at(-1).floor_timestamp)
+    updateTimeRange(props.rawMessages.at(-1).timestamp)
     const { dates, announcementsTrace, withdrawalsTrace } = await generateLineChartData(
       props.rawMessages.at(-1)
     )
