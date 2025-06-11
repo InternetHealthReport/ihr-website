@@ -38,7 +38,7 @@ const socket = ref(null)
 const rawMessages = ref([]) //Used to store all the messages from the websocket
 const filteredMessages = ref([]) //Used to store unique peer messages uses "uniquePeerMessages = new Map()""
 const uniquePeerMessages = new Map() //Used to store unique peer messages (For simplification)
-const communities = ref([]) //Community data from the GitHub repository
+const communityInfo = ref({})
 const selectedPeers = ref([])
 const defaultSelectedPeerCount = ref(5) //Default number of peers to display in the sankey chart
 const isLiveMode = ref(true)
@@ -299,13 +299,17 @@ const applyDefaultSelectedPeers = (peer) => {
 const addCommunityAndDescriptions = (communityDataArray) => {
   if (!Array.isArray(communityDataArray)) return []
   return communityDataArray.map((entry) => {
-    const [comm_1, comm_2] = typeof entry === 'string' ? entry.split(':').map(Number) : entry
-    const community = `${comm_1}:${comm_2}`
-    const matched = communities.value.find((c) => matchPattern(c.community, community))
+    const [comm_1, comm_2] = typeof entry === 'string' ? entry.split(':') : entry
+    const community_str = `${comm_1}:${comm_2}`
+    const comm_1_str = `${comm_1}`
+    const description =
+      communityInfo.value[community_str]?.description ||
+      communityInfo.value[comm_1_str]?.description ||
+      'Null'
     return {
-      community,
-      comm_1,
-      description: matched ? matched.description : 'Null'
+      community: community_str,
+      comm_1: comm_1_str,
+      description: description
     }
   })
 }
@@ -427,6 +431,7 @@ const fetchBGPlayData = async () => {
   }
   try {
     isLoadingBGPlayData.value = true
+    console.log('Fetching data...')
     const res = await axios.get('https://stat-ui.stat.ripe.net/data/bgplay/data.json', {
       params: {
         resource: params.value.prefix,
@@ -435,6 +440,7 @@ const fetchBGPlayData = async () => {
         rrcs: rrcs.value.join(',')
       }
     })
+    console.log('Data fetched successfully')
     processResData(res.data)
   } catch (error) {
     console.error('Error fetching BGPlay data:', error)
@@ -450,64 +456,106 @@ const fetchGithubFiles = async () => {
     const response = await axios.get(repoUrl)
     const files = response.data
     const txtFiles = files.filter(
-      (file) => file.name.startsWith('as') && file.name.endsWith('.txt')
+      (file) =>
+        (file.name.startsWith('as') && file.name.endsWith('.txt')) || file.name === 'well-known.txt'
     )
     const fetchFilePromises = txtFiles.map((file) => axios.get(file.download_url))
     const fileContents = await Promise.all(fetchFilePromises)
     const processedCommunities = fileContents.flatMap((content) => {
       const lines = content.data.trim().split('\n')
       return lines
-        .filter((line) => line.trim() !== '' && !line.startsWith('#'))
+        .filter(
+          (line) =>
+            line.trim() !== '' && // Exclude empty lines
+            !line.startsWith('#') && // Exclude comments
+            !line.startsWith('rt') && // Exclude Extended communities
+            !line.startsWith('soo') // Exclude Extended communities
+        )
         .map((line) => {
           const [community, description] = line.split(',')
           if (community && description) {
-            return { community: community.trim(), description: description.trim() }
+            return { value: community.trim(), description: description.trim() }
           }
           return null // Return null for improperly formatted lines
         })
         .filter((entry) => entry !== null) // Filter out null entries
     })
-    communities.value = processedCommunities
+    communityInfo.value = generateCommunityMap(processedCommunities)
   } catch (error) {
     console.error('Error fetching the GitHUb files: ', error)
   }
 }
 
-//Marching the community pattern
-const matchPattern = (community, communityToFind) => {
-  //This doesnot work with large communities, for example 65535:0:12345, 65535:nnn:0, 65535:123:100x.
-  if (community.split(':').length !== 2 || communityToFind.split(':').length !== 2) return false
-  // Exact match, for example: 65535:666, only matching this exact community
-  if (community === communityToFind) return true
+function generateCommunityMap(communities) {
+  const communityInfo = {}
 
-  const [pattern_1, pattern_2] = community.split(':')
-  const [comm_1, comm_2] = communityToFind.split(':')
-  // Range match, for example: 65535:0-100, matching anything from 65535:0 upto 65535:100
-  if (pattern_2.includes('-')) {
-    const [start, end] = pattern_2.split('-').map(Number)
-    const commNumber = Number(comm_2)
-    if (pattern_1 === comm_1 && commNumber >= start && commNumber <= end) {
-      //console.log('Range', community, communityToFind)
-      return true
+  const isWildcardX = (s) => s.includes('x')
+  const isWildcardN = (s) => s.includes('n')
+  const isRange = (s) => s.includes('-') && !isWildcardX(s) && !isWildcardN(s)
+  const isExact = (s) => !isRange(s) && !isWildcardX(s) && !isWildcardN(s)
+
+  // Expand range like '100-102' to ['100', '101', '102']
+  function expandRange(str) {
+    const [start, end] = str.split('-').map(Number)
+    const result = []
+    for (let i = start; i <= end; i++) {
+      result.push(i.toString())
+    }
+    return result
+  }
+
+  // Expand wildcard patterns like '100xxx','100xx4' to all possible values
+  function expandWildcard(pattern) {
+    const firstWildcard = pattern.indexOf('x')
+    if (firstWildcard === -1) return [pattern]
+
+    const fixedPart = pattern.slice(0, firstWildcard)
+    const wildcardPart = pattern.slice(firstWildcard)
+    const wildcardCount = (wildcardPart.match(/x/g) || []).length
+    const max = Math.pow(10, wildcardCount)
+
+    const expanded = []
+    for (let i = 0; i < max; i++) {
+      const digits = i.toString().padStart(wildcardCount, '0')
+      let wildcardExpanded = ''
+      let digitIndex = 0
+      for (const ch of wildcardPart) {
+        wildcardExpanded += ch === 'x' ? digits[digitIndex++] : ch
+      }
+      expanded.push(fixedPart + wildcardExpanded)
+    }
+    return expanded
+  }
+
+  // Expand any pattern to all matching strings
+  function expandPattern(pattern) {
+    if (isExact(pattern) || isWildcardN(pattern)) return [pattern]
+    if (isRange(pattern)) return expandRange(pattern)
+    if (isWildcardX(pattern)) return expandWildcard(pattern)
+    return []
+  }
+
+  for (const { value, description } of communities) {
+    const parts = value.split(':')
+    if (parts.length !== 2) continue
+
+    const [prefixPattern, suffixPattern] = parts
+
+    const prefixes = expandPattern(prefixPattern)
+    const suffixes = expandPattern(suffixPattern)
+
+    for (const prefix of prefixes) {
+      for (const suffix of suffixes) {
+        if (isWildcardN(suffix)) {
+          communityInfo[`${prefix}`] = { description } // For wildcard N '65535:nnn', store only the prefix
+        } else {
+          communityInfo[`${prefix}:${suffix}`] = { description }
+        }
+      }
     }
   }
-  // Single digit wildcard match, for example: 65535:x0, matching for 65535:00, 65535:10, 65535:20, etc
-  if (pattern_2.includes('x')) {
-    const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
-    if (pattern_1 === comm_1 && regex.test(comm_2)) {
-      //console.log('Wildcard', community, communityToFind)
-      return true
-    }
-  }
-  // Any Number Match, for example: 65535:nnn, which matches any community staring with 65535: followed by any number.
-  if (pattern_2.includes('nnn')) {
-    const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
-    if (pattern_1 === comm_1 && regex.test(comm_2)) {
-      //console.log('Any', community, communityToFind)
-      return true
-    }
-  }
-  return false
+  console.log('Community Object Generated')
+  return communityInfo
 }
 
 const updateSelectedPeers = (obj) => {
