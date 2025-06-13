@@ -15,9 +15,6 @@ const props = defineProps({
   maxHops: {
     type: Number
   },
-  bgpMessageType: {
-    type: Function
-  },
   usedMessagesCount: {
     type: Number
   },
@@ -45,17 +42,17 @@ const sliderWidthInit = ref(false)
 
 // Generate the stacked line chart data for the Plotly chart
 const generateLineChartData = async (message) => {
-  const timestamp = message.floor_timestamp
+  const timestamp = message.timestamp
   const dates = []
   const announcementsTrace = []
   const withdrawalsTrace = []
   //count no of messages based on type
-  if (props.bgpMessageType(message) === 'Announce') {
+  if (message.type === 'Announce') {
     if (!announcementsCount.value[timestamp]) {
       announcementsCount.value[timestamp] = 0
     }
     announcementsCount.value[timestamp]++
-  } else if (props.bgpMessageType(message) === 'Withdraw') {
+  } else if (message.type === 'Withdraw') {
     if (!withdrawalsCount.value[timestamp]) {
       withdrawalsCount.value[timestamp] = 0
     }
@@ -200,7 +197,7 @@ const init = async () => {
     sliderWidthInit.value = false
   }
   if (props.rawMessages && props.rawMessages.length > 0) {
-    updateTimeRange(props.rawMessages.at(-1).floor_timestamp)
+    updateTimeRange(props.rawMessages.at(-1).timestamp)
     const { dates, announcementsTrace, withdrawalsTrace } = await generateLineChartData(
       props.rawMessages.at(-1)
     )

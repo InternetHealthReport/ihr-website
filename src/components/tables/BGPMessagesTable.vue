@@ -13,9 +13,6 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  bgpMessageType: {
-    type: Function
-  },
   isLiveMode: {
     type: Boolean
   },
@@ -95,8 +92,8 @@ const rows = computed(() =>
             .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
             .join('\n')
         : 'Null',
-    type: props.bgpMessageType(message),
-    timestamp: timestampToUTC(message.floor_timestamp),
+    type: message.type,
+    timestamp: timestampToUTC(message.timestamp),
     community:
       message.community?.length > 0
         ? message.community.map((c) => `${c.community}, AS${c.comm_1}-${c.description}`).join('\n')

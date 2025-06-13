@@ -38,7 +38,7 @@ const socket = ref(null)
 const rawMessages = ref([]) //Used to store all the messages from the websocket
 const filteredMessages = ref([]) //Used to store unique peer messages uses "uniquePeerMessages = new Map()""
 const uniquePeerMessages = new Map() //Used to store unique peer messages (For simplification)
-const communities = ref([]) //Community data from the GitHub repository
+const communityInfo = ref({})
 const selectedPeers = ref([])
 const defaultSelectedPeerCount = ref(5) //Default number of peers to display in the sankey chart
 const isLiveMode = ref(true)
@@ -54,11 +54,16 @@ const startTime = ref(new Date().toISOString().slice(0, 16))
 const endTime = ref(new Date().toISOString().slice(0, 16))
 const rrcs = ref([])
 const rrcLocations = ref([])
+const isLoadingBGPlayData = ref(false)
+const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
+const bgPlayEvents = ref([]) // Used to store the "events" for BGPlay
+const bgPlayInitialState = ref(new Map()) // Used to store the initial state for BGPlay
+const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
 
 const params = ref({
   peer: '',
   path: '',
-  prefix: '169.145.140.0/23', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24, 202.164.222.0/24
+  prefix: '', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24, 202.164.222.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: false,
@@ -90,6 +95,11 @@ const resetData = () => {
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
   inputDisable.value = false
+
+  bgPlaySources.value = {}
+  bgPlayEvents.value = []
+  bgPlayInitialState.value.clear()
+  bgPlayASNames.value = {}
 }
 
 // Initialize the route
@@ -160,7 +170,7 @@ const connectWebSocket = () => {
   socket.value.onmessage = (event) => {
     const res = JSON.parse(event.data)
     if (res.type === 'ris_message') {
-      handleMessages(res.data)
+      processResData(res.data)
     } else if (res.type === 'ris_rrc_list') {
       handleRRC(res.data)
     } else if (res.type === 'ris_error') {
@@ -204,51 +214,149 @@ const sendSocketType = (protocol, paramData) => {
   )
 }
 
-const handleMessages = (data) => {
-  if (data.community && Array.isArray(data.community)) {
-    // Add descriptions to community data
-    data.community = data.community.map(([comm_1, comm_2]) => {
-      const community = `${comm_1}:${comm_2}`
-      const description = findCommunityDescription(community)
-      return { community: community, comm_1: comm_1, description: description }
-    })
-  }
-  if (data.path && Array.isArray(data.path)) {
-    const uniqueASpath = [...new Set(data.path)]
-    // Creating new property and adding AS, AS names and country codes to the "as_info"
-    data.as_info = uniqueASpath.map((asn) => getASInfo(asn))
-  }
-  // Creating new property to store the floor timestamp
-  data.floor_timestamp = Math.floor(data.timestamp)
+const processResData = (data) => {
+  if (dataSource.value === 'risLive') {
+    data.community = addCommunityAndDescriptions(data.community)
+    data.as_info = addASInfo(data.path)
+    data.type = addBGPMessageType(data)
+    // Modify the timestamp to be in seconds
+    data.timestamp = Math.floor(data.timestamp)
 
-  //Automatically select the first 5 peers for displaying the sankey chart
+    applyDefaultSelectedPeers(data.peer)
+
+    rawMessages.value.push(data)
+    //When in live mode
+    if (isLiveMode.value) {
+      handleFilterMessages(data)
+    }
+  } else {
+    data.data.sources.forEach((source) => {
+      const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
+      bgPlaySources.value[peer] = {
+        as_number: source.as_number,
+        rrc: source.rrc
+      }
+    })
+    data.data.nodes.forEach((node) => {
+      const [asn_name, country_iso_code2] = node.owner.split(', ')
+      bgPlayASNames.value[node.as_number] = {
+        asn_name,
+        country_iso_code2
+      }
+    })
+
+    data.data.events.forEach((event) => {
+      const peer = event.attrs.source_id.split('-')[1]
+      const peerInfo = bgPlaySources.value[peer]
+      const timestamp = Math.floor(new Date(event.timestamp + 'Z').getTime() / 1000)
+      bgPlayEvents.value.push({
+        peer_asn: peerInfo.as_number,
+        rcc: peerInfo.rrc,
+        peer: peer,
+        path: event.attrs.path || [],
+        community: addCommunityAndDescriptions(event.attrs.community),
+        as_info: addASInfo(event.attrs.path),
+        type: addBGPMessageType(event.type),
+        timestamp: timestamp
+      })
+    })
+
+    data.data.initial_state.forEach((event) => {
+      const peer = event.source_id.split('-')[1]
+      const peerInfo = bgPlaySources.value[peer]
+
+      if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
+
+      applyDefaultSelectedPeers(peer)
+
+      bgPlayInitialState.value.set(peer, {
+        peer_asn: peerInfo.as_number,
+        rcc: peerInfo.rrc,
+        peer: peer,
+        path: event.path || [],
+        community: addCommunityAndDescriptions(event.community),
+        as_info: addASInfo(event.path),
+        type: addBGPMessageType('I'), // Manually Assigning 'I' for Initial State
+        timestamp: 0 // For ease of filtering when using timestamp
+      })
+    })
+    console.log('BGPlay Events:', bgPlayEvents.value)
+    console.log('BGPlay Initial State:', bgPlayInitialState.value)
+  }
+}
+
+//Automatically select the first 5 peers for displaying the sankey chart
+const applyDefaultSelectedPeers = (peer) => {
   if (
     defaultSelectedPeerCount.value > 0 &&
-    !selectedPeers.value.some((peer) => peer.peer === data.peer)
+    !selectedPeers.value.some((data) => data.peer === peer)
   ) {
-    selectedPeers.value.push({ peer: data.peer })
+    selectedPeers.value.push({ peer: peer })
     defaultSelectedPeerCount.value--
   }
+}
 
-  rawMessages.value.push(data)
-  //When in live mode
-  if (isLiveMode.value) {
-    handleFilterMessages(data)
+// Apply community descriptions to the community data array
+const addCommunityAndDescriptions = (communityDataArray) => {
+  if (!Array.isArray(communityDataArray)) return []
+  return communityDataArray.map((entry) => {
+    const [comm_1, comm_2] = typeof entry === 'string' ? entry.split(':') : entry
+    const community_str = `${comm_1}:${comm_2}`
+    const comm_1_str = `${comm_1}`
+    const description =
+      communityInfo.value[community_str]?.description ||
+      communityInfo.value[comm_1_str]?.description ||
+      'Null'
+    return {
+      community: community_str,
+      comm_1: comm_1_str,
+      description: description
+    }
+  })
+}
+
+// Add AS Info to the AS path
+const addASInfo = (asPathArray) => {
+  if (!Array.isArray(asPathArray) || asPathArray.length === 0) return []
+
+  const source = dataSource.value === 'risLive' ? asNames.value : bgPlayASNames.value
+  const seen = new Set()
+
+  const result = []
+  for (const asn of asPathArray) {
+    if (seen.has(asn)) continue
+    seen.add(asn)
+    const info = source[asn] || {}
+    result.push({
+      asn,
+      asn_name: info.asn_name || 'Unknown',
+      country_iso_code2: info.country_iso_code2 || 'ZZ'
+    })
   }
+  return result
 }
 
-// Find the community description
-const findCommunityDescription = (communityToFind) => {
-  const community = communities.value.find((c) => matchPattern(c.community, communityToFind))
-  return community ? community.description : 'Null'
-}
-
-// Get the AS (AS Number, AS Name and Country Code) from the asnames.txt file
-const getASInfo = (asn) => {
-  if (asNames.value[asn]) {
-    return { asn: asn, ...asNames.value[asn] }
+// Determine the BGP message type
+const addBGPMessageType = (data) => {
+  if (dataSource.value === 'risLive') {
+    if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
+      return 'Announce'
+    } else if (data.withdrawals.includes(params.value.prefix)) {
+      return 'Withdraw'
+    } else {
+      return 'Unknown'
+    }
   } else {
-    return { asn: asn, asn_name: 'Unknown', country_iso_code2: 'ZZ' }
+    // For BGPlay, we can directly use the type from the event
+    if (data === 'I') {
+      return 'Initial State'
+    } else if (data === 'A') {
+      return 'Announce'
+    } else if (data === 'W') {
+      return 'Withdraw'
+    } else {
+      return 'Unknown'
+    }
   }
 }
 
@@ -263,7 +371,7 @@ const handleFilterMessages = (data) => {
     filteredMessages.value = []
     uniquePeerMessages.clear()
     const filteredRawMessages = rawMessages.value.filter(
-      (message) => message.floor_timestamp <= selectedMaxTimestamp.value
+      (message) => message.timestamp <= selectedMaxTimestamp.value
     )
     usedMessagesCount.value = filteredRawMessages.length
 
@@ -272,17 +380,6 @@ const handleFilterMessages = (data) => {
     })
   }
   filteredMessages.value = Array.from(uniquePeerMessages.values())
-}
-
-// Determine the BGP message type
-const bgpMessageType = (data) => {
-  if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
-    return 'Announce'
-  } else if (data.withdrawals.includes(params.value.prefix)) {
-    return 'Withdraw'
-  } else {
-    return 'Unknown'
-  }
 }
 
 const setSelectedMaxTimestamp = (val) => {
@@ -335,6 +432,37 @@ const fetchRCCs = async () => {
   }
 }
 
+const haveRequiredBGPlayParams = () => {
+  return (
+    params.value.prefix && startTime.value && endTime.value && rrcs.value && rrcs.value.length > 0
+  )
+}
+
+const fetchBGPlayData = async () => {
+  if (!haveRequiredBGPlayParams()) {
+    console.error('Missing required parameters')
+    return
+  }
+  try {
+    isLoadingBGPlayData.value = true
+    console.log('Fetching data...')
+    const res = await axios.get('https://stat-ui.stat.ripe.net/data/bgplay/data.json', {
+      params: {
+        resource: params.value.prefix,
+        starttime: startTime.value,
+        endtime: endTime.value,
+        rrcs: rrcs.value.join(',')
+      }
+    })
+    console.log('Data fetched successfully')
+    processResData(res.data)
+  } catch (error) {
+    console.error('Error fetching BGPlay data:', error)
+  } finally {
+    isLoadingBGPlayData.value = false
+  }
+}
+
 // Fetching the communities from the GitHub repository
 const fetchGithubFiles = async () => {
   const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
@@ -342,64 +470,106 @@ const fetchGithubFiles = async () => {
     const response = await axios.get(repoUrl)
     const files = response.data
     const txtFiles = files.filter(
-      (file) => file.name.startsWith('as') && file.name.endsWith('.txt')
+      (file) =>
+        (file.name.startsWith('as') && file.name.endsWith('.txt')) || file.name === 'well-known.txt'
     )
     const fetchFilePromises = txtFiles.map((file) => axios.get(file.download_url))
     const fileContents = await Promise.all(fetchFilePromises)
     const processedCommunities = fileContents.flatMap((content) => {
       const lines = content.data.trim().split('\n')
       return lines
-        .filter((line) => line.trim() !== '' && !line.startsWith('#'))
+        .filter(
+          (line) =>
+            line.trim() !== '' && // Exclude empty lines
+            !line.startsWith('#') && // Exclude comments
+            !line.startsWith('rt') && // Exclude Extended communities
+            !line.startsWith('soo') // Exclude Extended communities
+        )
         .map((line) => {
           const [community, description] = line.split(',')
           if (community && description) {
-            return { community: community.trim(), description: description.trim() }
+            return { value: community.trim(), description: description.trim() }
           }
           return null // Return null for improperly formatted lines
         })
         .filter((entry) => entry !== null) // Filter out null entries
     })
-    communities.value = processedCommunities
+    communityInfo.value = generateCommunityMap(processedCommunities)
   } catch (error) {
     console.error('Error fetching the GitHUb files: ', error)
   }
 }
 
-//Marching the community pattern
-const matchPattern = (community, communityToFind) => {
-  //This doesnot work with large communities, for example 65535:0:12345, 65535:nnn:0, 65535:123:100x.
-  if (community.split(':').length !== 2 || communityToFind.split(':').length !== 2) return false
-  // Exact match, for example: 65535:666, only matching this exact community
-  if (community === communityToFind) return true
+function generateCommunityMap(communities) {
+  const communityInfo = {}
 
-  const [pattern_1, pattern_2] = community.split(':')
-  const [comm_1, comm_2] = communityToFind.split(':')
-  // Range match, for example: 65535:0-100, matching anything from 65535:0 upto 65535:100
-  if (pattern_2.includes('-')) {
-    const [start, end] = pattern_2.split('-').map(Number)
-    const commNumber = Number(comm_2)
-    if (pattern_1 === comm_1 && commNumber >= start && commNumber <= end) {
-      //console.log('Range', community, communityToFind)
-      return true
+  const isWildcardX = (s) => s.includes('x')
+  const isWildcardN = (s) => s.includes('n')
+  const isRange = (s) => s.includes('-') && !isWildcardX(s) && !isWildcardN(s)
+  const isExact = (s) => !isRange(s) && !isWildcardX(s) && !isWildcardN(s)
+
+  // Expand range like '100-102' to ['100', '101', '102']
+  function expandRange(str) {
+    const [start, end] = str.split('-').map(Number)
+    const result = []
+    for (let i = start; i <= end; i++) {
+      result.push(i.toString())
+    }
+    return result
+  }
+
+  // Expand wildcard patterns like '100xxx','100xx4' to all possible values
+  function expandWildcard(pattern) {
+    const firstWildcard = pattern.indexOf('x')
+    if (firstWildcard === -1) return [pattern]
+
+    const fixedPart = pattern.slice(0, firstWildcard)
+    const wildcardPart = pattern.slice(firstWildcard)
+    const wildcardCount = (wildcardPart.match(/x/g) || []).length
+    const max = Math.pow(10, wildcardCount)
+
+    const expanded = []
+    for (let i = 0; i < max; i++) {
+      const digits = i.toString().padStart(wildcardCount, '0')
+      let wildcardExpanded = ''
+      let digitIndex = 0
+      for (const ch of wildcardPart) {
+        wildcardExpanded += ch === 'x' ? digits[digitIndex++] : ch
+      }
+      expanded.push(fixedPart + wildcardExpanded)
+    }
+    return expanded
+  }
+
+  // Expand any pattern to all matching strings
+  function expandPattern(pattern) {
+    if (isExact(pattern) || isWildcardN(pattern)) return [pattern]
+    if (isRange(pattern)) return expandRange(pattern)
+    if (isWildcardX(pattern)) return expandWildcard(pattern)
+    return []
+  }
+
+  for (const { value, description } of communities) {
+    const parts = value.split(':')
+    if (parts.length !== 2) continue
+
+    const [prefixPattern, suffixPattern] = parts
+
+    const prefixes = expandPattern(prefixPattern)
+    const suffixes = expandPattern(suffixPattern)
+
+    for (const prefix of prefixes) {
+      for (const suffix of suffixes) {
+        if (isWildcardN(suffix)) {
+          communityInfo[`${prefix}`] = { description } // For wildcard N '65535:nnn', store only the prefix
+        } else {
+          communityInfo[`${prefix}:${suffix}`] = { description }
+        }
+      }
     }
   }
-  // Single digit wildcard match, for example: 65535:x0, matching for 65535:00, 65535:10, 65535:20, etc
-  if (pattern_2.includes('x')) {
-    const regex = new RegExp(`^${pattern_2.replace('x', '\\d')}$`)
-    if (pattern_1 === comm_1 && regex.test(comm_2)) {
-      //console.log('Wildcard', community, communityToFind)
-      return true
-    }
-  }
-  // Any Number Match, for example: 65535:nnn, which matches any community staring with 65535: followed by any number.
-  if (pattern_2.includes('nnn')) {
-    const regex = new RegExp(`^${pattern_2.replace('nnn', '\\d+')}$`)
-    if (pattern_1 === comm_1 && regex.test(comm_2)) {
-      //console.log('Any', community, communityToFind)
-      return true
-    }
-  }
-  return false
+  console.log('Community Object Generated')
+  return communityInfo
 }
 
 const updateSelectedPeers = (obj) => {
@@ -444,13 +614,33 @@ onMounted(() => {
       <QCard class="q-pa-md q-pr-lg">
         <p>Data Source</p>
         <div>
-          <QRadio v-model="dataSource" val="risLive" label="RisLive" />
+          <QRadio
+            v-model="dataSource"
+            val="risLive"
+            label="RisLive"
+            :disable="
+              isPlaying ||
+              inputDisable ||
+              Object.keys(bgPlaySources).length > 0 ||
+              isLoadingBGPlayData
+            "
+          />
           <QIcon name="fas fa-circle-info" class="q-ml-md">
             <QTooltip>Monitor Real-Time BGP events</QTooltip>
           </QIcon>
         </div>
         <div>
-          <QRadio v-model="dataSource" val="bgplay" label="BGPlay" />
+          <QRadio
+            v-model="dataSource"
+            val="bgplay"
+            label="BGPlay"
+            :disable="
+              isPlaying ||
+              inputDisable ||
+              Object.keys(bgPlaySources).length > 0 ||
+              isLoadingBGPlayData
+            "
+          />
           <QIcon name="fas fa-circle-info" class="q-ml-md">
             <QTooltip>Monitor BGP events from a specific time range</QTooltip>
           </QIcon>
@@ -466,7 +656,12 @@ onMounted(() => {
               placeholder="Prefix"
               :dense="true"
               color="accent"
-              :disable="isPlaying || inputDisable"
+              :disable="
+                isPlaying ||
+                inputDisable ||
+                Object.keys(bgPlaySources).length > 0 ||
+                isLoadingBGPlayData
+              "
             />
             <QSelect
               v-if="dataSource === 'risLive'"
@@ -489,6 +684,7 @@ onMounted(() => {
               emit-value
               class="input"
               clearable
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
             />
           </div>
           <div class="row items-center justify-center gap-30">
@@ -497,6 +693,7 @@ onMounted(() => {
               label="Start Date Time in (UTC)"
               v-model="startTime"
               class="input"
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
             >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
@@ -514,6 +711,7 @@ onMounted(() => {
               label="End Date Time in (UTC)"
               v-model="endTime"
               class="input"
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
             >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
@@ -549,7 +747,17 @@ onMounted(() => {
             :disable="disableButton || params.prefix === ''"
             @click="toggleConnection"
           />
-          <QBtn v-else color="secondary" :label="'Submit'" />
+          <QBtn
+            v-else
+            color="secondary"
+            :label="'Submit'"
+            @click="fetchBGPlayData"
+            :disable="
+              Object.keys(bgPlaySources).length > 0 ||
+              isLoadingBGPlayData ||
+              !haveRequiredBGPlayParams()
+            "
+          />
           <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
           <div class="column">
             <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
@@ -572,7 +780,6 @@ onMounted(() => {
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
-        :bgp-message-type="bgpMessageType"
         @enable-live-mode="enableLiveMode"
       />
     </GenericCardController>
@@ -586,7 +793,6 @@ onMounted(() => {
       <BGPLineChart
         :raw-messages="rawMessages"
         :max-hops="maxHops"
-        :bgp-message-type="bgpMessageType"
         :used-messages-count="usedMessagesCount"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
@@ -607,7 +813,6 @@ onMounted(() => {
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
-        :bgp-message-type="bgpMessageType"
         @enable-live-mode="enableLiveMode"
         @update-selected-peers="updateSelectedPeers"
       />
