@@ -120,7 +120,7 @@ watch(selectedPeersModel, () => {
       </QTd>
     </template>
     <template #body-cell-timestamp="props">
-      <QTd class="nobreak" :props="props">{{ timestampToUTC(props.row.timestamp) }}</QTd>
+      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.timestamp) }}</QTd>
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
@@ -143,8 +143,7 @@ watch(selectedPeersModel, () => {
   display: flex;
   gap: 5px;
 }
-.nobreak {
-  white-space: nowrap;
-  word-break: keep-all;
+.nowrap {
+  white-space: nowrap !important;
 }
 </style>
