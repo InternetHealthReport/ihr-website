@@ -5,21 +5,38 @@ import { get, set } from 'idb-keyval'
 // Base URL for RIPE Atlas API
 const RIPE_ATLAS_API_BASE = 'https://atlas.ripe.net/api/v2/'
 const DEFAULT_TIMEOUT = 180000
+const LOAD_INITIAL_PROBES_COUNT = 10
 
 const axios_base = axios.create({
   baseURL: RIPE_ATLAS_API_BASE,
   timeout: DEFAULT_TIMEOUT
 })
 
+// Helper functions
+// Split a large array into array of smaller size chunks
+const splitListToChunks = (list) => {
+  const CHUNK_SIZE = 100
+  const chunksList = []
+
+  list.sort((a, b) => +a - +b)
+
+  for (let i = 0; i < list.length; i += CHUNK_SIZE) {
+    chunksList.push(list.slice(i, i + CHUNK_SIZE))
+  }
+  return chunksList
+}
+
 const AtlasApi = {
   install: (app, options) => {
-    const getMeasurementById = async (measurementId) => {
+    const getMeasurementById = async (measurementId, params = {}) => {
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}`
       return await cache(
-        `${url}`,
+        params && Object.keys(params).length > 0 ? `${url}_${JSON.stringify(params)}` : `${url}`,
         () => {
-          return axios_base.get(url)
+          return axios_base.get(url, {
+            params
+          })
         },
         {
           storageAllowed: storageAllowed ? storageAllowed : false
@@ -57,10 +74,82 @@ const AtlasApi = {
       )
     }
 
+    const selectNFromList = (list, N = 10) => {
+      const multiplier = Math.floor(list.length / N)
+
+      if (multiplier == 0) {
+        return list
+      } else {
+        return list.filter((_, ind) => (ind + 1) % multiplier == 0)
+      }
+    }
+
+    const getProbesByMeasurementId = async (measurementId) => {
+      const probesInMeasurement = await getMeasurementById(measurementId, { fields: 'probes' })
+      return probesInMeasurement?.data.probes.map((p) => p.id.toString()) ?? []
+    }
+
+    // Fetches measurement result chunk by chunk and caches
+    const getAndCacheMeasurementDataInChunks = async (measurementId, params = {}) => {
+      // Batch measurement result by smaller chunks of probes ids results
+
+      let probeList = []
+
+      // Get the full measurement result
+      if (!params.probe_ids) {
+        // Get probes involved in the measurement
+        probeList = await getProbesByMeasurementId(measurementId)
+        // select only N probes from list
+        probeList = selectNFromList(probeList, LOAD_INITIAL_PROBES_COUNT)
+      } else {
+        probeList = params.probe_ids.split(',')
+      }
+
+      let probeChunksList = splitListToChunks(probeList).map((list) => list.join(','))
+
+      const storageAllowed = JSON.parse(await get('storage-allowed'))
+      const url = `measurements/${measurementId}/results`
+      return await cache(
+        params && Object.keys(params).length > 0 ? `${url}_${JSON.stringify(params)}` : url,
+        async () => {
+          // fetcher function: defines how to fetch data in chunks
+          return await Promise.all(
+            probeChunksList.reduce((result, probesChunk) => {
+              const currentParams = {
+                ...params,
+                probe_ids: probesChunk
+              }
+              result.push(
+                axios_base.get(url, {
+                  params: currentParams
+                })
+              )
+
+              return result
+            }, [])
+          )
+        },
+        {
+          storageAllowed: storageAllowed ? storageAllowed : false
+        },
+        // combinator function: defines how to combine the responses
+        (resolvedPromisesList) => {
+          return resolvedPromisesList.reduce((result, response) => {
+            response.data.forEach((hopData) => {
+              result.push(hopData)
+            })
+
+            return result
+          }, [])
+        }
+      )
+    }
+
     const atlas_api = {
       getMeasurementById,
       getMeasurementData,
-      getProbeById
+      getProbeById,
+      getAndCacheMeasurementDataInChunks
     }
 
     app.provide('atlas_api', atlas_api)
