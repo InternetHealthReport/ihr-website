@@ -5,6 +5,7 @@ import { get, set } from 'idb-keyval'
 // Base URL for RIPE Atlas API
 const RIPE_ATLAS_API_BASE = 'https://atlas.ripe.net/api/v2/'
 const DEFAULT_TIMEOUT = 180000
+const LOAD_INITIAL_PROBES_COUNT = 10
 
 const axios_base = axios.create({
   baseURL: RIPE_ATLAS_API_BASE,
@@ -73,23 +74,38 @@ const AtlasApi = {
       )
     }
 
+    const selectNFromList = (list, N = 10) => {
+      const multiplier = Math.floor(list.length / N)
+
+      if (multiplier == 0) {
+        return list
+      } else {
+        return list.filter((_, ind) => (ind + 1) % multiplier == 0)
+      }
+    }
+
+    const getProbesByMeasurementId = async (measurementId) => {
+      const probesInMeasurement = await getMeasurementById(measurementId, { fields: 'probes' })
+      return probesInMeasurement?.data.probes.map((p) => p.id.toString()) ?? []
+    }
+
     // Fetches measurement result chunk by chunk and caches
     const getAndCacheMeasurementDataInChunks = async (measurementId, params = {}) => {
       // Batch measurement result by smaller chunks of probes ids results
 
-      let probeChunksList = []
+      let probeList = []
 
       // Get the full measurement result
       if (!params.probe_ids) {
         // Get probes involved in the measurement
-        const probesInMeasurement = await getMeasurementById(measurementId, { fields: 'probes' })
-        const probeList = probesInMeasurement?.data.probes.map((p) => p.id.toString()) ?? []
-        probeChunksList = splitListToChunks(probeList).map((list) => list.join(','))
+        probeList = await getProbesByMeasurementId(measurementId)
+        // select only N probes from list
+        probeList = selectNFromList(probeList, LOAD_INITIAL_PROBES_COUNT)
       } else {
-        probeChunksList = splitListToChunks(params.probe_ids.split(',')).map((list) =>
-          list.join(',')
-        )
+        probeList = params.probe_ids.split(',')
       }
+
+      let probeChunksList = splitListToChunks(probeList).map((list) => list.join(','))
 
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `measurements/${measurementId}/results`
