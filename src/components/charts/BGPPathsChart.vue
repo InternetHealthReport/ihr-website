@@ -43,13 +43,12 @@ const generateGraphData = () => {
   )
 
   filteredSelectedMessages.forEach((message) => {
-    //Only consider bgp type Announce messagess
+    //Only consider bgp type Announce and Initial State messagess
     if (
       !message.path ||
       message.path.length === 0 ||
       message.type === 'Withdraw' ||
-      message.type === 'Unknown' ||
-      message.type === 'Initial State'
+      message.type === 'Unknown'
     )
       return
     const path = removeConsecutiveDuplicateAS(message.path).slice(-(props.maxHops + 1)) //+1 for the last AS
