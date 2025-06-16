@@ -49,16 +49,18 @@ const inputDisable = ref(false)
 const isWsDisconnected = ref(false)
 
 const dataSource = ref('risLive') //'risLive' or 'bgplay'
+const minTimestamp = ref(Infinity)
+const maxTimestamp = ref(-Infinity)
 
 const startTime = ref(new Date().toISOString().slice(0, 16))
 const endTime = ref(new Date().toISOString().slice(0, 16))
 const rrcs = ref([])
 const rrcLocations = ref([])
-const isLoadingBGPlayData = ref(false)
+const isLoadingBgplayData = ref(false)
 const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
-const bgPlayEvents = ref([]) // Used to store the "events" for BGPlay
-const bgPlayInitialState = ref(new Map()) // Used to store the initial state for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
+const bgPlayInitialState = ref([]) // Used to store the initial state for BGPlay
+const displayOnlyInitialState = ref(true) // Used to display only the initial state
 
 const params = ref({
   peer: '',
@@ -97,9 +99,11 @@ const resetData = () => {
   inputDisable.value = false
 
   bgPlaySources.value = {}
-  bgPlayEvents.value = []
-  bgPlayInitialState.value.clear()
+  bgPlayInitialState.value = []
   bgPlayASNames.value = {}
+  minTimestamp.value = Infinity
+  maxTimestamp.value = -Infinity
+  displayOnlyInitialState.value = true
 }
 
 // Initialize the route
@@ -230,48 +234,41 @@ const processResData = (data) => {
       handleFilterMessages(data)
     }
   } else {
+    //Temp variables to reduce the vue reactivity
+    const sources = {}
+    const nodes = {}
+    const initial_state = []
+    const events = []
+
     data.data.sources.forEach((source) => {
       const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
-      bgPlaySources.value[peer] = {
+      sources[peer] = {
         as_number: source.as_number,
         rrc: source.rrc
       }
     })
+    bgPlaySources.value = sources
+
     data.data.nodes.forEach((node) => {
       const [asn_name, country_iso_code2] = node.owner.split(', ')
-      bgPlayASNames.value[node.as_number] = {
+      nodes[node.as_number] = {
         asn_name,
         country_iso_code2
       }
     })
-
-    data.data.events.forEach((event) => {
-      const peer = event.attrs.source_id.split('-')[1]
-      const peerInfo = bgPlaySources.value[peer]
-      const timestamp = Math.floor(new Date(event.timestamp + 'Z').getTime() / 1000)
-      bgPlayEvents.value.push({
-        peer_asn: peerInfo.as_number,
-        rcc: peerInfo.rrc,
-        peer: peer,
-        path: event.attrs.path || [],
-        community: addCommunityAndDescriptions(event.attrs.community),
-        as_info: addASInfo(event.attrs.path),
-        type: addBGPMessageType(event.type),
-        timestamp: timestamp
-      })
-    })
+    bgPlayASNames.value = nodes
 
     data.data.initial_state.forEach((event) => {
       const peer = event.source_id.split('-')[1]
-      const peerInfo = bgPlaySources.value[peer]
+      const peerInfo = sources[peer]
 
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
 
       applyDefaultSelectedPeers(peer)
 
-      bgPlayInitialState.value.set(peer, {
+      initial_state.push({
         peer_asn: peerInfo.as_number,
-        rcc: peerInfo.rrc,
+        rrc: peerInfo.rrc,
         peer: peer,
         path: event.path || [],
         community: addCommunityAndDescriptions(event.community),
@@ -280,8 +277,37 @@ const processResData = (data) => {
         timestamp: 0 // For ease of filtering when using timestamp
       })
     })
-    console.log('BGPlay Events:', bgPlayEvents.value)
-    console.log('BGPlay Initial State:', bgPlayInitialState.value)
+    filteredMessages.value = initial_state //directly update the messages table
+    bgPlayInitialState.value = initial_state //for storing the initial state
+
+    if (data.data.events.length != 0) {
+      data.data.events.forEach((event) => {
+        const peer = event.attrs.source_id.split('-')[1]
+        const peerInfo = sources[peer]
+        const timestamp = Math.floor(new Date(event.timestamp + 'Z').getTime() / 1000)
+
+        applyDefaultSelectedPeers(peer)
+
+        events.push({
+          peer_asn: peerInfo.as_number,
+          rrc: peerInfo.rrc,
+          peer: peer,
+          path: event.attrs.path || [],
+          community: addCommunityAndDescriptions(event.attrs.community),
+          as_info: addASInfo(event.attrs.path),
+          type: addBGPMessageType(event.type),
+          timestamp: timestamp
+        })
+      })
+      rawMessages.value = events
+      minTimestamp.value = events[0].timestamp
+      maxTimestamp.value = events.at(-1).timestamp
+    }
+
+    // automatically switch to events view if no initial state is available
+    if (bgPlayInitialState.value.length === 0) {
+      displayOnlyInitialState.value = false
+    }
   }
 }
 
@@ -368,26 +394,24 @@ const handleFilterMessages = (data) => {
     usedMessagesCount.value = rawMessages.value.length
   } else {
     //When using the time slider
-    filteredMessages.value = []
     uniquePeerMessages.clear()
-    const filteredRawMessages = rawMessages.value.filter(
-      (message) => message.timestamp <= selectedMaxTimestamp.value
-    )
-    usedMessagesCount.value = filteredRawMessages.length
-
-    filteredRawMessages.forEach((message) => {
-      uniquePeerMessages.set(message.peer, message)
-    })
+    for (const msg of bgPlayInitialState.value) {
+      uniquePeerMessages.set(msg.peer, msg)
+    }
+    let count = 0
+    for (const msg of rawMessages.value) {
+      if (msg.timestamp <= selectedMaxTimestamp.value) {
+        uniquePeerMessages.set(msg.peer, msg)
+        count++
+      }
+    }
+    usedMessagesCount.value = count
   }
   filteredMessages.value = Array.from(uniquePeerMessages.values())
 }
 
 const setSelectedMaxTimestamp = (val) => {
-  if (val) {
-    selectedMaxTimestamp.value = val
-  } else {
-    selectedMaxTimestamp.value = Infinity
-  }
+  selectedMaxTimestamp.value = val
   handleFilterMessages()
 }
 
@@ -397,7 +421,15 @@ const disableLiveMode = () => {
 
 const enableLiveMode = () => {
   isLiveMode.value = true
-  setSelectedMaxTimestamp()
+  setSelectedMaxTimestamp(Infinity)
+}
+
+const toggleDisplayOnlyInitialState = (val) => {
+  displayOnlyInitialState.value = !val
+  if (displayOnlyInitialState.value) {
+    filteredMessages.value = bgPlayInitialState.value
+    usedMessagesCount.value = 0
+  }
 }
 
 // Fetching the AS Info from the asnames.txt file
@@ -444,7 +476,7 @@ const fetchBGPlayData = async () => {
     return
   }
   try {
-    isLoadingBGPlayData.value = true
+    isLoadingBgplayData.value = true
     console.log('Fetching data...')
     const res = await axios.get('https://stat-ui.stat.ripe.net/data/bgplay/data.json', {
       params: {
@@ -454,12 +486,12 @@ const fetchBGPlayData = async () => {
         rrcs: rrcs.value.join(',')
       }
     })
-    console.log('Data fetched successfully')
+    console.log('Data fetched successfully, Processing Data...')
     processResData(res.data)
   } catch (error) {
     console.error('Error fetching BGPlay data:', error)
   } finally {
-    isLoadingBGPlayData.value = false
+    isLoadingBgplayData.value = false
   }
 }
 
@@ -622,7 +654,7 @@ onMounted(() => {
               isPlaying ||
               inputDisable ||
               Object.keys(bgPlaySources).length > 0 ||
-              isLoadingBGPlayData
+              isLoadingBgplayData
             "
           />
           <QIcon name="fas fa-circle-info" class="q-ml-md">
@@ -638,7 +670,7 @@ onMounted(() => {
               isPlaying ||
               inputDisable ||
               Object.keys(bgPlaySources).length > 0 ||
-              isLoadingBGPlayData
+              isLoadingBgplayData
             "
           />
           <QIcon name="fas fa-circle-info" class="q-ml-md">
@@ -660,7 +692,7 @@ onMounted(() => {
                 isPlaying ||
                 inputDisable ||
                 Object.keys(bgPlaySources).length > 0 ||
-                isLoadingBGPlayData
+                isLoadingBgplayData
               "
             />
             <QSelect
@@ -684,7 +716,7 @@ onMounted(() => {
               emit-value
               class="input"
               clearable
-              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
             />
           </div>
           <div class="row items-center justify-center gap-30">
@@ -693,7 +725,7 @@ onMounted(() => {
               label="Start Date Time in (UTC)"
               v-model="startTime"
               class="input"
-              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
             >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
@@ -711,7 +743,7 @@ onMounted(() => {
               label="End Date Time in (UTC)"
               v-model="endTime"
               class="input"
-              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBGPlayData"
+              :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
             >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
@@ -754,7 +786,7 @@ onMounted(() => {
             @click="fetchBGPlayData"
             :disable="
               Object.keys(bgPlaySources).length > 0 ||
-              isLoadingBGPlayData ||
+              isLoadingBgplayData ||
               !haveRequiredBGPlayParams()
             "
           />
@@ -780,6 +812,8 @@ onMounted(() => {
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
+        :is-loading-bgplay-data="isLoadingBgplayData"
+        :data-source="dataSource"
         @enable-live-mode="enableLiveMode"
       />
     </GenericCardController>
@@ -796,6 +830,13 @@ onMounted(() => {
         :used-messages-count="usedMessagesCount"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
+        :is-loading-bgplay-data="isLoadingBgplayData"
+        :data-source="dataSource"
+        :min-timestamp="minTimestamp"
+        :max-timestamp="maxTimestamp"
+        :display-only-initial-state="displayOnlyInitialState"
+        :has-bg-play-initial-state="bgPlayInitialState.length > 0"
+        @toggle-display-only-initial-state="toggleDisplayOnlyInitialState"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
         @disable-live-mode="disableLiveMode"
         @enable-live-mode="enableLiveMode"
@@ -809,6 +850,7 @@ onMounted(() => {
       class="q-my-lg"
     >
       <BGPMessagesTable
+        :data-source="dataSource"
         :filtered-messages="filteredMessages"
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"

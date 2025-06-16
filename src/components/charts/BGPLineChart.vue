@@ -23,10 +23,33 @@ const props = defineProps({
   },
   isPlaying: {
     type: Boolean
+  },
+  isLoadingBgplayData: {
+    type: Boolean
+  },
+  dataSource: {
+    type: String
+  },
+  minTimestamp: {
+    type: Number
+  },
+  maxTimestamp: {
+    type: Number
+  },
+  displayOnlyInitialState: {
+    type: Boolean
+  },
+  hasBgPlayInitialState: {
+    type: Boolean
   }
 })
 
-const emit = defineEmits(['setSelectedMaxTimestamp', 'disable-live-mode', 'enable-live-mode'])
+const emit = defineEmits([
+  'setSelectedMaxTimestamp',
+  'disable-live-mode',
+  'enable-live-mode',
+  'toggleDisplayOnlyInitialState'
+])
 
 const { utcString } = report()
 
@@ -39,6 +62,7 @@ const announcementsCount = ref({})
 const withdrawalsCount = ref({})
 const shapes = ref([])
 const sliderWidthInit = ref(false)
+const displayOnlyInitialStateModel = ref(true)
 
 // Generate the stacked line chart data for the Plotly chart
 const generateLineChartData = async (message) => {
@@ -76,18 +100,24 @@ const timestampToUTC = (timestamp) => {
   return utcString(new Date(timestamp * 1000))
 }
 
-// Update the time range based on the timestamp of the message
+// Update the time range
 const updateTimeRange = (timestamp) => {
-  if (timestamp) {
-    if (timestamp < minTimestamp.value) {
-      minTimestamp.value = timestamp
+  if (props.dataSource === 'risLive') {
+    if (timestamp) {
+      if (timestamp < minTimestamp.value) {
+        minTimestamp.value = timestamp
+      }
+      if (timestamp > maxTimestamp.value) {
+        maxTimestamp.value = timestamp
+      }
     }
-    if (timestamp > maxTimestamp.value) {
-      maxTimestamp.value = timestamp
+    if (props.isLiveMode) {
+      selectedMaxTimestamp.value = maxTimestamp.value
     }
-  }
-  if (props.isLiveMode) {
-    selectedMaxTimestamp.value = maxTimestamp.value
+  } else {
+    minTimestamp.value = props.minTimestamp
+    maxTimestamp.value = props.maxTimestamp
+    selectedMaxTimestamp.value = props.minTimestamp
   }
 }
 
@@ -139,9 +169,7 @@ const handlePlotlyClick = (event) => {
   if (point) {
     const timestamp = Math.floor(new Date(point.x + 'Z').getTime() / 1000)
     selectedMaxTimestamp.value = timestamp
-    emit('disable-live-mode')
-    addVerticalLine(timestamp)
-    emit('setSelectedMaxTimestamp', timestamp)
+    updateSlider(timestamp)
   }
 }
 
@@ -206,6 +234,10 @@ const init = async () => {
   }
 }
 
+const toggleSwitchToInitialState = () => {
+  emit('toggleDisplayOnlyInitialState', displayOnlyInitialStateModel.value)
+}
+
 watch(
   () => props.rawMessages,
   () => {
@@ -225,20 +257,45 @@ watch(
   }
 )
 
+watch(
+  () => props.displayOnlyInitialState,
+  () => {
+    displayOnlyInitialStateModel.value = props.displayOnlyInitialState
+  }
+)
+
+watch(displayOnlyInitialStateModel, () => {
+  if (displayOnlyInitialStateModel.value) {
+    shapes.value = []
+    updateTimeRange()
+  } else {
+    updateSlider(selectedMaxTimestamp.value)
+  }
+})
+
 onMounted(() => {
   init()
 })
 </script>
 
 <template>
-  <div v-if="rawMessages.length === 0" class="noData">
-    <h1>No data available</h1>
-    <h3>Try Changing the Input Parameters or you can wait</h3>
-    <h6>Note: Some prefixes become active after some time.</h6>
+  <div class="noData" v-if="rawMessages.length === 0">
+    <h1 v-if="isLoadingBgplayData">Loading...</h1>
+    <h1 v-else>No data available</h1>
+    <h3 v-if="dataSource === 'risLive'">Try Changing the Input Parameters or you can wait</h3>
+    <h6 v-if="dataSource === 'risLive'">Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>
-    <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
-    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    <div v-if="dataSource === 'risLive'">
+      <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    </div>
+    <QBtn
+      v-if="props.hasBgPlayInitialState"
+      :color="displayOnlyInitialStateModel ? 'primary' : 'secondary'"
+      :label="displayOnlyInitialStateModel ? 'Switch to Time Range' : 'Switch to Initial State'"
+      @click="toggleSwitchToInitialState"
+    />
     <ReactiveChart
       :layout="actualChartLayout"
       :traces="actualChartData"
@@ -253,6 +310,7 @@ onMounted(() => {
       <div class="timetampSliderContainer">
         <QSlider
           v-model="selectedMaxTimestamp"
+          :disable="displayOnlyInitialStateModel && props.dataSource === 'bgplay'"
           :min="minTimestamp === Infinity ? 0 : minTimestamp"
           :max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
           label-always

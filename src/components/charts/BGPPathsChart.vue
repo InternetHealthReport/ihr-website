@@ -20,6 +20,12 @@ const props = defineProps({
   },
   isPlaying: {
     type: Boolean
+  },
+  isLoadingBgplayData: {
+    type: Boolean
+  },
+  dataSource: {
+    type: String
   }
 })
 
@@ -170,14 +176,17 @@ onMounted(() => {
 
 <template>
   <div v-if="props.filteredMessages.length">
-    <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
-    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    <div v-if="dataSource === 'risLive'">
+      <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    </div>
     <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
   </div>
   <div v-else class="noData">
-    <h1>No data available</h1>
-    <h3>Try Changing the Input Parameters or you can wait</h3>
-    <h6>Note: Some prefixes become active after some time.</h6>
+    <h1 v-if="isLoadingBgplayData">Loading...</h1>
+    <h1 v-else>No data available</h1>
+    <h3 v-if="dataSource === 'risLive'">Try Changing the Input Parameters or you can wait</h3>
+    <h6 v-if="dataSource === 'risLive'">Note: Some prefixes become active after some time.</h6>
   </div>
 </template>
 

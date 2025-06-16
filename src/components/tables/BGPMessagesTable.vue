@@ -18,6 +18,9 @@ const props = defineProps({
   },
   isPlaying: {
     type: Boolean
+  },
+  dataSource: {
+    type: String
   }
 })
 
@@ -28,7 +31,7 @@ const emit = defineEmits(['enable-live-mode', 'update-selected-peers'])
 const selectedPeersModel = ref(props.selectedPeers)
 const search = ref('')
 
-const columns = [
+const columns = ref([
   { name: 'peer_asn', label: 'Peer ASN', field: 'peer_asn', align: 'left' },
   { name: 'peer', label: 'Peer', field: 'peer', align: 'left' },
   { name: 'path', label: 'AS Path', field: 'path', align: 'left' },
@@ -36,7 +39,7 @@ const columns = [
   { name: 'type', label: 'Type', field: 'type', align: 'left' },
   { name: 'timestamp', label: 'Timestamp', field: 'timestamp', align: 'left' },
   { name: 'community', label: 'Community', field: 'community', align: 'left' }
-]
+])
 
 const timestampToUTC = (timestamp) => {
   return utcString(new Date(timestamp * 1000))
@@ -45,6 +48,22 @@ const timestampToUTC = (timestamp) => {
 const enableLiveMode = () => {
   emit('enable-live-mode')
 }
+
+watch(
+  () => props.dataSource,
+  () => {
+    columns.value = columns.value.filter((col) => col.name !== 'rrc')
+    if (props.dataSource === 'bgplay') {
+      const index = columns.value.findIndex((col) => col.name === 'type') //to put rrc column before type comumn
+      const rrcColumn = { name: 'rrc', label: 'RRC', field: 'rrc', align: 'left' }
+      if (index !== -1) {
+        columns.value.splice(index, 0, rrcColumn)
+      } else {
+        columns.value.push(rrcColumn)
+      }
+    }
+  }
+)
 
 watch(
   () => props.selectedPeers,
@@ -68,10 +87,10 @@ watch(selectedPeersModel, () => {
     row-key="peer"
     selection="multiple"
   >
-    <template v-if="props.filteredMessages.length !== 0" #top-left>
+    <div v-if="dataSource === 'risLive'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
-    </template>
+    </div>
     <template #top-right>
       <QInput v-model="search" dense outlined debounce="300" color="accent" label="Search">
         <template #append>
@@ -120,7 +139,9 @@ watch(selectedPeersModel, () => {
       </QTd>
     </template>
     <template #body-cell-timestamp="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.timestamp) }}</QTd>
+      <QTd class="nowrap" :props="props">{{
+        props.row.timestamp === 0 ? 'N/A' : timestampToUTC(props.row.timestamp)
+      }}</QTd>
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
