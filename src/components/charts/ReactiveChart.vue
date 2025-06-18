@@ -246,6 +246,19 @@ const isCvdSupported = () => {
   return notSupported
 }
 
+const isValidTrace = (trace) => {
+  if (!trace || typeof trace !== 'object') {
+    return false
+  }
+  if (['scatter', 'bar'].includes(trace.type)) {
+    return Array.isArray(trace.x) && Array.isArray(trace.y)
+  }
+  if (trace.type === 'heatmap') {
+    return Array.isArray(trace.z)
+  }
+  return true
+}
+
 const react = () => {
   if (!created.value) {
     console.error('SHOULD NEVER HAPPEN')
@@ -253,13 +266,18 @@ const react = () => {
   if (props.traces == undefined) {
     return
   }
+  const validTraces = props.traces.filter(isValidTrace)
+  if (!validTraces.length) {
+    return
+  }
   if (props.newPlot) {
-    Plotly.newPlot(myId.value, props.traces, layoutLocal.value)
+    Plotly.newPlot(myId.value, validTraces, layoutLocal.value)
   } else {
-    Plotly.react(myId.value, props.traces, layoutLocal.value)
+    Plotly.react(myId.value, validTraces, layoutLocal.value)
   }
   // emits('loaded')
 }
+
 const onCvdDropdown = async (paletteKey) => {
   if (paletteKey === 'default') {
     Plotly.react(myId.value, props.traces, layoutLocal.value)
@@ -268,9 +286,7 @@ const onCvdDropdown = async (paletteKey) => {
   }
   dropdownCVD.value = false
 }
-const relayout = () => {
-  Plotly.relayout(myId.value, {})
-}
+
 const init = () => {
   const modebarButtons = []
   if (!props.disableCVD) {
@@ -325,6 +341,7 @@ const init = () => {
   })
   created.value = true
 }
+
 onMounted(() => {
   init()
 })
