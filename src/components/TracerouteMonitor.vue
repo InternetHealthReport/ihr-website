@@ -53,6 +53,7 @@ const intervalValue = ref(null)
 const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
+const showProbeOverflowAlert = ref(false)
 
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
@@ -67,6 +68,16 @@ const processData = async (tracerouteData, loadProbes = false) => {
   const nonResponsiveNodes = new Set()
   const outgoingEdges = new Map()
   let highestMedianRtt = 0
+
+  allProbes.value = allProbes.value.length == 0 ? await atlas_api.getProbesByMeasurementId(measurementID.value) : allProbes.value
+  atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value).then((data) => {
+            data.forEach(x => {
+                console.log(x)
+                probeDetailsMap.value[x.id.toString()] = x
+              })
+            })
+  showProbeOverflowAlert.value = allProbes.value.length > 1000
+  
 
   tracerouteData.forEach((probeData, probeIndex) => {
     if (probeData.result[0].error) {
@@ -91,14 +102,9 @@ const processData = async (tracerouteData, loadProbes = false) => {
       if (
         (!props.probeIDs ||
           props.probeIDs.length === 0 ||
-          props.probeIDs.includes(probeData.prb_id.toString())) &&
-        !allProbes.value.includes(probeData.prb_id.toString())
+          props.probeIDs.includes(probeData.prb_id.toString()))
       ) {
-        allProbes.value.push(probeData.prb_id.toString())
         selectedProbes.value.push(probeData.prb_id.toString())
-        atlas_api.getProbeById(probeData.prb_id.toString()).then((data) => {
-          probeDetailsMap.value[probeData.prb_id.toString()] = data.data
-        })
       }
     }
 
@@ -436,6 +442,19 @@ watch(
     :info-title="$t('tracerouteMonitorChart.info.title')"
     :info-description="$t('tracerouteMonitorChart.info.description')"
   >
+      <QDialog v-model="showProbeOverflowAlert">
+      <QCard style="width: 1000px; height: auto">
+        <QCardSection>
+          <div class="text-h6">Probes overflow Alert</div>
+        </QCardSection>
+        <QCardSection class="q-pt-none">
+        <div>Number of probes included for this measurement is above 1000, So minimizing the numbers till 1000 probes :)</div>
+        </QCardSection>
+        <QCardActions align="right">
+          <QBtn v-close-popup flat label="Close" color="primary" />
+        </QCardActions>
+      </QCard>
+    </QDialog>
     <TracerouteChart
       :measurement-i-d="measurementID"
       :is-loading="isLoading"
