@@ -70,23 +70,31 @@ const generateLineChartData = async (message) => {
   const dates = []
   const announcementsTrace = []
   const withdrawalsTrace = []
-  //count no of messages based on type
-  if (message.type === 'Announce') {
-    if (!announcementsCount.value[timestamp]) {
-      announcementsCount.value[timestamp] = 0
+  if (props.dataSource === 'risLive') {
+    //count no of messages based on type
+    if (message.type === 'Announce') {
+      if (!announcementsCount.value[timestamp]) {
+        announcementsCount.value[timestamp] = 0
+      }
+      announcementsCount.value[timestamp]++
+    } else if (message.type === 'Withdraw') {
+      if (!withdrawalsCount.value[timestamp]) {
+        withdrawalsCount.value[timestamp] = 0
+      }
+      withdrawalsCount.value[timestamp]++
     }
-    announcementsCount.value[timestamp]++
-  } else if (message.type === 'Withdraw') {
-    if (!withdrawalsCount.value[timestamp]) {
-      withdrawalsCount.value[timestamp] = 0
+    // Generate complete timestamps
+    for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
+      dates.push(timestampToUTC(t))
+      announcementsTrace.push(announcementsCount.value[t] || 0)
+      withdrawalsTrace.push(withdrawalsCount.value[t] || 0)
     }
-    withdrawalsCount.value[timestamp]++
-  }
-  // Generate complete timestamps
-  for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
-    dates.push(timestampToUTC(t))
-    announcementsTrace.push(announcementsCount.value[t] || 0)
-    withdrawalsTrace.push(withdrawalsCount.value[t] || 0)
+  } else {
+    //TODO (This is dummy data)
+    const firstMessageTimestamp = props.rawMessages[0].timestamp || 0
+    const lastMessageTimestamp = props.rawMessages[props.rawMessages.length - 1].timestamp || 0
+    dates.push(timestampToUTC(firstMessageTimestamp), timestampToUTC(lastMessageTimestamp))
+    announcementsTrace.push(1, 2, 1, 3)
   }
   // Update chart data for announcements
   return {
