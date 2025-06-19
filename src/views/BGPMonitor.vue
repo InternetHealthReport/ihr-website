@@ -60,7 +60,7 @@ const isLoadingBgplayData = ref(false)
 const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
 const bgPlayInitialState = ref([]) // Used to store the initial state for BGPlay
-const displayOnlyInitialState = ref(true) // Used to display only the initial state
+const initialStateDataCount = ref(0)
 
 const params = ref({
   peer: '',
@@ -103,7 +103,7 @@ const resetData = () => {
   bgPlayASNames.value = {}
   minTimestamp.value = Infinity
   maxTimestamp.value = -Infinity
-  displayOnlyInitialState.value = true
+  initialStateDataCount.value = 0
 }
 
 // Initialize the route
@@ -237,8 +237,8 @@ const processResData = (data) => {
     //Temp variables to reduce the vue reactivity
     const sources = {}
     const nodes = {}
-    const initial_state = []
     const events = []
+    const query_starttime = timestampToUnix(data.data.query_starttime)
 
     data.data.sources.forEach((source) => {
       const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
@@ -265,8 +265,9 @@ const processResData = (data) => {
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
 
       applyDefaultSelectedPeers(peer)
+      initialStateDataCount.value++
 
-      initial_state.push({
+      events.push({
         peer_asn: peerInfo.as_number,
         rrc: peerInfo.rrc,
         peer: peer,
@@ -274,17 +275,15 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(event.path),
         type: addBGPMessageType('I'), // Manually Assigning 'I' for Initial State
-        timestamp: 0 // For ease of filtering when using timestamp
+        timestamp: query_starttime
       })
     })
-    filteredMessages.value = initial_state //directly update the messages table
-    bgPlayInitialState.value = initial_state //for storing the initial state
 
     if (data.data.events.length != 0) {
       data.data.events.forEach((event) => {
         const peer = event.attrs.source_id.split('-')[1]
         const peerInfo = sources[peer]
-        const timestamp = Math.floor(new Date(event.timestamp + 'Z').getTime() / 1000)
+        const timestamp = timestampToUnix(event.timestamp)
 
         applyDefaultSelectedPeers(peer)
 
@@ -300,14 +299,9 @@ const processResData = (data) => {
         })
       })
       rawMessages.value = events
-      minTimestamp.value = events[0].timestamp
       maxTimestamp.value = events.at(-1).timestamp
     }
-
-    // automatically switch to events view if no initial state is available
-    if (bgPlayInitialState.value.length === 0) {
-      displayOnlyInitialState.value = false
-    }
+    minTimestamp.value = query_starttime
   }
 }
 
@@ -395,9 +389,6 @@ const handleFilterMessages = (data) => {
   } else {
     //When using the time slider
     uniquePeerMessages.clear()
-    for (const msg of bgPlayInitialState.value) {
-      uniquePeerMessages.set(msg.peer, msg)
-    }
     let count = 0
     for (const msg of rawMessages.value) {
       if (msg.timestamp <= selectedMaxTimestamp.value) {
@@ -424,12 +415,8 @@ const enableLiveMode = () => {
   setSelectedMaxTimestamp(Infinity)
 }
 
-const toggleDisplayOnlyInitialState = (val) => {
-  displayOnlyInitialState.value = !val
-  if (displayOnlyInitialState.value) {
-    filteredMessages.value = bgPlayInitialState.value
-    usedMessagesCount.value = 0
-  }
+const timestampToUnix = (timestamp) => {
+  return Math.floor(new Date(timestamp + 'Z').getTime() / 1000)
 }
 
 // Fetching the AS Info from the asnames.txt file
@@ -794,6 +781,12 @@ onMounted(() => {
           <div class="column">
             <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
             <span>Total messages received: {{ rawMessages.length }}</span>
+            <span v-if="dataSource === 'bgplay'"
+              >No of Initial State Messages: {{ initialStateDataCount }}</span
+            >
+            <span v-if="dataSource === 'bgplay'"
+              >No of Events: {{ rawMessages.length - initialStateDataCount }}</span
+            >
           </div>
         </div>
       </div>
@@ -834,9 +827,6 @@ onMounted(() => {
         :data-source="dataSource"
         :min-timestamp="minTimestamp"
         :max-timestamp="maxTimestamp"
-        :display-only-initial-state="displayOnlyInitialState"
-        :has-bg-play-initial-state="bgPlayInitialState.length > 0"
-        @toggle-display-only-initial-state="toggleDisplayOnlyInitialState"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
         @disable-live-mode="disableLiveMode"
         @enable-live-mode="enableLiveMode"

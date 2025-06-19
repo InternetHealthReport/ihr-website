@@ -139,9 +139,7 @@ watch(selectedPeersModel, () => {
       </QTd>
     </template>
     <template #body-cell-timestamp="props">
-      <QTd class="nowrap" :props="props">{{
-        props.row.timestamp === 0 ? 'N/A' : timestampToUTC(props.row.timestamp)
-      }}</QTd>
+      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.timestamp) }}</QTd>
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
