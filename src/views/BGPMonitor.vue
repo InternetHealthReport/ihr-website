@@ -462,6 +462,19 @@ const fetchBGPlayData = async () => {
     console.error('Missing required parameters')
     return
   }
+
+  const start = new Date(startTime.value)
+  const end = new Date(endTime.value)
+  const diffInMs = end.getTime() - start.getTime()
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
+
+  if (diffInDays > 7) {
+    const proceed = confirm(
+      'The selected time range may result in a large amount of data being loaded. This could affect performance or make the website unresponsive.\n\nDo you want to proceed?'
+    )
+    if (!proceed) return
+  }
+  
   try {
     isLoadingBgplayData.value = true
     console.log('Fetching data...')
