@@ -239,6 +239,7 @@ const processResData = (data) => {
     const nodes = {}
     const events = []
     const query_starttime = timestampToUnix(data.data.query_starttime)
+    const query_endtime = timestampToUnix(data.data.query_endtime)
 
     data.data.sources.forEach((source) => {
       const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
@@ -298,10 +299,12 @@ const processResData = (data) => {
           timestamp: timestamp
         })
       })
-      rawMessages.value = events
       maxTimestamp.value = events.at(-1).timestamp
+    } else {
+      maxTimestamp.value = query_endtime // If no events, use the query end time
     }
     minTimestamp.value = query_starttime
+    rawMessages.value = events
   }
 }
 
