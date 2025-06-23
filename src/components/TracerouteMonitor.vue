@@ -307,8 +307,8 @@ const loadMeasurement = async () => {
       let startTime = metaData.value.start_time
       const stopTime = metaData.value.stop_time
 
-      // Fetch last 2 measurements
-      const shortenedDurationStartTime = stopTime - 2*metaData.value["interval"]
+      // Fetch last 5 measurements
+      const shortenedDurationStartTime = stopTime - 5*metaData.value["interval"]
       startTime = shortenedDurationStartTime > 0? shortenedDurationStartTime: startTime 
 
       timeRange.value.min = startTime
