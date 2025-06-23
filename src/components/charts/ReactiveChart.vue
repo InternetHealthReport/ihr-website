@@ -364,15 +364,15 @@ watch(
 watch(
   () => props.yMax,
   (newValue) => {
-    const graphDiv = myId.value
-    Plotly.relayout(graphDiv, 'yaxis.range', [0, newValue])
+    if (typeof newValue === 'number' && !isNaN(newValue)) {
+      Plotly.relayout(myId.value, 'yaxis.range', [0, newValue])
+    }
   }
 )
 watch(
   () => props.shapes,
   (newValue) => {
-    const graphDiv = myId.value
-    Plotly.relayout(graphDiv, 'shapes', newValue)
+    Plotly.relayout(myId.value, 'shapes', newValue)
   }
 )
 </script>
