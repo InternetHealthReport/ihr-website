@@ -26,6 +26,10 @@ const props = defineProps({
   },
   dataSource: {
     type: String
+  },
+  isNoData: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -174,12 +178,12 @@ onMounted(() => {
 
 <template>
   <div v-if="isLoadingBgplayData">
-    <div class="noData">
+    <div class="text-center">
       <h1>Loading...</h1>
     </div>
   </div>
-  <div v-else-if="props.filteredMessages.length === 0">
-    <div class="noData">
+  <div v-else-if="props.isNoData">
+    <div class="text-center">
       <h1>No data available</h1>
       <template v-if="dataSource === 'risLive'">
         <h3>Try Changing the Input Parameters or you can wait</h3>
@@ -192,15 +196,13 @@ onMounted(() => {
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>
-    <div v-if="props.filteredMessages.length !== 0 && nodes.size === 0" class="noData">
+    <div
+      v-if="!props.isNoData && nodes.size === 0"
+      class="text-center absolute-center"
+      style="z-index: 1"
+    >
       <h1>No AS Path</h1>
     </div>
-    <ReactiveChart v-else :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
+    <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
   </div>
 </template>
-
-<style scoped>
-.noData {
-  text-align: center;
-}
-</style>

@@ -477,7 +477,7 @@ const fetchBGPlayData = async () => {
     )
     if (!proceed) return
   }
-  
+
   try {
     isLoadingBgplayData.value = true
     console.log('Fetching data...')
@@ -823,6 +823,7 @@ onMounted(() => {
         :is-playing="isPlaying"
         :is-loading-bgplay-data="isLoadingBgplayData"
         :data-source="dataSource"
+        :is-no-data="rawMessages.length === 0"
         @enable-live-mode="enableLiveMode"
       />
     </GenericCardController>
