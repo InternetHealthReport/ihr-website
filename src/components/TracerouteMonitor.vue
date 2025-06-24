@@ -72,7 +72,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
   allProbes.value = allProbes.value.length == 0 ? await atlas_api.getProbesByMeasurementId(measurementID.value) : allProbes.value
   atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value).then((data) => {
             data.forEach(x => {
-                console.log(x)
                 probeDetailsMap.value[x.id.toString()] = x
               })
             })
@@ -118,7 +117,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
       if (!nodes.value[probeData.dst_addr]) {
         nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
       }
-      selectedDestinations.value.push(probeData.dst_addr)
     }
 
     probeData.result.forEach((hopData, hopIndex) => {
