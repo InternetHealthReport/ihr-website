@@ -55,6 +55,9 @@ const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 const showProbeOverflowAlert = ref(false)
 
+// re-emitting events from children to grand parent
+const emit = defineEmits(['setSelectedDestinations', 'setSelectedProbes'])
+
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
   loadMeasurementErrorDialog.value = true
@@ -402,6 +405,7 @@ const loadMeasurementOnSearchQuery = debounce(() => {
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
     loadMeasurementOnProbeChange()
+    emit('setSelectedProbes', selectedProbes.value)
   }
 })
 
@@ -414,6 +418,7 @@ watchEffect(() => {
 watchEffect(() => {
   if (selectedDestinations.value.length > 0) {
     loadMeasurementOnDestinationChange()
+      emit('setSelectedDestinations', selectedDestinations.value)
   }
 })
 

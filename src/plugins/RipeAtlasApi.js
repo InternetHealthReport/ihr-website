@@ -89,7 +89,6 @@ const AtlasApi = {
       return await cache(
         `${url}_msm_${measurementID}_probes`,
         async () => {
-          console.log('listParams::: ', listParams)
           return await Promise.all(
             listParams.map((x) => {
               return axios_base.get(url, { params: x })

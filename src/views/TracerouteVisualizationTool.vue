@@ -19,6 +19,17 @@ const loadMeasurement = () => {
   pushRoute()
 }
 
+const onUpdateProbesInRoute = (probeIds) => {
+  probeIDs.value = probeIds
+  pushRoute()
+}
+
+
+const onUpdateDestinationsInRoute = (destinationIps) => {
+  destinationIPs.value = destinationIps
+  pushRoute()
+}
+
 const pushRoute = () => {
   router.push(
     Tr.i18nRoute({
@@ -73,6 +84,8 @@ onMounted(() => {
       :destination-i-ps="destinationIPs"
       :open-options="true"
       class="traceroute-monitor"
+      @set-selected-probes="onUpdateProbesInRoute"
+      @set-selected-destinations="onUpdateDestinationsInRoute"
     />
   </div>
   <Feedback />
