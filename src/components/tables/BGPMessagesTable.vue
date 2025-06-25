@@ -1,6 +1,6 @@
 <script setup>
 import { QBtn, QTable, QInput, QIcon, QTd } from 'quasar'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import report from '@/plugins/report'
 import Tr from '@/i18n/translation'
 
@@ -18,6 +18,9 @@ const props = defineProps({
   },
   isPlaying: {
     type: Boolean
+  },
+  dataSource: {
+    type: String
   }
 })
 
@@ -27,50 +30,15 @@ const emit = defineEmits(['enable-live-mode', 'update-selected-peers'])
 
 const selectedPeersModel = ref(props.selectedPeers)
 const search = ref('')
+
 const columns = ref([
-  {
-    name: 'peer_asn',
-    required: true,
-    label: 'Peer ASN',
-    align: 'left',
-    field: 'peer_asn'
-  },
-  {
-    name: 'peer',
-    align: 'left',
-    label: 'Peer',
-    field: 'peer'
-  },
-  {
-    name: 'path',
-    label: 'AS Path',
-    field: 'path',
-    align: 'left'
-  },
-  {
-    name: 'as_info',
-    label: 'AS Info',
-    field: 'as_info',
-    align: 'left'
-  },
-  {
-    name: 'type',
-    label: 'Type',
-    field: 'type',
-    align: 'left'
-  },
-  {
-    name: 'timestamp',
-    label: 'Timestamp',
-    field: 'timestamp',
-    align: 'left'
-  },
-  {
-    name: 'community',
-    label: 'Community',
-    field: 'community',
-    align: 'left'
-  }
+  { name: 'peer_asn', label: 'Peer ASN', field: 'peer_asn', align: 'left' },
+  { name: 'peer', label: 'Peer', field: 'peer', align: 'left' },
+  { name: 'path', label: 'AS Path', field: 'path', align: 'left' },
+  { name: 'as_info', label: 'AS Info', field: 'as_info', align: 'left' },
+  { name: 'type', label: 'Type', field: 'type', align: 'left' },
+  { name: 'timestamp', label: 'Timestamp', field: 'timestamp', align: 'left' },
+  { name: 'community', label: 'Community', field: 'community', align: 'left' }
 ])
 
 const timestampToUTC = (timestamp) => {
@@ -81,24 +49,20 @@ const enableLiveMode = () => {
   emit('enable-live-mode')
 }
 
-const rows = computed(() =>
-  props.filteredMessages.map((message) => ({
-    peer_asn: message.peer_asn,
-    peer: message.peer,
-    path: message.path?.length > 0 ? message.path : null,
-    as_info:
-      message.as_info?.length > 0
-        ? message.as_info
-            .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
-            .join('\n')
-        : 'Null',
-    type: message.type,
-    timestamp: timestampToUTC(message.timestamp),
-    community:
-      message.community?.length > 0
-        ? message.community.map((c) => `${c.community}, AS${c.comm_1}-${c.description}`).join('\n')
-        : 'Null'
-  }))
+watch(
+  () => props.dataSource,
+  () => {
+    columns.value = columns.value.filter((col) => col.name !== 'rrc')
+    if (props.dataSource === 'bgplay') {
+      const index = columns.value.findIndex((col) => col.name === 'type') //to put rrc column before type comumn
+      const rrcColumn = { name: 'rrc', label: 'RRC', field: 'rrc', align: 'left' }
+      if (index !== -1) {
+        columns.value.splice(index, 0, rrcColumn)
+      } else {
+        columns.value.push(rrcColumn)
+      }
+    }
+  }
 )
 
 watch(
@@ -117,13 +81,13 @@ watch(selectedPeersModel, () => {
   <QTable
     v-model:selected="selectedPeersModel"
     flat
-    :rows="rows"
+    :rows="props.filteredMessages"
     :columns="columns"
     :filter="search"
     row-key="peer"
     selection="multiple"
   >
-    <template v-if="props.filteredMessages.length !== 0" #top-left>
+    <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'risLive'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </template>
@@ -147,40 +111,58 @@ watch(selectedPeersModel, () => {
     <template #body-cell-path="props">
       <QTd :props="props">
         <span class="asn-list">
-          <template v-if="props.row.path">
-            <span v-for="(asn, index) in props.row.path" :key="index">
-              <RouterLink
-                :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${asn}` } })"
-                target="_blank"
-              >
-                {{ asn }}
-              </RouterLink>
-              <span v-if="index < props.row.path.length - 1">&nbsp;</span>
-            </span>
+          <template v-if="props.row.path?.length">
+            <RouterLink
+              v-for="(asn, index) in props.row.path"
+              :key="index"
+              :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${asn}` } })"
+              target="_blank"
+            >
+              {{ asn + (index < props.row.path.length - 1 ? ',' : '') }}
+            </RouterLink>
           </template>
-          <template v-else> Null </template>
+          <template v-else>Null</template>
         </span>
       </QTd>
     </template>
     <template #body-cell-as_info="props">
       <QTd :props="props">
-        <pre>{{ props.row.as_info }}</pre>
+        <pre
+          >{{
+            props.row.as_info.length > 0
+              ? props.row.as_info
+                  .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
+                  .join('\n')
+              : 'Null'
+          }}
+        </pre>
       </QTd>
+    </template>
+    <template #body-cell-timestamp="props">
+      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.timestamp) }}</QTd>
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
-        <pre>{{ props.row.community }}</pre>
+        <pre
+          >{{
+            props.row.community.length > 0
+              ? props.row.community
+                  .map((c) => `${c.community}, AS${c.comm_1}-${c.description}`)
+                  .join('\n')
+              : 'Null'
+          }}
+        </pre>
       </QTd>
     </template>
   </QTable>
 </template>
 
-<style>
+<style scoped>
 .asn-list {
-  display: inline-flex;
-  flex-wrap: nowrap;
+  display: flex;
+  gap: 5px;
 }
-.asn-list > span {
-  display: inline;
+.nowrap {
+  white-space: nowrap !important;
 }
 </style>

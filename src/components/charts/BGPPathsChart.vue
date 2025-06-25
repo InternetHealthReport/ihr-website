@@ -20,6 +20,16 @@ const props = defineProps({
   },
   isPlaying: {
     type: Boolean
+  },
+  isLoadingBgplayData: {
+    type: Boolean
+  },
+  dataSource: {
+    type: String
+  },
+  isNoData: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -43,13 +53,12 @@ const generateGraphData = () => {
   )
 
   filteredSelectedMessages.forEach((message) => {
-    //Only consider bgp type Announce messagess
+    //Only consider bgp type Announce and Initial State messagess
     if (
       !message.path ||
       message.path.length === 0 ||
       message.type === 'Withdraw' ||
-      message.type === 'Unknown' ||
-      message.type === 'Initial State'
+      message.type === 'Unknown'
     )
       return
     const path = removeConsecutiveDuplicateAS(message.path).slice(-(props.maxHops + 1)) //+1 for the last AS
@@ -128,10 +137,8 @@ const renderChart = () => {
 }
 
 const init = () => {
-  if (props.filteredMessages && props.filteredMessages.length > 0) {
-    generateGraphData()
-    renderChart()
-  }
+  generateGraphData()
+  renderChart()
 }
 
 const enableLiveMode = () => {
@@ -170,20 +177,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="props.filteredMessages.length">
-    <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
-    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+  <div v-if="isLoadingBgplayData">
+    <div class="text-center">
+      <h1>Loading...</h1>
+    </div>
+  </div>
+  <div v-else-if="props.isNoData">
+    <div class="text-center">
+      <h1>No data available</h1>
+      <template v-if="dataSource === 'risLive'">
+        <h3>Try Changing the Input Parameters or you can wait</h3>
+        <h6>Note: Some prefixes become active after some time.</h6>
+      </template>
+    </div>
+  </div>
+  <div v-else>
+    <div v-if="dataSource === 'risLive'">
+      <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    </div>
+    <div
+      v-if="!props.isNoData && nodes.size === 0"
+      class="text-center absolute-center"
+      style="z-index: 1"
+    >
+      <h1>No AS Path</h1>
+    </div>
     <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
   </div>
-  <div v-else class="noData">
-    <h1>No data available</h1>
-    <h3>Try Changing the Input Parameters or you can wait</h3>
-    <h6>Note: Some prefixes become active after some time.</h6>
-  </div>
 </template>
-
-<style>
-.noData {
-  text-align: center;
-}
-</style>
