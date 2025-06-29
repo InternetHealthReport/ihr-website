@@ -13,9 +13,17 @@ const measurementID = ref('')
 const measurementIDInput = ref('')
 const probeIDs = ref([])
 const destinationIPs = ref([])
+const isProbesOverflow = ref(false)
 
 const loadMeasurement = () => {
+  if(measurementID.value == measurementIDInput.value) return
+
+  // Update when value is changed
   measurementID.value = measurementIDInput.value
+  
+  // Clear the previous route values on loading a new measurement
+  probeIDs.value.length = 0
+  destinationIPs.value.length = 0
   pushRoute()
 }
 
@@ -24,6 +32,9 @@ const onUpdateProbesInRoute = (probeIds) => {
   pushRoute()
 }
 
+const onProbesOverflow = (showAlert) => {
+  isProbesOverflow.value = showAlert
+}
 
 const onUpdateDestinationsInRoute = (destinationIps) => {
   destinationIPs.value = destinationIps
@@ -66,6 +77,7 @@ onMounted(() => {
 <template>
   <div class="IHR_char-container q-ma-md">
     <h1>Traceroute Monitor</h1>
+    <p v-if="isProbesOverflow" class="probes-overflow">Number of probes included for this measurement is above 1000, So minimizing the numbers till 1000 probes</p>
     <QInput
       v-model="measurementIDInput"
       placeholder="Enter RIPE ATLAS traceroute measurement ID"
@@ -86,6 +98,7 @@ onMounted(() => {
       class="traceroute-monitor"
       @set-selected-probes="onUpdateProbesInRoute"
       @set-selected-destinations="onUpdateDestinationsInRoute"
+      @probes-overflow="onProbesOverflow"
     />
   </div>
   <Feedback />
@@ -94,5 +107,8 @@ onMounted(() => {
 <style scoped>
 .traceroute-monitor {
   margin-bottom: 20px;
+}
+.probes-overflow {
+  color: red;
 }
 </style>

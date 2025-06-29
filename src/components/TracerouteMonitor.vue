@@ -53,10 +53,9 @@ const intervalValue = ref(null)
 const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
-const showProbeOverflowAlert = ref(false)
 
 // re-emitting events from children to grand parent
-const emit = defineEmits(['setSelectedDestinations', 'setSelectedProbes'])
+const emit = defineEmits(['setSelectedDestinations', 'setSelectedProbes', 'probesOverflow'])
 
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
@@ -78,7 +77,8 @@ const processData = async (tracerouteData, loadProbes = false) => {
                 probeDetailsMap.value[x.id.toString()] = x
               })
             })
-  showProbeOverflowAlert.value = allProbes.value.length > 1000
+  if(allProbes.value.length > 1000) emit('probesOverflow', true)
+  else emit('probesOverflow', false)
   
 
   tracerouteData.forEach((probeData, probeIndex) => {
@@ -445,19 +445,6 @@ watch(
     :info-title="$t('tracerouteMonitorChart.info.title')"
     :info-description="$t('tracerouteMonitorChart.info.description')"
   >
-      <QDialog v-model="showProbeOverflowAlert">
-      <QCard style="width: 1000px; height: auto">
-        <QCardSection>
-          <div class="text-h6">Probes overflow Alert</div>
-        </QCardSection>
-        <QCardSection class="q-pt-none">
-        <div>Number of probes included for this measurement is above 1000, So minimizing the numbers till 1000 probes :)</div>
-        </QCardSection>
-        <QCardActions align="right">
-          <QBtn v-close-popup flat label="Close" color="primary" />
-        </QCardActions>
-      </QCard>
-    </QDialog>
     <TracerouteChart
       :measurement-i-d="measurementID"
       :is-loading="isLoading"
