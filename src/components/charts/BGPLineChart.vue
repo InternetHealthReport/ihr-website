@@ -35,6 +35,18 @@ const props = defineProps({
   },
   maxTimestamp: {
     type: Number
+  },
+  datesTrace: {
+    type: Array,
+    default: () => []
+  },
+  announcementsTrace: {
+    type: Array,
+    default: () => []
+  },
+  withdrawalsTrace: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -54,11 +66,11 @@ const sliderWidthInit = ref(false)
 
 // Generate the stacked line chart data for the Plotly chart
 const generateLineChartData = async (message) => {
-  const timestamp = message.timestamp
-  const dates = []
-  const announcementsTrace = []
-  const withdrawalsTrace = []
+  let dates = []
+  let announcementsTrace = []
+  let withdrawalsTrace = []
   if (props.dataSource === 'risLive') {
+    const timestamp = message.timestamp
     //count no of messages based on type
     if (message.type === 'Announce') {
       if (!announcementsCount.value[timestamp]) {
@@ -78,14 +90,11 @@ const generateLineChartData = async (message) => {
       withdrawalsTrace.push(withdrawalsCount.value[t] || 0)
     }
   } else {
-    //TODO (This is dummy data)
-    const firstMessageTimestamp = props.rawMessages[0].timestamp || 0
-    const lastMessageTimestamp = props.rawMessages[props.rawMessages.length - 1].timestamp || 0
-    dates.push(timestampToUTC(firstMessageTimestamp), timestampToUTC(lastMessageTimestamp))
-    announcementsTrace.push(1, 2, 1, 3)
-    withdrawalsTrace.push(0, 0, 0, 0)
+    dates = props.datesTrace
+    announcementsTrace = props.announcementsTrace
+    withdrawalsTrace = props.withdrawalsTrace
   }
-  // Update chart data for announcements
+  // Update chart data for announcements and withdrawals
   return {
     dates: dates,
     announcementsTrace: announcementsTrace,
@@ -251,6 +260,14 @@ watch(
       updateTimeRange()
     }
   }
+)
+
+watch(
+  [() => props.datesTrace, () => props.announcementsTrace, () => props.withdrawalsTrace],
+  () => {
+    init()
+  },
+  { deep: true }
 )
 
 onMounted(() => {

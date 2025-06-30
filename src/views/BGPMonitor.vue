@@ -61,6 +61,10 @@ const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
 const bgPlayInitialState = ref([]) // Used to store the initial state for BGPlay
 const initialStateDataCount = ref(0)
+const timestampIndexMap = new Map()
+const datesTrace = ref([])
+const announcementsTrace = ref([])
+const withdrawalsTrace = ref([])
 
 const params = ref({
   peer: '',
@@ -104,6 +108,10 @@ const resetData = () => {
   minTimestamp.value = Infinity
   maxTimestamp.value = -Infinity
   initialStateDataCount.value = 0
+  timestampIndexMap.clear()
+  datesTrace.value = []
+  announcementsTrace.value = []
+  withdrawalsTrace.value = []
 }
 
 // Initialize the route
@@ -238,8 +246,11 @@ const processResData = (data) => {
     const sources = {}
     const nodes = {}
     const events = []
-    const query_starttime = timestampToUnix(data.data.query_starttime)
-    const query_endtime = timestampToUnix(data.data.query_endtime)
+
+    generateLineChartData({ timestamp: data.data.query_starttime, type: 'I' }) //To push the start time to the line chart
+
+    const query_unix_starttime = timestampToUnix(data.data.query_starttime)
+    const query_unix_endtime = timestampToUnix(data.data.query_endtime)
 
     data.data.sources.forEach((source) => {
       const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
@@ -276,35 +287,53 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(event.path),
         type: addBGPMessageType('I'), // Manually Assigning 'I' for Initial State
-        timestamp: query_starttime
+        timestamp: query_unix_starttime
       })
     })
 
-    if (data.data.events.length != 0) {
-      data.data.events.forEach((event) => {
-        const peer = event.attrs.source_id.split('-')[1]
-        const peerInfo = sources[peer]
-        const timestamp = timestampToUnix(event.timestamp)
+    data.data.events.forEach((event) => {
+      generateLineChartData(event)
+      const peer = event.attrs.source_id.split('-')[1]
+      const peerInfo = sources[peer]
+      const timestamp = timestampToUnix(event.timestamp)
 
-        applyDefaultSelectedPeers(peer)
+      applyDefaultSelectedPeers(peer)
 
-        events.push({
-          peer_asn: peerInfo.as_number,
-          rrc: peerInfo.rrc,
-          peer: peer,
-          path: event.attrs.path || [],
-          community: addCommunityAndDescriptions(event.attrs.community),
-          as_info: addASInfo(event.attrs.path),
-          type: addBGPMessageType(event.type),
-          timestamp: timestamp
-        })
+      events.push({
+        peer_asn: peerInfo.as_number,
+        rrc: peerInfo.rrc,
+        peer: peer,
+        path: event.attrs.path || [],
+        community: addCommunityAndDescriptions(event.attrs.community),
+        as_info: addASInfo(event.attrs.path),
+        type: addBGPMessageType(event.type),
+        timestamp: timestamp
       })
-      maxTimestamp.value = events.at(-1).timestamp
+    })
+
+    if (data.data.events.length === 0) {
+      maxTimestamp.value = query_unix_endtime // If no events, use the query end time
     } else {
-      maxTimestamp.value = query_endtime // If no events, use the query end time
+      maxTimestamp.value = events.at(-1).timestamp
     }
-    minTimestamp.value = query_starttime
+    minTimestamp.value = query_unix_starttime
     rawMessages.value = events
+  }
+}
+
+const generateLineChartData = (event) => {
+  const timestamp = event.timestamp
+  let index = timestampIndexMap.get(timestamp)
+
+  if (index === undefined) {
+    index = datesTrace.value.length
+    timestampIndexMap.set(timestamp, index)
+    datesTrace.value.push(timestamp)
+  }
+  if (event.type === 'A') {
+    announcementsTrace.value[index] = (announcementsTrace.value[index] || 0) + 1
+  } else if (event.type === 'W') {
+    withdrawalsTrace.value[index] = (withdrawalsTrace.value[index] || 0) + 1
   }
 }
 
@@ -844,6 +873,9 @@ onMounted(() => {
         :data-source="dataSource"
         :min-timestamp="minTimestamp"
         :max-timestamp="maxTimestamp"
+        :dates-trace="datesTrace"
+        :announcements-trace="announcementsTrace"
+        :withdrawals-trace="withdrawalsTrace"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
         @disable-live-mode="disableLiveMode"
         @enable-live-mode="enableLiveMode"
