@@ -387,6 +387,10 @@ const debounce = (func, wait) => {
 const loadMeasurementOnTimeRange = debounce((e) => {
   leftLabelValue.value = convertUnixTimestamp(e.min)
   rightLabelValue.value = convertUnixTimestamp(e.max)
+
+  // On slider update, update the measurement data
+  timeRange.value.min = e.min
+  timeRange.value.max = e.max
   loadMeasurementData()
 }, 3000)
 
