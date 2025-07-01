@@ -435,7 +435,6 @@ watch(displayMode, () => {
           <div class="rttLabel">RTT</div>
         </div>
         <div class="col">
-          <!-- percentages for RTT -->
           <div class="scaleLabel">{{ minDisplayedRtt }}</div>
           <div class="scale">
             <div
