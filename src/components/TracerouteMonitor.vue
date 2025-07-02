@@ -54,6 +54,9 @@ const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 
+// re-emitting events from children to grand parent
+const emit = defineEmits(['setSelectedDestinations', 'setSelectedProbes', 'probesOverflow'])
+
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
   loadMeasurementErrorDialog.value = true
@@ -67,6 +70,16 @@ const processData = async (tracerouteData, loadProbes = false) => {
   const nonResponsiveNodes = new Set()
   const outgoingEdges = new Map()
   let highestMedianRtt = 0
+
+  allProbes.value = allProbes.value.length == 0 ? await atlas_api.getProbesByMeasurementId(measurementID.value) : allProbes.value
+  atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value).then((data) => {
+            data.forEach(x => {
+                probeDetailsMap.value[x.id.toString()] = x
+              })
+            })
+  if(allProbes.value.length > 1000) emit('probesOverflow', true)
+  else emit('probesOverflow', false)
+  
 
   tracerouteData.forEach((probeData, probeIndex) => {
     if (probeData.result[0].error) {
@@ -91,14 +104,9 @@ const processData = async (tracerouteData, loadProbes = false) => {
       if (
         (!props.probeIDs ||
           props.probeIDs.length === 0 ||
-          props.probeIDs.includes(probeData.prb_id.toString())) &&
-        !allProbes.value.includes(probeData.prb_id.toString())
+          props.probeIDs.includes(probeData.prb_id.toString()))
       ) {
-        allProbes.value.push(probeData.prb_id.toString())
         selectedProbes.value.push(probeData.prb_id.toString())
-        atlas_api.getProbeById(probeData.prb_id.toString()).then((data) => {
-          probeDetailsMap.value[probeData.prb_id.toString()] = data.data
-        })
       }
     }
 
@@ -112,7 +120,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
       if (!nodes.value[probeData.dst_addr]) {
         nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
       }
-      selectedDestinations.value.push(probeData.dst_addr)
     }
 
     probeData.result.forEach((hopData, hopIndex) => {
@@ -298,12 +305,12 @@ const loadMeasurement = async () => {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
 
-      let startTime = fetchedMetaData.start_time
-      const stopTime = fetchedMetaData.stop_time
+      let startTime = metaData.value.start_time
+      const stopTime = metaData.value.stop_time
 
-      if (stopTime - startTime > 24 * 3600) {
-        startTime = stopTime - 24 * 3600
-      }
+      // Fetch last 5 measurements
+      const shortenedDurationStartTime = stopTime - 5*metaData.value["interval"]
+      startTime = shortenedDurationStartTime > 0? shortenedDurationStartTime: startTime 
 
       timeRange.value.min = startTime
       timeRange.value.max = stopTime
@@ -342,15 +349,15 @@ const loadMeasurementData = async (loadProbes = false) => {
       const params = {}
 
       if (!timeRange.value.disable) {
-        params.start_time = timeRange.value.min
-        params.stop_time = timeRange.value.max
+        params.start = timeRange.value.min
+        params.stop = timeRange.value.max
       }
 
       if (selectedProbes.value.length > 0) {
         params.probe_ids = selectedProbes.value.join(',')
       }
 
-      const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
+      const data = await atlas_api.getAndCacheMeasurementDataInChunks(measurementID.value, params)
 
       const filteredData = data.filter(
         (item) =>
@@ -380,6 +387,10 @@ const debounce = (func, wait) => {
 const loadMeasurementOnTimeRange = debounce((e) => {
   leftLabelValue.value = convertUnixTimestamp(e.min)
   rightLabelValue.value = convertUnixTimestamp(e.max)
+
+  // On slider update, update the measurement data
+  timeRange.value.min = e.min
+  timeRange.value.max = e.max
   loadMeasurementData()
 }, 3000)
 
@@ -398,6 +409,7 @@ const loadMeasurementOnSearchQuery = debounce(() => {
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
     loadMeasurementOnProbeChange()
+    emit('setSelectedProbes', selectedProbes.value)
   }
 })
 
@@ -410,6 +422,7 @@ watchEffect(() => {
 watchEffect(() => {
   if (selectedDestinations.value.length > 0) {
     loadMeasurementOnDestinationChange()
+      emit('setSelectedDestinations', selectedDestinations.value)
   }
 })
 
