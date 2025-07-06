@@ -27,6 +27,7 @@ import BGPLineChart from '@/components/charts/BGPLineChart.vue'
 import BGPMessagesTable from '@/components/tables/BGPMessagesTable.vue'
 import '@/styles/chart.css'
 import Feedback from '@/components/Feedback.vue'
+import { Address6, Address4 } from 'ip-address'
 
 const { t } = i18n.global
 
@@ -47,6 +48,7 @@ const usedMessagesCount = ref(0) //Just for displaying how many messages are bei
 const asNames = ref({}) // AS Info from asnames.txt file
 const inputDisable = ref(false)
 const isWsDisconnected = ref(false)
+const normalizedPrefix = ref('') // Used to store the normalized prefix to determine the BGP message type
 
 const dataSource = ref('risLive') //'risLive' or 'bgplay'
 const minTimestamp = ref(Infinity)
@@ -101,6 +103,7 @@ const resetData = () => {
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
   inputDisable.value = false
+  normalizedPrefix.value = ''
 
   bgPlaySources.value = {}
   bgPlayInitialState.value = []
@@ -119,6 +122,7 @@ const initRoute = () => {
   const query = { ...route.query }
   if (route.query.prefix) {
     params.value.prefix = route.query.prefix
+    normalizedPrefix.value = normalizePrefix(route.query.prefix)
   } else {
     query.prefix = params.value.prefix
   }
@@ -388,13 +392,25 @@ const addASInfo = (asPathArray) => {
   return result
 }
 
+const normalizePrefix = (prefix) => {
+  if (Address4.isValid(prefix)) {
+    return new Address4(prefix).correctForm()
+  } else if (Address6.isValid(prefix)) {
+    return new Address6(prefix).correctForm()
+  }
+  return prefix
+}
+
 // Determine the BGP message type
 const addBGPMessageType = (data) => {
   if (dataSource.value === 'risLive') {
-    if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
-      return 'Announce'
-    } else if (data.withdrawals.includes(params.value.prefix)) {
+    const withdrawalSet = new Set(data.withdrawals.map(normalizePrefix))
+    const announcementSet = new Set((data.announcements[0]?.prefixes || []).map(normalizePrefix))
+
+    if (withdrawalSet.has(normalizedPrefix.value)) {
       return 'Withdraw'
+    } else if (announcementSet.has(normalizedPrefix.value)) {
+      return 'Announce'
     } else {
       return 'Unknown'
     }
@@ -654,6 +670,7 @@ watch(
       rrcs: rrcs.value ? rrcs.value.join(',') : ''
     }
     router.replace({ query })
+    normalizedPrefix.value = normalizePrefix(params.value.prefix)
   },
   { deep: true }
 )
