@@ -77,7 +77,11 @@ onMounted(() => {
 <template>
   <div class="IHR_char-container q-ma-md">
     <h1>Traceroute Monitor</h1>
-    <p v-if="isProbesOverflow" class="probes-overflow">Number of probes included for this measurement is above 1000, So minimizing the numbers till 1000 probes</p>
+    <p v-if="isProbesOverflow" class="probes-overflow">
+      The selected measurement: {{measurementID}} is a large measurement. Few points to be noted aboot a large measurement:<br />
+      - There are more than 1000 probes in a measurement, Currently the app limits the number to 1000. <br />
+      - Updating the RTT chart's time slider will make the app try to load a larger amount of data, resulting in latency. 
+    </p>
     <QInput
       v-model="measurementIDInput"
       placeholder="Enter RIPE ATLAS traceroute measurement ID"

@@ -7,7 +7,7 @@ import TracerouteChart from '@/components/charts/TracerouteChart.vue'
 import TracerouteRttChart from '@/components/charts/TracerouteRttChart.vue'
 import TracerouteProbesTable from '@/components/tables/TracerouteProbesTable.vue'
 import TracerouteDestinationsTable from '@/components/tables/TracerouteDestinationsTable.vue'
-import { convertUnixTimestamp, isPrivateIP, calculateMedian } from '../plugins/tracerouteFunctions'
+import { isPrivateIP, calculateMedian } from '../plugins/tracerouteFunctions'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const props = defineProps({
@@ -32,8 +32,8 @@ const measurementID = ref('')
 const nodes = ref({})
 const edges = ref({})
 const timeRange = ref({ disable: true })
-const leftLabelValue = ref('')
-const rightLabelValue = ref('')
+const rttChartLeftTimestamp = ref(0)
+const rttChartRightTimestamp = ref(0)
 const nodeSize = 15
 const selectedProbes = ref([])
 const allProbes = ref([])
@@ -278,8 +278,8 @@ const loadMeasurement = async () => {
 
   metaData.value = {}
   timeRange.value = { disable: true }
-  leftLabelValue.value = ''
-  rightLabelValue.value = ''
+  rttChartLeftTimestamp.value = 0
+  rttChartRightTimestamp.value = 0
 
   selectedProbes.value = []
   allProbes.value = []
@@ -315,8 +315,8 @@ const loadMeasurement = async () => {
       timeRange.value.min = startTime
       timeRange.value.max = stopTime
 
-      leftLabelValue.value = convertUnixTimestamp(startTime)
-      rightLabelValue.value = convertUnixTimestamp(stopTime)
+      rttChartLeftTimestamp.value = startTime
+      rttChartRightTimestamp.value = stopTime
 
       timeRange.value.disable = false
 
@@ -385,8 +385,8 @@ const debounce = (func, wait) => {
 }
 
 const loadMeasurementOnTimeRange = debounce((e) => {
-  leftLabelValue.value = convertUnixTimestamp(e.min)
-  rightLabelValue.value = convertUnixTimestamp(e.max)
+  rttChartLeftTimestamp.value = e.min
+  rttChartRightTimestamp.value = e.max
 
   // On slider update, update the measurement data
   timeRange.value.min = e.min
@@ -477,8 +477,8 @@ watch(
           :interval-value="intervalValue"
           :time-range="timeRange"
           :meta-data="metaData"
-          :left-label-value="leftLabelValue"
-          :right-label-value="rightLabelValue"
+          :left-timestamp="rttChartLeftTimestamp"
+          :right-timestamp="rttChartRightTimestamp"
           :rtt-over-time="rttOverTime"
           @load-measurement-on-time-range="loadMeasurementOnTimeRange"
         />
