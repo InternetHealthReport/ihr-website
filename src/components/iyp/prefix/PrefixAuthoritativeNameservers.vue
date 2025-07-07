@@ -16,7 +16,8 @@ const nameservers = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (p:BGPPrefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(n:AuthoritativeNameServer)
+  query: `MATCH (p:BGPPrefix {prefix: $prefix})<-[po:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(n:AuthoritativeNameServer)
+    WHERE "BGPPrefix" IN po.prefix_types
     OPTIONAL MATCH (n)<-[:MANAGED_BY]-(:DomainName)-[:PART_OF]-(d:HostName)
     RETURN COLLECT(DISTINCT i.ip) AS ip, n.name as nameserver, split(n.name, '.')[-1] AS tld, COUNT(DISTINCT d.name) AS nb_hostnames`,
   columns: [

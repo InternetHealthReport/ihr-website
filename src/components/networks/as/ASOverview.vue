@@ -68,8 +68,8 @@ const queries = ref([
   },
   {
     data: [],
-    query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:BGPPrefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
-      WHERE rr.reference_name = "tranco.top1m" AND h.name = d.name
+    query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:BGPPrefix)<-[po:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
+      WHERE rr.reference_name = "tranco.top1m" AND h.name = d.name AND "BGPPrefix" IN po.prefix_types
       RETURN DISTINCT h.name AS hostname, rr.rank AS rank
       ORDER BY rank LIMIT 5`
   }

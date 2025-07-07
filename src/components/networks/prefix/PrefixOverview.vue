@@ -54,7 +54,8 @@ const queries = ref([
   },
   {
     data: [],
-    query: `MATCH (p:Prefix {prefix: $prefix})<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)
+    query: `MATCH (p:Prefix {prefix: $prefix})<-[po:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)
+      WHERE "BGPPrefix" IN po.prefix_types
       OPTIONAL MATCH (h)-[:PART_OF]-(:DomainName)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
       RETURN  DISTINCT h.name as hostname, ra.rank AS rank ORDER BY rank LIMIT 5`
   }
