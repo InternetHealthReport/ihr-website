@@ -18,7 +18,8 @@ const nameservers = ref({
   show: false,
   loading: true,
   query: `MATCH (:HostName {name: $hostname})-[:PART_OF]-(:DomainName)-[:MANAGED_BY]-(n:AuthoritativeNameServer)
-    OPTIONAL MATCH (n)-[:RESOLVES_TO]->(i:IP)-[:PART_OF]-(p:BGPPrefix)-[:ORIGINATE]-(a:AS)
+    OPTIONAL MATCH (n)-[:RESOLVES_TO]->(i:IP)-[po:PART_OF]-(p:BGPPrefix)-[:ORIGINATE]-(a:AS)
+    WHERE "BGPPrefix" IN po.prefix_types
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
     RETURN  DISTINCT i.ip AS ip, n.name as nameserver, a.asn AS asn, p.prefix AS prefix, COLLECT(DISTINCT t.label) AS tags`,
   columns: [
