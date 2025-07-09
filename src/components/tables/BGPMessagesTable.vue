@@ -127,15 +127,14 @@ watch(selectedPeersModel, () => {
     </template>
     <template #body-cell-as_info="props">
       <QTd :props="props">
-        <pre
-          >{{
-            props.row.as_info.length > 0
-              ? props.row.as_info
-                  .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
-                  .join('\n')
-              : 'Null'
-          }}
-        </pre>
+        <template v-if="props.row.as_info.length > 0">
+          <pre>{{
+            props.row.as_info
+              .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
+              .join('\n')
+          }}</pre>
+        </template>
+        <template v-else>Null</template>
       </QTd>
     </template>
     <template #body-cell-timestamp="props">
@@ -143,15 +142,14 @@ watch(selectedPeersModel, () => {
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
-        <pre
-          >{{
-            props.row.community.length > 0
-              ? props.row.community
-                  .map((c) => `${c.community}, AS${c.comm_1}-${c.description}`)
-                  .join('\n')
-              : 'Null'
-          }}
-        </pre>
+        <template v-if="props.row.community.length > 0">
+          <pre>{{
+            props.row.community
+              .map((c) => `${c.community}, AS${c.comm_1}-${c.description}`)
+              .join('\n')
+          }}</pre>
+        </template>
+        <template v-else> Null </template>
       </QTd>
     </template>
   </QTable>
