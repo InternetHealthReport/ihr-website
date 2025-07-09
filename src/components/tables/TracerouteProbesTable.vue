@@ -31,7 +31,7 @@ const paginatedProbes = computed(() => {
       ...props.probeDetailsMap[probe]
     }))
     .filter((probe) => {
-      return ['address_v4', 'address_v6', 'country_code', 'asn_v4', 'asn_v6'].some((field) => {
+      return ['address_v4', 'address_v6', 'country_code', 'asn_v4', 'asn_v6', 'id'].some((field) => {
         return probe[field] && probe[field].toString().toLowerCase().includes(query)
       })
     })
@@ -77,7 +77,6 @@ watch(selectedProbesModel, () => {
   <QInput
     v-model="searchQuery"
     placeholder="Search..."
-    :disable="Object.keys(nodes).length < 1"
     @input="emit('loadMeasurementOnSearchQuery')"
   />
   <QTable :rows="paginatedProbes" :columns="columns" row-key="probe" flat>
@@ -87,7 +86,6 @@ watch(selectedProbesModel, () => {
           <template v-if="col.name === 'probe'">
             <QCheckbox
               v-model="selectAllProbes"
-              :disable="Object.keys(nodes).length < 1"
               @update:model-value="toggleSelectAll"
             />
           </template>

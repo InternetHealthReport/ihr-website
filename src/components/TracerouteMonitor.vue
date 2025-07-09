@@ -102,9 +102,11 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     if (loadProbes) {
       if (
-        (!props.probeIDs ||
+        ((!props.probeIDs ||
           props.probeIDs.length === 0 ||
           props.probeIDs.includes(probeData.prb_id.toString()))
+          && !(selectedProbes.value.includes(probeData.prb_id.toString()))
+        )
       ) {
         selectedProbes.value.push(probeData.prb_id.toString())
       }
