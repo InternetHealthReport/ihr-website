@@ -2,7 +2,7 @@
 import { QRange } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, computed, watch } from 'vue'
-import { calculateMedian } from '../../plugins/tracerouteFunctions'
+import { calculateMedian, convertUnixTimestamp } from '../../plugins/tracerouteFunctions'
 
 const props = defineProps({
   intervalValue: {
@@ -14,11 +14,11 @@ const props = defineProps({
   metaData: {
     type: Object
   },
-  leftLabelValue: {
-    type: String
+  leftTimestamp: {
+    type: Number
   },
-  rightLabelValue: {
-    type: String
+  rightTimestamp: {
+    type: Number
   },
   rttOverTime: {
     type: Array
@@ -34,6 +34,14 @@ const actualChartLayout = ref({})
 const showOneOffMessage = ref(false)
 const showTooSmallMessage = ref(false)
 const showNoDataMessage = ref(true)
+
+const leftLabel = computed(() => {
+  return convertUnixTimestamp(timeRangeModel.value.min) ?? ''
+})
+
+const rightLabel = computed(() => {
+  return convertUnixTimestamp(timeRangeModel.value.max) ?? ''
+})
 
 const plotRTTChart = async () => {
   if (!props.intervalValue) {
@@ -150,8 +158,8 @@ watch(filteredRttOverTime, () => {
           :disable="timeRangeModel.disable"
           :min="minTime"
           :max="maxTime"
-          :left-label-value="leftLabelValue"
-          :right-label-value="rightLabelValue"
+          :left-label-value="leftLabel"
+          :right-label-value="rightLabel"
           label-always
           drag-range
           @change="rangeOnChane"
