@@ -103,7 +103,6 @@ const resetData = () => {
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
   inputDisable.value = false
-  normalizedPrefix.value = ''
 
   bgPlaySources.value = {}
   bgPlayInitialState.value = []
@@ -393,12 +392,17 @@ const addASInfo = (asPathArray) => {
 }
 
 const normalizePrefix = (prefix) => {
-  if (Address4.isValid(prefix)) {
-    return new Address4(prefix).correctForm()
-  } else if (Address6.isValid(prefix)) {
-    return new Address6(prefix).correctForm()
+  const [ip, length] = prefix.split('/')
+  let normalizedIp
+  if (Address4.isValid(ip)) {
+    normalizedIp = new Address4(ip).correctForm()
+  } else if (Address6.isValid(ip)) {
+    normalizedIp = new Address6(ip).correctForm()
+  } else {
+    console.warn(`Invalid prefix: ${prefix}`)
+    normalizedIp = ip // use the original IP if invalid
   }
-  return prefix
+  return length ? `${normalizedIp}/${length}` : normalizedIp
 }
 
 // Determine the BGP message type
@@ -412,6 +416,7 @@ const addBGPMessageType = (data) => {
     } else if (announcementSet.has(normalizedPrefix.value)) {
       return 'Announce'
     } else {
+      console.warn(`Unknown BGP message type:`, data)
       return 'Unknown'
     }
   } else {
