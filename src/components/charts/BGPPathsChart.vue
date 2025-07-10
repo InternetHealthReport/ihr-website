@@ -185,14 +185,14 @@ onMounted(() => {
   <div v-else-if="props.isNoData">
     <div class="text-center">
       <h1>No data available</h1>
-      <template v-if="dataSource === 'risLive'">
+      <template v-if="dataSource === 'ris-live'">
         <h3>Try Changing the Input Parameters or you can wait</h3>
         <h6>Note: Some prefixes become active after some time.</h6>
       </template>
     </div>
   </div>
   <div v-else>
-    <div v-if="dataSource === 'risLive'">
+    <div v-if="dataSource === 'ris-live'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>

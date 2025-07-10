@@ -69,7 +69,7 @@ const generateLineChartData = async (message) => {
   let dates = []
   let announcementsTrace = []
   let withdrawalsTrace = []
-  if (props.dataSource === 'risLive') {
+  if (props.dataSource === 'ris-live') {
     const timestamp = message.timestamp
     //count no of messages based on type
     if (message.type === 'Announce') {
@@ -108,7 +108,7 @@ const timestampToUTC = (timestamp) => {
 
 // Update the time range
 const updateTimeRange = (timestamp) => {
-  if (props.dataSource === 'risLive') {
+  if (props.dataSource === 'ris-live') {
     if (timestamp) {
       if (timestamp < minTimestamp.value) {
         minTimestamp.value = timestamp
@@ -279,11 +279,11 @@ onMounted(() => {
   <div class="noData" v-if="rawMessages.length === 0">
     <h1 v-if="isLoadingBgplayData">Loading...</h1>
     <h1 v-else>No data available</h1>
-    <h3 v-if="dataSource === 'risLive'">Try Changing the Input Parameters or you can wait</h3>
-    <h6 v-if="dataSource === 'risLive'">Note: Some prefixes become active after some time.</h6>
+    <h3 v-if="dataSource === 'ris-live'">Try Changing the Input Parameters or you can wait</h3>
+    <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>
-    <div v-if="dataSource === 'risLive'">
+    <div v-if="dataSource === 'ris-live'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>
@@ -296,7 +296,7 @@ onMounted(() => {
     />
     <div class="timetampSlider">
       <div class="timeStampControls">
-        <span v-if="dataSource === 'risLive'"
+        <span v-if="dataSource === 'ris-live'"
           >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span
         >
         <span v-else

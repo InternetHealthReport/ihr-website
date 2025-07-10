@@ -50,7 +50,7 @@ const inputDisable = ref(false)
 const isWsDisconnected = ref(false)
 const normalizedPrefix = ref('') // Used to store the normalized prefix to determine the BGP message type
 
-const dataSource = ref('risLive') //'risLive' or 'bgplay'
+const dataSource = ref('ris-live') //'ris-live' or 'bgplay'
 const minTimestamp = ref(Infinity)
 const maxTimestamp = ref(-Infinity)
 
@@ -125,30 +125,30 @@ const initRoute = () => {
   } else {
     query.prefix = params.value.prefix
   }
-  if (route.query.maxHops) {
-    maxHops.value = parseInt(route.query.maxHops)
+  if (route.query['max-hops']) {
+    maxHops.value = parseInt(route.query['max-hops'])
   } else {
-    query.maxHops = maxHops.value
+    query['max-hops'] = maxHops.value
   }
   if (route.query.rrc) {
     params.value.host = route.query.rrc
   } else {
     query.rrc = params.value.host
   }
-  if (route.query.dataSource) {
-    dataSource.value = route.query.dataSource
+  if (route.query['data-source']) {
+    dataSource.value = route.query['data-source']
   } else {
-    query.dataSource = dataSource.value
+    query['data-source'] = dataSource.value
   }
-  if (route.query.startTime) {
-    startTime.value = route.query.startTime
+  if (route.query['start-time']) {
+    startTime.value = route.query['start-time']
   } else {
-    query.startTime = startTime.value
+    query['start-time'] = startTime.value
   }
-  if (route.query.endTime) {
-    endTime.value = route.query.endTime
+  if (route.query['end-time']) {
+    endTime.value = route.query['end-time']
   } else {
-    query.endTime = endTime.value
+    query['end-time'] = endTime.value
   }
   if (route.query.rrcs) {
     rrcs.value = route.query.rrcs.split(',').map(Number)
@@ -230,7 +230,7 @@ const sendSocketType = (protocol, paramData) => {
 }
 
 const processResData = (data) => {
-  if (dataSource.value === 'risLive') {
+  if (dataSource.value === 'ris-live') {
     data.community = addCommunityAndDescriptions(data.community)
     data.as_info = addASInfo(data.path)
     data.type = addBGPMessageType(data)
@@ -374,7 +374,7 @@ const addCommunityAndDescriptions = (communityDataArray) => {
 const addASInfo = (asPathArray) => {
   if (!Array.isArray(asPathArray) || asPathArray.length === 0) return []
 
-  const source = dataSource.value === 'risLive' ? asNames.value : bgPlayASNames.value
+  const source = dataSource.value === 'ris-live' ? asNames.value : bgPlayASNames.value
   const seen = new Set()
 
   const result = []
@@ -407,7 +407,7 @@ const normalizePrefix = (prefix) => {
 
 // Determine the BGP message type
 const addBGPMessageType = (data) => {
-  if (dataSource.value === 'risLive') {
+  if (dataSource.value === 'ris-live') {
     const withdrawalSet = new Set(data.withdrawals.map(normalizePrefix))
     const announcementSet = new Set((data.announcements[0]?.prefixes || []).map(normalizePrefix))
 
@@ -667,11 +667,11 @@ watch(
     const query = {
       ...route.query,
       prefix: params.value.prefix,
-      maxHops: maxHops.value,
+      'max-hops': maxHops.value,
       rrc: params.value.host,
-      dataSource: dataSource.value,
-      startTime: startTime.value,
-      endTime: endTime.value,
+      'data-source': dataSource.value,
+      'start-time': startTime.value,
+      'end-time': endTime.value,
       rrcs: rrcs.value ? rrcs.value.join(',') : ''
     }
     router.replace({ query })
@@ -702,7 +702,7 @@ onMounted(() => {
         <div>
           <QRadio
             v-model="dataSource"
-            val="risLive"
+            val="ris-live"
             label="RisLive"
             :disable="
               isPlaying ||
@@ -750,7 +750,7 @@ onMounted(() => {
               "
             />
             <QSelect
-              v-if="dataSource === 'risLive'"
+              v-if="dataSource === 'ris-live'"
               v-model="params.host"
               filled
               :options="rrcList"
@@ -827,7 +827,7 @@ onMounted(() => {
         </div>
         <div class="row items-center justify-center gap-30">
           <QBtn
-            v-if="dataSource === 'risLive'"
+            v-if="dataSource === 'ris-live'"
             :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
             :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
             :disable="disableButton || params.prefix === ''"

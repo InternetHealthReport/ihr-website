@@ -87,7 +87,7 @@ watch(selectedPeersModel, () => {
     row-key="peer"
     selection="multiple"
   >
-    <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'risLive'">
+    <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'ris-live'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </template>
