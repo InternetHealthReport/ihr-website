@@ -119,6 +119,7 @@ const resetData = () => {
 // Initialize the route
 const initRoute = () => {
   const query = { ...route.query }
+
   if (route.query.prefix) {
     params.value.prefix = route.query.prefix
     normalizedPrefix.value = normalizePrefix(route.query.prefix)
@@ -130,30 +131,34 @@ const initRoute = () => {
   } else {
     query['max-hops'] = maxHops.value
   }
-  if (route.query.rrc) {
-    params.value.host = route.query.rrc
-  } else {
-    query.rrc = params.value.host
-  }
   if (route.query['data-source']) {
     dataSource.value = route.query['data-source']
   } else {
     query['data-source'] = dataSource.value
   }
-  if (route.query['start-time']) {
-    startTime.value = route.query['start-time']
+
+  if (dataSource.value === 'ris-live') {
+    if (route.query.rrc) {
+      params.value.host = route.query.rrc
+    } else {
+      query.rrc = params.value.host
+    }
   } else {
-    query['start-time'] = startTime.value
-  }
-  if (route.query['end-time']) {
-    endTime.value = route.query['end-time']
-  } else {
-    query['end-time'] = endTime.value
-  }
-  if (route.query.rrcs) {
-    rrcs.value = route.query.rrcs.split(',').map(Number)
-  } else {
-    query.rrcs = rrcs.value.join(',')
+    if (route.query.rrcs) {
+      rrcs.value = route.query.rrcs.split(',').map(Number)
+    } else {
+      query.rrcs = rrcs.value.join(',')
+    }
+    if (route.query['start-time']) {
+      startTime.value = route.query['start-time']
+    } else {
+      query['start-time'] = startTime.value
+    }
+    if (route.query['end-time']) {
+      endTime.value = route.query['end-time']
+    } else {
+      query['end-time'] = endTime.value
+    }
   }
   router.replace({ query })
 }
@@ -665,14 +670,16 @@ watch(
   [params, maxHops, dataSource, startTime, endTime, rrcs],
   () => {
     const query = {
-      ...route.query,
       prefix: params.value.prefix,
       'max-hops': maxHops.value,
-      rrc: params.value.host,
-      'data-source': dataSource.value,
-      'start-time': startTime.value,
-      'end-time': endTime.value,
-      rrcs: rrcs.value ? rrcs.value.join(',') : ''
+      'data-source': dataSource.value
+    }
+    if (dataSource.value === 'ris-live') {
+      query.rrc = params.value.host
+    } else {
+      query['start-time'] = startTime.value
+      query['end-time'] = endTime.value
+      query.rrcs = rrcs.value ? rrcs.value.join(',') : ''
     }
     router.replace({ query })
     normalizedPrefix.value = normalizePrefix(params.value.prefix)
