@@ -851,7 +851,7 @@ onMounted(() => {
               !haveRequiredBGPlayParams()
             "
           />
-          <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
+          <QBtn color="negative" :label="'Reset'" @click="resetData" />
           <div class="column">
             <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
             <span>Total messages received: {{ rawMessages.length }}</span>
