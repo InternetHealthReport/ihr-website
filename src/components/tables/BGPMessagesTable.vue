@@ -87,7 +87,7 @@ watch(selectedPeersModel, () => {
     row-key="peer"
     selection="multiple"
   >
-    <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'risLive'">
+    <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'ris-live'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </template>
@@ -127,15 +127,14 @@ watch(selectedPeersModel, () => {
     </template>
     <template #body-cell-as_info="props">
       <QTd :props="props">
-        <pre
-          >{{
-            props.row.as_info.length > 0
-              ? props.row.as_info
-                  .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
-                  .join('\n')
-              : 'Null'
-          }}
-        </pre>
+        <template v-if="props.row.as_info.length > 0">
+          <pre>{{
+            props.row.as_info
+              .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
+              .join('\n')
+          }}</pre>
+        </template>
+        <template v-else>Null</template>
       </QTd>
     </template>
     <template #body-cell-timestamp="props">
@@ -143,15 +142,14 @@ watch(selectedPeersModel, () => {
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
-        <pre
-          >{{
-            props.row.community.length > 0
-              ? props.row.community
-                  .map((c) => `${c.community}, AS${c.comm_1}-${c.description}`)
-                  .join('\n')
-              : 'Null'
-          }}
-        </pre>
+        <template v-if="props.row.community.length > 0">
+          <pre>{{
+            props.row.community
+              .map((c) => `${c.community}, AS${c.comm_1}-${c.description}`)
+              .join('\n')
+          }}</pre>
+        </template>
+        <template v-else> Null </template>
       </QTd>
     </template>
   </QTable>
