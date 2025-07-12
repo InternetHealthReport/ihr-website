@@ -28,8 +28,10 @@ import BGPMessagesTable from '@/components/tables/BGPMessagesTable.vue'
 import '@/styles/chart.css'
 import Feedback from '@/components/Feedback.vue'
 import { Address6, Address4 } from 'ip-address'
+import report from '@/plugins/report'
 
 const { t } = i18n.global
+const { utcString } = report()
 
 const maxHops = ref(9)
 const isPlaying = ref(false)
@@ -63,10 +65,12 @@ const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
 const bgPlayInitialState = ref([]) // Used to store the initial state for BGPlay
 const initialStateDataCount = ref(0)
-const timestampIndexMap = new Map()
 const datesTrace = ref([])
 const announcementsTrace = ref([])
 const withdrawalsTrace = ref([])
+let announcementsCount = {}
+let withdrawalsCount = {}
+const uniqueEventTimestamps = new Set()
 
 const params = ref({
   peer: '',
@@ -110,10 +114,12 @@ const resetData = () => {
   minTimestamp.value = Infinity
   maxTimestamp.value = -Infinity
   initialStateDataCount.value = 0
-  timestampIndexMap.clear()
   datesTrace.value = []
   announcementsTrace.value = []
   withdrawalsTrace.value = []
+  announcementsCount = {}
+  withdrawalsCount = {}
+  uniqueEventTimestamps.clear()
 }
 
 // Initialize the route
@@ -255,8 +261,6 @@ const processResData = (data) => {
     const nodes = {}
     const events = []
 
-    generateLineChartData({ timestamp: data.data.query_starttime, type: 'I' }) //To push the start time to the line chart
-
     const query_unix_starttime = timestampToUnix(data.data.query_starttime)
     const query_unix_endtime = timestampToUnix(data.data.query_endtime)
 
@@ -326,23 +330,46 @@ const processResData = (data) => {
     }
     minTimestamp.value = query_unix_starttime
     rawMessages.value = events
+    generateLineChartTrace()
   }
 }
 
 const generateLineChartData = (event) => {
-  const timestamp = event.timestamp
-  let index = timestampIndexMap.get(timestamp)
+  const timestamp = timestampToUnix(event.timestamp)
+  uniqueEventTimestamps.add(timestamp)
 
-  if (index === undefined) {
-    index = datesTrace.value.length
-    timestampIndexMap.set(timestamp, index)
-    datesTrace.value.push(timestamp)
-  }
   if (event.type === 'A') {
-    announcementsTrace.value[index] = (announcementsTrace.value[index] || 0) + 1
+    announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
   } else if (event.type === 'W') {
-    withdrawalsTrace.value[index] = (withdrawalsTrace.value[index] || 0) + 1
+    withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
   }
+}
+
+const generateLineChartTrace = () => {
+  // Fill gaps to ensure consistent timestamps
+  for (let t = minTimestamp.value; t <= maxTimestamp.value; t += 60) {
+    uniqueEventTimestamps.add(t)
+  }
+
+  const sortedTimestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
+
+  const dTrace = []
+  const aTrace = []
+  const wTrace = []
+
+  for (const t of sortedTimestamps) {
+    dTrace.push(timestampToUTC(t))
+    aTrace.push(announcementsCount[t] ?? 0)
+    wTrace.push(withdrawalsCount[t] ?? 0)
+  }
+
+  datesTrace.value = dTrace
+  announcementsTrace.value = aTrace
+  withdrawalsTrace.value = wTrace
+}
+
+const timestampToUTC = (timestamp) => {
+  return utcString(new Date(timestamp * 1000))
 }
 
 //Automatically select the first 5 peers for displaying the sankey chart
