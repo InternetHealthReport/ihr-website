@@ -132,20 +132,26 @@ const renderChart = (dates, announcementsTrace, withdrawalsTrace) => {
     {
       x: dates,
       y: withdrawalsTrace,
-      type: 'scatter',
-      mode: 'none',
-      name: 'Withdrawals',
+      type: 'scattergl',
+      mode: 'markers',
+      fill: 'tozeroy',
       fillcolor: 'rgba(255, 127, 14, 0.5)',
-      stackgroup: 'one'
+      marker: {
+        color: 'rgba(255, 127, 14, 0.5)'
+      },
+      name: 'Withdrawals'
     },
     {
       x: dates,
       y: announcementsTrace,
-      type: 'scatter',
-      mode: 'none',
-      name: 'Announcements',
+      type: 'scattergl',
+      fill: 'tozeroy',
       fillcolor: 'rgba(31, 119, 180, 0.5)',
-      stackgroup: 'one'
+      marker: {
+        color: 'rgba(31, 119, 180, 0.5)'
+      },
+      mode: 'markers',
+      name: 'Announcements'
     }
   ]
 
