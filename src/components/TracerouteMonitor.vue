@@ -77,6 +77,12 @@ const processData = async (tracerouteData, loadProbes = false) => {
                 probeDetailsMap.value[x.id.toString()] = x
               })
             })
+  atlas_api.getProbesByIds(selectedProbes.value, measurementID.value).then((data) => {
+            data.forEach(x => {
+                probeDetailsMap.value[x.id.toString()] = x
+              })
+            })
+
   if(allProbes.value.length > 1000) emit('probesOverflow', true)
   else emit('probesOverflow', false)
   
@@ -283,6 +289,7 @@ const loadMeasurement = async () => {
   rttChartLeftTimestamp.value = 0
   rttChartRightTimestamp.value = 0
 
+  console.log("selectedProbes.value in loadMeasurement::: ", selectedProbes.value)
   selectedProbes.value = []
   allProbes.value = []
   probeDetailsMap.value = {}
@@ -343,7 +350,7 @@ const loadMeasurementData = async (loadProbes = false) => {
     try {
       if (loadProbes) {
         allProbes.value = []
-        selectedProbes.value = []
+        // selectedProbes.value = []
         allDestinations.value = []
         selectedDestinations.value = []
       }
@@ -358,7 +365,9 @@ const loadMeasurementData = async (loadProbes = false) => {
       if (selectedProbes.value.length > 0) {
         params.probe_ids = selectedProbes.value.join(',')
       }
-
+      
+      console.log("selectedProbes.value in load measurement data::: ", selectedProbes.value)
+      console.log("loadProbes::: ", loadProbes)
       const data = await atlas_api.getAndCacheMeasurementDataInChunks(measurementID.value, params)
 
       const filteredData = data.filter(
@@ -408,10 +417,56 @@ const loadMeasurementOnSearchQuery = debounce(() => {
   loadMeasurementData()
 }, 1000)
 
+const sortAndCompare = (arrA, arrB) => {
+  if(arrA.length !== arrB.length) return false
+
+  const N = arrA.length
+  const compareFunc = (a, b) => +a - +b
+  const sortedArrA = arrA.sort(compareFunc)
+  const sortedArrB = arrB.sort(compareFunc)
+
+  for(let i = 0; i < N; i++) {
+    if(sortedArrA[i] !== sortedArrB[i]) return false
+  }
+
+  return true
+}
+
+// First array should be bigger
+const mergeArrays = (arrA, arrB) => {
+
+  if(arrA.length < arrB.length) mergeArrays(arrB, arrA)
+
+  const compareFunc = (a, b) => +a - +b
+  const sortedArrA = arrA.sort(compareFunc)
+  const sortedArrB = arrB.sort(compareFunc)
+
+  const newArr = []
+
+  for(let i = 0, j = 0; i < sortedArrA.length && j < sortedArrB.length;) {
+    if(+sortedArrA[i] < +sortedArrB[j]) newArr.push(+sortedArrA[i++])
+    else if(+sortedArrA[i] > +sortedArrB[j]) newArr.push(+sortedArrB[j++])
+    else newArr.push(+sortedArrA[i++])
+  }
+
+  return newArr
+}
+
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
+    console.log("selectedProbes.value from the watcher::: ", selectedProbes.value)
     loadMeasurementOnProbeChange()
-    emit('setSelectedProbes', selectedProbes.value)
+    if(!sortAndCompare(props.probeIDs, selectedProbes.value)) {
+      emit('setSelectedProbes', selectedProbes.value)
+    }
+  }
+})
+
+watch(() => props.probeIDs, (newArr, oldArr) => {
+  if(!sortAndCompare(newArr, oldArr) &&
+    !sortAndCompare(newArr, selectedProbes.value) 
+  ) {
+    selectedProbes.value = newArr
   }
 })
 

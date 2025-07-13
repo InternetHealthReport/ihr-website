@@ -121,6 +121,7 @@ const AtlasApi = {
     // Fetches measurement result chunk by chunk and caches
     const getAndCacheMeasurementDataInChunks = async (measurementId, params = {}) => {
       // Batch measurement result by smaller chunks of probes ids results
+      console.log('This got called with params::: ', params)
 
       let probeList = []
 
@@ -131,6 +132,8 @@ const AtlasApi = {
         // select only N probes from list
         probeList = selectNFromList(probeList, LOAD_INITIAL_PROBES_COUNT)
       } else {
+        // Update this part,
+        // Cache the measurement result by probe ids.
         probeList = params.probe_ids.split(',')
       }
 
