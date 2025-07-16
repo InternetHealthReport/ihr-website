@@ -27,8 +27,11 @@ import BGPLineChart from '@/components/charts/BGPLineChart.vue'
 import BGPMessagesTable from '@/components/tables/BGPMessagesTable.vue'
 import '@/styles/chart.css'
 import Feedback from '@/components/Feedback.vue'
+import { Address6, Address4 } from 'ip-address'
+import report from '@/plugins/report'
 
 const { t } = i18n.global
+const { utcString } = report()
 
 const maxHops = ref(9)
 const isPlaying = ref(false)
@@ -47,8 +50,9 @@ const usedMessagesCount = ref(0) //Just for displaying how many messages are bei
 const asNames = ref({}) // AS Info from asnames.txt file
 const inputDisable = ref(false)
 const isWsDisconnected = ref(false)
+const normalizedPrefix = ref('') // Used to store the normalized prefix to determine the BGP message type
 
-const dataSource = ref('risLive') //'risLive' or 'bgplay'
+const dataSource = ref('ris-live') //'ris-live' or 'bgplay'
 const minTimestamp = ref(Infinity)
 const maxTimestamp = ref(-Infinity)
 
@@ -61,10 +65,12 @@ const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
 const bgPlayInitialState = ref([]) // Used to store the initial state for BGPlay
 const initialStateDataCount = ref(0)
-const timestampIndexMap = new Map()
 const datesTrace = ref([])
 const announcementsTrace = ref([])
 const withdrawalsTrace = ref([])
+let announcementsCount = {}
+let withdrawalsCount = {}
+const uniqueEventTimestamps = new Set()
 
 const params = ref({
   peer: '',
@@ -108,49 +114,57 @@ const resetData = () => {
   minTimestamp.value = Infinity
   maxTimestamp.value = -Infinity
   initialStateDataCount.value = 0
-  timestampIndexMap.clear()
   datesTrace.value = []
   announcementsTrace.value = []
   withdrawalsTrace.value = []
+  announcementsCount = {}
+  withdrawalsCount = {}
+  uniqueEventTimestamps.clear()
 }
 
 // Initialize the route
 const initRoute = () => {
   const query = { ...route.query }
+
   if (route.query.prefix) {
     params.value.prefix = route.query.prefix
+    normalizedPrefix.value = normalizePrefix(route.query.prefix)
   } else {
     query.prefix = params.value.prefix
   }
-  if (route.query.maxHops) {
-    maxHops.value = parseInt(route.query.maxHops)
+  if (route.query['max-hops']) {
+    maxHops.value = parseInt(route.query['max-hops'])
   } else {
-    query.maxHops = maxHops.value
+    query['max-hops'] = maxHops.value
   }
-  if (route.query.rrc) {
-    params.value.host = route.query.rrc
+  if (route.query['data-source']) {
+    dataSource.value = route.query['data-source']
   } else {
-    query.rrc = params.value.host
+    query['data-source'] = dataSource.value
   }
-  if (route.query.dataSource) {
-    dataSource.value = route.query.dataSource
+
+  if (dataSource.value === 'ris-live') {
+    if (route.query.rrc) {
+      params.value.host = route.query.rrc
+    } else {
+      query.rrc = params.value.host
+    }
   } else {
-    query.dataSource = dataSource.value
-  }
-  if (route.query.startTime) {
-    startTime.value = route.query.startTime
-  } else {
-    query.startTime = startTime.value
-  }
-  if (route.query.endTime) {
-    endTime.value = route.query.endTime
-  } else {
-    query.endTime = endTime.value
-  }
-  if (route.query.rrcs) {
-    rrcs.value = route.query.rrcs.split(',').map(Number)
-  } else {
-    query.rrcs = rrcs.value.join(',')
+    if (route.query.rrcs) {
+      rrcs.value = route.query.rrcs.split(',').map(Number)
+    } else {
+      query.rrcs = rrcs.value.join(',')
+    }
+    if (route.query['start-time']) {
+      startTime.value = route.query['start-time']
+    } else {
+      query['start-time'] = startTime.value
+    }
+    if (route.query['end-time']) {
+      endTime.value = route.query['end-time']
+    } else {
+      query['end-time'] = endTime.value
+    }
   }
   router.replace({ query })
 }
@@ -227,7 +241,7 @@ const sendSocketType = (protocol, paramData) => {
 }
 
 const processResData = (data) => {
-  if (dataSource.value === 'risLive') {
+  if (dataSource.value === 'ris-live') {
     data.community = addCommunityAndDescriptions(data.community)
     data.as_info = addASInfo(data.path)
     data.type = addBGPMessageType(data)
@@ -246,8 +260,6 @@ const processResData = (data) => {
     const sources = {}
     const nodes = {}
     const events = []
-
-    generateLineChartData({ timestamp: data.data.query_starttime, type: 'I' }) //To push the start time to the line chart
 
     const query_unix_starttime = timestampToUnix(data.data.query_starttime)
     const query_unix_endtime = timestampToUnix(data.data.query_endtime)
@@ -318,23 +330,46 @@ const processResData = (data) => {
     }
     minTimestamp.value = query_unix_starttime
     rawMessages.value = events
+    generateLineChartTrace()
   }
 }
 
 const generateLineChartData = (event) => {
-  const timestamp = event.timestamp
-  let index = timestampIndexMap.get(timestamp)
+  const timestamp = timestampToUnix(event.timestamp)
+  uniqueEventTimestamps.add(timestamp)
 
-  if (index === undefined) {
-    index = datesTrace.value.length
-    timestampIndexMap.set(timestamp, index)
-    datesTrace.value.push(timestamp)
-  }
   if (event.type === 'A') {
-    announcementsTrace.value[index] = (announcementsTrace.value[index] || 0) + 1
+    announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
   } else if (event.type === 'W') {
-    withdrawalsTrace.value[index] = (withdrawalsTrace.value[index] || 0) + 1
+    withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
   }
+}
+
+const generateLineChartTrace = () => {
+  // Fill gaps to ensure consistent timestamps
+  for (let t = minTimestamp.value; t <= maxTimestamp.value; t += 60) {
+    uniqueEventTimestamps.add(t)
+  }
+
+  const sortedTimestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
+
+  const dTrace = []
+  const aTrace = []
+  const wTrace = []
+
+  for (const t of sortedTimestamps) {
+    dTrace.push(timestampToUTC(t))
+    aTrace.push(announcementsCount[t] ?? 0)
+    wTrace.push(withdrawalsCount[t] ?? 0)
+  }
+
+  datesTrace.value = dTrace
+  announcementsTrace.value = aTrace
+  withdrawalsTrace.value = wTrace
+}
+
+const timestampToUTC = (timestamp) => {
+  return utcString(new Date(timestamp * 1000))
 }
 
 //Automatically select the first 5 peers for displaying the sankey chart
@@ -371,7 +406,7 @@ const addCommunityAndDescriptions = (communityDataArray) => {
 const addASInfo = (asPathArray) => {
   if (!Array.isArray(asPathArray) || asPathArray.length === 0) return []
 
-  const source = dataSource.value === 'risLive' ? asNames.value : bgPlayASNames.value
+  const source = dataSource.value === 'ris-live' ? asNames.value : bgPlayASNames.value
   const seen = new Set()
 
   const result = []
@@ -388,14 +423,32 @@ const addASInfo = (asPathArray) => {
   return result
 }
 
+const normalizePrefix = (prefix) => {
+  const [ip, length] = prefix.split('/')
+  let normalizedIp
+  if (Address4.isValid(ip)) {
+    normalizedIp = new Address4(ip).correctForm()
+  } else if (Address6.isValid(ip)) {
+    normalizedIp = new Address6(ip).correctForm()
+  } else {
+    console.warn(`Invalid prefix: ${prefix}`)
+    normalizedIp = ip // use the original IP if invalid
+  }
+  return length ? `${normalizedIp}/${length}` : normalizedIp
+}
+
 // Determine the BGP message type
 const addBGPMessageType = (data) => {
-  if (dataSource.value === 'risLive') {
-    if (data.announcements[0]?.prefixes.includes(params.value.prefix)) {
-      return 'Announce'
-    } else if (data.withdrawals.includes(params.value.prefix)) {
+  if (dataSource.value === 'ris-live') {
+    const withdrawalSet = new Set(data.withdrawals.map(normalizePrefix))
+    const announcementSet = new Set((data.announcements[0]?.prefixes || []).map(normalizePrefix))
+
+    if (withdrawalSet.has(normalizedPrefix.value)) {
       return 'Withdraw'
+    } else if (announcementSet.has(normalizedPrefix.value)) {
+      return 'Announce'
     } else {
+      console.warn(`Unknown BGP message type:`, data)
       return 'Unknown'
     }
   } else {
@@ -644,16 +697,19 @@ watch(
   [params, maxHops, dataSource, startTime, endTime, rrcs],
   () => {
     const query = {
-      ...route.query,
       prefix: params.value.prefix,
-      maxHops: maxHops.value,
-      rrc: params.value.host,
-      dataSource: dataSource.value,
-      startTime: startTime.value,
-      endTime: endTime.value,
-      rrcs: rrcs.value ? rrcs.value.join(',') : ''
+      'max-hops': maxHops.value,
+      'data-source': dataSource.value
+    }
+    if (dataSource.value === 'ris-live') {
+      query.rrc = params.value.host
+    } else {
+      query['start-time'] = startTime.value
+      query['end-time'] = endTime.value
+      query.rrcs = rrcs.value ? rrcs.value.join(',') : ''
     }
     router.replace({ query })
+    normalizedPrefix.value = normalizePrefix(params.value.prefix)
   },
   { deep: true }
 )
@@ -680,7 +736,7 @@ onMounted(() => {
         <div>
           <QRadio
             v-model="dataSource"
-            val="risLive"
+            val="ris-live"
             label="RisLive"
             :disable="
               isPlaying ||
@@ -728,7 +784,7 @@ onMounted(() => {
               "
             />
             <QSelect
-              v-if="dataSource === 'risLive'"
+              v-if="dataSource === 'ris-live'"
               v-model="params.host"
               filled
               :options="rrcList"
@@ -805,7 +861,7 @@ onMounted(() => {
         </div>
         <div class="row items-center justify-center gap-30">
           <QBtn
-            v-if="dataSource === 'risLive'"
+            v-if="dataSource === 'ris-live'"
             :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
             :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
             :disable="disableButton || params.prefix === ''"
@@ -822,7 +878,7 @@ onMounted(() => {
               !haveRequiredBGPlayParams()
             "
           />
-          <QBtn color="negative" :label="'Reset'" :disable="isPlaying" @click="resetData" />
+          <QBtn color="negative" :label="'Reset'" @click="resetData" />
           <div class="column">
             <span>Displaying Unique Peer messages: {{ filteredMessages.length }}</span>
             <span>Total messages received: {{ rawMessages.length }}</span>
