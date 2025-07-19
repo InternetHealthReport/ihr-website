@@ -212,7 +212,11 @@ const toggleRisProtocol = () => {
   } else if (rrcList.value.length === 0) {
     sendSocketType('request_rrc_list', null) // Request the RRC list called only once
   } else if (isPlaying.value) {
-    sendSocketType('ris_subscribe', params.value)
+    const subscribeParams = {
+      ...params.value,
+      host: rrcList.value.find((rrc) => rrc.value === params.value.host).inputValue
+    }
+    sendSocketType('ris_subscribe', subscribeParams)
   } else {
     socket.value.close()
   }
@@ -220,14 +224,16 @@ const toggleRisProtocol = () => {
 
 // Handle the RRC list (host)
 const handleRRC = (data) => {
-  if (data?.length > 0) {
-    if (route.query.rrc) {
-      params.value.host = route.query.rrc
-    } else {
-      params.value.host = data[0]
+  if (!Array.isArray(data) || data.length === 0) return
+  const rrcListLocations = data.sort().map((rrc) => {
+    const value = parseInt(rrc.match(/\d+/)[0])
+    return {
+      value,
+      label: rrcLocations.value.find((rrc) => rrc.value === value).label,
+      inputValue: rrc
     }
-    rrcList.value = data.sort()
-  }
+  })
+  rrcList.value = rrcListLocations
 }
 
 //Stringify and send the socket type
@@ -526,8 +532,8 @@ const fetchRCCs = async () => {
       rrcLocations.value.push({
         label:
           rcc.multihop === true
-            ? `${rcc.id} - Multihop (${rcc.geographical_location})`
-            : `${rcc.id} - ${rcc.geographical_location}`,
+            ? `${rcc.name} - Multihop (${rcc.geographical_location})`
+            : `${rcc.name} - ${rcc.geographical_location}`,
         value: rcc.id
       })
     })
@@ -720,10 +726,10 @@ watch(isPlaying, () => {
 
 onMounted(() => {
   initRoute()
+  fetchRCCs()
   connectWebSocket()
   fetchAllASInfo()
   fetchGithubFiles()
-  fetchRCCs()
 })
 </script>
 
@@ -789,9 +795,11 @@ onMounted(() => {
               filled
               :options="rrcList"
               label="RRC"
+              emit-value
               :dense="true"
               color="accent"
               :disable="isPlaying || inputDisable"
+              class="optionSelect"
             />
             <QSelect
               filled
@@ -864,7 +872,7 @@ onMounted(() => {
             v-if="dataSource === 'ris-live'"
             :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
             :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
-            :disable="disableButton || params.prefix === ''"
+            :disable="disableButton || params.prefix === '' || params.host === ''"
             @click="toggleConnection"
           />
           <QBtn
@@ -978,6 +986,9 @@ onMounted(() => {
 <style scoped>
 .input {
   width: 200px;
+}
+.optionSelect {
+  width: 100px;
 }
 .gap-30 {
   gap: 30px;
