@@ -32,13 +32,41 @@ const selectedPeersModel = ref(props.selectedPeers)
 const search = ref('')
 
 const columns = ref([
-  { name: 'peer_asn', label: 'Peer ASN', field: 'peer_asn', align: 'left' },
-  { name: 'peer', label: 'Peer', field: 'peer', align: 'left' },
-  { name: 'path', label: 'AS Path', field: 'path', align: 'left' },
-  { name: 'as_info', label: 'AS Info', field: 'as_info', align: 'left' },
-  { name: 'type', label: 'Type', field: 'type', align: 'left' },
-  { name: 'timestamp', label: 'Timestamp', field: 'timestamp', align: 'left' },
-  { name: 'community', label: 'Community', field: 'community', align: 'left' }
+  { name: 'peer_asn', label: 'Peer ASN', field: 'peer_asn', align: 'left', sortable: true },
+  {
+    name: 'peer',
+    label: 'Peer',
+    field: 'peer',
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
+  },
+  {
+    name: 'path',
+    label: 'AS Path',
+    field: 'path',
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
+  },
+  {
+    name: 'as_info',
+    label: 'AS Info',
+    field: 'as_info',
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
+  },
+  { name: 'type', label: 'Type', field: 'type', align: 'left', sortable: true },
+  { name: 'timestamp', label: 'Timestamp', field: 'timestamp', align: 'left', sortable: true },
+  {
+    name: 'community',
+    label: 'Community',
+    field: 'community',
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
+  }
 ])
 
 const timestampToUTC = (timestamp) => {
@@ -55,7 +83,7 @@ watch(
     columns.value = columns.value.filter((col) => col.name !== 'rrc')
     if (props.dataSource === 'bgplay') {
       const index = columns.value.findIndex((col) => col.name === 'type') //to put rrc column before type comumn
-      const rrcColumn = { name: 'rrc', label: 'RRC', field: 'rrc', align: 'left' }
+      const rrcColumn = { name: 'rrc', label: 'RRC', field: 'rrc', align: 'left', sortable: true }
       if (index !== -1) {
         columns.value.splice(index, 0, rrcColumn)
       } else {
