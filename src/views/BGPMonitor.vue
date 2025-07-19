@@ -226,7 +226,7 @@ const toggleRisProtocol = () => {
 const handleRRC = (data) => {
   if (!Array.isArray(data) || data.length === 0) return
   const rrcListLocations = data.sort().map((rrc) => {
-    const value = parseInt(rrc.match(/\d+/)[0])
+    const value = parseInt(rrc.match(/\d+/)[0], 10)
     return {
       value,
       label: rrcLocations.value.find((rrc) => rrc.value === value).label,
