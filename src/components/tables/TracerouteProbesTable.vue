@@ -79,22 +79,7 @@ watch(selectedProbesModel, () => {
     placeholder="Search..."
     @input="emit('loadMeasurementOnSearchQuery')"
   />
-  <QTable :rows="paginatedProbes" :columns="columns" row-key="probe" flat>
-    <template #header="props">
-      <QTr :props="props">
-        <QTd v-for="col in props.cols" :key="col.name" :props="props.colProps">
-          <template v-if="col.name === 'probe'">
-            <QCheckbox
-              v-model="selectAllProbes"
-              @update:model-value="toggleSelectAll"
-            />
-          </template>
-          <template v-else>
-            {{ col.label }}
-          </template>
-        </QTd>
-      </QTr>
-    </template>
+  <QTable :rows="paginatedProbes" :columns="columns" row-key="probe" selection="multiple">
     <template #body="props">
       <QTr :props="props">
         <QTd>

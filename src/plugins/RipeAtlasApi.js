@@ -76,7 +76,7 @@ const AtlasApi = {
     }
 
     const getProbesByIds = async (probeIds = null, measurementID) => {
-      if (probeIds == null || probeIds.length == 0) return null
+      if (probeIds == null || probeIds.length == 0) return []
 
       let probesChunks = splitListToChunks(probeIds, 10)
 
@@ -133,77 +133,40 @@ const AtlasApi = {
         probeList = await getProbesByMeasurementId(measurementId)
         // select only N probes from list
         probeList = selectNFromList(probeList, LOAD_INITIAL_PROBES_COUNT)
-
-        let probeChunksList = splitListToChunks(probeList).map((list) => list.join(','))
-
-        return await cache(
-          url,
-          async () => {
-            // fetcher function: defines how to fetch data in chunks
-            return await Promise.all(
-              probeChunksList.reduce((result, probesChunk) => {
-                const currentParams = {
-                  ...params,
-                  probe_ids: probesChunk
-                }
-                result.push(
-                  axios_base.get(url, {
-                    params: currentParams
-                  })
-                )
-
-                return result
-              }, [])
-            )
-          },
-          {
-            storageAllowed: storageAllowed ? storageAllowed : false
-          },
-          // combinator function: defines how to combine the responses
-          (resolvedPromisesList) => {
-            return resolvedPromisesList.reduce((result, response) => {
-              response.data.forEach((hopData) => {
-                result.push(hopData)
-              })
-
-              return result
-            }, [])
-          }
-        )
       } else {
         // Cache the measurement result by probe ids.
         probeList = params.probe_ids.split(',')
-        let paramsList = probeList.map((probe) => {
-          return {
-            ...params,
-            probe_ids: [probe]
-          }
-        })
-        const responseArray = await Promise.all(
-          paramsList.map(async (param) => {
-            return await cache(
-              `${url}_${JSON.stringify(param)}`,
-              async () => {
-                // fetcher function: defines how to fetch data in chunks
-                return await axios_base.get(url, {
-                  params
-                })
-              },
-              {
-                storageAllowed: storageAllowed ? storageAllowed : false
-              }
-            )
-          })
-        )
-
-        return responseArray.reduce((result, item) => {
-          item.data.forEach((hopData) => {
-            result.push(hopData)
-          })
-
-          return result
-        }, [])
       }
+      let paramsList = probeList.map((probe) => {
+        return {
+          ...params,
+          probe_ids: probe
+        }
+      })
+      const responseArray = await Promise.all(
+        paramsList.map(async (param) => {
+          return await cache(
+            `${url}_${JSON.stringify(param)}`,
+            async () => {
+              // fetcher function: defines how to fetch data in chunks
+              return await axios_base.get(url, {
+                params: param
+              })
+            },
+            {
+              storageAllowed: storageAllowed ? storageAllowed : false
+            }
+          )
+        })
+      )
+
+      return responseArray.reduce((result, item) => {
+        item.data.forEach((hopData) => {
+          result.push(hopData)
+        })
+
+        return result
+      }, [])
     }
 
     const atlas_api = {

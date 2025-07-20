@@ -118,17 +118,15 @@ const processData = async (tracerouteData, loadProbes = false) => {
       }
     }
 
-    if (
-      (!props.destinationIPs ||
-        props.destinationIPs.length === 0 ||
-        props.destinationIPs.includes(probeData.dst_addr)) &&
-      !allDestinations.value.includes(probeData.dst_addr)
-    ) {
+    if(!allDestinations.value.includes(probeData.dst_addr)) 
       allDestinations.value.push(probeData.dst_addr)
-      if (!nodes.value[probeData.dst_addr]) {
-        nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
-      }
-    }
+    // if (!nodes.value[probeData.dst_addr]) {
+    //   nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
+    // }
+
+    if(!(selectedDestinations.value.length == 0 ||
+       selectedDestinations.value.includes(probeData.dst_addr)))
+      return; 
 
     probeData.result.forEach((hopData, hopIndex) => {
       hopData.result.forEach((result, resultIndex) => {
@@ -352,7 +350,7 @@ const loadMeasurementData = async (loadProbes = false) => {
         allProbes.value = []
         // selectedProbes.value = []
         allDestinations.value = []
-        selectedDestinations.value = []
+        // selectedDestinations.value = []
       }
 
       const params = {}
@@ -370,13 +368,14 @@ const loadMeasurementData = async (loadProbes = false) => {
       console.log("loadProbes::: ", loadProbes)
       const data = await atlas_api.getAndCacheMeasurementDataInChunks(measurementID.value, params)
 
-      const filteredData = data.filter(
-        (item) =>
-          selectedDestinations.value.length === 0 ||
-          selectedDestinations.value.includes(item.dst_addr)
-      )
+      // const filteredData = data.filter(
+      //   (item) =>
+      //     selectedDestinations.value.length === 0
+      //     //  ||
+      //     // selectedDestinations.value.includes(item.dst_addr)
+      // )
 
-      processData(filteredData, loadProbes)
+      processData(data, loadProbes)
     } catch (error) {
       console.error('Failed to load measurement data:', error)
     } finally {
