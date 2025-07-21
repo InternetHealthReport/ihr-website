@@ -145,7 +145,7 @@ const initRoute = () => {
 
   if (dataSource.value === 'ris-live') {
     if (route.query.rrc) {
-      params.value.host = route.query.rrc
+      params.value.host = Number(route.query.rrc)
     } else {
       query.rrc = params.value.host
     }
