@@ -1,9 +1,12 @@
 <script setup>
-import { QSpinner, QMarkupTable } from 'quasar'
+import { QSpinner, QMarkupTable, QCard, QCardSection, QCheckbox } from 'quasar'
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject, watch, onMounted } from 'vue'
 import '@/styles/chart.css'
+import { LMap, LTileLayer, LControl, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
+import 'leaflet/dist/leaflet.css'
+import { Country }  from 'country-state-city'
 
 const iyp_api = inject('iyp_api')
 
@@ -24,6 +27,7 @@ const route = useRoute()
 
 const references = ref(REFERENCES)
 const loading = ref(3)
+const loadingMap = ref(3)
 const queries = ref([
   {
     data: [],
@@ -55,8 +59,28 @@ const queries = ref([
       OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       RETURN a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS as_name, nb_domains`
-  }
+  },
+  {
+    data: [],
+    query: `MATCH (p:Point)-[:LOCATED_IN]-(f:Facility)-[:COUNTRY]-(:Country {country_code: $cc})
+      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, f.name AS name`
+  },
+  {
+    data: [],
+    query: `MATCH (p:Point)-[:LOCATED_IN]-(a:AtlasProbe)-[:COUNTRY]-(:Country {country_code: $cc})
+      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, a.id AS id, a.description AS description`
+  },
+  {
+    data: [],
+    query: `MATCH (p:Point)-[:LOCATED_IN]-(o:Organization)-[:COUNTRY]-(:Country {country_code: $cc})
+      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, o.name AS name`
+  },
 ])
+const zoom = ref(5)
+const countryInfo = ref(Country.getCountryByCode(props.countryCode))
+const facilitiesPoints = ref(false)
+const atlasProbePoints = ref(false)
+const organizationPoints = ref(false)
 
 const fetchData = async (cc) => {
   let params = { cc: cc.toUpperCase() }
@@ -73,6 +97,27 @@ const fetchData = async (cc) => {
   iyp_api.run([{ statement: queries.value[2].query, parameters: params }]).then((results) => {
     queries.value[2].data = results[0]
     loading.value -= 1
+  })
+}
+
+const fetchMapData = async (cc) => {
+  let params = { cc: cc.toUpperCase() }
+  iyp_api.run([{ statement: queries.value[3].query, parameters: params }]).then((results) => {
+    queries.value[3].data = results[0]
+    loadingMap.value -= 1
+    facilitiesPoints.value = true
+  })
+
+  iyp_api.run([{ statement: queries.value[4].query, parameters: params }]).then((results) => {
+    queries.value[4].data = results[0]
+    loadingMap.value -= 1
+    atlasProbePoints.value = true
+  })
+
+  iyp_api.run([{ statement: queries.value[5].query, parameters: params }]).then((results) => {
+    queries.value[5].data = results[0]
+    loadingMap.value -= 1
+    organizationPoints.value = true
   })
 }
 
@@ -101,11 +146,13 @@ watch(
       query.data = []
     })
     fetchData(props.countryCode)
+    fetchMapData(props.countryCode)
   }
 )
 
 onMounted(() => {
   fetchData(props.countryCode)
+  fetchMapData(props.countryCode)
 })
 </script>
 
@@ -215,6 +262,47 @@ onMounted(() => {
                 </a>
               </div>
             </div>
+          </td>
+        </tr>
+      </tbody>
+    </QMarkupTable>
+    <br />
+    <QMarkupTable separator="horizontal">
+      <thead>
+        <tr>
+          <th class="text-left">Map</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="height: 600px;">
+            <LMap v-model="zoom" v-model:zoom="zoom" :center="[countryInfo.latitude, countryInfo.longitude]" :use-global-leaflet="false">
+              <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap"></LTileLayer>
+              <LControl>
+                <QCard>
+                  <QCardSection>
+                    <div>
+                      <QCheckbox v-model="organizationPoints" label="Organizations" />
+                    </div>
+                    <div>
+                      <QCheckbox v-model="facilitiesPoints" label="Facilities" />
+                    </div>
+                    <div>
+                      <QCheckbox v-model="atlasProbePoints" label="Atlas Probes" />
+                    </div>
+                  </QCardSection>
+                </QCard>
+              </LControl>
+              <LMarker v-if="facilitiesPoints" v-for="(item, index) in queries[3].data" :key="index" :lat-lng="[item.latitude, item.longitude]">
+                <LPopup>{{ item.name }}</LPopup>
+              </LMarker>
+              <LMarker v-if="atlasProbePoints" v-for="(item, index) in queries[4].data" :key="index" :lat-lng="[item.latitude, item.longitude]">
+                <LPopup>{{ item.id }} - {{ item.description }}</LPopup>
+              </LMarker>
+              <LMarker v-if="organizationPoints" v-for="(item, index) in queries[5].data" :key="index" :lat-lng="[item.latitude, item.longitude]">
+                <LPopup>{{ item.name }}</LPopup>
+              </LMarker>
+            </LMap>
           </td>
         </tr>
       </tbody>
