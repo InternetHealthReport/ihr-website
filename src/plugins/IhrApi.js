@@ -24,6 +24,7 @@ import {
 
 /// Base url for api
 const IHR_API_BASE = 'https://ihr.iijlab.net/ihr/api/'
+// const IHR_API_BASE = 'https://www.ihr.live/api-dev/' // New API; See TODO in IhrQuert.js line 108
 /// Default timeout before api call are considered failed
 const DEFAULT_TIMEOUT = 180000
 /// Data of the first available data

@@ -105,6 +105,7 @@ class QueryBase {
 /** @brief all allowed filters in ihr-api
  */
 class Query extends QueryBase {
+  // TODO: replace `dictionary = { format: 'json' }` with `dictionary = { }` for new API
   constructor(dictionary = { format: 'json' }) {
     super()
     this.filter = dictionary
