@@ -7,7 +7,7 @@ import TracerouteChart from '@/components/charts/TracerouteChart.vue'
 import TracerouteRttChart from '@/components/charts/TracerouteRttChart.vue'
 import TracerouteProbesTable from '@/components/tables/TracerouteProbesTable.vue'
 import TracerouteDestinationsTable from '@/components/tables/TracerouteDestinationsTable.vue'
-import { convertUnixTimestamp, isPrivateIP, calculateMedian } from '../plugins/tracerouteFunctions'
+import { isPrivateIP, calculateMedian } from '../plugins/tracerouteFunctions'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const props = defineProps({
@@ -32,8 +32,8 @@ const measurementID = ref('')
 const nodes = ref({})
 const edges = ref({})
 const timeRange = ref({ disable: true })
-const leftLabelValue = ref('')
-const rightLabelValue = ref('')
+const rttChartLeftTimestamp = ref(0)
+const rttChartRightTimestamp = ref(0)
 const nodeSize = 15
 const selectedProbes = ref([])
 const allProbes = ref([])
@@ -54,6 +54,9 @@ const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 
+// re-emitting events from children to grand parent
+const emit = defineEmits(['setSelectedDestinations', 'setSelectedProbes', 'probesOverflow'])
+
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
   loadMeasurementErrorDialog.value = true
@@ -67,6 +70,22 @@ const processData = async (tracerouteData, loadProbes = false) => {
   const nonResponsiveNodes = new Set()
   const outgoingEdges = new Map()
   let highestMedianRtt = 0
+
+  allProbes.value = allProbes.value.length == 0 ? await atlas_api.getProbesByMeasurementId(measurementID.value) : allProbes.value
+  atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value).then((data) => {
+            data.forEach(x => {
+                probeDetailsMap.value[x.id.toString()] = x
+              })
+            })
+  atlas_api.getProbesByIds(selectedProbes.value, measurementID.value).then((data) => {
+            data.forEach(x => {
+                probeDetailsMap.value[x.id.toString()] = x
+              })
+            })
+
+  if(allProbes.value.length > 1000) emit('probesOverflow', true)
+  else emit('probesOverflow', false)
+  
 
   tracerouteData.forEach((probeData, probeIndex) => {
     if (probeData.result[0].error) {
@@ -89,31 +108,25 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     if (loadProbes) {
       if (
-        (!props.probeIDs ||
+        ((!props.probeIDs ||
           props.probeIDs.length === 0 ||
-          props.probeIDs.includes(probeData.prb_id.toString())) &&
-        !allProbes.value.includes(probeData.prb_id.toString())
+          props.probeIDs.includes(probeData.prb_id.toString()))
+          && !(selectedProbes.value.includes(probeData.prb_id.toString()))
+        )
       ) {
-        allProbes.value.push(probeData.prb_id.toString())
         selectedProbes.value.push(probeData.prb_id.toString())
-        atlas_api.getProbeById(probeData.prb_id.toString()).then((data) => {
-          probeDetailsMap.value[probeData.prb_id.toString()] = data.data
-        })
       }
     }
 
-    if (
-      (!props.destinationIPs ||
-        props.destinationIPs.length === 0 ||
-        props.destinationIPs.includes(probeData.dst_addr)) &&
-      !allDestinations.value.includes(probeData.dst_addr)
-    ) {
+    if(!allDestinations.value.includes(probeData.dst_addr)) 
       allDestinations.value.push(probeData.dst_addr)
-      if (!nodes.value[probeData.dst_addr]) {
-        nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
-      }
-      selectedDestinations.value.push(probeData.dst_addr)
-    }
+    // if (!nodes.value[probeData.dst_addr]) {
+    //   nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
+    // }
+
+    if(!(selectedDestinations.value.length == 0 ||
+       selectedDestinations.value.includes(probeData.dst_addr)))
+      return; 
 
     probeData.result.forEach((hopData, hopIndex) => {
       hopData.result.forEach((result, resultIndex) => {
@@ -271,9 +284,10 @@ const loadMeasurement = async () => {
 
   metaData.value = {}
   timeRange.value = { disable: true }
-  leftLabelValue.value = ''
-  rightLabelValue.value = ''
+  rttChartLeftTimestamp.value = 0
+  rttChartRightTimestamp.value = 0
 
+  console.log("selectedProbes.value in loadMeasurement::: ", selectedProbes.value)
   selectedProbes.value = []
   allProbes.value = []
   probeDetailsMap.value = {}
@@ -298,18 +312,18 @@ const loadMeasurement = async () => {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
 
-      let startTime = fetchedMetaData.start_time
-      const stopTime = fetchedMetaData.stop_time
+      let startTime = metaData.value.start_time
+      const stopTime = metaData.value.stop_time
 
-      if (stopTime - startTime > 24 * 3600) {
-        startTime = stopTime - 24 * 3600
-      }
+      // Fetch last 5 measurements
+      const shortenedDurationStartTime = stopTime - 5*metaData.value["interval"]
+      startTime = shortenedDurationStartTime > 0? shortenedDurationStartTime: startTime 
 
       timeRange.value.min = startTime
       timeRange.value.max = stopTime
 
-      leftLabelValue.value = convertUnixTimestamp(startTime)
-      rightLabelValue.value = convertUnixTimestamp(stopTime)
+      rttChartLeftTimestamp.value = startTime
+      rttChartRightTimestamp.value = stopTime
 
       timeRange.value.disable = false
 
@@ -334,31 +348,34 @@ const loadMeasurementData = async (loadProbes = false) => {
     try {
       if (loadProbes) {
         allProbes.value = []
-        selectedProbes.value = []
+        // selectedProbes.value = []
         allDestinations.value = []
-        selectedDestinations.value = []
+        // selectedDestinations.value = []
       }
 
       const params = {}
 
       if (!timeRange.value.disable) {
-        params.start_time = timeRange.value.min
-        params.stop_time = timeRange.value.max
+        params.start = timeRange.value.min
+        params.stop = timeRange.value.max
       }
 
       if (selectedProbes.value.length > 0) {
         params.probe_ids = selectedProbes.value.join(',')
       }
+      
+      console.log("selectedProbes.value in load measurement data::: ", selectedProbes.value)
+      console.log("loadProbes::: ", loadProbes)
+      const data = await atlas_api.getAndCacheMeasurementDataInChunks(measurementID.value, params)
 
-      const data = (await atlas_api.getMeasurementData(measurementID.value, params)).data
+      // const filteredData = data.filter(
+      //   (item) =>
+      //     selectedDestinations.value.length === 0
+      //     //  ||
+      //     // selectedDestinations.value.includes(item.dst_addr)
+      // )
 
-      const filteredData = data.filter(
-        (item) =>
-          selectedDestinations.value.length === 0 ||
-          selectedDestinations.value.includes(item.dst_addr)
-      )
-
-      processData(filteredData, loadProbes)
+      processData(data, loadProbes)
     } catch (error) {
       console.error('Failed to load measurement data:', error)
     } finally {
@@ -378,8 +395,12 @@ const debounce = (func, wait) => {
 }
 
 const loadMeasurementOnTimeRange = debounce((e) => {
-  leftLabelValue.value = convertUnixTimestamp(e.min)
-  rightLabelValue.value = convertUnixTimestamp(e.max)
+  rttChartLeftTimestamp.value = e.min
+  rttChartRightTimestamp.value = e.max
+
+  // On slider update, update the measurement data
+  timeRange.value.min = e.min
+  timeRange.value.max = e.max
   loadMeasurementData()
 }, 3000)
 
@@ -395,9 +416,56 @@ const loadMeasurementOnSearchQuery = debounce(() => {
   loadMeasurementData()
 }, 1000)
 
+const sortAndCompare = (arrA, arrB) => {
+  if(arrA.length !== arrB.length) return false
+
+  const N = arrA.length
+  const compareFunc = (a, b) => +a - +b
+  const sortedArrA = arrA.sort(compareFunc)
+  const sortedArrB = arrB.sort(compareFunc)
+
+  for(let i = 0; i < N; i++) {
+    if(sortedArrA[i] !== sortedArrB[i]) return false
+  }
+
+  return true
+}
+
+// First array should be bigger
+const mergeArrays = (arrA, arrB) => {
+
+  if(arrA.length < arrB.length) mergeArrays(arrB, arrA)
+
+  const compareFunc = (a, b) => +a - +b
+  const sortedArrA = arrA.sort(compareFunc)
+  const sortedArrB = arrB.sort(compareFunc)
+
+  const newArr = []
+
+  for(let i = 0, j = 0; i < sortedArrA.length && j < sortedArrB.length;) {
+    if(+sortedArrA[i] < +sortedArrB[j]) newArr.push(+sortedArrA[i++])
+    else if(+sortedArrA[i] > +sortedArrB[j]) newArr.push(+sortedArrB[j++])
+    else newArr.push(+sortedArrA[i++])
+  }
+
+  return newArr
+}
+
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
+    console.log("selectedProbes.value from the watcher::: ", selectedProbes.value)
     loadMeasurementOnProbeChange()
+    if(!sortAndCompare(props.probeIDs, selectedProbes.value)) {
+      emit('setSelectedProbes', selectedProbes.value)
+    }
+  }
+})
+
+watch(() => props.probeIDs, (newArr, oldArr) => {
+  if(!sortAndCompare(newArr, oldArr) &&
+    !sortAndCompare(newArr, selectedProbes.value) 
+  ) {
+    selectedProbes.value = newArr
   }
 })
 
@@ -410,6 +478,7 @@ watchEffect(() => {
 watchEffect(() => {
   if (selectedDestinations.value.length > 0) {
     loadMeasurementOnDestinationChange()
+      emit('setSelectedDestinations', selectedDestinations.value)
   }
 })
 
@@ -464,8 +533,8 @@ watch(
           :interval-value="intervalValue"
           :time-range="timeRange"
           :meta-data="metaData"
-          :left-label-value="leftLabelValue"
-          :right-label-value="rightLabelValue"
+          :left-timestamp="rttChartLeftTimestamp"
+          :right-timestamp="rttChartRightTimestamp"
           :rtt-over-time="rttOverTime"
           @load-measurement-on-time-range="loadMeasurementOnTimeRange"
         />
