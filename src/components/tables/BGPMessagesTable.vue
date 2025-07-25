@@ -1,6 +1,6 @@
 <script setup>
 import { QBtn, QTable, QInput, QIcon, QTd } from 'quasar'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, watch } from 'vue'
 import report from '@/plugins/report'
 import Tr from '@/i18n/translation'
 
@@ -13,14 +13,14 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  bgpMessageType: {
-    type: Function
-  },
   isLiveMode: {
     type: Boolean
   },
   isPlaying: {
     type: Boolean
+  },
+  dataSource: {
+    type: String
   }
 })
 
@@ -30,49 +30,42 @@ const emit = defineEmits(['enable-live-mode', 'update-selected-peers'])
 
 const selectedPeersModel = ref(props.selectedPeers)
 const search = ref('')
+
 const columns = ref([
-  {
-    name: 'peer_asn',
-    required: true,
-    label: 'Peer ASN',
-    align: 'left',
-    field: 'peer_asn'
-  },
+  { name: 'peer_asn', label: 'Peer ASN', field: 'peer_asn', align: 'left', sortable: true },
   {
     name: 'peer',
-    align: 'left',
     label: 'Peer',
-    field: 'peer'
+    field: 'peer',
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
   },
   {
     name: 'path',
     label: 'AS Path',
     field: 'path',
-    align: 'left'
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
   },
   {
     name: 'as_info',
     label: 'AS Info',
     field: 'as_info',
-    align: 'left'
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
   },
-  {
-    name: 'type',
-    label: 'Type',
-    field: 'type',
-    align: 'left'
-  },
-  {
-    name: 'timestamp',
-    label: 'Timestamp',
-    field: 'timestamp',
-    align: 'left'
-  },
+  { name: 'type', label: 'Type', field: 'type', align: 'left', sortable: true },
+  { name: 'timestamp', label: 'Timestamp', field: 'timestamp', align: 'left', sortable: true },
   {
     name: 'community',
     label: 'Community',
     field: 'community',
-    align: 'left'
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
   }
 ])
 
@@ -84,24 +77,20 @@ const enableLiveMode = () => {
   emit('enable-live-mode')
 }
 
-const rows = computed(() =>
-  props.filteredMessages.map((message) => ({
-    peer_asn: message.peer_asn,
-    peer: message.peer,
-    path: message.path?.length > 0 ? message.path : null,
-    as_info:
-      message.as_info?.length > 0
-        ? message.as_info
-            .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
-            .join('\n')
-        : 'Null',
-    type: props.bgpMessageType(message),
-    timestamp: timestampToUTC(message.floor_timestamp),
-    community:
-      message.community?.length > 0
-        ? message.community.map((c) => `${c.community}, AS${c.comm_1}-${c.description}`).join('\n')
-        : 'Null'
-  }))
+watch(
+  () => props.dataSource,
+  () => {
+    columns.value = columns.value.filter((col) => col.name !== 'rrc')
+    if (props.dataSource === 'bgplay') {
+      const index = columns.value.findIndex((col) => col.name === 'type') //to put rrc column before type comumn
+      const rrcColumn = { name: 'rrc', label: 'RRC', field: 'rrc', align: 'left', sortable: true }
+      if (index !== -1) {
+        columns.value.splice(index, 0, rrcColumn)
+      } else {
+        columns.value.push(rrcColumn)
+      }
+    }
+  }
 )
 
 watch(
@@ -120,13 +109,13 @@ watch(selectedPeersModel, () => {
   <QTable
     v-model:selected="selectedPeersModel"
     flat
-    :rows="rows"
+    :rows="props.filteredMessages"
     :columns="columns"
     :filter="search"
     row-key="peer"
     selection="multiple"
   >
-    <template v-if="props.filteredMessages.length !== 0" #top-left>
+    <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'ris-live'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </template>
@@ -150,40 +139,56 @@ watch(selectedPeersModel, () => {
     <template #body-cell-path="props">
       <QTd :props="props">
         <span class="asn-list">
-          <template v-if="props.row.path">
-            <span v-for="(asn, index) in props.row.path" :key="index">
-              <RouterLink
-                :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${asn}` } })"
-                target="_blank"
-              >
-                {{ asn }}
-              </RouterLink>
-              <span v-if="index < props.row.path.length - 1">&nbsp;</span>
-            </span>
+          <template v-if="props.row.path?.length">
+            <RouterLink
+              v-for="(asn, index) in props.row.path"
+              :key="index"
+              :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${asn}` } })"
+              target="_blank"
+            >
+              {{ asn + (index < props.row.path.length - 1 ? ',' : '') }}
+            </RouterLink>
           </template>
-          <template v-else> Null </template>
+          <template v-else>Null</template>
         </span>
       </QTd>
     </template>
     <template #body-cell-as_info="props">
       <QTd :props="props">
-        <pre>{{ props.row.as_info }}</pre>
+        <template v-if="props.row.as_info.length > 0">
+          <pre>{{
+            props.row.as_info
+              .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
+              .join('\n')
+          }}</pre>
+        </template>
+        <template v-else>Null</template>
       </QTd>
+    </template>
+    <template #body-cell-timestamp="props">
+      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.timestamp) }}</QTd>
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
-        <pre>{{ props.row.community }}</pre>
+        <template v-if="props.row.community.length > 0">
+          <pre>{{
+            props.row.community
+              .map((c) => `${c.community}, AS${c.comm_1}-${c.description}`)
+              .join('\n')
+          }}</pre>
+        </template>
+        <template v-else> Null </template>
       </QTd>
     </template>
   </QTable>
 </template>
 
-<style>
+<style scoped>
 .asn-list {
-  display: inline-flex;
-  flex-wrap: nowrap;
+  display: flex;
+  gap: 5px;
 }
-.asn-list > span {
-  display: inline;
+.nowrap {
+  white-space: nowrap !important;
 }
 </style>

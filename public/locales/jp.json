@@ -28,7 +28,7 @@
     },
     "bgpMonitor": {
       "name": "BGP Monitor",
-      "summary": "Real Time BGP Monitor"
+      "summary": "Monitor Real-Time and Past BGP events"
     },
     "globalReport": {
       "name": "Global",
@@ -1180,11 +1180,11 @@
     }
   },
   "bgpMessagesTable": {
-    "title": "RIS Live BGP messages",
-    "subTitle": "RIS Live",
+    "title": "BGP Messages",
+    "subTitle": "RIS Live / BGPlay",
     "info": {
-      "title": "RIS Live BGP messages",
-      "description": "<p><strong>Routing Information Service Live (RIS Live)</strong></p><p>This tool internally uses 'RIS Live' to obtain live BGP updates. RIS Live is a feed that offers BGP messages in real-time. It collects information from the RIS Route Collectors (RRCs) and uses a WebSocket JSON API to monitor and detect routing events around the world.</p><p><strong>Messages Table</strong></p><p>The messages table contains data received from the RIS Live WebSocket and other external datasets, including 'AS Info' and 'BGP communities.' Only unique peers are displayed, and peers are continuously updated with new data. To view older BGP messages, use the timestamp slider. By default, the first 5 peers are selected to display the AS paths in the Sankey chart.</p><p>For more details, see <a href='https://ris-live.ripe.net/'>RIS Live</a>.</p>"
+      "title": "BGP Messages",
+      "description": "<p><strong>Data Sources</strong></p><p>This tool internally uses 'RIS Live' and 'BGPlay' to obtain BGP data.</p><p><strong>BGPLay</strong></p><p>The BGPlay API returns BGP updates observed for a resource over a specified period of time.</p><p><strong>Routing Information Service Live (RIS Live)</strong></p><p>RIS Live is a feed that offers BGP messages in real-time. It collects information from the RIS Route Collectors (RRCs) and uses a WebSocket JSON API to monitor and detect routing events around the world.</p><p><strong>Messages Table</strong></p><p>The messages table contains data received from the RIS Live WebSocket or BGPlay API and other external datasets, including 'AS Info' and 'BGP communities.' Only unique peers are displayed, and peers are continuously updated with new data. To view older BGP messages, use the timestamp slider. By default, the first 5 peers are selected to display the AS paths in the Sankey chart.</p><p>For more details, see <a href='https://ris-live.ripe.net/'>RIS Live</a>, <a href='https://stat.ripe.net/docs/02.data-api/bgplay.html'>BGPlay</a>.</p>"
     }
   },
   "tracerouteMonitorChart": {

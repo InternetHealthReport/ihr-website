@@ -15,9 +15,6 @@ const props = defineProps({
   maxHops: {
     type: Number
   },
-  bgpMessageType: {
-    type: Function
-  },
   usedMessagesCount: {
     type: Number
   },
@@ -26,6 +23,30 @@ const props = defineProps({
   },
   isPlaying: {
     type: Boolean
+  },
+  isLoadingBgplayData: {
+    type: Boolean
+  },
+  dataSource: {
+    type: String
+  },
+  minTimestamp: {
+    type: Number
+  },
+  maxTimestamp: {
+    type: Number
+  },
+  datesTrace: {
+    type: Array,
+    default: () => []
+  },
+  announcementsTrace: {
+    type: Array,
+    default: () => []
+  },
+  withdrawalsTrace: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -45,29 +66,35 @@ const sliderWidthInit = ref(false)
 
 // Generate the stacked line chart data for the Plotly chart
 const generateLineChartData = async (message) => {
-  const timestamp = message.floor_timestamp
-  const dates = []
-  const announcementsTrace = []
-  const withdrawalsTrace = []
-  //count no of messages based on type
-  if (props.bgpMessageType(message) === 'Announce') {
-    if (!announcementsCount.value[timestamp]) {
-      announcementsCount.value[timestamp] = 0
+  let dates = []
+  let announcementsTrace = []
+  let withdrawalsTrace = []
+  if (props.dataSource === 'ris-live') {
+    const timestamp = message.timestamp
+    //count no of messages based on type
+    if (message.type === 'Announce') {
+      if (!announcementsCount.value[timestamp]) {
+        announcementsCount.value[timestamp] = 0
+      }
+      announcementsCount.value[timestamp]++
+    } else if (message.type === 'Withdraw') {
+      if (!withdrawalsCount.value[timestamp]) {
+        withdrawalsCount.value[timestamp] = 0
+      }
+      withdrawalsCount.value[timestamp]++
     }
-    announcementsCount.value[timestamp]++
-  } else if (props.bgpMessageType(message) === 'Withdraw') {
-    if (!withdrawalsCount.value[timestamp]) {
-      withdrawalsCount.value[timestamp] = 0
+    // Generate complete timestamps
+    for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
+      dates.push(timestampToUTC(t))
+      announcementsTrace.push(announcementsCount.value[t] || 0)
+      withdrawalsTrace.push(withdrawalsCount.value[t] || 0)
     }
-    withdrawalsCount.value[timestamp]++
+  } else {
+    dates = props.datesTrace
+    announcementsTrace = props.announcementsTrace
+    withdrawalsTrace = props.withdrawalsTrace
   }
-  // Generate complete timestamps
-  for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
-    dates.push(timestampToUTC(t))
-    announcementsTrace.push(announcementsCount.value[t] || 0)
-    withdrawalsTrace.push(withdrawalsCount.value[t] || 0)
-  }
-  // Update chart data for announcements
+  // Update chart data for announcements and withdrawals
   return {
     dates: dates,
     announcementsTrace: announcementsTrace,
@@ -79,18 +106,24 @@ const timestampToUTC = (timestamp) => {
   return utcString(new Date(timestamp * 1000))
 }
 
-// Update the time range based on the timestamp of the message
+// Update the time range
 const updateTimeRange = (timestamp) => {
-  if (timestamp) {
-    if (timestamp < minTimestamp.value) {
-      minTimestamp.value = timestamp
+  if (props.dataSource === 'ris-live') {
+    if (timestamp) {
+      if (timestamp < minTimestamp.value) {
+        minTimestamp.value = timestamp
+      }
+      if (timestamp > maxTimestamp.value) {
+        maxTimestamp.value = timestamp
+      }
     }
-    if (timestamp > maxTimestamp.value) {
-      maxTimestamp.value = timestamp
+    if (props.isLiveMode) {
+      selectedMaxTimestamp.value = maxTimestamp.value
     }
-  }
-  if (props.isLiveMode) {
-    selectedMaxTimestamp.value = maxTimestamp.value
+  } else {
+    minTimestamp.value = props.minTimestamp
+    maxTimestamp.value = props.maxTimestamp
+    selectedMaxTimestamp.value = props.minTimestamp
   }
 }
 
@@ -99,20 +132,26 @@ const renderChart = (dates, announcementsTrace, withdrawalsTrace) => {
     {
       x: dates,
       y: withdrawalsTrace,
-      type: 'scatter',
-      mode: 'none',
-      name: 'Withdrawals',
+      type: 'scattergl',
+      mode: 'markers',
+      fill: 'tozeroy',
       fillcolor: 'rgba(255, 127, 14, 0.5)',
-      stackgroup: 'one'
+      marker: {
+        color: 'rgba(255, 127, 14, 0.5)'
+      },
+      name: 'Withdrawals'
     },
     {
       x: dates,
       y: announcementsTrace,
-      type: 'scatter',
-      mode: 'none',
-      name: 'Announcements',
+      type: 'scattergl',
+      fill: 'tozeroy',
       fillcolor: 'rgba(31, 119, 180, 0.5)',
-      stackgroup: 'one'
+      marker: {
+        color: 'rgba(31, 119, 180, 0.5)'
+      },
+      mode: 'markers',
+      name: 'Announcements'
     }
   ]
 
@@ -142,9 +181,7 @@ const handlePlotlyClick = (event) => {
   if (point) {
     const timestamp = Math.floor(new Date(point.x + 'Z').getTime() / 1000)
     selectedMaxTimestamp.value = timestamp
-    emit('disable-live-mode')
-    addVerticalLine(timestamp)
-    emit('setSelectedMaxTimestamp', timestamp)
+    updateSlider(timestamp)
   }
 }
 
@@ -200,12 +237,15 @@ const init = async () => {
     sliderWidthInit.value = false
   }
   if (props.rawMessages && props.rawMessages.length > 0) {
-    updateTimeRange(props.rawMessages.at(-1).floor_timestamp)
+    updateTimeRange(props.rawMessages.at(-1).timestamp)
     const { dates, announcementsTrace, withdrawalsTrace } = await generateLineChartData(
       props.rawMessages.at(-1)
     )
     renderChart(dates, announcementsTrace, withdrawalsTrace)
     adjustQSliderWidth(false)
+    if (props.dataSource === 'bgplay') {
+      updateSlider(selectedMaxTimestamp.value)
+    }
   }
 }
 
@@ -228,20 +268,31 @@ watch(
   }
 )
 
+watch(
+  [() => props.datesTrace, () => props.announcementsTrace, () => props.withdrawalsTrace],
+  () => {
+    init()
+  },
+  { deep: true }
+)
+
 onMounted(() => {
   init()
 })
 </script>
 
 <template>
-  <div v-if="rawMessages.length === 0" class="noData">
-    <h1>No data available</h1>
-    <h3>Try Changing the Input Parameters or you can wait</h3>
-    <h6>Note: Some prefixes become active after some time.</h6>
+  <div class="noData" v-if="rawMessages.length === 0">
+    <h1 v-if="isLoadingBgplayData">Loading...</h1>
+    <h1 v-else>No data available</h1>
+    <h3 v-if="dataSource === 'ris-live'">Try Changing the Input Parameters or you can wait</h3>
+    <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>
-    <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
-    <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    <div v-if="dataSource === 'ris-live'">
+      <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
+      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    </div>
     <ReactiveChart
       :layout="actualChartLayout"
       :traces="actualChartData"
@@ -251,7 +302,13 @@ onMounted(() => {
     />
     <div class="timetampSlider">
       <div class="timeStampControls">
-        <span>Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span>
+        <span v-if="dataSource === 'ris-live'"
+          >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span
+        >
+        <span v-else
+          >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State and
+          Events)</span
+        >
       </div>
       <div class="timetampSliderContainer">
         <QSlider
