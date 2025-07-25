@@ -909,24 +909,16 @@ onMounted(() => {
     </QCard>
     <div class="row inline q-mt-lg">
       <QBadge class="q-mr-md">
-        <div class="text-body2">
-          Displaying Unique Peer messages: {{ filteredMessages.length }}
-        </div>
+        <div class="text-body2">Displaying Unique Peer messages: {{ filteredMessages.length }}</div>
       </QBadge>
       <QBadge class="q-mr-md">
-        <div class="text-body2">
-          Total messages received: {{ rawMessages.length }}
-        </div>
+        <div class="text-body2">Total messages received: {{ rawMessages.length }}</div>
       </QBadge>
       <QBadge v-if="dataSource === 'bgplay'" class="q-mr-md">
-        <div class="text-body2">
-          No of Initial State Messages: {{ initialStateDataCount }}
-        </div>
+        <div class="text-body2">No of Initial State Messages: {{ initialStateDataCount }}</div>
       </QBadge>
       <QBadge v-if="dataSource === 'bgplay'" class="q-mr-md">
-        <div class="text-body2">
-          No of Events: {{ rawMessages.length - initialStateDataCount }}
-        </div>
+        <div class="text-body2">No of Events: {{ rawMessages.length - initialStateDataCount }}</div>
       </QBadge>
     </div>
 
@@ -1012,5 +1004,4 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

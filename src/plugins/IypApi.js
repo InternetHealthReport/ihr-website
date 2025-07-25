@@ -56,7 +56,7 @@ const formatResponse = (results) => {
       }
       countElementsInRow += 1
     })
-    obj = JSON.parse(JSON.stringify(obj, (_, value) => value === undefined ? null : value))
+    obj = JSON.parse(JSON.stringify(obj, (_, value) => (value === undefined ? null : value)))
     list.push(obj)
   })
   return list

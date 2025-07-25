@@ -14,7 +14,7 @@ export function getASNamesCountryMappings() {
       const parsedData = {}
       runIyp([{ statement: cypher }])
         .then((response) => {
-          response[0].forEach(obj => {
+          response[0].forEach((obj) => {
             parsedData[obj.asn] = {
               asn_name: obj.name,
               country_iso_code2: obj.country_code
