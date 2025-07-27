@@ -56,7 +56,7 @@ const toggleSelectAll = (value) => {
 
 
 watch(
-  () => props.selectedProbes,
+  [() => props.selectedProbes, () => props.allProbes],
   () => {
     selectedProbesModel.value = props.selectedProbes
     if(props.selectedProbes.length === props.allProbes.length)
@@ -87,7 +87,6 @@ watch(selectedProbesModel, () => {
             <QCheckbox
               v-model="selectAllProbes"
               toggle-order="ft"
-              :disable="Object.keys(nodes).length < 1"
               @update:model-value="toggleSelectAll"
             />
           </template>

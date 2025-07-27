@@ -20,7 +20,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['loadMeasurementOnSearchQuery', 'setSelectedDestinations'])
+const emit = defineEmits(['loadMeasurementOnSearchQuery', 'setSelectedDestinations', 'setSelectAllDestinations'])
 
 const destinationSearchQuery = ref('')
 const selectAllDestinationsModel = ref(props.selectAllDestinations)
@@ -38,8 +38,10 @@ const filteredDestinationRows = computed(() => {
 const toggleSelectAllDestinations = (value) => {
   if (value) {
     emit('setSelectedDestinations', props.allDestinations)
+    emit('setSelectAllDestinations', true)
   } else {
     emit('setSelectedDestinations', [])
+    emit('setSelectAllDestinations', false)
   }
 }
 
@@ -65,14 +67,22 @@ const destinationRows = computed(() => {
 watch(
   () => props.nodes,
   () => {
-    selectAllDestinationsModel.value = true
+    if(selectAllDestinationsModel.value === true) {
+      emit('setSelectedDestinations', props.allDestinations)
+    }
   }
 )
 
 watch(
-  () => props.selectedDestinations,
+  [() => props.selectedDestinations, () => props.allDestinations],
   () => {
     selectDestinationsModel.value = props.selectedDestinations
+    if(props.selectedDestinations.length === props.allDestinations.length)
+      selectAllDestinationsModel.value = true
+    else if(props.selectedDestinations.length === 0) 
+      selectAllDestinationsModel.value = false
+    else 
+      selectAllDestinationsModel.value = null
   }
 )
 
@@ -94,6 +104,7 @@ watch(selectDestinationsModel, () => {
           <template v-if="col.name === 'destination'">
             <QCheckbox
               v-model="selectAllDestinationsModel"
+              toggle-order="ft"
               @update:model-value="toggleSelectAllDestinations"
             />
           </template>

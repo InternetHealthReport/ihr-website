@@ -72,12 +72,12 @@ const processData = async (tracerouteData, loadProbes = false) => {
   let highestMedianRtt = 0
 
   allProbes.value = allProbes.value.length == 0 ? await atlas_api.getProbesByMeasurementId(measurementID.value) : allProbes.value
-  atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value).then((data) => {
+  atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value, allProbes.value.length >= 1000).then((data) => {
             data.forEach(x => {
                 probeDetailsMap.value[x.id.toString()] = x
               })
             })
-  atlas_api.getProbesByIds(selectedProbes.value, measurementID.value).then((data) => {
+  atlas_api.getProbesByIds(selectedProbes.value, measurementID.value, selectedProbes.value.length >= 1000).then((data) => {
             data.forEach(x => {
                 probeDetailsMap.value[x.id.toString()] = x
               })
@@ -120,11 +120,13 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     if(!allDestinations.value.includes(probeData.dst_addr)) 
       allDestinations.value.push(probeData.dst_addr)
-    // if (!nodes.value[probeData.dst_addr]) {
+    // if (!nodes.value[probeData.dst_addr]) {probeData.dst_addr
     //   nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
     // }
 
-    if(!(selectedDestinations.value.length == 0 ||
+    console.log("selectAllDestinations.value::: ", selectAllDestinations.value)
+    console.log("selectedDestinations.value::: ", selectedDestinations.value)
+    if(!(selectAllDestinations.value ||
        selectedDestinations.value.includes(probeData.dst_addr)))
       return; 
 
@@ -406,6 +408,9 @@ const loadMeasurementOnTimeRange = debounce((e) => {
 
 const loadMeasurementOnProbeChange = debounce(() => {
   loadMeasurementData()
+  // if(selectAllDestinations.value === true) {
+  //   selectedDestinations.value = allDestinations.value
+  // }
 }, 1000)
 
 const loadMeasurementOnDestinationChange = debounce(() => {
@@ -469,6 +474,10 @@ watch(() => props.probeIDs, (newArr, oldArr) => {
   }
 })
 
+watch(() => props.destinationIPs, () => {
+  selectedDestinations.value = props.destinationIPs
+})
+
 watchEffect(() => {
   if (!timeRange.value.disable) {
     loadMeasurementOnTimeRange(timeRange.value)
@@ -488,6 +497,10 @@ const setSelectedProbes = (value) => {
 
 const setSelectedDestinations = (value) => {
   selectedDestinations.value = value
+}
+
+const setSelectAllDestinations = (value) => {
+  selectAllDestinations.value = value
 }
 
 watch(
@@ -568,6 +581,7 @@ watch(
           :ip-to-asn-map="ipToAsnMap"
           :selected-destinations="selectedDestinations"
           @set-selected-destinations="setSelectedDestinations"
+          @set-select-all-destinations="setSelectAllDestinations"
           @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
         />
       </GenericCardController>

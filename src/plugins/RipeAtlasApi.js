@@ -75,38 +75,68 @@ const AtlasApi = {
       )
     }
 
-    const getProbesByIds = async (probeIds = null, measurementID) => {
+    const getProbesByIds = async (probeIds = null, measurementID, cacheProbesByMeasurement) => {
       if (probeIds == null || probeIds.length == 0) return []
-
-      let probesChunks = splitListToChunks(probeIds, 10)
-
-      let listParams = probesChunks.map((x) => {
-        return { id__in: x.join(',') }
-      })
 
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `probes`
-      return await cache(
-        `${url}_msm_${measurementID}_probes`,
-        async () => {
-          return await Promise.all(
-            listParams.map((x) => {
-              return axios_base.get(url, { params: x })
-            })
-          )
-        },
-        {
-          storageAllowed: storageAllowed ? storageAllowed : false
-        },
-        (responses) => {
-          return responses.reduce((combinedResult, response) => {
-            response?.data?.results.forEach((probeDetails) => {
-              combinedResult.push(probeDetails)
-            })
-            return combinedResult
-          }, [])
-        }
-      )
+
+      if (cacheProbesByMeasurement) {
+        let probesChunks = splitListToChunks(probeIds, 10)
+        let listParams = probesChunks.map((x) => {
+          return { id__in: x.join(',') }
+        })
+        return await cache(
+          `${url}_msm_${measurementID}_probes`,
+          async () => {
+            return await Promise.all(
+              listParams.map((x) => {
+                return axios_base.get(url, { params: x })
+              })
+            )
+          },
+          {
+            storageAllowed: storageAllowed ? storageAllowed : false
+          },
+          (responses) => {
+            return responses.reduce((combinedResult, response) => {
+              response?.data?.results.forEach((probeDetails) => {
+                combinedResult.push(probeDetails)
+              })
+              return combinedResult
+            }, [])
+          }
+        )
+      } else {
+        const paramsList = probeIds.map((probeId) => {
+          return { id__in: probeId }
+        })
+
+        const responseArray = await Promise.all(
+          paramsList.map(async (param) => {
+            return await cache(
+              `${url}_msm_${measurementID}_probes_${JSON.stringify(param)}`,
+              async () => {
+                // fetcher function: defines how to fetch data in chunks
+                return await axios_base.get(url, {
+                  params: param
+                })
+              },
+              {
+                storageAllowed: storageAllowed ? storageAllowed : false
+              }
+            )
+          })
+        )
+
+        return responseArray.reduce((result, probeDetails) => {
+          probeDetails.data?.results.forEach((probeDetail) => {
+            result.push(probeDetail)
+          })
+
+          return result
+        }, [])
+      }
     }
 
     const selectNFromList = (list, N = 10) => {
@@ -121,7 +151,6 @@ const AtlasApi = {
     // Fetches measurement result chunk by chunk and caches
     const getAndCacheMeasurementDataInChunks = async (measurementId, params = {}) => {
       // Batch measurement result by smaller chunks of probes ids results
-      console.log('This got called with params::: ', params)
 
       let probeList = []
       const storageAllowed = JSON.parse(await get('storage-allowed'))
