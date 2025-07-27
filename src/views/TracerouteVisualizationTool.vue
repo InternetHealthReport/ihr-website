@@ -16,7 +16,9 @@ const destinationIPs = ref([])
 const isProbesOverflow = ref(false)
 
 const loadMeasurement = () => {
-  if(measurementID.value == measurementIDInput.value) return
+  if(measurementID.value == measurementIDInput.value) {
+    return
+  }
 
   // Update when value is changed
   measurementID.value = measurementIDInput.value

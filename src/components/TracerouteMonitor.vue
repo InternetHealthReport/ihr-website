@@ -83,9 +83,12 @@ const processData = async (tracerouteData, loadProbes = false) => {
               })
             })
 
-  if(allProbes.value.length > 1000) emit('probesOverflow', true)
-  else emit('probesOverflow', false)
-  
+  if(allProbes.value.length > 1000) {
+    emit('probesOverflow', true)
+  }
+  else {
+    emit('probesOverflow', false)
+  } 
 
   tracerouteData.forEach((probeData, probeIndex) => {
     if (probeData.result[0].error) {
@@ -118,17 +121,14 @@ const processData = async (tracerouteData, loadProbes = false) => {
       }
     }
 
-    if(!allDestinations.value.includes(probeData.dst_addr)) 
+    if(!allDestinations.value.includes(probeData.dst_addr)) {
       allDestinations.value.push(probeData.dst_addr)
-    // if (!nodes.value[probeData.dst_addr]) {probeData.dst_addr
-    //   nodes.value[probeData.dst_addr] = { label: probeData.dst_addr }
-    // }
+    }
 
-    console.log("selectAllDestinations.value::: ", selectAllDestinations.value)
-    console.log("selectedDestinations.value::: ", selectedDestinations.value)
     if(!(selectAllDestinations.value ||
-       selectedDestinations.value.includes(probeData.dst_addr)))
-      return; 
+       selectedDestinations.value.includes(probeData.dst_addr))) {
+         return; 
+    }
 
     probeData.result.forEach((hopData, hopIndex) => {
       hopData.result.forEach((result, resultIndex) => {
@@ -289,7 +289,6 @@ const loadMeasurement = async () => {
   rttChartLeftTimestamp.value = 0
   rttChartRightTimestamp.value = 0
 
-  console.log("selectedProbes.value in loadMeasurement::: ", selectedProbes.value)
   selectedProbes.value = []
   allProbes.value = []
   probeDetailsMap.value = {}
@@ -350,9 +349,7 @@ const loadMeasurementData = async (loadProbes = false) => {
     try {
       if (loadProbes) {
         allProbes.value = []
-        // selectedProbes.value = []
         allDestinations.value = []
-        // selectedDestinations.value = []
       }
 
       const params = {}
@@ -365,17 +362,7 @@ const loadMeasurementData = async (loadProbes = false) => {
       if (selectedProbes.value.length > 0) {
         params.probe_ids = selectedProbes.value.join(',')
       }
-      
-      console.log("selectedProbes.value in load measurement data::: ", selectedProbes.value)
-      console.log("loadProbes::: ", loadProbes)
       const data = await atlas_api.getAndCacheMeasurementDataInChunks(measurementID.value, params)
-
-      // const filteredData = data.filter(
-      //   (item) =>
-      //     selectedDestinations.value.length === 0
-      //     //  ||
-      //     // selectedDestinations.value.includes(item.dst_addr)
-      // )
 
       processData(data, loadProbes)
     } catch (error) {
@@ -408,9 +395,6 @@ const loadMeasurementOnTimeRange = debounce((e) => {
 
 const loadMeasurementOnProbeChange = debounce(() => {
   loadMeasurementData()
-  // if(selectAllDestinations.value === true) {
-  //   selectedDestinations.value = allDestinations.value
-  // }
 }, 1000)
 
 const loadMeasurementOnDestinationChange = debounce(() => {
@@ -422,7 +406,9 @@ const loadMeasurementOnSearchQuery = debounce(() => {
 }, 1000)
 
 const sortAndCompare = (arrA, arrB) => {
-  if(arrA.length !== arrB.length) return false
+  if(arrA.length !== arrB.length) {
+    return false
+  }
 
   const N = arrA.length
   const compareFunc = (a, b) => +a - +b
@@ -430,35 +416,17 @@ const sortAndCompare = (arrA, arrB) => {
   const sortedArrB = arrB.sort(compareFunc)
 
   for(let i = 0; i < N; i++) {
-    if(sortedArrA[i] !== sortedArrB[i]) return false
+    if(sortedArrA[i] !== sortedArrB[i]) {
+      return false
+    }
   }
 
   return true
 }
 
-// First array should be bigger
-const mergeArrays = (arrA, arrB) => {
-
-  if(arrA.length < arrB.length) mergeArrays(arrB, arrA)
-
-  const compareFunc = (a, b) => +a - +b
-  const sortedArrA = arrA.sort(compareFunc)
-  const sortedArrB = arrB.sort(compareFunc)
-
-  const newArr = []
-
-  for(let i = 0, j = 0; i < sortedArrA.length && j < sortedArrB.length;) {
-    if(+sortedArrA[i] < +sortedArrB[j]) newArr.push(+sortedArrA[i++])
-    else if(+sortedArrA[i] > +sortedArrB[j]) newArr.push(+sortedArrB[j++])
-    else newArr.push(+sortedArrA[i++])
-  }
-
-  return newArr
-}
 
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
-    console.log("selectedProbes.value from the watcher::: ", selectedProbes.value)
     loadMeasurementOnProbeChange()
     if(!sortAndCompare(props.probeIDs, selectedProbes.value)) {
       emit('setSelectedProbes', selectedProbes.value)
@@ -487,7 +455,7 @@ watchEffect(() => {
 watchEffect(() => {
   if (selectedDestinations.value.length > 0) {
     loadMeasurementOnDestinationChange()
-      emit('setSelectedDestinations', selectedDestinations.value)
+    emit('setSelectedDestinations', selectedDestinations.value)
   }
 })
 

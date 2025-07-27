@@ -77,12 +77,15 @@ watch(
   [() => props.selectedDestinations, () => props.allDestinations],
   () => {
     selectDestinationsModel.value = props.selectedDestinations
-    if(props.selectedDestinations.length === props.allDestinations.length)
+    if(props.selectedDestinations.length === props.allDestinations.length) {
       selectAllDestinationsModel.value = true
-    else if(props.selectedDestinations.length === 0) 
+    }
+    else if(props.selectedDestinations.length === 0) {
       selectAllDestinationsModel.value = false
-    else 
+    }
+    else {
       selectAllDestinationsModel.value = null
+    }
 
     emit('setSelectAllDestinations', selectAllDestinationsModel.value)
   }

@@ -76,7 +76,9 @@ const AtlasApi = {
     }
 
     const getProbesByIds = async (probeIds = null, measurementID, cacheProbesByMeasurement) => {
-      if (probeIds == null || probeIds.length == 0) return []
+      if (probeIds == null || probeIds.length == 0) {
+        return []
+      }
 
       const storageAllowed = JSON.parse(await get('storage-allowed'))
       const url = `probes`

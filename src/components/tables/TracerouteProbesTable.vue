@@ -59,12 +59,15 @@ watch(
   [() => props.selectedProbes, () => props.allProbes],
   () => {
     selectedProbesModel.value = props.selectedProbes
-    if(props.selectedProbes.length === props.allProbes.length)
+    if(props.selectedProbes.length === props.allProbes.length) {
       selectAllProbes.value = true
-    else if(props.selectedProbes.length === 0) 
+    }
+    else if(props.selectedProbes.length === 0)  {
       selectAllProbes.value = false
-    else 
+    }
+    else {
       selectAllProbes.value = null
+    }
   }
 )
 
