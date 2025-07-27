@@ -83,6 +83,8 @@ watch(
       selectAllDestinationsModel.value = false
     else 
       selectAllDestinationsModel.value = null
+
+    emit('setSelectAllDestinations', selectAllDestinationsModel.value)
   }
 )
 
