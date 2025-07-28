@@ -24,7 +24,8 @@ import {
 
 /// Base url for api
 const IHR_API_BASE = 'https://ihr.iijlab.net/ihr/api/'
-// const IHR_API_BASE = 'https://www.ihr.live/api-dev/' // New API; See TODO in IhrQuert.js line 108
+// const IHR_API_BASE = 'https://www.ihr.live/api-dev/' // New API; See TODO in IhrQuery.js line 108
+
 /// Default timeout before api call are considered failed
 const DEFAULT_TIMEOUT = 180000
 /// Data of the first available data
@@ -38,11 +39,16 @@ const IhrApi = {
     })
 
     const _resolveAxiosPromise = (endpoint, query, successCallback, errorCallback) => {
+      if (!endpoint.includes('/')) {
+        endpoint = `${endpoint}/`
+      }
       axios_base
         .get(endpoint, { params: query })
         .then((res) => {
-          if (successCallback instanceof Function) {
-            successCallback(res.data, res)
+          if (res.headers['content-type'] === 'application/json') {
+            if (successCallback instanceof Function) {
+              successCallback(res.data, res)
+            }
           }
         })
         .catch((error) => {
@@ -60,24 +66,37 @@ const IhrApi = {
 
     const _generic = (endpoint, query, successCallback, errorCallback) => {
       if (Object.prototype.isPrototypeOf.call(QueryBase, query.constructor)) {
-        // console.log('call to:', query, query.toString())
-        // console.log('query url:', getUrl(query))
-        const resolvePagination = query.resolvePagination
         query = query.get_filter()
-        // console.log(query)
-        if (resolvePagination && successCallback instanceof Function) {
+
+        if (successCallback instanceof Function) {
+          const allResults = []
+
           const recursiveSuccess = (data, response) => {
-            successCallback(data, response)
+            if (Array.isArray(data.results)) {
+              allResults.push(...data.results)
+            }
+
             if (data.next != null) {
-              // console.log(data.next)
-              _resolveAxiosPromise(data.next, '', recursiveSuccess, errorCallback)
+              const nextUrl = data.next.replace(IHR_API_BASE, '')
+              _resolveAxiosPromise(nextUrl, null, recursiveSuccess, errorCallback)
+            } else {
+              // Final page — call the original successCallback once
+              const finalData = {
+                ...data,
+                results: allResults,
+                next: null,
+                previous: null,
+                count: allResults.length
+              }
+              successCallback(finalData, response)
             }
           }
-          successCallback = recursiveSuccess
+
+          _resolveAxiosPromise(endpoint, query, recursiveSuccess, errorCallback)
         }
       }
-      _resolveAxiosPromise(endpoint, query, successCallback, errorCallback)
     }
+
 
     const getUrl = (queryFilter) => {
       if (queryFilter == null) {
