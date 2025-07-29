@@ -73,6 +73,8 @@ const withdrawalsTrace = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
 const uniqueEventTimestamps = new Set()
+const currentIndex = ref(-1)
+const usingIndex = ref(false)
 
 const params = ref({
   peer: '',
@@ -122,6 +124,8 @@ const resetData = () => {
   announcementsCount = {}
   withdrawalsCount = {}
   uniqueEventTimestamps.clear()
+  currentIndex.value = -1
+  usingIndex.value = false
 }
 
 // Initialize the route
@@ -479,14 +483,24 @@ const handleFilterMessages = (data) => {
     //When new message is received by the websocket
     uniquePeerMessages.set(data.peer, data)
     usedMessagesCount.value = rawMessages.value.length
+    currentIndex.value = rawMessages.value.length - 1
   } else {
     //When using the time slider
     uniquePeerMessages.clear()
     let count = 0
-    for (const msg of rawMessages.value) {
-      if (msg.timestamp <= selectedMaxTimestamp.value) {
+    for (let i = 0; i < rawMessages.value.length; i++) {
+      const msg = rawMessages.value[i]
+
+      const isIndexBased = usingIndex.value && i <= currentIndex.value
+      const isTimestampBased = !usingIndex.value && msg.timestamp <= selectedMaxTimestamp.value
+
+      if (isTimestampBased) currentIndex.value = i
+
+      if (isIndexBased || isTimestampBased) {
         uniquePeerMessages.set(msg.peer, msg)
         count++
+      } else {
+        break
       }
     }
     usedMessagesCount.value = count
@@ -504,12 +518,39 @@ const disableLiveMode = () => {
 }
 
 const enableLiveMode = () => {
+  disableUsingIndex()
   isLiveMode.value = true
   setSelectedMaxTimestamp(Infinity)
 }
 
 const timestampToUnix = (timestamp) => {
   return Math.floor(new Date(timestamp + 'Z').getTime() / 1000)
+}
+
+const disableUsingIndex = () => {
+  usingIndex.value = false
+}
+
+const nextEvent = () => {
+  disableLiveMode()
+  if (currentIndex.value < rawMessages.value.length - 1) {
+    currentIndex.value++
+    usingIndex.value = true
+  }
+}
+
+const prevEvent = () => {
+  disableLiveMode()
+  if (currentIndex.value > 0) {
+    currentIndex.value--
+    usingIndex.value = true
+  } else {
+    if (initialStateDataCount.value > 0) {
+      currentIndex.value = 0
+    } else {
+      currentIndex.value = -1
+    }
+  }
 }
 
 // Fetching the AS Info from the asnames.txt file
@@ -726,6 +767,10 @@ watch(isPlaying, () => {
   toggleRisProtocol()
 })
 
+/*watch(currentIndex, (newIndex) => {
+  console.log('Current Index Updated:', newIndex)
+})*/
+
 onMounted(() => {
   initRoute()
   fetchRCCs()
@@ -892,6 +937,7 @@ onMounted(() => {
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
           :disable="disableButton || params.prefix === '' || params.host === ''"
           @click="toggleConnection"
+          class="q-mr-lg"
         />
         <QBtn
           v-else
@@ -903,6 +949,27 @@ onMounted(() => {
             isLoadingBgplayData ||
             !haveRequiredBGPlayParams()
           "
+          class="q-mr-lg"
+        />
+        <QBtn
+          color="indigo"
+          :label="'Previous'"
+          @click="prevEvent"
+          :disable="
+            rawMessages.length === 0 ||
+            (dataSource === 'bgplay'
+              ? initialStateDataCount !== 0
+                ? currentIndex === 0
+                : currentIndex === -1
+              : currentIndex === 0)
+          "
+        />
+        <QBtn
+          color="indigo"
+          :label="'Next'"
+          @click="nextEvent"
+          :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
+          class="q-mr-lg"
         />
         <QBtn color="negative" :label="'Reset'" @click="resetData" />
       </QCardActions>
@@ -961,8 +1028,11 @@ onMounted(() => {
         :dates-trace="datesTrace"
         :announcements-trace="announcementsTrace"
         :withdrawals-trace="withdrawalsTrace"
+        :current-index="currentIndex"
+        :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
         @disable-live-mode="disableLiveMode"
+        @disable-using-index="disableUsingIndex"
         @enable-live-mode="enableLiveMode"
       />
     </GenericCardController>

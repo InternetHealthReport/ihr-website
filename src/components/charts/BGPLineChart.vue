@@ -47,10 +47,23 @@ const props = defineProps({
   withdrawalsTrace: {
     type: Array,
     default: () => []
+  },
+  currentIndex: {
+    type: Number,
+    default: -1
+  },
+  usingIndex: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['setSelectedMaxTimestamp', 'disable-live-mode', 'enable-live-mode'])
+const emit = defineEmits([
+  'setSelectedMaxTimestamp',
+  'disable-live-mode',
+  'enable-live-mode',
+  'disable-using-index'
+])
 
 const { utcString } = report()
 
@@ -211,7 +224,10 @@ const enableLiveMode = () => {
 }
 
 // Gets called when the time slider is moved
-const updateSlider = (timestamp) => {
+const updateSlider = (timestamp, isUsingSlider) => {
+  if (isUsingSlider) {
+    emit('disable-using-index')
+  }
   emit('disable-live-mode')
   addVerticalLine(timestamp)
   emit('setSelectedMaxTimestamp', timestamp)
@@ -276,6 +292,23 @@ watch(
   { deep: true }
 )
 
+watch(
+  () => props.currentIndex,
+  () => {
+    if (props.isLiveMode || !props.usingIndex) return
+    
+    if (props.currentIndex === -1) {
+      emit('disable-using-index')
+      updateSlider(minTimestamp.value)
+      selectedMaxTimestamp.value = minTimestamp.value
+    } else {
+      const timestamp = props.rawMessages[props.currentIndex].timestamp
+      selectedMaxTimestamp.value = timestamp
+      updateSlider(timestamp)
+    }
+  }
+)
+
 onMounted(() => {
   init()
 })
@@ -320,7 +353,7 @@ onMounted(() => {
             maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
           "
           color="accent"
-          @update:model-value="updateSlider"
+          @update:model-value="updateSlider($event, true)"
         />
         <div class="timestampInfo">
           <span
