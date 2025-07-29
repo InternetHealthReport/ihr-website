@@ -23,6 +23,12 @@ const props = defineProps({
   },
   destinationIPs: {
     type: Array
+  },
+  startTime: {
+    type: Number
+  },
+  stopTime: {
+    type: Number
   }
 })
 
@@ -55,7 +61,12 @@ const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 
 // re-emitting events from children to grand parent
-const emit = defineEmits(['setSelectedDestinations', 'setSelectedProbes', 'probesOverflow'])
+const emit = defineEmits([
+  'setSelectedDestinations', 
+  'setSelectedProbes', 
+  'probesOverflow', 
+  'setSelectedTimeRange',
+])
 
 const handleLoadMeasurementError = (error) => {
   loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
@@ -313,12 +324,16 @@ const loadMeasurement = async () => {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
 
-      let startTime = metaData.value.start_time
-      const stopTime = metaData.value.stop_time
+      const stopTime = (+props.stopTime !== 0)? +props.stopTime : metaData.value.stop_time
 
       // Fetch last 5 measurements
       const shortenedDurationStartTime = stopTime - 5*metaData.value["interval"]
-      startTime = shortenedDurationStartTime > 0? shortenedDurationStartTime: startTime 
+      const startTime = (+props.startTime !== 0) ? 
+                          +props.startTime
+                          : shortenedDurationStartTime > 0 ?
+                            shortenedDurationStartTime
+                              : metaData.value.start_time 
+
 
       timeRange.value.min = startTime
       timeRange.value.max = stopTime
@@ -384,6 +399,7 @@ const debounce = (func, wait) => {
 }
 
 const loadMeasurementOnTimeRange = debounce((e) => {
+  emit('setSelectedTimeRange', ({ startTime: e.min, stopTime: e.max }))
   rttChartLeftTimestamp.value = e.min
   rttChartRightTimestamp.value = e.max
 

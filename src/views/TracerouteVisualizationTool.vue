@@ -14,6 +14,8 @@ const measurementIDInput = ref('')
 const probeIDs = ref([])
 const destinationIPs = ref([])
 const isProbesOverflow = ref(false)
+const startTime = ref(0)
+const stopTime = ref(0)
 
 const loadMeasurement = () => {
   if(measurementID.value == measurementIDInput.value) {
@@ -38,6 +40,12 @@ const onProbesOverflow = (showAlert) => {
   isProbesOverflow.value = showAlert
 }
 
+const onUpdateTimeRangeInRoute = ({ startTime: startTimeInput, stopTime: endTimeInput }) => {
+  startTime.value = startTimeInput
+  stopTime.value = endTimeInput
+  pushRoute()
+}
+
 const onUpdateDestinationsInRoute = (destinationIps) => {
   destinationIPs.value = destinationIps
   pushRoute()
@@ -50,7 +58,9 @@ const pushRoute = () => {
       query: Object.assign({}, route.query, {
         measurment: measurementID.value,
         probeids: probeIDs.value.join(','),
-        destinationips: destinationIPs.value.join(',')
+        destinationips: destinationIPs.value.join(','),
+        starttime: startTime.value,
+        stoptime: stopTime.value,
       })
     })
   )
@@ -60,6 +70,8 @@ onMounted(() => {
   const tracerouteid = route.query.measurment
   const probes = route.query.probeids
   const destinations = route.query.destinationips
+  const startTimeFromQuery = route.query.starttime
+  const stopTimeFromQuery = route.query.stoptime
 
   if (tracerouteid) {
     measurementIDInput.value = tracerouteid
@@ -72,6 +84,14 @@ onMounted(() => {
 
   if (destinations) {
     destinationIPs.value = destinations.split(',')
+  }
+
+  if(startTimeFromQuery) {
+    startTime.value = startTimeFromQuery
+  }
+
+  if(stopTimeFromQuery) {
+    stopTime.value = stopTimeFromQuery
   }
 })
 </script>
@@ -100,10 +120,13 @@ onMounted(() => {
       :atlas-measurement-i-d="measurementID"
       :probe-i-ds="probeIDs"
       :destination-i-ps="destinationIPs"
+      :start-time="startTime"
+      :stop-time="stopTime"
       :open-options="true"
       class="traceroute-monitor"
       @set-selected-probes="onUpdateProbesInRoute"
       @set-selected-destinations="onUpdateDestinationsInRoute"
+      @set-selected-time-range="onUpdateTimeRangeInRoute"
       @probes-overflow="onProbesOverflow"
     />
   </div>
