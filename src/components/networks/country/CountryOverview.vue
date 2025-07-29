@@ -6,6 +6,7 @@ import { ref, inject, watch, onMounted } from 'vue'
 import '@/styles/chart.css'
 import { LMap, LTileLayer, LControl, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { icon } from 'leaflet'
 import { Country }  from 'country-state-city'
 
 const iyp_api = inject('iyp_api')
@@ -63,17 +64,41 @@ const queries = ref([
   {
     data: [],
     query: `MATCH (p:Point)-[:LOCATED_IN]-(f:Facility)-[:COUNTRY]-(:Country {country_code: $cc})
-      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, f.name AS name`
+      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, f.name AS name`,
+    icon: icon({
+      iconUrl: '/leaflet/marker-icon-blue.png',
+      shadowUrl: '/leaflet/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      shadowSize: [41, 41],
+      popupAnchor: [1, -34]
+    })
   },
   {
     data: [],
     query: `MATCH (p:Point)-[:LOCATED_IN]-(a:AtlasProbe)-[:COUNTRY]-(:Country {country_code: $cc})
-      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, a.id AS id, a.description AS description`
+      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, a.id AS id, a.description AS description`,
+    icon: icon({
+    iconUrl: '/leaflet/marker-icon-red.png',
+    shadowUrl: '/leaflet/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    shadowSize: [41, 41],
+    popupAnchor: [1, -34]
+  })
   },
   {
     data: [],
     query: `MATCH (p:Point)-[:LOCATED_IN]-(o:Organization)-[:COUNTRY]-(:Country {country_code: $cc})
-      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, o.name AS name`
+      RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, o.name AS name`,
+    icon: icon({
+      iconUrl: '/leaflet/marker-icon-green.png',
+      shadowUrl: '/leaflet/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      shadowSize: [41, 41],
+      popupAnchor: [1, -34]
+    })
   },
 ])
 const zoom = ref(5)
@@ -282,24 +307,25 @@ onMounted(() => {
                 <QCard>
                   <QCardSection>
                     <div>
-                      <QCheckbox v-model="organizationPoints" label="Organizations" />
+                      <QCheckbox v-model="facilitiesPoints" label="Facilities" color="blue" keep-color />
                     </div>
                     <div>
-                      <QCheckbox v-model="facilitiesPoints" label="Facilities" />
+                      <QCheckbox v-model="organizationPoints" label="Organizations" color="green" keep-color />
                     </div>
                     <div>
-                      <QCheckbox v-model="atlasProbePoints" label="Atlas Probes" />
+                      <QCheckbox v-model="atlasProbePoints" label="Atlas Probes" color="red" keep-color />
                     </div>
                   </QCardSection>
                 </QCard>
               </LControl>
-              <LMarker v-if="facilitiesPoints" v-for="(item, index) in queries[3].data" :key="index" :lat-lng="[item.latitude, item.longitude]">
+              <LMarker v-if="facilitiesPoints" v-for="(item, index) in queries[3].data" :key="index" :lat-lng="[item.latitude, item.longitude]" :icon="queries[3].icon">
                 <LPopup>{{ item.name }}</LPopup>
               </LMarker>
-              <LMarker v-if="atlasProbePoints" v-for="(item, index) in queries[4].data" :key="index" :lat-lng="[item.latitude, item.longitude]">
-                <LPopup>{{ item.id }} - {{ item.description }}</LPopup>
+              <LMarker v-if="atlasProbePoints" v-for="(item, index) in queries[4].data" :key="index" :lat-lng="[item.latitude, item.longitude]" :icon="queries[4].icon">
+                <LPopup v-if="item.description">{{ item.id }} - {{ item.description }}</LPopup>
+                <LPopup v-else>{{ item.id }}</LPopup>
               </LMarker>
-              <LMarker v-if="organizationPoints" v-for="(item, index) in queries[5].data" :key="index" :lat-lng="[item.latitude, item.longitude]">
+              <LMarker v-if="organizationPoints" v-for="(item, index) in queries[5].data" :key="index" :lat-lng="[item.latitude, item.longitude]" :icon="queries[5].icon">
                 <LPopup>{{ item.name }}</LPopup>
               </LMarker>
             </LMap>
