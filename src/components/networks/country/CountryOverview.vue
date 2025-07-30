@@ -76,7 +76,7 @@ const queries = ref([
   },
   {
     data: [],
-    query: `MATCH (p:Point)-[:LOCATED_IN]-(a:AtlasProbe)-[:COUNTRY]-(:Country {country_code: $cc})
+    query: `MATCH (p:Point)-[:LOCATED_IN]-(a:AtlasProbe {status_name: 'Connected'})-[:COUNTRY]-(:Country {country_code: $cc})
       RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, a.id AS id, a.description AS description`,
     icon: icon({
     iconUrl: '/leaflet/marker-icon-red.png',
@@ -301,7 +301,7 @@ onMounted(() => {
       <tbody>
         <tr>
           <td style="height: 600px;">
-            <LMap v-model="zoom" v-model:zoom="zoom" :center="[countryInfo.latitude, countryInfo.longitude]" :use-global-leaflet="false">
+            <LMap v-model="zoom" v-model:zoom="zoom" :center="[countryInfo.latitude, countryInfo.longitude]" :use-global-leaflet="false" :options="{ attributionControl: false }">
               <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap"></LTileLayer>
               <LControl>
                 <QCard>
