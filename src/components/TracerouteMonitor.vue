@@ -347,8 +347,12 @@ const loadMeasurement = async () => {
 
       await loadMeasurementData(true)
 
-      selectedDestinations.value = allDestinations.value
-      selectAllDestinations.value = true
+      if(selectedDestinations.value === null || selectedDestinations.value.length === 0) {
+        selectedDestinations.value = allDestinations.value
+        selectAllDestinations.value = true
+      } else {
+        selectAllDestinations.value = null
+      }
     } catch (error) {
       console.log(error)
       handleLoadMeasurementError(error)
