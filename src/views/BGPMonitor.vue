@@ -73,6 +73,8 @@ const withdrawalsTrace = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
 const uniqueEventTimestamps = new Set()
+const currentIndex = ref(-1)
+const usingIndex = ref(false)
 
 const params = ref({
   peer: '',
@@ -122,6 +124,8 @@ const resetData = () => {
   announcementsCount = {}
   withdrawalsCount = {}
   uniqueEventTimestamps.clear()
+  currentIndex.value = -1
+  usingIndex.value = false
 }
 
 // Initialize the route
@@ -263,6 +267,19 @@ const processResData = (data) => {
     if (isLiveMode.value) {
       handleFilterMessages(data)
     }
+
+    if (data.timestamp < minTimestamp.value) {
+      minTimestamp.value = data.timestamp
+    }
+    if (data.timestamp > maxTimestamp.value) {
+      maxTimestamp.value = data.timestamp
+    }
+
+    generateLineChartData({
+      timestamp: data.timestamp,
+      type: data.type
+    })
+    generateLineChartTrace()
   } else {
     //Temp variables to reduce the vue reactivity
     const sources = {}
@@ -312,10 +329,15 @@ const processResData = (data) => {
     })
 
     data.data.events.forEach((event) => {
-      generateLineChartData(event)
       const peer = event.attrs.source_id.split('-')[1]
       const peerInfo = sources[peer]
       const timestamp = timestampToUnix(event.timestamp)
+      const type = addBGPMessageType(event.type)
+
+      generateLineChartData({
+        timestamp: timestamp,
+        type: type
+      })
 
       applyDefaultSelectedPeers(peer)
 
@@ -326,7 +348,7 @@ const processResData = (data) => {
         path: event.attrs.path || [],
         community: addCommunityAndDescriptions(event.attrs.community),
         as_info: addASInfo(event.attrs.path),
-        type: addBGPMessageType(event.type),
+        type: type,
         timestamp: timestamp
       })
     })
@@ -342,33 +364,39 @@ const processResData = (data) => {
   }
 }
 
-const generateLineChartData = (event) => {
-  const timestamp = timestampToUnix(event.timestamp)
-  uniqueEventTimestamps.add(timestamp)
-
-  if (event.type === 'A') {
+const generateLineChartData = (data) => {
+  const timestamp = data.timestamp
+  if (dataSource.value === 'bgplay') {
+    uniqueEventTimestamps.add(timestamp)
+  }
+  if (data.type === 'Announce') {
     announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
-  } else if (event.type === 'W') {
+  } else if (data.type === 'Withdraw') {
     withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
   }
 }
 
 const generateLineChartTrace = () => {
-  // Fill gaps to ensure consistent timestamps
-  for (let t = minTimestamp.value; t <= maxTimestamp.value; t += 60) {
-    uniqueEventTimestamps.add(t)
-  }
-
-  const sortedTimestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
-
   const dTrace = []
   const aTrace = []
   const wTrace = []
+  let timestamps = []
 
-  for (const t of sortedTimestamps) {
+  if (dataSource.value === 'ris-live') {
+    for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
+      timestamps.push(t)
+    }
+  } else {
+    for (let t = minTimestamp.value; t <= maxTimestamp.value; t += 60) {
+      uniqueEventTimestamps.add(t)
+    }
+    timestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
+  }
+
+  for (const t of timestamps) {
     dTrace.push(timestampToUTC(t))
-    aTrace.push(announcementsCount[t] ?? 0)
-    wTrace.push(withdrawalsCount[t] ?? 0)
+    aTrace.push(announcementsCount[t] || 0)
+    wTrace.push(withdrawalsCount[t] || 0)
   }
 
   datesTrace.value = dTrace
@@ -479,14 +507,29 @@ const handleFilterMessages = (data) => {
     //When new message is received by the websocket
     uniquePeerMessages.set(data.peer, data)
     usedMessagesCount.value = rawMessages.value.length
+    currentIndex.value = rawMessages.value.length - 1
   } else {
     //When using the time slider
     uniquePeerMessages.clear()
     let count = 0
-    for (const msg of rawMessages.value) {
-      if (msg.timestamp <= selectedMaxTimestamp.value) {
+
+    if (selectedMaxTimestamp.value < rawMessages.value[0].timestamp) {
+      currentIndex.value = -1
+    }
+
+    for (let i = 0; i < rawMessages.value.length; i++) {
+      const msg = rawMessages.value[i]
+
+      const isIndexBased = usingIndex.value && i <= currentIndex.value
+      const isTimestampBased = !usingIndex.value && msg.timestamp <= selectedMaxTimestamp.value
+
+      if (isTimestampBased) currentIndex.value = i
+
+      if (isIndexBased || isTimestampBased) {
         uniquePeerMessages.set(msg.peer, msg)
         count++
+      } else {
+        break
       }
     }
     usedMessagesCount.value = count
@@ -500,16 +543,46 @@ const setSelectedMaxTimestamp = (val) => {
 }
 
 const disableLiveMode = () => {
+  if (isLiveMode.value && dataSource.value === 'ris-live') {
+    rawMessages.value.sort((a, b) => a.timestamp - b.timestamp)
+  }
   isLiveMode.value = false
 }
 
 const enableLiveMode = () => {
+  disableUsingIndex()
   isLiveMode.value = true
   setSelectedMaxTimestamp(Infinity)
 }
 
 const timestampToUnix = (timestamp) => {
   return Math.floor(new Date(timestamp + 'Z').getTime() / 1000)
+}
+
+const disableUsingIndex = () => {
+  usingIndex.value = false
+}
+
+const nextEvent = () => {
+  disableLiveMode()
+  if (currentIndex.value < rawMessages.value.length - 1) {
+    currentIndex.value++
+    usingIndex.value = true
+  }
+}
+
+const prevEvent = () => {
+  disableLiveMode()
+  if (currentIndex.value > 0) {
+    currentIndex.value--
+    usingIndex.value = true
+  } else {
+    if (initialStateDataCount.value > 0) {
+      currentIndex.value = 0
+    } else {
+      currentIndex.value = -1
+    }
+  }
 }
 
 // Fetching the AS Info from the asnames.txt file
@@ -726,6 +799,7 @@ watch(isPlaying, () => {
   toggleRisProtocol()
 })
 
+
 onMounted(() => {
   initRoute()
   fetchRCCs()
@@ -892,6 +966,7 @@ onMounted(() => {
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
           :disable="disableButton || params.prefix === '' || params.host === ''"
           @click="toggleConnection"
+          class="q-mr-lg"
         />
         <QBtn
           v-else
@@ -903,6 +978,27 @@ onMounted(() => {
             isLoadingBgplayData ||
             !haveRequiredBGPlayParams()
           "
+          class="q-mr-lg"
+        />
+        <QBtn
+          color="indigo"
+          :label="'Previous'"
+          @click="prevEvent"
+          :disable="
+            rawMessages.length === 0 ||
+            (dataSource === 'bgplay'
+              ? initialStateDataCount !== 0
+                ? currentIndex === 0
+                : currentIndex === -1
+              : currentIndex === 0)
+          "
+        />
+        <QBtn
+          color="indigo"
+          :label="'Next'"
+          @click="nextEvent"
+          :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
+          class="q-mr-lg"
         />
         <QBtn color="negative" :label="'Reset'" @click="resetData" />
       </QCardActions>
@@ -950,7 +1046,6 @@ onMounted(() => {
     >
       <BGPLineChart
         :raw-messages="rawMessages"
-        :max-hops="maxHops"
         :used-messages-count="usedMessagesCount"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
@@ -961,8 +1056,11 @@ onMounted(() => {
         :dates-trace="datesTrace"
         :announcements-trace="announcementsTrace"
         :withdrawals-trace="withdrawalsTrace"
+        :current-index="currentIndex"
+        :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
         @disable-live-mode="disableLiveMode"
+        @disable-using-index="disableUsingIndex"
         @enable-live-mode="enableLiveMode"
       />
     </GenericCardController>
