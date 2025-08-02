@@ -799,9 +799,6 @@ watch(isPlaying, () => {
   toggleRisProtocol()
 })
 
-/*watch(currentIndex, (newIndex) => {
-  console.log('Current Index Updated:', newIndex)
-})*/
 
 onMounted(() => {
   initRoute()
