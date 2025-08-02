@@ -5,15 +5,9 @@ import { ref, onMounted, watch } from 'vue'
 import report from '@/plugins/report'
 
 const props = defineProps({
-  prefix: {
-    type: String
-  },
   rawMessages: {
     type: Array,
     default: () => []
-  },
-  maxHops: {
-    type: Number
   },
   usedMessagesCount: {
     type: Number
@@ -69,78 +63,26 @@ const { utcString } = report()
 
 const actualChartData = ref([])
 const actualChartLayout = ref({})
-const minTimestamp = ref(Infinity)
-const maxTimestamp = ref(-Infinity)
 const selectedMaxTimestamp = ref(0)
-const announcementsCount = ref({})
-const withdrawalsCount = ref({})
 const shapes = ref([])
 const sliderWidthInit = ref(false)
-
-// Generate the stacked line chart data for the Plotly chart
-const generateLineChartData = async (message) => {
-  let dates = []
-  let announcementsTrace = []
-  let withdrawalsTrace = []
-  if (props.dataSource === 'ris-live') {
-    const timestamp = message.timestamp
-    //count no of messages based on type
-    if (message.type === 'Announce') {
-      if (!announcementsCount.value[timestamp]) {
-        announcementsCount.value[timestamp] = 0
-      }
-      announcementsCount.value[timestamp]++
-    } else if (message.type === 'Withdraw') {
-      if (!withdrawalsCount.value[timestamp]) {
-        withdrawalsCount.value[timestamp] = 0
-      }
-      withdrawalsCount.value[timestamp]++
-    }
-    // Generate complete timestamps
-    for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
-      dates.push(timestampToUTC(t))
-      announcementsTrace.push(announcementsCount.value[t] || 0)
-      withdrawalsTrace.push(withdrawalsCount.value[t] || 0)
-    }
-  } else {
-    dates = props.datesTrace
-    announcementsTrace = props.announcementsTrace
-    withdrawalsTrace = props.withdrawalsTrace
-  }
-  // Update chart data for announcements and withdrawals
-  return {
-    dates: dates,
-    announcementsTrace: announcementsTrace,
-    withdrawalsTrace: withdrawalsTrace
-  }
-}
 
 const timestampToUTC = (timestamp) => {
   return utcString(new Date(timestamp * 1000))
 }
 
 // Update the time range
-const updateTimeRange = (timestamp) => {
+const updateTimeRange = () => {
   if (props.dataSource === 'ris-live') {
-    if (timestamp) {
-      if (timestamp < minTimestamp.value) {
-        minTimestamp.value = timestamp
-      }
-      if (timestamp > maxTimestamp.value) {
-        maxTimestamp.value = timestamp
-      }
-    }
     if (props.isLiveMode) {
-      selectedMaxTimestamp.value = maxTimestamp.value
+      selectedMaxTimestamp.value = props.maxTimestamp
     }
   } else {
-    minTimestamp.value = props.minTimestamp
-    maxTimestamp.value = props.maxTimestamp
     selectedMaxTimestamp.value = props.minTimestamp
   }
 }
 
-const renderChart = (dates, announcementsTrace, withdrawalsTrace) => {
+const renderChart = async (dates, announcementsTrace, withdrawalsTrace) => {
   const data = [
     {
       x: dates,
@@ -194,7 +136,7 @@ const handlePlotlyClick = (event) => {
   if (point) {
     const timestamp = Math.floor(new Date(point.x + 'Z').getTime() / 1000)
     selectedMaxTimestamp.value = timestamp
-    updateSlider(timestamp)
+    updateSlider(timestamp, true)
   }
 }
 
@@ -236,42 +178,24 @@ const updateSlider = (timestamp, isUsingSlider) => {
 // Adjust the width of the QSlider to match the width of the Plotly chart
 const adjustQSliderWidth = (relayout) => {
   if (!sliderWidthInit.value || relayout) {
-    try {
-      const rectElement = document.querySelector('rect.nsewdrag.drag')
-      const sliderWidth = rectElement.getAttribute('width')
-      const slider = document.querySelector('div.timetampSliderContainer')
-      slider.style.width = `${sliderWidth}px`
-      sliderWidthInit.value = true
-    } catch (e) {}
+    const rectElement = document.querySelector('rect.nsewdrag.drag')
+    const sliderWidth = rectElement.getAttribute('width')
+    const slider = document.querySelector('div.timetampSliderContainer')
+    slider.style.width = `${sliderWidth}px`
+    sliderWidthInit.value = true
   }
 }
 
 const init = async () => {
-  if (props.rawMessages.length == 1) {
-    minTimestamp.value = Infinity
-    maxTimestamp.value = -Infinity
-    sliderWidthInit.value = false
-  }
-  if (props.rawMessages && props.rawMessages.length > 0) {
-    updateTimeRange(props.rawMessages.at(-1).timestamp)
-    const { dates, announcementsTrace, withdrawalsTrace } = await generateLineChartData(
-      props.rawMessages.at(-1)
-    )
-    renderChart(dates, announcementsTrace, withdrawalsTrace)
-    adjustQSliderWidth(false)
-    if (props.dataSource === 'bgplay') {
-      updateSlider(selectedMaxTimestamp.value)
-    }
+  sliderWidthInit.value = false
+  if (props.rawMessages.length === 0) return
+  updateTimeRange()
+  await renderChart(props.datesTrace, props.announcementsTrace, props.withdrawalsTrace)
+  adjustQSliderWidth(false)
+  if (props.dataSource === 'bgplay') {
+    updateSlider(selectedMaxTimestamp.value)
   }
 }
-
-watch(
-  () => props.rawMessages,
-  () => {
-    init()
-  },
-  { deep: true }
-)
 
 //Remove the vertical line and update the selected timestamp
 watch(
@@ -296,11 +220,11 @@ watch(
   () => props.currentIndex,
   () => {
     if (props.isLiveMode || !props.usingIndex) return
-    
+
     if (props.currentIndex === -1) {
       emit('disable-using-index')
-      updateSlider(minTimestamp.value)
-      selectedMaxTimestamp.value = minTimestamp.value
+      updateSlider(props.minTimestamp)
+      selectedMaxTimestamp.value = props.minTimestamp
     } else {
       const timestamp = props.rawMessages[props.currentIndex].timestamp
       selectedMaxTimestamp.value = timestamp
@@ -346,11 +270,11 @@ onMounted(() => {
       <div class="timetampSliderContainer">
         <QSlider
           v-model="selectedMaxTimestamp"
-          :min="minTimestamp === Infinity ? 0 : minTimestamp"
-          :max="maxTimestamp === -Infinity ? 0 : maxTimestamp"
+          :min="props.minTimestamp === Infinity ? 0 : props.minTimestamp"
+          :max="props.maxTimestamp === -Infinity ? 0 : props.maxTimestamp"
           label-always
           :label-value="
-            maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
+            props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
           "
           color="accent"
           @update:model-value="updateSlider($event, true)"
@@ -358,11 +282,15 @@ onMounted(() => {
         <div class="timestampInfo">
           <span
             >Min Timestamp:
-            {{ minTimestamp === Infinity ? 'No Data' : timestampToUTC(minTimestamp) }}</span
+            {{
+              props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
+            }}</span
           >
           <span
             >Max Timestamp:
-            {{ maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(maxTimestamp) }}</span
+            {{
+              props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
+            }}</span
           >
         </div>
       </div>

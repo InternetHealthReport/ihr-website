@@ -267,6 +267,19 @@ const processResData = (data) => {
     if (isLiveMode.value) {
       handleFilterMessages(data)
     }
+
+    if (data.timestamp < minTimestamp.value) {
+      minTimestamp.value = data.timestamp
+    }
+    if (data.timestamp > maxTimestamp.value) {
+      maxTimestamp.value = data.timestamp
+    }
+
+    generateLineChartData({
+      timestamp: data.timestamp,
+      type: data.type
+    })
+    generateLineChartTrace()
   } else {
     //Temp variables to reduce the vue reactivity
     const sources = {}
@@ -316,10 +329,15 @@ const processResData = (data) => {
     })
 
     data.data.events.forEach((event) => {
-      generateLineChartData(event)
       const peer = event.attrs.source_id.split('-')[1]
       const peerInfo = sources[peer]
       const timestamp = timestampToUnix(event.timestamp)
+      const type = addBGPMessageType(event.type)
+
+      generateLineChartData({
+        timestamp: timestamp,
+        type: type
+      })
 
       applyDefaultSelectedPeers(peer)
 
@@ -330,7 +348,7 @@ const processResData = (data) => {
         path: event.attrs.path || [],
         community: addCommunityAndDescriptions(event.attrs.community),
         as_info: addASInfo(event.attrs.path),
-        type: addBGPMessageType(event.type),
+        type: type,
         timestamp: timestamp
       })
     })
@@ -346,33 +364,39 @@ const processResData = (data) => {
   }
 }
 
-const generateLineChartData = (event) => {
-  const timestamp = timestampToUnix(event.timestamp)
-  uniqueEventTimestamps.add(timestamp)
-
-  if (event.type === 'A') {
+const generateLineChartData = (data) => {
+  const timestamp = data.timestamp
+  if (dataSource.value === 'bgplay') {
+    uniqueEventTimestamps.add(timestamp)
+  }
+  if (data.type === 'Announce') {
     announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
-  } else if (event.type === 'W') {
+  } else if (data.type === 'Withdraw') {
     withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
   }
 }
 
 const generateLineChartTrace = () => {
-  // Fill gaps to ensure consistent timestamps
-  for (let t = minTimestamp.value; t <= maxTimestamp.value; t += 60) {
-    uniqueEventTimestamps.add(t)
-  }
-
-  const sortedTimestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
-
   const dTrace = []
   const aTrace = []
   const wTrace = []
+  let timestamps = []
 
-  for (const t of sortedTimestamps) {
+  if (dataSource.value === 'ris-live') {
+    for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
+      timestamps.push(t)
+    }
+  } else {
+    for (let t = minTimestamp.value; t <= maxTimestamp.value; t += 60) {
+      uniqueEventTimestamps.add(t)
+    }
+    timestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
+  }
+
+  for (const t of timestamps) {
     dTrace.push(timestampToUTC(t))
-    aTrace.push(announcementsCount[t] ?? 0)
-    wTrace.push(withdrawalsCount[t] ?? 0)
+    aTrace.push(announcementsCount[t] || 0)
+    wTrace.push(withdrawalsCount[t] || 0)
   }
 
   datesTrace.value = dTrace
@@ -488,6 +512,11 @@ const handleFilterMessages = (data) => {
     //When using the time slider
     uniquePeerMessages.clear()
     let count = 0
+
+    if (selectedMaxTimestamp.value < rawMessages.value[0].timestamp) {
+      currentIndex.value = -1
+    }
+
     for (let i = 0; i < rawMessages.value.length; i++) {
       const msg = rawMessages.value[i]
 
@@ -514,6 +543,9 @@ const setSelectedMaxTimestamp = (val) => {
 }
 
 const disableLiveMode = () => {
+  if (isLiveMode.value && dataSource.value === 'ris-live') {
+    rawMessages.value.sort((a, b) => a.timestamp - b.timestamp)
+  }
   isLiveMode.value = false
 }
 
@@ -1017,7 +1049,6 @@ onMounted(() => {
     >
       <BGPLineChart
         :raw-messages="rawMessages"
-        :max-hops="maxHops"
         :used-messages-count="usedMessagesCount"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
