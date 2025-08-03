@@ -14,8 +14,8 @@ const measurementIDInput = ref('')
 const probeIDs = ref([])
 const destinationIPs = ref([])
 const isProbesOverflow = ref(false)
-const startTime = ref(0)
-const stopTime = ref(0)
+const startTime = ref('')
+const stopTime = ref('')
 
 const loadMeasurement = () => {
   if(measurementID.value == measurementIDInput.value) {
@@ -120,8 +120,8 @@ onMounted(() => {
       :atlas-measurement-i-d="measurementID"
       :probe-i-ds="probeIDs"
       :destination-i-ps="destinationIPs"
-      :start-time="+startTime"
-      :stop-time="+stopTime"
+      :start-time="startTime"
+      :stop-time="stopTime"
       :open-options="true"
       class="traceroute-monitor"
       @set-selected-probes="onUpdateProbesInRoute"

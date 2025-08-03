@@ -25,10 +25,10 @@ const props = defineProps({
     type: Array
   },
   startTime: {
-    type: Number
+    type: String
   },
   stopTime: {
-    type: Number
+    type: String
   }
 })
 
@@ -59,6 +59,15 @@ const intervalValue = ref(null)
 const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
+
+const convertUnixTimestamp = (value) => {
+  const timestampSeconds = Math.floor(new Date(value).getTime() / 1000)
+  if(isNaN(timestampSeconds)) return 0
+  return timestampSeconds
+}
+
+const startTimestamp = ref(convertUnixTimestamp(props.startTime))
+const stopTimestamp = ref(convertUnixTimestamp(props.stopTime))
 
 // re-emitting events from children to grand parent
 const emit = defineEmits([
@@ -324,12 +333,12 @@ const loadMeasurement = async () => {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
 
-      const stopTime = (+props.stopTime !== 0)? +props.stopTime : metaData.value.stop_time
+      const stopTime = (stopTimestamp.value !== 0)? stopTimestamp : metaData.value.stop_time
 
       // Fetch last 5 measurements
       const shortenedDurationStartTime = stopTime - 5*metaData.value["interval"]
-      const startTime = (+props.startTime !== 0) ? 
-                          +props.startTime
+      const startTime = (startTimestamp.value !== 0) ? 
+                          startTimestamp
                           : shortenedDurationStartTime > 0 ?
                             shortenedDurationStartTime
                               : metaData.value.start_time 
@@ -403,7 +412,13 @@ const debounce = (func, wait) => {
 }
 
 const loadMeasurementOnTimeRange = debounce((e) => {
-  emit('setSelectedTimeRange', ({ startTime: e.min, stopTime: e.max }))
+  if(e.min !== 0 && e.max !== 0) {
+    const queryParamObject = { 
+      startTime: new Date(e.min*1000).toISOString(), 
+      stopTime: new Date(e.max*1000).toISOString() 
+    }
+    emit('setSelectedTimeRange', (queryParamObject))
+  }
   rttChartLeftTimestamp.value = e.min
   rttChartRightTimestamp.value = e.max
 
@@ -464,6 +479,14 @@ watch(() => props.probeIDs, (newArr, oldArr) => {
 
 watch(() => props.destinationIPs, () => {
   selectedDestinations.value = props.destinationIPs
+})
+
+watch(() => props.startTime, () => {
+  startTimestamp.value = convertUnixTimestamp(props.startTime)
+})
+
+watch(() => props.stopTime, () => {
+  stopTimestamp.value = convertUnixTimestamp(props.stopTime)
 })
 
 watchEffect(() => {
