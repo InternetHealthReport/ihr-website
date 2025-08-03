@@ -24,6 +24,26 @@ const convertUnixTimestamp = (unixTimestamp) => {
   return `${year} - ${day} ${month}, ${hours}:${minutes}`
 }
 
+const convertTimeToFormat = (value) => {
+  const dateTime = new Date((value ?? 0) * 1000)
+
+  const year = String(dateTime.getFullYear())
+  const day = String(dateTime.getDate()).padStart(2, '0')
+  const month = String(dateTime.getMonth() + 1).padStart(2, '0')
+
+  const hours = String(dateTime.getHours()).padStart(2, '0')
+  const minutes = String(dateTime.getMinutes()).padStart(2, '0')
+  const seconds = String(dateTime.getSeconds()).padStart(2, '0')
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+}
+
+const convertDateTimeToSeconds = (value) => {
+  const timestampSeconds = Math.floor(new Date(value).getTime() / 1000)
+  if (isNaN(timestampSeconds)) return 0
+  return timestampSeconds
+}
+
 const isPrivateIP = (ip) => {
   const privateRangesIPv4 = [
     { start: '10.0.0.0', end: '10.255.255.255' },
@@ -73,4 +93,10 @@ const calculateMedian = (values) => {
   return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2
 }
 
-export { convertUnixTimestamp, isPrivateIP, calculateMedian }
+export {
+  convertUnixTimestamp,
+  isPrivateIP,
+  calculateMedian,
+  convertTimeToFormat,
+  convertDateTimeToSeconds
+}

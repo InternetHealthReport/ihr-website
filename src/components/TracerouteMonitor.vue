@@ -7,7 +7,7 @@ import TracerouteChart from '@/components/charts/TracerouteChart.vue'
 import TracerouteRttChart from '@/components/charts/TracerouteRttChart.vue'
 import TracerouteProbesTable from '@/components/tables/TracerouteProbesTable.vue'
 import TracerouteDestinationsTable from '@/components/tables/TracerouteDestinationsTable.vue'
-import { isPrivateIP, calculateMedian } from '../plugins/tracerouteFunctions'
+import { isPrivateIP, calculateMedian, convertTimeToFormat, convertDateTimeToSeconds } from '../plugins/tracerouteFunctions'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const props = defineProps({
@@ -60,14 +60,8 @@ const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 
-const convertUnixTimestamp = (value) => {
-  const timestampSeconds = Math.floor(new Date(value).getTime() / 1000)
-  if(isNaN(timestampSeconds)) return 0
-  return timestampSeconds
-}
-
-const startTimestamp = ref(convertUnixTimestamp(props.startTime))
-const stopTimestamp = ref(convertUnixTimestamp(props.stopTime))
+const startTimestamp = ref(convertDateTimeToSeconds(props.startTime))
+const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
 
 // re-emitting events from children to grand parent
 const emit = defineEmits([
@@ -414,8 +408,8 @@ const debounce = (func, wait) => {
 const loadMeasurementOnTimeRange = debounce((e) => {
   if(e.min !== 0 && e.max !== 0) {
     const queryParamObject = { 
-      startTime: new Date(e.min*1000).toISOString(), 
-      stopTime: new Date(e.max*1000).toISOString() 
+      startTime: convertTimeToFormat(e.min), 
+      stopTime: convertTimeToFormat(e.max) 
     }
     emit('setSelectedTimeRange', (queryParamObject))
   }
@@ -482,11 +476,11 @@ watch(() => props.destinationIPs, () => {
 })
 
 watch(() => props.startTime, () => {
-  startTimestamp.value = convertUnixTimestamp(props.startTime)
+  startTimestamp.value = convertDateTimeToSeconds(props.startTime)
 })
 
 watch(() => props.stopTime, () => {
-  stopTimestamp.value = convertUnixTimestamp(props.stopTime)
+  stopTimestamp.value = convertDateTimeToSeconds(props.stopTime)
 })
 
 watchEffect(() => {
