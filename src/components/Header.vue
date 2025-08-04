@@ -107,7 +107,7 @@ const SIMPLE_MENU = [
         entryName: 'header.tracerouteVisualization.name',
         routeName: 'traceroute-monitor',
         summary: 'header.tracerouteVisualization.summary',
-        experimental: true
+        experimental: false
       }
     ]
   },
