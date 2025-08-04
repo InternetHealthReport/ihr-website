@@ -59,21 +59,21 @@ const pushRoute = () => {
       replace: true,
       query: Object.assign({}, route.query, {
         measurment: measurementID.value,
-        probeids: probeIDs.value.join(','),
-        destinationips: destinationIPs.value.join(','),
-        starttime: startTime.value,
-        stoptime: stopTime.value
+        'probe-ids': probeIDs.value.join(','),
+        'destination-ips': destinationIPs.value.join(','),
+        'start-time': startTime.value,
+        'stop-time': stopTime.value
       })
     })
   )
 }
 
 onMounted(() => {
-  const tracerouteid = route.query.measurment
-  const probes = route.query.probeids
-  const destinations = route.query.destinationips
-  const startTimeFromQuery = route.query.starttime
-  const stopTimeFromQuery = route.query.stoptime
+  const tracerouteid = route.query['measurment']
+  const probes = route.query['probe-ids']
+  const destinations = route.query['destination-ips']
+  const startTimeFromQuery = route.query['start-time']
+  const stopTimeFromQuery = route.query['stop-time']
 
   if (tracerouteid) {
     measurementIDInput.value = tracerouteid
