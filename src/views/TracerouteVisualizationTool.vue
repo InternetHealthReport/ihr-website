@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { QInput, QIcon, QBtn } from 'quasar'
+import { QInput, QBtn, QCard, QCardSection, QCardActions, QBadge } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import TracerouteMonitor from '@/components/TracerouteMonitor.vue'
 import Tr from '@/i18n/translation'
@@ -99,25 +99,32 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="IHR_char-container q-ma-md">
-    <h1>Traceroute Monitor</h1>
-    <p v-if="isProbesOverflow" class="probes-overflow">
-      The selected measurement: {{measurementID}} is a large measurement. Few points to be noted aboot a large measurement:<br />
-      - There are more than 1000 probes in a measurement, Currently the app limits the number to 1000. <br />
-      - Updating the RTT chart's time slider will make the app try to load a larger amount of data, resulting in latency. 
-    </p>
-    <QInput
-      v-model="measurementIDInput"
-      placeholder="Enter RIPE ATLAS traceroute measurement ID"
-      @keyup.enter="loadMeasurement"
-    >
-      <template #prepend>
-        <QIcon name="web" />
-      </template>
-      <QBtn round dense flat :ripple="false" no-caps size="22px" @click="loadMeasurement">
-        <QIcon name="search" />
-      </QBtn>
-    </QInput>
+  <div class="IHR_char-container">
+    <h1 class="text-center q-pa-xl">Traceroute Monitor</h1>
+    <QCard>
+      <QCardSection>
+        <QInput
+          v-model="measurementIDInput"
+          outlined
+          placeholder="RIPE ATLAS traceroute measurement ID"
+          :dense="true"
+          color="accent"
+        />
+      </QCardSection>
+      <QCardActions align="center">
+        <QBtn label="Search" color="primary" @click="loadMeasurement" />
+      </QCardActions>
+    </QCard>
+    <QBadge v-if="isProbesOverflow" color="red" class="q-mt-lg overflow-badge">
+      <div class="text-body2">
+        <div class="text-weight-bold">RIPE ATLAS Measurement ID <QBadge color="primary" class="text-weight-bold">{{ measurementID }}</QBadge></div>
+        This measurement is a large one. Here are a few important points to note about large measurements:
+        <ul>
+          <li>There are more than 1,000 probes involved in this measurement. Currently, the application limits the number of probes displayed to 1,000.</li>
+          <li>Updating the RTT chart's time slider will prompt the application to load a larger amount of data, which may result in increased latency.</li>
+        </ul>
+      </div>
+    </QBadge>
     <TracerouteMonitor
       :atlas-measurement-i-d="measurementID"
       :probe-i-ds="probeIDs"
@@ -125,7 +132,7 @@ onMounted(() => {
       :start-time="startTime"
       :stop-time="stopTime"
       :open-options="true"
-      class="traceroute-monitor"
+      class="q-mb-lg q-mt-lg"
       @set-selected-probes="onUpdateProbesInRoute"
       @set-selected-destinations="onUpdateDestinationsInRoute"
       @set-selected-time-range="onUpdateTimeRangeInRoute"
@@ -136,10 +143,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.traceroute-monitor {
-  margin-bottom: 20px;
-}
-.probes-overflow {
-  color: red;
+.overflow-badge {
+  width: 100%
 }
 </style>
