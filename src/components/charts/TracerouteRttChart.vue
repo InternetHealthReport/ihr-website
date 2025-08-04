@@ -15,12 +15,6 @@ const props = defineProps({
   metaData: {
     type: Object
   },
-  leftTimestamp: {
-    type: Number
-  },
-  rightTimestamp: {
-    type: Number
-  },
   rttOverTime: {
     type: Array
   },
@@ -31,7 +25,7 @@ const props = defineProps({
 
 const emit = defineEmits(['loadMeasurementOnTimeRange'])
 
-const timeRangeModel = ref({})
+const timeRangeModel = ref({ min: 0, max: 0, disable: true })
 const sliderWidthInit = ref(false)
 const actualChartData = ref([])
 const actualChartLayout = ref({})
@@ -141,6 +135,12 @@ watch(
   () => props.timeRange,
   () => {
     timeRangeModel.value = props.timeRange
+    if (!('min' in timeRangeModel.value)) {
+      timeRangeModel.value.min = null
+    }
+    if (!('max' in timeRangeModel.value)) {
+      timeRangeModel.value.max = null
+    }
   }
 )
 watch(filteredRttOverTime, () => {
@@ -226,7 +226,6 @@ watch(filteredRttOverTime, () => {
       </div>
     </div>
   </div>
-
   <div v-if="isLoading" class="IHR_loading-spinner">
     <QSpinner color="secondary" size="15em" />
   </div>

@@ -41,8 +41,6 @@ const measurementID = ref('')
 const nodes = ref({})
 const edges = ref({})
 const timeRange = ref({ disable: true })
-const rttChartLeftTimestamp = ref(0)
-const rttChartRightTimestamp = ref(0)
 const nodeSize = 15
 const selectedProbes = ref([])
 const allProbes = ref([])
@@ -305,8 +303,6 @@ const loadMeasurement = async () => {
 
   metaData.value = {}
   timeRange.value = { disable: true }
-  rttChartLeftTimestamp.value = 0
-  rttChartRightTimestamp.value = 0
 
   selectedProbes.value = []
   allProbes.value = []
@@ -348,10 +344,6 @@ const loadMeasurement = async () => {
 
       timeRange.value.min = startTime
       timeRange.value.max = stopTime
-
-      rttChartLeftTimestamp.value = startTime
-      rttChartRightTimestamp.value = stopTime
-
       timeRange.value.disable = false
 
       intervalValue.value = fetchedMetaData.interval || null
@@ -429,8 +421,6 @@ const loadMeasurementOnTimeRange = debounce((e) => {
     }
     emit('setSelectedTimeRange', (queryParamObject))
   }
-  rttChartLeftTimestamp.value = e.min
-  rttChartRightTimestamp.value = e.max
 
   // On slider update, update the measurement data
   timeRange.value.min = e.min
@@ -570,8 +560,6 @@ watch(
           :is-loading="isLoadingRtt"
           :time-range="timeRange"
           :meta-data="metaData"
-          :left-timestamp="rttChartLeftTimestamp"
-          :right-timestamp="rttChartRightTimestamp"
           :rtt-over-time="rttOverTime"
           @load-measurement-on-time-range="loadMeasurementOnTimeRange"
         />
