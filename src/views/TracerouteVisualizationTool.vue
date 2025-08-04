@@ -62,7 +62,7 @@ const pushRoute = () => {
         'probe-ids': probeIDs.value.join(','),
         'destination-ips': destinationIPs.value.join(','),
         'start-time': startTime.value,
-        'stop-time': stopTime.value
+        'end-time': stopTime.value
       })
     })
   )
@@ -73,7 +73,7 @@ onMounted(() => {
   const probes = route.query['probe-ids']
   const destinations = route.query['destination-ips']
   const startTimeFromQuery = route.query['start-time']
-  const stopTimeFromQuery = route.query['stop-time']
+  const stopTimeFromQuery = route.query['end-time']
 
   if (tracerouteid) {
     measurementIDInput.value = tracerouteid
