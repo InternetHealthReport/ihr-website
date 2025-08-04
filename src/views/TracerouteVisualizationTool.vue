@@ -26,8 +26,10 @@ const loadMeasurement = () => {
   measurementID.value = measurementIDInput.value
   
   // Clear the previous route values on loading a new measurement
-  probeIDs.value.length = 0
-  destinationIPs.value.length = 0
+  probeIDs.value = []
+  destinationIPs.value = []
+  startTime.value = ''
+  stopTime.value = ''
   pushRoute()
 }
 
