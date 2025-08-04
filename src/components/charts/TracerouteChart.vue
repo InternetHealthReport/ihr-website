@@ -1,7 +1,6 @@
 <script setup>
-import { QBtn, QIcon, QInput, QSpinner, QRadio } from 'quasar'
-import ReactiveChart from './ReactiveChart.vue'
-import { ref, onMounted, watch, computed, nextTick } from 'vue'
+import { QBtn, QSpinner, QRadio } from 'quasar'
+import { ref, watch, computed, nextTick } from 'vue'
 import { VNetworkGraph } from 'v-network-graph'
 import * as vNG from 'v-network-graph'
 import RipeApi from '../../plugins/RipeApi'
@@ -10,6 +9,7 @@ import {
   isPrivateIP,
   calculateMedian
 } from '../../plugins/tracerouteFunctions'
+import '@/styles/chart.css'
 
 const props = defineProps({
   measurementID: {
@@ -326,7 +326,6 @@ watch(displayMode, () => {
 
 <template>
   <div class="graph-container">
-    <QSpinner v-if="isLoading" color="primary" />
     <VNetworkGraph
       v-if="Object.keys(nodes).length > 0 && selectedProbes.length > 0 && !isLoading"
       ref="graph"
@@ -355,7 +354,7 @@ watch(displayMode, () => {
             <span
               class="asnDot"
               :style="{ backgroundColor: asnColors[tooltipData.data.asns[0].asn] || 'gray' }"
-            />
+            ></span>
             <a :href="`/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
               AS{{ tooltipData.data.asns[0].asn }} ({{ tooltipData.data.asns[0].holder }})
             </a>
@@ -445,7 +444,7 @@ watch(displayMode, () => {
               :key="index"
               class="scaleColor"
               :style="{ backgroundColor: rttColor(percentage) }"
-            />
+            ></div>
           </div>
           <div class="scaleLabel">{{ maxDisplayedRtt }}</div>
         </div>
@@ -471,6 +470,9 @@ watch(displayMode, () => {
       <QBtn icon="zoom_in" @click="zoomIn" />
       <QBtn icon="zoom_out" @click="zoomOut" />
       <QBtn icon="fullscreen" @click="toggleFullScreen" />
+    </div>
+    <div v-if="isLoading" class="IHR_loading-spinner">
+      <QSpinner color="secondary" size="15em" />
     </div>
   </div>
 </template>

@@ -1,9 +1,10 @@
 <script setup>
-import { QRange, QDate, QInput, QIcon, QPopupProxy, QTime } from 'quasar'
+import { QRange, QDate, QInput, QIcon, QPopupProxy, QTime, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, computed, watch } from 'vue'
 import { calculateMedian, convertUnixTimestamp, convertTimeToFormat, convertDateTimeToSeconds } from '../../plugins/tracerouteFunctions'
 import DateTimePicker from '../DateTimePicker.vue'
+import '@/styles/chart.css'
 
 const props = defineProps({
   intervalValue: {
@@ -23,6 +24,9 @@ const props = defineProps({
   },
   rttOverTime: {
     type: Array
+  },
+  isLoading: {
+    type: Boolean
   }
 })
 
@@ -266,6 +270,9 @@ watch(filteredRttOverTime, () => {
         </QInput>
       </div>
     </div>
+  </div>
+  <div v-if="isLoading" class="IHR_loading-spinner">
+    <QSpinner color="secondary" size="15em" />
   </div>
 </template>
 

@@ -1,6 +1,7 @@
 <script setup>
-import { QInput, QCheckbox, QTable, QTd, QTr } from 'quasar'
+import { QInput, QCheckbox, QTable, QTd, QTr, QSpinner } from 'quasar'
 import { ref, computed, watch } from 'vue'
+import '@/styles/chart.css'
 
 const props = defineProps({
   nodes: {
@@ -14,6 +15,9 @@ const props = defineProps({
   },
   selectedProbes: {
     type: Array
+  },
+  isLoading: {
+    type: Boolean
   }
 })
 
@@ -116,4 +120,7 @@ watch(selectedProbesModel, () => {
       </QTr>
     </template>
   </QTable>
+  <div v-if="isLoading" class="IHR_loading-spinner">
+    <QSpinner color="secondary" size="15em" />
+  </div>
 </template>

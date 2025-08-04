@@ -1,6 +1,6 @@
 <script setup>
-import { ref, inject, watchEffect, watch, onMounted } from 'vue'
-import { QBtn, QDialog, QCard, QCardSection, QCardActions, QExpansionItem } from 'quasar'
+import { ref, inject, watchEffect, watch } from 'vue'
+import { QExpansionItem } from 'quasar'
 import dagre from 'dagre'
 import RipeApi from '../plugins/RipeApi'
 import TracerouteChart from '@/components/charts/TracerouteChart.vue'
@@ -33,7 +33,10 @@ const props = defineProps({
 })
 
 const atlas_api = inject('atlas_api')
-const isLoading = ref(false)
+const isLoadingChart = ref(false)
+const isLoadingRtt = ref(false)
+const isLoadingProbes = ref(false)
+const isLoadingDestinations = ref(false)
 const measurementID = ref('')
 const nodes = ref({})
 const edges = ref({})
@@ -85,17 +88,20 @@ const processData = async (tracerouteData, loadProbes = false) => {
   const outgoingEdges = new Map()
   let highestMedianRtt = 0
 
+  isLoadingProbes.value = true
   allProbes.value = allProbes.value.length == 0 ? await atlas_api.getProbesByMeasurementId(measurementID.value) : allProbes.value
   atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value, allProbes.value.length >= 1000).then((data) => {
-            data.forEach(x => {
-                probeDetailsMap.value[x.id.toString()] = x
-              })
-            })
+    data.forEach(x => {
+      probeDetailsMap.value[x.id.toString()] = x
+    })
+    isLoadingProbes.value = false
+  })
   atlas_api.getProbesByIds(selectedProbes.value, measurementID.value, selectedProbes.value.length >= 1000).then((data) => {
-            data.forEach(x => {
-                probeDetailsMap.value[x.id.toString()] = x
-              })
-            })
+    data.forEach(x => {
+      probeDetailsMap.value[x.id.toString()] = x
+    })
+    isLoadingProbes.value = false
+  })
 
   if(allProbes.value.length > 1000) {
     emit('probesOverflow', true)
@@ -317,7 +323,10 @@ const loadMeasurement = async () => {
   intervalValue.value = null
 
   if (measurementID.value.trim()) {
-    isLoading.value = true
+    isLoadingChart.value = true
+    isLoadingRtt.value = true
+    isLoadingProbes.value = true
+    isLoadingDestinations.value = true
     try {
       const fetchedMetaData = (await atlas_api.getMeasurementById(measurementID.value)).data
 
@@ -360,14 +369,18 @@ const loadMeasurement = async () => {
       console.log(error)
       handleLoadMeasurementError(error)
     } finally {
-      isLoading.value = false
+      isLoadingChart.value = false
+      isLoadingRtt.value = false
     }
   }
 }
 
 const loadMeasurementData = async (loadProbes = false) => {
   if (measurementID.value.trim()) {
-    isLoading.value = true
+    isLoadingChart.value = true
+    isLoadingRtt.value = true
+    isLoadingProbes.value = true
+    isLoadingDestinations.value = true
     try {
       if (loadProbes) {
         allProbes.value = []
@@ -390,7 +403,8 @@ const loadMeasurementData = async (loadProbes = false) => {
     } catch (error) {
       console.error('Failed to load measurement data:', error)
     } finally {
-      isLoading.value = false
+      isLoadingChart.value = false
+      isLoadingRtt.value = false
     }
   }
 }
@@ -406,6 +420,7 @@ const debounce = (func, wait) => {
 }
 
 const loadMeasurementOnTimeRange = debounce((e) => {
+  isLoadingRtt.value = true
   if(e.min !== 0 && e.max !== 0) {
     const queryParamObject = { 
       startTime: convertTimeToFormat(e.min), 
@@ -419,7 +434,9 @@ const loadMeasurementOnTimeRange = debounce((e) => {
   // On slider update, update the measurement data
   timeRange.value.min = e.min
   timeRange.value.max = e.max
-  loadMeasurementData()
+  loadMeasurementData().finally(() => {
+    isLoadingRtt.value = false
+  })
 }, 3000)
 
 const loadMeasurementOnProbeChange = debounce(() => {
@@ -427,11 +444,19 @@ const loadMeasurementOnProbeChange = debounce(() => {
 }, 1000)
 
 const loadMeasurementOnDestinationChange = debounce(() => {
-  loadMeasurementData()
+  isLoadingDestinations.value = true
+  loadMeasurementData().finally(() => {
+    isLoadingDestinations.value = false
+  })
 }, 1000)
 
 const loadMeasurementOnSearchQuery = debounce(() => {
-  loadMeasurementData()
+  isLoadingProbes.value = true
+  isLoadingDestinations.value = true
+  loadMeasurementData().finally(() => {
+    isLoadingProbes.value = false
+    isLoadingDestinations.value = false
+  })
 }, 1000)
 
 const sortAndCompare = (arrA, arrB) => {
@@ -525,7 +550,7 @@ watch(
   >
     <TracerouteChart
       :measurement-i-d="measurementID"
-      :is-loading="isLoading"
+      :is-loading="isLoadingChart"
       :nodes="nodes"
       :selected-probes="selectedProbes"
       :node-size="nodeSize"
@@ -549,6 +574,7 @@ watch(
       >
         <TracerouteRttChart
           :interval-value="intervalValue"
+          :is-loading="isLoadingRtt"
           :time-range="timeRange"
           :meta-data="metaData"
           :left-timestamp="rttChartLeftTimestamp"
@@ -569,6 +595,7 @@ watch(
           :all-probes="allProbes"
           :probe-details-map="probeDetailsMap"
           :selected-probes="selectedProbes"
+          :is-loading="isLoadingProbes"
           @set-selected-probes="setSelectedProbes"
           @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
         />
@@ -585,6 +612,7 @@ watch(
           :select-all-destinations="selectAllDestinations"
           :ip-to-asn-map="ipToAsnMap"
           :selected-destinations="selectedDestinations"
+          :is-loading="isLoadingDestinations"
           @set-selected-destinations="setSelectedDestinations"
           @set-select-all-destinations="setSelectAllDestinations"
           @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
