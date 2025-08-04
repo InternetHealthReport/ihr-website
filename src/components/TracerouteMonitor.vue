@@ -88,7 +88,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
   const outgoingEdges = new Map()
   let highestMedianRtt = 0
 
-  isLoadingProbes.value = true
   allProbes.value = allProbes.value.length == 0 ? await atlas_api.getProbesByMeasurementId(measurementID.value) : allProbes.value
   atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value, allProbes.value.length >= 1000).then((data) => {
     data.forEach(x => {
@@ -371,6 +370,7 @@ const loadMeasurement = async () => {
     } finally {
       isLoadingChart.value = false
       isLoadingRtt.value = false
+      isLoadingDestinations.value = false
     }
   }
 }
@@ -405,6 +405,7 @@ const loadMeasurementData = async (loadProbes = false) => {
     } finally {
       isLoadingChart.value = false
       isLoadingRtt.value = false
+      isLoadingDestinations.value = false
     }
   }
 }
@@ -444,19 +445,11 @@ const loadMeasurementOnProbeChange = debounce(() => {
 }, 1000)
 
 const loadMeasurementOnDestinationChange = debounce(() => {
-  isLoadingDestinations.value = true
-  loadMeasurementData().finally(() => {
-    isLoadingDestinations.value = false
-  })
+  loadMeasurementData()
 }, 1000)
 
 const loadMeasurementOnSearchQuery = debounce(() => {
-  isLoadingProbes.value = true
-  isLoadingDestinations.value = true
-  loadMeasurementData().finally(() => {
-    isLoadingProbes.value = false
-    isLoadingDestinations.value = false
-  })
+  loadMeasurementData()
 }, 1000)
 
 const sortAndCompare = (arrA, arrB) => {
