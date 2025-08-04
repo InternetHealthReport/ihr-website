@@ -1,9 +1,8 @@
 <script setup>
-import { QRange, QDate, QInput, QIcon, QPopupProxy, QTime, QSpinner } from 'quasar'
+import { QRange, QDate, QInput, QIcon, QPopupProxy, QTime, QSpinner, QSpace } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, computed, watch } from 'vue'
 import { calculateMedian, convertUnixTimestamp, convertTimeToFormat, convertDateTimeToSeconds } from '../../plugins/tracerouteFunctions'
-import DateTimePicker from '../DateTimePicker.vue'
 import '@/styles/chart.css'
 
 const props = defineProps({
@@ -182,92 +181,47 @@ watch(filteredRttOverTime, () => {
           drag-range
           @change="rangeOnChane"
         />
-      </div>
-    </div>
-    <div class="timestampInput">
-      <div class="timestampInputContainer">
-        <QInput 
-          v-model="leftDateTimePicker" 
-          filled
-        >
-          <template #prepend>
-            <QIcon 
-              name="event" 
-              class="cursor-pointer"
+        <div class="row">
+          <div class="col-2">
+            <QInput
+              label="Start Date Time in (UTC)"
+              v-model="leftDateTimePicker"
+              class="input"
+              filled
             >
-              <QPopupProxy 
-                cover 
-                transition-show="scale" 
-                transition-hide="scale"
-              >
-                <QDate 
-                  v-model="leftDateTimePicker" 
-                  mask="YYYY-MM-DDTHH:mm:ss" 
-                />
-              </QPopupProxy>
-            </QIcon>
-          </template>
-          <template #append>
-            <QIcon 
-              name="access_time" 
-              class="cursor-pointer"
+              <template v-slot:append>
+                <QIcon name="event" class="cursor-pointer">
+                  <QPopupProxy no-route-dismiss cover>
+                    <div class="q-pa-md q-gutter-md row items-start">
+                      <QDate flat v-model="leftDateTimePicker" mask="YYYY-MM-DDTHH:mm" />
+                      <QTime flat v-model="leftDateTimePicker" mask="YYYY-MM-DDTHH:mm" />
+                    </div>
+                  </QPopupProxy>
+                </QIcon>
+              </template>
+            </QInput>
+          </div>
+          <QSpace />
+          <div class="col-2">
+            <QInput
+              label="End Date Time in (UTC)"
+              v-model="rightDateTimePicker"
+              class="input"
+              filled
             >
-              <QPopupProxy 
-                cover 
-                transition-show="scale" 
-                transition-hide="scale"
-              >
-                <QTime 
-                  v-model="leftDateTimePicker" 
-                  mask="YYYY-MM-DDTHH:mm:ss" 
-                  format24h 
-                />
-              </QPopupProxy>
-            </QIcon>
-          </template>
-        </QInput>
-      </div>
-      <div class="timestampInputContainer">
-        <QInput 
-          v-model="rightDateTimePicker" 
-          filled
-        >
-          <template #prepend>
-            <QIcon 
-              name="event" 
-              class="cursor-pointer"
-            >
-              <QPopupProxy 
-                cover 
-                transition-show="scale" 
-                transition-hide="scale"
-              >
-                <QDate 
-                  v-model="rightDateTimePicker" 
-                  mask="YYYY-MM-DDTHH:mm:ss" 
-                />
-              </QPopupProxy>
-            </QIcon>
-          </template>
-          <template #append>
-            <QIcon 
-              name="access_time" 
-              class="cursor-pointer"
-            >
-              <QPopupProxy 
-                cover 
-                transition-show="scale" 
-                transition-hide="scale"
-              >
-                <QTime 
-                  v-model="rightDateTimePicker" 
-                  mask="YYYY-MM-DDTHH:mm:ss" 
-                  format24h 
-                />
-              </QPopupProxy>
-            </QIcon>
-          </template>
-        </QInput>
+              <template v-slot:append>
+                <QIcon name="event" class="cursor-pointer">
+                  <QPopupProxy no-route-dismiss cover>
+                    <div class="q-pa-md q-gutter-md row items-start">
+                      <QDate flat v-model="rightDateTimePicker" mask="YYYY-MM-DDTHH:mm" />
+                      <QTime flat v-model="rightDateTimePicker" mask="YYYY-MM-DDTHH:mm" />
+                    </div>
+                  </QPopupProxy>
+                </QIcon>
+              </template>
+            </QInput>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -293,18 +247,4 @@ watch(filteredRttOverTime, () => {
   gap: 10px;
   width: 100%;
 }
-
-.timestampInput {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.timestampInputContainer {
-  flex: 30%;
-  /* gap: 30px; */
-  justify-content: center;
-  align-items: center;
-  margin: 0 10%;
-}
-
 </style>
