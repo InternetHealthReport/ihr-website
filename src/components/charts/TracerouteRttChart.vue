@@ -1,8 +1,9 @@
 <script setup>
-import { QRange } from 'quasar'
+import { QRange, QDate, QInput, QIcon, QPopupProxy, QTime } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, computed, watch } from 'vue'
-import { calculateMedian } from '../../plugins/tracerouteFunctions'
+import { calculateMedian, convertUnixTimestamp, convertTimeToFormat, convertDateTimeToSeconds } from '../../plugins/tracerouteFunctions'
+import DateTimePicker from '../DateTimePicker.vue'
 
 const props = defineProps({
   intervalValue: {
@@ -14,11 +15,11 @@ const props = defineProps({
   metaData: {
     type: Object
   },
-  leftLabelValue: {
-    type: String
+  leftTimestamp: {
+    type: Number
   },
-  rightLabelValue: {
-    type: String
+  rightTimestamp: {
+    type: Number
   },
   rttOverTime: {
     type: Array
@@ -34,6 +35,16 @@ const actualChartLayout = ref({})
 const showOneOffMessage = ref(false)
 const showTooSmallMessage = ref(false)
 const showNoDataMessage = ref(true)
+const leftDateTimePicker = ref(convertTimeToFormat(0))
+const rightDateTimePicker = ref(convertTimeToFormat(0))
+
+const leftLabel = computed(() => {
+  return convertUnixTimestamp(timeRangeModel.value.min) ?? ''
+})
+
+const rightLabel = computed(() => {
+  return convertUnixTimestamp(timeRangeModel.value.max) ?? ''
+})
 
 const plotRTTChart = async () => {
   if (!props.intervalValue) {
@@ -90,6 +101,8 @@ const filteredRttOverTime = computed(() => {
   }
 
   const { min, max } = timeRangeModel.value
+  leftDateTimePicker.value = convertTimeToFormat(min)
+  rightDateTimePicker.value = convertTimeToFormat(max)
   return props.rttOverTime.filter((dataPoint) => {
     return dataPoint.timestamp >= min && dataPoint.timestamp <= max
   })
@@ -111,6 +124,15 @@ const adjustQSliderWidth = (relayout) => {
 const rangeOnChane = (event) => {
   emit('loadMeasurementOnTimeRange', event)
 }
+
+watch([leftDateTimePicker, rightDateTimePicker], 
+  () => {
+    emit('loadMeasurementOnTimeRange', {
+      min: convertDateTimeToSeconds(leftDateTimePicker.value),
+      max: convertDateTimeToSeconds(rightDateTimePicker.value)
+    })
+  }
+)
 
 watch(
   () => props.timeRange,
@@ -150,12 +172,98 @@ watch(filteredRttOverTime, () => {
           :disable="timeRangeModel.disable"
           :min="minTime"
           :max="maxTime"
-          :left-label-value="leftLabelValue"
-          :right-label-value="rightLabelValue"
+          :left-label-value="leftLabel"
+          :right-label-value="rightLabel"
           label-always
           drag-range
           @change="rangeOnChane"
         />
+      </div>
+    </div>
+    <div class="timestampInput">
+      <div class="timestampInputContainer">
+        <QInput 
+          v-model="leftDateTimePicker" 
+          filled
+        >
+          <template #prepend>
+            <QIcon 
+              name="event" 
+              class="cursor-pointer"
+            >
+              <QPopupProxy 
+                cover 
+                transition-show="scale" 
+                transition-hide="scale"
+              >
+                <QDate 
+                  v-model="leftDateTimePicker" 
+                  mask="YYYY-MM-DDTHH:mm:ss" 
+                />
+              </QPopupProxy>
+            </QIcon>
+          </template>
+          <template #append>
+            <QIcon 
+              name="access_time" 
+              class="cursor-pointer"
+            >
+              <QPopupProxy 
+                cover 
+                transition-show="scale" 
+                transition-hide="scale"
+              >
+                <QTime 
+                  v-model="leftDateTimePicker" 
+                  mask="YYYY-MM-DDTHH:mm:ss" 
+                  format24h 
+                />
+              </QPopupProxy>
+            </QIcon>
+          </template>
+        </QInput>
+      </div>
+      <div class="timestampInputContainer">
+        <QInput 
+          v-model="rightDateTimePicker" 
+          filled
+        >
+          <template #prepend>
+            <QIcon 
+              name="event" 
+              class="cursor-pointer"
+            >
+              <QPopupProxy 
+                cover 
+                transition-show="scale" 
+                transition-hide="scale"
+              >
+                <QDate 
+                  v-model="rightDateTimePicker" 
+                  mask="YYYY-MM-DDTHH:mm:ss" 
+                />
+              </QPopupProxy>
+            </QIcon>
+          </template>
+          <template #append>
+            <QIcon 
+              name="access_time" 
+              class="cursor-pointer"
+            >
+              <QPopupProxy 
+                cover 
+                transition-show="scale" 
+                transition-hide="scale"
+              >
+                <QTime 
+                  v-model="rightDateTimePicker" 
+                  mask="YYYY-MM-DDTHH:mm:ss" 
+                  format24h 
+                />
+              </QPopupProxy>
+            </QIcon>
+          </template>
+        </QInput>
       </div>
     </div>
   </div>
@@ -178,4 +286,18 @@ watch(filteredRttOverTime, () => {
   gap: 10px;
   width: 100%;
 }
+
+.timestampInput {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.timestampInputContainer {
+  flex: 30%;
+  /* gap: 30px; */
+  justify-content: center;
+  align-items: center;
+  margin: 0 10%;
+}
+
 </style>

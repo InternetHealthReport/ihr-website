@@ -1,6 +1,6 @@
 import { get, set, del, clear, keys, getMany, delMany } from 'idb-keyval'
 
-const cache = async (key, fetcher, options) => {
+const cache = async (key, fetcher, options, combinator = null) => {
   if (!options) {
     options = defaultOptions
   } else {
@@ -12,6 +12,9 @@ const cache = async (key, fetcher, options) => {
   } else {
     try {
       item = await fetcher()
+      if (combinator != null) {
+        item = combinator(item)
+      }
       const sessionObj = {
         ...options,
         data: item
@@ -28,7 +31,7 @@ const cache = async (key, fetcher, options) => {
           error.name === 'NS_ERROR_DOM_QUOTA_REACHED')
       ) {
         await deleteExpiredItemsAndReduceSpace()
-        item = await cache(key, fetcher, options)
+        item = await cache(key, fetcher, options, combinator)
       }
     }
   }

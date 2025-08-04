@@ -20,7 +20,7 @@ const props = defineProps({
 const emit = defineEmits(['loadMeasurementOnSearchQuery', 'setSelectedProbes'])
 
 const searchQuery = ref('')
-const selectAllProbes = ref(true)
+const selectAllProbes = ref(null)
 const selectedProbesModel = ref(props.selectedProbes)
 
 const paginatedProbes = computed(() => {
@@ -31,7 +31,7 @@ const paginatedProbes = computed(() => {
       ...props.probeDetailsMap[probe]
     }))
     .filter((probe) => {
-      return ['address_v4', 'address_v6', 'country_code', 'asn_v4', 'asn_v6'].some((field) => {
+      return ['address_v4', 'address_v6', 'country_code', 'asn_v4', 'asn_v6', 'id'].some((field) => {
         return probe[field] && probe[field].toString().toLowerCase().includes(query)
       })
     })
@@ -54,17 +54,20 @@ const toggleSelectAll = (value) => {
   }
 }
 
-watch(
-  () => props.nodes,
-  () => {
-    selectAllProbes.value = true
-  }
-)
 
 watch(
-  () => props.selectedProbes,
+  [() => props.selectedProbes, () => props.allProbes],
   () => {
     selectedProbesModel.value = props.selectedProbes
+    if(props.selectedProbes.length === props.allProbes.length) {
+      selectAllProbes.value = true
+    }
+    else if(props.selectedProbes.length === 0)  {
+      selectAllProbes.value = false
+    }
+    else {
+      selectAllProbes.value = null
+    }
   }
 )
 
@@ -77,7 +80,6 @@ watch(selectedProbesModel, () => {
   <QInput
     v-model="searchQuery"
     placeholder="Search..."
-    :disable="Object.keys(nodes).length < 1"
     @input="emit('loadMeasurementOnSearchQuery')"
   />
   <QTable :rows="paginatedProbes" :columns="columns" row-key="probe" flat>
@@ -87,7 +89,7 @@ watch(selectedProbesModel, () => {
           <template v-if="col.name === 'probe'">
             <QCheckbox
               v-model="selectAllProbes"
-              :disable="Object.keys(nodes).length < 1"
+              toggle-order="ft"
               @update:model-value="toggleSelectAll"
             />
           </template>
