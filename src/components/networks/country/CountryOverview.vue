@@ -7,7 +7,7 @@ import '@/styles/chart.css'
 import { LMap, LTileLayer, LControl, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { icon } from 'leaflet'
-import { Country }  from 'country-state-city'
+import { Country } from 'country-state-city'
 
 const iyp_api = inject('iyp_api')
 
@@ -79,13 +79,13 @@ const queries = ref([
     query: `MATCH (p:Point)-[:LOCATED_IN]-(a:AtlasProbe {status_name: 'Connected'})-[:COUNTRY]-(:Country {country_code: $cc})
       RETURN p.position.longitude AS longitude, p.position.latitude AS latitude, a.id AS id, a.description AS description`,
     icon: icon({
-    iconUrl: '/leaflet/marker-icon-red.png',
-    shadowUrl: '/leaflet/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    shadowSize: [41, 41],
-    popupAnchor: [1, -34]
-  })
+      iconUrl: '/leaflet/marker-icon-red.png',
+      shadowUrl: '/leaflet/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      shadowSize: [41, 41],
+      popupAnchor: [1, -34]
+    })
   },
   {
     data: [],
@@ -99,7 +99,7 @@ const queries = ref([
       shadowSize: [41, 41],
       popupAnchor: [1, -34]
     })
-  },
+  }
 ])
 const zoom = ref(5)
 const countryInfo = ref(Country.getCountryByCode(props.countryCode))
@@ -300,32 +300,75 @@ onMounted(() => {
       </thead>
       <tbody>
         <tr>
-          <td style="height: 600px;">
-            <LMap v-model="zoom" v-model:zoom="zoom" :center="[countryInfo.latitude, countryInfo.longitude]" :use-global-leaflet="false" :options="{ attributionControl: false }">
-              <LTileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base" name="OpenStreetMap"></LTileLayer>
+          <td style="height: 600px">
+            <LMap
+              v-model="zoom"
+              v-model:zoom="zoom"
+              :center="[countryInfo.latitude, countryInfo.longitude]"
+              :use-global-leaflet="false"
+              :options="{ attributionControl: false }"
+            >
+              <LTileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                layer-type="base"
+                name="OpenStreetMap"
+              ></LTileLayer>
               <LControl>
                 <QCard>
                   <QCardSection>
                     <div>
-                      <QCheckbox v-model="facilitiesPoints" label="Facilities" color="blue" keep-color />
+                      <QCheckbox
+                        v-model="facilitiesPoints"
+                        label="Facilities"
+                        color="blue"
+                        keep-color
+                      />
                     </div>
                     <div>
-                      <QCheckbox v-model="organizationPoints" label="Organizations" color="green" keep-color />
+                      <QCheckbox
+                        v-model="organizationPoints"
+                        label="Organizations"
+                        color="green"
+                        keep-color
+                      />
                     </div>
                     <div>
-                      <QCheckbox v-model="atlasProbePoints" label="Atlas Probes" color="red" keep-color />
+                      <QCheckbox
+                        v-model="atlasProbePoints"
+                        label="Atlas Probes"
+                        color="red"
+                        keep-color
+                      />
                     </div>
                   </QCardSection>
                 </QCard>
               </LControl>
-              <LMarker v-if="facilitiesPoints" v-for="(item, index) in queries[3].data" :key="index" :lat-lng="[item.latitude, item.longitude]" :icon="queries[3].icon">
+              <LMarker
+                v-if="facilitiesPoints"
+                v-for="(item, index) in queries[3].data"
+                :key="index"
+                :lat-lng="[item.latitude, item.longitude]"
+                :icon="queries[3].icon"
+              >
                 <LPopup>{{ item.name }}</LPopup>
               </LMarker>
-              <LMarker v-if="atlasProbePoints" v-for="(item, index) in queries[4].data" :key="index" :lat-lng="[item.latitude, item.longitude]" :icon="queries[4].icon">
+              <LMarker
+                v-if="atlasProbePoints"
+                v-for="(item, index) in queries[4].data"
+                :key="index"
+                :lat-lng="[item.latitude, item.longitude]"
+                :icon="queries[4].icon"
+              >
                 <LPopup v-if="item.description">{{ item.id }} - {{ item.description }}</LPopup>
                 <LPopup v-else>{{ item.id }}</LPopup>
               </LMarker>
-              <LMarker v-if="organizationPoints" v-for="(item, index) in queries[5].data" :key="index" :lat-lng="[item.latitude, item.longitude]" :icon="queries[5].icon">
+              <LMarker
+                v-if="organizationPoints"
+                v-for="(item, index) in queries[5].data"
+                :key="index"
+                :lat-lng="[item.latitude, item.longitude]"
+                :icon="queries[5].icon"
+              >
                 <LPopup>{{ item.name }}</LPopup>
               </LMarker>
             </LMap>

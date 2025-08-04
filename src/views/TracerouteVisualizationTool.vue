@@ -18,13 +18,13 @@ const startTime = ref('')
 const stopTime = ref('')
 
 const loadMeasurement = () => {
-  if(measurementID.value == measurementIDInput.value) {
+  if (measurementID.value == measurementIDInput.value) {
     return
   }
 
   // Update when value is changed
   measurementID.value = measurementIDInput.value
-  
+
   // Clear the previous route values on loading a new measurement
   probeIDs.value = []
   destinationIPs.value = []
@@ -62,7 +62,7 @@ const pushRoute = () => {
         probeids: probeIDs.value.join(','),
         destinationips: destinationIPs.value.join(','),
         starttime: startTime.value,
-        stoptime: stopTime.value,
+        stoptime: stopTime.value
       })
     })
   )
@@ -88,11 +88,11 @@ onMounted(() => {
     destinationIPs.value = destinations.split(',')
   }
 
-  if(startTimeFromQuery) {
+  if (startTimeFromQuery) {
     startTime.value = startTimeFromQuery
   }
 
-  if(stopTimeFromQuery) {
+  if (stopTimeFromQuery) {
     stopTime.value = stopTimeFromQuery
   }
 })
@@ -117,11 +117,21 @@ onMounted(() => {
     </QCard>
     <QBadge v-if="isProbesOverflow" color="red" class="q-mt-lg overflow-badge">
       <div class="text-body2">
-        <div class="text-weight-bold">RIPE ATLAS Measurement ID <QBadge color="primary" class="text-weight-bold">{{ measurementID }}</QBadge></div>
-        This measurement is a large one. Here are a few important points to note about large measurements:
+        <div class="text-weight-bold">
+          RIPE ATLAS Measurement ID
+          <QBadge color="primary" class="text-weight-bold">{{ measurementID }}</QBadge>
+        </div>
+        This measurement is a large one. Here are a few important points to note about large
+        measurements:
         <ul>
-          <li>There are more than 1,000 probes involved in this measurement. Currently, the application limits the number of probes displayed to 1,000.</li>
-          <li>Updating the RTT chart's time slider will prompt the application to load a larger amount of data, which may result in increased latency.</li>
+          <li>
+            There are more than 1,000 probes involved in this measurement. Currently, the
+            application limits the number of probes displayed to 1,000.
+          </li>
+          <li>
+            Updating the RTT chart's time slider will prompt the application to load a larger amount
+            of data, which may result in increased latency.
+          </li>
         </ul>
       </div>
     </QBadge>
@@ -144,6 +154,6 @@ onMounted(() => {
 
 <style scoped>
 .overflow-badge {
-  width: 100%
+  width: 100%;
 }
 </style>

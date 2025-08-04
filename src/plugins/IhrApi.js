@@ -97,7 +97,6 @@ const IhrApi = {
       }
     }
 
-
     const getUrl = (queryFilter) => {
       if (queryFilter == null) {
         return ''

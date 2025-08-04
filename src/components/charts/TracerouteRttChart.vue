@@ -2,7 +2,12 @@
 import { QRange, QDate, QInput, QIcon, QPopupProxy, QTime, QSpinner, QSpace } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, computed, watch } from 'vue'
-import { calculateMedian, convertUnixTimestamp, convertTimeToFormat, convertDateTimeToSeconds } from '../../plugins/tracerouteFunctions'
+import {
+  calculateMedian,
+  convertUnixTimestamp,
+  convertTimeToFormat,
+  convertDateTimeToSeconds
+} from '../../plugins/tracerouteFunctions'
 import '@/styles/chart.css'
 
 const props = defineProps({
@@ -122,14 +127,12 @@ const rangeOnChane = (event) => {
   emit('loadMeasurementOnTimeRange', event)
 }
 
-watch([leftDateTimePicker, rightDateTimePicker], 
-  () => {
-    emit('loadMeasurementOnTimeRange', {
-      min: convertDateTimeToSeconds(leftDateTimePicker.value),
-      max: convertDateTimeToSeconds(rightDateTimePicker.value)
-    })
-  }
-)
+watch([leftDateTimePicker, rightDateTimePicker], () => {
+  emit('loadMeasurementOnTimeRange', {
+    min: convertDateTimeToSeconds(leftDateTimePicker.value),
+    max: convertDateTimeToSeconds(rightDateTimePicker.value)
+  })
+})
 
 watch(
   () => props.timeRange,
@@ -205,18 +208,18 @@ watch(filteredRttOverTime, () => {
         </div>
         <QSpace />
         <div class="col-2">
-          <QInput
-            label="End Date Time in (UTC)"
-            v-model="rightDateTimePicker"
-            class="input"
-            filled
-          >
+          <QInput label="End Date Time in (UTC)" v-model="rightDateTimePicker" class="input" filled>
             <template v-slot:append>
               <QIcon name="event" class="cursor-pointer">
                 <QPopupProxy no-route-dismiss cover>
                   <div class="q-pa-md q-gutter-md row items-start">
                     <QDate flat v-model="rightDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" />
-                    <QTime flat v-model="rightDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" format24h />
+                    <QTime
+                      flat
+                      v-model="rightDateTimePicker"
+                      mask="YYYY-MM-DDTHH:mm:ss"
+                      format24h
+                    />
                   </div>
                 </QPopupProxy>
               </QIcon>

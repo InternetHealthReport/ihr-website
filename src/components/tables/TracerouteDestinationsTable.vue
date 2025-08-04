@@ -24,7 +24,11 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['loadMeasurementOnSearchQuery', 'setSelectedDestinations', 'setSelectAllDestinations'])
+const emit = defineEmits([
+  'loadMeasurementOnSearchQuery',
+  'setSelectedDestinations',
+  'setSelectAllDestinations'
+])
 
 const destinationSearchQuery = ref('')
 const selectAllDestinationsModel = ref(props.selectAllDestinations)
@@ -71,29 +75,24 @@ const destinationRows = computed(() => {
 watch(
   () => props.nodes,
   () => {
-    if(selectAllDestinationsModel.value === true) {
+    if (selectAllDestinationsModel.value === true) {
       emit('setSelectedDestinations', props.allDestinations)
     }
   }
 )
 
-watch(
-  [() => props.selectedDestinations, () => props.allDestinations],
-  () => {
-    selectDestinationsModel.value = props.selectedDestinations
-    if(props.selectedDestinations.length === props.allDestinations.length) {
-      selectAllDestinationsModel.value = true
-    }
-    else if(props.selectedDestinations.length === 0) {
-      selectAllDestinationsModel.value = false
-    }
-    else {
-      selectAllDestinationsModel.value = null
-    }
-
-    emit('setSelectAllDestinations', selectAllDestinationsModel.value)
+watch([() => props.selectedDestinations, () => props.allDestinations], () => {
+  selectDestinationsModel.value = props.selectedDestinations
+  if (props.selectedDestinations.length === props.allDestinations.length) {
+    selectAllDestinationsModel.value = true
+  } else if (props.selectedDestinations.length === 0) {
+    selectAllDestinationsModel.value = false
+  } else {
+    selectAllDestinationsModel.value = null
   }
-)
+
+  emit('setSelectAllDestinations', selectAllDestinationsModel.value)
+})
 
 watch(selectDestinationsModel, () => {
   emit('setSelectedDestinations', selectDestinationsModel.value)

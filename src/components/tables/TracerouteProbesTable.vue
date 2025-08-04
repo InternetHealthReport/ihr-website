@@ -35,9 +35,11 @@ const paginatedProbes = computed(() => {
       ...props.probeDetailsMap[probe]
     }))
     .filter((probe) => {
-      return ['address_v4', 'address_v6', 'country_code', 'asn_v4', 'asn_v6', 'id'].some((field) => {
-        return probe[field] && probe[field].toString().toLowerCase().includes(query)
-      })
+      return ['address_v4', 'address_v6', 'country_code', 'asn_v4', 'asn_v6', 'id'].some(
+        (field) => {
+          return probe[field] && probe[field].toString().toLowerCase().includes(query)
+        }
+      )
     })
 })
 
@@ -58,22 +60,16 @@ const toggleSelectAll = (value) => {
   }
 }
 
-
-watch(
-  [() => props.selectedProbes, () => props.allProbes],
-  () => {
-    selectedProbesModel.value = props.selectedProbes
-    if(props.selectedProbes.length === props.allProbes.length) {
-      selectAllProbes.value = true
-    }
-    else if(props.selectedProbes.length === 0)  {
-      selectAllProbes.value = false
-    }
-    else {
-      selectAllProbes.value = null
-    }
+watch([() => props.selectedProbes, () => props.allProbes], () => {
+  selectedProbesModel.value = props.selectedProbes
+  if (props.selectedProbes.length === props.allProbes.length) {
+    selectAllProbes.value = true
+  } else if (props.selectedProbes.length === 0) {
+    selectAllProbes.value = false
+  } else {
+    selectAllProbes.value = null
   }
-)
+})
 
 watch(selectedProbesModel, () => {
   emit('setSelectedProbes', selectedProbesModel.value)

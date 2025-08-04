@@ -7,7 +7,12 @@ import TracerouteChart from '@/components/charts/TracerouteChart.vue'
 import TracerouteRttChart from '@/components/charts/TracerouteRttChart.vue'
 import TracerouteProbesTable from '@/components/tables/TracerouteProbesTable.vue'
 import TracerouteDestinationsTable from '@/components/tables/TracerouteDestinationsTable.vue'
-import { isPrivateIP, calculateMedian, convertTimeToFormat, convertDateTimeToSeconds } from '../plugins/tracerouteFunctions'
+import {
+  isPrivateIP,
+  calculateMedian,
+  convertTimeToFormat,
+  convertDateTimeToSeconds
+} from '../plugins/tracerouteFunctions'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const props = defineProps({
@@ -66,10 +71,10 @@ const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
 
 // re-emitting events from children to grand parent
 const emit = defineEmits([
-  'setSelectedDestinations', 
-  'setSelectedProbes', 
-  'probesOverflow', 
-  'setSelectedTimeRange',
+  'setSelectedDestinations',
+  'setSelectedProbes',
+  'probesOverflow',
+  'setSelectedTimeRange'
 ])
 
 const handleLoadMeasurementError = (error) => {
@@ -86,26 +91,36 @@ const processData = async (tracerouteData, loadProbes = false) => {
   const outgoingEdges = new Map()
   let highestMedianRtt = 0
 
-  allProbes.value = allProbes.value.length == 0 ? await atlas_api.getProbesByMeasurementId(measurementID.value) : allProbes.value
-  atlas_api.getProbesByIds(allProbes.value.slice(0, 1000), measurementID.value, allProbes.value.length >= 1000).then((data) => {
-    data.forEach(x => {
-      probeDetailsMap.value[x.id.toString()] = x
+  allProbes.value =
+    allProbes.value.length == 0
+      ? await atlas_api.getProbesByMeasurementId(measurementID.value)
+      : allProbes.value
+  atlas_api
+    .getProbesByIds(
+      allProbes.value.slice(0, 1000),
+      measurementID.value,
+      allProbes.value.length >= 1000
+    )
+    .then((data) => {
+      data.forEach((x) => {
+        probeDetailsMap.value[x.id.toString()] = x
+      })
+      isLoadingProbes.value = false
     })
-    isLoadingProbes.value = false
-  })
-  atlas_api.getProbesByIds(selectedProbes.value, measurementID.value, selectedProbes.value.length >= 1000).then((data) => {
-    data.forEach(x => {
-      probeDetailsMap.value[x.id.toString()] = x
+  atlas_api
+    .getProbesByIds(selectedProbes.value, measurementID.value, selectedProbes.value.length >= 1000)
+    .then((data) => {
+      data.forEach((x) => {
+        probeDetailsMap.value[x.id.toString()] = x
+      })
+      isLoadingProbes.value = false
     })
-    isLoadingProbes.value = false
-  })
 
-  if(allProbes.value.length > 1000) {
+  if (allProbes.value.length > 1000) {
     emit('probesOverflow', true)
-  }
-  else {
+  } else {
     emit('probesOverflow', false)
-  } 
+  }
 
   tracerouteData.forEach((probeData, probeIndex) => {
     if (probeData.result[0].error) {
@@ -128,23 +143,21 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
     if (loadProbes) {
       if (
-        ((!props.probeIDs ||
+        (!props.probeIDs ||
           props.probeIDs.length === 0 ||
-          props.probeIDs.includes(probeData.prb_id.toString()))
-          && !(selectedProbes.value.includes(probeData.prb_id.toString()))
-        )
+          props.probeIDs.includes(probeData.prb_id.toString())) &&
+        !selectedProbes.value.includes(probeData.prb_id.toString())
       ) {
         selectedProbes.value.push(probeData.prb_id.toString())
       }
     }
 
-    if(!allDestinations.value.includes(probeData.dst_addr)) {
+    if (!allDestinations.value.includes(probeData.dst_addr)) {
       allDestinations.value.push(probeData.dst_addr)
     }
 
-    if(!(selectAllDestinations.value ||
-       selectedDestinations.value.includes(probeData.dst_addr))) {
-         return; 
+    if (!(selectAllDestinations.value || selectedDestinations.value.includes(probeData.dst_addr))) {
+      return
     }
 
     probeData.result.forEach((hopData, hopIndex) => {
@@ -331,16 +344,16 @@ const loadMeasurement = async () => {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
 
-      const stopTime = (stopTimestamp.value !== 0)? stopTimestamp : metaData.value.stop_time
+      const stopTime = stopTimestamp.value !== 0 ? stopTimestamp : metaData.value.stop_time
 
       // Fetch last 5 measurements
-      const shortenedDurationStartTime = stopTime - 5*metaData.value["interval"]
-      const startTime = (startTimestamp.value !== 0) ? 
-                          startTimestamp
-                          : shortenedDurationStartTime > 0 ?
-                            shortenedDurationStartTime
-                              : metaData.value.start_time 
-
+      const shortenedDurationStartTime = stopTime - 5 * metaData.value['interval']
+      const startTime =
+        startTimestamp.value !== 0
+          ? startTimestamp
+          : shortenedDurationStartTime > 0
+            ? shortenedDurationStartTime
+            : metaData.value.start_time
 
       timeRange.value.min = startTime
       timeRange.value.max = stopTime
@@ -350,7 +363,7 @@ const loadMeasurement = async () => {
 
       await loadMeasurementData(true)
 
-      if(selectedDestinations.value === null || selectedDestinations.value.length === 0) {
+      if (selectedDestinations.value === null || selectedDestinations.value.length === 0) {
         selectedDestinations.value = allDestinations.value
         selectAllDestinations.value = true
       } else {
@@ -414,12 +427,12 @@ const debounce = (func, wait) => {
 
 const loadMeasurementOnTimeRange = debounce((e) => {
   isLoadingRtt.value = true
-  if(e.min !== 0 && e.max !== 0) {
-    const queryParamObject = { 
-      startTime: convertTimeToFormat(e.min), 
-      stopTime: convertTimeToFormat(e.max) 
+  if (e.min !== 0 && e.max !== 0) {
+    const queryParamObject = {
+      startTime: convertTimeToFormat(e.min),
+      stopTime: convertTimeToFormat(e.max)
     }
-    emit('setSelectedTimeRange', (queryParamObject))
+    emit('setSelectedTimeRange', queryParamObject)
   }
 
   // On slider update, update the measurement data
@@ -443,7 +456,7 @@ const loadMeasurementOnSearchQuery = debounce(() => {
 }, 1000)
 
 const sortAndCompare = (arrA, arrB) => {
-  if(arrA.length !== arrB.length) {
+  if (arrA.length !== arrB.length) {
     return false
   }
 
@@ -452,8 +465,8 @@ const sortAndCompare = (arrA, arrB) => {
   const sortedArrA = arrA.sort(compareFunc)
   const sortedArrB = arrB.sort(compareFunc)
 
-  for(let i = 0; i < N; i++) {
-    if(sortedArrA[i] !== sortedArrB[i]) {
+  for (let i = 0; i < N; i++) {
+    if (sortedArrA[i] !== sortedArrB[i]) {
       return false
     }
   }
@@ -461,35 +474,44 @@ const sortAndCompare = (arrA, arrB) => {
   return true
 }
 
-
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
     loadMeasurementOnProbeChange()
-    if(!sortAndCompare(props.probeIDs, selectedProbes.value)) {
+    if (!sortAndCompare(props.probeIDs, selectedProbes.value)) {
       emit('setSelectedProbes', selectedProbes.value)
     }
   }
 })
 
-watch(() => props.probeIDs, (newArr, oldArr) => {
-  if(!sortAndCompare(newArr, oldArr) &&
-    !sortAndCompare(newArr, selectedProbes.value) 
-  ) {
-    selectedProbes.value = newArr
+watch(
+  () => props.probeIDs,
+  (newArr, oldArr) => {
+    if (!sortAndCompare(newArr, oldArr) && !sortAndCompare(newArr, selectedProbes.value)) {
+      selectedProbes.value = newArr
+    }
   }
-})
+)
 
-watch(() => props.destinationIPs, () => {
-  selectedDestinations.value = props.destinationIPs
-})
+watch(
+  () => props.destinationIPs,
+  () => {
+    selectedDestinations.value = props.destinationIPs
+  }
+)
 
-watch(() => props.startTime, () => {
-  startTimestamp.value = convertDateTimeToSeconds(props.startTime)
-})
+watch(
+  () => props.startTime,
+  () => {
+    startTimestamp.value = convertDateTimeToSeconds(props.startTime)
+  }
+)
 
-watch(() => props.stopTime, () => {
-  stopTimestamp.value = convertDateTimeToSeconds(props.stopTime)
-})
+watch(
+  () => props.stopTime,
+  () => {
+    stopTimestamp.value = convertDateTimeToSeconds(props.stopTime)
+  }
+)
 
 watchEffect(() => {
   if (!timeRange.value.disable) {
