@@ -182,7 +182,7 @@ const copyAPI = () => {
 
 <template>
   <div>
-    <h1 class="text-center">Metis: Atlas probe selection</h1>
+    <h1 class="text-center q-pa-xl">Metis: Atlas probe selection</h1>
     <div class="row justify-center q-pa-md">
       <div class="IHR_description">
         <p>

@@ -257,7 +257,7 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div class="q-mb-xs">
-      <div class="text-center">
+      <div class="text-center q-pa-xl">
         <div class="text-h1">
           {{ $t('globalReport.title.global') }}
         </div>

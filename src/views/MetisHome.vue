@@ -7,7 +7,7 @@ import '@/styles/chart.css'
 
 <template>
   <div>
-    <h1 class="text-center">Metis</h1>
+    <h1 class="text-center q-pa-xl">Metis</h1>
     <div class="row justify-center metis-component">
       <div class="IHR_description">
         <p>Welcome to Metis! A data-driven method to select diverse vantage points.</p>

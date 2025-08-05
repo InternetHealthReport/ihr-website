@@ -103,7 +103,7 @@ watch(selected, (newValue) => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <div>
-      <h1 class="text-center">Network Delays During National Lockdowns</h1>
+      <h1 class="text-center q-pa-xl">Network Delays During National Lockdowns</h1>
 
       <div class="row justify-center">
         <div class="IHR_description q-pa-lg">
