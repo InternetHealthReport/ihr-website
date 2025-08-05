@@ -1,8 +1,9 @@
 <script setup>
-import { QBtn, QTable, QInput, QIcon, QTd } from 'quasar'
+import { QBtn, QTable, QInput, QIcon, QTd, QSpinner } from 'quasar'
 import { ref, watch } from 'vue'
 import report from '@/plugins/report'
 import Tr from '@/i18n/translation'
+import '@/styles/chart.css'
 
 const props = defineProps({
   filteredMessages: {
@@ -21,7 +22,10 @@ const props = defineProps({
   },
   dataSource: {
     type: String
-  }
+  },
+  isLoadingBgplayData: {
+    type: Boolean
+  },
 })
 
 const { utcString } = report()
@@ -181,6 +185,9 @@ watch(selectedPeersModel, () => {
       </QTd>
     </template>
   </QTable>
+  <div v-if="isLoadingBgplayData" class="IHR_loading-spinner">
+    <QSpinner color="secondary" size="15em" />
+  </div>
 </template>
 
 <style scoped>

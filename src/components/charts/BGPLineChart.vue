@@ -1,8 +1,9 @@
 <script setup>
-import { QBtn, QSlider } from 'quasar'
+import { QBtn, QSlider, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, onMounted, watch } from 'vue'
 import report from '@/plugins/report'
+import '@/styles/chart.css'
 
 const props = defineProps({
   rawMessages: {
@@ -239,9 +240,13 @@ onMounted(() => {
 </script>
 
 <template>
+  <div v-if="isLoadingBgplayData" class="loadingContainer">
+    <div class="IHR_loading-spinner">
+      <QSpinner color="secondary" size="15em" />
+    </div>
+  </div>
   <div class="noData" v-if="rawMessages.length === 0">
-    <h1 v-if="isLoadingBgplayData">Loading...</h1>
-    <h1 v-else>No data available</h1>
+    <h1 v-if="!isLoadingBgplayData">No data available</h1>
     <h3 v-if="dataSource === 'ris-live'">Try Changing the Input Parameters or you can wait</h3>
     <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
   </div>
@@ -327,5 +332,8 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.loadingContainer {
+  height: 60px;
 }
 </style>

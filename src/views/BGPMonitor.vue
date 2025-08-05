@@ -1077,6 +1077,7 @@ onMounted(() => {
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
+        :is-loading-bgplay-data="isLoadingBgplayData"
         @enable-live-mode="enableLiveMode"
         @update-selected-peers="updateSelectedPeers"
       />

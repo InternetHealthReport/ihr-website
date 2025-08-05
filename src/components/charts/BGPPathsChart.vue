@@ -1,7 +1,8 @@
 <script setup>
-import { QBtn } from 'quasar'
+import { QBtn, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, onMounted, watch } from 'vue'
+import '@/styles/chart.css'
 
 const props = defineProps({
   filteredMessages: {
@@ -177,9 +178,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="isLoadingBgplayData">
-    <div class="text-center">
-      <h1>Loading...</h1>
+  <div v-if="isLoadingBgplayData" class="loadingContainer">
+    <div class="IHR_loading-spinner">
+      <QSpinner color="secondary" size="15em" />
     </div>
   </div>
   <div v-else-if="props.isNoData">
@@ -206,3 +207,9 @@ onMounted(() => {
     <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
   </div>
 </template>
+
+<style>
+.loadingContainer {
+  height: 60px;
+}
+</style>
