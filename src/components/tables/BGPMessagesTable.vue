@@ -25,7 +25,7 @@ const props = defineProps({
   },
   isLoadingBgplayData: {
     type: Boolean
-  },
+  }
 })
 
 const { utcString } = report()

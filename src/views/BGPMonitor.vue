@@ -799,7 +799,6 @@ watch(isPlaying, () => {
   toggleRisProtocol()
 })
 
-
 onMounted(() => {
   initRoute()
   fetchRCCs()

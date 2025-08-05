@@ -58,7 +58,7 @@ const pushRoute = () => {
     Tr.i18nRoute({
       replace: true,
       query: Object.assign({}, route.query, {
-        'measurment': measurementID.value,
+        measurment: measurementID.value,
         'probe-ids': probeIDs.value.join(','),
         'destination-ips': destinationIPs.value.join(','),
         'start-time': startTime.value,

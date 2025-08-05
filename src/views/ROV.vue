@@ -128,7 +128,9 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
     <div>
-      <h1 class="text-center q-pa-xl"><q-icon name="fas fa-route" />&nbsp; Route Origin Validation</h1>
+      <h1 class="text-center q-pa-xl">
+        <q-icon name="fas fa-route" />&nbsp; Route Origin Validation
+      </h1>
       <h3 class="text-center">
         {{ interval.dayDiff() }}-day report ending on {{ reportDateFmt }}
         <DateTimePicker
