@@ -103,17 +103,21 @@ onMounted(() => {
     <h1 class="text-center q-pa-xl">Traceroute Monitor</h1>
     <QCard>
       <QCardSection>
-        <QInput
-          v-model="measurementIDInput"
-          outlined
-          placeholder="RIPE ATLAS traceroute measurement ID"
-          :dense="true"
-          color="accent"
-        />
+        <div class="row justify-end">
+          <div class="col q-mr-md">
+            <QInput
+              v-model="measurementIDInput"
+              outlined
+              placeholder="RIPE ATLAS traceroute measurement ID"
+              :dense="true"
+              color="accent"
+            />
+          </div>
+          <div class="col-auto">
+            <QBtn label="Load" color="primary" @click="loadMeasurement" />
+          </div>
+        </div>
       </QCardSection>
-      <QCardActions align="center">
-        <QBtn label="Search" color="primary" @click="loadMeasurement" />
-      </QCardActions>
     </QCard>
     <QBadge v-if="isProbesOverflow" color="red" class="q-mt-lg overflow-badge">
       <div class="text-body2">
