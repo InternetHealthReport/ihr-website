@@ -43,6 +43,10 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  activeSourcesTraces: {
+    type: Array,
+    default: () => []
+  },
   currentIndex: {
     type: Number,
     default: -1
@@ -64,6 +68,10 @@ const { utcString } = report()
 
 const actualChartData = ref([])
 const actualChartLayout = ref({})
+
+const activeSourcesChartData = ref([])
+const activeSourcesChartLayout = ref({})
+
 const selectedMaxTimestamp = ref(0)
 const shapes = ref([])
 const sliderWidthInit = ref(false)
@@ -81,6 +89,19 @@ const updateTimeRange = () => {
   } else {
     selectedMaxTimestamp.value = props.minTimestamp
   }
+}
+
+const layout = {
+  legend: {
+    orientation: 'h',
+    y: 1.1,
+    x: 0.5,
+    xanchor: 'center',
+    yanchor: 'bottom'
+  },
+  showlegend: true,
+  yaxis: { rangemode: 'tozero' },
+  shapes: []
 }
 
 const renderChart = async (dates, announcementsTrace, withdrawalsTrace) => {
@@ -110,25 +131,37 @@ const renderChart = async (dates, announcementsTrace, withdrawalsTrace) => {
       name: 'Announcements'
     }
   ]
-
-  const layout = {
-    legend: {
-      orientation: 'h',
-      y: 1.1,
-      x: 0.5,
-      xanchor: 'center',
-      yanchor: 'bottom'
-    },
-    yaxis: { title: 'Number of Messages', rangemode: 'tozero' },
-    shapes: []
-  }
-
+  
   if (shapes.value.length) {
     layout.shapes = shapes.value
   }
 
   actualChartData.value = data
   actualChartLayout.value = layout
+}
+
+const renderSourcesChart = async (dates, activeSourcesTraces) => {
+  const data = [
+    {
+      x: dates,
+      y: activeSourcesTraces,
+      type: 'scattergl',
+      fill: 'tozeroy',
+      fillcolor: 'rgba(58, 160, 44, 0.5)',
+      marker: {
+        color: 'rgba(58, 160, 44, 0.5)'
+      },
+      mode: 'markers',
+      name: 'BGP Sources'
+    }
+  ]
+
+  if (shapes.value.length) {
+    layout.shapes = shapes.value
+  }
+
+  activeSourcesChartData.value = data
+  activeSourcesChartLayout.value = layout
 }
 
 // Handle click event on the Plotly chart
@@ -192,6 +225,7 @@ const init = async () => {
   if (props.rawMessages.length === 0) return
   updateTimeRange()
   await renderChart(props.datesTrace, props.announcementsTrace, props.withdrawalsTrace)
+  await renderSourcesChart(props.datesTrace, props.activeSourcesTraces)
   adjustQSliderWidth(false)
   if (props.dataSource === 'bgplay') {
     updateSlider(selectedMaxTimestamp.value)
@@ -210,7 +244,12 @@ watch(
 )
 
 watch(
-  [() => props.datesTrace, () => props.announcementsTrace, () => props.withdrawalsTrace],
+  [
+    () => props.datesTrace,
+    () => props.announcementsTrace,
+    () => props.withdrawalsTrace,
+    () => props.activeSourcesTraces
+  ],
   () => {
     init()
   },
@@ -258,6 +297,14 @@ onMounted(() => {
     <ReactiveChart
       :layout="actualChartLayout"
       :traces="actualChartData"
+      :shapes="shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
+
+    <ReactiveChart
+      :layout="activeSourcesChartLayout"
+      :traces="activeSourcesChartData"
       :shapes="shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"

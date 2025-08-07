@@ -70,8 +70,11 @@ const initialStateDataCount = ref(0)
 const datesTrace = ref([])
 const announcementsTrace = ref([])
 const withdrawalsTrace = ref([])
+const activeSourcesTraces = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
+let activeSourcesCount = {}
+const activePeers = new Map()
 const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
@@ -121,8 +124,11 @@ const resetData = () => {
   datesTrace.value = []
   announcementsTrace.value = []
   withdrawalsTrace.value = []
+  activeSourcesTraces.value = []
   announcementsCount = {}
   withdrawalsCount = {}
+  activeSourcesCount = {}
+  activePeers.clear()
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
   usingIndex.value = false
@@ -277,7 +283,8 @@ const processResData = (data) => {
 
     generateLineChartData({
       timestamp: data.timestamp,
-      type: data.type
+      type: data.type,
+      peer: data.peer
     })
     generateLineChartTrace()
   } else {
@@ -336,7 +343,8 @@ const processResData = (data) => {
 
       generateLineChartData({
         timestamp: timestamp,
-        type: type
+        type: type,
+        peer: peer
       })
 
       applyDefaultSelectedPeers(peer)
@@ -366,21 +374,31 @@ const processResData = (data) => {
 
 const generateLineChartData = (data) => {
   const timestamp = data.timestamp
+  const peer = data.peer
   if (dataSource.value === 'bgplay') {
     uniqueEventTimestamps.add(timestamp)
   }
   if (data.type === 'Announce') {
     announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
+    activePeers.set(peer, true)
   } else if (data.type === 'Withdraw') {
     withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
+    activePeers.set(peer, false)
   }
+  let activeCount = 0
+  for (let status of activePeers.values()) {
+    if (status === true) activeCount++
+  }
+  activeSourcesCount[timestamp] = activeCount
 }
 
 const generateLineChartTrace = () => {
   const dTrace = []
   const aTrace = []
   const wTrace = []
+  const asTrace = []
   let timestamps = []
+  let lastActiveSourcesCount = 0
 
   if (dataSource.value === 'ris-live') {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
@@ -397,11 +415,17 @@ const generateLineChartTrace = () => {
     dTrace.push(timestampToUTC(t))
     aTrace.push(announcementsCount[t] || 0)
     wTrace.push(withdrawalsCount[t] || 0)
+
+    if (activeSourcesCount[t] !== undefined) {
+      lastActiveSourcesCount = activeSourcesCount[t]
+    }
+    asTrace.push(activeSourcesCount[t] || lastActiveSourcesCount)
   }
 
   datesTrace.value = dTrace
   announcementsTrace.value = aTrace
   withdrawalsTrace.value = wTrace
+  activeSourcesTraces.value = asTrace
 }
 
 const timestampToUTC = (timestamp) => {
@@ -1055,6 +1079,7 @@ onMounted(() => {
         :dates-trace="datesTrace"
         :announcements-trace="announcementsTrace"
         :withdrawals-trace="withdrawalsTrace"
+        :active-sources-traces="activeSourcesTraces"
         :current-index="currentIndex"
         :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
