@@ -926,7 +926,7 @@ onMounted(() => {
                           <QPopupProxy no-route-dismiss cover>
                             <div class="q-pa-md q-gutter-md row items-start">
                               <QDate flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
+                              <QTime flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" format24h />
                             </div>
                           </QPopupProxy>
                         </QIcon>
@@ -945,7 +945,7 @@ onMounted(() => {
                           <QPopupProxy no-route-dismiss cover>
                             <div class="q-pa-md q-gutter-md row items-start">
                               <QDate flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
+                              <QTime flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" format24h />
                             </div>
                           </QPopupProxy>
                         </QIcon>
