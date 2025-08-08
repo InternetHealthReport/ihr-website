@@ -70,11 +70,11 @@ const initialStateDataCount = ref(0)
 const datesTrace = ref([])
 const announcementsTrace = ref([])
 const withdrawalsTrace = ref([])
-const activeSourcesTraces = ref([])
+const announcementsPeersTraces = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
-let activeSourcesCount = {}
-const activePeers = new Map()
+let announcementsPeersCount = {}
+const announcementsPeers = new Set()
 const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
@@ -124,11 +124,11 @@ const resetData = () => {
   datesTrace.value = []
   announcementsTrace.value = []
   withdrawalsTrace.value = []
-  activeSourcesTraces.value = []
+  announcementsPeersTraces.value = []
   announcementsCount = {}
   withdrawalsCount = {}
-  activeSourcesCount = {}
-  activePeers.clear()
+  announcementsPeersCount = {}
+  announcementsPeers.clear()
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
   usingIndex.value = false
@@ -380,25 +380,21 @@ const generateLineChartData = (data) => {
   }
   if (data.type === 'Announce') {
     announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
-    activePeers.set(peer, true)
+    announcementsPeers.add(peer)
   } else if (data.type === 'Withdraw') {
     withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
-    activePeers.set(peer, false)
+    announcementsPeers.delete(peer)
   }
-  let activeCount = 0
-  for (let status of activePeers.values()) {
-    if (status === true) activeCount++
-  }
-  activeSourcesCount[timestamp] = activeCount
+  announcementsPeersCount[timestamp] = announcementsPeers.size
 }
 
 const generateLineChartTrace = () => {
   const dTrace = []
   const aTrace = []
   const wTrace = []
-  const asTrace = []
+  const apTrace = []
   let timestamps = []
-  let lastActiveSourcesCount = 0
+  let lastAnnouncementsPeersCount = 0
 
   if (dataSource.value === 'ris-live') {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
@@ -416,16 +412,16 @@ const generateLineChartTrace = () => {
     aTrace.push(announcementsCount[t] || 0)
     wTrace.push(withdrawalsCount[t] || 0)
 
-    if (activeSourcesCount[t] !== undefined) {
-      lastActiveSourcesCount = activeSourcesCount[t]
+    if (announcementsPeersCount[t] !== undefined) {
+      lastAnnouncementsPeersCount = announcementsPeersCount[t]
     }
-    asTrace.push(activeSourcesCount[t] || lastActiveSourcesCount)
+    apTrace.push(announcementsPeersCount[t] || lastAnnouncementsPeersCount)
   }
 
   datesTrace.value = dTrace
   announcementsTrace.value = aTrace
   withdrawalsTrace.value = wTrace
-  activeSourcesTraces.value = asTrace
+  announcementsPeersTraces.value = apTrace
 }
 
 const timestampToUTC = (timestamp) => {
@@ -1079,7 +1075,7 @@ onMounted(() => {
         :dates-trace="datesTrace"
         :announcements-trace="announcementsTrace"
         :withdrawals-trace="withdrawalsTrace"
-        :active-sources-traces="activeSourcesTraces"
+        :announcements-peers-traces="announcementsPeersTraces"
         :current-index="currentIndex"
         :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"

@@ -43,7 +43,7 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  activeSourcesTraces: {
+  announcementsPeersTraces: {
     type: Array,
     default: () => []
   },
@@ -66,14 +66,10 @@ const emit = defineEmits([
 
 const { utcString } = report()
 
-const actualChartData = ref([])
-const actualChartLayout = ref({})
-
-const activeSourcesChartData = ref([])
-const activeSourcesChartLayout = ref({})
+const announcementsAndWithdrawnChartData = ref([])
+const announcementsPeersChartData = ref([])
 
 const selectedMaxTimestamp = ref(0)
-const shapes = ref([])
 const sliderWidthInit = ref(false)
 
 const timestampToUTC = (timestamp) => {
@@ -104,7 +100,11 @@ const layout = {
   shapes: []
 }
 
-const renderChart = async (dates, announcementsTrace, withdrawalsTrace) => {
+const renderAnnouncementsAndWithdrawnChart = async (
+  dates,
+  announcementsTrace,
+  withdrawalsTrace
+) => {
   const data = [
     {
       x: dates,
@@ -131,20 +131,14 @@ const renderChart = async (dates, announcementsTrace, withdrawalsTrace) => {
       name: 'Announcements'
     }
   ]
-  
-  if (shapes.value.length) {
-    layout.shapes = shapes.value
-  }
-
-  actualChartData.value = data
-  actualChartLayout.value = layout
+  announcementsAndWithdrawnChartData.value = data
 }
 
-const renderSourcesChart = async (dates, activeSourcesTraces) => {
+const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) => {
   const data = [
     {
       x: dates,
-      y: activeSourcesTraces,
+      y: announcementsPeersTraces,
       type: 'scattergl',
       fill: 'tozeroy',
       fillcolor: 'rgba(58, 160, 44, 0.5)',
@@ -155,13 +149,7 @@ const renderSourcesChart = async (dates, activeSourcesTraces) => {
       name: 'BGP Sources'
     }
   ]
-
-  if (shapes.value.length) {
-    layout.shapes = shapes.value
-  }
-
-  activeSourcesChartData.value = data
-  activeSourcesChartLayout.value = layout
+  announcementsPeersChartData.value = data
 }
 
 // Handle click event on the Plotly chart
@@ -177,7 +165,7 @@ const handlePlotlyClick = (event) => {
 // Add a vertical line to the chart at the given timestamp
 const addVerticalLine = (timestamp) => {
   const x = new Date(timestamp * 1000).toISOString()
-  shapes.value = [
+  layout.shapes = [
     {
       type: 'line',
       x0: x,
@@ -224,8 +212,8 @@ const init = async () => {
   sliderWidthInit.value = false
   if (props.rawMessages.length === 0) return
   updateTimeRange()
-  await renderChart(props.datesTrace, props.announcementsTrace, props.withdrawalsTrace)
-  await renderSourcesChart(props.datesTrace, props.activeSourcesTraces)
+  await renderAnnouncementsAndWithdrawnChart(props.datesTrace, props.announcementsTrace, props.withdrawalsTrace)
+  await renderAnnouncementsPeersChart(props.datesTrace, props.announcementsPeersTraces)
   adjustQSliderWidth(false)
   if (props.dataSource === 'bgplay') {
     updateSlider(selectedMaxTimestamp.value)
@@ -237,7 +225,7 @@ watch(
   () => props.isLiveMode,
   () => {
     if (props.isLiveMode) {
-      shapes.value = []
+      layout.shapes = []
       updateTimeRange()
     }
   }
@@ -248,7 +236,7 @@ watch(
     () => props.datesTrace,
     () => props.announcementsTrace,
     () => props.withdrawalsTrace,
-    () => props.activeSourcesTraces
+    () => props.announcementsPeersTraces
   ],
   () => {
     init()
@@ -295,17 +283,17 @@ onMounted(() => {
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>
     <ReactiveChart
-      :layout="actualChartLayout"
-      :traces="actualChartData"
-      :shapes="shapes"
+      :layout="layout"
+      :traces="announcementsAndWithdrawnChartData"
+      :shapes="layout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
 
     <ReactiveChart
-      :layout="activeSourcesChartLayout"
-      :traces="activeSourcesChartData"
-      :shapes="shapes"
+      :layout="layout"
+      :traces="announcementsPeersChartData"
+      :shapes="layout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
