@@ -393,21 +393,23 @@ const generateLineChartTrace = () => {
   const aTrace = []
   const wTrace = []
   const apTrace = []
-  let timestamps = []
   let lastAnnouncementsPeersCount = 0
 
   if (dataSource.value === 'ris-live') {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
-      timestamps.push(t)
+      createTimestampTrace(t)
     }
   } else {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t += 60) {
       uniqueEventTimestamps.add(t)
     }
-    timestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
+    const timestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
+    for (const t of timestamps) {
+      createTimestampTrace(t)
+    }
   }
 
-  for (const t of timestamps) {
+  function createTimestampTrace(t) {
     dTrace.push(timestampToUTC(t))
     aTrace.push(announcementsCount[t] || 0)
     wTrace.push(withdrawalsCount[t] || 0)
