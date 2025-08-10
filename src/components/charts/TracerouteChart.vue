@@ -204,10 +204,11 @@ const assignAsnColors = () => {
   asnColors.value = colors
 }
 
-const rttColor = (rtt) => {
+const rttColor = (rtt, shouldCompliment = true) => {
   if (rtt === null || rtt === undefined) return 'black'
   const normalized = Math.min(Math.max(rtt / props.maxDisplayedRtt, 0), 1)
-  const green = Math.floor(255 * (1 - normalized))
+  const greenFactor = shouldCompliment ? (1 - normalized) : normalized  
+  const green = Math.floor(255 * greenFactor)
   return `rgb(150, ${green}, 60)`
 }
 
@@ -426,7 +427,7 @@ watch(displayMode, () => {
           <div class="rttLabel">RTT</div>
         </div>
         <div class="col">
-          <div class="scaleLabel">{{ minDisplayedRtt }}</div>
+          <div class="scaleLabel">{{ maxDisplayedRtt }}</div>
           <div class="scale">
             <div
               v-for="(percentage, index) in Array.from(
@@ -435,10 +436,10 @@ watch(displayMode, () => {
               )"
               :key="index"
               class="scaleColor"
-              :style="{ backgroundColor: rttColor(percentage) }"
+              :style="{ backgroundColor: rttColor(percentage, shouldCompliment = false) }"
             ></div>
           </div>
-          <div class="scaleLabel">{{ maxDisplayedRtt }}</div>
+          <div class="scaleLabel">{{ minDisplayedRtt }}</div>
         </div>
       </div>
     </div>
