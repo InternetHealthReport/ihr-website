@@ -73,6 +73,7 @@ const withdrawalsTrace = ref([])
 const announcementsPeersTraces = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
+let lastTypeByTimestamp = {}
 let announcementsPeersCount = {}
 const announcementsPeers = new Set()
 const uniqueEventTimestamps = new Set()
@@ -128,6 +129,7 @@ const resetData = () => {
   announcementsCount = {}
   withdrawalsCount = {}
   announcementsPeersCount = {}
+  lastTypeByTimestamp = {}
   announcementsPeers.clear()
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
@@ -378,14 +380,30 @@ const generateLineChartData = (data) => {
   if (dataSource.value === 'bgplay') {
     uniqueEventTimestamps.add(timestamp)
   }
+
   if (data.type === 'Announce') {
     announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
-    announcementsPeers.add(peer)
+    updateByTimestamp(data.type)
   } else if (data.type === 'Withdraw') {
     withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
-    announcementsPeers.delete(peer)
+    updateByTimestamp(data.type)
   }
-  announcementsPeersCount[timestamp] = announcementsPeers.size
+
+  function updateByTimestamp(type) {
+    if (dataSource.value === 'ris-live') {
+      if (!lastTypeByTimestamp[timestamp]) {
+        lastTypeByTimestamp[timestamp] = new Map()
+      }
+      lastTypeByTimestamp[timestamp].set(peer, type)
+    } else {
+      if (type === 'Announce') {
+        announcementsPeers.add(peer)
+      } else {
+        announcementsPeers.delete(peer)
+      }
+      announcementsPeersCount[timestamp] = announcementsPeers.size
+    }
+  }
 }
 
 const generateLineChartTrace = () => {
@@ -393,6 +411,7 @@ const generateLineChartTrace = () => {
   const aTrace = []
   const wTrace = []
   const apTrace = []
+  const announcementsPeers = new Set()
   let lastAnnouncementsPeersCount = 0
 
   if (dataSource.value === 'ris-live') {
@@ -414,10 +433,21 @@ const generateLineChartTrace = () => {
     aTrace.push(announcementsCount[t] || 0)
     wTrace.push(withdrawalsCount[t] || 0)
 
-    if (announcementsPeersCount[t] !== undefined) {
-      lastAnnouncementsPeersCount = announcementsPeersCount[t]
+    if (dataSource.value === 'ris-live') {
+      const lastTypeMap = lastTypeByTimestamp[t]
+      if (lastTypeMap) {
+        for (const [peer, type] of lastTypeMap) {
+          if (type === 'Announce') announcementsPeers.add(peer)
+          else announcementsPeers.delete(peer)
+        }
+      }
+      apTrace.push(announcementsPeers.size)
+    } else {
+      if (announcementsPeersCount[t] !== undefined) {
+        lastAnnouncementsPeersCount = announcementsPeersCount[t]
+      }
+      apTrace.push(announcementsPeersCount[t] || lastAnnouncementsPeersCount)
     }
-    apTrace.push(announcementsPeersCount[t] || lastAnnouncementsPeersCount)
   }
 
   datesTrace.value = dTrace
