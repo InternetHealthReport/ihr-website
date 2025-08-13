@@ -531,7 +531,9 @@ watchEffect(() => {
 })
 
 const setSelectedProbes = (value) => {
-  selectedProbes.value = value
+  if(!sortAndCompare(value, selectedProbes.value)) {
+    selectedProbes.value = value
+  }
 }
 
 const setSelectedDestinations = (value) => {
