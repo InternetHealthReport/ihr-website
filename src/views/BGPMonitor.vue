@@ -70,8 +70,12 @@ const initialStateDataCount = ref(0)
 const datesTrace = ref([])
 const announcementsTrace = ref([])
 const withdrawalsTrace = ref([])
+const announcementsPeersTraces = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
+let lastTypeByTimestamp = {}
+let announcementsPeersCount = {}
+const announcementsPeers = new Set()
 const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
@@ -121,8 +125,12 @@ const resetData = () => {
   datesTrace.value = []
   announcementsTrace.value = []
   withdrawalsTrace.value = []
+  announcementsPeersTraces.value = []
   announcementsCount = {}
   withdrawalsCount = {}
+  announcementsPeersCount = {}
+  lastTypeByTimestamp = {}
+  announcementsPeers.clear()
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
   usingIndex.value = false
@@ -277,7 +285,8 @@ const processResData = (data) => {
 
     generateLineChartData({
       timestamp: data.timestamp,
-      type: data.type
+      type: data.type,
+      peer: data.peer
     })
     generateLineChartTrace()
   } else {
@@ -336,7 +345,8 @@ const processResData = (data) => {
 
       generateLineChartData({
         timestamp: timestamp,
-        type: type
+        type: type,
+        peer: peer
       })
 
       applyDefaultSelectedPeers(peer)
@@ -366,13 +376,33 @@ const processResData = (data) => {
 
 const generateLineChartData = (data) => {
   const timestamp = data.timestamp
+  const peer = data.peer
   if (dataSource.value === 'bgplay') {
     uniqueEventTimestamps.add(timestamp)
   }
+
   if (data.type === 'Announce') {
     announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
+    updateByTimestamp(data.type)
   } else if (data.type === 'Withdraw') {
     withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
+    updateByTimestamp(data.type)
+  }
+
+  function updateByTimestamp(type) {
+    if (dataSource.value === 'ris-live') {
+      if (!lastTypeByTimestamp[timestamp]) {
+        lastTypeByTimestamp[timestamp] = new Map()
+      }
+      lastTypeByTimestamp[timestamp].set(peer, type)
+    } else {
+      if (type === 'Announce') {
+        announcementsPeers.add(peer)
+      } else {
+        announcementsPeers.delete(peer)
+      }
+      announcementsPeersCount[timestamp] = announcementsPeers.size
+    }
   }
 }
 
@@ -380,28 +410,50 @@ const generateLineChartTrace = () => {
   const dTrace = []
   const aTrace = []
   const wTrace = []
-  let timestamps = []
+  const apTrace = []
+  const announcementsPeers = new Set()
+  let lastAnnouncementsPeersCount = 0
 
   if (dataSource.value === 'ris-live') {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
-      timestamps.push(t)
+      createTimestampTrace(t)
     }
   } else {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t += 60) {
       uniqueEventTimestamps.add(t)
     }
-    timestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
+    const timestamps = [...uniqueEventTimestamps].sort((a, b) => a - b)
+    for (const t of timestamps) {
+      createTimestampTrace(t)
+    }
   }
 
-  for (const t of timestamps) {
+  function createTimestampTrace(t) {
     dTrace.push(timestampToUTC(t))
     aTrace.push(announcementsCount[t] || 0)
     wTrace.push(withdrawalsCount[t] || 0)
+
+    if (dataSource.value === 'ris-live') {
+      const lastTypeMap = lastTypeByTimestamp[t]
+      if (lastTypeMap) {
+        for (const [peer, type] of lastTypeMap) {
+          if (type === 'Announce') announcementsPeers.add(peer)
+          else announcementsPeers.delete(peer)
+        }
+      }
+      apTrace.push(announcementsPeers.size)
+    } else {
+      if (announcementsPeersCount[t] !== undefined) {
+        lastAnnouncementsPeersCount = announcementsPeersCount[t]
+      }
+      apTrace.push(announcementsPeersCount[t] || lastAnnouncementsPeersCount)
+    }
   }
 
   datesTrace.value = dTrace
   announcementsTrace.value = aTrace
   withdrawalsTrace.value = wTrace
+  announcementsPeersTraces.value = apTrace
 }
 
 const timestampToUTC = (timestamp) => {
@@ -1055,6 +1107,7 @@ onMounted(() => {
         :dates-trace="datesTrace"
         :announcements-trace="announcementsTrace"
         :withdrawals-trace="withdrawalsTrace"
+        :announcements-peers-traces="announcementsPeersTraces"
         :current-index="currentIndex"
         :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
