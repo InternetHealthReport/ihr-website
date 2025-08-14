@@ -299,8 +299,8 @@ const processResData = (data) => {
     const nodes = {}
     const events = []
 
-    const query_unix_starttime = timestampToUnix(data.data.query_starttime)
-    const query_unix_endtime = timestampToUnix(data.data.query_endtime)
+    minTimestamp.value = timestampToUnix(data.data.query_starttime)
+    maxTimestamp.value = timestampToUnix(data.data.query_endtime)
 
     data.data.sources.forEach((source) => {
       const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
@@ -328,7 +328,7 @@ const processResData = (data) => {
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
 
       generateLineChartData({
-        timestamp: query_unix_starttime,
+        timestamp: minTimestamp.value,
         type: type,
         peer: peer
       })
@@ -344,7 +344,7 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(event.path),
         type: type,
-        timestamp: query_unix_starttime
+        timestamp: minTimestamp.value
       })
     })
 
@@ -373,13 +373,6 @@ const processResData = (data) => {
         timestamp: timestamp
       })
     })
-
-    if (data.data.events.length === 0) {
-      maxTimestamp.value = query_unix_endtime // If no events, use the query end time
-    } else {
-      maxTimestamp.value = events.at(-1).timestamp
-    }
-    minTimestamp.value = query_unix_starttime
     rawMessages.value = events
     generateLineChartTrace()
   }
