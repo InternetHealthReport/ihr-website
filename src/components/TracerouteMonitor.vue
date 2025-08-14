@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject, watchEffect, watch } from 'vue'
-import { QExpansionItem } from 'quasar'
+import { QExpansionItem, QSeparator, QInput, QBtn } from 'quasar'
 import dagre from 'dagre'
 import RipeApi from '../plugins/RipeApi'
 import TracerouteChart from '@/components/charts/TracerouteChart.vue'
@@ -11,7 +11,8 @@ import {
   isPrivateIP,
   calculateMedian,
   convertTimeToFormat,
-  convertDateTimeToSeconds
+  convertDateTimeToSeconds,
+  convertUnixTimestamp
 } from '../plugins/tracerouteFunctions'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
@@ -19,7 +20,7 @@ const props = defineProps({
   atlasMeasurementID: {
     type: String
   },
-  openOptions: {
+  isComponent: {
     type: Boolean,
     default: false
   },
@@ -65,6 +66,7 @@ const intervalValue = ref(null)
 const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
+const measurementIDInput = ref('')
 
 const startTimestamp = ref(convertDateTimeToSeconds(props.startTime))
 const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
@@ -74,7 +76,8 @@ const emit = defineEmits([
   'setSelectedDestinations',
   'setSelectedProbes',
   'probesOverflow',
-  'setSelectedTimeRange'
+  'setSelectedTimeRange',
+  'loadMeasurement'
 ])
 
 const handleLoadMeasurementError = (error) => {
@@ -311,6 +314,7 @@ watch(nodes, updateDisplayedRttValues)
 
 const loadMeasurement = async () => {
   measurementID.value = props.atlasMeasurementID
+  measurementIDInput.value = props.atlasMeasurementID
   nodes.value = {}
   edges.value = {}
 
@@ -553,6 +557,46 @@ watch(
     :info-title="$t('tracerouteMonitorChart.info.title')"
     :info-description="$t('tracerouteMonitorChart.info.description')"
   >
+    <div class="row q-mb-md">
+      <div class="col-3 q-mr-md">
+        <div v-if="!props.isComponent" class="row justify-end q-mb-md">
+          <div class="col q-mr-md">
+            <QInput
+              v-model="measurementIDInput"
+              outlined
+              placeholder="RIPE ATLAS traceroute measurement ID"
+              :dense="true"
+              color="accent"
+            />
+          </div>
+          <div class="col-auto">
+            <QBtn
+              label="Load"
+              color="primary"
+              @click="emit('loadMeasurement', measurementIDInput)"
+            />
+          </div>
+        </div>
+        <div><strong>Description:</strong> {{ metaData.description }}</div>
+        <div><strong>Target:</strong> {{ metaData.target }}</div>
+        <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
+        <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
+        <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
+        <div><strong>Status:</strong> {{ metaData.status?.name }}</div>
+      </div>
+      <QSeparator :vertical="true" />
+      <div class="col q-ml-md">
+        <TracerouteRttChart
+          :interval-value="intervalValue"
+          :is-loading="isLoadingRtt"
+          :time-range="timeRange"
+          :meta-data="metaData"
+          :rtt-over-time="rttOverTime"
+          @load-measurement-on-time-range="loadMeasurementOnTimeRange"
+        />
+      </div>
+    </div>
+    <QSeparator />
     <TracerouteChart
       :measurement-i-d="measurementID"
       :is-loading="isLoadingChart"
@@ -568,24 +612,9 @@ watch(
       :ip-to-asn-map="ipToAsnMap"
       :asn-list="asnList"
       @update-displayed-rtt-values="updateDisplayedRttValues"
+      class="q-mt-md"
     />
-    <QExpansionItem :default-opened="props.openOptions" icon="tune" label="Options">
-      <GenericCardController
-        :title="$t('tracerouteMonitorRtt.title')"
-        :sub-title="$t('tracerouteMonitorRtt.subTitle')"
-        :info-title="$t('tracerouteMonitorRtt.info.title')"
-        :info-description="$t('tracerouteMonitorRtt.info.description')"
-        class="cardTraceroute"
-      >
-        <TracerouteRttChart
-          :interval-value="intervalValue"
-          :is-loading="isLoadingRtt"
-          :time-range="timeRange"
-          :meta-data="metaData"
-          :rtt-over-time="rttOverTime"
-          @load-measurement-on-time-range="loadMeasurementOnTimeRange"
-        />
-      </GenericCardController>
+    <QExpansionItem :default-opened="!props.isComponent" icon="tune" label="Probes & Destinations">
       <GenericCardController
         :title="$t('tracerouteMonitorProbes.title')"
         :sub-title="$t('tracerouteMonitorProbes.subTitle')"

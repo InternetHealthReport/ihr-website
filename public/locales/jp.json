@@ -1195,14 +1195,6 @@
       "description": ""
     }
   },
-  "tracerouteMonitorRtt": {
-    "title": "RTT",
-    "subTitle": "Median RTT over time",
-    "info": {
-      "title": "RTT",
-      "description": ""
-    }
-  },
   "tracerouteMonitorProbes": {
     "title": "RIPE Atlas probes",
     "subTitle": "The probes of the measurement",

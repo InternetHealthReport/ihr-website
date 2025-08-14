@@ -1,14 +1,10 @@
 <script setup>
-import { QBtn, QSpinner, QRadio } from 'quasar'
+import { QBtn, QSpinner, QBtnGroup } from 'quasar'
 import { ref, watch, computed, nextTick } from 'vue'
 import { VNetworkGraph } from 'v-network-graph'
 import * as vNG from 'v-network-graph'
 import RipeApi from '../../plugins/RipeApi'
-import {
-  convertUnixTimestamp,
-  isPrivateIP,
-  calculateMedian
-} from '../../plugins/tracerouteFunctions'
+import { isPrivateIP, calculateMedian } from '../../plugins/tracerouteFunctions'
 import '@/styles/chart.css'
 
 const props = defineProps({
@@ -402,21 +398,17 @@ watch(displayMode, () => {
         <strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}
       </div>
     </div>
-    <div v-if="Object.keys(nodes).length > 0" class="measurement-info-overlay">
-      <div><strong>Description:</strong> {{ metaData.description }}</div>
-      <div><strong>Target:</strong> {{ metaData.target }}</div>
-      <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
-      <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
-      <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
-      <div><strong>Status:</strong> {{ metaData.status.name }}</div>
-    </div>
     <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
-      <QRadio v-model="displayMode" val="normal" label="Normal Mode" />
-      <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
-      <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
-      <QBtn v-if="displayMode === 'asn'" flat dense @click="showAsnOverlay = !showAsnOverlay">
-        ASN Overlay
-      </QBtn>
+      <QBtnGroup>
+        <QBtn label="Normal Mode" @click="displayMode = 'normal'" />
+        <QBtn label="RTT Mode" @click="displayMode = 'rtt'" />
+        <QBtn label="ASN Mode" @click="displayMode = 'asn'" />
+        <QBtn
+          v-if="displayMode === 'asn'"
+          label="ASN Overlay"
+          @click="showAsnOverlay = !showAsnOverlay"
+        />
+      </QBtnGroup>
     </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
       <div>
@@ -528,14 +520,8 @@ watch(displayMode, () => {
 .mode-toggle-overlay {
   position: absolute;
   top: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .rtt-info-overlay {

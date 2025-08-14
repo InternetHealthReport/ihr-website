@@ -10,20 +10,19 @@ import Feedback from '@/components/Feedback.vue'
 const route = useRoute()
 const router = useRouter()
 const measurementID = ref('')
-const measurementIDInput = ref('')
 const probeIDs = ref([])
 const destinationIPs = ref([])
 const isProbesOverflow = ref(false)
 const startTime = ref('')
 const stopTime = ref('')
 
-const loadMeasurement = () => {
-  if (measurementID.value == measurementIDInput.value) {
+const loadMeasurement = (measurementIDInput) => {
+  if (measurementID.value == measurementIDInput) {
     return
   }
 
   // Update when value is changed
-  measurementID.value = measurementIDInput.value
+  measurementID.value = measurementIDInput
 
   // Clear the previous route values on loading a new measurement
   probeIDs.value = []
@@ -76,7 +75,6 @@ onMounted(() => {
   const stopTimeFromQuery = route.query['end-time']
 
   if (tracerouteid) {
-    measurementIDInput.value = tracerouteid
     measurementID.value = tracerouteid
   }
 
@@ -101,7 +99,7 @@ onMounted(() => {
 <template>
   <div class="IHR_char-container">
     <h1 class="text-center q-pa-xl">Traceroute Monitor</h1>
-    <QCard>
+    <!-- <QCard>
       <QCardSection>
         <div class="row justify-end">
           <div class="col q-mr-md">
@@ -118,7 +116,7 @@ onMounted(() => {
           </div>
         </div>
       </QCardSection>
-    </QCard>
+    </QCard> -->
     <QBadge v-if="isProbesOverflow" color="red" class="q-mt-lg overflow-badge">
       <div class="text-body2">
         <div class="text-weight-bold">
@@ -145,12 +143,13 @@ onMounted(() => {
       :destination-i-ps="destinationIPs"
       :start-time="startTime"
       :stop-time="stopTime"
-      :open-options="true"
+      :is-component="false"
       class="q-mb-lg q-mt-lg"
       @set-selected-probes="onUpdateProbesInRoute"
       @set-selected-destinations="onUpdateDestinationsInRoute"
       @set-selected-time-range="onUpdateTimeRangeInRoute"
       @probes-overflow="onProbesOverflow"
+      @load-measurement="loadMeasurement"
     />
   </div>
   <Feedback />

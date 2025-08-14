@@ -229,7 +229,7 @@ watch(filteredRttOverTime, () => {
       </div>
     </div>
   </div>
-  <div v-if="isLoading" class="IHR_loading-spinner">
+  <div v-if="isLoading" class="rttSpinner">
     <QSpinner color="secondary" size="15em" />
   </div>
 </template>
@@ -250,5 +250,15 @@ watch(filteredRttOverTime, () => {
   flex-direction: column;
   gap: 10px;
   width: 100%;
+}
+
+.rttSpinner {
+  position: absolute;
+  top: 5%;
+  left: 60%;
+}
+.rttSpinner > * {
+  width: 25%;
+  height: 25%;
 }
 </style>

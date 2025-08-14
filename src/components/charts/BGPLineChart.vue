@@ -212,7 +212,11 @@ const init = async () => {
   sliderWidthInit.value = false
   if (props.rawMessages.length === 0) return
   updateTimeRange()
-  await renderAnnouncementsAndWithdrawnChart(props.datesTrace, props.announcementsTrace, props.withdrawalsTrace)
+  await renderAnnouncementsAndWithdrawnChart(
+    props.datesTrace,
+    props.announcementsTrace,
+    props.withdrawalsTrace
+  )
   await renderAnnouncementsPeersChart(props.datesTrace, props.announcementsPeersTraces)
   adjustQSliderWidth(false)
   if (props.dataSource === 'bgplay') {
