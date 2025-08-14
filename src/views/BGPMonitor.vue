@@ -18,7 +18,7 @@ import {
   QMarkupTable,
   QBadge
 } from 'quasar'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
@@ -79,6 +79,10 @@ const announcementsPeers = new Set()
 const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
+
+const isHidden = ref(false)
+const myElement = ref(null)
+let observer = null
 
 const params = ref({
   peer: '',
@@ -835,6 +839,23 @@ const updateSelectedPeers = (obj) => {
   selectedPeers.value = obj
 }
 
+const customIntersectionObserver = () => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        isHidden.value = !entry.isIntersecting
+      })
+    },
+    {
+      threshold: 0,
+      rootMargin: '-68.8px 0px 0px 0px'
+    }
+  )
+  if (myElement.value?.$el) {
+    observer.observe(myElement.value.$el)
+  }
+}
+
 watch(
   [params, maxHops, dataSource, startTime, endTime, rrcs],
   () => {
@@ -866,11 +887,18 @@ onMounted(() => {
   connectWebSocket()
   fetchAllASInfo()
   fetchGithubFiles()
+  customIntersectionObserver()
+})
+
+onUnmounted(() => {
+  if (observer && myElement.value?.$el) {
+    observer.unobserve(myElement.value?.$el)
+  }
 })
 </script>
 
 <template>
-  <div class="IHR_char-container">
+  <div class="IHR_char-container relative-position">
     <h1 class="text-center q-pa-xl">BGP Monitor</h1>
     <QCard>
       <QCardSection>
@@ -1019,7 +1047,7 @@ onMounted(() => {
           </tbody>
         </QMarkupTable>
       </QCardSection>
-      <QCardActions align="center">
+      <QCardActions align="center" ref="myElement">
         <QBtn
           v-if="dataSource === 'ris-live'"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
@@ -1061,6 +1089,30 @@ onMounted(() => {
           class="q-mr-lg"
         />
         <QBtn color="negative" :label="'Reset'" @click="resetData" />
+      </QCardActions>
+    </QCard>
+
+    <QCard :class="[isHidden ? 'floating-card' : 'hidden']">
+      <QCardActions class="row justify-center items-center">
+        <QBtn
+          color="indigo"
+          :label="'Previous'"
+          @click="prevEvent"
+          :disable="
+            rawMessages.length === 0 ||
+            (dataSource === 'bgplay'
+              ? initialStateDataCount !== 0
+                ? currentIndex === 0
+                : currentIndex === -1
+              : currentIndex === 0)
+          "
+        />
+        <QBtn
+          color="indigo"
+          :label="'Next'"
+          @click="nextEvent"
+          :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
+        />
       </QCardActions>
     </QCard>
     <div class="row inline q-mt-lg">
@@ -1164,4 +1216,13 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style scoped></style>
+<style scoped>
+.floating-card {
+  z-index: 99;
+  position: fixed;
+  max-width: max-content;
+  top: 90px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+</style>
