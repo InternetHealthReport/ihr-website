@@ -319,8 +319,15 @@ const processResData = (data) => {
     data.data.initial_state.forEach((event) => {
       const peer = event.source_id.split('-')[1]
       const peerInfo = sources[peer]
+      const type = addBGPMessageType('I') // Manually Assigning 'I' for Initial State
 
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
+
+      generateLineChartData({
+        timestamp: query_unix_starttime,
+        type: type,
+        peer: peer
+      })
 
       applyDefaultSelectedPeers(peer)
       initialStateDataCount.value++
@@ -332,7 +339,7 @@ const processResData = (data) => {
         path: event.path || [],
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(event.path),
-        type: addBGPMessageType('I'), // Manually Assigning 'I' for Initial State
+        type: type,
         timestamp: query_unix_starttime
       })
     })
@@ -387,6 +394,8 @@ const generateLineChartData = (data) => {
   } else if (data.type === 'Withdraw') {
     withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
     updateByTimestamp(data.type)
+  } else if (data.type === 'Initial State') {
+    updateByTimestamp(data.type)
   }
 
   function updateByTimestamp(type) {
@@ -396,7 +405,7 @@ const generateLineChartData = (data) => {
       }
       lastTypeByTimestamp[timestamp].set(peer, type)
     } else {
-      if (type === 'Announce') {
+      if (type === 'Announce' || type === 'Initial State') {
         announcementsPeers.add(peer)
       } else {
         announcementsPeers.delete(peer)
