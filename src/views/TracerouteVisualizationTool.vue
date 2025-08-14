@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { QInput, QBtn, QCard, QCardSection, QCardActions, QBadge } from 'quasar'
+import { QBadge } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import TracerouteMonitor from '@/components/TracerouteMonitor.vue'
 import Tr from '@/i18n/translation'
@@ -99,24 +99,6 @@ onMounted(() => {
 <template>
   <div class="IHR_char-container">
     <h1 class="text-center q-pa-xl">Traceroute Monitor</h1>
-    <!-- <QCard>
-      <QCardSection>
-        <div class="row justify-end">
-          <div class="col q-mr-md">
-            <QInput
-              v-model="measurementIDInput"
-              outlined
-              placeholder="RIPE ATLAS traceroute measurement ID"
-              :dense="true"
-              color="accent"
-            />
-          </div>
-          <div class="col-auto">
-            <QBtn label="Load" color="primary" @click="loadMeasurement" />
-          </div>
-        </div>
-      </QCardSection>
-    </QCard> -->
     <QBadge v-if="isProbesOverflow" color="red" class="q-mt-lg overflow-badge">
       <div class="text-body2">
         <div class="text-weight-bold">
