@@ -80,6 +80,8 @@ const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
 
+const vrps = ref([])
+
 const isHidden = ref(false)
 const myElement = ref(null)
 let observer = null
@@ -138,6 +140,8 @@ const resetData = () => {
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
   usingIndex.value = false
+
+  vrps.value = []
 }
 
 // Initialize the route
@@ -712,6 +716,8 @@ const fetchBGPlayData = async () => {
     })
     console.log('Data fetched successfully, Processing Data...')
     processResData(res.data)
+
+    await getCoveringVrpsForPrefix()
   } catch (error) {
     console.error('Error fetching BGPlay data:', error)
   } finally {
@@ -826,6 +832,61 @@ function generateCommunityMap(communities) {
   }
   console.log('Community Object Generated')
   return communityInfo
+}
+
+const getCoveringVrpsForPrefix = async () => {
+  try {
+    const res = await axios.get(`https://www.ihr.live/rpki-history/api/vrp`, {
+      params: {
+        prefix: params.value.prefix,
+        timestamp__gte: timestampToUnix(startTime.value),
+        timestamp__lte: timestampToUnix(endTime.value)
+      }
+    })
+    vrps.value = res.data
+    console.log('VRPs fetched successfully:', vrps.value)
+  } catch (error) {
+    console.error('Error fetching VRPs:', error)
+  }
+}
+
+const getRPKIStatus = (asn) => {
+  if (!vrps.value || vrps.value.length === 0) {
+    return { status: 'NotFound' }
+  }
+
+  let sameOriginAsnFound = false
+  const prefixLength = params.value.prefix.split('/')[1]
+
+  for (const vrp of vrps.value) {
+    if (vrp.asn === 0 || vrp.asn !== asn) {
+      continue
+    }
+    sameOriginAsnFound = true
+
+    if (prefixLength <= vrp.max_length) {
+      return { status: 'Valid' }
+    }
+  }
+
+  if (sameOriginAsnFound) {
+    return {
+      status: 'Invalid',
+      reason: {
+        code: 'moreSpecific',
+        description:
+          'Covering VRP with matching origin ASN found, but queried prefix is more specific than maxLength attribute allows.'
+      }
+    }
+  }
+
+  return {
+    status: 'Invalid',
+    reason: {
+      code: 'noMatchingOrigin',
+      description: 'No covering VRP with matching origin ASN found.'
+    }
+  }
 }
 
 const updateSelectedPeers = (obj) => {
