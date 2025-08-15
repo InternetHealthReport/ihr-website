@@ -80,7 +80,7 @@ const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
 
-const vrps = ref([])
+let vrps = []
 
 const isHidden = ref(false)
 const myElement = ref(null)
@@ -141,7 +141,7 @@ const resetData = () => {
   currentIndex.value = -1
   usingIndex.value = false
 
-  vrps.value = []
+  vrps = []
 }
 
 // Initialize the route
@@ -275,6 +275,7 @@ const processResData = (data) => {
     data.type = addBGPMessageType(data)
     // Modify the timestamp to be in seconds
     data.timestamp = Math.floor(data.timestamp)
+    data.rpki_status = 'TODO'
 
     applyDefaultSelectedPeers(data.peer)
 
@@ -328,6 +329,8 @@ const processResData = (data) => {
       const peer = event.source_id.split('-')[1]
       const peerInfo = sources[peer]
       const type = addBGPMessageType('I') // Manually Assigning 'I' for Initial State
+      const path = event.path || []
+      const originASN = path.length ? path[path.length - 1] : null
 
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
 
@@ -344,10 +347,11 @@ const processResData = (data) => {
         peer_asn: peerInfo.as_number,
         rrc: peerInfo.rrc,
         peer: peer,
-        path: event.path || [],
+        path: path,
         community: addCommunityAndDescriptions(event.community),
-        as_info: addASInfo(event.path),
+        as_info: addASInfo(path),
         type: type,
+        rpki_status: getRPKIStatus(originASN, minTimestamp.value).status,
         timestamp: minTimestamp.value
       })
     })
@@ -357,6 +361,8 @@ const processResData = (data) => {
       const peerInfo = sources[peer]
       const timestamp = timestampToUnix(event.timestamp)
       const type = addBGPMessageType(event.type)
+      const path = event.attrs.path || []
+      const originASN = path.length ? path[path.length - 1] : null
 
       generateLineChartData({
         timestamp: timestamp,
@@ -370,10 +376,11 @@ const processResData = (data) => {
         peer_asn: peerInfo.as_number,
         rrc: peerInfo.rrc,
         peer: peer,
-        path: event.attrs.path || [],
+        path: path,
         community: addCommunityAndDescriptions(event.attrs.community),
-        as_info: addASInfo(event.attrs.path),
+        as_info: addASInfo(path),
         type: type,
+        rpki_status: getRPKIStatus(originASN, timestamp).status,
         timestamp: timestamp
       })
     })
@@ -715,9 +722,8 @@ const fetchBGPlayData = async () => {
       }
     })
     console.log('Data fetched successfully, Processing Data...')
-    processResData(res.data)
-
     await getCoveringVrpsForPrefix()
+    processResData(res.data)
   } catch (error) {
     console.error('Error fetching BGPlay data:', error)
   } finally {
@@ -836,55 +842,73 @@ function generateCommunityMap(communities) {
 
 const getCoveringVrpsForPrefix = async () => {
   try {
-    const res = await axios.get(`https://www.ihr.live/rpki-history/api/vrp`, {
+    const res = await axios.get('https://www.ihr.live/rpki-history/api/vrp', {
       params: {
         prefix: params.value.prefix,
         timestamp__gte: timestampToUnix(startTime.value),
         timestamp__lte: timestampToUnix(endTime.value)
       }
     })
-    vrps.value = res.data
-    console.log('VRPs fetched successfully:', vrps.value)
+
+    res.data.map((vrp) => {
+      const data = {
+        ...vrp,
+        unixVisible: {
+          from: timestampToUnix(vrp.visible.from.split('+')[0]),
+          to: timestampToUnix(vrp.visible.to.split('+')[0])
+        }
+      }
+      vrps.push(data)
+    })
+    console.log('VRPs fetched successfully:', vrps)
   } catch (error) {
     console.error('Error fetching VRPs:', error)
   }
 }
 
-const getRPKIStatus = (asn) => {
-  if (!vrps.value || vrps.value.length === 0) {
+const getRPKIStatus = (asn, timestamp) => {
+  if (!asn || !timestamp) {
+    return { status: 'Null' }
+  }
+
+  if (!vrps || vrps.length === 0) {
+    return { status: 'Not Found' }
+  }
+
+  const prefixLength = Number(params.value.prefix.split('/')[1])
+
+  const matchingASN = vrps.filter((vrp) => vrp.asn === asn && vrp.asn !== 0)
+
+  if (matchingASN.length === 0) {
+    return {
+      status: 'Invalid (No Matching Origin)',
+      reason: {
+        code: 'noMatchingOrigin',
+        description: 'No covering VRP with matching origin ASN found.'
+      }
+    }
+  }
+
+  const activeVRPs = matchingASN.filter(
+    (vrp) => timestamp >= vrp.unixVisible.from && timestamp <= vrp.unixVisible.to
+  )
+
+  if (activeVRPs.length === 0) {
     return { status: 'NotFound' }
   }
 
-  let sameOriginAsnFound = false
-  const prefixLength = params.value.prefix.split('/')[1]
-
-  for (const vrp of vrps.value) {
-    if (vrp.asn === 0 || vrp.asn !== asn) {
-      continue
-    }
-    sameOriginAsnFound = true
-
+  for (const vrp of activeVRPs) {
     if (prefixLength <= vrp.max_length) {
       return { status: 'Valid' }
     }
   }
 
-  if (sameOriginAsnFound) {
-    return {
-      status: 'Invalid',
-      reason: {
-        code: 'moreSpecific',
-        description:
-          'Covering VRP with matching origin ASN found, but queried prefix is more specific than maxLength attribute allows.'
-      }
-    }
-  }
-
   return {
-    status: 'Invalid',
+    status: 'Invalid (More Specific)',
     reason: {
-      code: 'noMatchingOrigin',
-      description: 'No covering VRP with matching origin ASN found.'
+      code: 'moreSpecific',
+      description:
+        'Covering VRP with matching origin ASN found, but queried prefix is more specific than maxLength attribute allows.'
     }
   }
 }
