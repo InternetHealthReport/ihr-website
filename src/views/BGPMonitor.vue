@@ -894,7 +894,7 @@ const getRPKIStatus = (asn, timestamp) => {
   )
 
   if (activeVRPs.length === 0) {
-    return { status: 'NotFound' }
+    return { status: 'Not Found' }
   }
 
   for (const vrp of activeVRPs) {
