@@ -62,6 +62,13 @@ const columns = ref([
     sort: (a, b) => a.length - b.length
   },
   { name: 'type', label: 'Type', field: 'type', align: 'left', sortable: true },
+  {
+    name: 'rpki_status',
+    label: 'RPKI Status',
+    field: 'rpki_status',
+    align: 'left',
+    sortable: true
+  },
   { name: 'timestamp', label: 'Timestamp', field: 'timestamp', align: 'left', sortable: true },
   {
     name: 'community',
