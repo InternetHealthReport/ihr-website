@@ -333,7 +333,9 @@ watch(displayMode, () => {
       :configs="configs"
       :event-handlers="eventHandlers"
     />
-    <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
+    <div v-else-if="!isLoading" class="placeholder-message">
+      No Traceroute Network Graph data available.
+    </div>
     <div
       v-if="selectedNode"
       ref="tooltip"
