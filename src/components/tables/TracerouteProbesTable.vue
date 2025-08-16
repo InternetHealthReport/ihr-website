@@ -2,6 +2,7 @@
 import { QInput, QTable, QSpinner } from 'quasar'
 import { ref, computed, watch } from 'vue'
 import '@/styles/chart.css'
+import { ipAddressSortFunction } from '../../plugins/tracerouteFunctions'
 
 const props = defineProps({
   nodes: {
@@ -35,33 +36,9 @@ const customSort = (rows, sortBy, descending) => {
         return +x[sortBy] > +y[sortBy] ? 1 : +x[sortBy] < +y[sortBy] ? -1 : 0
       } else if (sortBy === 'ipv4') {
         // IP Sort function
-        if (!x.address_v4 || !y.address_v4) {
-          return 0
-        }
-        const ip_array_a = x.address_v4.split('.').map((ip) => +ip)
-        const ip_array_b = y.address_v4.split('.').map((ip) => +ip)
-        return ip_array_a[0] > ip_array_b[0]
-          ? 1
-          : ip_array_a[0] < ip_array_b[0]
-            ? -1
-            : ip_array_a[1] > ip_array_b[1]
-              ? 1
-              : ip_array_a[1] < ip_array_b[1]
-                ? -1
-                : ip_array_a[2] > ip_array_b[2]
-                  ? 1
-                  : ip_array_a[2] < ip_array_b[2]
-                    ? -1
-                    : ip_array_a[3] > ip_array_b[3]
-                      ? 1
-                      : ip_array_a[3] < ip_array_b[3]
-                        ? -1
-                        : 0
-      } else if (sortBy === 'ipv6') {
-        // numeric sort
-        return x.address_v6 > y.address_v6 ? 1 : x.address_v6 < y.address_v6 ? -1 : 0
+        return ipAddressSortFunction(x.address_v4, y.address_v4)
       } else {
-        // numeric sort
+        // regular sort
         return x[sortBy] > y[sortBy] ? 1 : x[sortBy] < y[sortBy] ? -1 : 0
       }
     })

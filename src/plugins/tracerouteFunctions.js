@@ -93,10 +93,37 @@ const calculateMedian = (values) => {
   return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2
 }
 
+const ipAddressSortFunction = (x, y) => {
+  // IP Sort function
+  if (!x || !y) {
+    return 0
+  }
+  const ip_array_a = x.split('.').map((ip) => +ip)
+  const ip_array_b = y.split('.').map((ip) => +ip)
+  return ip_array_a[0] > ip_array_b[0]
+    ? 1
+    : ip_array_a[0] < ip_array_b[0]
+      ? -1
+      : ip_array_a[1] > ip_array_b[1]
+        ? 1
+        : ip_array_a[1] < ip_array_b[1]
+          ? -1
+          : ip_array_a[2] > ip_array_b[2]
+            ? 1
+            : ip_array_a[2] < ip_array_b[2]
+              ? -1
+              : ip_array_a[3] > ip_array_b[3]
+                ? 1
+                : ip_array_a[3] < ip_array_b[3]
+                  ? -1
+                  : 0
+}
+
 export {
   convertUnixTimestamp,
   isPrivateIP,
   calculateMedian,
   convertTimeToFormat,
-  convertDateTimeToSeconds
+  convertDateTimeToSeconds,
+  ipAddressSortFunction
 }
