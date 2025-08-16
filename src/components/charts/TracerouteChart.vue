@@ -427,7 +427,7 @@ watch(displayMode, () => {
           <div class="rttLabel">RTT</div>
         </div>
         <div class="col">
-          <div class="scaleLabel">{{ maxDisplayedRtt }}</div>
+          <div class="scaleLabel">{{ maxDisplayedRtt.toFixed(3) }}</div>
           <div class="scale">
             <div
               v-for="(percentage, index) in Array.from(
@@ -439,7 +439,7 @@ watch(displayMode, () => {
               :style="{ backgroundColor: rttColor(percentage, shouldCompliment = false) }"
             ></div>
           </div>
-          <div class="scaleLabel">{{ minDisplayedRtt }}</div>
+          <div class="scaleLabel">{{ minDisplayedRtt.toFixed(3) }}</div>
         </div>
       </div>
     </div>
