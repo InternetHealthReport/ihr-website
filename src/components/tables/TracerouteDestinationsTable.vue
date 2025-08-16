@@ -33,6 +33,7 @@ const emit = defineEmits([
 const destinationSearchQuery = ref('')
 const selectAllDestinationsModel = ref(props.selectAllDestinations)
 const selectDestinationsModel = ref(props.selectedDestinations)
+const selectedDestinationDetailsList = ref([])
 
 const filteredDestinationRows = computed(() => {
   const query = destinationSearchQuery.value.toLowerCase()
@@ -82,7 +83,15 @@ watch(
 )
 
 watch([() => props.selectedDestinations, () => props.allDestinations], () => {
-  selectDestinationsModel.value = props.selectedDestinations
+  // selectDestinationsModel.value = props.selectedDestinations
+  filteredDestinationRows.value.forEach((destinationDetails, ind) => {
+    if (
+      props.selectedDestinations.includes(destinationDetails.destination) &&
+      selectedDestinationDetailsList.value.filter((x) => x.destination === destinationDetails.destination).length === 0
+    ) {
+      selectedDestinationDetailsList.value.push(filteredDestinationRows.value[ind])
+    }
+  })
   if (props.selectedDestinations.length === props.allDestinations.length) {
     selectAllDestinationsModel.value = true
   } else if (props.selectedDestinations.length === 0) {
@@ -92,10 +101,19 @@ watch([() => props.selectedDestinations, () => props.allDestinations], () => {
   }
 
   emit('setSelectAllDestinations', selectAllDestinationsModel.value)
-})
+}, {deep: true})
 
-watch(selectDestinationsModel, () => {
-  emit('setSelectedDestinations', selectDestinationsModel.value)
+// watch(selectDestinationsModel, () => {
+//   emit('setSelectedDestinations', selectDestinationsModel.value)
+// })
+
+watch(selectedDestinationDetailsList, (newVal, oldVal) => {
+  if (newVal.length !== oldVal.length) {
+    emit(
+      'setSelectedDestinations',
+      selectedDestinationDetailsList.value.map((destination) => destination.destination)
+    )
+  }
 })
 </script>
 
@@ -105,8 +123,15 @@ watch(selectDestinationsModel, () => {
     placeholder="Search destinations..."
     @input="emit('loadMeasurementOnSearchQuery')"
   />
-  <QTable :rows="filteredDestinationRows" :columns="destinationColumns" row-key="destination" flat>
-    <template #header="props">
+  <QTable 
+    v-model:selected="selectedDestinationDetailsList"
+    :rows="filteredDestinationRows" 
+    :columns="destinationColumns" 
+    row-key="destination" 
+    flat
+    selection="multiple"
+  >
+    <!-- <template #header="props">
       <QTr :props="props">
         <QTd v-for="col in props.cols" :key="col.name" :props="props.colProps">
           <template v-if="col.name === 'destination'">
@@ -134,7 +159,7 @@ watch(selectDestinationsModel, () => {
         <QTd>{{ props.row.ip }}</QTd>
         <QTd>{{ props.row.asn }}</QTd>
       </QTr>
-    </template>
+    </template> -->
   </QTable>
   <div v-if="isLoading" class="IHR_loading-spinner">
     <QSpinner color="secondary" size="15em" />
