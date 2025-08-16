@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject, watchEffect, watch } from 'vue'
-import { QExpansionItem, QSeparator, QInput, QBtn, QBadge } from 'quasar'
+import { QExpansionItem, QSeparator, QInput, QBtn } from 'quasar'
 import dagre from 'dagre'
 import RipeApi from '../plugins/RipeApi'
 import TracerouteChart from '@/components/charts/TracerouteChart.vue'
@@ -67,6 +67,7 @@ const loadMeasurementErrorDialog = ref(false)
 const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 const measurementIDInput = ref('')
+const fallbackStopTime = ref(Math.floor(Date.now()/1000))
 
 const startTimestamp = ref(convertDateTimeToSeconds(props.startTime))
 const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
@@ -399,8 +400,15 @@ const loadMeasurementData = async (loadProbes = false) => {
       const params = {}
 
       if (!timeRange.value.disable) {
-        params.start = timeRange.value.min
-        params.stop = timeRange.value.max
+        if(timeRange.value.min > 0) {
+          params.start = timeRange.value.min
+        }
+
+        if(timeRange.value.max > 0) {
+          params.stop = timeRange.value.max
+        } else {
+          params.stop = fallbackStopTime.value
+        }
       }
 
       if (selectedProbes.value.length > 0) {
@@ -578,12 +586,28 @@ watch(
           </div>
         </div>
         <template v-if="metaData.target">
-          <div><strong>Description:</strong> {{ metaData.description }}</div>
-          <div><strong>Target:</strong> {{ metaData.target }}</div>
-          <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
-          <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
-          <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
-          <div><strong>Status:</strong> {{ metaData.status?.name }}</div>
+          <div class="text-h6">
+            <strong>Measurement details:-</strong>
+          </div>
+          <p>
+            <ul>
+              <li>
+                Traceroute to <u>{{ metaData.target }}</u>. <span v-if="metaData.status?.name">This measurement is <u>{{ metaData.status?.name }}</u></span>
+              </li>
+              <li>
+                Measuring from <u>{{ convertUnixTimestamp(metaData.start_time) }}</u> to <u>{{ convertUnixTimestamp(metaData.stop_time) }}</u> <span v-if="metaData.interval">every <u>{{ metaData.interval }} seconds</u></span>
+              </li>
+              <li>
+                RTT Chart and Network graph covers data from <u>{{ convertUnixTimestamp(timeRange.min) }}</u> to <u>{{ convertUnixTimestamp(timeRange.max) }}</u>.  
+              </li>
+              <li>
+                Selected probes: {{ selectedProbes.length }} (Out of {{ allProbes.length }})
+              </li>
+              <li>
+                Selected destinations: {{ selectedDestinations.length }}
+              </li>
+            </ul>
+          </p>
         </template>
         <template v-else>
           <div class="text-body2 measurementInputInfo">
