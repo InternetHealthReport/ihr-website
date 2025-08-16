@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject, watchEffect, watch } from 'vue'
-import { QExpansionItem, QSeparator, QInput, QBtn } from 'quasar'
+import { QExpansionItem, QSeparator, QInput, QBtn, QBadge } from 'quasar'
 import dagre from 'dagre'
 import RipeApi from '../plugins/RipeApi'
 import TracerouteChart from '@/components/charts/TracerouteChart.vue'
@@ -577,12 +577,19 @@ watch(
             />
           </div>
         </div>
-        <div><strong>Description:</strong> {{ metaData.description }}</div>
-        <div><strong>Target:</strong> {{ metaData.target }}</div>
-        <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
-        <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
-        <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
-        <div><strong>Status:</strong> {{ metaData.status?.name }}</div>
+        <template v-if="metaData.target">
+          <div><strong>Description:</strong> {{ metaData.description }}</div>
+          <div><strong>Target:</strong> {{ metaData.target }}</div>
+          <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
+          <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
+          <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
+          <div><strong>Status:</strong> {{ metaData.status?.name }}</div>
+        </template>
+        <template v-else>
+          <div class="text-body2 measurementInputInfo">
+            Please enter a RIPE Atlas Traceroute Measurement from <a href="https://atlas.ripe.net/measurements/public?sort=-id&id__gt=1000000&toggle=all&page_size=100&page=1&type=traceroute" target="_blank">this link</a> in the above input box
+          </div>
+        </template>
       </div>
       <QSeparator :vertical="true" />
       <div class="col q-ml-md">
@@ -657,5 +664,8 @@ watch(
 <style scoped>
 .cardTraceroute {
   margin-bottom: 20px;
+}
+.measurementInputInfo {
+  color: red;
 }
 </style>
