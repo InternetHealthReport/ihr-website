@@ -461,7 +461,7 @@ watch(displayMode, () => {
         </div>
       </div>
     </div>
-    <div class="view-control-overlay">
+    <div class="row view-control-overlay justify-center">
       <QBtn icon="zoom_in" @click="zoomIn" />
       <QBtn icon="zoom_out" @click="zoomOut" />
       <QBtn icon="fullscreen" @click="toggleFullScreen" />
@@ -611,10 +611,9 @@ watch(displayMode, () => {
 .view-control-overlay {
   background-color: rgba(255, 255, 255, 0.8);
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 0px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.5em;
 }
 
