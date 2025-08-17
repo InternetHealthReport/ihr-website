@@ -53,6 +53,7 @@ const asNames = ref({}) // AS Info from asnames.txt file
 const inputDisable = ref(false)
 const isWsDisconnected = ref(false)
 const normalizedPrefix = ref('') // Used to store the normalized prefix to determine the BGP message type
+let normalizedPrefixLength = null
 
 const dataSource = ref('ris-live') //'ris-live' or 'bgplay'
 const minTimestamp = ref(Infinity)
@@ -140,7 +141,7 @@ const resetData = () => {
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
   usingIndex.value = false
-
+  normalizedPrefixLength = null
   vrps = []
 }
 
@@ -150,7 +151,7 @@ const initRoute = () => {
 
   if (route.query.prefix) {
     params.value.prefix = route.query.prefix
-    normalizedPrefix.value = normalizePrefix(route.query.prefix)
+    normalizedPrefix.value = normalizePrefix(route.query.prefix, true)
   } else {
     query.prefix = params.value.prefix
   }
@@ -528,7 +529,7 @@ const addASInfo = (asPathArray) => {
   return result
 }
 
-const normalizePrefix = (prefix) => {
+const normalizePrefix = (prefix, isUserInputPrefix) => {
   const [ip, length] = prefix.split('/')
   let normalizedIp
   if (Address4.isValid(ip)) {
@@ -538,6 +539,9 @@ const normalizePrefix = (prefix) => {
   } else {
     console.warn(`Invalid prefix: ${prefix}`)
     normalizedIp = ip // use the original IP if invalid
+  }
+  if (isUserInputPrefix === true && length) {
+    normalizedPrefixLength = Number(length)
   }
   return length ? `${normalizedIp}/${length}` : normalizedIp
 }
@@ -867,19 +871,29 @@ const getCoveringVrpsForPrefix = async () => {
 }
 
 const getRPKIStatus = (asn, timestamp) => {
-  if (!asn || !timestamp) {
-    return { status: 'Null' }
+  if (!asn || !timestamp) return { status: 'Null' }
+  if (!vrps || vrps.length === 0) return { status: 'Not Found' }
+
+  let same_origin_asn_found = false
+
+  for (const vrp of vrps) {
+    if (vrp.asn !== asn || vrp.asn === 0) continue
+    same_origin_asn_found = true
+
+    if (timestamp >= vrp.unixVisible.from && timestamp <= vrp.unixVisible.to) {
+      if (normalizedPrefixLength <= vrp.max_length) return { status: 'Valid' }
+      return {
+        status: 'Invalid (More Specific)',
+        reason: {
+          code: 'moreSpecific',
+          description:
+            'Covering VRP with matching origin ASN found, but queried prefix is more specific than maxLength attribute allows.'
+        }
+      }
+    }
   }
-
-  if (!vrps || vrps.length === 0) {
-    return { status: 'Not Found' }
-  }
-
-  const prefixLength = Number(params.value.prefix.split('/')[1])
-
-  const matchingASN = vrps.filter((vrp) => vrp.asn === asn && vrp.asn !== 0)
-
-  if (matchingASN.length === 0) {
+  
+  if (!same_origin_asn_found) {
     return {
       status: 'Invalid (No Matching Origin)',
       reason: {
@@ -888,29 +902,7 @@ const getRPKIStatus = (asn, timestamp) => {
       }
     }
   }
-
-  const activeVRPs = matchingASN.filter(
-    (vrp) => timestamp >= vrp.unixVisible.from && timestamp <= vrp.unixVisible.to
-  )
-
-  if (activeVRPs.length === 0) {
-    return { status: 'Not Found' }
-  }
-
-  for (const vrp of activeVRPs) {
-    if (prefixLength <= vrp.max_length) {
-      return { status: 'Valid' }
-    }
-  }
-
-  return {
-    status: 'Invalid (More Specific)',
-    reason: {
-      code: 'moreSpecific',
-      description:
-        'Covering VRP with matching origin ASN found, but queried prefix is more specific than maxLength attribute allows.'
-    }
-  }
+  return { status: 'Not Found' }
 }
 
 const updateSelectedPeers = (obj) => {
@@ -950,7 +942,7 @@ watch(
       query.rrcs = rrcs.value ? rrcs.value.join(',') : ''
     }
     router.replace({ query })
-    normalizedPrefix.value = normalizePrefix(params.value.prefix)
+    normalizedPrefix.value = normalizePrefix(params.value.prefix, true)
   },
   { deep: true }
 )
