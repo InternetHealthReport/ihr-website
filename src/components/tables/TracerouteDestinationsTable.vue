@@ -1,5 +1,5 @@
 <script setup>
-import { QInput, QCheckbox, QTable, QTd, QTr, QSpinner } from 'quasar'
+import { QInput, QTable, QSpinner } from 'quasar'
 import { ref, computed, watch } from 'vue'
 import '@/styles/chart.css'
 import { ipAddressSortFunction } from '../../plugins/tracerouteFunctions'
@@ -70,16 +70,6 @@ const filteredDestinationRows = computed(() => {
     })
   })
 })
-
-const toggleSelectAllDestinations = (value) => {
-  if (value) {
-    emit('setSelectedDestinations', props.allDestinations)
-    emit('setSelectAllDestinations', true)
-  } else {
-    emit('setSelectedDestinations', [])
-    emit('setSelectAllDestinations', false)
-  }
-}
 
 const destinationColumns = [
   {

@@ -524,6 +524,20 @@ watch(
   }
 )
 
+watch(allDestinations, () => {
+  $q.notify({
+    message: 'New destinations have been added.',
+    color: 'blue',
+    position: 'bottom-right',
+    actions: [
+      {
+        icon: 'close',
+        'aria-label': 'Dismiss',
+      }
+    ],
+  })
+}, {deep: true})
+
 watchEffect(() => {
   if (!timeRange.value.disable) {
     loadMeasurementOnTimeRange(timeRange.value)
