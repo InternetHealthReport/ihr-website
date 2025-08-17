@@ -282,7 +282,7 @@ onMounted(() => {
     <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>
-    <div v-if="dataSource === 'ris-live'">
+    <div v-if="dataSource === 'ris-live'" class="q-mb-md">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>
