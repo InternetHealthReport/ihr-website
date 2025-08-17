@@ -207,7 +207,7 @@ const assignAsnColors = () => {
 const rttColor = (rtt, shouldCompliment = true) => {
   if (rtt === null || rtt === undefined) return 'black'
   const normalized = Math.min(Math.max(rtt / props.maxDisplayedRtt, 0), 1)
-  const greenFactor = shouldCompliment ? (1 - normalized) : normalized  
+  const greenFactor = shouldCompliment ? 1 - normalized : normalized
   const green = Math.floor(255 * greenFactor)
   return `rgb(150, ${green}, 60)`
 }
@@ -438,7 +438,7 @@ watch(displayMode, () => {
               )"
               :key="index"
               class="scaleColor"
-              :style="{ backgroundColor: rttColor(percentage, shouldCompliment = false) }"
+              :style="{ backgroundColor: rttColor(percentage, (shouldCompliment = false)) }"
             ></div>
           </div>
           <div class="scaleLabel">{{ minDisplayedRtt.toFixed(3) }}</div>

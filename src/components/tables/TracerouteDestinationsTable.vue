@@ -34,7 +34,7 @@ const emit = defineEmits([
 const customSort = (rows, sortBy, descending) => {
   const data = [...rows]
 
-   if (sortBy) {
+  if (sortBy) {
     data.sort((a, b) => {
       const x = descending ? b : a
       const y = descending ? a : b
@@ -82,7 +82,13 @@ const toggleSelectAllDestinations = (value) => {
 }
 
 const destinationColumns = [
-  { name: 'destination', align: 'left', label: 'Destination IP', field: 'destination', sortable: true },
+  {
+    name: 'destination',
+    align: 'left',
+    label: 'Destination IP',
+    field: 'destination',
+    sortable: true
+  },
   { name: 'asn', align: 'left', label: 'ASN', field: 'asn', sortable: true }
 ]
 
@@ -108,25 +114,31 @@ watch(
   }
 )
 
-watch([() => props.selectedDestinations, () => props.allDestinations], () => {
-  filteredDestinationRows.value.forEach((destinationDetails, ind) => {
-    if (
-      props.selectedDestinations.includes(destinationDetails.destination) &&
-      selectedDestinationDetailsList.value.filter((x) => x.destination === destinationDetails.destination).length === 0
-    ) {
-      selectedDestinationDetailsList.value.push(filteredDestinationRows.value[ind])
+watch(
+  [() => props.selectedDestinations, () => props.allDestinations],
+  () => {
+    filteredDestinationRows.value.forEach((destinationDetails, ind) => {
+      if (
+        props.selectedDestinations.includes(destinationDetails.destination) &&
+        selectedDestinationDetailsList.value.filter(
+          (x) => x.destination === destinationDetails.destination
+        ).length === 0
+      ) {
+        selectedDestinationDetailsList.value.push(filteredDestinationRows.value[ind])
+      }
+    })
+    if (props.selectedDestinations.length === props.allDestinations.length) {
+      selectAllDestinationsModel.value = true
+    } else if (props.selectedDestinations.length === 0) {
+      selectAllDestinationsModel.value = false
+    } else {
+      selectAllDestinationsModel.value = null
     }
-  })
-  if (props.selectedDestinations.length === props.allDestinations.length) {
-    selectAllDestinationsModel.value = true
-  } else if (props.selectedDestinations.length === 0) {
-    selectAllDestinationsModel.value = false
-  } else {
-    selectAllDestinationsModel.value = null
-  }
 
-  emit('setSelectAllDestinations', selectAllDestinationsModel.value)
-}, {deep: true})
+    emit('setSelectAllDestinations', selectAllDestinationsModel.value)
+  },
+  { deep: true }
+)
 
 watch(selectedDestinationDetailsList, (newVal, oldVal) => {
   if (newVal.length !== oldVal.length) {
@@ -144,11 +156,11 @@ watch(selectedDestinationDetailsList, (newVal, oldVal) => {
     placeholder="Search destinations..."
     @input="emit('loadMeasurementOnSearchQuery')"
   />
-  <QTable 
+  <QTable
     v-model:selected="selectedDestinationDetailsList"
-    :rows="filteredDestinationRows" 
-    :columns="destinationColumns" 
-    row-key="destination" 
+    :rows="filteredDestinationRows"
+    :columns="destinationColumns"
+    row-key="destination"
     flat
     selection="multiple"
     :sort-method="customSort"

@@ -200,7 +200,12 @@ watch(filteredRttOverTime, () => {
                   <QPopupProxy no-route-dismiss cover>
                     <div class="q-pa-md q-gutter-md row items-start">
                       <QDate flat v-model="leftDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" />
-                      <QTime flat v-model="leftDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" format24h />
+                      <QTime
+                        v-model="leftDateTimePicker"
+                        flat
+                        mask="YYYY-MM-DDTHH:mm:ss"
+                        format24h
+                      />
                     </div>
                   </QPopupProxy>
                 </QIcon>
@@ -208,15 +213,20 @@ watch(filteredRttOverTime, () => {
             </QInput>
           </div>
           <div class="col-2 q-pl-md">
-            <QInput label="Selected End Date Time in (UTC)" v-model="rightDateTimePicker" class="input" filled>
+            <QInput
+              v-model="rightDateTimePicker"
+              label="Selected End Date Time in (UTC)"
+              class="input"
+              filled
+            >
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
                   <QPopupProxy no-route-dismiss cover>
                     <div class="q-pa-md q-gutter-md row items-start">
                       <QDate flat v-model="rightDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" />
                       <QTime
-                        flat
                         v-model="rightDateTimePicker"
+                        flat
                         mask="YYYY-MM-DDTHH:mm:ss"
                         format24h
                       />

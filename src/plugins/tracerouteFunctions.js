@@ -131,5 +131,5 @@ export {
   convertTimeToFormat,
   convertDateTimeToSeconds,
   ipAddressSortFunction,
-  isInteger,
+  isInteger
 }
