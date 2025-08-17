@@ -190,7 +190,7 @@ watch(filteredRttOverTime, () => {
         <div class="row justify-center">
           <div class="col-2 q-pr-md">
             <QInput
-              label="Start Date Time in (UTC)"
+              label="Selected Start Date Time in (UTC)"
               v-model="leftDateTimePicker"
               class="input"
               filled
@@ -208,7 +208,7 @@ watch(filteredRttOverTime, () => {
             </QInput>
           </div>
           <div class="col-2 q-pl-md">
-            <QInput label="End Date Time in (UTC)" v-model="rightDateTimePicker" class="input" filled>
+            <QInput label="Selected End Date Time in (UTC)" v-model="rightDateTimePicker" class="input" filled>
               <template v-slot:append>
                 <QIcon name="event" class="cursor-pointer">
                   <QPopupProxy no-route-dismiss cover>
