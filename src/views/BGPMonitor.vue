@@ -3,7 +3,6 @@ import {
   QBtn,
   QSelect,
   QInput,
-  QSlider,
   uid,
   QDialog,
   QCard,
@@ -35,7 +34,6 @@ import report from '@/plugins/report'
 const { t } = i18n.global
 const { utcString } = report()
 
-const maxHops = ref(9)
 const isPlaying = ref(false)
 const rrcList = ref([])
 const disableButton = ref(false)
@@ -154,11 +152,6 @@ const initRoute = () => {
     normalizedPrefix.value = normalizePrefix(route.query.prefix, true)
   } else {
     query.prefix = params.value.prefix
-  }
-  if (route.query['max-hops']) {
-    maxHops.value = parseInt(route.query['max-hops'])
-  } else {
-    query['max-hops'] = maxHops.value
   }
   if (route.query['data-source']) {
     dataSource.value = route.query['data-source']
@@ -892,7 +885,7 @@ const getRPKIStatus = (asn, timestamp) => {
       }
     }
   }
-  
+
   if (!same_origin_asn_found) {
     return {
       status: 'Invalid (No Matching Origin)',
@@ -927,11 +920,10 @@ const customIntersectionObserver = () => {
 }
 
 watch(
-  [params, maxHops, dataSource, startTime, endTime, rrcs],
+  [params, dataSource, startTime, endTime, rrcs],
   () => {
     const query = {
       prefix: params.value.prefix,
-      'max-hops': maxHops.value,
       'data-source': dataSource.value
     }
     if (dataSource.value === 'ris-live') {
@@ -1016,8 +1008,8 @@ onUnmounted(() => {
                 </div>
               </td>
               <td>
-                <div class="row">
-                  <div class="col q-mr-xl q-mt-lg">
+                <div class="row items-center">
+                  <div class="col q-mr-xl">
                     <QInput
                       v-model="params.prefix"
                       outlined
@@ -1032,52 +1024,11 @@ onUnmounted(() => {
                       "
                     />
                   </div>
-                  <div v-if="dataSource === 'ris-live'" class="col-2 q-mr-xl q-mt-lg">
-                    <QSelect
-                      v-model="params.host"
-                      filled
-                      :options="rrcList"
-                      label="RRC"
-                      emit-value
-                      :dense="true"
-                      color="accent"
-                      :disable="isPlaying || inputDisable"
-                    />
-                  </div>
-                  <div v-else class="col-2 q-mr-xl q-mt-lg">
-                    <QSelect
-                      filled
-                      :dense="true"
-                      v-model="rrcs"
-                      multiple
-                      :options="rrcLocations"
-                      label="RRCs"
-                      emit-value
-                      clearable
-                      :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
-                    />
-                  </div>
-                  <div class="col-2 q-mr-xl q-mt-lg">
-                    <QSlider
-                      v-model="maxHops"
-                      :min="1"
-                      :max="9"
-                      :step="1"
-                      label-always
-                      snap
-                      label
-                      :label-value="'Max Hops: ' + maxHops"
-                      color="accent"
-                      marker-labels
-                    />
-                  </div>
-                </div>
-                <div v-if="dataSource === 'bgplay'" class="row">
-                  <div class="col-2 q-mr-xl">
+                  <div v-if="dataSource === 'bgplay'" class="row">
                     <QInput
                       label="Start Date Time in (UTC)"
                       v-model="startTime"
-                      class="input"
+                      class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                     >
                       <template v-slot:append>
@@ -1091,12 +1042,10 @@ onUnmounted(() => {
                         </QIcon>
                       </template>
                     </QInput>
-                  </div>
-                  <div class="col-2">
                     <QInput
                       label="End Date Time in (UTC)"
                       v-model="endTime"
-                      class="input"
+                      class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                     >
                       <template v-slot:append>
@@ -1111,13 +1060,38 @@ onUnmounted(() => {
                       </template>
                     </QInput>
                   </div>
+                  <div v-if="dataSource === 'ris-live'" class="col-2">
+                    <QSelect
+                      v-model="params.host"
+                      filled
+                      :options="rrcList"
+                      label="RRC"
+                      emit-value
+                      :dense="true"
+                      color="accent"
+                      :disable="isPlaying || inputDisable"
+                    />
+                  </div>
+                  <div v-else class="col-2">
+                    <QSelect
+                      filled
+                      :dense="true"
+                      v-model="rrcs"
+                      multiple
+                      :options="rrcLocations"
+                      label="RRCs"
+                      emit-value
+                      clearable
+                      :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                    />
+                  </div>
                 </div>
               </td>
             </tr>
           </tbody>
         </QMarkupTable>
       </QCardSection>
-      <QCardActions align="center" ref="myElement">
+      <QCardActions align="center" ref="myElement" class="q-pb-md q-pt-none">
         <QBtn
           v-if="dataSource === 'ris-live'"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
@@ -1209,7 +1183,6 @@ onUnmounted(() => {
     >
       <BGPPathsChart
         :filtered-messages="filteredMessages"
-        :max-hops="maxHops"
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
