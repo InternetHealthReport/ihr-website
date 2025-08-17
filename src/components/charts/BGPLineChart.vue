@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QSlider, QSpinner } from 'quasar'
+import { QBadge, QBtn, QSlider, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, onMounted, watch } from 'vue'
 import report from '@/plugins/report'
@@ -212,7 +212,11 @@ const init = async () => {
   sliderWidthInit.value = false
   if (props.rawMessages.length === 0) return
   updateTimeRange()
-  await renderAnnouncementsAndWithdrawnChart(props.datesTrace, props.announcementsTrace, props.withdrawalsTrace)
+  await renderAnnouncementsAndWithdrawnChart(
+    props.datesTrace,
+    props.announcementsTrace,
+    props.withdrawalsTrace
+  )
   await renderAnnouncementsPeersChart(props.datesTrace, props.announcementsPeersTraces)
   adjustQSliderWidth(false)
   if (props.dataSource === 'bgplay') {
@@ -282,6 +286,55 @@ onMounted(() => {
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>
+    <div class="timetampSlider">
+      <div class="timetampSliderContainer">
+        <div class="row timestampInfo">
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div class="text-body2">
+                Min Timestamp:
+                {{
+                  props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
+                }}
+              </div>
+            </QBadge>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div v-if="dataSource === 'ris-live'" class="text-body2">
+                Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages
+              </div>
+              <div v-else class="text-body2">
+                Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State
+                and Events)
+              </div>
+            </QBadge>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div class="text-body2">
+                Max Timestamp:
+                {{
+                  props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
+                }}
+              </div>
+            </QBadge>
+          </div>
+        </div>
+        <QSlider
+          v-model="selectedMaxTimestamp"
+          :min="props.minTimestamp === Infinity ? 0 : props.minTimestamp"
+          :max="props.maxTimestamp === -Infinity ? 0 : props.maxTimestamp"
+          label-always
+          :label-value="
+            props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
+          "
+          switch-label-side
+          color="accent"
+          @update:model-value="updateSlider($event, true)"
+        />
+      </div>
+    </div>
     <ReactiveChart
       :layout="layout"
       :traces="announcementsAndWithdrawnChartData"
@@ -297,44 +350,6 @@ onMounted(() => {
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
-    <div class="timetampSlider">
-      <div class="timeStampControls">
-        <span v-if="dataSource === 'ris-live'"
-          >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span
-        >
-        <span v-else
-          >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State and
-          Events)</span
-        >
-      </div>
-      <div class="timetampSliderContainer">
-        <QSlider
-          v-model="selectedMaxTimestamp"
-          :min="props.minTimestamp === Infinity ? 0 : props.minTimestamp"
-          :max="props.maxTimestamp === -Infinity ? 0 : props.maxTimestamp"
-          label-always
-          :label-value="
-            props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
-          "
-          color="accent"
-          @update:model-value="updateSlider($event, true)"
-        />
-        <div class="timestampInfo">
-          <span
-            >Min Timestamp:
-            {{
-              props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
-            }}</span
-          >
-          <span
-            >Max Timestamp:
-            {{
-              props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
-            }}</span
-          >
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -367,6 +382,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
 }
 .loadingContainer {
   height: 60px;
