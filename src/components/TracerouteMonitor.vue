@@ -1,6 +1,6 @@
 <script setup>
 import { ref, inject, watchEffect, watch } from 'vue'
-import { QExpansionItem, QSeparator, QInput, QBtn } from 'quasar'
+import { QExpansionItem, QSeparator, QInput, QBtn, QIcon, useQuasar } from 'quasar'
 import dagre from 'dagre'
 import RipeApi from '../plugins/RipeApi'
 import TracerouteChart from '@/components/charts/TracerouteChart.vue'
@@ -12,9 +12,12 @@ import {
   calculateMedian,
   convertTimeToFormat,
   convertDateTimeToSeconds,
-  convertUnixTimestamp
+  convertUnixTimestamp,
+  isInteger,
 } from '../plugins/tracerouteFunctions'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
+
+const $q = useQuasar()
 
 const props = defineProps({
   atlasMeasurementID: {
@@ -68,6 +71,7 @@ const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
 const measurementIDInput = ref('')
 const fallbackStopTime = ref(Math.floor(Date.now()/1000))
+const isProbeOverflowAlert = ref(false)
 
 const startTimestamp = ref(convertDateTimeToSeconds(props.startTime))
 const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
@@ -76,7 +80,6 @@ const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
 const emit = defineEmits([
   'setSelectedDestinations',
   'setSelectedProbes',
-  'probesOverflow',
   'setSelectedTimeRange',
   'loadMeasurement'
 ])
@@ -120,11 +123,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
       isLoadingProbes.value = false
     })
 
-  if (allProbes.value.length > 1000) {
-    emit('probesOverflow', true)
-  } else {
-    emit('probesOverflow', false)
-  }
+    isProbeOverflowAlert.value = allProbes.value.length > 1000
 
   tracerouteData.forEach((probeData, probeIndex) => {
     if (probeData.result[0].error) {
@@ -556,6 +555,45 @@ watch(
     loadMeasurement()
   }
 )
+
+const isSanitizeMeasurementID = () => {
+  return isInteger(measurementID.value)
+}
+
+const showProbeOverflowNotif = () => {
+  $q.notify({
+    message: isSanitizeMeasurementID(measurementID.value) ? 
+      `<div class="text-body2">
+        <div class="text-weight-bold">
+          RIPE ATLAS Measurement ID
+          <QBadge color="primary" class="text-weight-bold">${ measurementID.value }</QBadge>
+        </div>
+        This measurement is a large one. Here are a few important points to note about large
+        measurements:
+        <ul>
+          <li>
+            There are more than 1,000 probes involved in this measurement. Currently, the
+            application limits the number of probes displayed to 1,000.
+          </li>
+          <li>
+            Updating the RTT chart's time slider will prompt the application to load a larger amount
+            of data, which may result in increased latency.
+          </li>
+        </ul>
+      </div>`: `Invalid traceroute measurement ID`,
+    color: 'red',
+    position: 'center',
+    multiline: true,
+    actions: [
+      {
+        icon: 'close',
+        'aria-label': 'Dismiss',
+      }
+    ],
+    timeout: 0,
+    html: true
+  })
+}
 </script>
 
 <template>
@@ -586,10 +624,20 @@ watch(
           </div>
         </div>
         <template v-if="metaData.target">
-          <div class="text-h6">
+          <div class="row text-h6 justify-between">
             <strong>Measurement details:-</strong>
+            <template v-if="isProbeOverflowAlert">
+              <QBtn
+                @click="showProbeOverflowNotif" 
+              >
+                <QIcon 
+                  name="warning" 
+                  color="red"
+                />
+              </QBtn>
+            </template>
           </div>
-          <p>
+          <p class="row">
             <ul>
               <li>
                 Traceroute to <u>{{ metaData.target }}</u>. <span v-if="metaData.status?.name">This measurement is <u>{{ metaData.status?.name }}</u></span>

@@ -12,7 +12,6 @@ const router = useRouter()
 const measurementID = ref('')
 const probeIDs = ref([])
 const destinationIPs = ref([])
-const isProbesOverflow = ref(false)
 const startTime = ref('')
 const stopTime = ref('')
 
@@ -37,9 +36,6 @@ const onUpdateProbesInRoute = (probeIds) => {
   pushRoute()
 }
 
-const onProbesOverflow = (showAlert) => {
-  isProbesOverflow.value = showAlert
-}
 
 const onUpdateTimeRangeInRoute = ({ startTime: startTimeInput, stopTime: endTimeInput }) => {
   startTime.value = startTimeInput
@@ -98,27 +94,9 @@ onMounted(() => {
 
 <template>
   <div class="IHR_char-container">
-    <h1 class="text-center q-pa-xl">Traceroute Monitor</h1>
-    <QBadge v-if="isProbesOverflow" color="red" class="q-mt-lg overflow-badge">
-      <div class="text-body2">
-        <div class="text-weight-bold">
-          RIPE ATLAS Measurement ID
-          <QBadge color="primary" class="text-weight-bold">{{ measurementID }}</QBadge>
-        </div>
-        This measurement is a large one. Here are a few important points to note about large
-        measurements:
-        <ul>
-          <li>
-            There are more than 1,000 probes involved in this measurement. Currently, the
-            application limits the number of probes displayed to 1,000.
-          </li>
-          <li>
-            Updating the RTT chart's time slider will prompt the application to load a larger amount
-            of data, which may result in increased latency.
-          </li>
-        </ul>
-      </div>
-    </QBadge>
+    <h1 class="text-center q-pa-xl">
+      Traceroute Monitor
+    </h1>
     <TracerouteMonitor
       :atlas-measurement-i-d="measurementID"
       :probe-i-ds="probeIDs"
@@ -130,7 +108,6 @@ onMounted(() => {
       @set-selected-probes="onUpdateProbesInRoute"
       @set-selected-destinations="onUpdateDestinationsInRoute"
       @set-selected-time-range="onUpdateTimeRangeInRoute"
-      @probes-overflow="onProbesOverflow"
       @load-measurement="loadMeasurement"
     />
   </div>

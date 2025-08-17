@@ -119,11 +119,17 @@ const ipAddressSortFunction = (x, y) => {
                   : 0
 }
 
+const isInteger = (str) => {
+  const regex = /^\d+$/
+  return regex.test(str)
+}
+
 export {
   convertUnixTimestamp,
   isPrivateIP,
   calculateMedian,
   convertTimeToFormat,
   convertDateTimeToSeconds,
-  ipAddressSortFunction
+  ipAddressSortFunction,
+  isInteger,
 }
