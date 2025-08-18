@@ -416,11 +416,11 @@ watch(displayMode, () => {
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
       <div>
         <span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }" />
-        <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + ' ms' : 'Not available' }}
+        <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
       </div>
       <div>
         <span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }" />
-        <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + ' ms' : 'Not available' }}
+        <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
       </div>
     </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">

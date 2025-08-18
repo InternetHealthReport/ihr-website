@@ -651,7 +651,7 @@ const showProbeOverflowNotif = () => {
               </QBtn>
             </template>
           </div>
-          <p class="row">
+          <div class="row">
             <ul>
               <li>
                 Traceroute to <u>{{ metaData.target }}</u>. <span v-if="metaData.status?.name">This measurement is <u>{{ metaData.status?.name }}</u></span>
@@ -669,7 +669,7 @@ const showProbeOverflowNotif = () => {
                 Selected destinations: {{ selectedDestinations.length }}
               </li>
             </ul>
-          </p>
+          </div>
         </template>
         <template v-else>
           <div class="text-body2 measurementInputInfo">
