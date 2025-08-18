@@ -8,11 +8,11 @@ The Internet Health Report monitors the conditions of networks that compose the 
 
 #### Install Node JS
 
-Install [Node v20.10.0 (LTS)](https://nodejs.org/en/blog/release/v20.10.0)
+Install [Node v22.18.0 (LTS)](https://nodejs.org/en/blog/release/v22.18.0)
 
 #### Install npm package manager
 
-Install [Npm v10.2.4](https://docs.npmjs.com/cli/v10/configuring-npm)
+Install [Npm v10.9.3](https://docs.npmjs.com/cli/v10/configuring-npm)
 
 #### Cloning and Running the Application in local
 
