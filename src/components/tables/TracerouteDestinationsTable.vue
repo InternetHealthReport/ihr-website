@@ -107,6 +107,9 @@ watch(
 watch(
   [() => props.selectedDestinations, () => props.allDestinations],
   () => {
+    if (!props.allDestinations.length) {
+      selectedDestinationDetailsList.value = []
+    }
     filteredDestinationRows.value.forEach((destinationDetails, ind) => {
       if (
         props.selectedDestinations.includes(destinationDetails.destination) &&

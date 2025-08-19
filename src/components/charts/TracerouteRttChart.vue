@@ -244,9 +244,7 @@ watch(filteredRttOverTime, () => {
     </div>
   </template>
   <template v-else>
-    <div class="placeholder-message">
-      No Traceroute RTT chart data available.
-    </div>
+    <div class="placeholder-message">No Traceroute RTT chart data available.</div>
   </template>
 </template>
 

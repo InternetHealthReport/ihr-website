@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QSpinner, QBtnGroup } from 'quasar'
+import { QBtn, QSpinner, QBtnToggle } from 'quasar'
 import { ref, watch, computed, nextTick } from 'vue'
 import { VNetworkGraph } from 'v-network-graph'
 import * as vNG from 'v-network-graph'
@@ -402,25 +402,34 @@ watch(displayMode, () => {
       </div>
     </div>
     <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
-      <QBtnGroup>
-        <QBtn label="Normal Mode" @click="displayMode = 'normal'" />
-        <QBtn label="RTT Mode" @click="displayMode = 'rtt'" />
-        <QBtn label="ASN Mode" @click="displayMode = 'asn'" />
+      <div>
+        <QBtnToggle
+          v-model="displayMode"
+          :options="[
+            { label: 'Normal Mode', value: 'normal' },
+            { label: 'RTT Mode', value: 'rtt' },
+            { label: 'ASN Mode', value: 'asn' }
+          ]"
+        />
+      </div>
+      <div class="q-mt-md">
         <QBtn
           v-if="displayMode === 'asn'"
           label="ASN Overlay"
           @click="showAsnOverlay = !showAsnOverlay"
         />
-      </QBtnGroup>
+      </div>
     </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
       <div>
         <span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }" />
-        <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
+        <strong>Min RTT: </strong
+        >{{ minDisplayedRtt ? minDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
       </div>
       <div>
         <span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }" />
-        <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
+        <strong>Max RTT: </strong
+        >{{ maxDisplayedRtt ? maxDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
       </div>
     </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
@@ -461,7 +470,7 @@ watch(displayMode, () => {
         </div>
       </div>
     </div>
-    <div class="row view-control-overlay justify-center">
+    <div v-if="Object.keys(nodes).length > 0" class="row view-control-overlay justify-center">
       <QBtn icon="zoom_in" @click="zoomIn" />
       <QBtn icon="zoom_out" @click="zoomOut" />
       <QBtn icon="fullscreen" @click="toggleFullScreen" />

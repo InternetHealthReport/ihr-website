@@ -85,6 +85,9 @@ const columns = [
 watch(
   [() => props.selectedProbes, () => props.allProbes, () => props.probeDetailsMap],
   () => {
+    if (!props.allProbes.length) {
+      selectedProbesDetailsList.value = []
+    }
     paginatedProbes.value.forEach((probe, ind) => {
       if (
         props.selectedProbes.includes(probe.probe) &&

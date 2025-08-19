@@ -1,6 +1,5 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { QBadge } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import TracerouteMonitor from '@/components/TracerouteMonitor.vue'
 import Tr from '@/i18n/translation'
@@ -52,7 +51,7 @@ const pushRoute = () => {
     Tr.i18nRoute({
       replace: true,
       query: Object.assign({}, route.query, {
-        measurment: measurementID.value,
+        measurement: measurementID.value,
         'probe-ids': probeIDs.value.join(','),
         'destination-ips': destinationIPs.value.join(','),
         'start-time': startTime.value,
@@ -63,7 +62,7 @@ const pushRoute = () => {
 }
 
 onMounted(() => {
-  const tracerouteid = route.query['measurment']
+  const tracerouteid = route.query['measurement']
   const probes = route.query['probe-ids']
   const destinations = route.query['destination-ips']
   const startTimeFromQuery = route.query['start-time']
