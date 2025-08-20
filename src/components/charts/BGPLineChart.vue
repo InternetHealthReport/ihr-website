@@ -47,6 +47,18 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
+  validRpkiData: {
+    type: Object,
+    default: () => ({ x: [], y: [] })
+  },
+  invalidRpkiData: {
+    type: Object,
+    default: () => ({ x: [], y: [] })
+  },
+  notFoundRpkiData: {
+    type: Object,
+    default: () => ({ x: [], y: [] })
+  },
   currentIndex: {
     type: Number,
     default: -1
@@ -68,6 +80,7 @@ const { utcString } = report()
 
 const announcementsAndWithdrawnChartData = ref([])
 const announcementsPeersChartData = ref([])
+const rpkiStatusChartData = ref([])
 
 const selectedMaxTimestamp = ref(0)
 const sliderWidthInit = ref(false)
@@ -98,6 +111,18 @@ const layout = {
   showlegend: true,
   yaxis: { rangemode: 'tozero' },
   shapes: []
+}
+
+const rpkiLayout = {
+  legend: {
+    orientation: 'h',
+    y: 1.1,
+    x: 0.5,
+    xanchor: 'center',
+    yanchor: 'bottom'
+  },
+  showlegend: true,
+  yaxis: { rangemode: 'tozero' }
 }
 
 const renderAnnouncementsAndWithdrawnChart = async (
@@ -150,6 +175,45 @@ const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) =>
     }
   ]
   announcementsPeersChartData.value = data
+}
+
+const renderRpkiStatusChart = async (validRpkiData, invalidRpkiData, notFoundRpkiData) => {
+  const data = [
+    {
+      x: validRpkiData.x,
+      y: validRpkiData.y,
+      type: 'scattergl',
+      mode: 'markers',
+      name: 'RPKI Valid',
+      marker: {
+        size: 18,
+        color: 'rgba(58, 160, 44, 0.5)'
+      }
+    },
+    {
+      x: invalidRpkiData.x,
+      y: invalidRpkiData.y,
+      type: 'scattergl',
+      mode: 'markers',
+      name: 'RPKI Invalid',
+      marker: {
+        size: 18,
+        color: 'rgba(255, 0, 0, 0.5)'
+      }
+    },
+    {
+      x: notFoundRpkiData.x,
+      y: notFoundRpkiData.y,
+      type: 'scattergl',
+      mode: 'markers',
+      name: 'RPKI Not Found',
+      marker: {
+        size: 18,
+        color: 'rgba(255, 215, 0, 0.5)'
+      }
+    }
+  ]
+  rpkiStatusChartData.value = data
 }
 
 // Handle click event on the Plotly chart
@@ -218,6 +282,7 @@ const init = async () => {
     props.withdrawalsTrace
   )
   await renderAnnouncementsPeersChart(props.datesTrace, props.announcementsPeersTraces)
+  await renderRpkiStatusChart(props.validRpkiData, props.invalidRpkiData, props.notFoundRpkiData)
   adjustQSliderWidth(false)
   if (props.dataSource === 'bgplay') {
     updateSlider(selectedMaxTimestamp.value)
@@ -240,7 +305,10 @@ watch(
     () => props.datesTrace,
     () => props.announcementsTrace,
     () => props.withdrawalsTrace,
-    () => props.announcementsPeersTraces
+    () => props.announcementsPeersTraces,
+    () => props.validRpkiData,
+    () => props.invalidRpkiData,
+    () => props.notFoundRpkiData
   ],
   () => {
     init()
@@ -346,6 +414,14 @@ onMounted(() => {
     <ReactiveChart
       :layout="layout"
       :traces="announcementsPeersChartData"
+      :shapes="layout.shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
+
+    <ReactiveChart
+      :layout="rpkiLayout"
+      :traces="rpkiStatusChartData"
       :shapes="layout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"

@@ -79,6 +79,10 @@ const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
 
+const seenRpkiData = new Set()
+let validRpkiData = { x: [], y: [] }
+let notFoundRpkiData = { x: [], y: [] }
+let invalidRpkiData = { x: [], y: [] }
 let vrps = []
 
 const isHidden = ref(false)
@@ -141,6 +145,10 @@ const resetData = () => {
   usingIndex.value = false
   normalizedPrefixLength = null
   vrps = []
+  seenRpkiData.clear()
+  validRpkiData = { x: [], y: [] }
+  notFoundRpkiData = { x: [], y: [] }
+  invalidRpkiData = { x: [], y: [] }
 }
 
 // Initialize the route
@@ -325,13 +333,16 @@ const processResData = (data) => {
       const type = addBGPMessageType('I') // Manually Assigning 'I' for Initial State
       const path = event.path || []
       const originASN = path.length ? path[path.length - 1] : null
+      const rpki_status = getRPKIStatus(originASN, minTimestamp.value).status
 
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
 
       generateLineChartData({
         timestamp: minTimestamp.value,
         type: type,
-        peer: peer
+        peer: peer,
+        origin_asn: originASN,
+        rpki_status: rpki_status
       })
 
       applyDefaultSelectedPeers(peer)
@@ -345,7 +356,7 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(path),
         type: type,
-        rpki_status: getRPKIStatus(originASN, minTimestamp.value).status,
+        rpki_status: rpki_status,
         timestamp: minTimestamp.value
       })
     })
@@ -357,11 +368,14 @@ const processResData = (data) => {
       const type = addBGPMessageType(event.type)
       const path = event.attrs.path || []
       const originASN = path.length ? path[path.length - 1] : null
+      const rpki_status = getRPKIStatus(originASN, timestamp).status
 
       generateLineChartData({
         timestamp: timestamp,
         type: type,
-        peer: peer
+        peer: peer,
+        origin_asn: originASN,
+        rpki_status: rpki_status
       })
 
       applyDefaultSelectedPeers(peer)
@@ -374,7 +388,7 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.attrs.community),
         as_info: addASInfo(path),
         type: type,
-        rpki_status: getRPKIStatus(originASN, timestamp).status,
+        rpki_status: rpki_status,
         timestamp: timestamp
       })
     })
@@ -392,15 +406,15 @@ const generateLineChartData = (data) => {
 
   if (data.type === 'Announce') {
     announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
-    updateByTimestamp(data.type)
+    updateByTimestamp(data.type, data.rpki_status, data.origin_asn)
   } else if (data.type === 'Withdraw') {
     withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
     updateByTimestamp(data.type)
   } else if (data.type === 'Initial State') {
-    updateByTimestamp(data.type)
+    updateByTimestamp(data.type, data.rpki_status, data.origin_asn)
   }
 
-  function updateByTimestamp(type) {
+  function updateByTimestamp(type, rpki_status, origin_asn) {
     if (dataSource.value === 'ris-live') {
       if (!lastTypeByTimestamp[timestamp]) {
         lastTypeByTimestamp[timestamp] = new Map()
@@ -409,10 +423,30 @@ const generateLineChartData = (data) => {
     } else {
       if (type === 'Announce' || type === 'Initial State') {
         announcementsPeers.add(peer)
+        if (rpki_status === 'Valid') {
+          addRpkiData(validRpkiData, origin_asn, timestamp)
+        } else if (rpki_status === 'Not Found') {
+          addRpkiData(notFoundRpkiData, origin_asn, timestamp)
+        } else if (
+          rpki_status === 'Invalid (No Matching Origin)' ||
+          rpki_status === 'Invalid (More Specific)'
+        ) {
+          addRpkiData(invalidRpkiData, origin_asn, timestamp)
+        }
       } else {
         announcementsPeers.delete(peer)
       }
       announcementsPeersCount[timestamp] = announcementsPeers.size
+    }
+  }
+
+  function addRpkiData(collection, asn, timestamp) {
+    const ts = timestampToUTC(timestamp)
+    const key = `${asn}_${ts}`
+    if (!seenRpkiData.has(key)) {
+      collection.x.push(ts)
+      collection.y.push('AS' + asn)
+      seenRpkiData.add(key)
     }
   }
 }
@@ -1212,6 +1246,9 @@ onUnmounted(() => {
         :announcements-trace="announcementsTrace"
         :withdrawals-trace="withdrawalsTrace"
         :announcements-peers-traces="announcementsPeersTraces"
+        :valid-rpki-data="validRpkiData"
+        :invalid-rpki-data="invalidRpkiData"
+        :not-found-rpki-data="notFoundRpkiData"
         :current-index="currentIndex"
         :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
