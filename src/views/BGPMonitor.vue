@@ -277,7 +277,7 @@ const processResData = (data) => {
     data.type = addBGPMessageType(data)
     // Modify the timestamp to be in seconds
     data.timestamp = Math.floor(data.timestamp)
-    data.rpki_status = 'TODO'
+    
 
     applyDefaultSelectedPeers(data.peer)
 

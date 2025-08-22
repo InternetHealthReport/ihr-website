@@ -420,6 +420,7 @@ onMounted(() => {
     />
 
     <ReactiveChart
+      v-if="dataSource === 'bgplay'"
       :layout="rpkiLayout"
       :traces="rpkiStatusChartData"
       :shapes="layout.shapes"
