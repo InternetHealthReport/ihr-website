@@ -405,20 +405,18 @@ onMounted(() => {
     </div>
     <ReactiveChart
       :layout="layout"
-      :traces="announcementsAndWithdrawnChartData"
-      :shapes="layout.shapes"
-      @plotly-click="handlePlotlyClick"
-      @plotly-relayout="adjustQSliderWidth(true)"
-    />
-
-    <ReactiveChart
-      :layout="layout"
       :traces="announcementsPeersChartData"
       :shapes="layout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
-
+    <ReactiveChart
+      :layout="layout"
+      :traces="announcementsAndWithdrawnChartData"
+      :shapes="layout.shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
     <ReactiveChart
       v-if="dataSource === 'bgplay'"
       :layout="rpkiLayout"
