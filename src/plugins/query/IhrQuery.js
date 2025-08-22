@@ -197,7 +197,7 @@ class CountryQuery extends Query {
   }
 
   static get ENTRY_POINT() {
-    return 'countries'
+    return 'countries/'
   }
 
   //methods
@@ -230,7 +230,7 @@ class NetworkQuery extends Query {
   }
 
   static get ENTRY_POINT() {
-    return 'networks'
+    return 'networks/'
   }
 
   //methods
@@ -303,7 +303,7 @@ class DiscoEventQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'disco/events'
+    return 'disco/events/'
   }
 
   //methods
@@ -396,7 +396,7 @@ class DiscoProbesQuery extends Query {
   }
 
   static get ENTRY_POINT() {
-    return 'disco_probes'
+    return 'disco_probes/'
   }
 
   //methods
@@ -437,7 +437,7 @@ class ForwardingAlarmsQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'link/forwarding/alarms'
+    return 'link/forwarding/alarms/'
   }
 
   //methods
@@ -506,7 +506,7 @@ class DelayAlarmsQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'link/delay/alarms'
+    return 'link/delay/alarms/'
   }
 
   //methods
@@ -628,7 +628,7 @@ class DelayQuery extends DelayAndForwardingQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'link/delay'
+    return 'link/delay/'
   }
 }
 
@@ -643,7 +643,7 @@ class ForwardingQuery extends DelayAndForwardingQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'link/forwarding'
+    return 'link/forwarding/'
   }
 }
 
@@ -692,7 +692,7 @@ class HegemonyQuery extends CommonHegemonyQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'hegemony'
+    return 'hegemony/'
   }
 
   //methods
@@ -729,7 +729,7 @@ class HegemonyPrefixQuery extends CommonHegemonyQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'hegemony/prefixes'
+    return 'hegemony/prefixes/'
   }
 
   //methods
@@ -793,7 +793,7 @@ class HegemonyCountryQuery extends CommonHegemonyQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'hegemony/countries'
+    return 'hegemony/countries/'
   }
 
   //methods
@@ -830,7 +830,7 @@ class HegemonyAlarmsQuery extends CommonHegemonyQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'hegemony/alarms'
+    return 'hegemony/alarms/'
   }
 
   //methods
@@ -871,7 +871,7 @@ class HegemonyConeQuery extends CommonHegemonyQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'hegemony/cones'
+    return 'hegemony/cones/'
   }
 
   //methods
@@ -908,7 +908,7 @@ class NetworkDelayAlarmsQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'network_delay/alarms'
+    return 'network_delay/alarms/'
   }
 
   static get EDGE_TYPE() {
@@ -1047,7 +1047,7 @@ class NetworkDelayQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'network_delay'
+    return 'network_delay/'
   }
 
   static get EDGE_TYPE() {
@@ -1183,7 +1183,7 @@ class NetworkDelayLocation extends Query {
   }
 
   static get ENTRY_POINT() {
-    return 'network_delay/locations'
+    return 'network_delay/locations/'
   }
 
   static get EDGE_TYPE() {
@@ -1266,7 +1266,7 @@ class MetisAtlasSelectionQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'metis/atlas/selection'
+    return 'metis/atlas/selection/'
   }
 }
 
@@ -1312,7 +1312,7 @@ class MetisAtlasDeploymentQuery extends TimeQuery {
   }
 
   static get ENTRY_POINT() {
-    return 'metis/atlas/deployment'
+    return 'metis/atlas/deployment/'
   }
 }
 

@@ -37,9 +37,6 @@ const IhrApi = {
     })
 
     const _resolveAxiosPromise = (endpoint, query, successCallback, errorCallback) => {
-      if (!endpoint.includes('/')) {
-        endpoint = `${endpoint}/`
-      }
       axios_base
         .get(endpoint, { params: query })
         .then((res) => {
