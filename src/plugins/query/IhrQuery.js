@@ -106,7 +106,7 @@ class QueryBase {
  */
 class Query extends QueryBase {
   // TODO: replace `dictionary = { format: 'json' }` with `dictionary = { }` for new API
-  constructor(dictionary = { format: 'json' }) {
+  constructor(dictionary = { }) {
     super()
     this.filter = dictionary
   }
