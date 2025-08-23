@@ -14,6 +14,15 @@ const props = defineProps({
   intervalValue: {
     type: Number
   },
+  isOneOff: {
+    type: Boolean
+  },
+  minRtt: {
+    type: Number
+  },
+  maxRtt: {
+    type: Number
+  },
   timeRange: {
     type: Object
   },
@@ -144,7 +153,8 @@ watch(
     if (!('max' in timeRangeModel.value)) {
       timeRangeModel.value.max = null
     }
-  }
+  },
+  {deep: true}
 )
 watch(filteredRttOverTime, () => {
   showOneOffMessage.value = false
@@ -157,84 +167,99 @@ watch(filteredRttOverTime, () => {
 
 <template>
   <template v-if="metaData.target">
-    <div v-if="showNoDataMessage">
-      <span>No data</span>
-    </div>
-    <div v-else-if="showOneOffMessage">
-      <span>No interval found (probably one-off measurement)</span>
+    <div v-if="isOneOff == true" class="col q-ml-md">
+      <div class="text-h6">
+        One-off measurement stats:
+      </div>
+      <ul>
+        <li class="text-body">
+          Minimum RTT: <strong>{{ minRtt }} ms</strong>
+        </li>
+        <li>
+          Maximum RTT: <strong>{{ maxRtt }} ms</strong>
+        </li>
+      </ul>
     </div>
     <div v-else>
-      <div v-if="showTooSmallMessage">
-        <span>Interval too small</span>
+      <div v-if="showNoDataMessage">
+        <span>No data</span>
       </div>
-      <ReactiveChart
-        v-else
-        :layout="actualChartLayout"
-        :traces="actualChartData"
-        @plotly-relayout="adjustQSliderWidth(true)"
-      />
-    </div>
-    <div class="timetampSlider">
-      <div class="timetampSliderContainer">
-        <QRange
-          v-model="timeRangeModel"
-          :disable="timeRangeModel.disable"
-          :min="minTime"
-          :max="maxTime"
-          :left-label-value="leftLabel"
-          :right-label-value="rightLabel"
-          label-always
-          drag-range
-          @change="rangeOnChane"
+      <div v-else-if="showOneOffMessage">
+        <span>No interval found (probably one-off measurement)</span>
+      </div>
+      <div v-else>
+        <div v-if="showTooSmallMessage">
+          <span>Interval too small</span>
+        </div>
+        <ReactiveChart
+          v-else
+          :layout="actualChartLayout"
+          :traces="actualChartData"
+          @plotly-relayout="adjustQSliderWidth(true)"
         />
-        <div class="row justify-center">
-          <div class="col-2 q-pr-md">
-            <QInput
-              label="Selected Start Date Time in (UTC)"
-              v-model="leftDateTimePicker"
-              class="input"
-              filled
-            >
-              <template v-slot:append>
-                <QIcon name="event" class="cursor-pointer">
-                  <QPopupProxy no-route-dismiss cover>
-                    <div class="q-pa-md q-gutter-md row items-start">
-                      <QDate flat v-model="leftDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" />
-                      <QTime
-                        v-model="leftDateTimePicker"
-                        flat
-                        mask="YYYY-MM-DDTHH:mm:ss"
-                        format24h
-                      />
-                    </div>
-                  </QPopupProxy>
-                </QIcon>
-              </template>
-            </QInput>
-          </div>
-          <div class="col-2 q-pl-md">
-            <QInput
-              v-model="rightDateTimePicker"
-              label="Selected End Date Time in (UTC)"
-              class="input"
-              filled
-            >
-              <template v-slot:append>
-                <QIcon name="event" class="cursor-pointer">
-                  <QPopupProxy no-route-dismiss cover>
-                    <div class="q-pa-md q-gutter-md row items-start">
-                      <QDate flat v-model="rightDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" />
-                      <QTime
-                        v-model="rightDateTimePicker"
-                        flat
-                        mask="YYYY-MM-DDTHH:mm:ss"
-                        format24h
-                      />
-                    </div>
-                  </QPopupProxy>
-                </QIcon>
-              </template>
-            </QInput>
+      </div>
+      <div class="timetampSlider">
+        <div class="timetampSliderContainer">
+          <QRange
+            v-model="timeRangeModel"
+            :disable="timeRangeModel.disable"
+            :min="minTime"
+            :max="maxTime"
+            :left-label-value="leftLabel"
+            :right-label-value="rightLabel"
+            label-always
+            drag-range
+            @change="rangeOnChane"
+          />
+          <div class="row justify-center">
+            <div class="col-2 q-pr-md">
+              <QInput
+                label="Selected Start Date Time in (UTC)"
+                v-model="leftDateTimePicker"
+                class="input"
+                filled
+              >
+                <template v-slot:append>
+                  <QIcon name="event" class="cursor-pointer">
+                    <QPopupProxy no-route-dismiss cover>
+                      <div class="q-pa-md q-gutter-md row items-start">
+                        <QDate flat v-model="leftDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" />
+                        <QTime
+                          v-model="leftDateTimePicker"
+                          flat
+                          mask="YYYY-MM-DDTHH:mm:ss"
+                          format24h
+                        />
+                      </div>
+                    </QPopupProxy>
+                  </QIcon>
+                </template>
+              </QInput>
+            </div>
+            <div class="col-2 q-pl-md">
+              <QInput
+                v-model="rightDateTimePicker"
+                label="Selected End Date Time in (UTC)"
+                class="input"
+                filled
+              >
+                <template v-slot:append>
+                  <QIcon name="event" class="cursor-pointer">
+                    <QPopupProxy no-route-dismiss cover>
+                      <div class="q-pa-md q-gutter-md row items-start">
+                        <QDate flat v-model="rightDateTimePicker" mask="YYYY-MM-DDTHH:mm:ss" />
+                        <QTime
+                          v-model="rightDateTimePicker"
+                          flat
+                          mask="YYYY-MM-DDTHH:mm:ss"
+                          format24h
+                        />
+                      </div>
+                    </QPopupProxy>
+                  </QIcon>
+                </template>
+              </QInput>
+            </div>
           </div>
         </div>
       </div>

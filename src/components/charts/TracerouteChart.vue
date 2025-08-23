@@ -420,25 +420,13 @@ watch(displayMode, () => {
         />
       </div>
     </div>
-    <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
-      <div>
-        <span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }" />
-        <strong>Min RTT: </strong
-        >{{ minDisplayedRtt ? minDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
-      </div>
-      <div>
-        <span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }" />
-        <strong>Max RTT: </strong
-        >{{ maxDisplayedRtt ? maxDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
-      </div>
-    </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
       <div class="row items-center">
         <div class="col">
           <div class="rttLabel">RTT</div>
         </div>
         <div class="col">
-          <div class="scaleLabel">{{ maxDisplayedRtt.toFixed(3) }}</div>
+          <div class="scaleLabel">{{ maxDisplayedRtt.toFixed(3) }} ms</div>
           <div class="scale">
             <div
               v-for="(percentage, index) in Array.from(
@@ -450,7 +438,7 @@ watch(displayMode, () => {
               :style="{ backgroundColor: rttColor(percentage, (shouldCompliment = false)) }"
             ></div>
           </div>
-          <div class="scaleLabel">{{ minDisplayedRtt.toFixed(3) }}</div>
+          <div class="scaleLabel">{{ minDisplayedRtt.toFixed(3) }} ms</div>
         </div>
       </div>
     </div>
