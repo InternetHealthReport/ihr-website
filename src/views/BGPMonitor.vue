@@ -449,7 +449,7 @@ const generateLineChartData = (data) => {
 
   function updateOriginByTimestamp() {
     if (type === 'Unknown') return
-    
+
     if (dataSource.value === 'ris-live') {
       eventsByTimestamp[timestamp] ??= []
       eventsByTimestamp[timestamp].push({ peer, type, origin_asn })
@@ -939,31 +939,42 @@ const getRPKIStatus = (asn, timestamp) => {
   if (!asn || !timestamp) return { status: 'Null' }
   if (!vrps || vrps.length === 0) return { status: 'Not Found' }
 
+  let covering_vrp_exists = false
   let same_origin_asn_found = false
 
   for (const vrp of vrps) {
-    if (vrp.asn !== asn || vrp.asn === 0) continue
+    if (timestamp < vrp.unixVisible.from || timestamp > vrp.unixVisible.to) {
+      continue
+    }
+    covering_vrp_exists = true
+
+    if (vrp.asn !== asn || vrp.asn === 0) {
+      continue
+    }
     same_origin_asn_found = true
 
-    if (timestamp >= vrp.unixVisible.from && timestamp <= vrp.unixVisible.to) {
-      if (normalizedPrefixLength <= vrp.max_length) return { status: 'Valid' }
-      return {
-        status: 'Invalid (More Specific)',
-        reason: {
-          code: 'moreSpecific',
-          description:
-            'Covering VRP with matching origin ASN found, but queried prefix is more specific than maxLength attribute allows.'
-        }
+    if (normalizedPrefixLength <= vrp.max_length) {
+      return { status: 'Valid' }
+    }
+  }
+  
+  if (same_origin_asn_found) {
+    return {
+      status: 'Invalid (More Specific)',
+      reason: {
+        code: 'prefixTooLong',
+        description:
+          'Covering VRP with matching origin ASN found, but prefix length exceeds allowed maxLength.'
       }
     }
   }
 
-  if (!same_origin_asn_found) {
+  if (covering_vrp_exists) {
     return {
       status: 'Invalid (No Matching Origin)',
       reason: {
         code: 'noMatchingOrigin',
-        description: 'No covering VRP with matching origin ASN found.'
+        description: 'Covering VRP found, but no matching origin ASN.'
       }
     }
   }
