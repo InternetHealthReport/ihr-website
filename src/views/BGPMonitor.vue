@@ -72,8 +72,11 @@ const withdrawalsTrace = ref([])
 const announcementsPeersTraces = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
-let lastTypeByTimestamp = {}
-let announcementsPeersCount = {}
+let eventsByTimestamp = {}
+let announcementsPeersCountByOrigin = {}
+let announcementsPeersByOrigin = {}
+let peerToOrigin = {}
+const allOriginAsns = new Set()
 const announcementsPeers = new Set()
 const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
@@ -137,8 +140,11 @@ const resetData = () => {
   announcementsPeersTraces.value = []
   announcementsCount = {}
   withdrawalsCount = {}
-  announcementsPeersCount = {}
-  lastTypeByTimestamp = {}
+  announcementsPeersCountByOrigin = {}
+  announcementsPeersByOrigin = {}
+  peerToOrigin = {}
+  allOriginAsns.clear()
+  eventsByTimestamp = {}
   announcementsPeers.clear()
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
@@ -277,7 +283,6 @@ const processResData = (data) => {
     data.type = addBGPMessageType(data)
     // Modify the timestamp to be in seconds
     data.timestamp = Math.floor(data.timestamp)
-    
 
     applyDefaultSelectedPeers(data.peer)
 
@@ -297,7 +302,8 @@ const processResData = (data) => {
     generateLineChartData({
       timestamp: data.timestamp,
       type: data.type,
-      peer: data.peer
+      peer: data.peer,
+      origin_asn: data.path.length ? data.path[data.path.length - 1] : null
     })
     generateLineChartTrace()
   } else {
@@ -398,56 +404,82 @@ const processResData = (data) => {
 }
 
 const generateLineChartData = (data) => {
-  const timestamp = data.timestamp
-  const peer = data.peer
+  const { timestamp, peer, type, origin_asn, rpki_status } = data
+
   if (dataSource.value === 'bgplay') {
     uniqueEventTimestamps.add(timestamp)
   }
 
-  if (data.type === 'Announce') {
-    announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
-    updateByTimestamp(data.type, data.rpki_status, data.origin_asn)
-  } else if (data.type === 'Withdraw') {
-    withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
-    updateByTimestamp(data.type)
-  } else if (data.type === 'Initial State') {
-    updateByTimestamp(data.type, data.rpki_status, data.origin_asn)
+  updateTypeByTimestamp()
+  updateOriginByTimestamp()
+  updateRpkiByTimestamp()
+
+  function updateTypeByTimestamp() {
+    if (type === 'Announce') {
+      announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
+    } else if (type === 'Withdraw') {
+      withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
+    }
   }
 
-  function updateByTimestamp(type, rpki_status, origin_asn) {
+  function updateRpkiByTimestamp() {
+    if (dataSource.value === 'bgplay' && (type === 'Announce' || type === 'Initial State')) {
+      if (rpki_status === 'Valid') {
+        addRpkiData(validRpkiData)
+      } else if (rpki_status === 'Not Found') {
+        addRpkiData(notFoundRpkiData)
+      } else if (
+        rpki_status === 'Invalid (No Matching Origin)' ||
+        rpki_status === 'Invalid (More Specific)'
+      ) {
+        addRpkiData(invalidRpkiData)
+      }
+    }
+
+    function addRpkiData(collection) {
+      const ts = timestampToUTC(timestamp)
+      const key = `${origin_asn}_${ts}`
+      if (!seenRpkiData.has(key)) {
+        collection.x.push(ts)
+        collection.y.push('AS' + origin_asn)
+        seenRpkiData.add(key)
+      }
+    }
+  }
+
+  function updateOriginByTimestamp() {
+    if (type === 'Unknown') return
+    
     if (dataSource.value === 'ris-live') {
-      if (!lastTypeByTimestamp[timestamp]) {
-        lastTypeByTimestamp[timestamp] = new Map()
-      }
-      lastTypeByTimestamp[timestamp].set(peer, type)
+      eventsByTimestamp[timestamp] ??= []
+      eventsByTimestamp[timestamp].push({ peer, type, origin_asn })
     } else {
-      if (type === 'Announce' || type === 'Initial State') {
-        announcementsPeers.add(peer)
-        if (rpki_status === 'Valid') {
-          addRpkiData(validRpkiData, origin_asn, timestamp)
-        } else if (rpki_status === 'Not Found') {
-          addRpkiData(notFoundRpkiData, origin_asn, timestamp)
-        } else if (
-          rpki_status === 'Invalid (No Matching Origin)' ||
-          rpki_status === 'Invalid (More Specific)'
-        ) {
-          addRpkiData(invalidRpkiData, origin_asn, timestamp)
-        }
-      } else {
-        announcementsPeers.delete(peer)
+      helperUpdateOriginByTimestamp(announcementsPeersByOrigin, type, peer, origin_asn)
+      announcementsPeersCountByOrigin[timestamp] ??= {}
+      for (const [asn, peers] of Object.entries(announcementsPeersByOrigin)) {
+        announcementsPeersCountByOrigin[timestamp][asn] = peers.size
       }
-      announcementsPeersCount[timestamp] = announcementsPeers.size
     }
   }
+}
 
-  function addRpkiData(collection, asn, timestamp) {
-    const ts = timestampToUTC(timestamp)
-    const key = `${asn}_${ts}`
-    if (!seenRpkiData.has(key)) {
-      collection.x.push(ts)
-      collection.y.push('AS' + asn)
-      seenRpkiData.add(key)
+const helperUpdateOriginByTimestamp = (collection, type, peer, origin_asn) => {
+  const old_origin_asn = peerToOrigin[peer]
+
+  if (type === 'Announce' || type === 'Initial State') {
+    allOriginAsns.add(origin_asn)
+    collection[origin_asn] ??= new Set()
+
+    if (old_origin_asn && old_origin_asn !== origin_asn) {
+      // Peer changed origin ASN so we need to remove it from the old ASN set
+      collection[old_origin_asn]?.delete(peer)
     }
+
+    collection[origin_asn].add(peer)
+    peerToOrigin[peer] = origin_asn
+  } else if (type === 'Withdraw') {
+    collection[old_origin_asn]?.delete(peer)
+    delete peerToOrigin[peer]
   }
 }
 
@@ -455,9 +487,10 @@ const generateLineChartTrace = () => {
   const dTrace = []
   const aTrace = []
   const wTrace = []
-  const apTrace = []
-  const announcementsPeers = new Set()
-  let lastAnnouncementsPeersCount = 0
+
+  const apTracesByOrigin = {}
+  const activePeersByAsn = {}
+  let lastCountsByOrigin = {}
 
   if (dataSource.value === 'ris-live') {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
@@ -479,26 +512,31 @@ const generateLineChartTrace = () => {
     wTrace.push(withdrawalsCount[t] || 0)
 
     if (dataSource.value === 'ris-live') {
-      const lastTypeMap = lastTypeByTimestamp[t]
-      if (lastTypeMap) {
-        for (const [peer, type] of lastTypeMap) {
-          if (type === 'Announce') announcementsPeers.add(peer)
-          else announcementsPeers.delete(peer)
-        }
+      const events = eventsByTimestamp[t]
+      for (const { peer, type, origin_asn } of events) {
+        helperUpdateOriginByTimestamp(activePeersByAsn, type, peer, origin_asn)
       }
-      apTrace.push(announcementsPeers.size)
     } else {
-      if (announcementsPeersCount[t] !== undefined) {
-        lastAnnouncementsPeersCount = announcementsPeersCount[t]
+      const countsByOrigin = announcementsPeersCountByOrigin[t]
+      if (countsByOrigin) {
+        lastCountsByOrigin = countsByOrigin
       }
-      apTrace.push(announcementsPeersCount[t] || lastAnnouncementsPeersCount)
+    }
+
+    for (const asn of allOriginAsns) {
+      if (!apTracesByOrigin[asn]) {
+        apTracesByOrigin[asn] = []
+      }
+      apTracesByOrigin[asn].push(
+        dataSource.value === 'ris-live' ? activePeersByAsn[asn].size : lastCountsByOrigin[asn] || 0
+      )
     }
   }
 
   datesTrace.value = dTrace
   announcementsTrace.value = aTrace
   withdrawalsTrace.value = wTrace
-  announcementsPeersTraces.value = apTrace
+  announcementsPeersTraces.value = apTracesByOrigin
 }
 
 const timestampToUTC = (timestamp) => {

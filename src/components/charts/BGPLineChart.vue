@@ -44,8 +44,8 @@ const props = defineProps({
     default: () => []
   },
   announcementsPeersTraces: {
-    type: Array,
-    default: () => []
+    type: Object,
+    default: () => ({})
   },
   validRpkiData: {
     type: Object,
@@ -159,21 +159,38 @@ const renderAnnouncementsAndWithdrawnChart = async (
   announcementsAndWithdrawnChartData.value = data
 }
 
+const colors = [
+  'rgba(44, 160, 44, 0.5)', // cooked asparagus green
+  'rgba(236, 112, 99, 0.5)', // pink
+  'rgba(31, 119, 180, 0.5)', // muted blue
+  'rgba(255, 127, 14, 0.5)', // safety orange
+  'rgba(214, 39, 40, 0.5)', // brick red
+  'rgba(148, 103, 189, 0.5)', // muted purple
+  'rgba(140, 86, 75, 0.5)', // chestnut brown
+  'rgba(127, 127, 127, 0.5)', // middle gray
+  'rgba(227, 119, 194, 0.5)', // raspberry yogurt pink
+  'rgba(188, 189, 34, 0.5)', // curry yellow-green
+  'rgba(23, 190, 207, 0.5)' // blue-teal
+]
+
 const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) => {
-  const data = [
-    {
+  const data = []
+  let colorIndex = 0
+
+  for (const [asn, yValues] of Object.entries(announcementsPeersTraces)) {
+    const color = colors[colorIndex % colors.length]
+    colorIndex++
+    data.push({
       x: dates,
-      y: announcementsPeersTraces,
-      type: 'scattergl',
-      fill: 'tozeroy',
-      fillcolor: 'rgba(58, 160, 44, 0.5)',
-      marker: {
-        color: 'rgba(58, 160, 44, 0.5)'
-      },
+      y: yValues,
+      stackgroup: 'one',
+      type: 'scatter',
       mode: 'markers',
-      name: 'BGP Sources'
-    }
-  ]
+      marker: { color },
+      name: `ASN ${asn}`,
+      stackgroup: 'one'
+    })
+  }
   announcementsPeersChartData.value = data
 }
 
