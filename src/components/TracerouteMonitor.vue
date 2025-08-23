@@ -88,6 +88,8 @@ const loadProbesDestinationsError = ref(false)
 const startTimestamp = ref(convertDateTimeToSeconds(props.startTime))
 const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
 
+const isOneOff = ref(false)
+
 // re-emitting events from children to grand parent
 const emit = defineEmits([
   'setSelectedDestinations',
@@ -355,21 +357,31 @@ const loadMeasurement = async () => {
       if (fetchedMetaData.status.name === 'Ongoing') {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
+      
+      const isMeasurementOneOff = metaData.value['interval'] > 0 ? false : true 
+      
+      let startTime = 0
+      let stopTime = 0
 
-      const stopTime = stopTimestamp.value !== 0 ? stopTimestamp : metaData.value.stop_time
-
-      // Fetch last 5 measurements
-      const shortenedDurationStartTime = stopTime - 5 * metaData.value['interval']
-      const startTime =
-        startTimestamp.value !== 0
-          ? startTimestamp
-          : shortenedDurationStartTime > 0
-            ? shortenedDurationStartTime
-            : metaData.value.start_time
-
-      timeRange.value.min = startTime
-      timeRange.value.max = stopTime
-      timeRange.value.disable = false
+      if(isMeasurementOneOff == false) {
+        stopTime = stopTimestamp.value !== 0 ? stopTimestamp : metaData.value.stop_time
+  
+  
+        // Fetch last 5 measurements
+        const shortenedDurationStartTime = stopTime - 5 * metaData.value['interval']
+        startTime =
+          startTimestamp.value !== 0
+            ? startTimestamp
+            : shortenedDurationStartTime > 0
+              ? shortenedDurationStartTime
+              : metaData.value.start_time
+        
+        timeRange.value.min = startTime
+        timeRange.value.max = stopTime
+        timeRange.value.disable = false
+      } else {
+        timeRange.value.disable = true
+      }
 
       intervalValue.value = fetchedMetaData.interval || null
 
@@ -381,6 +393,8 @@ const loadMeasurement = async () => {
       } else {
         selectAllDestinations.value = null
       }
+
+      isOneOff.value = isMeasurementOneOff
     } catch (error) {
       // console.log('Failed to load measurement:', measurementID.value)
       isLoadingProbes.value = false
@@ -648,7 +662,7 @@ watch(
                     >every <strong>{{ metaData.interval }} seconds</strong></span
                   >
                 </li>
-                <li>
+                <li v-if="isOneOff == false">
                   RTT Chart and Network graph covers data from
                   <strong>{{ convertUnixTimestamp(timeRange.min) }}</strong> to
                   <strong>{{ convertUnixTimestamp(timeRange.max) }}</strong
@@ -677,6 +691,9 @@ watch(
             :interval-value="intervalValue"
             :is-loading="isLoadingRtt"
             :time-range="timeRange"
+            :is-one-off="isOneOff"
+            :min-rtt="minDisplayedRtt"
+            :max-rtt="maxDisplayedRtt"
             :meta-data="metaData"
             :rtt-over-time="rttOverTime"
             @load-measurement-on-time-range="loadMeasurementOnTimeRange"
