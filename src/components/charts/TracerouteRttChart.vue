@@ -249,8 +249,8 @@ watch(filteredRttOverTime, () => {
                         />
                       </div>
                       <div class="row items-center justify-end q-ma-md">
-                        <QBtn v-close-popup label="Apply" color="primary" flat @click="updateLeftDatePicker(leftDateTimePickerTemp)" />
-                        <QBtn v-close-popup label="Close" color="primary" flat />
+                        <QBtn v-close-popup class="closeBtnStyle q-mr-md" label="Close" flat />
+                        <QBtn v-close-popup class="bg-primary applyBtnStyle" label="Apply" flat @click="updateLeftDatePicker(leftDateTimePickerTemp)" />
                       </div>
                     </QPopupProxy>
                   </QIcon>
@@ -277,8 +277,8 @@ watch(filteredRttOverTime, () => {
                         />
                       </div>
                       <div class="row items-center justify-end q-ma-md">
-                        <QBtn v-close-popup label="Apply" color="primary" flat @click="updateRightDatePicker(rightDateTimePickerTemp)" />
-                        <QBtn v-close-popup label="Close" color="primary" flat />
+                        <QBtn v-close-popup class="closeBtnStyle q-mr-md" label="Close" flat />
+                        <QBtn v-close-popup class="bg-primary applyBtnStyle" label="Apply" flat @click="updateRightDatePicker(rightDateTimePickerTemp)" />
                       </div>
                     </QPopupProxy>
                   </QIcon>
@@ -332,5 +332,12 @@ watch(filteredRttOverTime, () => {
   height: 100%;
   color: #666;
   font-size: 1.2em;
+}
+
+.applyBtnStyle {
+ color: rgba(255, 255, 255);
+}
+.closeBtnStyle {
+ background-color: rgba(0, 0, 0, 0.171);
 }
 </style>
