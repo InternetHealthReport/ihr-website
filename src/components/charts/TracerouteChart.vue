@@ -412,13 +412,6 @@ watch(displayMode, () => {
           ]"
         />
       </div>
-      <div class="q-mt-md">
-        <QBtn
-          v-if="displayMode === 'asn'"
-          label="ASN Overlay"
-          @click="showAsnOverlay = !showAsnOverlay"
-        />
-      </div>
     </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
       <div class="row items-center">
