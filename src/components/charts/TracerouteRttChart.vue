@@ -5,7 +5,6 @@ import { ref, computed, watch } from 'vue'
 import {
   calculateMedian,
   convertUnixTimestamp,
-  convertTimeToFormat,
   convertDateTimeToSeconds
 } from '../../plugins/tracerouteFunctions'
 import '@/styles/chart.css'
@@ -46,11 +45,11 @@ const actualChartLayout = ref({})
 const showOneOffMessage = ref(false)
 const showTooSmallMessage = ref(false)
 const showNoDataMessage = ref(true)
-const leftDateTimePicker = ref(convertTimeToFormat(0))
-const rightDateTimePicker = ref(convertTimeToFormat(0))
+const leftDateTimePicker = ref(convertUnixTimestamp(0))
+const rightDateTimePicker = ref(convertUnixTimestamp(0))
 
-const leftDateTimePickerTemp = ref(convertTimeToFormat(0))
-const rightDateTimePickerTemp = ref(convertTimeToFormat(0))
+const leftDateTimePickerTemp = ref(convertUnixTimestamp(0))
+const rightDateTimePickerTemp = ref(convertUnixTimestamp(0))
 
 const leftLabel = computed(() => {
   return convertUnixTimestamp(timeRangeModel.value.min) ?? ''
@@ -124,8 +123,8 @@ const filteredRttOverTime = computed(() => {
   }
 
   const { min, max } = timeRangeModel.value
-  leftDateTimePicker.value = convertTimeToFormat(min)
-  rightDateTimePicker.value = convertTimeToFormat(max)
+  leftDateTimePicker.value = convertUnixTimestamp(min)
+  rightDateTimePicker.value = convertUnixTimestamp(max)
   return props.rttOverTime.filter((dataPoint) => {
     return dataPoint.timestamp >= min && dataPoint.timestamp <= max
   })
@@ -241,11 +240,11 @@ watch(filteredRttOverTime, () => {
                   <QIcon name="event" class="cursor-pointer">
                     <QPopupProxy no-route-dismiss cover>
                       <div class="row q-pa-md q-gutter-md row items-start">
-                        <QDate flat v-model="leftDateTimePickerTemp" mask="YYYY-MM-DDTHH:mm:ss" />
+                        <QDate flat v-model="leftDateTimePickerTemp" mask="YYYY-MM-DD, HH:mm" />
                         <QTime
                           v-model="leftDateTimePickerTemp"
                           flat
-                          mask="YYYY-MM-DDTHH:mm:ss"
+                          mask="YYYY-MM-DD, HH:mm"
                           format24h
                         />
                       </div>
@@ -269,11 +268,11 @@ watch(filteredRttOverTime, () => {
                   <QIcon name="event" class="cursor-pointer">
                     <QPopupProxy no-route-dismiss cover>
                       <div class="row q-pa-md q-gutter-md row items-start">
-                        <QDate flat v-model="rightDateTimePickerTemp" mask="YYYY-MM-DDTHH:mm:ss" />
+                        <QDate flat v-model="rightDateTimePickerTemp" mask="YYYY-MM-DD, HH:mm" />
                         <QTime
                           v-model="rightDateTimePickerTemp"
                           flat
-                          mask="YYYY-MM-DDTHH:mm:ss"
+                          mask="YYYY-MM-DD, HH:mm"
                           format24h
                         />
                       </div>

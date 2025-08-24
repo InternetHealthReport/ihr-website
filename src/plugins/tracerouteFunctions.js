@@ -1,30 +1,4 @@
-const convertUnixTimestamp = (unixTimestamp) => {
-  const date = new Date(unixTimestamp * 1000)
-
-  const year = String(date.getFullYear())
-  const day = String(date.getDate()).padStart(2, '0')
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ]
-  const month = monthNames[date.getMonth()]
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-
-  return `${year} - ${day} ${month}, ${hours}:${minutes}`
-}
-
-const convertTimeToFormat = (value) => {
+const convertUnixTimestamp = (value) => {
   const dateTime = new Date((value ?? 0) * 1000)
 
   const year = String(dateTime.getFullYear())
@@ -35,7 +9,7 @@ const convertTimeToFormat = (value) => {
   const minutes = String(dateTime.getMinutes()).padStart(2, '0')
   const seconds = String(dateTime.getSeconds()).padStart(2, '0')
 
-  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
+  return `${year}-${month}-${day}, ${hours}:${minutes}`
 }
 
 const convertDateTimeToSeconds = (value) => {
@@ -128,7 +102,6 @@ export {
   convertUnixTimestamp,
   isPrivateIP,
   calculateMedian,
-  convertTimeToFormat,
   convertDateTimeToSeconds,
   ipAddressSortFunction,
   isInteger
