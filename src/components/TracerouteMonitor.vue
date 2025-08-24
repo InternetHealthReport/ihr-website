@@ -20,7 +20,6 @@ import TracerouteDestinationsTable from '@/components/tables/TracerouteDestinati
 import {
   isPrivateIP,
   calculateMedian,
-  convertTimeToFormat,
   convertDateTimeToSeconds,
   convertUnixTimestamp
 } from '../plugins/tracerouteFunctions'
@@ -468,8 +467,8 @@ const loadMeasurementOnTimeRange = debounce((e) => {
   isLoadingRtt.value = true
   if (e.min !== 0 && e.max !== 0) {
     const queryParamObject = {
-      startTime: convertTimeToFormat(e.min),
-      stopTime: convertTimeToFormat(e.max)
+      startTime: convertUnixTimestamp(e.min),
+      stopTime: convertUnixTimestamp(e.max)
     }
     emit('setSelectedTimeRange', queryParamObject)
   }
@@ -651,28 +650,31 @@ watch(
                 <li>
                   Traceroute to <strong>{{ metaData.target }}</strong
                   >.
-                  <span v-if="metaData.status?.name"
-                    >This measurement is <strong>{{ metaData.status?.name }}</strong></span
-                  >
                 </li>
                 <li>
                   Measuring from <strong>{{ convertUnixTimestamp(metaData.start_time) }}</strong> to
                   <strong>{{ convertUnixTimestamp(metaData.stop_time) }}</strong>
-                  <span v-if="metaData.interval"
-                    >every <strong>{{ metaData.interval }} seconds</strong></span
-                  >
                 </li>
                 <li v-if="isOneOff == false">
-                  RTT Chart and Network graph covers data from
-                  <strong>{{ convertUnixTimestamp(timeRange.min) }}</strong> to
-                  <strong>{{ convertUnixTimestamp(timeRange.max) }}</strong
-                  >.
+                  Frequency: {{ metaData.interval }} seconds
                 </li>
-                <li>
-                  Selected probes: {{ selectedProbes.length }} (Out of {{ allProbes.length }})
-                </li>
-                <li>Selected destinations: {{ selectedDestinations.length }}</li>
               </ul>
+              <div>
+                <div class="col text-h6">
+                  <strong>RTT Chart and Network graph:</strong>
+                </div>
+                <ul>
+                  <li v-if="isOneOff == false">
+                    Showing from
+                    {{ convertUnixTimestamp(timeRange.min) }} to
+                    {{ convertUnixTimestamp(timeRange.max) }}
+                  </li>
+                  <li>
+                    Selected probes: {{ selectedProbes.length }} (Out of {{ allProbes.length }})
+                  </li>
+                  <li>Selected destinations: {{ selectedDestinations.length }}</li>
+                </ul>
+              </div>
             </div>
           </div>
           <div v-else>
