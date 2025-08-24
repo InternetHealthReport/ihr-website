@@ -442,22 +442,6 @@ watch(displayMode, () => {
         </div>
       </div>
     </div>
-    <div
-      v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay"
-      class="asn-info-overlay"
-      :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }"
-    >
-      <div class="asn-grid">
-        <div
-          v-for="asn in filteredAsnList"
-          :key="asn"
-          :style="{ backgroundColor: asnColors[asn] }"
-          class="asn-box"
-        >
-          <a class="asn-link" :href="'/en/network/AS' + asn" target="_blank">AS{{ asn }}</a>
-        </div>
-      </div>
-    </div>
     <div v-if="Object.keys(nodes).length > 0" class="row view-control-overlay justify-center">
       <QBtn icon="zoom_in" @click="zoomIn" />
       <QBtn icon="zoom_out" @click="zoomOut" />
