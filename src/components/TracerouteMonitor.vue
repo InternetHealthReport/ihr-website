@@ -621,6 +621,7 @@ watch(
                 placeholder="RIPE ATLAS traceroute measurement ID"
                 :dense="true"
                 color="accent"
+                :autofocus="true"
               />
             </div>
             <div class="col-auto">
