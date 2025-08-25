@@ -21,7 +21,6 @@ import TracerouteDestinationsTable from '@/components/tables/TracerouteDestinati
 import {
   isPrivateIP,
   calculateMedian,
-  convertTimeToFormat,
   convertDateTimeToSeconds,
   convertUnixTimestamp
 } from '../plugins/tracerouteFunctions'
@@ -87,6 +86,8 @@ const loadProbesDestinationsError = ref(false)
 
 const startTimestamp = ref(convertDateTimeToSeconds(props.startTime))
 const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
+
+const isOneOff = ref(false)
 
 // re-emitting events from children to grand parent
 const emit = defineEmits([
@@ -355,21 +356,31 @@ const loadMeasurement = async () => {
       if (fetchedMetaData.status.name === 'Ongoing') {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
+      
+      const isMeasurementOneOff = metaData.value['interval'] > 0 ? false : true 
+      
+      let startTime = 0
+      let stopTime = 0
 
-      const stopTime = stopTimestamp.value !== 0 ? stopTimestamp : metaData.value.stop_time
-
-      // Fetch last 5 measurements
-      const shortenedDurationStartTime = stopTime - 5 * metaData.value['interval']
-      const startTime =
-        startTimestamp.value !== 0
-          ? startTimestamp
-          : shortenedDurationStartTime > 0
-            ? shortenedDurationStartTime
-            : metaData.value.start_time
-
-      timeRange.value.min = startTime
-      timeRange.value.max = stopTime
-      timeRange.value.disable = false
+      if(isMeasurementOneOff == false) {
+        stopTime = stopTimestamp.value !== 0 ? stopTimestamp : metaData.value.stop_time
+  
+  
+        // Fetch last 5 measurements
+        const shortenedDurationStartTime = stopTime - 5 * metaData.value['interval']
+        startTime =
+          startTimestamp.value !== 0
+            ? startTimestamp
+            : shortenedDurationStartTime > 0
+              ? shortenedDurationStartTime
+              : metaData.value.start_time
+        
+        timeRange.value.min = startTime
+        timeRange.value.max = stopTime
+        timeRange.value.disable = false
+      } else {
+        timeRange.value.disable = true
+      }
 
       intervalValue.value = fetchedMetaData.interval || null
 
@@ -381,6 +392,8 @@ const loadMeasurement = async () => {
       } else {
         selectAllDestinations.value = null
       }
+
+      isOneOff.value = isMeasurementOneOff
     } catch (error) {
       // console.log('Failed to load measurement:', measurementID.value)
       isLoadingProbes.value = false
@@ -454,8 +467,8 @@ const loadMeasurementOnTimeRange = debounce((e) => {
   isLoadingRtt.value = true
   if (e.min !== 0 && e.max !== 0) {
     const queryParamObject = {
-      startTime: convertTimeToFormat(e.min),
-      stopTime: convertTimeToFormat(e.max)
+      startTime: convertUnixTimestamp(e.min, true),
+      stopTime: convertUnixTimestamp(e.max, true)
     }
     emit('setSelectedTimeRange', queryParamObject)
   }
@@ -502,9 +515,9 @@ const sortAndCompare = (arrA, arrB) => {
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
     loadMeasurementOnProbeChange()
-  }
-  if (!sortAndCompare(props.probeIDs, selectedProbes.value)) {
-    emit('setSelectedProbes', selectedProbes.value)
+    if (!sortAndCompare(props.probeIDs, selectedProbes.value)) {
+      emit('setSelectedProbes', selectedProbes.value)
+    }
   }
 })
 
@@ -566,8 +579,8 @@ watchEffect(() => {
 watchEffect(() => {
   if (selectedDestinations.value.length > 0) {
     loadMeasurementOnDestinationChange()
+    emit('setSelectedDestinations', selectedDestinations.value)
   }
-  emit('setSelectedDestinations', selectedDestinations.value)
 })
 
 const setSelectedProbes = (value) => {
@@ -608,6 +621,7 @@ watch(
                 placeholder="RIPE ATLAS traceroute measurement ID"
                 :dense="true"
                 color="accent"
+                :autofocus="true"
               />
             </div>
             <div class="col-auto">
@@ -637,28 +651,31 @@ watch(
                 <li>
                   Traceroute to <strong>{{ metaData.target }}</strong
                   >.
-                  <span v-if="metaData.status?.name"
-                    >This measurement is <strong>{{ metaData.status?.name }}</strong></span
-                  >
                 </li>
                 <li>
                   Measuring from <strong>{{ convertUnixTimestamp(metaData.start_time) }}</strong> to
                   <strong>{{ convertUnixTimestamp(metaData.stop_time) }}</strong>
-                  <span v-if="metaData.interval"
-                    >every <strong>{{ metaData.interval }} seconds</strong></span
-                  >
                 </li>
-                <li>
-                  RTT Chart and Network graph covers data from
-                  <strong>{{ convertUnixTimestamp(timeRange.min) }}</strong> to
-                  <strong>{{ convertUnixTimestamp(timeRange.max) }}</strong
-                  >.
+                <li v-if="isOneOff == false">
+                  Frequency: {{ metaData.interval }} seconds
                 </li>
-                <li>
-                  Selected probes: {{ selectedProbes.length }} (Out of {{ allProbes.length }})
-                </li>
-                <li>Selected destinations: {{ selectedDestinations.length }}</li>
               </ul>
+              <div>
+                <div class="col text-h6">
+                  <strong>RTT Chart and Network graph:</strong>
+                </div>
+                <ul>
+                  <li v-if="isOneOff == false">
+                    Showing from
+                    {{ convertUnixTimestamp(timeRange.min) }} to
+                    {{ convertUnixTimestamp(timeRange.max) }}
+                  </li>
+                  <li>
+                    Selected probes: {{ selectedProbes.length }} (Out of {{ allProbes.length }})
+                  </li>
+                  <li>Selected destinations: {{ selectedDestinations.length }}</li>
+                </ul>
+              </div>
             </div>
           </div>
           <div v-else>
@@ -677,6 +694,9 @@ watch(
             :interval-value="intervalValue"
             :is-loading="isLoadingRtt"
             :time-range="timeRange"
+            :is-one-off="isOneOff"
+            :min-rtt="minDisplayedRtt"
+            :max-rtt="maxDisplayedRtt"
             :meta-data="metaData"
             :rtt-over-time="rttOverTime"
             @load-measurement-on-time-range="loadMeasurementOnTimeRange"
