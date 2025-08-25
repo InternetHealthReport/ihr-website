@@ -70,23 +70,21 @@ const datesTrace = ref([])
 const announcementsTrace = ref([])
 const withdrawalsTrace = ref([])
 const announcementsPeersTraces = ref([])
+const rpkiStatusTraces = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
 let eventsByTimestamp = {}
 let announcementsPeersCountByOrigin = {}
 let announcementsPeersByOrigin = {}
 let peerToOrigin = {}
+let rpkiPeerToOrigin = {}
 const allOriginAsns = new Set()
-const announcementsPeers = new Set()
 const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
 
-const seenRpkiData = new Set()
-let validRpkiData = { x: [], y: [] }
-let notFoundRpkiData = { x: [], y: [] }
-let invalidRpkiData = { x: [], y: [] }
 let vrps = []
+let vrp_timestamps = []
 
 const isHidden = ref(false)
 const myElement = ref(null)
@@ -138,23 +136,21 @@ const resetData = () => {
   announcementsTrace.value = []
   withdrawalsTrace.value = []
   announcementsPeersTraces.value = []
+  rpkiStatusTraces.value = []
   announcementsCount = {}
   withdrawalsCount = {}
   announcementsPeersCountByOrigin = {}
   announcementsPeersByOrigin = {}
   peerToOrigin = {}
+  rpkiPeerToOrigin = {}
   allOriginAsns.clear()
   eventsByTimestamp = {}
-  announcementsPeers.clear()
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
   usingIndex.value = false
   normalizedPrefixLength = null
   vrps = []
-  seenRpkiData.clear()
-  validRpkiData = { x: [], y: [] }
-  notFoundRpkiData = { x: [], y: [] }
-  invalidRpkiData = { x: [], y: [] }
+  vrp_timestamps = []
 }
 
 // Initialize the route
@@ -339,7 +335,7 @@ const processResData = (data) => {
       const type = addBGPMessageType('I') // Manually Assigning 'I' for Initial State
       const path = event.path || []
       const originASN = path.length ? path[path.length - 1] : null
-      const rpki_status = getRPKIStatus(originASN, minTimestamp.value).status
+      const { status } = getRPKIStatus(originASN, minTimestamp.value)
 
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
 
@@ -347,8 +343,7 @@ const processResData = (data) => {
         timestamp: minTimestamp.value,
         type: type,
         peer: peer,
-        origin_asn: originASN,
-        rpki_status: rpki_status
+        origin_asn: originASN
       })
 
       applyDefaultSelectedPeers(peer)
@@ -362,7 +357,7 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(path),
         type: type,
-        rpki_status: rpki_status,
+        rpki_status: status,
         timestamp: minTimestamp.value
       })
     })
@@ -374,14 +369,13 @@ const processResData = (data) => {
       const type = addBGPMessageType(event.type)
       const path = event.attrs.path || []
       const originASN = path.length ? path[path.length - 1] : null
-      const rpki_status = getRPKIStatus(originASN, timestamp).status
+      const { status } = getRPKIStatus(originASN, timestamp)
 
       generateLineChartData({
         timestamp: timestamp,
         type: type,
         peer: peer,
-        origin_asn: originASN,
-        rpki_status: rpki_status
+        origin_asn: originASN
       })
 
       applyDefaultSelectedPeers(peer)
@@ -394,7 +388,7 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.attrs.community),
         as_info: addASInfo(path),
         type: type,
-        rpki_status: rpki_status,
+        rpki_status: status,
         timestamp: timestamp
       })
     })
@@ -404,7 +398,7 @@ const processResData = (data) => {
 }
 
 const generateLineChartData = (data) => {
-  const { timestamp, peer, type, origin_asn, rpki_status } = data
+  const { timestamp, peer, type, origin_asn } = data
 
   if (dataSource.value === 'bgplay') {
     uniqueEventTimestamps.add(timestamp)
@@ -423,26 +417,27 @@ const generateLineChartData = (data) => {
   }
 
   function updateRpkiByTimestamp() {
-    if (dataSource.value === 'bgplay' && (type === 'Announce' || type === 'Initial State')) {
-      if (rpki_status === 'Valid') {
-        addRpkiData(validRpkiData)
-      } else if (rpki_status === 'Not Found') {
-        addRpkiData(notFoundRpkiData)
-      } else if (
-        rpki_status === 'Invalid (No Matching Origin)' ||
-        rpki_status === 'Invalid (More Specific)'
-      ) {
-        addRpkiData(invalidRpkiData)
-      }
-    }
-
-    function addRpkiData(collection) {
-      const ts = timestampToUTC(timestamp)
-      const key = `${origin_asn}_${ts}`
-      if (!seenRpkiData.has(key)) {
-        collection.x.push(ts)
-        collection.y.push('AS' + origin_asn)
-        seenRpkiData.add(key)
+    if (dataSource.value === 'bgplay') {
+      rpkiPeerToOrigin[peer] ??= []
+      const oldData = rpkiPeerToOrigin[peer][rpkiPeerToOrigin[peer].length - 1]
+      if (type === 'Withdraw') {
+        if (oldData && oldData.timestamp === timestamp) {
+          rpkiPeerToOrigin[peer].pop()
+        }
+        rpkiPeerToOrigin[peer].push({
+          origin_asn: 0,
+          timestamp: timestamp
+        })
+      } else {
+        if (!oldData || oldData.origin_asn !== origin_asn) {
+          if (oldData && oldData.timestamp === timestamp) {
+            rpkiPeerToOrigin[peer].pop()
+          }
+          rpkiPeerToOrigin[peer].push({
+            origin_asn: origin_asn,
+            timestamp: timestamp
+          })
+        }
       }
     }
   }
@@ -487,6 +482,7 @@ const generateLineChartTrace = () => {
   const dTrace = []
   const aTrace = []
   const wTrace = []
+  let rsTrace = {}
 
   const apTracesByOrigin = {}
   const activePeersByAsn = {}
@@ -504,6 +500,7 @@ const generateLineChartTrace = () => {
     for (const t of timestamps) {
       createTimestampTrace(t)
     }
+    generateRpkiChartData()
   }
 
   function createTimestampTrace(t) {
@@ -512,7 +509,7 @@ const generateLineChartTrace = () => {
     wTrace.push(withdrawalsCount[t] || 0)
 
     if (dataSource.value === 'ris-live') {
-      const events = eventsByTimestamp[t]
+      const events = eventsByTimestamp[t] || []
       for (const { peer, type, origin_asn } of events) {
         helperUpdateOriginByTimestamp(activePeersByAsn, type, peer, origin_asn)
       }
@@ -533,10 +530,64 @@ const generateLineChartTrace = () => {
     }
   }
 
+  function generateRpkiChartData() {
+    for (const [peer, origins] of Object.entries(rpkiPeerToOrigin)) {
+      const check_timestamps = vrp_timestamps
+        .concat(origins)
+        .sort((a, b) => a.timestamp - b.timestamp)
+
+      let current_status = 'Withdrawn'
+      let current_origin = null
+      let current_range_start = null
+
+      for (const { origin_asn, timestamp } of check_timestamps) {
+        if (origin_asn === 0) {
+          if (current_status !== 'Withdrawn') {
+            addData(timestamp)
+          }
+          current_status = 'Withdrawn'
+          current_origin = null
+          current_range_start = null
+        } else if (origin_asn === -1) {
+          if (current_status === 'Withdrawn') continue
+
+          const new_status = getRPKIStatus(current_origin, timestamp).status
+          if (current_status != new_status) {
+            addData(timestamp)
+            current_status = new_status
+            current_range_start = timestamp
+          }
+        } else {
+          if (current_status !== 'Withdrawn') {
+            addData(timestamp)
+          }
+          current_origin = origin_asn
+          current_status = getRPKIStatus(current_origin, timestamp).status
+          current_range_start = timestamp
+        }
+      }
+
+      const endTimeUnix = timestampToUnix(endTime.value)
+      if (current_range_start && current_range_start < endTimeUnix) {
+        addData(endTimeUnix)
+      }
+
+      function addData(timestamp) {
+        const duration = timestamp - current_range_start - 1
+        rsTrace[current_status] ??= { y: [], x: [], base: [], text: [] }
+        rsTrace[current_status].y.push(peer)
+        rsTrace[current_status].x.push(timestampToUTC(duration))
+        rsTrace[current_status].base.push(timestampToUTC(current_range_start))
+        rsTrace[current_status].text.push(current_origin)
+      }
+    }
+  }
+
   datesTrace.value = dTrace
   announcementsTrace.value = aTrace
   withdrawalsTrace.value = wTrace
   announcementsPeersTraces.value = apTracesByOrigin
+  rpkiStatusTraces.value = rsTrace
 }
 
 const timestampToUTC = (timestamp) => {
@@ -911,11 +962,14 @@ function generateCommunityMap(communities) {
 
 const getCoveringVrpsForPrefix = async () => {
   try {
+    const startTimeUnix = timestampToUnix(startTime.value)
+    const endTimeUnix = timestampToUnix(endTime.value)
+
     const res = await axios.get('https://www.ihr.live/rpki-history/api/vrp', {
       params: {
         prefix: params.value.prefix,
-        timestamp__gte: timestampToUnix(startTime.value),
-        timestamp__lte: timestampToUnix(endTime.value)
+        timestamp__gte: startTimeUnix,
+        timestamp__lte: endTimeUnix
       }
     })
 
@@ -929,7 +983,28 @@ const getCoveringVrpsForPrefix = async () => {
       }
       vrps.push(data)
     })
-    console.log('VRPs fetched successfully:', vrps)
+
+    vrp_timestamps = calculateVrpChangeTimestamps(vrps)
+
+    function calculateVrpChangeTimestamps(vrpData) {
+      const vrpTimestamps = new Set()
+
+      for (const vrp of vrpData) {
+        const visibleFrom = vrp.unixVisible.from
+        const visibleTo = vrp.unixVisible.to + 1 // add +1 second
+
+        if (visibleFrom >= startTimeUnix && visibleFrom <= endTimeUnix) {
+          vrpTimestamps.add(visibleFrom)
+        }
+
+        if (visibleTo >= startTimeUnix && visibleTo <= endTimeUnix) {
+          vrpTimestamps.add(visibleTo)
+        }
+      }
+      return Array.from(vrpTimestamps)
+        .sort((a, b) => a - b)
+        .map((t) => ({ origin_asn: -1, timestamp: t }))
+    }
   } catch (error) {
     console.error('Error fetching VRPs:', error)
   }
@@ -957,7 +1032,7 @@ const getRPKIStatus = (asn, timestamp) => {
       return { status: 'Valid' }
     }
   }
-  
+
   if (same_origin_asn_found) {
     return {
       status: 'Invalid (More Specific)',
@@ -1295,9 +1370,7 @@ onUnmounted(() => {
         :announcements-trace="announcementsTrace"
         :withdrawals-trace="withdrawalsTrace"
         :announcements-peers-traces="announcementsPeersTraces"
-        :valid-rpki-data="validRpkiData"
-        :invalid-rpki-data="invalidRpkiData"
-        :not-found-rpki-data="notFoundRpkiData"
+        :rpki-status-traces="rpkiStatusTraces"
         :current-index="currentIndex"
         :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"

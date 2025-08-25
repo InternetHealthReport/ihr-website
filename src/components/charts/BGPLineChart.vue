@@ -47,17 +47,9 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
-  validRpkiData: {
+  rpkiStatusTraces: {
     type: Object,
-    default: () => ({ x: [], y: [] })
-  },
-  invalidRpkiData: {
-    type: Object,
-    default: () => ({ x: [], y: [] })
-  },
-  notFoundRpkiData: {
-    type: Object,
-    default: () => ({ x: [], y: [] })
+    default: () => ({})
   },
   currentIndex: {
     type: Number,
@@ -114,6 +106,8 @@ const layout = {
 }
 
 const rpkiLayout = {
+  barmode: 'stack',
+  showlegend: true,
   legend: {
     orientation: 'h',
     y: 1.1,
@@ -121,8 +115,13 @@ const rpkiLayout = {
     xanchor: 'center',
     yanchor: 'bottom'
   },
-  showlegend: true,
-  yaxis: { rangemode: 'tozero' }
+  yaxis: {
+    tickfont: {
+      size: 8
+    },
+    dtick: 1
+  },
+  height: 500
 }
 
 const renderAnnouncementsAndWithdrawnChart = async (
@@ -187,49 +186,39 @@ const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) =>
       type: 'scatter',
       mode: 'markers',
       marker: { color },
-      name: `ASN ${asn}`,
-      stackgroup: 'one'
+      name: `ASN ${asn}`
     })
   }
   announcementsPeersChartData.value = data
 }
 
-const renderRpkiStatusChart = async (validRpkiData, invalidRpkiData, notFoundRpkiData) => {
-  const data = [
-    {
-      x: validRpkiData.x,
-      y: validRpkiData.y,
-      type: 'scattergl',
-      mode: 'markers',
-      name: 'RPKI Valid',
+const renderRpkiStatusChart = async (rpkiStatusTraces) => {
+  const data = []
+
+  for (const [status, { y, x, base, text }] of Object.entries(rpkiStatusTraces)) {
+    data.push({
+      type: 'bar',
+      orientation: 'h',
+      y,
+      x,
+      base,
+      hovertext: text,
+      hoverinfo: 'text',
+      hovertemplate: 'Peer: %{y}<br>Origin: AS%{hovertext}<extra></extra>',
+      width: 0.9,
+      name: 'RPKI ' + status,
       marker: {
-        size: 18,
-        color: 'rgba(58, 160, 44, 0.5)'
+        color:
+          status === 'Valid'
+            ? '#55b748' // green
+            : status === 'Invalid (More Specific)'
+              ? '#db2b27' // red
+              : status === 'Invalid (No Matching Origin)'
+                ? '#db2b27' // red
+                : '#fdbf11' // yellow
       }
-    },
-    {
-      x: invalidRpkiData.x,
-      y: invalidRpkiData.y,
-      type: 'scattergl',
-      mode: 'markers',
-      name: 'RPKI Invalid',
-      marker: {
-        size: 18,
-        color: 'rgba(255, 0, 0, 0.5)'
-      }
-    },
-    {
-      x: notFoundRpkiData.x,
-      y: notFoundRpkiData.y,
-      type: 'scattergl',
-      mode: 'markers',
-      name: 'RPKI Not Found',
-      marker: {
-        size: 18,
-        color: 'rgba(255, 215, 0, 0.5)'
-      }
-    }
-  ]
+    })
+  }
   rpkiStatusChartData.value = data
 }
 
@@ -299,7 +288,7 @@ const init = async () => {
     props.withdrawalsTrace
   )
   await renderAnnouncementsPeersChart(props.datesTrace, props.announcementsPeersTraces)
-  await renderRpkiStatusChart(props.validRpkiData, props.invalidRpkiData, props.notFoundRpkiData)
+  await renderRpkiStatusChart(props.rpkiStatusTraces)
   adjustQSliderWidth(false)
   if (props.dataSource === 'bgplay') {
     updateSlider(selectedMaxTimestamp.value)
@@ -323,9 +312,7 @@ watch(
     () => props.announcementsTrace,
     () => props.withdrawalsTrace,
     () => props.announcementsPeersTraces,
-    () => props.validRpkiData,
-    () => props.invalidRpkiData,
-    () => props.notFoundRpkiData
+    () => props.rpkiStatusTraces
   ],
   () => {
     init()
