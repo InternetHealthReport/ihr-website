@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QSlider, QSpinner } from 'quasar'
+import { QBadge, QBtn, QSlider, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, onMounted, watch } from 'vue'
 import report from '@/plugins/report'
@@ -44,8 +44,20 @@ const props = defineProps({
     default: () => []
   },
   announcementsPeersTraces: {
-    type: Array,
-    default: () => []
+    type: Object,
+    default: () => ({})
+  },
+  validRpkiData: {
+    type: Object,
+    default: () => ({ x: [], y: [] })
+  },
+  invalidRpkiData: {
+    type: Object,
+    default: () => ({ x: [], y: [] })
+  },
+  notFoundRpkiData: {
+    type: Object,
+    default: () => ({ x: [], y: [] })
   },
   currentIndex: {
     type: Number,
@@ -68,6 +80,7 @@ const { utcString } = report()
 
 const announcementsAndWithdrawnChartData = ref([])
 const announcementsPeersChartData = ref([])
+const rpkiStatusChartData = ref([])
 
 const selectedMaxTimestamp = ref(0)
 const sliderWidthInit = ref(false)
@@ -98,6 +111,18 @@ const layout = {
   showlegend: true,
   yaxis: { rangemode: 'tozero' },
   shapes: []
+}
+
+const rpkiLayout = {
+  legend: {
+    orientation: 'h',
+    y: 1.1,
+    x: 0.5,
+    xanchor: 'center',
+    yanchor: 'bottom'
+  },
+  showlegend: true,
+  yaxis: { rangemode: 'tozero' }
 }
 
 const renderAnnouncementsAndWithdrawnChart = async (
@@ -134,22 +159,78 @@ const renderAnnouncementsAndWithdrawnChart = async (
   announcementsAndWithdrawnChartData.value = data
 }
 
+const colors = [
+  'rgba(44, 160, 44, 0.5)', // cooked asparagus green
+  'rgba(236, 112, 99, 0.5)', // pink
+  'rgba(31, 119, 180, 0.5)', // muted blue
+  'rgba(255, 127, 14, 0.5)', // safety orange
+  'rgba(214, 39, 40, 0.5)', // brick red
+  'rgba(148, 103, 189, 0.5)', // muted purple
+  'rgba(140, 86, 75, 0.5)', // chestnut brown
+  'rgba(127, 127, 127, 0.5)', // middle gray
+  'rgba(227, 119, 194, 0.5)', // raspberry yogurt pink
+  'rgba(188, 189, 34, 0.5)', // curry yellow-green
+  'rgba(23, 190, 207, 0.5)' // blue-teal
+]
+
 const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) => {
+  const data = []
+  let colorIndex = 0
+
+  for (const [asn, yValues] of Object.entries(announcementsPeersTraces)) {
+    const color = colors[colorIndex % colors.length]
+    colorIndex++
+    data.push({
+      x: dates,
+      y: yValues,
+      stackgroup: 'one',
+      type: 'scatter',
+      mode: 'markers',
+      marker: { color },
+      name: `ASN ${asn}`,
+      stackgroup: 'one'
+    })
+  }
+  announcementsPeersChartData.value = data
+}
+
+const renderRpkiStatusChart = async (validRpkiData, invalidRpkiData, notFoundRpkiData) => {
   const data = [
     {
-      x: dates,
-      y: announcementsPeersTraces,
+      x: validRpkiData.x,
+      y: validRpkiData.y,
       type: 'scattergl',
-      fill: 'tozeroy',
-      fillcolor: 'rgba(58, 160, 44, 0.5)',
-      marker: {
-        color: 'rgba(58, 160, 44, 0.5)'
-      },
       mode: 'markers',
-      name: 'BGP Sources'
+      name: 'RPKI Valid',
+      marker: {
+        size: 18,
+        color: 'rgba(58, 160, 44, 0.5)'
+      }
+    },
+    {
+      x: invalidRpkiData.x,
+      y: invalidRpkiData.y,
+      type: 'scattergl',
+      mode: 'markers',
+      name: 'RPKI Invalid',
+      marker: {
+        size: 18,
+        color: 'rgba(255, 0, 0, 0.5)'
+      }
+    },
+    {
+      x: notFoundRpkiData.x,
+      y: notFoundRpkiData.y,
+      type: 'scattergl',
+      mode: 'markers',
+      name: 'RPKI Not Found',
+      marker: {
+        size: 18,
+        color: 'rgba(255, 215, 0, 0.5)'
+      }
     }
   ]
-  announcementsPeersChartData.value = data
+  rpkiStatusChartData.value = data
 }
 
 // Handle click event on the Plotly chart
@@ -218,6 +299,7 @@ const init = async () => {
     props.withdrawalsTrace
   )
   await renderAnnouncementsPeersChart(props.datesTrace, props.announcementsPeersTraces)
+  await renderRpkiStatusChart(props.validRpkiData, props.invalidRpkiData, props.notFoundRpkiData)
   adjustQSliderWidth(false)
   if (props.dataSource === 'bgplay') {
     updateSlider(selectedMaxTimestamp.value)
@@ -240,7 +322,10 @@ watch(
     () => props.datesTrace,
     () => props.announcementsTrace,
     () => props.withdrawalsTrace,
-    () => props.announcementsPeersTraces
+    () => props.announcementsPeersTraces,
+    () => props.validRpkiData,
+    () => props.invalidRpkiData,
+    () => props.notFoundRpkiData
   ],
   () => {
     init()
@@ -282,36 +367,45 @@ onMounted(() => {
     <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>
-    <div v-if="dataSource === 'ris-live'">
+    <div v-if="dataSource === 'ris-live'" class="q-mb-md">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>
-    <ReactiveChart
-      :layout="layout"
-      :traces="announcementsAndWithdrawnChartData"
-      :shapes="layout.shapes"
-      @plotly-click="handlePlotlyClick"
-      @plotly-relayout="adjustQSliderWidth(true)"
-    />
-
-    <ReactiveChart
-      :layout="layout"
-      :traces="announcementsPeersChartData"
-      :shapes="layout.shapes"
-      @plotly-click="handlePlotlyClick"
-      @plotly-relayout="adjustQSliderWidth(true)"
-    />
     <div class="timetampSlider">
-      <div class="timeStampControls">
-        <span v-if="dataSource === 'ris-live'"
-          >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span
-        >
-        <span v-else
-          >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State and
-          Events)</span
-        >
-      </div>
       <div class="timetampSliderContainer">
+        <div class="row timestampInfo">
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div class="text-body2">
+                Min Timestamp:
+                {{
+                  props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
+                }}
+              </div>
+            </QBadge>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div v-if="dataSource === 'ris-live'" class="text-body2">
+                Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages
+              </div>
+              <div v-else class="text-body2">
+                Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State
+                and Events)
+              </div>
+            </QBadge>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div class="text-body2">
+                Max Timestamp:
+                {{
+                  props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
+                }}
+              </div>
+            </QBadge>
+          </div>
+        </div>
         <QSlider
           v-model="selectedMaxTimestamp"
           :min="props.minTimestamp === Infinity ? 0 : props.minTimestamp"
@@ -320,25 +414,34 @@ onMounted(() => {
           :label-value="
             props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
           "
+          switch-label-side
           color="accent"
           @update:model-value="updateSlider($event, true)"
         />
-        <div class="timestampInfo">
-          <span
-            >Min Timestamp:
-            {{
-              props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
-            }}</span
-          >
-          <span
-            >Max Timestamp:
-            {{
-              props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
-            }}</span
-          >
-        </div>
       </div>
     </div>
+    <ReactiveChart
+      :layout="layout"
+      :traces="announcementsPeersChartData"
+      :shapes="layout.shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
+    <ReactiveChart
+      :layout="layout"
+      :traces="announcementsAndWithdrawnChartData"
+      :shapes="layout.shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
+    <ReactiveChart
+      v-if="dataSource === 'bgplay'"
+      :layout="rpkiLayout"
+      :traces="rpkiStatusChartData"
+      :shapes="layout.shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
   </div>
 </template>
 
@@ -371,6 +474,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
 }
 .loadingContainer {
   height: 60px;

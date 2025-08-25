@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QSpinner } from 'quasar'
+import { QBtn, QSlider, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, onMounted, watch } from 'vue'
 import '@/styles/chart.css'
@@ -8,9 +8,6 @@ const props = defineProps({
   filteredMessages: {
     type: Array,
     default: () => []
-  },
-  maxHops: {
-    type: Number
   },
   selectedPeers: {
     type: Array,
@@ -40,6 +37,7 @@ const actualChartData = ref([])
 const actualChartLayout = ref({})
 const nodes = ref(new Map()) //It will constins nodes (asn) data, key is asn and value is [asn, asn_name, country_iso_code2]
 const links = ref([])
+const maxHops = ref(9)
 
 const generateGraphData = () => {
   nodes.value.clear()
@@ -62,7 +60,7 @@ const generateGraphData = () => {
       message.type === 'Unknown'
     )
       return
-    const path = removeConsecutiveDuplicateAS(message.path).slice(-(props.maxHops + 1)) //+1 for the last AS
+    const path = removeConsecutiveDuplicateAS(message.path).slice(-(maxHops.value + 1)) //+1 for the last AS
     path.forEach((n, i) => {
       if (nodes.value.has(n)) {
         const node = nodes.value.get(n)
@@ -163,7 +161,7 @@ watch(
 )
 
 watch(
-  () => props.maxHops,
+  () => maxHops,
   () => {
     if (!props.isPlaying || !props.isLiveMode) {
       init()
@@ -203,6 +201,20 @@ onMounted(() => {
       style="z-index: 1"
     >
       <h1>No AS Path</h1>
+    </div>
+    <div class="q-mt-lg q-px-md">
+      <QSlider
+        v-model="maxHops"
+        :min="1"
+        :max="9"
+        :step="1"
+        label-always
+        snap
+        label
+        :label-value="'Max Hops: ' + maxHops"
+        color="accent"
+        marker-labels
+      />
     </div>
     <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
   </div>
