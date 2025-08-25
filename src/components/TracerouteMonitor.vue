@@ -467,8 +467,8 @@ const loadMeasurementOnTimeRange = debounce((e) => {
   isLoadingRtt.value = true
   if (e.min !== 0 && e.max !== 0) {
     const queryParamObject = {
-      startTime: convertUnixTimestamp(e.min),
-      stopTime: convertUnixTimestamp(e.max)
+      startTime: convertUnixTimestamp(e.min, true),
+      stopTime: convertUnixTimestamp(e.max, true)
     }
     emit('setSelectedTimeRange', queryParamObject)
   }

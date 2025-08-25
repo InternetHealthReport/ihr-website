@@ -1,4 +1,4 @@
-const convertUnixTimestamp = (value) => {
+const convertUnixTimestamp = (value, isUrl = false) => {
   const dateTime = new Date((value ?? 0) * 1000)
 
   const year = String(dateTime.getFullYear())
@@ -9,7 +9,7 @@ const convertUnixTimestamp = (value) => {
   const minutes = String(dateTime.getMinutes()).padStart(2, '0')
   const seconds = String(dateTime.getSeconds()).padStart(2, '0')
 
-  return `${year}-${month}-${day}, ${hours}:${minutes}`
+  return isUrl ? `${year}-${month}-${day}T${hours}:${minutes}`: `${year}-${month}-${day}, ${hours}:${minutes}`
 }
 
 const convertDateTimeToSeconds = (value) => {
