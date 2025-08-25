@@ -761,7 +761,7 @@
       },
       "dumps": {
         "title": "Daily dumps",
-        "summary": "For users that need faster access to more IHR data, we also provide daily dumps of IHR database. Please refer to <a href='https://ihr-archive.iijlab.net'> https://ihr-archive.iijlab.net</a>",
+        "summary": "For users that need faster access to more IHR data, we also provide daily dumps of IHR database. Please refer to <a href='https://archive.ihr.live/'> https://archive.ihr.live/</a>",
         "description": {}
       },
       "datapolicy": {
