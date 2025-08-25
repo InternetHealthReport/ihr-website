@@ -515,9 +515,9 @@ const sortAndCompare = (arrA, arrB) => {
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
     loadMeasurementOnProbeChange()
-  }
-  if (!sortAndCompare(props.probeIDs, selectedProbes.value)) {
-    emit('setSelectedProbes', selectedProbes.value)
+    if (!sortAndCompare(props.probeIDs, selectedProbes.value)) {
+      emit('setSelectedProbes', selectedProbes.value)
+    }
   }
 })
 
@@ -579,8 +579,8 @@ watchEffect(() => {
 watchEffect(() => {
   if (selectedDestinations.value.length > 0) {
     loadMeasurementOnDestinationChange()
+    emit('setSelectedDestinations', selectedDestinations.value)
   }
-  emit('setSelectedDestinations', selectedDestinations.value)
 })
 
 const setSelectedProbes = (value) => {
