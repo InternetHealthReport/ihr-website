@@ -22,6 +22,9 @@ const props = defineProps({
   maxRtt: {
     type: Number
   },
+  oneOffMeasurementMedianRtt: {
+    type: Number
+  },
   timeRange: {
     type: Object
   },
@@ -191,6 +194,9 @@ watch(filteredRttOverTime, () => {
       <ul>
         <li class="text-body">
           Minimum RTT: <strong>{{ minRtt }} ms</strong>
+        </li>
+        <li class="text-body">
+          Median RTT: <strong>{{ oneOffMeasurementMedianRtt }} ms</strong>
         </li>
         <li>
           Maximum RTT: <strong>{{ maxRtt }} ms</strong>

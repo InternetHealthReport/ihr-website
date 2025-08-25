@@ -88,6 +88,7 @@ const startTimestamp = ref(convertDateTimeToSeconds(props.startTime))
 const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
 
 const isOneOff = ref(false)
+const oneOffMeasurementMedianRTT = ref(0)
 
 // re-emitting events from children to grand parent
 const emit = defineEmits([
@@ -97,7 +98,8 @@ const emit = defineEmits([
   'loadMeasurement'
 ])
 
-const processData = async (tracerouteData, loadProbes = false) => {
+const processData = async (tracerouteData, loadProbes = false, isMeasurementOneOff) => {
+  const medianRTTsArrayForOneOff = []
   const g = new dagre.graphlib.Graph()
   g.setGraph({ rankdir: 'LR', nodesep: 290, edgesep: 150, ranksep: 1000 })
   g.setDefaultEdgeLabel(() => ({}))
@@ -249,6 +251,8 @@ const processData = async (tracerouteData, loadProbes = false) => {
         }
         lastNodeId = currentIp
         finalHopNodeId = currentIp
+
+        if(isMeasurementOneOff && medianRtt) medianRTTsArrayForOneOff.push(medianRtt)
       })
     })
 
@@ -286,8 +290,10 @@ const processData = async (tracerouteData, loadProbes = false) => {
   layoutNodes.value = layouts
 
   maxMedianRtt.value = highestMedianRtt
+  maxDisplayedRtt.value = highestMedianRtt
 
   updateDisplayedRttValues()
+  oneOffMeasurementMedianRTT.value = calculateMedian(medianRTTsArrayForOneOff)
 }
 
 const updateDisplayedRttValues = () => {
@@ -310,12 +316,6 @@ const updateDisplayedRttValues = () => {
   })
 
   minDisplayedRtt.value = minRtt === Infinity ? null : minRtt
-  maxDisplayedRtt.value =
-    destinationNodeMedianRtt !== null
-      ? destinationNodeMedianRtt
-      : maxRtt === -Infinity
-        ? null
-        : maxRtt
 }
 
 watch(nodes, updateDisplayedRttValues)
@@ -384,7 +384,7 @@ const loadMeasurement = async () => {
 
       intervalValue.value = fetchedMetaData.interval || null
 
-      await loadMeasurementData(true)
+      await loadMeasurementData(true, isMeasurementOneOff)
 
       if (selectedDestinations.value === null || selectedDestinations.value.length === 0) {
         selectedDestinations.value = allDestinations.value
@@ -407,7 +407,7 @@ const loadMeasurement = async () => {
   }
 }
 
-const loadMeasurementData = async (loadProbes = false) => {
+const loadMeasurementData = async (loadProbes = false, isMeasurementOneOff) => {
   loadProbesDestinationsError.value = false
   if (measurementID.value.trim()) {
     isLoadingChart.value = true
@@ -439,7 +439,7 @@ const loadMeasurementData = async (loadProbes = false) => {
       }
       const data = await atlas_api.getAndCacheMeasurementDataInChunks(measurementID.value, params)
 
-      processData(data, loadProbes)
+      processData(data, loadProbes, isMeasurementOneOff)
     } catch (error) {
       // console.log('Failed to load measurement:', measurementID.value)
       isLoadingProbes.value = false
@@ -476,21 +476,21 @@ const loadMeasurementOnTimeRange = debounce((e) => {
   // On slider update, update the measurement data
   timeRange.value.min = e.min
   timeRange.value.max = e.max
-  loadMeasurementData().finally(() => {
+  loadMeasurementData(false, isOneOff.value).finally(() => {
     isLoadingRtt.value = false
   })
 }, 3000)
 
 const loadMeasurementOnProbeChange = debounce(() => {
-  loadMeasurementData()
+  loadMeasurementData(false, isOneOff.value)
 }, 1000)
 
 const loadMeasurementOnDestinationChange = debounce(() => {
-  loadMeasurementData()
+  loadMeasurementData(false, isOneOff.value)
 }, 1000)
 
 const loadMeasurementOnSearchQuery = debounce(() => {
-  loadMeasurementData()
+  loadMeasurementData(false, isOneOff.value)
 }, 1000)
 
 const sortAndCompare = (arrA, arrB) => {
@@ -697,6 +697,7 @@ watch(
             :is-one-off="isOneOff"
             :min-rtt="minDisplayedRtt"
             :max-rtt="maxDisplayedRtt"
+            :one-off-measurement-median-rtt="oneOffMeasurementMedianRTT"
             :meta-data="metaData"
             :rtt-over-time="rttOverTime"
             @load-measurement-on-time-range="loadMeasurementOnTimeRange"
