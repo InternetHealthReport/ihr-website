@@ -53,7 +53,8 @@ const isWsDisconnected = ref(false)
 const normalizedPrefix = ref('') // Used to store the normalized prefix to determine the BGP message type
 let normalizedPrefixLength = null
 
-const dataSource = ref('ris-live') //'ris-live' or 'bgplay'
+const dataSource = ref('bgplay') //'ris-live' or 'bgplay'
+const dataSourceOptions = ['ris-live', 'bgplay']
 const minTimestamp = ref(Infinity)
 const maxTimestamp = ref(-Infinity)
 
@@ -157,37 +158,50 @@ const resetData = () => {
 const initRoute = () => {
   const query = { ...route.query }
 
-  if (route.query.prefix) {
-    params.value.prefix = route.query.prefix
-    normalizedPrefix.value = normalizePrefix(route.query.prefix, true)
+  const queryPrefix = route.query.prefix?.trim()
+  const queryDataSource = route.query['data-source']?.trim()
+  const queryRrc = Number(route.query.rrc?.trim())
+  const queryRrcs = route.query.rrcs
+    ?.trim()
+    .split(',')
+    .map(Number)
+    .filter((n) => !isNaN(n))
+
+  const queryStartTime = route.query['start-time']?.trim()
+  const queryEndTime = route.query['end-time']?.trim()
+
+  if (queryPrefix) {
+    console.log(`Query Prefix: ${queryPrefix}`)
+    params.value.prefix = queryPrefix
+    normalizedPrefix.value = normalizePrefix(queryPrefix, true)
   } else {
     query.prefix = params.value.prefix
   }
-  if (route.query['data-source']) {
-    dataSource.value = route.query['data-source']
+  if (queryDataSource && dataSourceOptions.includes(queryDataSource)) {
+    dataSource.value = queryDataSource
   } else {
     query['data-source'] = dataSource.value
   }
 
   if (dataSource.value === 'ris-live') {
-    if (route.query.rrc) {
-      params.value.host = Number(route.query.rrc)
+    if (queryRrc) {
+      params.value.host = queryRrc
     } else {
       query.rrc = params.value.host
     }
   } else {
-    if (route.query.rrcs) {
-      rrcs.value = route.query.rrcs.split(',').map(Number)
+    if (queryRrcs) {
+      rrcs.value = queryRrcs
     } else {
       query.rrcs = rrcs.value.join(',')
     }
-    if (route.query['start-time']) {
-      startTime.value = route.query['start-time']
+    if (queryStartTime) {
+      startTime.value = queryStartTime
     } else {
       query['start-time'] = startTime.value
     }
-    if (route.query['end-time']) {
-      endTime.value = route.query['end-time']
+    if (queryEndTime) {
+      endTime.value = queryEndTime
     } else {
       query['end-time'] = endTime.value
     }
@@ -1080,6 +1094,14 @@ const customIntersectionObserver = () => {
 watch(
   [params, dataSource, startTime, endTime, rrcs],
   () => {
+    const inputPrefix = params.value.prefix?.trim()
+    const inputStartTime = startTime.value?.trim()
+    const inputEndTime = endTime.value?.trim()
+
+    params.value.prefix = inputPrefix
+    startTime.value = inputStartTime
+    endTime.value = inputEndTime
+
     const query = {
       prefix: params.value.prefix,
       'data-source': dataSource.value
@@ -1135,22 +1157,6 @@ onUnmounted(() => {
                 <div>
                   <QRadio
                     v-model="dataSource"
-                    val="ris-live"
-                    label="RisLive"
-                    :disable="
-                      isPlaying ||
-                      inputDisable ||
-                      Object.keys(bgPlaySources).length > 0 ||
-                      isLoadingBgplayData
-                    "
-                  />
-                  <QIcon name="fas fa-circle-info" class="q-ml-md">
-                    <QTooltip>Monitor Real-Time BGP events</QTooltip>
-                  </QIcon>
-                </div>
-                <div>
-                  <QRadio
-                    v-model="dataSource"
                     val="bgplay"
                     label="BGPlay"
                     :disable="
@@ -1162,6 +1168,22 @@ onUnmounted(() => {
                   />
                   <QIcon name="fas fa-circle-info" class="q-ml-md">
                     <QTooltip>Monitor BGP events from a specific time range</QTooltip>
+                  </QIcon>
+                </div>
+                <div>
+                  <QRadio
+                    v-model="dataSource"
+                    val="ris-live"
+                    label="RisLive"
+                    :disable="
+                      isPlaying ||
+                      inputDisable ||
+                      Object.keys(bgPlaySources).length > 0 ||
+                      isLoadingBgplayData
+                    "
+                  />
+                  <QIcon name="fas fa-circle-info" class="q-ml-md">
+                    <QTooltip>Monitor Real-Time BGP events</QTooltip>
                   </QIcon>
                 </div>
               </td>
