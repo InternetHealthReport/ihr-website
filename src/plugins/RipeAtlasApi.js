@@ -5,7 +5,7 @@ import { get, set } from 'idb-keyval'
 // Base URL for RIPE Atlas API
 const RIPE_ATLAS_API_BASE = 'https://atlas.ripe.net/api/v2/'
 const DEFAULT_TIMEOUT = 180000
-const LOAD_INITIAL_PROBES_COUNT = 10
+const LOAD_INITIAL_PROBES_COUNT = 5
 const DEFAULT_CHUNK_SIZE = 10
 
 const axios_base = axios.create({

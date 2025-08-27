@@ -25,6 +25,7 @@ const props = defineProps({
 const emit = defineEmits(['loadMeasurementOnSearchQuery', 'setSelectedProbes'])
 
 const customSort = (rows, sortBy, descending) => {
+  console.log("descending::: ", descending)
   const data = [...rows]
 
   if (sortBy) {

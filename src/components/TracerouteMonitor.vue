@@ -293,8 +293,6 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
 const updateDisplayedRttValues = () => {
   let minRtt = Infinity
-  let maxRtt = -Infinity
-  let destinationNodeMedianRtt = null
 
   Object.values(nodes.value).forEach((node) => {
     if (node.hops && node.hops.length > 0) {
@@ -303,9 +301,6 @@ const updateDisplayedRttValues = () => {
       )
       if (medianRtt !== null) {
         minRtt = Math.min(minRtt, medianRtt)
-        if (node.isLastHop) {
-          destinationNodeMedianRtt = medianRtt
-        }
       }
     }
   })
@@ -390,7 +385,6 @@ const loadMeasurement = async () => {
 
       isOneOff.value = isMeasurementOneOff
     } catch (error) {
-      // console.log('Failed to load measurement:', measurementID.value)
       isLoadingProbes.value = false
       loadMeasurementIDError.value = true
       showErrorOverflowAlert.value = true
@@ -662,13 +656,13 @@ watch(
                 <ul>
                   <li v-if="isOneOff == false">
                     Showing from
-                    {{ convertUnixTimestamp(timeRange.min) }} to
-                    {{ convertUnixTimestamp(timeRange.max) }}
+                    <strong>{{ convertUnixTimestamp(timeRange.min) }}</strong> to
+                    <strong>{{ convertUnixTimestamp(timeRange.max) }}</strong>
                   </li>
                   <li>
-                    Selected probes: {{ selectedProbes.length }} (Out of {{ allProbes.length }})
+                    Selected probes: <strong>{{ selectedProbes.length }}</strong> (Out of {{ allProbes.length }})
                   </li>
-                  <li>Selected destinations: {{ selectedDestinations.length }}</li>
+                  <li>Selected destinations: <strong>{{ selectedDestinations.length }}</strong></li>
                 </ul>
               </div>
             </div>
