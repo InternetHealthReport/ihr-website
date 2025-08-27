@@ -23,9 +23,7 @@ import {
 } from './query/IhrQuery'
 
 /// Base url for api
-const IHR_API_BASE = 'https://ihr.iijlab.net/ihr/api/'
-// const IHR_API_BASE = 'https://www.ihr.live/api-dev/' // New API; See TODO in IhrQuery.js line 108
-
+const IHR_API_BASE = 'https://www.ihr.live/ihr/api/'
 /// Default timeout before api call are considered failed
 const DEFAULT_TIMEOUT = 180000
 /// Data of the first available data
@@ -39,9 +37,6 @@ const IhrApi = {
     })
 
     const _resolveAxiosPromise = (endpoint, query, successCallback, errorCallback) => {
-      if (!endpoint.includes('/')) {
-        endpoint = `${endpoint}/`
-      }
       axios_base
         .get(endpoint, { params: query })
         .then((res) => {

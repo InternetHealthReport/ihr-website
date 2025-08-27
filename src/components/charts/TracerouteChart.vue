@@ -1,14 +1,10 @@
 <script setup>
-import { QBtn, QSpinner, QRadio } from 'quasar'
+import { QBtn, QSpinner, QBtnToggle } from 'quasar'
 import { ref, watch, computed, nextTick } from 'vue'
 import { VNetworkGraph } from 'v-network-graph'
 import * as vNG from 'v-network-graph'
 import RipeApi from '../../plugins/RipeApi'
-import {
-  convertUnixTimestamp,
-  isPrivateIP,
-  calculateMedian
-} from '../../plugins/tracerouteFunctions'
+import { isPrivateIP, calculateMedian } from '../../plugins/tracerouteFunctions'
 import '@/styles/chart.css'
 
 const props = defineProps({
@@ -208,10 +204,11 @@ const assignAsnColors = () => {
   asnColors.value = colors
 }
 
-const rttColor = (rtt) => {
+const rttColor = (rtt, shouldCompliment = true) => {
   if (rtt === null || rtt === undefined) return 'black'
   const normalized = Math.min(Math.max(rtt / props.maxDisplayedRtt, 0), 1)
-  const green = Math.floor(255 * (1 - normalized))
+  const greenFactor = shouldCompliment ? 1 - normalized : normalized
+  const green = Math.floor(255 * greenFactor)
   return `rgb(150, ${green}, 60)`
 }
 
@@ -336,7 +333,9 @@ watch(displayMode, () => {
       :configs="configs"
       :event-handlers="eventHandlers"
     />
-    <div v-else-if="!isLoading" class="placeholder-message">No graph data available.</div>
+    <div v-else-if="!isLoading" class="placeholder-message">
+      No Traceroute Network Graph data available.
+    </div>
     <div
       v-if="selectedNode"
       ref="tooltip"
@@ -402,30 +401,35 @@ watch(displayMode, () => {
         <strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}
       </div>
     </div>
-    <div v-if="Object.keys(nodes).length > 0" class="measurement-info-overlay">
-      <div><strong>Description:</strong> {{ metaData.description }}</div>
-      <div><strong>Target:</strong> {{ metaData.target }}</div>
-      <div><strong>Target IP:</strong> {{ metaData.target_ip }}</div>
-      <div><strong>Start Time:</strong> {{ convertUnixTimestamp(metaData.start_time) }}</div>
-      <div><strong>Stop Time:</strong> {{ convertUnixTimestamp(metaData.stop_time) }}</div>
-      <div><strong>Status:</strong> {{ metaData.status.name }}</div>
-    </div>
     <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
-      <QRadio v-model="displayMode" val="normal" label="Normal Mode" />
-      <QRadio v-model="displayMode" val="rtt" label="RTT Mode" />
-      <QRadio v-model="displayMode" val="asn" label="ASN Mode" />
-      <QBtn v-if="displayMode === 'asn'" flat dense @click="showAsnOverlay = !showAsnOverlay">
-        ASN Overlay
-      </QBtn>
+      <div>
+        <QBtnToggle
+          v-model="displayMode"
+          :options="[
+            { label: 'Normal Mode', value: 'normal' },
+            { label: 'RTT Mode', value: 'rtt' },
+            { label: 'ASN Mode', value: 'asn' }
+          ]"
+        />
+      </div>
+      <div class="q-mt-md">
+        <QBtn
+          v-if="displayMode === 'asn'"
+          label="ASN Overlay"
+          @click="showAsnOverlay = !showAsnOverlay"
+        />
+      </div>
     </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
       <div>
         <span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }" />
-        <strong>Min RTT: </strong>{{ minDisplayedRtt ? minDisplayedRtt + ' ms' : 'Not available' }}
+        <strong>Min RTT: </strong
+        >{{ minDisplayedRtt ? minDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
       </div>
       <div>
         <span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }" />
-        <strong>Max RTT: </strong>{{ maxDisplayedRtt ? maxDisplayedRtt + ' ms' : 'Not available' }}
+        <strong>Max RTT: </strong
+        >{{ maxDisplayedRtt ? maxDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
       </div>
     </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
@@ -434,7 +438,7 @@ watch(displayMode, () => {
           <div class="rttLabel">RTT</div>
         </div>
         <div class="col">
-          <div class="scaleLabel">{{ minDisplayedRtt }}</div>
+          <div class="scaleLabel">{{ maxDisplayedRtt.toFixed(3) }}</div>
           <div class="scale">
             <div
               v-for="(percentage, index) in Array.from(
@@ -443,10 +447,10 @@ watch(displayMode, () => {
               )"
               :key="index"
               class="scaleColor"
-              :style="{ backgroundColor: rttColor(percentage) }"
+              :style="{ backgroundColor: rttColor(percentage, (shouldCompliment = false)) }"
             ></div>
           </div>
-          <div class="scaleLabel">{{ maxDisplayedRtt }}</div>
+          <div class="scaleLabel">{{ minDisplayedRtt.toFixed(3) }}</div>
         </div>
       </div>
     </div>
@@ -466,7 +470,7 @@ watch(displayMode, () => {
         </div>
       </div>
     </div>
-    <div class="view-control-overlay">
+    <div v-if="Object.keys(nodes).length > 0" class="row view-control-overlay justify-center">
       <QBtn icon="zoom_in" @click="zoomIn" />
       <QBtn icon="zoom_out" @click="zoomOut" />
       <QBtn icon="fullscreen" @click="toggleFullScreen" />
@@ -528,14 +532,8 @@ watch(displayMode, () => {
 .mode-toggle-overlay {
   position: absolute;
   top: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-  border-left: 1px solid #ccc;
-  font-size: 12px;
-  display: flex;
-  flex-direction: column;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 .rtt-info-overlay {
@@ -622,10 +620,9 @@ watch(displayMode, () => {
 .view-control-overlay {
   background-color: rgba(255, 255, 255, 0.8);
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  bottom: 0px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.5em;
 }
 

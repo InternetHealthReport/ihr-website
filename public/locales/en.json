@@ -685,7 +685,7 @@
               "src": "",
               "style": ""
             },
-            "body": "Two formats are available, HTML and JSON. The HTML format allows developers to easily play with the API. The JSON format provides a programmatic access to our reports. The results are formatted in HTML if you access the API with your web browser, JSON is used otherwise."
+            "body": "The JSON format provides a programmatic access to our reports. The results are formatted in JSON for all access methods."
           },
           "2": {
             "header": "Endpoints",
@@ -693,7 +693,7 @@
               "src": "",
               "style": ""
             },
-            "body": "The API is accessible at <a href='/ihr/api/'>http://ihr.iijlab.net/ihr/api/</a>, there are multiple endpoints available, which are documented in the <a href='/en/api'>API documentation</a>."
+            "body": "The API is accessible at <a href='/ihr/api/'>https://www.ihr.live/ihr/api/</a>, there are multiple endpoints available, which are documented in the <a href='/en/api'>API documentation</a>."
           },
           "3": {
             "header": "Filtering",
@@ -701,7 +701,7 @@
               "src": "",
               "style": ""
             },
-            "body": "You can filter your search by adding parameters in the URL. For example: <ul> <li> <a href='https://ihr.iijlab.net/ihr/api/network_delay/?asn=174'> https://ihr.iijlab.net/ihr/api/network_delay/?asn=174</a> returns delay changes only for AS174.  </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712'> https://ihr.iijlab.net/ihr/api/disco/events/?streamname=20712</a> returns network disconnections for AS20712.  </li><li> <a href='https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR'> https://ihr.iijlab.net/ihr/api/disco/events/?streamname=IR</a> returns network disconnections in Iran.  </li></ul> You can also filter results using inequalities. Add the suffix '_gte' and '_lte' for 'greater than or equal' and 'less than or equal'. For example, <a href='https://ihr.iijlab.net/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00'> https://ihr.iijlab.net/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00 </a> returns delay change results for AS174 on June 2017."
+            "body": "You can filter your search by adding parameters in the URL. For example: <ul> <li> <a href='https://www.ihr.live/ihr/api/network_delay/?asn=174'> https://www.ihr.live/ihr/api/network_delay/?asn=174</a> returns delay changes only for AS174.  </li><li> <a href='https://www.ihr.live/ihr/api/disco/events/?streamname=20712'> https://www.ihr.live/ihr/api/disco/events/?streamname=20712</a> returns network disconnections for AS20712.  </li><li> <a href='https://www.ihr.live/ihr/api/disco/events/?streamname=IR'> https://www.ihr.live/ihr/api/disco/events/?streamname=IR</a> returns network disconnections in Iran.  </li></ul> You can also filter results using inequalities. Add the suffix '_gte' and '_lte' for 'greater than or equal' and 'less than or equal'. For example, <a href='https://www.ihr.live/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00'> https://www.ihr.live/ihr/api/network_delay/?asn=174&amp;timebin__gte=2017-06-01T00:00&amp;timebin__lte=2017-07-01T00:00 </a> returns delay change results for AS174 on June 2017."
           },
           "4": {
             "header": "Scripting",
@@ -709,7 +709,7 @@
               "src": "",
               "style": ""
             },
-            "body": "This is a python example to fetch the latest delay change results for AS174 on June 2017: <pre id='cod' style='overflow:auto'><code>import sys{17}import requests\nurl = 'https://ihr.iijlab.net/ihr/api/network_delay/'\nparams=&#123;\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'&#125; \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
+            "body": "This is a python example to fetch the latest delay change results for AS174 on June 2017: <pre id='cod' style='overflow:auto'><code>import sys\nimport requests\nurl = 'https://www.ihr.live/ihr/api/network_delay/'\nparams=&#123;\n    'asn': 174\n    'timebin__gte': '2017-06-01T00:00'\n    'timebin__lte': '2017-07-01T00:00'&#125; \nresp = requests.get(url,params) \nif (resp.ok): \n    data = resp.json()\n    print(data) \nelse: \n    resp.raise_for_status()</code></pre>"
           }
         }
       },
@@ -761,7 +761,7 @@
       },
       "dumps": {
         "title": "Daily dumps",
-        "summary": "For users that need faster access to more IHR data, we also provide daily dumps of IHR database. Please refer to <a href='https://ihr-archive.iijlab.net'> https://ihr-archive.iijlab.net</a>",
+        "summary": "For users that need faster access to more IHR data, we also provide daily dumps of IHR database. Please refer to <a href='https://archive.ihr.live/'> https://archive.ihr.live/</a>",
         "description": {}
       },
       "datapolicy": {
@@ -1192,14 +1192,6 @@
     "subTitle": "Monitor a RIPE Atlas measurement",
     "info": {
       "title": "Traceroute Monitor",
-      "description": ""
-    }
-  },
-  "tracerouteMonitorRtt": {
-    "title": "RTT",
-    "subTitle": "Median RTT over time",
-    "info": {
-      "title": "RTT",
       "description": ""
     }
   },

@@ -1,7 +1,8 @@
 <script setup>
-import { QInput, QCheckbox, QTable, QTd, QTr, QSpinner } from 'quasar'
+import { QInput, QTable, QSpinner } from 'quasar'
 import { ref, computed, watch } from 'vue'
 import '@/styles/chart.css'
+import { ipAddressSortFunction } from '../../plugins/tracerouteFunctions'
 
 const props = defineProps({
   nodes: {
@@ -23,9 +24,30 @@ const props = defineProps({
 
 const emit = defineEmits(['loadMeasurementOnSearchQuery', 'setSelectedProbes'])
 
+const customSort = (rows, sortBy, descending) => {
+  const data = [...rows]
+
+  if (sortBy) {
+    data.sort((a, b) => {
+      const x = descending ? b : a
+      const y = descending ? a : b
+
+      if (sortBy === 'probe') {
+        return +x[sortBy] > +y[sortBy] ? 1 : +x[sortBy] < +y[sortBy] ? -1 : 0
+      } else if (sortBy === 'ipv4') {
+        // IP Sort function
+        return ipAddressSortFunction(x.address_v4, y.address_v4)
+      } else {
+        // regular sort
+        return x[sortBy] > y[sortBy] ? 1 : x[sortBy] < y[sortBy] ? -1 : 0
+      }
+    })
+  }
+
+  return data
+}
+
 const searchQuery = ref('')
-const selectAllProbes = ref(null)
-const selectedProbesModel = ref(props.selectedProbes)
 
 const paginatedProbes = computed(() => {
   const query = searchQuery.value.toLowerCase()
@@ -43,36 +65,48 @@ const paginatedProbes = computed(() => {
     })
 })
 
+const selectedProbesDetailsList = ref([])
+
 const columns = [
-  { name: 'probe', align: 'left', label: 'Probe', field: 'probe' },
-  { name: 'ipv4', align: 'left', label: 'IPv4 Address', field: 'ipv4' },
-  { name: 'ipv6', align: 'left', label: 'IPv6 Address', field: 'ipv6' },
-  { name: 'country_code', align: 'left', label: 'Country Code', field: 'country_code' },
-  { name: 'asn_v4', align: 'left', label: 'ASN4', field: 'asn_v4' },
-  { name: 'asn_v6', align: 'left', label: 'ASN6', field: 'asn_v6' }
+  { name: 'probe', align: 'left', label: 'Probe', field: 'probe', sortable: true },
+  { name: 'ipv4', align: 'left', label: 'IPv4 Address', field: 'address_v4', sortable: true },
+  { name: 'ipv6', align: 'left', label: 'IPv6 Address', field: 'address_v6', sortable: true },
+  {
+    name: 'country_code',
+    align: 'left',
+    label: 'Country Code',
+    field: 'country_code',
+    sortable: true
+  },
+  { name: 'asn_v4', align: 'left', label: 'ASN4', field: 'asn_v4', sortable: true },
+  { name: 'asn_v6', align: 'left', label: 'ASN6', field: 'asn_v6', sortable: true }
 ]
 
-const toggleSelectAll = (value) => {
-  if (value) {
-    emit('setSelectedProbes', props.allProbes)
-  } else {
-    emit('setSelectedProbes', [])
-  }
-}
+watch(
+  [() => props.selectedProbes, () => props.allProbes, () => props.probeDetailsMap],
+  () => {
+    if (!props.allProbes.length) {
+      selectedProbesDetailsList.value = []
+    }
+    paginatedProbes.value.forEach((probe, ind) => {
+      if (
+        props.selectedProbes.includes(probe.probe) &&
+        selectedProbesDetailsList.value.filter((x) => x.probe === probe.probe).length === 0
+      ) {
+        selectedProbesDetailsList.value.push(paginatedProbes.value[ind])
+      }
+    })
+  },
+  { deep: true }
+)
 
-watch([() => props.selectedProbes, () => props.allProbes], () => {
-  selectedProbesModel.value = props.selectedProbes
-  if (props.selectedProbes.length === props.allProbes.length) {
-    selectAllProbes.value = true
-  } else if (props.selectedProbes.length === 0) {
-    selectAllProbes.value = false
-  } else {
-    selectAllProbes.value = null
+watch(selectedProbesDetailsList, (newVal, oldVal) => {
+  if (newVal.length !== oldVal.length) {
+    emit(
+      'setSelectedProbes',
+      selectedProbesDetailsList.value.map((probeDetails) => probeDetails.probe)
+    )
   }
-})
-
-watch(selectedProbesModel, () => {
-  emit('setSelectedProbes', selectedProbesModel.value)
 })
 </script>
 
@@ -82,40 +116,15 @@ watch(selectedProbesModel, () => {
     placeholder="Search..."
     @input="emit('loadMeasurementOnSearchQuery')"
   />
-  <QTable :rows="paginatedProbes" :columns="columns" row-key="probe" flat>
-    <template #header="props">
-      <QTr :props="props">
-        <QTd v-for="col in props.cols" :key="col.name" :props="props.colProps">
-          <template v-if="col.name === 'probe'">
-            <QCheckbox
-              v-model="selectAllProbes"
-              toggle-order="ft"
-              @update:model-value="toggleSelectAll"
-            />
-          </template>
-          <template v-else>
-            {{ col.label }}
-          </template>
-        </QTd>
-      </QTr>
-    </template>
-    <template #body="props">
-      <QTr :props="props">
-        <QTd>
-          <QCheckbox
-            v-model="selectedProbesModel"
-            :val="props.row.probe"
-            :label="props.row.probe"
-          />
-        </QTd>
-        <QTd>{{ props.row.address_v4 }}</QTd>
-        <QTd>{{ props.row.address_v6 }}</QTd>
-        <QTd>{{ props.row.country_code }}</QTd>
-        <QTd>{{ props.row.asn_v4 }}</QTd>
-        <QTd>{{ props.row.asn_v6 }}</QTd>
-      </QTr>
-    </template>
-  </QTable>
+  <QTable
+    v-model:selected="selectedProbesDetailsList"
+    :rows="paginatedProbes"
+    :columns="columns"
+    row-key="probe"
+    flat
+    selection="multiple"
+    :sort-method="customSort"
+  />
   <div v-if="isLoading" class="IHR_loading-spinner">
     <QSpinner color="secondary" size="15em" />
   </div>

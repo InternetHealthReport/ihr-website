@@ -6,7 +6,7 @@ If you believe you have found a security vulnerability in this repository, pleas
 
 **Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**
 
-Instead, please send an email to admin@ihr.live.
+Instead, please email admin@ihr.live.
 
 Please include as much of the information listed below as you can to help us better understand and resolve the issue:
 

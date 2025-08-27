@@ -1,6 +1,17 @@
 <script setup>
 import { ref, inject, watchEffect, watch } from 'vue'
-import { QExpansionItem } from 'quasar'
+import {
+  QExpansionItem,
+  QSeparator,
+  QInput,
+  QBtn,
+  useQuasar,
+  QDialog,
+  QCard,
+  QCardSection,
+  QCardActions,
+  QBadge
+} from 'quasar'
 import dagre from 'dagre'
 import RipeApi from '../plugins/RipeApi'
 import TracerouteChart from '@/components/charts/TracerouteChart.vue'
@@ -11,15 +22,18 @@ import {
   isPrivateIP,
   calculateMedian,
   convertTimeToFormat,
-  convertDateTimeToSeconds
+  convertDateTimeToSeconds,
+  convertUnixTimestamp
 } from '../plugins/tracerouteFunctions'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
+
+const $q = useQuasar()
 
 const props = defineProps({
   atlasMeasurementID: {
     type: String
   },
-  openOptions: {
+  isComponent: {
     type: Boolean,
     default: false
   },
@@ -62,9 +76,14 @@ const asnList = ref([])
 const ipToAsnMap = ref({})
 const rttOverTime = ref([])
 const intervalValue = ref(null)
-const loadMeasurementErrorDialog = ref(false)
-const loadMeasurementErrorMessage = ref('')
 const nodeSet = ref(new Set())
+const measurementIDInput = ref('')
+const fallbackStopTime = ref(Math.floor(Date.now() / 1000))
+const isProbeOverflowAlert = ref(false)
+const showProbeOverflowAlert = ref(false)
+const showErrorOverflowAlert = ref(false)
+const loadMeasurementIDError = ref(false)
+const loadProbesDestinationsError = ref(false)
 
 const startTimestamp = ref(convertDateTimeToSeconds(props.startTime))
 const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
@@ -73,14 +92,9 @@ const stopTimestamp = ref(convertDateTimeToSeconds(props.stopTime))
 const emit = defineEmits([
   'setSelectedDestinations',
   'setSelectedProbes',
-  'probesOverflow',
-  'setSelectedTimeRange'
+  'setSelectedTimeRange',
+  'loadMeasurement'
 ])
-
-const handleLoadMeasurementError = (error) => {
-  loadMeasurementErrorMessage.value = error.message || 'An unexpected error occurred.'
-  loadMeasurementErrorDialog.value = true
-}
 
 const processData = async (tracerouteData, loadProbes = false) => {
   const g = new dagre.graphlib.Graph()
@@ -116,11 +130,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
       isLoadingProbes.value = false
     })
 
-  if (allProbes.value.length > 1000) {
-    emit('probesOverflow', true)
-  } else {
-    emit('probesOverflow', false)
-  }
+  isProbeOverflowAlert.value = allProbes.value.length > 1000
 
   tracerouteData.forEach((probeData, probeIndex) => {
     if (probeData.result[0].error) {
@@ -310,7 +320,9 @@ const updateDisplayedRttValues = () => {
 watch(nodes, updateDisplayedRttValues)
 
 const loadMeasurement = async () => {
+  loadMeasurementIDError.value = false
   measurementID.value = props.atlasMeasurementID
+  measurementIDInput.value = props.atlasMeasurementID
   nodes.value = {}
   edges.value = {}
 
@@ -370,8 +382,10 @@ const loadMeasurement = async () => {
         selectAllDestinations.value = null
       }
     } catch (error) {
-      console.log(error)
-      handleLoadMeasurementError(error)
+      // console.log('Failed to load measurement:', measurementID.value)
+      isLoadingProbes.value = false
+      loadMeasurementIDError.value = true
+      showErrorOverflowAlert.value = true
     } finally {
       isLoadingChart.value = false
       isLoadingRtt.value = false
@@ -381,6 +395,7 @@ const loadMeasurement = async () => {
 }
 
 const loadMeasurementData = async (loadProbes = false) => {
+  loadProbesDestinationsError.value = false
   if (measurementID.value.trim()) {
     isLoadingChart.value = true
     isLoadingRtt.value = true
@@ -395,8 +410,15 @@ const loadMeasurementData = async (loadProbes = false) => {
       const params = {}
 
       if (!timeRange.value.disable) {
-        params.start = timeRange.value.min
-        params.stop = timeRange.value.max
+        if (timeRange.value.min > 0) {
+          params.start = timeRange.value.min
+        }
+
+        if (timeRange.value.max > 0) {
+          params.stop = timeRange.value.max
+        } else {
+          params.stop = fallbackStopTime.value
+        }
       }
 
       if (selectedProbes.value.length > 0) {
@@ -406,7 +428,10 @@ const loadMeasurementData = async (loadProbes = false) => {
 
       processData(data, loadProbes)
     } catch (error) {
-      console.error('Failed to load measurement data:', error)
+      // console.log('Failed to load measurement:', measurementID.value)
+      isLoadingProbes.value = false
+      loadProbesDestinationsError.value = true
+      showErrorOverflowAlert.value = true
     } finally {
       isLoadingChart.value = false
       isLoadingRtt.value = false
@@ -477,9 +502,9 @@ const sortAndCompare = (arrA, arrB) => {
 watchEffect(() => {
   if (selectedProbes.value.length > 0) {
     loadMeasurementOnProbeChange()
-    if (!sortAndCompare(props.probeIDs, selectedProbes.value)) {
-      emit('setSelectedProbes', selectedProbes.value)
-    }
+  }
+  if (!sortAndCompare(props.probeIDs, selectedProbes.value)) {
+    emit('setSelectedProbes', selectedProbes.value)
   }
 })
 
@@ -513,6 +538,25 @@ watch(
   }
 )
 
+watch(
+  allDestinations,
+  () => {
+    $q.notify({
+      message: 'New traceroute destinations have been added.',
+      color: 'primary',
+      position: 'bottom',
+      actions: [
+        {
+          icon: 'close',
+          'aria-label': 'Dismiss',
+          color: 'white'
+        }
+      ]
+    })
+  },
+  { deep: true }
+)
+
 watchEffect(() => {
   if (!timeRange.value.disable) {
     loadMeasurementOnTimeRange(timeRange.value)
@@ -522,8 +566,8 @@ watchEffect(() => {
 watchEffect(() => {
   if (selectedDestinations.value.length > 0) {
     loadMeasurementOnDestinationChange()
-    emit('setSelectedDestinations', selectedDestinations.value)
   }
+  emit('setSelectedDestinations', selectedDestinations.value)
 })
 
 const setSelectedProbes = (value) => {
@@ -547,86 +591,212 @@ watch(
 </script>
 
 <template>
-  <GenericCardController
-    :title="$t('tracerouteMonitorChart.title')"
-    :sub-title="$t('tracerouteMonitorChart.subTitle')"
-    :info-title="$t('tracerouteMonitorChart.info.title')"
-    :info-description="$t('tracerouteMonitorChart.info.description')"
-  >
-    <TracerouteChart
-      :measurement-i-d="measurementID"
-      :is-loading="isLoadingChart"
-      :nodes="nodes"
-      :selected-probes="selectedProbes"
-      :node-size="nodeSize"
-      :edges="edges"
-      :layout-nodes="layoutNodes"
-      :meta-data="metaData"
-      :probe-details-map="probeDetailsMap"
-      :min-displayed-rtt="minDisplayedRtt"
-      :max-displayed-rtt="maxDisplayedRtt"
-      :ip-to-asn-map="ipToAsnMap"
-      :asn-list="asnList"
-      @update-displayed-rtt-values="updateDisplayedRttValues"
-    />
-    <QExpansionItem :default-opened="props.openOptions" icon="tune" label="Options">
-      <GenericCardController
-        :title="$t('tracerouteMonitorRtt.title')"
-        :sub-title="$t('tracerouteMonitorRtt.subTitle')"
-        :info-title="$t('tracerouteMonitorRtt.info.title')"
-        :info-description="$t('tracerouteMonitorRtt.info.description')"
-        class="cardTraceroute"
+  <div>
+    <GenericCardController
+      :title="$t('tracerouteMonitorChart.title')"
+      :sub-title="$t('tracerouteMonitorChart.subTitle')"
+      :info-title="$t('tracerouteMonitorChart.info.title')"
+      :info-description="$t('tracerouteMonitorChart.info.description')"
+    >
+      <div class="row q-mb-md">
+        <div class="col-3 q-mr-md">
+          <div v-if="!props.isComponent" class="row justify-end q-mb-md">
+            <div class="col q-mr-md">
+              <QInput
+                v-model="measurementIDInput"
+                outlined
+                placeholder="RIPE ATLAS traceroute measurement ID"
+                :dense="true"
+                color="accent"
+              />
+            </div>
+            <div class="col-auto">
+              <QBtn
+                label="Load"
+                color="primary"
+                @click="emit('loadMeasurement', measurementIDInput)"
+              />
+            </div>
+          </div>
+          <div v-if="metaData.target">
+            <div class="row justify-between">
+              <div class="col text-h6">
+                <strong>Measurement details:</strong>
+              </div>
+              <div class="col-auto" v-if="isProbeOverflowAlert">
+                <QBtn
+                  @click="showProbeOverflowAlert = true"
+                  icon="warning"
+                  text-color="red"
+                  outline
+                />
+              </div>
+            </div>
+            <div class="row">
+              <ul>
+                <li>
+                  Traceroute to <strong>{{ metaData.target }}</strong
+                  >.
+                  <span v-if="metaData.status?.name"
+                    >This measurement is <strong>{{ metaData.status?.name }}</strong></span
+                  >
+                </li>
+                <li>
+                  Measuring from <strong>{{ convertUnixTimestamp(metaData.start_time) }}</strong> to
+                  <strong>{{ convertUnixTimestamp(metaData.stop_time) }}</strong>
+                  <span v-if="metaData.interval"
+                    >every <strong>{{ metaData.interval }} seconds</strong></span
+                  >
+                </li>
+                <li>
+                  RTT Chart and Network graph covers data from
+                  <strong>{{ convertUnixTimestamp(timeRange.min) }}</strong> to
+                  <strong>{{ convertUnixTimestamp(timeRange.max) }}</strong
+                  >.
+                </li>
+                <li>
+                  Selected probes: {{ selectedProbes.length }} (Out of {{ allProbes.length }})
+                </li>
+                <li>Selected destinations: {{ selectedDestinations.length }}</li>
+              </ul>
+            </div>
+          </div>
+          <div v-else>
+            <div class="text-body2 measurementInputInfo">
+              Please enter a RIPE Atlas Traceroute Measurement from
+              <a href="https://atlas.ripe.net/measurements/public?type=traceroute" target="_blank"
+                >this link</a
+              >
+              in the above input box
+            </div>
+          </div>
+        </div>
+        <QSeparator :vertical="true" />
+        <div class="col q-ml-md">
+          <TracerouteRttChart
+            :interval-value="intervalValue"
+            :is-loading="isLoadingRtt"
+            :time-range="timeRange"
+            :meta-data="metaData"
+            :rtt-over-time="rttOverTime"
+            @load-measurement-on-time-range="loadMeasurementOnTimeRange"
+          />
+        </div>
+      </div>
+      <QSeparator />
+      <TracerouteChart
+        :measurement-i-d="measurementID"
+        :is-loading="isLoadingChart"
+        :nodes="nodes"
+        :selected-probes="selectedProbes"
+        :node-size="nodeSize"
+        :edges="edges"
+        :layout-nodes="layoutNodes"
+        :meta-data="metaData"
+        :probe-details-map="probeDetailsMap"
+        :min-displayed-rtt="minDisplayedRtt"
+        :max-displayed-rtt="maxDisplayedRtt"
+        :ip-to-asn-map="ipToAsnMap"
+        :asn-list="asnList"
+        @update-displayed-rtt-values="updateDisplayedRttValues"
+        class="q-mt-md"
+      />
+      <QExpansionItem
+        :default-opened="!props.isComponent"
+        icon="tune"
+        label="Probes & Destinations"
       >
-        <TracerouteRttChart
-          :interval-value="intervalValue"
-          :is-loading="isLoadingRtt"
-          :time-range="timeRange"
-          :meta-data="metaData"
-          :rtt-over-time="rttOverTime"
-          @load-measurement-on-time-range="loadMeasurementOnTimeRange"
-        />
-      </GenericCardController>
-      <GenericCardController
-        :title="$t('tracerouteMonitorProbes.title')"
-        :sub-title="$t('tracerouteMonitorProbes.subTitle')"
-        :info-title="$t('tracerouteMonitorProbes.info.title')"
-        :info-description="$t('tracerouteMonitorProbes.info.description')"
-        class="cardTraceroute"
-      >
-        <TracerouteProbesTable
-          :nodes="nodes"
-          :all-probes="allProbes"
-          :probe-details-map="probeDetailsMap"
-          :selected-probes="selectedProbes"
-          :is-loading="isLoadingProbes"
-          @set-selected-probes="setSelectedProbes"
-          @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
-        />
-      </GenericCardController>
-      <GenericCardController
-        :title="$t('tracerouteMonitorDestinations.title')"
-        :sub-title="$t('tracerouteMonitorDestinations.subTitle')"
-        :info-title="$t('tracerouteMonitorDestinations.info.title')"
-        :info-description="$t('tracerouteMonitorDestinations.info.description')"
-      >
-        <TracerouteDestinationsTable
-          :nodes="nodes"
-          :all-destinations="allDestinations"
-          :select-all-destinations="selectAllDestinations"
-          :ip-to-asn-map="ipToAsnMap"
-          :selected-destinations="selectedDestinations"
-          :is-loading="isLoadingDestinations"
-          @set-selected-destinations="setSelectedDestinations"
-          @set-select-all-destinations="setSelectAllDestinations"
-          @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
-        />
-      </GenericCardController>
-    </QExpansionItem>
-  </GenericCardController>
+        <GenericCardController
+          :title="$t('tracerouteMonitorProbes.title')"
+          :sub-title="$t('tracerouteMonitorProbes.subTitle')"
+          :info-title="$t('tracerouteMonitorProbes.info.title')"
+          :info-description="$t('tracerouteMonitorProbes.info.description')"
+          class="cardTraceroute"
+        >
+          <TracerouteProbesTable
+            :nodes="nodes"
+            :all-probes="allProbes"
+            :probe-details-map="probeDetailsMap"
+            :selected-probes="selectedProbes"
+            :is-loading="isLoadingProbes"
+            @set-selected-probes="setSelectedProbes"
+            @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
+          />
+        </GenericCardController>
+        <GenericCardController
+          :title="$t('tracerouteMonitorDestinations.title')"
+          :sub-title="$t('tracerouteMonitorDestinations.subTitle')"
+          :info-title="$t('tracerouteMonitorDestinations.info.title')"
+          :info-description="$t('tracerouteMonitorDestinations.info.description')"
+        >
+          <TracerouteDestinationsTable
+            :nodes="nodes"
+            :all-destinations="allDestinations"
+            :select-all-destinations="selectAllDestinations"
+            :ip-to-asn-map="ipToAsnMap"
+            :selected-destinations="selectedDestinations"
+            :is-loading="isLoadingDestinations"
+            @set-selected-destinations="setSelectedDestinations"
+            @set-select-all-destinations="setSelectAllDestinations"
+            @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
+          />
+        </GenericCardController>
+      </QExpansionItem>
+    </GenericCardController>
+    <QDialog v-model="showProbeOverflowAlert">
+      <QCard>
+        <QCardSection>
+          <div class="text-body2">
+            <div class="text-weight-bold">
+              RIPE ATLAS Measurement ID
+              <QBadge color="primary" class="text-weight-bold">{{ measurementID }}</QBadge>
+            </div>
+            This measurement is a large one. Here are a few important points to note about large
+            measurements:
+            <ul>
+              <li>
+                There are more than 1,000 probes involved in this measurement. Currently, the
+                application limits the number of probes displayed to 1,000.
+              </li>
+              <li>
+                Updating the RTT chart's time slider will prompt the application to load a larger
+                amount of data, which may result in increased latency.
+              </li>
+            </ul>
+          </div>
+        </QCardSection>
+        <QCardActions align="right">
+          <QBtn v-close-popup flat label="Close" />
+        </QCardActions>
+      </QCard>
+    </QDialog>
+    <QDialog v-model="showErrorOverflowAlert">
+      <QCard>
+        <QCardSection>
+          <div class="text-body2">
+            <div class="text-weight-bold">
+              RIPE ATLAS Measurement ID
+              <QBadge color="primary" class="text-weight-bold">{{ measurementID }}</QBadge>
+            </div>
+            <div v-if="loadMeasurementIDError">Maybe the measurement does not exist.</div>
+            <div v-if="loadProbesDestinationsError">
+              Maybe the given probes or destinations do not correspond with the given measurement.
+            </div>
+          </div>
+        </QCardSection>
+        <QCardActions align="right">
+          <QBtn v-close-popup flat label="Close" />
+        </QCardActions>
+      </QCard>
+    </QDialog>
+  </div>
 </template>
 
 <style scoped>
 .cardTraceroute {
   margin-bottom: 20px;
+}
+.measurementInputInfo {
+  color: red;
 }
 </style>
