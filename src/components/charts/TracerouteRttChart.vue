@@ -22,9 +22,6 @@ const props = defineProps({
   maxRtt: {
     type: Number
   },
-  oneOffMeasurementMedianRtt: {
-    type: Number
-  },
   timeRange: {
     type: Object
   },
@@ -133,6 +130,15 @@ const filteredRttOverTime = computed(() => {
   })
 })
 
+// Handling one-off measurement's median RTT
+const oneOffMedianRtt = computed(() => {
+  if(props.isOneOff) {
+    return calculateMedian(filteredRttOverTime.value.map(rttObj => rttObj.rtt).filter(rtt => rtt !== null))
+  }
+
+  return 0
+})
+
 // Adjust the width of the QSlider to match the width of the Plotly chart
 const adjustQSliderWidth = (relayout) => {
   if (!sliderWidthInit.value || relayout) {
@@ -196,7 +202,7 @@ watch(filteredRttOverTime, () => {
           Minimum RTT: <strong>{{ minRtt }} ms</strong>
         </li>
         <li class="text-body">
-          Median RTT: <strong>{{ oneOffMeasurementMedianRtt }} ms</strong>
+          Median RTT: <strong>{{ oneOffMedianRtt }} ms</strong>
         </li>
         <li>
           Maximum RTT: <strong>{{ maxRtt }} ms</strong>
