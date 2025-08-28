@@ -94,7 +94,8 @@ const emit = defineEmits([
   'setSelectedDestinations',
   'setSelectedProbes',
   'setSelectedTimeRange',
-  'loadMeasurement'
+  'loadMeasurement',
+  'clearSelectedProbes',
 ])
 
 const processData = async (tracerouteData, loadProbes = false) => {
@@ -510,6 +511,11 @@ watchEffect(() => {
   }
 })
 
+const clearSelectedProbes = () => {
+  selectedProbes.value.length = 0
+  emit('clearSelectedProbes')
+}
+
 watch(
   () => props.probeIDs,
   (newArr, oldArr) => {
@@ -729,6 +735,7 @@ watch(
             :selected-probes="selectedProbes"
             :is-loading="isLoadingProbes"
             @set-selected-probes="setSelectedProbes"
+            @clear-selected-probes="clearSelectedProbes"
             @load-measurement-on-search-query="loadMeasurementOnSearchQuery"
           />
         </GenericCardController>

@@ -22,10 +22,9 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['loadMeasurementOnSearchQuery', 'setSelectedProbes'])
+const emit = defineEmits(['loadMeasurementOnSearchQuery', 'setSelectedProbes', 'clearSelectedProbes'])
 
 const customSort = (rows, sortBy, descending) => {
-  console.log("descending::: ", descending)
   const data = [...rows]
 
   if (sortBy) {
@@ -102,7 +101,10 @@ watch(
 )
 
 watch(selectedProbesDetailsList, (newVal, oldVal) => {
-  if (newVal.length !== oldVal.length) {
+  if(newVal.length === 0) {
+    emit('clearSelectedProbes')
+  }
+  else if (newVal.length !== oldVal.length) {
     emit(
       'setSelectedProbes',
       selectedProbesDetailsList.value.map((probeDetails) => probeDetails.probe)
