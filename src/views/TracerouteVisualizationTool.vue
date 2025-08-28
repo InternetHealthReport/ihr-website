@@ -35,6 +35,11 @@ const onUpdateProbesInRoute = (probeIds) => {
   pushRoute()
 }
 
+const onClearSelectedProbes = () => {
+  probeIDs.value.length = 0
+  pushRoute()
+}
+
 const onUpdateTimeRangeInRoute = ({ startTime: startTimeInput, stopTime: endTimeInput }) => {
   startTime.value = startTimeInput
   stopTime.value = endTimeInput
@@ -102,6 +107,7 @@ onMounted(() => {
       :is-component="false"
       class="q-mb-lg q-mt-lg"
       @set-selected-probes="onUpdateProbesInRoute"
+      @clear-selected-probes="onClearSelectedProbes"
       @set-selected-destinations="onUpdateDestinationsInRoute"
       @set-selected-time-range="onUpdateTimeRangeInRoute"
       @load-measurement="loadMeasurement"
