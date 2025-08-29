@@ -294,6 +294,8 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
 const updateDisplayedRttValues = () => {
   let minRtt = Infinity
+  let maxRtt = -Infinity
+  let destinationNodeMedianRtt = null
 
   Object.values(nodes.value).forEach((node) => {
     if (node.hops && node.hops.length > 0) {
@@ -302,11 +304,20 @@ const updateDisplayedRttValues = () => {
       )
       if (medianRtt !== null) {
         minRtt = Math.min(minRtt, medianRtt)
+        if (node.isLastHop) {
+          destinationNodeMedianRtt = medianRtt
+        }
       }
     }
   })
 
   minDisplayedRtt.value = minRtt === Infinity ? null : minRtt
+  maxDisplayedRtt.value =
+    destinationNodeMedianRtt !== null
+      ? destinationNodeMedianRtt
+      : maxRtt === -Infinity
+        ? null
+        : maxRtt
 }
 
 watch(nodes, updateDisplayedRttValues)
