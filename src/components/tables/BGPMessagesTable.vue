@@ -85,13 +85,23 @@ watch(
   () => props.dataSource,
   () => {
     columns.value = columns.value.filter((col) => col.name !== 'rrc')
+    columns.value = columns.value.filter((col) => col.name !== 'rpki_status')
     if (props.dataSource === 'bgplay') {
       const index = columns.value.findIndex((col) => col.name === 'type') //to put rrc column before type comumn
       const rrcColumn = { name: 'rrc', label: 'RRC', field: 'rrc', align: 'left', sortable: true }
+      const rpkiStatusColumn = {
+        name: 'rpki_status',
+        label: 'RPKI Status',
+        field: 'rpki_status',
+        align: 'left',
+        sortable: true
+      }
       if (index !== -1) {
         columns.value.splice(index, 0, rrcColumn)
+        columns.value.splice(index + 1, 0, rpkiStatusColumn)
       } else {
         columns.value.push(rrcColumn)
+        columns.value.push(rpkiStatusColumn)
       }
     }
   }

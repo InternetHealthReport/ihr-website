@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QSlider, QSpinner } from 'quasar'
+import { QBadge, QBtn, QSlider, QSpinner } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, onMounted, watch } from 'vue'
 import report from '@/plugins/report'
@@ -44,8 +44,12 @@ const props = defineProps({
     default: () => []
   },
   announcementsPeersTraces: {
-    type: Array,
-    default: () => []
+    type: Object,
+    default: () => ({})
+  },
+  rpkiStatusTraces: {
+    type: Object,
+    default: () => ({})
   },
   currentIndex: {
     type: Number,
@@ -68,6 +72,7 @@ const { utcString } = report()
 
 const announcementsAndWithdrawnChartData = ref([])
 const announcementsPeersChartData = ref([])
+const rpkiStatusChartData = ref([])
 
 const selectedMaxTimestamp = ref(0)
 const sliderWidthInit = ref(false)
@@ -87,7 +92,9 @@ const updateTimeRange = () => {
   }
 }
 
-const layout = {
+let shapes = []
+
+const defaultLayout = {
   legend: {
     orientation: 'h',
     y: 1.1,
@@ -96,8 +103,24 @@ const layout = {
     yanchor: 'bottom'
   },
   showlegend: true,
-  yaxis: { rangemode: 'tozero' },
-  shapes: []
+  yaxis: { rangemode: 'tozero' }
+}
+
+const lineChartLayout = {
+  ...defaultLayout,
+  hovermode: 'x'
+}
+
+const rpkiLayout = {
+  ...defaultLayout,
+  height: 500,
+  barmode: 'stack',
+  yaxis: {
+    tickfont: {
+      size: 8
+    },
+    dtick: 1
+  }
 }
 
 const renderAnnouncementsAndWithdrawnChart = async (
@@ -135,21 +158,51 @@ const renderAnnouncementsAndWithdrawnChart = async (
 }
 
 const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) => {
-  const data = [
-    {
+  const data = []
+  let colorIndex = 0
+
+  for (const [asn, yValues] of Object.entries(announcementsPeersTraces)) {
+    colorIndex++
+    data.push({
       x: dates,
-      y: announcementsPeersTraces,
-      type: 'scattergl',
-      fill: 'tozeroy',
-      fillcolor: 'rgba(58, 160, 44, 0.5)',
-      marker: {
-        color: 'rgba(58, 160, 44, 0.5)'
-      },
+      y: yValues,
+      stackgroup: 'one',
+      type: 'scatter',
       mode: 'markers',
-      name: 'BGP Sources'
-    }
-  ]
+      name: `AS${asn}`
+    })
+  }
   announcementsPeersChartData.value = data
+}
+
+const renderRpkiStatusChart = async (rpkiStatusTraces) => {
+  const data = []
+
+  for (const [status, { y, x, base, peer_asn, origin_asn }] of Object.entries(rpkiStatusTraces)) {
+    data.push({
+      type: 'bar',
+      orientation: 'h',
+      y,
+      x,
+      base,
+      hovertext: origin_asn,
+      customdata: peer_asn,
+      hovertemplate: 'AS%{customdata} (%{y})<br>' + 'Origin: AS%{hovertext}<extra></extra>',
+      width: 0.9,
+      name: 'RPKI ' + status,
+      marker: {
+        color:
+          status === 'Valid'
+            ? '#55b748' // green
+            : status === 'Invalid (More Specific)'
+              ? '#db2b27' // red
+              : status === 'Invalid (No Matching Origin)'
+                ? '#db2b27' // red
+                : '#fdbf11' // yellow
+      }
+    })
+  }
+  rpkiStatusChartData.value = data
 }
 
 // Handle click event on the Plotly chart
@@ -165,7 +218,7 @@ const handlePlotlyClick = (event) => {
 // Add a vertical line to the chart at the given timestamp
 const addVerticalLine = (timestamp) => {
   const x = new Date(timestamp * 1000).toISOString()
-  layout.shapes = [
+  shapes = [
     {
       type: 'line',
       x0: x,
@@ -175,7 +228,7 @@ const addVerticalLine = (timestamp) => {
       xref: 'x',
       yref: 'paper',
       line: {
-        color: 'red',
+        color: '#800080', // purple
         width: 2,
         dash: 'dashdot'
       }
@@ -218,6 +271,7 @@ const init = async () => {
     props.withdrawalsTrace
   )
   await renderAnnouncementsPeersChart(props.datesTrace, props.announcementsPeersTraces)
+  await renderRpkiStatusChart(props.rpkiStatusTraces)
   adjustQSliderWidth(false)
   if (props.dataSource === 'bgplay') {
     updateSlider(selectedMaxTimestamp.value)
@@ -229,7 +283,7 @@ watch(
   () => props.isLiveMode,
   () => {
     if (props.isLiveMode) {
-      layout.shapes = []
+      shapes = []
       updateTimeRange()
     }
   }
@@ -240,7 +294,8 @@ watch(
     () => props.datesTrace,
     () => props.announcementsTrace,
     () => props.withdrawalsTrace,
-    () => props.announcementsPeersTraces
+    () => props.announcementsPeersTraces,
+    () => props.rpkiStatusTraces
   ],
   () => {
     init()
@@ -282,36 +337,45 @@ onMounted(() => {
     <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>
-    <div v-if="dataSource === 'ris-live'">
+    <div v-if="dataSource === 'ris-live'" class="q-mb-md">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>
-    <ReactiveChart
-      :layout="layout"
-      :traces="announcementsAndWithdrawnChartData"
-      :shapes="layout.shapes"
-      @plotly-click="handlePlotlyClick"
-      @plotly-relayout="adjustQSliderWidth(true)"
-    />
-
-    <ReactiveChart
-      :layout="layout"
-      :traces="announcementsPeersChartData"
-      :shapes="layout.shapes"
-      @plotly-click="handlePlotlyClick"
-      @plotly-relayout="adjustQSliderWidth(true)"
-    />
     <div class="timetampSlider">
-      <div class="timeStampControls">
-        <span v-if="dataSource === 'ris-live'"
-          >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages</span
-        >
-        <span v-else
-          >Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State and
-          Events)</span
-        >
-      </div>
       <div class="timetampSliderContainer">
+        <div class="row timestampInfo">
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div class="text-body2">
+                Min Timestamp:
+                {{
+                  props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
+                }}
+              </div>
+            </QBadge>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div v-if="dataSource === 'ris-live'" class="text-body2">
+                Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages
+              </div>
+              <div v-else class="text-body2">
+                Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State
+                and Events)
+              </div>
+            </QBadge>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div class="text-body2">
+                Max Timestamp:
+                {{
+                  props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
+                }}
+              </div>
+            </QBadge>
+          </div>
+        </div>
         <QSlider
           v-model="selectedMaxTimestamp"
           :min="props.minTimestamp === Infinity ? 0 : props.minTimestamp"
@@ -320,25 +384,34 @@ onMounted(() => {
           :label-value="
             props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
           "
+          switch-label-side
           color="accent"
           @update:model-value="updateSlider($event, true)"
         />
-        <div class="timestampInfo">
-          <span
-            >Min Timestamp:
-            {{
-              props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
-            }}</span
-          >
-          <span
-            >Max Timestamp:
-            {{
-              props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
-            }}</span
-          >
-        </div>
       </div>
     </div>
+    <ReactiveChart
+      :layout="lineChartLayout"
+      :traces="announcementsPeersChartData"
+      :shapes="shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
+    <ReactiveChart
+      :layout="lineChartLayout"
+      :traces="announcementsAndWithdrawnChartData"
+      :shapes="shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
+    <ReactiveChart
+      v-if="dataSource === 'bgplay'"
+      :layout="rpkiLayout"
+      :traces="rpkiStatusChartData"
+      :shapes="shapes"
+      @plotly-click="handlePlotlyClick"
+      @plotly-relayout="adjustQSliderWidth(true)"
+    />
   </div>
 </template>
 
@@ -371,6 +444,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
 }
 .loadingContainer {
   height: 60px;
