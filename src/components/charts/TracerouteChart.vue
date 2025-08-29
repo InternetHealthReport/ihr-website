@@ -110,6 +110,7 @@ const eventHandlers = {
   'node:pointerout': () => {},
   'view:click': () => {
     clearHighlight()
+    selectedNode.value = null
     tooltipOpacity.value = 0
   },
   'node:pointerdown': async ({ node }) => {
