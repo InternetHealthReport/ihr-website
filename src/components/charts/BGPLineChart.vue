@@ -92,7 +92,9 @@ const updateTimeRange = () => {
   }
 }
 
-const layout = {
+let shapes = []
+
+const defaultLayout = {
   legend: {
     orientation: 'h',
     y: 1.1,
@@ -101,27 +103,24 @@ const layout = {
     yanchor: 'bottom'
   },
   showlegend: true,
-  yaxis: { rangemode: 'tozero' },
-  shapes: []
+  yaxis: { rangemode: 'tozero' }
+}
+
+const lineChartLayout = {
+  ...defaultLayout,
+  hovermode: 'x'
 }
 
 const rpkiLayout = {
+  ...defaultLayout,
+  height: 500,
   barmode: 'stack',
-  showlegend: true,
-  legend: {
-    orientation: 'h',
-    y: 1.1,
-    x: 0.5,
-    xanchor: 'center',
-    yanchor: 'bottom'
-  },
   yaxis: {
     tickfont: {
       size: 8
     },
     dtick: 1
-  },
-  height: 500
+  }
 }
 
 const renderAnnouncementsAndWithdrawnChart = async (
@@ -158,26 +157,11 @@ const renderAnnouncementsAndWithdrawnChart = async (
   announcementsAndWithdrawnChartData.value = data
 }
 
-const colors = [
-  'rgba(44, 160, 44, 0.5)', // cooked asparagus green
-  'rgba(236, 112, 99, 0.5)', // pink
-  'rgba(31, 119, 180, 0.5)', // muted blue
-  'rgba(255, 127, 14, 0.5)', // safety orange
-  'rgba(214, 39, 40, 0.5)', // brick red
-  'rgba(148, 103, 189, 0.5)', // muted purple
-  'rgba(140, 86, 75, 0.5)', // chestnut brown
-  'rgba(127, 127, 127, 0.5)', // middle gray
-  'rgba(227, 119, 194, 0.5)', // raspberry yogurt pink
-  'rgba(188, 189, 34, 0.5)', // curry yellow-green
-  'rgba(23, 190, 207, 0.5)' // blue-teal
-]
-
 const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) => {
   const data = []
   let colorIndex = 0
 
   for (const [asn, yValues] of Object.entries(announcementsPeersTraces)) {
-    const color = colors[colorIndex % colors.length]
     colorIndex++
     data.push({
       x: dates,
@@ -185,8 +169,7 @@ const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) =>
       stackgroup: 'one',
       type: 'scatter',
       mode: 'markers',
-      marker: { color },
-      name: `ASN ${asn}`
+      name: `AS${asn}`
     })
   }
   announcementsPeersChartData.value = data
@@ -195,16 +178,16 @@ const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) =>
 const renderRpkiStatusChart = async (rpkiStatusTraces) => {
   const data = []
 
-  for (const [status, { y, x, base, text }] of Object.entries(rpkiStatusTraces)) {
+  for (const [status, { y, x, base, peer_asn, origin_asn }] of Object.entries(rpkiStatusTraces)) {
     data.push({
       type: 'bar',
       orientation: 'h',
       y,
       x,
       base,
-      hovertext: text,
-      hoverinfo: 'text',
-      hovertemplate: 'Peer: %{y}<br>Origin: AS%{hovertext}<extra></extra>',
+      hovertext: origin_asn,
+      customdata: peer_asn,
+      hovertemplate: 'AS%{customdata} (%{y})<br>' + 'Origin: AS%{hovertext}<extra></extra>',
       width: 0.9,
       name: 'RPKI ' + status,
       marker: {
@@ -235,7 +218,7 @@ const handlePlotlyClick = (event) => {
 // Add a vertical line to the chart at the given timestamp
 const addVerticalLine = (timestamp) => {
   const x = new Date(timestamp * 1000).toISOString()
-  layout.shapes = [
+  shapes = [
     {
       type: 'line',
       x0: x,
@@ -245,7 +228,7 @@ const addVerticalLine = (timestamp) => {
       xref: 'x',
       yref: 'paper',
       line: {
-        color: 'red',
+        color: '#800080', // purple
         width: 2,
         dash: 'dashdot'
       }
@@ -300,7 +283,7 @@ watch(
   () => props.isLiveMode,
   () => {
     if (props.isLiveMode) {
-      layout.shapes = []
+      shapes = []
       updateTimeRange()
     }
   }
@@ -408,16 +391,16 @@ onMounted(() => {
       </div>
     </div>
     <ReactiveChart
-      :layout="layout"
+      :layout="lineChartLayout"
       :traces="announcementsPeersChartData"
-      :shapes="layout.shapes"
+      :shapes="shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
     <ReactiveChart
-      :layout="layout"
+      :layout="lineChartLayout"
       :traces="announcementsAndWithdrawnChartData"
-      :shapes="layout.shapes"
+      :shapes="shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
@@ -425,7 +408,7 @@ onMounted(() => {
       v-if="dataSource === 'bgplay'"
       :layout="rpkiLayout"
       :traces="rpkiStatusChartData"
-      :shapes="layout.shapes"
+      :shapes="shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />

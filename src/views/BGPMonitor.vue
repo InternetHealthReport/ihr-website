@@ -313,6 +313,7 @@ const processResData = (data) => {
       timestamp: data.timestamp,
       type: data.type,
       peer: data.peer,
+      peer_asn: data.peer_asn,
       origin_asn: data.path.length ? data.path[data.path.length - 1] : null
     })
     generateLineChartTrace()
@@ -349,6 +350,7 @@ const processResData = (data) => {
       const type = addBGPMessageType('I') // Manually Assigning 'I' for Initial State
       const path = event.path || []
       const originASN = path.length ? path[path.length - 1] : null
+      const peer_asn = peerInfo.as_number
       const { status } = getRPKIStatus(originASN, minTimestamp.value)
 
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
@@ -357,6 +359,7 @@ const processResData = (data) => {
         timestamp: minTimestamp.value,
         type: type,
         peer: peer,
+        peer_asn: peer_asn,
         origin_asn: originASN
       })
 
@@ -383,12 +386,14 @@ const processResData = (data) => {
       const type = addBGPMessageType(event.type)
       const path = event.attrs.path || []
       const originASN = path.length ? path[path.length - 1] : null
+      const peer_asn = peerInfo.as_number
       const { status } = getRPKIStatus(originASN, timestamp)
 
       generateLineChartData({
         timestamp: timestamp,
         type: type,
         peer: peer,
+        peer_asn: peer_asn,
         origin_asn: originASN
       })
 
@@ -412,7 +417,7 @@ const processResData = (data) => {
 }
 
 const generateLineChartData = (data) => {
-  const { timestamp, peer, type, origin_asn } = data
+  const { timestamp, peer, type, origin_asn, peer_asn } = data
 
   if (dataSource.value === 'bgplay') {
     uniqueEventTimestamps.add(timestamp)
@@ -432,22 +437,23 @@ const generateLineChartData = (data) => {
 
   function updateRpkiByTimestamp() {
     if (dataSource.value === 'bgplay') {
-      rpkiPeerToOrigin[peer] ??= []
-      const oldData = rpkiPeerToOrigin[peer][rpkiPeerToOrigin[peer].length - 1]
+      const key = `${peer_asn}-${peer}`
+      rpkiPeerToOrigin[key] ??= []
+      const oldData = rpkiPeerToOrigin[key][rpkiPeerToOrigin[key].length - 1]
       if (type === 'Withdraw') {
         if (oldData && oldData.timestamp === timestamp) {
-          rpkiPeerToOrigin[peer].pop()
+          rpkiPeerToOrigin[key].pop()
         }
-        rpkiPeerToOrigin[peer].push({
+        rpkiPeerToOrigin[key].push({
           origin_asn: 0,
           timestamp: timestamp
         })
       } else {
         if (!oldData || oldData.origin_asn !== origin_asn) {
           if (oldData && oldData.timestamp === timestamp) {
-            rpkiPeerToOrigin[peer].pop()
+            rpkiPeerToOrigin[key].pop()
           }
-          rpkiPeerToOrigin[peer].push({
+          rpkiPeerToOrigin[key].push({
             origin_asn: origin_asn,
             timestamp: timestamp
           })
@@ -545,7 +551,8 @@ const generateLineChartTrace = () => {
   }
 
   function generateRpkiChartData() {
-    for (const [peer, origins] of Object.entries(rpkiPeerToOrigin)) {
+    for (const [key, origins] of Object.entries(rpkiPeerToOrigin)) {
+      const [peer_asn, peer] = key.split('-')
       const check_timestamps = vrp_timestamps
         .concat(origins)
         .sort((a, b) => a.timestamp - b.timestamp)
@@ -588,11 +595,12 @@ const generateLineChartTrace = () => {
 
       function addData(timestamp) {
         const duration = timestamp - current_range_start - 1
-        rsTrace[current_status] ??= { y: [], x: [], base: [], text: [] }
+        rsTrace[current_status] ??= { y: [], x: [], base: [], peer_asn: [], origin_asn: [] }
         rsTrace[current_status].y.push(peer)
         rsTrace[current_status].x.push(timestampToUTC(duration))
         rsTrace[current_status].base.push(timestampToUTC(current_range_start))
-        rsTrace[current_status].text.push(current_origin)
+        rsTrace[current_status].peer_asn.push(peer_asn)
+        rsTrace[current_status].origin_asn.push(current_origin)
       }
     }
   }
