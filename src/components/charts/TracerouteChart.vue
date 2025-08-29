@@ -110,6 +110,7 @@ const eventHandlers = {
   'node:pointerout': () => {},
   'view:click': () => {
     clearHighlight()
+    selectedNode.value = null
     tooltipOpacity.value = 0
   },
   'node:pointerdown': async ({ node }) => {
@@ -412,25 +413,6 @@ watch(displayMode, () => {
           ]"
         />
       </div>
-      <div class="q-mt-md">
-        <QBtn
-          v-if="displayMode === 'asn'"
-          label="ASN Overlay"
-          @click="showAsnOverlay = !showAsnOverlay"
-        />
-      </div>
-    </div>
-    <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="rtt-info-overlay">
-      <div>
-        <span class="rtt-dot" :style="{ backgroundColor: rttColor(minDisplayedRtt) }" />
-        <strong>Min RTT: </strong
-        >{{ minDisplayedRtt ? minDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
-      </div>
-      <div>
-        <span class="rtt-dot" :style="{ backgroundColor: rttColor(maxDisplayedRtt) }" />
-        <strong>Max RTT: </strong
-        >{{ maxDisplayedRtt ? maxDisplayedRtt.toFixed(3) + ' ms' : 'Not available' }}
-      </div>
     </div>
     <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
       <div class="row items-center">
@@ -438,7 +420,7 @@ watch(displayMode, () => {
           <div class="rttLabel">RTT</div>
         </div>
         <div class="col">
-          <div class="scaleLabel">{{ maxDisplayedRtt.toFixed(3) }}</div>
+          <div class="scaleLabel">{{ `${maxDisplayedRtt.toFixed(3)}ms` }}</div>
           <div class="scale">
             <div
               v-for="(percentage, index) in Array.from(
@@ -450,23 +432,7 @@ watch(displayMode, () => {
               :style="{ backgroundColor: rttColor(percentage, (shouldCompliment = false)) }"
             ></div>
           </div>
-          <div class="scaleLabel">{{ minDisplayedRtt.toFixed(3) }}</div>
-        </div>
-      </div>
-    </div>
-    <div
-      v-if="displayMode === 'asn' && Object.keys(nodes).length > 0 && showAsnOverlay"
-      class="asn-info-overlay"
-      :style="{ width: `${Math.min(filteredAsnList.length * 120, 1100)}px` }"
-    >
-      <div class="asn-grid">
-        <div
-          v-for="asn in filteredAsnList"
-          :key="asn"
-          :style="{ backgroundColor: asnColors[asn] }"
-          class="asn-box"
-        >
-          <a class="asn-link" :href="'/en/network/AS' + asn" target="_blank">AS{{ asn }}</a>
+          <div class="scaleLabel">{{ `${minDisplayedRtt.toFixed(3)}ms` }}</div>
         </div>
       </div>
     </div>
@@ -576,7 +542,6 @@ watch(displayMode, () => {
 .scaleLabel {
   font-size: 14px;
   text-align: center;
-  margin-left: 12%;
 }
 
 .scaleColor {
