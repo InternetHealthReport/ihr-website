@@ -4,6 +4,8 @@ import ReactiveChart from './ReactiveChart.vue'
 import { ref, onMounted, watch } from 'vue'
 import report from '@/plugins/report'
 import '@/styles/chart.css'
+import BGPVrpsTable from '../tables/BGPVrpsTable.vue'
+import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const props = defineProps({
   rawMessages: {
@@ -55,6 +57,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  vrpTableData: {
+    type: Array,
+    default: () => []
+  },
   currentIndex: {
     type: Number,
     default: -1
@@ -96,8 +102,6 @@ const updateTimeRange = () => {
   }
 }
 
-let shapes = []
-
 const defaultLayout = {
   legend: {
     orientation: 'h',
@@ -106,6 +110,7 @@ const defaultLayout = {
     xanchor: 'center',
     yanchor: 'bottom'
   },
+  shapes: [],
   showlegend: true,
   yaxis: { rangemode: 'tozero' }
 }
@@ -222,7 +227,7 @@ const handlePlotlyClick = (event) => {
 // Add a vertical line to the chart at the given timestamp
 const addVerticalLine = (timestamp) => {
   const x = new Date(timestamp * 1000).toISOString()
-  shapes = [
+  const shapes = [
     {
       type: 'line',
       x0: x,
@@ -238,6 +243,8 @@ const addVerticalLine = (timestamp) => {
       }
     }
   ]
+  lineChartLayout.shapes = shapes
+  rpkiLayout.shapes = shapes
 }
 
 const enableLiveMode = () => {
@@ -287,7 +294,8 @@ watch(
   () => props.isLiveMode,
   () => {
     if (props.isLiveMode) {
-      shapes = []
+      lineChartLayout.shapes = []
+      rpkiLayout.shapes = []
       updateTimeRange()
     }
   }
@@ -397,14 +405,14 @@ onMounted(() => {
     <ReactiveChart
       :layout="lineChartLayout"
       :traces="announcementsPeersChartData"
-      :shapes="shapes"
+      :shapes="lineChartLayout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
     <ReactiveChart
       :layout="lineChartLayout"
       :traces="announcementsAndWithdrawnChartData"
-      :shapes="shapes"
+      :shapes="lineChartLayout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
@@ -416,11 +424,21 @@ onMounted(() => {
       <ReactiveChart
         :layout="rpkiLayout"
         :traces="rpkiStatusChartData"
-        :shapes="shapes"
+        :shapes="rpkiLayout.shapes"
         @plotly-click="handlePlotlyClick"
         @plotly-relayout="adjustQSliderWidth(true)"
       />
     </div>
+    <GenericCardController
+      v-if="dataSource === 'bgplay'"
+      :title="$t('bgpVrpsTable.title')"
+      :sub-title="$t('bgpVrpsTable.subTitle')"
+      :info-title="$t('bgpVrpsTable.info.title')"
+      :info-description="$t('bgpVrpsTable.info.description')"
+      class="q-mt-lg"
+    >
+      <BGPVrpsTable :vrpTableData="props.vrpTableData" />
+    </GenericCardController>
   </div>
 </template>
 

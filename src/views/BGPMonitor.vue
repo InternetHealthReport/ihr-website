@@ -87,6 +87,7 @@ const usingIndex = ref(false)
 let vrps = []
 let vrp_timestamps = []
 const isNoVrpData = ref(false)
+const vrpTableData = ref([])
 
 const isHidden = ref(false)
 const myElement = ref(null)
@@ -154,6 +155,7 @@ const resetData = () => {
   vrps = []
   vrp_timestamps = []
   isNoVrpData.value = false
+  vrpTableData.value = []
 }
 
 // Initialize the route
@@ -162,18 +164,13 @@ const initRoute = () => {
 
   const queryPrefix = route.query.prefix?.trim()
   const queryDataSource = route.query['data-source']?.trim()
-  const queryRrc = Number(route.query.rrc?.trim())
-  const queryRrcs = route.query.rrcs
-    ?.trim()
-    .split(',')
-    .map(Number)
-    .filter((n) => !isNaN(n))
+  const queryRrc = route.query.rrc?.trim()
+  const queryRrcs = route.query.rrcs?.trim()
 
   const queryStartTime = route.query['start-time']?.trim()
   const queryEndTime = route.query['end-time']?.trim()
 
   if (queryPrefix) {
-    console.log(`Query Prefix: ${queryPrefix}`)
     params.value.prefix = queryPrefix
     normalizedPrefix.value = normalizePrefix(queryPrefix, true)
   } else {
@@ -187,13 +184,17 @@ const initRoute = () => {
 
   if (dataSource.value === 'ris-live') {
     if (queryRrc) {
-      params.value.host = queryRrc
+      const num = Number(queryRrc)
+      params.value.host = isNaN(num) ? '' : num
     } else {
       query.rrc = params.value.host
     }
   } else {
     if (queryRrcs) {
       rrcs.value = queryRrcs
+        .split(',')
+        .map(Number)
+        .filter((rrc) => !isNaN(rrc))
     } else {
       query.rrcs = rrcs.value.join(',')
     }
@@ -752,9 +753,25 @@ const handleFilterMessages = (data) => {
   filteredMessages.value = Array.from(uniquePeerMessages.values())
 }
 
+const handleVrpTableData = () => {
+  if (dataSource.value === 'ris-live') return
+  let tableData = []
+  for (const vrp of vrps) {
+    if (
+      selectedMaxTimestamp.value < vrp.unixVisibleFrom ||
+      selectedMaxTimestamp.value > vrp.unixVisibleTo
+    ) {
+      continue
+    }
+    tableData.push(vrp)
+  }
+  vrpTableData.value = tableData
+}
+
 const setSelectedMaxTimestamp = (val) => {
   selectedMaxTimestamp.value = val
   handleFilterMessages()
+  handleVrpTableData()
 }
 
 const disableLiveMode = () => {
@@ -999,13 +1016,15 @@ const getCoveringVrpsForPrefix = async () => {
       }
     })
 
-    res.data.map((vrp) => {
+    res.data.map((vrp, i) => {
+      const [ip, prefixLength] = vrp.prefix.split('/')
       const data = {
         ...vrp,
-        unixVisible: {
-          from: timestampToUnix(vrp.visible.from.split('+')[0]),
-          to: timestampToUnix(vrp.visible.to.split('+')[0])
-        }
+        id: i,
+        ip,
+        prefixLength: Number(prefixLength),
+        unixVisibleFrom: timestampToUnix(vrp.visible.from.split('+')[0]),
+        unixVisibleTo: timestampToUnix(vrp.visible.to.split('+')[0])
       }
       vrps.push(data)
     })
@@ -1016,8 +1035,8 @@ const getCoveringVrpsForPrefix = async () => {
       const vrpTimestamps = new Set()
 
       for (const vrp of vrpData) {
-        const visibleFrom = vrp.unixVisible.from
-        const visibleTo = vrp.unixVisible.to + 1 // add +1 second
+        const visibleFrom = vrp.unixVisibleFrom
+        const visibleTo = vrp.unixVisibleTo + 1 // add +1 second
 
         if (visibleFrom >= startTimeUnix && visibleFrom <= endTimeUnix) {
           vrpTimestamps.add(visibleFrom)
@@ -1050,7 +1069,7 @@ const getRPKIStatus = (asn, timestamp) => {
   let same_origin_asn_found = false
 
   for (const vrp of vrps) {
-    if (timestamp < vrp.unixVisible.from || timestamp > vrp.unixVisible.to) {
+    if (timestamp < vrp.unixVisibleFrom || timestamp > vrp.unixVisibleTo) {
       continue
     }
     covering_vrp_exists = true
@@ -1412,6 +1431,7 @@ onUnmounted(() => {
         :announcements-peers-traces="announcementsPeersTraces"
         :rpki-status-traces="rpkiStatusTraces"
         :is-no-vrp-data="isNoVrpData"
+        :vrp-table-data="vrpTableData"
         :current-index="currentIndex"
         :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
