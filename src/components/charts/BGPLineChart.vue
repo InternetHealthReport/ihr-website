@@ -51,6 +51,10 @@ const props = defineProps({
     type: Object,
     default: () => ({})
   },
+  isNoVrpData: {
+    type: Boolean,
+    default: false
+  },
   currentIndex: {
     type: Number,
     default: -1
@@ -331,7 +335,7 @@ onMounted(() => {
       <QSpinner color="secondary" size="15em" />
     </div>
   </div>
-  <div class="noData" v-if="rawMessages.length === 0">
+  <div class="text-center" v-if="rawMessages.length === 0">
     <h1 v-if="!isLoadingBgplayData">No data available</h1>
     <h3 v-if="dataSource === 'ris-live'">Try Changing the Input Parameters or you can wait</h3>
     <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
@@ -404,21 +408,23 @@ onMounted(() => {
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
-    <ReactiveChart
-      v-if="dataSource === 'bgplay'"
-      :layout="rpkiLayout"
-      :traces="rpkiStatusChartData"
-      :shapes="shapes"
-      @plotly-click="handlePlotlyClick"
-      @plotly-relayout="adjustQSliderWidth(true)"
-    />
+    <div v-if="dataSource === 'bgplay'" class="relative-position">
+      <div v-if="isNoVrpData" class="absolute-center text-center" style="z-index: 9">
+        <h1>No RPKI Data Available</h1>
+        <h3>Requested timerange is outside of available data.</h3>
+      </div>
+      <ReactiveChart
+        :layout="rpkiLayout"
+        :traces="rpkiStatusChartData"
+        :shapes="shapes"
+        @plotly-click="handlePlotlyClick"
+        @plotly-relayout="adjustQSliderWidth(true)"
+      />
+    </div>
   </div>
 </template>
 
 <style>
-.noData {
-  text-align: center;
-}
 .timetampSlider {
   display: flex;
   flex-direction: column;

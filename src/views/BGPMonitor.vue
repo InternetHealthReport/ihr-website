@@ -86,6 +86,7 @@ const usingIndex = ref(false)
 
 let vrps = []
 let vrp_timestamps = []
+const isNoVrpData = ref(false)
 
 const isHidden = ref(false)
 const myElement = ref(null)
@@ -152,6 +153,7 @@ const resetData = () => {
   normalizedPrefixLength = null
   vrps = []
   vrp_timestamps = []
+  isNoVrpData.value = false
 }
 
 // Initialize the route
@@ -520,7 +522,9 @@ const generateLineChartTrace = () => {
     for (const t of timestamps) {
       createTimestampTrace(t)
     }
-    generateRpkiChartData()
+    if (isNoVrpData.value === false) {
+      generateRpkiChartData()
+    }
   }
 
   function createTimestampTrace(t) {
@@ -1028,12 +1032,18 @@ const getCoveringVrpsForPrefix = async () => {
         .map((t) => ({ origin_asn: -1, timestamp: t }))
     }
   } catch (error) {
+    if (error.response && error.response.status === 404) {
+      isNoVrpData.value = true
+      console.warn(error.response.data)
+      return
+    }
     console.error('Error fetching VRPs:', error)
   }
 }
 
 const getRPKIStatus = (asn, timestamp) => {
   if (!asn || !timestamp) return { status: 'Null' }
+  if (isNoVrpData.value) return { status: 'No Data' }
   if (!vrps || vrps.length === 0) return { status: 'Not Found' }
 
   let covering_vrp_exists = false
@@ -1401,6 +1411,7 @@ onUnmounted(() => {
         :withdrawals-trace="withdrawalsTrace"
         :announcements-peers-traces="announcementsPeersTraces"
         :rpki-status-traces="rpkiStatusTraces"
+        :is-no-vrp-data="isNoVrpData"
         :current-index="currentIndex"
         :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
