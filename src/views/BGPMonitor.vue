@@ -31,6 +31,8 @@ import Feedback from '@/components/Feedback.vue'
 import { Address6, Address4 } from 'ip-address'
 import report from '@/plugins/report'
 
+const RIS_LIVE_UNSUPPORTED_RRCS = [2, 8, 9, 17]
+
 const ripe_api = inject('ripe_api')
 const rpki_api = inject('rpki_api')
 
@@ -1225,6 +1227,7 @@ onUnmounted(() => {
                       v-model="startTime"
                       class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                      outlined
                     >
                       <template v-slot:append>
                         <QIcon name="event" class="cursor-pointer">
@@ -1245,6 +1248,7 @@ onUnmounted(() => {
                       v-model="endTime"
                       class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                      outlined
                     >
                       <template v-slot:append>
                         <QIcon name="event" class="cursor-pointer">
@@ -1264,8 +1268,8 @@ onUnmounted(() => {
                   <div v-if="dataSource === 'ris-live'" class="col-2">
                     <QSelect
                       v-model="params.host"
-                      filled
-                      :options="rrcLocations"
+                      outlined
+                      :options="rrcLocations.filter((val) => !RIS_LIVE_UNSUPPORTED_RRCS.includes(val.value))"
                       label="RRC"
                       emit-value
                       :dense="true"
@@ -1275,7 +1279,7 @@ onUnmounted(() => {
                   </div>
                   <div v-else class="col-2">
                     <QSelect
-                      filled
+                      outlined
                       :dense="true"
                       v-model="rrcs"
                       multiple
