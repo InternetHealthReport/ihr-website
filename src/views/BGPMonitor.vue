@@ -3,7 +3,6 @@ import {
   QBtn,
   QSelect,
   QInput,
-  QSlider,
   uid,
   QDialog,
   QCard,
@@ -18,7 +17,7 @@ import {
   QMarkupTable,
   QBadge
 } from 'quasar'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
@@ -35,7 +34,6 @@ import report from '@/plugins/report'
 const { t } = i18n.global
 const { utcString } = report()
 
-const maxHops = ref(9)
 const isPlaying = ref(false)
 const rrcList = ref([])
 const disableButton = ref(false)
@@ -53,8 +51,10 @@ const asNames = ref({}) // AS Info from asnames.txt file
 const inputDisable = ref(false)
 const isWsDisconnected = ref(false)
 const normalizedPrefix = ref('') // Used to store the normalized prefix to determine the BGP message type
+let normalizedPrefixLength = null
 
-const dataSource = ref('ris-live') //'ris-live' or 'bgplay'
+const dataSource = ref('bgplay') //'ris-live' or 'bgplay'
+const dataSourceOptions = ['ris-live', 'bgplay']
 const minTimestamp = ref(Infinity)
 const maxTimestamp = ref(-Infinity)
 
@@ -71,14 +71,27 @@ const datesTrace = ref([])
 const announcementsTrace = ref([])
 const withdrawalsTrace = ref([])
 const announcementsPeersTraces = ref([])
+const rpkiStatusTraces = ref([])
 let announcementsCount = {}
 let withdrawalsCount = {}
-let lastTypeByTimestamp = {}
-let announcementsPeersCount = {}
-const announcementsPeers = new Set()
+let eventsByTimestamp = {}
+let announcementsPeersCountByOrigin = {}
+let announcementsPeersByOrigin = {}
+let peerToOrigin = {}
+let rpkiPeerToOrigin = {}
+const allOriginAsns = new Set()
 const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
+
+let vrps = []
+let vrp_timestamps = []
+const isNoVrpData = ref(false)
+const vrpTableData = ref([])
+
+const isHidden = ref(false)
+const myElement = ref(null)
+let observer = null
 
 const params = ref({
   peer: '',
@@ -126,56 +139,72 @@ const resetData = () => {
   announcementsTrace.value = []
   withdrawalsTrace.value = []
   announcementsPeersTraces.value = []
+  rpkiStatusTraces.value = []
   announcementsCount = {}
   withdrawalsCount = {}
-  announcementsPeersCount = {}
-  lastTypeByTimestamp = {}
-  announcementsPeers.clear()
+  announcementsPeersCountByOrigin = {}
+  announcementsPeersByOrigin = {}
+  peerToOrigin = {}
+  rpkiPeerToOrigin = {}
+  allOriginAsns.clear()
+  eventsByTimestamp = {}
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
   usingIndex.value = false
+  normalizedPrefixLength = null
+  vrps = []
+  vrp_timestamps = []
+  isNoVrpData.value = false
+  vrpTableData.value = []
 }
 
 // Initialize the route
 const initRoute = () => {
   const query = { ...route.query }
 
-  if (route.query.prefix) {
-    params.value.prefix = route.query.prefix
-    normalizedPrefix.value = normalizePrefix(route.query.prefix)
+  const queryPrefix = route.query.prefix?.trim()
+  const queryDataSource = route.query['data-source']?.trim()
+  const queryRrc = route.query.rrc?.trim()
+  const queryRrcs = route.query.rrcs?.trim()
+
+  const queryStartTime = route.query['start-time']?.trim()
+  const queryEndTime = route.query['end-time']?.trim()
+
+  if (queryPrefix) {
+    params.value.prefix = queryPrefix
+    normalizedPrefix.value = normalizePrefix(queryPrefix, true)
   } else {
     query.prefix = params.value.prefix
   }
-  if (route.query['max-hops']) {
-    maxHops.value = parseInt(route.query['max-hops'])
-  } else {
-    query['max-hops'] = maxHops.value
-  }
-  if (route.query['data-source']) {
-    dataSource.value = route.query['data-source']
+  if (queryDataSource && dataSourceOptions.includes(queryDataSource)) {
+    dataSource.value = queryDataSource
   } else {
     query['data-source'] = dataSource.value
   }
 
   if (dataSource.value === 'ris-live') {
-    if (route.query.rrc) {
-      params.value.host = Number(route.query.rrc)
+    if (queryRrc) {
+      const num = Number(queryRrc)
+      params.value.host = isNaN(num) ? '' : num
     } else {
       query.rrc = params.value.host
     }
   } else {
-    if (route.query.rrcs) {
-      rrcs.value = route.query.rrcs.split(',').map(Number)
+    if (queryRrcs) {
+      rrcs.value = queryRrcs
+        .split(',')
+        .map(Number)
+        .filter((rrc) => !isNaN(rrc))
     } else {
       query.rrcs = rrcs.value.join(',')
     }
-    if (route.query['start-time']) {
-      startTime.value = route.query['start-time']
+    if (queryStartTime) {
+      startTime.value = queryStartTime
     } else {
       query['start-time'] = startTime.value
     }
-    if (route.query['end-time']) {
-      endTime.value = route.query['end-time']
+    if (queryEndTime) {
+      endTime.value = queryEndTime
     } else {
       query['end-time'] = endTime.value
     }
@@ -286,7 +315,9 @@ const processResData = (data) => {
     generateLineChartData({
       timestamp: data.timestamp,
       type: data.type,
-      peer: data.peer
+      peer: data.peer,
+      peer_asn: data.peer_asn,
+      origin_asn: data.path.length ? data.path[data.path.length - 1] : null
     })
     generateLineChartTrace()
   } else {
@@ -295,8 +326,8 @@ const processResData = (data) => {
     const nodes = {}
     const events = []
 
-    const query_unix_starttime = timestampToUnix(data.data.query_starttime)
-    const query_unix_endtime = timestampToUnix(data.data.query_endtime)
+    minTimestamp.value = timestampToUnix(data.data.query_starttime)
+    maxTimestamp.value = timestampToUnix(data.data.query_endtime)
 
     data.data.sources.forEach((source) => {
       const peer = source.id.split('-')[1] //removes the 'rrc-' prefix
@@ -319,8 +350,21 @@ const processResData = (data) => {
     data.data.initial_state.forEach((event) => {
       const peer = event.source_id.split('-')[1]
       const peerInfo = sources[peer]
+      const type = addBGPMessageType('I') // Manually Assigning 'I' for Initial State
+      const path = event.path || []
+      const originASN = path.length ? path[path.length - 1] : null
+      const peer_asn = peerInfo.as_number
+      const { status } = getRPKIStatus(originASN, minTimestamp.value)
 
       if (!rrcs.value.includes(Number(peerInfo.rrc))) return // Filter out peers not in the selected RRCs
+
+      generateLineChartData({
+        timestamp: minTimestamp.value,
+        type: type,
+        peer: peer,
+        peer_asn: peer_asn,
+        origin_asn: originASN
+      })
 
       applyDefaultSelectedPeers(peer)
       initialStateDataCount.value++
@@ -329,11 +373,12 @@ const processResData = (data) => {
         peer_asn: peerInfo.as_number,
         rrc: peerInfo.rrc,
         peer: peer,
-        path: event.path || [],
+        path: path,
         community: addCommunityAndDescriptions(event.community),
-        as_info: addASInfo(event.path),
-        type: addBGPMessageType('I'), // Manually Assigning 'I' for Initial State
-        timestamp: query_unix_starttime
+        as_info: addASInfo(path),
+        type: type,
+        rpki_status: status,
+        timestamp: minTimestamp.value
       })
     })
 
@@ -342,11 +387,17 @@ const processResData = (data) => {
       const peerInfo = sources[peer]
       const timestamp = timestampToUnix(event.timestamp)
       const type = addBGPMessageType(event.type)
+      const path = event.attrs.path || []
+      const originASN = path.length ? path[path.length - 1] : null
+      const peer_asn = peerInfo.as_number
+      const { status } = getRPKIStatus(originASN, timestamp)
 
       generateLineChartData({
         timestamp: timestamp,
         type: type,
-        peer: peer
+        peer: peer,
+        peer_asn: peer_asn,
+        origin_asn: originASN
       })
 
       applyDefaultSelectedPeers(peer)
@@ -355,54 +406,98 @@ const processResData = (data) => {
         peer_asn: peerInfo.as_number,
         rrc: peerInfo.rrc,
         peer: peer,
-        path: event.attrs.path || [],
+        path: path,
         community: addCommunityAndDescriptions(event.attrs.community),
-        as_info: addASInfo(event.attrs.path),
+        as_info: addASInfo(path),
         type: type,
+        rpki_status: status,
         timestamp: timestamp
       })
     })
-
-    if (data.data.events.length === 0) {
-      maxTimestamp.value = query_unix_endtime // If no events, use the query end time
-    } else {
-      maxTimestamp.value = events.at(-1).timestamp
-    }
-    minTimestamp.value = query_unix_starttime
     rawMessages.value = events
     generateLineChartTrace()
   }
 }
 
 const generateLineChartData = (data) => {
-  const timestamp = data.timestamp
-  const peer = data.peer
+  const { timestamp, peer, type, origin_asn, peer_asn } = data
+
   if (dataSource.value === 'bgplay') {
     uniqueEventTimestamps.add(timestamp)
   }
 
-  if (data.type === 'Announce') {
-    announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
-    updateByTimestamp(data.type)
-  } else if (data.type === 'Withdraw') {
-    withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
-    updateByTimestamp(data.type)
+  updateTypeByTimestamp()
+  updateOriginByTimestamp()
+  updateRpkiByTimestamp()
+
+  function updateTypeByTimestamp() {
+    if (type === 'Announce') {
+      announcementsCount[timestamp] = (announcementsCount[timestamp] || 0) + 1
+    } else if (type === 'Withdraw') {
+      withdrawalsCount[timestamp] = (withdrawalsCount[timestamp] || 0) + 1
+    }
   }
 
-  function updateByTimestamp(type) {
-    if (dataSource.value === 'ris-live') {
-      if (!lastTypeByTimestamp[timestamp]) {
-        lastTypeByTimestamp[timestamp] = new Map()
-      }
-      lastTypeByTimestamp[timestamp].set(peer, type)
-    } else {
-      if (type === 'Announce') {
-        announcementsPeers.add(peer)
+  function updateRpkiByTimestamp() {
+    if (dataSource.value === 'bgplay') {
+      const key = `${peer_asn}-${peer}`
+      rpkiPeerToOrigin[key] ??= []
+      const oldData = rpkiPeerToOrigin[key][rpkiPeerToOrigin[key].length - 1]
+      if (type === 'Withdraw') {
+        if (oldData && oldData.timestamp === timestamp) {
+          rpkiPeerToOrigin[key].pop()
+        }
+        rpkiPeerToOrigin[key].push({
+          origin_asn: 0,
+          timestamp: timestamp
+        })
       } else {
-        announcementsPeers.delete(peer)
+        if (!oldData || oldData.origin_asn !== origin_asn) {
+          if (oldData && oldData.timestamp === timestamp) {
+            rpkiPeerToOrigin[key].pop()
+          }
+          rpkiPeerToOrigin[key].push({
+            origin_asn: origin_asn,
+            timestamp: timestamp
+          })
+        }
       }
-      announcementsPeersCount[timestamp] = announcementsPeers.size
     }
+  }
+
+  function updateOriginByTimestamp() {
+    if (type === 'Unknown') return
+
+    if (dataSource.value === 'ris-live') {
+      eventsByTimestamp[timestamp] ??= []
+      eventsByTimestamp[timestamp].push({ peer, type, origin_asn })
+    } else {
+      helperUpdateOriginByTimestamp(announcementsPeersByOrigin, type, peer, origin_asn)
+      announcementsPeersCountByOrigin[timestamp] ??= {}
+      for (const [asn, peers] of Object.entries(announcementsPeersByOrigin)) {
+        announcementsPeersCountByOrigin[timestamp][asn] = peers.size
+      }
+    }
+  }
+}
+
+const helperUpdateOriginByTimestamp = (collection, type, peer, origin_asn) => {
+  const old_origin_asn = peerToOrigin[peer]
+
+  if (type === 'Announce' || type === 'Initial State') {
+    allOriginAsns.add(origin_asn)
+    collection[origin_asn] ??= new Set()
+
+    if (old_origin_asn && old_origin_asn !== origin_asn) {
+      // Peer changed origin ASN so we need to remove it from the old ASN set
+      collection[old_origin_asn]?.delete(peer)
+    }
+
+    collection[origin_asn].add(peer)
+    peerToOrigin[peer] = origin_asn
+  } else if (type === 'Withdraw') {
+    collection[old_origin_asn]?.delete(peer)
+    delete peerToOrigin[peer]
   }
 }
 
@@ -410,9 +505,11 @@ const generateLineChartTrace = () => {
   const dTrace = []
   const aTrace = []
   const wTrace = []
-  const apTrace = []
-  const announcementsPeers = new Set()
-  let lastAnnouncementsPeersCount = 0
+  let rsTrace = {}
+
+  const apTracesByOrigin = {}
+  const activePeersByAsn = {}
+  let lastCountsByOrigin = {}
 
   if (dataSource.value === 'ris-live') {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
@@ -426,6 +523,9 @@ const generateLineChartTrace = () => {
     for (const t of timestamps) {
       createTimestampTrace(t)
     }
+    if (isNoVrpData.value === false) {
+      generateRpkiChartData()
+    }
   }
 
   function createTimestampTrace(t) {
@@ -434,26 +534,87 @@ const generateLineChartTrace = () => {
     wTrace.push(withdrawalsCount[t] || 0)
 
     if (dataSource.value === 'ris-live') {
-      const lastTypeMap = lastTypeByTimestamp[t]
-      if (lastTypeMap) {
-        for (const [peer, type] of lastTypeMap) {
-          if (type === 'Announce') announcementsPeers.add(peer)
-          else announcementsPeers.delete(peer)
+      const events = eventsByTimestamp[t] || []
+      for (const { peer, type, origin_asn } of events) {
+        helperUpdateOriginByTimestamp(activePeersByAsn, type, peer, origin_asn)
+      }
+    } else {
+      const countsByOrigin = announcementsPeersCountByOrigin[t]
+      if (countsByOrigin) {
+        lastCountsByOrigin = countsByOrigin
+      }
+    }
+
+    for (const asn of allOriginAsns) {
+      if (!apTracesByOrigin[asn]) {
+        apTracesByOrigin[asn] = []
+      }
+      apTracesByOrigin[asn].push(
+        dataSource.value === 'ris-live' ? activePeersByAsn[asn].size : lastCountsByOrigin[asn] || 0
+      )
+    }
+  }
+
+  function generateRpkiChartData() {
+    for (const [key, origins] of Object.entries(rpkiPeerToOrigin)) {
+      const [peer_asn, peer] = key.split('-')
+      const check_timestamps = vrp_timestamps
+        .concat(origins)
+        .sort((a, b) => a.timestamp - b.timestamp)
+
+      let current_status = 'Withdrawn'
+      let current_origin = null
+      let current_range_start = null
+
+      for (const { origin_asn, timestamp } of check_timestamps) {
+        if (origin_asn === 0) {
+          if (current_status !== 'Withdrawn') {
+            addData(timestamp)
+          }
+          current_status = 'Withdrawn'
+          current_origin = null
+          current_range_start = null
+        } else if (origin_asn === -1) {
+          if (current_status === 'Withdrawn') continue
+
+          const new_status = getRPKIStatus(current_origin, timestamp).status
+          if (current_status != new_status) {
+            addData(timestamp)
+            current_status = new_status
+            current_range_start = timestamp
+          }
+        } else {
+          if (current_status !== 'Withdrawn') {
+            addData(timestamp)
+          }
+          current_origin = origin_asn
+          current_status = getRPKIStatus(current_origin, timestamp).status
+          current_range_start = timestamp
         }
       }
-      apTrace.push(announcementsPeers.size)
-    } else {
-      if (announcementsPeersCount[t] !== undefined) {
-        lastAnnouncementsPeersCount = announcementsPeersCount[t]
+
+      const endTimeUnix = timestampToUnix(endTime.value)
+      if (current_range_start && current_range_start < endTimeUnix) {
+        addData(endTimeUnix)
       }
-      apTrace.push(announcementsPeersCount[t] || lastAnnouncementsPeersCount)
+
+      function addData(timestamp) {
+        const duration = timestamp - current_range_start - 1
+        rsTrace[current_status] ??= { y: [], x: [], base: [], peer_asn: [], origin_asn: [] }
+        rsTrace[current_status].y.push(peer)
+        rsTrace[current_status].x.push(timestampToUTC(duration))
+        rsTrace[current_status].base.push(timestampToUTC(current_range_start))
+        rsTrace[current_status].peer_asn.push(peer_asn)
+        rsTrace[current_status].origin_asn.push(current_origin)
+      }
     }
   }
 
   datesTrace.value = dTrace
   announcementsTrace.value = aTrace
   withdrawalsTrace.value = wTrace
-  announcementsPeersTraces.value = apTrace
+  announcementsPeersTraces.value = apTracesByOrigin
+  rpkiStatusTraces.value = rsTrace
 }
 
 const timestampToUTC = (timestamp) => {
@@ -511,7 +672,7 @@ const addASInfo = (asPathArray) => {
   return result
 }
 
-const normalizePrefix = (prefix) => {
+const normalizePrefix = (prefix, isUserInputPrefix) => {
   const [ip, length] = prefix.split('/')
   let normalizedIp
   if (Address4.isValid(ip)) {
@@ -521,6 +682,9 @@ const normalizePrefix = (prefix) => {
   } else {
     console.warn(`Invalid prefix: ${prefix}`)
     normalizedIp = ip // use the original IP if invalid
+  }
+  if (isUserInputPrefix === true && length) {
+    normalizedPrefixLength = Number(length)
   }
   return length ? `${normalizedIp}/${length}` : normalizedIp
 }
@@ -589,9 +753,25 @@ const handleFilterMessages = (data) => {
   filteredMessages.value = Array.from(uniquePeerMessages.values())
 }
 
+const handleVrpTableData = () => {
+  if (dataSource.value === 'ris-live') return
+  let tableData = []
+  for (const vrp of vrps) {
+    if (
+      selectedMaxTimestamp.value < vrp.unixVisibleFrom ||
+      selectedMaxTimestamp.value > vrp.unixVisibleTo
+    ) {
+      continue
+    }
+    tableData.push(vrp)
+  }
+  vrpTableData.value = tableData
+}
+
 const setSelectedMaxTimestamp = (val) => {
   selectedMaxTimestamp.value = val
   handleFilterMessages()
+  handleVrpTableData()
 }
 
 const disableLiveMode = () => {
@@ -705,6 +885,7 @@ const fetchBGPlayData = async () => {
       }
     })
     console.log('Data fetched successfully, Processing Data...')
+    await getCoveringVrpsForPrefix()
     processResData(res.data)
   } catch (error) {
     console.error('Error fetching BGPlay data:', error)
@@ -822,16 +1003,144 @@ function generateCommunityMap(communities) {
   return communityInfo
 }
 
+const getCoveringVrpsForPrefix = async () => {
+  try {
+    const startTimeUnix = timestampToUnix(startTime.value)
+    const endTimeUnix = timestampToUnix(endTime.value)
+
+    const res = await axios.get('https://www.ihr.live/rpki-history/api/vrp', {
+      params: {
+        prefix: params.value.prefix,
+        timestamp__gte: startTimeUnix,
+        timestamp__lte: endTimeUnix
+      }
+    })
+
+    res.data.map((vrp, i) => {
+      const [ip, prefixLength] = vrp.prefix.split('/')
+      const data = {
+        ...vrp,
+        id: i,
+        ip,
+        prefixLength: Number(prefixLength),
+        unixVisibleFrom: timestampToUnix(vrp.visible.from.split('+')[0]),
+        unixVisibleTo: timestampToUnix(vrp.visible.to.split('+')[0])
+      }
+      vrps.push(data)
+    })
+
+    vrp_timestamps = calculateVrpChangeTimestamps(vrps)
+
+    function calculateVrpChangeTimestamps(vrpData) {
+      const vrpTimestamps = new Set()
+
+      for (const vrp of vrpData) {
+        const visibleFrom = vrp.unixVisibleFrom
+        const visibleTo = vrp.unixVisibleTo + 1 // add +1 second
+
+        if (visibleFrom >= startTimeUnix && visibleFrom <= endTimeUnix) {
+          vrpTimestamps.add(visibleFrom)
+        }
+
+        if (visibleTo >= startTimeUnix && visibleTo <= endTimeUnix) {
+          vrpTimestamps.add(visibleTo)
+        }
+      }
+      return Array.from(vrpTimestamps)
+        .sort((a, b) => a - b)
+        .map((t) => ({ origin_asn: -1, timestamp: t }))
+    }
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      isNoVrpData.value = true
+      console.warn(error.response.data)
+      return
+    }
+    console.error('Error fetching VRPs:', error)
+  }
+}
+
+const getRPKIStatus = (asn, timestamp) => {
+  if (!asn || !timestamp) return { status: 'Null' }
+  if (isNoVrpData.value) return { status: 'No Data' }
+  if (!vrps || vrps.length === 0) return { status: 'Not Found' }
+
+  let covering_vrp_exists = false
+  let same_origin_asn_found = false
+
+  for (const vrp of vrps) {
+    if (timestamp < vrp.unixVisibleFrom || timestamp > vrp.unixVisibleTo) {
+      continue
+    }
+    covering_vrp_exists = true
+
+    if (vrp.asn !== asn || vrp.asn === 0) {
+      continue
+    }
+    same_origin_asn_found = true
+
+    if (normalizedPrefixLength <= vrp.max_length) {
+      return { status: 'Valid' }
+    }
+  }
+
+  if (same_origin_asn_found) {
+    return {
+      status: 'Invalid (More Specific)',
+      reason: {
+        code: 'prefixTooLong',
+        description:
+          'Covering VRP with matching origin ASN found, but prefix length exceeds allowed maxLength.'
+      }
+    }
+  }
+
+  if (covering_vrp_exists) {
+    return {
+      status: 'Invalid (No Matching Origin)',
+      reason: {
+        code: 'noMatchingOrigin',
+        description: 'Covering VRP found, but no matching origin ASN.'
+      }
+    }
+  }
+  return { status: 'Not Found' }
+}
+
 const updateSelectedPeers = (obj) => {
   selectedPeers.value = obj
 }
 
+const customIntersectionObserver = () => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        isHidden.value = !entry.isIntersecting
+      })
+    },
+    {
+      threshold: 0,
+      rootMargin: '-68.8px 0px 0px 0px'
+    }
+  )
+  if (myElement.value?.$el) {
+    observer.observe(myElement.value.$el)
+  }
+}
+
 watch(
-  [params, maxHops, dataSource, startTime, endTime, rrcs],
+  [params, dataSource, startTime, endTime, rrcs],
   () => {
+    const inputPrefix = params.value.prefix?.trim()
+    const inputStartTime = startTime.value?.trim()
+    const inputEndTime = endTime.value?.trim()
+
+    params.value.prefix = inputPrefix
+    startTime.value = inputStartTime
+    endTime.value = inputEndTime
+
     const query = {
       prefix: params.value.prefix,
-      'max-hops': maxHops.value,
       'data-source': dataSource.value
     }
     if (dataSource.value === 'ris-live') {
@@ -842,7 +1151,7 @@ watch(
       query.rrcs = rrcs.value ? rrcs.value.join(',') : ''
     }
     router.replace({ query })
-    normalizedPrefix.value = normalizePrefix(params.value.prefix)
+    normalizedPrefix.value = normalizePrefix(params.value.prefix, true)
   },
   { deep: true }
 )
@@ -857,11 +1166,18 @@ onMounted(() => {
   connectWebSocket()
   fetchAllASInfo()
   fetchGithubFiles()
+  customIntersectionObserver()
+})
+
+onUnmounted(() => {
+  if (observer && myElement.value?.$el) {
+    observer.unobserve(myElement.value?.$el)
+  }
 })
 </script>
 
 <template>
-  <div class="IHR_char-container">
+  <div class="IHR_char-container relative-position">
     <h1 class="text-center q-pa-xl">BGP Monitor</h1>
     <QCard>
       <QCardSection>
@@ -878,22 +1194,6 @@ onMounted(() => {
                 <div>
                   <QRadio
                     v-model="dataSource"
-                    val="ris-live"
-                    label="RisLive"
-                    :disable="
-                      isPlaying ||
-                      inputDisable ||
-                      Object.keys(bgPlaySources).length > 0 ||
-                      isLoadingBgplayData
-                    "
-                  />
-                  <QIcon name="fas fa-circle-info" class="q-ml-md">
-                    <QTooltip>Monitor Real-Time BGP events</QTooltip>
-                  </QIcon>
-                </div>
-                <div>
-                  <QRadio
-                    v-model="dataSource"
                     val="bgplay"
                     label="BGPlay"
                     :disable="
@@ -907,10 +1207,26 @@ onMounted(() => {
                     <QTooltip>Monitor BGP events from a specific time range</QTooltip>
                   </QIcon>
                 </div>
+                <div>
+                  <QRadio
+                    v-model="dataSource"
+                    val="ris-live"
+                    label="RisLive"
+                    :disable="
+                      isPlaying ||
+                      inputDisable ||
+                      Object.keys(bgPlaySources).length > 0 ||
+                      isLoadingBgplayData
+                    "
+                  />
+                  <QIcon name="fas fa-circle-info" class="q-ml-md">
+                    <QTooltip>Monitor Real-Time BGP events</QTooltip>
+                  </QIcon>
+                </div>
               </td>
               <td>
-                <div class="row">
-                  <div class="col q-mr-xl q-mt-lg">
+                <div class="row items-center">
+                  <div class="col q-mr-xl">
                     <QInput
                       v-model="params.prefix"
                       outlined
@@ -925,52 +1241,11 @@ onMounted(() => {
                       "
                     />
                   </div>
-                  <div v-if="dataSource === 'ris-live'" class="col-2 q-mr-xl q-mt-lg">
-                    <QSelect
-                      v-model="params.host"
-                      filled
-                      :options="rrcList"
-                      label="RRC"
-                      emit-value
-                      :dense="true"
-                      color="accent"
-                      :disable="isPlaying || inputDisable"
-                    />
-                  </div>
-                  <div v-else class="col-2 q-mr-xl q-mt-lg">
-                    <QSelect
-                      filled
-                      :dense="true"
-                      v-model="rrcs"
-                      multiple
-                      :options="rrcLocations"
-                      label="RRCs"
-                      emit-value
-                      clearable
-                      :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
-                    />
-                  </div>
-                  <div class="col-2 q-mr-xl q-mt-lg">
-                    <QSlider
-                      v-model="maxHops"
-                      :min="1"
-                      :max="9"
-                      :step="1"
-                      label-always
-                      snap
-                      label
-                      :label-value="'Max Hops: ' + maxHops"
-                      color="accent"
-                      marker-labels
-                    />
-                  </div>
-                </div>
-                <div v-if="dataSource === 'bgplay'" class="row">
-                  <div class="col-2 q-mr-xl">
+                  <div v-if="dataSource === 'bgplay'" class="row">
                     <QInput
                       label="Start Date Time in (UTC)"
                       v-model="startTime"
-                      class="input"
+                      class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                     >
                       <template v-slot:append>
@@ -984,12 +1259,10 @@ onMounted(() => {
                         </QIcon>
                       </template>
                     </QInput>
-                  </div>
-                  <div class="col-2">
                     <QInput
                       label="End Date Time in (UTC)"
                       v-model="endTime"
-                      class="input"
+                      class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                     >
                       <template v-slot:append>
@@ -1004,13 +1277,38 @@ onMounted(() => {
                       </template>
                     </QInput>
                   </div>
+                  <div v-if="dataSource === 'ris-live'" class="col-2">
+                    <QSelect
+                      v-model="params.host"
+                      filled
+                      :options="rrcList"
+                      label="RRC"
+                      emit-value
+                      :dense="true"
+                      color="accent"
+                      :disable="isPlaying || inputDisable"
+                    />
+                  </div>
+                  <div v-else class="col-2">
+                    <QSelect
+                      filled
+                      :dense="true"
+                      v-model="rrcs"
+                      multiple
+                      :options="rrcLocations"
+                      label="RRCs"
+                      emit-value
+                      clearable
+                      :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                    />
+                  </div>
                 </div>
               </td>
             </tr>
           </tbody>
         </QMarkupTable>
       </QCardSection>
-      <QCardActions align="center">
+      <QCardActions align="center" ref="myElement" class="q-pb-md q-pt-none">
         <QBtn
           v-if="dataSource === 'ris-live'"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
@@ -1054,17 +1352,41 @@ onMounted(() => {
         <QBtn color="negative" :label="'Reset'" @click="resetData" />
       </QCardActions>
     </QCard>
-    <div class="row inline q-mt-lg">
-      <QBadge class="q-mr-md">
+
+    <QCard :class="[isHidden ? 'floating-card' : 'hidden']">
+      <QCardActions class="row justify-center items-center">
+        <QBtn
+          color="indigo"
+          :label="'Previous'"
+          @click="prevEvent"
+          :disable="
+            rawMessages.length === 0 ||
+            (dataSource === 'bgplay'
+              ? initialStateDataCount !== 0
+                ? currentIndex === 0
+                : currentIndex === -1
+              : currentIndex === 0)
+          "
+        />
+        <QBtn
+          color="indigo"
+          :label="'Next'"
+          @click="nextEvent"
+          :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
+        />
+      </QCardActions>
+    </QCard>
+    <div class="row inline q-mt-lg" style="gap: 10px">
+      <QBadge>
         <div class="text-body2">Displaying Unique Peer messages: {{ filteredMessages.length }}</div>
       </QBadge>
-      <QBadge class="q-mr-md">
+      <QBadge>
         <div class="text-body2">Total messages received: {{ rawMessages.length }}</div>
       </QBadge>
-      <QBadge v-if="dataSource === 'bgplay'" class="q-mr-md">
+      <QBadge v-if="dataSource === 'bgplay'">
         <div class="text-body2">No of Initial State Messages: {{ initialStateDataCount }}</div>
       </QBadge>
-      <QBadge v-if="dataSource === 'bgplay'" class="q-mr-md">
+      <QBadge v-if="dataSource === 'bgplay'">
         <div class="text-body2">No of Events: {{ rawMessages.length - initialStateDataCount }}</div>
       </QBadge>
     </div>
@@ -1078,7 +1400,6 @@ onMounted(() => {
     >
       <BGPPathsChart
         :filtered-messages="filteredMessages"
-        :max-hops="maxHops"
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
@@ -1108,6 +1429,9 @@ onMounted(() => {
         :announcements-trace="announcementsTrace"
         :withdrawals-trace="withdrawalsTrace"
         :announcements-peers-traces="announcementsPeersTraces"
+        :rpki-status-traces="rpkiStatusTraces"
+        :is-no-vrp-data="isNoVrpData"
+        :vrp-table-data="vrpTableData"
         :current-index="currentIndex"
         :using-index="usingIndex"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
@@ -1155,4 +1479,13 @@ onMounted(() => {
   <Feedback />
 </template>
 
-<style scoped></style>
+<style scoped>
+.floating-card {
+  z-index: 99;
+  position: fixed;
+  max-width: max-content;
+  top: 90px;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+</style>
