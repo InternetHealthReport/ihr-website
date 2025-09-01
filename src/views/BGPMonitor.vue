@@ -17,7 +17,7 @@ import {
   QMarkupTable,
   QBadge
 } from 'quasar'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
@@ -31,11 +31,13 @@ import Feedback from '@/components/Feedback.vue'
 import { Address6, Address4 } from 'ip-address'
 import report from '@/plugins/report'
 
+const ripe_api = inject('ripe_api')
+const rpki_api = inject('rpki_api')
+
 const { t } = i18n.global
 const { utcString } = report()
 
 const isPlaying = ref(false)
-const rrcList = ref([])
 const disableButton = ref(false)
 const socket = ref(null)
 const rawMessages = ref([]) //Used to store all the messages from the websocket
@@ -240,8 +242,6 @@ const connectWebSocket = () => {
     const res = JSON.parse(event.data)
     if (res.type === 'ris_message') {
       processResData(res.data)
-    } else if (res.type === 'ris_rrc_list') {
-      handleRRC(res.data)
     } else if (res.type === 'ris_error') {
       console.log('Ris Live Error:', res.data.message)
     }
@@ -252,12 +252,10 @@ const toggleRisProtocol = () => {
   if (!socket.value) {
     // If websocket is not connected
     connectWebSocket()
-  } else if (rrcList.value.length === 0) {
-    sendSocketType('request_rrc_list', null) // Request the RRC list called only once
   } else if (isPlaying.value) {
     const subscribeParams = {
       ...params.value,
-      host: rrcList.value.find((rrc) => rrc.value === params.value.host).inputValue
+      host: rrcLocations.value.find((rrc) => rrc.value === params.value.host).host
     }
     sendSocketType('ris_subscribe', subscribeParams)
   } else {
@@ -265,22 +263,9 @@ const toggleRisProtocol = () => {
   }
 }
 
-// Handle the RRC list (host)
-const handleRRC = (data) => {
-  if (!Array.isArray(data) || data.length === 0) return
-  const rrcListLocations = data.sort().map((rrc) => {
-    const value = parseInt(rrc.match(/\d+/)[0], 10)
-    return {
-      value,
-      label: rrcLocations.value.find((rrc) => rrc.value === value).label,
-      inputValue: rrc
-    }
-  })
-  rrcList.value = rrcListLocations
-}
-
 //Stringify and send the socket type
 const sendSocketType = (protocol, paramData) => {
+  console.log(paramData)
   socket.value.send(
     JSON.stringify({
       type: protocol,
@@ -829,7 +814,7 @@ const fetchAllASInfo = async () => {
 
 const fetchRCCs = async () => {
   try {
-    const res = await axios.get('https://stat.ripe.net/data/rrc-info/data.json')
+    const res = await ripe_api.rccInfo()
     const data = res.data.data.rrcs
     if (!Array.isArray(data) || data.length === 0) {
       console.error('No RRC data found')
@@ -841,7 +826,8 @@ const fetchRCCs = async () => {
           rcc.multihop === true
             ? `${rcc.name} - Multihop (${rcc.geographical_location})`
             : `${rcc.name} - ${rcc.geographical_location}`,
-        value: rcc.id
+        value: rcc.id,
+        host: `${rcc.name.toLowerCase()}.ripe.net`
       })
     })
   } catch (error) {
@@ -876,14 +862,12 @@ const fetchBGPlayData = async () => {
   try {
     isLoadingBgplayData.value = true
     console.log('Fetching data...')
-    const res = await axios.get('https://stat-ui.stat.ripe.net/data/bgplay/data.json', {
-      params: {
-        resource: params.value.prefix,
-        starttime: startTime.value,
-        endtime: endTime.value,
-        rrcs: rrcs.value.join(',')
-      }
-    })
+    const res = await ripe_api.getBgpData(
+      params.value.prefix,
+      startTime.value,
+      endTime.value,
+      rrcs.value
+    )
     console.log('Data fetched successfully, Processing Data...')
     await getCoveringVrpsForPrefix()
     processResData(res.data)
@@ -1008,13 +992,7 @@ const getCoveringVrpsForPrefix = async () => {
     const startTimeUnix = timestampToUnix(startTime.value)
     const endTimeUnix = timestampToUnix(endTime.value)
 
-    const res = await axios.get('https://www.ihr.live/rpki-history/api/vrp', {
-      params: {
-        prefix: params.value.prefix,
-        timestamp__gte: startTimeUnix,
-        timestamp__lte: endTimeUnix
-      }
-    })
+    const res = await rpki_api.vrp(params.value.prefix, startTimeUnix, endTimeUnix)
 
     res.data.map((vrp, i) => {
       const [ip, prefixLength] = vrp.prefix.split('/')
@@ -1255,6 +1233,9 @@ onUnmounted(() => {
                               <QDate flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
                               <QTime flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" format24h />
                             </div>
+                            <div class="row items-center justify-end q-ma-md">
+                              <QBtn v-close-popup class="primary" label="Apply" outline />
+                            </div>
                           </QPopupProxy>
                         </QIcon>
                       </template>
@@ -1272,6 +1253,9 @@ onUnmounted(() => {
                               <QDate flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
                               <QTime flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" format24h />
                             </div>
+                            <div class="row items-center justify-end q-ma-md">
+                              <QBtn v-close-popup class="primary" label="Apply" outline />
+                            </div>
                           </QPopupProxy>
                         </QIcon>
                       </template>
@@ -1281,7 +1265,7 @@ onUnmounted(() => {
                     <QSelect
                       v-model="params.host"
                       filled
-                      :options="rrcList"
+                      :options="rrcLocations"
                       label="RRC"
                       emit-value
                       :dense="true"

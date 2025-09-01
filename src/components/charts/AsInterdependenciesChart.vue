@@ -15,7 +15,6 @@ import { ref, inject, onBeforeMount, onMounted, computed, watch, nextTick } from
 import { HegemonyQuery, HegemonyConeQuery, AS_FAMILY } from '@/plugins/IhrApi'
 import { AS_INTERDEPENDENCIES_LAYOUT } from '@/plugins/layouts/layoutsChart'
 import { useI18n } from 'vue-i18n'
-import ripeApi from '@/plugins/RipeApi'
 import { useRoute, useRouter } from 'vue-router'
 import ReactiveChart from './ReactiveChart.vue'
 import AsInterdependenciesTable from '../tables/AsInterdependenciesTable.vue'
@@ -23,6 +22,7 @@ import Bgplay from '../ripe/Bgplay.vue'
 import '@/styles/chart.css'
 
 const ihr_api = inject('ihr_api')
+const ripe_api = inject('ripe_api')
 
 const { t } = useI18n()
 
@@ -166,7 +166,7 @@ const apiCall = async () => {
 }
 
 const getNeighboursData = () => {
-  ripeApi.asnNeighbours(props.asNumber).then((res) => {
+  ripe_api.asnNeighbours(props.asNumber).then((res) => {
     res.data.data.neighbours.forEach((neighbour) => {
       neighbours.value.push(neighbour.asn)
     })

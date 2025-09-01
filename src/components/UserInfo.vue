@@ -2,10 +2,10 @@
 import { RouterLink } from 'vue-router'
 import { QMarkupTable, QSpinner } from 'quasar'
 import { ref, onMounted, inject } from 'vue'
-import ripeApi from '@/plugins/RipeApi'
 import Tr from '@/i18n/translation'
 
 const iyp_api = inject('iyp_api')
+const ripe_api = inject('ripe_api')
 
 const as_info_query = ref({
   loading: true,
@@ -24,8 +24,8 @@ const as_info_query = ref({
 })
 
 const getUserInfo = async () => {
-  const userIP = (await ripeApi.userIP()).data
-  const userASN = (await ripeApi.userASN(userIP.data.ip)).data
+  const userIP = (await ripe_api.userIP()).data
+  const userASN = (await ripe_api.userASN(userIP.data.ip)).data
   userInfo.value.IP = userIP.data.ip
   userInfo.value.AS = userASN.data.asns[0]
   userInfo.value.PREFIX = userASN.data.prefix

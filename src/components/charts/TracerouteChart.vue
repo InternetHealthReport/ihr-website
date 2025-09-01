@@ -1,9 +1,8 @@
 <script setup>
 import { QBtn, QSpinner, QBtnToggle } from 'quasar'
-import { ref, watch, computed, nextTick } from 'vue'
+import { ref, watch, computed, nextTick, inject } from 'vue'
 import { VNetworkGraph } from 'v-network-graph'
 import * as vNG from 'v-network-graph'
-import RipeApi from '../../plugins/RipeApi'
 import { isPrivateIP, calculateMedian } from '../../plugins/tracerouteFunctions'
 import '@/styles/chart.css'
 
@@ -51,6 +50,7 @@ const props = defineProps({
 
 const emit = defineEmits(['updateDisplayedRttValues'])
 
+const ripe_api = inject('ripe_api')
 const tooltipData = ref({})
 const zoomLevel = ref(0)
 const selectedNode = ref(null)
@@ -124,7 +124,7 @@ const eventHandlers = {
     const nodeInfo = props.nodes[node]
     let nodeMetaData
     if (!node.includes('*')) {
-      nodeMetaData = (await RipeApi.prefixOverview(node)).data
+      nodeMetaData = (await ripe_api.prefixOverview(node)).data
       if (nodeMetaData.error === 'LOCAL_STORAGE_FULL') {
         return handleLocalStorageFullError()
       }

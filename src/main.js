@@ -13,6 +13,8 @@ import { IhrApi } from '@/plugins/IhrApi'
 import { LibraryDelayer } from '@/plugins/LibraryDelayer'
 import { IypApi } from '@/plugins/IypApi'
 import { AtlasApi } from '@/plugins/RipeAtlasApi'
+import { RipeApi } from '@/plugins/RipeApi'
+import { RpkiApi } from './plugins/RpkiApi'
 import VNetworkGraph from 'v-network-graph'
 import 'v-network-graph/lib/style.css'
 
@@ -55,6 +57,8 @@ app.use(LibraryDelayer, {
 })
 app.use(IypApi)
 app.use(AtlasApi)
+app.use(RipeApi)
+app.use(RpkiApi)
 app.use(VNetworkGraph)
 
 app.mount('#app')

@@ -13,7 +13,6 @@ import {
   QBadge
 } from 'quasar'
 import dagre from 'dagre'
-import RipeApi from '../plugins/RipeApi'
 import TracerouteChart from '@/components/charts/TracerouteChart.vue'
 import TracerouteRttChart from '@/components/charts/TracerouteRttChart.vue'
 import TracerouteProbesTable from '@/components/tables/TracerouteProbesTable.vue'
@@ -52,6 +51,7 @@ const props = defineProps({
 })
 
 const atlas_api = inject('atlas_api')
+const ripe_api = inject('ripe_api')
 const isLoadingChart = ref(false)
 const isLoadingRtt = ref(false)
 const isLoadingProbes = ref(false)
@@ -203,7 +203,7 @@ const processData = async (tracerouteData, loadProbes = false) => {
 
         if (!newNodeInfo.isNonResponsive && !nodeSet.value.has(newNodeInfo.label)) {
           nodeSet.value.add(newNodeInfo.label)
-          const asnPromise = RipeApi.userASN(newNodeInfo.label).then((asnData) => {
+          ripe_api.userASN(newNodeInfo.label).then((asnData) => {
             const asn = asnData.data.data.asns[0]
             if (asn) {
               if (!asnList.value.includes(asn)) {
