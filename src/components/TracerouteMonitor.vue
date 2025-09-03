@@ -95,7 +95,7 @@ const emit = defineEmits([
   'setSelectedProbes',
   'setSelectedTimeRange',
   'loadMeasurement',
-  'clearSelectedProbes',
+  'clearSelectedProbes'
 ])
 
 const processData = async (tracerouteData, loadProbes = false) => {
@@ -358,16 +358,15 @@ const loadMeasurement = async () => {
       if (fetchedMetaData.status.name === 'Ongoing') {
         fetchedMetaData.stop_time = Math.floor(Date.now() / 1000)
       }
-      
-      const isMeasurementOneOff = metaData.value['interval'] > 0 ? false : true 
-      
+
+      const isMeasurementOneOff = metaData.value['interval'] > 0 ? false : true
+
       let startTime = 0
       let stopTime = 0
 
-      if(isMeasurementOneOff == false) {
+      if (isMeasurementOneOff == false) {
         stopTime = stopTimestamp.value !== 0 ? stopTimestamp : metaData.value.stop_time
-  
-  
+
         // Fetch last 5 measurements
         const shortenedDurationStartTime = stopTime - 5 * metaData.value['interval']
         startTime =
@@ -376,7 +375,7 @@ const loadMeasurement = async () => {
             : shortenedDurationStartTime > 0
               ? shortenedDurationStartTime
               : metaData.value.start_time
-        
+
         timeRange.value.min = startTime
         timeRange.value.max = stopTime
         timeRange.value.disable = false
@@ -662,26 +661,29 @@ watch(
                   Measuring from <strong>{{ convertUnixTimestamp(metaData.start_time) }}</strong> to
                   <strong>{{ convertUnixTimestamp(metaData.stop_time) }}</strong>
                 </li>
+                <li v-if="isOneOff == false">Frequency: {{ metaData.interval }} seconds</li>
+              </ul>
+            </div>
+            <div class="row">
+              <div class="col text-h6">
+                <strong>RTT Chart and Network graph:</strong>
+              </div>
+            </div>
+            <div class="row">
+              <ul>
                 <li v-if="isOneOff == false">
-                  Frequency: {{ metaData.interval }} seconds
+                  Showing from
+                  <strong>{{ convertUnixTimestamp(timeRange.min) }}</strong> to
+                  <strong>{{ convertUnixTimestamp(timeRange.max) }}</strong>
+                </li>
+                <li>
+                  Selected probes: <strong>{{ selectedProbes.length }}</strong> (Out of
+                  {{ allProbes.length }})
+                </li>
+                <li>
+                  Selected destinations: <strong>{{ selectedDestinations.length }}</strong>
                 </li>
               </ul>
-              <div>
-                <div class="col text-h6">
-                  <strong>RTT Chart and Network graph:</strong>
-                </div>
-                <ul>
-                  <li v-if="isOneOff == false">
-                    Showing from
-                    <strong>{{ convertUnixTimestamp(timeRange.min) }}</strong> to
-                    <strong>{{ convertUnixTimestamp(timeRange.max) }}</strong>
-                  </li>
-                  <li>
-                    Selected probes: <strong>{{ selectedProbes.length }}</strong> (Out of {{ allProbes.length }})
-                  </li>
-                  <li>Selected destinations: <strong>{{ selectedDestinations.length }}</strong></li>
-                </ul>
-              </div>
             </div>
           </div>
           <div v-else>

@@ -67,7 +67,6 @@ const updateRightDatePicker = (timePickerTemp) => {
   rightDateTimePicker.value = timePickerTemp
 }
 
-
 const plotRTTChart = async () => {
   if (!props.intervalValue) {
     showOneOffMessage.value = true
@@ -132,8 +131,10 @@ const filteredRttOverTime = computed(() => {
 
 // Handling one-off measurement's median RTT
 const oneOffMedianRtt = computed(() => {
-  if(props.isOneOff) {
-    return calculateMedian(filteredRttOverTime.value.map(rttObj => rttObj.rtt).filter(rtt => rtt !== null))
+  if (props.isOneOff) {
+    return calculateMedian(
+      filteredRttOverTime.value.map((rttObj) => rttObj.rtt).filter((rtt) => rtt !== null)
+    )
   }
 
   return 0
@@ -157,10 +158,10 @@ const rangeOnChane = (event) => {
 }
 
 watch([leftDateTimePicker, rightDateTimePicker], () => {
-  if(leftDateTimePicker.value != leftDateTimePickerTemp.value) {
+  if (leftDateTimePicker.value != leftDateTimePickerTemp.value) {
     leftDateTimePickerTemp.value = leftDateTimePicker.value
   }
-  if(rightDateTimePicker.value != rightDateTimePickerTemp.value) {
+  if (rightDateTimePicker.value != rightDateTimePickerTemp.value) {
     rightDateTimePickerTemp.value = rightDateTimePicker.value
   }
   emit('loadMeasurementOnTimeRange', {
@@ -180,7 +181,7 @@ watch(
       timeRangeModel.value.max = null
     }
   },
-  {deep: true}
+  { deep: true }
 )
 watch(filteredRttOverTime, () => {
   showOneOffMessage.value = false
@@ -194,9 +195,7 @@ watch(filteredRttOverTime, () => {
 <template>
   <template v-if="metaData.target">
     <div v-if="isOneOff == true" class="col q-ml-md">
-      <div class="text-h6">
-        One-off measurement stats:
-      </div>
+      <div class="text-h6">One-off measurement stats:</div>
       <ul>
         <li class="text-body">
           Minimum RTT: <strong>{{ minRtt }} ms</strong>
@@ -246,7 +245,7 @@ watch(filteredRttOverTime, () => {
                 label="Selected Start Date Time in (UTC)"
                 v-model="leftDateTimePicker"
                 class="input"
-                filled
+                outlined
               >
                 <template v-slot:append>
                   <QIcon name="event" class="cursor-pointer">
@@ -261,8 +260,14 @@ watch(filteredRttOverTime, () => {
                         />
                       </div>
                       <div class="row items-center justify-end q-ma-md">
-                        <QBtn v-close-popup class="closeBtnStyle q-mr-md" label="Close" flat />
-                        <QBtn v-close-popup class="bg-primary applyBtnStyle" label="Apply" flat @click="updateLeftDatePicker(leftDateTimePickerTemp)" />
+                        <QBtn v-close-popup class="closeBtnStyle q-mr-md" label="Close" outline />
+                        <QBtn
+                          v-close-popup
+                          class="bg-primary applyBtnStyle"
+                          label="Apply"
+                          outline
+                          @click="updateLeftDatePicker(leftDateTimePickerTemp)"
+                        />
                       </div>
                     </QPopupProxy>
                   </QIcon>
@@ -274,7 +279,7 @@ watch(filteredRttOverTime, () => {
                 v-model="rightDateTimePicker"
                 label="Selected End Date Time in (UTC)"
                 class="input"
-                filled
+                outlined
               >
                 <template v-slot:append>
                   <QIcon name="event" class="cursor-pointer">
@@ -289,8 +294,14 @@ watch(filteredRttOverTime, () => {
                         />
                       </div>
                       <div class="row items-center justify-end q-ma-md">
-                        <QBtn v-close-popup class="closeBtnStyle q-mr-md" label="Close" flat />
-                        <QBtn v-close-popup class="bg-primary applyBtnStyle" label="Apply" flat @click="updateRightDatePicker(rightDateTimePickerTemp)" />
+                        <QBtn v-close-popup class="closeBtnStyle q-mr-md" label="Close" outline />
+                        <QBtn
+                          v-close-popup
+                          class="bg-primary applyBtnStyle"
+                          label="Apply"
+                          outline
+                          @click="updateRightDatePicker(rightDateTimePickerTemp)"
+                        />
                       </div>
                     </QPopupProxy>
                   </QIcon>
@@ -347,9 +358,9 @@ watch(filteredRttOverTime, () => {
 }
 
 .applyBtnStyle {
- color: rgba(255, 255, 255);
+  color: rgba(255, 255, 255);
 }
 .closeBtnStyle {
- background-color: rgba(0, 0, 0, 0.171);
+  background-color: rgba(0, 0, 0, 0.171);
 }
 </style>

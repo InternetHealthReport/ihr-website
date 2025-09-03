@@ -1269,7 +1269,9 @@ onUnmounted(() => {
                     <QSelect
                       v-model="params.host"
                       outlined
-                      :options="rrcLocations.filter((val) => !RIS_LIVE_UNSUPPORTED_RRCS.includes(val.value))"
+                      :options="
+                        rrcLocations.filter((val) => !RIS_LIVE_UNSUPPORTED_RRCS.includes(val.value))
+                      "
                       label="RRC"
                       emit-value
                       :dense="true"
