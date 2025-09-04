@@ -112,7 +112,8 @@ const defaultLayout = {
   },
   shapes: [],
   showlegend: true,
-  yaxis: { rangemode: 'tozero' }
+  xaxis: { autorange: true },
+  yaxis: { autorange: true, rangemode: 'tozero' }
 }
 
 const lineChartLayout = {
@@ -297,6 +298,16 @@ watch(
       lineChartLayout.shapes = []
       rpkiLayout.shapes = []
       updateTimeRange()
+    }
+  }
+)
+
+watch(
+  () => props.rawMessages,
+  () => {
+    if (props.rawMessages.length === 0) {
+      defaultLayout.xaxis.autorange = true
+      defaultLayout.yaxis.autorange = true
     }
   }
 )
