@@ -1272,7 +1272,7 @@ onUnmounted(() => {
                               <QBtn
                                 v-close-popup
                                 @click="applyStartTime"
-                                class="primary"
+                                class="bg-primary applyBtnStyle"
                                 label="Apply"
                                 outline
                               />
@@ -1300,7 +1300,7 @@ onUnmounted(() => {
                               <QBtn
                                 v-close-popup
                                 @click="applyEndTime"
-                                class="primary"
+                                class="bg-primary applyBtnStyle"
                                 label="Apply"
                                 outline
                               />
@@ -1494,7 +1494,7 @@ onUnmounted(() => {
       />
     </GenericCardController>
     <QDialog v-model="isWsDisconnected">
-      <QCard style="width: 1000px; height: auto">
+      <QCard>
         <QCardSection>
           <div class="text-h6">Failed to connect to the server.</div>
         </QCardSection>
@@ -1511,7 +1511,7 @@ onUnmounted(() => {
       </QCard>
     </QDialog>
     <QDialog v-model="bgPlayAdditionalMessagesReceived">
-      <QCard style="width: 1000px; height: auto">
+      <QCard>
         <QCardSection>
           <div class="text-h6">Important Information from BGPlay</div>
         </QCardSection>
@@ -1539,5 +1539,8 @@ onUnmounted(() => {
   top: 90px;
   left: 50%;
   transform: translate(-50%, 0);
+}
+.applyBtnStyle {
+  color: rgba(255, 255, 255);
 }
 </style>
