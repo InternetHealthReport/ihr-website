@@ -62,8 +62,11 @@ const dataSourceOptions = ['ris-live', 'bgplay']
 const minTimestamp = ref(Infinity)
 const maxTimestamp = ref(-Infinity)
 
+const tempStartTime = ref(new Date().toISOString().slice(0, 16))
+const tempEndTime = ref(new Date().toISOString().slice(0, 16))
 const startTime = ref(new Date().toISOString().slice(0, 16))
 const endTime = ref(new Date().toISOString().slice(0, 16))
+
 const rrcs = ref([])
 const rrcLocations = ref([])
 const isLoadingBgplayData = ref(false)
@@ -205,11 +208,13 @@ const initRoute = () => {
       query.rrcs = rrcs.value.join(',')
     }
     if (queryStartTime) {
+      tempStartTime.value = queryStartTime
       startTime.value = queryStartTime
     } else {
       query['start-time'] = startTime.value
     }
     if (queryEndTime) {
+      tempEndTime.value = queryEndTime
       endTime.value = queryEndTime
     } else {
       query['end-time'] = endTime.value
@@ -1099,6 +1104,19 @@ const updateSelectedPeers = (obj) => {
   selectedPeers.value = obj
 }
 
+const applyStartTime = () => {
+  startTime.value = tempStartTime.value
+}
+
+const applyEndTime = () => {
+  endTime.value = tempEndTime.value
+}
+
+const resetTempValues = () => {
+  tempStartTime.value = startTime.value
+  tempEndTime.value = endTime.value
+}
+
 const customIntersectionObserver = () => {
   observer = new IntersectionObserver(
     (entries) => {
@@ -1232,20 +1250,32 @@ onUnmounted(() => {
                   <div v-if="dataSource === 'bgplay'" class="row">
                     <QInput
                       label="Start Date Time in (UTC)"
-                      v-model="startTime"
+                      v-model="tempStartTime"
                       class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                       outlined
                     >
                       <template v-slot:append>
                         <QIcon name="event" class="cursor-pointer">
-                          <QPopupProxy no-route-dismiss cover>
+                          <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
                             <div class="q-pa-md q-gutter-md row items-start">
-                              <QDate flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" format24h />
+                              <QDate flat v-model="tempStartTime" mask="YYYY-MM-DDTHH:mm" />
+                              <QTime
+                                flat
+                                v-model="tempStartTime"
+                                mask="YYYY-MM-DDTHH:mm"
+                                format24h
+                              />
                             </div>
                             <div class="row items-center justify-end q-ma-md">
-                              <QBtn v-close-popup class="primary" label="Apply" outline />
+                              <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
+                              <QBtn
+                                v-close-popup
+                                @click="applyStartTime"
+                                class="primary"
+                                label="Apply"
+                                outline
+                              />
                             </div>
                           </QPopupProxy>
                         </QIcon>
@@ -1253,20 +1283,27 @@ onUnmounted(() => {
                     </QInput>
                     <QInput
                       label="End Date Time in (UTC)"
-                      v-model="endTime"
+                      v-model="tempEndTime"
                       class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                       outlined
                     >
                       <template v-slot:append>
                         <QIcon name="event" class="cursor-pointer">
-                          <QPopupProxy no-route-dismiss cover>
+                          <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
                             <div class="q-pa-md q-gutter-md row items-start">
-                              <QDate flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" format24h />
+                              <QDate flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" />
+                              <QTime flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" format24h />
                             </div>
                             <div class="row items-center justify-end q-ma-md">
-                              <QBtn v-close-popup class="primary" label="Apply" outline />
+                              <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
+                              <QBtn
+                                v-close-popup
+                                @click="applyEndTime"
+                                class="primary"
+                                label="Apply"
+                                outline
+                              />
                             </div>
                           </QPopupProxy>
                         </QIcon>
