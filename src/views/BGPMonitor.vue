@@ -69,7 +69,8 @@ const rrcLocations = ref([])
 const isLoadingBgplayData = ref(false)
 const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
-const bgPlayInitialState = ref([]) // Used to store the initial state for BGPlay
+const bgPlayAdditionalMessagesReceived = ref(false)
+const bgPlayAdditionalMessages = ref([]) // Used to store any additional messages from BGPlay (res.data.messages[]) e.g warnings, errors etc
 const initialStateDataCount = ref(0)
 const datesTrace = ref([])
 const announcementsTrace = ref([])
@@ -134,7 +135,8 @@ const resetData = () => {
   inputDisable.value = false
 
   bgPlaySources.value = {}
-  bgPlayInitialState.value = []
+  bgPlayAdditionalMessagesReceived.value = false
+  bgPlayAdditionalMessages.value = []
   bgPlayASNames.value = {}
   minTimestamp.value = Infinity
   maxTimestamp.value = -Infinity
@@ -308,6 +310,12 @@ const processResData = (data) => {
     })
     generateLineChartTrace()
   } else {
+    if (data.messages.length > 0) {
+      bgPlayAdditionalMessages.value = data.messages
+      bgPlayAdditionalMessagesReceived.value = true
+      return
+    }
+
     //Temp variables to reduce the vue reactivity
     const sources = {}
     const nodes = {}
@@ -1459,6 +1467,23 @@ onUnmounted(() => {
             due to network issues. If the connection remains idle for too long, the server will also
             close the WebSocket connection.
           </p>
+        </QCardSection>
+        <QCardActions align="right">
+          <QBtn v-close-popup flat label="Close" color="primary" />
+        </QCardActions>
+      </QCard>
+    </QDialog>
+    <QDialog v-model="bgPlayAdditionalMessagesReceived">
+      <QCard style="width: 1000px; height: auto">
+        <QCardSection>
+          <div class="text-h6">Important Information from BGPlay</div>
+        </QCardSection>
+        <QCardSection class="q-pt-none">
+          <div v-for="(msg, index) in bgPlayAdditionalMessages" :key="index">
+            <p v-for="(data, i) in msg" :key="i">
+              {{ data }}
+            </p>
+          </div>
         </QCardSection>
         <QCardActions align="right">
           <QBtn v-close-popup flat label="Close" color="primary" />
