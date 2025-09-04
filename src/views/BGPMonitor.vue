@@ -549,7 +549,9 @@ const generateLineChartTrace = () => {
         apTracesByOrigin[asn] = []
       }
       apTracesByOrigin[asn].push(
-        dataSource.value === 'ris-live' ? activePeersByAsn[asn].size : lastCountsByOrigin[asn] || 0
+        dataSource.value === 'ris-live'
+          ? activePeersByAsn[asn]?.size || 0
+          : lastCountsByOrigin[asn] || 0
       )
     }
   }
