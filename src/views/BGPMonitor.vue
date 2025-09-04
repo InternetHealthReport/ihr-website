@@ -160,7 +160,6 @@ const resetData = () => {
   uniqueEventTimestamps.clear()
   currentIndex.value = -1
   usingIndex.value = false
-  normalizedPrefixLength = null
   vrps = []
   vrp_timestamps = []
   isNoVrpData.value = false
@@ -680,13 +679,18 @@ const normalizePrefix = (prefix, isUserInputPrefix) => {
   } else if (Address6.isValid(ip)) {
     normalizedIp = new Address6(ip).correctForm()
   } else {
-    console.warn(`Invalid prefix: ${prefix}`)
-    normalizedIp = ip // use the original IP if invalid
+    console.warn(`Invalid Ip, prefix: ${prefix}`)
+    normalizedIp = ip // use the original IP if invalid (should never happen)
   }
-  if (isUserInputPrefix === true && length) {
-    normalizedPrefixLength = Number(length)
+  if (length) {
+    if (isUserInputPrefix === true) {
+      normalizedPrefixLength = Number(length)
+    }
+    return `${normalizedIp}/${length}`
+  } else {
+    console.warn(`Prefix length missing, prefix: ${prefix}`) // should never happen
+    return normalizedIp
   }
-  return length ? `${normalizedIp}/${length}` : normalizedIp
 }
 
 // Determine the BGP message type
