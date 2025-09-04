@@ -62,14 +62,18 @@ const dataSourceOptions = ['ris-live', 'bgplay']
 const minTimestamp = ref(Infinity)
 const maxTimestamp = ref(-Infinity)
 
+const tempStartTime = ref(new Date().toISOString().slice(0, 16))
+const tempEndTime = ref(new Date().toISOString().slice(0, 16))
 const startTime = ref(new Date().toISOString().slice(0, 16))
 const endTime = ref(new Date().toISOString().slice(0, 16))
+
 const rrcs = ref([])
 const rrcLocations = ref([])
 const isLoadingBgplayData = ref(false)
 const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
 const bgPlayASNames = ref({}) // Used to store the AS names we get from the BGPlay nodes Array
-const bgPlayInitialState = ref([]) // Used to store the initial state for BGPlay
+const bgPlayAdditionalMessagesReceived = ref(false)
+const bgPlayAdditionalMessages = ref([]) // Used to store any additional messages from BGPlay (res.data.messages[]) e.g warnings, errors etc
 const initialStateDataCount = ref(0)
 const datesTrace = ref([])
 const announcementsTrace = ref([])
@@ -134,7 +138,8 @@ const resetData = () => {
   inputDisable.value = false
 
   bgPlaySources.value = {}
-  bgPlayInitialState.value = []
+  bgPlayAdditionalMessagesReceived.value = false
+  bgPlayAdditionalMessages.value = []
   bgPlayASNames.value = {}
   minTimestamp.value = Infinity
   maxTimestamp.value = -Infinity
@@ -203,11 +208,13 @@ const initRoute = () => {
       query.rrcs = rrcs.value.join(',')
     }
     if (queryStartTime) {
+      tempStartTime.value = queryStartTime
       startTime.value = queryStartTime
     } else {
       query['start-time'] = startTime.value
     }
     if (queryEndTime) {
+      tempEndTime.value = queryEndTime
       endTime.value = queryEndTime
     } else {
       query['end-time'] = endTime.value
@@ -308,6 +315,12 @@ const processResData = (data) => {
     })
     generateLineChartTrace()
   } else {
+    if (data.messages.length > 0) {
+      bgPlayAdditionalMessages.value = data.messages
+      bgPlayAdditionalMessagesReceived.value = true
+      return
+    }
+
     //Temp variables to reduce the vue reactivity
     const sources = {}
     const nodes = {}
@@ -1091,6 +1104,19 @@ const updateSelectedPeers = (obj) => {
   selectedPeers.value = obj
 }
 
+const applyStartTime = () => {
+  startTime.value = tempStartTime.value
+}
+
+const applyEndTime = () => {
+  endTime.value = tempEndTime.value
+}
+
+const resetTempValues = () => {
+  tempStartTime.value = startTime.value
+  tempEndTime.value = endTime.value
+}
+
 const customIntersectionObserver = () => {
   observer = new IntersectionObserver(
     (entries) => {
@@ -1224,20 +1250,32 @@ onUnmounted(() => {
                   <div v-if="dataSource === 'bgplay'" class="row">
                     <QInput
                       label="Start Date Time in (UTC)"
-                      v-model="startTime"
+                      v-model="tempStartTime"
                       class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                       outlined
                     >
                       <template v-slot:append>
                         <QIcon name="event" class="cursor-pointer">
-                          <QPopupProxy no-route-dismiss cover>
+                          <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
                             <div class="q-pa-md q-gutter-md row items-start">
-                              <QDate flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime flat v-model="startTime" mask="YYYY-MM-DDTHH:mm" format24h />
+                              <QDate flat v-model="tempStartTime" mask="YYYY-MM-DDTHH:mm" />
+                              <QTime
+                                flat
+                                v-model="tempStartTime"
+                                mask="YYYY-MM-DDTHH:mm"
+                                format24h
+                              />
                             </div>
                             <div class="row items-center justify-end q-ma-md">
-                              <QBtn v-close-popup class="primary" label="Apply" outline />
+                              <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
+                              <QBtn
+                                v-close-popup
+                                @click="applyStartTime"
+                                class="primary"
+                                label="Apply"
+                                outline
+                              />
                             </div>
                           </QPopupProxy>
                         </QIcon>
@@ -1245,20 +1283,27 @@ onUnmounted(() => {
                     </QInput>
                     <QInput
                       label="End Date Time in (UTC)"
-                      v-model="endTime"
+                      v-model="tempEndTime"
                       class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                       outlined
                     >
                       <template v-slot:append>
                         <QIcon name="event" class="cursor-pointer">
-                          <QPopupProxy no-route-dismiss cover>
+                          <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
                             <div class="q-pa-md q-gutter-md row items-start">
-                              <QDate flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime flat v-model="endTime" mask="YYYY-MM-DDTHH:mm" format24h />
+                              <QDate flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" />
+                              <QTime flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" format24h />
                             </div>
                             <div class="row items-center justify-end q-ma-md">
-                              <QBtn v-close-popup class="primary" label="Apply" outline />
+                              <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
+                              <QBtn
+                                v-close-popup
+                                @click="applyEndTime"
+                                class="primary"
+                                label="Apply"
+                                outline
+                              />
                             </div>
                           </QPopupProxy>
                         </QIcon>
@@ -1459,6 +1504,23 @@ onUnmounted(() => {
             due to network issues. If the connection remains idle for too long, the server will also
             close the WebSocket connection.
           </p>
+        </QCardSection>
+        <QCardActions align="right">
+          <QBtn v-close-popup flat label="Close" color="primary" />
+        </QCardActions>
+      </QCard>
+    </QDialog>
+    <QDialog v-model="bgPlayAdditionalMessagesReceived">
+      <QCard style="width: 1000px; height: auto">
+        <QCardSection>
+          <div class="text-h6">Important Information from BGPlay</div>
+        </QCardSection>
+        <QCardSection class="q-pt-none">
+          <div v-for="(msg, index) in bgPlayAdditionalMessages" :key="index">
+            <p v-for="(data, i) in msg" :key="i">
+              {{ data }}
+            </p>
+          </div>
         </QCardSection>
         <QCardActions align="right">
           <QBtn v-close-popup flat label="Close" color="primary" />
