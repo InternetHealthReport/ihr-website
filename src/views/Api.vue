@@ -1,15 +1,15 @@
 <script setup>
 import { onMounted } from 'vue'
-import SwaggerUI from 'swagger-ui'
-import 'swagger-ui/dist/swagger-ui.css'
+import { SwaggerUIBundle, SwaggerUIStandalonePreset } from 'swagger-ui-dist'
+import 'swagger-ui-dist/swagger-ui.css'
 
 onMounted(() => {
-  SwaggerUI({
+  SwaggerUIBundle({
     url: 'https://www.ihr.live/ihr/api/openapi.json',
     dom_id: '#swagger-ui',
     layout: 'BaseLayout',
     defaultModelsExpandDepth: -1,
-    presets: [SwaggerUI.presets.apis],
+    presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
     deepLinking: false
   })
 })

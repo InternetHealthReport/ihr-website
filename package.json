@@ -23,7 +23,7 @@
     "ip-address": "^10.0.1",
     "plotly.js-dist": "^3.1.0",
     "quasar": "^2.18.2",
-    "swagger-ui": "^5.27.1",
+    "swagger-ui-dist": "^5.28.1",
     "v-network-graph": "^0.9.21",
     "vue": "^3.5.18",
     "vue-i18n": "^11.1.11",
