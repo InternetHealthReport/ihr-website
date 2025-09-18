@@ -16,7 +16,8 @@ import {
   useQuasar,
   exportFile,
   QMarkupTable,
-  copyToClipboard
+  copyToClipboard,
+  uid
 } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
@@ -402,22 +403,28 @@ onMounted(() => {
           </QTable>
         </QTabPanel>
         <QTabPanel name="api" class="text-left q-pa-lg" light>
-          <QBtn
-            no-caps
-            dense
-            flat
-            @click="copyToClipboard(cypherQuery.replace(/^\s+|\s+$/gm, ''))"
-            style="width: 100%"
-            align="left"
-          >
+          <div>
             <pre
               style="text-align: left"
             ><code style="white-space: pre-wrap;" v-html="hljs.highlight(cypherQuery.replace(/^\s+|\s+$/gm, ''), { language: 'cypher' }).value"></code></pre>
-            <QTooltip>Click to copy</QTooltip>
-          </QBtn>
+          </div>
+          <div class="row">
+            <QBtn
+              label="Copy query"
+              color="secondary"
+              class="q-mr-md"
+              @click="copyToClipboard(cypherQuery.replace(/^\s+|\s+$/gm, ''))"
+            />
+            <QBtn
+              label="Run query to IYP"
+              color="secondary"
+              :href="`https://iyp.iijlab.net/browser/?session=[${encodeURIComponent(JSON.stringify({ query: cypherQuery.replace(/^\s+|\s+$/gm, ''), uuid: uid() }))}]`"
+              target="_blank"
+            />
+          </div>
           <div>
             <br />IYP Public Instance Link:
-            <a href="https://iyp.iijlab.net/">https://iyp.iijlab.net/</a>
+            <a href="https://iyp.iijlab.net/" target="_blank">https://iyp.iijlab.net/</a>
           </div>
         </QTabPanel>
         <QTabPanel name="metadata">
