@@ -200,7 +200,7 @@ const queryPrefixes = async (value) => {
     return []
   }
   const query =
-    'MATCH (p:Prefix) WHERE p.prefix STARTS WITH $value RETURN p.prefix as prefix, head(labels(p)) AS node LIMIT 10'
+    'MATCH (p:Prefix) WHERE p.prefix STARTS WITH $value RETURN DISTINCT p.prefix as prefix, "Prefix" AS node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
   return res[0]
 }

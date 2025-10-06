@@ -43,21 +43,21 @@ const references = ref(REFERENCES)
 const queries = ref([
   {
     data: [],
-    query: `MATCH (p:Prefix {prefix: $prefix})
+    query: `MATCH (p:BGPPrefix {prefix: $prefix})
       OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
-      OPTIONAL MATCH(p)-[deleg:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
+      OPTIONAL MATCH (p)-[:PART_OF]-(:RIRPrefix)-[deleg:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
       OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
       RETURN p.prefix AS prefix, head(collect(DISTINCT(o.descr))) AS descr, collect(DISTINCT([toString(a.asn), COALESCE(pdbn.name, btn.name, ripen.name)])) AS asn, c.name AS country, collect(DISTINCT(t.label)) AS tags, deleg.registry AS rir, c.country_code AS cc`
   },
   {
     data: [],
-    query: `MATCH (p:Prefix {prefix: $prefix})<-[po:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)
-      WHERE "BGPPrefix" IN po.prefix_types
-      OPTIONAL MATCH (h)-[:PART_OF]-(:DomainName)-[ra:RANK]->(:Ranking {name: 'Tranco top 1M'})
-      RETURN  DISTINCT h.name as hostname, ra.rank AS rank ORDER BY rank LIMIT 5`
+    query: `MATCH (p:BGPPrefix {prefix: $prefix})<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)
+      WITH DISTINCT h
+      OPTIONAL MATCH (h)-[ra:RANK]->(r:Ranking)
+      RETURN  DISTINCT h.name as hostname, count(DISTINCT r) AS rank ORDER BY rank DESC LIMIT 5`
   }
 ])
 const af = ref(null)

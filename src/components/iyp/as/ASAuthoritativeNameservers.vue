@@ -17,8 +17,7 @@ const nameservers = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:BGPPrefix)<-[po:PART_OF]-(i:IP)<-[:RESOLVES_TO {reference_name:'openintel.infra_ns'}]-(h:AuthoritativeNameServer)
-    WHERE "BGPPrefix" IN po.prefix_types
+  query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(p:BGPPrefix)<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO {reference_name:'openintel.infra_ns'}]-(h:AuthoritativeNameServer)
     RETURN DISTINCT h.name AS nameserver, COLLECT(DISTINCT p.prefix) AS prefix, i.ip as ip`,
   columns: [
     {
