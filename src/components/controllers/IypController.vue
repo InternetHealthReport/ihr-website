@@ -415,12 +415,12 @@ onMounted(() => {
               class="q-mr-md"
               @click="copyToClipboard(cypherQuery.replace(/^\s+|\s+$/gm, ''))"
             />
-            <QBtn
+            <!-- <QBtn
               label="Run query to IYP"
               color="secondary"
               :href="`https://iyp.iijlab.net/browser/?session=[${encodeURIComponent(JSON.stringify({ query: cypherQuery.replace(/^\s+|\s+$/gm, ''), uuid: uid() }))}]`"
               target="_blank"
-            />
+            /> -->
           </div>
           <div>
             <br />IYP Public Instance Link:

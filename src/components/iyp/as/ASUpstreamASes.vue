@@ -99,7 +99,13 @@ onMounted(() => {
       v-if="upstreams.data.length > 0"
       :chart-data="upstreams.data"
       :chart-layout="{ yaxis: { title: { text: 'AS Hegemony (%)' }, range: [0, 100] } }"
-      :config="{ key: 'asn', groupKey: 'af', value: 'hegemony_score', xlabel_prefix: 'AS' }"
+      :config="{
+        key: 'asn',
+        groupKey: 'af',
+        value: 'hegemony_score',
+        xlabel_prefix: 'AS',
+        showAllGroupValues: true
+      }"
     />
     <!--  <IypGenericTreemapChart
       v-if="dependings.length > 0"
