@@ -19,14 +19,11 @@ const prefixes = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (:Country {country_code: $cc})-[:COUNTRY]-(p:BGPPrefix)
-    OPTIONAL MATCH (p)<-[o:ORIGINATE {reference_org:'IHR'}]-(a:AS)
-    OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
-    OPTIONAL MATCH (p)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
+    query: `MATCH (p:BGPPrefix)-[:COUNTRY {reference_name: 'ihr.rov'}]-(c:Country {country_code: $cc})
+    OPTIONAL MATCH (p)<-[o:ORIGINATE {reference_name:'ihr.rov'}]-(a:AS)
+    OPTIONAL MATCH (p)-[:PART_OF]->(:RIRPrefix)-[creg:COUNTRY {reference_name: 'nro.delegated_stats'}]-(creg_country:Country)
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-    OPTIONAL MATCH (p)-[:PART_OF]->(cover:BGPPrefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(:OpaqueID)
-    OPTIONAL MATCH (cover:BGPPrefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(cover_creg_country:Country)
-    RETURN c.country_code AS cc, toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, cover_creg_country.country_code, '-')) AS rir_country, p.prefix AS prefix, COLLECT(DISTINCT(t.label)) AS tags, COLLECT(DISTINCT o.descr) AS descr, COLLECT(DISTINCT o.visibility) AS visibility, COLLECT(DISTINCT a.asn) AS asn `,
+    RETURN c.country_code AS cc, toUpper(COALESCE(creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, '-')) AS rir_country, p.prefix AS prefix, COLLECT(DISTINCT(t.label)) AS tags, COLLECT(DISTINCT o.descr) AS descr, COLLECT(DISTINCT o.visibility) AS visibility, COLLECT(DISTINCT a.asn) AS asn`,
   columns: [
     {
       name: 'RIR',

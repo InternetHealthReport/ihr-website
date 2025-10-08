@@ -20,11 +20,10 @@ const prefixes = ref({
   loading: true,
   query: `MATCH (:AS {asn: $asn})-[o:ORIGINATE]->(p:BGPPrefix)
     OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
-    OPTIONAL MATCH (p)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
-    OPTIONAL MATCH (p)-[:PART_OF*1..3]->(cover:RIRPrefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(:OpaqueID)
-    OPTIONAL MATCH (cover:RIRPrefix)-[cover_creg:ASSIGNED {reference_org:'NRO'}]->(cover_creg_country:Country)
-    RETURN c.country_code AS cc, toUpper(COALESCE(creg.registry, cover_creg.registry, '-')) AS rir, toUpper(COALESCE(creg_country.country_code, cover_creg_country.country_code, '-')) AS rir_country, p.prefix as prefix, collect(DISTINCT(t.label)) AS tags, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility`,
+    OPTIONAL MATCH (p)-[:PART_OF]->(cover:RIRPrefix)-[cover_creg:ASSIGNED {reference_name:'nro.delegated_stats'}]->(:OpaqueID)
+    OPTIONAL MATCH (cover:RIRPrefix)-[:COUNTRY {reference_name:'nro.delegated_stats'}]->(cover_creg_country:Country)
+    RETURN c.country_code AS cc, toUpper(COALESCE(cover_creg.registry, '-')) AS rir, toUpper(COALESCE(cover_creg_country.country_code, '-')) AS rir_country, p.prefix as prefix, collect(DISTINCT(t.label)) AS tags, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility`,
   columns: [
     {
       name: 'RIR',
