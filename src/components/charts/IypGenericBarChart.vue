@@ -37,8 +37,6 @@ const renderChart = () => {
       }
     })
 
-    console.log(group_values)
-
     group_values.forEach((group) => {
       const filtData = localChartData.value.filter((item) => item[props.config.groupKey] == group)
 
@@ -60,6 +58,35 @@ const renderChart = () => {
       x: groupedData.labels,
       y: groupedData.data,
       type: 'bar'
+    })
+  }
+
+  if (props.config.showAllGroupValues) {
+    // only available if groupKey exists
+    data.forEach((row1) => {
+      let reduce_others = 0
+      data.forEach((row2) => {
+        if (row1.name !== row2.name) {
+          row2.x.forEach((value) => {
+            if (!row1.x.includes(value) && value !== 'Others') {
+              const missing_value = localChartData.value.filter(
+                (item) =>
+                  item[props.config.groupKey] == row1.name &&
+                  item[props.config.key] == value.replace('AS', '')
+              )
+              if (missing_value.length) {
+                row1.x.push(value)
+                row1.y.push(missing_value[0][props.config.value])
+                reduce_others += missing_value[0][props.config.value]
+              }
+            }
+          })
+        }
+      })
+      const other_index = row1.x.indexOf('Others')
+      if (other_index >= 0) {
+        row1.y[other_index] -= reduce_others
+      }
     })
   }
 
