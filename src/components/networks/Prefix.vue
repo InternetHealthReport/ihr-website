@@ -62,6 +62,7 @@ watch(
     if (route.params.ip != host.value || Number(route.params.length) != prefixLength.value) {
       host.value = route.params.ip
       prefixLength.value = Number(route.params.length)
+      fetchData()
     }
   },
   { deep: true }
