@@ -46,7 +46,7 @@ const queries = ref([
     query: `MATCH (p:BGPPrefix {prefix: $prefix})
       OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-      OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       OPTIONAL MATCH (p)-[:PART_OF]-(:RIRPrefix)-[deleg:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
       OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)

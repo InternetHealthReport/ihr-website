@@ -20,7 +20,7 @@ const ips = ref({
   query: `MATCH (:HostName {name: $hostname})-[:RESOLVES_TO]-(i:IP)
     OPTIONAL MATCH (i)-[:PART_OF]-(p:BGPPrefix)-[:ORIGINATE]-(a:AS)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-    OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
     RETURN DISTINCT a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS asname, i.ip as ip, p.prefix AS prefix, COLLECT(DISTINCT t.label) AS tags`,

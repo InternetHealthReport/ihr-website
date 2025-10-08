@@ -19,7 +19,7 @@ const atlas = ref({
   loading: true,
   query: `MATCH (:Country {country_code: $cc})-[:COUNTRY]-(atlas:AtlasProbe)-[loc:LOCATED_IN]-(a:AS)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-    OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
     RETURN atlas.id AS id, atlas.status_name AS status, 'IPv'+loc.af AS af, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS asname`,
   columns: [

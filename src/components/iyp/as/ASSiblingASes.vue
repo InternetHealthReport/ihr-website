@@ -16,7 +16,7 @@ const siblings = ref({
   query: `MATCH (a:AS {asn: $asn})-[:SIBLING_OF]-(sibling:AS)
     OPTIONAL MATCH (sibling)-[:COUNTRY {reference_org:'NRO'}]->(c)
     OPTIONAL MATCH (sibling)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-    OPTIONAL MATCH (sibling)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+    OPTIONAL MATCH (sibling)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
     OPTIONAL MATCH (sibling)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
     RETURN DISTINCT sibling.asn AS asn, c.country_code AS cc, COALESCE(pdbn.name, btn.name, ripen.name) AS name`,
   columns: [

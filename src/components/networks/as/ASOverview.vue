@@ -47,7 +47,7 @@ const queries = ref([
       OPTIONAL MATCH (a)-[:ORIGINATE]->(p6:BGPPrefix {af:6})
       WITH COALESCE(COUNT(DISTINCT p6.prefix), 0) AS prefixes_v6, prefixes_v4, a
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-      OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       OPTIONAL MATCH (a)-[:NAME]->(n:Name)
       OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)

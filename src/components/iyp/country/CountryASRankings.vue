@@ -18,7 +18,7 @@ const rankings = ref({
   loading: true,
   query: `MATCH (:Country {country_code: $cc})-[:COUNTRY]-(r:Ranking)-[rr:RANK]-(a:AS)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-    OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
     RETURN r.name AS rank_name, rr.rank AS rank, a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS asname, 1/(1+toFloat(rr.rank)) AS inv_rank`,
   columns: [
