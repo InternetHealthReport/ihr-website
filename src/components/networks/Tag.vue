@@ -25,7 +25,8 @@ const tagName = ref(null)
 const menu = ref(activeMenu)
 
 const getInfo = () => {
-  const query = `MATCH (t:Tag {label: $tag})
+  const query = `MATCH (t:Tag)
+      WHERE lower(t.label) = lower($tag)
       RETURN t.label AS label`
   return [{ statement: query, parameters: { tag: tag.value } }]
 }

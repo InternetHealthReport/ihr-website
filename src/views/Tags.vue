@@ -91,10 +91,10 @@ onMounted(() => {
             <ul class="ul_styles">
               <li>
                 <RouterLink
-                  :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'ToR Services' } })"
+                  :to="Tr.i18nRoute({ name: 'tag', params: { tag: 'Tor services' } })"
                   class="IHR_delikify"
                 >
-                  ToR Services
+                  Tor services
                 </RouterLink>
               </li>
               <li>

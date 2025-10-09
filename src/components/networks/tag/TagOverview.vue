@@ -24,7 +24,8 @@ const loading = ref(1)
 const queries = ref([
   {
     data: [],
-    query: `MATCH (t:Tag {label: $tag})
+    query: `MATCH (t:Tag)
+      WHERE lower(t.label) = lower($tag)
       OPTIONAL MATCH (t)<-[cat_a:CATEGORIZED]-(a:AS) WITH t, count(DISTINCT a) as nb_ases, COLLECT(DISTINCT cat_a.reference_org) as data_source_ases
       OPTIONAL MATCH (t)<-[cat_p:CATEGORIZED]-(p:Prefix) WITH t, nb_ases, data_source_ases, count(DISTINCT p) as nb_prefixes, COLLECT(DISTINCT cat_p.reference_org) as data_source_prefixes
       OPTIONAL MATCH (t)<-[cat_d:CATEGORIZED]-(:URL)-[:PART_OF]-(d:HostName) WITH t, nb_ases, data_source_ases, nb_prefixes, data_source_prefixes, count(DISTINCT d) as nb_hostnames, COLLECT(DISTINCT cat_d.reference_org) as data_source_domains
