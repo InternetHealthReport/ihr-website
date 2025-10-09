@@ -16,10 +16,9 @@ const domains = ref({
   data: [],
   show: false,
   loading: true,
-  query: `MATCH (p:Prefix {prefix: $prefix})<-[po:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(h:HostName & !AuthoritativeNameServer)-[:PART_OF]-(d:DomainName)-[ra:RANK {reference_name:'tranco.top1m'}]->(rn:Ranking)
-    WHERE "BGPPrefix" IN po.prefix_types
+    query: `MATCH (p:BGPPrefix {prefix: $prefix})<-[:PART_OF]-(i:IP)<-[:RESOLVES_TO]-(h:HostName & !AuthoritativeNameServer)-[:PART_OF]-(d:DomainName)-[ra:RANK {reference_name:'tranco.top1m'}]->(rn:Ranking)
     OPTIONAL MATCH (h)<-[:PART_OF]-(p)-[:CATEGORIZED]->(t:Tag)
-    RETURN COLLECT(DISTINCT i.ip) AS ip, h.name as hostName, collect(DISTINCT t.label) as tags, ra.rank AS rank, split(h.name, '.')[-1] AS tld, 1/toFloat(ra.rank) AS inv_rank, rn.name as rankingName
+    RETURN h.name as hostName, COLLECT(DISTINCT i.ip) AS ip, collect(DISTINCT t.label) as tags, ra.rank AS rank, split(h.name, '.')[-1] AS tld, 1/toFloat(ra.rank) AS inv_rank, rn.name as rankingName
     ORDER BY rank`,
   columns: [
     {

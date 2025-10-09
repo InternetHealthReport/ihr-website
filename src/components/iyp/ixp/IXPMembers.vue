@@ -18,7 +18,7 @@ const members = ref({
   query: `MATCH (:PeeringdbIXID {id: $id})<-[:EXTERNAL_ID]-(:IXP)<-[m:MEMBER_OF]-(a:AS)
     WHERE m.reference_org <> 'CAIDA'
     OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-    OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+    OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
     OPTIONAL MATCH (a)-[:COUNTRY {reference_org: 'NRO'}]->(c:Country)
     RETURN distinct a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS name, c.country_code as cc`,

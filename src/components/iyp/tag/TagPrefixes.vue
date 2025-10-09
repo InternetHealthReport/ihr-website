@@ -18,10 +18,9 @@ const prefixes = ref({
   loading: true,
   query: `MATCH (t:Tag {label: $tag})<-[cat:CATEGORIZED]-(p:Prefix)
     OPTIONAL MATCH (p)<-[o:ORIGINATE]-(a:AS)
-    OPTIONAL MATCH (a)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
-    OPTIONAL MATCH (p)-[:COUNTRY {reference_org:'IHR'}]->(c:Country)
+    OPTIONAL MATCH (p)-[:PART_OF]-(:RIRPrefix)-[creg:COUNTRY {reference_name:'nro.delegated_stats'}]->(creg_country:Country)
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(to:Tag) WHERE t <> to
-    RETURN p.prefix as prefix, collect(DISTINCT to.label) as other_tags, c.country_code AS cc, creg_country.country_code as as_cc, collect(DISTINCT a.asn) as asn, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name, cat.reference_url AS classifier_url`,
+    RETURN p.prefix as prefix, collect(DISTINCT to.label) as other_tags, creg_country.country_code as cc, collect(DISTINCT a.asn) as asn, collect(DISTINCT o.descr) as descr, collect(DISTINCT o.visibility) as visibility, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name, cat.reference_url AS classifier_url`,
   columns: [
     {
       name: 'Classified by',
@@ -50,9 +49,9 @@ const prefixes = ref({
     },
     {
       name: 'Reg. Country',
-      label: 'AS Reg. Country ',
+      label: 'Reg. Country ',
       align: 'left',
-      field: (row) => row.as_cc,
+      field: (row) => row.cc,
       format: (val) => `${String(val).toUpperCase()}`,
       sortable: true
     },
@@ -61,14 +60,6 @@ const prefixes = ref({
       label: 'Description',
       align: 'left',
       field: (row) => row.descr,
-      format: (val) => `${val}`,
-      sortable: true
-    },
-    {
-      name: 'Geoloc. Country',
-      label: 'Geoloc',
-      align: 'left',
-      field: (row) => row.cc,
       format: (val) => `${val}`,
       sortable: true
     },
@@ -126,7 +117,7 @@ onMounted(() => {
       :chart-data="prefixesViz"
       :chart-layout="{ title: 'Breakdown per origin AS and registered country code' }"
       :config="{
-        keys: ['as_cc', 'asn', 'prefix'],
+        keys: ['cc', 'asn', 'prefix'],
         root: tag,
         show_percent: true,
         hovertemplate:

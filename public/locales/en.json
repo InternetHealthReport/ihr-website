@@ -1013,7 +1013,7 @@
         "caption": "Prefixes registered and geo-located in ",
         "info": {
           "title": "IP Prefixes",
-          "description": "<p>IP prefixes geo-located by Maxmind or registered with RIRs in the selected country.</p>"
+          "description": "<p>IP prefixes that are announced in BGP and geo-located by Maxmind in the selected country.</p>"
         }
       },
       "atlas": {

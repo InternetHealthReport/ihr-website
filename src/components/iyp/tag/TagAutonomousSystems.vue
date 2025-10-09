@@ -19,7 +19,7 @@ const ases = ref({
   query: `MATCH (t:Tag {label: $tag})<-[cat:CATEGORIZED]-(a:AS)
     OPTIONAL MATCH (a)-[:CATEGORIZED]->(to:Tag) WHERE t <> to
     OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(n:Name)
-    OPTIONAL MATCH (a)-[creg:COUNTRY {reference_org:'NRO'}]->(creg_country:Country)
+    OPTIONAL MATCH (a)-[creg:COUNTRY {reference_name:'nro.delegated_stats'}]->(creg_country:Country)
     WHERE creg_country.country_code <> ''
     RETURN a.asn as asn, n.name as name, collect(DISTINCT to.label) as other_tags, toUpper(COALESCE(creg.registry,  '-')) AS rir, creg_country.country_code AS cc, cat.reference_org AS classifier_org, split(cat.reference_name, '.')[-1] AS classifier_name`,
   columns: [

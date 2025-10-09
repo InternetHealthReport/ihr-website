@@ -44,7 +44,7 @@ const queries = ref([
     query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[rr:RANK]-(:Ranking)-[:COUNTRY]-(c)
       WHERE rr.rank < 10
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-      OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       RETURN a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS as_name, SUM(10-rr.rank) AS nb_rankings
       ORDER BY nb_rankings DESC LIMIT 5`
@@ -52,12 +52,11 @@ const queries = ref([
   {
     data: [],
     query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[ca:CATEGORIZED]-(:Tag {label:'Tranco 10k Host'}),
-      (a)-[:ORIGINATE]-(:BGPPrefix)-[po:PART_OF]-(:IP)-[re:RESOLVES_TO {reference_name:'openintel.tranco1m'}]-(d:HostName)
+      (a)-[:ORIGINATE]-(:BGPPrefix)-[:PART_OF]-(:IP)-[re:RESOLVES_TO {reference_name:'openintel.tranco1m'}]-(d:HostName)
       USING INDEX re:RESOLVES_TO(reference_name)
-      WHERE "BGPPrefix" IN po.prefix_types
       WITH a, COUNT(DISTINCT d) AS nb_domains ORDER BY nb_domains DESC LIMIT 5
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-      OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       RETURN a.asn AS asn, COALESCE(pdbn.name, btn.name, ripen.name) AS as_name, nb_domains`
   },

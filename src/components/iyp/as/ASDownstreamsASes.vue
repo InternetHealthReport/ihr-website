@@ -19,7 +19,7 @@ const downstreams = ref({
   query: `MATCH (a:AS {asn: $asn})<-[d:DEPENDS_ON]-(b:AS)
     WHERE a.asn <> b.asn
     OPTIONAL MATCH (b)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-    OPTIONAL MATCH (b)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+    OPTIONAL MATCH (b)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
     OPTIONAL MATCH (b)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
     OPTIONAL MATCH (b)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
     OPTIONAL MATCH (b)-[:CATEGORIZED]->(t:Tag)

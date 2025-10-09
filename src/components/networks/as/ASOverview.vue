@@ -47,7 +47,7 @@ const queries = ref([
       OPTIONAL MATCH (a)-[:ORIGINATE]->(p6:BGPPrefix {af:6})
       WITH COALESCE(COUNT(DISTINCT p6.prefix), 0) AS prefixes_v6, prefixes_v4, a
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-      OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       OPTIONAL MATCH (a)-[:NAME]->(n:Name)
       OPTIONAL MATCH (a)-[:WEBSITE]->(u:URL)
@@ -68,8 +68,8 @@ const queries = ref([
   },
   {
     data: [],
-    query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:BGPPrefix)<-[po:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
-      WHERE rr.reference_name = "tranco.top1m" AND h.name = d.name AND "BGPPrefix" IN po.prefix_types
+    query: `MATCH (:AS {asn: $asn})-[:ORIGINATE]->(:BGPPrefix)<-[:PART_OF]-(:IP)<-[:RESOLVES_TO]-(h:HostName)-[:PART_OF]-(d:DomainName)-[rr:RANK]->(rn:Ranking)
+      WHERE rr.reference_name = "tranco.top1m" AND h.name = d.name
       RETURN DISTINCT h.name AS hostname, rr.rank AS rank
       ORDER BY rank LIMIT 5`
   }

@@ -54,7 +54,7 @@ const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
 const getInfo = () => {
   const query = `MATCH (a:AS {asn: $asn})
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
-      OPTIONAL MATCH (a)-[:NAME {reference_org:'BGP.Tools'}]->(btn:Name)
+      OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
       RETURN COALESCE(pdbn.name, btn.name, ripen.name) AS name`
   return [{ statement: query, parameters: { asn: asNumber.value } }]
