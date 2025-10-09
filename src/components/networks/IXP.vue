@@ -141,7 +141,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <h1 class="text-center">
       {{ pageTitle }}
     </h1>
