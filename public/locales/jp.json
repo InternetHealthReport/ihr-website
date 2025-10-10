@@ -1218,5 +1218,13 @@
       "title": "RIPE Atlas destinations",
       "description": ""
     }
+  },
+  "whois": {
+    "title": "Whois Matches",
+    "caption": "Registration information",
+    "info": {
+      "title": "Whois Matches",
+      "description": "Whois provides registration information about the resource in a tabular format, with the most common fields of interest displayed by default."
+    }
   }
 }
