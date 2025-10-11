@@ -12,7 +12,10 @@ const props = defineProps(['pageTitle', 'hostName'])
     :info-title="$t('iyp.domainname.ips.info.title')"
     :info-description="$t('iyp.domainname.ips.info.description')"
   >
-    <HostNameIPAddressesPrefixes :page-title="pageTitle" :host-name="hostName" />
+    <HostNameIPAddressesPrefixes
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
 </template>
 

@@ -194,8 +194,13 @@ watch(filteredRttOverTime, () => {
 
 <template>
   <template v-if="metaData.target">
-    <div v-if="isOneOff == true" class="col q-ml-md">
-      <div class="text-h6">One-off measurement stats:</div>
+    <div
+      v-if="isOneOff == true"
+      class="col q-ml-md"
+    >
+      <div class="text-h6">
+        One-off measurement stats:
+      </div>
       <ul>
         <li class="text-body">
           Minimum RTT: <strong>{{ minRtt }} ms</strong>
@@ -242,16 +247,26 @@ watch(filteredRttOverTime, () => {
           <div class="row justify-center">
             <div class="col-2 q-pr-md">
               <QInput
-                label="Selected Start Date Time in (UTC)"
                 v-model="leftDateTimePicker"
+                label="Selected Start Date Time in (UTC)"
                 class="input"
                 outlined
               >
-                <template v-slot:append>
-                  <QIcon name="event" class="cursor-pointer">
-                    <QPopupProxy no-route-dismiss cover>
+                <template #append>
+                  <QIcon
+                    name="event"
+                    class="cursor-pointer"
+                  >
+                    <QPopupProxy
+                      no-route-dismiss
+                      cover
+                    >
                       <div class="row q-pa-md q-gutter-md row items-start">
-                        <QDate flat v-model="leftDateTimePickerTemp" mask="YYYY-MM-DD, HH:mm" />
+                        <QDate
+                          v-model="leftDateTimePickerTemp"
+                          flat
+                          mask="YYYY-MM-DD, HH:mm"
+                        />
                         <QTime
                           v-model="leftDateTimePickerTemp"
                           flat
@@ -260,7 +275,12 @@ watch(filteredRttOverTime, () => {
                         />
                       </div>
                       <div class="row items-center justify-end q-ma-md">
-                        <QBtn v-close-popup class="closeBtnStyle q-mr-md" label="Close" outline />
+                        <QBtn
+                          v-close-popup
+                          class="closeBtnStyle q-mr-md"
+                          label="Close"
+                          outline
+                        />
                         <QBtn
                           v-close-popup
                           class="bg-primary applyBtnStyle"
@@ -281,11 +301,21 @@ watch(filteredRttOverTime, () => {
                 class="input"
                 outlined
               >
-                <template v-slot:append>
-                  <QIcon name="event" class="cursor-pointer">
-                    <QPopupProxy no-route-dismiss cover>
+                <template #append>
+                  <QIcon
+                    name="event"
+                    class="cursor-pointer"
+                  >
+                    <QPopupProxy
+                      no-route-dismiss
+                      cover
+                    >
                       <div class="row q-pa-md q-gutter-md row items-start">
-                        <QDate flat v-model="rightDateTimePickerTemp" mask="YYYY-MM-DD, HH:mm" />
+                        <QDate
+                          v-model="rightDateTimePickerTemp"
+                          flat
+                          mask="YYYY-MM-DD, HH:mm"
+                        />
                         <QTime
                           v-model="rightDateTimePickerTemp"
                           flat
@@ -294,7 +324,12 @@ watch(filteredRttOverTime, () => {
                         />
                       </div>
                       <div class="row items-center justify-end q-ma-md">
-                        <QBtn v-close-popup class="closeBtnStyle q-mr-md" label="Close" outline />
+                        <QBtn
+                          v-close-popup
+                          class="closeBtnStyle q-mr-md"
+                          label="Close"
+                          outline
+                        />
                         <QBtn
                           v-close-popup
                           class="bg-primary applyBtnStyle"
@@ -312,12 +347,20 @@ watch(filteredRttOverTime, () => {
         </div>
       </div>
     </div>
-    <div v-if="isLoading" class="rttSpinner">
-      <QSpinner color="secondary" size="15em" />
+    <div
+      v-if="isLoading"
+      class="rttSpinner"
+    >
+      <QSpinner
+        color="secondary"
+        size="15em"
+      />
     </div>
   </template>
   <template v-else>
-    <div class="placeholder-message">No Traceroute RTT chart data available.</div>
+    <div class="placeholder-message">
+      No Traceroute RTT chart data available.
+    </div>
   </template>
 </template>
 

@@ -158,7 +158,13 @@ watch(selectedDestinationDetailsList, (newVal, oldVal) => {
     selection="multiple"
     :sort-method="customSort"
   />
-  <div v-if="isLoading" class="IHR_loading-spinner">
-    <QSpinner color="secondary" size="15em" />
+  <div
+    v-if="isLoading"
+    class="IHR_loading-spinner"
+  >
+    <QSpinner
+      color="secondary"
+      size="15em"
+    />
   </div>
 </template>

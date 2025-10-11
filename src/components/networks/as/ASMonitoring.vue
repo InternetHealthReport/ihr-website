@@ -99,7 +99,10 @@ const toggleIpFamily = () => {
     :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
   >
-    <ASRipeAtlas :as-number="asNumber" :page-title="pageTitle" />
+    <ASRipeAtlas
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 
   <!-- <GenericCardController

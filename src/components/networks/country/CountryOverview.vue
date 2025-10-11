@@ -183,15 +183,29 @@ onMounted(() => {
 <template>
   <div>
     <QMarkupTable separator="horizontal">
-      <div v-if="loading > 0" class="IHR_loading-spinner">
-        <QSpinner color="secondary" size="15em" />
+      <div
+        v-if="loading > 0"
+        class="IHR_loading-spinner"
+      >
+        <QSpinner
+          color="secondary"
+          size="15em"
+        />
       </div>
       <thead>
         <tr>
-          <th class="text-left">Summary</th>
-          <th class="text-left">Prominent ISPs</th>
-          <th class="text-left">Prominent Hosting Providers</th>
-          <th class="text-left">External Links</th>
+          <th class="text-left">
+            Summary
+          </th>
+          <th class="text-left">
+            Prominent ISPs
+          </th>
+          <th class="text-left">
+            Prominent Hosting Providers
+          </th>
+          <th class="text-left">
+            External Links
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -258,7 +272,10 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[1].data.length > 0">
-              <div v-for="item in queries[1].data" :key="Number(item.asn)">
+              <div
+                v-for="item in queries[1].data"
+                :key="Number(item.asn)"
+              >
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}` } })"
                 >
@@ -269,7 +286,10 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[2].data.length > 0">
-              <div v-for="item in queries[2].data" :key="Number(item.asn)">
+              <div
+                v-for="item in queries[2].data"
+                :key="Number(item.asn)"
+              >
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item.asn}` } })"
                 >
@@ -280,8 +300,15 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div v-for="(value, key) in references" :key="key">
-                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+              <div
+                v-for="(value, key) in references"
+                :key="key"
+              >
+                <a
+                  :href="handleReference(key)"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {{ key }}
                 </a>
               </div>
@@ -290,11 +317,13 @@ onMounted(() => {
         </tr>
       </tbody>
     </QMarkupTable>
-    <br />
+    <br>
     <QMarkupTable separator="horizontal">
       <thead>
         <tr>
-          <th class="text-left">Map</th>
+          <th class="text-left">
+            Map
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -311,7 +340,7 @@ onMounted(() => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 layer-type="base"
                 name="OpenStreetMap"
-              ></LTileLayer>
+              />
               <LControl>
                 <QCard>
                   <QCardSection>
@@ -343,8 +372,8 @@ onMounted(() => {
                 </QCard>
               </LControl>
               <LMarker
-                v-if="facilitiesPoints"
                 v-for="(item, index) in queries[3].data"
+                v-if="facilitiesPoints"
                 :key="index"
                 :lat-lng="[item.latitude, item.longitude]"
                 :icon="queries[3].icon"
@@ -352,18 +381,22 @@ onMounted(() => {
                 <LPopup>{{ item.name }}</LPopup>
               </LMarker>
               <LMarker
-                v-if="atlasProbePoints"
                 v-for="(item, index) in queries[4].data"
+                v-if="atlasProbePoints"
                 :key="index"
                 :lat-lng="[item.latitude, item.longitude]"
                 :icon="queries[4].icon"
               >
-                <LPopup v-if="item.description">{{ item.id }} - {{ item.description }}</LPopup>
-                <LPopup v-else>{{ item.id }}</LPopup>
+                <LPopup v-if="item.description">
+                  {{ item.id }} - {{ item.description }}
+                </LPopup>
+                <LPopup v-else>
+                  {{ item.id }}
+                </LPopup>
               </LMarker>
               <LMarker
-                v-if="organizationPoints"
                 v-for="(item, index) in queries[5].data"
+                v-if="organizationPoints"
                 :key="index"
                 :lat-lng="[item.latitude, item.longitude]"
                 :icon="queries[5].icon"

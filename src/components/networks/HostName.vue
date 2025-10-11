@@ -90,7 +90,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+  >
     <h1 class="text-center">
       {{ pageTitle }}
     </h1>
@@ -107,27 +110,51 @@ onMounted(() => {
         narrow-indicator
       >
         <!-- <QTab name="overview">Overview</QTab> -->
-        <QTab name="routing"> Routing </QTab>
-        <QTab name="dns"> DNS </QTab>
-        <QTab name="rankings"> Rankings </QTab>
-        <QTab name="custom"> Custom </QTab>
+        <QTab name="routing">
+          Routing
+        </QTab>
+        <QTab name="dns">
+          DNS
+        </QTab>
+        <QTab name="rankings">
+          Rankings
+        </QTab>
+        <QTab name="custom">
+          Custom
+        </QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels v-if="pageTitle" v-model="menu">
+      <QTabPanels
+        v-if="pageTitle"
+        v-model="menu"
+      >
         <!-- <QTabPanel name="overview">
           
         </QTabPanel> -->
         <QTabPanel name="routing">
-          <HostNameRouting :page-title="pageTitle" :host-name="domainName" />
+          <HostNameRouting
+            :page-title="pageTitle"
+            :host-name="domainName"
+          />
         </QTabPanel>
         <QTabPanel name="dns">
-          <HostNameDNS :page-title="pageTitle" :host-name="domainName" />
+          <HostNameDNS
+            :page-title="pageTitle"
+            :host-name="domainName"
+          />
         </QTabPanel>
         <QTabPanel name="rankings">
-          <HostNameRankings :page-title="pageTitle" :host-name="domainName" />
+          <HostNameRankings
+            :page-title="pageTitle"
+            :host-name="domainName"
+          />
         </QTabPanel>
         <QTabPanel name="custom">
-          <HostNameCustom :page-title="pageTitle" :host-name="domainName" :hash="routeHash" />
+          <HostNameCustom
+            :page-title="pageTitle"
+            :host-name="domainName"
+            :hash="routeHash"
+          />
         </QTabPanel>
       </QTabPanels>
     </QCard>

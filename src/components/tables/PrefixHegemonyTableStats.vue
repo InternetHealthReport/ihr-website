@@ -120,13 +120,17 @@ const getClassByHegemony = (hegemony) => {
 <template>
   <div>
     <div>
-      <QInput v-model="tabFilter" debounce="300" placeholder="Search">
+      <QInput
+        v-model="tabFilter"
+        debounce="300"
+        placeholder="Search"
+      >
         <template #prepend>
           <QIcon name="fas fa-search" />
         </template>
       </QInput>
     </div>
-    <br />
+    <br>
     <QTable
       :rows="rows"
       :columns="columns"
@@ -141,13 +145,36 @@ const getClassByHegemony = (hegemony) => {
       <template #header="props">
         <div style="display: contents">
           <QTr>
-            <q-th key="ASN" :props="props"> ASN </q-th>
-            <q-th key="ASName" :props="props"> Name </q-th>
-            <q-th key="invalid" :props="props">
+            <q-th
+              key="ASN"
+              :props="props"
+            >
+              ASN
+            </q-th>
+            <q-th
+              key="ASName"
+              :props="props"
+            >
+              Name
+            </q-th>
+            <q-th
+              key="invalid"
+              :props="props"
+            >
               {{ columnName }}
             </q-th>
-            <q-th key="specific" :props="props"> {{ columnName }} (more specific) </q-th>
-            <q-th key="total" :props="props"> Total </q-th>
+            <q-th
+              key="specific"
+              :props="props"
+            >
+              {{ columnName }} (more specific)
+            </q-th>
+            <q-th
+              key="total"
+              :props="props"
+            >
+              Total
+            </q-th>
           </QTr>
         </div>
       </template>

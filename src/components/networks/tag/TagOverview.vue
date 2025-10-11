@@ -65,13 +65,24 @@ onMounted(() => {
 
 <template>
   <div class="IYP_chart">
-    <div v-if="loading > 0" class="IYP_loading-spinner">
-      <QSpinner color="secondary" size="3em" />
+    <div
+      v-if="loading > 0"
+      class="IYP_loading-spinner"
+    >
+      <QSpinner
+        color="secondary"
+        size="3em"
+      />
     </div>
-    <div v-else class="row justify-center">
+    <div
+      v-else
+      class="row justify-center"
+    >
       <div class="col-4">
         <h3>Summary</h3>
-        <p class="text-center">Data Sources: {{ allSources(queries[0].data[0]).join(', ') }}</p>
+        <p class="text-center">
+          Data Sources: {{ allSources(queries[0].data[0]).join(', ') }}
+        </p>
       </div>
     </div>
   </div>

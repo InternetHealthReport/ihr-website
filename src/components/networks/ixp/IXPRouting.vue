@@ -12,7 +12,10 @@ const props = defineProps(['ixpNumber', 'pageTitle'])
     :info-title="$t('iyp.ixp.roas.info.title')"
     :info-description="$t('iyp.ixp.roas.info.description')"
   >
-    <IXPRPKIRouteOriginAuthorization :ixp-number="ixpNumber" :page-title="pageTitle" />
+    <IXPRPKIRouteOriginAuthorization
+      :ixp-number="ixpNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

@@ -158,16 +158,29 @@ watch(
   >
     <template #append>
       <div v-if="!loading">
-        <QIcon v-if="!readonly" name="fas fa-search" style="font-size: 0.82em; margin-right: 4px" />
+        <QIcon
+          v-if="!readonly"
+          name="fas fa-search"
+          style="font-size: 0.82em; margin-right: 4px"
+        />
       </div>
       <div v-else>
-        <QSpinner color="primary" size="0.82em" />
+        <QSpinner
+          color="primary"
+          size="0.82em"
+        />
       </div>
     </template>
     <template #loading />
     <template #option="scope">
-      <QItem v-bind="scope.itemProps" @click="selectLocation(scope.opt.value)">
-        <QItemSection side color="accent">
+      <QItem
+        v-bind="scope.itemProps"
+        @click="selectLocation(scope.opt.value)"
+      >
+        <QItemSection
+          side
+          color="accent"
+        >
           {{ ihr_api.readableType(scope.opt.type) }}
         </QItemSection>
         <QItemSection class="IHR_asn-element-name">

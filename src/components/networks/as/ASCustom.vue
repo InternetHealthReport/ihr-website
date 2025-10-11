@@ -123,9 +123,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
@@ -135,7 +140,10 @@ onMounted(() => {
         v-model="select.value"
         :label="select.label"
       />
-      <QCheckbox v-model="selectAll" label="All" />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Overview -->
@@ -227,7 +235,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.atlas.info.description')"
     class="card"
   >
-    <ASRipeAtlas :as-number="asNumber" :page-title="pageTitle" />
+    <ASRipeAtlas
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 
   <!-- <GenericCardController
@@ -273,7 +284,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.ipPrefix.info.description')"
     class="card"
   >
-    <ASOriginatedPrefixes :as-number="asNumber" :page-title="pageTitle" />
+    <ASOriginatedPrefixes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[8].value"
@@ -283,7 +297,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.peers.info.description')"
     class="card"
   >
-    <ASConnectedASes :as-number="asNumber" :page-title="pageTitle" />
+    <ASConnectedASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[9].value"
@@ -293,7 +310,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.upstreams.info.description')"
     class="card"
   >
-    <ASUpstreamASes :as-number="asNumber" :page-title="pageTitle" />
+    <ASUpstreamASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[10].value"
@@ -303,7 +323,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.downstreams.info.description')"
     class="card"
   >
-    <ASDownstreamsASes :as-number="asNumber" :page-title="pageTitle" />
+    <ASDownstreamsASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[11].value"
@@ -313,7 +336,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.roas.info.description')"
     class="card"
   >
-    <ASRPKIRouteOriginAuthorization :as-number="asNumber" :page-title="pageTitle" />
+    <ASRPKIRouteOriginAuthorization
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
@@ -324,7 +350,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.popularDomains.info.description')"
     class="card"
   >
-    <ASPopularDomains :as-number="asNumber" :page-title="pageTitle" />
+    <ASPopularDomains
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[13].value"
@@ -334,7 +363,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.popularHostNames.info.description')"
     class="card"
   >
-    <ASPopularHostNames :as-number="asNumber" :page-title="pageTitle" />
+    <ASPopularHostNames
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[14].value"
@@ -344,7 +376,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.authoritativeNameservers.info.description')"
     class="card"
   >
-    <ASAuthoritativeNameservers :as-number="asNumber" :page-title="pageTitle" />
+    <ASAuthoritativeNameservers
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
@@ -355,7 +390,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.ixp.info.description')"
     class="card"
   >
-    <ASIXPs :as-number="asNumber" :page-title="pageTitle" />
+    <ASIXPs
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[16].value"
@@ -365,7 +403,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.facilities.info.description')"
     class="card"
   >
-    <ASCoLocatedASes :as-number="asNumber" :page-title="pageTitle" />
+    <ASCoLocatedASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Registration -->
   <GenericCardController
@@ -376,7 +417,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.siblings.info.description')"
     class="card"
   >
-    <ASSiblingASes :as-number="asNumber" :page-title="pageTitle" />
+    <ASSiblingASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
@@ -387,7 +431,10 @@ onMounted(() => {
     :info-description="$t('iyp.as.rankings.info.description')"
     class="card"
   >
-    <ASRankings :as-number="asNumber" :page-title="pageTitle" />
+    <ASRankings
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

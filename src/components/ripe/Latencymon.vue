@@ -82,7 +82,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :id="myId" class="IHR_nowrap" />
+  <div
+    :id="myId"
+    class="IHR_nowrap"
+  />
 </template>
 
 <style>

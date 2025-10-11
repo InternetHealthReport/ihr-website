@@ -147,7 +147,7 @@ const traces = computed(() => {
       :layout="layout"
       :traces="traces"
       :no-data="noData"
-      :disableCVD="true"
+      :disable-c-v-d="true"
       :y-max="yMax"
     />
   </div>

@@ -185,8 +185,14 @@ const getCalssByHegemony = (props) => {
           :class="col.name == 'hegemony' ? ['IHR_important-cell', getCalssByHegemony(props)] : ''"
         >
           <div v-if="col.name == 'direct'">
-            <QIcon v-if="props.row.direct" name="fas fa-check" />
-            <QIcon v-if="!props.row.direct" name="fas fa-times" />
+            <QIcon
+              v-if="props.row.direct"
+              name="fas fa-check"
+            />
+            <QIcon
+              v-if="!props.row.direct"
+              name="fas fa-times"
+            />
           </div>
           {{ col.format(col.field(props.row)) }}
         </QTd>

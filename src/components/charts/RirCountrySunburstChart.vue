@@ -63,6 +63,11 @@ onMounted(() => {
 
 <template>
   <div>
-    <ReactiveChart :layout="layout" :traces="traces" :chart-title="chartTitle" :no-data="noData" />
+    <ReactiveChart
+      :layout="layout"
+      :traces="traces"
+      :chart-title="chartTitle"
+      :no-data="noData"
+    />
   </div>
 </template>

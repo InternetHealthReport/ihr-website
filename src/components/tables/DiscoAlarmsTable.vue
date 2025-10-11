@@ -143,7 +143,10 @@ const msmPrbIds = (probes) => {
         <QTd auto-width>
           <QToggle v-model="props.expand" />
         </QTd>
-        <QTd key="location" align>
+        <QTd
+          key="location"
+          align
+        >
           <div v-if="props.row.streamtype == 'asn'">
             <RouterLink
               :to="Tr.i18nRoute({ name: 'network', params: { id: 'AS' + props.row.streamname } })"
@@ -168,9 +171,18 @@ const msmPrbIds = (probes) => {
           {{ props.row.nbdiscoprobes }}
         </QTd>
       </QTr>
-      <QTr v-if="props.expand" :props="props">
-        <QTd colspan="100%" class="IHR_nohover" bordered>
-          <div class="text-h3 text-center">Pings from disconnected probes</div>
+      <QTr
+        v-if="props.expand"
+        :props="props"
+      >
+        <QTd
+          colspan="100%"
+          class="IHR_nohover"
+          bordered
+        >
+          <div class="text-h3 text-center">
+            Pings from disconnected probes
+          </div>
           <div class="IHR_side_borders">
             <Latencymon
               :start-time="

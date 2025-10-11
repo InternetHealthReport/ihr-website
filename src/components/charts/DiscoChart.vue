@@ -138,7 +138,11 @@ onMounted(() => {
 <template>
   <div class="IHR_chart">
     <div>
-      <DiscoMap ref="ihrChartMap" :events="mapData" :loading="loading" />
+      <DiscoMap
+        ref="ihrChartMap"
+        :events="mapData"
+        :loading="loading"
+      />
       <DiscoAlarmsTable
         :start-time="startTime"
         :stop-time="endTime"

@@ -197,9 +197,14 @@ onMounted(async () => {
 
 <template>
   <div class="IHR_char-container">
-    <h1 class="text-center q-pa-xl">"Upstream" Topology Overview</h1>
+    <h1 class="text-center q-pa-xl">
+      "Upstream" Topology Overview
+    </h1>
     <div class="row justify-center">
-      <div v-if="chartAmount == 0" class="IHR_description">
+      <div
+        v-if="chartAmount == 0"
+        class="IHR_description"
+      >
         <p>
           This tool provides a comprehensive platform for researchers and network professionals to
           explore and analyze the topology of an AS or a network prefix.
@@ -326,10 +331,17 @@ onMounted(async () => {
       </div>
     </div>
     <div class="addTopologyButton">
-      <QBtn color="secondary" label="Add Topology" @click="incrementChart(``, ``)" />
+      <QBtn
+        color="secondary"
+        label="Add Topology"
+        @click="incrementChart(``, ``)"
+      />
     </div>
     {{ layout.value }}
-    <GridLayout v-model:layout="layout" :row-height="30">
+    <GridLayout
+      v-model:layout="layout"
+      :row-height="30"
+    >
       <GridItem
         v-for="(item, index) in layout"
         :key="item.i"

@@ -54,7 +54,10 @@ const getUrlAnchor = () => {
 <template>
   <div>
     <QCard>
-      <div :id="anchorUrl" class="anchor" />
+      <div
+        :id="anchorUrl"
+        class="anchor"
+      />
       <QBar class="bar">
         <div>
           <div class="text-h6">
@@ -65,7 +68,12 @@ const getUrlAnchor = () => {
           </div>
         </div>
         <QSpace />
-        <QBtn dense flat icon="fa-solid fa-link" @click="copyToClipboard(getUrlAnchor())">
+        <QBtn
+          dense
+          flat
+          icon="fa-solid fa-link"
+          @click="copyToClipboard(getUrlAnchor())"
+        >
           <QTooltip> Copy widget's URL </QTooltip>
         </QBtn>
         <QBtn
@@ -77,17 +85,28 @@ const getUrlAnchor = () => {
         />
       </QBar>
       <QCardSection>
-        <slot></slot>
+        <slot />
       </QCardSection>
     </QCard>
     <QDialog v-model="infoDialog">
       <QCard style="width: 1000px; height: auto">
         <QCardSection>
-          <div class="text-h6" v-html="infoTitle"></div>
+          <div
+            class="text-h6"
+            v-html="infoTitle"
+          />
         </QCardSection>
-        <QCardSection class="q-pt-none" v-html="infoDescription" />
+        <QCardSection
+          class="q-pt-none"
+          v-html="infoDescription"
+        />
         <QCardActions align="right">
-          <QBtn v-close-popup flat label="Close" color="primary" />
+          <QBtn
+            v-close-popup
+            flat
+            label="Close"
+            color="primary"
+          />
         </QCardActions>
       </QCard>
     </QDialog>

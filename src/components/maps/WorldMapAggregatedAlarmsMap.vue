@@ -120,7 +120,7 @@ onMounted(() => {
       :layout="layout"
       :traces="traces"
       :no-data="noData"
-      :disableCVD="true"
+      :disable-c-v-d="true"
       @plotly-click="plotlyClickedDataHandler"
     />
   </div>

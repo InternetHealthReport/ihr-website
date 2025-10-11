@@ -71,14 +71,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div
+    id="IHR_as-and-ixp-container"
+    class="IHR_char-container"
+  >
     <div v-if="route.params.id || route.params.ip">
       <AS v-if="asNumber" />
       <IXP v-if="ixpNumber" />
       <Prefix v-if="prefixHostString && prefixLengthNumber" />
     </div>
     <div v-else>
-      <h1 class="text-center q-pa-xl">Network Report</h1>
+      <h1 class="text-center q-pa-xl">
+        Network Report
+      </h1>
       <div class="q-pa-md flex flex-center">
         <div style="width: 100%; max-width: 500px">
           <SearchBar

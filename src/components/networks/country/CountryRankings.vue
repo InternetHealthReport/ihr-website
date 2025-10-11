@@ -13,7 +13,10 @@ const props = defineProps(['countryCode', 'pageTitle'])
     :info-title="$t('iyp.country.rankings.info.title')"
     :info-description="$t('iyp.country.rankings.info.description')"
   >
-    <CountryASRankings :country-code="countryCode" :page-title="pageTitle" />
+    <CountryASRankings
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

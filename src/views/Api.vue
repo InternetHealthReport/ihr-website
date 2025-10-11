@@ -18,7 +18,7 @@ onMounted(() => {
 <template>
   <div class="row justify-center">
     <div class="col-10">
-      <div id="swagger-ui"></div>
+      <div id="swagger-ui" />
     </div>
   </div>
 </template>

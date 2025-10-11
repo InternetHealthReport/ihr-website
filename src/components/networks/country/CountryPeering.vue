@@ -14,7 +14,10 @@ const props = defineProps(['countryCode', 'pageTitle'])
     :info-title="$t('iyp.country.ixps.info.title')"
     :info-description="$t('iyp.country.ixps.info.description')"
   >
-    <CountryInternetExchangePoints :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePoints
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.country.ixps_domestic_distribution.title')"

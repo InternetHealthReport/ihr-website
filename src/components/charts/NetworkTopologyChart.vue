@@ -461,10 +461,17 @@ defineExpose({ fitToScreen })
 </script>
 
 <template>
-  <QCard style="margin-bottom: 15px" :flat="props.isComponent" :bordered="!props.isComponent">
+  <QCard
+    style="margin-bottom: 15px"
+    :flat="props.isComponent"
+    :bordered="!props.isComponent"
+  >
     <QCardSection v-if="!props.isComponent">
       <div class="flex justify-between pb-0">
-        <div class="flex justify-center" style="flex-grow: 1">
+        <div
+          class="flex justify-center"
+          style="flex-grow: 1"
+        >
           <QInput
             v-model="searchInput"
             style="max-width: 145px"
@@ -482,7 +489,12 @@ defineExpose({ fitToScreen })
           />
           <div class="row q-col-gutter-sm q-gutter-y-sm q-gutter-x-none q-responsive buttons">
             <div class="col-6 col-sm-auto">
-              <QBtn color="secondary" label="Search" class="full-width" @click="search" />
+              <QBtn
+                color="secondary"
+                label="Search"
+                class="full-width"
+                @click="search"
+              />
             </div>
             <div class="col-6 col-sm-auto">
               <QBtn
@@ -497,11 +509,29 @@ defineExpose({ fitToScreen })
       </div>
     </QCardSection>
 
-    <QCardSection v-if="!loading && Object.keys(allNodes).length > 0" class="graphContainer">
-      <QBtnGroup outline class="controlPanel">
-        <QBtn outline icon="zoom_in" @click="graph?.zoomIn()" />
-        <QBtn outline icon="zoom_out" @click="graph?.zoomOut()" />
-        <QBtn outline icon="fit_screen" @click="fitToScreen()" />
+    <QCardSection
+      v-if="!loading && Object.keys(allNodes).length > 0"
+      class="graphContainer"
+    >
+      <QBtnGroup
+        outline
+        class="controlPanel"
+      >
+        <QBtn
+          outline
+          icon="zoom_in"
+          @click="graph?.zoomIn()"
+        />
+        <QBtn
+          outline
+          icon="zoom_out"
+          @click="graph?.zoomOut()"
+        />
+        <QBtn
+          outline
+          icon="fit_screen"
+          @click="fitToScreen()"
+        />
       </QBtnGroup>
 
       <VNetworkGraph
@@ -514,22 +544,31 @@ defineExpose({ fitToScreen })
         :event-handlers="eventHandlers"
       />
 
-      <div v-if="props.showLegend" class="legend">
+      <div
+        v-if="props.showLegend"
+        class="legend"
+      >
         <div class="row items-center">
           <div class="col">
-            <div class="hegemonyLabel">Hegemony</div>
+            <div class="hegemonyLabel">
+              Hegemony
+            </div>
           </div>
           <div class="col">
-            <div class="scaleLabel">100%</div>
+            <div class="scaleLabel">
+              100%
+            </div>
             <div class="scale">
               <div
                 v-for="percentage in [100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0]"
                 :key="percentage"
                 class="scaleColor"
                 :style="{ backgroundColor: calculateNodeColor(percentage) }"
-              ></div>
+              />
             </div>
-            <div class="scaleLabel">0%</div>
+            <div class="scaleLabel">
+              0%
+            </div>
           </div>
         </div>
       </div>
@@ -550,9 +589,19 @@ defineExpose({ fitToScreen })
       </div>
     </QCardSection>
 
-    <QSpinner v-if="loading" color="secondary" size="5em" class="spinner" />
+    <QSpinner
+      v-if="loading"
+      color="secondary"
+      size="5em"
+      class="spinner"
+    />
 
-    <h5 v-if="!loading && Object.keys(allNodes).length == 0" class="text-center">No data found</h5>
+    <h5
+      v-if="!loading && Object.keys(allNodes).length == 0"
+      class="text-center"
+    >
+      No data found
+    </h5>
   </QCard>
 </template>
 
