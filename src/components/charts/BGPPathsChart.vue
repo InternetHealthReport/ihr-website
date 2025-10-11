@@ -176,9 +176,15 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="isLoadingBgplayData" class="loadingContainer">
+  <div
+    v-if="isLoadingBgplayData"
+    class="loadingContainer"
+  >
     <div class="IHR_loading-spinner">
-      <QSpinner color="secondary" size="15em" />
+      <QSpinner
+        color="secondary"
+        size="15em"
+      />
     </div>
   </div>
   <div v-else-if="props.isNoData">
@@ -192,8 +198,17 @@ onMounted(() => {
   </div>
   <div v-else>
     <div v-if="dataSource === 'ris-live'">
-      <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
-      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+      <QBtn
+        v-if="isLiveMode && isPlaying"
+        color="negative"
+        label="Live"
+      />
+      <QBtn
+        v-else
+        color="grey-9"
+        label="Go to Live"
+        @click="enableLiveMode"
+      />
     </div>
     <div
       v-if="!props.isNoData && nodes.size === 0"
@@ -216,7 +231,11 @@ onMounted(() => {
         marker-labels
       />
     </div>
-    <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
+    <ReactiveChart
+      :layout="actualChartLayout"
+      :traces="actualChartData"
+      :new-plot="true"
+    />
   </div>
 </template>
 

@@ -101,9 +101,14 @@ watch(selected, (newValue) => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+  >
     <div>
-      <h1 class="text-center q-pa-xl">Network Delays During National Lockdowns</h1>
+      <h1 class="text-center q-pa-xl">
+        Network Delays During National Lockdowns
+      </h1>
 
       <div class="row justify-center">
         <div class="IHR_description q-pa-lg">
@@ -112,8 +117,7 @@ watch(selected, (newValue) => {
             <a
               href="https://labs.ripe.net/Members/becha/hackathons-in-the-time-of-corona"
               targeet="_blank"
-              >RIPE Hackathon on the health of the Internet during the COVID-19 crisis</a
-            >, we hacked this experimental interface to look at network delays during national
+            >RIPE Hackathon on the health of the Internet during the COVID-19 crisis</a>, we hacked this experimental interface to look at network delays during national
             lockdowns. This is an attempt to monitor and study congestion that could occur at large
             eyeball networks during mass quarantines.
           </p>
@@ -125,7 +129,10 @@ watch(selected, (newValue) => {
           </p>
           <p>
             Displayed delays are computed from
-            <a href="https://atlas.ripe.net/" target="_blank">RIPE Atlas</a> traceroutes towards
+            <a
+              href="https://atlas.ripe.net/"
+              target="_blank"
+            >RIPE Atlas</a> traceroutes towards
             Google DNS, the networks' main upstream providers, and, for European countries, two
             large IXPs (AMS-IX and DE-CIX), and the E-root DNS server for other countries. See also
             our
@@ -136,28 +143,40 @@ watch(selected, (newValue) => {
             <a
               href="https://labs.ripe.net/Members/romain_fontugne/network-delays-in-times-of-corona"
               target="_blank"
-              >RIPE Labs article</a
-            >.
+            >RIPE Labs article</a>.
           </p>
           <p>Be patient. Loading all graphs may take some time for certain countries.</p>
         </div>
       </div>
       <div class="row justify-center box_corona">
         <div class="col-3">
-          <QSelect v-model="selected" :options="selection" label="Select a country" />
+          <QSelect
+            v-model="selected"
+            :options="selection"
+            label="Select a country"
+          />
         </div>
       </div>
       <div class="row toolbox">
         <div>
           <h3>Toolbox</h3>
-          <QToggle v-model="searchBar" label="Add more destination networks" />
+          <QToggle
+            v-model="searchBar"
+            label="Add more destination networks"
+          />
         </div>
       </div>
       <div v-if="selected" />
-      <div v-for="asn in asns" :key="`${asn.name}-${asn.as}`">
+      <div
+        v-for="asn in asns"
+        :key="`${asn.name}-${asn.as}`"
+      >
         <div class="row">
           <div class="col-12 text-center q-pa-md">
-            <div :id="asn.as" class="IHR_anchor" />
+            <div
+              :id="asn.as"
+              class="IHR_anchor"
+            />
             <h2>{{ asn.name }} (AS{{ asn.as }})</h2>
           </div>
           <div class="column_corona">
@@ -173,7 +192,9 @@ watch(selected, (newValue) => {
               :search-bar="searchBar"
               @max-value="updateYaxis"
             />
-            <p class="center">One month before Lockdown</p>
+            <p class="center">
+              One month before Lockdown
+            </p>
           </div>
           <div class="column_corona">
             <NetworkDelayChart
@@ -188,7 +209,9 @@ watch(selected, (newValue) => {
               :search-bar="searchBar"
               @max-value="updateYaxis"
             />
-            <p class="center">Lockdown({{ countriesInfo[selected['value']].start }})</p>
+            <p class="center">
+              Lockdown({{ countriesInfo[selected['value']].start }})
+            </p>
           </div>
           <div class="column_corona">
             <NetworkDelayChart
@@ -203,7 +226,9 @@ watch(selected, (newValue) => {
               :search-bar="searchBar"
               @max-value="updateYaxis"
             />
-            <p class="center">Latest</p>
+            <p class="center">
+              Latest
+            </p>
           </div>
         </div>
       </div>

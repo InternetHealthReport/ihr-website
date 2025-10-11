@@ -17,7 +17,9 @@ const showFeedbackDialog = ref(false)
   <QDialog v-model="showFeedbackDialog">
     <QCard>
       <QCardSection>
-        <div class="text-h6">Give Feedback</div>
+        <div class="text-h6">
+          Give Feedback
+        </div>
       </QCardSection>
       <QCardSection>
         <div>
@@ -25,14 +27,16 @@ const showFeedbackDialog = ref(false)
           <ul>
             <li>
               Send your feedback by email to
-              <a href="mailto:admin@ihr.live" target="_blank">admin@ihr.live</a>
+              <a
+                href="mailto:admin@ihr.live"
+                target="_blank"
+              >admin@ihr.live</a>
             </li>
             <li>
               Join our
               <a
                 href="https://join.slack.com/t/internethealthreport/shared_invite/zt-19d4e48py-~oirVwkINe01gTVEF3o4Kw"
-                >Slack workspace</a
-              >
+              >Slack workspace</a>
               and send your feedback as a direct message or in the #ihr-website channel
             </li>
             <li>
@@ -45,7 +49,11 @@ const showFeedbackDialog = ref(false)
         </div>
       </QCardSection>
       <QCardActions align="right">
-        <QBtn v-close-popup flat label="Close" />
+        <QBtn
+          v-close-popup
+          flat
+          label="Close"
+        />
       </QCardActions>
     </QCard>
   </QDialog>

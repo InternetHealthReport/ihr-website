@@ -110,9 +110,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
@@ -122,11 +127,18 @@ onMounted(() => {
         v-model="select.value"
         :label="select.label"
       />
-      <QCheckbox v-model="selectAll" label="All" />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Overview -->
-  <CountryOverview v-if="selects[0].value" :country-code="countryCode" class="card" />
+  <CountryOverview
+    v-if="selects[0].value"
+    :country-code="countryCode"
+    class="card"
+  />
   <!-- Monitoring -->
   <GenericCardController
     v-if="selects[1].value"
@@ -218,7 +230,10 @@ onMounted(() => {
     :info-description="$t('iyp.country.atlas.info.description')"
     class="card"
   >
-    <CountryRipeAtlas :country-code="countryCode" :page-title="pageTitle" />
+    <CountryRipeAtlas
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Routing -->
   <GenericCardController
@@ -229,7 +244,10 @@ onMounted(() => {
     :info-description="$t('iyp.country.ases.info.description')"
     class="card"
   >
-    <CountryAutonomousSystems :country-code="countryCode" :page-title="pageTitle" />
+    <CountryAutonomousSystems
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[7].value"
@@ -239,7 +257,10 @@ onMounted(() => {
     :info-description="$t('iyp.country.prefixes.info.description')"
     class="card"
   >
-    <CountryIPPrefixes :country-code="countryCode" :page-title="pageTitle" />
+    <CountryIPPrefixes
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
@@ -250,7 +271,10 @@ onMounted(() => {
     :info-description="$t('iyp.country.ixps.info.description')"
     class="card"
   >
-    <CountryInternetExchangePoints :country-code="countryCode" :page-title="pageTitle" />
+    <CountryInternetExchangePoints
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[9].value"
@@ -287,7 +311,10 @@ onMounted(() => {
     :info-description="$t('iyp.country.rankings.info.description')"
     class="card"
   >
-    <CountryASRankings :country-code="countryCode" :page-title="pageTitle" />
+    <CountryASRankings
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

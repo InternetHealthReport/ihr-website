@@ -269,7 +269,11 @@ onMounted(() => {
       @loaded="loading"
       @plotly-click="showTable"
     />
-    <QCard v-if="details.tableVisible" class="bg-accent q-ma-xl" dark>
+    <QCard
+      v-if="details.tableVisible"
+      class="bg-accent q-ma-xl"
+      dark
+    >
       <QCardSection class="q-pa-xs">
         <div class="row items-center">
           <div class="col">
@@ -299,14 +303,32 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <q-tab name="delay" :label="$t('charts.delayAndForwarding.tables.delay.title')" />
-        <q-tab name="forwarding" :label="$t('charts.delayAndForwarding.tables.forwarding.title')" />
-        <q-tab name="api" label="API" />
+        <q-tab
+          name="delay"
+          :label="$t('charts.delayAndForwarding.tables.delay.title')"
+        />
+        <q-tab
+          name="forwarding"
+          :label="$t('charts.delayAndForwarding.tables.forwarding.title')"
+        />
+        <q-tab
+          name="api"
+          label="API"
+        />
       </QTabs>
-      <div v-if="loading" class="IHR_loading-spinner">
-        <QSpinner color="secondary" size="15em" />
+      <div
+        v-if="loading"
+        class="IHR_loading-spinner"
+      >
+        <QSpinner
+          color="secondary"
+          size="15em"
+        />
       </div>
-      <QTabPanels v-model="details.activeTab" animated>
+      <QTabPanels
+        v-model="details.activeTab"
+        animated
+      >
         <QTabPanel name="delay">
           <DelayAlarmsTable
             :start-time="details.delayData.startTime"
@@ -323,7 +345,10 @@ onMounted(() => {
             @prefix-details="emits('prefix-details', $event)"
           />
         </QTabPanel>
-        <QTabPanel name="api" class="IHR_api-table">
+        <QTabPanel
+          name="api"
+          class="IHR_api-table"
+        >
           <h3>{{ $t('charts.delayAndForwarding.apiTitle') }}</h3>
           <table>
             <tbody>
@@ -334,7 +359,11 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a id="delay" :href="delayUrl" target="_blank">{{ delayUrl }}</a>
+                  <a
+                    id="delay"
+                    :href="delayUrl"
+                    target="_blank"
+                  >{{ delayUrl }}</a>
                 </td>
               </tr>
               <tr>
@@ -344,7 +373,11 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a id="forwarding" :href="forwardingUrl" target="_blank">{{ forwardingUrl }}</a>
+                  <a
+                    id="forwarding"
+                    :href="forwardingUrl"
+                    target="_blank"
+                  >{{ forwardingUrl }}</a>
                 </td>
               </tr>
               <tr>
@@ -354,19 +387,30 @@ onMounted(() => {
                   </p>
                 </td>
                 <td>
-                  <a id="delayAlarms" :href="delayAlarmsUrl" target="_blank">{{
+                  <a
+                    id="delayAlarms"
+                    :href="delayAlarmsUrl"
+                    target="_blank"
+                  >{{
                     delayAlarmsUrl
                   }}</a>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <p class="text-subtitle1" name="forwardingAlarms">
+                  <p
+                    class="text-subtitle1"
+                    name="forwardingAlarms"
+                  >
                     {{ $t('charts.delayAndForwarding.tables.forwarding.title') }}
                   </p>
                 </td>
                 <td>
-                  <a id="forwardingAlarms" :href="forwardingAlarmsUrl" target="_blank">{{
+                  <a
+                    id="forwardingAlarms"
+                    :href="forwardingAlarmsUrl"
+                    target="_blank"
+                  >{{
                     forwardingAlarmsUrl
                   }}</a>
                 </td>

@@ -94,7 +94,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+  >
     <h1 class="text-center">
       {{ pageTitle }}
     </h1>
@@ -110,21 +113,42 @@ onMounted(() => {
         align="justify"
         narrow-indicator
       >
-        <QTab name="overview"> Overview </QTab>
-        <QTab name="routing"> Routing </QTab>
-        <QTab name="dns"> DNS </QTab>
-        <QTab name="custom"> Custom </QTab>
+        <QTab name="overview">
+          Overview
+        </QTab>
+        <QTab name="routing">
+          Routing
+        </QTab>
+        <QTab name="dns">
+          DNS
+        </QTab>
+        <QTab name="custom">
+          Custom
+        </QTab>
       </QTabs>
       <QSeparator />
-      <QTabPanels v-if="pageTitle" v-model="menu">
+      <QTabPanels
+        v-if="pageTitle"
+        v-model="menu"
+      >
         <QTabPanel name="overview">
-          <PrefixOverview :host="host" :prefix-length="prefixLength" :get-prefix="getPrefix()" />
+          <PrefixOverview
+            :host="host"
+            :prefix-length="prefixLength"
+            :get-prefix="getPrefix()"
+          />
         </QTabPanel>
         <QTabPanel name="routing">
-          <PrefixRouting :page-title="pageTitle" :get-prefix="getPrefix()" />
+          <PrefixRouting
+            :page-title="pageTitle"
+            :get-prefix="getPrefix()"
+          />
         </QTabPanel>
         <QTabPanel name="dns">
-          <PrefixDNS :page-title="pageTitle" :get-prefix="getPrefix()" />
+          <PrefixDNS
+            :page-title="pageTitle"
+            :get-prefix="getPrefix()"
+          />
         </QTabPanel>
         <QTabPanel name="custom">
           <PrefixCustom

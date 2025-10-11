@@ -12,7 +12,10 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-title="$t('iyp.as.rankings.info.title')"
     :info-description="$t('iyp.as.rankings.info.description')"
   >
-    <ASRankings :as-number="asNumber" :page-title="pageTitle" />
+    <ASRankings
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

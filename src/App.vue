@@ -70,7 +70,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <QLayout id="app" view="hHh LpR fff">
+  <QLayout
+    id="app"
+    view="hHh LpR fff"
+  >
     <Header />
     <QPageContainer>
       <RouterView />

@@ -89,9 +89,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
@@ -101,11 +106,18 @@ onMounted(() => {
         v-model="select.value"
         :label="select.label"
       />
-      <QCheckbox v-model="selectAll" label="All" />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Overview -->
-  <IXPOverview v-if="selects[0].value" :ixp-number="peeringdbId" class="card" />
+  <IXPOverview
+    v-if="selects[0].value"
+    :ixp-number="peeringdbId"
+    class="card"
+  />
   <!-- Monitoring -->
   <GenericCardController
     v-if="selects[1].value && caidaId"
@@ -170,7 +182,10 @@ onMounted(() => {
     :info-description="$t('iyp.ixp.members.info.description')"
     class="card"
   >
-    <IXPMembers :ixp-number="peeringdbId" :page-title="pageTitle" />
+    <IXPMembers
+      :ixp-number="peeringdbId"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <!-- Peering -->
   <GenericCardController
@@ -181,7 +196,10 @@ onMounted(() => {
     :info-description="$t('iyp.ixp.facilities.info.description')"
     class="card"
   >
-    <IXPCoLocationFacilities :ixp-number="peeringdbId" :page-title="pageTitle" />
+    <IXPCoLocationFacilities
+      :ixp-number="peeringdbId"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[6].value"
@@ -191,7 +209,10 @@ onMounted(() => {
     :info-description="$t('iyp.ixp.peeringLANs.info.description')"
     class="card"
   >
-    <IXPPeeringLANs :ixp-number="peeringdbId" :page-title="pageTitle" />
+    <IXPPeeringLANs
+      :ixp-number="peeringdbId"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

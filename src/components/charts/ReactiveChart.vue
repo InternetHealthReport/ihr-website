@@ -382,41 +382,105 @@ watch(
     <h3 v-if="chartTitle">
       {{ chartTitle }}
     </h3>
-    <div ref="myId"></div>
-    <div v-if="noData" class="IHR_no-data">
-      <div class="bg-white" style="text-align: center">
+    <div ref="myId" />
+    <div
+      v-if="noData"
+      class="IHR_no-data"
+    >
+      <div
+        class="bg-white"
+        style="text-align: center"
+      >
         {{ noData }}
       </div>
     </div>
-    <QMenu v-if="dropdownCVD" anchor="top right" self="top right" :offset="[10, -60]">
+    <QMenu
+      v-if="dropdownCVD"
+      anchor="top right"
+      self="top right"
+      :offset="[10, -60]"
+    >
       <QList>
-        <QItem clickable @click="onCvdDropdown('default')">
+        <QItem
+          clickable
+          @click="onCvdDropdown('default')"
+        >
           <QItemSection>
-            <QItemLabel class="text-weight-medium q-pb-xs"> Default </QItemLabel>
-            <QItemLabel class="text-caption" lines="2">
+            <QItemLabel class="text-weight-medium q-pb-xs">
+              Default
+            </QItemLabel>
+            <QItemLabel
+              class="text-caption"
+              lines="2"
+            >
               Plotly's built-in continuous color scales
             </QItemLabel>
           </QItemSection>
         </QItem>
-        <QItem clickable @click="onCvdDropdown('protanopia')" :disable="isCvdSupported()">
+        <QItem
+          clickable
+          :disable="isCvdSupported()"
+          @click="onCvdDropdown('protanopia')"
+        >
           <QItemSection>
-            <QBadge color="red" label="Experimental" style="width: fit-content" />
-            <QItemLabel class="text-weight-medium q-pb-xs"> Protanopia </QItemLabel>
-            <QItemLabel class="text-caption" lines="2"> Custom continuous color scales </QItemLabel>
+            <QBadge
+              color="red"
+              label="Experimental"
+              style="width: fit-content"
+            />
+            <QItemLabel class="text-weight-medium q-pb-xs">
+              Protanopia
+            </QItemLabel>
+            <QItemLabel
+              class="text-caption"
+              lines="2"
+            >
+              Custom continuous color scales
+            </QItemLabel>
           </QItemSection>
         </QItem>
-        <QItem clickable @click="onCvdDropdown('deuteranopia')" :disable="isCvdSupported()">
+        <QItem
+          clickable
+          :disable="isCvdSupported()"
+          @click="onCvdDropdown('deuteranopia')"
+        >
           <QItemSection>
-            <QBadge color="red" label="Experimental" style="width: fit-content" />
-            <QItemLabel class="text-weight-medium q-pb-xs"> Deuteranopia </QItemLabel>
-            <QItemLabel class="text-caption" lines="2"> Custom continuous color scales </QItemLabel>
+            <QBadge
+              color="red"
+              label="Experimental"
+              style="width: fit-content"
+            />
+            <QItemLabel class="text-weight-medium q-pb-xs">
+              Deuteranopia
+            </QItemLabel>
+            <QItemLabel
+              class="text-caption"
+              lines="2"
+            >
+              Custom continuous color scales
+            </QItemLabel>
           </QItemSection>
         </QItem>
-        <QItem clickable @click="onCvdDropdown('tritanopia')" :disable="isCvdSupported()">
+        <QItem
+          clickable
+          :disable="isCvdSupported()"
+          @click="onCvdDropdown('tritanopia')"
+        >
           <QItemSection>
-            <QBadge color="red" label="Experimental" style="width: fit-content" />
-            <QItemLabel class="text-weight-medium q-pb-xs"> Tritanopia </QItemLabel>
-            <QItemLabel class="text-caption" lines="2"> Custom continuous color scales </QItemLabel>
+            <QBadge
+              color="red"
+              label="Experimental"
+              style="width: fit-content"
+            />
+            <QItemLabel class="text-weight-medium q-pb-xs">
+              Tritanopia
+            </QItemLabel>
+            <QItemLabel
+              class="text-caption"
+              lines="2"
+            >
+              Custom continuous color scales
+            </QItemLabel>
           </QItemSection>
         </QItem>
       </QList>

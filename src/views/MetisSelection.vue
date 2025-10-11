@@ -182,7 +182,9 @@ const copyAPI = () => {
 
 <template>
   <div>
-    <h1 class="text-center q-pa-xl">Metis: Atlas probe selection</h1>
+    <h1 class="text-center q-pa-xl">
+      Metis: Atlas probe selection
+    </h1>
     <div class="row justify-center q-pa-md">
       <div class="IHR_description">
         <p>
@@ -194,9 +196,10 @@ const copyAPI = () => {
           We actually provide a list of autonomous systems (ASes) instead of probes. This is because
           the connected probes are constantly changing. In order to avoid querying the Atlas API
           each time in parallel, we provide the API specification that can be directly used with the
-          <a href="https://atlas.ripe.net/measurements/form/" target="_blank"
-            >template that Atlas provides when creating a new measurement</a
-          >. The specification is a bit bulky, but Atlas currently does not provide a way to enter a
+          <a
+            href="https://atlas.ripe.net/measurements/form/"
+            target="_blank"
+          >template that Atlas provides when creating a new measurement</a>. The specification is a bit bulky, but Atlas currently does not provide a way to enter a
           <i>list</i> of ASes.
         </p>
         <p>
@@ -207,24 +210,43 @@ const copyAPI = () => {
         </p>
         <p>
           If you are looking for historical data or want to automate the process, check out the
-          <RouterLink :to="Tr.i18nRoute({ name: 'api' })"> Metis section of the IHR API </RouterLink
-          >.
+          <RouterLink :to="Tr.i18nRoute({ name: 'api' })">
+            Metis section of the IHR API
+          </RouterLink>.
         </p>
       </div>
     </div>
     <div class="row justify-center">
       <div class="col-3">
-        <QInput v-model="nbprobes" label="Number of probes" />
-        <QSelect v-model="metric" :options="metricoptions" label="Distance metric" />
-        <QSelect v-model="af" :options="afoptions" label="IP version" />
-        <QBtn class="q-mt-sm" label="Go" @click="apiCall" />
+        <QInput
+          v-model="nbprobes"
+          label="Number of probes"
+        />
+        <QSelect
+          v-model="metric"
+          :options="metricoptions"
+          label="Distance metric"
+        />
+        <QSelect
+          v-model="af"
+          :options="afoptions"
+          label="IP version"
+        />
+        <QBtn
+          class="q-mt-sm"
+          label="Go"
+          @click="apiCall"
+        />
       </div>
     </div>
     <div v-if="fetch">
       <div class="q-pa-md">
         <div class="row justify-evenly">
           <div class="col-6 q-px-md">
-            <MetisTable :data="tableData" :loading="loading" />
+            <MetisTable
+              :data="tableData"
+              :loading="loading"
+            />
           </div>
           <div class="col-5 q-px-xl">
             <h2>Country distribution</h2>
@@ -234,8 +256,17 @@ const copyAPI = () => {
         <div class="row justify-center">
           <div class="IHR_block q-px-md">
             <h2>Atlas API specification</h2>
-            <QBtn class="q-mb-sm" color="secondary" label="Copy" @click="copyAPI" />
-            <textarea v-model="apiJson" class="apiTextarea" readonly />
+            <QBtn
+              class="q-mb-sm"
+              color="secondary"
+              label="Copy"
+              @click="copyAPI"
+            />
+            <textarea
+              v-model="apiJson"
+              class="apiTextarea"
+              readonly
+            />
           </div>
         </div>
         <div class="row justify-center">

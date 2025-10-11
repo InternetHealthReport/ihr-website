@@ -135,22 +135,41 @@ onMounted(() => {
   >
     <template #body="props">
       <QTr :props="props">
-        <QTd v-if="showStart" key="startpoint" :props="props">
+        <QTd
+          v-if="showStart"
+          key="startpoint"
+          :props="props"
+        >
           {{ prettyName(getCellValue(props, 'startpoint')) }}
         </QTd>
-        <QTd key="endpoint" :props="props">
+        <QTd
+          key="endpoint"
+          :props="props"
+        >
           {{ prettyName(getCellValue(props, 'endpoint')) }}
         </QTd>
-        <QTd key="median" :props="props">
+        <QTd
+          key="median"
+          :props="props"
+        >
           {{ getCellValue(props, 'median') }}
         </QTd>
-        <QTd key="nbtracks" :props="props">
+        <QTd
+          key="nbtracks"
+          :props="props"
+        >
           {{ getCellValue(props, 'nbtracks') }}
         </QTd>
-        <QTd key="realrtt" :props="props">
+        <QTd
+          key="realrtt"
+          :props="props"
+        >
           {{ getCellValue(props, 'realrtt') }}
         </QTd>
-        <QTd key="nbprobes" :props="props">
+        <QTd
+          key="nbprobes"
+          :props="props"
+        >
           {{ getCellValue(props, 'nbprobes') }}
         </QTd>
       </QTr>

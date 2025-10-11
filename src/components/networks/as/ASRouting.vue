@@ -16,7 +16,10 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-title="$t('iyp.as.ipPrefix.info.title')"
     :info-description="$t('iyp.as.ipPrefix.info.description')"
   >
-    <ASOriginatedPrefixes :as-number="asNumber" :page-title="pageTitle" />
+    <ASOriginatedPrefixes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.peers.title')"
@@ -25,7 +28,10 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.peers.info.description')"
     class="card"
   >
-    <ASConnectedASes :as-number="asNumber" :page-title="pageTitle" />
+    <ASConnectedASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.upstreams.title')"
@@ -34,7 +40,10 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.upstreams.info.description')"
     class="card"
   >
-    <ASUpstreamASes :as-number="asNumber" :page-title="pageTitle" />
+    <ASUpstreamASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.downstreams.title')"
@@ -43,7 +52,10 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.downstreams.info.description')"
     class="card"
   >
-    <ASDownstreamsASes :as-number="asNumber" :page-title="pageTitle" />
+    <ASDownstreamsASes
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
   <GenericCardController
     :title="$t('iyp.as.roas.title')"
@@ -52,7 +64,10 @@ const props = defineProps(['asNumber', 'pageTitle'])
     :info-description="$t('iyp.as.roas.info.description')"
     class="card"
   >
-    <ASRPKIRouteOriginAuthorization :as-number="asNumber" :page-title="pageTitle" />
+    <ASRPKIRouteOriginAuthorization
+      :as-number="asNumber"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

@@ -136,16 +136,28 @@ const getClassByHegemony = (hegemony) => {
   >
     <template #loading>
       <div class="spinner-container">
-        <q-spinner color="secondary" size="50px" />
+        <q-spinner
+          color="secondary"
+          size="50px"
+        />
       </div>
     </template>
     <template #no-data>
-      <div v-if="!loading" class="q-table__bottom row items-center q-table__bottom--nodata">
-        <QIcon name="warning" class="q-table__bottom-nodata-icon" />
+      <div
+        v-if="!loading"
+        class="q-table__bottom row items-center q-table__bottom--nodata"
+      >
+        <QIcon
+          name="warning"
+          class="q-table__bottom-nodata-icon"
+        />
         No data available
       </div>
     </template>
-    <template #header="props" style="display: contents">
+    <template
+      #header="props"
+      style="display: contents"
+    >
       <QTr>
         <QTh colspan="2">
           <h3>Autonomous System</h3>
@@ -153,7 +165,12 @@ const getClassByHegemony = (hegemony) => {
         <QTh colspan="3">
           <h3>
             Population coverage
-            <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
+            <QIcon
+              name="far fa-question-circle"
+              color="grey"
+              style="font-size: 0.9em"
+              right
+            />
             <QTooltip max-width="360px">
               <div
                 v-html="$t(`documentationPage.sections.countryasdependency.description.1.body`)"
@@ -164,7 +181,12 @@ const getClassByHegemony = (hegemony) => {
         <QTh colspan="1">
           <h3>
             AS coverage
-            <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
+            <QIcon
+              name="far fa-question-circle"
+              color="grey"
+              style="font-size: 0.9em"
+              right
+            />
             <QTooltip max-width="360px">
               <div
                 v-html="$t(`documentationPage.sections.countryasdependency.description.2.body`)"
@@ -176,16 +198,42 @@ const getClassByHegemony = (hegemony) => {
       <QTr>
         <QTh />
         <QTh>
-          <QInput v-model="tabFilter" dense debounce="300" borderless placeholder="Search">
+          <QInput
+            v-model="tabFilter"
+            dense
+            debounce="300"
+            borderless
+            placeholder="Search"
+          >
             <template #prepend>
               <QIcon name="fas fa-search" />
             </template>
           </QInput>
         </QTh>
-        <QTh key="allEyeball" :props="props"> Total </QTh>
-        <QTh key="eyeball" :props="props"> Direct </QTh>
-        <QTh key="transitingEyeball" :props="props"> Indirect </QTh>
-        <QTh key="transitingAs" :props="props"> Total </QTh>
+        <QTh
+          key="allEyeball"
+          :props="props"
+        >
+          Total
+        </QTh>
+        <QTh
+          key="eyeball"
+          :props="props"
+        >
+          Direct
+        </QTh>
+        <QTh
+          key="transitingEyeball"
+          :props="props"
+        >
+          Indirect
+        </QTh>
+        <QTh
+          key="transitingAs"
+          :props="props"
+        >
+          Total
+        </QTh>
       </QTr>
     </template>
     <template #body="props">

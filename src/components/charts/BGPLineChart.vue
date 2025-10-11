@@ -349,20 +349,47 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="isLoadingBgplayData" class="loadingContainer">
+  <div
+    v-if="isLoadingBgplayData"
+    class="loadingContainer"
+  >
     <div class="IHR_loading-spinner">
-      <QSpinner color="secondary" size="15em" />
+      <QSpinner
+        color="secondary"
+        size="15em"
+      />
     </div>
   </div>
-  <div class="text-center" v-if="rawMessages.length === 0">
-    <h1 v-if="!isLoadingBgplayData">No data available</h1>
-    <h3 v-if="dataSource === 'ris-live'">Try Changing the Input Parameters or you can wait</h3>
-    <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
+  <div
+    v-if="rawMessages.length === 0"
+    class="text-center"
+  >
+    <h1 v-if="!isLoadingBgplayData">
+      No data available
+    </h1>
+    <h3 v-if="dataSource === 'ris-live'">
+      Try Changing the Input Parameters or you can wait
+    </h3>
+    <h6 v-if="dataSource === 'ris-live'">
+      Note: Some prefixes become active after some time.
+    </h6>
   </div>
   <div v-else>
-    <div v-if="dataSource === 'ris-live'" class="q-mb-md">
-      <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
-      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    <div
+      v-if="dataSource === 'ris-live'"
+      class="q-mb-md"
+    >
+      <QBtn
+        v-if="isLiveMode && isPlaying"
+        color="negative"
+        label="Live"
+      />
+      <QBtn
+        v-else
+        color="grey-9"
+        label="Go to Live"
+        @click="enableLiveMode"
+      />
     </div>
     <div class="timetampSlider">
       <div class="timetampSliderContainer">
@@ -379,10 +406,16 @@ onMounted(() => {
           </div>
           <div class="col-12 col-sm-auto">
             <QBadge class="full-width">
-              <div v-if="dataSource === 'ris-live'" class="text-body2">
+              <div
+                v-if="dataSource === 'ris-live'"
+                class="text-body2"
+              >
                 Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages
               </div>
-              <div v-else class="text-body2">
+              <div
+                v-else
+                class="text-body2"
+              >
                 Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State
                 and Events)
               </div>
@@ -427,8 +460,15 @@ onMounted(() => {
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
-    <div v-if="dataSource === 'bgplay'" class="relative-position">
-      <div v-if="isNoVrpData" class="absolute-center text-center" style="z-index: 9">
+    <div
+      v-if="dataSource === 'bgplay'"
+      class="relative-position"
+    >
+      <div
+        v-if="isNoVrpData"
+        class="absolute-center text-center"
+        style="z-index: 9"
+      >
         <h1>No RPKI Data Available</h1>
         <h3>Requested timerange is outside of available data.</h3>
       </div>
@@ -448,7 +488,7 @@ onMounted(() => {
       :info-description="$t('bgpVrpsTable.info.description')"
       class="q-mt-lg"
     >
-      <BGPVrpsTable :vrpTableData="props.vrpTableData" />
+      <BGPVrpsTable :vrp-table-data="props.vrpTableData" />
     </GenericCardController>
   </div>
 </template>

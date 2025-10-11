@@ -117,7 +117,10 @@ const setMajorEyeballs = (asns) => {
     :info-description="$t('iyp.country.atlas.info.description')"
     class="card"
   >
-    <CountryRipeAtlas :country-code="countryCode" :page-title="pageTitle" />
+    <CountryRipeAtlas
+      :country-code="countryCode"
+      :page-title="pageTitle"
+    />
   </GenericCardController>
 </template>
 

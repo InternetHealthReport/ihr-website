@@ -137,15 +137,29 @@ onMounted(() => {
 <template>
   <div>
     <QMarkupTable separator="horizontal">
-      <div v-if="loading > 0" class="IHR_loading-spinner">
-        <QSpinner color="secondary" size="15em" />
+      <div
+        v-if="loading > 0"
+        class="IHR_loading-spinner"
+      >
+        <QSpinner
+          color="secondary"
+          size="15em"
+        />
       </div>
       <thead>
         <tr>
-          <th class="text-left">Summary</th>
-          <th class="text-left">Originated By</th>
-          <th class="text-left">Popular Hostnames</th>
-          <th class="text-left">External Links</th>
+          <th class="text-left">
+            Summary
+          </th>
+          <th class="text-left">
+            Originated By
+          </th>
+          <th class="text-left">
+            Popular Hostnames
+          </th>
+          <th class="text-left">
+            External Links
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -166,7 +180,10 @@ onMounted(() => {
           <td>
             <div v-if="queries[0].data.length > 0">
               <div v-if="queries[0].data[0].asn[0][0]">
-                <div v-for="item in queries[0].data[0].asn" :key="item[0]">
+                <div
+                  v-for="item in queries[0].data[0].asn"
+                  :key="item[0]"
+                >
                   <RouterLink
                     :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${item[0]}` } })"
                   >
@@ -181,7 +198,10 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[1].data.length > 0">
-              <div v-for="item in queries[1].data" :key="item.hostname">
+              <div
+                v-for="item in queries[1].data"
+                :key="item.hostname"
+              >
                 <RouterLink
                   :to="Tr.i18nRoute({ name: 'hostname', params: { hostname: item.hostname } })"
                 >
@@ -192,8 +212,15 @@ onMounted(() => {
           </td>
           <td class="text-left">
             <div v-if="queries[0].data.length > 0">
-              <div v-for="(value, key) in references" :key="key">
-                <a :href="handleReference(key)" target="_blank" rel="noreferrer">
+              <div
+                v-for="(value, key) in references"
+                :key="key"
+              >
+                <a
+                  :href="handleReference(key)"
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   {{ key }}
                 </a>
               </div>
@@ -202,11 +229,13 @@ onMounted(() => {
         </tr>
       </tbody>
     </QMarkupTable>
-    <br />
+    <br>
     <QMarkupTable separator="horizontal">
       <thead>
         <tr>
-          <th class="text-left">"Upstream" Topology</th>
+          <th class="text-left">
+            "Upstream" Topology
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -221,23 +250,36 @@ onMounted(() => {
         </tr>
       </tbody>
     </QMarkupTable>
-    <br />
+    <br>
     <QMarkupTable>
       <thead>
         <tr>
-          <th class="text-left" :colspan="5">Tags</th>
+          <th
+            class="text-left"
+            :colspan="5"
+          >
+            Tags
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td :colspan="5">
-            <div v-if="queries[0].data.length > 0" class="row">
+            <div
+              v-if="queries[0].data.length > 0"
+              class="row"
+            >
               <RouterLink
                 v-for="tag in queries[0].data[0].tags"
                 :key="tag"
                 :to="Tr.i18nRoute({ name: 'tag', params: { tag: tag }, hash: '#Prefixes' })"
               >
-                <QChip dense size="md" color="info" text-color="white">
+                <QChip
+                  dense
+                  size="md"
+                  color="info"
+                  text-color="white"
+                >
                   {{ tag }}
                 </QChip>
               </RouterLink>

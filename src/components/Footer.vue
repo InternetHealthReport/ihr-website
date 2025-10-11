@@ -6,24 +6,47 @@ import { version } from '../../package.json'
 </script>
 
 <template>
-  <QFooter elevated primary class="IHR_footer text-white text-center" style="z-index: 999">
+  <QFooter
+    elevated
+    primary
+    class="IHR_footer text-white text-center"
+    style="z-index: 999"
+  >
     <div class="IHR_footer_contents">
       <div class="IHR_fsection">
-        <div class="" style="max-width: 400px">
+        <div
+          class=""
+          style="max-width: 400px"
+        >
           <div>
-            <QBtn round dense flat :ripple="false" no-caps>
+            <QBtn
+              round
+              dense
+              flat
+              :ripple="false"
+              no-caps
+            >
               <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-                <img src="/imgs/ihr_logo.svg" class="ihr-logo" alt="IHR Logo" />
+                <img
+                  src="/imgs/ihr_logo.svg"
+                  class="ihr-logo"
+                  alt="IHR Logo"
+                >
               </RouterLink>
               <a
                 :href="`https://github.com/InternetHealthReport/ihr-website/releases/tag/v${version}`"
                 class=""
                 target="_blank"
               >
-                <QBadge color="red" floating>v{{ version }}</QBadge>
+                <QBadge
+                  color="red"
+                  floating
+                >v{{ version }}</QBadge>
               </a>
             </QBtn>
-            <div class="text-weight-bold text-h5 q-mt-sm">Internet Health Report</div>
+            <div class="text-weight-bold text-h5 q-mt-sm">
+              Internet Health Report
+            </div>
           </div>
           <div class="IHR_external-links">
             <div class="row nowrap justify-evenly">
@@ -33,7 +56,10 @@ import { version } from '../../package.json'
                 target="_blank"
                 aria-label="Follow us on X"
               >
-                <QIcon name="fab fa-square-x-twitter" class="inline-block" />
+                <QIcon
+                  name="fab fa-square-x-twitter"
+                  class="inline-block"
+                />
               </a>
               <a
                 href="https://github.com/InternetHealthReport"
@@ -41,7 +67,10 @@ import { version } from '../../package.json'
                 target="_blank"
                 aria-label="Visit our GitHub"
               >
-                <QIcon name="fab fa-github-square" class="inline-block" />
+                <QIcon
+                  name="fab fa-github-square"
+                  class="inline-block"
+                />
               </a>
               <a
                 href="mailto:admin@ihr.live"
@@ -49,14 +78,20 @@ import { version } from '../../package.json'
                 target="_blank"
                 aria-label="Contact us via email"
               >
-                <QIcon name="fas fa-envelope-square" class="inline-block" />
+                <QIcon
+                  name="fas fa-envelope-square"
+                  class="inline-block"
+                />
               </a>
             </div>
           </div>
         </div>
       </div>
       <div class="IHR_fsection">
-        <div class="IHR_sitemap" style="max-width: 700px">
+        <div
+          class="IHR_sitemap"
+          style="max-width: 700px"
+        >
           <ul>
             <li class="text-weight-bold links-title text-capitalize">
               {{ $t('footer.reportPages.title') }}
@@ -145,14 +180,20 @@ import { version } from '../../package.json'
       </div>
     </div>
     <div class="IHR_fsection">
-      <div class="row items-center IHR_license-section" style="max-width: 800px">
+      <div
+        class="row items-center IHR_license-section"
+        style="max-width: 800px"
+      >
         <div class="col-3">
-          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
-            ><img
-              alt="Creative Commons License"
-              style="border-width: 0"
-              src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
-          /></a>
+          <a
+            rel="license"
+            href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+            target="_blank"
+          ><img
+            alt="Creative Commons License"
+            style="border-width: 0"
+            src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"
+          ></a>
         </div>
         <div class="col-9 text-caption text-center q-pa-sm">
           <span
@@ -161,18 +202,18 @@ import { version } from '../../package.json'
             property="dct:title"
             rel="dct:type"
           >
-            Internet Health Report</span
-          >
+            Internet Health Report</span>
           is licensed under a
-          <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"
-            >Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a
-          >. Permissions beyond the scope of this license may be available at
+          <a
+            rel="license"
+            href="http://creativecommons.org/licenses/by-nc-sa/4.0/"
+            target="_blank"
+          >Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. Permissions beyond the scope of this license may be available at
           <a
             xmlns:cc="http://creativecommons.org/ns#"
             href="mailto:admin@ihr.live"
             rel="cc:morePermissions"
-            >admin@ihr.live</a
-          >.
+          >admin@ihr.live</a>.
         </div>
       </div>
     </div>

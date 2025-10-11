@@ -137,12 +137,31 @@ onMounted(() => {
     row-key="peer"
     selection="multiple"
   >
-    <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'ris-live'">
-      <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
-      <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
+    <template
+      v-if="props.filteredMessages.length !== 0 && dataSource === 'ris-live'"
+      #top-left
+    >
+      <QBtn
+        v-if="isLiveMode && isPlaying"
+        color="negative"
+        label="Live"
+      />
+      <QBtn
+        v-else
+        color="grey-9"
+        label="Go to Live"
+        @click="enableLiveMode"
+      />
     </template>
     <template #top-right>
-      <QInput v-model="search" dense outlined debounce="300" color="accent" label="Search">
+      <QInput
+        v-model="search"
+        dense
+        outlined
+        debounce="300"
+        color="accent"
+        label="Search"
+      >
         <template #append>
           <QIcon name="search" />
         </template>
@@ -184,11 +203,18 @@ onMounted(() => {
               .join('\n')
           }}</pre>
         </template>
-        <template v-else>Null</template>
+        <template v-else>
+          Null
+        </template>
       </QTd>
     </template>
     <template #body-cell-timestamp="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.timestamp) }}</QTd>
+      <QTd
+        class="nowrap"
+        :props="props"
+      >
+        {{ timestampToUTC(props.row.timestamp) }}
+      </QTd>
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
@@ -199,12 +225,20 @@ onMounted(() => {
               .join('\n')
           }}</pre>
         </template>
-        <template v-else> Null </template>
+        <template v-else>
+          Null
+        </template>
       </QTd>
     </template>
   </QTable>
-  <div v-if="isLoadingBgplayData" class="IHR_loading-spinner">
-    <QSpinner color="secondary" size="15em" />
+  <div
+    v-if="isLoadingBgplayData"
+    class="IHR_loading-spinner"
+  >
+    <QSpinner
+      color="secondary"
+      size="15em"
+    />
   </div>
 </template>
 

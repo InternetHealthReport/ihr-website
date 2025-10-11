@@ -76,9 +76,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
@@ -88,7 +93,10 @@ onMounted(() => {
         v-model="select.value"
         :label="select.label"
       />
-      <QCheckbox v-model="selectAll" label="All" />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Routing -->
@@ -100,7 +108,10 @@ onMounted(() => {
     :info-description="$t('iyp.domainname.ips.info.description')"
     class="card"
   >
-    <HostNameIPAddressesPrefixes :page-title="pageTitle" :host-name="hostName" />
+    <HostNameIPAddressesPrefixes
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
   <!-- DNS -->
   <GenericCardController
@@ -111,7 +122,10 @@ onMounted(() => {
     :info-description="$t('iyp.domainname.nameservers.info.description')"
     class="card"
   >
-    <HostNameAuthoritativeNameservers :page-title="pageTitle" :host-name="hostName" />
+    <HostNameAuthoritativeNameservers
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[2].value"
@@ -121,7 +135,10 @@ onMounted(() => {
     :info-description="$t('iyp.domainname.country_query.info.description')"
     class="card"
   >
-    <HostNameQueryingCountries :page-title="pageTitle" :host-name="hostName" />
+    <HostNameQueryingCountries
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
   <GenericCardController
     v-if="selects[3].value"
@@ -131,7 +148,10 @@ onMounted(() => {
     :info-description="$t('iyp.domainname.as_query.info.description')"
     class="card"
   >
-    <HostNameQueryingASes :page-title="pageTitle" :host-name="hostName" />
+    <HostNameQueryingASes
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController
@@ -142,7 +162,10 @@ onMounted(() => {
     :info-description="$t('iyp.domainname.rankings.info.description')"
     class="card"
   >
-    <HostNameRankings :page-title="pageTitle" :host-name="hostName" />
+    <HostNameRankings
+      :page-title="pageTitle"
+      :host-name="hostName"
+    />
   </GenericCardController>
 </template>
 

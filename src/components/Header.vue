@@ -174,10 +174,16 @@ watch(simpleMenu, () => {
 </script>
 
 <template>
-  <QHeader elevated primary>
+  <QHeader
+    elevated
+    primary
+  >
     <QToolbar class="q-py-sm q-px-lg row">
       <div class="col-12 row no-wrap items-center">
-        <QItem id="IHR_home-button" role="button">
+        <QItem
+          id="IHR_home-button"
+          role="button"
+        >
           <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
             <QBtn
               round
@@ -188,7 +194,11 @@ watch(simpleMenu, () => {
               size="22px"
               aria-label="IHR Logo - Go to Home"
             >
-              <img src="/imgs/ihr_logo.svg" style="width: 45px" alt="IHR Logo" />
+              <img
+                src="/imgs/ihr_logo.svg"
+                style="width: 45px"
+                alt="IHR Logo"
+              >
             </QBtn>
           </RouterLink>
         </QItem>
@@ -196,7 +206,11 @@ watch(simpleMenu, () => {
         <div
           class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md"
         >
-          <QBtnGroup v-for="(item, index) in simpleMenu" :key="item.entryName" flat>
+          <QBtnGroup
+            v-for="(item, index) in simpleMenu"
+            :key="item.entryName"
+            flat
+          >
             <QBtn
               v-if="item.options == null"
               flat
@@ -240,7 +254,11 @@ watch(simpleMenu, () => {
                     <QItemLabel class="text-bold">
                       {{ $t(option.entryName) }}
                     </QItemLabel>
-                    <QItemLabel class="text-grey" caption lines="2">
+                    <QItemLabel
+                      class="text-grey"
+                      caption
+                      lines="2"
+                    >
                       {{ $t(option.summary) }}
                     </QItemLabel>
                   </QItemSection>
@@ -263,19 +281,30 @@ watch(simpleMenu, () => {
       </div>
       <!--Log in /Log out stuff here-->
     </QToolbar>
-    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
+    <QDrawer
+      v-model="leftDrawerOpen"
+      bordered
+      class="bg-primary"
+    >
       <QList class="q-pt-md">
         <!-- <QItemLabel header>Essential Links</QItemLabel> -->
-        <template v-for="(item, index) in simpleMenu" :key="index">
-          <QItem v-if="!item.options" flat class="q-pa-none">
+        <template
+          v-for="(item, index) in simpleMenu"
+          :key="index"
+        >
+          <QItem
+            v-if="!item.options"
+            flat
+            class="q-pa-none"
+          >
             <QBtn
               class="full-width"
               flat
               :label="$t(item.entryName)"
               :to="Tr.i18nRoute({ name: item.routeName })"
-              @click="leftDrawerOpen = false"
               align="left"
               style="min-height: 48px; padding: 12px 16px; font-size: 16px"
+              @click="leftDrawerOpen = false"
             />
           </QItem>
 
@@ -295,8 +324,8 @@ watch(simpleMenu, () => {
                 clickable
                 :to="Tr.i18nRoute({ name: option.routeName })"
                 active-class="IHR_active-route"
-                @click="leftDrawerOpen = false"
                 style="padding: 12px 24px"
+                @click="leftDrawerOpen = false"
               >
                 <QItemSection>
                   <QBadge
@@ -308,7 +337,10 @@ watch(simpleMenu, () => {
                   <QItemLabel class="text-weight-medium text-white q-pb-xs">
                     {{ $t(option.entryName) }}
                   </QItemLabel>
-                  <QItemLabel class="text-grey text-caption" lines="2">
+                  <QItemLabel
+                    class="text-grey text-caption"
+                    lines="2"
+                  >
                     {{ $t(option.summary) }}
                   </QItemLabel>
                 </QItemSection>

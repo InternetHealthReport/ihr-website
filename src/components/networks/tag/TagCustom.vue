@@ -110,16 +110,31 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard flat bordered>
+  <QCard
+    flat
+    bordered
+  >
     <QCardSection>
-      <div class="text-h6">Select widgets to show</div>
+      <div class="text-h6">
+        Select widgets to show
+      </div>
     </QCardSection>
     <QSeparator inset />
     <QCardSection>
-      <span v-for="(select, index) in selects" :key="index">
-        <QCheckbox v-if="select.hasData" v-model="select.value" :label="select.label" />
+      <span
+        v-for="(select, index) in selects"
+        :key="index"
+      >
+        <QCheckbox
+          v-if="select.hasData"
+          v-model="select.value"
+          :label="select.label"
+        />
       </span>
-      <QCheckbox v-model="selectAll" label="All" />
+      <QCheckbox
+        v-model="selectAll"
+        label="All"
+      />
     </QCardSection>
   </QCard>
   <!-- Overview -->
@@ -158,9 +173,9 @@ onMounted(() => {
     :title="$t('iyp.tag.prefixes.title')"
     :sub-title="
       $t('iyp.tag.prefixes.caption') +
-      tag +
-      ' by ' +
-      selectedWidgets.data_source_prefixes.join(', ')
+        tag +
+        ' by ' +
+        selectedWidgets.data_source_prefixes.join(', ')
     "
     :info-title="$t('iyp.tag.prefixes.info.title')"
     :info-description="$t('iyp.tag.prefixes.info.description')"

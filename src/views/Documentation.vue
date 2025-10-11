@@ -139,12 +139,19 @@ const sectionActive = ref('')
     <QCard class="IHR_documentation-page-sidebar">
       <QCardSection>
         <h3>{{ $t('documentationPage.title') }}</h3>
-        <div v-for="(sec, idx) in sections" :key="idx" class="q-pl-sm q-pb-xs">
+        <div
+          v-for="(sec, idx) in sections"
+          :key="idx"
+          class="q-pl-sm q-pb-xs"
+        >
           <div class="text-weight-light">
             {{ $t(`documentationPage.sectionsTitle.${sec.sectionsTitle}`) }}
           </div>
           <ul>
-            <li v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)" :key="idx">
+            <li
+              v-for="(secB, idx) in sec.sectionsBody.map((key) => key.name)"
+              :key="idx"
+            >
               <RouterLink
                 :to="
                   Tr.i18nRoute({
@@ -169,7 +176,10 @@ const sectionActive = ref('')
 
     <!-- Main Content -->
     <div id="IHR_documentation-page">
-      <div v-for="(mainSec, mainIdx) in sections" :key="mainIdx">
+      <div
+        v-for="(mainSec, mainIdx) in sections"
+        :key="mainIdx"
+      >
         <div
           v-for="(bodySec, bodyIdx) in mainSec.sectionsBody"
           :key="bodyIdx"
@@ -178,27 +188,30 @@ const sectionActive = ref('')
           <div
             :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"
             class="IHR_anchor"
-          ></div>
-          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)"></h1>
+          />
+          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)" />
           <p
             class="text-left text-body1"
             v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"
-          ></p>
-          <div v-for="idx in bodySec.numberOfDescriptions" :key="idx">
+          />
+          <div
+            v-for="idx in bodySec.numberOfDescriptions"
+            :key="idx"
+          >
             <h2
               v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"
-            ></h2>
+            />
             <img
               v-if="
                 $t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`) !== ''
               "
               :src="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.src`)"
               :style="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.img.style`)"
-            />
+            >
             <p
               class="text-left text-body1"
               v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"
-            ></p>
+            />
           </div>
         </div>
       </div>

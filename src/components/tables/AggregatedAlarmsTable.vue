@@ -450,7 +450,10 @@ watch(
   >
     <template #body="props">
       <QTr :props="props">
-        <QTd v-for="column in columns" :key="column.name">
+        <QTd
+          v-for="column in columns"
+          :key="column.name"
+        >
           <div
             v-if="column.name.endsWith('overview')"
             :key="`${tableKeyCurrent}.${column.name}`"
@@ -458,7 +461,10 @@ watch(
           >
             <QToggle v-model="toggle[`${props.row.key_normalized}_${column.name}`]" />
           </div>
-          <div v-else-if="column.name === tableKeyCurrent" :style="{ 'text-align': column.align }">
+          <div
+            v-else-if="column.name === tableKeyCurrent"
+            :style="{ 'text-align': column.align }"
+          >
             <RouterLink
               :to="
                 Tr.i18nRoute({
@@ -518,9 +524,15 @@ watch(
             :style="{ 'text-align': column.align }"
           >
             <div>{{ alternativeASNKeySubtitle(props.row[column.name], column.label) }}</div>
-            <div class="alternative_key_body" v-html="props.row[column.name]" />
+            <div
+              class="alternative_key_body"
+              v-html="props.row[column.name]"
+            />
           </div>
-          <div v-else :style="{ 'text-align': column.align }">
+          <div
+            v-else
+            :style="{ 'text-align': column.align }"
+          >
             {{ column.format(props.row[column.name], props.row) }}
           </div>
         </QTd>
@@ -532,8 +544,14 @@ watch(
           <div>{{ aggregatedColumn.format(props.row[aggregatedColumn.name], props.row) }}</div>
         </QTd>
       </QTr>
-      <QTr v-if="toggle[`${props.row.key_normalized}_overview`]" :props="props">
-        <QTd colspan="100%" bordered>
+      <QTr
+        v-if="toggle[`${props.row.key_normalized}_overview`]"
+        :props="props"
+      >
+        <QTd
+          colspan="100%"
+          bordered
+        >
           <div>
             <div v-if="alternativeKey">
               <div class="row">
@@ -549,7 +567,10 @@ watch(
                         :max="maxTimeFormatted"
                       />
                     </div>
-                    <div class="col-auto" style="width: 40px" />
+                    <div
+                      class="col-auto"
+                      style="width: 40px"
+                    />
                     <div class="col">
                       <QInput
                         v-model="endTimeFormatted[props.row.key_normalized]"
@@ -561,7 +582,10 @@ watch(
                       />
                     </div>
                   </div>
-                  <div class="row" style="margin-top: 20px; margin-bottom: 10px">
+                  <div
+                    class="row"
+                    style="margin-top: 20px; margin-bottom: 10px"
+                  >
                     <div class="col-7 text-center">
                       <QBtn
                         color="primary"
@@ -713,8 +737,14 @@ watch(
           </div>
         </QTd>
       </QTr>
-      <QTr v-if="toggle[`${props.row.key_normalized}_asn_overview`]" :props="props">
-        <QTd colspan="100%" bordered>
+      <QTr
+        v-if="toggle[`${props.row.key_normalized}_asn_overview`]"
+        :props="props"
+      >
+        <QTd
+          colspan="100%"
+          bordered
+        >
           <div
             v-for="af in getOverviewIPAddressFamilies(props.row[`${tableKeyCurrent}_af`])"
             :key="af"
@@ -796,8 +826,14 @@ watch(
           </div>
         </QTd>
       </QTr>
-      <QTr v-if="toggle[`${props.row.key_normalized}_country_overview`]" :props="props">
-        <QTd colspan="100%" bordered>
+      <QTr
+        v-if="toggle[`${props.row.key_normalized}_country_overview`]"
+        :props="props"
+      >
+        <QTd
+          colspan="100%"
+          bordered
+        >
           <div v-if="selectedTableDataSource == 'ioda'">
             <div style="text-align: center; font-size: 18px">
               {{ `${props.row[`${tableKeyCurrent}_country`]} Internet Overview` }}

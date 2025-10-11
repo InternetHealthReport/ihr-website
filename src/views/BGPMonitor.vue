@@ -223,29 +223,52 @@ const initRoute = () => {
 }
 
 // Connect to the WebSocket
+
+let wsInstance = null
+
 const connectWebSocket = () => {
+  // Close existing WebSocket if it exists and is still open
+  if (socket.value && socket.value.readyState !== WebSocket.CLOSED) {
+    console.log('⚠️ Closing existing WebSocket before creating new one')
+    try {
+      socket.value.close(1000, 'Creating new connection')
+    } catch (error) {
+      console.error('Error closing existing socket:', error)
+    }
+  }
+  
   socket.value = new WebSocket(`wss://ris-live.ripe.net/v1/ws/?client=ihr_${uid()}`)
+  
   if (socket.value.readyState === WebSocket.CONNECTING) {
     disableButton.value = true
   }
+  
   socket.value.onopen = () => {
+    console.log('✅ WebSocket connected')
     disableButton.value = false
     toggleRisProtocol()
   }
-  socket.value.onclose = () => {
-    socket.value = null
-    if (isPlaying.value) {
-      isPlaying.value = false
+  
+  socket.value.onclose = (event) => {
+    console.log('🔴 WebSocket closed:', event.code, event.reason)
+    // Only auto-reset if not cleaning up intentionally
+    if (!isCleaningUp.value) {
+      socket.value = null
+      if (isPlaying.value) {
+        isPlaying.value = false
+      }
     }
   }
+  
   socket.value.onerror = (error) => {
-    console.log('WebSocket Error:', error)
+    console.error('❌ WebSocket Error:', error)
     isWsDisconnected.value = true
     disableButton.value = false
     if (isPlaying.value) {
       isPlaying.value = false
     }
   }
+  
   socket.value.onmessage = (event) => {
     const res = JSON.parse(event.data)
     if (res.type === 'ris_message') {
@@ -255,6 +278,28 @@ const connectWebSocket = () => {
     }
   }
 }
+
+const cleanupWebSocket = () => {
+  // Try both references
+  const socketsToClose = [socket.value, wsInstance].filter(Boolean)
+  
+  socketsToClose.forEach((ws, index) => {
+    try {
+      console.log(`🧹 Cleaning socket instance ${index + 1}`)
+      ws.onopen = ws.onclose = ws.onerror = ws.onmessage = null
+      
+      if (ws.readyState < WebSocket.CLOSING) {
+        ws.close(1000, 'Forced cleanup')
+      }
+    } catch (e) {
+      console.error(`Error closing socket ${index + 1}:`, e)
+    }
+  })
+  
+  socket.value = null
+  wsInstance = null
+}
+
 
 const toggleRisProtocol = () => {
   if (!socket.value) {
@@ -267,7 +312,10 @@ const toggleRisProtocol = () => {
     }
     sendSocketType('ris_subscribe', subscribeParams)
   } else {
+
+   if (socket.value.readyState === WebSocket.OPEN){
     socket.value.close()
+  }
   }
 }
 
@@ -1143,6 +1191,13 @@ const customIntersectionObserver = () => {
 watch(
   [params, dataSource, startTime, endTime, rrcs],
   () => {
+
+   // Close WebSocket when switching from ris-live to bgplay
+    if (dataSource.value === 'bgplay' && socket.value) {
+      socket.value.close()
+      socket.value = null
+    }
+
     const inputPrefix = params.value.prefix?.trim()
     const inputStartTime = startTime.value?.trim()
     const inputEndTime = endTime.value?.trim()
@@ -1182,6 +1237,14 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+
+// close the websocket connection when component is unmounted 
+
+  if (socket.value && socket.value.readyState !== WebSocket.CLOSED) {
+    socket.value.close()
+    socket.value = null
+  }
+
   if (observer && myElement.value?.$el) {
     observer.unobserve(myElement.value?.$el)
   }
@@ -1190,10 +1253,16 @@ onUnmounted(() => {
 
 <template>
   <div class="IHR_char-container relative-position">
-    <h1 class="text-center q-pa-xl">BGP Monitor</h1>
+    <h1 class="text-center q-pa-xl">
+      BGP Monitor
+    </h1>
     <QCard>
       <QCardSection>
-        <QMarkupTable flat bordered separator="cell">
+        <QMarkupTable
+          flat
+          bordered
+          separator="cell"
+        >
           <thead>
             <tr>
               <th>Data Source</th>
@@ -1210,12 +1279,15 @@ onUnmounted(() => {
                     label="BGPlay"
                     :disable="
                       isPlaying ||
-                      inputDisable ||
-                      Object.keys(bgPlaySources).length > 0 ||
-                      isLoadingBgplayData
+                        inputDisable ||
+                        Object.keys(bgPlaySources).length > 0 ||
+                        isLoadingBgplayData
                     "
                   />
-                  <QIcon name="fas fa-circle-info" class="q-ml-md">
+                  <QIcon
+                    name="fas fa-circle-info"
+                    class="q-ml-md"
+                  >
                     <QTooltip>Monitor BGP events from a specific time range</QTooltip>
                   </QIcon>
                 </div>
@@ -1226,12 +1298,15 @@ onUnmounted(() => {
                     label="RisLive"
                     :disable="
                       isPlaying ||
-                      inputDisable ||
-                      Object.keys(bgPlaySources).length > 0 ||
-                      isLoadingBgplayData
+                        inputDisable ||
+                        Object.keys(bgPlaySources).length > 0 ||
+                        isLoadingBgplayData
                     "
                   />
-                  <QIcon name="fas fa-circle-info" class="q-ml-md">
+                  <QIcon
+                    name="fas fa-circle-info"
+                    class="q-ml-md"
+                  >
                     <QTooltip>Monitor Real-Time BGP events</QTooltip>
                   </QIcon>
                 </div>
@@ -1247,40 +1322,59 @@ onUnmounted(() => {
                       color="accent"
                       :disable="
                         isPlaying ||
-                        inputDisable ||
-                        Object.keys(bgPlaySources).length > 0 ||
-                        isLoadingBgplayData
+                          inputDisable ||
+                          Object.keys(bgPlaySources).length > 0 ||
+                          isLoadingBgplayData
                       "
                     />
                   </div>
-                  <div v-if="dataSource === 'bgplay'" class="row">
+                  <div
+                    v-if="dataSource === 'bgplay'"
+                    class="row"
+                  >
                     <QInput
-                      label="Start Date Time in (UTC)"
                       v-model="tempStartTime"
+                      label="Start Date Time in (UTC)"
                       class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                       outlined
                     >
-                      <template v-slot:append>
-                        <QIcon name="event" class="cursor-pointer">
-                          <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
+                      <template #append>
+                        <QIcon
+                          name="event"
+                          class="cursor-pointer"
+                        >
+                          <QPopupProxy
+                            no-route-dismiss
+                            cover
+                            @hide="resetTempValues"
+                          >
                             <div class="q-pa-md q-gutter-md row items-start">
-                              <QDate flat v-model="tempStartTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime
-                                flat
+                              <QDate
                                 v-model="tempStartTime"
+                                flat
+                                mask="YYYY-MM-DDTHH:mm"
+                              />
+                              <QTime
+                                v-model="tempStartTime"
+                                flat
                                 mask="YYYY-MM-DDTHH:mm"
                                 format24h
                               />
                             </div>
                             <div class="row items-center justify-end q-ma-md">
-                              <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
                               <QBtn
                                 v-close-popup
-                                @click="applyStartTime"
+                                class="primary q-mr-sm"
+                                label="Close"
+                                outline
+                              />
+                              <QBtn
+                                v-close-popup
                                 class="bg-primary applyBtnStyle"
                                 label="Apply"
                                 outline
+                                @click="applyStartTime"
                               />
                             </div>
                           </QPopupProxy>
@@ -1288,27 +1382,48 @@ onUnmounted(() => {
                       </template>
                     </QInput>
                     <QInput
-                      label="End Date Time in (UTC)"
                       v-model="tempEndTime"
+                      label="End Date Time in (UTC)"
                       class="input q-mr-xl"
                       :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
                       outlined
                     >
-                      <template v-slot:append>
-                        <QIcon name="event" class="cursor-pointer">
-                          <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
+                      <template #append>
+                        <QIcon
+                          name="event"
+                          class="cursor-pointer"
+                        >
+                          <QPopupProxy
+                            no-route-dismiss
+                            cover
+                            @hide="resetTempValues"
+                          >
                             <div class="q-pa-md q-gutter-md row items-start">
-                              <QDate flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" format24h />
+                              <QDate
+                                v-model="tempEndTime"
+                                flat
+                                mask="YYYY-MM-DDTHH:mm"
+                              />
+                              <QTime
+                                v-model="tempEndTime"
+                                flat
+                                mask="YYYY-MM-DDTHH:mm"
+                                format24h
+                              />
                             </div>
                             <div class="row items-center justify-end q-ma-md">
-                              <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
                               <QBtn
                                 v-close-popup
-                                @click="applyEndTime"
+                                class="primary q-mr-sm"
+                                label="Close"
+                                outline
+                              />
+                              <QBtn
+                                v-close-popup
                                 class="bg-primary applyBtnStyle"
                                 label="Apply"
                                 outline
+                                @click="applyEndTime"
                               />
                             </div>
                           </QPopupProxy>
@@ -1316,7 +1431,10 @@ onUnmounted(() => {
                       </template>
                     </QInput>
                   </div>
-                  <div v-if="dataSource === 'ris-live'" class="col-2">
+                  <div
+                    v-if="dataSource === 'ris-live'"
+                    class="col-2"
+                  >
                     <QSelect
                       v-model="params.host"
                       outlined
@@ -1330,11 +1448,14 @@ onUnmounted(() => {
                       :disable="isPlaying || inputDisable"
                     />
                   </div>
-                  <div v-else class="col-2">
+                  <div
+                    v-else
+                    class="col-2"
+                  >
                     <QSelect
+                      v-model="rrcs"
                       outlined
                       :dense="true"
-                      v-model="rrcs"
                       multiple
                       :options="rrcLocations"
                       label="RRCs"
@@ -1349,48 +1470,56 @@ onUnmounted(() => {
           </tbody>
         </QMarkupTable>
       </QCardSection>
-      <QCardActions align="center" ref="myElement" class="q-pb-md q-pt-none">
+      <QCardActions
+        ref="myElement"
+        align="center"
+        class="q-pb-md q-pt-none"
+      >
         <QBtn
           v-if="dataSource === 'ris-live'"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
           :disable="disableButton || params.prefix === '' || params.host === ''"
-          @click="toggleConnection"
           class="q-mr-lg"
+          @click="toggleConnection"
         />
         <QBtn
           v-else
           color="secondary"
           :label="'Submit'"
-          @click="fetchBGPlayData"
           :disable="
             Object.keys(bgPlaySources).length > 0 ||
-            isLoadingBgplayData ||
-            !haveRequiredBGPlayParams()
+              isLoadingBgplayData ||
+              !haveRequiredBGPlayParams()
           "
           class="q-mr-lg"
+          @click="fetchBGPlayData"
         />
         <QBtn
           color="indigo"
           :label="'Previous'"
-          @click="prevEvent"
           :disable="
             rawMessages.length === 0 ||
-            (dataSource === 'bgplay'
-              ? initialStateDataCount !== 0
-                ? currentIndex === 0
-                : currentIndex === -1
-              : currentIndex === 0)
+              (dataSource === 'bgplay'
+                ? initialStateDataCount !== 0
+                  ? currentIndex === 0
+                  : currentIndex === -1
+                : currentIndex === 0)
           "
+          @click="prevEvent"
         />
         <QBtn
           color="indigo"
           :label="'Next'"
-          @click="nextEvent"
           :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
           class="q-mr-lg"
+          @click="nextEvent"
         />
-        <QBtn color="negative" :label="'Reset'" @click="resetData" />
+        <QBtn
+          color="negative"
+          :label="'Reset'"
+          @click="resetData"
+        />
       </QCardActions>
     </QCard>
 
@@ -1399,36 +1528,47 @@ onUnmounted(() => {
         <QBtn
           color="indigo"
           :label="'Previous'"
-          @click="prevEvent"
           :disable="
             rawMessages.length === 0 ||
-            (dataSource === 'bgplay'
-              ? initialStateDataCount !== 0
-                ? currentIndex === 0
-                : currentIndex === -1
-              : currentIndex === 0)
+              (dataSource === 'bgplay'
+                ? initialStateDataCount !== 0
+                  ? currentIndex === 0
+                  : currentIndex === -1
+                : currentIndex === 0)
           "
+          @click="prevEvent"
         />
         <QBtn
           color="indigo"
           :label="'Next'"
-          @click="nextEvent"
           :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
+          @click="nextEvent"
         />
       </QCardActions>
     </QCard>
-    <div class="row inline q-mt-lg" style="gap: 10px">
+    <div
+      class="row inline q-mt-lg"
+      style="gap: 10px"
+    >
       <QBadge>
-        <div class="text-body2">Displaying Unique Peer messages: {{ filteredMessages.length }}</div>
+        <div class="text-body2">
+          Displaying Unique Peer messages: {{ filteredMessages.length }}
+        </div>
       </QBadge>
       <QBadge>
-        <div class="text-body2">Total messages received: {{ rawMessages.length }}</div>
+        <div class="text-body2">
+          Total messages received: {{ rawMessages.length }}
+        </div>
       </QBadge>
       <QBadge v-if="dataSource === 'bgplay'">
-        <div class="text-body2">No of Initial State Messages: {{ initialStateDataCount }}</div>
+        <div class="text-body2">
+          No of Initial State Messages: {{ initialStateDataCount }}
+        </div>
       </QBadge>
       <QBadge v-if="dataSource === 'bgplay'">
-        <div class="text-body2">No of Events: {{ rawMessages.length - initialStateDataCount }}</div>
+        <div class="text-body2">
+          No of Events: {{ rawMessages.length - initialStateDataCount }}
+        </div>
       </QBadge>
     </div>
 
@@ -1502,7 +1642,9 @@ onUnmounted(() => {
     <QDialog v-model="isWsDisconnected">
       <QCard>
         <QCardSection>
-          <div class="text-h6">Failed to connect to the server.</div>
+          <div class="text-h6">
+            Failed to connect to the server.
+          </div>
         </QCardSection>
         <QCardSection class="q-pt-none">
           <p>
@@ -1512,24 +1654,42 @@ onUnmounted(() => {
           </p>
         </QCardSection>
         <QCardActions align="right">
-          <QBtn v-close-popup flat label="Close" color="primary" />
+          <QBtn
+            v-close-popup
+            flat
+            label="Close"
+            color="primary"
+          />
         </QCardActions>
       </QCard>
     </QDialog>
     <QDialog v-model="bgPlayAdditionalMessagesReceived">
       <QCard>
         <QCardSection>
-          <div class="text-h6">Important Information from BGPlay</div>
+          <div class="text-h6">
+            Important Information from BGPlay
+          </div>
         </QCardSection>
         <QCardSection class="q-pt-none">
-          <div v-for="(msg, index) in bgPlayAdditionalMessages" :key="index">
-            <p v-for="(data, i) in msg" :key="i">
+          <div
+            v-for="(msg, index) in bgPlayAdditionalMessages"
+            :key="index"
+          >
+            <p
+              v-for="(data, i) in msg"
+              :key="i"
+            >
               {{ data }}
             </p>
           </div>
         </QCardSection>
         <QCardActions align="right">
-          <QBtn v-close-popup flat label="Close" color="primary" />
+          <QBtn
+            v-close-popup
+            flat
+            label="Close"
+            color="primary"
+          />
         </QCardActions>
       </QCard>
     </QDialog>

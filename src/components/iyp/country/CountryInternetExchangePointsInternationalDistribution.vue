@@ -263,18 +263,22 @@ onMounted(() => {
         <div class="row">
           <div class="col q-mr-xl">
             <QBadge>Number of unique ASes per IXP: {{ uniqueASperIXP }}</QBadge>
-            <QSlider v-model="uniqueASperIXP" :min="uniqueASperIXPMin" :max="uniqueASperIXPMax" />
+            <QSlider
+              v-model="uniqueASperIXP"
+              :min="uniqueASperIXPMin"
+              :max="uniqueASperIXPMax"
+            />
           </div>
           <div class="col">
             <QSelect
+              v-model="selectResource"
               use-chips
               filled
               multiple
-              v-model="selectResource"
               :options="optionsResource"
-              @update:model-value="load()"
               :rules="[(val) => val.length > 0 || 'Please select at least one Data Sources']"
               label="Data Sources"
+              @update:model-value="load()"
             />
           </div>
         </div>

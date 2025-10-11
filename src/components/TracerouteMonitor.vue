@@ -618,7 +618,10 @@ watch(
     >
       <div class="row q-mb-md">
         <div class="col-3 q-mr-md">
-          <div v-if="!props.isComponent" class="row justify-end q-mb-md">
+          <div
+            v-if="!props.isComponent"
+            class="row justify-end q-mb-md"
+          >
             <div class="col q-mr-md">
               <QInput
                 v-model="measurementIDInput"
@@ -642,26 +645,30 @@ watch(
               <div class="col text-h6">
                 <strong>Measurement details:</strong>
               </div>
-              <div class="col-auto" v-if="isProbeOverflowAlert">
+              <div
+                v-if="isProbeOverflowAlert"
+                class="col-auto"
+              >
                 <QBtn
-                  @click="showProbeOverflowAlert = true"
                   icon="warning"
                   text-color="red"
                   outline
+                  @click="showProbeOverflowAlert = true"
                 />
               </div>
             </div>
             <div class="row">
               <ul>
                 <li>
-                  Traceroute to <strong>{{ metaData.target }}</strong
-                  >.
+                  Traceroute to <strong>{{ metaData.target }}</strong>.
                 </li>
                 <li>
                   Measuring from <strong>{{ convertUnixTimestamp(metaData.start_time) }}</strong> to
                   <strong>{{ convertUnixTimestamp(metaData.stop_time) }}</strong>
                 </li>
-                <li v-if="isOneOff == false">Frequency: {{ metaData.interval }} seconds</li>
+                <li v-if="isOneOff == false">
+                  Frequency: {{ metaData.interval }} seconds
+                </li>
               </ul>
             </div>
             <div class="row">
@@ -689,9 +696,10 @@ watch(
           <div v-else>
             <div class="text-body2 measurementInputInfo">
               Please enter a RIPE Atlas Traceroute Measurement from
-              <a href="https://atlas.ripe.net/measurements/public?type=traceroute" target="_blank"
-                >this link</a
-              >
+              <a
+                href="https://atlas.ripe.net/measurements/public?type=traceroute"
+                target="_blank"
+              >this link</a>
               in the above input box
             </div>
           </div>
@@ -726,8 +734,8 @@ watch(
         :max-displayed-rtt="maxDisplayedRtt"
         :ip-to-asn-map="ipToAsnMap"
         :asn-list="asnList"
-        @update-displayed-rtt-values="updateDisplayedRttValues"
         class="q-mt-md"
+        @update-displayed-rtt-values="updateDisplayedRttValues"
       />
       <QExpansionItem
         :default-opened="!props.isComponent"
@@ -778,7 +786,12 @@ watch(
           <div class="text-body2">
             <div class="text-weight-bold">
               RIPE ATLAS Measurement ID
-              <QBadge color="primary" class="text-weight-bold">{{ measurementID }}</QBadge>
+              <QBadge
+                color="primary"
+                class="text-weight-bold"
+              >
+                {{ measurementID }}
+              </QBadge>
             </div>
             This measurement is a large one. Here are a few important points to note about large
             measurements:
@@ -795,7 +808,11 @@ watch(
           </div>
         </QCardSection>
         <QCardActions align="right">
-          <QBtn v-close-popup flat label="Close" />
+          <QBtn
+            v-close-popup
+            flat
+            label="Close"
+          />
         </QCardActions>
       </QCard>
     </QDialog>
@@ -805,16 +822,27 @@ watch(
           <div class="text-body2">
             <div class="text-weight-bold">
               RIPE ATLAS Measurement ID
-              <QBadge color="primary" class="text-weight-bold">{{ measurementID }}</QBadge>
+              <QBadge
+                color="primary"
+                class="text-weight-bold"
+              >
+                {{ measurementID }}
+              </QBadge>
             </div>
-            <div v-if="loadMeasurementIDError">Maybe the measurement does not exist.</div>
+            <div v-if="loadMeasurementIDError">
+              Maybe the measurement does not exist.
+            </div>
             <div v-if="loadProbesDestinationsError">
               Maybe the given probes or destinations do not correspond with the given measurement.
             </div>
           </div>
         </QCardSection>
         <QCardActions align="right">
-          <QBtn v-close-popup flat label="Close" />
+          <QBtn
+            v-close-popup
+            flat
+            label="Close"
+          />
         </QCardActions>
       </QCard>
     </QDialog>

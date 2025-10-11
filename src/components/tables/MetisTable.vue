@@ -104,15 +104,25 @@ const exportTable = () => {
     flat
   >
     <template #top>
-      <div class="q-table__title">Selected ASes</div>
+      <div class="q-table__title">
+        Selected ASes
+      </div>
       <QSpace />
-      <QInput v-model="tabFilter" debounce="300" placeholder="Search">
+      <QInput
+        v-model="tabFilter"
+        debounce="300"
+        placeholder="Search"
+      >
         <template #prepend>
           <QIcon name="search" />
         </template>
       </QInput>
       <QSpace />
-      <QBtn color="secondary" label="Export to CSV" @click="exportTable" />
+      <QBtn
+        color="secondary"
+        label="Export to CSV"
+        @click="exportTable"
+      />
     </template>
   </QTable>
 </template>

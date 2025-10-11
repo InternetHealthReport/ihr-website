@@ -53,7 +53,12 @@ const timestampToUTC = (timestamp) => {
 </script>
 
 <template>
-  <QTable flat :rows="props.vrpTableData" :columns="columns" row-key="id">
+  <QTable
+    flat
+    :rows="props.vrpTableData"
+    :columns="columns"
+    row-key="id"
+  >
     <template #body-cell-asn="props">
       <QTd :props="props">
         <RouterLink
@@ -80,10 +85,20 @@ const timestampToUTC = (timestamp) => {
       </QTd>
     </template>
     <template #body-cell-unixVisibleFrom="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.unixVisibleFrom) }}</QTd>
+      <QTd
+        class="nowrap"
+        :props="props"
+      >
+        {{ timestampToUTC(props.row.unixVisibleFrom) }}
+      </QTd>
     </template>
     <template #body-cell-unixVisibleTo="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.unixVisibleTo) }}</QTd>
+      <QTd
+        class="nowrap"
+        :props="props"
+      >
+        {{ timestampToUTC(props.row.unixVisibleTo) }}
+      </QTd>
     </template>
   </QTable>
 </template>

@@ -11,7 +11,12 @@ import { QBtn } from 'quasar'
       </div>
       <h2>What on Internet are you doing here !</h2>
       <p>Well this is sad the page that you were looking for is not here</p>
-      <QBtn class="sec" :to="Tr.i18nRoute({ name: 'home' })"> Get Yourself Home </QBtn>
+      <QBtn
+        class="sec"
+        :to="Tr.i18nRoute({ name: 'home' })"
+      >
+        Get Yourself Home
+      </QBtn>
     </div>
   </div>
 </template>

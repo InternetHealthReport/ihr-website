@@ -154,14 +154,26 @@ onMounted(async () => {
     </div>
     <div class="row justify-center">
       <div class="col q-px-md">
-        <QExpansionItem label="Show data" class="bg-grey-2">
-          <MetisTable :data="tableData" :loading="!fetch" />
+        <QExpansionItem
+          label="Show data"
+          class="bg-grey-2"
+        >
+          <MetisTable
+            :data="tableData"
+            :loading="!fetch"
+          />
         </QExpansionItem>
       </div>
     </div>
   </div>
-  <div v-else class="spinner-container">
-    <q-spinner color="secondary" size="50px" />
+  <div
+    v-else
+    class="spinner-container"
+  >
+    <q-spinner
+      color="secondary"
+      size="50px"
+    />
   </div>
 </template>
 

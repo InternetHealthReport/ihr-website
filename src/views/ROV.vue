@@ -126,7 +126,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div
+    id="IHR_as-and-ixp-container"
+    ref="ihrAsAndIxpContainer"
+    class="IHR_char-container"
+  >
     <div>
       <h1 class="text-center q-pa-xl">
         <q-icon name="fas fa-route" />&nbsp; Route Origin Validation
@@ -142,7 +146,11 @@ onMounted(() => {
         />
       </h3>
     </div>
-    <PrefixHegemonyChart :start-time="startTime" :end-time="endTime" :fetch="fetch" />
+    <PrefixHegemonyChart
+      :start-time="startTime"
+      :end-time="endTime"
+      :fetch="fetch"
+    />
     <!-- <button @click="generateReport()" class="np-btn">Generate Report</button> -->
   </div>
   <Feedback />

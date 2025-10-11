@@ -334,7 +334,10 @@ watch(displayMode, () => {
       :configs="configs"
       :event-handlers="eventHandlers"
     />
-    <div v-else-if="!isLoading" class="placeholder-message">
+    <div
+      v-else-if="!isLoading"
+      class="placeholder-message"
+    >
       No Traceroute Network Graph data available.
     </div>
     <div
@@ -344,7 +347,10 @@ watch(displayMode, () => {
       :style="{ ...tooltipPos, opacity: tooltipOpacity }"
     >
       <div style="display: flex; align-items: center">
-        <span class="nodeTypeDot" :style="{ backgroundColor: tooltipData.color }" />{{
+        <span
+          class="nodeTypeDot"
+          :style="{ backgroundColor: tooltipData.color }"
+        />{{
           tooltipData.type
         }}
       </div>
@@ -354,13 +360,18 @@ watch(displayMode, () => {
             <span
               class="asnDot"
               :style="{ backgroundColor: asnColors[tooltipData.data.asns[0].asn] || 'gray' }"
-            ></span>
-            <a :href="`/en/network/AS${tooltipData.data.asns[0].asn}`" target="_blank">
+            />
+            <a
+              :href="`/en/network/AS${tooltipData.data.asns[0].asn}`"
+              target="_blank"
+            >
               AS{{ tooltipData.data.asns[0].asn }} ({{ tooltipData.data.asns[0].holder }})
             </a>
           </div>
         </template>
-        <template v-else> ASN not available </template>
+        <template v-else>
+          ASN not available
+        </template>
       </div>
       <div><strong>IP:</strong> {{ tooltipData.label }}</div>
       <div><strong>Announced:</strong> {{ tooltipData?.data?.announced ?? 'Not available' }}</div>
@@ -380,8 +391,12 @@ watch(displayMode, () => {
       <div v-if="tooltipData.country_code">
         <strong>Country Code:</strong> {{ tooltipData.country_code }}
       </div>
-      <div v-if="tooltipData.asn_v4"><strong>ASN4:</strong> {{ tooltipData.asn_v4 }}</div>
-      <div v-if="tooltipData.asn_v6"><strong>ASN6:</strong> {{ tooltipData.asn_v6 }}</div>
+      <div v-if="tooltipData.asn_v4">
+        <strong>ASN4:</strong> {{ tooltipData.asn_v4 }}
+      </div>
+      <div v-if="tooltipData.asn_v6">
+        <strong>ASN6:</strong> {{ tooltipData.asn_v6 }}
+      </div>
       <div>
         <strong>Median RTT:</strong>
         {{ tooltipData.medianRtt ? tooltipData.medianRtt + 'ms' : 'Not available' }}
@@ -391,7 +406,9 @@ watch(displayMode, () => {
         {{ tooltipData.medianSize ? tooltipData.medianSize + ' bytes' : 'Not available' }}
       </div>
       <div><strong>Median TTL:</strong> {{ tooltipData.medianTtl ?? 'Not available' }}</div>
-      <div v-if="tooltipData.id"><strong>Probe ID:</strong> {{ tooltipData.id }}</div>
+      <div v-if="tooltipData.id">
+        <strong>Probe ID:</strong> {{ tooltipData.id }}
+      </div>
       <div v-if="tooltipData.description">
         <strong>Probe Description:</strong> {{ tooltipData.description }}
       </div>
@@ -402,7 +419,10 @@ watch(displayMode, () => {
         <strong>Status Since:</strong> {{ new Date(tooltipData.status.since).toLocaleString() }}
       </div>
     </div>
-    <div v-if="Object.keys(nodes).length > 0" class="mode-toggle-overlay">
+    <div
+      v-if="Object.keys(nodes).length > 0"
+      class="mode-toggle-overlay"
+    >
       <div>
         <QBtnToggle
           v-model="displayMode"
@@ -414,13 +434,20 @@ watch(displayMode, () => {
         />
       </div>
     </div>
-    <div v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0" class="legend">
+    <div
+      v-if="displayMode === 'rtt' && Object.keys(nodes).length > 0"
+      class="legend"
+    >
       <div class="row items-center">
         <div class="col">
-          <div class="rttLabel">RTT</div>
+          <div class="rttLabel">
+            RTT
+          </div>
         </div>
         <div class="col">
-          <div class="scaleLabel">{{ `${maxDisplayedRtt.toFixed(3)}ms` }}</div>
+          <div class="scaleLabel">
+            {{ `${maxDisplayedRtt.toFixed(3)}ms` }}
+          </div>
           <div class="scale">
             <div
               v-for="(percentage, index) in Array.from(
@@ -430,19 +457,39 @@ watch(displayMode, () => {
               :key="index"
               class="scaleColor"
               :style="{ backgroundColor: rttColor(percentage, (shouldCompliment = false)) }"
-            ></div>
+            />
           </div>
-          <div class="scaleLabel">{{ `${minDisplayedRtt.toFixed(3)}ms` }}</div>
+          <div class="scaleLabel">
+            {{ `${minDisplayedRtt.toFixed(3)}ms` }}
+          </div>
         </div>
       </div>
     </div>
-    <div v-if="Object.keys(nodes).length > 0" class="row view-control-overlay justify-center">
-      <QBtn icon="zoom_in" @click="zoomIn" />
-      <QBtn icon="zoom_out" @click="zoomOut" />
-      <QBtn icon="fullscreen" @click="toggleFullScreen" />
+    <div
+      v-if="Object.keys(nodes).length > 0"
+      class="row view-control-overlay justify-center"
+    >
+      <QBtn
+        icon="zoom_in"
+        @click="zoomIn"
+      />
+      <QBtn
+        icon="zoom_out"
+        @click="zoomOut"
+      />
+      <QBtn
+        icon="fullscreen"
+        @click="toggleFullScreen"
+      />
     </div>
-    <div v-if="isLoading" class="IHR_loading-spinner">
-      <QSpinner color="secondary" size="15em" />
+    <div
+      v-if="isLoading"
+      class="IHR_loading-spinner"
+    >
+      <QSpinner
+        color="secondary"
+        size="15em"
+      />
     </div>
   </div>
 </template>

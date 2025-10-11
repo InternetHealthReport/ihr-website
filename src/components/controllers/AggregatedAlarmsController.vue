@@ -493,11 +493,17 @@ watch(selectedAlarmTypesOptions.value, () => {
   <div>
     <QCard>
       <QCardSection>
-        <QMarkupTable flat bordered separator="cell">
+        <QMarkupTable
+          flat
+          bordered
+          separator="cell"
+        >
           <thead>
             <tr>
               <th>Data Source</th>
-              <th :colspan="maxAlarmTypesLength">Alarm Types</th>
+              <th :colspan="maxAlarmTypesLength">
+                Alarm Types
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -507,7 +513,10 @@ watch(selectedAlarmTypesOptions.value, () => {
               class="q-tr--no-hover"
             >
               <td>
-                <QCheckbox v-model="selectedDataSources[indexSource]" disable />
+                <QCheckbox
+                  v-model="selectedDataSources[indexSource]"
+                  disable
+                />
                 {{ dataSource.metadata.title }}
                 <QIcon name="fas fa-circle-info">
                   <QTooltip>
@@ -515,7 +524,10 @@ watch(selectedAlarmTypesOptions.value, () => {
                   </QTooltip>
                 </QIcon>
               </td>
-              <td v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types" :key="indexAlarm">
+              <td
+                v-for="(dataAlarm, indexAlarm) in dataSource.alarm_types"
+                :key="indexAlarm"
+              >
                 <QCheckbox
                   v-model="selectedAlarmTypes[indexSource][indexAlarm]"
                   :disable="isLoaded"
@@ -544,7 +556,7 @@ watch(selectedAlarmTypesOptions.value, () => {
             </tr>
           </tbody>
         </QMarkupTable>
-        <br />
+        <br>
         <!--FILTER + ACTIONS LAYOUT-->
         <div class="row q-col-gutter-md">
           <!-- LEFT BLOCK: Date pickers + Apply/Reset -->
@@ -585,7 +597,12 @@ watch(selectedAlarmTypesOptions.value, () => {
                 </QBtn>
               </div>
               <div class="col-6">
-                <QBtn color="primary" class="full-width" :disable="isLoaded" @click="resetTime">
+                <QBtn
+                  color="primary"
+                  class="full-width"
+                  :disable="isLoaded"
+                  @click="resetTime"
+                >
                   RESET TIME
                 </QBtn>
               </div>
@@ -596,8 +613,8 @@ watch(selectedAlarmTypesOptions.value, () => {
             <div class="row q-col-gutter-md q-gutter-y-sm items-end">
               <div class="col-12 col-sm-6 col-md-4">
                 <QSelect
-                  class="full-width"
                   v-model="selectSeveritiesLevels"
+                  class="full-width"
                   :disable="isLoaded"
                   outlined
                   multiple
@@ -609,8 +626,8 @@ watch(selectedAlarmTypesOptions.value, () => {
               </div>
               <div class="col-12 col-sm-6 col-md-4">
                 <QSelect
-                  class="full-width"
                   v-model="selectIPAddressFamilies"
+                  class="full-width"
                   :disable="isLoaded"
                   outlined
                   multiple
@@ -637,8 +654,14 @@ watch(selectedAlarmTypesOptions.value, () => {
     </QCard>
     <QCard class="card">
       <QCardSection>
-        <div v-if="loadingVal" class="loader-wrapper">
-          <q-spinner color="secondary" size="50px" />
+        <div
+          v-if="loadingVal"
+          class="loader-wrapper"
+        >
+          <q-spinner
+            color="secondary"
+            size="50px"
+          />
         </div>
         <div v-else>
           <WorldMapAggregatedAlarmsChart
@@ -659,7 +682,12 @@ watch(selectedAlarmTypesOptions.value, () => {
           <QCardSection>
             <div class="row alarm-actions items-center">
               <div class="col">
-                <QBtn color="primary" class="full-width" :disable="isLoaded" @click="resetTime">
+                <QBtn
+                  color="primary"
+                  class="full-width"
+                  :disable="isLoaded"
+                  @click="resetTime"
+                >
                   RESET TIME
                 </QBtn>
               </div>
@@ -676,8 +704,14 @@ watch(selectedAlarmTypesOptions.value, () => {
             </div>
           </QCardSection>
           <QCardSection>
-            <div v-if="loadingVal" class="loader-wrapper">
-              <q-spinner color="secondary" size="50px" />
+            <div
+              v-if="loadingVal"
+              class="loader-wrapper"
+            >
+              <q-spinner
+                color="secondary"
+                size="50px"
+              />
             </div>
             <div v-else>
               <TimeSeriesAggregatedAlarmsChart
@@ -713,8 +747,14 @@ watch(selectedAlarmTypesOptions.value, () => {
             </div>
           </QCardSection>
           <QCardSection>
-            <div v-if="loadingVal" class="loader-wrapper">
-              <q-spinner color="secondary" size="50px" />
+            <div
+              v-if="loadingVal"
+              class="loader-wrapper"
+            >
+              <q-spinner
+                color="secondary"
+                size="50px"
+              />
             </div>
             <div v-else>
               <TreeMapAggregatedAlarmsChart
@@ -743,7 +783,7 @@ watch(selectedAlarmTypesOptions.value, () => {
           :name="indexAlarmTypeTitlesMap"
           :disable="
             isLoaded ||
-            !AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypes)[indexAlarmTypeTitlesMap]
+              !AggregatedAlarmsUtils.flattenDictionary(selectedAlarmTypes)[indexAlarmTypeTitlesMap]
           "
         />
       </QTabs>
@@ -754,13 +794,23 @@ watch(selectedAlarmTypesOptions.value, () => {
           :key="indexAlarmTypeTitlesMap"
           :name="indexAlarmTypeTitlesMap"
         >
-          <QInput v-model="filter" debounce="300" placeholder="Filter">
+          <QInput
+            v-model="filter"
+            debounce="300"
+            placeholder="Filter"
+          >
             <template #append>
               <QIcon name="fas fa-filter" />
             </template>
           </QInput>
-          <div v-if="loadingVal" class="loader-wrapper">
-            <q-spinner color="secondary" size="50px" />
+          <div
+            v-if="loadingVal"
+            class="loader-wrapper"
+          >
+            <q-spinner
+              color="secondary"
+              size="50px"
+            />
           </div>
           <div v-else>
             <AggregatedAlarmsTable

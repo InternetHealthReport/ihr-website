@@ -105,7 +105,10 @@ const organizations = ref(ORGANIZATIONS)
 
 <template>
   <div id="IHR_home">
-    <div id="IHR_actions" class="row">
+    <div
+      id="IHR_actions"
+      class="row"
+    >
       <div class="col">
         <div>Internet Health Report</div>
         <div class="IHR_actions-area">
@@ -122,16 +125,27 @@ const organizations = ref(ORGANIZATIONS)
       </div>
     </div>
 
-    <div class="IHR_home-description-main" v-html="$t('homePage.globalReport.description')" />
+    <div
+      class="IHR_home-description-main"
+      v-html="$t('homePage.globalReport.description')"
+    />
     <div class="IHR_home-description-main">
       See latest alarms in the
-      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })"> global report </RouterLink>
+      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })">
+        global report
+      </RouterLink>
       and network metrics in
-      <RouterLink :to="Tr.i18nRoute({ name: 'network' })"> network reports </RouterLink>.
+      <RouterLink :to="Tr.i18nRoute({ name: 'network' })">
+        network reports
+      </RouterLink>.
     </div>
 
     <div class="row wrap justify-center q-gutter-md IHR_home-description-main">
-      <QCard v-for="graphT in graphTypes" :key="graphT.name" class="analysis-modules">
+      <QCard
+        v-for="graphT in graphTypes"
+        :key="graphT.name"
+        class="analysis-modules"
+      >
         <QCardSection class="bg-primary text-white q-pa-sm">
           <div>
             <QAvatar :icon="graphT.icon" />
@@ -139,7 +153,10 @@ const organizations = ref(ORGANIZATIONS)
           </div>
         </QCardSection>
         <QCardSection class="q-pa-xs">
-          <div class="IHR_home-description_text" v-html="$t(`${graphT.name}.description`)" />
+          <div
+            class="IHR_home-description_text"
+            v-html="$t(`${graphT.name}.description`)"
+          />
           <div class="IHR_home-description_text IHR_home-description-link">
             <RouterLink
               :to="
@@ -177,11 +194,21 @@ const organizations = ref(ORGANIZATIONS)
       </h2>
 
       <div class="row wrap justify-center">
-        <div v-for="(org, index) in organizations" :key="index">
-          <a :href="org.url" target="_blank">
+        <div
+          v-for="(org, index) in organizations"
+          :key="index"
+        >
+          <a
+            :href="org.url"
+            target="_blank"
+          >
             <div class="IHR_ack-logo">
-              <span></span>
-              <img :src="org.logo" :alt="org.name" :id="org.name" />
+              <span />
+              <img
+                :id="org.name"
+                :src="org.logo"
+                :alt="org.name"
+              >
             </div>
           </a>
         </div>

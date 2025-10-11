@@ -95,11 +95,20 @@ onMounted(() => {
 
 <template>
   <div>
-    <QCard v-if="loaded === false" negative>
+    <QCard
+      v-if="loaded === false"
+      negative
+    >
       <QCardSection> {{ $t('genericErrors.cloudNotLoad') }} BGPlay </QCardSection>
     </QCard>
-    <div v-if="loaded === null" class="IHR_loading-spinner">
-      <QSpinner color="secondary" size="15em" />
+    <div
+      v-if="loaded === null"
+      class="IHR_loading-spinner"
+    >
+      <QSpinner
+        color="secondary"
+        size="15em"
+      />
     </div>
     <div :id="myId" />
   </div>
