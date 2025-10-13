@@ -25,7 +25,7 @@ import ASCoLocatedASes from '@/components/iyp/as/ASCoLocatedASes.vue'
 import ASSiblingASes from '@/components/iyp/as/ASSiblingASes.vue'
 import ASRankings from '@/components/iyp/as/ASRankings.vue'
 import ASAuthoritativeNameservers from '@/components/iyp/as/ASAuthoritativeNameservers.vue'
-import Whois from '@/components/Whois.vue'
+import ASWhois from '@/components/whois/ASWhois.vue'
 
 const props = defineProps([
   'startTime',
@@ -388,7 +388,7 @@ onMounted(() => {
     :info-description="$t('whois.info.description')"
     class="card"
   >
-    <Whois :as-number="asNumber" :page-title="pageTitle" />
+    <ASWhois :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
   <!-- Rankings -->
   <GenericCardController

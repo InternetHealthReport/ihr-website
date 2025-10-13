@@ -1,6 +1,7 @@
 import axios from 'axios'
 import cache from './cache.js'
 import { get } from 'idb-keyval'
+import { runIyp } from './IypApi.js';
 
 const IANA_ASN_BOOTSTRAP = "https://data.iana.org/rdap/asn.json";
 const RDAP_ORG_PROXY = "https://rdap.org";
@@ -64,8 +65,47 @@ const Whois = {
 			return response
 		}
 
+		const prefix = async (prefix) => {
+			const storageAllowed = JSON.parse(await get('storage-allowed'))
+			const iyp_query = `MATCH (p:BGPPrefix {prefix: $prefix})<-[o:ORIGINATE]-(a:AS)
+      	RETURN DISTINCT a.asn AS asn`
+			const asnList = (await runIyp([{ statement: iyp_query, parameters: { prefix: prefix } }]))[0]
+			let response = null
+			if (asnList?.length) {
+				for (const asn of asnList) {
+					const baseUrls = await findRdapServersForAsn(asn.asn)
+					if (baseUrls?.length) {
+						for (const base of baseUrls) {
+							const url = base.replace(/\/+$/, "") + `/ip/${prefix}`
+							response = await cache(
+								url,
+								() => {return axios.get(url, {timeout: DEFAULT_TIMEOUT})},
+								{storageAllowed: storageAllowed ? storageAllowed : false}
+							)
+							if (response) {
+								break
+							}
+						}
+					}
+					if (response) {
+						break
+					}
+				}
+			}
+			if (!response) {
+				const url = RDAP_ORG_PROXY + `/ip/${prefix}`
+				response = await cache(
+					url,
+					() => {return axios.get(url, {timeout: DEFAULT_TIMEOUT})},
+					{storageAllowed: storageAllowed ? storageAllowed : false}
+				)
+			}
+			return response
+		}
+
     const whois = {
-      asn
+      asn,
+			prefix
     }
     app.provide('whois', whois)
   }

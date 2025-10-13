@@ -13,6 +13,7 @@ import PrefixMoreSpecificPrefixes from '@/components/iyp/prefix/PrefixMoreSpecif
 import PrefixPopularDomains from '@/components/iyp/prefix/PrefixPopularDomains.vue'
 import PrefixAuthoritativeNameservers from '@/components/iyp/prefix/PrefixAuthoritativeNameservers.vue'
 import PrefixPopularHostNames from '@/components/iyp/prefix/PrefixPopularHostNames.vue'
+import PrefixWhois from '@/components/whois/PrefixWhois.vue'
 
 const props = defineProps(['host', 'prefixLength', 'getPrefix', 'pageTitle', 'hash'])
 
@@ -31,7 +32,8 @@ const selects = ref([
   { value: false, label: t('iyp.prefix.moreSpecific.title') },
   { value: false, label: t('iyp.prefix.popularDomains.title') },
   { value: false, label: t('iyp.prefix.popularHostNames.title') },
-  { value: false, label: t('iyp.prefix.nameservers.title') }
+  { value: false, label: t('iyp.prefix.nameservers.title') },
+  { value: false, label: t('whois.title') }
 ])
 const selectAll = ref(false)
 
@@ -176,6 +178,16 @@ onMounted(() => {
     class="card"
   >
     <PrefixAuthoritativeNameservers :page-title="pageTitle" :get-prefix="getPrefix" />
+  </GenericCardController>
+  <GenericCardController
+    v-if="selects[8].value"
+    :title="$t('whois.title')"
+    :sub-title="$t('whois.caption')"
+    :info-title="$t('whois.info.title')"
+    :info-description="$t('whois.info.description')"
+    class="card"
+  >
+    <PrefixWhois :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
 </template>
 
