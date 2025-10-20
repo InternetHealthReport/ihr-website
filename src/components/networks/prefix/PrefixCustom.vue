@@ -13,7 +13,7 @@ import PrefixMoreSpecificPrefixes from '@/components/iyp/prefix/PrefixMoreSpecif
 import PrefixPopularDomains from '@/components/iyp/prefix/PrefixPopularDomains.vue'
 import PrefixAuthoritativeNameservers from '@/components/iyp/prefix/PrefixAuthoritativeNameservers.vue'
 import PrefixPopularHostNames from '@/components/iyp/prefix/PrefixPopularHostNames.vue'
-import PrefixWhois from '@/components/whois/PrefixWhois.vue'
+import Whois from '@/components/Whois.vue'
 
 const props = defineProps(['host', 'prefixLength', 'getPrefix', 'pageTitle', 'hash'])
 
@@ -187,7 +187,7 @@ onMounted(() => {
     :info-description="$t('whois.info.description')"
     class="card"
   >
-    <PrefixWhois :page-title="pageTitle" :get-prefix="getPrefix" />
+    <Whois :page-title="pageTitle" :get-prefix="getPrefix" />
   </GenericCardController>
 </template>
 
