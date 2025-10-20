@@ -224,7 +224,9 @@ const initRoute = () => {
 
 // Connect to the WebSocket
 const connectWebSocket = () => {
-  socket.value = new WebSocket(`wss://ris-live.ripe.net/v1/ws/?client=ihr_${uid()}`)
+  if (!socket.value) {
+    socket.value = new WebSocket(`wss://ris-live.ripe.net/v1/ws/?client=ihr_${uid()}`)
+  }
   if (socket.value.readyState === WebSocket.CONNECTING) {
     disableButton.value = true
   }
@@ -245,6 +247,8 @@ const connectWebSocket = () => {
     if (isPlaying.value) {
       isPlaying.value = false
     }
+    socket.value.close()
+    socket.value = null
   }
   socket.value.onmessage = (event) => {
     const res = JSON.parse(event.data)
@@ -268,6 +272,7 @@ const toggleRisProtocol = () => {
     sendSocketType('ris_subscribe', subscribeParams)
   } else {
     socket.value.close()
+    socket.value = null
   }
 }
 
@@ -1184,6 +1189,10 @@ onMounted(() => {
 onUnmounted(() => {
   if (observer && myElement.value?.$el) {
     observer.unobserve(myElement.value?.$el)
+  }
+  if (socket.value) {
+    socket.value.close()
+    socket.value = null
   }
 })
 </script>
