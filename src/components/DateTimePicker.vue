@@ -12,20 +12,19 @@ const props = defineProps({
   },
   min: {
     type: Date,
-    required: true,
     default: () => {
       return new Date()
     }
   },
   max: {
     type: Date,
-    required: true,
     default: () => {
       return new Date()
     }
   },
   white: {
-    type: Boolean
+    type: Boolean,
+    default:false
   },
   hideTime: {
     type: Boolean,
