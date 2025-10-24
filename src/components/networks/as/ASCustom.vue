@@ -25,6 +25,7 @@ import ASCoLocatedASes from '@/components/iyp/as/ASCoLocatedASes.vue'
 import ASSiblingASes from '@/components/iyp/as/ASSiblingASes.vue'
 import ASRankings from '@/components/iyp/as/ASRankings.vue'
 import ASAuthoritativeNameservers from '@/components/iyp/as/ASAuthoritativeNameservers.vue'
+import Whois from '@/components/Whois.vue'
 
 const props = defineProps([
   'startTime',
@@ -66,6 +67,7 @@ const selects = ref([
   { value: false, label: t('iyp.as.ixp.title') },
   { value: false, label: t('iyp.as.facilities.title') },
   { value: false, label: t('iyp.as.siblings.title') },
+  { value: false, label: t('whois.title') },
   { value: false, label: t('iyp.as.rankings.title') }
 ])
 const selectAll = ref(false)
@@ -378,9 +380,19 @@ onMounted(() => {
   >
     <ASSiblingASes :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
-  <!-- Rankings -->
   <GenericCardController
     v-if="selects[18].value"
+    :title="$t('whois.title')"
+    :sub-title="$t('whois.caption')"
+    :info-title="$t('whois.info.title')"
+    :info-description="$t('whois.info.description')"
+    class="card"
+  >
+    <Whois :as-number="asNumber" :page-title="pageTitle" />
+  </GenericCardController>
+  <!-- Rankings -->
+  <GenericCardController
+    v-if="selects[19].value"
     :title="$t('iyp.as.rankings.title')"
     :sub-title="$t('iyp.as.rankings.caption') + asNumber"
     :info-title="$t('iyp.as.rankings.info.title')"

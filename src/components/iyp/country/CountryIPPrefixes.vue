@@ -19,7 +19,7 @@ const prefixes = ref({
   data: [],
   show: false,
   loading: true,
-    query: `MATCH (p:BGPPrefix)-[:COUNTRY {reference_name: 'ihr.rov'}]-(c:Country {country_code: $cc})
+  query: `MATCH (p:BGPPrefix)-[:COUNTRY {reference_name: 'ihr.rov'}]-(c:Country {country_code: $cc})
     OPTIONAL MATCH (p)<-[o:ORIGINATE {reference_name:'ihr.rov'}]-(a:AS)
     OPTIONAL MATCH (p)-[:PART_OF]->(:RIRPrefix)-[creg:COUNTRY {reference_name: 'nro.delegated_stats'}]-(creg_country:Country)
     OPTIONAL MATCH (p)-[:CATEGORIZED]->(t:Tag)
