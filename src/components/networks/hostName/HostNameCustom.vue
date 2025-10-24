@@ -26,8 +26,8 @@ const selects = ref([
   { value: false, label: t('iyp.domainname.nameservers.title') },
   { value: false, label: t('iyp.domainname.country_query.title') },
   { value: false, label: t('iyp.domainname.as_query.title') },
-  { value: false, label: t('iyp.domainname.rankings.title') },
-  { value: false, label: t('whois.title') }
+  { value: false, label: t('whois.title') },
+  { value: false, label: t('iyp.domainname.rankings.title') }
 ])
 const selectAll = ref(false)
 
@@ -135,19 +135,9 @@ onMounted(() => {
   >
     <HostNameQueryingASes :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
-  <!-- Rankings -->
+  <!-- Registration -->
   <GenericCardController
     v-if="selects[4].value"
-    :title="$t('iyp.domainname.rankings.title')"
-    :sub-title="$t('iyp.domainname.rankings.caption') + pageTitle"
-    :info-title="$t('iyp.domainname.rankings.info.title')"
-    :info-description="$t('iyp.domainname.rankings.info.description')"
-    class="card"
-  >
-    <HostNameRankings :page-title="pageTitle" :host-name="hostName" />
-  </GenericCardController>
-  <GenericCardController
-    v-if="selects[5].value"
     :title="$t('whois.title')"
     :sub-title="$t('whois.caption')"
     :info-title="$t('whois.info.title')"
@@ -155,6 +145,17 @@ onMounted(() => {
     class="card"
   >
     <Whois :page-title="pageTitle" :host-name="hostName" />
+  </GenericCardController>
+  <!-- Rankings -->
+  <GenericCardController
+    v-if="selects[5].value"
+    :title="$t('iyp.domainname.rankings.title')"
+    :sub-title="$t('iyp.domainname.rankings.caption') + pageTitle"
+    :info-title="$t('iyp.domainname.rankings.info.title')"
+    :info-description="$t('iyp.domainname.rankings.info.description')"
+    class="card"
+  >
+    <HostNameRankings :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
 </template>
 

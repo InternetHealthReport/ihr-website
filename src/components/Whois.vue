@@ -1,7 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { ref, inject, watch, onMounted } from 'vue'
-import { QMarkupTable, QSpinner } from 'quasar'
+import { QSpinner } from 'quasar'
 import '@/styles/chart.css'
 import hljs from 'highlight.js'
 import 'highlight.js/scss/vs.scss'
@@ -70,12 +70,26 @@ onMounted(() => {
       ><code style="white-space: pre-wrap;" v-html="hljs.highlight(whois_data, { language: 'text' }).value"></code></pre>
     </div>
     <div v-else>
-      RDAP error. Please try to run the following command in your terminal.
-      <pre style="text-align: left">
-        <code v-if="asNumber" style="white-space: pre-wrap;" v-html="hljs.highlight(`whois AS${asNumber}`, { language: 'bash' }).value"></code>
-        <code v-if="getPrefix" style="white-space: pre-wrap;" v-html="hljs.highlight(`whois ${getPrefix}`, { language: 'bash' }).value"></code>
-        <code v-if="hostName" style="white-space: pre-wrap;" v-html="hljs.highlight(`whois ${hostName}`, { language: 'bash' }).value"></code>
-      </pre>
+      No RDAP URL available for
+      <span v-if="asNumber">AS{{ asNumber }}.</span>
+      <span v-if="getPrefix">prefix {{ getPrefix }}.</span>
+      <span v-if="hostName">hostname {{ hostName }}.</span>
+      Please try to run the following command in your terminal.
+      <div v-if="asNumber">
+        <pre
+          style="text-align: left"
+        ><code style="white-space: pre-wrap;" v-html="hljs.highlight(`whois AS${asNumber}`, { language: 'bash' }).value"></code></pre>
+      </div>
+      <div v-if="getPrefix">
+        <pre
+          style="text-align: left"
+        ><code style="white-space: pre-wrap;" v-html="hljs.highlight(`whois ${getPrefix}`, { language: 'bash' }).value"></code></pre>
+      </div>
+      <div v-if="hostName">
+        <pre
+          style="text-align: left"
+        ><code style="white-space: pre-wrap;" v-html="hljs.highlight(`whois ${hostName}`, { language: 'bash' }).value"></code></pre>
+      </div>
     </div>
   </div>
   <div v-else class="IHR_loading-spinner">
