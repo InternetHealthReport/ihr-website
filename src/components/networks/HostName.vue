@@ -8,6 +8,7 @@ import { useI18n } from 'vue-i18n'
 import HostNameRouting from '@/components/networks/hostName/HostNameRouting.vue'
 import HostNameDNS from '@/components/networks/hostName/HostNameDNS.vue'
 import HostNameRankings from '@/components/networks/hostName/HostNameRankings.vue'
+import HostNameRegistration from '@/components/networks/hostName/HostNameRegistration.vue'
 import HostNameCustom from '@/components/networks/hostName/HostNameCustom.vue'
 
 const { t } = useI18n()
@@ -109,6 +110,7 @@ onMounted(() => {
         <!-- <QTab name="overview">Overview</QTab> -->
         <QTab name="routing"> Routing </QTab>
         <QTab name="dns"> DNS </QTab>
+        <QTab name="registration"> Registration </QTab>
         <QTab name="rankings"> Rankings </QTab>
         <QTab name="custom"> Custom </QTab>
       </QTabs>
@@ -122,6 +124,9 @@ onMounted(() => {
         </QTabPanel>
         <QTabPanel name="dns">
           <HostNameDNS :page-title="pageTitle" :host-name="domainName" />
+        </QTabPanel>
+        <QTabPanel name="registration">
+          <HostNameRegistration :page-title="pageTitle" :host-name="domainName" />
         </QTabPanel>
         <QTabPanel name="rankings">
           <HostNameRankings :page-title="pageTitle" :host-name="domainName" />

@@ -110,7 +110,7 @@ const handleReference = (key) => {
 watch(
   () => props.host,
   () => {
-    loading.value = 3
+    loading.value = 2
     queries.value.forEach((query) => {
       query.data = []
     })
@@ -121,7 +121,7 @@ watch(
 watch(
   () => props.prefixLength,
   () => {
-    loading.value = 3
+    loading.value = 2
     queries.value.forEach((query) => {
       query.data = []
     })
