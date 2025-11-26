@@ -10,6 +10,7 @@ import HostNameAuthoritativeNameservers from '@/components/iyp/hostName/HostName
 import HostNameQueryingCountries from '@/components/iyp/hostName/HostNameQueryingCountries.vue'
 import HostNameQueryingASes from '@/components/iyp/hostName/HostNameQueryingASes.vue'
 import HostNameRankings from '@/components/iyp/hostName/HostNameRankings.vue'
+import Whois from '@/components/Whois.vue'
 
 const props = defineProps(['hostName', 'pageTitle', 'hash'])
 
@@ -25,6 +26,7 @@ const selects = ref([
   { value: false, label: t('iyp.domainname.nameservers.title') },
   { value: false, label: t('iyp.domainname.country_query.title') },
   { value: false, label: t('iyp.domainname.as_query.title') },
+  { value: false, label: t('whois.title') },
   { value: false, label: t('iyp.domainname.rankings.title') }
 ])
 const selectAll = ref(false)
@@ -133,9 +135,20 @@ onMounted(() => {
   >
     <HostNameQueryingASes :page-title="pageTitle" :host-name="hostName" />
   </GenericCardController>
-  <!-- Rankings -->
+  <!-- Registration -->
   <GenericCardController
     v-if="selects[4].value"
+    :title="$t('whois.title')"
+    :sub-title="$t('whois.caption')"
+    :info-title="$t('whois.info.title')"
+    :info-description="$t('whois.info.description')"
+    class="card"
+  >
+    <Whois :page-title="pageTitle" :host-name="hostName" />
+  </GenericCardController>
+  <!-- Rankings -->
+  <GenericCardController
+    v-if="selects[5].value"
     :title="$t('iyp.domainname.rankings.title')"
     :sub-title="$t('iyp.domainname.rankings.caption') + pageTitle"
     :info-title="$t('iyp.domainname.rankings.info.title')"

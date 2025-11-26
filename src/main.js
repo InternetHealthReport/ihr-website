@@ -17,6 +17,7 @@ import { RipeApi } from '@/plugins/RipeApi'
 import { RpkiApi } from './plugins/RpkiApi'
 import VNetworkGraph from 'v-network-graph'
 import 'v-network-graph/lib/style.css'
+import { Whois } from '@/plugins/Whois'
 
 const app = createApp(App)
 
@@ -60,5 +61,6 @@ app.use(AtlasApi)
 app.use(RipeApi)
 app.use(RpkiApi)
 app.use(VNetworkGraph)
+app.use(Whois)
 
 app.mount('#app')

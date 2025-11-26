@@ -9,6 +9,7 @@ import PrefixOverview from '@/components/networks/prefix/PrefixOverview.vue'
 import PrefixRouting from '@/components/networks/prefix/PrefixRouting.vue'
 import PrefixDNS from '@/components/networks/prefix/PrefixDNS.vue'
 import PrefixCustom from '@/components/networks/prefix/PrefixCustom.vue'
+import PrefixRegistration from '@/components/networks/prefix/PrefixRegistration.vue'
 
 const { t } = useI18n()
 
@@ -113,6 +114,7 @@ onMounted(() => {
         <QTab name="overview"> Overview </QTab>
         <QTab name="routing"> Routing </QTab>
         <QTab name="dns"> DNS </QTab>
+        <QTab name="registration"> Registration </QTab>
         <QTab name="custom"> Custom </QTab>
       </QTabs>
       <QSeparator />
@@ -125,6 +127,9 @@ onMounted(() => {
         </QTabPanel>
         <QTabPanel name="dns">
           <PrefixDNS :page-title="pageTitle" :get-prefix="getPrefix()" />
+        </QTabPanel>
+        <QTabPanel name="registration">
+          <PrefixRegistration :page-title="pageTitle" :get-prefix="getPrefix()" />
         </QTabPanel>
         <QTabPanel name="custom">
           <PrefixCustom

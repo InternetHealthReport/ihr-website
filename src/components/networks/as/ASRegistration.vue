@@ -2,6 +2,7 @@
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import ASOriginatedPrefixes from '@/components/iyp/as/ASOriginatedPrefixes.vue'
 import ASSiblingASes from '@/components/iyp/as/ASSiblingASes.vue'
+import Whois from '@/components/Whois.vue'
 
 const props = defineProps(['asNumber', 'pageTitle'])
 </script>
@@ -23,6 +24,15 @@ const props = defineProps(['asNumber', 'pageTitle'])
     class="card"
   >
     <ASSiblingASes :as-number="asNumber" :page-title="pageTitle" />
+  </GenericCardController>
+  <GenericCardController
+    :title="$t('whois.title')"
+    :sub-title="$t('whois.caption')"
+    :info-title="$t('whois.info.title')"
+    :info-description="$t('whois.info.description')"
+    class="card"
+  >
+    <Whois :as-number="asNumber" :page-title="pageTitle" />
   </GenericCardController>
 </template>
 
