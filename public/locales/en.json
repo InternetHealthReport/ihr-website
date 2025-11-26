@@ -1220,10 +1220,10 @@
     }
   },
   "whois": {
-    "title": "RDAP Matches",
-    "caption": "Registration information",
+    "title": "RDAP",
+    "caption": "Registration information from RDAP",
     "info": {
-      "title": "RDAP Matches",
+      "title": "RDAP",
       "description": "Whois provides registration information about the resource in a tabular format, with the most common fields of interest displayed by default."
     }
   }
