@@ -57,17 +57,22 @@ const isWsDisconnected = ref(false)
 const normalizedPrefix = ref('') // Used to store the normalized prefix to determine the BGP message type
 let normalizedPrefixLength = null
 
-const dataSource = ref('bgplay') //'ris-live' or 'bgplay'
-const dataSourceOptions = ['ris-live', 'bgplay']
+const dataSourceOptions = ref([
+  { label: 'BGPlay', value: 'bgplay' },
+  { label: 'RisLive', value: 'ris-live' }
+])
+const dataSource = ref(dataSourceOptions.value[0])
 const minTimestamp = ref(Infinity)
 const maxTimestamp = ref(-Infinity)
 
-const tempStartTime = ref(new Date().toISOString().slice(0, 16))
-const tempEndTime = ref(new Date().toISOString().slice(0, 16))
-const startTime = ref(new Date().toISOString().slice(0, 16))
-const endTime = ref(new Date().toISOString().slice(0, 16))
+const startTime = ref(
+  new Date(new Date().getTime() - 48 * 60 * 60 * 1000).toISOString().slice(0, 16)
+)
+const endTime = ref(new Date(new Date().getTime() - 12 * 60 * 60 * 1000).toISOString().slice(0, 16))
+const tempStartTime = ref(startTime.value)
+const tempEndTime = ref(endTime.value)
 
-const rrcs = ref([])
+const rrcs = ref([0])
 const rrcLocations = ref([])
 const isLoadingBgplayData = ref(false)
 const bgPlaySources = ref({}) // Used to store the "sources" for BGPlay
@@ -104,12 +109,12 @@ let observer = null
 const params = ref({
   peer: '',
   path: '',
-  prefix: '', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24, 202.164.222.0/24
+  prefix: '84.205.65.0/24', //2600:40fc:1004::/48 , 196.249.102.0/24 , 170.238.225.0/24, 202.164.222.0/24
   type: 'UPDATE',
   require: '',
   moreSpecific: false,
   lessSpecific: false,
-  host: '',
+  host: 0,
   socketOptions: {
     includeRaw: false,
     acknowledge: false
@@ -184,13 +189,16 @@ const initRoute = () => {
   } else {
     query.prefix = params.value.prefix
   }
-  if (queryDataSource && dataSourceOptions.includes(queryDataSource)) {
-    dataSource.value = queryDataSource
+  if (
+    queryDataSource &&
+    dataSourceOptions.value.map((obj) => obj.value).includes(queryDataSource)
+  ) {
+    dataSource.value = dataSourceOptions.value.find((obj) => obj.value === queryDataSource)
   } else {
-    query['data-source'] = dataSource.value
+    query['data-source'] = dataSource.value.value
   }
 
-  if (dataSource.value === 'ris-live') {
+  if (dataSource.value.value === 'ris-live') {
     if (queryRrc) {
       const num = Number(queryRrc)
       params.value.host = isNaN(num) ? '' : num
@@ -288,7 +296,7 @@ const sendSocketType = (protocol, paramData) => {
 }
 
 const processResData = (data) => {
-  if (dataSource.value === 'ris-live') {
+  if (dataSource.value.value === 'ris-live') {
     data.community = addCommunityAndDescriptions(data.community)
     data.as_info = addASInfo(data.path)
     data.type = addBGPMessageType(data)
@@ -426,7 +434,7 @@ const processResData = (data) => {
 const generateLineChartData = (data) => {
   const { timestamp, peer, type, origin_asn, peer_asn } = data
 
-  if (dataSource.value === 'bgplay') {
+  if (dataSource.value.value === 'bgplay') {
     uniqueEventTimestamps.add(timestamp)
   }
 
@@ -443,7 +451,7 @@ const generateLineChartData = (data) => {
   }
 
   function updateRpkiByTimestamp() {
-    if (dataSource.value === 'bgplay') {
+    if (dataSource.value.value === 'bgplay') {
       const key = `${peer_asn}-${peer}`
       rpkiPeerToOrigin[key] ??= []
       const oldData = rpkiPeerToOrigin[key][rpkiPeerToOrigin[key].length - 1]
@@ -472,7 +480,7 @@ const generateLineChartData = (data) => {
   function updateOriginByTimestamp() {
     if (type === 'Unknown') return
 
-    if (dataSource.value === 'ris-live') {
+    if (dataSource.value.value === 'ris-live') {
       eventsByTimestamp[timestamp] ??= []
       eventsByTimestamp[timestamp].push({ peer, type, origin_asn })
     } else {
@@ -515,7 +523,7 @@ const generateLineChartTrace = () => {
   const activePeersByAsn = {}
   let lastCountsByOrigin = {}
 
-  if (dataSource.value === 'ris-live') {
+  if (dataSource.value.value === 'ris-live') {
     for (let t = minTimestamp.value; t <= maxTimestamp.value; t++) {
       createTimestampTrace(t)
     }
@@ -537,7 +545,7 @@ const generateLineChartTrace = () => {
     aTrace.push(announcementsCount[t] || 0)
     wTrace.push(withdrawalsCount[t] || 0)
 
-    if (dataSource.value === 'ris-live') {
+    if (dataSource.value.value === 'ris-live') {
       const events = eventsByTimestamp[t] || []
       for (const { peer, type, origin_asn } of events) {
         helperUpdateOriginByTimestamp(activePeersByAsn, type, peer, origin_asn)
@@ -554,7 +562,7 @@ const generateLineChartTrace = () => {
         apTracesByOrigin[asn] = []
       }
       apTracesByOrigin[asn].push(
-        dataSource.value === 'ris-live'
+        dataSource.value.value === 'ris-live'
           ? activePeersByAsn[asn]?.size || 0
           : lastCountsByOrigin[asn] || 0
       )
@@ -661,7 +669,7 @@ const addCommunityAndDescriptions = (communityDataArray) => {
 const addASInfo = (asPathArray) => {
   if (!Array.isArray(asPathArray) || asPathArray.length === 0) return []
 
-  const source = dataSource.value === 'ris-live' ? asNames.value : bgPlayASNames.value
+  const source = dataSource.value.value === 'ris-live' ? asNames.value : bgPlayASNames.value
   const seen = new Set()
 
   const result = []
@@ -702,7 +710,7 @@ const normalizePrefix = (prefix, isUserInputPrefix) => {
 
 // Determine the BGP message type
 const addBGPMessageType = (data) => {
-  if (dataSource.value === 'ris-live') {
+  if (dataSource.value.value === 'ris-live') {
     const withdrawalSet = new Set(data.withdrawals.map(normalizePrefix))
     const announcementSet = new Set((data.announcements[0]?.prefixes || []).map(normalizePrefix))
 
@@ -765,7 +773,7 @@ const handleFilterMessages = (data) => {
 }
 
 const handleVrpTableData = () => {
-  if (dataSource.value === 'ris-live') return
+  if (dataSource.value.value === 'ris-live') return
   let tableData = []
   for (const vrp of vrps) {
     if (
@@ -786,7 +794,7 @@ const setSelectedMaxTimestamp = (val) => {
 }
 
 const disableLiveMode = () => {
-  if (isLiveMode.value && dataSource.value === 'ris-live') {
+  if (isLiveMode.value && dataSource.value.value === 'ris-live') {
     rawMessages.value.sort((a, b) => a.timestamp - b.timestamp)
   }
   isLiveMode.value = false
@@ -1158,9 +1166,9 @@ watch(
 
     const query = {
       prefix: params.value.prefix,
-      'data-source': dataSource.value
+      'data-source': dataSource.value.value
     }
-    if (dataSource.value === 'ris-live') {
+    if (dataSource.value.value === 'ris-live') {
       query.rrc = params.value.host
     } else {
       query['start-time'] = startTime.value
@@ -1202,165 +1210,127 @@ onUnmounted(() => {
     <h1 class="text-center q-pa-xl">BGP Monitor</h1>
     <QCard>
       <QCardSection>
-        <QMarkupTable flat bordered separator="cell">
-          <thead>
-            <tr>
-              <th>Data Source</th>
-              <th>Input</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div>
-                  <QRadio
-                    v-model="dataSource"
-                    val="bgplay"
-                    label="BGPlay"
-                    :disable="
-                      isPlaying ||
-                      inputDisable ||
-                      Object.keys(bgPlaySources).length > 0 ||
-                      isLoadingBgplayData
-                    "
-                  />
-                  <QIcon name="fas fa-circle-info" class="q-ml-md">
-                    <QTooltip>Monitor BGP events from a specific time range</QTooltip>
-                  </QIcon>
-                </div>
-                <div>
-                  <QRadio
-                    v-model="dataSource"
-                    val="ris-live"
-                    label="RisLive"
-                    :disable="
-                      isPlaying ||
-                      inputDisable ||
-                      Object.keys(bgPlaySources).length > 0 ||
-                      isLoadingBgplayData
-                    "
-                  />
-                  <QIcon name="fas fa-circle-info" class="q-ml-md">
-                    <QTooltip>Monitor Real-Time BGP events</QTooltip>
-                  </QIcon>
-                </div>
-              </td>
-              <td>
-                <div class="row items-center">
-                  <div class="col q-mr-xl">
-                    <QInput
-                      v-model="params.prefix"
-                      outlined
-                      placeholder="Prefix"
-                      :dense="true"
-                      color="accent"
-                      :disable="
-                        isPlaying ||
-                        inputDisable ||
-                        Object.keys(bgPlaySources).length > 0 ||
-                        isLoadingBgplayData
-                      "
-                    />
-                  </div>
-                  <div v-if="dataSource === 'bgplay'" class="row">
-                    <QInput
-                      label="Start Date Time in (UTC)"
-                      v-model="tempStartTime"
-                      class="input q-mr-xl"
-                      :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
-                      outlined
-                    >
-                      <template v-slot:append>
-                        <QIcon name="event" class="cursor-pointer">
-                          <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
-                            <div class="q-pa-md q-gutter-md row items-start">
-                              <QDate flat v-model="tempStartTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime
-                                flat
-                                v-model="tempStartTime"
-                                mask="YYYY-MM-DDTHH:mm"
-                                format24h
-                              />
-                            </div>
-                            <div class="row items-center justify-end q-ma-md">
-                              <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
-                              <QBtn
-                                v-close-popup
-                                @click="applyStartTime"
-                                class="bg-primary applyBtnStyle"
-                                label="Apply"
-                                outline
-                              />
-                            </div>
-                          </QPopupProxy>
-                        </QIcon>
-                      </template>
-                    </QInput>
-                    <QInput
-                      label="End Date Time in (UTC)"
-                      v-model="tempEndTime"
-                      class="input q-mr-xl"
-                      :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
-                      outlined
-                    >
-                      <template v-slot:append>
-                        <QIcon name="event" class="cursor-pointer">
-                          <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
-                            <div class="q-pa-md q-gutter-md row items-start">
-                              <QDate flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" />
-                              <QTime flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" format24h />
-                            </div>
-                            <div class="row items-center justify-end q-ma-md">
-                              <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
-                              <QBtn
-                                v-close-popup
-                                @click="applyEndTime"
-                                class="bg-primary applyBtnStyle"
-                                label="Apply"
-                                outline
-                              />
-                            </div>
-                          </QPopupProxy>
-                        </QIcon>
-                      </template>
-                    </QInput>
-                  </div>
-                  <div v-if="dataSource === 'ris-live'" class="col-2">
-                    <QSelect
-                      v-model="params.host"
-                      outlined
-                      :options="
-                        rrcLocations.filter((val) => !RIS_LIVE_UNSUPPORTED_RRCS.includes(val.value))
-                      "
-                      label="RRC"
-                      emit-value
-                      :dense="true"
-                      color="accent"
-                      :disable="isPlaying || inputDisable"
-                    />
-                  </div>
-                  <div v-else class="col-2">
-                    <QSelect
-                      outlined
-                      :dense="true"
-                      v-model="rrcs"
-                      multiple
-                      :options="rrcLocations"
-                      label="RRCs"
-                      emit-value
-                      clearable
-                      :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
-                    />
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </QMarkupTable>
+        <div class="row">
+          <div class="col-2 q-mr-xl">
+            <QSelect
+              outlined
+              label="Data Source"
+              :options="dataSourceOptions"
+              v-model="dataSource"
+              :disable="
+                isPlaying ||
+                inputDisable ||
+                Object.keys(bgPlaySources).length > 0 ||
+                isLoadingBgplayData
+              "
+            />
+          </div>
+          <div class="col">
+            <div class="row items-center">
+              <div class="col q-mr-xl">
+                <QInput
+                  v-model="params.prefix"
+                  outlined
+                  label="Prefix"
+                  color="accent"
+                  :disable="
+                    isPlaying ||
+                    inputDisable ||
+                    Object.keys(bgPlaySources).length > 0 ||
+                    isLoadingBgplayData
+                  "
+                />
+              </div>
+              <div v-if="dataSource.value === 'bgplay'" class="row">
+                <QInput
+                  label="Start Date Time in (UTC)"
+                  v-model="tempStartTime"
+                  class="q-mr-xl"
+                  :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                  outlined
+                >
+                  <template v-slot:append>
+                    <QIcon name="event" class="cursor-pointer">
+                      <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
+                        <div class="q-pa-md q-gutter-md row items-start">
+                          <QDate flat v-model="tempStartTime" mask="YYYY-MM-DDTHH:mm" />
+                          <QTime flat v-model="tempStartTime" mask="YYYY-MM-DDTHH:mm" format24h />
+                        </div>
+                        <div class="row items-center justify-end q-ma-md">
+                          <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
+                          <QBtn
+                            v-close-popup
+                            @click="applyStartTime"
+                            class="bg-primary applyBtnStyle"
+                            label="Apply"
+                            outline
+                          />
+                        </div>
+                      </QPopupProxy>
+                    </QIcon>
+                  </template>
+                </QInput>
+                <QInput
+                  label="End Date Time in (UTC)"
+                  v-model="tempEndTime"
+                  class="q-mr-xl"
+                  :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                  outlined
+                >
+                  <template v-slot:append>
+                    <QIcon name="event" class="cursor-pointer">
+                      <QPopupProxy no-route-dismiss cover @hide="resetTempValues">
+                        <div class="q-pa-md q-gutter-md row items-start">
+                          <QDate flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" />
+                          <QTime flat v-model="tempEndTime" mask="YYYY-MM-DDTHH:mm" format24h />
+                        </div>
+                        <div class="row items-center justify-end q-ma-md">
+                          <QBtn v-close-popup class="primary q-mr-sm" label="Close" outline />
+                          <QBtn
+                            v-close-popup
+                            @click="applyEndTime"
+                            class="bg-primary applyBtnStyle"
+                            label="Apply"
+                            outline
+                          />
+                        </div>
+                      </QPopupProxy>
+                    </QIcon>
+                  </template>
+                </QInput>
+              </div>
+              <div v-if="dataSource.value === 'ris-live'" class="col-2">
+                <QSelect
+                  v-model="params.host"
+                  outlined
+                  :options="
+                    rrcLocations.filter((val) => !RIS_LIVE_UNSUPPORTED_RRCS.includes(val.value))
+                  "
+                  label="RRC"
+                  emit-value
+                  color="accent"
+                  :disable="isPlaying || inputDisable"
+                />
+              </div>
+              <div v-else class="col-2">
+                <QSelect
+                  outlined
+                  v-model="rrcs"
+                  multiple
+                  :options="rrcLocations"
+                  label="RRCs"
+                  emit-value
+                  clearable
+                  :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </QCardSection>
       <QCardActions align="center" ref="myElement" class="q-pb-md q-pt-none">
         <QBtn
-          v-if="dataSource === 'ris-live'"
+          v-if="dataSource.value === 'ris-live'"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
           :disable="disableButton || params.prefix === '' || params.host === ''"
@@ -1370,7 +1340,7 @@ onUnmounted(() => {
         <QBtn
           v-else
           color="secondary"
-          :label="'Submit'"
+          :label="'Load'"
           @click="fetchBGPlayData"
           :disable="
             Object.keys(bgPlaySources).length > 0 ||
@@ -1385,7 +1355,7 @@ onUnmounted(() => {
           @click="prevEvent"
           :disable="
             rawMessages.length === 0 ||
-            (dataSource === 'bgplay'
+            (dataSource.value === 'bgplay'
               ? initialStateDataCount !== 0
                 ? currentIndex === 0
                 : currentIndex === -1
@@ -1411,7 +1381,7 @@ onUnmounted(() => {
           @click="prevEvent"
           :disable="
             rawMessages.length === 0 ||
-            (dataSource === 'bgplay'
+            (dataSource.value === 'bgplay'
               ? initialStateDataCount !== 0
                 ? currentIndex === 0
                 : currentIndex === -1
@@ -1426,39 +1396,7 @@ onUnmounted(() => {
         />
       </QCardActions>
     </QCard>
-    <div class="row inline q-mt-lg" style="gap: 10px">
-      <QBadge>
-        <div class="text-body2">Displaying Unique Peer messages: {{ filteredMessages.length }}</div>
-      </QBadge>
-      <QBadge>
-        <div class="text-body2">Total messages received: {{ rawMessages.length }}</div>
-      </QBadge>
-      <QBadge v-if="dataSource === 'bgplay'">
-        <div class="text-body2">No of Initial State Messages: {{ initialStateDataCount }}</div>
-      </QBadge>
-      <QBadge v-if="dataSource === 'bgplay'">
-        <div class="text-body2">No of Events: {{ rawMessages.length - initialStateDataCount }}</div>
-      </QBadge>
-    </div>
 
-    <GenericCardController
-      :title="$t('bgpAsPaths.title')"
-      :sub-title="$t('bgpAsPaths.subTitle')"
-      :info-title="$t('bgpAsPaths.info.title')"
-      :info-description="$t('bgpAsPaths.info.description')"
-      class="q-mt-lg"
-    >
-      <BGPPathsChart
-        :filtered-messages="filteredMessages"
-        :selected-peers="selectedPeers"
-        :is-live-mode="isLiveMode"
-        :is-playing="isPlaying"
-        :is-loading-bgplay-data="isLoadingBgplayData"
-        :data-source="dataSource"
-        :is-no-data="rawMessages.length === 0"
-        @enable-live-mode="enableLiveMode"
-      />
-    </GenericCardController>
     <GenericCardController
       :title="$t('bgpMessagesCount.title')"
       :sub-title="$t('bgpMessagesCount.subTitle')"
@@ -1472,7 +1410,7 @@ onUnmounted(() => {
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
         :is-loading-bgplay-data="isLoadingBgplayData"
-        :data-source="dataSource"
+        :data-source="dataSource.value"
         :min-timestamp="minTimestamp"
         :max-timestamp="maxTimestamp"
         :dates-trace="datesTrace"
@@ -1491,6 +1429,24 @@ onUnmounted(() => {
       />
     </GenericCardController>
     <GenericCardController
+      :title="$t('bgpAsPaths.title')"
+      :sub-title="$t('bgpAsPaths.subTitle')"
+      :info-title="$t('bgpAsPaths.info.title')"
+      :info-description="$t('bgpAsPaths.info.description')"
+      class="q-mt-lg"
+    >
+      <BGPPathsChart
+        :filtered-messages="filteredMessages"
+        :selected-peers="selectedPeers"
+        :is-live-mode="isLiveMode"
+        :is-playing="isPlaying"
+        :is-loading-bgplay-data="isLoadingBgplayData"
+        :data-source="dataSource.value"
+        :is-no-data="rawMessages.length === 0"
+        @enable-live-mode="enableLiveMode"
+      />
+    </GenericCardController>
+    <GenericCardController
       :title="$t('bgpMessagesTable.title')"
       :sub-title="$t('bgpMessagesTable.subTitle')"
       :info-title="$t('bgpMessagesTable.info.title')"
@@ -1498,7 +1454,7 @@ onUnmounted(() => {
       class="q-my-lg"
     >
       <BGPMessagesTable
-        :data-source="dataSource"
+        :data-source="dataSource.value"
         :filtered-messages="filteredMessages"
         :selected-peers="selectedPeers"
         :is-live-mode="isLiveMode"
