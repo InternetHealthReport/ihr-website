@@ -211,12 +211,12 @@ const renderRpkiStatusChart = async (rpkiStatusTraces) => {
     data.push({
       type: 'bar',
       orientation: 'h',
-      y,
+      y: peer_asn.map((val) => `AS${val}`),
       x,
       base,
       hovertext: origin_asn,
-      customdata: peer_asn,
-      hovertemplate: 'AS%{customdata} (%{y})<br>' + 'Origin: AS%{hovertext}<extra></extra>',
+      customdata: y,
+      hovertemplate: 'IP: %{customdata} (%{y})<br>' + 'Origin: AS%{hovertext}<extra></extra>',
       width: 0.9,
       name: 'RPKI ' + status,
       marker: {
