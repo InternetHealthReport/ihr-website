@@ -33,6 +33,7 @@ const RIS_LIVE_UNSUPPORTED_RRCS = [2, 8, 9, 17]
 
 const ripe_api = inject('ripe_api')
 const rpki_api = inject('rpki_api')
+const github_api = inject('github_api')
 
 const { t } = i18n.global
 const { utcString } = report()
@@ -908,15 +909,16 @@ const fetchBGPlayData = async () => {
 
 // Fetching the communities from the GitHub repository
 const fetchGithubFiles = async () => {
-  const repoUrl = 'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
   try {
-    const response = await axios.get(repoUrl)
+    const response = await github_api.get_repo(
+      'https://api.github.com/repos/NLNOG/lg.ring.nlnog.net/contents/communities'
+    )
     const files = response.data
     const txtFiles = files.filter(
       (file) =>
         (file.name.startsWith('as') && file.name.endsWith('.txt')) || file.name === 'well-known.txt'
     )
-    const fetchFilePromises = txtFiles.map((file) => axios.get(file.download_url))
+    const fetchFilePromises = txtFiles.map((file) => github_api.get_file(file.download_url))
     const fileContents = await Promise.all(fetchFilePromises)
     const processedCommunities = fileContents.flatMap((content) => {
       const lines = content.data.trim().split('\n')

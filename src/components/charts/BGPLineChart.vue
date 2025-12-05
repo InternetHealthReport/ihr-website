@@ -205,6 +205,7 @@ const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) =>
 
 const renderRpkiStatusChart = async (rpkiStatusTraces) => {
   const data = []
+  console.log(rpkiStatusTraces)
 
   for (const [status, { y, x, base, peer_asn, origin_asn }] of Object.entries(rpkiStatusTraces)) {
     data.push({
@@ -519,14 +520,28 @@ onMounted(() => {
       </div>
     </div>
     <ReactiveChart
-      :layout="lineChartLayout"
+      :layout="{
+        ...lineChartLayout,
+        yaxis: {
+          title: {
+            text: 'Reachability (# Peers)'
+          }
+        }
+      }"
       :traces="announcementsPeersChartData"
       :shapes="lineChartLayout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
     <ReactiveChart
-      :layout="lineChartLayout"
+      :layout="{
+        ...lineChartLayout,
+        yaxis: {
+          title: {
+            text: '# BGP messages / second'
+          }
+        }
+      }"
       :traces="announcementsAndWithdrawnChartData"
       :shapes="lineChartLayout.shapes"
       @plotly-click="handlePlotlyClick"
@@ -538,7 +553,14 @@ onMounted(() => {
         <h3>Requested timerange is outside of available data.</h3>
       </div>
       <ReactiveChart
-        :layout="rpkiLayout"
+        :layout="{
+          ...rpkiLayout,
+          yaxis: {
+            title: {
+              text: 'Peers'
+            }
+          }
+        }"
         :traces="rpkiStatusChartData"
         :shapes="rpkiLayout.shapes"
         @plotly-click="handlePlotlyClick"

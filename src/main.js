@@ -15,6 +15,7 @@ import { IypApi } from '@/plugins/IypApi'
 import { AtlasApi } from '@/plugins/RipeAtlasApi'
 import { RipeApi } from '@/plugins/RipeApi'
 import { RpkiApi } from './plugins/RpkiApi'
+import { GithubApi } from './plugins/GithubApi'
 import VNetworkGraph from 'v-network-graph'
 import 'v-network-graph/lib/style.css'
 import { Whois } from '@/plugins/Whois'
@@ -60,6 +61,7 @@ app.use(IypApi)
 app.use(AtlasApi)
 app.use(RipeApi)
 app.use(RpkiApi)
+app.use(GithubApi)
 app.use(VNetworkGraph)
 app.use(Whois)
 
