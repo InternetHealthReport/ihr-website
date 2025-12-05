@@ -214,6 +214,7 @@ onMounted(() => {
         :label-value="'Max Hops: ' + maxHops"
         color="accent"
         marker-labels
+        reverse
       />
     </div>
     <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />

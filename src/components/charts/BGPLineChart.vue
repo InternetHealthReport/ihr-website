@@ -411,6 +411,18 @@ onMounted(() => {
     </div>
     <div class="timetampSlider">
       <div class="timetampSliderContainer">
+        <QSlider
+          v-model="selectedMaxTimestamp"
+          :min="props.minTimestamp === Infinity ? 0 : props.minTimestamp"
+          :max="props.maxTimestamp === -Infinity ? 0 : props.maxTimestamp"
+          label-always
+          :label-value="
+            props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
+          "
+          color="accent"
+          @update:model-value="updateSlider($event, true)"
+          class="q-mt-lg"
+        />
         <div class="row timestampInfo">
           <div class="col-12 col-sm-auto">
             <QBadge class="full-width">
@@ -468,7 +480,6 @@ onMounted(() => {
             </QBadge>
           </div>
         </div>
-
         <QCard :class="[isHidden ? 'floating-card' : 'hidden']">
           <QCardActions class="row justify-center items-center">
             <QBtn
@@ -505,19 +516,6 @@ onMounted(() => {
             />
           </QCardActions>
         </QCard>
-
-        <QSlider
-          v-model="selectedMaxTimestamp"
-          :min="props.minTimestamp === Infinity ? 0 : props.minTimestamp"
-          :max="props.maxTimestamp === -Infinity ? 0 : props.maxTimestamp"
-          label-always
-          :label-value="
-            props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
-          "
-          switch-label-side
-          color="accent"
-          @update:model-value="updateSlider($event, true)"
-        />
       </div>
     </div>
     <ReactiveChart
