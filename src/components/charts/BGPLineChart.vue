@@ -205,7 +205,6 @@ const renderAnnouncementsPeersChart = async (dates, announcementsPeersTraces) =>
 
 const renderRpkiStatusChart = async (rpkiStatusTraces) => {
   const data = []
-  console.log(rpkiStatusTraces)
 
   for (const [status, { y, x, base, peer_asn, origin_asn }] of Object.entries(rpkiStatusTraces)) {
     data.push({
@@ -216,7 +215,7 @@ const renderRpkiStatusChart = async (rpkiStatusTraces) => {
       base,
       hovertext: origin_asn,
       customdata: y,
-      hovertemplate: 'IP: %{customdata} (%{y})<br>' + 'Origin: AS%{hovertext}<extra></extra>',
+      hovertemplate: 'Peer IP: %{customdata} (%{y})<br>' + 'Origin: AS%{hovertext}<extra></extra>',
       width: 0.9,
       name: 'RPKI ' + status,
       marker: {

@@ -17,7 +17,6 @@ import {
 } from 'quasar'
 import { onMounted, onUnmounted, ref, watch, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import axios from 'axios'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import i18n from '@/i18n'
 import { getASNamesCountryMappings } from '../plugins/AsNames'

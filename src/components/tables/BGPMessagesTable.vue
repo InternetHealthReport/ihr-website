@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QTable, QInput, QIcon, QTd, QSpinner } from 'quasar'
+import { QBtn, QTable, QInput, QIcon, QTd, QSpinner, QTooltip } from 'quasar'
 import { onMounted, ref, watch } from 'vue'
 import report from '@/plugins/report'
 import Tr from '@/i18n/translation'
@@ -39,34 +39,18 @@ const columns = ref([
   { name: 'peer_asn', label: 'Peer ASN', field: 'peer_asn', align: 'left', sortable: true },
   {
     name: 'peer',
-    label: 'Peer',
+    label: 'Peer IP',
     field: 'peer',
     align: 'left',
     sortable: true,
     sort: (a, b) => a.length - b.length
   },
+  { name: 'type', label: 'Message Type', field: 'type', align: 'left', sortable: true },
+  { name: 'timestamp', label: 'Timestamp', field: 'timestamp', align: 'left', sortable: true },
   {
     name: 'path',
     label: 'AS Path',
     field: 'path',
-    align: 'left',
-    sortable: true,
-    sort: (a, b) => a.length - b.length
-  },
-  {
-    name: 'as_info',
-    label: 'AS Info',
-    field: 'as_info',
-    align: 'left',
-    sortable: true,
-    sort: (a, b) => a.length - b.length
-  },
-  { name: 'type', label: 'Type', field: 'type', align: 'left', sortable: true },
-  { name: 'timestamp', label: 'Timestamp', field: 'timestamp', align: 'left', sortable: true },
-  {
-    name: 'community',
-    label: 'Community',
-    field: 'community',
     align: 'left',
     sortable: true,
     sort: (a, b) => a.length - b.length
@@ -82,10 +66,15 @@ const enableLiveMode = () => {
 }
 
 const addDynamicTableColumns = () => {
-  columns.value = columns.value.filter((col) => col.name !== 'rrc')
-  columns.value = columns.value.filter((col) => col.name !== 'rpki_status')
+  const communityColumn = {
+    name: 'community',
+    label: 'Community',
+    field: 'community',
+    align: 'left',
+    sortable: true,
+    sort: (a, b) => a.length - b.length
+  }
   if (props.dataSource === 'bgplay') {
-    const index = columns.value.findIndex((col) => col.name === 'type') //to put rrc column before type comumn
     const rrcColumn = { name: 'rrc', label: 'RRC', field: 'rrc', align: 'left', sortable: true }
     const rpkiStatusColumn = {
       name: 'rpki_status',
@@ -94,13 +83,9 @@ const addDynamicTableColumns = () => {
       align: 'left',
       sortable: true
     }
-    if (index !== -1) {
-      columns.value.splice(index, 0, rrcColumn)
-      columns.value.splice(index + 1, 0, rpkiStatusColumn)
-    } else {
-      columns.value.push(rrcColumn)
-      columns.value.push(rpkiStatusColumn)
-    }
+    columns.value.push(...[rpkiStatusColumn, communityColumn, rrcColumn])
+  } else {
+    columns.value.push(...[communityColumn])
   }
 }
 
@@ -163,33 +148,26 @@ onMounted(() => {
       <QTd :props="props">
         <span class="asn-list">
           <template v-if="props.row.path?.length">
-            <RouterLink
-              v-for="(asn, index) in props.row.path"
-              :key="index"
-              :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${asn}` } })"
-              target="_blank"
-            >
-              {{ asn + (index < props.row.path.length - 1 ? ',' : '') }}
-            </RouterLink>
+            <div v-for="(asn, index) in props.row.path" :key="index">
+              <RouterLink
+                :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${asn}` } })"
+                target="_blank"
+              >
+                <QTooltip v-if="props.row.as_info.length > 0">{{
+                  `${props.row.as_info.find((info) => info.asn === asn).asn_name}, ${props.row.as_info.find((info) => info.asn === asn).country_iso_code2}`
+                }}</QTooltip>
+                {{ asn }} </RouterLink
+              >{{ index < props.row.path.length - 1 ? ',' : '' }}
+            </div>
           </template>
           <template v-else>Null</template>
         </span>
       </QTd>
     </template>
-    <template #body-cell-as_info="props">
-      <QTd :props="props">
-        <template v-if="props.row.as_info.length > 0">
-          <pre>{{
-            props.row.as_info
-              .map((info) => `${info.asn}: ${info.asn_name}, ${info.country_iso_code2}`)
-              .join('\n')
-          }}</pre>
-        </template>
-        <template v-else>Null</template>
-      </QTd>
-    </template>
     <template #body-cell-timestamp="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.timestamp) }}</QTd>
+      <QTd class="nowrap" :props="props">{{
+        timestampToUTC(props.row.timestamp).slice(0, 16)
+      }}</QTd>
     </template>
     <template #body-cell-community="props">
       <QTd :props="props">
