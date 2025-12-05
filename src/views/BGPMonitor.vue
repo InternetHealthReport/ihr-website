@@ -100,10 +100,6 @@ let vrp_timestamps = []
 const isNoVrpData = ref(false)
 const vrpTableData = ref([])
 
-const isHidden = ref(false)
-const myElement = ref(null)
-let observer = null
-
 const params = ref({
   peer: '',
   path: '',
@@ -1134,23 +1130,6 @@ const resetTempValues = () => {
   tempEndTime.value = endTime.value
 }
 
-const customIntersectionObserver = () => {
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        isHidden.value = !entry.isIntersecting
-      })
-    },
-    {
-      threshold: 0,
-      rootMargin: '-68.8px 0px 0px 0px'
-    }
-  )
-  if (myElement.value?.$el) {
-    observer.observe(myElement.value.$el)
-  }
-}
-
 watch(
   [params, dataSource, startTime, endTime, rrcs],
   () => {
@@ -1189,13 +1168,9 @@ onMounted(() => {
   connectWebSocket()
   fetchAllASInfo()
   fetchGithubFiles()
-  customIntersectionObserver()
 })
 
 onUnmounted(() => {
-  if (observer && myElement.value?.$el) {
-    observer.unobserve(myElement.value?.$el)
-  }
   if (socket.value) {
     socket.value.close()
     socket.value = null
@@ -1326,7 +1301,7 @@ onUnmounted(() => {
           </div>
         </div>
       </QCardSection>
-      <QCardActions align="center" ref="myElement" class="q-pb-md q-pt-none">
+      <QCardActions align="center" class="q-pb-md q-pt-none">
         <QBtn
           v-if="dataSource.value === 'ris-live'"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
@@ -1347,54 +1322,9 @@ onUnmounted(() => {
           "
           class="q-mr-lg"
         />
-        <QBtn
-          color="indigo"
-          :label="'Previous'"
-          @click="prevEvent"
-          :disable="
-            rawMessages.length === 0 ||
-            (dataSource.value === 'bgplay'
-              ? initialStateDataCount !== 0
-                ? currentIndex === 0
-                : currentIndex === -1
-              : currentIndex === 0)
-          "
-        />
-        <QBtn
-          color="indigo"
-          :label="'Next'"
-          @click="nextEvent"
-          :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
-          class="q-mr-lg"
-        />
         <QBtn color="negative" :label="'Reset'" @click="resetData" />
       </QCardActions>
     </QCard>
-
-    <QCard :class="[isHidden ? 'floating-card' : 'hidden']">
-      <QCardActions class="row justify-center items-center">
-        <QBtn
-          color="indigo"
-          :label="'Previous'"
-          @click="prevEvent"
-          :disable="
-            rawMessages.length === 0 ||
-            (dataSource.value === 'bgplay'
-              ? initialStateDataCount !== 0
-                ? currentIndex === 0
-                : currentIndex === -1
-              : currentIndex === 0)
-          "
-        />
-        <QBtn
-          color="indigo"
-          :label="'Next'"
-          @click="nextEvent"
-          :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
-        />
-      </QCardActions>
-    </QCard>
-
     <GenericCardController
       :title="$t('bgpMessagesCount.title')"
       :sub-title="$t('bgpMessagesCount.subTitle')"
@@ -1420,10 +1350,13 @@ onUnmounted(() => {
         :vrp-table-data="vrpTableData"
         :current-index="currentIndex"
         :using-index="usingIndex"
+        :initial-state-data-count="initialStateDataCount"
         @set-selected-max-timestamp="setSelectedMaxTimestamp"
         @disable-live-mode="disableLiveMode"
         @disable-using-index="disableUsingIndex"
         @enable-live-mode="enableLiveMode"
+        @prev-event="prevEvent"
+        @next-event="nextEvent"
       />
     </GenericCardController>
     <GenericCardController
@@ -1513,14 +1446,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.floating-card {
-  z-index: 99;
-  position: fixed;
-  max-width: max-content;
-  top: 90px;
-  left: 50%;
-  transform: translate(-50%, 0);
-}
 .applyBtnStyle {
   color: rgba(255, 255, 255);
 }
