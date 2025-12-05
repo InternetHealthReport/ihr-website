@@ -136,6 +136,7 @@ onMounted(() => {
     :filter="search"
     row-key="peer"
     selection="multiple"
+    style="border-radius: 0px"
   >
     <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'ris-live'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />

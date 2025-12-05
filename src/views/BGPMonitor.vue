@@ -8,14 +8,12 @@ import {
   QCard,
   QCardSection,
   QCardActions,
-  QRadio,
   QIcon,
-  QTooltip,
   QDate,
   QTime,
   QPopupProxy,
-  QMarkupTable,
-  QBadge
+  QExpansionItem,
+  QItemSection
 } from 'quasar'
 import { onMounted, onUnmounted, ref, watch, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -1433,7 +1431,7 @@ onUnmounted(() => {
       :sub-title="$t('bgpAsPaths.subTitle')"
       :info-title="$t('bgpAsPaths.info.title')"
       :info-description="$t('bgpAsPaths.info.description')"
-      class="q-mt-lg"
+      class="q-my-lg"
     >
       <BGPPathsChart
         :filtered-messages="filteredMessages"
@@ -1445,24 +1443,36 @@ onUnmounted(() => {
         :is-no-data="rawMessages.length === 0"
         @enable-live-mode="enableLiveMode"
       />
-    </GenericCardController>
-    <GenericCardController
-      :title="$t('bgpMessagesTable.title')"
-      :sub-title="$t('bgpMessagesTable.subTitle')"
-      :info-title="$t('bgpMessagesTable.info.title')"
-      :info-description="$t('bgpMessagesTable.info.description')"
-      class="q-my-lg"
-    >
-      <BGPMessagesTable
-        :data-source="dataSource.value"
-        :filtered-messages="filteredMessages"
-        :selected-peers="selectedPeers"
-        :is-live-mode="isLiveMode"
-        :is-playing="isPlaying"
-        :is-loading-bgplay-data="isLoadingBgplayData"
-        @enable-live-mode="enableLiveMode"
-        @update-selected-peers="updateSelectedPeers"
-      />
+      <QExpansionItem
+        v-if="rawMessages.length"
+        default-opened
+        dense
+        class="expansion-header"
+        expand-icon-class="text-white"
+      >
+        <template v-slot:header>
+          <QItemSection>
+            <div>
+              <div class="text-h6">
+                {{ $t('bgpMessagesTable.title') }}
+              </div>
+              <div class="text-subtitle2">
+                {{ $t('bgpMessagesTable.subTitle') }}
+              </div>
+            </div>
+          </QItemSection>
+        </template>
+        <BGPMessagesTable
+          :data-source="dataSource.value"
+          :filtered-messages="filteredMessages"
+          :selected-peers="selectedPeers"
+          :is-live-mode="isLiveMode"
+          :is-playing="isPlaying"
+          :is-loading-bgplay-data="isLoadingBgplayData"
+          @enable-live-mode="enableLiveMode"
+          @update-selected-peers="updateSelectedPeers"
+        />
+      </QExpansionItem>
     </GenericCardController>
     <QDialog v-model="isWsDisconnected">
       <QCard>
@@ -1513,5 +1523,9 @@ onUnmounted(() => {
 }
 .applyBtnStyle {
   color: rgba(255, 255, 255);
+}
+.expansion-header {
+  background-color: #263238;
+  color: #fff;
 }
 </style>

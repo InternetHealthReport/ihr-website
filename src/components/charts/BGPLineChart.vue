@@ -1,11 +1,10 @@
 <script setup>
-import { QBadge, QBtn, QSlider, QSpinner } from 'quasar'
+import { QBadge, QBtn, QSlider, QSpinner, QExpansionItem, QItemSection } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
 import { ref, onMounted, watch } from 'vue'
 import report from '@/plugins/report'
 import '@/styles/chart.css'
 import BGPVrpsTable from '../tables/BGPVrpsTable.vue'
-import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const props = defineProps({
   rawMessages: {
@@ -440,16 +439,26 @@ onMounted(() => {
         @plotly-relayout="adjustQSliderWidth(true)"
       />
     </div>
-    <GenericCardController
+    <QExpansionItem
       v-if="dataSource === 'bgplay'"
-      :title="$t('bgpVrpsTable.title')"
-      :sub-title="$t('bgpVrpsTable.subTitle')"
-      :info-title="$t('bgpVrpsTable.info.title')"
-      :info-description="$t('bgpVrpsTable.info.description')"
-      class="q-mt-lg"
+      dense
+      class="expansion-header"
+      expand-icon-class="text-white"
     >
+      <template v-slot:header>
+        <QItemSection>
+          <div>
+            <div class="text-h6">
+              {{ $t('bgpVrpsTable.title') }}
+            </div>
+            <div class="text-subtitle2">
+              {{ $t('bgpVrpsTable.subTitle') }}
+            </div>
+          </div>
+        </QItemSection>
+      </template>
       <BGPVrpsTable :vrpTableData="props.vrpTableData" />
-    </GenericCardController>
+    </QExpansionItem>
   </div>
 </template>
 
@@ -483,5 +492,9 @@ onMounted(() => {
 }
 .loadingContainer {
   height: 60px;
+}
+.expansion-header {
+  background-color: #263238;
+  color: #fff;
 }
 </style>

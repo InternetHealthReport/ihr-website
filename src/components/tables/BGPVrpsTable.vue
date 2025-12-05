@@ -53,7 +53,13 @@ const timestampToUTC = (timestamp) => {
 </script>
 
 <template>
-  <QTable flat :rows="props.vrpTableData" :columns="columns" row-key="id">
+  <QTable
+    flat
+    :rows="props.vrpTableData"
+    :columns="columns"
+    row-key="id"
+    style="border-radius: 0px"
+  >
     <template #body-cell-asn="props">
       <QTd :props="props">
         <RouterLink
