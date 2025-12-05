@@ -44,7 +44,6 @@ const rawMessages = ref([]) //Used to store all the messages from the websocket
 const filteredMessages = ref([]) //Used to store unique peer messages uses "uniquePeerMessages = new Map()""
 const uniquePeerMessages = new Map() //Used to store unique peer messages (For simplification)
 const communityInfo = ref({})
-const selectedPeers = ref([])
 const defaultSelectedPeerCount = ref(5) //Default number of peers to display in the sankey chart
 const isLiveMode = ref(true)
 const selectedMaxTimestamp = ref(0)
@@ -129,7 +128,6 @@ const resetData = () => {
   rawMessages.value = []
   filteredMessages.value = []
   uniquePeerMessages.clear()
-  selectedPeers.value = []
   defaultSelectedPeerCount.value = 5
   isLiveMode.value = true
   selectedMaxTimestamp.value = 0
@@ -297,8 +295,6 @@ const processResData = (data) => {
     // Modify the timestamp to be in seconds
     data.timestamp = Math.floor(data.timestamp)
 
-    applyDefaultSelectedPeers(data.peer)
-
     rawMessages.value.push(data)
     //When in live mode
     if (isLiveMode.value) {
@@ -372,7 +368,6 @@ const processResData = (data) => {
         origin_asn: originASN
       })
 
-      applyDefaultSelectedPeers(peer)
       initialStateDataCount.value++
 
       events.push({
@@ -405,8 +400,6 @@ const processResData = (data) => {
         peer_asn: peer_asn,
         origin_asn: originASN
       })
-
-      applyDefaultSelectedPeers(peer)
 
       events.push({
         peer_asn: peerInfo.as_number,
@@ -627,17 +620,6 @@ const generateLineChartTrace = () => {
 
 const timestampToUTC = (timestamp) => {
   return utcString(new Date(timestamp * 1000))
-}
-
-//Automatically select the first 5 peers for displaying the sankey chart
-const applyDefaultSelectedPeers = (peer) => {
-  if (
-    defaultSelectedPeerCount.value > 0 &&
-    !selectedPeers.value.some((data) => data.peer === peer)
-  ) {
-    selectedPeers.value.push({ peer: peer })
-    defaultSelectedPeerCount.value--
-  }
 }
 
 // Apply community descriptions to the community data array
@@ -1114,8 +1096,8 @@ const getRPKIStatus = (asn, timestamp) => {
   return { status: 'Not Found' }
 }
 
-const updateSelectedPeers = (obj) => {
-  selectedPeers.value = obj
+const updateSelectedPeers = (val) => {
+  defaultSelectedPeerCount.value = val
 }
 
 const applyStartTime = () => {
@@ -1369,7 +1351,7 @@ onUnmounted(() => {
     >
       <BGPPathsChart
         :filtered-messages="filteredMessages"
-        :selected-peers="selectedPeers"
+        :selected-peers-number="defaultSelectedPeerCount"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
         :is-loading-bgplay-data="isLoadingBgplayData"
@@ -1399,7 +1381,7 @@ onUnmounted(() => {
         <BGPMessagesTable
           :data-source="dataSource.value"
           :filtered-messages="filteredMessages"
-          :selected-peers="selectedPeers"
+          :selected-peers-number="defaultSelectedPeerCount"
           :is-live-mode="isLiveMode"
           :is-playing="isPlaying"
           :is-loading-bgplay-data="isLoadingBgplayData"

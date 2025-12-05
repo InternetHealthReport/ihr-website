@@ -10,9 +10,9 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  selectedPeers: {
-    type: Array,
-    default: () => []
+  selectedPeersNumber: {
+    type: Number,
+    default: 5
   },
   isLiveMode: {
     type: Boolean
@@ -32,7 +32,9 @@ const { utcString } = report()
 
 const emit = defineEmits(['enable-live-mode', 'update-selected-peers'])
 
-const selectedPeersModel = ref(props.selectedPeers)
+const selectedPeersModel = ref(
+  props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => ({ peer: obj.peer }))
+)
 const search = ref('')
 
 const columns = ref([
@@ -96,15 +98,14 @@ watch(
   }
 )
 
-watch(
-  () => props.selectedPeers,
-  () => {
-    selectedPeersModel.value = props.selectedPeers
-  }
-)
+watch([() => props.selectedPeersNumber, () => props.filteredMessages], () => {
+  selectedPeersModel.value = props.filteredMessages
+    .slice(0, props.selectedPeersNumber)
+    .map((obj) => ({ peer: obj.peer }))
+})
 
 watch(selectedPeersModel, () => {
-  emit('update-selected-peers', selectedPeersModel.value)
+  emit('update-selected-peers', selectedPeersModel.value.length)
 })
 
 onMounted(() => {
@@ -116,14 +117,14 @@ onMounted(() => {
   <QTable
     v-model:selected="selectedPeersModel"
     flat
-    :rows="props.filteredMessages"
+    :rows="filteredMessages"
     :columns="columns"
     :filter="search"
     row-key="peer"
     selection="multiple"
     style="border-radius: 0px"
   >
-    <template #top-left v-if="props.filteredMessages.length !== 0 && dataSource === 'ris-live'">
+    <template #top-left v-if="filteredMessages.length !== 0 && dataSource === 'ris-live'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </template>

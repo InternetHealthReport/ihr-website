@@ -9,9 +9,9 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  selectedPeers: {
-    type: Array,
-    default: () => []
+  selectedPeersNumber: {
+    type: Number,
+    default: 5
   },
   isLiveMode: {
     type: Boolean
@@ -46,7 +46,7 @@ const generateGraphData = () => {
   const linkSetCount = new Map()
 
   //Only consider selected peers which are selected in the table
-  const peers = props.selectedPeers.map((message) => message.peer)
+  const peers = props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => obj.peer)
   const filteredSelectedMessages = props.filteredMessages.filter((message) =>
     peers.includes(message.peer)
   )
@@ -153,7 +153,7 @@ watch(
 )
 
 watch(
-  () => props.selectedPeers,
+  () => props.selectedPeersNumber,
   () => {
     init()
   },
