@@ -1089,15 +1089,42 @@ const onLoad = () => {
   return true
 }
 
+const loadOnMount = () => {
+  if (Object.keys(route.query).length !== 0) {
+    const dataSourceQuery = route.query['data-source']
+    const prefixQuery = route.query['prefix']
+    const startTimeQuery = route.query['start-time']
+    const endTimeQuery = route.query['end-time']
+    const rrcsQuery = route.query['rrcs']
+    const rrcQuery = route.query['rrc']
+    dataSource.value = dataSourceOptions.value.find((obj) => obj.value === dataSourceQuery)
+    if (dataSource.value.value === 'ris-live') {
+      if (prefixQuery && rrcQuery) {
+        params.value.prefix = prefixQuery
+        params.value.host = Number(rrcQuery)
+        toggleConnection()
+      }
+    } else if (dataSource.value.value === 'bgplay') {
+      if (prefixQuery && startTimeQuery && endTimeQuery && rrcsQuery) {
+        params.value.prefix = prefixQuery
+        startTime.value = startTimeQuery
+        endTime.value = endTimeQuery
+        rrcs.value = rrcsQuery.split(',').map((val) => Number(val))
+        fetchBGPlayData()
+      }
+    }
+  }
+}
+
 watch(isPlaying, () => {
   toggleRisProtocol()
 })
 
-onMounted(() => {
-  fetchRCCs()
-  connectWebSocket()
-  fetchAllASInfo()
-  fetchGithubFiles()
+onMounted(async () => {
+  await fetchRCCs()
+  await fetchAllASInfo()
+  await fetchGithubFiles()
+  loadOnMount()
 })
 
 onUnmounted(() => {
