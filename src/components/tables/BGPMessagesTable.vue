@@ -1,5 +1,5 @@
 <script setup>
-import { QBtn, QTable, QInput, QIcon, QTd, QSpinner, QTooltip } from 'quasar'
+import { QBtn, QTable, QInput, QIcon, QTd, QSpinner, QTooltip, format } from 'quasar'
 import { onMounted, ref, watch } from 'vue'
 import report from '@/plugins/report'
 import Tr from '@/i18n/translation'
@@ -77,7 +77,14 @@ const addDynamicTableColumns = () => {
     sort: (a, b) => a.length - b.length
   }
   if (props.dataSource === 'bgplay') {
-    const rrcColumn = { name: 'rrc', label: 'RRC', field: 'rrc', align: 'left', sortable: true }
+    const rrcColumn = {
+      name: 'rrc',
+      label: 'RRC',
+      field: 'rrc',
+      align: 'left',
+      sortable: true,
+      format: (val) => Number(val)
+    }
     const rpkiStatusColumn = {
       name: 'rpki_status',
       label: 'RPKI Status',
@@ -161,7 +168,7 @@ onMounted(() => {
               >{{ index < props.row.path.length - 1 ? ',' : '' }}
             </div>
           </template>
-          <template v-else>Null</template>
+          <template v-else>-</template>
         </span>
       </QTd>
     </template>
@@ -175,11 +182,16 @@ onMounted(() => {
         <template v-if="props.row.community.length > 0">
           <pre>{{
             props.row.community
-              .map((c) => `${c.community}, AS${c.comm_1}-${c.description}`)
+              .map((c) => {
+                if (c.description === 'Null') {
+                  return `${c.community}, Unknown`
+                }
+                return `${c.community}, AS${c.comm_1}-${c.description}`
+              })
               .join('\n')
           }}</pre>
         </template>
-        <template v-else> Null </template>
+        <template v-else>-</template>
       </QTd>
     </template>
   </QTable>
