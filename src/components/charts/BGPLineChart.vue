@@ -417,7 +417,9 @@ onMounted(() => {
           :max="props.maxTimestamp === -Infinity ? 0 : props.maxTimestamp"
           label-always
           :label-value="
-            props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
+            props.maxTimestamp === -Infinity
+              ? 'No Data'
+              : timestampToUTC(selectedMaxTimestamp)?.slice(0, 16)
           "
           color="accent"
           @update:model-value="updateSlider($event, true)"
@@ -429,7 +431,9 @@ onMounted(() => {
               <div class="text-body2">
                 Start:
                 {{
-                  props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
+                  props.minTimestamp === Infinity
+                    ? 'No Data'
+                    : timestampToUTC(props.minTimestamp)?.slice(0, 16)
                 }}
               </div>
             </QBadge>
@@ -474,7 +478,9 @@ onMounted(() => {
               <div class="text-body2">
                 End:
                 {{
-                  props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
+                  props.maxTimestamp === -Infinity
+                    ? 'No Data'
+                    : timestampToUTC(props.maxTimestamp)?.slice(0, 16)
                 }}
               </div>
             </QBadge>

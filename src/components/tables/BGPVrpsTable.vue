@@ -86,10 +86,14 @@ const timestampToUTC = (timestamp) => {
       </QTd>
     </template>
     <template #body-cell-unixVisibleFrom="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.unixVisibleFrom) }}</QTd>
+      <QTd class="nowrap" :props="props">{{
+        timestampToUTC(props.row.unixVisibleFrom)?.slice(0, 16)
+      }}</QTd>
     </template>
     <template #body-cell-unixVisibleTo="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.unixVisibleTo) }}</QTd>
+      <QTd class="nowrap" :props="props">{{
+        timestampToUTC(props.row.unixVisibleTo)?.slice(0, 16)
+      }}</QTd>
     </template>
   </QTable>
 </template>
