@@ -93,6 +93,7 @@ const allOriginAsns = new Set()
 const uniqueEventTimestamps = new Set()
 const currentIndex = ref(-1)
 const usingIndex = ref(false)
+let hasValidPrefix = false
 
 let vrps = []
 let vrp_timestamps = []
@@ -118,6 +119,9 @@ const route = useRoute()
 const router = useRouter()
 
 const toggleConnection = () => {
+  if (!onLoad()) {
+    return
+  }
   inputDisable.value = true
   isPlaying.value = !isPlaying.value
 }
@@ -161,65 +165,6 @@ const resetData = () => {
   vrp_timestamps = []
   isNoVrpData.value = false
   vrpTableData.value = []
-}
-
-// Initialize the route
-const initRoute = () => {
-  const query = { ...route.query }
-
-  const queryPrefix = route.query.prefix?.trim()
-  const queryDataSource = route.query['data-source']?.trim()
-  const queryRrc = route.query.rrc?.trim()
-  const queryRrcs = route.query.rrcs?.trim()
-
-  const queryStartTime = route.query['start-time']?.trim()
-  const queryEndTime = route.query['end-time']?.trim()
-
-  if (queryPrefix) {
-    params.value.prefix = queryPrefix
-    normalizedPrefix.value = normalizePrefix(queryPrefix, true)
-  } else {
-    query.prefix = params.value.prefix
-  }
-  if (
-    queryDataSource &&
-    dataSourceOptions.value.map((obj) => obj.value).includes(queryDataSource)
-  ) {
-    dataSource.value = dataSourceOptions.value.find((obj) => obj.value === queryDataSource)
-  } else {
-    query['data-source'] = dataSource.value.value
-  }
-
-  if (dataSource.value.value === 'ris-live') {
-    if (queryRrc) {
-      const num = Number(queryRrc)
-      params.value.host = isNaN(num) ? '' : num
-    } else {
-      query.rrc = params.value.host
-    }
-  } else {
-    if (queryRrcs) {
-      rrcs.value = queryRrcs
-        .split(',')
-        .map(Number)
-        .filter((rrc) => !isNaN(rrc))
-    } else {
-      query.rrcs = rrcs.value.join(',')
-    }
-    if (queryStartTime) {
-      tempStartTime.value = queryStartTime
-      startTime.value = queryStartTime
-    } else {
-      query['start-time'] = startTime.value
-    }
-    if (queryEndTime) {
-      tempEndTime.value = queryEndTime
-      endTime.value = queryEndTime
-    } else {
-      query['end-time'] = endTime.value
-    }
-  }
-  router.replace({ query })
 }
 
 // Connect to the WebSocket
@@ -677,9 +622,11 @@ const normalizePrefix = (prefix, isUserInputPrefix) => {
     if (isUserInputPrefix === true) {
       normalizedPrefixLength = Number(length)
     }
+    hasValidPrefix = true
     return `${normalizedIp}/${length}`
   } else {
     console.warn(`Prefix length missing, prefix: ${prefix}`) // should never happen
+    hasValidPrefix = false
     return normalizedIp
   }
 }
@@ -852,6 +799,10 @@ const haveRequiredBGPlayParams = () => {
 }
 
 const fetchBGPlayData = async () => {
+  if (!onLoad()) {
+    return
+  }
+
   if (!haveRequiredBGPlayParams()) {
     console.error('Missing required parameters')
     return
@@ -1113,40 +1064,36 @@ const resetTempValues = () => {
   tempEndTime.value = endTime.value
 }
 
-watch(
-  [params, dataSource, startTime, endTime, rrcs],
-  () => {
-    const inputPrefix = params.value.prefix?.trim()
-    const inputStartTime = startTime.value?.trim()
-    const inputEndTime = endTime.value?.trim()
+const onLoad = () => {
+  params.value.prefix = params.value.prefix.trim()
+  startTime.value = startTime.value.trim()
+  endTime.value = endTime.value.trim()
 
-    params.value.prefix = inputPrefix
-    startTime.value = inputStartTime
-    endTime.value = inputEndTime
+  normalizedPrefix.value = normalizePrefix(params.value.prefix, true)
+  if (!hasValidPrefix) {
+    return false
+  }
 
-    const query = {
-      prefix: params.value.prefix,
-      'data-source': dataSource.value.value
-    }
-    if (dataSource.value.value === 'ris-live') {
-      query.rrc = params.value.host
-    } else {
-      query['start-time'] = startTime.value
-      query['end-time'] = endTime.value
-      query.rrcs = rrcs.value ? rrcs.value.join(',') : ''
-    }
-    router.replace({ query })
-    normalizedPrefix.value = normalizePrefix(params.value.prefix, true)
-  },
-  { deep: true }
-)
+  const query = {
+    prefix: params.value.prefix,
+    'data-source': dataSource.value.value
+  }
+  if (dataSource.value.value === 'ris-live') {
+    query.rrc = params.value.host
+  } else {
+    query['start-time'] = startTime.value
+    query['end-time'] = endTime.value
+    query.rrcs = rrcs.value ? rrcs.value.join(',') : ''
+  }
+  router.replace({ query })
+  return true
+}
 
 watch(isPlaying, () => {
   toggleRisProtocol()
 })
 
 onMounted(() => {
-  initRoute()
   fetchRCCs()
   connectWebSocket()
   fetchAllASInfo()
