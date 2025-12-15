@@ -195,13 +195,6 @@ onMounted(() => {
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
     </div>
-    <div
-      v-if="!props.isNoData && nodes.size === 0"
-      class="text-center absolute-center"
-      style="z-index: 1"
-    >
-      <h1>No AS Path</h1>
-    </div>
     <div class="q-mt-lg q-px-md">
       <QSlider
         v-model="maxHops"
@@ -217,7 +210,12 @@ onMounted(() => {
         reverse
       />
     </div>
-    <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
+    <ReactiveChart
+      :layout="actualChartLayout"
+      :traces="actualChartData"
+      :new-plot="true"
+      :no-data="!props.isNoData && nodes.size === 0 ? 'No AS Path' : false"
+    />
   </div>
 </template>
 

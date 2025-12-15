@@ -1165,7 +1165,7 @@
   },
   "bgpAsPaths": {
     "title": "AS Paths",
-    "subTitle": "",
+    "subTitle": "AS-level paths observed from selected peers",
     "info": {
       "title": "AS Paths",
       "description": "<p><strong>Sankey Chart</strong></p><p>The Sankey chart displays the AS paths received in the BGP (Announcement) messages. See 'AS Paths' in the messages table. By default, only 5 messages are displayed to reduce clutter. You can select additional messages by choosing the 'Peers' in the messages table.</p><p><strong>Limit Number of Hops</strong></p><p>You can limit the number of hops in the Sankey chart by adjusting the 'Max Hops' input slider.</p>"
@@ -1181,7 +1181,7 @@
   },
   "bgpMessagesTable": {
     "title": "Latest BGP Message per Peer",
-    "subTitle": ""
+    "subTitle": "Per-peer details of monitored BGP messages"
   },
   "bgpVrpsTable": {
     "title": "RPKI",

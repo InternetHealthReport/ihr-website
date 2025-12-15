@@ -313,7 +313,7 @@ const processResData = (data) => {
         origin_asn: originASN
       })
 
-      initialStateDataCount.value++
+      // initialStateDataCount.value++ // Uncomment for including initial state
 
       events.push({
         peer_asn: peerInfo.as_number,

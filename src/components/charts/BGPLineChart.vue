@@ -553,10 +553,6 @@ onMounted(() => {
       @plotly-relayout="adjustQSliderWidth(true)"
     />
     <div v-if="dataSource === 'bgplay'" class="relative-position">
-      <div v-if="isNoVrpData" class="absolute-center text-center" style="z-index: 9">
-        <h1>No RPKI Data Available</h1>
-        <h3>Requested timerange is outside of available data.</h3>
-      </div>
       <ReactiveChart
         :layout="{
           ...rpkiLayout,
@@ -570,6 +566,11 @@ onMounted(() => {
         :shapes="rpkiLayout.shapes"
         @plotly-click="handlePlotlyClick"
         @plotly-relayout="adjustQSliderWidth(true)"
+        :no-data="
+          isNoVrpData
+            ? 'No RPKI Data Available. Requested timerange is outside of available data.'
+            : false
+        "
       />
     </div>
     <QExpansionItem
