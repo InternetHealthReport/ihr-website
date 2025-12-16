@@ -39,6 +39,7 @@ const { utcString } = report()
 
 const isPlaying = ref(false)
 const disableButton = ref(false)
+const firstLoad = ref(false)
 const socket = ref(null)
 const rawMessages = ref([]) //Used to store all the messages from the websocket
 const filteredMessages = ref([]) //Used to store unique peer messages uses "uniquePeerMessages = new Map()""
@@ -1121,10 +1122,12 @@ watch(isPlaying, () => {
 })
 
 onMounted(async () => {
+  firstLoad.value = true
   await fetchRCCs()
   await fetchAllASInfo()
   await fetchGithubFiles()
   loadOnMount()
+  firstLoad.value = false
 })
 
 onUnmounted(() => {
@@ -1263,7 +1266,7 @@ onUnmounted(() => {
           v-if="dataSource.value === 'ris-live'"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
-          :disable="disableButton || params.prefix === '' || params.host === ''"
+          :disable="firstLoad ? true : disableButton || params.prefix === '' || params.host === ''"
           @click="toggleConnection"
           class="q-mr-lg"
         />
@@ -1273,9 +1276,11 @@ onUnmounted(() => {
           :label="'Load'"
           @click="fetchBGPlayData"
           :disable="
-            Object.keys(bgPlaySources).length > 0 ||
-            isLoadingBgplayData ||
-            !haveRequiredBGPlayParams()
+            firstLoad
+              ? true
+              : Object.keys(bgPlaySources).length > 0 ||
+                isLoadingBgplayData ||
+                !haveRequiredBGPlayParams()
           "
           class="q-mr-lg"
         />
