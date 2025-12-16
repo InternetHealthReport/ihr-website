@@ -185,7 +185,7 @@ onMounted(() => {
     <div class="text-center">
       <h1>No data available</h1>
       <template v-if="dataSource === 'ris-live'">
-        <h3>Try Changing the Input Parameters or you can wait</h3>
+        <h3>Try changing the input parameters or you can wait</h3>
         <h6>Note: Some prefixes become active after some time.</h6>
       </template>
     </div>

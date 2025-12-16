@@ -56,7 +56,7 @@ let normalizedPrefixLength = null
 
 const dataSourceOptions = ref([
   { label: 'BGPlay', value: 'bgplay' },
-  { label: 'RisLive', value: 'ris-live' }
+  { label: 'RIS Live', value: 'ris-live' }
 ])
 const dataSource = ref(dataSourceOptions.value[0])
 const minTimestamp = ref(Infinity)
@@ -1173,7 +1173,7 @@ onUnmounted(() => {
               </div>
               <div v-if="dataSource.value === 'bgplay'" class="row">
                 <QInput
-                  label="Start Date Time in (UTC)"
+                  label="Start Date Time (in UTC)"
                   v-model="tempStartTime"
                   class="q-mr-xl"
                   :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
@@ -1201,7 +1201,7 @@ onUnmounted(() => {
                   </template>
                 </QInput>
                 <QInput
-                  label="End Date Time in (UTC)"
+                  label="End Date Time (in UTC)"
                   v-model="tempEndTime"
                   class="q-mr-xl"
                   :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"

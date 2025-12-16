@@ -401,7 +401,7 @@ onMounted(() => {
   </div>
   <div class="text-center" v-if="rawMessages.length === 0">
     <h1 v-if="!isLoadingBgplayData">No data available</h1>
-    <h3 v-if="dataSource === 'ris-live'">Try Changing the Input Parameters or you can wait</h3>
+    <h3 v-if="dataSource === 'ris-live'">Try changing the input parameters or you can wait</h3>
     <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>

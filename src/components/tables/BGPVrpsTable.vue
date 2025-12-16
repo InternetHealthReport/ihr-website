@@ -40,7 +40,7 @@ const columns = ref([
   },
   {
     name: 'unixVisibleTo',
-    label: 'Visible to',
+    label: 'Visible To',
     field: 'unixVisibleTo',
     align: 'left',
     sortable: true
