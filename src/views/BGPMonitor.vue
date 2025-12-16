@@ -314,7 +314,7 @@ const processResData = (data) => {
         origin_asn: originASN
       })
 
-      // initialStateDataCount.value++ // Uncomment for including initial state
+      initialStateDataCount.value++
 
       events.push({
         peer_asn: peerInfo.as_number,
@@ -748,12 +748,17 @@ const nextEvent = () => {
 
 const prevEvent = () => {
   disableLiveMode()
-  if (currentIndex.value > 0) {
-    currentIndex.value--
-    usingIndex.value = true
+  if (initialStateDataCount.value > 0) {
+    if (currentIndex.value === initialStateDataCount.value - 1) {
+      currentIndex.value = initialStateDataCount.value - 1
+    } else {
+      currentIndex.value--
+      usingIndex.value = true
+    }
   } else {
-    if (initialStateDataCount.value > 0) {
-      currentIndex.value = 0
+    if (currentIndex.value > 0) {
+      currentIndex.value--
+      usingIndex.value = true
     } else {
       currentIndex.value = -1
     }

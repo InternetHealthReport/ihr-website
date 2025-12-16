@@ -449,8 +449,8 @@ onMounted(() => {
                 :disable="
                   rawMessages.length === 0 ||
                   (dataSource === 'bgplay'
-                    ? initialStateDataCount !== 0
-                      ? currentIndex === 0
+                    ? initialStateDataCount > 0
+                      ? currentIndex === initialStateDataCount - 1
                       : currentIndex === -1
                     : currentIndex === 0)
                 "
@@ -460,7 +460,10 @@ onMounted(() => {
                   {{ usedMessagesCount + ' out of ' + rawMessages.length }} Processed Messages
                 </div>
                 <div v-else class="text-body2">
-                  {{ usedMessagesCount + ' out of ' + rawMessages.length }} Processed Messages
+                  {{
+                    usedMessagesCount - initialStateDataCount + ' out of ' + rawMessages.length
+                  }}
+                  Processed Messages
                 </div>
               </QBadge>
               <QBtn
@@ -497,8 +500,8 @@ onMounted(() => {
               :disable="
                 rawMessages.length === 0 ||
                 (dataSource === 'bgplay'
-                  ? initialStateDataCount !== 0
-                    ? currentIndex === 0
+                  ? initialStateDataCount > 0
+                    ? currentIndex === initialStateDataCount - 1
                     : currentIndex === -1
                   : currentIndex === 0)
               "
@@ -509,7 +512,7 @@ onMounted(() => {
                 <QIcon name="message" />
               </div>
               <div v-else class="text-body2">
-                {{ usedMessagesCount + '/' + rawMessages.length }}
+                {{ usedMessagesCount - initialStateDataCount + '/' + rawMessages.length }}
                 <QIcon name="message" />
               </div>
             </QBadge>
