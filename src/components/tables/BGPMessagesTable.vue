@@ -164,8 +164,8 @@ onMounted(() => {
                 <QTooltip v-if="props.row.as_info.length > 0">{{
                   `${props.row.as_info.find((info) => info.asn === asn).asn_name}, ${props.row.as_info.find((info) => info.asn === asn).country_iso_code2}`
                 }}</QTooltip>
-                {{ asn }} </RouterLink
-              >{{ index < props.row.path.length - 1 ? ',' : '' }}
+                {{ asn }}
+              </RouterLink>
             </div>
           </template>
           <template v-else>-</template>
