@@ -460,9 +460,7 @@ onMounted(() => {
                   {{ usedMessagesCount + ' out of ' + rawMessages.length }} Processed Messages
                 </div>
                 <div v-else class="text-body2">
-                  {{
-                    usedMessagesCount - initialStateDataCount + ' out of ' + rawMessages.length
-                  }}
+                  {{ usedMessagesCount - initialStateDataCount + ' out of ' + rawMessages.length }}
                   Processed Messages
                 </div>
               </QBadge>

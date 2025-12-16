@@ -1095,7 +1095,7 @@ const onLoad = () => {
   return true
 }
 
-const loadOnMount = () => {
+const loadOnMount = (initOnlyParams = false) => {
   if (Object.keys(route.query).length !== 0) {
     const dataSourceQuery = route.query['data-source']
     const prefixQuery = route.query['prefix']
@@ -1108,15 +1108,17 @@ const loadOnMount = () => {
       if (prefixQuery && rrcQuery) {
         params.value.prefix = prefixQuery
         params.value.host = Number(rrcQuery)
-        toggleConnection()
+        if (!initOnlyParams) toggleConnection()
       }
     } else if (dataSource.value.value === 'bgplay') {
       if (prefixQuery && startTimeQuery && endTimeQuery && rrcsQuery) {
         params.value.prefix = prefixQuery
         startTime.value = startTimeQuery
         endTime.value = endTimeQuery
+        tempStartTime.value = startTimeQuery
+        tempEndTime.value = endTimeQuery
         rrcs.value = rrcsQuery.split(',').map((val) => Number(val))
-        fetchBGPlayData()
+        if (!initOnlyParams) fetchBGPlayData()
       }
     }
   }
@@ -1128,6 +1130,7 @@ watch(isPlaying, () => {
 
 onMounted(async () => {
   firstLoad.value = true
+  loadOnMount(true)
   await fetchRCCs()
   await fetchAllASInfo()
   await fetchGithubFiles()
@@ -1156,6 +1159,7 @@ onUnmounted(() => {
               :options="dataSourceOptions"
               v-model="dataSource"
               :disable="
+                firstLoad ||
                 isPlaying ||
                 inputDisable ||
                 Object.keys(bgPlaySources).length > 0 ||
@@ -1172,6 +1176,7 @@ onUnmounted(() => {
                   label="Prefix"
                   color="accent"
                   :disable="
+                    firstLoad ||
                     isPlaying ||
                     inputDisable ||
                     Object.keys(bgPlaySources).length > 0 ||
@@ -1184,7 +1189,9 @@ onUnmounted(() => {
                   label="Start Date Time (in UTC)"
                   v-model="tempStartTime"
                   class="q-mr-xl"
-                  :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                  :disable="
+                    firstLoad || Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData
+                  "
                   outlined
                 >
                   <template v-slot:append>
@@ -1212,7 +1219,9 @@ onUnmounted(() => {
                   label="End Date Time (in UTC)"
                   v-model="tempEndTime"
                   class="q-mr-xl"
-                  :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                  :disable="
+                    firstLoad || Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData
+                  "
                   outlined
                 >
                   <template v-slot:append>
@@ -1247,7 +1256,7 @@ onUnmounted(() => {
                   label="RRC"
                   emit-value
                   color="accent"
-                  :disable="isPlaying || inputDisable"
+                  :disable="firstLoad || isPlaying || inputDisable"
                 />
               </div>
               <div v-else class="col-2">
@@ -1259,7 +1268,9 @@ onUnmounted(() => {
                   label="RRCs"
                   emit-value
                   clearable
-                  :disable="Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData"
+                  :disable="
+                    firstLoad || Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData
+                  "
                 />
               </div>
             </div>
@@ -1271,7 +1282,7 @@ onUnmounted(() => {
           v-if="dataSource.value === 'ris-live'"
           :color="disableButton ? 'grey-9' : isPlaying ? 'secondary' : 'positive'"
           :label="disableButton ? 'Connecting' : isPlaying ? 'Pause' : 'Play'"
-          :disable="firstLoad ? true : disableButton || params.prefix === '' || params.host === ''"
+          :disable="firstLoad || disableButton || params.prefix === '' || params.host === ''"
           @click="toggleConnection"
           class="q-mr-lg"
         />
