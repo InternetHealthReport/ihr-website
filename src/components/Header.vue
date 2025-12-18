@@ -128,9 +128,9 @@ const SIMPLE_MENU = [
 const simpleMenu = ref(SIMPLE_MENU)
 const leftDrawerOpen = ref(false)
 
-onMounted(() => {
-  document.title = 'Internet Health Report'
-})
+// onMounted(() => {
+//   document.title = 'Internet Health Report'
+// })
 
 const debounceFunc = () => {
   debounce(() => {
