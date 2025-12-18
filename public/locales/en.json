@@ -1164,36 +1164,28 @@
     }
   },
   "bgpAsPaths": {
-    "title": "BGP Announcements",
-    "subTitle": "AS Paths",
+    "title": "AS Paths",
+    "subTitle": "AS-level paths observed from selected peers",
     "info": {
-      "title": "BGP Announcements",
-      "description": "<p><strong>Sankey Chart</strong></p><p>The Sankey chart displays the AS paths received in the BGP (Announcement) messages. See 'AS Paths' in the messages table. By default, only 5 messages are displayed to reduce clutter. You can select additional messages by choosing the 'Peers' in the messages table.</p><p><strong>Limit Number of Hops</strong></p><p>You can limit the number of hops in the Sankey chart by adjusting the 'Max Hops' input slider.</p>"
+      "title": "AS Paths",
+      "description": "<p><strong>Sankey Chart</strong></p><p>The Sankey chart displays the AS paths received in the BGP (Announcement) messages. See 'AS Path' in the messages table. By default, only 5 peers are displayed to reduce clutter. You can select additional peers in the messages table.</p><p><strong>Limit Number of Hops</strong></p><p>You can limit the number of displayed hops in the Sankey chart by adjusting the 'Max Hops' input slider.</p>"
     }
   },
   "bgpMessagesCount": {
-    "title": "BGP Messages Received Over Time",
-    "subTitle": "Number of Messages",
+    "title": "Overview",
+    "subTitle": "Reachability / Number of messages / RPKI status",
     "info": {
       "title": "BGP Messages Received Over Time",
-      "description": "<p><strong>Line Chart</strong></p><ul><li><b>BGP Sources (Origins)</b>: Shows the number of announced AS Origins over time.</li><li><b>Announcements</b>: Shows the number of BGP announcement messages received over time.</li><li><b>Withdrawals</b>: Shows the number of BGP withdrawal messages received over time.</li></ul><p><strong>Bar Chart</strong></p><p>The bar chart shows the RPKI status of the origin AS in the AS Path over time.</p><p><strong>View Past BGP Messages</strong></p><p>Use the time slider below the line chart or click on the line chart to view the BGP messages received at a particular timestamp. When viewing past messages, the 'LIVE' button in the Sankey chart, line chart, and Messages Table will automatically switch to 'GO TO LIVE'. During this time,  if the tool is Playing all new messages received will be stored in the background, which can be viewed again after clicking the 'GO TO LIVE' button.</p>"
+      "description": "<p><strong>Line Charts</strong></p><ul><li><b>Reachability</b>: Shows the number of peers that can reach the prefix and the origin AS they see over time.</li><li><b>Announcements</b>: Shows the number of BGP announcement messages received over time.</li><li><b>Withdrawals</b>: Shows the number of BGP withdrawal messages received over time.</li></ul><p><strong>Bar Chart</strong></p><p>The bar chart shows the RPKI status of the prefix as seen by the peers over time. Note that the timestamps are based on the <a href='https://www.ihr.live/rpki-history/api/docs'>RPKI History API</a> and are thus quantized to 20 minute intervals. They reflect visibility at an RPKI validator instance at certain points in time and are unrelated to the validity period of the underlying ROA.</p><p><strong>View Past BGP Messages</strong></p><p>Use the time slider below the line chart or click on the line chart to view the BGP messages received at a particular timestamp.</p><p><i>For RIS Live:</i> When viewing past messages, the 'LIVE' button in the Sankey chart, line chart, and messages table will automatically switch to 'GO TO LIVE'. During this time all new messages received will be stored in the background, which can be viewed again after clicking the 'GO TO LIVE' button.</p>"
     }
   },
   "bgpMessagesTable": {
-    "title": "BGP Messages",
-    "subTitle": "RIS Live / BGPlay",
-    "info": {
-      "title": "BGP Messages",
-      "description": "<p><strong>Data Sources</strong></p><p>This tool internally uses 'RIS Live' and 'BGPlay' to obtain BGP data.</p><p><strong>BGPLay</strong></p><p>The BGPlay API returns BGP updates observed for a resource over a specified period of time.</p><p><strong>Routing Information Service Live (RIS Live)</strong></p><p>RIS Live is a feed that offers BGP messages in real-time. It collects information from the RIS Route Collectors (RRCs) and uses a WebSocket JSON API to monitor and detect routing events around the world.</p><p><strong>Messages Table</strong></p><p>The messages table contains data received from the RIS Live WebSocket or BGPlay API and other external datasets, including 'AS Info' and 'BGP communities.' Only unique peers are displayed, and peers are continuously updated with new data. To view older BGP messages, use the timestamp slider. By default, the first 5 peers are selected to display the AS paths in the Sankey chart.</p><p>For more details, see <a href='https://ris-live.ripe.net/'>RIS Live</a>, <a href='https://stat.ripe.net/docs/02.data-api/bgplay.html'>BGPlay</a>.</p>"
-    }
+    "title": "Latest BGP Message per Peer",
+    "subTitle": "Per-peer details of monitored BGP messages"
   },
   "bgpVrpsTable": {
-    "title": "RPKI Data, Validated ROA Payloads (VRPs).",
-    "subTitle": "List of covering VRPs at timestamp",
-    "info": {
-      "title": "RPKI Data, Validated ROA Payloads (VRPs).",
-      "description": "<p>This table shows the list of covering VRPs for the selected prefix at the selected timestamp. For more details check the GitHub repository <a href='https://github.com/InternetHealthReport/rpki-history'>rpki-history</a></p>"
-    }
+    "title": "RPKI",
+    "subTitle": "List of covering validated ROAs at selected time"
   },
   "tracerouteMonitorChart": {
     "title": "Traceroute Monitor",

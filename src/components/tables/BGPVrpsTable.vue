@@ -40,7 +40,7 @@ const columns = ref([
   },
   {
     name: 'unixVisibleTo',
-    label: 'Visible to',
+    label: 'Visible To',
     field: 'unixVisibleTo',
     align: 'left',
     sortable: true
@@ -53,7 +53,13 @@ const timestampToUTC = (timestamp) => {
 </script>
 
 <template>
-  <QTable flat :rows="props.vrpTableData" :columns="columns" row-key="id">
+  <QTable
+    flat
+    :rows="props.vrpTableData"
+    :columns="columns"
+    row-key="id"
+    style="border-radius: 0px"
+  >
     <template #body-cell-asn="props">
       <QTd :props="props">
         <RouterLink
@@ -80,10 +86,14 @@ const timestampToUTC = (timestamp) => {
       </QTd>
     </template>
     <template #body-cell-unixVisibleFrom="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.unixVisibleFrom) }}</QTd>
+      <QTd class="nowrap" :props="props">{{
+        timestampToUTC(props.row.unixVisibleFrom)?.slice(0, 16)
+      }}</QTd>
     </template>
     <template #body-cell-unixVisibleTo="props">
-      <QTd class="nowrap" :props="props">{{ timestampToUTC(props.row.unixVisibleTo) }}</QTd>
+      <QTd class="nowrap" :props="props">{{
+        timestampToUTC(props.row.unixVisibleTo)?.slice(0, 16)
+      }}</QTd>
     </template>
   </QTable>
 </template>

@@ -9,9 +9,9 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  selectedPeers: {
-    type: Array,
-    default: () => []
+  selectedPeersNumber: {
+    type: Number,
+    default: 5
   },
   isLiveMode: {
     type: Boolean
@@ -46,7 +46,7 @@ const generateGraphData = () => {
   const linkSetCount = new Map()
 
   //Only consider selected peers which are selected in the table
-  const peers = props.selectedPeers.map((message) => message.peer)
+  const peers = props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => obj.peer)
   const filteredSelectedMessages = props.filteredMessages.filter((message) =>
     peers.includes(message.peer)
   )
@@ -153,7 +153,7 @@ watch(
 )
 
 watch(
-  () => props.selectedPeers,
+  () => props.selectedPeersNumber,
   () => {
     init()
   },
@@ -185,7 +185,7 @@ onMounted(() => {
     <div class="text-center">
       <h1>No data available</h1>
       <template v-if="dataSource === 'ris-live'">
-        <h3>Try Changing the Input Parameters or you can wait</h3>
+        <h3>Try changing the input parameters or you can wait</h3>
         <h6>Note: Some prefixes become active after some time.</h6>
       </template>
     </div>
@@ -194,13 +194,6 @@ onMounted(() => {
     <div v-if="dataSource === 'ris-live'">
       <QBtn v-if="isLiveMode && isPlaying" color="negative" label="Live" />
       <QBtn v-else color="grey-9" label="Go to Live" @click="enableLiveMode" />
-    </div>
-    <div
-      v-if="!props.isNoData && nodes.size === 0"
-      class="text-center absolute-center"
-      style="z-index: 1"
-    >
-      <h1>No AS Path</h1>
     </div>
     <div class="q-mt-lg q-px-md">
       <QSlider
@@ -214,9 +207,15 @@ onMounted(() => {
         :label-value="'Max Hops: ' + maxHops"
         color="accent"
         marker-labels
+        reverse
       />
     </div>
-    <ReactiveChart :layout="actualChartLayout" :traces="actualChartData" :new-plot="true" />
+    <ReactiveChart
+      :layout="actualChartLayout"
+      :traces="actualChartData"
+      :new-plot="true"
+      :no-data="!props.isNoData && nodes.size === 0 ? 'No AS Path' : false"
+    />
   </div>
 </template>
 

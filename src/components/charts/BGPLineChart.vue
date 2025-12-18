@@ -1,11 +1,20 @@
 <script setup>
-import { QBadge, QBtn, QSlider, QSpinner } from 'quasar'
+import {
+  QBadge,
+  QBtn,
+  QSlider,
+  QSpinner,
+  QExpansionItem,
+  QItemSection,
+  QCard,
+  QCardActions,
+  QIcon
+} from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onUnmounted } from 'vue'
 import report from '@/plugins/report'
 import '@/styles/chart.css'
 import BGPVrpsTable from '../tables/BGPVrpsTable.vue'
-import GenericCardController from '@/components/controllers/GenericCardController.vue'
 
 const props = defineProps({
   rawMessages: {
@@ -68,6 +77,9 @@ const props = defineProps({
   usingIndex: {
     type: Boolean,
     default: false
+  },
+  initialStateDataCount: {
+    type: Number
   }
 })
 
@@ -75,7 +87,9 @@ const emit = defineEmits([
   'setSelectedMaxTimestamp',
   'disable-live-mode',
   'enable-live-mode',
-  'disable-using-index'
+  'disable-using-index',
+  'prev-event',
+  'next-event'
 ])
 
 const { utcString } = report()
@@ -86,6 +100,10 @@ const rpkiStatusChartData = ref([])
 
 const selectedMaxTimestamp = ref(0)
 const sliderWidthInit = ref(false)
+const isHidden = ref(false)
+const prevNextElement = ref(null)
+
+let observer = null
 
 const timestampToUTC = (timestamp) => {
   return utcString(new Date(timestamp * 1000))
@@ -192,12 +210,12 @@ const renderRpkiStatusChart = async (rpkiStatusTraces) => {
     data.push({
       type: 'bar',
       orientation: 'h',
-      y,
+      y: peer_asn.map((val) => `AS${val}`),
       x,
       base,
       hovertext: origin_asn,
-      customdata: peer_asn,
-      hovertemplate: 'AS%{customdata} (%{y})<br>' + 'Origin: AS%{hovertext}<extra></extra>',
+      customdata: y,
+      hovertemplate: 'Peer IP: %{customdata} (%{y})<br>' + 'Origin: AS%{hovertext}<extra></extra>',
       width: 0.9,
       name: 'RPKI ' + status,
       marker: {
@@ -290,6 +308,23 @@ const init = async () => {
   }
 }
 
+const customIntersectionObserver = () => {
+  observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        isHidden.value = !entry.isIntersecting
+      })
+    },
+    {
+      threshold: 0,
+      rootMargin: '-68.8px 0px 0px 0px'
+    }
+  )
+  if (prevNextElement.value) {
+    observer.observe(prevNextElement.value)
+  }
+}
+
 //Remove the vertical line and update the selected timestamp
 watch(
   () => props.isLiveMode,
@@ -343,6 +378,16 @@ watch(
   }
 )
 
+watch(prevNextElement, () => {
+  customIntersectionObserver()
+})
+
+onUnmounted(() => {
+  if (observer && prevNextElement.value) {
+    observer.unobserve(prevNextElement.value)
+  }
+})
+
 onMounted(() => {
   init()
 })
@@ -356,7 +401,7 @@ onMounted(() => {
   </div>
   <div class="text-center" v-if="rawMessages.length === 0">
     <h1 v-if="!isLoadingBgplayData">No data available</h1>
-    <h3 v-if="dataSource === 'ris-live'">Try Changing the Input Parameters or you can wait</h3>
+    <h3 v-if="dataSource === 'ris-live'">Try changing the input parameters or you can wait</h3>
     <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
   </div>
   <div v-else>
@@ -366,90 +411,189 @@ onMounted(() => {
     </div>
     <div class="timetampSlider">
       <div class="timetampSliderContainer">
-        <div class="row timestampInfo">
-          <div class="col-12 col-sm-auto">
-            <QBadge class="full-width">
-              <div class="text-body2">
-                Min Timestamp:
-                {{
-                  props.minTimestamp === Infinity ? 'No Data' : timestampToUTC(props.minTimestamp)
-                }}
-              </div>
-            </QBadge>
-          </div>
-          <div class="col-12 col-sm-auto">
-            <QBadge class="full-width">
-              <div v-if="dataSource === 'ris-live'" class="text-body2">
-                Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages
-              </div>
-              <div v-else class="text-body2">
-                Using: {{ usedMessagesCount + '/' + rawMessages.length }} Messages (Initial State
-                and Events)
-              </div>
-            </QBadge>
-          </div>
-          <div class="col-12 col-sm-auto">
-            <QBadge class="full-width">
-              <div class="text-body2">
-                Max Timestamp:
-                {{
-                  props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(props.maxTimestamp)
-                }}
-              </div>
-            </QBadge>
-          </div>
-        </div>
         <QSlider
           v-model="selectedMaxTimestamp"
           :min="props.minTimestamp === Infinity ? 0 : props.minTimestamp"
           :max="props.maxTimestamp === -Infinity ? 0 : props.maxTimestamp"
           label-always
           :label-value="
-            props.maxTimestamp === -Infinity ? 'No Data' : timestampToUTC(selectedMaxTimestamp)
+            props.maxTimestamp === -Infinity
+              ? 'No Data'
+              : timestampToUTC(selectedMaxTimestamp)?.slice(0, 16)
           "
-          switch-label-side
           color="accent"
           @update:model-value="updateSlider($event, true)"
+          class="q-mt-lg"
         />
+        <div class="row timestampInfo">
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div class="text-body2">
+                Start:
+                {{
+                  props.minTimestamp === Infinity
+                    ? 'No Data'
+                    : timestampToUTC(props.minTimestamp)?.slice(0, 16)
+                }}
+              </div>
+            </QBadge>
+          </div>
+          <div class="col-12 col-sm-auto" ref="prevNextElement">
+            <div class="row justify-center items-center">
+              <QBtn
+                round
+                color="indigo"
+                icon="arrow_back"
+                @click="emit('prev-event')"
+                class="q-mr-md"
+                :disable="
+                  rawMessages.length === 0 ||
+                  (dataSource === 'bgplay'
+                    ? initialStateDataCount > 0
+                      ? currentIndex === initialStateDataCount - 1
+                      : currentIndex === -1
+                    : currentIndex === 0)
+                "
+              />
+              <QBadge class="q-mr-md">
+                <div v-if="dataSource === 'ris-live'" class="text-body2">
+                  {{ usedMessagesCount + ' out of ' + rawMessages.length }} Processed Messages
+                </div>
+                <div v-else class="text-body2">
+                  {{ usedMessagesCount - initialStateDataCount + ' out of ' + rawMessages.length }}
+                  Processed Messages
+                </div>
+              </QBadge>
+              <QBtn
+                round
+                color="indigo"
+                icon="arrow_forward"
+                @click="emit('next-event')"
+                :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
+                class="q-mr-lg"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <QBadge class="full-width">
+              <div class="text-body2">
+                End:
+                {{
+                  props.maxTimestamp === -Infinity
+                    ? 'No Data'
+                    : timestampToUTC(props.maxTimestamp)?.slice(0, 16)
+                }}
+              </div>
+            </QBadge>
+          </div>
+        </div>
+        <QCard :class="[isHidden ? 'floating-card' : 'hidden']">
+          <QCardActions class="row justify-center items-center">
+            <QBtn
+              round
+              color="indigo"
+              icon="arrow_back"
+              @click="emit('prev-event')"
+              class="q-mr-md"
+              :disable="
+                rawMessages.length === 0 ||
+                (dataSource === 'bgplay'
+                  ? initialStateDataCount > 0
+                    ? currentIndex === initialStateDataCount - 1
+                    : currentIndex === -1
+                  : currentIndex === 0)
+              "
+            />
+            <QBadge class="q-mr-md">
+              <div v-if="dataSource === 'ris-live'" class="text-body2">
+                {{ usedMessagesCount + '/' + rawMessages.length }}
+                <QIcon name="message" />
+              </div>
+              <div v-else class="text-body2">
+                {{ usedMessagesCount - initialStateDataCount + '/' + rawMessages.length }}
+                <QIcon name="message" />
+              </div>
+            </QBadge>
+            <QBtn
+              round
+              color="indigo"
+              icon="arrow_forward"
+              @click="emit('next-event')"
+              :disable="rawMessages.length === 0 || currentIndex === rawMessages.length - 1"
+            />
+          </QCardActions>
+        </QCard>
       </div>
     </div>
     <ReactiveChart
-      :layout="lineChartLayout"
+      :layout="{
+        ...lineChartLayout,
+        yaxis: {
+          title: {
+            text: 'Reachability (# Peers)'
+          }
+        }
+      }"
       :traces="announcementsPeersChartData"
       :shapes="lineChartLayout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
     <ReactiveChart
-      :layout="lineChartLayout"
+      :layout="{
+        ...lineChartLayout,
+        yaxis: {
+          title: {
+            text: '# BGP messages / second'
+          }
+        }
+      }"
       :traces="announcementsAndWithdrawnChartData"
       :shapes="lineChartLayout.shapes"
       @plotly-click="handlePlotlyClick"
       @plotly-relayout="adjustQSliderWidth(true)"
     />
     <div v-if="dataSource === 'bgplay'" class="relative-position">
-      <div v-if="isNoVrpData" class="absolute-center text-center" style="z-index: 9">
-        <h1>No RPKI Data Available</h1>
-        <h3>Requested timerange is outside of available data.</h3>
-      </div>
       <ReactiveChart
-        :layout="rpkiLayout"
+        :layout="{
+          ...rpkiLayout,
+          yaxis: {
+            title: {
+              text: 'Peers'
+            }
+          }
+        }"
         :traces="rpkiStatusChartData"
         :shapes="rpkiLayout.shapes"
         @plotly-click="handlePlotlyClick"
         @plotly-relayout="adjustQSliderWidth(true)"
+        :no-data="
+          isNoVrpData
+            ? 'No RPKI Data Available. Requested timerange is outside of available data.'
+            : false
+        "
       />
     </div>
-    <GenericCardController
+    <QExpansionItem
       v-if="dataSource === 'bgplay'"
-      :title="$t('bgpVrpsTable.title')"
-      :sub-title="$t('bgpVrpsTable.subTitle')"
-      :info-title="$t('bgpVrpsTable.info.title')"
-      :info-description="$t('bgpVrpsTable.info.description')"
-      class="q-mt-lg"
+      dense
+      class="expansion-header q-ma-xl"
+      expand-icon-class="text-white"
     >
+      <template v-slot:header>
+        <QItemSection>
+          <div>
+            <div class="text-h6">
+              {{ $t('bgpVrpsTable.title') }}
+            </div>
+            <div class="text-subtitle2">
+              {{ $t('bgpVrpsTable.subTitle') }}
+            </div>
+          </div>
+        </QItemSection>
+      </template>
       <BGPVrpsTable :vrpTableData="props.vrpTableData" />
-    </GenericCardController>
+    </QExpansionItem>
   </div>
 </template>
 
@@ -483,5 +627,17 @@ onMounted(() => {
 }
 .loadingContainer {
   height: 60px;
+}
+.expansion-header {
+  background-color: #263238;
+  color: #fff;
+}
+.floating-card {
+  z-index: 99;
+  position: fixed;
+  max-width: max-content;
+  top: 90px;
+  left: 50%;
+  transform: translate(-50%, 0);
 }
 </style>

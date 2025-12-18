@@ -24,7 +24,7 @@ const props = defineProps({
   },
   white: {
     type: Boolean,
-    default:false
+    default: false
   },
   hideTime: {
     type: Boolean,
