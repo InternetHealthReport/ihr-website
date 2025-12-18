@@ -577,7 +577,7 @@ onMounted(() => {
     <QExpansionItem
       v-if="dataSource === 'bgplay'"
       dense
-      class="expansion-header"
+      class="expansion-header q-ma-xl"
       expand-icon-class="text-white"
     >
       <template v-slot:header>

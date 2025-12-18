@@ -1358,7 +1358,7 @@ onUnmounted(() => {
         v-if="rawMessages.length"
         default-opened
         dense
-        class="expansion-header"
+        class="expansion-header q-ma-xl"
         expand-icon-class="text-white"
       >
         <template v-slot:header>
