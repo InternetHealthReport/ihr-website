@@ -1,36 +1,16 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { QLayout, QPageContainer, QIcon } from 'quasar'
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { QLayout, QPageContainer, QBtn } from 'quasar'
+import { ref } from 'vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 import LocalStorageBanner from './components/LocalStorageBanner.vue'
 
-// Throttle function
-const throttle = (func, delay) => {
-  let lastCall = 0
-  return (...args) => {
-    const now = new Date().getTime()
-    if (now - lastCall < delay) return
-    lastCall = now
-    return func(...args)
-  }
-}
-
-// Anti-shake function
-const debounce = (func, delay) => {
-  let timeoutId
-  return (...args) => {
-    clearTimeout(timeoutId)
-    timeoutId = setTimeout(() => func(...args), delay)
-  }
-}
-
 const scrollPosition = ref(0)
 
-const showScrollTopButton = computed(() => {
-  return scrollPosition.value > 0
-})
+const scroll = (event) => {
+  scrollPosition.value = event.position
+}
 
 const scrollToTop = () => {
   try {
@@ -43,34 +23,10 @@ const scrollToTop = () => {
     window.scrollTo(0, 0) // Backup programme
   }
 }
-
-const updateScrollPosition = throttle(() => {
-  scrollPosition.value = window.scrollY
-}, 100) // Updated every 100ms
-
-// Throttle the scrolling process (every 100ms)
-const throttledUpdate = throttle(updateScrollPosition, 100)
-// Anti-shake processing scroll stop (100ms delay)
-const debouncedUpdate = debounce(updateScrollPosition, 100)
-
-onMounted(() => {
-  window.addEventListener(
-    'scroll',
-    (event) => {
-      throttledUpdate(event) // Throttling updates during scrolling
-      debouncedUpdate(event) // Anti-shake update after scrolling stops
-    },
-    { passive: true }
-  )
-})
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', throttledUpdate)
-  window.removeEventListener('scroll', debouncedUpdate)
-})
 </script>
 
 <template>
-  <QLayout id="app" view="hHh LpR fff">
+  <QLayout id="app" view="hHh LpR fff" @scroll="scroll">
     <Header />
     <QPageContainer>
       <RouterView />
@@ -78,14 +34,9 @@ onBeforeUnmount(() => {
     </QPageContainer>
     <Footer />
     <Transition name="fade-slide">
-      <button
-        v-show="showScrollTopButton"
-        aria-label="Scroll to top"
-        class="IHR_scroll-btn bg-primary text-white"
-        @click="scrollToTop"
-      >
-        <QIcon name="fas fa-arrow-up" />
-      </button>
+      <div class="IHR_scroll-btn" v-if="scrollPosition > 0">
+        <QBtn icon="fas fa-arrow-up" class="bg-primary text-white" round @click="scrollToTop" />
+      </div>
     </Transition>
   </QLayout>
   <LocalStorageBanner :disable="true" />
@@ -124,12 +75,8 @@ onBeforeUnmount(() => {
   bottom: 20px;
   right: 20px;
   z-index: 2000;
-  cursor: pointer;
   border-radius: 50%;
-  color: #fff;
-  padding: 0.7rem 0.8rem;
   border: 1px solid #fff;
-  opacity: 0.8;
 }
 .IHR_scroll-btn:hover {
   transform: scale(1.1);
