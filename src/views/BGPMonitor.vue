@@ -1,5 +1,6 @@
 <script setup>
 import {
+  QSpinner,
   QBtn,
   QSelect,
   QInput,
@@ -1150,6 +1151,12 @@ onUnmounted(() => {
   <div class="IHR_char-container relative-position">
     <h1 class="text-center q-pa-xl">BGP Monitor</h1>
     <QCard>
+      <div
+        v-if="firstLoad || isLoadingBgplayData"
+        class="absolute-full flex flex-center bg-white bg-opacity-70 z-top"
+      >
+        <QSpinner size="40px" color="primary" />
+      </div>
       <QCardSection>
         <div class="row">
           <div class="col-2 q-mr-xl">
