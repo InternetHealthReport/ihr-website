@@ -77,22 +77,4 @@ Replace `<host-port>` with the port on your host machine where you want to expos
 
 ## Ways to contribute
 
-First off, thanks for taking the time to contribute! 🎉🎉
-
-Before you start, please follow these guidelines:
-
-1. **Solve Existing Issues**: If you find an existing issue that you would like to work on, please discuss it with the maintainers before starting to solve it. This ensures that everyone is on the same page regarding the approach and scope of the solution.
-2. **Create a New Issue**: If you have an idea for a new feature or have identified a bug that is not listed, please discuss it with the maintainers before creating a new issue. Providing context and details will help us understand the importance of your suggestion.
-3. **Pull Requests (PRs)**: Please note that PRs that are not assigned to contributors and are not related to an open issue will be closed automatically.
-
-Please refer to the project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow. The basic workflow:
-
-1. **Fork** the repo on GitHub
-2. **Clone** the project to your own machine
-3. Create a **branch** and name it with the `issue number`
-4. **Commit** changes to the branch
-5. **Push** your work back to your fork
-6. **Rebase** your branch with the `master` branch
-7. Submit your **Pull Request** so that we can review it
-
-Please submit your issues and pull request while following the automated template. During the contributing phase abide by the [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md).
+Checkout [IHR Handbook for contributors](https://github.com/InternetHealthReport/gsoc/blob/main/ihr-contributor-handbook.md) for more info.
