@@ -13,7 +13,8 @@ import {
   QTime,
   QPopupProxy,
   QExpansionItem,
-  QItemSection
+  QItemSection,
+  QSpinner
 } from 'quasar'
 import { onMounted, onUnmounted, ref, watch, inject } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -1268,6 +1269,8 @@ onUnmounted(() => {
                   label="RRCs"
                   emit-value
                   clearable
+                  popup-content-class="highlight-selected-rrcs"
+                  options-selected-class="bg-cyan-1 text-cyan-9 text-bold"
                   :disable="
                     firstLoad || Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData
                   "
@@ -1302,6 +1305,9 @@ onUnmounted(() => {
         />
         <QBtn color="negative" :label="'Reset'" @click="resetData" />
       </QCardActions>
+      <div v-if="firstLoad" class="absolute-full flex flex-center bg-white">
+        <QSpinner size="2em" color="secondary" />
+      </div>
     </QCard>
     <GenericCardController
       :title="$t('bgpMessagesCount.title')"
