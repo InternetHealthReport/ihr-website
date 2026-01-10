@@ -1,103 +1,58 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { QCard, QCardSection } from 'quasar'
+import { QCard, QCardSection, QBtn, useQuasar } from 'quasar'
 import Tr from '@/i18n/translation'
+
+const $q = useQuasar()
+
+// copy function
+const copyLabel = ref('Copy page')
+const copyIcon = ref('content_copy')
+const copying = ref(false)
 
 const SECTIONS = [
   {
     sectionsTitle: 'general',
     sectionsBody: [
-      {
-        name: 'about',
-        numberOfDescriptions: 4
-      },
-      {
-        name: 'faq',
-        numberOfDescriptions: 6
-      },
-      {
-        name: 'ack',
-        numberOfDescriptions: 11
-      }
+      { name: 'about', numberOfDescriptions: 4 },
+      { name: 'faq', numberOfDescriptions: 6 },
+      { name: 'ack', numberOfDescriptions: 11 }
     ]
   },
   {
     sectionsTitle: 'reports',
     sectionsBody: [
-      {
-        name: 'globalreport',
-        numberOfDescriptions: 0
-      },
-      {
-        name: 'networkreport',
-        numberOfDescriptions: 0
-      },
-      {
-        name: 'countryreport',
-        numberOfDescriptions: 0
-      }
+      { name: 'globalreport', numberOfDescriptions: 0 },
+      { name: 'networkreport', numberOfDescriptions: 0 },
+      { name: 'countryreport', numberOfDescriptions: 0 }
     ]
   },
   {
     sectionsTitle: 'analysisModules',
     sectionsBody: [
-      {
-        name: 'asdependency',
-        numberOfDescriptions: 4
-      },
-      {
-        name: 'countryasdependency',
-        numberOfDescriptions: 3
-      },
-      {
-        name: 'prefixasdependency',
-        numberOfDescriptions: 4
-      },
-      {
-        name: 'netdelay',
-        numberOfDescriptions: 2
-      },
-      {
-        name: 'delayforward',
-        numberOfDescriptions: 4
-      },
-      {
-        name: 'disco',
-        numberOfDescriptions: 3
-      }
+      { name: 'asdependency', numberOfDescriptions: 4 },
+      { name: 'countryasdependency', numberOfDescriptions: 3 },
+      { name: 'prefixasdependency', numberOfDescriptions: 4 },
+      { name: 'netdelay', numberOfDescriptions: 2 },
+      { name: 'delayforward', numberOfDescriptions: 4 },
+      { name: 'disco', numberOfDescriptions: 3 }
     ]
   },
   {
     sectionsTitle: 'dataAccess',
     sectionsBody: [
-      {
-        name: 'api',
-        numberOfDescriptions: 4
-      },
-      {
-        name: 'pythonlibrary',
-        numberOfDescriptions: 5
-      },
-      {
-        name: 'dumps',
-        numberOfDescriptions: 0
-      },
-      {
-        name: 'datapolicy',
-        numberOfDescriptions: 0
-      }
+      { name: 'api', numberOfDescriptions: 4 },
+      { name: 'pythonlibrary', numberOfDescriptions: 5 },
+      { name: 'dumps', numberOfDescriptions: 0 },
+      { name: 'datapolicy', numberOfDescriptions: 0 }
     ]
   }
 ]
 
 const emit = defineEmits({
   'sidebar-action': (sideBarAction) => {
-    if (sideBarAction !== null) {
-      return true
-    } else {
-      return false
-    }
+    return sideBarAction !== null
   }
 })
 
@@ -115,6 +70,40 @@ const activateSelection = (sec) => {
   }
   sectionActiveStatus.value[sec] = true
   sectionActive.value = sec
+}
+
+const copyToClipboard = async () => {
+  const contentElement = document.getElementById('IHR_documentation-page')
+  
+  if (contentElement) {
+    try {
+      const textToCopy = contentElement.innerText
+      await navigator.clipboard.writeText(textToCopy)
+      copyLabel.value = 'Copied!'
+      copyIcon.value = 'check'
+      copying.value = true
+      $q.notify({
+        message: 'Documentation copied to clipboard',
+        color: 'positive',
+        icon: 'check',
+        position: 'top',
+        timeout: 1000
+      })
+      setTimeout(() => {
+        copyLabel.value = 'Copy page'
+        copyIcon.value = 'content_copy'
+        copying.value = false
+      }, 2000)
+      
+    } catch (err) {
+      console.error('Failed to copy: ', err)
+      $q.notify({
+        message: 'Failed to copy',
+        color: 'negative',
+        icon: 'error'
+      })
+    }
+  }
 }
 
 const sections = ref(SECTIONS)
@@ -135,7 +124,20 @@ const sectionActive = ref('')
 
 <template>
   <div class="IHR_documentation-container">
-    <!-- Sidebar -->
+    
+    <div class="IHR_copy-button-wrapper">
+      <QBtn
+        rounded
+        no-caps
+        :icon="copyIcon"
+        :label="copyLabel"
+        :color="copying ? 'positive' : 'black'"
+        text-color="white"
+        class="q-px-md q-py-sm shadow-10"
+        @click="copyToClipboard"
+      />
+    </div>
+
     <QCard class="IHR_documentation-page-sidebar">
       <QCardSection>
         <h3>{{ $t('documentationPage.title') }}</h3>
@@ -167,7 +169,6 @@ const sectionActive = ref('')
       </QCardSection>
     </QCard>
 
-    <!-- Main Content -->
     <div id="IHR_documentation-page">
       <div v-for="(mainSec, mainIdx) in sections" :key="mainIdx">
         <div
@@ -210,9 +211,22 @@ const sectionActive = ref('')
 .IHR_documentation-container {
   display: flex;
   width: 100%;
+  position: relative;
 }
 
-/* Main Content */
+.IHR_copy-button-wrapper {
+  position: fixed;
+  bottom: 2rem;
+  right: 5rem;
+  z-index: 5000;
+}
+
+@media screen and (max-width: 720px) {
+  .IHR_copy-button-wrapper {
+    bottom: 4.5rem;
+    right: 1.5rem;
+  }
+}
 #IHR_documentation-page {
   flex: 1;
   margin: 0 auto;
@@ -261,7 +275,6 @@ const sectionActive = ref('')
   visibility: hidden;
 }
 
-/* Sidebar */
 .IHR_documentation-page-sidebar {
   height: 100vh;
   width: 300px;
