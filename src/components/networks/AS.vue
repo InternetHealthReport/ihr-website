@@ -1,5 +1,5 @@
 <script setup>
-import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel } from 'quasar'
+import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel, QSkeleton } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, watch, computed, onMounted, inject } from 'vue'
@@ -98,6 +98,9 @@ const family = computed(() => {
 })
 
 const pageTitle = computed(() => {
+  if (!asName.value) {
+    return `AS${asNumber.value}`
+  }
   return `AS${asNumber.value} - ${asName.value}`
 })
 
@@ -155,7 +158,7 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <h1 class="text-center">
-      {{ pageTitle }}
+      AS{{ asNumber }}<template v-if="loadingStatus"> - <QSkeleton type="text" animation="wave" width="200px" height="1.5em" style="display: inline-block; vertical-align: middle; border-radius: 8px;" /></template><template v-else-if="asName"> - {{ asName }}</template>
     </h1>
     <h3 class="text-center">
       <div v-if="['monitoring', 'custom'].includes(menu)">
