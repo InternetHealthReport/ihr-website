@@ -1269,7 +1269,6 @@ onUnmounted(() => {
                   label="RRCs"
                   emit-value
                   clearable
-                  popup-content-class="highlight-selected-rrcs"
                   options-selected-class="bg-cyan-1 text-cyan-9 text-bold"
                   :disable="
                     firstLoad || Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData
