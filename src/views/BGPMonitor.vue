@@ -1305,8 +1305,8 @@ onUnmounted(() => {
         />
         <QBtn color="negative" :label="'Reset'" @click="resetData" />
       </QCardActions>
-      <div v-if="firstLoad" class="absolute-full flex flex-center bg-white">
-        <QSpinner size="2em" color="secondary" />
+      <div v-if="firstLoad" class="IHR_loading-spinner">
+        <QSpinner color="secondary" size="15em" />
       </div>
     </QCard>
     <GenericCardController
