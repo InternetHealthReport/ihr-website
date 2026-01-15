@@ -1,5 +1,5 @@
 <script setup>
-import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel, QSkeleton } from 'quasar'
+import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, watch, computed, onMounted, inject } from 'vue'
@@ -144,7 +144,7 @@ onMounted(() => {
 <template>
   <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <h1 class="text-center">
-      <template v-if="loadingStatus"><QSkeleton type="text" animation="wave" width="250px" height="1.5em" style="display: inline-block; vertical-align: middle; border-radius: 8px;" /></template><template v-else>{{ pageTitle }}</template>
+      {{ pageTitle }}
     </h1>
     <h3 class="text-center">
       <div v-if="['monitoring', 'custom'].includes(menu)">
