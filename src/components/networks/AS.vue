@@ -98,6 +98,9 @@ const family = computed(() => {
 })
 
 const pageTitle = computed(() => {
+  if (!asName.value) {
+    return `AS${asNumber.value}`
+  }
   return `AS${asNumber.value} - ${asName.value}`
 })
 

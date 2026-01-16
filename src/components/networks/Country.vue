@@ -88,6 +88,9 @@ const family = computed(() => {
 })
 
 const pageTitle = computed(() => {
+  if (!countryName.value) {
+    return countryCode.value
+  }
   return countryName.value
 })
 
