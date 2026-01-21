@@ -16,6 +16,7 @@ import * as AggregatedAlarmsDataModel from '@/plugins/models/AggregatedAlarmsDat
 import Latencymon from '@/components/ripe/Latencymon.vue'
 import IodaChart from '@/components/charts/IodaChart.vue'
 import '@/styles/chart.css'
+import DOMPurify from 'dompurify'
 
 const ihr_api = inject('ihr_api')
 
@@ -518,7 +519,7 @@ watch(
             :style="{ 'text-align': column.align }"
           >
             <div>{{ alternativeASNKeySubtitle(props.row[column.name], column.label) }}</div>
-            <div class="alternative_key_body" v-html="props.row[column.name]" />
+            <div class="alternative_key_body" v-html="DOMPurify.sanitize(props.row[column.name])"></div>
           </div>
           <div v-else :style="{ 'text-align': column.align }">
             {{ column.format(props.row[column.name], props.row) }}

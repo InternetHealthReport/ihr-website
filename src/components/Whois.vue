@@ -5,6 +5,7 @@ import { QSpinner } from 'quasar'
 import '@/styles/chart.css'
 import hljs from 'highlight.js'
 import 'highlight.js/scss/vs.scss'
+import DOMPurify from 'dompurify'
 
 const whois = inject('whois')
 
@@ -67,7 +68,7 @@ onMounted(() => {
     <div v-if="whois_data">
       <pre
         style="text-align: left"
-      ><code style="white-space: pre-wrap;" v-html="hljs.highlight(whois_data, { language: 'text' }).value"></code></pre>
+      ><code style="white-space: pre-wrap;" v-html="DOMPurify.sanitize(hljs.highlight(whois_data, { language: 'text' }).value)"></code></pre>
     </div>
     <div v-else>
       No RDAP URL available for
@@ -78,17 +79,17 @@ onMounted(() => {
       <div v-if="asNumber">
         <pre
           style="text-align: left"
-        ><code style="white-space: pre-wrap;" v-html="hljs.highlight(`whois AS${asNumber}`, { language: 'bash' }).value"></code></pre>
+        ><code style="white-space: pre-wrap;" v-html="DOMPurify.sanitize(hljs.highlight(`whois AS${asNumber}`, { language: 'bash' }).value)"></code></pre>
       </div>
       <div v-if="getPrefix">
         <pre
           style="text-align: left"
-        ><code style="white-space: pre-wrap;" v-html="hljs.highlight(`whois ${getPrefix}`, { language: 'bash' }).value"></code></pre>
+        ><code style="white-space: pre-wrap;" v-html="DOMPurify.sanitize(hljs.highlight(`whois ${getPrefix}`, { language: 'bash' }).value)"></code></pre>
       </div>
       <div v-if="hostName">
         <pre
           style="text-align: left"
-        ><code style="white-space: pre-wrap;" v-html="hljs.highlight(`whois ${hostName}`, { language: 'bash' }).value"></code></pre>
+        ><code style="white-space: pre-wrap;" v-html="DOMPurify.sanitize(hljs.highlight(`whois ${hostName}`, { language: 'bash' }).value)"></code></pre>
       </div>
     </div>
   </div>

@@ -11,7 +11,8 @@ import {
   QDialog
 } from 'quasar'
 import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+import DOMPurify from 'dompurify'
 
 const props = defineProps({
   title: {
@@ -83,9 +84,9 @@ const getUrlAnchor = () => {
     <QDialog v-model="infoDialog">
       <QCard style="width: 1000px; height: auto">
         <QCardSection>
-          <div class="text-h6" v-html="infoTitle"></div>
+          <div class="text-h6" v-html="DOMPurify.sanitize(infoTitle)"></div>
         </QCardSection>
-        <QCardSection class="q-pt-none" v-html="infoDescription" />
+        <QCardSection class="q-pt-none" v-html="DOMPurify.sanitize(infoDescription)" />
         <QCardActions align="right">
           <QBtn v-close-popup flat label="Close" color="primary" />
         </QCardActions>

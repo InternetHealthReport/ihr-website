@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { QCard, QCardSection } from 'quasar'
 import Tr from '@/i18n/translation'
+import DOMPurify from 'dompurify'
 
 const SECTIONS = [
   {
@@ -179,14 +180,14 @@ const sectionActive = ref('')
             :id="replaceSpaces($t(`documentationPage.sections.${bodySec.name}.title`))"
             class="IHR_anchor"
           ></div>
-          <h1 v-html="$t(`documentationPage.sections.${bodySec.name}.title`)"></h1>
+          <h1 v-html="DOMPurify.sanitize($t(`documentationPage.sections.${bodySec.name}.title`))"></h1>
           <p
             class="text-left text-body1"
-            v-html="$t(`documentationPage.sections.${bodySec.name}.summary`)"
+            v-html="DOMPurify.sanitize($t(`documentationPage.sections.${bodySec.name}.summary`))"
           ></p>
           <div v-for="idx in bodySec.numberOfDescriptions" :key="idx">
             <h2
-              v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`)"
+              v-html="DOMPurify.sanitize($t(`documentationPage.sections.${bodySec.name}.description.${idx}.header`))"
             ></h2>
             <img
               v-if="
@@ -197,7 +198,7 @@ const sectionActive = ref('')
             />
             <p
               class="text-left text-body1"
-              v-html="$t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`)"
+              v-html="DOMPurify.sanitize($t(`documentationPage.sections.${bodySec.name}.description.${idx}.body`))"
             ></p>
           </div>
         </div>

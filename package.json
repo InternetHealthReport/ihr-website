@@ -1,6 +1,6 @@
 {
   "name": "ihr-website",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,7 @@
     "axios": "^1.13.1",
     "country-state-city": "^3.2.1",
     "dagre": "^0.8.5",
+    "dompurify": "^3.3.1",
     "grid-layout-plus": "^1.1.1",
     "highlight.js": "^11.11.1",
     "highlightjs-cypher": "^1.2.0",

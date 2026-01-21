@@ -4,6 +4,7 @@ import { QCard, QCardSection, QAvatar, QIcon, QBtn } from 'quasar'
 import { ref } from 'vue'
 import Tr from '@/i18n/translation'
 import UserInfo from '@/components/UserInfo.vue'
+import DOMPurify from 'dompurify'
 
 const GRAPHS_TYPES = [
   {
@@ -116,13 +117,13 @@ const organizations = ref(ORGANIZATIONS)
           >
             {{ $t('homePage.globalReport.name') }}
           </QBtn>
-          <div class="ihr-home-line" />
+          <div class="ihr-home-line"></div>
           <UserInfo />
         </div>
       </div>
     </div>
 
-    <div class="IHR_home-description-main" v-html="$t('homePage.globalReport.description')" />
+    <div class="IHR_home-description-main" v-html="DOMPurify.sanitize($t('homePage.globalReport.description'))"></div>
     <div class="IHR_home-description-main">
       See latest alarms in the
       <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })"> global report </RouterLink>
@@ -139,7 +140,7 @@ const organizations = ref(ORGANIZATIONS)
           </div>
         </QCardSection>
         <QCardSection class="q-pa-xs">
-          <div class="IHR_home-description_text" v-html="$t(`${graphT.name}.description`)" />
+          <div class="IHR_home-description_text" v-html="DOMPurify.sanitize($t(`${graphT.name}.description`))"></div>
           <div class="IHR_home-description_text IHR_home-description-link">
             <RouterLink
               :to="

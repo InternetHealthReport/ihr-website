@@ -5,6 +5,7 @@ import { RouterLink } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
+import DOMPurify from 'dompurify'
 
 const ihr_api = inject('ihr_api')
 
@@ -208,8 +209,8 @@ const simpleDependenciesFormat = (val) => {
               <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
               <QTooltip max-width="360px">
                 <div
-                  v-html="$t(`documentationPage.sections.prefixasdependency.description.1.body`)"
-                />
+                  v-html="DOMPurify.sanitize($t(`documentationPage.sections.prefixasdependency.description.1.body`))"
+                ></div>
               </QTooltip>
             </h3>
           </QTh>
@@ -219,8 +220,8 @@ const simpleDependenciesFormat = (val) => {
               <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
               <QTooltip max-width="360px">
                 <div
-                  v-html="$t(`documentationPage.sections.prefixasdependency.description.2.body`)"
-                />
+                  v-html="DOMPurify.sanitize($t(`documentationPage.sections.prefixasdependency.description.2.body`))"
+                ></div>
               </QTooltip>
             </h3>
           </QTh>

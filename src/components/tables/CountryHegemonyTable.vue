@@ -4,6 +4,7 @@ import { ref, inject } from 'vue'
 import commonTable from '@/plugins/commonTable'
 import { useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
+import DOMPurify from 'dompurify'
 
 const iht_api = inject('ihr_api')
 
@@ -156,8 +157,8 @@ const getClassByHegemony = (hegemony) => {
             <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
             <QTooltip max-width="360px">
               <div
-                v-html="$t(`documentationPage.sections.countryasdependency.description.1.body`)"
-              />
+                v-html="DOMPurify.sanitize($t(`documentationPage.sections.countryasdependency.description.1.body`))"
+              ></div>
             </QTooltip>
           </h3>
         </QTh>
@@ -167,8 +168,8 @@ const getClassByHegemony = (hegemony) => {
             <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
             <QTooltip max-width="360px">
               <div
-                v-html="$t(`documentationPage.sections.countryasdependency.description.2.body`)"
-              />
+                v-html="DOMPurify.sanitize($t(`documentationPage.sections.countryasdependency.description.2.body`))"
+              ></div>
             </QTooltip>
           </h3>
         </QTh>
