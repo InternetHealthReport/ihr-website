@@ -67,3 +67,9 @@ p:first-letter {
   text-decoration: none;
   font-weight: 400;
 }
+
+.IHR_multi_select_selected_option {
+  font-weight: bold;
+  background-color: oklch(95.6% 0.045 203.388);
+  color: oklch(39.8% 0.07 227.392);
+}

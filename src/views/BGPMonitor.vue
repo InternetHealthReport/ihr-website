@@ -1269,7 +1269,8 @@ onUnmounted(() => {
                   label="RRCs"
                   emit-value
                   clearable
-                  options-selected-class="bg-cyan-1 text-cyan-9 text-bold"
+                  options-hover-class="bg-cyan-2"
+                  options-selected-class="IHR_multi_select_selected_option"
                   :disable="
                     firstLoad || Object.keys(bgPlaySources).length > 0 || isLoadingBgplayData
                   "
