@@ -275,6 +275,7 @@ onMounted(() => {
               @update:model-value="load()"
               :rules="[(val) => val.length > 0 || 'Please select at least one Data Sources']"
               label="Data Sources"
+              options-selected-class="IHR_multi_select_selected_option"
             />
           </div>
         </div>

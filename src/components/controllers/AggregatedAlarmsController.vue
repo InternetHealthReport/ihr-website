@@ -605,6 +605,7 @@ watch(selectedAlarmTypesOptions.value, () => {
                   label="Severity Levels:"
                   stack-label
                   use-chips
+                  options-selected-class="IHR_multi_select_selected_option"
                 />
               </div>
               <div class="col-12 col-sm-6 col-md-4">
@@ -618,6 +619,7 @@ watch(selectedAlarmTypesOptions.value, () => {
                   label="IP Address Families:"
                   stack-label
                   use-chips
+                  options-selected-class="IHR_multi_select_selected_option"
                 />
               </div>
               <div class="col-12 col-sm-6 col-md-auto text-sm-right">

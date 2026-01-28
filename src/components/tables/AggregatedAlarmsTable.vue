@@ -584,6 +584,7 @@ watch(
                     label="Severity Levels:"
                     stack-label
                     use-chips
+                    options-selected-class="IHR_multi_select_selected_option"
                   />
                 </div>
                 <div class="col offset-md-1">
@@ -595,6 +596,7 @@ watch(
                     label="IP Address Families:"
                     stack-label
                     use-chips
+                    options-selected-class="IHR_multi_select_selected_option"
                   />
                 </div>
                 <div class="col">
