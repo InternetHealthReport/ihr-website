@@ -234,7 +234,7 @@ const queryIP = async (ip) => {
     af = 6
   }
   const query =
-    'MATCH (p:Prefix {af: $af}) WHERE iyp.ipMatch($ip, p.prefix) ORDER BY p.prefixlen DESC RETURN DISTINCT p.prefix AS prefix, "Prefix" AS node LIMIT 1'
+    'MATCH (p:BGPPrefix {af: $af}) WHERE iyp.ipMatch($ip, p.prefix) ORDER BY p.prefixlen DESC RETURN DISTINCT p.prefix AS prefix, "Prefix" AS node LIMIT 1'
   const res = await iyp_api.run([{ statement: query, parameters: { af: af, ip: ip } }])
   return res[0]
 }

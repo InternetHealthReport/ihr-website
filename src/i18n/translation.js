@@ -52,13 +52,16 @@ const Trans = {
     return import.meta.env.VITE_SUPPORTED_LOCALES.split(',')
   },
 
-  async routeMiddleware(to, _from, next) {
+  // async routeMiddleware(to, _from, next) {
+  async routeMiddleware(to, _from) {
     let paramLocale = to.params.locale
     if (!Trans.isLocaleSupported(paramLocale)) {
-      return next(await Trans.guessDefaultLocale())
+      // return next(await Trans.guessDefaultLocale())
+      return await Trans.guessDefaultLocale()
     }
     await Trans.switchLanguage(paramLocale)
-    return next()
+    // return next()
+    return
   },
 
   get currentLocale() {
