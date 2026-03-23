@@ -209,7 +209,11 @@ const simpleDependenciesFormat = (val) => {
               <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
               <QTooltip max-width="360px">
                 <div
-                  v-html="DOMPurify.sanitize($t(`documentationPage.sections.prefixasdependency.description.1.body`))"
+                  v-html="
+                    DOMPurify.sanitize(
+                      $t(`documentationPage.sections.prefixasdependency.description.1.body`)
+                    )
+                  "
                 ></div>
               </QTooltip>
             </h3>
@@ -220,7 +224,11 @@ const simpleDependenciesFormat = (val) => {
               <QIcon name="far fa-question-circle" color="grey" style="font-size: 0.9em" right />
               <QTooltip max-width="360px">
                 <div
-                  v-html="DOMPurify.sanitize($t(`documentationPage.sections.prefixasdependency.description.2.body`))"
+                  v-html="
+                    DOMPurify.sanitize(
+                      $t(`documentationPage.sections.prefixasdependency.description.2.body`)
+                    )
+                  "
                 ></div>
               </QTooltip>
             </h3>

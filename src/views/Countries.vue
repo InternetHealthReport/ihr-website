@@ -47,6 +47,7 @@ onMounted(() => {
               label-txt="Enter a country name"
               :no-a-s="true"
               :no-i-x-p="true"
+              :no-ip="true"
               :no-prefix="true"
               :no-host-name="true"
               :no-tag="true"

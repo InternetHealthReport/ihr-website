@@ -47,6 +47,7 @@ onMounted(() => {
               :no-a-s="true"
               :no-i-x-p="true"
               :no-prefix="true"
+              :no-ip="true"
               :no-country="true"
               :no-tag="true"
               :no-rank="true"
