@@ -123,7 +123,10 @@ const organizations = ref(ORGANIZATIONS)
       </div>
     </div>
 
-    <div class="IHR_home-description-main" v-html="DOMPurify.sanitize($t('homePage.globalReport.description'))"></div>
+    <div
+      class="IHR_home-description-main"
+      v-html="DOMPurify.sanitize($t('homePage.globalReport.description'))"
+    ></div>
     <div class="IHR_home-description-main">
       See latest alarms in the
       <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })"> global report </RouterLink>
@@ -140,7 +143,10 @@ const organizations = ref(ORGANIZATIONS)
           </div>
         </QCardSection>
         <QCardSection class="q-pa-xs">
-          <div class="IHR_home-description_text" v-html="DOMPurify.sanitize($t(`${graphT.name}.description`))"></div>
+          <div
+            class="IHR_home-description_text"
+            v-html="DOMPurify.sanitize($t(`${graphT.name}.description`))"
+          ></div>
           <div class="IHR_home-description_text IHR_home-description-link">
             <RouterLink
               :to="

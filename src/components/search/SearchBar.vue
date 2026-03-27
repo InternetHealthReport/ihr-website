@@ -1,5 +1,5 @@
 <script setup>
-import { QSelect, QBtn, QSpinner, QItem, QItemSection, QDialog } from 'quasar'
+import { QSelect, QBtn, QSpinner, QItem, QItemSection } from 'quasar'
 import { ref, inject, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -41,6 +41,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  noIp: {
+    type: Boolean,
+    default: false
+  },
   noCountry: {
     type: Boolean,
     default: false
@@ -73,6 +77,7 @@ const Address6 = ipAddress.Address6
 
 let loadingQueryAS = false
 let loadingQueryPrefixes = false
+let loadingQueryIP = false
 let loadingQueryIXPs = false
 let loadingQueryCountries = false
 let loadingQueryASNames = false
@@ -80,24 +85,29 @@ let loadingQueryHostNames = false
 let loadingQueryTags = false
 let loadingQueryRanks = false
 
+const checkIpPrefix = (value) => {
+  let match
+  try {
+    match = new Address4(value).isCorrect()
+  } catch (e) {
+    match = null
+  }
+  if (!match) {
+    try {
+      match = new Address6(value).isCorrect()
+    } catch (e) {
+      match = null
+    }
+  }
+  return match
+}
+
 const search = async (value, update) => {
   loading.value = true
   options.value = []
   const asnRegex = /^(as)?(\d+)$/i
   const asnMatch = asnRegex.exec(value)
-  let prefixMatch
-  try {
-    prefixMatch = new Address4(value).isCorrect()
-  } catch (e) {
-    prefixMatch = null
-  }
-  if (!prefixMatch) {
-    try {
-      prefixMatch = new Address6(value).isCorrect()
-    } catch (e) {
-      prefixMatch = null
-    }
-  }
+  const ipPrefixMatch = checkIpPrefix(value)
   if (asnMatch) {
     loadingQueryAS = true
     queryAS(asnMatch[2]).then((res) => {
@@ -105,13 +115,22 @@ const search = async (value, update) => {
       loadingQueryAS = false
       noResults(res, update)
     })
-  } else if (prefixMatch) {
-    loadingQueryPrefixes = true
-    queryPrefixes(value).then((res) => {
-      searchResponse(res, update)
-      loadingQueryPrefixes = false
-      noResults(res, update)
-    })
+  } else if (ipPrefixMatch) {
+    if (value.includes('/')) {
+      loadingQueryPrefixes = true
+      queryPrefixes(value).then((res) => {
+        searchResponse(res, update)
+        loadingQueryPrefixes = false
+        noResults(res, update)
+      })
+    } else {
+      loadingQueryIP = true
+      queryIP(value).then((res) => {
+        searchResponse(res, update)
+        loadingQueryIP = false
+        noResults(res, update)
+      })
+    }
   } else {
     mixedEntitySearch(value, update)
   }
@@ -122,6 +141,7 @@ const noResults = (res, update) => {
     !res.length &&
     !loadingQueryAS &&
     !loadingQueryPrefixes &&
+    !loadingQueryIP &&
     !loadingQueryIXPs &&
     !loadingQueryCountries &&
     !loadingQueryASNames &&
@@ -202,6 +222,20 @@ const queryPrefixes = async (value) => {
   const query =
     'MATCH (p:Prefix) WHERE p.prefix STARTS WITH $value RETURN DISTINCT p.prefix as prefix, "Prefix" AS node LIMIT 10'
   const res = await iyp_api.run([{ statement: query, parameters: { value: value } }])
+  return res[0]
+}
+
+const queryIP = async (ip) => {
+  if (props.noIp) {
+    return []
+  }
+  let af = 4
+  if (ip.includes(':')) {
+    af = 6
+  }
+  const query =
+    'MATCH (p:BGPPrefix {af: $af}) WHERE iyp.ipMatch($ip, p.prefix) ORDER BY p.prefixlen DESC RETURN DISTINCT p.prefix AS prefix, "Prefix" AS node LIMIT 1'
+  const res = await iyp_api.run([{ statement: query, parameters: { af: af, ip: ip } }])
   return res[0]
 }
 
@@ -481,6 +515,7 @@ watch(
           v-if="
             !loadingQueryAS &&
             !loadingQueryPrefixes &&
+            !loadingQueryIP &&
             !loadingQueryIXPs &&
             !loadingQueryCountries &&
             !loadingQueryASNames &&

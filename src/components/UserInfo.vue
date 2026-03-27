@@ -9,32 +9,33 @@ const ripe_api = inject('ripe_api')
 
 const as_info_query = ref({
   loading: true,
-  query: `MATCH (a:AS {asn: $asn})
-      OPTIONAL MATCH (a)-[:ORIGINATE]->(p4:BGPPrefix {af:4})
-      WITH COALESCE(COUNT(DISTINCT p4.prefix), 0) AS prefixes_v4, a
-      OPTIONAL MATCH (a)-[:ORIGINATE]->(p6:BGPPrefix {af:6})
-      WITH COALESCE(COUNT(DISTINCT p6.prefix), 0) AS prefixes_v6, prefixes_v4, a
+  query: `MATCH (p:BGPPrefix {af: $af})-[:ORIGINATE]-(a:AS)
+      WHERE iyp.ipMatch($ip, p.prefix)
+      ORDER BY p.prefixlen DESC
+      LIMIT 1
+      WITH DISTINCT p.prefix AS prefix, a
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
-      OPTIONAL MATCH (a)-[:NAME]->(n:Name)
-      OPTIONAL MATCH (a)-[:MEMBER_OF]->(ixp:IXP)-[:COUNTRY]-(ixp_country:Country)
       OPTIONAL MATCH (a)-[:COUNTRY {reference_name: 'nro.delegated_stats'}]->(c:Country)
-      RETURN c.country_code AS cc, c.name AS country, prefixes_v4, prefixes_v6, COALESCE(pdbn.name, btn.name, ripen.name) AS name, count(DISTINCT ixp) as nb_ixp, count(DISTINCT ixp_country) as nb_country `
+      RETURN a.asn AS as, c.country_code AS cc, c.name AS country, prefix, COALESCE(pdbn.name, btn.name, ripen.name) AS name`
 })
 
 const getUserInfo = async () => {
   const userIP = (await ripe_api.userIP()).data
-  const userASN = (await ripe_api.userASN(userIP.data.ip)).data
   userInfo.value.IP = userIP.data.ip
-  userInfo.value.AS = userASN.data.asns[0]
-  userInfo.value.PREFIX = userASN.data.prefix
 
   as_info_query.value.loading = true
-  let query_params = { asn: Number(userASN.data.asns[0]) }
+  let af = 4
+  if (userInfo.value.IP.includes(':')) {
+    af = 6
+  }
+  let query_params = { af: af, ip: userInfo.value.IP }
   iyp_api
     .run([{ statement: as_info_query.value.query, parameters: query_params }])
     .then((results) => {
+      userInfo.value.AS = results[0][0].as
+      userInfo.value.PREFIX = results[0][0].prefix
       userInfo.value.AS_NAME = results[0][0].name
       userInfo.value.COUNTRY = results[0][0].country
       userInfo.value.CC = results[0][0].cc
