@@ -1,9 +1,9 @@
 <script setup>
-import ReactiveChart from '../charts/ReactiveChart.vue'
-import { COMMON_FEATURE } from '@/plugins/layouts/layoutsChart.js'
 import getCountryName from '@/plugins/countryName'
 import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { LMap, LTileLayer, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
+import 'leaflet/dist/leaflet.css'
 
 const { t } = useI18n()
 
@@ -22,19 +22,9 @@ const props = defineProps({
   }
 })
 
-const layout = ref({
-  ...COMMON_FEATURE,
-  geo: {
-    showframe: false,
-    showcoastlines: false,
-    showland: true,
-    landcolor: 'rgb(215, 215, 215)',
-    countrycolor: 'rgb(235, 235, 235)',
-    showcountries: true
-  }
-})
 const probes = ref([])
 const noData = ref(t('loading'))
+const zoom = ref(2)
 
 const updateProbes = () => {
   probes.value = []
@@ -88,16 +78,9 @@ watch(
 )
 
 const traces = computed(() => {
-  let latitudes = []
-  let longitudes = []
-  let sizes = []
-  let colors = []
-  let text = []
-  probes.value.forEach((prob) => {
-    latitudes.push(prob.lat)
-    longitudes.push(prob.lon)
+  return probes.value.map((prob) => {
     let color = prob.level - 6
-    let durationHour = Math.ceil(Math.abs(prob.endTime - prob.startTime) / (1000 * 60 * 60))
+    const durationHour = Math.ceil(Math.abs(prob.endTime - prob.startTime) / (1000 * 60 * 60))
     let durationMin = Math.ceil(Math.abs(prob.endTime - prob.startTime) / (1000 * 60))
     let durationLabel = `${durationHour} hours`
     if (durationHour <= 1) {
@@ -106,49 +89,58 @@ const traces = computed(() => {
     if (durationMin == 0) {
       durationLabel = 'Unk.'
     }
-    let probeText = `<b>${prob.label}</b><br> PB${prob.id}<br> ${dateFormatter(
+    const probeText = `<b>${prob.label}</b><br> PB${prob.id}<br> ${dateFormatter(
       prob.startTime
     )}<br> Duration: ${durationLabel}<br> Deviation: ${prob.level}`
-    text.push(probeText)
     if (durationMin == 0) {
       durationMin = 30
     }
-    sizes.push(Math.min(durationMin / 2, 30))
+    const size = Math.min(durationMin / 2, 30)
     const red = Math.min(255, 255 * (color / 5))
     const green = 255 - Math.min(255, 255 * (color / 5))
     const blue = 255 - Math.min(255, 255 * (color / 5))
-    colors.push(`rgba(${red},${green},${blue},0.1)`)
-  })
-  return [
-    {
-      type: 'scattergeo',
-      mode: 'markers',
-      lat: latitudes,
-      lon: longitudes,
-      hoverinfo: 'text',
-      text: text,
-      marker: {
-        size: sizes,
-        color: colors,
-        line: {
-          color: 'black',
-          width: 1
-        }
-      },
-      name: 'world events'
+    color = `rgba(${red},${green},${blue},0.2)`
+    return {
+      lat: prob.lat,
+      lon: prob.lon,
+      text: probeText,
+      size: size,
+      color: color
     }
-  ]
+  })
 })
 </script>
 
 <template>
-  <div class="IHR_disco-chart">
-    <ReactiveChart
-      :layout="layout"
-      :traces="traces"
-      :no-data="noData"
-      :disableCVD="true"
-      :y-max="yMax"
-    />
+  <div style="height: 600px">
+    <LMap
+      v-model="zoom"
+      v-model:zoom="zoom"
+      :center="[0, 0]"
+      :use-global-leaflet="false"
+      :options="{ attributionControl: false }"
+    >
+      <LTileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        layer-type="base"
+        name="OpenStreetMap"
+        class="grayscale-tiles"
+      ></LTileLayer>
+      <LCircleMarker
+        v-for="trace in traces"
+        :lat-lng="[trace.lat, trace.lon]"
+        :radius="trace.size"
+        :color="trace.color"
+        :fillOpacity="1"
+      >
+        <LTooltip><div v-html="trace.text" style="text-align: left"></div></LTooltip>
+      </LCircleMarker>
+    </LMap>
   </div>
 </template>
+
+<style scoped>
+:deep(.leaflet-tile-pane) {
+  filter: grayscale(100%) brightness(1.1);
+}
+</style>
