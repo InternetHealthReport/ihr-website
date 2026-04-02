@@ -1,6 +1,6 @@
 <script setup>
 import getCountryName from '@/plugins/countryName'
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { LMap, LTileLayer, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -114,11 +114,11 @@ const traces = computed(() => {
 <template>
   <div style="height: 600px">
     <LMap
-      v-model="zoom"
       v-model:zoom="zoom"
       :center="[0, 0]"
       :use-global-leaflet="false"
-      :options="{ attributionControl: false }"
+      :options="{ attributionControl: false, worldCopyJump: true, minZoom: 2 }"
+      @ready="(map) => nextTick(() => map.invalidateSize())"
     >
       <LTileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
