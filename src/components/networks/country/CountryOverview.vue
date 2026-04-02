@@ -311,6 +311,7 @@ onMounted(() => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 layer-type="base"
                 name="OpenStreetMap"
+                class="grayscale-tiles"
               ></LTileLayer>
               <LControl>
                 <QCard>
@@ -378,7 +379,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style>
+<style scoped>
 p {
   font-size: 1rem;
   margin-bottom: 0;
@@ -392,5 +393,8 @@ h3 {
   cursor: pointer;
   width: 100%;
   text-align: right;
+}
+:deep(.leaflet-tile-pane) {
+  filter: grayscale(100%) brightness(1.1);
 }
 </style>

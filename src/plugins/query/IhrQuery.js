@@ -376,6 +376,10 @@ class DiscoEventQuery extends TimeQuery {
     return this._setOrder('nbdiscoprobes', order)
   }
 
+  includeProbeDetails(value) {
+    return this._set('include_probe_details', value)
+  }
+
   orderedByTime() {
     return this.orderedByStartTime()
   }

@@ -85,11 +85,13 @@ const apiCall = () => {
     filters = new DiscoEventQuery()
       .streamName('')
       .timeInterval(props.startTime, props.endTime)
+      .includeProbeDetails('True')
       .orderedByTime()
   } else {
     filters = new DiscoEventQuery()
       .streamName(props.streamName)
       .timeInterval(props.startTime, props.endTime)
+      .includeProbeDetails('True')
       .orderedByTime()
   }
   loading.value = true
