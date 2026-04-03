@@ -63,7 +63,7 @@ const queries = ref([
   {
     data: [],
     query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[ca:CATEGORIZED]-(:Tag {label:'Tranco 10k Host'}),
-      (a)-[:ORIGINATE]-(:BGPPrefix)-[:PART_OF]-(:IP)-[re:RESOLVES_TO {reference_name:'openintel.tranco1m'}]-(d:HostName)
+      (a)-[:ORIGINATE]-(:BGPPrefix)-[:PART_OF]-(:IP)-[re:RESOLVES_TO {reference_name:'openintel.toplist'}]-(d:HostName)
       USING INDEX re:RESOLVES_TO(reference_name)
       WITH a, COUNT(DISTINCT d) AS nb_domains ORDER BY nb_domains DESC LIMIT 5
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
