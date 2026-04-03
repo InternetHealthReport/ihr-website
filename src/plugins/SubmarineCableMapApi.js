@@ -44,9 +44,24 @@ const SubmarineCableMapApi = {
       )
     }
 
+    const landingPointCountryMap = async () => {
+      const storageAllowed = JSON.parse(await get('storage-allowed'))
+      const url = 'landing-point-country-map.json'
+      return await cache(
+        `${url}`,
+        () => {
+          return axios_base.get(url)
+        },
+        {
+          storageAllowed: storageAllowed ? storageAllowed : false
+        }
+      )
+    }
+
     const submarine_cable_map_api = {
       cableGeo,
-      landingPointGeo
+      landingPointGeo,
+      landingPointCountryMap
     }
 
     app.provide('submarine_cable_map_api', submarine_cable_map_api)

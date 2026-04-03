@@ -26,6 +26,8 @@ const REFERENCES = {
   'stat.ripe.net': 'https://stat.ripe.net/app/launchpad'
 }
 
+let LANDING_POINT_COUNTRY_ISO = null
+
 const props = defineProps({
   countryCode: {
     type: String,
@@ -110,36 +112,16 @@ const queries = ref([
   }
 ])
 
-// Maps country-state-city names to the country names used in landing-point-geo.json
-const LANDING_POINT_COUNTRY_NAME_MAP = {
-  'East Timor': 'Timor-Leste',
-  'Democratic Republic of the Congo': 'Congo, Dem. Rep.',
-  Congo: 'Congo, Rep.',
-  'Saint Helena': 'Ascension and Tristan da Cunha',
-  'Bonaire, Sint Eustatius and Saba': 'Sint Eustatius and Saba',
-  'Sint Maarten (Dutch part)': 'Sint Maarten',
-  'Saint-Martin (French part)': 'Saint Martin'
-}
-
 const getSubmarineCables = (cc, cableGeoData, landingPointGeoData) => {
-  const country = Country.getCountryByCode(cc)
-  if (!country) {
-    return { domestic: [], international: [], domesticLPs: [], internationalLPs: [] }
-  }
-
-  const countryName = LANDING_POINT_COUNTRY_NAME_MAP[country.name] ?? country.name
-
   const domesticLPs = []
   const nonDomesticLPs = []
   for (const f of landingPointGeoData.features) {
     const name = f.properties.name
     const idx = name.indexOf(',')
     if (idx === -1) continue
-    if (name.includes('United States') && countryName === 'United States') {
-      if (name.substring(idx + 6) === countryName) {
-        domesticLPs.push(f.geometry.coordinates)
-      }
-    } else if (name.substring(idx + 2) === countryName) {
+    if (LANDING_POINT_COUNTRY_ISO[name.substring(idx + 6)] === cc) {
+      domesticLPs.push(f.geometry.coordinates)
+    } else if (LANDING_POINT_COUNTRY_ISO[name.substring(idx + 2)] === cc) {
       domesticLPs.push(f.geometry.coordinates)
     } else {
       nonDomesticLPs.push(f.geometry.coordinates)
@@ -271,6 +253,7 @@ const fetchMapData = async (cc) => {
 const fetchSubmarineCableMapData = async () => {
   const cableGeoData = (await submarine_cable_map_api.cableGeo()).data
   const landingPointGeoData = (await submarine_cable_map_api.landingPointGeo()).data
+  LANDING_POINT_COUNTRY_ISO = (await submarine_cable_map_api.landingPointCountryMap()).data
 
   submarineCables.value = getSubmarineCables(props.countryCode, cableGeoData, landingPointGeoData)
 }
