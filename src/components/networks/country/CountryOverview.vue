@@ -151,6 +151,23 @@ const getSubmarineCables = (cc, cableGeoData, landingPointGeoData) => {
     }
   }
 
+  const mergedFeatures = []
+  const cableById = new Map()
+  for (const feature of cableGeoData.features) {
+    const id = feature.properties.id
+    if (cableById.has(id)) {
+      cableById.get(id).geometry.coordinates.push(...feature.geometry.coordinates)
+    } else {
+      const merged = {
+        ...feature,
+        geometry: { ...feature.geometry, coordinates: [...feature.geometry.coordinates] }
+      }
+      cableById.set(id, merged)
+      mergedFeatures.push(merged)
+    }
+  }
+  cableGeoData = { ...cableGeoData, features: mergedFeatures }
+
   for (const cable of cableGeoData.features) {
     const allPoints = cable.geometry.coordinates.flat()
     const hasDomestic = allPoints.some((pt) => domesticLPs.some((lp) => isNear(pt, lp, 0.1)))
