@@ -2,8 +2,9 @@
 import getCountryName from '@/plugins/countryName'
 import { ref, watch, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { LMap, LTileLayer, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
+import { LMap, LTileLayer, LCircleMarker, LTooltip, LControl } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { QCard } from 'quasar'
 
 const { t } = useI18n()
 
@@ -126,6 +127,14 @@ const traces = computed(() => {
         name="OpenStreetMap"
         class="grayscale-tiles"
       ></LTileLayer>
+      <LControl position="bottomright">
+        <QCard flat style="padding: 2px 4px; min-height: unset">
+          <span style="font-size: 11px">
+            &copy;
+            <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>
+          </span>
+        </QCard>
+      </LControl>
       <LCircleMarker
         v-for="trace in traces"
         :lat-lng="[trace.lat, trace.lon]"

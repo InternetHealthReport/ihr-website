@@ -445,6 +445,20 @@ onMounted(() => {
                 name="OpenStreetMap"
                 class="grayscale-tiles"
               ></LTileLayer>
+              <LControl position="bottomright">
+                <QCard flat style="padding: 2px 4px; min-height: unset">
+                  <span style="font-size: 11px">
+                    &copy;
+                    <a href="https://www.openstreetmap.org/copyright" target="_blank"
+                      >OpenStreetMap</a
+                    >
+                    | &copy;
+                    <a href="https://www.submarinecablemap.com" target="_blank"
+                      >TeleGeography's Submarine Cable Map</a
+                    >
+                  </span>
+                </QCard>
+              </LControl>
               <LControl>
                 <QCard>
                   <QCardSection>
