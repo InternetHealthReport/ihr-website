@@ -11,7 +11,7 @@ import {
   QIcon
 } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
-import { ref, onMounted, watch, onUnmounted } from 'vue'
+import { ref, onMounted, watch, onUnmounted, computed } from 'vue'
 import report from '@/plugins/report'
 import '@/styles/chart.css'
 import BGPVrpsTable from '../tables/BGPVrpsTable.vue'
@@ -325,6 +325,15 @@ const customIntersectionObserver = () => {
   }
 }
 
+const rpkiStatusChartXRange = computed(() => {
+  if (announcementsPeersChartData.value.length) {
+    if ('x' in announcementsPeersChartData.value[0]) {
+      return [announcementsPeersChartData.value[0].x[0], announcementsPeersChartData.value[0].x[announcementsPeersChartData.value[0].x.length - 1]]
+    }
+  }
+  return []
+})
+
 //Remove the vertical line and update the selected timestamp
 watch(
   () => props.isLiveMode,
@@ -561,6 +570,10 @@ onMounted(() => {
             title: {
               text: 'Peers'
             }
+          },
+          xaxis: {
+            autorange: rpkiStatusChartXRange.length ? false : true,
+            range: rpkiStatusChartXRange
           }
         }"
         :traces="rpkiStatusChartData"
