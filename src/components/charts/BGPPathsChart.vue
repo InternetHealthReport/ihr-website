@@ -189,8 +189,8 @@ onMounted(() => {
     <div class="text-center">
       <h1>No data available</h1>
       <template v-if="dataSource === 'ris-live'">
-        <h3>Try changing the input parameters or you can wait</h3>
-        <h6>Note: Some prefixes become active after some time.</h6>
+        <h3>Waiting for BGP updates.</h3>
+        <h6>This may take some time, depending on the selected prefix.</h6>
       </template>
     </div>
   </div>
