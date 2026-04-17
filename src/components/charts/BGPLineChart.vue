@@ -513,16 +513,21 @@ onMounted(() => {
                   : currentIndex === 0)
               "
             />
-            <QBadge class="q-mr-md">
-              <div v-if="dataSource === 'ris-live'" class="text-body2">
-                {{ usedMessagesCount + '/' + rawMessages.length }}
-                <QIcon name="message" />
-              </div>
-              <div v-else class="text-body2">
-                {{ (usedMessagesCount - initialStateDataCount) + '/' + (rawMessages.length - initialStateDataCount) }}
-                <QIcon name="message" />
-              </div>
-            </QBadge>
+            <div class="q-mr-md column items-center">
+              <QBadge class="q-mb-sm">
+                <div v-if="dataSource === 'ris-live'" class="text-body2">
+                  {{ usedMessagesCount + '/' + rawMessages.length }}
+                  <QIcon name="message" />
+                </div>
+                <div v-else class="text-body2">
+                  {{ (usedMessagesCount - initialStateDataCount) + '/' + (rawMessages.length - initialStateDataCount) }}
+                  <QIcon name="message" />
+                </div>
+              </QBadge>
+              <QBadge class="text-body2">
+                {{ timestampToUTC(selectedMaxTimestamp)?.slice(0, 16) }}
+              </QBadge>
+            </div>
             <QBtn
               round
               color="indigo"

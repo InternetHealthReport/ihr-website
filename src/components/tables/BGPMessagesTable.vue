@@ -120,7 +120,6 @@ watch([() => props.selectedPeersNumber, () => props.filteredMessages], () => {
 })
 
 watch(selectedPeersModel, () => {
-  console.log(selectedPeersModel)
   emit('update-selected-peers', selectedPeersModel.value)
 })
 
