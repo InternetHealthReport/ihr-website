@@ -457,10 +457,10 @@ onMounted(() => {
               />
               <QBadge class="q-mr-md">
                 <div v-if="dataSource === 'ris-live'" class="text-body2">
-                  {{ usedMessagesCount + ' out of ' + rawMessages.length }} Processed Messages
+                  {{ usedMessagesCount + ' out of ' + rawMessages.length}} Processed Messages
                 </div>
                 <div v-else class="text-body2">
-                  {{ usedMessagesCount - initialStateDataCount + ' out of ' + rawMessages.length }}
+                  {{ (usedMessagesCount - initialStateDataCount) + ' out of ' + (rawMessages.length - initialStateDataCount) }}
                   Processed Messages
                 </div>
               </QBadge>
@@ -510,7 +510,7 @@ onMounted(() => {
                 <QIcon name="message" />
               </div>
               <div v-else class="text-body2">
-                {{ usedMessagesCount - initialStateDataCount + '/' + rawMessages.length }}
+                {{ (usedMessagesCount - initialStateDataCount) + '/' + (rawMessages.length - initialStateDataCount) }}
                 <QIcon name="message" />
               </div>
             </QBadge>
