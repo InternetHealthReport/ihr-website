@@ -572,8 +572,9 @@ onMounted(() => {
             }
           },
           xaxis: {
+            type: 'date',
             autorange: rpkiStatusChartXRange.length ? false : true,
-            range: rpkiStatusChartXRange
+            range: rpkiStatusChartXRange,
           }
         }"
         :traces="rpkiStatusChartData"

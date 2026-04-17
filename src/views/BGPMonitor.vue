@@ -16,7 +16,7 @@ import {
   QItemSection,
   QSpinner
 } from 'quasar'
-import { onMounted, onUnmounted, ref, watch, inject } from 'vue'
+import { onMounted, onUnmounted, ref, watch, inject, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import i18n from '@/i18n'
@@ -325,7 +325,6 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(path),
         type: type,
-        rpki_status: status,
         timestamp: minTimestamp.value
       })
     })
@@ -356,7 +355,6 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.attrs.community),
         as_info: addASInfo(path),
         type: type,
-        rpki_status: status,
         timestamp: timestamp
       })
     })
@@ -547,10 +545,10 @@ const generateLineChartTrace = () => {
       }
 
       function addData(timestamp) {
-        const duration = timestamp - current_range_start - 1
+        const duration = (timestamp - current_range_start - 1) * 1000
         rsTrace[current_status] ??= { y: [], x: [], base: [], peer_asn: [], origin_asn: [] }
         rsTrace[current_status].y.push(peer)
-        rsTrace[current_status].x.push(timestampToUTC(duration))
+        rsTrace[current_status].x.push(duration)
         rsTrace[current_status].base.push(timestampToUTC(current_range_start))
         rsTrace[current_status].peer_asn.push(peer_asn)
         rsTrace[current_status].origin_asn.push(current_origin)
@@ -565,8 +563,19 @@ const generateLineChartTrace = () => {
   rpkiStatusTraces.value = rsTrace
 }
 
+const filteredMessagesWithRpki = computed(() => {
+  return filteredMessages.value.map((msg) => {
+    const originASN = msg.path.length ? msg.path[msg.path.length - 1] : null
+    const { status } = getRPKIStatus(originASN, selectedMaxTimestamp.value)
+    return {
+      ...msg,
+      rpki_status: status
+    }
+  })
+})
+
 const timestampToUTC = (timestamp) => {
-  return utcString(new Date(timestamp * 1000))
+  return utcString(new Date(Number(String(timestamp).padEnd(13, '0'))))
 }
 
 // Apply community descriptions to the community data array
@@ -1381,7 +1390,7 @@ onUnmounted(() => {
         </template>
         <BGPMessagesTable
           :data-source="dataSource.value"
-          :filtered-messages="filteredMessages"
+          :filtered-messages="filteredMessagesWithRpki"
           :selected-peers-number="defaultSelectedPeerCount"
           :is-live-mode="isLiveMode"
           :is-playing="isPlaying"
