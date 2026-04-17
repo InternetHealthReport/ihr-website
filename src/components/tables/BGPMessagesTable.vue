@@ -14,6 +14,10 @@ const props = defineProps({
     type: Number,
     default: 5
   },
+  selectedPeers: {
+    type: Array,
+    default: () => []
+  },
   isLiveMode: {
     type: Boolean
   },
@@ -33,7 +37,7 @@ const { utcString } = report()
 const emit = defineEmits(['enable-live-mode', 'update-selected-peers'])
 
 const selectedPeersModel = ref(
-  props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => ({ peer: obj.peer }))
+  props.selectedPeers.length ? props.selectedPeers : props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => ({ peer: obj.peer }))
 )
 const search = ref('')
 
@@ -106,13 +110,18 @@ watch(
 )
 
 watch([() => props.selectedPeersNumber, () => props.filteredMessages], () => {
-  selectedPeersModel.value = props.filteredMessages
-    .slice(0, props.selectedPeersNumber)
-    .map((obj) => ({ peer: obj.peer }))
+  if (props.selectedPeers.length) {
+    selectedPeersModel.value = props.selectedPeers
+  } else {
+    selectedPeersModel.value = props.filteredMessages
+      .slice(0, props.selectedPeersNumber)
+      .map((obj) => ({ peer: obj.peer }))
+  }
 })
 
 watch(selectedPeersModel, () => {
-  emit('update-selected-peers', selectedPeersModel.value.length)
+  console.log(selectedPeersModel)
+  emit('update-selected-peers', selectedPeersModel.value)
 })
 
 onMounted(() => {

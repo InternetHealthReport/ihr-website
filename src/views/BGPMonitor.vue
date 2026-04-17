@@ -47,6 +47,7 @@ const filteredMessages = ref([]) //Used to store unique peer messages uses "uniq
 const uniquePeerMessages = new Map() //Used to store unique peer messages (For simplification)
 const communityInfo = ref({})
 const defaultSelectedPeerCount = ref(5) //Default number of peers to display in the sankey chart
+const defaultSelectedPeers = ref([]) //Default number of peers to display in the sankey chart
 const isLiveMode = ref(true)
 const selectedMaxTimestamp = ref(0)
 const usedMessagesCount = ref(0) //Just for displaying how many messages are being used
@@ -135,6 +136,7 @@ const resetData = () => {
   filteredMessages.value = []
   uniquePeerMessages.clear()
   defaultSelectedPeerCount.value = 5
+  defaultSelectedPeers.value = []
   isLiveMode.value = true
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
@@ -1064,7 +1066,8 @@ const getRPKIStatus = (asn, timestamp) => {
 }
 
 const updateSelectedPeers = (val) => {
-  defaultSelectedPeerCount.value = val
+  defaultSelectedPeerCount.value = val.length
+  defaultSelectedPeers.value = val
 }
 
 const applyStartTime = () => {
@@ -1362,6 +1365,7 @@ onUnmounted(() => {
       <BGPPathsChart
         :filtered-messages="filteredMessages"
         :selected-peers-number="defaultSelectedPeerCount"
+        :selected-peers="defaultSelectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
         :is-loading-bgplay-data="isLoadingBgplayData"
@@ -1392,6 +1396,7 @@ onUnmounted(() => {
           :data-source="dataSource.value"
           :filtered-messages="filteredMessagesWithRpki"
           :selected-peers-number="defaultSelectedPeerCount"
+          :selected-peers="defaultSelectedPeers"
           :is-live-mode="isLiveMode"
           :is-playing="isPlaying"
           :is-loading-bgplay-data="isLoadingBgplayData"
