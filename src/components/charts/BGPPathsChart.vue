@@ -50,7 +50,9 @@ const generateGraphData = () => {
   const linkSetCount = new Map()
 
   //Only consider selected peers which are selected in the table
-  const peers = props.selectedPeers.length ? props.selectedPeers.map((obj) => obj.peer) : props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => obj.peer)
+  const peers = props.selectedPeers.length
+    ? props.selectedPeers.map((obj) => obj.peer)
+    : props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => obj.peer)
   const filteredSelectedMessages = props.filteredMessages.filter((message) =>
     peers.includes(message.peer)
   )

@@ -328,7 +328,10 @@ const customIntersectionObserver = () => {
 const rpkiStatusChartXRange = computed(() => {
   if (announcementsPeersChartData.value.length) {
     if ('x' in announcementsPeersChartData.value[0]) {
-      return [announcementsPeersChartData.value[0].x[0], announcementsPeersChartData.value[0].x[announcementsPeersChartData.value[0].x.length - 1]]
+      return [
+        announcementsPeersChartData.value[0].x[0],
+        announcementsPeersChartData.value[0].x[announcementsPeersChartData.value[0].x.length - 1]
+      ]
     }
   }
   return []
@@ -466,10 +469,15 @@ onMounted(() => {
               />
               <QBadge class="q-mr-md">
                 <div v-if="dataSource === 'ris-live'" class="text-body2">
-                  {{ usedMessagesCount + ' out of ' + rawMessages.length}} Processed Messages
+                  {{ usedMessagesCount + ' out of ' + rawMessages.length }} Processed Messages
                 </div>
                 <div v-else class="text-body2">
-                  {{ (usedMessagesCount - initialStateDataCount) + ' out of ' + (rawMessages.length - initialStateDataCount) }}
+                  {{
+                    usedMessagesCount -
+                    initialStateDataCount +
+                    ' out of ' +
+                    (rawMessages.length - initialStateDataCount)
+                  }}
                   Processed Messages
                 </div>
               </QBadge>
@@ -520,7 +528,12 @@ onMounted(() => {
                   <QIcon name="message" />
                 </div>
                 <div v-else class="text-body2">
-                  {{ (usedMessagesCount - initialStateDataCount) + '/' + (rawMessages.length - initialStateDataCount) }}
+                  {{
+                    usedMessagesCount -
+                    initialStateDataCount +
+                    '/' +
+                    (rawMessages.length - initialStateDataCount)
+                  }}
                   <QIcon name="message" />
                 </div>
               </QBadge>
@@ -579,7 +592,7 @@ onMounted(() => {
           xaxis: {
             type: 'date',
             autorange: rpkiStatusChartXRange.length ? false : true,
-            range: rpkiStatusChartXRange,
+            range: rpkiStatusChartXRange
           }
         }"
         :traces="rpkiStatusChartData"

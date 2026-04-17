@@ -37,7 +37,9 @@ const { utcString } = report()
 const emit = defineEmits(['enable-live-mode', 'update-selected-peers'])
 
 const selectedPeersModel = ref(
-  props.selectedPeers.length ? props.selectedPeers : props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => ({ peer: obj.peer }))
+  props.selectedPeers.length
+    ? props.selectedPeers
+    : props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => ({ peer: obj.peer }))
 )
 const search = ref('')
 
