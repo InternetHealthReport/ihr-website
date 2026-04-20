@@ -118,20 +118,17 @@ const traces = computed(() => {
       v-model:zoom="zoom"
       :center="[0, 0]"
       :use-global-leaflet="false"
-      :options="{ attributionControl: false, worldCopyJump: true, minZoom: 2 }"
+      :options="{ attributionControl: false, worldCopyJump: true, minZoom: 2, maxZoom: 15 }"
       @ready="(map) => nextTick(() => map.invalidateSize())"
     >
-      <LTileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        layer-type="base"
-        name="OpenStreetMap"
-        class="grayscale-tiles"
-      ></LTileLayer>
+      <LTileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"></LTileLayer>
       <LControl position="bottomright">
         <QCard flat style="padding: 2px 4px; min-height: unset">
           <span style="font-size: 11px">
             &copy;
             <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>
+            | &copy;
+            <a href="https://carto.com/attributions" target="_blank">CARTO</a>
           </span>
         </QCard>
       </LControl>
@@ -149,7 +146,7 @@ const traces = computed(() => {
 </template>
 
 <style scoped>
-:deep(.leaflet-tile-pane) {
+/* :deep(.leaflet-tile-pane) {
   filter: grayscale(100%) brightness(1.1);
-}
+} */
 </style>

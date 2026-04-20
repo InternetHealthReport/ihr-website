@@ -436,14 +436,11 @@ onMounted(() => {
               v-model:zoom="zoom"
               :center="[countryInfo.latitude, countryInfo.longitude]"
               :use-global-leaflet="false"
-              :options="{ attributionControl: false, worldCopyJump: true, minZoom: 3 }"
+              :options="{ attributionControl: false, worldCopyJump: true, minZoom: 3, maxZoom: 15 }"
               @ready="(map) => nextTick(() => map.invalidateSize())"
             >
               <LTileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                layer-type="base"
-                name="OpenStreetMap"
-                class="grayscale-tiles"
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
               ></LTileLayer>
               <LControl position="bottomright">
                 <QCard flat style="padding: 2px 4px; min-height: unset">
@@ -452,6 +449,8 @@ onMounted(() => {
                     <a href="https://www.openstreetmap.org/copyright" target="_blank"
                       >OpenStreetMap</a
                     >
+                    | &copy;
+                    <a href="https://carto.com/attributions" target="_blank">CARTO</a>
                     | &copy;
                     <a href="https://www.submarinecablemap.com" target="_blank"
                       >TeleGeography's Submarine Cable Map</a
@@ -624,9 +623,9 @@ h3 {
   width: 100%;
   text-align: right;
 }
-:deep(.leaflet-tile-pane) {
+/* :deep(.leaflet-tile-pane) {
   filter: grayscale(100%) brightness(1.1);
-}
+} */
 .landing-point {
   z-index: 1000;
 }
