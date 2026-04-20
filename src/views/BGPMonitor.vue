@@ -46,7 +46,7 @@ const rawMessages = ref([]) //Used to store all the messages from the websocket
 const filteredMessages = ref([]) //Used to store unique peer messages uses "uniquePeerMessages = new Map()""
 const uniquePeerMessages = new Map() //Used to store unique peer messages (For simplification)
 const communityInfo = ref({})
-const defaultSelectedPeerCount = ref(5) //Default number of peers to display in the sankey chart
+const defaultSelectedPeerCount = ref(50) //Default number of peers to display in the sankey chart
 const defaultSelectedPeers = ref([]) //Default number of peers to display in the sankey chart
 const isLiveMode = ref(true)
 const selectedMaxTimestamp = ref(0)
@@ -135,7 +135,7 @@ const resetData = () => {
   rawMessages.value = []
   filteredMessages.value = []
   uniquePeerMessages.clear()
-  defaultSelectedPeerCount.value = 5
+  defaultSelectedPeerCount.value = 50
   defaultSelectedPeers.value = []
   isLiveMode.value = true
   selectedMaxTimestamp.value = 0
