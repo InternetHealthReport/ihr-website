@@ -106,7 +106,7 @@ const prevNextElement = ref(null)
 let observer = null
 
 const timestampToUTC = (timestamp) => {
-  return utcString(new Date(timestamp * 1000))
+  return utcString(new Date(Number(String(timestamp).padEnd(13, '0'))))
 }
 
 // Update the time range
@@ -337,6 +337,24 @@ const rpkiStatusChartXRange = computed(() => {
   return []
 })
 
+const handleRpkiPlotlyClick = (event) => {
+  const point = event.points[0]
+  if (!point) return
+
+  const xaxis = point.xaxis
+  const mouseX = event.event.clientX
+  const plotDiv = event.event.target.closest('.js-plotly-plot')
+  const rect = plotDiv.getBoundingClientRect()
+
+  // xaxis.p2d converts pixel position to data coordinate (ms)
+  const pixelX = mouseX - rect.left - xaxis._offset
+  const clickedMs = xaxis.p2d(pixelX)
+  const timestamp = Math.floor(new Date(clickedMs + 'Z').getTime() / 1000)
+
+  selectedMaxTimestamp.value = timestamp
+  updateSlider(timestamp, true)
+}
+
 //Remove the vertical line and update the selected timestamp
 watch(
   () => props.isLiveMode,
@@ -414,7 +432,9 @@ onMounted(() => {
   <div class="text-center" v-if="rawMessages.length === 0">
     <h1 v-if="!isLoadingBgplayData">No data available</h1>
     <h3 v-if="dataSource === 'ris-live'">Waiting for BGP updates.</h3>
-    <h6 v-if="dataSource === 'ris-live'">This may take some time, depending on the selected prefix.</h6>
+    <h6 v-if="dataSource === 'ris-live'">
+      This may take some time, depending on the selected prefix.
+    </h6>
   </div>
   <div v-else>
     <div v-if="dataSource === 'ris-live'" class="q-mb-md">
@@ -597,7 +617,7 @@ onMounted(() => {
         }"
         :traces="rpkiStatusChartData"
         :shapes="rpkiLayout.shapes"
-        @plotly-click="handlePlotlyClick"
+        @plotly-click="handleRpkiPlotlyClick"
         @plotly-relayout="adjustQSliderWidth(true)"
         :no-data="
           isNoVrpData
