@@ -16,6 +16,7 @@ import {
 import Tr from '@/i18n/translation'
 import { ref } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
+import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const SIMPLE_MENU = [
   {
@@ -175,6 +176,7 @@ const closeMenu = () => {
               </QList>
             </QBtnDropdown>
           </template>
+          <!-- <LanguageSwitcher /> -->
         </nav>
 
         <!-- Mobile hamburger -->
@@ -239,6 +241,7 @@ const closeMenu = () => {
                   }}</QItemLabel>
                 </QItemSection>
               </QItem>
+              <!-- <LanguageSwitcher /> -->
             </QList>
           </QExpansionItem>
         </template>
