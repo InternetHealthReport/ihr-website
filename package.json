@@ -25,6 +25,7 @@
     "plotly.js-dist": "^3.4.0",
     "quasar": "^2.18.7",
     "swagger-ui-dist": "^5.32.1",
+    "three": "^0.184.0",
     "v-network-graph": "^0.9.22",
     "vue": "^3.5.30",
     "vue-i18n": "^11.3.0",

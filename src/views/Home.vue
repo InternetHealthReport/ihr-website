@@ -1,386 +1,493 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QCard, QCardSection, QAvatar, QIcon, QBtn } from 'quasar'
-import { ref } from 'vue'
+import { QCard, QCardSection, QIcon, QBtn } from 'quasar'
 import Tr from '@/i18n/translation'
 import UserInfo from '@/components/UserInfo.vue'
-import DOMPurify from 'dompurify'
+import Globe from '@/components/Globe.vue'
 
-const GRAPHS_TYPES = [
+const ANALYSIS_MODULES = [
   {
+    key: 'asInterdependence',
     name: 'homePage.analysisModules.asInterdependence',
     icon: 'fas fa-project-diagram',
-    docsQuery: {}
+    image: '/imgs/hegemony_AS2497.png'
   },
   {
+    key: 'networkDelay',
     name: 'homePage.analysisModules.networkDelay',
     icon: 'fas fa-shipping-fast',
-    docsQuery: {}
+    image: '/imgs/netdelay_AS24482.png'
   },
   {
+    key: 'delayAndForwarding',
     name: 'homePage.analysisModules.delayAndForwarding',
     icon: 'fas fa-exchange-alt',
-    docsQuery: {}
+    image: '/imgs/forwarding_AS174.png'
   },
   {
+    key: 'disco',
     name: 'homePage.analysisModules.disco',
     icon: 'fas fa-plug',
-    docsQuery: {}
+    image: '/imgs/disco_AS16322.png'
   }
 ]
 
+const REPORTS = [
+  { key: 'global', icon: 'fas fa-globe', route: 'global-report' },
+  { key: 'country', icon: 'fas fa-flag', route: 'country' },
+  { key: 'network', icon: 'fas fa-network-wired', route: 'network' },
+  { key: 'hostname', icon: 'fas fa-server', route: 'hostname' },
+  { key: 'tag', icon: 'fas fa-tags', route: 'tag' },
+  { key: 'rank', icon: 'fas fa-chart-bar', route: 'rank' }
+]
+
+const TOOLS = [
+  { key: 'metis', icon: 'fas fa-map-marked-alt', route: 'metis' },
+  { key: 'bgpMonitor', icon: 'fas fa-broadcast-tower', route: 'bgp-monitor' },
+  { key: 'traceroute', icon: 'fas fa-route', route: 'traceroute-monitor' }
+]
+
 const ORGANIZATIONS = [
-  {
-    name: 'iij',
-    logo: '/imgs/IIJ-logo.svg',
-    url: 'https://www.iij.ad.jp/en/'
-  },
-  {
-    name: 'ripe',
-    logo: '/imgs/ripe-logo.png',
-    url: 'https://www.ripe.net/'
-  },
+  { name: 'iij', logo: '/imgs/IIJ-logo.svg', url: 'https://www.iij.ad.jp/en/', height: 60 },
+  { name: 'ripe', logo: '/imgs/RIPE_NCC_logo.svg', url: 'https://www.ripe.net/', height: 45 },
   {
     name: 'gsoc',
     logo: '/imgs/gsoc-logo.svg',
-    url: 'https://summerofcode.withgoogle.com/'
+    url: 'https://summerofcode.withgoogle.com/',
+    height: 60
   },
-  {
-    name: 'routeviews',
-    logo: '/imgs/rv-logo.png',
-    url: 'http://www.routeviews.org/'
-  },
+  { name: 'routeviews', logo: '/imgs/rv-logo.png', url: 'http://www.routeviews.org/', height: 80 },
   {
     name: 'isoc',
     logo: '/imgs/isoc-logo.png',
-    url: 'https://www.internetsociety.org/'
+    url: 'https://www.internetsociety.org/',
+    height: 80
   },
   {
     name: 'manrs',
-    logo: '/imgs/manrs-logo.jpg',
-    url: 'https://www.manrs.org/'
+    logo: '/imgs/MANRS_logo_Horz_RGB_Dark.png',
+    url: 'https://www.manrs.org/',
+    height: 75
   },
   {
     name: 'apnic',
     logo: '/imgs/apnic-foundation-logo.png',
-    url: 'https://apnic.foundation/'
+    url: 'https://apnic.foundation/',
+    height: 120
   },
   {
     name: 'cloudflare',
     logo: '/imgs/cloudflare-logo.png',
-    url: 'https://www.cloudflare.com/'
+    url: 'https://www.cloudflare.com/',
+    height: 70
   },
-  {
-    name: 'fastly',
-    logo: '/imgs/fastly-logo.svg',
-    url: 'https://www.fastly.com/'
-  }
+  { name: 'fastly', logo: '/imgs/fastly-logo.svg', url: 'https://www.fastly.com/', height: 50 }
 ]
-
-const PLACEHOLDER_VALUES = {
-  asPaper:
-    "<a href='https://www.iijlab.net/en/members/romain/pdf/romain_pam2018.pdf' target='_blank'>",
-  close: '</a>'
-  /*
-  ripe: "<a href='https://atlas.ripe.net/' target='_blank'>RIPE Atlas</a>",
-  bgpstream:
-    "<a href='https://bgpstream.caida.org/' target='_blank'>BGPstream</a>",
-  delayAndForwardingPaper:
-    "<a href='https://conferences.sigcomm.org/imc/2017/papers/imc17-final106.pdf' target='_blank'>",
-  discoPaper:
-    "<a href='https://tma.ifip.org/wordpress/wp-content/uploads/2017/06/tma2017_paper41.pdf' target='_blank'>"
-  */
-}
-
-const props = defineProps({
-  showSidebar: {
-    type: Boolean,
-    default: false
-  }
-})
-
-const graphTypes = ref(GRAPHS_TYPES)
-const placeholderValues = ref(PLACEHOLDER_VALUES)
-const organizations = ref(ORGANIZATIONS)
 </script>
 
 <template>
   <div id="IHR_home">
-    <div id="IHR_actions" class="row">
-      <div class="col">
-        <div>Internet Health Report</div>
-        <div class="IHR_actions-area">
-          <QBtn
-            outline
-            style="width: inherit; font-size: large"
-            :to="Tr.i18nRoute({ name: 'global-report' })"
-          >
-            {{ $t('homePage.globalReport.name') }}
-          </QBtn>
-          <div class="ihr-home-line"></div>
-          <UserInfo />
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__bg" />
+      <div class="hero__inner row items-center q-col-gutter-lg">
+        <div class="col-12 col-md-7">
+          <h1 class="hero__headline">{{ $t('homePage.hero.headline') }}</h1>
+          <p class="hero__subtitle">{{ $t('homePage.hero.subtitle') }}</p>
+          <div class="hero__actions-wrap">
+            <div class="row q-gutter-sm">
+              <QBtn
+                unelevated
+                color="white"
+                text-color="dark"
+                :label="$t('homePage.hero.globalReport')"
+                :to="Tr.i18nRoute({ name: 'global-report' })"
+                no-caps
+                size="lg"
+                class="hero__btn"
+              />
+              <QBtn
+                outline
+                color="white"
+                :label="$t('homePage.hero.exploreNetworks')"
+                :to="Tr.i18nRoute({ name: 'network' })"
+                no-caps
+                size="lg"
+                class="hero__btn"
+              />
+            </div>
+            <UserInfo class="q-mt-lg full-width" />
+          </div>
+        </div>
+        <div class="col-12 col-md-5 hero__globe">
+          <Globe />
         </div>
       </div>
-    </div>
+    </section>
 
-    <div
-      class="IHR_home-description-main"
-      v-html="DOMPurify.sanitize($t('homePage.globalReport.description'))"
-    ></div>
-    <div class="IHR_home-description-main">
-      See latest alarms in the
-      <RouterLink :to="Tr.i18nRoute({ name: 'global-report' })"> global report </RouterLink>
-      and network metrics in
-      <RouterLink :to="Tr.i18nRoute({ name: 'network' })"> network reports </RouterLink>.
-    </div>
+    <!-- Stats -->
+    <section class="stats">
+      <div class="row justify-around q-col-gutter-md content-width">
+        <div
+          v-for="s in ['networks', 'countries', 'dataSources', 'monitoring']"
+          :key="s"
+          class="text-center"
+          style="min-width: 130px"
+        >
+          <span class="stats__number">{{ $t(`homePage.stats.${s}`) }}</span>
+          <span class="stats__label">{{ $t(`homePage.stats.${s}Label`) }}</span>
+        </div>
+      </div>
+    </section>
 
-    <div class="row wrap justify-center q-gutter-md IHR_home-description-main">
-      <QCard v-for="graphT in graphTypes" :key="graphT.name" class="analysis-modules">
-        <QCardSection class="bg-primary text-white q-pa-sm">
-          <div>
-            <QAvatar :icon="graphT.icon" />
-            {{ $t(`${graphT.name}.title`) }}
-          </div>
-        </QCardSection>
-        <QCardSection class="q-pa-xs">
-          <div
-            class="IHR_home-description_text"
-            v-html="DOMPurify.sanitize($t(`${graphT.name}.description`))"
-          ></div>
-          <div class="IHR_home-description_text IHR_home-description-link">
-            <RouterLink
-              :to="
-                Tr.i18nRoute({
-                  name: 'documentation',
-                  hash: $t(`${graphT.name}.docHash`)
-                })
-              "
-            >
-              {{ $t('homePage.learnmore') }} {{ $t(`${graphT.name}.title`) }}
+    <!-- Features (alternating rows) -->
+    <section class="content-width q-pa-md q-pt-lg">
+      <h2 class="section-title">{{ $t('homePage.features.title') }}</h2>
+      <div
+        v-for="(mod, i) in ANALYSIS_MODULES"
+        :key="mod.key"
+        class="feature-row row items-center q-col-gutter-xl"
+        :class="{ 'flex-row-reverse': i % 2 !== 0 }"
+      >
+        <div class="col-12 col-md-7">
+          <h2 class="feature-row__title">{{ $t(`${mod.name}.title`) }}</h2>
+          <p class="feature-row__desc">{{ $t(`${mod.name}.description`) }}</p>
+          <RouterLink
+            :to="Tr.i18nRoute({ name: 'documentation', hash: $t(`${mod.name}.docHash`) })"
+            class="feature-row__link"
+          >
+            {{ $t('homePage.learnmore') }}{{ $t(`${mod.name}.title`) }}
+            <QIcon name="fas fa-chevron-right" size="0.7rem" class="q-ml-xs" />
+          </RouterLink>
+        </div>
+        <div class="col-12 col-md-5">
+          <img :src="mod.image" :alt="$t(`${mod.name}.title`)" class="feature-row__img" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Reports -->
+    <section class="section--light q-pa-xl">
+      <div class="content-width">
+        <h2 class="section-title">{{ $t('homePage.reports.title') }}</h2>
+        <div class="row q-col-gutter-md">
+          <div v-for="report in REPORTS" :key="report.key" class="col-12 col-sm-6 col-md-4">
+            <RouterLink :to="Tr.i18nRoute({ name: report.route })" class="card-link">
+              <QCard flat bordered class="card-hover full-height">
+                <QCardSection class="text-center q-py-lg">
+                  <QIcon :name="report.icon" size="2rem" color="primary" class="q-mb-sm" />
+                  <div class="card-title">{{ $t(`homePage.reports.${report.key}.name`) }}</div>
+                  <div class="card-desc">
+                    {{ $t(`homePage.reports.${report.key}.description`) }}
+                  </div>
+                </QCardSection>
+              </QCard>
             </RouterLink>
           </div>
-        </QCardSection>
-      </QCard>
-    </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- <div class="IHR_section">
-      <QCard class="IHR_tweets-types">
-        <QCardSection class="bg-white text-primary q-pa-sm">
-          <div class="text-h2">
-            <QAvatar icon="fab fa-twitter"></QAvatar>
-            {{ $t('homePage.ihrTweets.title') }}
-          </div>
-        </QCardSection>
-        <QCardSection class="q-pa-xs">
+    <!-- Tools -->
+    <section class="content-width q-pa-xl">
+      <h2 class="section-title">{{ $t('homePage.tools.title') }}</h2>
+      <div class="row q-col-gutter-md">
+        <div v-for="tool in TOOLS" :key="tool.key" class="col-12 col-sm-4">
+          <RouterLink :to="Tr.i18nRoute({ name: tool.route })" class="card-link">
+            <QCard flat bordered class="card-hover full-height">
+              <QCardSection class="text-center q-py-lg">
+                <QIcon :name="tool.icon" size="2.5rem" color="primary" class="q-mb-md" />
+                <div class="card-title">{{ $t(`homePage.tools.${tool.key}.name`) }}</div>
+                <div class="card-desc">{{ $t(`homePage.tools.${tool.key}.description`) }}</div>
+              </QCardSection>
+            </QCard>
+          </RouterLink>
+        </div>
+      </div>
+    </section>
 
-        </QCardSection>
-      </QCard>
-    </div> -->
-
-    <div class="IHR_section">
-      <h2 class="text-h2">
-        <QIcon name="fa fa-heart" />
-        {{ $t('homePage.ack.title') }}
-      </h2>
-
-      <div class="row wrap justify-center">
-        <div v-for="(org, index) in organizations" :key="index">
-          <a :href="org.url" target="_blank">
-            <div class="IHR_ack-logo">
-              <span></span>
-              <img :src="org.logo" :alt="org.name" :id="org.name" />
-            </div>
+    <!-- Partners -->
+    <section class="section--light q-pa-xl">
+      <h2 class="section-title">{{ $t('homePage.ack.title') }}</h2>
+      <div class="marquee">
+        <div class="marquee__track">
+          <a
+            v-for="org in [...ORGANIZATIONS, ...ORGANIZATIONS]"
+            :key="org.name + Math.random()"
+            :href="org.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="marquee__logo"
+          >
+            <img :src="org.logo" :alt="org.name" :style="{ height: org.height + 'px' }" />
           </a>
         </div>
       </div>
-    </div>
-    <!--<q-drawer :value="hideSidebar" side="left" show-if-above bordered>-->
-    <!--<q-scroll-area class="fit">-->
-    <!--</q-scroll-area>-->
-    <!--</q-drawer>-->
+    </section>
   </div>
 </template>
 
-<style>
-.ihr-home-line {
-  width: 100%;
-  border-bottom: 1px solid #fff;
-  margin-bottom: 10px;
+<style scoped>
+/*
+ * Overrides for main.css globals (h1/h2/h3 !important, p:first-letter, a color).
+ * Quasar utility classes used where possible; custom CSS only where needed.
+ */
+
+/* Layout helper */
+.content-width {
+  max-width: 1200px;
+  margin: 0 auto;
 }
-#IHR_actions {
-  margin-bottom: 5rem;
-  max-width: 100%;
-  height: 440px;
-  background-color: #000;
-  background-image: url('/imgs/global-banner.png');
-  background-repeat: no-repeat;
-  background-position: right top;
-  background-size: contain;
-}
-@media screen and (max-width: 1024px) {
-  #IHR_actions {
-    background-position: center center;
-    background-size: cover;
-  }
-}
-#IHR_actions > div {
-  height: 100%;
-}
-#IHR_actions > div:first-child {
-  color: #fff;
-  font-size: 50px;
-  text-align: left;
-  padding-top: 3.375rem;
-  padding-left: 5rem;
-  display: inline-block;
-  text-shadow: 0 0 8px #000;
-}
-@media screen and (max-width: 600px) {
-  #IHR_actions > div:first-child {
-    padding-top: 2.5rem;
-    padding-left: 0;
-    text-align: center;
-    font-size: 2rem;
-  }
-}
-#IHR_graphs-types {
-  width: 100%;
-}
-#IHR_graphs-types > div {
-  background-color: #fff;
-  padding: 1.6em;
-  border: #808080 solid 1px;
-}
-#IHR_graphs-types > div > h2 {
-  font-weight: 400;
-  margin-bottom: 0.3125rem;
-  font-size: 2.375rem;
-}
-@media screen and (max-width: 600px) {
-  #IHR_graphs-types > div > h2 {
-    font-size: 1.8125rem;
-  }
-}
-#IHR_graphs-types > div > h2:first-letter {
-  text-transform: uppercase;
-}
-.IHR_actions-area {
-  width: 100%;
-  min-width: 330px;
-  max-width: fit-content;
-}
-.IHR_home-description_text {
-  width: 90%;
-  margin: 2.5rem auto;
-  text-align: left;
-  padding: 0 1rem;
-  font-size: 1.1875rem;
-}
-@media screen and (max-width: 600px) {
-  .IHR_home-description_text {
-    font-size: 1rem;
-  }
-}
-#IHR_graphs-types .IHR_home-description_text {
-  text-align: justify;
-}
-.IHR_home-description-main {
-  font-size: 1.5rem;
-  margin: 2.5rem auto !important;
-  text-align: center;
-  width: 85%;
-  max-width: 1450px;
-}
-@media screen and (max-width: 600px) {
-  .IHR_home-description-main {
-    font-size: 1.1875rem;
-  }
-}
-.IHR_home-description-link,
-.IHR_home-description_text-link {
+
+/* ===== HERO ===== */
+.hero {
   position: relative;
-  text-align: right;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a2327 0%, #263238 40%, #1e282e 100%);
+  padding: 5rem 2rem 2.5rem;
+  color: #fff;
+  min-height: 540px;
 }
-.IHR_section {
-  margin: 5rem auto 40px auto;
-  width: 85%;
-  font-size: 1.5rem;
-  text-align: center;
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 70% 40%,
+    rgba(38, 50, 56, 0.15) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
 }
-.IHR_section > h2 {
-  font-size: 2.6875rem;
+.hero__inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  z-index: 1;
 }
-@media screen and (max-width: 600px) {
-  .IHR_section > h2 {
-    font-size: 1.8125rem;
+#IHR_home .hero__headline {
+  font-size: 3.2rem !important;
+  font-weight: 800 !important;
+  line-height: 1.12;
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.025em;
+  color: #fff;
+}
+#IHR_home .hero__subtitle {
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 2rem;
+  max-width: 520px;
+}
+#IHR_home .hero__subtitle::first-letter {
+  text-transform: none;
+}
+.hero__actions-wrap {
+  width: fit-content;
+}
+.hero__btn {
+  font-weight: 600 !important;
+  border-radius: 8px;
+  padding: 0 1.75rem;
+}
+.hero__globe {
+  aspect-ratio: 1;
+}
+@media (max-width: 960px) {
+  .hero {
+    padding: 3.5rem 1.5rem 2rem;
+    min-height: auto;
+  }
+  .hero__inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .hero__inner > :first-child {
+    order: 2;
+  }
+  #IHR_home .hero__headline {
+    font-size: 2.25rem !important;
+  }
+  .hero__subtitle {
+    max-width: 100%;
+  }
+  .hero__actions-wrap {
+    margin: 0 auto;
+  }
+  .hero__globe {
+    width: 320px;
+    max-width: 100%;
+    order: -1;
   }
 }
-.IHR_ack-logo {
-  margin-left: auto;
-  margin-right: auto;
+
+/* ===== STATS ===== */
+.stats {
+  background: #f8fafc;
+  padding: 2.5rem 2rem;
+}
+.stats__number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #263238;
+  line-height: 1.2;
+}
+.stats__label {
+  display: block;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-top: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ===== SHARED ===== */
+.section--light {
+  background: #f8fafc;
+}
+#IHR_home .section-title {
+  font-size: 2.125rem !important;
+  font-weight: 700 !important;
   text-align: center;
-  height: 200px;
-  width: 500px;
+  margin: 0 0 2.5rem;
+  color: #263238;
+}
+
+/* ===== FEATURES (alternating rows) ===== */
+.feature-row {
+  padding: 4rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+.feature-row:last-child {
+  border-bottom: none;
+}
+#IHR_home .feature-row__title {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+  color: #263238;
+  margin: 0 0 1rem;
+  line-height: 1.25;
+}
+#IHR_home .feature-row__desc {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #475569;
+  margin: 0 0 1.5rem;
+}
+#IHR_home .feature-row__desc::first-letter {
+  text-transform: none;
+}
+.feature-row__link {
+  color: #263238 !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.feature-row__link:hover {
+  text-decoration: underline;
+}
+.feature-row__img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+@media (max-width: 768px) {
+  .feature-row,
+  .flex-row-reverse {
+    flex-direction: column;
+    padding: 2.5rem 0;
+  }
+  #IHR_home .feature-row__title {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* ===== CARDS (reports & tools) ===== */
+.card-link {
+  text-decoration: none !important;
+  color: inherit;
+}
+#IHR_home .card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #263238;
+  margin-bottom: 0.35rem;
+}
+#IHR_home .card-desc {
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.55;
+}
+#IHR_home .card-desc::first-letter {
+  text-transform: none;
+}
+.card-hover {
+  border-radius: 10px !important;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+  cursor: pointer;
+}
+.card-hover:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+.card-arrow {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.card-hover:hover .card-arrow {
+  opacity: 1;
+}
+
+/* ===== PARTNERS MARQUEE ===== */
+.marquee {
   overflow: hidden;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
 }
-.IHR_ack-logo > span {
-  display: inline-block;
-  vertical-align: middle;
-  height: 100%;
+.marquee__track {
+  display: flex;
+  align-items: stretch;
+  gap: 4rem;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
 }
-.IHR_ack-logo > img {
-  vertical-align: middle;
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
+}
+.marquee__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 120px;
+}
+.marquee__logo img {
   width: auto;
-  height: auto;
-  object-fit: contain;
 }
-.IHR_ack-logo > img#iij {
-  max-height: 200px;
-  max-width: 350px;
-}
-.IHR_ack-logo > img#ripe {
-  max-height: 200px;
-  max-width: 300px;
-}
-.IHR_ack-logo > img#gsoc {
-  max-height: 200px;
-  max-width: 400px;
-}
-.IHR_ack-logo > img#routeviews {
-  max-height: 200px;
-  max-width: 100px;
-}
-.IHR_ack-logo > img#isoc {
-  max-height: 200px;
-  max-width: 300px;
-}
-.IHR_ack-logo > img#manrs {
-  max-height: 200px;
-  max-width: 300px;
-}
-.IHR_ack-logo > img#apnic {
-  max-height: 200px;
-  max-width: 200px;
-}
-.IHR_ack-logo > img#cloudflare {
-  max-height: 200px;
-  max-width: 250px;
-}
-.IHR_ack-logo > img#fastly {
-  max-height: 200px;
-  max-width: 170px;
-}
-.IHR_ack-logo > img:hover {
-  transform: scale(1.1);
-}
-.analysis-modules {
-  max-width: 600px;
-  text-align: left;
-  border-radius: 15px !important;
-}
-@media (max-width: 1411px) {
-  .analysis-modules {
-    margin-left: 0;
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
 </style>

@@ -43,33 +43,6 @@ const scrollToTop = () => {
 </template>
 
 <style>
-.IHR_menu-entries a,
-.IHR_menu-entries button {
-  font-size: 1rem;
-  color: #fff;
-  text-decoration: none;
-  text-transform: capitalize;
-  font-weight: 700;
-}
-.IHR_menu-entries button {
-  box-shadow: none;
-}
-.IHR_footer a {
-  color: #fff;
-}
-.IHR_footer afirst-child {
-  border-left: none;
-}
-.IHR_copyright > div {
-  margin: 0.5rem 0;
-}
-.IHR_external-links {
-  font-size: 3em;
-  text-decoration: none;
-}
-.IHR_external-links a {
-  color: #fff;
-}
 .IHR_scroll-btn {
   position: fixed;
   bottom: 20px;

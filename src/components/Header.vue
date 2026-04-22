@@ -13,6 +13,8 @@ import {
   QDrawer,
   QExpansionItem,
   QBadge,
+  QIcon,
+  QDialog,
   debounce
 } from 'quasar'
 import Tr from '@/i18n/translation'
@@ -127,10 +129,7 @@ const SIMPLE_MENU = [
 
 const simpleMenu = ref(SIMPLE_MENU)
 const leftDrawerOpen = ref(false)
-
-// onMounted(() => {
-//   document.title = 'Internet Health Report'
-// })
+const searchOpen = ref(false)
 
 const debounceFunc = () => {
   debounce(() => {
@@ -174,27 +173,34 @@ watch(simpleMenu, () => {
 </script>
 
 <template>
-  <QHeader elevated primary>
-    <QToolbar class="q-py-sm q-px-lg row">
+  <QHeader elevated class="IHR_header">
+    <QToolbar class="q-py-none q-px-lg row IHR_toolbar">
       <div class="col-12 row no-wrap items-center">
-        <QItem id="IHR_home-button" role="button">
-          <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
+        <!-- Logo + Wordmark -->
+        <QItem id="IHR_home-button" role="button" class="q-pa-none">
+          <RouterLink
+            :to="Tr.i18nRoute({ name: 'home' })"
+            class="row items-center no-wrap"
+            style="text-decoration: none"
+          >
             <QBtn
               round
               dense
               flat
               :ripple="false"
               no-caps
-              size="22px"
+              size="20px"
               aria-label="IHR Logo - Go to Home"
             >
-              <img src="/imgs/ihr_logo.svg" style="width: 45px" alt="IHR Logo" />
+              <img src="/imgs/ihr_logo.svg" style="width: 38px" alt="IHR Logo" />
             </QBtn>
+            <span class="IHR_wordmark gt-xs q-ml-sm">IHR</span>
           </RouterLink>
         </QItem>
-        <SearchBar class="IHR_search-box col-4" />
+
+        <!-- Desktop Nav -->
         <div
-          class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md"
+          class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto"
         >
           <QBtnGroup v-for="(item, index) in simpleMenu" :key="item.entryName" flat>
             <QBtn
@@ -214,7 +220,7 @@ watch(simpleMenu, () => {
               @mouseout.enter="toggleValue(index, 1, false)"
             >
               <QList
-                class="rounded-borders text-white bg-primary"
+                class="rounded-borders text-white IHR_dropdown-list"
                 bordered
                 separator
                 padding
@@ -240,7 +246,7 @@ watch(simpleMenu, () => {
                     <QItemLabel class="text-bold">
                       {{ $t(option.entryName) }}
                     </QItemLabel>
-                    <QItemLabel class="text-grey" caption lines="2">
+                    <QItemLabel class="text-grey-5" caption lines="2">
                       {{ $t(option.summary) }}
                     </QItemLabel>
                   </QItemSection>
@@ -248,9 +254,21 @@ watch(simpleMenu, () => {
               </QList>
             </QBtnDropdown>
           </QBtnGroup>
-          <!-- <LanguageSwitcher /> -->
         </div>
-        <div class="lt-md">
+
+        <!-- Search Icon (Desktop) -->
+        <QBtn
+          flat
+          round
+          dense
+          icon="fas fa-search"
+          class="gt-sm q-ml-sm"
+          @click="searchOpen = true"
+          aria-label="Search"
+        />
+
+        <!-- Mobile Hamburger -->
+        <div class="lt-md q-ml-auto">
           <q-btn
             flat
             dense
@@ -261,11 +279,28 @@ watch(simpleMenu, () => {
           />
         </div>
       </div>
-      <!--Log in /Log out stuff here-->
     </QToolbar>
-    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
+
+    <!-- Search Dialog -->
+    <QDialog v-model="searchOpen" position="top" seamless>
+      <div class="IHR_search-overlay q-pa-md">
+        <div class="row items-center" style="max-width: 700px; margin: 0 auto">
+          <SearchBar class="col" />
+          <QBtn
+            flat
+            round
+            dense
+            icon="close"
+            class="q-ml-sm text-white"
+            @click="searchOpen = false"
+          />
+        </div>
+      </div>
+    </QDialog>
+
+    <!-- Mobile Drawer -->
+    <QDrawer v-model="leftDrawerOpen" bordered class="IHR_drawer">
       <QList class="q-pt-md">
-        <!-- <QItemLabel header>Essential Links</QItemLabel> -->
         <template v-for="(item, index) in simpleMenu" :key="index">
           <QItem v-if="!item.options" flat class="q-pa-none">
             <QBtn
@@ -278,7 +313,6 @@ watch(simpleMenu, () => {
               style="min-height: 48px; padding: 12px 16px; font-size: 16px"
             />
           </QItem>
-
           <QExpansionItem
             v-else
             :label="$t(item.entryName)"
@@ -287,7 +321,6 @@ watch(simpleMenu, () => {
             style="font-size: 16px"
             header-class="text-white text-uppercase text-weight-medium q-py-md"
           >
-            <!-- Submenu items -->
             <QList padding>
               <QItem
                 v-for="option in item.options"
@@ -313,7 +346,6 @@ watch(simpleMenu, () => {
                   </QItemLabel>
                 </QItemSection>
               </QItem>
-              <!-- <LanguageSwitcher /> -->
             </QList>
           </QExpansionItem>
         </template>
@@ -323,35 +355,77 @@ watch(simpleMenu, () => {
 </template>
 
 <style>
-.IHR_minimum-width {
-  min-width: 640px !important;
+/* Header base */
+.IHR_header {
+  background: rgba(20, 20, 30, 0.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
+.IHR_toolbar {
+  min-height: 56px;
+  max-height: 56px;
+}
+
+/* Wordmark */
+.IHR_wordmark {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+/* Nav entries */
 .IHR_menu-entries a,
 .IHR_menu-entries button {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: #fff;
   text-decoration: none;
   text-transform: capitalize;
-  margin-right: 10px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 .IHR_menu-entries button {
   box-shadow: none;
 }
-.IHR_dropdown-menu {
-  background-color: #263238;
+
+/* Dropdown */
+.IHR_dropdown-list {
+  background: rgba(20, 20, 30, 0.96) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
-.IHR_dropdown-menu a {
-  font-size: 1rem;
+
+/* Active route */
+.IHR_active-route {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px;
+}
+
+/* Search overlay */
+.IHR_search-overlay {
+  width: 100vw;
+  background: rgba(20, 20, 30, 0.97);
+  backdrop-filter: blur(12px);
+}
+
+/* Drawer */
+.IHR_drawer {
+  background: rgba(20, 20, 30, 0.98) !important;
+}
+.IHR_drawer .q-btn {
   color: #fff;
-  text-decoration: none;
   text-transform: capitalize;
-  margin-right: 10px;
-  font-weight: 700;
 }
+
+/* Home button */
 #IHR_home-button {
-  padding: 0px 13px 0px 2px;
+  padding: 0px 4px 0px 0px;
+  min-width: auto;
 }
+
+/* Legacy compat */
 #IHR_forgotten-password {
   white-space: nowrap;
 }
@@ -365,18 +439,10 @@ watch(simpleMenu, () => {
 #IHR_last-element {
   height: 50px;
 }
-.IHR_active-route {
-  background: #ffffff26 !important;
-  border-radius: 4px;
-}
 
 @media screen and (max-width: 1024px) {
   .col-12.row.no-wrap.items-center {
-    justify-content: space-around;
-  }
-
-  .IHR_search-box.col-4 {
-    flex-grow: 1;
+    justify-content: space-between;
   }
 }
 </style>
