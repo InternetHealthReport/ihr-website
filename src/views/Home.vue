@@ -218,8 +218,8 @@ const ORGANIZATIONS = [
       <div class="marquee content-width">
         <div class="marquee__track">
           <a
-            v-for="org in [...ORGANIZATIONS, ...ORGANIZATIONS]"
-            :key="org.name + Math.random()"
+            v-for="(org, i) in [...ORGANIZATIONS, ...ORGANIZATIONS]"
+            :key="org.name + '-' + i"
             :href="org.url"
             target="_blank"
             rel="noopener noreferrer"
@@ -468,6 +468,7 @@ const ORGANIZATIONS = [
   gap: 4rem;
   width: max-content;
   animation: marquee-scroll 30s linear infinite;
+  will-change: transform;
 }
 .marquee:hover .marquee__track {
   animation-play-state: paused;
