@@ -8,7 +8,7 @@ import { version } from '../../package.json'
 <template>
   <QFooter elevated class="ihr-footer text-white" style="z-index: 999">
     <!-- Main footer content -->
-    <div class="ihr-footer__inner">
+    <div class="ihr-footer__inner content-width">
       <!-- Col 1: Logo + Social -->
       <div class="ihr-footer__brand">
         <RouterLink :to="Tr.i18nRoute({ name: 'home' })" class="ihr-footer__logo-link">
@@ -152,7 +152,7 @@ import { version } from '../../package.json'
 
     <!-- Bottom bar -->
     <div class="ihr-footer__bottom">
-      <div class="ihr-footer__bottom-inner">
+      <div class="ihr-footer__bottom-inner content-width">
         <span class="ihr-footer__copyright">
           <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
             <img
@@ -179,13 +179,11 @@ import { version } from '../../package.json'
 <style>
 /* Footer base */
 .ihr-footer {
-  background: #0f172a !important;
+  background: #263238 !important;
 }
 
 /* Inner grid */
 .ihr-footer__inner {
-  max-width: 1200px;
-  margin: 0 auto;
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
   gap: 2rem;
@@ -276,8 +274,6 @@ import { version } from '../../package.json'
   padding: 1rem 2rem;
 }
 .ihr-footer__bottom-inner {
-  max-width: 1200px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;

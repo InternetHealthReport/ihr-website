@@ -90,52 +90,56 @@ const ORGANIZATIONS = [
     <!-- Hero -->
     <section class="hero">
       <div class="hero__bg" />
-      <div class="hero__inner row items-center q-col-gutter-lg">
-        <div class="col-12 col-md-7">
-          <h1 class="hero__headline">{{ $t('homePage.hero.headline') }}</h1>
-          <p class="hero__subtitle">{{ $t('homePage.hero.subtitle') }}</p>
-          <div class="hero__actions-wrap">
-            <div class="row q-gutter-sm">
-              <QBtn
-                unelevated
-                color="white"
-                text-color="dark"
-                :label="$t('homePage.hero.globalReport')"
-                :to="Tr.i18nRoute({ name: 'global-report' })"
-                no-caps
-                size="lg"
-                class="hero__btn"
-              />
-              <QBtn
-                outline
-                color="white"
-                :label="$t('homePage.hero.exploreNetworks')"
-                :to="Tr.i18nRoute({ name: 'network' })"
-                no-caps
-                size="lg"
-                class="hero__btn"
-              />
+      <div class="hero__inner content-width">
+        <div class="row items-center q-col-gutter-lg">
+          <div class="col-12 col-md-7">
+            <h1 class="hero__headline">{{ $t('homePage.hero.headline') }}</h1>
+            <p class="hero__subtitle">{{ $t('homePage.hero.subtitle') }}</p>
+            <div class="hero__actions-wrap">
+              <div class="row q-gutter-sm">
+                <QBtn
+                  unelevated
+                  color="white"
+                  text-color="dark"
+                  :label="$t('homePage.hero.globalReport')"
+                  :to="Tr.i18nRoute({ name: 'global-report' })"
+                  no-caps
+                  size="lg"
+                  class="hero__btn"
+                />
+                <QBtn
+                  outline
+                  color="white"
+                  :label="$t('homePage.hero.exploreNetworks')"
+                  :to="Tr.i18nRoute({ name: 'network' })"
+                  no-caps
+                  size="lg"
+                  class="hero__btn"
+                />
+              </div>
+              <UserInfo class="q-mt-lg full-width" />
             </div>
-            <UserInfo class="q-mt-lg full-width" />
           </div>
-        </div>
-        <div class="col-12 col-md-5 hero__globe">
-          <Globe />
+          <div class="col-12 col-md-5 hero__globe">
+            <Globe />
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Stats -->
     <section class="stats">
-      <div class="row justify-around q-col-gutter-md content-width">
-        <div
-          v-for="s in ['networks', 'countries', 'dataSources', 'monitoring']"
-          :key="s"
-          class="text-center"
-          style="min-width: 130px"
-        >
-          <span class="stats__number">{{ $t(`homePage.stats.${s}`) }}</span>
-          <span class="stats__label">{{ $t(`homePage.stats.${s}Label`) }}</span>
+      <div class="content-width">
+        <div class="row justify-around q-col-gutter-md">
+          <div
+            v-for="s in ['networks', 'countries', 'dataSources', 'monitoring']"
+            :key="s"
+            class="text-center"
+            style="min-width: 130px"
+          >
+            <span class="stats__number">{{ $t(`homePage.stats.${s}`) }}</span>
+            <span class="stats__label">{{ $t(`homePage.stats.${s}Label`) }}</span>
+          </div>
         </div>
       </div>
     </section>
@@ -209,7 +213,7 @@ const ORGANIZATIONS = [
     <!-- Partners -->
     <section class="section--light q-pa-xl">
       <h2 class="section-title">{{ $t('homePage.ack.title') }}</h2>
-      <div class="marquee">
+      <div class="marquee content-width">
         <div class="marquee__track">
           <a
             v-for="org in [...ORGANIZATIONS, ...ORGANIZATIONS]"
@@ -233,18 +237,14 @@ const ORGANIZATIONS = [
  * Quasar utility classes used where possible; custom CSS only where needed.
  */
 
-/* Layout helper */
-.content-width {
-  max-width: 1200px;
-  margin: 0 auto;
-}
+/* Layout helper now in main.css */
 
 /* ===== HERO ===== */
 .hero {
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #1a2327 0%, #263238 40%, #1e282e 100%);
-  padding: 5rem 2rem 2.5rem;
+  padding: 5rem 0 2.5rem;
   color: #fff;
   min-height: 540px;
 }
@@ -260,9 +260,9 @@ const ORGANIZATIONS = [
 }
 .hero__inner {
   position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
   z-index: 1;
+  width: 100%;
+  padding: 0 2rem;
 }
 #IHR_home .hero__headline {
   font-size: 3.2rem !important;
@@ -451,8 +451,6 @@ const ORGANIZATIONS = [
 .marquee {
   overflow: hidden;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
   -webkit-mask-image: linear-gradient(
     to right,

@@ -27,6 +27,12 @@ p:first-letter {
   text-transform: uppercase;
 }
 
+.content-width {
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .IHR_label {
   text-align: right;
   font-weight: 500;

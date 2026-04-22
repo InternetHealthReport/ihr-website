@@ -14,7 +14,6 @@ import {
   QExpansionItem,
   QBadge,
   QIcon,
-  QDialog,
   debounce
 } from 'quasar'
 import Tr from '@/i18n/translation'
@@ -129,7 +128,6 @@ const SIMPLE_MENU = [
 
 const simpleMenu = ref(SIMPLE_MENU)
 const leftDrawerOpen = ref(false)
-const searchOpen = ref(false)
 
 const debounceFunc = () => {
   debounce(() => {
@@ -174,29 +172,24 @@ watch(simpleMenu, () => {
 
 <template>
   <QHeader elevated class="IHR_header">
-    <QToolbar class="q-py-none q-px-lg row IHR_toolbar">
+    <QToolbar class="q-py-none q-px-lg row IHR_toolbar content-width">
       <div class="col-12 row no-wrap items-center">
         <!-- Logo + Wordmark -->
         <QItem id="IHR_home-button" role="button" class="q-pa-none">
           <RouterLink
             :to="Tr.i18nRoute({ name: 'home' })"
-            class="row items-center no-wrap"
+            class="column items-center no-wrap"
             style="text-decoration: none"
           >
-            <QBtn
-              round
-              dense
-              flat
-              :ripple="false"
-              no-caps
-              size="20px"
-              aria-label="IHR Logo - Go to Home"
-            >
-              <img src="/imgs/ihr_logo.svg" style="width: 38px" alt="IHR Logo" />
-            </QBtn>
-            <span class="IHR_wordmark gt-xs q-ml-sm">IHR</span>
+            <img src="/imgs/ihr_logo.svg" style="width: 38px" alt="IHR Logo" />
+            <span class="IHR_wordmark gt-xs">Internet Health Report</span>
           </RouterLink>
         </QItem>
+
+        <!-- Search (Desktop) -->
+        <div class="IHR_header-search gt-sm q-ml-md">
+          <SearchBar />
+        </div>
 
         <!-- Desktop Nav -->
         <div
@@ -256,17 +249,6 @@ watch(simpleMenu, () => {
           </QBtnGroup>
         </div>
 
-        <!-- Search Icon (Desktop) -->
-        <QBtn
-          flat
-          round
-          dense
-          icon="fas fa-search"
-          class="gt-sm q-ml-sm"
-          @click="searchOpen = true"
-          aria-label="Search"
-        />
-
         <!-- Mobile Hamburger -->
         <div class="lt-md q-ml-auto">
           <q-btn
@@ -280,23 +262,6 @@ watch(simpleMenu, () => {
         </div>
       </div>
     </QToolbar>
-
-    <!-- Search Dialog -->
-    <QDialog v-model="searchOpen" position="top" seamless>
-      <div class="IHR_search-overlay q-pa-md">
-        <div class="row items-center" style="max-width: 700px; margin: 0 auto">
-          <SearchBar class="col" />
-          <QBtn
-            flat
-            round
-            dense
-            icon="close"
-            class="q-ml-sm text-white"
-            @click="searchOpen = false"
-          />
-        </div>
-      </div>
-    </QDialog>
 
     <!-- Mobile Drawer -->
     <QDrawer v-model="leftDrawerOpen" bordered class="IHR_drawer">
@@ -357,29 +322,40 @@ watch(simpleMenu, () => {
 <style>
 /* Header base */
 .IHR_header {
-  background: rgba(20, 20, 30, 0.92) !important;
+  background: #263238 !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .IHR_toolbar {
-  min-height: 56px;
-  max-height: 56px;
+  min-height: 64px !important;
+  max-height: 64px;
+  width: 100%;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 
 /* Wordmark */
 .IHR_wordmark {
   color: #fff;
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-decoration: none;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* Inline search */
+.IHR_header-search {
+  flex: 0 1 280px;
+  min-width: 160px;
 }
 
 /* Nav entries */
 .IHR_menu-entries a,
 .IHR_menu-entries button {
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: #fff;
   text-decoration: none;
   text-transform: capitalize;
@@ -392,7 +368,7 @@ watch(simpleMenu, () => {
 
 /* Dropdown */
 .IHR_dropdown-list {
-  background: rgba(20, 20, 30, 0.96) !important;
+  background: rgba(38, 50, 56, 0.96) !important;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
@@ -403,16 +379,9 @@ watch(simpleMenu, () => {
   border-radius: 4px;
 }
 
-/* Search overlay */
-.IHR_search-overlay {
-  width: 100vw;
-  background: rgba(20, 20, 30, 0.97);
-  backdrop-filter: blur(12px);
-}
-
 /* Drawer */
 .IHR_drawer {
-  background: rgba(20, 20, 30, 0.98) !important;
+  background: #263238 !important;
 }
 .IHR_drawer .q-btn {
   color: #fff;
