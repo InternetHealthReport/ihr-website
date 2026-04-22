@@ -11,7 +11,7 @@ import {
   QIcon
 } from 'quasar'
 import ReactiveChart from './ReactiveChart.vue'
-import { ref, onMounted, watch, onUnmounted } from 'vue'
+import { ref, onMounted, watch, onUnmounted, computed } from 'vue'
 import report from '@/plugins/report'
 import '@/styles/chart.css'
 import BGPVrpsTable from '../tables/BGPVrpsTable.vue'
@@ -106,7 +106,7 @@ const prevNextElement = ref(null)
 let observer = null
 
 const timestampToUTC = (timestamp) => {
-  return utcString(new Date(timestamp * 1000))
+  return utcString(new Date(Number(String(timestamp).padEnd(13, '0'))))
 }
 
 // Update the time range
@@ -325,6 +325,36 @@ const customIntersectionObserver = () => {
   }
 }
 
+const rpkiStatusChartXRange = computed(() => {
+  if (announcementsPeersChartData.value.length) {
+    if ('x' in announcementsPeersChartData.value[0]) {
+      return [
+        announcementsPeersChartData.value[0].x[0],
+        announcementsPeersChartData.value[0].x[announcementsPeersChartData.value[0].x.length - 1]
+      ]
+    }
+  }
+  return []
+})
+
+const handleRpkiPlotlyClick = (event) => {
+  const point = event.points[0]
+  if (!point) return
+
+  const xaxis = point.xaxis
+  const mouseX = event.event.clientX
+  const plotDiv = event.event.target.closest('.js-plotly-plot')
+  const rect = plotDiv.getBoundingClientRect()
+
+  // xaxis.p2d converts pixel position to data coordinate (ms)
+  const pixelX = mouseX - rect.left - xaxis._offset
+  const clickedMs = xaxis.p2d(pixelX)
+  const timestamp = Math.floor(new Date(clickedMs + 'Z').getTime() / 1000)
+
+  selectedMaxTimestamp.value = timestamp
+  updateSlider(timestamp, true)
+}
+
 //Remove the vertical line and update the selected timestamp
 watch(
   () => props.isLiveMode,
@@ -401,8 +431,10 @@ onMounted(() => {
   </div>
   <div class="text-center" v-if="rawMessages.length === 0">
     <h1 v-if="!isLoadingBgplayData">No data available</h1>
-    <h3 v-if="dataSource === 'ris-live'">Try changing the input parameters or you can wait</h3>
-    <h6 v-if="dataSource === 'ris-live'">Note: Some prefixes become active after some time.</h6>
+    <h3 v-if="dataSource === 'ris-live'">Waiting for BGP updates.</h3>
+    <h6 v-if="dataSource === 'ris-live'">
+      This may take some time, depending on the selected prefix.
+    </h6>
   </div>
   <div v-else>
     <div v-if="dataSource === 'ris-live'" class="q-mb-md">
@@ -460,7 +492,12 @@ onMounted(() => {
                   {{ usedMessagesCount + ' out of ' + rawMessages.length }} Processed Messages
                 </div>
                 <div v-else class="text-body2">
-                  {{ usedMessagesCount - initialStateDataCount + ' out of ' + rawMessages.length }}
+                  {{
+                    usedMessagesCount -
+                    initialStateDataCount +
+                    ' out of ' +
+                    (rawMessages.length - initialStateDataCount)
+                  }}
                   Processed Messages
                 </div>
               </QBadge>
@@ -504,16 +541,26 @@ onMounted(() => {
                   : currentIndex === 0)
               "
             />
-            <QBadge class="q-mr-md">
-              <div v-if="dataSource === 'ris-live'" class="text-body2">
-                {{ usedMessagesCount + '/' + rawMessages.length }}
-                <QIcon name="message" />
-              </div>
-              <div v-else class="text-body2">
-                {{ usedMessagesCount - initialStateDataCount + '/' + rawMessages.length }}
-                <QIcon name="message" />
-              </div>
-            </QBadge>
+            <div class="q-mr-md column items-center">
+              <QBadge class="q-mb-sm">
+                <div v-if="dataSource === 'ris-live'" class="text-body2">
+                  {{ usedMessagesCount + '/' + rawMessages.length }}
+                  <QIcon name="message" />
+                </div>
+                <div v-else class="text-body2">
+                  {{
+                    usedMessagesCount -
+                    initialStateDataCount +
+                    '/' +
+                    (rawMessages.length - initialStateDataCount)
+                  }}
+                  <QIcon name="message" />
+                </div>
+              </QBadge>
+              <QBadge class="text-body2">
+                {{ timestampToUTC(selectedMaxTimestamp)?.slice(0, 16) }}
+              </QBadge>
+            </div>
             <QBtn
               round
               color="indigo"
@@ -561,11 +608,16 @@ onMounted(() => {
             title: {
               text: 'Peers'
             }
+          },
+          xaxis: {
+            type: 'date',
+            autorange: rpkiStatusChartXRange.length ? false : true,
+            range: rpkiStatusChartXRange
           }
         }"
         :traces="rpkiStatusChartData"
         :shapes="rpkiLayout.shapes"
-        @plotly-click="handlePlotlyClick"
+        @plotly-click="handleRpkiPlotlyClick"
         @plotly-relayout="adjustQSliderWidth(true)"
         :no-data="
           isNoVrpData

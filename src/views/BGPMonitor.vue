@@ -16,7 +16,7 @@ import {
   QItemSection,
   QSpinner
 } from 'quasar'
-import { onMounted, onUnmounted, ref, watch, inject } from 'vue'
+import { onMounted, onUnmounted, ref, watch, inject, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import i18n from '@/i18n'
@@ -46,7 +46,8 @@ const rawMessages = ref([]) //Used to store all the messages from the websocket
 const filteredMessages = ref([]) //Used to store unique peer messages uses "uniquePeerMessages = new Map()""
 const uniquePeerMessages = new Map() //Used to store unique peer messages (For simplification)
 const communityInfo = ref({})
-const defaultSelectedPeerCount = ref(5) //Default number of peers to display in the sankey chart
+const defaultSelectedPeerCount = ref(50) //Default number of peers to display in the sankey chart
+const defaultSelectedPeers = ref([]) //Default number of peers to display in the sankey chart
 const isLiveMode = ref(true)
 const selectedMaxTimestamp = ref(0)
 const usedMessagesCount = ref(0) //Just for displaying how many messages are being used
@@ -134,7 +135,8 @@ const resetData = () => {
   rawMessages.value = []
   filteredMessages.value = []
   uniquePeerMessages.clear()
-  defaultSelectedPeerCount.value = 5
+  defaultSelectedPeerCount.value = 50
+  defaultSelectedPeers.value = []
   isLiveMode.value = true
   selectedMaxTimestamp.value = 0
   usedMessagesCount.value = 0
@@ -325,7 +327,6 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.community),
         as_info: addASInfo(path),
         type: type,
-        rpki_status: status,
         timestamp: minTimestamp.value
       })
     })
@@ -356,7 +357,6 @@ const processResData = (data) => {
         community: addCommunityAndDescriptions(event.attrs.community),
         as_info: addASInfo(path),
         type: type,
-        rpki_status: status,
         timestamp: timestamp
       })
     })
@@ -547,10 +547,10 @@ const generateLineChartTrace = () => {
       }
 
       function addData(timestamp) {
-        const duration = timestamp - current_range_start - 1
+        const duration = (timestamp - current_range_start - 1) * 1000
         rsTrace[current_status] ??= { y: [], x: [], base: [], peer_asn: [], origin_asn: [] }
         rsTrace[current_status].y.push(peer)
-        rsTrace[current_status].x.push(timestampToUTC(duration))
+        rsTrace[current_status].x.push(duration)
         rsTrace[current_status].base.push(timestampToUTC(current_range_start))
         rsTrace[current_status].peer_asn.push(peer_asn)
         rsTrace[current_status].origin_asn.push(current_origin)
@@ -565,8 +565,19 @@ const generateLineChartTrace = () => {
   rpkiStatusTraces.value = rsTrace
 }
 
+const filteredMessagesWithRpki = computed(() => {
+  return filteredMessages.value.map((msg) => {
+    const originASN = msg.path.length ? msg.path[msg.path.length - 1] : null
+    const { status } = getRPKIStatus(originASN, selectedMaxTimestamp.value)
+    return {
+      ...msg,
+      rpki_status: status
+    }
+  })
+})
+
 const timestampToUTC = (timestamp) => {
-  return utcString(new Date(timestamp * 1000))
+  return utcString(new Date(Number(String(timestamp).padEnd(13, '0'))))
 }
 
 // Apply community descriptions to the community data array
@@ -1055,7 +1066,8 @@ const getRPKIStatus = (asn, timestamp) => {
 }
 
 const updateSelectedPeers = (val) => {
-  defaultSelectedPeerCount.value = val
+  defaultSelectedPeerCount.value = val.length
+  defaultSelectedPeers.value = val
 }
 
 const applyStartTime = () => {
@@ -1353,6 +1365,7 @@ onUnmounted(() => {
       <BGPPathsChart
         :filtered-messages="filteredMessages"
         :selected-peers-number="defaultSelectedPeerCount"
+        :selected-peers="defaultSelectedPeers"
         :is-live-mode="isLiveMode"
         :is-playing="isPlaying"
         :is-loading-bgplay-data="isLoadingBgplayData"
@@ -1381,8 +1394,9 @@ onUnmounted(() => {
         </template>
         <BGPMessagesTable
           :data-source="dataSource.value"
-          :filtered-messages="filteredMessages"
+          :filtered-messages="filteredMessagesWithRpki"
           :selected-peers-number="defaultSelectedPeerCount"
+          :selected-peers="defaultSelectedPeers"
           :is-live-mode="isLiveMode"
           :is-playing="isPlaying"
           :is-loading-bgplay-data="isLoadingBgplayData"

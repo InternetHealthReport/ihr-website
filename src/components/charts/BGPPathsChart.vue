@@ -13,6 +13,10 @@ const props = defineProps({
     type: Number,
     default: 5
   },
+  selectedPeers: {
+    type: Array,
+    default: () => []
+  },
   isLiveMode: {
     type: Boolean
   },
@@ -46,7 +50,9 @@ const generateGraphData = () => {
   const linkSetCount = new Map()
 
   //Only consider selected peers which are selected in the table
-  const peers = props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => obj.peer)
+  const peers = props.selectedPeers.length
+    ? props.selectedPeers.map((obj) => obj.peer)
+    : props.filteredMessages.slice(0, props.selectedPeersNumber).map((obj) => obj.peer)
   const filteredSelectedMessages = props.filteredMessages.filter((message) =>
     peers.includes(message.peer)
   )
@@ -185,8 +191,8 @@ onMounted(() => {
     <div class="text-center">
       <h1>No data available</h1>
       <template v-if="dataSource === 'ris-live'">
-        <h3>Try changing the input parameters or you can wait</h3>
-        <h6>Note: Some prefixes become active after some time.</h6>
+        <h3>Waiting for BGP updates.</h3>
+        <h6>This may take some time, depending on the selected prefix.</h6>
       </template>
     </div>
   </div>
