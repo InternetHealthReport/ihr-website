@@ -193,19 +193,21 @@ const ORGANIZATIONS = [
     </section>
 
     <!-- Tools -->
-    <section class="content-width q-pa-xl">
-      <h2 class="section-title">{{ $t('homePage.tools.title') }}</h2>
-      <div class="row q-col-gutter-md">
-        <div v-for="tool in TOOLS" :key="tool.key" class="col-12 col-sm-4">
-          <RouterLink :to="Tr.i18nRoute({ name: tool.route })" class="card-link">
-            <QCard flat bordered class="card-hover full-height">
-              <QCardSection class="text-center q-py-lg">
-                <QIcon :name="tool.icon" size="2.5rem" color="primary" class="q-mb-md" />
-                <div class="card-title">{{ $t(`homePage.tools.${tool.key}.name`) }}</div>
-                <div class="card-desc">{{ $t(`homePage.tools.${tool.key}.description`) }}</div>
-              </QCardSection>
-            </QCard>
-          </RouterLink>
+    <section class="q-pa-xl">
+      <div class="content-width">
+        <h2 class="section-title">{{ $t('homePage.tools.title') }}</h2>
+        <div class="row q-col-gutter-md">
+          <div v-for="tool in TOOLS" :key="tool.key" class="col-12 col-sm-6 col-md-4">
+            <RouterLink :to="Tr.i18nRoute({ name: tool.route })" class="card-link">
+              <QCard flat bordered class="card-hover full-height">
+                <QCardSection class="text-center q-py-lg">
+                  <QIcon :name="tool.icon" size="2rem" color="primary" class="q-mb-sm" />
+                  <div class="card-title">{{ $t(`homePage.tools.${tool.key}.name`) }}</div>
+                  <div class="card-desc">{{ $t(`homePage.tools.${tool.key}.description`) }}</div>
+                </QCardSection>
+              </QCard>
+            </RouterLink>
+          </div>
         </div>
       </div>
     </section>
