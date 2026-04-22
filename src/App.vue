@@ -76,9 +76,6 @@ const scrollToTop = () => {
   transform: translateY(0);
 }
 
-#IHR_home-button {
-  padding: 0 13px 0 2px;
-}
 #IHR_forgotten-password {
   white-space: nowrap;
 }

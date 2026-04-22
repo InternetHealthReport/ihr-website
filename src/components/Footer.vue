@@ -13,17 +13,8 @@ import { version } from '../../package.json'
       <div class="ihr-footer__brand">
         <RouterLink :to="Tr.i18nRoute({ name: 'home' })" class="ihr-footer__logo-link">
           <img src="/imgs/ihr_logo.svg" class="ihr-footer__logo" alt="IHR Logo" />
+          <div class="ihr-footer__brand-name">Internet Health Report</div>
         </RouterLink>
-        <div class="ihr-footer__brand-name">
-          Internet Health Report
-          <a
-            :href="`https://github.com/InternetHealthReport/ihr-website/releases/tag/v${version}`"
-            target="_blank"
-            class="ihr-footer__version"
-          >
-            v{{ version }}
-          </a>
-        </div>
         <p class="ihr-footer__tagline">Monitoring the health of the Internet</p>
         <div class="ihr-footer__social">
           <a href="https://x.com/ihr_alerts" target="_blank" aria-label="Follow us on X">
@@ -171,6 +162,13 @@ import { version } from '../../package.json'
             >. Contact <a href="mailto:admin@ihr.live">admin@ihr.live</a> for other permissions.
           </span>
         </span>
+        <a
+          :href="`https://github.com/InternetHealthReport/ihr-website/releases/tag/v${version}`"
+          target="_blank"
+          class="ihr-footer__version"
+        >
+          v{{ version }}
+        </a>
       </div>
     </div>
   </QFooter>
@@ -185,9 +183,10 @@ import { version } from '../../package.json'
 /* Inner grid */
 .ihr-footer__inner {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 2rem;
-  padding: 3rem 2rem 2rem;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  align-items: start;
+  gap: 2.5rem;
+  padding: 3rem 2rem 2.5rem;
 }
 @media (max-width: 768px) {
   .ihr-footer__inner {
@@ -198,12 +197,22 @@ import { version } from '../../package.json'
 @media (max-width: 480px) {
   .ihr-footer__inner {
     grid-template-columns: 1fr;
+    text-align: center;
   }
 }
 
 /* Brand col */
+.ihr-footer__brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 .ihr-footer__logo-link {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
 }
 .ihr-footer__logo {
   width: 50px;
@@ -211,19 +220,20 @@ import { version } from '../../package.json'
 .ihr-footer__brand-name {
   font-size: 1.1rem;
   font-weight: 700;
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
 }
 .ihr-footer__version {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: #f87171;
   text-decoration: none;
-  margin-left: 0.35rem;
-  vertical-align: super;
+}
+.ihr-footer__version:hover {
+  color: #fca5a5;
 }
 .ihr-footer__tagline {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.5);
-  margin: 0.5rem 0 1rem;
+  margin: 0.75rem 0 1.25rem;
 }
 .ihr-footer__social {
   display: flex;
@@ -238,6 +248,14 @@ import { version } from '../../package.json'
 .ihr-footer__social a:hover {
   color: #fff;
 }
+@media (max-width: 480px) {
+  .ihr-footer__brand {
+    align-items: center;
+  }
+  .ihr-footer__social {
+    justify-content: center;
+  }
+}
 
 /* Link columns */
 .ihr-footer__col-title {
@@ -246,7 +264,9 @@ import { version } from '../../package.json'
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .ihr-footer__col ul {
   list-style: none;
@@ -254,7 +274,7 @@ import { version } from '../../package.json'
   padding: 0;
 }
 .ihr-footer__col ul li {
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
 }
 .ihr-footer__col ul li a {
   color: rgba(255, 255, 255, 0.8);
@@ -271,12 +291,19 @@ import { version } from '../../package.json'
 /* Bottom bar */
 .ihr-footer__bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 1rem 2rem;
+  padding: 1.25rem 2rem;
 }
 .ihr-footer__bottom-inner {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+@media (max-width: 600px) {
+  .ihr-footer__bottom-inner {
+    flex-direction: column;
+    text-align: center;
+  }
 }
 .ihr-footer__copyright {
   font-size: 0.75rem;
