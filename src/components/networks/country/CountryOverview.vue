@@ -2,20 +2,31 @@
 import { QSpinner, QMarkupTable, QCard, QCardSection, QCheckbox } from 'quasar'
 import { RouterLink, useRoute } from 'vue-router'
 import Tr from '@/i18n/translation'
-import { ref, inject, watch, onMounted } from 'vue'
+import { ref, inject, watch, onMounted, nextTick } from 'vue'
 import '@/styles/chart.css'
-import { LMap, LTileLayer, LControl, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
+import {
+  LMap,
+  LTileLayer,
+  LControl,
+  LMarker,
+  LPopup,
+  LPolyline,
+  LCircleMarker
+} from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { icon } from 'leaflet'
 import { Country } from 'country-state-city'
 
 const iyp_api = inject('iyp_api')
+const submarine_cable_map_api = inject('submarine_cable_map_api')
 
 const REFERENCES = {
   'bgp.he.net': 'https://bgp.he.net/country',
   'radar.cloudflare.com': 'https://radar.cloudflare.com',
   'stat.ripe.net': 'https://stat.ripe.net/app/launchpad'
 }
+
+let LANDING_POINT_COUNTRY_ISO = null
 
 const props = defineProps({
   countryCode: {
@@ -52,7 +63,7 @@ const queries = ref([
   {
     data: [],
     query: `MATCH (c:Country {country_code: $cc})-[:COUNTRY {reference_name:'nro.delegated_stats'}]-(a:AS)-[ca:CATEGORIZED]-(:Tag {label:'Tranco 10k Host'}),
-      (a)-[:ORIGINATE]-(:BGPPrefix)-[:PART_OF]-(:IP)-[re:RESOLVES_TO {reference_name:'openintel.tranco1m'}]-(d:HostName)
+      (a)-[:ORIGINATE]-(:BGPPrefix)-[:PART_OF]-(:IP)-[re:RESOLVES_TO {reference_name:'openintel.toplist'}]-(d:HostName)
       USING INDEX re:RESOLVES_TO(reference_name)
       WITH a, COUNT(DISTINCT d) AS nb_domains ORDER BY nb_domains DESC LIMIT 5
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
@@ -100,11 +111,122 @@ const queries = ref([
     })
   }
 ])
+
+const getSubmarineCables = (cc, cableGeoData, landingPointGeoData) => {
+  const domesticLPs = []
+  const nonDomesticLPs = []
+  for (const f of landingPointGeoData.features) {
+    const name = f.properties.name
+    const idx = name.indexOf(',')
+    if (idx === -1) continue
+    if (LANDING_POINT_COUNTRY_ISO[name.substring(idx + 6)] === cc) {
+      domesticLPs.push(f.geometry.coordinates)
+    } else if (LANDING_POINT_COUNTRY_ISO[name.substring(idx + 2)] === cc) {
+      domesticLPs.push(f.geometry.coordinates)
+    } else {
+      nonDomesticLPs.push(f.geometry.coordinates)
+    }
+  }
+
+  if (!domesticLPs.length) {
+    return { domestic: [], international: [], domesticLPs: [], internationalLPs: [] }
+  }
+
+  const isNear = ([ax, ay], [bx, by], tol) => Math.abs(ax - bx) < tol && Math.abs(ay - by) < tol
+  const findMatched = (points, lpList, tol) =>
+    lpList.filter((lp) => points.some((pt) => isNear(pt, lp, tol)))
+
+  const domestic = []
+  const international = []
+  const domesticLPsSeen = new Set()
+  const usedDomesticLPs = []
+  const internationalLPsSeen = new Set()
+  const internationalLPs = []
+
+  const addUnique = (lp, seen, arr) => {
+    const key = lp.join(',')
+    if (!seen.has(key)) {
+      seen.add(key)
+      arr.push(lp)
+    }
+  }
+
+  const mergedFeatures = []
+  const cableById = new Map()
+  for (const feature of cableGeoData.features) {
+    const id = feature.properties.id
+    if (cableById.has(id)) {
+      cableById.get(id).geometry.coordinates.push(...feature.geometry.coordinates)
+    } else {
+      const merged = {
+        ...feature,
+        geometry: { ...feature.geometry, coordinates: [...feature.geometry.coordinates] }
+      }
+      cableById.set(id, merged)
+      mergedFeatures.push(merged)
+    }
+  }
+  cableGeoData = { ...cableGeoData, features: mergedFeatures }
+
+  for (const cable of cableGeoData.features) {
+    const allPoints = cable.geometry.coordinates.flat()
+    const hasDomestic = allPoints.some((pt) => domesticLPs.some((lp) => isNear(pt, lp, 0.1)))
+    if (!hasDomestic) continue
+    const hasNonDomestic = allPoints.some((pt) => nonDomesticLPs.some((lp) => isNear(pt, lp, 0.1)))
+    if (hasNonDomestic) {
+      const endpoints = cable.geometry.coordinates.flatMap((line) => [
+        line[0],
+        line[line.length - 1]
+      ])
+      international.push(cable)
+      for (const lp of findMatched(allPoints, domesticLPs, 0.1)) {
+        addUnique(lp, internationalLPsSeen, internationalLPs)
+      }
+
+      for (const lp of nonDomesticLPs.filter(
+        (lp) =>
+          endpoints.some((ep) => isNear(ep, lp, 0.1)) ||
+          allPoints.some((pt) => isNear(pt, lp, 0.04))
+      )) {
+        addUnique(lp, internationalLPsSeen, internationalLPs)
+      }
+    } else {
+      domestic.push(cable)
+      for (const lp of findMatched(allPoints, domesticLPs, 0.1)) {
+        addUnique(lp, domesticLPsSeen, usedDomesticLPs)
+      }
+    }
+  }
+
+  return { domestic, international, domesticLPs: usedDomesticLPs, internationalLPs }
+}
+
 const zoom = ref(5)
 const countryInfo = ref(Country.getCountryByCode(props.countryCode))
+const cableRenderCoords = (coordinates) => {
+  const allLngs = coordinates
+    .flat()
+    .map(([lng]) => lng)
+    .sort((a, b) => a - b)
+  const refLng = allLngs[Math.floor(allLngs.length / 2)]
+  const normalized = coordinates.map((line) =>
+    line.map(([lng, lat]) => {
+      while (lng - refLng > 180) lng -= 360
+      while (refLng - lng > 180) lng += 360
+      return [lat, lng]
+    })
+  )
+  return [-360, 0, 360].flatMap((offset) =>
+    normalized.map((line) => line.map(([lat, lng]) => [lat, lng + offset]))
+  )
+}
+
+const submarineCables = ref(null)
 const facilitiesPoints = ref(false)
 const atlasProbePoints = ref(false)
 const organizationPoints = ref(false)
+const domesticSubmarineCables = ref(true)
+const internationalSubmarineCables = ref(true)
 
 const fetchData = async (cc) => {
   let params = { cc: cc.toUpperCase() }
@@ -145,6 +267,14 @@ const fetchMapData = async (cc) => {
   })
 }
 
+const fetchSubmarineCableMapData = async () => {
+  const cableGeoData = (await submarine_cable_map_api.cableGeo()).data
+  const landingPointGeoData = (await submarine_cable_map_api.landingPointGeo()).data
+  LANDING_POINT_COUNTRY_ISO = (await submarine_cable_map_api.landingPointCountryMap()).data
+
+  submarineCables.value = getSubmarineCables(props.countryCode, cableGeoData, landingPointGeoData)
+}
+
 const handleReference = (key) => {
   let externalLink = ''
   let cc = props.countryCode
@@ -171,12 +301,14 @@ watch(
     })
     fetchData(props.countryCode)
     fetchMapData(props.countryCode)
+    fetchSubmarineCableMapData()
   }
 )
 
 onMounted(() => {
   fetchData(props.countryCode)
   fetchMapData(props.countryCode)
+  fetchSubmarineCableMapData()
 })
 </script>
 
@@ -301,18 +433,31 @@ onMounted(() => {
         <tr>
           <td style="height: 600px">
             <LMap
-              v-model="zoom"
               v-model:zoom="zoom"
               :center="[countryInfo.latitude, countryInfo.longitude]"
               :use-global-leaflet="false"
-              :options="{ attributionControl: false }"
+              :options="{ attributionControl: false, worldCopyJump: true, minZoom: 3, maxZoom: 15 }"
+              @ready="(map) => nextTick(() => map.invalidateSize())"
             >
               <LTileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                layer-type="base"
-                name="OpenStreetMap"
-                class="grayscale-tiles"
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
               ></LTileLayer>
+              <LControl position="bottomright">
+                <QCard flat style="padding: 2px 4px; min-height: unset">
+                  <span style="font-size: 11px">
+                    &copy;
+                    <a href="https://www.openstreetmap.org/copyright" target="_blank"
+                      >OpenStreetMap</a
+                    >
+                    | &copy;
+                    <a href="https://carto.com/attributions" target="_blank">CARTO</a>
+                    | &copy;
+                    <a href="https://www.submarinecablemap.com" target="_blank"
+                      >TeleGeography's Submarine Cable Map</a
+                    >
+                  </span>
+                </QCard>
+              </LControl>
               <LControl>
                 <QCard>
                   <QCardSection>
@@ -340,9 +485,93 @@ onMounted(() => {
                         keep-color
                       />
                     </div>
+                    <div v-if="submarineCables?.domestic.length">
+                      <QCheckbox
+                        v-model="domesticSubmarineCables"
+                        label="Domestic Submarine Cables"
+                      />
+                    </div>
+                    <div v-if="submarineCables?.international.length">
+                      <QCheckbox
+                        v-model="internationalSubmarineCables"
+                        label="International Submarine Cables"
+                      />
+                    </div>
                   </QCardSection>
                 </QCard>
               </LControl>
+              <template
+                v-if="domesticSubmarineCables && submarineCables?.domesticLPs.length"
+                v-for="([lng, lat], index) in submarineCables.domesticLPs"
+                :key="`dlp-${index}`"
+              >
+                <LCircleMarker
+                  v-for="offset in [-360, 0, 360]"
+                  :key="`dlp-${index}-${offset}`"
+                  :lat-lng="[lat, lng + offset]"
+                  :radius="5"
+                  color="#333"
+                  :fill="true"
+                  fill-color="#fff"
+                  :fill-opacity="1"
+                />
+              </template>
+              <template
+                v-if="internationalSubmarineCables && submarineCables?.internationalLPs.length"
+                v-for="([lng, lat], index) in submarineCables.internationalLPs"
+                :key="`ilp-${index}`"
+              >
+                <LCircleMarker
+                  v-for="offset in [-360, 0, 360]"
+                  :key="`ilp-${index}-${offset}`"
+                  :lat-lng="[lat, lng + offset]"
+                  :radius="5"
+                  color="#333"
+                  :fill="true"
+                  fill-color="#fff"
+                  :fill-opacity="1"
+                />
+              </template>
+              <template
+                v-if="domesticSubmarineCables && submarineCables?.domestic.length"
+                v-for="(cable, cIndex) in submarineCables.domestic"
+                :key="`d-${cIndex}`"
+              >
+                <LPolyline
+                  v-for="(latLngs, lIndex) in cableRenderCoords(cable.geometry.coordinates)"
+                  :key="`d-${cIndex}-${lIndex}`"
+                  :lat-lngs="latLngs"
+                  :color="cable.properties.color"
+                >
+                  <LPopup
+                    ><a
+                      target="_blank"
+                      :href="`https://www.submarinecablemap.com/submarine-cable/${cable.properties.id}`"
+                      >{{ cable.properties.name }}</a
+                    ></LPopup
+                  >
+                </LPolyline>
+              </template>
+              <template
+                v-if="internationalSubmarineCables && submarineCables?.international.length"
+                v-for="(cable, cIndex) in submarineCables.international"
+                :key="`i-${cIndex}`"
+              >
+                <LPolyline
+                  v-for="(latLngs, lIndex) in cableRenderCoords(cable.geometry.coordinates)"
+                  :key="`i-${cIndex}-${lIndex}`"
+                  :lat-lngs="latLngs"
+                  :color="cable.properties.color"
+                >
+                  <LPopup
+                    ><a
+                      target="_blank"
+                      :href="`https://www.submarinecablemap.com/submarine-cable/${cable.properties.id}`"
+                      >{{ cable.properties.name }}</a
+                    ></LPopup
+                  >
+                </LPolyline>
+              </template>
               <LMarker
                 v-if="facilitiesPoints"
                 v-for="(item, index) in queries[3].data"
@@ -394,7 +623,10 @@ h3 {
   width: 100%;
   text-align: right;
 }
-:deep(.leaflet-tile-pane) {
+/* :deep(.leaflet-tile-pane) {
   filter: grayscale(100%) brightness(1.1);
+} */
+.landing-point {
+  z-index: 1000;
 }
 </style>

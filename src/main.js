@@ -19,6 +19,7 @@ import { GithubApi } from './plugins/GithubApi'
 import VNetworkGraph from 'v-network-graph'
 import 'v-network-graph/lib/style.css'
 import { Whois } from '@/plugins/Whois'
+import { SubmarineCableMapApi } from '@/plugins/SubmarineCableMapApi'
 
 const app = createApp(App)
 
@@ -64,5 +65,6 @@ app.use(RpkiApi)
 app.use(GithubApi)
 app.use(VNetworkGraph)
 app.use(Whois)
+app.use(SubmarineCableMapApi)
 
 app.mount('#app')

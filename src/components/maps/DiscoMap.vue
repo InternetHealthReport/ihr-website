@@ -1,9 +1,10 @@
 <script setup>
 import getCountryName from '@/plugins/countryName'
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { LMap, LTileLayer, LCircleMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
+import { LMap, LTileLayer, LCircleMarker, LTooltip, LControl } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { QCard } from 'quasar'
 
 const { t } = useI18n()
 
@@ -114,18 +115,23 @@ const traces = computed(() => {
 <template>
   <div style="height: 600px">
     <LMap
-      v-model="zoom"
       v-model:zoom="zoom"
       :center="[0, 0]"
       :use-global-leaflet="false"
-      :options="{ attributionControl: false }"
+      :options="{ attributionControl: false, worldCopyJump: true, minZoom: 2, maxZoom: 15 }"
+      @ready="(map) => nextTick(() => map.invalidateSize())"
     >
-      <LTileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        layer-type="base"
-        name="OpenStreetMap"
-        class="grayscale-tiles"
-      ></LTileLayer>
+      <LTileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"></LTileLayer>
+      <LControl position="bottomright">
+        <QCard flat style="padding: 2px 4px; min-height: unset">
+          <span style="font-size: 11px">
+            &copy;
+            <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>
+            | &copy;
+            <a href="https://carto.com/attributions" target="_blank">CARTO</a>
+          </span>
+        </QCard>
+      </LControl>
       <LCircleMarker
         v-for="trace in traces"
         :lat-lng="[trace.lat, trace.lon]"
@@ -140,7 +146,7 @@ const traces = computed(() => {
 </template>
 
 <style scoped>
-:deep(.leaflet-tile-pane) {
+/* :deep(.leaflet-tile-pane) {
   filter: grayscale(100%) brightness(1.1);
-}
+} */
 </style>
