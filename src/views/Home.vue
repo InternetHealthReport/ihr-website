@@ -287,7 +287,7 @@ const ORGANIZATIONS = [
 .hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #1a2327 0%, #263238 40%, #1e282e 100%);
+  background: linear-gradient(135deg, black 0%, #263238 40%, black 100%);
   padding: 5rem 0 2.5rem;
   color: #fff;
   min-height: 540px;
