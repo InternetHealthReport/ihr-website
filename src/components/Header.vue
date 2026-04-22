@@ -11,11 +11,10 @@ import {
   QItemLabel,
   QDrawer,
   QExpansionItem,
-  QBadge,
-  debounce
+  QBadge
 } from 'quasar'
 import Tr from '@/i18n/translation'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
 
 const SIMPLE_MENU = [
@@ -105,30 +104,13 @@ const SIMPLE_MENU = [
 const simpleMenu = ref(SIMPLE_MENU)
 const leftDrawerOpen = ref(false)
 
-const toggleValue = (index, type, value) => {
-  if (type === 1) simpleMenu.value[index].menuOver = value
-  else if (type === 2) simpleMenu.value[index].listOver = value
-}
-
 const closeMenu = () => {
   simpleMenu.value.forEach((item) => {
     if (item.menu !== undefined) {
-      item.menuOver = false
-      item.listOver = false
       item.menu = false
     }
   })
 }
-
-const checkMenu = () => {
-  simpleMenu.value.forEach((item) => {
-    if (item.menu !== undefined) {
-      item.menu = item.menuOver || item.listOver
-    }
-  })
-}
-
-watch(simpleMenu, debounce(checkMenu, 200), { deep: true })
 </script>
 
 <template>
@@ -166,17 +148,8 @@ watch(simpleMenu, debounce(checkMenu, 200), { deep: true })
               class="ihr-nav__btn"
               menu-anchor="bottom left"
               menu-self="top left"
-              @mouseover="toggleValue(index, 1, true)"
-              @mouseleave="toggleValue(index, 1, false)"
             >
-              <QList
-                class="ihr-dropdown"
-                bordered
-                separator
-                padding
-                @mouseover="toggleValue(index, 2, true)"
-                @mouseleave="toggleValue(index, 2, false)"
-              >
+              <QList class="ihr-dropdown" separator padding>
                 <QItem
                   v-for="option in item.options"
                   :key="option.entryName"
@@ -352,8 +325,13 @@ watch(simpleMenu, debounce(checkMenu, 200), { deep: true })
 .ihr-dropdown {
   background: rgba(38, 50, 56, 0.96) !important;
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #fff;
+  border-radius: 8px;
+}
+.q-menu {
+  background: rgba(38, 50, 56, 0.96) !important;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Active route highlight */
