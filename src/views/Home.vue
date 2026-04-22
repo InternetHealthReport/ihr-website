@@ -1,9 +1,51 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { QCard, QCardSection, QIcon, QBtn } from 'quasar'
+import { ref, onMounted } from 'vue'
 import Tr from '@/i18n/translation'
 import UserInfo from '@/components/UserInfo.vue'
 import Globe from '@/components/Globe.vue'
+
+const marqueeTrack = ref(null)
+
+onMounted(() => {
+  if (!marqueeTrack.value) return
+  const imgs = marqueeTrack.value.querySelectorAll('img')
+  let loaded = 0
+  const total = imgs.length
+  const onAllLoaded = () => {
+    const halfWidth = marqueeTrack.value.scrollWidth / 2
+    marqueeTrack.value.style.setProperty('--marquee-dist', `-${halfWidth}px`)
+    marqueeTrack.value.classList.add('marquee__track--ready')
+  }
+  if (total === 0) {
+    onAllLoaded()
+    return
+  }
+  imgs.forEach((img) => {
+    if (img.complete) {
+      loaded++
+      if (loaded === total) onAllLoaded()
+    } else {
+      img.addEventListener(
+        'load',
+        () => {
+          loaded++
+          if (loaded === total) onAllLoaded()
+        },
+        { once: true }
+      )
+      img.addEventListener(
+        'error',
+        () => {
+          loaded++
+          if (loaded === total) onAllLoaded()
+        },
+        { once: true }
+      )
+    }
+  })
+})
 
 const ANALYSIS_MODULES = [
   {
@@ -216,7 +258,7 @@ const ORGANIZATIONS = [
     <section class="section--light q-pa-xl">
       <h2 class="section-title">{{ $t('homePage.ack.title') }}</h2>
       <div class="marquee content-width">
-        <div class="marquee__track">
+        <div ref="marqueeTrack" class="marquee__track">
           <a
             v-for="(org, i) in [...ORGANIZATIONS, ...ORGANIZATIONS]"
             :key="org.name + '-' + i"
@@ -467,8 +509,10 @@ const ORGANIZATIONS = [
   align-items: stretch;
   gap: 4rem;
   width: max-content;
-  animation: marquee-scroll 30s linear infinite;
   will-change: transform;
+}
+.marquee__track--ready {
+  animation: marquee-scroll 30s linear infinite;
 }
 .marquee:hover .marquee__track {
   animation-play-state: paused;
@@ -488,7 +532,7 @@ const ORGANIZATIONS = [
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(var(--marquee-dist, -50%));
   }
 }
 </style>
