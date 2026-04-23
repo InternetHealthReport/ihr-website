@@ -8,7 +8,7 @@ const nbprobes = ref('100')
 </script>
 
 <template>
-  <div>
+  <div class="content-width">
     <h1 class="text-center q-pa-xl">Metis: Atlas probe deployment recommendations</h1>
     <div class="row justify-center">
       <div class="IHR_description">

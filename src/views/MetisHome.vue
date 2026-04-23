@@ -6,7 +6,7 @@ import '@/styles/chart.css'
 </script>
 
 <template>
-  <div>
+  <div class="content-width">
     <h1 class="text-center q-pa-xl">Metis</h1>
     <div class="row justify-center metis-component">
       <div class="IHR_description">
