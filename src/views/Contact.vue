@@ -1,89 +1,107 @@
-<script setup></script>
+<script setup>
+import { QCard, QCardSection, QIcon, QSeparator } from 'quasar'
+</script>
 
 <template>
-  <div id="IHR_contact-page">
-    <div class="IHR_contact-page">
-      <h1>Feedback</h1>
-      <p class="IHR_description">
-        Please submit bug reports and feature requests on Github:
-        <a href="https://github.com/InternetHealthReport/ihr-website/issues" target="_blank"
-          >https://github.com/InternetHealthReport/ihr-website/issues</a
-        >
-      </p>
-      <h1>Others</h1>
-      <p>
-        For questions and inquiries, please contact us at:
-        <a href="mailto:admin@ihr.live">admin@ihr.live</a>
-      </p>
+  <div class="content-width">
+    <h1>Contact</h1>
+    <QSeparator />
+
+    <div class="row q-col-gutter-lg q-mt-md">
+      <!-- Feedback -->
+      <div class="col-12 col-sm-6">
+        <QCard flat bordered class="contact-card full-height">
+          <QCardSection class="q-pa-lg">
+            <div class="contact-card__icon-wrap">
+              <QIcon name="fab fa-github" size="1.25rem" color="primary" />
+            </div>
+            <div class="contact-card__title">Bug reports &amp; feature requests</div>
+            <p class="contact-card__desc">
+              Found something broken or have an idea to improve IHR? Submit an issue on GitHub.
+            </p>
+            <a
+              href="https://github.com/InternetHealthReport/ihr-website/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="contact-card__link"
+            >
+              github.com/InternetHealthReport/ihr-website/issues
+              <QIcon name="fas fa-external-link-alt" size="0.65rem" class="q-ml-xs" />
+            </a>
+          </QCardSection>
+        </QCard>
+      </div>
+
+      <!-- Others -->
+      <div class="col-12 col-sm-6">
+        <QCard flat bordered class="contact-card full-height">
+          <QCardSection class="q-pa-lg">
+            <div class="contact-card__icon-wrap">
+              <QIcon name="fas fa-envelope" size="1.25rem" color="primary" />
+            </div>
+            <div class="contact-card__title">Questions &amp; inquiries</div>
+            <p class="contact-card__desc">
+              For general questions, partnership opportunities, or anything else, reach us by email.
+            </p>
+            <a href="mailto:admin@ihr.live" class="contact-card__link">
+              admin@ihr.live
+              <QIcon name="fas fa-external-link-alt" size="0.65rem" class="q-ml-xs" />
+            </a>
+          </QCardSection>
+        </QCard>
+      </div>
+    </div>
+
+    <div class="contact-note">
+      Internet Health Report is an open project. Community contributions are always welcome.
     </div>
   </div>
 </template>
 
-<style>
-#IHR_contact-page {
-  width: 60%;
-  margin: 0 auto;
+<style scoped>
+/* ===== CARDS ===== */
+.contact-card {
+  border-radius: 10px !important;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
-@media screen and (max-width: 600px) {
-  #IHR_contact-page {
-    width: 100%;
-    padding: 0 1rem;
-  }
+.contact-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
-.IHR_background {
-  width: 1000px;
-  height: 1000px;
-  max-width: 100%;
-  background-repeat: no-repeat;
-  background-position: left top;
-  background-size: 1000px 1000px;
-  opacity: 0.1;
-  position: absolute;
-  top: 450px;
-  overflow-x: hidden;
-  position: fixed;
+.contact-card__icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #e6f1fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
-@media screen and (max-width: 600px) {
-  .IHR_background {
-    width: 100%;
-  }
-}
-.IHR_contact-page > h1 {
-  line-height: 1.5rem;
-  padding: 0.5rem 0;
+
+.contact-card__link {
+  font-size: 0.875rem;
+  color: #185fa5;
+  text-decoration: none;
   font-weight: 500;
-  border-bottom: 1px solid #ccc;
-  margin: 4rem 0 1.5rem;
-}
-@media screen and (max-width: 600px) {
-  .IHR_contact-page > h1 {
-    font-size: 1.8125rem;
-  }
-}
-.IHR_contact-page > h2 {
-  margin-bottom: 1.625rem;
-  font-weight: 500;
-  line-height: 1.5rem;
-  border-bottom: 1px solid #ccc;
-  margin: 4rem 0 1.5rem;
-}
-@media screen and (max-width: 600px) {
-  .IHR_contact-page > h2 {
-    font-size: 1.5rem;
-  }
-}
-.IHR_contact-page > p {
-  font-size: 1.5rem;
-  width: 100%;
-  margin: 2.5rem auto;
-  text-align: left;
-}
-@media screen and (max-width: 600px) {
-  .IHR_contact-page > p {
-    font-size: 1rem;
-  }
-}
-.IHR_contact-page > p > a {
   word-break: break-word;
+  display: inline-flex;
+  align-items: center;
+}
+.contact-card__link:hover {
+  text-decoration: underline;
+}
+
+/* ===== NOTE ===== */
+.contact-note {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #64748b;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.75rem;
+  line-height: 1.6;
 }
 </style>
