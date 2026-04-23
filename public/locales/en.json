@@ -91,7 +91,7 @@
       "title": "Tools",
       "metis": "Metis",
       "observable": "Observable",
-      "topology": "Network Topology",
+      "topology": "\"Upstream\" Topology",
       "bgpMonitor": "BGP Monitor",
       "traceroute": "Traceroute Monitor"
     },
