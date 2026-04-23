@@ -31,7 +31,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="content-width">
     <div v-if="route.params.cc">
       <Country v-if="countryString" />
     </div>

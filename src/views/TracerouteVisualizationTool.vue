@@ -96,7 +96,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="IHR_char-container">
+  <div class="content-width">
     <h1 class="text-center q-pa-xl">Traceroute Monitor</h1>
     <TracerouteMonitor
       :atlas-measurement-i-d="measurementID"

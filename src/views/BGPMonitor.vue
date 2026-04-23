@@ -1160,7 +1160,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="IHR_char-container relative-position">
+  <div class="content-width relative-position">
     <h1 class="text-center q-pa-xl">BGP Monitor</h1>
     <QCard>
       <QCardSection>
