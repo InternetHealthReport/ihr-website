@@ -15,7 +15,7 @@ import { QCard, QCardSection, QIcon, QSeparator } from 'quasar'
             <div class="contact-card__icon-wrap">
               <QIcon name="fab fa-github" size="1.25rem" color="primary" />
             </div>
-            <div class="contact-card__title">Bug reports &amp; feature requests</div>
+            <div class="contact-card__title">Bug reports &amp; Feature requests</div>
             <p class="contact-card__desc">
               Found something broken or have an idea to improve IHR? Submit an issue on GitHub.
             </p>
@@ -39,9 +39,10 @@ import { QCard, QCardSection, QIcon, QSeparator } from 'quasar'
             <div class="contact-card__icon-wrap">
               <QIcon name="fas fa-envelope" size="1.25rem" color="primary" />
             </div>
-            <div class="contact-card__title">Questions &amp; inquiries</div>
+            <div class="contact-card__title">Questions &amp; Inquiries</div>
             <p class="contact-card__desc">
-              For general questions, partnership opportunities, or anything else, reach us by email.
+              For general questions, collaboration opportunities, or anything else, reach us by
+              email.
             </p>
             <a href="mailto:admin@ihr.live" class="contact-card__link">
               admin@ihr.live
