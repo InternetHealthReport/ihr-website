@@ -1,6 +1,5 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { QLayout, QPageContainer, QBtn } from 'quasar'
 import { ref } from 'vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
@@ -26,50 +25,23 @@ const scrollToTop = () => {
 </script>
 
 <template>
-  <QLayout id="app" view="hHh LpR fff" @scroll="scroll">
+  <q-layout id="app" view="hHh LpR fff" @scroll="scroll">
     <Header />
-    <QPageContainer>
+    <q-page-container>
       <RouterView />
       <!-- <div id="IHR_last-element"> </div> -->
-    </QPageContainer>
+    </q-page-container>
     <Footer />
     <Transition name="fade-slide">
       <div class="IHR_scroll-btn" v-if="scrollPosition > 0">
-        <QBtn icon="fas fa-arrow-up" class="bg-primary text-white" round @click="scrollToTop" />
+        <q-btn icon="fas fa-arrow-up" class="bg-primary text-white" round @click="scrollToTop" />
       </div>
     </Transition>
-  </QLayout>
+  </q-layout>
   <LocalStorageBanner :disable="true" />
 </template>
 
 <style>
-.IHR_menu-entries a,
-.IHR_menu-entries button {
-  font-size: 1rem;
-  color: #fff;
-  text-decoration: none;
-  text-transform: capitalize;
-  font-weight: 700;
-}
-.IHR_menu-entries button {
-  box-shadow: none;
-}
-.IHR_footer a {
-  color: #fff;
-}
-.IHR_footer afirst-child {
-  border-left: none;
-}
-.IHR_copyright > div {
-  margin: 0.5rem 0;
-}
-.IHR_external-links {
-  font-size: 3em;
-  text-decoration: none;
-}
-.IHR_external-links a {
-  color: #fff;
-}
 .IHR_scroll-btn {
   position: fixed;
   bottom: 20px;
@@ -103,9 +75,6 @@ const scrollToTop = () => {
   transform: translateY(0);
 }
 
-#IHR_home-button {
-  padding: 0 13px 0 2px;
-}
 #IHR_forgotten-password {
   white-space: nowrap;
 }

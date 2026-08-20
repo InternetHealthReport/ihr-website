@@ -71,7 +71,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" class="content-width">
     <div v-if="route.params.id || route.params.ip">
       <AS v-if="asNumber" />
       <IXP v-if="ixpNumber" />

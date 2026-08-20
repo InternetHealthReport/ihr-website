@@ -196,7 +196,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="IHR_char-container">
+  <div class="content-width">
     <h1 class="text-center q-pa-xl">"Upstream" Topology Overview</h1>
     <div class="row justify-center">
       <div v-if="chartAmount == 0" class="IHR_description">

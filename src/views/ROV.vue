@@ -126,7 +126,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="IHR_char-container">
+  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer" class="content-width">
     <div>
       <h1 class="text-center q-pa-xl">
         <q-icon name="fas fa-route" />&nbsp; Route Origin Validation

@@ -10,11 +10,6 @@
   line-height: 1;
 }
 
-.IHR_char-container {
-  width: 90%;
-  margin: 0 auto;
-}
-
 .IHR_loading-spinner {
   position: absolute;
   top: 35%;

@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QMarkupTable, QSpinner } from 'quasar'
 import { ref, onMounted, inject } from 'vue'
 import Tr from '@/i18n/translation'
 
@@ -51,82 +50,113 @@ onMounted(() => {
 </script>
 
 <template>
-  <QMarkupTable class="user-info-card" dense bordered>
-    <thead>
-      <tr>
-        <th :colspan="2" align="center" style="border-bottom: 1px solid white; font-size: large">
-          YOUR CONNECTION
-        </th>
-      </tr>
-    </thead>
-    <tbody v-if="!as_info_query.loading">
-      <tr>
-        <td align="right" class="user-info-text">IP:</td>
-        <td align="left" class="user-info-text">
-          {{ userInfo.IP }}
-        </td>
-      </tr>
-      <tr>
-        <td align="right" class="user-info-text">AS:</td>
-        <td align="left" class="user-info-text">
-          <RouterLink
-            :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${userInfo.AS}` } })"
-            class="user-info-link"
-          >
-            AS{{ userInfo.AS }} - {{ userInfo.AS_NAME }}
-          </RouterLink>
-        </td>
-      </tr>
-      <tr>
-        <td align="right" class="user-info-text">PREFIX:</td>
-        <td align="left" class="user-info-text">
-          <RouterLink
-            :to="
-              Tr.i18nRoute({
-                name: 'prefix',
-                params: { ip: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] }
-              })
-            "
-            class="user-info-link"
-          >
-            {{ userInfo.PREFIX }}
-          </RouterLink>
-        </td>
-      </tr>
-      <tr>
-        <td align="right" class="user-info-text">COUNTRY:</td>
-        <td align="left" class="user-info-text">
-          <RouterLink
-            :to="Tr.i18nRoute({ name: 'country', params: { cc: userInfo.CC } })"
-            class="user-info-link"
-          >
-            {{ userInfo.COUNTRY }}
-          </RouterLink>
-        </td>
-      </tr>
-    </tbody>
-    <div v-else class="loading-spinner">
-      <QSpinner color="secondary" size="1em" />
-    </div>
-  </QMarkupTable>
+  <q-card class="user-info-card" flat>
+    <q-card-section class="user-info-header">
+      <q-icon name="fas fa-wifi" size="1rem" class="q-mr-sm" />
+      <span class="user-info-header__text">{{ $t('homePage.yourConnection.title') }}</span>
+    </q-card-section>
+    <q-card-section v-if="!as_info_query.loading" class="user-info-body q-pt-sm">
+      <div class="user-info-row">
+        <span class="user-info-label">{{ $t('homePage.yourConnection.ip') }}</span>
+        <span class="user-info-value">{{ userInfo.IP }}</span>
+      </div>
+      <div class="user-info-row">
+        <span class="user-info-label">{{ $t('homePage.yourConnection.as') }}</span>
+        <RouterLink
+          :to="Tr.i18nRoute({ name: 'network', params: { id: `AS${userInfo.AS}` } })"
+          class="user-info-link"
+        >
+          AS{{ userInfo.AS }} — {{ userInfo.AS_NAME }}
+        </RouterLink>
+      </div>
+      <div class="user-info-row">
+        <span class="user-info-label">{{ $t('homePage.yourConnection.prefix') }}</span>
+        <RouterLink
+          :to="
+            Tr.i18nRoute({
+              name: 'prefix',
+              params: { ip: userInfo.PREFIX.split('/')[0], length: userInfo.PREFIX.split('/')[1] }
+            })
+          "
+          class="user-info-link"
+        >
+          {{ userInfo.PREFIX }}
+        </RouterLink>
+      </div>
+      <div class="user-info-row">
+        <span class="user-info-label">{{ $t('homePage.yourConnection.country') }}</span>
+        <RouterLink
+          :to="Tr.i18nRoute({ name: 'country', params: { cc: userInfo.CC } })"
+          class="user-info-link"
+        >
+          {{ userInfo.COUNTRY }}
+        </RouterLink>
+      </div>
+    </q-card-section>
+    <q-card-section v-else class="text-center q-py-lg">
+      <q-spinner color="white" size="1.5em" />
+    </q-card-section>
+  </q-card>
 </template>
 
 <style>
 .user-info-card {
-  width: inherit;
-  background-color: rgba(0, 0, 0, 0) !important;
-  border-color: #fff !important;
-  color: #fff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  overflow: hidden;
 }
-.user-info-text {
-  font-size: 14px !important;
-  font-weight: 500 !important;
+.user-info-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 0.5rem !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.user-info-header__text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.7);
+}
+.user-info-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.user-info-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.user-info-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.5);
+  min-width: 55px;
+  flex-shrink: 0;
+}
+.user-info-value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  word-break: break-all;
 }
 .user-info-link {
-  color: #fff !important;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #93c5fd !important;
+  text-decoration: none;
+  word-break: break-all;
+  transition: color 0.15s;
 }
-.loading-spinner {
-  margin-bottom: 10px;
-  text-align: center;
+.user-info-link:hover {
+  color: #bfdbfe !important;
+  text-decoration: underline;
 }
 </style>

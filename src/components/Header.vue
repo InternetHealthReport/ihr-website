@@ -1,22 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import {
-  QHeader,
-  QToolbar,
-  QItem,
-  QBtn,
-  QBtnGroup,
-  QBtnDropdown,
-  QList,
-  QItemSection,
-  QItemLabel,
-  QDrawer,
-  QExpansionItem,
-  QBadge,
-  debounce
-} from 'quasar'
 import Tr from '@/i18n/translation'
-import { onMounted, ref, watch } from 'vue'
+import { ref } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 
@@ -51,26 +36,14 @@ const SIMPLE_MENU = [
         routeName: 'hostname',
         summary: 'header.hostNameReport.summary'
       },
-      {
-        entryName: 'header.tagReport.name',
-        routeName: 'tag',
-        summary: 'header.tagReport.summary'
-      },
+      { entryName: 'header.tagReport.name', routeName: 'tag', summary: 'header.tagReport.summary' },
       {
         entryName: 'header.rankReport.name',
         routeName: 'rank',
         summary: 'header.rankReport.summary'
       },
-      {
-        entryName: 'header.rovReport.name',
-        routeName: 'rov',
-        summary: 'header.rovReport.summary'
-      },
-      {
-        entryName: 'header.covid19.name',
-        routeName: 'covid19',
-        summary: 'header.covid19.summary'
-      }
+      { entryName: 'header.rovReport.name', routeName: 'rov', summary: 'header.rovReport.summary' },
+      { entryName: 'header.covid19.name', routeName: 'covid19', summary: 'header.covid19.summary' }
     ]
   },
   {
@@ -111,175 +84,118 @@ const SIMPLE_MENU = [
       }
     ]
   },
-  {
-    entryName: 'header.documentation',
-    routeName: 'documentation'
-  },
-  {
-    entryName: 'header.API',
-    routeName: 'api'
-  },
-  {
-    entryName: 'header.contact',
-    routeName: 'contact'
-  }
+  { entryName: 'header.documentation', routeName: 'documentation' },
+  { entryName: 'header.API', routeName: 'api' },
+  { entryName: 'header.contact', routeName: 'contact' }
 ]
 
 const simpleMenu = ref(SIMPLE_MENU)
 const leftDrawerOpen = ref(false)
 
-// onMounted(() => {
-//   document.title = 'Internet Health Report'
-// })
-
-const debounceFunc = () => {
-  debounce(() => {
-    checkMenu()
-  }, 200)
-}
-
-const toggleValue = (_index, _type, _value) => {
-  if (_type == 1) {
-    simpleMenu.value[_index].menuOver = _value
-  } else if (_type == 2) {
-    simpleMenu.value[_index].listOver = _value
-  }
-}
-
 const closeMenu = () => {
-  for (let i = 0; i < simpleMenu.value.length; i++) {
-    if (simpleMenu.value[i].menu != undefined) {
-      simpleMenu.value[i].menuOver = false
-      simpleMenu.value[i].listOver = false
-      simpleMenu.value[i].menu = false
+  simpleMenu.value.forEach((item) => {
+    if (item.menu !== undefined) {
+      item.menu = false
     }
-  }
+  })
 }
-
-const checkMenu = () => {
-  for (let i = 0; i < simpleMenu.value.length; i++) {
-    if (simpleMenu.value[i].menu != undefined) {
-      if (simpleMenu.value[i].menuOver || simpleMenu.value[i].listOver) {
-        simpleMenu.value[i].menu = true
-      } else {
-        simpleMenu.value[i].menu = false
-      }
-    }
-  }
-}
-
-watch(simpleMenu, () => {
-  debounceFunc()
-})
 </script>
 
 <template>
-  <QHeader elevated primary>
-    <QToolbar class="q-py-sm q-px-lg row">
-      <div class="col-12 row no-wrap items-center">
-        <QItem id="IHR_home-button" role="button">
-          <RouterLink :to="Tr.i18nRoute({ name: 'home' })">
-            <QBtn
-              round
-              dense
+  <q-header elevated class="ihr-header">
+    <q-toolbar class="ihr-toolbar">
+      <div class="ihr-toolbar__inner content-width">
+        <!-- Logo -->
+        <RouterLink :to="Tr.i18nRoute({ name: 'home' })" class="ihr-logo">
+          <img src="/imgs/ihr_logo.svg" alt="IHR Logo" />
+          <span class="ihr-logo__text gt-xs">Internet Health Report</span>
+        </RouterLink>
+
+        <!-- Search (desktop) -->
+        <div class="ihr-search gt-sm">
+          <SearchBar />
+        </div>
+
+        <!-- Desktop nav -->
+        <nav class="ihr-nav gt-sm">
+          <template v-for="(item, index) in simpleMenu" :key="item.entryName">
+            <q-btn
+              v-if="!item.options"
               flat
-              :ripple="false"
               no-caps
-              size="22px"
-              aria-label="IHR Logo - Go to Home"
-            >
-              <img src="/imgs/ihr_logo.svg" style="width: 45px" alt="IHR Logo" />
-            </QBtn>
-          </RouterLink>
-        </QItem>
-        <SearchBar class="IHR_search-box col-4" />
-        <div
-          class="IHR_menu-entries text-body2 text-weight-bold row items-center no-wrap gt-sm q-ml-auto q-mr-md"
-        >
-          <QBtnGroup v-for="(item, index) in simpleMenu" :key="item.entryName" flat>
-            <QBtn
-              v-if="item.options == null"
-              flat
               :label="$t(item.entryName)"
               :to="Tr.i18nRoute({ name: item.routeName })"
+              class="ihr-nav__btn"
             />
-            <QBtnDropdown
+            <q-btn-dropdown
               v-else
               v-model="item.menu"
               flat
+              no-caps
               :label="$t(item.entryName)"
+              class="ihr-nav__btn"
               menu-anchor="bottom left"
               menu-self="top left"
-              @mouseover.enter="toggleValue(index, 1, true)"
-              @mouseout.enter="toggleValue(index, 1, false)"
             >
-              <QList
-                class="rounded-borders text-white bg-primary"
-                bordered
-                separator
-                padding
-                @mouseover.enter="toggleValue(index, 2, true)"
-                @mouseout.enter="toggleValue(index, 2, false)"
-              >
-                <QItem
+              <q-list class="ihr-dropdown" separator padding>
+                <q-item
                   v-for="option in item.options"
                   :key="option.entryName"
                   v-close-popup
                   clickable
                   :to="Tr.i18nRoute({ name: option.routeName })"
-                  active-class="IHR_active-route"
+                  active-class="ihr-nav--active"
                   @click="closeMenu"
                 >
-                  <QItemSection>
-                    <QBadge
+                  <q-item-section>
+                    <q-badge
                       v-if="option.experimental"
                       color="red"
                       label="Experimental"
                       style="width: fit-content"
                     />
-                    <QItemLabel class="text-bold">
-                      {{ $t(option.entryName) }}
-                    </QItemLabel>
-                    <QItemLabel class="text-grey" caption lines="2">
-                      {{ $t(option.summary) }}
-                    </QItemLabel>
-                  </QItemSection>
-                </QItem>
-              </QList>
-            </QBtnDropdown>
-          </QBtnGroup>
+                    <q-item-label class="text-bold">{{ $t(option.entryName) }}</q-item-label>
+                    <q-item-label class="text-grey-5" caption lines="2">{{
+                      $t(option.summary)
+                    }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
+          </template>
           <!-- <LanguageSwitcher /> -->
-        </div>
-        <div class="lt-md">
-          <q-btn
-            flat
-            dense
-            round
-            icon="menu"
-            aria-label="Menu"
-            @click="leftDrawerOpen = !leftDrawerOpen"
-          />
-        </div>
-      </div>
-      <!--Log in /Log out stuff here-->
-    </QToolbar>
-    <QDrawer v-model="leftDrawerOpen" bordered class="bg-primary">
-      <QList class="q-pt-md">
-        <!-- <QItemLabel header>Essential Links</QItemLabel> -->
-        <template v-for="(item, index) in simpleMenu" :key="index">
-          <QItem v-if="!item.options" flat class="q-pa-none">
-            <QBtn
-              class="full-width"
-              flat
-              :label="$t(item.entryName)"
-              :to="Tr.i18nRoute({ name: item.routeName })"
-              @click="leftDrawerOpen = false"
-              align="left"
-              style="min-height: 48px; padding: 12px 16px; font-size: 16px"
-            />
-          </QItem>
+        </nav>
 
-          <QExpansionItem
+        <!-- Mobile hamburger -->
+        <q-btn
+          class="ihr-hamburger lt-md"
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Menu"
+          @click="leftDrawerOpen = !leftDrawerOpen"
+        />
+      </div>
+    </q-toolbar>
+
+    <!-- Mobile drawer -->
+    <q-drawer v-model="leftDrawerOpen" bordered class="ihr-drawer">
+      <q-list class="q-pt-md">
+        <template v-for="(item, index) in simpleMenu" :key="index">
+          <q-item
+            v-if="!item.options"
+            clickable
+            :to="Tr.i18nRoute({ name: item.routeName })"
+            @click="leftDrawerOpen = false"
+          >
+            <q-item-section>
+              <q-item-label class="text-white text-weight-medium" style="font-size: 16px">{{
+                $t(item.entryName)
+              }}</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-expansion-item
             v-else
             :label="$t(item.entryName)"
             expand-icon="arrow_drop_down"
@@ -287,71 +203,142 @@ watch(simpleMenu, () => {
             style="font-size: 16px"
             header-class="text-white text-uppercase text-weight-medium q-py-md"
           >
-            <!-- Submenu items -->
-            <QList padding>
-              <QItem
+            <q-list padding>
+              <q-item
                 v-for="option in item.options"
                 :key="option.entryName"
                 clickable
                 :to="Tr.i18nRoute({ name: option.routeName })"
-                active-class="IHR_active-route"
+                active-class="ihr-nav--active"
                 @click="leftDrawerOpen = false"
                 style="padding: 12px 24px"
               >
-                <QItemSection>
-                  <QBadge
+                <q-item-section>
+                  <q-badge
                     v-if="option.experimental"
                     color="red"
                     label="Experimental"
                     style="width: fit-content"
                   />
-                  <QItemLabel class="text-weight-medium text-white q-pb-xs">
-                    {{ $t(option.entryName) }}
-                  </QItemLabel>
-                  <QItemLabel class="text-grey text-caption" lines="2">
-                    {{ $t(option.summary) }}
-                  </QItemLabel>
-                </QItemSection>
-              </QItem>
+                  <q-item-label class="text-weight-medium text-white q-pb-xs">{{
+                    $t(option.entryName)
+                  }}</q-item-label>
+                  <q-item-label class="text-grey text-caption" lines="2">{{
+                    $t(option.summary)
+                  }}</q-item-label>
+                </q-item-section>
+              </q-item>
               <!-- <LanguageSwitcher /> -->
-            </QList>
-          </QExpansionItem>
+            </q-list>
+          </q-expansion-item>
         </template>
-      </QList>
-    </QDrawer>
-  </QHeader>
+      </q-list>
+    </q-drawer>
+  </q-header>
 </template>
 
 <style>
-.IHR_minimum-width {
-  min-width: 640px !important;
+/* Header shell */
+.ihr-header {
+  background: #263238 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
-.IHR_menu-entries a,
-.IHR_menu-entries button {
-  font-size: 1rem;
-  color: #fff;
+
+/* Toolbar — use q-toolbar but override its defaults */
+.ihr-toolbar.q-toolbar {
+  min-height: 64px;
+  height: 64px;
+  padding: 0 2rem;
+  overflow: visible;
+}
+
+/* Inner wrapper — centers content via content-width */
+.ihr-toolbar__inner {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Logo */
+.ihr-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-decoration: none;
-  text-transform: capitalize;
-  margin-right: 10px;
-  font-weight: 700;
+  flex-shrink: 0;
+  padding: 4px;
 }
-.IHR_menu-entries button {
+.ihr-logo img {
+  width: 38px;
+  display: block;
+}
+.ihr-logo__text {
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* Search */
+.ihr-search {
+  flex: 0 1 420px;
+  min-width: 200px;
+}
+
+/* Desktop nav */
+.ihr-nav {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.ihr-nav__btn.q-btn {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.01em;
   box-shadow: none;
 }
-.IHR_dropdown-menu {
-  background-color: #263238;
-}
-.IHR_dropdown-menu a {
-  font-size: 1rem;
+
+/* Hamburger */
+.ihr-hamburger.q-btn {
+  margin-left: auto;
   color: #fff;
-  text-decoration: none;
-  text-transform: capitalize;
-  margin-right: 10px;
-  font-weight: 700;
 }
-#IHR_home-button {
-  padding: 0px 13px 0px 2px;
+
+/* Dropdown menu */
+.ihr-dropdown {
+  background: rgba(38, 50, 56, 0.96) !important;
+  backdrop-filter: blur(12px);
+  color: #fff;
+  border-radius: 8px;
 }
+.q-menu {
+  background: rgba(38, 50, 56, 0.96) !important;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Active route highlight */
+.ihr-nav--active {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px;
+}
+
+/* Drawer */
+.ihr-drawer {
+  background: #263238 !important;
+}
+.ihr-drawer .q-item {
+  color: #fff;
+}
+
+/* Legacy compat (used by App.vue / other components) */
 #IHR_forgotten-password {
   white-space: nowrap;
 }
@@ -364,19 +351,5 @@ watch(simpleMenu, () => {
 }
 #IHR_last-element {
   height: 50px;
-}
-.IHR_active-route {
-  background: #ffffff26 !important;
-  border-radius: 4px;
-}
-
-@media screen and (max-width: 1024px) {
-  .col-12.row.no-wrap.items-center {
-    justify-content: space-around;
-  }
-
-  .IHR_search-box.col-4 {
-    flex-grow: 1;
-  }
 }
 </style>

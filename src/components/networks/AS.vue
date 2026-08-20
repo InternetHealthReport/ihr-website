@@ -1,5 +1,6 @@
 <script setup>
-import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel } from 'quasar'
+import DashboardController from '@/components/controllers/DashboardController.vue'
+import { QCard, QTabs, QTab, QSeparator, QTabPanels, QTabPanel, event } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import Tr from '@/i18n/translation'
 import { ref, watch, computed, onMounted, inject } from 'vue'
@@ -25,21 +26,22 @@ const router = useRouter()
 
 const timeRange = route.query.last ? route.query.last : 3
 
-let {
-  interval,
-  utcString,
-  fetch,
-  reportDateFmt,
-  minDate,
-  maxDate,
-  setReportDate,
-  startTime,
-  endTime
-} = report(timeRange)
+let reportDate = report(timeRange)
 
-if (route.query.date && route.query.date != utcString(maxDate.value).split('T')[0]) {
-  setReportDate(new Date(route.query.date))
+if (route.query.date && route.query.date != reportDate.endTime.toISOString().split('T')[0]) {
+  reportDate = report(timeRange, new Date(route.query.date))
 }
+
+const navigation = ref([
+  { label: 'Overview', icon: 'article', value: 'overview' },
+  { label: 'Monitoring', icon: 'monitor_heart', value: 'monitoring' },
+  { label: 'Routing', icon: 'route', value: 'routing' },
+  { label: 'DNS', icon: 'dns', value: 'dns' },
+  { label: 'Peering', icon: 'diversity_2', value: 'peering' },
+  { label: 'Registration', icon: 'app_registration', value: 'registration' },
+  { label: 'Rankings', icon: 'leaderboard', value: 'rankings' },
+  { label: 'Custom', icon: 'dashboard_customize', value: 'custom' }
+])
 
 const activeMenu = route.query.active ? route.query.active : 'overview'
 
@@ -47,16 +49,28 @@ const routeHash = ref(route.hash)
 const loadingStatus = ref(false)
 const asNumber = ref(Number(route.params.id.replace('AS', '')))
 const asName = ref(null)
+const asTags = ref([])
 const menu = ref(activeMenu)
 const peeringdbId = ref(null)
 const addressFamily = ref(route.query.af == undefined ? 4 : route.query.af)
+const peeringdbNetId = ref(null)
+
+const references = ref([
+  { label: 'bgp.he.net', value: `https://bgp.he.net/AS${asNumber.value}` },
+  { label: 'bgp.tools', value: `https://bgp.tools/as/${asNumber.value}` },
+  { label: 'PeeringDB', value: `https://www.peeringdb.com/net/${peeringdbNetId.value}` },
+  { label: 'Cloudflare Radar', value: `https://radar.cloudflare.com/AS${asNumber.value}` },
+  { label: 'RIPEstat', value: `https://stat.ripe.net/app/launchpad/AS${asNumber.value}` }
+])
 
 const getInfo = () => {
   const query = `MATCH (a:AS {asn: $asn})
       OPTIONAL MATCH (a)-[:NAME {reference_org:'PeeringDB'}]->(pdbn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'bgp.tools'}]->(btn:Name)
       OPTIONAL MATCH (a)-[:NAME {reference_org:'RIPE NCC'}]->(ripen:Name)
-      RETURN COALESCE(pdbn.name, btn.name, ripen.name) AS name`
+      OPTIONAL MATCH (a)-[:CATEGORIZED]->(t:Tag)
+      OPTIONAL MATCH (a)-[:EXTERNAL_ID]->(p:PeeringdbNetID)
+      RETURN COALESCE(pdbn.name, btn.name, ripen.name) AS name, collect(DISTINCT(t.label)) as tags, p.id AS peeringdbNetId`
   return [{ statement: query, parameters: { asn: asNumber.value } }]
 }
 
@@ -68,6 +82,8 @@ const fetchData = async () => {
   try {
     let res = await iyp_api.run(queries)
     asName.value = res[0][0].name
+    asTags.value = res[0][0].tags
+    peeringdbNetId.value = res[0][0].peeringdbNetId
     loadingStatus.value = false
   } catch (e) {
     loadingStatus.value = false
@@ -85,8 +101,8 @@ const pushRoute = () => {
       replace: true,
       query: Object.assign({}, route.query, {
         af: family.value,
-        last: interval.value.dayDiff(),
-        date: utcString(interval.value.end).split('T')[0],
+        last: reportDate.interval.dayDiff(),
+        date: reportDate.endTime.toISOString().split('T')[0],
         active: menu.value ? menu.value : activeMenu
       })
     })
@@ -99,18 +115,29 @@ const family = computed(() => {
 
 const pageTitle = computed(() => {
   if (!asName.value) {
-    return `AS${asNumber.value}`
+    return { title: `AS${asNumber.value}`, subtitle: '' }
   }
-  return `AS${asNumber.value} - ${asName.value}`
+  return { title: `AS${asNumber.value}`, subtitle: asName.value }
 })
 
 const toggleIpFamily = () => {
   addressFamily.value = addressFamily.value == AS_FAMILY.v4 ? AS_FAMILY.v6 : AS_FAMILY.v4
 }
 
-watch(addressFamily, () => {
+const changeSlot = (event) => {
+  menu.value = event
+}
+
+const changeEndTime = (event) => {
+  reportDate = report(event.diffDays, event.to)
   pushRoute()
-})
+}
+
+const changeAf = (event) => {
+  addressFamily.value = event
+  pushRoute()
+}
+
 watch(
   () => route.params.id,
   (asn) => {
@@ -124,9 +151,7 @@ watch(
     }
   }
 )
-watch(interval, () => {
-  pushRoute()
-})
+
 watch(
   () => route.query.active,
   (active) => {
@@ -135,12 +160,22 @@ watch(
     }
   }
 )
+
 watch(menu, () => {
   if ('display' in route.query && !route.hash.includes('#')) {
     delete route.query.display
   }
   pushRoute()
 })
+
+watch(peeringdbNetId, () => {
+  references.value.forEach((obj) => {
+    if (obj.value.includes('peeringdb.com')) {
+      obj.value = `https://www.peeringdb.com/net/${peeringdbNetId.value}`
+    }
+  })
+})
+
 onMounted(() => {
   if (asNumber.value) {
     pushRoute()
@@ -156,7 +191,34 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
+  <DashboardController
+    :navigation="navigation"
+    :title="pageTitle.title"
+    :subtitle="pageTitle.subtitle"
+    :tags="asTags"
+    :start-time="reportDate.startTime"
+    :end-time="reportDate.endTime"
+    :active-slot="menu"
+    :address-family="Number(addressFamily)"
+    :external="references"
+    @change-slot="changeSlot"
+    @change-end-time="changeEndTime"
+    @change-af="changeAf"
+  >
+    <q-tab-panels v-model="menu">
+      <q-tab-panel name="overview">
+        <ASOverview :as-number="asNumber" :peeringdb-id="setPeeringdbId" />
+      </q-tab-panel>
+      <q-tab-panel name="monitoring"> test456 </q-tab-panel>
+      <q-tab-panel name="routing"> test789 </q-tab-panel>
+      <q-tab-panel name="dns"> test123123 </q-tab-panel>
+      <q-tab-panel name="peering"> test123456 </q-tab-panel>
+      <q-tab-panel name="registration"> test123789 </q-tab-panel>
+      <q-tab-panel name="rankings"> test123123123 </q-tab-panel>
+      <q-tab-panel name="custom"> test123123456 </q-tab-panel>
+    </q-tab-panels>
+  </DashboardController>
+  <!-- <div id="IHR_as-and-ixp-container" ref="ihrAsAndIxpContainer">
     <h1 class="text-center">
       {{ pageTitle }}
     </h1>
@@ -237,7 +299,7 @@ onMounted(() => {
         </QTabPanel>
       </QTabPanels>
     </QCard>
-  </div>
+  </div> -->
 </template>
 
 <style>

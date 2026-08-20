@@ -181,7 +181,7 @@ const copyAPI = () => {
 </script>
 
 <template>
-  <div>
+  <div class="content-width">
     <h1 class="text-center q-pa-xl">Metis: Atlas probe selection</h1>
     <div class="row justify-center q-pa-md">
       <div class="IHR_description">

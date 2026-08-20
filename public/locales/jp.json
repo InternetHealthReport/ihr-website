@@ -87,13 +87,21 @@
       "covid19": "COVID19 ",
       "global": "global "
     },
+     "tools": {
+      "title": "Tools",
+      "metis": "Metis",
+      "observable": "Observable",
+      "topology": "\"Upstream\" Topology",
+      "bgpMonitor": "BGP Monitor",
+      "traceroute": "Traceroute Monitor"
+    },
     "documentation": {
       "title": "documentation",
       "dataAccess": "Data access",
       "analysisModules": "Analysis modules"
     },
     "about": {
-      "title": "about IHR",
+      "title": "About IHR",
       "datapolicy": "data policy",
       "contact": "contact",
       "acknowledgments": "acknowledgments"
@@ -428,7 +436,7 @@
               "src": "",
               "style": ""
             },
-            "body": "<a href='https://www.manrs.org/' target='_blank'>Mutually Agreed Norms for Routing Security (MANRS)</a> is a global initiative that supported the development of IHR tools to monitor route origin validation via the <a href='https://www.manrs.org/ambassadors-program/fellows/'>MANRS Fellowship Program</a>."
+            "body": "<a href='https://www.manrs.org/ target='_blank''>Mutually Agreed Norms for Routing Security (MANRS)</a> is a global initiative that supported the development of IHR tools to monitor route origin validation via the <a href='https://www.manrs.org/ambassadors-program/fellows/'>MANRS Fellowship Program</a>."
           },
           "8": {
             "header": "Edgecast",
@@ -772,6 +780,32 @@
     }
   },
   "homePage": {
+    "hero": {
+      "headline": "Monitoring the health of the Internet",
+      "subtitle": "Providing network operators, policymakers, and researchers with a better understanding of the Internet's infrastructure, performance, and evolution.",
+      "globalReport": "Global Report",
+      "exploreNetworks": "Explore Networks"
+    },
+    "yourConnection": {
+      "title": "Your Connection",
+      "ip": "IP",
+      "as": "AS",
+      "prefix": "Prefix",
+      "country": "Country"
+    },
+    "stats": {
+      "networks": "80,000+",
+      "networksLabel": "Networks Monitored",
+      "countries": "170+",
+      "countriesLabel": "Countries Covered",
+      "dataSources": "10+",
+      "dataSourcesLabel": "Data Sources",
+      "monitoring": "24/7",
+      "monitoringLabel": "Continuous Monitoring"
+    },
+    "features": {
+      "title": "How We Monitor the Internet"
+    },
     "globalReport": {
       "name": "GLOBAL REPORT",
       "description": "The Internet Health Report monitors the conditions of networks that compose the Internet. This effort aims to provide network operators, policymakers, and other stakeholders, with a better understanding of the Internet's infrastructure and its evolution."
@@ -799,11 +833,50 @@
         "description": "The worst-case scenario is the complete disconnection of a network from the Internet. The Internet Health Report infers data plane disruptions by monitoring the connectivity of RIPE Atlas probes."
       }
     },
-    "ihrTweets": {
-      "title": "IHR Tweets"
+    "reports": {
+      "title": "Explore Our Reports",
+      "global": {
+        "name": "Global Report",
+        "description": "Alarms reported across all monitored networks"
+      },
+      "country": {
+        "name": "Country Report",
+        "description": "Overview of Internet resources per country"
+      },
+      "network": {
+        "name": "Network Report",
+        "description": "Details for a single network (AS or IXP)"
+      },
+      "hostname": {
+        "name": "Hostname Report",
+        "description": "Details for a specific hostname"
+      },
+      "tag": {
+        "name": "Tag Report",
+        "description": "Details for a group of tagged networks"
+      },
+      "rank": {
+        "name": "Rank Report",
+        "description": "Rankings of networks by various metrics"
+      }
+    },
+    "tools": {
+      "title": "Tools",
+      "metis": {
+        "name": "Metis",
+        "description": "Atlas probe selection and deployment tool"
+      },
+      "bgpMonitor": {
+        "name": "BGP Monitor",
+        "description": "Monitor real-time and past BGP events"
+      },
+      "traceroute": {
+        "name": "Traceroute Monitor",
+        "description": "Visualize and monitor traceroute data"
+      }
     },
     "ack": {
-      "title": "Special thanks to",
+      "title": "Supported By",
       "organizations": {
         "iij": {
           "name": "IIJ",
@@ -1013,7 +1086,7 @@
         "caption": "Prefixes registered and geo-located in ",
         "info": {
           "title": "IP Prefixes",
-          "description": "<p>IP prefixes geo-located by Maxmind or registered with RIRs in the selected country.</p>"
+          "description": "<p>IP prefixes that are announced in BGP and geo-located by Maxmind in the selected country.</p>"
         }
       },
       "atlas": {

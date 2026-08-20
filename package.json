@@ -1,6 +1,6 @@
 {
   "name": "ihr-website",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -23,8 +23,11 @@
     "idb-keyval": "^6.2.2",
     "ip-address": "^10.1.0",
     "plotly.js-dist": "^3.4.0",
+    "postprocessing": "^6.39.1",
     "quasar": "^2.18.7",
     "swagger-ui-dist": "^5.32.1",
+    "three": "^0.184.0",
+    "three-globe": "^2.45.2",
     "v-network-graph": "^0.9.22",
     "vue": "^3.5.30",
     "vue-i18n": "^11.3.0",
