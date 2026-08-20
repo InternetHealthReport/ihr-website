@@ -1,18 +1,5 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import {
-  QHeader,
-  QToolbar,
-  QBtn,
-  QBtnDropdown,
-  QList,
-  QItem,
-  QItemSection,
-  QItemLabel,
-  QDrawer,
-  QExpansionItem,
-  QBadge
-} from 'quasar'
 import Tr from '@/i18n/translation'
 import { ref } from 'vue'
 import SearchBar from '@/components/search/SearchBar.vue'
@@ -115,8 +102,8 @@ const closeMenu = () => {
 </script>
 
 <template>
-  <QHeader elevated class="ihr-header">
-    <QToolbar class="ihr-toolbar">
+  <q-header elevated class="ihr-header">
+    <q-toolbar class="ihr-toolbar">
       <div class="ihr-toolbar__inner content-width">
         <!-- Logo -->
         <RouterLink :to="Tr.i18nRoute({ name: 'home' })" class="ihr-logo">
@@ -132,7 +119,7 @@ const closeMenu = () => {
         <!-- Desktop nav -->
         <nav class="ihr-nav gt-sm">
           <template v-for="(item, index) in simpleMenu" :key="item.entryName">
-            <QBtn
+            <q-btn
               v-if="!item.options"
               flat
               no-caps
@@ -140,7 +127,7 @@ const closeMenu = () => {
               :to="Tr.i18nRoute({ name: item.routeName })"
               class="ihr-nav__btn"
             />
-            <QBtnDropdown
+            <q-btn-dropdown
               v-else
               v-model="item.menu"
               flat
@@ -150,8 +137,8 @@ const closeMenu = () => {
               menu-anchor="bottom left"
               menu-self="top left"
             >
-              <QList class="ihr-dropdown" separator padding>
-                <QItem
+              <q-list class="ihr-dropdown" separator padding>
+                <q-item
                   v-for="option in item.options"
                   :key="option.entryName"
                   v-close-popup
@@ -160,27 +147,27 @@ const closeMenu = () => {
                   active-class="ihr-nav--active"
                   @click="closeMenu"
                 >
-                  <QItemSection>
-                    <QBadge
+                  <q-item-section>
+                    <q-badge
                       v-if="option.experimental"
                       color="red"
                       label="Experimental"
                       style="width: fit-content"
                     />
-                    <QItemLabel class="text-bold">{{ $t(option.entryName) }}</QItemLabel>
-                    <QItemLabel class="text-grey-5" caption lines="2">{{
+                    <q-item-label class="text-bold">{{ $t(option.entryName) }}</q-item-label>
+                    <q-item-label class="text-grey-5" caption lines="2">{{
                       $t(option.summary)
-                    }}</QItemLabel>
-                  </QItemSection>
-                </QItem>
-              </QList>
-            </QBtnDropdown>
+                    }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-btn-dropdown>
           </template>
           <!-- <LanguageSwitcher /> -->
         </nav>
 
         <!-- Mobile hamburger -->
-        <QBtn
+        <q-btn
           class="ihr-hamburger lt-md"
           flat
           dense
@@ -190,25 +177,25 @@ const closeMenu = () => {
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
       </div>
-    </QToolbar>
+    </q-toolbar>
 
     <!-- Mobile drawer -->
-    <QDrawer v-model="leftDrawerOpen" bordered class="ihr-drawer">
-      <QList class="q-pt-md">
+    <q-drawer v-model="leftDrawerOpen" bordered class="ihr-drawer">
+      <q-list class="q-pt-md">
         <template v-for="(item, index) in simpleMenu" :key="index">
-          <QItem
+          <q-item
             v-if="!item.options"
             clickable
             :to="Tr.i18nRoute({ name: item.routeName })"
             @click="leftDrawerOpen = false"
           >
-            <QItemSection>
-              <QItemLabel class="text-white text-weight-medium" style="font-size: 16px">{{
+            <q-item-section>
+              <q-item-label class="text-white text-weight-medium" style="font-size: 16px">{{
                 $t(item.entryName)
-              }}</QItemLabel>
-            </QItemSection>
-          </QItem>
-          <QExpansionItem
+              }}</q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-expansion-item
             v-else
             :label="$t(item.entryName)"
             expand-icon="arrow_drop_down"
@@ -216,8 +203,8 @@ const closeMenu = () => {
             style="font-size: 16px"
             header-class="text-white text-uppercase text-weight-medium q-py-md"
           >
-            <QList padding>
-              <QItem
+            <q-list padding>
+              <q-item
                 v-for="option in item.options"
                 :key="option.entryName"
                 clickable
@@ -226,28 +213,28 @@ const closeMenu = () => {
                 @click="leftDrawerOpen = false"
                 style="padding: 12px 24px"
               >
-                <QItemSection>
-                  <QBadge
+                <q-item-section>
+                  <q-badge
                     v-if="option.experimental"
                     color="red"
                     label="Experimental"
                     style="width: fit-content"
                   />
-                  <QItemLabel class="text-weight-medium text-white q-pb-xs">{{
+                  <q-item-label class="text-weight-medium text-white q-pb-xs">{{
                     $t(option.entryName)
-                  }}</QItemLabel>
-                  <QItemLabel class="text-grey text-caption" lines="2">{{
+                  }}</q-item-label>
+                  <q-item-label class="text-grey text-caption" lines="2">{{
                     $t(option.summary)
-                  }}</QItemLabel>
-                </QItemSection>
-              </QItem>
+                  }}</q-item-label>
+                </q-item-section>
+              </q-item>
               <!-- <LanguageSwitcher /> -->
-            </QList>
-          </QExpansionItem>
+            </q-list>
+          </q-expansion-item>
         </template>
-      </QList>
-    </QDrawer>
-  </QHeader>
+      </q-list>
+    </q-drawer>
+  </q-header>
 </template>
 
 <style>
@@ -257,7 +244,7 @@ const closeMenu = () => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Toolbar — use QToolbar but override its defaults */
+/* Toolbar — use q-toolbar but override its defaults */
 .ihr-toolbar.q-toolbar {
   min-height: 64px;
   height: 64px;

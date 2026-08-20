@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QFooter, QIcon } from 'quasar'
 import Tr from '@/i18n/translation'
 import { version } from '../../package.json'
 
@@ -49,7 +48,7 @@ const COLUMNS = [
 </script>
 
 <template>
-  <QFooter elevated class="bg-blue-grey-10 text-white" style="z-index: 999">
+  <q-footer elevated class="bg-blue-grey-10 text-white">
     <!-- Main grid -->
     <div class="ihr-footer-grid content-width q-pa-xl">
       <!-- Brand column -->
@@ -75,7 +74,7 @@ const COLUMNS = [
             :aria-label="social.aria"
             class="ihr-footer-social-link"
           >
-            <QIcon :name="social.icon" />
+            <q-icon :name="social.icon" />
           </a>
         </div>
       </div>
@@ -143,7 +142,7 @@ const COLUMNS = [
         </a>
       </div>
     </div>
-  </QFooter>
+  </q-footer>
 </template>
 
 <style>

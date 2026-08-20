@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QCard, QCardSection, QIcon, QSpinner } from 'quasar'
 import { ref, onMounted, inject } from 'vue'
 import Tr from '@/i18n/translation'
 
@@ -51,12 +50,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <QCard class="user-info-card" flat>
-    <QCardSection class="user-info-header">
-      <QIcon name="fas fa-wifi" size="1rem" class="q-mr-sm" />
+  <q-card class="user-info-card" flat>
+    <q-card-section class="user-info-header">
+      <q-icon name="fas fa-wifi" size="1rem" class="q-mr-sm" />
       <span class="user-info-header__text">{{ $t('homePage.yourConnection.title') }}</span>
-    </QCardSection>
-    <QCardSection v-if="!as_info_query.loading" class="user-info-body q-pt-sm">
+    </q-card-section>
+    <q-card-section v-if="!as_info_query.loading" class="user-info-body q-pt-sm">
       <div class="user-info-row">
         <span class="user-info-label">{{ $t('homePage.yourConnection.ip') }}</span>
         <span class="user-info-value">{{ userInfo.IP }}</span>
@@ -93,11 +92,11 @@ onMounted(() => {
           {{ userInfo.COUNTRY }}
         </RouterLink>
       </div>
-    </QCardSection>
-    <QCardSection v-else class="text-center q-py-lg">
-      <QSpinner color="white" size="1.5em" />
-    </QCardSection>
-  </QCard>
+    </q-card-section>
+    <q-card-section v-else class="text-center q-py-lg">
+      <q-spinner color="white" size="1.5em" />
+    </q-card-section>
+  </q-card>
 </template>
 
 <style>

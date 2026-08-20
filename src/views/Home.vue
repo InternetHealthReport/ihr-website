@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import { QCard, QCardSection, QIcon, QBtn } from 'quasar'
 import { ref, onMounted } from 'vue'
 import Tr from '@/i18n/translation'
 import UserInfo from '@/components/UserInfo.vue'
@@ -139,7 +138,7 @@ const ORGANIZATIONS = [
             <p class="hero__subtitle">{{ $t('homePage.hero.subtitle') }}</p>
             <div class="hero__actions-wrap">
               <div class="row q-gutter-sm">
-                <QBtn
+                <q-btn
                   unelevated
                   color="white"
                   text-color="dark"
@@ -149,7 +148,7 @@ const ORGANIZATIONS = [
                   size="lg"
                   class="hero__btn"
                 />
-                <QBtn
+                <q-btn
                   outline
                   color="white"
                   :label="$t('homePage.hero.exploreNetworks')"
@@ -203,7 +202,7 @@ const ORGANIZATIONS = [
             class="feature-row__link"
           >
             {{ $t('homePage.learnmore') }}{{ $t(`${mod.name}.title`) }}
-            <QIcon name="fas fa-chevron-right" size="0.7rem" class="q-ml-xs" />
+            <q-icon name="fas fa-chevron-right" size="0.7rem" class="q-ml-xs" />
           </RouterLink>
         </div>
         <div class="col-12 col-md-5">
@@ -219,15 +218,15 @@ const ORGANIZATIONS = [
         <div class="row q-col-gutter-md">
           <div v-for="report in REPORTS" :key="report.key" class="col-12 col-sm-6 col-md-4">
             <RouterLink :to="Tr.i18nRoute({ name: report.route })" class="card-link">
-              <QCard flat bordered class="card-hover full-height">
-                <QCardSection class="text-center q-py-lg">
-                  <QIcon :name="report.icon" size="2rem" color="primary" class="q-mb-sm" />
+              <q-card flat bordered class="card-hover full-height">
+                <q-card-section class="text-center q-py-lg">
+                  <q-icon :name="report.icon" size="2rem" color="primary" class="q-mb-sm" />
                   <div class="card-title">{{ $t(`homePage.reports.${report.key}.name`) }}</div>
                   <div class="card-desc">
                     {{ $t(`homePage.reports.${report.key}.description`) }}
                   </div>
-                </QCardSection>
-              </QCard>
+                </q-card-section>
+              </q-card>
             </RouterLink>
           </div>
         </div>
@@ -241,13 +240,13 @@ const ORGANIZATIONS = [
         <div class="row q-col-gutter-md">
           <div v-for="tool in TOOLS" :key="tool.key" class="col-12 col-sm-6 col-md-4">
             <RouterLink :to="Tr.i18nRoute({ name: tool.route })" class="card-link">
-              <QCard flat bordered class="card-hover full-height">
-                <QCardSection class="text-center q-py-lg">
-                  <QIcon :name="tool.icon" size="2rem" color="primary" class="q-mb-sm" />
+              <q-card flat bordered class="card-hover full-height">
+                <q-card-section class="text-center q-py-lg">
+                  <q-icon :name="tool.icon" size="2rem" color="primary" class="q-mb-sm" />
                   <div class="card-title">{{ $t(`homePage.tools.${tool.key}.name`) }}</div>
                   <div class="card-desc">{{ $t(`homePage.tools.${tool.key}.description`) }}</div>
-                </QCardSection>
-              </QCard>
+                </q-card-section>
+              </q-card>
             </RouterLink>
           </div>
         </div>

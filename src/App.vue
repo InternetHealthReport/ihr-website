@@ -1,6 +1,5 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { QLayout, QPageContainer, QBtn } from 'quasar'
 import { ref } from 'vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
@@ -26,19 +25,19 @@ const scrollToTop = () => {
 </script>
 
 <template>
-  <QLayout id="app" view="hHh LpR fff" @scroll="scroll">
+  <q-layout id="app" view="hHh LpR fff" @scroll="scroll">
     <Header />
-    <QPageContainer>
+    <q-page-container>
       <RouterView />
       <!-- <div id="IHR_last-element"> </div> -->
-    </QPageContainer>
+    </q-page-container>
     <Footer />
     <Transition name="fade-slide">
       <div class="IHR_scroll-btn" v-if="scrollPosition > 0">
-        <QBtn icon="fas fa-arrow-up" class="bg-primary text-white" round @click="scrollToTop" />
+        <q-btn icon="fas fa-arrow-up" class="bg-primary text-white" round @click="scrollToTop" />
       </div>
     </Transition>
-  </QLayout>
+  </q-layout>
   <LocalStorageBanner :disable="true" />
 </template>
 
