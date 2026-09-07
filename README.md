@@ -34,7 +34,7 @@ VITE_DEFAULT_LOCALE=en
 VITE_FALLBACK_LOCALE=en
 VITE_SUPPORTED_LOCALES=en,jp
 VITE_BASE_URL=/
-CARTO_BASEMAPS_API_KEY=your-api-key-here
+VITE_CARTO_BASEMAPS_API_KEY=your-api-key-here
 ```
 
 #### Install all the NPM packages.
@@ -82,7 +82,7 @@ VITE_DEFAULT_LOCALE=en
 VITE_FALLBACK_LOCALE=en
 VITE_SUPPORTED_LOCALES=en,jp
 VITE_BASE_URL=/
-CARTO_BASEMAPS_API_KEY=your-api-key-here
+VITE_CARTO_BASEMAPS_API_KEY=your-api-key-here
 ```
 
 #### Build the Docker Image

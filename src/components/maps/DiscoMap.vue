@@ -6,6 +6,8 @@ import { LMap, LTileLayer, LCircleMarker, LTooltip, LControl } from '@vue-leafle
 import 'leaflet/dist/leaflet.css'
 import { QCard } from 'quasar'
 
+const CARTO_KEY = import.meta.env.VITE_CARTO_BASEMAPS_API_KEY
+
 const { t } = useI18n()
 
 const props = defineProps({
@@ -121,7 +123,7 @@ const traces = computed(() => {
       :options="{ attributionControl: false, worldCopyJump: true, minZoom: 2, maxZoom: 15 }"
       @ready="(map) => nextTick(() => map.invalidateSize())"
     >
-      <LTileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"></LTileLayer>
+      <LTileLayer :url="`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`"></LTileLayer>
       <LControl position="bottomright">
         <QCard flat style="padding: 2px 4px; min-height: unset">
           <span style="font-size: 11px">

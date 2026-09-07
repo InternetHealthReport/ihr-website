@@ -17,6 +17,8 @@ import 'leaflet/dist/leaflet.css'
 import { icon } from 'leaflet'
 import { Country } from 'country-state-city'
 
+const CARTO_KEY = import.meta.env.VITE_CARTO_BASEMAPS_API_KEY
+
 const iyp_api = inject('iyp_api')
 const submarine_cable_map_api = inject('submarine_cable_map_api')
 
@@ -440,7 +442,7 @@ onMounted(() => {
               @ready="(map) => nextTick(() => map.invalidateSize())"
             >
               <LTileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                :url="`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`"
               ></LTileLayer>
               <LControl position="bottomright">
                 <QCard flat style="padding: 2px 4px; min-height: unset">
