@@ -25,6 +25,18 @@ cd ihr-website
 Note: 
 - you can use [NVM](https://github.com/nvm-sh/nvm) to switch between node versions as per your need 
 
+#### Create a `.env` file
+
+Create a `.env` file in the project root using the following content:
+
+```bash
+VITE_DEFAULT_LOCALE=en
+VITE_FALLBACK_LOCALE=en
+VITE_SUPPORTED_LOCALES=en,jp
+VITE_BASE_URL=/
+CARTO_BASEMAPS_API_KEY=your-api-key-here
+```
+
 #### Install all the NPM packages.
 
 ```bash
@@ -59,6 +71,18 @@ To deploy the project with Docker, follow these steps:
 ```bash
 git clone https://github.com/InternetHealthReport/ihr-website.git
 cd ihr-website
+```
+
+#### Create a `.env` file
+
+Create a `.env` file in the project root using the following content:
+
+```bash
+VITE_DEFAULT_LOCALE=en
+VITE_FALLBACK_LOCALE=en
+VITE_SUPPORTED_LOCALES=en,jp
+VITE_BASE_URL=/
+CARTO_BASEMAPS_API_KEY=your-api-key-here
 ```
 
 #### Build the Docker Image
