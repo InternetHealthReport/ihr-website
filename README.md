@@ -25,17 +25,56 @@ cd ihr-website
 Note: 
 - you can use [NVM](https://github.com/nvm-sh/nvm) to switch between node versions as per your need 
 
-#### Create a `.env` file
+#### Configure the frontend
 
-Create a `.env` file in the project root using the following content:
+The application reads browser-visible runtime settings from `public/config.json`. Copy or edit it as needed:
 
-```bash
-VITE_DEFAULT_LOCALE=en
-VITE_FALLBACK_LOCALE=en
-VITE_SUPPORTED_LOCALES=en,jp
-VITE_BASE_URL=/
-VITE_CARTO_BASEMAPS_API_KEY=your-api-key-here
+```json
+{
+  "DEFAULT_LOCALE": "en",
+  "FALLBACK_LOCALE": "en",
+  "SUPPORTED_LOCALES": ["en", "jp"],
+  "BASE_URL": "/",
+  "CARTO_BASEMAPS_API_KEY": "your-api-key-here"
+}
 ```
+
+Do not store secrets in this file. Runtime configuration is downloaded by the browser and is visible to every website visitor.
+The included `public/robots.txt` asks compliant search-engine crawlers not to index `/config.json`, but it does not prevent anyone from accessing the file.
+
+#### Add a new runtime configuration variable
+
+To add a variable in the future:
+
+1. Add the variable and a safe development default to `public/config.json`:
+
+   ```json
+   {
+     "EXAMPLE_SERVICE_URL": "https://example.test/api"
+   }
+   ```
+
+2. Add validation for it in `src/config.js`. Make the property required when the application cannot work without it, or provide a safe default when it is optional.
+
+3. Read it in application code only through `getConfig()`:
+
+   ```js
+   import { getConfig } from '@/config'
+
+   const serviceUrl = getConfig().EXAMPLE_SERVICE_URL
+   ```
+
+   Do not use `import.meta.env` for a deployment-time value. Also avoid calling `getConfig()` from a module that is statically imported before `loadConfig()` completes; configuration-dependent startup modules must be dynamically imported after `loadConfig()`, as in `src/main.js`.
+
+4. Add the property to the production Ansible template:
+
+   ```jinja2
+   {
+     "EXAMPLE_SERVICE_URL": "https://example.test/api"
+   }
+   ```
+
+After updating the mounted `config.json`, reload the page to pick up the new value. Application code changes still require building and deploying a new Docker image.
 
 #### Install all the NPM packages.
 
@@ -73,18 +112,6 @@ git clone https://github.com/InternetHealthReport/ihr-website.git
 cd ihr-website
 ```
 
-#### Create a `.env` file
-
-Create a `.env` file in the project root using the following content:
-
-```bash
-VITE_DEFAULT_LOCALE=en
-VITE_FALLBACK_LOCALE=en
-VITE_SUPPORTED_LOCALES=en,jp
-VITE_BASE_URL=/
-VITE_CARTO_BASEMAPS_API_KEY=your-api-key-here
-```
-
 #### Build the Docker Image
 
 ```bash
@@ -94,10 +121,13 @@ docker build -t ihr-website .
 #### Run the Docker Container
 
 ```bash
-docker run --name ihr-website -d -p <host-port>:80 -t ihr-website
+docker run --name ihr-website -d -p <host-port>:80 \
+  --mount type=bind,src=/absolute/path/to/config.json,dst=/usr/share/nginx/html/config.json,readonly \
+  ihr-website
 ```
 
 Replace `<host-port>` with the port on your host machine where you want to expose the application.
+The mounted `config.json` can be changed for each deployment without rebuilding the image.
 
 ## Ways to contribute
 

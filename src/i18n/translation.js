@@ -2,6 +2,7 @@ import i18n from '@/i18n'
 import { nextTick } from 'vue'
 import { get, set } from 'idb-keyval'
 import axios from 'axios'
+import { getConfig } from '@/config'
 
 const Trans = {
   set currentLocale(newLocale) {
@@ -45,11 +46,11 @@ const Trans = {
   },
 
   get defaultLocale() {
-    return import.meta.env.VITE_DEFAULT_LOCALE
+    return getConfig().DEFAULT_LOCALE
   },
 
   get supportedLocales() {
-    return import.meta.env.VITE_SUPPORTED_LOCALES.split(',')
+    return getConfig().SUPPORTED_LOCALES
   },
 
   // async routeMiddleware(to, _from, next) {

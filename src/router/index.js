@@ -1,8 +1,9 @@
 import { RouterView, createRouter, createWebHistory } from 'vue-router'
 import Tr from '@/i18n/translation'
+import { getConfig } from '@/config'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.VITE_BASE_URL),
+  history: createWebHistory(getConfig().BASE_URL),
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition

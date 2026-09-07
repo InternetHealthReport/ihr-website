@@ -16,8 +16,9 @@ import {
 import 'leaflet/dist/leaflet.css'
 import { icon } from 'leaflet'
 import { Country } from 'country-state-city'
+import { getConfig } from '@/config'
 
-const CARTO_KEY = import.meta.env.VITE_CARTO_BASEMAPS_API_KEY
+const CARTO_KEY = getConfig().CARTO_BASEMAPS_API_KEY
 
 const iyp_api = inject('iyp_api')
 const submarine_cable_map_api = inject('submarine_cable_map_api')

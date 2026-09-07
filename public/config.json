@@ -1,0 +1,7 @@
+{
+  "DEFAULT_LOCALE": "en",
+  "FALLBACK_LOCALE": "en",
+  "SUPPORTED_LOCALES": ["en", "jp"],
+  "BASE_URL": "/",
+  "CARTO_BASEMAPS_API_KEY": ""
+}

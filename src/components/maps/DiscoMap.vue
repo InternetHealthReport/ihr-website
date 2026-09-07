@@ -5,8 +5,9 @@ import { useI18n } from 'vue-i18n'
 import { LMap, LTileLayer, LCircleMarker, LTooltip, LControl } from '@vue-leaflet/vue-leaflet'
 import 'leaflet/dist/leaflet.css'
 import { QCard } from 'quasar'
+import { getConfig } from '@/config'
 
-const CARTO_KEY = import.meta.env.VITE_CARTO_BASEMAPS_API_KEY
+const CARTO_KEY = getConfig().CARTO_BASEMAPS_API_KEY
 
 const { t } = useI18n()
 
