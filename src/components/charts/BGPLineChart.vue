@@ -116,7 +116,10 @@ const updateTimeRange = () => {
       selectedMaxTimestamp.value = props.maxTimestamp
     }
   } else {
-    selectedMaxTimestamp.value = props.minTimestamp
+    selectedMaxTimestamp.value =
+      props.usingIndex && props.currentIndex >= 0
+        ? props.rawMessages[props.currentIndex].timestamp
+        : props.minTimestamp
   }
 }
 
@@ -337,6 +340,10 @@ const rpkiStatusChartXRange = computed(() => {
   return []
 })
 
+const processedBgplayMessages = computed(() =>
+  Math.max(0, props.usedMessagesCount - props.initialStateDataCount)
+)
+
 const handleRpkiPlotlyClick = (event) => {
   const point = event.points[0]
   if (!point) return
@@ -493,10 +500,9 @@ onMounted(() => {
                 </div>
                 <div v-else class="text-body2">
                   {{
-                    usedMessagesCount -
-                    initialStateDataCount +
+                    processedBgplayMessages +
                     ' out of ' +
-                    (rawMessages.length - initialStateDataCount)
+                    Math.max(0, rawMessages.length - initialStateDataCount)
                   }}
                   Processed Messages
                 </div>
@@ -549,10 +555,9 @@ onMounted(() => {
                 </div>
                 <div v-else class="text-body2">
                   {{
-                    usedMessagesCount -
-                    initialStateDataCount +
+                    processedBgplayMessages +
                     '/' +
-                    (rawMessages.length - initialStateDataCount)
+                    Math.max(0, rawMessages.length - initialStateDataCount)
                   }}
                   <QIcon name="message" />
                 </div>

@@ -16,7 +16,7 @@ import {
   QItemSection,
   QSpinner
 } from 'quasar'
-import { onMounted, onUnmounted, ref, watch, inject, computed } from 'vue'
+import { onMounted, onUnmounted, ref, watch, inject, computed, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import GenericCardController from '@/components/controllers/GenericCardController.vue'
 import i18n from '@/i18n'
@@ -102,6 +102,8 @@ let vrps = []
 let vrp_timestamps = []
 const isNoVrpData = ref(false)
 const vrpTableData = ref([])
+
+const userSelectedMessage = ref(0)
 
 const params = ref({
   peer: '',
@@ -1103,12 +1105,13 @@ const onLoad = () => {
     query['start-time'] = startTime.value
     query['end-time'] = endTime.value
     query.rrcs = rrcs.value ? rrcs.value.join(',') : ''
+    query.message = userSelectedMessage.value
   }
   router.replace({ query })
   return true
 }
 
-const loadOnMount = (initOnlyParams = false) => {
+const loadOnMount = async (initOnlyParams = false) => {
   if (Object.keys(route.query).length !== 0) {
     const dataSourceQuery = route.query['data-source']
     const prefixQuery = route.query['prefix']
@@ -1116,6 +1119,7 @@ const loadOnMount = (initOnlyParams = false) => {
     const endTimeQuery = route.query['end-time']
     const rrcsQuery = route.query['rrcs']
     const rrcQuery = route.query['rrc']
+    const message = route.query['message']
     dataSource.value = dataSourceOptions.value.find((obj) => obj.value === dataSourceQuery)
     if (dataSource.value.value === 'ris-live') {
       if (prefixQuery && rrcQuery) {
@@ -1131,14 +1135,53 @@ const loadOnMount = (initOnlyParams = false) => {
         tempStartTime.value = startTimeQuery
         tempEndTime.value = endTimeQuery
         rrcs.value = rrcsQuery.split(',').map((val) => Number(val))
-        if (!initOnlyParams) fetchBGPlayData()
+        if (message !== undefined) {
+          const parsedMessage = Number(message)
+          userSelectedMessage.value = Number.isFinite(parsedMessage)
+            ? Math.max(0, Math.trunc(parsedMessage))
+            : 0
+        }
+        if (!initOnlyParams) await fetchBGPlayData()
       }
     }
   }
 }
 
+const initMessages = async () => {
+  if (dataSource.value.value !== 'bgplay' || route.query.message === undefined) return
+
+  await nextTick()
+
+  const availableMessages = Math.max(0, rawMessages.value.length - initialStateDataCount.value)
+  const requestedMessages = Math.min(userSelectedMessage.value, availableMessages)
+
+  // The query parameter counts BGPlay update messages only. Internally, the
+  // initial-state rows precede those messages in rawMessages.
+  usingIndex.value = true
+  isLiveMode.value = false
+  currentIndex.value = initialStateDataCount.value + requestedMessages - 1
+  selectedMaxTimestamp.value =
+    currentIndex.value >= 0 ? rawMessages.value[currentIndex.value].timestamp : minTimestamp.value
+  handleFilterMessages()
+}
+
 watch(isPlaying, () => {
   toggleRisProtocol()
+})
+
+watch(usedMessagesCount, (count) => {
+  if (firstLoad.value || dataSource.value.value !== 'bgplay') return
+
+  const message = Math.max(0, count - initialStateDataCount.value)
+  if (Number(route.query.message) === message) return
+
+  userSelectedMessage.value = message
+  router.replace({
+    query: {
+      ...route.query,
+      message
+    }
+  })
 })
 
 onMounted(async () => {
@@ -1147,7 +1190,8 @@ onMounted(async () => {
   await fetchRCCs()
   await fetchAllASInfo()
   await fetchGithubFiles()
-  loadOnMount()
+  await loadOnMount()
+  await initMessages()
   firstLoad.value = false
 })
 

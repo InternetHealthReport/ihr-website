@@ -124,7 +124,9 @@ const traces = computed(() => {
       :options="{ attributionControl: false, worldCopyJump: true, minZoom: 2, maxZoom: 15 }"
       @ready="(map) => nextTick(() => map.invalidateSize())"
     >
-      <LTileLayer :url="`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`"></LTileLayer>
+      <LTileLayer
+        :url="`https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`"
+      ></LTileLayer>
       <LControl position="bottomright">
         <QCard flat style="padding: 2px 4px; min-height: unset">
           <span style="font-size: 11px">
