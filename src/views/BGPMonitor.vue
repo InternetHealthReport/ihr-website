@@ -1068,6 +1068,12 @@ const getRPKIStatus = (asn, timestamp) => {
 }
 
 const updateSelectedPeers = (val) => {
+  // An empty result set can occur before the prefix is announced. The table
+  // emits its empty selection in that state, but it must not turn the default
+  // selection count into zero: peers that appear at a later timestamp should
+  // still be selected automatically.
+  if (filteredMessages.value.length === 0 && val.length === 0) return
+
   defaultSelectedPeerCount.value = val.length
   defaultSelectedPeers.value = val
 }
