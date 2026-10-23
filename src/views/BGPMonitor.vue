@@ -1190,6 +1190,10 @@ watch(usedMessagesCount, (count) => {
   })
 })
 
+watch(tempStartTime, applyStartTime)
+
+watch(tempEndTime, applyEndTime)
+
 onMounted(async () => {
   firstLoad.value = true
   loadOnMount(true)
